@@ -90,6 +90,20 @@ export interface RequestEditorSelectionStateMessage extends BaseMessage {
   command: 'REQUEST_EDITOR_SELECTION_STATE'
 }
 
+export interface GetChatHistoryMessage extends BaseMessage {
+  command: 'GET_CHAT_HISTORY'
+}
+
+export interface GetFimChatHistoryMessage extends BaseMessage {
+  command: 'GET_FIM_CHAT_HISTORY'
+}
+
+export interface SaveChatHistoryMessage extends BaseMessage {
+  command: 'SAVE_CHAT_HISTORY'
+  messages: string[]
+  is_fim_mode: boolean
+}
+
 /**
  * Messages from extension to webview:
  */
@@ -154,6 +168,16 @@ export interface EditorSelectionChangedMessage extends BaseMessage {
   hasSelection: boolean
 }
 
+export interface ChatHistoryMessage extends BaseMessage {
+  command: 'CHAT_HISTORY'
+  messages: string[]
+}
+
+export interface FimChatHistoryMessage extends BaseMessage {
+  command: 'FIM_CHAT_HISTORY'
+  messages: string[]
+}
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | GetLastPromptMessage
@@ -175,6 +199,9 @@ export type WebviewMessage =
   | SaveFimModeMessage
   | RequestEditorStateMessage
   | RequestEditorSelectionStateMessage
+  | GetChatHistoryMessage
+  | GetFimChatHistoryMessage
+  | SaveChatHistoryMessage
 
 // Union type of all possible outgoing messages to webview
 export type ExtensionMessage =
@@ -188,3 +215,5 @@ export type ExtensionMessage =
   | FimModeMessage
   | EditorStateChangedMessage
   | EditorSelectionChangedMessage
+  | ChatHistoryMessage
+  | FimChatHistoryMessage

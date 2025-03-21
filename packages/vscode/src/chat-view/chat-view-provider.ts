@@ -70,7 +70,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
     // Add selection change listener
     vscode.window.onDidChangeTextEditorSelection((event) => {
       const has_selection = !event.textEditor.selection.isEmpty
-      if (has_selection !== this._has_active_selection) {
+      if (has_selection != this._has_active_selection) {
         this._has_active_selection = has_selection
         if (this._webview_view) {
           this._send_message<ExtensionMessage>({
@@ -82,8 +82,10 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
     })
 
     const update_selection_state = () => {
-      const activeTextEditor = vscode.window.activeTextEditor
-      const has_selection = activeTextEditor ? !activeTextEditor.selection.isEmpty : false
+      const active_text_editor = vscode.window.activeTextEditor
+      const has_selection = active_text_editor
+        ? !active_text_editor.selection.isEmpty
+        : false
       this._has_active_selection = has_selection
       if (this._webview_view) {
         this._send_message<ExtensionMessage>({
@@ -147,6 +149,39 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       async (message: WebviewMessage) => {
         try {
           switch (message.command) {
+            case 'GET_CHAT_HISTORY': {
+              const history = this._context.workspaceState.get<string[]>(
+                'chat-history',
+                []
+              )
+              this._send_message<ExtensionMessage>({
+                command: 'CHAT_HISTORY',
+                messages: history
+              })
+              break
+            }
+
+            case 'GET_FIM_CHAT_HISTORY': {
+              const history = this._context.workspaceState.get<string[]>(
+                'fim-chat-history',
+                []
+              )
+              this._send_message<ExtensionMessage>({
+                command: 'FIM_CHAT_HISTORY',
+                messages: history
+              })
+              break
+            }
+
+            case 'SAVE_CHAT_HISTORY': {
+              const key = message.is_fim_mode ? 'fim-chat-history' : 'chat-history';
+              await this._context.workspaceState.update(
+                key,
+                message.messages
+              )
+              break
+            }
+
             case 'GET_LAST_PROMPT': {
               const last_instruction =
                 this._context.workspaceState.get<string>('lastChatPrompt') || ''

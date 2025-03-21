@@ -26,6 +26,8 @@ type Props = {
   on_fim_mode_click: () => void
   has_active_editor: boolean
   has_active_selection: boolean
+  chat_history: string[]
+  chat_history_fim_mode: string[]
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -104,6 +106,8 @@ export const Main: React.FC<Props> = (props) => {
       <UiSeparator size="small" />
       <UiChatInput
         value={current_instruction}
+        chat_history={props.chat_history}
+        chat_history_fim_mode={props.chat_history_fim_mode}
         on_change={handle_input_change}
         on_submit={handle_submit}
         on_copy={handle_copy}

@@ -11,7 +11,7 @@ export function chat_to_clipboard_command(
     async () => {
       // Main Instruction Input
       let last_chat_prompt =
-        context.globalState.get<string>('lastChatPrompt') || ''
+        context.workspaceState.get<string>('lastChatPrompt') || ''
 
       const instruction = await vscode.window.showInputBox({
         prompt: 'Ask anything',
@@ -23,7 +23,7 @@ export function chat_to_clipboard_command(
         return // User cancelled
       }
 
-      await context.globalState.update('lastChatPrompt', instruction)
+      await context.workspaceState.update('lastChatPrompt', instruction)
 
       // Files Collection using FilesCollector
       const files_collector = new FilesCollector(
@@ -50,6 +50,14 @@ export function chat_to_clipboard_command(
       const final_text = `${
         context_text ? `<files>\n${context_text}</files>\n` : ''
       }${instruction}`
+
+      // Add to chat history
+      const current_history = context.workspaceState.get<string[]>(
+        'chat-history',
+        []
+      )
+      const updated_history = [instruction, ...current_history].slice(0, 100)
+      await context.workspaceState.update('chat-history', updated_history)
 
       await vscode.env.clipboard.writeText(final_text)
       vscode.window.showInformationMessage('Chat prompt copied to clipboard')

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
+import { useEffect, useState } from 'react'
 import { Main } from './Main'
 import { Presets as UiPresets } from '@ui/components/Presets'
 import {
@@ -14,7 +14,9 @@ import {
   ExpandedPresetsMessage,
   FimModeMessage,
   EditorStateChangedMessage,
-  EditorSelectionChangedMessage
+  EditorSelectionChangedMessage,
+  ChatHistoryMessage,
+  FimChatHistoryMessage
 } from './types/messages'
 
 const vscode = acquireVsCodeApi()
@@ -32,7 +34,10 @@ function App() {
   const [expanded_presets, set_expanded_presets] = useState<number[]>([])
   const [is_fim_mode, set_is_fim_mode] = useState<boolean>()
   const [has_active_editor, set_has_active_editor] = useState<boolean>()
-  const [has_active_selection, set_has_active_selection] = useState<boolean>(false)
+  const [has_active_selection, set_has_active_selection] = useState<boolean>()
+  const [chat_history, set_chat_history] = useState<string[]>()
+  const [chat_history_fim_mode, set_chat_history_fim_mode] =
+    useState<string[]>()
 
   useEffect(() => {
     vscode.postMessage({ command: 'GET_LAST_PROMPT' } as WebviewMessage)
@@ -43,6 +48,9 @@ function App() {
     vscode.postMessage({ command: 'GET_EXPANDED_PRESETS' } as WebviewMessage)
     vscode.postMessage({ command: 'GET_FIM_MODE' } as WebviewMessage)
     vscode.postMessage({ command: 'REQUEST_EDITOR_STATE' } as WebviewMessage)
+    vscode.postMessage({ command: 'REQUEST_EDITOR_SELECTION_STATE' } as WebviewMessage)
+    vscode.postMessage({ command: 'GET_CHAT_HISTORY' } as WebviewMessage)
+    vscode.postMessage({ command: 'GET_FIM_CHAT_HISTORY' } as WebviewMessage)
 
     const handle_message = (event: MessageEvent) => {
       const message = event.data as ExtensionMessage
@@ -97,6 +105,14 @@ function App() {
             (message as EditorSelectionChangedMessage).hasSelection
           )
           break
+        case 'CHAT_HISTORY':
+          set_chat_history((message as ChatHistoryMessage).messages || [])
+          break
+        case 'FIM_CHAT_HISTORY':
+          set_chat_history_fim_mode(
+            (message as FimChatHistoryMessage).messages || []
+          )
+          break
       }
     }
 
@@ -113,6 +129,32 @@ function App() {
       instruction: params.instruction,
       preset_names: params.preset_names
     } as WebviewMessage)
+
+    // Update the appropriate chat history based on mode
+    if (is_fim_mode) {
+      const new_history = [params.instruction, ...chat_history_fim_mode!].slice(
+        0,
+        100
+      )
+      set_chat_history_fim_mode(new_history)
+
+      // Save to workspace state
+      vscode.postMessage({
+        command: 'SAVE_CHAT_HISTORY',
+        messages: new_history,
+        is_fim_mode: true
+      } as WebviewMessage)
+    } else {
+      const new_history = [params.instruction, ...chat_history!].slice(0, 100)
+      set_chat_history(new_history)
+
+      // Save to workspace state
+      vscode.postMessage({
+        command: 'SAVE_CHAT_HISTORY',
+        messages: new_history,
+        is_fim_mode: false
+      } as WebviewMessage)
+    }
   }
 
   const handle_show_preset_picker = (
@@ -194,7 +236,10 @@ function App() {
     is_connected === undefined ||
     presets === undefined ||
     is_fim_mode === undefined ||
-    has_active_editor === undefined
+    has_active_editor === undefined ||
+    has_active_selection === undefined ||
+    chat_history === undefined ||
+    chat_history_fim_mode === undefined
   ) {
     return null
   }
@@ -218,6 +263,8 @@ function App() {
       is_fim_mode={is_fim_mode && has_active_editor}
       on_fim_mode_click={handle_fim_mode_click}
       has_active_selection={has_active_selection}
+      chat_history={chat_history}
+      chat_history_fim_mode={chat_history_fim_mode}
     />
   )
 }

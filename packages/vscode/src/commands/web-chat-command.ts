@@ -47,7 +47,7 @@ export function web_chat_with_command(
 
       // Main Instruction Input
       let last_chat_prompt =
-        context.globalState.get<string>('lastChatPrompt') || ''
+        context.workspaceState.get<string>('lastChatPrompt') || ''
 
       const instruction = await vscode.window.showInputBox({
         prompt: 'Type something',
@@ -59,7 +59,7 @@ export function web_chat_with_command(
         return // User cancelled
       }
 
-      await context.globalState.update('lastChatPrompt', instruction)
+      await context.workspaceState.update('lastChatPrompt', instruction)
 
       // Files Collection using FilesCollector
       const files_collector = new FilesCollector(
@@ -89,6 +89,14 @@ export function web_chat_with_command(
       const final_text = `${
         context_text ? `<files>\n${context_text}</files>\n` : ''
       }${modified_instruction}`
+
+      // Add to chat history
+      const current_history = context.workspaceState.get<string[]>(
+        'chat-history',
+        []
+      )
+      const updated_history = [instruction, ...current_history].slice(0, 100)
+      await context.workspaceState.update('chat-history', updated_history)
 
       // Initialize chat with selected preset name
       websocket_server_instance.initialize_chats(final_text, [
@@ -153,7 +161,7 @@ export function web_chat_command(
 
     // Main Instruction Input
     let last_chat_prompt =
-      context.globalState.get<string>('lastChatPrompt') || ''
+      context.workspaceState.get<string>('lastChatPrompt') || ''
 
     const instruction = await vscode.window.showInputBox({
       prompt: 'Type something',
@@ -165,7 +173,7 @@ export function web_chat_command(
       return // User cancelled
     }
 
-    await context.globalState.update('lastChatPrompt', instruction)
+    await context.workspaceState.update('lastChatPrompt', instruction)
 
     // Files Collection using FilesCollector
     const files_collector = new FilesCollector(
@@ -193,6 +201,14 @@ export function web_chat_command(
     const final_text = `${
       context_text ? `<files>\n${context_text}</files>\n` : ''
     }${modified_instruction}`
+
+    // Add to chat history
+    const current_history = context.workspaceState.get<string[]>(
+      'chat-history',
+      []
+    )
+    const updated_history = [instruction, ...current_history].slice(0, 100)
+    await context.workspaceState.update('chat-history', updated_history)
 
     // Initialize chats with selected preset names
     websocket_server_instance.initialize_chats(final_text, selected_names)

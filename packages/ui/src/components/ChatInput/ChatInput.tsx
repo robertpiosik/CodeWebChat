@@ -1,10 +1,12 @@
-import { useRef, useEffect, useMemo } from 'react'
+import { useRef, useEffect, useMemo, useState } from 'react'
 import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 
 type Props = {
   value: string
+  chat_history: string[]
+  chat_history_fim_mode: string[]
   on_change: (value: string) => void
   on_submit: () => void
   on_copy: () => void
@@ -20,8 +22,9 @@ export const ChatInput: React.FC<Props> = (props) => {
   const textarea_ref = useRef<HTMLTextAreaElement>(null)
   const highlight_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
+  const [history_index, set_history_index] = useState(-1)
+  const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
 
-  // Replace the existing get_highlighted_text function with this one
   const get_highlighted_text = (text: string) => {
     if (props.is_fim_mode) {
       return <span>{text}</span>
@@ -48,12 +51,21 @@ export const ChatInput: React.FC<Props> = (props) => {
   }, [])
 
   const handle_input_change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    props.on_change(e.target.value)
+    const new_value = e.target.value
+    props.on_change(new_value)
+
+    // Reset history navigation state
+    set_history_index(-1)
+
+    if (!new_value) {
+      set_is_history_enabled(true)
+    }
   }
 
   const handle_submit = () => {
-    if (!props.is_connected) return
+    if (!props.is_connected || (!props.is_fim_mode && !props.value)) return
     props.on_submit()
+    set_history_index(-1) // Reset history index after submitting
   }
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -64,10 +76,13 @@ export const ChatInput: React.FC<Props> = (props) => {
       const end = textarea.selectionEnd
 
       // Create new value with newline inserted at cursor position
-      const newValue =
+      const new_value =
         props.value.substring(0, start) + '\n' + props.value.substring(end)
 
-      props.on_change(newValue)
+      props.on_change(new_value)
+
+      // Disable history when editing
+      set_is_history_enabled(false)
 
       // Set cursor position after the inserted newline
       setTimeout(() => {
@@ -76,6 +91,44 @@ export const ChatInput: React.FC<Props> = (props) => {
     } else if (e.key == 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handle_submit()
+    } else if (
+      (e.key == 'ArrowUp' || e.key == 'ArrowDown') &&
+      is_history_enabled
+    ) {
+      // Get active history based on current mode
+      const active_history = props.is_fim_mode
+        ? props.chat_history_fim_mode
+        : props.chat_history
+
+      // Only handle history if there are items
+      if (active_history.length == 0) return
+
+      e.preventDefault()
+
+      if (e.key == 'ArrowUp') {
+        // Going up in history (show older entries)
+        if (history_index < active_history.length - 1) {
+          const new_index = history_index + 1
+          set_history_index(new_index)
+          // Changed to use direct indexing starting from oldest (index 0)
+          props.on_change(active_history[new_index])
+        }
+      } else if (e.key == 'ArrowDown') {
+        // Going down in history (show newer entries)
+        if (history_index > 0) {
+          const new_index = history_index - 1
+          set_history_index(new_index)
+          // Changed to use direct indexing
+          props.on_change(active_history[new_index])
+        } else if (history_index === 0) {
+          // Return to empty field when reaching the bottom
+          set_history_index(-1)
+          props.on_change('')
+        }
+      }
+    } else if (props.value) {
+      // Only disable history when there's content and pressing other keys
+      set_is_history_enabled(false)
     }
   }
 
@@ -102,6 +155,9 @@ export const ChatInput: React.FC<Props> = (props) => {
 
     props.on_change(new_value)
 
+    // Disable history when inserting selection placeholder
+    set_is_history_enabled(false)
+
     setTimeout(() => {
       if (textarea_ref.current) {
         textarea_ref.current.selectionStart =
@@ -122,6 +178,30 @@ export const ChatInput: React.FC<Props> = (props) => {
     }
   }, [props.has_active_selection, props.value])
 
+  const placeholder = useMemo(() => {
+    const active_history = props.is_fim_mode
+      ? props.chat_history_fim_mode
+      : props.chat_history
+
+    if (props.is_fim_mode && props.has_active_editor) {
+      if (active_history.length > 0 && is_history_enabled) {
+        return 'Enter optional suggestions (⇅ for history)'
+      } else {
+        return 'Enter optional suggestions'
+      }
+    }
+
+    return active_history.length > 0 && is_history_enabled
+      ? 'Ask anything (⇅ for history)'
+      : 'Ask anything'
+  }, [
+    props.is_fim_mode,
+    props.has_active_editor,
+    props.chat_history,
+    props.chat_history_fim_mode,
+    is_history_enabled
+  ])
+
   return (
     <div
       className={styles.container}
@@ -133,11 +213,7 @@ export const ChatInput: React.FC<Props> = (props) => {
       </div>
       <TextareaAutosize
         ref={textarea_ref}
-        placeholder={
-          props.is_fim_mode && props.has_active_editor
-            ? 'Enter optional suggestions'
-            : 'Ask anything'
-        }
+        placeholder={placeholder}
         value={props.value}
         onChange={handle_input_change}
         onKeyDown={handle_key_down}
@@ -194,7 +270,9 @@ export const ChatInput: React.FC<Props> = (props) => {
           <button
             className={styles.footer__right__button}
             onClick={handle_submit}
-            disabled={!props.is_connected}
+            disabled={
+              !props.is_connected || (!props.is_fim_mode && !props.value)
+            }
             title={props.submit_disabled_title || 'Send'}
           >
             <div className={cn('codicon', 'codicon-send')} />
