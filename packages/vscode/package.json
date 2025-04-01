@@ -714,7 +714,7 @@
     "@types/node": "20.x",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
-    "@types/vscode": "1.92.0",
+    "@types/vscode": "1.98.0",
     "@types/ws": "^8.18.1",
     "babel-loader": "^9.1.3",
     "clean-webpack-plugin": "^4.0.0",
