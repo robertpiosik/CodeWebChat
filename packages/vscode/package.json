@@ -732,7 +732,7 @@
   },
   "dependencies": {
     "@vscode/codicons": "^0.0.36",
-    "axios": "^1.7.7",
+    "axios": "^1.8.2",
     "bufferutil": "^4.0.9",
     "classnames": "^2.5.1",
     "ignore": "^6.0.2",
