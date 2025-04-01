@@ -10,13 +10,13 @@
     "@storybook/types": "^7.6.20",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
-    "@types/vscode": "^1.92.0",
+    "@types/vscode": "^1.98.0",
     "css-loader": "^6.5.1",
-    "sass": "^1.49.0",
+    "sass": "^1.86.1",
     "sass-loader": "^12.4.0",
     "storybook": "^7.6.20",
     "style-loader": "^3.3.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@storybook/react": "^7.6.20",
@@ -26,6 +26,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-sortablejs": "^6.1.4",
-    "react-textarea-autosize": "^8.5.7"
+    "react-textarea-autosize": "^8.5.9"
   }
 }
