@@ -38,6 +38,8 @@ import {
   fim_in_chat_with_command
 } from './commands/fim-in-chat-command'
 import { save_context_command } from './commands/save-context-command'
+import { LAST_APPLIED_CHANGES_STATE_KEY } from './constants/state-keys'
+import { revert_command } from './commands/revert-command'
 
 // Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
@@ -212,6 +214,7 @@ export function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider),
+    revert_command(context),
     {
       dispose: () => {
         if (websocket_server_instance) {

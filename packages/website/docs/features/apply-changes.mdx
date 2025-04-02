@@ -72,8 +72,19 @@ You copied...
    - You get an option to **Revert** the changes immediately after they are applied.
 
   </TabItem>
-
 </Tabs>
+
+## Reverting Changes
+
+If you're not satisfied with the changes applied, Gemini Coder provides a command to revert the last batch of changes:
+
+- **Gemini Coder: Revert Last Applied Changes** - This command restores files to their state before the most recent application of changes:
+  - For modified files, it restores their original content
+  - For newly created files, it deletes them
+  - Available in the Command Palette
+  - Also available in a notification that appears immediately after applying changes
+
+The revert functionality remembers the state of files before changes were applied, allowing you to safely experiment with AI-suggested modifications knowing you can easily undo them if needed.
 
 ## Available commands
 
@@ -85,9 +96,17 @@ Applies changes to the current file using the default model.
 
 Lets you select which model to use for applying changes.
 
-##### `Gemini Coder: Apply Changes to Clipboard`
+##### `Gemini Coder: Apply Changes (Fast replace)`
 
-Instead of applying changes directly with API, copies the apply changes prompt to your clipboard for use in other tools.
+Applies changes using the fast replace mode, assuming clipboard contains complete file content.
+
+##### `Gemini Coder: Apply Changes (Intelligent update)`
+
+Applies changes using the intelligent update mode, which uses AI to merge changes intelligently.
+
+##### `Gemini Coder: Revert Last Applied Changes`
+
+Reverts files to their state before the last application of changes.
 
 ##### `Gemini Coder: Change Default Apply Changes Model`
 

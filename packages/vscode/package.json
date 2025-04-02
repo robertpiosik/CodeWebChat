@@ -288,6 +288,11 @@
         "command": "geminiCoder.applyChangesIntelligentUpdate",
         "title": "Apply Changes (Intelligent update)",
         "category": "Gemini Coder"
+      },
+      {
+        "command": "geminiCoder.revert",
+        "title": "Revert Last Applied Changes",
+        "category": "Gemini Coder"
       }
     ],
     "menus": {

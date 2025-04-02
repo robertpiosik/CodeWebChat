@@ -14,6 +14,7 @@ import {
   parse_clipboard_multiple_files,
   is_multiple_files_clipboard
 } from './clipboard-parser'
+import { LAST_APPLIED_CHANGES_STATE_KEY } from '../../constants/state-keys'
 
 // Interface to store original file state for reversion
 interface OriginalFileState {
@@ -628,6 +629,10 @@ export function apply_changes_command(params: {
 
           if (response == 'Revert') {
             await revert_files(result.original_states)
+            params.context.workspaceState.update(
+              LAST_APPLIED_CHANGES_STATE_KEY,
+              null
+            )
           }
         }
         return // Exit after fast replace
@@ -1038,6 +1043,12 @@ export function apply_changes_command(params: {
         .then((result) => {
           // Only show success message after the progress is complete and successful
           if (result === true) {
+            // Store the original states in workspace state for later reversion
+            params.context.workspaceState.update(
+              LAST_APPLIED_CHANGES_STATE_KEY,
+              original_states
+            )
+
             // If result is true, the operation completed successfully
             vscode.window
               .showInformationMessage(
@@ -1049,6 +1060,10 @@ export function apply_changes_command(params: {
               .then((response) => {
                 if (response == 'Revert') {
                   revert_files(original_states)
+                  params.context.workspaceState.update(
+                    LAST_APPLIED_CHANGES_STATE_KEY,
+                    null
+                  )
                 }
               })
           }
@@ -1193,6 +1208,18 @@ export function apply_changes_command(params: {
             await format_document(document)
             await document.save()
 
+            // Store original file state for potential reversion
+            await params.context.workspaceState.update(
+              LAST_APPLIED_CHANGES_STATE_KEY,
+              [
+                {
+                  file_path: file_path,
+                  content: original_content,
+                  is_new: false
+                }
+              ]
+            )
+
             // Show success message with Revert option
             const response = await vscode.window.showInformationMessage(
               'Changes have been applied!',
@@ -1211,6 +1238,10 @@ export function apply_changes_command(params: {
               await document.save()
               vscode.window.showInformationMessage(
                 'Changes reverted successfully.'
+              )
+              await params.context.workspaceState.update(
+                LAST_APPLIED_CHANGES_STATE_KEY,
+                null
               )
             }
           }

@@ -3,7 +3,7 @@ import {
   DEFAULT_FIM_MODEL_KEY,
   DEFAULT_REFACTORING_MODEL_KEY,
   DEFAULT_APPLY_CHANGES_MODEL_KEY
-} from '../constants/global-state-keys'
+} from '../constants/state-keys'
 
 export class ModelManager {
   constructor(private readonly context: vscode.ExtensionContext) {}
