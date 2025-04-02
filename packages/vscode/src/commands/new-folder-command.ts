@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
+import { create_safe_path } from '../utils/path-sanitizer'
 
 export function new_folder_command() {
   return vscode.commands.registerCommand(
@@ -24,14 +25,22 @@ export function new_folder_command() {
       }
 
       try {
-        // Create full path for new folder
-        const new_folder_path = path.join(parent_path, folder_name)
+        // Create safe folder path with sanitization
+        const new_folder_path = create_safe_path(parent_path, folder_name)
+
+        // If path sanitization failed, abort
+        if (!new_folder_path) {
+          vscode.window.showErrorMessage(
+            `Invalid folder name: '${folder_name}'`
+          )
+          return
+        }
 
         // Check if folder already exists
         try {
           await vscode.workspace.fs.stat(vscode.Uri.file(new_folder_path))
           vscode.window.showErrorMessage(
-            `Folder '${folder_name}' already exists.`
+            `Folder '${path.basename(new_folder_path)}' already exists.`
           )
           return
         } catch {

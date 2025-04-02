@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
+import { create_safe_path } from '../utils/path-sanitizer'
 
 export function rename_command() {
   return vscode.commands.registerCommand(
@@ -27,14 +28,22 @@ export function rename_command() {
       }
 
       try {
-        // Create full path for new location
-        const new_path = path.join(dir_name, new_name)
+        // Create safe new path with sanitization
+        const new_path = create_safe_path(dir_name, new_name)
+
+        // If path sanitization failed, abort
+        if (!new_path) {
+          vscode.window.showErrorMessage(`Invalid name: '${new_name}'`)
+          return
+        }
 
         // Check if target already exists
         try {
           await vscode.workspace.fs.stat(vscode.Uri.file(new_path))
           vscode.window.showErrorMessage(
-            `A file or folder named '${new_name}' already exists.`
+            `A file or folder named '${path.basename(
+              new_path
+            )}' already exists.`
           )
           return
         } catch {
