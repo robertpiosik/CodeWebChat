@@ -1,15 +1,12 @@
 import * as vscode from 'vscode'
-import * as fs from 'fs'
 import * as path from 'path'
+import * as fs from 'fs'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
+import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 
 type SavedContext = {
   name: string
   paths: string[]
-}
-
-type GeminiCoderConfig = {
-  savedContexts?: SavedContext[]
 }
 
 async function apply_saved_context(
@@ -17,12 +14,42 @@ async function apply_saved_context(
   workspace_root: string,
   workspace_provider: WorkspaceProvider
 ): Promise<void> {
-  // Convert relative paths to absolute paths
-  const absolute_paths = context.paths.map((relative_path) =>
-    path.isAbsolute(relative_path)
-      ? relative_path
-      : path.join(workspace_root, relative_path)
-  )
+  const workspace_name = path.basename(workspace_root)
+
+  // Check if we're in a multi-workspace environment
+  const workspaceFolders = vscode.workspace.workspaceFolders || []
+  const workspaceMap = new Map<string, string>()
+
+  for (const folder of workspaceFolders) {
+    workspaceMap.set(folder.name, folder.uri.fsPath)
+  }
+
+  // Convert workspace-prefixed paths to absolute paths
+  const absolute_paths = context.paths.map((prefixed_path) => {
+    // Check if path has workspace prefix
+    if (prefixed_path.includes(':')) {
+      const [prefix, relative_path] = prefixed_path.split(':', 2)
+
+      // If this workspace name matches the current prefix, use current workspace root
+      if (prefix === workspace_name) {
+        return path.join(workspace_root, relative_path)
+      }
+
+      // Check if this is from a different workspace folder
+      const alternate_root = workspaceMap.get(prefix)
+      if (alternate_root) {
+        return path.join(alternate_root, relative_path)
+      }
+
+      // Fallback - treat as a path in the current workspace
+      return path.join(workspace_root, relative_path)
+    }
+
+    // Legacy support for paths without workspace prefix
+    return path.isAbsolute(prefixed_path)
+      ? prefixed_path
+      : path.join(workspace_root, prefixed_path)
+  })
 
   // Filter to only existing paths
   const existing_paths = absolute_paths.filter((p) => fs.existsSync(p))
@@ -38,24 +65,10 @@ async function apply_saved_context(
   vscode.window.showInformationMessage(`Applied context "${context.name}".`)
 }
 
-async function save_config(
-  config_path: string,
-  config: GeminiCoderConfig
-): Promise<void> {
-  try {
-    const dirPath = path.dirname(config_path)
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath, { recursive: true })
-    }
-    fs.writeFileSync(config_path, JSON.stringify(config, null, 2), 'utf8')
-  } catch (error: any) {
-    vscode.window.showErrorMessage(`Error saving config: ${error.message}`)
-  }
-}
-
 export function select_saved_context_command(
   workspace_provider: WorkspaceProvider | undefined,
-  on_context_selected: () => void
+  on_context_selected: () => void,
+  extContext: vscode.ExtensionContext
 ): vscode.Disposable {
   return vscode.commands.registerCommand(
     'geminiCoder.selectSavedContext',
@@ -66,28 +79,19 @@ export function select_saved_context_command(
       }
 
       const workspace_root = workspace_provider.getWorkspaceRoot()
-      const config_path = path.join(
-        workspace_root,
-        '.vscode',
-        'gemini-coder.json'
+
+      // Get saved contexts from workspace state
+      const saved_contexts: SavedContext[] = extContext.workspaceState.get(
+        SAVED_CONTEXTS_STATE_KEY,
+        []
       )
 
-      // Check if the config file exists
-      if (!fs.existsSync(config_path)) {
+      if (saved_contexts.length == 0) {
         vscode.window.showInformationMessage('No saved contexts found.')
         return
       }
 
       try {
-        // Read the config file
-        const config_content = fs.readFileSync(config_path, 'utf8')
-        const config = JSON.parse(config_content) as GeminiCoderConfig
-
-        if (!config.savedContexts || config.savedContexts.length == 0) {
-          vscode.window.showInformationMessage('No saved contexts found.')
-          return
-        }
-
         // Define delete button
         const delete_button = {
           iconPath: new vscode.ThemeIcon('trash'),
@@ -108,7 +112,7 @@ export function select_saved_context_command(
 
         // Create QuickPick with buttons
         const quick_pick = vscode.window.createQuickPick()
-        quick_pick.items = createQuickPickItems(config.savedContexts)
+        quick_pick.items = createQuickPickItems(saved_contexts)
         quick_pick.placeholder = 'Select saved context'
 
         // Create a promise to be resolved when an item is picked or the quick pick is hidden
@@ -139,27 +143,30 @@ export function select_saved_context_command(
             )
 
             if (confirm_delete == 'Delete') {
-              // Remove the context from the config
-              if (config.savedContexts) {
-                config.savedContexts = config.savedContexts.filter(
-                  (c) => c.name != item.context.name
-                )
-                await save_config(config_path, config)
-                vscode.window.showInformationMessage(
-                  `Deleted context "${item.context.name}"`
-                )
+              // Remove the context from the state
+              const updatedContexts = saved_contexts.filter(
+                (c) => c.name != item.context.name
+              )
 
-                // Update the quick pick items
-                if (config.savedContexts.length == 0) {
-                  quick_pick.hide()
-                  vscode.window.showInformationMessage(
-                    'No saved contexts remaining.'
-                  )
-                } else {
-                  // Update items and ensure the quick pick stays visible
-                  quick_pick.items = createQuickPickItems(config.savedContexts)
-                  quick_pick.show() // Ensure quick pick is visible
-                }
+              // Update workspace state
+              await extContext.workspaceState.update(
+                SAVED_CONTEXTS_STATE_KEY,
+                updatedContexts
+              )
+              vscode.window.showInformationMessage(
+                `Deleted context "${item.context.name}"`
+              )
+
+              // Update the quick pick items
+              if (updatedContexts.length == 0) {
+                quick_pick.hide()
+                vscode.window.showInformationMessage(
+                  'No saved contexts remaining.'
+                )
+              } else {
+                // Update items and ensure the quick pick stays visible
+                quick_pick.items = createQuickPickItems(updatedContexts)
+                quick_pick.show() // Ensure quick pick is visible
               }
             }
           })
@@ -177,7 +184,7 @@ export function select_saved_context_command(
         on_context_selected()
       } catch (error: any) {
         vscode.window.showErrorMessage(
-          `Error reading saved contexts: ${error.message}`
+          `Error accessing saved contexts: ${error.message}`
         )
       }
     }

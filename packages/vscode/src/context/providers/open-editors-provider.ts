@@ -16,7 +16,7 @@ export class OpenEditorsProvider
     FileItem | undefined | null | void
   > = this._on_did_change_tree_data.event
 
-  private _workspace_root: string
+  private _workspace_roots: string[] = [] // Store all workspace roots
   private _checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
   private _file_token_counts: Map<string, number> = new Map() // Cache token counts
   private _tab_change_handler: vscode.Disposable
@@ -37,8 +37,9 @@ export class OpenEditorsProvider
   // Config change handler
   private _config_change_handler: vscode.Disposable
 
-  constructor(workspace_root: string) {
-    this._workspace_root = workspace_root
+  // Updated constructor to take workspace folders
+  constructor(workspace_folders: vscode.WorkspaceFolder[]) {
+    this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
     this._shared_state = SharedFileState.getInstance()
 
     // Load ignored extensions
@@ -96,6 +97,18 @@ export class OpenEditorsProvider
       this._initialized = true
       this._on_did_change_tree_data.fire() // Fire event to refresh view
     }, 500) // Small delay to ensure VS Code has loaded all editors
+  }
+
+  // Check if a file belongs to any workspace root
+  private _is_file_in_any_workspace(file_path: string): boolean {
+    return this._workspace_roots.some((root) => file_path.startsWith(root))
+  }
+
+  // Get the workspace root that contains this file
+  private _get_containing_workspace_root(
+    file_path: string
+  ): string | undefined {
+    return this._workspace_roots.find((root) => file_path.startsWith(root))
   }
 
   // New method to uncheck files that are now ignored
@@ -199,8 +212,8 @@ export class OpenEditorsProvider
     // Only proceed if the setting is enabled
     if (!this._attach_open_files) return
 
-    // Skip files not in workspace
-    if (!file_path.startsWith(this._workspace_root)) return
+    // Skip files not in any workspace
+    if (!this._is_file_in_any_workspace(file_path)) return
 
     if (should_ignore_file(file_path, this._ignored_extensions)) return
 
@@ -260,8 +273,8 @@ export class OpenEditorsProvider
     for (const uri of open_file_paths) {
       const file_path = uri.fsPath
 
-      // Skip files not in workspace
-      if (!file_path.startsWith(this._workspace_root)) continue
+      // Skip files not in any workspace
+      if (!this._is_file_in_any_workspace(file_path)) continue
 
       if (should_ignore_file(file_path, this._ignored_extensions)) continue
 
@@ -375,7 +388,7 @@ export class OpenEditorsProvider
   }
 
   async getChildren(): Promise<FileItem[]> {
-    if (!this._workspace_root) {
+    if (!this._workspace_roots.length) {
       vscode.window.showInformationMessage('No workspace folder found.')
       return []
     }
@@ -433,7 +446,7 @@ export class OpenEditorsProvider
     }
   }
 
-  // Modified to check workspace state when creating open editor items
+  // Modified to check all workspace roots and add workspace folder name to description
   async create_open_editor_items(): Promise<FileItem[]> {
     const items: FileItem[] = []
     const open_files = this._get_open_editors()
@@ -444,8 +457,8 @@ export class OpenEditorsProvider
     for (const file_uri of open_files) {
       const file_path = file_uri.fsPath
 
-      // Skip files not in the workspace
-      if (!file_path.startsWith(this._workspace_root)) {
+      // Skip files not in any workspace
+      if (!this._is_file_in_any_workspace(file_path)) {
         continue
       }
 
@@ -462,7 +475,7 @@ export class OpenEditorsProvider
       if (checkbox_state === undefined) {
         // Check if the file is checked in the workspace view
         const is_checked_in_workspace =
-          workspace_checked_files.includes(file_path)
+          this._is_file_checked_in_workspace(file_path)
 
         if (is_checked_in_workspace) {
           // If it's checked in workspace view, use that state
@@ -479,15 +492,27 @@ export class OpenEditorsProvider
         this._checked_items.set(file_path, checkbox_state)
       }
 
-      // Calculate relative path from workspace root
-      const relative_path = path.relative(
-        this._workspace_root,
-        path.dirname(file_path)
-      )
+      // Calculate relative path from the appropriate workspace root
+      const workspace_root = this._get_containing_workspace_root(file_path)
+      const relative_path = workspace_root
+        ? path.relative(workspace_root, path.dirname(file_path))
+        : path.dirname(file_path)
 
-      // Create description with relative path and token count
+      // Create description with workspace folder name and relative path if multiple workspaces
+      let description = relative_path ? `${relative_path}` : ''
+
+      // Add workspace folder name if multiple workspaces exist
+      if (this._workspace_roots.length > 1 && workspace_root) {
+        // Extract the workspace folder name from the path
+        const workspace_folder_name = path.basename(workspace_root)
+        // Add the workspace name with a large dot separator
+        description = relative_path
+          ? `${workspace_folder_name} • ${relative_path}`
+          : workspace_folder_name
+      }
+
+      // Calculate token count
       const token_count = await this._calculate_file_tokens(file_path)
-      const description = relative_path ? `${relative_path}` : ''
 
       const item = new FileItem(
         file_name,
@@ -507,8 +532,6 @@ export class OpenEditorsProvider
 
     return items
   }
-
-  // Rest of the class implementation...
 
   // Modified helper method to open a file in non-preview mode without pinning
   private async _open_file_in_non_preview_mode(uri: vscode.Uri): Promise<void> {
@@ -561,8 +584,8 @@ export class OpenEditorsProvider
     for (const uri of open_files) {
       const file_path = uri.fsPath
 
-      // Skip files not in workspace
-      if (!file_path.startsWith(this._workspace_root)) continue
+      // Skip files not in any workspace
+      if (!this._is_file_in_any_workspace(file_path)) continue
 
       // Explicitly set to unchecked state
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Unchecked)
@@ -584,8 +607,8 @@ export class OpenEditorsProvider
     for (const uri of open_files) {
       const file_path = uri.fsPath
 
-      // Skip files not in workspace
-      if (!file_path.startsWith(this._workspace_root)) continue
+      // Skip files not in any workspace
+      if (!this._is_file_in_any_workspace(file_path)) continue
 
       if (should_ignore_file(file_path, this._ignored_extensions)) continue
 
@@ -661,8 +684,8 @@ export class OpenEditorsProvider
     for (const uri of open_files) {
       const file_path = uri.fsPath
 
-      // Skip files not in workspace
-      if (!file_path.startsWith(this._workspace_root)) continue
+      // Skip files not in any workspace
+      if (!this._is_file_in_any_workspace(file_path)) continue
 
       if (should_ignore_file(file_path, this._ignored_extensions)) continue
 

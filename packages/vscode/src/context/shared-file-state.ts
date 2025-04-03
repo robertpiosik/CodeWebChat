@@ -72,7 +72,8 @@ export class SharedFileState {
 
     try {
       // Get checked files from both providers
-      const workspace_checked_files = this.workspace_provider.get_checked_files()
+      const workspace_checked_files =
+        this.workspace_provider.get_checked_files()
       const open_editors_checked_files =
         this.open_editors_provider.get_checked_files()
 
@@ -176,10 +177,15 @@ export class SharedFileState {
       return true
     }
 
+    // Find which workspace root contains this file
+    const workspace_root =
+      this.workspace_provider.get_workspace_root_for_file(file_path)
+    if (!workspace_root) {
+      return false
+    }
+
     // Check if any parent directory is checked
     let current_dir = path.dirname(file_path)
-    const workspace_root = this.workspace_provider.getWorkspaceRoot()
-
     while (current_dir.startsWith(workspace_root)) {
       if (workspace_checked_files.includes(current_dir)) {
         return true
@@ -229,7 +235,8 @@ export class SharedFileState {
       iconPath: undefined,
       tooltip: file_path,
       description: '',
-      contextValue: 'openEditor'
+      contextValue: 'openEditor',
+      isWorkspaceRoot: false
     }
 
     await this.open_editors_provider.update_check_state(fake_item, state)
@@ -256,6 +263,7 @@ export class SharedFileState {
       isGitIgnored: false,
       isSymbolicLink: false,
       isOpenFile: false,
+      isWorkspaceRoot: false, // Not a workspace root
       command: undefined,
       iconPath: undefined,
       tooltip: file_path,

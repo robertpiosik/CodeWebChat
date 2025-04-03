@@ -213,7 +213,7 @@ export function activate(context: vscode.ExtensionContext) {
     new_folder_command(),
     rename_command(),
     delete_command(),
-    save_context_command(workspace_provider),
+    save_context_command(workspace_provider, context),
     revert_command(context),
     {
       dispose: () => {

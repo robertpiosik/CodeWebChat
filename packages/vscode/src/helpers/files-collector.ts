@@ -1,29 +1,26 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { OpenEditorsProvider } from '../context/providers/open-editors-provider'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 
 export class FilesCollector {
-  private file_tree_provider: WorkspaceProvider
+  private workspace_provider: WorkspaceProvider
   private open_editors_provider?: OpenEditorsProvider
   private websites_provider?: WebsitesProvider
-  private workspace_root: string
+  private workspace_roots: string[] = []
 
   constructor(
-    file_tree_provider: WorkspaceProvider,
+    workspace_provider: WorkspaceProvider,
     open_editors_provider?: OpenEditorsProvider,
     websites_provider?: WebsitesProvider
   ) {
-    this.file_tree_provider = file_tree_provider
+    this.workspace_provider = workspace_provider
     this.open_editors_provider = open_editors_provider
     this.websites_provider = websites_provider
-    // Get workspace root from VS Code API
-    const workspace_folders = vscode.workspace.workspaceFolders
-    this.workspace_root = workspace_folders
-      ? workspace_folders[0].uri.fsPath
-      : ''
+
+    // Get all workspace roots
+    this.workspace_roots = workspace_provider.getWorkspaceRoots()
   }
 
   async collect_files(params?: {
@@ -32,7 +29,7 @@ export class FilesCollector {
     active_path?: string
   }): Promise<string> {
     // Get checked files from both providers
-    const workspace_files = this.file_tree_provider.get_checked_files()
+    const workspace_files = this.workspace_provider.get_checked_files()
     const open_editor_files =
       this.open_editors_provider?.get_checked_files() || []
 
@@ -68,15 +65,40 @@ export class FilesCollector {
 
         const content = fs.readFileSync(file_path, 'utf8')
 
+        // Find which workspace root this file belongs to
+        const workspace_root = this.getWorkspaceRootForFile(file_path)
+
+        if (!workspace_root) {
+          // File is outside any workspace - use full path as name
+          if (params?.disable_xml) {
+            collected_text += content
+          } else {
+            const is_active = params?.active_path === file_path
+            collected_text += `<file name="${file_path}"${
+              is_active ? ' active' : ''
+            }>\n<![CDATA[\n${content}\n]]>\n</file>\n`
+          }
+          continue
+        }
+
         // Convert absolute path to workspace-relative path
-        const relative_path = path.relative(this.workspace_root, file_path)
+        const relative_path = path.relative(workspace_root, file_path)
+
+        // Get the workspace name to prefix the path if there are multiple workspaces
+        let display_path = relative_path
+        if (this.workspace_roots.length > 1) {
+          // Find workspace name
+          const workspace_name =
+            this.workspace_provider.getWorkspaceName(workspace_root)
+          display_path = `${workspace_name}/${relative_path}`
+        }
 
         if (params?.disable_xml) {
           // Just add the content without XML wrapping, used for context counting so that it matches values shown in file tree
           collected_text += content
         } else {
           const is_active = params?.active_path == file_path
-          collected_text += `<file name="${relative_path}"${
+          collected_text += `<file name="${display_path}"${
             is_active ? ' active' : ''
           }>\n<![CDATA[\n${content}\n]]>\n</file>\n`
         }
@@ -86,5 +108,10 @@ export class FilesCollector {
     }
 
     return collected_text
+  }
+
+  // Helper method to determine which workspace root a file belongs to
+  private getWorkspaceRootForFile(file_path: string): string | undefined {
+    return this.workspace_provider.get_workspace_root_for_file(file_path)
   }
 }

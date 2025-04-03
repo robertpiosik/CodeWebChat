@@ -4,14 +4,11 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { should_ignore_file } from '../context/utils/extension-utils'
 import { ignored_extensions } from '../context/constants/ignored-extensions'
+import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 
 type SavedContext = {
   name: string
   paths: string[]
-}
-
-type ConfigStructure = {
-  savedContexts?: SavedContext[]
 }
 
 // Improved function to properly condense paths
@@ -138,8 +135,58 @@ function arePathsEqual(paths1: string[], paths2: string[]): boolean {
   return paths2.every((path) => set1.has(path))
 }
 
+// Add workspace prefix to paths for multi-root workspace support
+function add_workspace_prefix(
+  relative_paths: string[], 
+  workspace_root: string
+): string[] {
+  // Find matching workspace folder for this workspace root
+  const workspaceFolders = vscode.workspace.workspaceFolders || []
+  const currentWorkspace = workspaceFolders.find(folder => 
+    folder.uri.fsPath === workspace_root
+  )
+
+  // If not in a workspace or there's only one workspace folder, no need for prefixes
+  if (!currentWorkspace || workspaceFolders.length <= 1) {
+    return relative_paths
+  }
+  
+  // Add the workspace name as a prefix to each path
+  return relative_paths.map(p => `${currentWorkspace.name}:${p}`)
+}
+
+// Helper function to group files by workspace root
+function group_files_by_workspace(
+  checked_files: string[]
+): Map<string, string[]> {
+  const workspaceFolders = vscode.workspace.workspaceFolders || []
+  const filesByWorkspace = new Map<string, string[]>()
+  
+  // Initialize map with empty arrays for each workspace
+  workspaceFolders.forEach(folder => {
+    filesByWorkspace.set(folder.uri.fsPath, [])
+  })
+  
+  // Group files by which workspace they belong to
+  for (const file of checked_files) {
+    // Find the workspace that contains this file
+    const workspace = workspaceFolders.find(folder => 
+      file.startsWith(folder.uri.fsPath)
+    )
+    
+    if (workspace) {
+      const files = filesByWorkspace.get(workspace.uri.fsPath) || []
+      files.push(file)
+      filesByWorkspace.set(workspace.uri.fsPath, files)
+    }
+  }
+  
+  return filesByWorkspace
+}
+
 export function save_context_command(
-  workspace_provider: WorkspaceProvider | undefined
+  workspace_provider: WorkspaceProvider | undefined,
+  extContext: vscode.ExtensionContext
 ): vscode.Disposable {
   return vscode.commands.registerCommand(
     'geminiCoder.saveContext',
@@ -167,64 +214,48 @@ export function save_context_command(
         return
       }
 
-      const config_dir = path.join(workspace_root, '.vscode')
-      const config_file_path = path.join(config_dir, 'gemini-coder.json')
-      let config: ConfigStructure = { savedContexts: [] }
-
-      try {
-        // Ensure .vscode directory exists
-        if (!fs.existsSync(config_dir)) {
-          await fs.promises.mkdir(config_dir, { recursive: true })
-        }
-
-        // Read existing config file if it exists
-        if (fs.existsSync(config_file_path)) {
-          const file_content = await fs.promises.readFile(
-            config_file_path,
-            'utf-8'
-          )
-          try {
-            const parsed_config = JSON.parse(file_content)
-            // Basic validation
-            if (
-              typeof parsed_config == 'object' &&
-              parsed_config !== null &&
-              (parsed_config.savedContexts === undefined ||
-                Array.isArray(parsed_config.savedContexts))
-            ) {
-              config = parsed_config
-              if (!config.savedContexts) {
-                config.savedContexts = []
-              }
-            } else {
-              vscode.window.showErrorMessage(
-                `Invalid format in ${config_file_path}. It will be overwritten.`
-              )
-            }
-          } catch (parse_error) {
-            vscode.window.showErrorMessage(
-              `Error parsing ${config_file_path}: ${parse_error}. It will be overwritten.`
-            )
-          }
-        }
-      } catch (error) {
-        vscode.window.showErrorMessage(
-          `Error accessing configuration file: ${error}`
+      let all_prefixed_paths: string[] = []
+      const workspaceFolders = vscode.workspace.workspaceFolders || []
+      
+      if (workspaceFolders.length <= 1) {
+        // Single workspace - process as before
+        const condensed_paths = condense_paths(
+          checked_files,
+          workspace_root,
+          workspace_provider
         )
-        return
+        all_prefixed_paths = add_workspace_prefix(condensed_paths, workspace_root)
+      } else {
+        // Multi-root workspace - process each workspace separately
+        const filesByWorkspace = group_files_by_workspace(checked_files)
+        
+        // Process each workspace's files separately
+        filesByWorkspace.forEach((files, root) => {
+          if (files.length === 0) return
+          
+          // Condense paths for this workspace
+          const condensed_paths = condense_paths(
+            files,
+            root,
+            workspace_provider
+          )
+          
+          // Add workspace prefixes
+          const prefixed_paths = add_workspace_prefix(condensed_paths, root)
+          all_prefixed_paths = [...all_prefixed_paths, ...prefixed_paths]
+        })
       }
 
-      // Use the condense_paths function to generate a more compact list
-      const condensed_paths = condense_paths(
-        checked_files,
-        workspace_root,
-        workspace_provider
+      // Get saved contexts from workspace state
+      const saved_contexts: SavedContext[] = extContext.workspaceState.get(
+        SAVED_CONTEXTS_STATE_KEY, 
+        []
       )
 
       // Check if there's already a context with identical paths
-      if (config.savedContexts && config.savedContexts.length > 0) {
-        for (const existingContext of config.savedContexts) {
-          if (arePathsEqual(existingContext.paths, condensed_paths)) {
+      if (saved_contexts.length > 0) {
+        for (const existingContext of saved_contexts) {
+          if (arePathsEqual(existingContext.paths, all_prefixed_paths)) {
             vscode.window.showInformationMessage(
               `A context with identical paths already exists: "${existingContext.name}"`
             )
@@ -234,9 +265,7 @@ export function save_context_command(
       }
 
       // Get existing context names
-      const existing_context_names = config.savedContexts!.map(
-        (ctx) => ctx.name
-      )
+      const existing_context_names = saved_contexts.map(ctx => ctx.name)
 
       // Create quick pick items
       const quick_pick_items = [
@@ -291,34 +320,33 @@ export function save_context_command(
 
       const new_context: SavedContext = {
         name: context_name,
-        paths: condensed_paths
+        paths: all_prefixed_paths
       }
 
-      const existing_index = config.savedContexts!.findIndex(
+      const existing_index = saved_contexts.findIndex(
         (ctx) => ctx.name == context_name
       )
 
+      const updated_contexts = [...saved_contexts]
+      
       if (existing_index != -1) {
         // Replace existing context
-        config.savedContexts![existing_index] = new_context
+        updated_contexts[existing_index] = new_context
       } else {
         // Add new context
-        config.savedContexts!.push(new_context)
+        updated_contexts.push(new_context)
       }
 
       // Sort contexts alphabetically by name
-      config.savedContexts!.sort((a, b) => a.name.localeCompare(b.name))
+      updated_contexts.sort((a, b) => a.name.localeCompare(b.name))
 
       try {
-        // Write the updated config back to the file
-        await fs.promises.writeFile(
-          config_file_path,
-          JSON.stringify(config, null, 2), // Pretty print JSON
-          'utf-8'
-        )
+        // Save to workspace state
+        await extContext.workspaceState.update(SAVED_CONTEXTS_STATE_KEY, updated_contexts)
         vscode.window.showInformationMessage(
           `Context "${context_name}" saved successfully.`
         )
+
       } catch (error) {
         vscode.window.showErrorMessage(`Error saving context: ${error}`)
       }
