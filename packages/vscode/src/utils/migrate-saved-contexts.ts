@@ -101,29 +101,21 @@ export async function migrate_saved_contexts(
         merged_contexts
       )
 
-      // Show information message
-      vscode.window.showInformationMessage(
-        `Migrated ${config.savedContexts.length} saved context(s) from workspace config to extension storage`
-      )
-
       // Remove savedContexts key from the config and save back to file
       delete config.savedContexts
       try {
         fs.writeFileSync(config_path, JSON.stringify(config, null, 2), 'utf8')
-        vscode.window.showInformationMessage(
-          `Removed savedContexts from configuration file: ${config_path}`
-        )
+        // Removed notification message
       } catch (error: any) {
-        vscode.window.showErrorMessage(
-          `Failed to update configuration file ${config_path}: ${error.message}`
+        // Log error but don't show notification
+        console.error(
+          `Failed to update configuration file ${config_path}:`,
+          error
         )
       }
     } catch (error: any) {
-      // Log error and continue
+      // Log error but don't show notification
       console.error(`Error migrating contexts from ${config_path}:`, error)
-      vscode.window.showErrorMessage(
-        `Error migrating saved contexts: ${error.message}`
-      )
     }
   }
 }
