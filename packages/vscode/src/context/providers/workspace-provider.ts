@@ -602,13 +602,19 @@ export class WorkspaceProvider
   }
 
   async getChildren(element?: FileItem): Promise<FileItem[]> {
-    if (this.workspace_roots.length === 0) {
+    if (this.workspace_roots.length == 0) {
       vscode.window.showInformationMessage('No workspace folder found.')
       return []
     }
 
-    // If no element is provided, we're at the root level, show workspace folders
+    // If no element is provided, we're at the root level
     if (!element) {
+      // If there's only one workspace root, show its contents directly
+      if (this.workspace_roots.length == 1) {
+        const single_root = this.workspace_roots[0]
+        return this.get_files_and_directories(single_root)
+      }
+      // Otherwise, show workspace folders as root items
       return this.getWorkspaceFolderItems()
     }
 

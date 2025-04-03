@@ -130,8 +130,12 @@ export function context_initialization(context: vscode.ExtensionContext): {
     manageCheckboxStateManually: true
   })
 
-  // Set the title to "Workspace" since we now handle multiple workspace roots
-  workspace_view.title = 'Workspace'
+  // Set dynamic title based on number of workspace roots
+  if (workspace_folders && workspace_folders.length == 1) {
+    workspace_view.title = workspace_folders[0].name
+  } else {
+    workspace_view.title = 'Workspace'
+  }
 
   // Register handlers for workspace view
   register_workspace_view_handlers(workspace_view)
@@ -374,7 +378,6 @@ export function context_initialization(context: vscode.ExtensionContext): {
         }
 
         // Update the tree data provider
-        workspace_view.title = 'Workspace'
         const old_view = workspace_view
 
         // Create a new tree view with the updated provider
@@ -402,6 +405,13 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
         // Update token count
         update_activity_bar_badge_token_count()
+
+        // Update title based on number of workspace folders
+        if (vscode.workspace.workspaceFolders.length === 1) {
+          workspace_view.title = vscode.workspace.workspaceFolders[0].name
+        } else {
+          workspace_view.title = 'Workspace'
+        }
       }
     })
   )
