@@ -38,17 +38,21 @@ import {
   fim_in_chat_with_command
 } from './commands/fim-in-chat-command'
 import { save_context_command } from './commands/save-context-command'
-import { LAST_APPLIED_CHANGES_STATE_KEY } from './constants/state-keys'
 import { revert_command } from './commands/revert-command'
+import { migrate_saved_contexts } from './utils/migrate-saved-contexts'
 
 // Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   websocket_server_instance = new WebSocketManager(context)
 
   const { workspace_provider, open_editors_provider, websites_provider } =
     context_initialization(context)
+
+  // Migrate saved contexts from file-based to workspace state storage
+  // Delete a few weeks after 3 Apr 2025
+  await migrate_saved_contexts(context)
 
   // Connect WebSocketManager with WebsitesProvider
   if (websocket_server_instance && websites_provider) {
