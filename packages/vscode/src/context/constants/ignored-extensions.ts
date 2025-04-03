@@ -43,18 +43,4 @@ export const ignored_extensions = new Set([
   'dll',
   'so',
   'dylib',
-  // Cache and compiled files
-  'cache',
-  'class',
-  'pyc',
-  'pyo',
-  // Lock files (often very large)
-  'lock',
-  'lockb',
-  // Large data files
-  'csv',
-  'xls',
-  'xlsx',
-  'db',
-  'sqlite',
 ])
