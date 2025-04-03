@@ -12,7 +12,6 @@ import { SharedFileState } from './shared-file-state'
 import { marked } from 'marked'
 import { EventEmitter } from 'events'
 import { select_saved_context_command } from '../commands/select-saved-context-command'
-import { save_context_command } from '../commands/save-context-command'
 
 export const token_count_emitter = new EventEmitter()
 
@@ -333,17 +332,17 @@ export function context_initialization(context: vscode.ExtensionContext): {
   )
 
   // Update badge when tabs change with debouncing to avoid multiple updates
-  let tabChangeTimeout: NodeJS.Timeout | null = null
+  let tab_change_timeout: NodeJS.Timeout | null = null
   context.subscriptions.push(
     vscode.window.tabGroups.onDidChangeTabs(() => {
       // Clear previous timeout if it exists
-      if (tabChangeTimeout) {
-        clearTimeout(tabChangeTimeout)
+      if (tab_change_timeout) {
+        clearTimeout(tab_change_timeout)
       }
       // Set a new timeout to update after a short delay
-      tabChangeTimeout = setTimeout(() => {
+      tab_change_timeout = setTimeout(() => {
         update_activity_bar_badge_token_count()
-        tabChangeTimeout = null
+        tab_change_timeout = null
       }, 100) // 100ms debounce
     })
   )

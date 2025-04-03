@@ -557,10 +557,10 @@ export class WorkspaceProvider
 
   getTreeItem(element: FileItem): vscode.TreeItem {
     const key = element.resourceUri.fsPath
-    const checkboxState =
+    const checkbox_state =
       this.checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
 
-    element.checkboxState = checkboxState
+    element.checkboxState = checkbox_state
 
     // Get token count and add it to description
     const token_count = element.tokenCount
