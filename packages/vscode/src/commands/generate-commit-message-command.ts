@@ -117,57 +117,70 @@ export function generate_commit_message_command(
           data: message
         })
 
-        // Prepare request to AI model
-        const model = provider.model
-        const temperature = provider.temperature
-        const system_instructions = provider.systemInstructions
+        const token_count = Math.ceil(message.length / 4)
+        const formatted_token_count =
+          token_count > 1000 ? Math.ceil(token_count / 1000) + 'K' : token_count
 
-        const messages = [
-          ...(system_instructions
-            ? [{ role: 'system', content: system_instructions }]
-            : []),
+        await vscode.window.withProgress(
           {
-            role: 'user',
-            content: message
+            location: vscode.ProgressLocation.Notification,
+            title: `Generating commit message... (Sent about ${formatted_token_count} tokens)`,
+            cancellable: false
+          },
+          async () => {
+            // Prepare request to AI model
+            const model = provider.model
+            const temperature = provider.temperature
+            const system_instructions = provider.systemInstructions
+
+            const messages = [
+              ...(system_instructions
+                ? [{ role: 'system', content: system_instructions }]
+                : []),
+              {
+                role: 'user',
+                content: message
+              }
+            ]
+
+            const body = {
+              messages,
+              model,
+              temperature
+            }
+
+            // Make API request
+            const cancel_token_source = axios.CancelToken.source()
+            const response = await make_api_request(
+              provider,
+              body,
+              cancel_token_source.token
+            )
+
+            if (!response) {
+              vscode.window.showErrorMessage(
+                'Failed to generate commit message. Please try again later.'
+              )
+              return
+            } else if (response == 'rate_limit') {
+              const fallback_response = await handle_rate_limit_fallback(
+                all_providers,
+                default_model_name,
+                body,
+                cancel_token_source.token
+              )
+
+              if (!fallback_response) {
+                return
+              }
+
+              repository.inputBox.value = fallback_response
+              return
+            }
+
+            repository.inputBox.value = response
           }
-        ]
-
-        const body = {
-          messages,
-          model,
-          temperature
-        }
-
-        // Make API request
-        const cancel_token_source = axios.CancelToken.source()
-        const response = await make_api_request(
-          provider,
-          body,
-          cancel_token_source.token
         )
-
-        if (!response) {
-          vscode.window.showErrorMessage(
-            'Failed to generate commit message. Please try again later.'
-          )
-          return
-        } else if (response == 'rate_limit') {
-          const fallback_response = await handle_rate_limit_fallback(
-            all_providers,
-            default_model_name,
-            body,
-            cancel_token_source.token
-          )
-
-          if (!fallback_response) {
-            return
-          }
-
-          repository.inputBox.value = fallback_response
-          return
-        }
-
-        repository.inputBox.value = response
       } catch (error) {
         console.error('Error generating commit message:', error)
         vscode.window.showErrorMessage(
