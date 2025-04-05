@@ -76,8 +76,8 @@ const config: Config = {
           position: 'right'
         },
         {
-          href: 'https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder&ssr=false#review-details',
-          label: 'Rate',
+          href: 'https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder',
+          label: 'Install Extension',
           position: 'right'
         },
         {

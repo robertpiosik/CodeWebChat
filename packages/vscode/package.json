@@ -480,6 +480,12 @@
           "markdownDescription": "Create yours in [AI Studio](https://aistudio.google.com/app/apikey).",
           "default": ""
         },
+        "geminiCoder.commitMessagePrompt": {
+          "type": "string",
+          "scope": "resource",
+          "description": "The prompt text used when generating commit messages.",
+          "default": "Generate commit message for these changes."
+        },
         "geminiCoder.temperature": {
           "type": "number",
           "scope": "resource",

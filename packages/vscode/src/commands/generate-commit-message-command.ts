@@ -69,6 +69,9 @@ export function generate_commit_message_command(
           config.get<Provider[]>('geminiCoder.providers') || []
         const gemini_api_key = config.get<string>('geminiCoder.apiKey')
         const gemini_temperature = config.get<number>('geminiCoder.temperature')
+        const commit_message_prompt = config.get<string>(
+          'geminiCoder.commitMessagePrompt'
+        )
 
         // Get default commit message model
         const model_manager = new ModelManager(context)
@@ -106,7 +109,7 @@ export function generate_commit_message_command(
           use_staged
         )
 
-        const message = `${affected_files}\nGenerate commit message for these changes.\n${diff}`
+        const message = `${affected_files}\n${commit_message_prompt}\n${diff}`
 
         log({
           function_name: 'generate_commit_message_command',
