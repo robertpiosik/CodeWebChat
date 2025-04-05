@@ -1,0 +1,56 @@
+---
+hide_table_of_contents: true
+sidebar_position: 6
+---
+
+# Generate Commit Message
+
+Gemini Coder's Generate Commit Message feature automatically creates meaningful commit messages. This saves you time and ensures your commit history remains descriptive and consistent.
+
+_Structure of the generated message:_
+
+```
+<files>
+  [ORIGINAL FILES WITHOUT CHANGES]
+</files>
+Generate commit message for these changes.
+[DIFF OF CHANGES]
+```
+
+## How it works
+
+### Make changes
+
+Make modifications to your code that you want to commit.
+
+### Open source control
+
+Navigate to VS Code's Source Control panel.
+
+### Run command
+
+Right-click on the Source Control view and select "Generate Commit Message" from the context menu.
+
+### Review and use
+
+The AI analyzes your changes and generates a commit message that is automatically inserted into the commit message field.
+
+## Best practices
+
+### Review before committing
+
+Always review the generated message to ensure it accurately reflects your changes.
+
+### Edit as needed
+
+Feel free to modify the generated message to add specific details or context.
+
+### Configure your model
+
+Choose your preferred AI model for commit message generation in the settings.
+
+## Available commands
+
+##### `Gemini Coder: Change Default Commit Message Model`
+
+Configure which model should be used as the default for generating commit messages.

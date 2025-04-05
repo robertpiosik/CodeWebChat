@@ -299,6 +299,11 @@
         "title": "Generate Commit Message with Gemini Coder",
         "category": "Gemini Coder",
         "icon": "$(sparkle)"
+      },
+      {
+        "command": "geminiCoder.changeDefaultCommitMessageModel",
+        "title": "Change Default Commit Message Model",
+        "category": "Gemini Coder"
       }
     ],
     "menus": {

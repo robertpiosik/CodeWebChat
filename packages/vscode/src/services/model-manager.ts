@@ -38,7 +38,7 @@ export class ModelManager {
     const stored_model = this.context.globalState.get<string>(
       DEFAULT_COMMIT_MESSAGE_MODEL_KEY
     )
-    return stored_model || default_model
+    return stored_model || 'Gemini Pro'
   }
 
   // Set the default models

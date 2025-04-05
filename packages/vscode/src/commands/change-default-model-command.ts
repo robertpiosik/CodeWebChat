@@ -3,7 +3,11 @@ import { Provider } from '../types/provider'
 import { BUILT_IN_PROVIDERS } from '../constants/built-in-providers'
 import { ModelManager } from '../services/model-manager'
 
-export type ModelType = 'fim' | 'refactoring' | 'apply_changes'
+export type ModelType =
+  | 'fim'
+  | 'refactoring'
+  | 'apply_changes'
+  | 'commit_message'
 
 type ModelConfig = {
   command_id: string
@@ -26,6 +30,11 @@ const MODEL_CONFIGS: Record<ModelType, ModelConfig> = {
     command_id: 'geminiCoder.changeDefaultApplyChangesModel',
     display_name: 'Applying Changes',
     placeholder: 'Select default model for applying changes'
+  },
+  commit_message: {
+    command_id: 'geminiCoder.changeDefaultCommitMessageModel',
+    display_name: 'Commit Messages',
+    placeholder: 'Select default model for generating commit messages'
   }
 }
 
@@ -54,6 +63,9 @@ export function change_default_model_command(
         break
       case 'apply_changes':
         current_default_model = modelManager.get_default_apply_changes_model()
+        break
+      case 'commit_message':
+        current_default_model = modelManager.get_default_commit_message_model()
         break
     }
 
@@ -94,6 +106,11 @@ export function change_default_model_command(
             break
           case 'apply_changes':
             await modelManager.set_default_apply_changes_model(
+              selected_provider
+            )
+            break
+          case 'commit_message':
+            await modelManager.set_default_commit_message_model(
               selected_provider
             )
             break

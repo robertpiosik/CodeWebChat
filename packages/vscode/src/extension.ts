@@ -194,6 +194,7 @@ export async function activate(context: vscode.ExtensionContext) {
     change_default_model_command('fim', context),
     change_default_model_command('refactoring', context),
     change_default_model_command('apply_changes', context),
+    change_default_model_command('commit_message', context),
     web_chat_command(
       context,
       workspace_provider,
