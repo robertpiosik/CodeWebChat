@@ -50,7 +50,9 @@ export function generate_commit_message_command(
         let diff: string
         if (use_staged) {
           // Get diff of only staged changes
-          diff = await repository.diffIndexWithHEAD()
+          diff = execSync('git diff --staged', {
+            cwd: repository.rootUri.fsPath
+          }).toString()
         } else {
           // Get diff of all changes
           diff = await repository.diff()
