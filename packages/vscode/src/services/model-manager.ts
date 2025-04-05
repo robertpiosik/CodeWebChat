@@ -2,7 +2,8 @@ import * as vscode from 'vscode'
 import {
   DEFAULT_FIM_MODEL_KEY,
   DEFAULT_REFACTORING_MODEL_KEY,
-  DEFAULT_APPLY_CHANGES_MODEL_KEY
+  DEFAULT_APPLY_CHANGES_MODEL_KEY,
+  DEFAULT_COMMIT_MESSAGE_MODEL_KEY
 } from '../constants/state-keys'
 
 export class ModelManager {
@@ -30,6 +31,13 @@ export class ModelManager {
     )
     return stored_model || 'Gemini 2.0 Flash'
   }
+  
+  get_default_commit_message_model(): string {
+    const stored_model = this.context.globalState.get<string>(
+      DEFAULT_COMMIT_MESSAGE_MODEL_KEY
+    )
+    return stored_model || 'Gemini 2.0 Flash'
+  }
 
   // Set the default models
   async set_default_fim_model(model_name: string): Promise<void> {
@@ -47,6 +55,13 @@ export class ModelManager {
   async set_default_apply_changes_model(model_name: string): Promise<void> {
     await this.context.globalState.update(
       DEFAULT_APPLY_CHANGES_MODEL_KEY,
+      model_name
+    )
+  }
+
+  async set_default_commit_message_model(model_name: string): Promise<void> {
+    await this.context.globalState.update(
+      DEFAULT_COMMIT_MESSAGE_MODEL_KEY,
       model_name
     )
   }
