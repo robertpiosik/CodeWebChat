@@ -40,8 +40,22 @@ export function generate_commit_message_command(
       }
 
       try {
-        // Get diff of changes
-        const diff = await repository.diff()
+        // Check for staged changes first
+        const staged_changes = repository.state.indexChanges || []
+
+        // If no staged changes, get diff of all changes
+        // Otherwise, we'll only use the staged changes
+        const use_staged = staged_changes.length > 0
+
+        let diff: string
+        if (use_staged) {
+          // Get diff of only staged changes
+          diff = await repository.diffIndexWithHEAD()
+        } else {
+          // Get diff of all changes
+          diff = await repository.diff()
+        }
+
         if (!diff || diff.length == 0) {
           vscode.window.showInformationMessage('No changes to commit.')
           return
@@ -84,8 +98,11 @@ export function generate_commit_message_command(
           return
         }
 
-        // Collect the changed files with content in files-collector format
-        const affected_files = await collect_affected_files(repository)
+        // Collect the changed files with their original, unmodified content
+        const affected_files = await collect_affected_files(
+          repository,
+          use_staged
+        )
 
         const message = `${affected_files}\nGenerate commit message for these changes.\n${diff}`
 
@@ -156,7 +173,10 @@ export function generate_commit_message_command(
   )
 }
 
-async function collect_affected_files(repository: any): Promise<string> {
+async function collect_affected_files(
+  repository: any,
+  use_staged: boolean = false
+): Promise<string> {
   try {
     // Get the repository workspace root
     const root_path = repository.rootUri.fsPath
@@ -176,13 +196,27 @@ async function collect_affected_files(repository: any): Promise<string> {
 
       try {
         let content = ''
-        // Get previous content from git if the file was modified or deleted
-        // 5 - modified, 6 - deleted
-        if (change.status == 5 || change.status == 6) {
-          const result = execSync(`git show HEAD:"${relative_path}"`, {
-            cwd: root_path
-          }).toString()
-          content = result
+        if (use_staged) {
+          // For staged files, get content from the index
+          try {
+            content = execSync(`git show :"${relative_path}"`, {
+              cwd: root_path
+            }).toString()
+          } catch {
+            // File might be newly created and not in index yet
+          }
+        } else {
+          // For unstaged changes, get content from HEAD
+          if (change.status == 5 || change.status == 6) {
+            // 5 - modified, 6 - deleted
+            try {
+              content = execSync(`git show HEAD:"${relative_path}"`, {
+                cwd: root_path
+              }).toString()
+            } catch {
+              // File might be newly added to git and not in HEAD yet
+            }
+          }
         }
 
         files_content += `<file name="${relative_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
