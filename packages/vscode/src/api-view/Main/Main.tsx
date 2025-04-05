@@ -36,7 +36,7 @@ export const Main: React.FC<Props> = (props) => {
 
       <div className={styles['form-group']}>
         <div className={styles['form-field']}>
-          <label>API key</label>
+          <label>Gemini API key</label>
           <input
             value={props.api_key}
             onChange={(e) => props.on_api_key_change(e.target.value)}
