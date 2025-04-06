@@ -22,14 +22,11 @@ if (firefox_manifest.background && firefox_manifest.background.service_worker) {
 firefox_manifest.browser_action = firefox_manifest.action
 delete firefox_manifest.action
 
-// Add '<all_urls>' permission to avoid CORS errors when reaching the health check
-firefox_manifest.permissions.push('<all_urls>')
-
 // Filter not relevant permissions
 firefox_manifest.permissions = firefox_manifest.permissions.filter(
   (p) => p != 'alarms'
 )
-firefox_manifest.permissions.push(firefox_manifest.host_permissions[0])
+
 delete firefox_manifest.host_permissions
 
 // Create dist-firefox directory if it doesn't exist

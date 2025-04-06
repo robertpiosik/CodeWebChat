@@ -4,10 +4,9 @@ import cn from 'classnames'
 
 export type Website = {
   url: string
-  title: string
   content: string
+  title?: string
   favicon?: string
-  is_selection?: boolean
 }
 
 type Props = {
@@ -24,9 +23,8 @@ export const SavedWebsites: React.FC<Props> = (props) => {
           key={website.url}
           className={styles.item}
           title={
-            website.title +
-            ` - ${Math.ceil(website.content.length / 4)} tokens` +
-            `${website.is_selection ? ' (text selection)' : ''}`
+            (website.title || 'Untitled') +
+            ` - ${Math.ceil(website.content.length / 4)} tokens`
           }
         >
           <div className={styles.item__left}>
@@ -37,7 +35,7 @@ export const SavedWebsites: React.FC<Props> = (props) => {
               className={styles.item__left__title}
               onClick={() => props.on_link_click(website.url)}
             >
-              {website.title}
+              {website.title || 'Untitled'}
             </div>
           </div>
 

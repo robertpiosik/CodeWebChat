@@ -1,16 +1,4 @@
 import { Website } from '@/views/popup/hooks/use-websites-store'
-import { HtmlParser } from '../utils/html-parser'
-
-export type GetPageDataMessage = {
-  action: 'get-page-data'
-}
-
-export type PageDataMessage = {
-  action: 'page-data'
-  parsed_html: HtmlParser.ParsedResult | null
-  favicon?: string
-  is_selection?: boolean
-}
 
 export type UpdateSavedWebsitesMessage = {
   action: 'update-saved-websites'
@@ -26,9 +14,13 @@ export type InvokeFastReplaceMessage = {
   client_id: number
 }
 
+export type GetTabDataMessage = {
+  action: 'get-tab-data'
+  url: string
+}
+
 export type Message =
-  | GetPageDataMessage
-  | PageDataMessage
   | UpdateSavedWebsitesMessage
   | ChatInitializedMessage
   | InvokeFastReplaceMessage
+  | GetTabDataMessage

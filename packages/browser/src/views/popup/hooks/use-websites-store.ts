@@ -4,19 +4,17 @@ import browser from 'webextension-polyfill'
 
 export type StoredWebsite = {
   url: string
-  title: string
   content: string
+  title?: string
   favicon?: string // Base64 encoded favicon
   order?: number
-  is_selection?: boolean
 }
 
 export type Website = {
   url: string
-  title: string
   content: string
+  title?: string
   favicon?: string
-  is_selection?: boolean
 }
 
 // Initialize localforage instance for website data
@@ -37,7 +35,6 @@ export const use_websites_store = () => {
         title: site.title,
         content: site.content,
         favicon: site.favicon,
-        is_selection: site.is_selection
       }))
 
       const message: UpdateSavedWebsitesMessage = {
@@ -68,7 +65,6 @@ export const use_websites_store = () => {
         title: website.title,
         content: website.content,
         favicon: website.favicon,
-        is_selection: website.is_selection,
         order: max_order + 1 // Assign the next order number
       }
 

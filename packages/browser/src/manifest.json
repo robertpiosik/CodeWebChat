@@ -36,10 +36,6 @@
         "http://openwebui/"
       ],
       "js": ["send-prompt-content-script.js"]
-    },
-    {
-      "matches": ["<all_urls>"],
-      "js": ["get-page-data-content-script.js"]
     }
   ]
 }

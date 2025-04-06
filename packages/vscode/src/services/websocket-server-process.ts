@@ -1,7 +1,6 @@
 const WebSocket = require('ws') // ws works only with requrie
 import * as http from 'http'
 import * as process from 'process'
-// import * as crypto from 'crypto' // No longer needed for client ID
 
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { Website } from '@shared/types/websocket-message'
@@ -32,6 +31,16 @@ function generate_client_id(): number {
 
 // Create HTTP server
 const server = http.createServer((req: any, res: any) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+  if (req.method == 'OPTIONS') {
+    res.writeHead(204)
+    res.end()
+    return
+  }
+
   if (req.url == '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(

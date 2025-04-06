@@ -5,15 +5,6 @@ import * as turndownPluginGfm from '@joplin/turndown-plugin-gfm'
 import { Readability, isProbablyReaderable } from '@mozilla/readability'
 
 export namespace HtmlParser {
-  export type Params = {
-    url: string
-    html: string
-  }
-  export type ParsedResult = {
-    title: string
-    content: string
-  }
-
   export const create_turndown_service = (): TurndownService => {
     const turndown_service: TurndownService = new TurndownServiceJoplin({
       codeBlockStyle: 'fenced'
@@ -82,60 +73,21 @@ export namespace HtmlParser {
     return turndown_service
   }
 
-  export const parse = async (
-    params: Params
-  ): Promise<ParsedResult | undefined> => {
+  export const parse = async (html: string): Promise<string | undefined> => {
     const turndown_service = create_turndown_service()
-
-    const titleRegex = /<title>(.*?)<\/title>/
-    const match = params.html.match(titleRegex)
-    let title_element_text: string = ''
-    if (match) {
-      title_element_text = match[1]
-    }
 
     try {
       const parser = new DOMParser()
-      const doc = parser.parseFromString(
-        DOMPurify.sanitize(params.html),
-        'text/html'
-      )
+      const doc = parser.parseFromString(DOMPurify.sanitize(html), 'text/html')
       if (!isProbablyReaderable(doc)) return
-      const links = doc.querySelectorAll('a')
-      const url = new URL(params.url)
-      links.forEach((link) => {
-        const href = link.getAttribute('href')
-        if (href && href.startsWith('/')) {
-          link.setAttribute('href', url.origin + href)
-        }
-      })
       const article = new Readability(doc, { keepClasses: true }).parse()
       if (article && article.content) {
-        const title = article.title || title_element_text
         let content = turndown_service.turndown(article.content)
-        content = strip_markdown_links(content)
-        content = remove_markdown_images(content)
-
-        return {
-          title,
-          content
-        }
+        return content
       }
     } catch (error) {
       console.error('Error parsing HTML:', error)
       return undefined
     }
   }
-}
-
-// Replace "[TEXT](URL)" with "[TEXT]()"
-const strip_markdown_links = (text: string) => {
-  return text.replace(/\[([^\]]*)\]\(([^)]*)\)/g, (_, text) => `[${text}]()`)
-}
-
-const remove_markdown_images = (text: string) => {
-  // First remove the image markdown
-  const without_images = text.replace(/!\[([^\]]*)\]\(([^)]*)\)/g, '')
-  // Then remove any resulting empty lines (two or more consecutive newlines)
-  return without_images.replace(/\n{3,}/g, '\n\n')
 }

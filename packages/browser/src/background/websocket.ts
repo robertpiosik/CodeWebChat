@@ -94,7 +94,6 @@ export function send_saved_websites(websites: Website[]) {
       title: site.title,
       content: site.content,
       favicon: site.favicon,
-      is_selection: site.is_selection
     }))
 
     const message = {

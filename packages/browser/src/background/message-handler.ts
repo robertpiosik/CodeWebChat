@@ -6,6 +6,8 @@ import {
 import browser from 'webextension-polyfill'
 import { send_saved_websites, send_message_to_server } from './websocket'
 import { is_message } from '@/utils/is-message'
+import { GetTabDataResponse } from '@/types/responses'
+import { image_url_to_base64 } from '@/utils/image-url-to-base64'
 
 // Queue to manage multiple chat initialization
 interface ChatQueueItem {
@@ -21,9 +23,6 @@ let is_processing = false
 
 const CHAT_INITIALIZATION_TIMEOUT = 5000
 
-/**
- * Handle different types of incoming WebSocket messages
- */
 export const handle_messages = (message: WebSocketMessage) => {
   if (message.action == 'initialize-chats') {
     handle_initialize_chats_message(message as InitializeChatsMessage)
@@ -31,9 +30,6 @@ export const handle_messages = (message: WebSocketMessage) => {
   // Add handlers for other message types as needed
 }
 
-/**
- * Generates a unique 3-character alphanumeric ID not currently in use
- */
 const generate_alphanumeric_id = async (
   keyspace: string,
   length: number = 3
@@ -54,9 +50,6 @@ const generate_alphanumeric_id = async (
   }
 }
 
-/**
- * Process the next chat in the current queue item
- */
 const process_next_chat = async () => {
   if (chat_queue.length == 0 || !is_processing) {
     is_processing = false
@@ -121,9 +114,6 @@ const process_next_chat = async () => {
   }, CHAT_INITIALIZATION_TIMEOUT) as unknown as number
 }
 
-/**
- * Start processing the queue if not already processing
- */
 const start_processing = async () => {
   if (!is_processing && chat_queue.length > 0) {
     is_processing = true
@@ -131,9 +121,6 @@ const start_processing = async () => {
   }
 }
 
-/**
- * Handle initializing chats from VS Code
- */
 const handle_initialize_chats_message = async (
   message: InitializeChatsMessage
 ) => {
@@ -150,9 +137,6 @@ const handle_initialize_chats_message = async (
   }
 }
 
-/**
- * Handle chat-initialized messages from content scripts
- */
 const handle_chat_initialized = async () => {
   // Process the next chat in the queue if one exists
   if (chat_queue.length > 0) {
@@ -167,11 +151,46 @@ const handle_chat_initialized = async () => {
   }
 }
 
-/**
- * Set up message listeners for extension
- */
+const handle_get_tab_data = async (
+  callback: (tab_data?: GetTabDataResponse) => void
+) => {
+  try {
+    const tabs = await browser.tabs.query({ active: true, currentWindow: true })
+    const url = tabs[0]?.url
+    const favicon_url = tabs[0]?.favIconUrl
+
+    if (!url || !url.startsWith('http')) {
+      throw new Error('URL is not valid')
+    }
+
+    let html = ''
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+    html = await response.text()
+
+    let favicon_base64: string | undefined
+    if (favicon_url) {
+      try {
+        favicon_base64 = (await image_url_to_base64(favicon_url)) || undefined
+      } catch (faviconError) {
+        console.error('Error converting favicon to base64:', faviconError)
+      }
+    }
+
+    callback({
+      html,
+      favicon_base64
+    })
+  } catch (error) {
+    console.error('Error getting tab data:', error)
+    callback()
+  }
+}
+
 export const setup_message_listeners = () => {
-  browser.runtime.onMessage.addListener((message, _, __): any => {
+  browser.runtime.onMessage.addListener((message, _, sendResponse): any => {
     if (is_message(message)) {
       if (message.action == 'update-saved-websites' && message.websites) {
         send_saved_websites(message.websites)
@@ -182,7 +201,13 @@ export const setup_message_listeners = () => {
           action: 'invoke-fast-replace',
           client_id: message.client_id
         } as InvokeFastReplaceMessage)
+      } else if (message.action == 'get-tab-data') {
+        handle_get_tab_data((tab_data) => {
+          sendResponse(tab_data)
+        })
+        return true
       }
     }
+    return false // For messages that don't need a response
   })
 }
