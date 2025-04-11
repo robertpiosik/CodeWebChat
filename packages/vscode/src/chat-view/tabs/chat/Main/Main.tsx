@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import styles from './Main.scss'
-import { Presets as UiPresets } from '@ui/components/Presets'
-import { ChatInput as UiChatInput } from '@ui/components/ChatInput'
-import { ChatHeader as UiChatHeader } from '@ui/components/ChatHeader'
+import { Presets as UiPresets } from '@ui/components/editor/Presets'
+import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
+import { ChatHeader as UiChatHeader } from '@ui/components/editor/ChatHeader'
 import { Separator as UiSeparator } from '@ui/components/Separator'
 
 type Props = {

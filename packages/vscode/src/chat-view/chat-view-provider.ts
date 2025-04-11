@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { FilesCollector } from '../helpers/files-collector'
 import { WebSocketManager } from '@/services/websocket-manager'
-import { Presets } from '../../../ui/src/components/Presets'
+import { Presets } from '../../../ui/src/components/editor/Presets'
 import { code_completion_instruction_external } from '@/constants/instructions'
 import {
   WebviewMessage,

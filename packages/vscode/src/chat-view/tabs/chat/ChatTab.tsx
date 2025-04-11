@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Main } from './Main'
-import { Presets as UiPresets } from '@ui/components/Presets'
+import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import {
   WebviewMessage,
   ExtensionMessage,
@@ -17,7 +17,7 @@ import {
   TokenCountMessage,
   SelectionTextMessage,
   ActiveFileInfoMessage
-} from './types/messages'
+} from '../../types/messages'
 
 const vscode = acquireVsCodeApi()
 

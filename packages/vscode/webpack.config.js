@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const crypto = require('crypto') // Import crypto module
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -175,7 +176,7 @@ const config = [
     ],
     stats: 'errors-only'
   },
-  create_webview_config('chat', './src/chat-view/app.tsx'),
+  create_webview_config('chat', './src/chat-view/App.tsx'),
   create_webview_config('api', './src/api-view/app.tsx')
 ]
 
