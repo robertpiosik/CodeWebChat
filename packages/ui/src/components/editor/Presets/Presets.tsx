@@ -1,6 +1,6 @@
 import styles from './Presets.module.scss'
-import { IconButton } from '../../IconButton/IconButton'
-import { Button } from '../../Button/Button'
+import { IconButton } from '../IconButton/IconButton'
+import { Button } from '../Button/Button'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 
