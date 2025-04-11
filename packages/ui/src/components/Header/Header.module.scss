@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--padding-8px) var(--padding-16px);
+  border-bottom: 1px solid var(--vscode-sideBarSectionHeader-border);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  &__tab {
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--vscode-foreground);
+
+    &:hover {
+      background-color: var(--vscode-toolbar-hoverBackground);
+    }
+
+    &--active {
+      background-color: var(--vscode-button-background);
+      color: var(--vscode-button-foreground);
+
+      &:hover {
+        background-color: var(--vscode-button-hoverBackground);
+      }
+    }
+  }
+}
+
+.right {
+  color: var(--vscode-descriptionForeground);
+}

@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom/client'
 import { useEffect, useState } from 'react'
 import { Main } from './Main'
 import { Presets as UiPresets } from '@ui/components/Presets'
@@ -22,10 +21,7 @@ import {
 
 const vscode = acquireVsCodeApi()
 
-import '@vscode/codicons/dist/codicon.css'
-import '@ui/styles/global.scss'
-
-function App() {
+export const ChatTab = () => {
   const [is_connected, set_is_connected] = useState<boolean>()
   const [presets, set_presets] = useState<UiPresets.Preset[]>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])
@@ -291,6 +287,3 @@ function App() {
     />
   )
 }
-
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-root.render(<App />)
