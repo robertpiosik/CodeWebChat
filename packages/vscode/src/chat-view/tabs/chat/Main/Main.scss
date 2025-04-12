@@ -1,18 +1,18 @@
-
 .container {
-  padding-bottom: 12px;
+  padding: 0 var(--padding-12px) var(--padding-12px) var(--padding-12px);
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 
 .browser-extension-message {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
-  border-radius: 8px;
+  gap: var(--padding-4px);
+  border-radius: var(--padding-8px);
   border: 1px solid var(--vscode-panel-border);
-  padding: 10px;
+  padding: var(--padding-10px);
   background-color: var(--vscode-sideBar-background);
   > a {
     color: var(--vscode-textLink-foreground);

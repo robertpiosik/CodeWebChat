@@ -21,7 +21,11 @@ import {
 
 const vscode = acquireVsCodeApi()
 
-export const ChatTab = () => {
+type Props = {
+  is_visible: boolean
+}
+
+export const ChatTab: React.FC<Props> = (props) => {
   const [is_connected, set_is_connected] = useState<boolean>()
   const [presets, set_presets] = useState<UiPresets.Preset[]>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])
@@ -264,6 +268,7 @@ export const ChatTab = () => {
 
   return (
     <Main
+      is_visible={props.is_visible}
       initialize_chats={handle_initialize_chats}
       show_preset_picker={handle_show_preset_picker}
       copy_to_clipboard={handle_copy_to_clipboard}

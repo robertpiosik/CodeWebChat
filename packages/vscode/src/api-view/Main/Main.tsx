@@ -1,7 +1,7 @@
 import styles from './Main.scss'
 import { BUILT_IN_PROVIDERS } from '../../constants/built-in-providers'
-import { Button } from '@ui/components/Button'
-import { Separator } from '@ui/components/Separator'
+import { Button } from '@ui/components/editor/Button'
+import { Separator } from '@ui/components/editor/Separator'
 
 type Props = {
   providers: any[]

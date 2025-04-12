@@ -3,9 +3,10 @@ import styles from './Main.scss'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
 import { ChatHeader as UiChatHeader } from '@ui/components/editor/ChatHeader'
-import { Separator as UiSeparator } from '@ui/components/Separator'
+import { Separator as UiSeparator } from '@ui/components/editor/Separator'
 
 type Props = {
+  is_visible: boolean
   initialize_chats: (params: {
     instruction: string
     preset_names: string[]
@@ -135,7 +136,10 @@ export const Main: React.FC<Props> = (props) => {
   const total_token_count = props.token_count + estimated_input_tokens
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={{ display: !props.is_visible ? 'none' : undefined }}
+    >
       <UiChatHeader />
       <UiSeparator size="small" />
       <UiChatInput

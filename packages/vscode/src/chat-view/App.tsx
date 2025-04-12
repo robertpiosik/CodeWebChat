@@ -6,11 +6,12 @@ import { useState } from 'react'
 
 import '@vscode/codicons/dist/codicon.css'
 import '@ui/styles/global.scss'
+import { Template } from '@ui/components/editor/Template'
 
 const App = () => {
   const [active_tab, set_active_tab] = useState<'chat' | 'api'>('chat')
 
-  return (
+  const tabs = (
     <>
       <Header
         active_tab={active_tab}
@@ -21,8 +22,14 @@ const App = () => {
           set_active_tab('api')
         }}
       />
-      {active_tab == 'chat' && <ChatTab />}
-      {active_tab == 'api' && <ApiTab />}
+      <ChatTab is_visible={active_tab == 'chat'} />
+      <ApiTab is_visible={active_tab == 'api'} />
+    </>
+  )
+
+  return (
+    <>
+      <Template tabs_slot={tabs} />
     </>
   )
 }
