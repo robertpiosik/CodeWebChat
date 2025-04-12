@@ -5,14 +5,18 @@ import { Header } from '@ui/components/editor/Header'
 import { useState } from 'react'
 import { Template } from '@ui/components/editor/Template'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
+import { EditView } from '@ui/components/editor/EditView'
+import { EditPresetForm } from '@ui/components/editor/EditPresetForm'
+import * as vscode from 'vscode'
 
 import '@vscode/codicons/dist/codicon.css'
 import '@ui/styles/global.scss'
-import { EditView } from '@ui/components/editor/EditView'
 
 const App = () => {
   const [active_tab, set_active_tab] = useState<'chat' | 'api'>('chat')
   const [editing_preset, set_editing_preset] = useState<UiPresets.Preset>()
+
+  const handle_preset_update = (updated_preset: UiPresets.Preset) => {}
 
   const tabs = (
     <>
@@ -35,21 +39,24 @@ const App = () => {
     </>
   )
 
-  const edit_preset = (
+  const edit_preset_view = (
     <EditView
       back_label="Edit preset"
       on_back_click={() => {
         set_editing_preset(undefined)
       }}
     >
-      x
+      <EditPresetForm
+        preset={editing_preset!}
+        on_update={handle_preset_update}
+      />
     </EditView>
   )
 
   return (
     <>
       <Template
-        edit_preset_slot={editing_preset && edit_preset}
+        edit_preset_slot={editing_preset && edit_preset_view}
         tabs_slot={tabs}
       />
     </>
