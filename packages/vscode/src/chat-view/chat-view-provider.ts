@@ -740,20 +740,8 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
           window.resources_uri = "${resources_uri}";
         </script>
         <style>
-          *,
-          *::before,
-          *::after {
-            box-sizing: border-box;
-          }
           body {
-            padding: 0;
             overflow: hidden;
-          }
-          button {
-            border: none;
-            background: none;
-            padding: 0;
-            cursor: pointer;
           }
         </style>
       </head>

@@ -10,7 +10,7 @@ export namespace Separator {
 export const Separator: React.FC<Separator.Props> = (props) => {
   return (
     <div
-      className={cn({
+      className={cn(styles.separator, {
         [styles['separator--small']]: props.size == 'small',
         [styles['separator--medium']]: props.size == 'medium',
         [styles['separator--large']]: props.size == 'large'

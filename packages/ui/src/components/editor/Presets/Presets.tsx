@@ -30,6 +30,7 @@ export namespace Presets {
     is_fim_mode: boolean
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
+    on_preset_edit: (preset: Preset) => void
   }
 }
 
@@ -114,9 +115,10 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     <div className={styles.container}>
       <div className={styles.top}>
         <span>MY PRESETS</span>
-        {!props.disabled && (
-          <IconButton codicon_icon="edit" on_click={props.on_edit_presets} />
-        )}
+        <IconButton
+          codicon_icon="info"
+          href="https://gemini-coder.netlify.app/docs/features/chat/presets"
+        />
       </div>
 
       <div
@@ -190,7 +192,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     {is_disabled_in_fim && (
                       <div className={styles.presets__item__info}>
                         <span className="codicon codicon-info" />
-                        <span>Unavailable in FIM due to affix</span>
+                        <span>Unavailable in completions due to affix</span>
                       </div>
                     )}
 
@@ -204,14 +206,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         {has_affixes && (
                           <IconButton
                             codicon_icon="copy"
-                            on_click={() => props.on_preset_copy!(preset.name)}
+                            on_click={() => props.on_preset_copy(preset.name)}
                             title="Copy to clipboard"
                           />
                         )}
                         <IconButton
-                          codicon_icon="send"
-                          on_click={() => props.on_preset_click(preset.name)}
-                          title="Send"
+                          codicon_icon="edit"
+                          on_click={() => props.on_preset_edit(preset)}
+                          title="Edit"
                         />
                       </div>
 

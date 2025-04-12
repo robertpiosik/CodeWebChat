@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import styles from './Main.scss'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
-import { ChatHeader as UiChatHeader } from '@ui/components/editor/ChatHeader'
 import { Separator as UiSeparator } from '@ui/components/editor/Separator'
 
 type Props = {
@@ -30,6 +29,7 @@ type Props = {
   selection_text?: string
   active_file_length?: number
   on_presets_reorder: (reordered_presets: UiPresets.Preset[]) => void
+  on_preset_edit: (preset: UiPresets.Preset) => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -140,7 +140,6 @@ export const Main: React.FC<Props> = (props) => {
       className={styles.container}
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
-      <UiChatHeader />
       <UiSeparator size="small" />
       <UiChatInput
         value={current_instruction}
@@ -199,6 +198,7 @@ export const Main: React.FC<Props> = (props) => {
           })
         }}
         on_preset_copy={handle_preset_copy}
+        on_preset_edit={props.on_preset_edit}
         is_fim_mode={props.is_fim_mode}
         on_presets_reorder={props.on_presets_reorder}
       />

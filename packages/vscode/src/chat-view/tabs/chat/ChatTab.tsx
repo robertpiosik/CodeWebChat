@@ -23,6 +23,7 @@ const vscode = acquireVsCodeApi()
 
 type Props = {
   is_visible: boolean
+  on_preset_edit: (preset: UiPresets.Preset) => void
 }
 
 export const ChatTab: React.FC<Props> = (props) => {
@@ -289,6 +290,7 @@ export const ChatTab: React.FC<Props> = (props) => {
       selection_text={selection_text}
       active_file_length={active_file_length}
       on_presets_reorder={handle_presets_reorder}
+      on_preset_edit={props.on_preset_edit}
     />
   )
 }

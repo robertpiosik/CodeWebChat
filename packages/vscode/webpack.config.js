@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
-const crypto = require('crypto') // Import crypto module
+const crypto = require('crypto')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -102,6 +102,10 @@ function create_webview_config(name, entry_path) {
               }
             }
           ]
+        },
+        {
+          test: /\.svg$/,
+          use: ['@svgr/webpack']
         }
       ]
     },

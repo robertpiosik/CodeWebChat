@@ -1,5 +1,4 @@
 import styles from './Template.module.scss'
-import cn from 'classnames'
 
 namespace Template {
   export type Props = {

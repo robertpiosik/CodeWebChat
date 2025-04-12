@@ -7,8 +7,14 @@
   height: 20px;
   color: var(--vscode-icon-foreground);
   cursor: pointer;
+  text-decoration: none;
+
+  &:focus {
+    outline: none;
+  }
 
   &:hover {
+    color: inherit;
     background-color: var(--vscode-toolbar-hoverBackground);
   }
 }

@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite'
+import svgr from 'vite-plugin-svgr'
 import path from 'path'
 
 const config: StorybookConfig = {
@@ -8,6 +9,13 @@ const config: StorybookConfig = {
     options: {}
   },
   viteFinal: async (config) => {
+    config.plugins?.push(
+      svgr({
+        exportAsDefault: true,
+        svgrOptions: {},
+      }),
+    )
+    
     return {
       ...config,
       css: {
@@ -25,7 +33,10 @@ const config: StorybookConfig = {
         },
         preprocessorOptions: {
           scss: {
-            additionalData: `@use "${path.resolve(__dirname, '../src/styles/foundation')}" as *;`
+            additionalData: `@use "${path.resolve(
+              __dirname,
+              '../src/styles/foundation'
+            )}" as *;`
           }
         }
       },
