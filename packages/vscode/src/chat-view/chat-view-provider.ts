@@ -665,9 +665,10 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SAVE_PRESETS_ORDER') {
             const config = vscode.workspace.getConfiguration()
             // Convert UI format from message to config format before saving
-            const config_formatted_presets = message.presets.map((preset) =>
-              this._ui_preset_to_config_format(preset as Presets.Preset)
-            ) // Assuming message.presets matches UI format
+            const config_formatted_presets = message.presets.map(
+              (preset) =>
+                this._ui_preset_to_config_format(preset as Presets.Preset) // Assuming message.presets matches UI format
+            )
             await config.update(
               'geminiCoder.presets',
               config_formatted_presets,
@@ -684,18 +685,49 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
             )
 
             if (preset_index != -1) {
+              const updated_ui_preset = { ...update_msg.updated_preset }
+              let final_name = updated_ui_preset.name.trim()
+
+              // --- Start Uniqueness Check ---
+              let is_unique = false
+              let copy_number = 0
+              const base_name = final_name
+
+              while (!is_unique) {
+                const name_to_check =
+                  copy_number == 0 ? base_name : `${base_name} (${copy_number})`
+
+                // Check if this name exists in *other* presets
+                const conflict = currentPresets.some(
+                  (p, index) =>
+                    index != preset_index && p.name == name_to_check
+                )
+
+                if (!conflict) {
+                  final_name = name_to_check
+                  is_unique = true
+                } else {
+                  copy_number++
+                }
+              }
+
+              // If the name had to be changed, update the preset object and notify user
+              if (final_name != updated_ui_preset.name) {
+                updated_ui_preset.name = final_name
+              }
+              // --- End Uniqueness Check ---
+
               const updated_presets = [...currentPresets]
-              // Convert the updated preset from UI format to config format
-              updated_presets[preset_index] = this._ui_preset_to_config_format(
-                update_msg.updated_preset
-              )
+              // Convert the updated preset (with potentially modified name) from UI format to config format
+              updated_presets[preset_index] =
+                this._ui_preset_to_config_format(updated_ui_preset)
 
               await config.update(
                 'geminiCoder.presets',
                 updated_presets,
                 true // Update globally
               )
-              // Optional: Send updated list back to webview if needed immediately
+              // Send updated list back to webview
               this._send_presets_to_webview(webview_view.webview)
             } else {
               console.error(
