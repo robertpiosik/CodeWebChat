@@ -111,11 +111,11 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   }
 
   const handle_preset_delete = (name: string) => {
+    props.on_preset_delete(name)
     if (props.selected_presets.includes(name)) {
       const new_selected = props.selected_presets.filter((n) => n != name)
       props.on_selected_presets_change(new_selected)
     }
-    props.on_preset_delete(name)
   }
 
   if (props.presets.length == 0) return null
