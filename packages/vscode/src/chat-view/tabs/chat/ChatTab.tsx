@@ -19,9 +19,8 @@ import {
   ActiveFileInfoMessage
 } from '../../types/messages'
 
-const vscode = acquireVsCodeApi()
-
 type Props = {
+  vscode: any
   is_visible: boolean
   on_preset_edit: (preset: UiPresets.Preset) => void
 }
@@ -55,7 +54,7 @@ export const ChatTab: React.FC<Props> = (props) => {
       { command: 'GET_CURRENT_TOKEN_COUNT' }
     ] as WebviewMessage[]
 
-    initial_messages.forEach((message) => vscode.postMessage(message))
+    initial_messages.forEach((message) => props.vscode.postMessage(message))
 
     const handle_message = (event: MessageEvent) => {
       const message = event.data as ExtensionMessage
@@ -89,7 +88,7 @@ export const ChatTab: React.FC<Props> = (props) => {
             is_fim_mode
           ) {
             set_is_fim_mode(false)
-            vscode.postMessage({
+            props.vscode.postMessage({
               command: 'SAVE_FIM_MODE',
               enabled: false
             } as WebviewMessage)
@@ -128,7 +127,7 @@ export const ChatTab: React.FC<Props> = (props) => {
     instruction: string
     preset_names: string[]
   }) => {
-    vscode.postMessage({
+    props.vscode.postMessage({
       command: 'SEND_PROMPT',
       instruction: params.instruction,
       preset_names: params.preset_names
@@ -150,7 +149,7 @@ export const ChatTab: React.FC<Props> = (props) => {
         set_chat_history_fim_mode(new_history)
 
         // Save to workspace state
-        vscode.postMessage({
+        props.vscode.postMessage({
           command: 'SAVE_CHAT_HISTORY',
           messages: new_history,
           is_fim_mode: true
@@ -168,7 +167,7 @@ export const ChatTab: React.FC<Props> = (props) => {
         set_chat_history(new_history)
 
         // Save to workspace state
-        vscode.postMessage({
+        props.vscode.postMessage({
           command: 'SAVE_CHAT_HISTORY',
           messages: new_history,
           is_fim_mode: false
@@ -190,7 +189,7 @@ export const ChatTab: React.FC<Props> = (props) => {
       }
       window.addEventListener('message', messageHandler)
 
-      vscode.postMessage({
+      props.vscode.postMessage({
         command: 'SHOW_PRESET_PICKER',
         instruction
       } as WebviewMessage)
@@ -198,14 +197,14 @@ export const ChatTab: React.FC<Props> = (props) => {
   }
 
   const handle_copy_to_clipboard = (instruction: string) => {
-    vscode.postMessage({
+    props.vscode.postMessage({
       command: 'COPY_PROMPT',
       instruction
     } as WebviewMessage)
   }
 
   const handle_presets_selection_change = (selected_names: string[]) => {
-    vscode.postMessage({
+    props.vscode.postMessage({
       command: 'SAVE_SELECTED_PRESETS',
       names: selected_names
     } as WebviewMessage)
@@ -213,7 +212,7 @@ export const ChatTab: React.FC<Props> = (props) => {
   }
 
   const handle_expanded_presets_change = (expanded_indices: number[]) => {
-    vscode.postMessage({
+    props.vscode.postMessage({
       command: 'SAVE_EXPANDED_PRESETS',
       indices: expanded_indices
     } as WebviewMessage)
@@ -221,13 +220,13 @@ export const ChatTab: React.FC<Props> = (props) => {
   }
 
   const handle_open_settings = () => {
-    vscode.postMessage({
+    props.vscode.postMessage({
       command: 'OPEN_SETTINGS'
     } as WebviewMessage)
   }
 
   const handle_fim_mode_click = () => {
-    vscode.postMessage({
+    props.vscode.postMessage({
       command: 'SAVE_FIM_MODE',
       enabled: !is_fim_mode
     } as WebviewMessage)
@@ -239,7 +238,7 @@ export const ChatTab: React.FC<Props> = (props) => {
     set_presets(reordered_presets)
 
     // Send message to extension to save the new order
-    vscode.postMessage({
+    props.vscode.postMessage({
       command: 'SAVE_PRESETS_ORDER',
       presets: reordered_presets.map((preset) => ({
         name: preset.name,

@@ -2,21 +2,45 @@ import ReactDOM from 'react-dom/client'
 import { ChatTab } from './tabs/chat/ChatTab'
 import { ApiTab } from './tabs/api/ApiTab'
 import { Header } from '@ui/components/editor/Header'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Template } from '@ui/components/editor/Template'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { EditView } from '@ui/components/editor/EditView'
 import { EditPresetForm } from '@ui/components/editor/EditPresetForm'
-import * as vscode from 'vscode'
+const vscode = acquireVsCodeApi()
 
 import '@vscode/codicons/dist/codicon.css'
 import '@ui/styles/global.scss'
 
 const App = () => {
   const [active_tab, set_active_tab] = useState<'chat' | 'api'>('chat')
-  const [editing_preset, set_editing_preset] = useState<UiPresets.Preset>()
+  const [updating_preset, set_updating_preset] = useState<UiPresets.Preset>()
+  const [updated_preset, set_updated_preset] = useState<UiPresets.Preset>()
 
-  const handle_preset_update = (updated_preset: UiPresets.Preset) => {}
+  const handle_preset_update = (updated_preset: UiPresets.Preset) => {
+    set_updated_preset(updated_preset)
+  }
+
+  const handle_back_click = () => {
+    vscode.postMessage({
+      command: 'UPDATE_PRESET',
+      original_name: updating_preset!.name,
+      updated_preset: updated_preset
+    })
+  }
+
+  // Finalize back click when presets gets updated
+  useEffect(() => {
+    const handle_message = (event: MessageEvent) => {
+      const message = event.data
+      if (message.command == 'PRESETS') {
+        set_updated_preset(undefined)
+        set_updating_preset(undefined)
+      }
+    }
+    window.addEventListener('message', handle_message)
+    return () => window.removeEventListener('message', handle_message)
+  }, [])
 
   const tabs = (
     <>
@@ -30,24 +54,20 @@ const App = () => {
         }}
       />
       <ChatTab
+        vscode={vscode}
         is_visible={active_tab == 'chat'}
         on_preset_edit={(preset) => {
-          set_editing_preset(preset)
+          set_updating_preset(preset)
         }}
       />
       <ApiTab is_visible={active_tab == 'api'} />
     </>
   )
 
-  const edit_preset_view = (
-    <EditView
-      back_label="Edit preset"
-      on_back_click={() => {
-        set_editing_preset(undefined)
-      }}
-    >
+  const edit_preset_view = updating_preset && (
+    <EditView back_label="Edit preset" on_back_click={handle_back_click}>
       <EditPresetForm
-        preset={editing_preset!}
+        preset={updating_preset}
         on_update={handle_preset_update}
       />
     </EditView>
@@ -55,10 +75,7 @@ const App = () => {
 
   return (
     <>
-      <Template
-        edit_preset_slot={editing_preset && edit_preset_view}
-        tabs_slot={tabs}
-      />
+      <Template edit_preset_slot={edit_preset_view} tabs_slot={tabs} />
     </>
   )
 }

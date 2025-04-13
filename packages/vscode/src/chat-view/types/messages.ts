@@ -1,3 +1,5 @@
+import { Presets } from '@ui/components/editor/Presets'
+
 export interface BaseMessage {
   command: string
 }
@@ -104,6 +106,12 @@ export interface GetCurrentTokenCountMessage extends BaseMessage {
   command: 'GET_CURRENT_TOKEN_COUNT'
 }
 
+export interface UpdatePresetMessage extends BaseMessage {
+  command: 'UPDATE_PRESET'
+  original_name: string
+  updated_preset: Presets.Preset
+}
+
 // Messages from extension to webview:
 export interface ConnectionStatusMessage extends BaseMessage {
   command: 'CONNECTION_STATUS'
@@ -206,6 +214,7 @@ export type WebviewMessage =
   | GetFimChatHistoryMessage
   | SaveChatHistoryMessage
   | GetCurrentTokenCountMessage
+  | UpdatePresetMessage
 
 export type ExtensionMessage =
   | ConnectionStatusMessage
