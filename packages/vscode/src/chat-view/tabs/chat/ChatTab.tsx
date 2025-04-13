@@ -254,6 +254,13 @@ export const ChatTab: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
+  const handle_preset_delete = (name: string) => {
+    props.vscode.postMessage({
+      command: 'DELETE_PRESET',
+      name
+    } as WebviewMessage)
+  }
+
   if (
     is_connected === undefined ||
     presets === undefined ||
@@ -290,6 +297,7 @@ export const ChatTab: React.FC<Props> = (props) => {
       active_file_length={active_file_length}
       on_presets_reorder={handle_presets_reorder}
       on_preset_edit={props.on_preset_edit}
+      on_preset_delete={handle_preset_delete}
     />
   )
 }

@@ -112,6 +112,11 @@ export interface UpdatePresetMessage extends BaseMessage {
   updated_preset: Presets.Preset
 }
 
+export interface DeletePresetMessage extends BaseMessage {
+  command: 'DELETE_PRESET'
+  name: string
+}
+
 // Messages from extension to webview:
 export interface ConnectionStatusMessage extends BaseMessage {
   command: 'CONNECTION_STATUS'
@@ -190,6 +195,7 @@ export interface ActiveFileInfoMessage extends BaseMessage {
   fileLength: number
 }
 
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | SaveChatInstructionMessage
@@ -215,6 +221,7 @@ export type WebviewMessage =
   | SaveChatHistoryMessage
   | GetCurrentTokenCountMessage
   | UpdatePresetMessage
+  | DeletePresetMessage
 
 export type ExtensionMessage =
   | ConnectionStatusMessage

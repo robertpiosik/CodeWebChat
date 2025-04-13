@@ -11,7 +11,8 @@ import {
   SelectionTextMessage,
   ActiveFileInfoMessage,
   SaveFimModeMessage,
-  UpdatePresetMessage
+  UpdatePresetMessage,
+  DeletePresetMessage
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -215,6 +216,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       | SelectionTextMessage
       | ActiveFileInfoMessage
       | UpdatePresetMessage
+      | DeletePresetMessage
   >(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -699,8 +701,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
 
                 // Check if this name exists in *other* presets
                 const conflict = currentPresets.some(
-                  (p, index) =>
-                    index != preset_index && p.name == name_to_check
+                  (p, index) => index != preset_index && p.name == name_to_check
                 )
 
                 if (!conflict) {
@@ -735,6 +736,88 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
               )
               vscode.window.showErrorMessage(
                 `Could not update preset: Original preset "${update_msg.original_name}" not found.`
+              )
+            }
+          } else if (message.command == 'DELETE_PRESET') {
+            const presetName = (message as DeletePresetMessage).name
+            const config = vscode.workspace.getConfiguration()
+            const current_presets =
+              config.get<ConfigPresetFormat[]>('geminiCoder.presets', []) || []
+
+            // Show confirmation dialog with revert option
+            const delete_button = 'Delete'
+            const result = await vscode.window.showInformationMessage(
+              `Are you sure you want to delete the preset "${presetName}"?`,
+              { modal: true },
+              delete_button
+            )
+
+            if (result != delete_button) {
+              return // User cancelled
+            }
+
+            // Store the deleted preset and its index in case we need to revert
+            const presetIndex = current_presets.findIndex(
+              (p) => p.name == presetName
+            )
+            const deleted_preset = current_presets[presetIndex]
+            const updated_presets = current_presets.filter(
+              (p) => p.name != presetName
+            )
+
+            try {
+              await config.update(
+                'geminiCoder.presets',
+                updated_presets,
+                true // Update globally
+              )
+
+              // Show notification with undo option
+              const button_text = 'Undo'
+              const undo_result = await vscode.window.showInformationMessage(
+                `Preset "${presetName}" deleted`,
+                button_text
+              )
+
+              if (undo_result == button_text && deleted_preset) {
+                // Restore the preset at its original position
+                const restored_presets = [...updated_presets]
+                restored_presets.splice(presetIndex, 0, deleted_preset)
+
+                await config.update(
+                  'geminiCoder.presets',
+                  restored_presets,
+                  true
+                )
+                vscode.window.showInformationMessage(
+                  `Preset "${presetName}" restored`
+                )
+              }
+
+              // Send updated list back to webview
+              this._send_presets_to_webview(webview_view.webview)
+
+              // Also update selected presets if needed
+              const selected_names = this._context.globalState.get<string[]>(
+                'selectedPresets',
+                []
+              )
+              if (selected_names.includes(presetName)) {
+                const updated_selected = selected_names.filter(
+                  (n) => n != presetName
+                )
+                await this._context.globalState.update(
+                  'selectedPresets',
+                  updated_selected
+                )
+                this._send_message<ExtensionMessage>({
+                  command: 'SELECTED_PRESETS',
+                  names: updated_selected
+                })
+              }
+            } catch (error) {
+              vscode.window.showErrorMessage(
+                `Failed to delete preset: ${error}`
               )
             }
           }

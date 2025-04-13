@@ -31,6 +31,7 @@ export namespace Presets {
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (preset: Preset) => void
+    on_preset_delete: (name: string) => void
   }
 }
 
@@ -214,6 +215,11 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           codicon_icon="edit"
                           on_click={() => props.on_preset_edit(preset)}
                           title="Edit"
+                        />
+                        <IconButton
+                          codicon_icon="trash"
+                          on_click={() => props.on_preset_delete(preset.name)}
+                          title="Delete"
                         />
                       </div>
 
