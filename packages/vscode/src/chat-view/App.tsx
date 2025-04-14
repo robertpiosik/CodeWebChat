@@ -4,20 +4,21 @@ import { ApiTab } from './tabs/api/ApiTab'
 import { Header } from '@ui/components/editor/Header'
 import { useEffect, useState } from 'react'
 import { Template } from '@ui/components/editor/Template'
-import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { EditView } from '@ui/components/editor/EditView'
 import { EditPresetForm } from '@ui/components/editor/EditPresetForm'
-const vscode = acquireVsCodeApi()
 
 import '@vscode/codicons/dist/codicon.css'
 import '@ui/styles/global.scss'
+import { Preset } from '@shared/types/preset'
+
+const vscode = acquireVsCodeApi()
 
 const App = () => {
   const [active_tab, set_active_tab] = useState<'chat' | 'api'>('chat')
-  const [updating_preset, set_updating_preset] = useState<UiPresets.Preset>()
-  const [updated_preset, set_updated_preset] = useState<UiPresets.Preset>()
+  const [updating_preset, set_updating_preset] = useState<Preset>()
+  const [updated_preset, set_updated_preset] = useState<Preset>()
 
-  const handle_preset_update = (updated_preset: UiPresets.Preset) => {
+  const handle_preset_update = (updated_preset: Preset) => {
     set_updated_preset(updated_preset)
   }
 

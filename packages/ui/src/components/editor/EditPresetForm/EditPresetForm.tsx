@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import styles from './EditPresetForm.module.scss'
-import { Presets } from '../Presets'
+import { Preset } from '@shared/types/preset'
 
 type Props = {
-  preset: Presets.Preset
-  on_update: (updated_preset: Presets.Preset) => void
+  preset: Preset
+  on_update: (updated_preset: Preset) => void
 }
 
 export const EditPresetForm: React.FC<Props> = (props) => {

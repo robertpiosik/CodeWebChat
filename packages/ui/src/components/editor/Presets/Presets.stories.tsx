@@ -36,7 +36,9 @@ export const Multiple = () => {
         console.log('on_selected_presets_change', names)
         set_selected_presets(names)
       }}
-      on_edit_presets={() => console.log('on_edit_presets')}
+      on_preset_delete={(name) => console.log('on_preset_delete', name)}
+      on_preset_edit={(preset) => console.log('on_preset_edit', preset)}
+      on_create_preset={() => {}}
       expanded_presets={expanded_presets}
       on_expanded_presets_change={(indices) => {
         console.log('on_expanded_presets_change', indices)

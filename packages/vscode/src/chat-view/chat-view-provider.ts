@@ -12,13 +12,15 @@ import {
   ActiveFileInfoMessage,
   SaveFimModeMessage,
   UpdatePresetMessage,
-  DeletePresetMessage
+  DeletePresetMessage,
+  SelectedPresetsMessage
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { apply_preset_affixes_to_instruction } from '../helpers/apply-preset-affixes'
 import { token_count_emitter } from '@/context/context-initialization'
+import { Preset } from '@shared/types/preset'
 
 // Helper type for the structure in settings.json
 type ConfigPresetFormat = {
@@ -217,6 +219,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       | ActiveFileInfoMessage
       | UpdatePresetMessage
       | DeletePresetMessage
+      | SelectedPresetsMessage
   >(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -328,26 +331,24 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
   }
 
   // Helper function to convert UI Preset format to Config format
-  private _ui_preset_to_config_format(
-    uiPreset: Presets.Preset
-  ): ConfigPresetFormat {
+  private _ui_preset_to_config_format(preset: Preset): ConfigPresetFormat {
     return {
-      name: uiPreset.name,
-      chatbot: uiPreset.chatbot,
-      promptPrefix: uiPreset.prompt_prefix, // Convert case
-      promptSuffix: uiPreset.prompt_suffix, // Convert case
-      model: uiPreset.model,
-      temperature: uiPreset.temperature,
-      systemInstructions: uiPreset.system_instructions, // Convert case
-      options: uiPreset.options,
-      port: uiPreset.port
+      name: preset.name,
+      chatbot: preset.chatbot,
+      promptPrefix: preset.prompt_prefix,
+      promptSuffix: preset.prompt_suffix,
+      model: preset.model,
+      temperature: preset.temperature,
+      systemInstructions: preset.system_instructions,
+      options: preset.options,
+      port: preset.port
     }
   }
 
   // Helper function to convert Config Preset format to UI format (already used in _send_presets_to_webview)
   private _config_preset_to_ui_format(
     configPreset: ConfigPresetFormat
-  ): Presets.Preset {
+  ): Preset {
     return {
       name: configPreset.name,
       chatbot: configPreset.chatbot,
@@ -422,20 +423,6 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
             await this._context.globalState.update(
               'selectedPresets',
               message.names
-            )
-          } else if (message.command == 'GET_EXPANDED_PRESETS') {
-            const expanded_indices = this._context.globalState.get<number[]>(
-              'expandedPresets',
-              []
-            )
-            this._send_message<ExtensionMessage>({
-              command: 'EXPANDED_PRESETS',
-              indices: expanded_indices
-            })
-          } else if (message.command == 'SAVE_EXPANDED_PRESETS') {
-            await this._context.globalState.update(
-              'expandedPresets',
-              message.indices
             )
           } else if (message.command == 'SEND_PROMPT') {
             // Validate presets first
@@ -712,7 +699,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
                 }
               }
 
-              // If the name had to be changed, update the preset object and notify user
+              // If the name had to be changed, update the preset object
               if (final_name != updated_ui_preset.name) {
                 updated_ui_preset.name = final_name
               }
@@ -728,6 +715,28 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
                 updated_presets,
                 true // Update globally
               )
+
+              // --- Start Update Selected Presets ---
+              const selected_names = this._context.globalState.get<string[]>(
+                'selectedPresets',
+                []
+              )
+              if (selected_names.includes(update_msg.original_name)) {
+                const updated_selected_names = selected_names.map((name) =>
+                  name == update_msg.original_name ? final_name : name
+                )
+                await this._context.globalState.update(
+                  'selectedPresets',
+                  updated_selected_names
+                )
+                // Send updated selected presets to webview
+                this._send_message<SelectedPresetsMessage>({
+                  command: 'SELECTED_PRESETS',
+                  names: updated_selected_names
+                })
+              }
+              // --- End Update Selected Presets ---
+
               // Send updated list back to webview
               this._send_presets_to_webview(webview_view.webview)
             } else {
@@ -877,7 +886,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       config.get<ConfigPresetFormat[]>('geminiCoder.presets', []) || []
 
     // Convert from config format to UI format before sending
-    const presets_for_ui: Presets.Preset[] = web_chat_presets_config.map(
+    const presets_for_ui: Preset[] = web_chat_presets_config.map(
       (preset_config) => this._config_preset_to_ui_format(preset_config)
     )
 

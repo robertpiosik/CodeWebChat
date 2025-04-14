@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import styles from './Main.scss'
+import styles from './Main.module.scss'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
 import { Separator as UiSeparator } from '@ui/components/editor/Separator'
+import { Preset } from '@shared/types/preset'
 
 type Props = {
   is_visible: boolean
@@ -10,15 +11,11 @@ type Props = {
     instruction: string
     preset_names: string[]
   }) => void
-  show_preset_picker: (instruction: string) => Promise<string[]>
   copy_to_clipboard: (instruction: string) => void
-  open_settings: () => void
+  on_create_preset_click: () => void
   is_connected: boolean
-  presets: UiPresets.Preset[]
+  presets: Preset[]
   selected_presets: string[]
-  expanded_presets: number[]
-  on_selected_presets_change: (selected_names: string[]) => void
-  on_expanded_presets_change: (expanded_indices: number[]) => void
   is_fim_mode: boolean
   on_fim_mode_click: () => void
   has_active_editor: boolean
@@ -28,8 +25,8 @@ type Props = {
   token_count: number
   selection_text?: string
   active_file_length?: number
-  on_presets_reorder: (reordered_presets: UiPresets.Preset[]) => void
-  on_preset_edit: (preset: UiPresets.Preset) => void
+  on_presets_reorder: (reordered_presets: Preset[]) => void
+  on_preset_edit: (preset_name: string) => void
   on_preset_delete: (name: string) => void
 }
 
@@ -88,21 +85,10 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_submit = async () => {
-    if (props.selected_presets.length == 0) {
-      const selected_names = await props.show_preset_picker(current_instruction)
-      if (selected_names.length > 0) {
-        props.on_selected_presets_change(selected_names)
-        props.initialize_chats({
-          instruction: current_instruction,
-          preset_names: selected_names
-        })
-      }
-    } else {
-      props.initialize_chats({
-        instruction: current_instruction,
-        preset_names: props.selected_presets
-      })
-    }
+    props.initialize_chats({
+      instruction: current_instruction,
+      preset_names: props.selected_presets
+    })
   }
 
   const handle_copy = () => {
@@ -141,7 +127,6 @@ export const Main: React.FC<Props> = (props) => {
       className={styles.container}
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
-      <UiSeparator size="small" />
       <UiChatInput
         value={current_instruction}
         chat_history={props.chat_history}
@@ -185,13 +170,15 @@ export const Main: React.FC<Props> = (props) => {
       )}
       <UiSeparator size="large" />
       <UiPresets
-        presets={props.presets}
+        presets={props.presets.map((preset) => {
+          return {
+            ...preset,
+            has_affixes: !!(preset.prompt_prefix || preset.prompt_suffix)
+          }
+        })}
         disabled={!props.is_connected}
         selected_presets={props.selected_presets}
-        expanded_presets={props.expanded_presets}
-        on_selected_presets_change={props.on_selected_presets_change}
-        on_expanded_presets_change={props.on_expanded_presets_change}
-        on_edit_presets={props.open_settings}
+        on_create_preset={props.on_create_preset_click}
         on_preset_click={(name) => {
           props.initialize_chats({
             instruction: current_instruction,

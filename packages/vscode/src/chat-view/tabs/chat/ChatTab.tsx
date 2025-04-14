@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Main } from './Main'
-import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import {
   WebviewMessage,
   ExtensionMessage,
@@ -8,7 +7,6 @@ import {
   PresetsMessage,
   SelectedPresetsMessage,
   PresetsSelectedFromPickerMessage,
-  ExpandedPresetsMessage,
   FimModeMessage,
   EditorStateChangedMessage,
   EditorSelectionChangedMessage,
@@ -18,18 +16,18 @@ import {
   SelectionTextMessage,
   ActiveFileInfoMessage
 } from '../../types/messages'
+import { Preset } from '@shared/types/preset'
 
 type Props = {
   vscode: any
   is_visible: boolean
-  on_preset_edit: (preset: UiPresets.Preset) => void
+  on_preset_edit: (preset: Preset) => void
 }
 
 export const ChatTab: React.FC<Props> = (props) => {
   const [is_connected, set_is_connected] = useState<boolean>()
-  const [presets, set_presets] = useState<UiPresets.Preset[]>()
+  const [presets, set_presets] = useState<Preset[]>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])
-  const [expanded_presets, set_expanded_presets] = useState<number[]>([])
   const [is_fim_mode, set_is_fim_mode] = useState<boolean>(false)
   const [has_active_editor, set_has_active_editor] = useState<boolean>()
   const [has_active_selection, set_has_active_selection] = useState<boolean>()
@@ -72,9 +70,6 @@ export const ChatTab: React.FC<Props> = (props) => {
           set_selected_presets(
             (message as PresetsSelectedFromPickerMessage).names
           )
-          break
-        case 'EXPANDED_PRESETS':
-          set_expanded_presets((message as ExpandedPresetsMessage).indices)
           break
         case 'FIM_MODE':
           set_is_fim_mode((message as FimModeMessage).enabled)
@@ -123,14 +118,39 @@ export const ChatTab: React.FC<Props> = (props) => {
     return () => window.removeEventListener('message', handle_message)
   }, [is_fim_mode])
 
-  const handle_initialize_chats = (params: {
+  const handle_initialize_chats = async (params: {
     instruction: string
     preset_names: string[]
   }) => {
+    let preset_names = params.preset_names
+    if (params.preset_names.length == 0) {
+      const selected_names = await new Promise<string[]>((resolve) => {
+        const message_handler = (event: MessageEvent) => {
+          const message = event.data as ExtensionMessage
+          if (message.command === 'PRESETS_SELECTED_FROM_PICKER') {
+            window.removeEventListener('message', message_handler)
+            resolve((message as PresetsSelectedFromPickerMessage).names)
+          }
+        }
+        window.addEventListener('message', message_handler)
+        props.vscode.postMessage({
+          command: 'SHOW_PRESET_PICKER'
+        } as WebviewMessage)
+      })
+      if (selected_names.length > 0) {
+        props.vscode.postMessage({
+          command: 'SAVE_SELECTED_PRESETS',
+          names: selected_names
+        } as WebviewMessage)
+        set_selected_presets(selected_names)
+        preset_names = selected_names
+      }
+    }
+
     props.vscode.postMessage({
       command: 'SEND_PROMPT',
       instruction: params.instruction,
-      preset_names: params.preset_names
+      preset_names: preset_names
     } as WebviewMessage)
 
     // Update the appropriate chat history based on mode
@@ -176,26 +196,6 @@ export const ChatTab: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_show_preset_picker = (
-    instruction: string
-  ): Promise<string[]> => {
-    return new Promise((resolve) => {
-      const messageHandler = (event: MessageEvent) => {
-        const message = event.data as ExtensionMessage
-        if (message.command === 'PRESETS_SELECTED_FROM_PICKER') {
-          window.removeEventListener('message', messageHandler)
-          resolve((message as PresetsSelectedFromPickerMessage).names)
-        }
-      }
-      window.addEventListener('message', messageHandler)
-
-      props.vscode.postMessage({
-        command: 'SHOW_PRESET_PICKER',
-        instruction
-      } as WebviewMessage)
-    })
-  }
-
   const handle_copy_to_clipboard = (instruction: string) => {
     props.vscode.postMessage({
       command: 'COPY_PROMPT',
@@ -203,27 +203,7 @@ export const ChatTab: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
-  const handle_presets_selection_change = (selected_names: string[]) => {
-    props.vscode.postMessage({
-      command: 'SAVE_SELECTED_PRESETS',
-      names: selected_names
-    } as WebviewMessage)
-    set_selected_presets(selected_names)
-  }
-
-  const handle_expanded_presets_change = (expanded_indices: number[]) => {
-    props.vscode.postMessage({
-      command: 'SAVE_EXPANDED_PRESETS',
-      indices: expanded_indices
-    } as WebviewMessage)
-    set_expanded_presets(expanded_indices)
-  }
-
-  const handle_open_settings = () => {
-    props.vscode.postMessage({
-      command: 'OPEN_SETTINGS'
-    } as WebviewMessage)
-  }
+  const handle_create_preset = () => {}
 
   const handle_fim_mode_click = () => {
     props.vscode.postMessage({
@@ -233,7 +213,7 @@ export const ChatTab: React.FC<Props> = (props) => {
     set_is_fim_mode(!is_fim_mode)
   }
 
-  const handle_presets_reorder = (reordered_presets: UiPresets.Preset[]) => {
+  const handle_presets_reorder = (reordered_presets: Preset[]) => {
     // Update local state
     set_presets(reordered_presets)
 
@@ -252,6 +232,11 @@ export const ChatTab: React.FC<Props> = (props) => {
         port: preset.port
       }))
     } as WebviewMessage)
+  }
+
+  const handle_preset_edit = (name: string) => {
+    const preset = presets?.find((preset) => preset.name == name)
+    if (preset) props.on_preset_edit(preset)
   }
 
   const handle_preset_delete = (name: string) => {
@@ -277,15 +262,11 @@ export const ChatTab: React.FC<Props> = (props) => {
     <Main
       is_visible={props.is_visible}
       initialize_chats={handle_initialize_chats}
-      show_preset_picker={handle_show_preset_picker}
       copy_to_clipboard={handle_copy_to_clipboard}
       is_connected={is_connected}
       presets={presets}
       selected_presets={selected_presets}
-      expanded_presets={expanded_presets}
-      on_selected_presets_change={handle_presets_selection_change}
-      on_expanded_presets_change={handle_expanded_presets_change}
-      open_settings={handle_open_settings}
+      on_create_preset_click={handle_create_preset}
       has_active_editor={has_active_editor}
       is_fim_mode={is_fim_mode && has_active_editor}
       on_fim_mode_click={handle_fim_mode_click}
@@ -296,7 +277,7 @@ export const ChatTab: React.FC<Props> = (props) => {
       selection_text={selection_text}
       active_file_length={active_file_length}
       on_presets_reorder={handle_presets_reorder}
-      on_preset_edit={props.on_preset_edit}
+      on_preset_edit={handle_preset_edit}
       on_preset_delete={handle_preset_delete}
     />
   )

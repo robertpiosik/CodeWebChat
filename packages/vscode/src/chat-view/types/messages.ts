@@ -1,4 +1,4 @@
-import { Presets } from '@ui/components/editor/Presets'
+import { Preset } from '@shared/types/preset'
 
 export interface BaseMessage {
   command: string
@@ -32,15 +32,6 @@ export interface SaveSelectedPresetsMessage extends BaseMessage {
   names: string[]
 }
 
-export interface GetExpandedPresetsMessage extends BaseMessage {
-  command: 'GET_EXPANDED_PRESETS'
-}
-
-export interface SaveExpandedPresetsMessage extends BaseMessage {
-  command: 'SAVE_EXPANDED_PRESETS'
-  indices: number[]
-}
-
 export interface SavePresetsOrderMessage extends BaseMessage {
   command: 'SAVE_PRESETS_ORDER'
   presets: PresetMessageFormat[]
@@ -64,7 +55,6 @@ export interface ShowErrorMessage extends BaseMessage {
 
 export interface ShowPresetPickerMessage extends BaseMessage {
   command: 'SHOW_PRESET_PICKER'
-  instruction: string
 }
 
 export interface OpenSettingsMessage extends BaseMessage {
@@ -109,7 +99,7 @@ export interface GetCurrentTokenCountMessage extends BaseMessage {
 export interface UpdatePresetMessage extends BaseMessage {
   command: 'UPDATE_PRESET'
   original_name: string
-  updated_preset: Presets.Preset
+  updated_preset: Preset
 }
 
 export interface DeletePresetMessage extends BaseMessage {
@@ -195,7 +185,6 @@ export interface ActiveFileInfoMessage extends BaseMessage {
   fileLength: number
 }
 
-
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | SaveChatInstructionMessage
@@ -204,8 +193,6 @@ export type WebviewMessage =
   | GetPresetsMessage
   | GetSelectedPresetsMessage
   | SaveSelectedPresetsMessage
-  | GetExpandedPresetsMessage
-  | SaveExpandedPresetsMessage
   | SavePresetsOrderMessage
   | SendPromptMessage
   | CopyPromptMessage

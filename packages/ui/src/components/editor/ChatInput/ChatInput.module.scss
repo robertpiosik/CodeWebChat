@@ -94,6 +94,11 @@
 
       &--fim {
         padding-left: var(--padding-2px);
+
+        > span {
+          text-align: left;
+          line-height: 1;
+        }
       }
 
       &--selection > span {

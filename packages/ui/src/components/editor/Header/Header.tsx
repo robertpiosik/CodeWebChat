@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Icon } from '../Icon'
 import styles from './Header.module.scss'
 import cn from 'classnames'
@@ -9,6 +10,14 @@ type Props = {
 }
 
 export const Header: React.FC<Props> = (props) => {
+  const [window_width, set_window_width] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handle_resize = () => set_window_width(window.innerWidth)
+    window.addEventListener('resize', handle_resize)
+    return () => window.removeEventListener('resize', handle_resize)
+  }, [])
+
   return (
     <div className={styles.container}>
       <div className={styles.tabs}>
@@ -18,7 +27,7 @@ export const Header: React.FC<Props> = (props) => {
           })}
           onClick={props.on_chat_tab_click}
         >
-          Chat
+          {window_width >= 310 ? 'Web Chat' : 'Chat'}
         </button>
         <button
           className={cn(styles.tabs__tab, {
@@ -26,7 +35,7 @@ export const Header: React.FC<Props> = (props) => {
           })}
           onClick={props.on_api_tab_click}
         >
-          API
+          {window_width >= 310 ? 'API tools' : 'API'}
         </button>
       </div>
       <div className={styles.right}>

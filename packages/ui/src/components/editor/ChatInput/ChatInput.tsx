@@ -264,13 +264,13 @@ export const ChatInput: React.FC<Props> = (props) => {
               )}
               title={
                 props.has_active_editor
-                  ? 'Generate code at cursor position'
-                  : 'Open any file to generate code at cursor position'
+                  ? 'Generate code that fits best the cursor position'
+                  : 'Open any file to generate code that fits best the cursor position'
               }
               disabled={!props.has_active_editor}
             >
               <div className={cn('codicon', 'codicon-insert')} />
-              Ask for code completion
+              <span>Ask for code at cursor</span>
             </button>
           )}
           {can_insert_selection_placeholder && (
