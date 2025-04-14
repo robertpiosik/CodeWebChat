@@ -27,47 +27,69 @@
     flex-direction: column;
     border-bottom: 1px solid var(--vscode-sideBarSectionHeader-border);
 
+    &:hover .presets__item__header__right {
+      display: flex;
+    }
+
     &--disabled {
       opacity: 0.5;
     }
 
     &__header {
+      position: relative;
       display: flex;
       justify-content: space-between;
-      gap: 8px;
+      align-items: center;
+      gap: 4px;
       min-height: 24px;
-      cursor: pointer;
 
-      &__title {
-        padding: var(--padding-4px) 0;
+      &__left {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
-        &:hover {
-          text-decoration: underline;
-        }
-
-        &--default {
-          font-weight: 600;
-        }
-
-        &--disabled {
-          opacity: 0.5;
-
-          &:hover {
-            text-decoration: none;
+        &__icon {
+          display: flex;
+          > svg {
+            fill: var(--vscode-icon-foreground);
+            width: 16px;
+            height: 16px;
           }
         }
 
-        > span {
+        &__title {
+          padding: var(--padding-4px) 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
           cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+          }
+
+          &--default {
+            font-weight: 600;
+          }
+
+          &--disabled {
+            opacity: 0.5;
+            cursor: default; //
+
+            &:hover {
+              text-decoration: none;
+            }
+          }
         }
       }
 
       &__right {
-        flex-shrink: 0;
         display: flex;
         align-items: center;
         gap: var(--padding-4px);
-
+        display: none;
         &__drag_handle {
           display: flex;
           align-items: center;
@@ -188,7 +210,7 @@
     }
   }
 
-  &__edit {
+  &__create {
     margin-top: 12px;
   }
 }

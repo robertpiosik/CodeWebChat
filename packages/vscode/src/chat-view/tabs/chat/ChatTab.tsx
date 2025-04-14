@@ -127,7 +127,7 @@ export const ChatTab: React.FC<Props> = (props) => {
       const selected_names = await new Promise<string[]>((resolve) => {
         const message_handler = (event: MessageEvent) => {
           const message = event.data as ExtensionMessage
-          if (message.command === 'PRESETS_SELECTED_FROM_PICKER') {
+          if (message.command == 'PRESETS_SELECTED_FROM_PICKER') {
             window.removeEventListener('message', message_handler)
             resolve((message as PresetsSelectedFromPickerMessage).names)
           }
@@ -239,13 +239,6 @@ export const ChatTab: React.FC<Props> = (props) => {
     if (preset) props.on_preset_edit(preset)
   }
 
-  const handle_preset_delete = (name: string) => {
-    props.vscode.postMessage({
-      command: 'DELETE_PRESET',
-      name
-    } as WebviewMessage)
-  }
-
   if (
     is_connected === undefined ||
     presets === undefined ||
@@ -278,7 +271,6 @@ export const ChatTab: React.FC<Props> = (props) => {
       active_file_length={active_file_length}
       on_presets_reorder={handle_presets_reorder}
       on_preset_edit={handle_preset_edit}
-      on_preset_delete={handle_preset_delete}
     />
   )
 }

@@ -3,6 +3,7 @@ import { IconButton } from '../IconButton/IconButton'
 import { Button } from '../Button/Button'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
+import { Icon } from '../Icon'
 
 export namespace Presets {
   export type Preset = {
@@ -22,7 +23,7 @@ export namespace Presets {
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
-    on_preset_delete: (name: string) => void
+    on_preset_duplicate: (name: string) => void
   }
 }
 
@@ -71,22 +72,52 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             return (
               <div key={i} className={styles.presets__item}>
                 <div className={styles.presets__item__header}>
-                  <div
-                    className={cn(styles.presets__item__header__title, {
-                      [styles['presets__item__header__title--default']]:
-                        props.selected_presets.includes(preset.name),
-                      [styles['presets__item__header__title--disabled']]:
-                        is_disabled_in_fim
-                    })}
-                    onClick={(e) => {
-                      if (is_disabled_in_fim) return
-                      e.stopPropagation()
-                      props.on_preset_click(preset.name)
-                    }}
-                  >
-                    <span>{preset.name}</span>
+                  <div className={styles.presets__item__header__left}>
+                    <div className={styles.presets__item__header__left__icon}>
+                      <Icon variant="AI_STUDIO" />
+                    </div>
+
+                    <div
+                      className={cn(styles.presets__item__header__left__title, {
+                        [styles['presets__item__header__title--default']]:
+                          props.selected_presets.includes(preset.name),
+                        [styles['presets__item__header__title--disabled']]:
+                          is_disabled_in_fim
+                      })}
+                      onClick={(e) => {
+                        if (is_disabled_in_fim) return
+                        e.stopPropagation()
+                        props.on_preset_click(preset.name)
+                      }}
+                      title={preset.name}
+                    >
+                      {preset.name}
+                    </div>
                   </div>
                   <div className={styles.presets__item__header__right}>
+                    {preset.has_affixes && (
+                      <IconButton
+                        codicon_icon="copy"
+                        title="Duplicate"
+                        on_click={() => {
+                          props.on_preset_copy(preset.name)
+                        }}
+                      />
+                    )}
+                    <IconButton
+                      codicon_icon="files"
+                      title="Duplicate"
+                      on_click={() => {
+                        props.on_preset_duplicate(preset.name)
+                      }}
+                    />
+                    <IconButton
+                      codicon_icon="edit"
+                      title="Edit"
+                      on_click={() => {
+                        props.on_preset_edit(preset.name)
+                      }}
+                    />
                     <div
                       className={
                         styles.presets__item__header__right__drag_handle
@@ -100,8 +131,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             )
           })}
         </ReactSortable>
-        <div className={styles.presets__edit}>
-          <Button on_click={props.on_create_preset}>Edit Presets</Button>
+
+        <div className={styles.presets__create}>
+          <Button on_click={props.on_create_preset}>Create Preset</Button>
         </div>
       </div>
     </div>
