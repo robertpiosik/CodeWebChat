@@ -14,7 +14,7 @@ type Chatbot = {
   }
 }
 
-export const CHATBOTS: Chatbot = {
+export const CHATBOTS = {
   'AI Studio': {
     url: 'https://aistudio.google.com/prompts/new_chat',
     supports_custom_temperature: true,
@@ -81,4 +81,4 @@ export const CHATBOTS: Chatbot = {
   HuggingChat: {
     url: 'https://huggingface.co/chat/'
   },
-} as const
+} satisfies Chatbot

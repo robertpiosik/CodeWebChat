@@ -195,6 +195,15 @@ export interface ActiveFileInfoMessage extends BaseMessage {
   fileLength: number
 }
 
+export interface PresetCreated extends BaseMessage {
+  command: 'PRESET_CREATED'
+  preset: Preset
+}
+
+export interface PresetUpdated extends BaseMessage {
+  command: 'PRESET_UPDATED'
+}
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | SaveChatInstructionMessage
@@ -236,3 +245,5 @@ export type ExtensionMessage =
   | TokenCountMessage
   | SelectionTextMessage
   | ActiveFileInfoMessage
+  | PresetCreated
+  | PresetUpdated

@@ -720,7 +720,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
                 true // Update globally
               )
 
-              // --- Start Update Selected Presets ---
+              // Update selected (default) presets
               const selected_names = this._context.globalState.get<string[]>(
                 'selectedPresets',
                 []
@@ -739,10 +739,11 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
                   names: updated_selected_names
                 })
               }
-              // --- End Update Selected Presets ---
 
-              // Send updated list back to webview
               this._send_presets_to_webview(webview_view.webview)
+              this._send_message<ExtensionMessage>({
+                command: 'PRESET_UPDATED'
+              })
             } else {
               console.error(
                 `Preset with original name "${update_msg.original_name}" not found.`
@@ -889,10 +890,9 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
             let new_name = ''
             let copy_number = 0
             while (current_presets.some((p) => p.name == new_name)) {
-              new_name = `Unnamed (${copy_number++})`
+              new_name = `(${copy_number++})`
             }
 
-            // Create new preset with default values
             const new_preset: ConfigPresetFormat = {
               name: new_name,
               chatbot: 'AI Studio',
@@ -905,12 +905,14 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
               port: undefined
             }
 
-            // Add to presets
             const updated_presets = [...current_presets, new_preset]
 
             try {
-              await config.update('geminiCoder.presets', updated_presets, true)
-              this._send_presets_to_webview(webview_view.webview)
+              this._send_message<ExtensionMessage>({
+                command: 'PRESET_CREATED',
+                preset: this._config_preset_to_ui_format(new_preset)
+              })
+              config.update('geminiCoder.presets', updated_presets, true)
             } catch (error) {
               vscode.window.showErrorMessage(
                 `Failed to create preset: ${error}`

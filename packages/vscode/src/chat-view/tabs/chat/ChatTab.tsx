@@ -14,7 +14,8 @@ import {
   FimChatHistoryMessage,
   TokenCountMessage,
   SelectionTextMessage,
-  ActiveFileInfoMessage
+  ActiveFileInfoMessage,
+  PresetCreated
 } from '../../types/messages'
 import { Preset } from '@shared/types/preset'
 
@@ -54,7 +55,7 @@ export const ChatTab: React.FC<Props> = (props) => {
 
     initial_messages.forEach((message) => props.vscode.postMessage(message))
 
-    const handle_message = (event: MessageEvent) => {
+    const handle_message = async (event: MessageEvent) => {
       const message = event.data as ExtensionMessage
       switch (message.command) {
         case 'CONNECTION_STATUS':
@@ -110,6 +111,9 @@ export const ChatTab: React.FC<Props> = (props) => {
           break
         case 'ACTIVE_FILE_INFO_UPDATED':
           set_active_file_length((message as ActiveFileInfoMessage).fileLength)
+          break
+        case 'PRESET_CREATED':
+          props.on_preset_edit((message as PresetCreated).preset)
           break
       }
     }

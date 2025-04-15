@@ -32,7 +32,7 @@
     align-items: center;
     gap: var(--padding-4px);
     height: 22px;
-    padding: 0 var(--padding-12px);
+    padding-left: var(--padding-12px);
     cursor: pointer;
 
     &:hover {
@@ -45,6 +45,10 @@
 
     &--highlighted {
       background-color: var(--vscode-list-inactiveSelectionBackground);
+
+      &:hover {
+        background-color: var(--vscode-list-inactiveSelectionBackground);
+      }
     }
 
     &__left {
@@ -69,7 +73,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
 
-        &--default {
+        &--selected {
           font-weight: 600;
         }
 
@@ -83,6 +87,8 @@
       display: none;
       align-items: center;
       gap: var(--padding-4px);
+      cursor: default;
+      padding-right: var(--padding-8px);
 
       &__drag_handle {
         display: flex;

@@ -6,10 +6,11 @@ import { useEffect, useState } from 'react'
 import { Template } from '@ui/components/editor/Template'
 import { EditView } from '@ui/components/editor/EditView'
 import { EditPresetForm } from '@ui/components/editor/EditPresetForm'
+import { Preset } from '@shared/types/preset'
+import { ExtensionMessage } from './types/messages'
 
 import '@vscode/codicons/dist/codicon.css'
 import '@ui/styles/global.scss'
-import { Preset } from '@shared/types/preset'
 
 const vscode = acquireVsCodeApi()
 
@@ -32,9 +33,9 @@ const App = () => {
 
   // Finalize back click when presets gets updated
   useEffect(() => {
-    const handle_message = (event: MessageEvent) => {
+    const handle_message = (event: MessageEvent<ExtensionMessage>) => {
       const message = event.data
-      if (message.command == 'PRESETS') {
+      if (message.command == 'PRESET_UPDATED') {
         set_updated_preset(undefined)
         set_updating_preset(undefined)
       }

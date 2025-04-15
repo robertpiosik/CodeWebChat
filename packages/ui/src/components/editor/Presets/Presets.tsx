@@ -122,16 +122,21 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
                   <div
                     className={cn(styles.presets__item__left__title, {
-                      [styles['presets__item__title--default']]:
+                      [styles['presets__item__left__title--selected']]:
                         props.selected_presets.includes(preset.name),
-                      [styles['presets__item__title--disabled']]:
+                      [styles['presets__item__left__title--disabled']]:
                         is_disabled_in_fim
                     })}
                   >
                     {preset.name}
                   </div>
                 </div>
-                <div className={styles.presets__item__right}>
+                <div
+                  className={styles.presets__item__right}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                >
                   {preset.has_affixes && (
                     <IconButton
                       codicon_icon="copy"
