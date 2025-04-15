@@ -17,12 +17,30 @@
     font-size: var(--font-size-13px);
     color: var(--vscode-foreground);
     position: relative;
+    font-weight: normal;
+
+    &::before {
+      color: var(--vscode-foreground);
+      content: attr(data-text);
+      left: 50%;
+      transform: translateX(-50%);
+      visibility: hidden;
+      position: absolute;
+      font-weight: 600;
+      white-space: nowrap;
+    }
 
     &:hover {
       background-color: var(--vscode-toolbar-hoverBackground);
     }
 
     &--active {
+      color: transparent;
+
+      &::before {
+        visibility: visible;
+      }
+
       &::after {
         position: absolute;
         content: '';
