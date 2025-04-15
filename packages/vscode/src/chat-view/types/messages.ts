@@ -1,3 +1,4 @@
+import { CHATBOTS } from '@shared/constants/chatbots'
 import { Preset } from '@shared/types/preset'
 
 export interface BaseMessage {
@@ -112,6 +113,10 @@ export interface DuplicatePresetMessage extends BaseMessage {
   name: string
 }
 
+export interface CreatePresetMessage extends BaseMessage {
+  command: 'CREATE_PRESET'
+}
+
 // Messages from extension to webview:
 export interface ConnectionStatusMessage extends BaseMessage {
   command: 'CONNECTION_STATUS'
@@ -120,7 +125,7 @@ export interface ConnectionStatusMessage extends BaseMessage {
 
 export interface PresetMessageFormat {
   name: string
-  chatbot: string
+  chatbot: keyof typeof CHATBOTS
   prompt_prefix?: string
   prompt_suffix?: string
   model?: string
@@ -215,6 +220,7 @@ export type WebviewMessage =
   | UpdatePresetMessage
   | DeletePresetMessage
   | DuplicatePresetMessage
+  | CreatePresetMessage
 
 export type ExtensionMessage =
   | ConnectionStatusMessage

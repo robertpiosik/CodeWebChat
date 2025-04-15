@@ -14,7 +14,8 @@ import {
   UpdatePresetMessage,
   DeletePresetMessage,
   SelectedPresetsMessage,
-  DuplicatePresetMessage
+  DuplicatePresetMessage,
+  CreatePresetMessage
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -22,11 +23,11 @@ import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { apply_preset_affixes_to_instruction } from '../helpers/apply-preset-affixes'
 import { token_count_emitter } from '@/context/context-initialization'
 import { Preset } from '@shared/types/preset'
+import { CHATBOTS } from '@shared/constants/chatbots'
 
-// Helper type for the structure in settings.json
 type ConfigPresetFormat = {
   name: string
-  chatbot: string
+  chatbot: keyof typeof CHATBOTS
   promptPrefix?: string
   promptSuffix?: string
   model?: string
@@ -222,6 +223,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       | DeletePresetMessage
       | SelectedPresetsMessage
       | DuplicatePresetMessage
+      | CreatePresetMessage
   >(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -877,6 +879,43 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
                 `Failed to duplicate preset: ${error}`
               )
             }
+          } else if (message.command == 'CREATE_PRESET') {
+            // Get current presets
+            const config = vscode.workspace.getConfiguration()
+            const current_presets =
+              config.get<ConfigPresetFormat[]>('geminiCoder.presets', []) || []
+
+            // Generate unique name
+            let new_name = ''
+            let copy_number = 0
+            while (current_presets.some((p) => p.name == new_name)) {
+              new_name = `Unnamed (${copy_number++})`
+            }
+
+            // Create new preset with default values
+            const new_preset: ConfigPresetFormat = {
+              name: new_name,
+              chatbot: 'AI Studio',
+              promptPrefix: '',
+              promptSuffix: '',
+              model: undefined,
+              temperature: undefined,
+              systemInstructions: '',
+              options: undefined,
+              port: undefined
+            }
+
+            // Add to presets
+            const updated_presets = [...current_presets, new_preset]
+
+            try {
+              await config.update('geminiCoder.presets', updated_presets, true)
+              this._send_presets_to_webview(webview_view.webview)
+            } catch (error) {
+              vscode.window.showErrorMessage(
+                `Failed to create preset: ${error}`
+              )
+            }
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)
@@ -940,7 +979,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
 
     this._send_message<PresetsMessage>({
       command: 'PRESETS',
-      presets: presets_for_ui // Send UI formatted presets
+      presets: presets_for_ui
     })
   }
 

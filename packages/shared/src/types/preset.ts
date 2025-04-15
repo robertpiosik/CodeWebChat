@@ -1,6 +1,8 @@
+import { CHATBOTS } from '@shared/constants/chatbots'
+
 export type Preset = {
   name: string
-  chatbot: string
+  chatbot: keyof typeof CHATBOTS
   prompt_prefix?: string
   prompt_suffix?: string
   model?: string

@@ -5,6 +5,7 @@ import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
 import { useState } from 'react'
+import { CHATBOTS } from '@shared/constants/chatbots'
 
 const chatbot_to_icon = {
   'AI Studio': 'AI_STUDIO',
@@ -18,13 +19,13 @@ const chatbot_to_icon = {
   Mistral: 'MISTRAL',
   Grok: 'GROK',
   HuggingChat: 'HUGGING_CHAT'
-} as const
+} as Record<string, Icon.Variant>
 
 export namespace Presets {
   export type Preset = {
     id?: string | number
     name: string
-    chatbot: string
+    chatbot: keyof typeof CHATBOTS
     has_affixes: boolean
   }
 
@@ -52,7 +53,7 @@ const with_ids = (
   }))
 }
 
-const ChatbotIcon: React.FC<{ chatbot: string }> = (params) => {
+const ChatbotIcon: React.FC<{ chatbot: keyof typeof CHATBOTS }> = (params) => {
   const icon_variant =
     chatbot_to_icon[params.chatbot as keyof typeof chatbot_to_icon]
 

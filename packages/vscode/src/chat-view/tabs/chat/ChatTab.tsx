@@ -203,8 +203,6 @@ export const ChatTab: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
-  const handle_create_preset = () => {}
-
   const handle_fim_mode_click = () => {
     props.vscode.postMessage({
       command: 'SAVE_FIM_MODE',
@@ -231,6 +229,12 @@ export const ChatTab: React.FC<Props> = (props) => {
         options: preset.options,
         port: preset.port
       }))
+    } as WebviewMessage)
+  }
+
+  const handle_create_preset = () => {
+    props.vscode.postMessage({
+      command: 'CREATE_PRESET'
     } as WebviewMessage)
   }
 

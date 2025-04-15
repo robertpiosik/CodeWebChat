@@ -81,4 +81,4 @@ export const CHATBOTS: Chatbot = {
   HuggingChat: {
     url: 'https://huggingface.co/chat/'
   },
-}
+} as const
