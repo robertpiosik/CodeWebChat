@@ -107,6 +107,11 @@ export interface DeletePresetMessage extends BaseMessage {
   name: string
 }
 
+export interface DuplicatePresetMessage extends BaseMessage {
+  command: 'DUPLICATE_PRESET'
+  name: string
+}
+
 // Messages from extension to webview:
 export interface ConnectionStatusMessage extends BaseMessage {
   command: 'CONNECTION_STATUS'
@@ -209,6 +214,7 @@ export type WebviewMessage =
   | GetCurrentTokenCountMessage
   | UpdatePresetMessage
   | DeletePresetMessage
+  | DuplicatePresetMessage
 
 export type ExtensionMessage =
   | ConnectionStatusMessage

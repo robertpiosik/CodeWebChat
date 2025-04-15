@@ -28,6 +28,7 @@ type Props = {
   on_presets_reorder: (reordered_presets: Preset[]) => void
   on_preset_edit: (preset_name: string) => void
   on_preset_duplicate: (preset_name: string) => void
+  on_preset_delete: (preset_name: string) => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -190,6 +191,7 @@ export const Main: React.FC<Props> = (props) => {
         is_fim_mode={props.is_fim_mode}
         on_presets_reorder={props.on_presets_reorder}
         on_preset_duplicate={props.on_preset_duplicate}
+        on_preset_delete={props.on_preset_delete}
       />
     </div>
   )

@@ -66,7 +66,7 @@ const App = () => {
   )
 
   const edit_preset_view = updating_preset && (
-    <EditView back_label="Edit preset" on_back_click={handle_back_click}>
+    <EditView back_label="EDIT PRESET" on_back_click={handle_back_click}>
       <EditPresetForm
         preset={updating_preset}
         on_update={handle_preset_update}

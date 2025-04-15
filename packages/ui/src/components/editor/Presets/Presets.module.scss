@@ -46,7 +46,7 @@
       &__left {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 5px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -94,7 +94,6 @@
           display: flex;
           align-items: center;
           cursor: grab;
-          opacity: 0.3;
 
           &:active {
             cursor: grabbing;

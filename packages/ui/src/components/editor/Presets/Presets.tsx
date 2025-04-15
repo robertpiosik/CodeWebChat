@@ -24,6 +24,7 @@ export namespace Presets {
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
     on_preset_duplicate: (name: string) => void
+    on_preset_delete: (name: string) => void
   }
 }
 
@@ -73,9 +74,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               <div key={i} className={styles.presets__item}>
                 <div className={styles.presets__item__header}>
                   <div className={styles.presets__item__header__left}>
-                    <div className={styles.presets__item__header__left__icon}>
-                      <Icon variant="AI_STUDIO" />
-                    </div>
+                    {preset.chatbot == 'AI Studio' && (
+                      <div className={styles.presets__item__header__left__icon}>
+                        <Icon variant="AI_STUDIO" />
+                      </div>
+                    )}
+                    {preset.chatbot == 'Gemini' && (
+                      <div className={styles.presets__item__header__left__icon}>
+                        <Icon variant="GEMINI" />
+                      </div>
+                    )}
 
                     <div
                       className={cn(styles.presets__item__header__left__title, {
@@ -98,7 +106,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     {preset.has_affixes && (
                       <IconButton
                         codicon_icon="copy"
-                        title="Duplicate"
+                        title="Copy to clipboard"
                         on_click={() => {
                           props.on_preset_copy(preset.name)
                         }}
@@ -116,6 +124,13 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       title="Edit"
                       on_click={() => {
                         props.on_preset_edit(preset.name)
+                      }}
+                    />
+                    <IconButton
+                      codicon_icon="trash"
+                      title="Delete"
+                      on_click={() => {
+                        props.on_preset_delete(preset.name)
                       }}
                     />
                     <div
