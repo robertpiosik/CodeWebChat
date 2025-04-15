@@ -273,7 +273,7 @@ export const ChatTab: React.FC<Props> = (props) => {
       is_connected={is_connected}
       presets={presets}
       selected_presets={selected_presets}
-      on_create_preset_click={handle_create_preset}
+      on_create_preset={handle_create_preset}
       has_active_editor={has_active_editor}
       is_fim_mode={is_fim_mode && has_active_editor}
       on_fim_mode_click={handle_fim_mode_click}

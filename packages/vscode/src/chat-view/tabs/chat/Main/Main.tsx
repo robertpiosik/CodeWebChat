@@ -12,7 +12,7 @@ type Props = {
     preset_names: string[]
   }) => void
   copy_to_clipboard: (instruction: string) => void
-  on_create_preset_click: () => void
+  on_create_preset: () => void
   is_connected: boolean
   presets: Preset[]
   selected_presets: string[]
@@ -182,7 +182,7 @@ export const Main: React.FC<Props> = (props) => {
         })}
         disabled={!props.is_connected}
         selected_presets={props.selected_presets}
-        on_create_preset={props.on_create_preset_click}
+        on_create_preset={props.on_create_preset}
         on_preset_click={(name) => {
           props.initialize_chats({
             instruction: current_instruction,

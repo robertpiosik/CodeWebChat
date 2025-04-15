@@ -115,11 +115,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 }}
                 role="button"
                 title={preset.name}
-                onMouseOver={() => {
-                  if (highlighted_preset_name == preset.name) {
-                    set_highlighted_preset_name(undefined)
-                  }
-                }}
               >
                 <div className={styles.presets__item__left}>
                   <ChatbotIcon chatbot={preset.chatbot} />
