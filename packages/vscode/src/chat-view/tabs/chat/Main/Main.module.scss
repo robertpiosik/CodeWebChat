@@ -1,8 +1,12 @@
 .container {
-  padding: var(--padding-12px);
   display: flex;
   flex-direction: column;
   overflow: auto;
+  padding: var(--padding-12px) 0;
+}
+
+.chat-input {
+  margin: 0 var(--padding-12px);
 }
 
 .browser-extension-message {

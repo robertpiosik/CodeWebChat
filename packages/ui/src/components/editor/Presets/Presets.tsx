@@ -4,6 +4,21 @@ import { Button } from '../Button/Button'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
+import { useState } from 'react'
+
+const chatbot_to_icon = {
+  'AI Studio': 'AI_STUDIO',
+  Gemini: 'GEMINI',
+  'Open WebUI': 'OPEN_WEBUI',
+  OpenRouter: 'OPENROUTER',
+  ChatGPT: 'CHATGPT',
+  'GitHub Copilot': 'GITHUB_COPILOT',
+  Claude: 'CLAUDE',
+  DeepSeek: 'DEEPSEEK',
+  Mistral: 'MISTRAL',
+  Grok: 'GROK',
+  HuggingChat: 'HUGGING_CHAT'
+} as const
 
 export namespace Presets {
   export type Preset = {
@@ -37,12 +52,28 @@ const with_ids = (
   }))
 }
 
+const ChatbotIcon: React.FC<{ chatbot: string }> = (params) => {
+  const icon_variant =
+    chatbot_to_icon[params.chatbot as keyof typeof chatbot_to_icon]
+
+  if (!icon_variant) return null
+
+  return (
+    <div className={styles.presets__item__left__icon}>
+      <Icon variant={icon_variant} />
+    </div>
+  )
+}
+
 export const Presets: React.FC<Presets.Props> = (props) => {
+  const [highlighted_preset_name, set_highlighted_preset_name] =
+    useState<string>()
+
   if (props.presets.length == 0) return null
 
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
+      <div className={styles['my-presets']}>
         <span>MY PRESETS</span>
         <IconButton
           codicon_icon="info"
@@ -64,92 +95,94 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             }
           }}
           animation={150}
-          handle={`.${styles.presets__item__header__right__drag_handle}`}
+          handle={`.${styles.presets__item__right__drag_handle}`}
           disabled={props.disabled}
         >
           {props.presets.map((preset, i) => {
             const is_disabled_in_fim = props.is_fim_mode && preset.has_affixes
 
             return (
-              <div key={i} className={styles.presets__item}>
-                <div className={styles.presets__item__header}>
-                  <div className={styles.presets__item__header__left}>
-                    {preset.chatbot == 'AI Studio' && (
-                      <div className={styles.presets__item__header__left__icon}>
-                        <Icon variant="AI_STUDIO" />
-                      </div>
-                    )}
-                    {preset.chatbot == 'Gemini' && (
-                      <div className={styles.presets__item__header__left__icon}>
-                        <Icon variant="GEMINI" />
-                      </div>
-                    )}
+              <div
+                key={i}
+                className={cn(styles.presets__item, {
+                  [styles['presets__item--highlighted']]:
+                    highlighted_preset_name == preset.name
+                })}
+                onClick={() => {
+                  if (is_disabled_in_fim) return
+                  props.on_preset_click(preset.name)
+                  set_highlighted_preset_name(preset.name)
+                }}
+                role="button"
+                title={preset.name}
+                onMouseOver={() => {
+                  if (highlighted_preset_name == preset.name) {
+                    set_highlighted_preset_name(undefined)
+                  }
+                }}
+              >
+                <div className={styles.presets__item__left}>
+                  <ChatbotIcon chatbot={preset.chatbot} />
 
-                    <div
-                      className={cn(styles.presets__item__header__left__title, {
-                        [styles['presets__item__header__title--default']]:
-                          props.selected_presets.includes(preset.name),
-                        [styles['presets__item__header__title--disabled']]:
-                          is_disabled_in_fim
-                      })}
-                      onClick={(e) => {
-                        if (is_disabled_in_fim) return
-                        e.stopPropagation()
-                        props.on_preset_click(preset.name)
-                      }}
-                      title={preset.name}
-                    >
-                      {preset.name}
-                    </div>
+                  <div
+                    className={cn(styles.presets__item__left__title, {
+                      [styles['presets__item__title--default']]:
+                        props.selected_presets.includes(preset.name),
+                      [styles['presets__item__title--disabled']]:
+                        is_disabled_in_fim
+                    })}
+                  >
+                    {preset.name}
                   </div>
-                  <div className={styles.presets__item__header__right}>
-                    {preset.has_affixes && (
-                      <IconButton
-                        codicon_icon="copy"
-                        title="Copy to clipboard"
-                        on_click={() => {
-                          props.on_preset_copy(preset.name)
-                        }}
-                      />
-                    )}
+                </div>
+                <div className={styles.presets__item__right}>
+                  {preset.has_affixes && (
                     <IconButton
-                      codicon_icon="files"
-                      title="Duplicate"
-                      on_click={() => {
-                        props.on_preset_duplicate(preset.name)
+                      codicon_icon="copy"
+                      title="Copy to clipboard"
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_preset_copy(preset.name)
                       }}
                     />
-                    <IconButton
-                      codicon_icon="edit"
-                      title="Edit"
-                      on_click={() => {
-                        props.on_preset_edit(preset.name)
-                      }}
-                    />
-                    <IconButton
-                      codicon_icon="trash"
-                      title="Delete"
-                      on_click={() => {
-                        props.on_preset_delete(preset.name)
-                      }}
-                    />
-                    <div
-                      className={
-                        styles.presets__item__header__right__drag_handle
-                      }
-                    >
-                      <span className="codicon codicon-gripper" />
-                    </div>
+                  )}
+                  <IconButton
+                    codicon_icon="files"
+                    title="Duplicate"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_preset_duplicate(preset.name)
+                    }}
+                  />
+                  <IconButton
+                    codicon_icon="edit"
+                    title="Edit"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      set_highlighted_preset_name(preset.name)
+                      props.on_preset_edit(preset.name)
+                    }}
+                  />
+                  <IconButton
+                    codicon_icon="trash"
+                    title="Delete"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_preset_delete(preset.name)
+                    }}
+                  />
+                  <div className={styles.presets__item__right__drag_handle}>
+                    <span className="codicon codicon-gripper" />
                   </div>
                 </div>
               </div>
             )
           })}
         </ReactSortable>
+      </div>
 
-        <div className={styles.presets__create}>
-          <Button on_click={props.on_create_preset}>Create Preset</Button>
-        </div>
+      <div className={styles.presets__create}>
+        <Button on_click={props.on_create_preset}>Create Preset</Button>
       </div>
     </div>
   )

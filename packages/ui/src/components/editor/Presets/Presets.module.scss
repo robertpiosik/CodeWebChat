@@ -4,10 +4,12 @@
   gap: var(--padding-10px);
 }
 
-.top {
+.my-presets {
   display: flex;
   align-items: center;
   gap: var(--padding-10px);
+  padding: 0 var(--padding-12px);
+
   > span {
     color: var(--vscode-foreground);
   }
@@ -16,6 +18,7 @@
 .presets {
   display: flex;
   flex-direction: column;
+  gap: var(--padding-12px);
 
   &--disabled {
     opacity: 0.5;
@@ -23,193 +26,78 @@
   }
 
   &__item {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid var(--vscode-sideBarSectionHeader-border);
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--padding-4px);
+    height: 22px;
+    padding: 0 var(--padding-12px);
+    cursor: pointer;
 
-    &:hover .presets__item__header__right {
-      display: flex;
-    }
+    &:hover {
+      background-color: var(--vscode-list-hoverBackground);
 
-    &--disabled {
-      opacity: 0.5;
-    }
-
-    &__header {
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 4px;
-      min-height: 24px;
-
-      &__left {
+      .presets__item__right {
         display: flex;
-        align-items: center;
-        gap: 5px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        &__icon {
-          display: flex;
-          > svg {
-            fill: var(--vscode-icon-foreground);
-            width: 16px;
-            height: 16px;
-          }
-        }
-
-        &__title {
-          padding: var(--padding-4px) 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          cursor: pointer;
-
-          &:hover {
-            text-decoration: underline;
-          }
-
-          &--default {
-            font-weight: 600;
-          }
-
-          &--disabled {
-            opacity: 0.5;
-            cursor: default; //
-
-            &:hover {
-              text-decoration: none;
-            }
-          }
-        }
-      }
-
-      &__right {
-        display: flex;
-        align-items: center;
-        gap: var(--padding-4px);
-        display: none;
-        &__drag_handle {
-          display: flex;
-          align-items: center;
-          cursor: grab;
-
-          &:active {
-            cursor: grabbing;
-          }
-        }
       }
     }
 
-    &__info {
+    &--highlighted {
+      background-color: var(--vscode-list-inactiveSelectionBackground);
+    }
+
+    &__left {
       display: flex;
       align-items: center;
-      gap: var(--padding-4px);
-      padding: var(--padding-4px) var(--padding-6px);
-      margin: var(--padding-4px) 0;
-      background: var(--vscode-inputValidation-infoBackground);
-      border-radius: 5px;
-      color: var(--vscode-inputValidation-infoForeground);
-      font-size: 0.9em;
-    }
+      gap: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
-    &__details {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      padding: var(--padding-8px);
-      background: var(--vscode-editor-background);
-      border-radius: 5px;
-      margin-bottom: var(--padding-8px);
-      gap: var(--padding-10px);
-
-      &--disabled {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-
-      &__actions {
-        position: absolute;
-        top: var(--padding-6px);
-        right: var(--padding-6px);
+      &__icon {
         display: flex;
-        align-items: flex-end;
-        gap: var(--padding-4px);
-      }
 
-      &__row {
-        display: flex;
-        flex-direction: column;
-        gap: var(--padding-8px);
-
-        &__field {
-          display: flex;
-          flex-direction: column;
-
-          &__label {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--vscode-descriptionForeground);
-          }
-
-          &__value {
-            color: var(--vscode-foreground);
-          }
-        }
-      }
-
-      &__default_check {
-        display: flex;
-        align-items: center;
-        gap: var(--padding-4px);
-        cursor: pointer;
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-        color: var(--vscode-foreground);
-
-        input[type='checkbox'] {
-          appearance: none;
-          -webkit-appearance: none;
-          -moz-appearance: none;
+        > svg {
+          fill: var(--vscode-icon-foreground);
           width: 16px;
           height: 16px;
-          border-radius: 3px;
-          border: 1px solid var(--vscode-checkbox-border);
-          background-color: var(--vscode-checkbox-background);
-          position: relative;
-          cursor: pointer;
-          outline: none;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
+        }
+      }
 
-          &::before {
-            content: '\eab2';
-            font-family: 'codicon';
-            font-size: 13px;
-            color: var(--vscode-checkbox-foreground);
-            opacity: 0;
-            position: static;
-            transform: none;
-            border: none;
-            width: auto;
-            height: auto;
-          }
+      &__title {
+        overflow: hidden;
+        text-overflow: ellipsis;
 
-          &:checked::before {
-            opacity: 1;
-          }
+        &--default {
+          font-weight: 600;
+        }
 
-          &:focus-visible {
-            border-color: var(--vscode-focusBorder);
-          }
+        &--disabled {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    &__right {
+      display: none;
+      align-items: center;
+      gap: var(--padding-4px);
+
+      &__drag_handle {
+        display: flex;
+        align-items: center;
+        cursor: grab;
+        opacity: 0.6;
+
+        &:active {
+          cursor: grabbing;
         }
       }
     }
   }
 
   &__create {
-    margin-top: 12px;
+    margin: 0 var(--padding-12px);
   }
 }

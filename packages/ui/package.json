@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@storybook/types": "^7.6.20",
+    "@types/node": "20.x",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
     "@types/vscode": "^1.98.0",

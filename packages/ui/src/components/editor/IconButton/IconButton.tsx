@@ -3,7 +3,7 @@ import cn from 'classnames'
 
 type Props = {
   codicon_icon: string
-  on_click?: () => void
+  on_click?: (e: any) => void
   href?: string
   title?: string
 }

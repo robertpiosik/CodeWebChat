@@ -128,25 +128,28 @@ export const Main: React.FC<Props> = (props) => {
       className={styles.container}
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
-      <UiChatInput
-        value={current_instruction}
-        chat_history={props.chat_history}
-        chat_history_fim_mode={props.chat_history_fim_mode}
-        on_change={handle_input_change}
-        on_submit={handle_submit}
-        on_copy={handle_copy}
-        is_connected={props.is_connected}
-        token_count={total_token_count}
-        submit_disabled_title={
-          !props.is_connected
-            ? 'WebSocket connection not established. Please install the browser extension.'
-            : 'Initialize chats'
-        }
-        is_fim_mode={props.is_fim_mode}
-        on_fim_mode_click={handle_fim_mode_click}
-        has_active_editor={props.has_active_editor}
-        has_active_selection={props.has_active_selection}
-      />
+      <div className={styles['chat-input']}>
+        <UiChatInput
+          value={current_instruction}
+          chat_history={props.chat_history}
+          chat_history_fim_mode={props.chat_history_fim_mode}
+          on_change={handle_input_change}
+          on_submit={handle_submit}
+          on_copy={handle_copy}
+          is_connected={props.is_connected}
+          token_count={total_token_count}
+          submit_disabled_title={
+            !props.is_connected
+              ? 'WebSocket connection not established. Please install the browser extension.'
+              : 'Initialize chats'
+          }
+          is_fim_mode={props.is_fim_mode}
+          on_fim_mode_click={handle_fim_mode_click}
+          has_active_editor={props.has_active_editor}
+          has_active_selection={props.has_active_selection}
+        />
+      </div>
+
       {!props.is_connected && (
         <>
           <UiSeparator size="large" />
