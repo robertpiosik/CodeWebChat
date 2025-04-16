@@ -96,7 +96,7 @@ export class ApiViewProvider implements vscode.WebviewViewProvider {
           .getConfiguration('geminiCoder')
           .update('apiKey', message.api_key, true)
       } else if (message.command == 'update_fim_model') {
-        await this._model_manager.set_default_fim_model(message.model)
+        await this._model_manager.set_default_code_completion_model(message.model)
       } else if (message.command == 'update_refactoring_model') {
         await this._model_manager.set_default_refactoring_model(message.model)
       } else if (message.command == 'update_apply_changes_model') {

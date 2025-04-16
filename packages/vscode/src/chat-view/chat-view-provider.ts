@@ -15,7 +15,9 @@ import {
   DeletePresetMessage,
   SelectedPresetsMessage,
   DuplicatePresetMessage,
-  CreatePresetMessage
+  CreatePresetMessage,
+  ApiKeyUpdatedMessage,
+  UpdateApiKeyMessage
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -224,6 +226,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       | SelectedPresetsMessage
       | DuplicatePresetMessage
       | CreatePresetMessage
+      | ApiKeyUpdatedMessage
   >(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -921,6 +924,21 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
                 `Failed to create preset: ${error}`
               )
             }
+          } else if (message.command === 'GET_API_KEY') {
+            const config = vscode.workspace.getConfiguration()
+            const api_key = config.get<string>('geminiCoder.apiKey', '')
+            this._send_message<ApiKeyUpdatedMessage>({
+              command: 'API_KEY_UPDATED',
+              api_key
+            })
+          } else if (message.command === 'UPDATE_API_KEY') {
+            const update_msg = message as UpdateApiKeyMessage
+            const config = vscode.workspace.getConfiguration()
+            await config.update('geminiCoder.apiKey', update_msg.api_key, true)
+            this._send_message<ApiKeyUpdatedMessage>({
+              command: 'API_KEY_UPDATED',
+              api_key: update_msg.api_key
+            })
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)

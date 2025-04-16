@@ -59,7 +59,7 @@ select.input {
     }
 
     &::-webkit-slider-runnable-track {
-      background: var(--vscode-input-background);
+      background: var(--vscode-descriptionForeground);
       height: 3px;
     }
 

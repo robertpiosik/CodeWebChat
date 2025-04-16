@@ -42,7 +42,7 @@ export class ModelManager {
   }
 
   // Set the default models
-  async set_default_fim_model(model_name: string): Promise<void> {
+  async set_default_code_completion_model(model_name: string): Promise<void> {
     Logger.log({
       function_name: 'set_default_fim_model',
       message: `Setting default FIM model to: ${model_name}`

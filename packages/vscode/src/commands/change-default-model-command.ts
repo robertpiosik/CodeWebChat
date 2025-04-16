@@ -99,7 +99,7 @@ export function change_default_model_command(
         // Update in global state instead of configuration
         switch (model_type) {
           case 'fim':
-            await modelManager.set_default_fim_model(selected_provider)
+            await modelManager.set_default_code_completion_model(selected_provider)
             break
           case 'refactoring':
             await modelManager.set_default_refactoring_model(selected_provider)

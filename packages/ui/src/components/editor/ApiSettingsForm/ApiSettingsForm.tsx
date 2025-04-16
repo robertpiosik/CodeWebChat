@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './ApiSettingsForm.module.scss'
 import cn from 'classnames'
 import { Field } from '../Field'
@@ -10,7 +10,7 @@ type ModelOption = {
 
 type Props = {
   api_key: string
-  default_fim_model: string
+  default_code_completion_model: string
   default_refactoring_model: string
   default_apply_changes_model: string
   default_commit_message_model: string
@@ -23,6 +23,8 @@ type Props = {
 }
 
 export const ApiSettingsForm: React.FC<Props> = (props) => {
+  const [show_api_key, set_show_api_key] = useState(false)
+
   return (
     <div className={styles.form}>
       <Field
@@ -37,20 +39,33 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
           )
         }
       >
-        <input
-          id="api-key"
-          type="password"
-          value={props.api_key}
-          onChange={(e) => props.on_api_key_change(e.target.value)}
-          className={styles.input}
-          placeholder="Enter your API key"
-        />
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            id="api-key"
+            type={show_api_key ? 'text' : 'password'}
+            value={props.api_key}
+            onChange={(e) => props.on_api_key_change(e.target.value)}
+            className={styles.input}
+            placeholder="Enter your API key"
+            style={{ flex: 1 }}
+          />
+          <button
+            className={styles.input}
+            onClick={() => set_show_api_key(!show_api_key)}
+            style={{
+              padding: 'var(--padding-4px) var(--padding-8px)',
+              cursor: 'pointer'
+            }}
+          >
+            {show_api_key ? 'Hide' : 'Show'}
+          </button>
+        </div>
       </Field>
 
       <Field label="Default FIM Model" htmlFor="fim-model">
         <select
           id="fim-model"
-          value={props.default_fim_model}
+          value={props.default_code_completion_model}
           onChange={(e) => props.on_fim_model_change(e.target.value)}
           className={cn(styles.input, styles.select)}
         >

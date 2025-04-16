@@ -62,7 +62,7 @@ const App = () => {
           set_updating_preset(preset)
         }}
       />
-      <ApiTab is_visible={active_tab == 'api'} />
+      <ApiTab vscode={vscode} is_visible={active_tab == 'api'} />
     </>
   )
 

@@ -6,6 +6,15 @@ export interface BaseMessage {
 }
 
 // Messages from webview to extension
+export interface GetApiKeyMessage extends BaseMessage {
+  command: 'GET_API_KEY'
+}
+
+export interface UpdateApiKeyMessage extends BaseMessage {
+  command: 'UPDATE_API_KEY'
+  api_key: string
+}
+
 export interface SaveChatInstructionMessage extends BaseMessage {
   command: 'SAVE_CHAT_INSTRUCTION'
   instruction: string
@@ -118,6 +127,11 @@ export interface CreatePresetMessage extends BaseMessage {
 }
 
 // Messages from extension to webview:
+export interface ApiKeyUpdatedMessage extends BaseMessage {
+  command: 'API_KEY_UPDATED'
+  api_key: string
+}
+
 export interface ConnectionStatusMessage extends BaseMessage {
   command: 'CONNECTION_STATUS'
   connected: boolean
@@ -206,6 +220,8 @@ export interface PresetUpdated extends BaseMessage {
 
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
+  | GetApiKeyMessage
+  | UpdateApiKeyMessage
   | SaveChatInstructionMessage
   | SaveFimInstructionMessage
   | GetConnectionStatusMessage
@@ -232,6 +248,7 @@ export type WebviewMessage =
   | CreatePresetMessage
 
 export type ExtensionMessage =
+  | ApiKeyUpdatedMessage
   | ConnectionStatusMessage
   | PresetsMessage
   | SelectedPresetsMessage
