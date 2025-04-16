@@ -26,6 +26,7 @@
   display: flex;
   justify-content: center;
   padding-top: var(--padding-12px);
+  margin-bottom: -8px;
 
   > svg {
     fill: var(--vscode-icon-foreground);
