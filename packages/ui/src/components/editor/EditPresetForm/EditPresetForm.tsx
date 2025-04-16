@@ -3,6 +3,7 @@ import styles from './EditPresetForm.module.scss'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import TextareaAutosize from 'react-textarea-autosize'
+import cn from 'classnames'
 
 type Props = {
   preset: Preset
@@ -12,8 +13,17 @@ type Props = {
 export const EditPresetForm: React.FC<Props> = (props) => {
   const [chatbot, set_chatbot] = useState(props.preset.chatbot)
   const [name, set_name] = useState(props.preset.name)
-  const [temperature, set_temperature] = useState(props.preset.temperature)
-  const [model, set_model] = useState(props.preset.model)
+  const [temperature, set_temperature] = useState(
+    props.preset.temperature ||
+      CHATBOTS[props.preset.chatbot].default_temperature == -1
+      ? undefined
+      : CHATBOTS[props.preset.chatbot].default_temperature
+  )
+  const [model, set_model] = useState(
+    props.preset.model
+      ? props.preset.model
+      : Object.keys(CHATBOTS[props.preset.chatbot].models)[0] || undefined
+  )
   const [system_instructions, set_system_instructions] = useState(
     props.preset.system_instructions ||
       CHATBOTS[props.preset.chatbot].default_system_instructions ||
@@ -22,10 +32,10 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const [port, set_port] = useState(props.preset.port)
 
   const supports_temperature = CHATBOTS[chatbot].supports_custom_temperature
-  const supports_model = CHATBOTS[chatbot].supports_user_provided_model
   const supports_system_instructions =
     CHATBOTS[chatbot].supports_system_instructions
   const supports_port = CHATBOTS[chatbot].supports_user_provided_port
+  const supports_custom_model = CHATBOTS[chatbot].supports_user_provided_model
   const models = CHATBOTS[chatbot].models
 
   useEffect(() => {
@@ -34,7 +44,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       name,
       chatbot,
       ...(supports_temperature ? { temperature } : {}),
-      ...(supports_model ? { model } : {}),
+      ...(model ? { model } : {}),
       ...(supports_system_instructions ? { system_instructions } : {}),
       ...(supports_port ? { port } : {})
     })
@@ -43,9 +53,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const handle_chatbot_change = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const new_chatbot = e.target.value as keyof typeof CHATBOTS
     set_chatbot(new_chatbot)
-    set_model(undefined)
+    set_model(Object.keys(CHATBOTS[new_chatbot].models)[0] || undefined)
     set_port(undefined)
-    set_temperature(undefined)
+    set_temperature(
+      CHATBOTS[new_chatbot].default_temperature == -1
+        ? undefined
+        : CHATBOTS[new_chatbot].default_temperature
+    )
     if (CHATBOTS[new_chatbot].supports_system_instructions) {
       set_system_instructions(CHATBOTS[new_chatbot].default_system_instructions)
     } else {
@@ -86,7 +100,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         />
       </div>
 
-      {supports_model && Object.keys(models).length > 0 && (
+      {Object.keys(models).length > 0 && (
         <div className={styles.field}>
           <label htmlFor="preset-model" className={styles.field__label}>
             Model
@@ -97,13 +111,28 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             onChange={(e) => set_model(e.target.value)}
             className={styles.input}
           >
-            <option value="">Default</option>
             {Object.entries(models).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
               </option>
             ))}
           </select>
+        </div>
+      )}
+
+      {supports_custom_model && (
+        <div className={styles.field}>
+          <label htmlFor="preset-custom-model" className={styles.field__label}>
+            Model
+          </label>
+          <input
+            id="preset-custom-model"
+            type="text"
+            value={model || ''}
+            onChange={(e) => set_model(e.target.value)}
+            className={styles.input}
+            placeholder="Enter model name"
+          />
         </div>
       )}
 
@@ -114,11 +143,17 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           </label>
           <input
             id="preset-port"
-            type="number"
+            type="text"
             value={port}
             onChange={(e) => set_port(parseInt(e.target.value))}
             className={styles.input}
             placeholder="e.g. 3000"
+            onKeyDown={
+              (e) =>
+                !/[0-9]/.test(e.key) &&
+                e.key != 'Backspace' &&
+                e.preventDefault() // This way we don't see arrows up/down
+            }
           />
           {chatbot == 'Open WebUI' && (
             <div className={styles.field__info}>
@@ -130,9 +165,12 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
       {supports_temperature && (
         <div className={styles.field}>
-          <label className={styles.field__label}>Temperature</label>
+          <label htmlFor="preset-temperature" className={styles.field__label}>
+            Temperature
+          </label>
           <div className={styles.temperature}>
             <input
+              id="preset-temperature"
               type="number"
               min="0"
               max="1"
@@ -144,7 +182,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                   set_temperature(value)
                 }
               }}
-              className={`${styles.input} ${styles.temperature__input}`}
+              className={cn(styles.input, styles.temperature__input)}
             />
             <input
               type="range"

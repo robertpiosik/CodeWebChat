@@ -53,14 +53,21 @@ const with_ids = (
   }))
 }
 
-const ChatbotIcon: React.FC<{ chatbot: keyof typeof CHATBOTS }> = (params) => {
+const ChatbotIcon: React.FC<{
+  chatbot: keyof typeof CHATBOTS
+  is_selected: boolean
+}> = (params) => {
   const icon_variant =
     chatbot_to_icon[params.chatbot as keyof typeof chatbot_to_icon]
 
   if (!icon_variant) return null
 
   return (
-    <div className={styles.presets__item__left__icon}>
+    <div
+      className={cn(styles.presets__item__left__icon, {
+        [styles['presets__item__left__icon--selected']]: params.is_selected
+      })}
+    >
       <Icon variant={icon_variant} />
     </div>
   )
@@ -118,7 +125,10 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 title={preset.name}
               >
                 <div className={styles.presets__item__left}>
-                  <ChatbotIcon chatbot={preset.chatbot} />
+                  <ChatbotIcon
+                    chatbot={preset.chatbot}
+                    is_selected={props.selected_presets.includes(preset.name)}
+                  />
 
                   <div
                     className={cn(styles.presets__item__left__title, {

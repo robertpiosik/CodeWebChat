@@ -771,10 +771,10 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
             }
 
             // Store the deleted preset and its index in case we need to revert
-            const presetIndex = current_presets.findIndex(
+            const preset_index = current_presets.findIndex(
               (p) => p.name == presetName
             )
-            const deleted_preset = current_presets[presetIndex]
+            const deleted_preset = current_presets[preset_index]
             const updated_presets = current_presets.filter(
               (p) => p.name != presetName
             )
@@ -796,7 +796,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
               if (undo_result == button_text && deleted_preset) {
                 // Restore the preset at its original position
                 const restored_presets = [...updated_presets]
-                restored_presets.splice(presetIndex, 0, deleted_preset)
+                restored_presets.splice(preset_index, 0, deleted_preset)
 
                 await config.update(
                   'geminiCoder.presets',

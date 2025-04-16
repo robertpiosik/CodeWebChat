@@ -23,11 +23,11 @@
   resize: none;
   position: relative;
   z-index: 1;
-  overflow-y: auto;
   white-space: pre-wrap;
   overflow-wrap: break-word;
   word-break: break-word;
   letter-spacing: normal;
+  overflow: hidden;
 
   &:focus {
     outline: none;

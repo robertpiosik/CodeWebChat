@@ -67,6 +67,10 @@
           width: 16px;
           height: 16px;
         }
+
+        &--selected > svg {
+          fill: var(--vscode-textLink-foreground);
+        }
       }
 
       &__title {
@@ -74,7 +78,7 @@
         text-overflow: ellipsis;
 
         &--selected {
-          font-weight: 600;
+          color: var(--vscode-textLink-foreground);
         }
 
         &--disabled {
