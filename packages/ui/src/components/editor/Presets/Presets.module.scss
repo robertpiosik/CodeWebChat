@@ -7,11 +7,25 @@
 .my-presets {
   display: flex;
   align-items: center;
-  gap: var(--padding-10px);
+  justify-content: space-between;
   padding: 0 var(--padding-12px);
 
-  > span {
-    color: var(--vscode-foreground);
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-10px);
+
+    > span {
+      color: var(--vscode-foreground);
+    }
+  }
+
+  &__set-default {
+    color: var(--vscode-textLink-foreground);
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 

@@ -261,6 +261,12 @@ export const ChatTab: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
+  const handle_set_default = () => {
+    props.vscode.postMessage({
+      command: 'SHOW_PRESET_PICKER'
+    } as WebviewMessage)
+  }
+
   if (
     is_connected === undefined ||
     presets === undefined ||
@@ -295,6 +301,7 @@ export const ChatTab: React.FC<Props> = (props) => {
       on_preset_edit={handle_preset_edit}
       on_preset_duplicate={handle_preset_duplicate}
       on_preset_delete={handle_preset_delete}
+      on_set_default={handle_set_default}
     />
   )
 }

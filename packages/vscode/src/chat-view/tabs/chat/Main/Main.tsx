@@ -29,6 +29,7 @@ type Props = {
   on_preset_edit: (preset_name: string) => void
   on_preset_duplicate: (preset_name: string) => void
   on_preset_delete: (preset_name: string) => void
+  on_set_default: () => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -195,6 +196,7 @@ export const Main: React.FC<Props> = (props) => {
         on_presets_reorder={props.on_presets_reorder}
         on_preset_duplicate={props.on_preset_duplicate}
         on_preset_delete={props.on_preset_delete}
+        on_set_default={props.on_set_default}
       />
     </div>
   )

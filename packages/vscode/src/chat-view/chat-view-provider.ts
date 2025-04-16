@@ -589,21 +589,31 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
               []
             )
 
+            // First validate the current selection against available presets
+            const available_preset_names = web_chat_presets.map(
+              (preset) => preset.name
+            )
+            let selected_preset_names = this._context.globalState.get<string[]>(
+              'selectedPresets',
+              []
+            )
+            selected_preset_names = selected_preset_names.filter((name) =>
+              available_preset_names.includes(name)
+            )
+
+            // Update the global state with validated selection
+            await this._context.globalState.update(
+              'selectedPresets',
+              selected_preset_names
+            )
+
             const preset_quick_pick_items = web_chat_presets.map((preset) => ({
               label: preset.name,
               description: `${preset.chatbot}${
                 preset.model ? ` - ${preset.model}` : ''
               }`,
-              picked: false
+              picked: selected_preset_names.includes(preset.name) // Set picked state directly
             }))
-
-            const selected_preset_names = this._context.globalState.get<
-              string[]
-            >('selectedPresets', [])
-
-            preset_quick_pick_items.forEach((item) => {
-              item.picked = selected_preset_names.includes(item.label)
-            })
 
             const selected_presets = await vscode.window.showQuickPick(
               preset_quick_pick_items,
@@ -617,20 +627,13 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
               const selected_names = selected_presets.map(
                 (preset) => preset.label
               )
-
               await this._context.globalState.update(
                 'selectedPresets',
                 selected_names
               )
-
               this._send_message<ExtensionMessage>({
                 command: 'PRESETS_SELECTED_FROM_PICKER',
                 names: selected_names
-              })
-            } else {
-              this._send_message<ExtensionMessage>({
-                command: 'PRESETS_SELECTED_FROM_PICKER',
-                names: []
               })
             }
           } else if (message.command == 'OPEN_SETTINGS') {

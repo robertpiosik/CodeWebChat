@@ -41,6 +41,7 @@ export namespace Presets {
     on_preset_edit: (name: string) => void
     on_preset_duplicate: (name: string) => void
     on_preset_delete: (name: string) => void
+    on_set_default: () => void
   }
 }
 
@@ -82,11 +83,22 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles['my-presets']}>
-        <span>MY PRESETS</span>
-        <IconButton
-          codicon_icon="info"
-          href="https://gemini-coder.netlify.app/docs/features/chat/presets"
-        />
+        <div className={styles['my-presets__left']}>
+          <span>MY PRESETS</span>
+
+          <IconButton
+            codicon_icon="info"
+            href="https://gemini-coder.netlify.app/docs/features/chat/presets"
+          />
+        </div>
+
+        <button
+          className={styles['my-presets__set-default']}
+          onClick={props.on_set_default}
+          title="Set presets opening by default"
+        >
+          Set default
+        </button>
       </div>
 
       <div
