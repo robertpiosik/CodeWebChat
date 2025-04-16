@@ -4,6 +4,21 @@ import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
+import { Icon } from '../Icon'
+
+const chatbot_to_icon = {
+  'AI Studio': 'AI_STUDIO',
+  Gemini: 'GEMINI',
+  'Open WebUI': 'OPEN_WEBUI',
+  OpenRouter: 'OPENROUTER',
+  ChatGPT: 'CHATGPT',
+  'GitHub Copilot': 'GITHUB_COPILOT',
+  Claude: 'CLAUDE',
+  DeepSeek: 'DEEPSEEK',
+  Mistral: 'MISTRAL',
+  Grok: 'GROK',
+  HuggingChat: 'HUGGING_CHAT'
+} as Record<string, Icon.Variant>
 
 type Props = {
   preset: Preset
@@ -69,6 +84,10 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
   return (
     <div className={styles.form}>
+      <div className={styles['chatbot-icon']}>
+        <Icon variant={chatbot_to_icon[chatbot]} />
+      </div>
+
       <div className={styles.field}>
         <label htmlFor="preset-chatbot" className={styles.field__label}>
           Chatbot
