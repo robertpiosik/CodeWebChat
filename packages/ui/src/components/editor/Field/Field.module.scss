@@ -5,8 +5,9 @@
 
   &__label {
     font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
-    color: var(--vscode-descriptionForeground);
+    color: var(--vscode-editor-foreground);
     align-self: flex-start;
   }
 

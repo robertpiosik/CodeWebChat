@@ -101,7 +101,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
     const update_editor_state = () => {
       const has_active_editor = !!vscode.window.activeTextEditor
-      if (has_active_editor !== this._has_active_editor) {
+      if (has_active_editor != this._has_active_editor) {
         this._has_active_editor = has_active_editor
         if (this._webview_view) {
           this._send_message<ExtensionMessage>({
@@ -695,10 +695,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'UPDATE_PRESET') {
             const update_msg = message as UpdatePresetMessage
             const config = vscode.workspace.getConfiguration()
-            const currentPresets =
+            const current_presets =
               config.get<ConfigPresetFormat[]>('geminiCoder.presets', []) || []
 
-            const preset_index = currentPresets.findIndex(
+            const preset_index = current_presets.findIndex(
               (p) => p.name == update_msg.original_name
             )
 
@@ -713,10 +713,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
               while (!is_unique) {
                 const name_to_check =
-                  copy_number == 0 ? base_name : `${base_name} (${copy_number})`
+                  copy_number == 0
+                    ? base_name
+                    : `${base_name} (${copy_number})`.trim()
 
                 // Check if this name exists in *other* presets
-                const conflict = currentPresets.some(
+                const conflict = current_presets.some(
                   (p, index) => index != preset_index && p.name == name_to_check
                 )
 
@@ -727,14 +729,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                   copy_number++
                 }
               }
+              // --- End Uniqueness Check ---
 
               // If the name had to be changed, update the preset object
               if (final_name != updated_ui_preset.name) {
                 updated_ui_preset.name = final_name
               }
-              // --- End Uniqueness Check ---
 
-              const updated_presets = [...currentPresets]
+              const updated_presets = [...current_presets]
               // Convert the updated preset (with potentially modified name) from UI format to config format
               updated_presets[preset_index] =
                 this._ui_preset_to_config_format(updated_ui_preset)
@@ -1065,11 +1067,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     )
 
     const script_uri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extension_uri, 'out', 'chat.js')
+      vscode.Uri.joinPath(this._extension_uri, 'out', 'view.js')
     )
 
     const style_uri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extension_uri, 'out', 'chat.css')
+      vscode.Uri.joinPath(this._extension_uri, 'out', 'view.css')
     )
 
     return `

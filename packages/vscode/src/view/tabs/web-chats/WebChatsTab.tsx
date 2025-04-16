@@ -25,7 +25,7 @@ type Props = {
   on_preset_edit: (preset: Preset) => void
 }
 
-export const ChatTab: React.FC<Props> = (props) => {
+export const WebChatsTab: React.FC<Props> = (props) => {
   const [is_connected, set_is_connected] = useState<boolean>()
   const [presets, set_presets] = useState<Preset[]>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])

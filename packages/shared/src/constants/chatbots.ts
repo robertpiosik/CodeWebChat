@@ -6,7 +6,6 @@ type Chatbot = {
     supports_user_provided_model: boolean
     supports_user_provided_port: boolean
     default_system_instructions: string
-    default_temperature: number
     supported_options: {
       [option: string]: string
     }
@@ -25,7 +24,6 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     default_system_instructions:
       "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their `name` in the header.\nExample of a code block with a file name in the header:\n```typescript name=filename.ts\ncontents of file\n```",
-    default_temperature: 0.5,
     supported_options: {},
     models: {
       'gemini-2.0-flash': 'Gemini 2.0 Flash',
@@ -43,7 +41,6 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supported_options: { canvas: 'Canvas' },
     default_system_instructions: '',
-    default_temperature: -1,
     models: {
       '2.0-flash': '2.0 Flash',
       '2.0-flash-thinking': '2.0 Flash Thinking',
@@ -56,7 +53,6 @@ export const CHATBOTS = {
     supports_system_instructions: true,
     supports_user_provided_model: true,
     supports_user_provided_port: true,
-    default_temperature: 0.5,
     default_system_instructions:
       "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their `name` in the first line.\nExample of a code block with a file name in the first line:\n```typescript\n// filename.ts\ncontents of file\n```",
     supported_options: {},
@@ -70,7 +66,6 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     default_system_instructions:
       "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their `name` in the header.\nExample of a code block with a file name in the header:\n```typescript name=filename.ts\ncontents of file\n```",
-    default_temperature: 0.5,
     supported_options: {},
     models: {}
   },
@@ -81,7 +76,6 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     default_system_instructions: '',
-    default_temperature: -1,
     supported_options: {},
     models: {}
   },
@@ -92,7 +86,6 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     default_system_instructions: '',
-    default_temperature: -1,
     supported_options: {},
     models: {
       '4o': 'GPT-4o',
@@ -111,7 +104,6 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     default_system_instructions: '',
-    default_temperature: -1,
     supported_options: {},
     models: {}
   },
@@ -122,7 +114,6 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     default_system_instructions: '',
-    default_temperature: -1,
     supported_options: { 'deep-think': 'DeepThink (R1)', search: 'Search' },
     models: {}
   },
@@ -133,7 +124,6 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     default_system_instructions: '',
-    default_temperature: -1,
     supported_options: {},
     models: {}
   },
@@ -144,7 +134,6 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     default_system_instructions: '',
-    default_temperature: -1,
     supported_options: { think: 'Think' },
     models: {}
   },
@@ -155,7 +144,6 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     default_system_instructions: '',
-    default_temperature: -1,
     supported_options: {},
     models: {}
   }

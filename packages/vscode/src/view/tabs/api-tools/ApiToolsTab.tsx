@@ -1,6 +1,6 @@
 import { ApiSettingsForm } from '@ui/components/editor/ApiSettingsForm'
 import { BUILT_IN_PROVIDERS } from '@/constants/built-in-providers'
-import styles from './ApiTab.module.scss'
+import styles from './ApiToolsTab.module.scss'
 import React, { useState, useEffect } from 'react'
 import { ExtensionMessage } from '@/view/types/messages'
 
@@ -9,7 +9,7 @@ type Props = {
   is_visible: boolean
 }
 
-export const ApiTab: React.FC<Props> = (props) => {
+export const ApiToolsTab: React.FC<Props> = (props) => {
   const [api_key, set_api_key] = useState('')
   const [default_code_completion_model, set_default_code_completion_model] =
     useState('')

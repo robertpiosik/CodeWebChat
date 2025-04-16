@@ -60,12 +60,12 @@ select.input {
 
     &::-webkit-slider-runnable-track {
       background: var(--vscode-descriptionForeground);
-      height: 3px;
+      height: 2px;
     }
 
     &::-webkit-slider-thumb {
       appearance: none;
-      margin-top: -4px;
+      margin-top: -5px;
       background-color: var(--vscode-button-background);
       height: 12px;
       width: 12px;

@@ -93,7 +93,7 @@
         },
         {
           "id": "geminiCoderView",
-          "name": "Chat",
+          "name": "Gemini Coder",
           "type": "webview",
           "icon": "resources/activity-bar-icon.svg"
         }

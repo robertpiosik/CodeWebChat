@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import styles from './ApiSettingsForm.module.scss'
-import cn from 'classnames'
 import { Field } from '../Field'
 import { IconButton } from '../IconButton/IconButton'
 
@@ -57,12 +56,12 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
         </div>
       </Field>
 
-      <Field label="Code Completions" htmlFor="code-completions">
+      <Field label="Code Completions Model" htmlFor="code-completions-model">
         <select
-          id="code-completions"
+          id="code-completions-model"
           value={props.default_code_completion_model}
           onChange={(e) => props.on_fim_model_change(e.target.value)}
-          className={cn(styles.input, styles.select)}
+          className={styles.input}
         >
           {props.model_options.map((option) => (
             <option key={option} value={option}>
@@ -72,12 +71,12 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
         </select>
       </Field>
 
-      <Field label="Refactoring" htmlFor="refactoring">
+      <Field label="Refactoring Model" htmlFor="refactoring-model">
         <select
-          id="refactoring"
+          id="refactoring-model"
           value={props.default_refactoring_model}
           onChange={(e) => props.on_refactoring_model_change(e.target.value)}
-          className={cn(styles.input, styles.select)}
+          className={styles.input}
         >
           {props.model_options.map((option) => (
             <option key={option} value={option}>
@@ -87,12 +86,12 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
         </select>
       </Field>
 
-      <Field label="Apply Changes" htmlFor="apply-changes">
+      <Field label="Apply Changes Model" htmlFor="apply-changes-model">
         <select
-          id="apply-changes"
+          id="apply-changes-model"
           value={props.default_apply_changes_model}
           onChange={(e) => props.on_apply_changes_model_change(e.target.value)}
-          className={cn(styles.input, styles.select)}
+          className={styles.input}
         >
           {props.model_options.map((option) => (
             <option key={option} value={option}>
@@ -102,12 +101,12 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
         </select>
       </Field>
 
-      <Field label="Commit Messages" htmlFor="commit-message">
+      <Field label="Commit Messages Model" htmlFor="commit-message-model">
         <select
-          id="commit-message"
+          id="commit-message-model"
           value={props.default_commit_message_model}
           onChange={(e) => props.on_commit_message_model_change(e.target.value)}
-          className={cn(styles.input, styles.select)}
+          className={styles.input}
         >
           {props.model_options.map((option) => (
             <option key={option} value={option}>

@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client'
-import { ChatTab } from './tabs/chat/ChatTab'
-import { ApiTab } from './tabs/api/ApiTab'
+import { WebChatsTab } from './tabs/web-chats/WebChatsTab'
+import { ApiToolsTab } from './tabs/api-tools/ApiToolsTab'
 import { Header } from '@ui/components/editor/Header'
 import { useEffect, useState } from 'react'
 import { Template } from '@ui/components/editor/Template'
@@ -55,14 +55,14 @@ const App = () => {
           set_active_tab('api')
         }}
       />
-      <ChatTab
+      <WebChatsTab
         vscode={vscode}
         is_visible={active_tab == 'chat'}
         on_preset_edit={(preset) => {
           set_updating_preset(preset)
         }}
       />
-      <ApiTab vscode={vscode} is_visible={active_tab == 'api'} />
+      <ApiToolsTab vscode={vscode} is_visible={active_tab == 'api'} />
     </>
   )
 

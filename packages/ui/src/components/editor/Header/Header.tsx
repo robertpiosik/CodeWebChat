@@ -26,25 +26,25 @@ export const Header: React.FC<Props> = (props) => {
             [styles['tabs__tab--active']]: props.active_tab == 'chat'
           })}
           onClick={props.on_chat_tab_click}
-          data-text={window_width >= 310 ? 'Web Chats' : 'Chats'}
+          data-text={window_width >= 320 ? 'Web Chats' : 'Chats'}
         >
-          {window_width >= 310 ? 'Web Chats' : 'Chats'}
+          {window_width >= 320 ? 'Web Chats' : 'Chats'}
         </button>
         <button
           className={cn(styles.tabs__tab, {
             [styles['tabs__tab--active']]: props.active_tab == 'api'
           })}
           onClick={props.on_api_tab_click}
-          data-text={window_width >= 310 ? 'API tools' : 'API'}
+          data-text={window_width >= 320 ? 'API tools' : 'API'}
         >
-          {window_width >= 310 ? 'API tools' : 'API'}
+          {window_width >= 320 ? 'API tools' : 'API'}
         </button>
       </div>
       <div className={styles.right}>
         <a
           href="https://buymeacoffee.com/robertpiosik"
           className={styles.right__button}
-          title="Thank you for supporting free and open source software"
+          title="Thank you for choosing to support Gemini Coder"
         >
           <Icon variant="BUY_ME_A_COFFEE" />
         </a>
