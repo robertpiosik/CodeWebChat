@@ -21,6 +21,7 @@
   }
 
   &__set-default {
+    font-size: var(--font-size-12px);
     color: var(--vscode-textLink-foreground);
 
     &:hover {

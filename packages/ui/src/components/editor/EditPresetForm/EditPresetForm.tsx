@@ -5,6 +5,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import { Icon } from '../Icon'
+import { Field } from '../Field'
 
 const chatbot_to_icon = {
   'AI Studio': 'AI_STUDIO',
@@ -88,10 +89,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         <Icon variant={chatbot_to_icon[chatbot]} />
       </div>
 
-      <div className={styles.field}>
-        <label htmlFor="preset-chatbot" className={styles.field__label}>
-          Chatbot
-        </label>
+      <Field label="Chatbot" htmlFor="preset-chatbot">
         <select
           id="preset-chatbot"
           value={chatbot}
@@ -104,12 +102,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             </option>
           ))}
         </select>
-      </div>
+      </Field>
 
-      <div className={styles.field}>
-        <label htmlFor="preset-name" className={styles.field__label}>
-          Name
-        </label>
+      <Field label="Name" htmlFor="preset-name">
         <input
           id="preset-name"
           type="text"
@@ -117,13 +112,10 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           onChange={(e) => set_name(e.target.value)}
           className={styles.input}
         />
-      </div>
+      </Field>
 
       {Object.keys(models).length > 0 && (
-        <div className={styles.field}>
-          <label htmlFor="preset-model" className={styles.field__label}>
-            Model
-          </label>
+        <Field label="Model" htmlFor="preset-model">
           <select
             id="preset-model"
             value={model}
@@ -136,14 +128,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               </option>
             ))}
           </select>
-        </div>
+        </Field>
       )}
 
       {supports_custom_model && (
-        <div className={styles.field}>
-          <label htmlFor="preset-custom-model" className={styles.field__label}>
-            Model
-          </label>
+        <Field label="Model" htmlFor="preset-custom-model">
           <input
             id="preset-custom-model"
             type="text"
@@ -152,14 +141,21 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             className={styles.input}
             placeholder="Enter model name"
           />
-        </div>
+        </Field>
       )}
 
       {supports_port && (
-        <div className={styles.field}>
-          <label htmlFor="preset-port" className={styles.field__label}>
-            Port
-          </label>
+        <Field
+          label="Port"
+          htmlFor="preset-port"
+          info={
+            chatbot == 'Open WebUI' && (
+              <>
+                Left empty will open <code>http://openwebui/</code>.
+              </>
+            )
+          }
+        >
           <input
             id="preset-port"
             type="text"
@@ -174,19 +170,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 e.preventDefault() // This way we don't see arrows up/down
             }
           />
-          {chatbot == 'Open WebUI' && (
-            <div className={styles.field__info}>
-              Left empty will open <code>http://openwebui/</code>.
-            </div>
-          )}
-        </div>
+        </Field>
       )}
 
       {supports_temperature && (
-        <div className={styles.field}>
-          <label htmlFor="preset-temperature" className={styles.field__label}>
-            Temperature
-          </label>
+        <Field label="Temperature" htmlFor="preset-temperature">
           <div className={styles.temperature}>
             <input
               id="preset-temperature"
@@ -213,14 +201,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               className={styles.temperature__slider}
             />
           </div>
-        </div>
+        </Field>
       )}
 
       {supports_system_instructions && (
-        <div className={styles.field}>
-          <label htmlFor="system-instructions" className={styles.field__label}>
-            System Instructions
-          </label>
+        <Field label="System Instructions" htmlFor="system-instructions">
           <TextareaAutosize
             id="system-instructions"
             value={system_instructions}
@@ -229,7 +214,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             minRows={4}
             placeholder="Optional tone and style instructions for the model"
           />
-        </div>
+        </Field>
       )}
     </div>
   )

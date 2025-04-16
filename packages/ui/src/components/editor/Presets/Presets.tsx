@@ -97,7 +97,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           onClick={props.on_set_default}
           title="Set presets opening by default"
         >
-          Set default
+          Select default
         </button>
       </div>
 

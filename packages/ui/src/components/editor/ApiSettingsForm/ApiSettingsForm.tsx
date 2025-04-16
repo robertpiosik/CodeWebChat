@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './ApiSettingsForm.module.scss'
 import cn from 'classnames'
+import { Field } from '../Field'
 
 type ModelOption = {
   name: string
@@ -24,10 +25,18 @@ type Props = {
 export const ApiSettingsForm: React.FC<Props> = (props) => {
   return (
     <div className={styles.form}>
-      <div className={styles.field}>
-        <label htmlFor="api-key" className={styles.field__label}>
-          API Key
-        </label>
+      <Field
+        label="API Key"
+        htmlFor="api-key"
+        info={
+          !props.api_key && (
+            <>
+              Create yours in{' '}
+              <a href="https://aistudio.google.com/app/apikey">AI Studio</a>.
+            </>
+          )
+        }
+      >
         <input
           id="api-key"
           type="password"
@@ -36,18 +45,9 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
           className={styles.input}
           placeholder="Enter your API key"
         />
-        {!props.api_key && (
-          <div className={styles.field__info}>
-            Create yours in{' '}
-            <a href="https://aistudio.google.com/app/apikey">AI Studio</a>.
-          </div>
-        )}
-      </div>
+      </Field>
 
-      <div className={styles.field}>
-        <label htmlFor="fim-model" className={styles.field__label}>
-          Default FIM Model
-        </label>
+      <Field label="Default FIM Model" htmlFor="fim-model">
         <select
           id="fim-model"
           value={props.default_fim_model}
@@ -60,12 +60,9 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
             </option>
           ))}
         </select>
-      </div>
+      </Field>
 
-      <div className={styles.field}>
-        <label htmlFor="refactoring-model" className={styles.field__label}>
-          Default Refactoring Model
-        </label>
+      <Field label="Default Refactoring Model" htmlFor="refactoring-model">
         <select
           id="refactoring-model"
           value={props.default_refactoring_model}
@@ -78,12 +75,9 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
             </option>
           ))}
         </select>
-      </div>
+      </Field>
 
-      <div className={styles.field}>
-        <label htmlFor="apply-changes-model" className={styles.field__label}>
-          Default Apply Changes Model
-        </label>
+      <Field label="Default Apply Changes Model" htmlFor="apply-changes-model">
         <select
           id="apply-changes-model"
           value={props.default_apply_changes_model}
@@ -96,12 +90,12 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
             </option>
           ))}
         </select>
-      </div>
+      </Field>
 
-      <div className={styles.field}>
-        <label htmlFor="commit-message-model" className={styles.field__label}>
-          Default Commit Message Model
-        </label>
+      <Field
+        label="Default Commit Message Model"
+        htmlFor="commit-message-model"
+      >
         <select
           id="commit-message-model"
           value={props.default_commit_message_model}
@@ -114,7 +108,7 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
             </option>
           ))}
         </select>
-      </div>
+      </Field>
     </div>
   )
 }
