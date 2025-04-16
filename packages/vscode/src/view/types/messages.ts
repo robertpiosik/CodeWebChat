@@ -126,6 +126,24 @@ export interface CreatePresetMessage extends BaseMessage {
   command: 'CREATE_PRESET'
 }
 
+export interface GetDefaultModelsMessage extends BaseMessage {
+  command: 'GET_DEFAULT_MODELS'
+}
+
+export interface UpdateDefaultModelMessage extends BaseMessage {
+  command: 'UPDATE_DEFAULT_MODEL'
+  model_type:
+    | 'code_completion'
+    | 'refactoring'
+    | 'apply_changes'
+    | 'commit_message'
+  model: string
+}
+
+export interface GetCustomProvidersMessage extends BaseMessage {
+  command: 'GET_CUSTOM_PROVIDERS'
+}
+
 // Messages from extension to webview:
 export interface ApiKeyUpdatedMessage extends BaseMessage {
   command: 'API_KEY_UPDATED'
@@ -218,6 +236,26 @@ export interface PresetUpdated extends BaseMessage {
   command: 'PRESET_UPDATED'
 }
 
+export interface DefaultModelsUpdatedMessage extends BaseMessage {
+  command: 'DEFAULT_MODELS_UPDATED'
+  default_code_completion_model: string
+  default_refactoring_model: string
+  default_apply_changes_model: string
+  default_commit_message_model: string
+}
+
+export interface CustomProvidersUpdatedMessage extends BaseMessage {
+  command: 'CUSTOM_PROVIDERS_UPDATED'
+  custom_providers: Array<{
+    name: string
+    endpointUrl: string
+    apiKey: string
+    model: string
+    temperature?: number
+    systemInstructions?: string
+  }>
+}
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | GetApiKeyMessage
@@ -246,6 +284,9 @@ export type WebviewMessage =
   | DeletePresetMessage
   | DuplicatePresetMessage
   | CreatePresetMessage
+  | GetDefaultModelsMessage
+  | UpdateDefaultModelMessage
+  | GetCustomProvidersMessage
 
 export type ExtensionMessage =
   | ApiKeyUpdatedMessage
@@ -264,3 +305,5 @@ export type ExtensionMessage =
   | ActiveFileInfoMessage
   | PresetCreated
   | PresetUpdated
+  | DefaultModelsUpdatedMessage
+  | CustomProvidersUpdatedMessage

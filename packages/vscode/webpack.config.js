@@ -6,18 +6,73 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 /**
- * Creates a webpack configuration for React webviews
- * @param {string} name - Name of the entry (chat or api)
- * @param {string} entry_path - Path to the entry file
- * @returns {import('webpack').Configuration}
+ * @type {import('webpack').Configuration[]}
  */
-function create_webview_config(name, entry_path) {
-  return {
-    name,
+const config = [
+  {
+    name: 'extension',
+    mode: 'production',
+    target: 'node',
+    entry: {
+      extension: './src/extension.ts',
+      'websocket-server-process': './src/services/websocket-server-process.ts'
+    },
+    output: {
+      path: path.resolve(__dirname, 'out'),
+      filename: '[name].js',
+      libraryTarget: 'commonjs2',
+      devtoolModuleFilenameTemplate: '../[resource-path]'
+    },
+    devtool: 'source-map',
+    externals: {
+      vscode: 'commonjs vscode'
+    },
+    resolve: {
+      extensions: ['.ts', '.js'],
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+        '@shared': path.resolve(__dirname, '../shared/src')
+      }
+    },
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env', '@babel/preset-typescript']
+              }
+            }
+          ]
+        }
+      ]
+    },
+    plugins: [
+      new CleanWebpackPlugin({
+        cleanOnceBeforeBuildPatterns: ['../*.vsix'],
+        dangerouslyAllowCleanPatternsOutsideProject: true,
+        dry: false
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: '../../README.md',
+            to: '../README.md'
+          }
+        ]
+      })
+    ],
+    stats: 'errors-only'
+  },
+  {
+    name: 'view',
     mode: 'production',
     target: 'web',
     entry: {
-      [name]: entry_path
+      view: './src/view/App.tsx'
     },
     output: {
       path: path.resolve(__dirname, 'out'),
@@ -116,72 +171,6 @@ function create_webview_config(name, entry_path) {
     ],
     stats: 'errors-only'
   }
-}
-
-/**
- * @type {import('webpack').Configuration[]}
- */
-const config = [
-  {
-    name: 'extension',
-    mode: 'production',
-    target: 'node',
-    entry: {
-      extension: './src/extension.ts',
-      'websocket-server-process': './src/services/websocket-server-process.ts'
-    },
-    output: {
-      path: path.resolve(__dirname, 'out'),
-      filename: '[name].js',
-      libraryTarget: 'commonjs2',
-      devtoolModuleFilenameTemplate: '../[resource-path]'
-    },
-    devtool: 'source-map',
-    externals: {
-      vscode: 'commonjs vscode'
-    },
-    resolve: {
-      extensions: ['.ts', '.js'],
-      alias: {
-        '@': path.resolve(__dirname, 'src'),
-        '@shared': path.resolve(__dirname, '../shared/src')
-      }
-    },
-    module: {
-      rules: [
-        {
-          test: /\.ts$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: 'babel-loader',
-              options: {
-                presets: ['@babel/preset-env', '@babel/preset-typescript']
-              }
-            }
-          ]
-        }
-      ]
-    },
-    plugins: [
-      new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['../*.vsix'],
-        dangerouslyAllowCleanPatternsOutsideProject: true,
-        dry: false
-      }),
-      new CopyWebpackPlugin({
-        patterns: [
-          {
-            from: '../../README.md',
-            to: '../README.md'
-          }
-        ]
-      })
-    ],
-    stats: 'errors-only'
-  },
-  create_webview_config('chat', './src/chat-view/App.tsx'),
-  create_webview_config('api', './src/api-view/app.tsx')
 ]
 
 module.exports = config

@@ -7,7 +7,7 @@ import {
   code_completion_with_suggestions_command,
   code_completion_with_suggestions_with_command
 } from './commands/code-completion-commands'
-import { ChatViewProvider } from './chat-view/chat-view-provider'
+import { ViewProvider } from './view/view-provider'
 import {
   web_chat_command,
   web_chat_with_command
@@ -18,7 +18,6 @@ import { create_refactor_status_bar_item } from './status-bar/create-refactor-st
 import { refactor_command } from './commands/refactor-command'
 import { refactor_to_clipboard_command } from './commands/refactor-to-clipboard-command'
 import { WebSocketManager } from './services/websocket-manager'
-import { ApiViewProvider } from './api-view/api-view-provider'
 import { change_default_model_command } from './commands/change-default-model-command'
 import { close_editor_command } from './commands/close-editor-command'
 import { close_all_editors_command } from './commands/close-all-editors-command'
@@ -31,7 +30,7 @@ import { delete_command } from './commands/delete-command'
 import {
   code_completion_in_chat_command,
   code_completion_in_chat_with_command
-} from './commands/code-in-chat-commands'
+} from './commands/code-completion-in-chat-commands'
 import { save_context_command } from './commands/save-context-command'
 import { revert_command } from './commands/revert-command'
 import { migrate_saved_contexts } from './migrations/migrate-saved-contexts'
@@ -77,9 +76,9 @@ export async function activate(context: vscode.ExtensionContext) {
   create_refactor_status_bar_item(context)
   create_apply_changes_status_bar_item(context)
 
-  // Chat View
+  // View
   if (workspace_provider && open_editors_provider && websites_provider) {
-    const chat_view_provider = new ChatViewProvider(
+    const view_provider = new ViewProvider(
       context.extensionUri,
       workspace_provider,
       open_editors_provider,
@@ -89,8 +88,8 @@ export async function activate(context: vscode.ExtensionContext) {
     )
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(
-        'geminiCoderViewChat',
-        chat_view_provider,
+        'geminiCoderView',
+        view_provider,
         {
           webviewOptions: {
             retainContextWhenHidden: true
@@ -99,20 +98,6 @@ export async function activate(context: vscode.ExtensionContext) {
       )
     )
   }
-
-  // API View
-  const api_view_provider = new ApiViewProvider(context.extensionUri, context)
-  context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      'geminiCoderViewApi',
-      api_view_provider,
-      {
-        webviewOptions: {
-          retainContextWhenHidden: true
-        }
-      }
-    )
-  )
 
   // Register the custom open file command
   context.subscriptions.push(

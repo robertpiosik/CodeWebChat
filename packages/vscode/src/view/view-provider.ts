@@ -17,7 +17,10 @@ import {
   DuplicatePresetMessage,
   CreatePresetMessage,
   ApiKeyUpdatedMessage,
-  UpdateApiKeyMessage
+  UpdateApiKeyMessage,
+  DefaultModelsUpdatedMessage,
+  UpdateDefaultModelMessage,
+  CustomProvidersUpdatedMessage
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -26,6 +29,7 @@ import { apply_preset_affixes_to_instruction } from '../helpers/apply-preset-aff
 import { token_count_emitter } from '@/context/context-initialization'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { ModelManager } from '@/services/model-manager'
 
 type ConfigPresetFormat = {
   name: string
@@ -39,12 +43,13 @@ type ConfigPresetFormat = {
   port?: number
 }
 
-export class ChatViewProvider implements vscode.WebviewViewProvider {
+export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   private _has_active_editor: boolean = false
   private _has_active_selection: boolean = false
   private _is_fim_mode: boolean = false
+  private _model_manager: ModelManager
 
   constructor(
     private readonly _extension_uri: vscode.Uri,
@@ -71,6 +76,17 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
         ) {
           this._send_presets_to_webview(this._webview_view.webview)
         }
+        if (
+          event.affectsConfiguration('geminiCoder.providers') &&
+          this._webview_view
+        ) {
+          const config = vscode.workspace.getConfiguration()
+          const providers = config.get<any[]>('geminiCoder.providers', [])
+          this._send_message<CustomProvidersUpdatedMessage>({
+            command: 'CUSTOM_PROVIDERS_UPDATED',
+            custom_providers: providers
+          })
+        }
       }
     )
 
@@ -81,6 +97,7 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
     })
 
     this._context.subscriptions.push(this._config_listener)
+    this._model_manager = new ModelManager(this._context)
 
     const update_editor_state = () => {
       const has_active_editor = !!vscode.window.activeTextEditor
@@ -227,6 +244,8 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       | DuplicatePresetMessage
       | CreatePresetMessage
       | ApiKeyUpdatedMessage
+      | DefaultModelsUpdatedMessage
+      | CustomProvidersUpdatedMessage
   >(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -924,20 +943,54 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
                 `Failed to create preset: ${error}`
               )
             }
-          } else if (message.command === 'GET_API_KEY') {
+          } else if (message.command == 'GET_API_KEY') {
             const config = vscode.workspace.getConfiguration()
             const api_key = config.get<string>('geminiCoder.apiKey', '')
             this._send_message<ApiKeyUpdatedMessage>({
               command: 'API_KEY_UPDATED',
               api_key
             })
-          } else if (message.command === 'UPDATE_API_KEY') {
+          } else if (message.command == 'UPDATE_API_KEY') {
             const update_msg = message as UpdateApiKeyMessage
             const config = vscode.workspace.getConfiguration()
             await config.update('geminiCoder.apiKey', update_msg.api_key, true)
             this._send_message<ApiKeyUpdatedMessage>({
               command: 'API_KEY_UPDATED',
               api_key: update_msg.api_key
+            })
+          } else if (message.command == 'GET_DEFAULT_MODELS') {
+            this._send_default_models()
+          } else if (message.command == 'UPDATE_DEFAULT_MODEL') {
+            const update_msg = message as UpdateDefaultModelMessage
+            switch (update_msg.model_type) {
+              case 'code_completion':
+                this._model_manager.set_default_code_completion_model(
+                  update_msg.model
+                )
+                break
+              case 'refactoring':
+                this._model_manager.set_default_refactoring_model(
+                  update_msg.model
+                )
+                break
+              case 'apply_changes':
+                this._model_manager.set_default_apply_changes_model(
+                  update_msg.model
+                )
+                break
+              case 'commit_message':
+                this._model_manager.set_default_commit_message_model(
+                  update_msg.model
+                )
+                break
+            }
+            this._send_default_models()
+          } else if (message.command == 'GET_CUSTOM_PROVIDERS') {
+            const config = vscode.workspace.getConfiguration()
+            const providers = config.get<any[]>('geminiCoder.providers', [])
+            this._send_message<CustomProvidersUpdatedMessage>({
+              command: 'CUSTOM_PROVIDERS_UPDATED',
+              custom_providers: providers
             })
           }
         } catch (error: any) {
@@ -968,10 +1021,10 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       enabled: this._is_fim_mode
     })
 
-    // Send initial file info
     this._update_active_file_info()
-    // Send initial presets
-    this._send_presets_to_webview(webview_view.webview) // Ensure this is called after setup
+    this._send_presets_to_webview(webview_view.webview)
+    this._send_default_models()
+    this._send_custom_providers()
   }
 
   // Add this method to the ChatViewProvider class
@@ -1041,5 +1094,28 @@ export class ChatViewProvider implements vscode.WebviewViewProvider {
       </body>
       </html>
     `
+  }
+
+  private _send_default_models() {
+    this._send_message<DefaultModelsUpdatedMessage>({
+      command: 'DEFAULT_MODELS_UPDATED',
+      default_code_completion_model:
+        this._model_manager.get_default_fim_model(),
+      default_refactoring_model:
+        this._model_manager.get_default_refactoring_model(),
+      default_apply_changes_model:
+        this._model_manager.get_default_apply_changes_model(),
+      default_commit_message_model:
+        this._model_manager.get_default_commit_message_model()
+    })
+  }
+
+  private _send_custom_providers() {
+    const config = vscode.workspace.getConfiguration()
+    const providers = config.get<any[]>('geminiCoder.providers', [])
+    this._send_message<CustomProvidersUpdatedMessage>({
+      command: 'CUSTOM_PROVIDERS_UPDATED',
+      custom_providers: providers
+    })
   }
 }

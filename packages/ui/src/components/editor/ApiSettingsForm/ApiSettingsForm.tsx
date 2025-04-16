@@ -2,11 +2,7 @@ import React, { useState } from 'react'
 import styles from './ApiSettingsForm.module.scss'
 import cn from 'classnames'
 import { Field } from '../Field'
-
-type ModelOption = {
-  name: string
-  value: string
-}
+import { IconButton } from '../IconButton/IconButton'
 
 type Props = {
   api_key: string
@@ -14,7 +10,7 @@ type Props = {
   default_refactoring_model: string
   default_apply_changes_model: string
   default_commit_message_model: string
-  model_options: ModelOption[]
+  model_options: string[]
   on_api_key_change: (api_key: string) => void
   on_fim_model_change: (model: string) => void
   on_refactoring_model_change: (model: string) => void
@@ -25,10 +21,14 @@ type Props = {
 export const ApiSettingsForm: React.FC<Props> = (props) => {
   const [show_api_key, set_show_api_key] = useState(false)
 
+  const handle_api_key_visibility = () => {
+    set_show_api_key(!show_api_key)
+  }
+
   return (
     <div className={styles.form}>
       <Field
-        label="API Key"
+        label="Gemini API Key"
         htmlFor="api-key"
         info={
           !props.api_key && (
@@ -49,77 +49,69 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
             placeholder="Enter your API key"
             style={{ flex: 1 }}
           />
-          <button
-            className={styles.input}
-            onClick={() => set_show_api_key(!show_api_key)}
-            style={{
-              padding: 'var(--padding-4px) var(--padding-8px)',
-              cursor: 'pointer'
-            }}
-          >
-            {show_api_key ? 'Hide' : 'Show'}
-          </button>
+          <IconButton
+            codicon_icon={show_api_key ? 'eye-closed' : 'eye'}
+            on_click={handle_api_key_visibility}
+            title={show_api_key ? 'Hide API key' : 'Show API key'}
+          />
         </div>
       </Field>
 
-      <Field label="Default FIM Model" htmlFor="fim-model">
+      <Field label="Code Completions" htmlFor="code-completions">
         <select
-          id="fim-model"
+          id="code-completions"
           value={props.default_code_completion_model}
           onChange={(e) => props.on_fim_model_change(e.target.value)}
           className={cn(styles.input, styles.select)}
         >
           {props.model_options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.name}
+            <option key={option} value={option}>
+              {option}
             </option>
           ))}
         </select>
       </Field>
 
-      <Field label="Default Refactoring Model" htmlFor="refactoring-model">
+      <Field label="Refactoring" htmlFor="refactoring">
         <select
-          id="refactoring-model"
+          id="refactoring"
           value={props.default_refactoring_model}
           onChange={(e) => props.on_refactoring_model_change(e.target.value)}
           className={cn(styles.input, styles.select)}
         >
           {props.model_options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.name}
+            <option key={option} value={option}>
+              {option}
             </option>
           ))}
         </select>
       </Field>
 
-      <Field label="Default Apply Changes Model" htmlFor="apply-changes-model">
+      <Field label="Apply Changes" htmlFor="apply-changes">
         <select
-          id="apply-changes-model"
+          id="apply-changes"
           value={props.default_apply_changes_model}
           onChange={(e) => props.on_apply_changes_model_change(e.target.value)}
           className={cn(styles.input, styles.select)}
         >
           {props.model_options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.name}
+            <option key={option} value={option}>
+              {option}
             </option>
           ))}
         </select>
       </Field>
 
-      <Field
-        label="Default Commit Message Model"
-        htmlFor="commit-message-model"
-      >
+      <Field label="Commit Messages" htmlFor="commit-message">
         <select
-          id="commit-message-model"
+          id="commit-message"
           value={props.default_commit_message_model}
           onChange={(e) => props.on_commit_message_model_change(e.target.value)}
           className={cn(styles.input, styles.select)}
         >
           {props.model_options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.name}
+            <option key={option} value={option}>
+              {option}
             </option>
           ))}
         </select>

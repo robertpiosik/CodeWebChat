@@ -2,16 +2,11 @@ import { ApiSettingsForm } from '@ui/components/editor/ApiSettingsForm'
 import { BUILT_IN_PROVIDERS } from '@/constants/built-in-providers'
 import styles from './ApiTab.module.scss'
 import React, { useState, useEffect } from 'react'
-import { ModelManager } from '@/services/model-manager'
+import { ExtensionMessage } from '@/view/types/messages'
 
 type Props = {
   vscode: any
   is_visible: boolean
-}
-
-type ExtensionMessage = {
-  command: string
-  api_key?: string
 }
 
 export const ApiTab: React.FC<Props> = (props) => {
@@ -25,16 +20,37 @@ export const ApiTab: React.FC<Props> = (props) => {
   const [default_commit_message_model, set_default_commit_message_model] =
     useState('')
 
-  const model_options = BUILT_IN_PROVIDERS.map((provider) => ({
-    name: provider.name,
-    value: provider.name
-  }))
+  const [model_options, set_model_options] = useState<string[]>([])
 
   useEffect(() => {
     const handle_message = (event: MessageEvent<ExtensionMessage>) => {
       const message = event.data
       if (message.command == 'API_KEY_UPDATED') {
         set_api_key(message.api_key || '')
+      } else if (message.command == 'DEFAULT_MODELS_UPDATED') {
+        if (message.default_code_completion_model) {
+          set_default_code_completion_model(
+            message.default_code_completion_model
+          )
+        }
+        if (message.default_refactoring_model) {
+          set_default_refactoring_model(message.default_refactoring_model)
+        }
+        if (message.default_apply_changes_model) {
+          set_default_apply_changes_model(message.default_apply_changes_model)
+        }
+        if (message.default_commit_message_model) {
+          set_default_commit_message_model(message.default_commit_message_model)
+        }
+      } else if (
+        message.command == 'CUSTOM_PROVIDERS_UPDATED' &&
+        message.custom_providers
+      ) {
+        const all_providers = [
+          ...BUILT_IN_PROVIDERS.map((provider) => provider.name),
+          ...message.custom_providers.map((provider) => provider.name)
+        ]
+        set_model_options(all_providers)
       }
     }
 
@@ -42,21 +58,14 @@ export const ApiTab: React.FC<Props> = (props) => {
     props.vscode.postMessage({
       command: 'GET_API_KEY'
     })
+    props.vscode.postMessage({
+      command: 'GET_DEFAULT_MODELS'
+    })
+    props.vscode.postMessage({
+      command: 'GET_CUSTOM_PROVIDERS'
+    })
 
-    // Initialize model manager and get default models
-    const model_manager = new ModelManager(props.vscode.context)
-    set_default_code_completion_model(model_manager.get_default_fim_model())
-    set_default_refactoring_model(model_manager.get_default_refactoring_model())
-    set_default_apply_changes_model(
-      model_manager.get_default_apply_changes_model()
-    )
-    set_default_commit_message_model(
-      model_manager.get_default_commit_message_model()
-    )
-
-    return () => {
-      window.removeEventListener('message', handle_message)
-    }
+    return () => window.removeEventListener('message', handle_message)
   }, [])
 
   const handle_api_key_change = (api_key: string) => {
@@ -68,27 +77,35 @@ export const ApiTab: React.FC<Props> = (props) => {
   }
 
   const handle_code_completion_model_change = (model: string) => {
-    const model_manager = new ModelManager(props.vscode.context)
-    model_manager.set_default_code_completion_model(model)
-    set_default_code_completion_model(model)
+    props.vscode.postMessage({
+      command: 'UPDATE_DEFAULT_MODEL',
+      model_type: 'code_completion',
+      model
+    })
   }
 
   const handle_refactoring_model_change = (model: string) => {
-    const model_manager = new ModelManager(props.vscode.context)
-    model_manager.set_default_refactoring_model(model)
-    set_default_refactoring_model(model)
+    props.vscode.postMessage({
+      command: 'UPDATE_DEFAULT_MODEL',
+      model_type: 'refactoring',
+      model
+    })
   }
 
   const handle_apply_changes_model_change = (model: string) => {
-    const model_manager = new ModelManager(props.vscode.context)
-    model_manager.set_default_apply_changes_model(model)
-    set_default_apply_changes_model(model)
+    props.vscode.postMessage({
+      command: 'UPDATE_DEFAULT_MODEL',
+      model_type: 'apply_changes',
+      model
+    })
   }
 
   const handle_commit_message_model_change = (model: string) => {
-    const model_manager = new ModelManager(props.vscode.context)
-    model_manager.set_default_commit_message_model(model)
-    set_default_commit_message_model(model)
+    props.vscode.postMessage({
+      command: 'UPDATE_DEFAULT_MODEL',
+      model_type: 'commit_message',
+      model
+    })
   }
 
   return (

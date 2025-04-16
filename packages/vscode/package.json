@@ -92,14 +92,8 @@
           "icon": "resources/activity-bar-icon.svg"
         },
         {
-          "id": "geminiCoderViewChat",
+          "id": "geminiCoderView",
           "name": "Chat",
-          "type": "webview",
-          "icon": "resources/activity-bar-icon.svg"
-        },
-        {
-          "id": "geminiCoderViewApi",
-          "name": "Settings: API",
           "type": "webview",
           "icon": "resources/activity-bar-icon.svg"
         }
@@ -535,12 +529,6 @@
                 "type": "string"
               },
               "model": {
-                "type": "string"
-              },
-              "temperature": {
-                "type": "number"
-              },
-              "systemInstructions": {
                 "type": "string"
               }
             }
