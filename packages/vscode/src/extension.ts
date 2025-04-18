@@ -7,6 +7,7 @@ import { WebSocketManager } from './services/websocket-manager'
 import { migrate_saved_contexts } from './migrations/migrate-saved-contexts'
 import { migrate_provider_settings } from './migrations/migrate-provider-settings'
 import { migrate_keybindings } from './migrations/migrate-keybindings'
+import { migrate_system_instructions } from './migrations/migrate-system-instructions'
 import {
   apply_changes_command,
   refactor_command,
@@ -57,14 +58,13 @@ export async function activate(context: vscode.ExtensionContext) {
     // Migrate keybindings from old commands to new ones
     // Delete a few weeks after 10 Apr 2025
     await migrate_keybindings()
+
+    // Migrate system instructions to new format
+    // Delete a few weeks after 18 Apr 2025
+    await migrate_system_instructions()
   }
 
   await migrations()
-
-  // Connect WebSocketManager with WebsitesProvider
-  if (websocket_server_instance && websites_provider) {
-    websocket_server_instance.set_websites_provider(websites_provider)
-  }
 
   // Status bar
   create_refactor_status_bar_item(context)

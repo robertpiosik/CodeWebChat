@@ -1,3 +1,5 @@
+import { debounce } from '@/utils/debounce'
+import { extract_filename_from_comment } from '@shared/utils/extract-filename-from-comment'
 import browser from 'webextension-polyfill'
 
 // Function to check if any code block contains truncated fragments
@@ -47,20 +49,7 @@ const handle_button_click = (
   const chat_turn_container = button.closest('.chat-turn-container')
   if (!chat_turn_container) return
 
-  // Find and disable/hide both buttons
-  const buttons = chat_turn_container.querySelectorAll(
-    '.fast-replace-button, .intelligent-update-button'
-  )
-
-  buttons.forEach((btn) => {
-    ;(btn as HTMLButtonElement).disabled = true
-    btn.setAttribute(
-      'style',
-      `
-      cursor: not-allowed;
-    `
-    )
-  })
+  button.disabled = true
 
   // Find the ms-chat-turn-options element within the container
   const options = chat_turn_container.querySelector(
@@ -89,138 +78,144 @@ export const inject_apply_changes_buttons = (params: {
   is_ai_studio: boolean
 }) => {
   if (params.is_ai_studio) {
-    const add_buttons_to_message_footer = (params: {
-      footer: Element
-      client_id: number
-    }) => {
-      // Check if buttons already exist to avoid duplicates
-      if (
-        params.footer.querySelector('.fast-replace-button') ||
-        params.footer.querySelector('.intelligent-update-button')
-      ) {
-        return
-      }
+    const debounced_add_buttons = debounce(
+      (params: { footer: Element; client_id: number }) => {
+        const fast_replace_button_text = 'Apply Changes with Fast Replace'
+        const intelligent_update_button_text =
+          'Apply Changes with Intelligent Update'
 
-      // Find the parent chat-turn-container
-      const chat_turn_container = params.footer.closest('.chat-turn-container')
-      if (!chat_turn_container) {
-        console.warn(
-          'Could not find chat-turn-container for footer:',
-          params.footer
-        )
-        return
-      }
+        // Check if buttons already exist by text content to avoid duplicates
+        const existing_fast_replace_button = Array.from(
+          params.footer.querySelectorAll('button')
+        ).find((btn) => btn.textContent == fast_replace_button_text)
+        const existing_intelligent_update_button = Array.from(
+          params.footer.querySelectorAll('button')
+        ).find((btn) => btn.textContent == intelligent_update_button_text)
 
-      // Check if the container has any code block with name= attribute
-      const language_spans = chat_turn_container.querySelectorAll(
-        'ms-code-block footer > span.language'
-      )
-      let has_name_attribute = false
-
-      language_spans.forEach((span) => {
-        if (span.textContent?.includes('name=')) {
-          has_name_attribute = true
-        }
-      })
-
-      // Only proceed if we found at least one code block with name= attribute
-      if (!has_name_attribute) return
-
-      const has_truncated = has_truncated_fragments(chat_turn_container)
-      const has_diff = has_diff_markers(chat_turn_container)
-
-      const create_fast_replace_button = () => {
-        const fast_replace_button = document.createElement('button')
-        fast_replace_button.className = 'fast-replace-button'
-        fast_replace_button.textContent = 'Fast replace'
-        fast_replace_button.title =
-          'Overrides original files. Action can be reverted.'
-        apply_button_style(fast_replace_button)
-
-        // Add event listener for Fast replace button click
-        fast_replace_button.addEventListener('click', () => {
-          handle_button_click(
-            fast_replace_button,
-            params.client_id,
-            'fast-replace'
-          )
-        })
-
-        params.footer.insertBefore(
-          fast_replace_button,
-          params.footer.children[2]
-        )
-      }
-      const create_intelligent_update_button = () => {
-        const intelligent_update_button = document.createElement('button')
-        intelligent_update_button.className = 'intelligent-update-button'
-        intelligent_update_button.textContent = 'Intelligent update'
-        intelligent_update_button.title =
-          'Uses AI to merge partial changes into existing files.'
-        apply_button_style(intelligent_update_button)
-        intelligent_update_button.style.background =
-          'linear-gradient(to bottom right, #9168C0 12%, #319749 40%, #42de67 90%)'
-
-        // Add event listener for Intelligent update button click
-        intelligent_update_button.addEventListener('click', () => {
-          handle_button_click(
-            intelligent_update_button,
-            params.client_id,
-            'intelligent-update'
-          )
-        })
-
-        params.footer.insertBefore(
-          intelligent_update_button,
-          params.footer.children[2]
-        )
-      }
-
-      if (has_truncated || has_diff) {
-        create_intelligent_update_button()
-      } else {
-        create_fast_replace_button()
-      }
-    }
-
-    const attribute_observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
         if (
-          mutation.type == 'attributes' &&
-          (mutation.attributeName == 'disabled' ||
-            mutation.attributeName == 'mattooltipclass')
+          existing_fast_replace_button ||
+          existing_intelligent_update_button
         ) {
-          const target = mutation.target as Element
+          return
+        }
+
+        // Find the parent chat-turn-container
+        const chat_turn = params.footer.closest('ms-chat-turn') as HTMLElement
+
+        if (!chat_turn) {
+          console.error(
+            'Chat turn container not found for footer:',
+            params.footer
+          )
+          return
+        }
+
+        // TODO Remove checking for name attribute a few weeks from 18 Apr 2025
+        let has_eligible_block = false
+
+        const language_span = chat_turn.querySelector(
+          'ms-code-block footer > span.language'
+        ) as HTMLSpanElement
+
+        if (language_span.textContent?.includes('name=')) {
+          has_eligible_block = true
+        }
+
+        if (!has_eligible_block) {
+          const code_block = chat_turn.querySelector(
+            'ms-code-block code > span.hljs-comment:first-child'
+          ) as HTMLElement
           if (
-            target.nodeName == 'BUTTON' &&
-            target.getAttribute('mattooltipclass') == 'run-button-tooltip' &&
-            target.hasAttribute('disabled')
+            code_block.textContent &&
+            extract_filename_from_comment(code_block.textContent)
           ) {
-            console.log(
-              'Button with required attributes found via attribute change'
-            )
-            // Find all footers and add buttons to them
-            const all_footers = document.querySelectorAll('div.turn-footer')
-            all_footers.forEach((footer) => {
-              if (footer.textContent?.includes('thumb_up')) {
-                add_buttons_to_message_footer({
-                  footer,
-                  client_id: params.client_id
-                })
-              }
-            })
+            has_eligible_block = true
           }
         }
+
+        // Only proceed if we found at least one code block with a name attribute or filename comment
+        if (!has_eligible_block) return
+
+        const has_truncated = has_truncated_fragments(chat_turn)
+        const has_diff = has_diff_markers(chat_turn)
+
+        const create_fast_replace_button = () => {
+          const fast_replace_button = document.createElement('button')
+          fast_replace_button.textContent = fast_replace_button_text
+          fast_replace_button.title =
+            'Overrides original files. Action can be reverted.'
+          apply_button_style(fast_replace_button)
+
+          // Add event listener for Fast replace button click
+          fast_replace_button.addEventListener('click', () => {
+            handle_button_click(
+              fast_replace_button,
+              params.client_id,
+              'fast-replace'
+            )
+          })
+
+          params.footer.insertBefore(
+            fast_replace_button,
+            params.footer.children[2]
+          )
+        }
+        const create_intelligent_update_button = () => {
+          const intelligent_update_button = document.createElement('button')
+          intelligent_update_button.textContent = intelligent_update_button_text
+          intelligent_update_button.title =
+            'Uses AI to merge partial changes into existing files. Enabled because detected truncated fragments with ellipsis comments.'
+          apply_button_style(intelligent_update_button)
+          intelligent_update_button.style.background =
+            'linear-gradient(to bottom right, #9168C0 12%, #319749 40%, #42de67 90%)'
+
+          // Add event listener for Intelligent update button click
+          intelligent_update_button.addEventListener('click', () => {
+            handle_button_click(
+              intelligent_update_button,
+              params.client_id,
+              'intelligent-update'
+            )
+          })
+
+          params.footer.insertBefore(
+            intelligent_update_button,
+            params.footer.children[2]
+          )
+        }
+
+        if (has_truncated || has_diff) {
+          create_intelligent_update_button()
+        } else {
+          create_fast_replace_button()
+        }
+      },
+      100
+    )
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        const all_footers = document.querySelectorAll(
+          'ms-chat-turn .turn-footer'
+        )
+        all_footers.forEach((footer) => {
+          // Check if the footer is for an AI response (contains thumb_up icon)
+          if (
+            footer.querySelector('mat-icon')?.textContent?.trim() == 'thumb_up'
+          ) {
+            debounced_add_buttons({
+              footer,
+              client_id: params.client_id
+            })
+          }
+        })
       })
     })
 
-    // Start observing for attribute changes on the document.
-    // We are looking at the "Run" button to become disabled
-    // what means the response is generated and prompt is empty.
-    attribute_observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['disabled', 'mattooltipclass'],
-      subtree: true
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
     })
   }
 }

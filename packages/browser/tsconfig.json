@@ -9,7 +9,7 @@
     "baseUrl": ".",
     "strict": true,
     "jsx": "react-jsx",
-    "types": ["chrome", "webextension-polyfill"],
+    "types": ["chrome", "webextension-polyfill", "node"],
     "paths": {
       "@/*": ["./src/*"],
       "@shared/*": ["../shared/src/*"],

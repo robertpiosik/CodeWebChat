@@ -23,8 +23,11 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     default_system_instructions:
-      "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their `name` in the header.\nExample of a code block with a file name in the header:\n```typescript name=filename.ts\ncontents of file\n```",
-    supported_options: {},
+      "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their `name` in the first line.\nExample of a code block with a file name in the first line:\n```typescript\n// filename.ts\ncontents of file\n```",
+    supported_options: {
+      // close sidebar
+      // close settings
+    },
     models: {
       'gemini-2.5-flash-preview-04-17': 'Gemini 2.5 Flash Preview 04-17',
       'gemini-2.5-pro-preview-03-25': 'Gemini 2.5 Pro Preview 03-25',
@@ -67,7 +70,7 @@ export const CHATBOTS = {
     supports_user_provided_model: true,
     supports_user_provided_port: false,
     default_system_instructions:
-      "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their `name` in the header.\nExample of a code block with a file name in the header:\n```typescript name=filename.ts\ncontents of file\n```",
+      "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their `name` in the first line.\nExample of a code block with a file name in the first line:\n```typescript\n// filename.ts\ncontents of file\n```",
     supported_options: {},
     models: {}
   },

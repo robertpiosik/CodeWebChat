@@ -1,21 +1,10 @@
+import { cleanup_api_response } from '@/helpers/cleanup-api-response'
+import { extract_filename_from_comment } from '@shared/utils/extract-filename-from-comment'
+
 export interface ClipboardFile {
   file_path: string
   content: string
   workspace_name?: string
-}
-
-const extract_filename_from_comment = (line: string): string | null => {
-  const stripped = line
-    .trim()
-    .replace(/^(\/\/|#|--|\/\*|\*)\s*/, '')
-    .trim()
-
-  const path_match = stripped.match(/(?:[\w\-./]+\/)*[\w\-.]+\.\w{1,10}/)
-  if (path_match && path_match[0]) {
-    return path_match[0]
-  }
-
-  return null
 }
 
 // Helper function to check if path starts with a workspace name and extract it
@@ -108,6 +97,11 @@ export const parse_clipboard_multiple_files = (params: {
         // We've found the end of the block
         state = 'TEXT'
 
+        // Clean up the collected content before adding/appending
+        const cleaned_content = cleanup_api_response({
+          content: current_content
+        })
+
         // Add the collected file if we have a valid filename
         if (current_file_name) {
           const file_key = `${
@@ -116,11 +110,13 @@ export const parse_clipboard_multiple_files = (params: {
 
           if (files_map.has(file_key)) {
             const existing_file = files_map.get(file_key)!
-            existing_file.content += '\n\n' + current_content
+            // Append cleaned content
+            existing_file.content += '\n\n' + cleaned_content
           } else {
             files_map.set(file_key, {
               file_path: current_file_name,
-              content: current_content,
+              // Use cleaned content
+              content: cleaned_content,
               workspace_name: current_workspace_name
             })
           }
@@ -175,15 +171,20 @@ export const parse_clipboard_multiple_files = (params: {
 
   // Handle edge case: last file in clipboard doesn't have closing ```
   if (state == 'CONTENT' && current_file_name) {
+    // Clean up the collected content before adding/appending
+    const cleaned_content = cleanup_api_response({ content: current_content })
+
     const file_key = `${current_workspace_name || ''}:${current_file_name}`
 
     if (files_map.has(file_key)) {
       const existing_file = files_map.get(file_key)!
-      existing_file.content += '\n\n' + current_content
+      // Append cleaned content
+      existing_file.content += '\n\n' + cleaned_content
     } else {
       files_map.set(file_key, {
         file_path: current_file_name,
-        content: current_content,
+        // Use cleaned content
+        content: cleaned_content,
         workspace_name: current_workspace_name
       })
     }
