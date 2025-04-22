@@ -16,14 +16,19 @@ import {
   SelectedPresetsMessage,
   DuplicatePresetMessage,
   CreatePresetMessage,
-  GeminiApiKeyUpdatedMessage,
+  GeminiApiKeyMessage,
   UpdateGeminiApiKeyMessage,
   DefaultModelsUpdatedMessage,
   UpdateDefaultModelMessage,
   CustomProvidersUpdatedMessage,
   OpenRouterModelsMessage,
   ShowOpenRouterModelPickerMessage,
-  OpenRouterModelSelectedMessage
+  OpenRouterModelSelectedMessage,
+  CodeCompletionsSettingsMessage,
+  FileRefactoringSettingsMessage,
+  ApplyChatResponseSettingsMessage,
+  CommitMessageSettingsMessage,
+  ApiToolSettings // Assuming ApiToolSettings is defined here
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -252,11 +257,15 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       | SelectedPresetsMessage
       | DuplicatePresetMessage
       | CreatePresetMessage
-      | GeminiApiKeyUpdatedMessage
+      | GeminiApiKeyMessage
       | DefaultModelsUpdatedMessage
       | CustomProvidersUpdatedMessage
       | OpenRouterModelsMessage
       | OpenRouterModelSelectedMessage
+      | CodeCompletionsSettingsMessage
+      | FileRefactoringSettingsMessage
+      | ApplyChatResponseSettingsMessage
+      | CommitMessageSettingsMessage
   >(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -1004,8 +1013,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               GEMINI_API_KEY_STATE_KEY,
               ''
             )
-            this._send_message<GeminiApiKeyUpdatedMessage>({
-              command: 'GEMINI_API_KEY_UPDATED',
+            this._send_message<GeminiApiKeyMessage>({
+              command: 'GEMINI_API_KEY',
               api_key
             })
           } else if (message.command == 'UPDATE_GEMINI_API_KEY') {
@@ -1014,8 +1023,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               GEMINI_API_KEY_STATE_KEY,
               update_msg.api_key
             )
-            this._send_message<GeminiApiKeyUpdatedMessage>({
-              command: 'GEMINI_API_KEY_UPDATED',
+            this._send_message<GeminiApiKeyMessage>({
+              command: 'GEMINI_API_KEY',
               api_key: update_msg.api_key
             })
           } else if (message.command == 'GET_DEFAULT_MODELS') {
@@ -1085,6 +1094,62 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                 model_id: undefined
               })
             }
+          } else if (message.command == 'GET_CODE_COMPLETIONS_SETTINGS') {
+            const settings = this._context.globalState.get<ApiToolSettings>(
+              'code_completions_settings',
+              {} as ApiToolSettings // Provide a default empty object cast to the type
+            )
+            this._send_message<CodeCompletionsSettingsMessage>({
+              command: 'CODE_COMPLETIONS_SETTINGS',
+              settings
+            })
+          } else if (message.command == 'UPDATE_CODE_COMPLETIONS_SETTINGS') {
+            await this._context.globalState.update(
+              'code_completions_settings',
+              message.settings
+            )
+          } else if (message.command == 'GET_FILE_REFACTORING_SETTINGS') {
+            const settings = this._context.globalState.get<ApiToolSettings>(
+              'file_refactoring_settings',
+              {} as ApiToolSettings // Provide a default empty object cast to the type
+            )
+            this._send_message<FileRefactoringSettingsMessage>({
+              command: 'FILE_REFACTORING_SETTINGS',
+              settings
+            })
+          } else if (message.command == 'UPDATE_FILE_REFACTORING_SETTINGS') {
+            await this._context.globalState.update(
+              'file_refactoring_settings',
+              message.settings
+            )
+          } else if (message.command == 'GET_APPLY_CHAT_RESPONSE_SETTINGS') {
+            const settings = this._context.globalState.get<ApiToolSettings>(
+              'apply_chat_response_settings',
+              {} as ApiToolSettings // Provide a default empty object cast to the type
+            )
+            this._send_message<ApplyChatResponseSettingsMessage>({
+              command: 'APPLY_CHAT_RESPONSE_SETTINGS',
+              settings
+            })
+          } else if (message.command == 'UPDATE_APPLY_CHAT_RESPONSE_SETTINGS') {
+            await this._context.globalState.update(
+              'apply_chat_response_settings',
+              message.settings
+            )
+          } else if (message.command == 'GET_COMMIT_MESSAGE_SETTINGS') {
+            const settings = this._context.globalState.get<ApiToolSettings>(
+              'commit_message_settings',
+              {} as ApiToolSettings // Provide a default empty object cast to the type
+            )
+            this._send_message<CommitMessageSettingsMessage>({
+              command: 'COMMIT_MESSAGE_SETTINGS',
+              settings
+            })
+          } else if (message.command == 'UPDATE_COMMIT_MESSAGE_SETTINGS') {
+            await this._context.globalState.update(
+              'commit_message_settings',
+              message.settings
+            )
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)
@@ -1118,6 +1183,36 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this._send_presets_to_webview(webview_view.webview)
     this._send_default_models()
     this._send_custom_providers()
+
+    // Send initial settings for new tools
+    this._send_message<CodeCompletionsSettingsMessage>({
+      command: 'CODE_COMPLETIONS_SETTINGS',
+      settings: this._context.globalState.get<ApiToolSettings>(
+        'code_completions_settings',
+        {} as ApiToolSettings
+      )
+    })
+    this._send_message<FileRefactoringSettingsMessage>({
+      command: 'FILE_REFACTORING_SETTINGS',
+      settings: this._context.globalState.get<ApiToolSettings>(
+        'file_refactoring_settings',
+        {} as ApiToolSettings
+      )
+    })
+    this._send_message<ApplyChatResponseSettingsMessage>({
+      command: 'APPLY_CHAT_RESPONSE_SETTINGS',
+      settings: this._context.globalState.get<ApiToolSettings>(
+        'apply_chat_response_settings',
+        {} as ApiToolSettings
+      )
+    })
+    this._send_message<CommitMessageSettingsMessage>({
+      command: 'COMMIT_MESSAGE_SETTINGS',
+      settings: this._context.globalState.get<ApiToolSettings>(
+        'commit_message_settings',
+        {} as ApiToolSettings
+      )
+    })
   }
 
   // Add this method to the ChatViewProvider class

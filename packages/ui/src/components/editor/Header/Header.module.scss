@@ -1,6 +1,8 @@
 .container {
   display: flex;
   justify-content: space-between;
+  height: var(--header-height);
+  flex-shrink: 0;
   padding: 0 var(--padding-8px) 0 var(--padding-12px);
   border-bottom: 1px solid var(--vscode-sideBarSectionHeader-border);
 }
@@ -10,7 +12,7 @@
   gap: var(--padding-4px);
 
   &__tab {
-    padding: var(--padding-4px) 9px;
+    padding: 0 9px;
     margin-bottom: var(--padding-6px);
     border-radius: var(--border-radius-4px);
     cursor: pointer;

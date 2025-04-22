@@ -3,7 +3,6 @@ import { IconButton } from '../IconButton/IconButton'
 
 type Props = {
   on_back_click: () => void
-  back_label: string
   children: React.ReactNode
 }
 
@@ -12,11 +11,11 @@ export const EditView: React.FC<Props> = (props) => {
     <div className={styles.container}>
       <div className={styles.header}>
         <IconButton
-          codicon_icon="arrow-left"
+          codicon_icon="chevron-left"
           on_click={props.on_back_click}
-          title={props.back_label}
+          title="Return to previous screen"
         />
-        <span className={styles['back-label']}>{props.back_label}</span>
+        <span className={styles['back-label']}>Back</span>
       </div>
       <div className={styles.content}>{props.children}</div>
     </div>

@@ -1,6 +1,14 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Preset } from '@shared/types/preset'
 
+export type Provider = 'Gemini API' | 'OpenRouter'
+
+export type ApiToolSettings = {
+  provider?: Provider
+  model?: string
+  temperature?: number
+}
+
 export interface BaseMessage {
   command: string
 }
@@ -166,14 +174,50 @@ export interface ShowOpenRouterModelPickerMessage extends BaseMessage {
   }[]
 }
 
+export interface GetCodeCompletionsSettingsMessage extends BaseMessage {
+  command: 'GET_CODE_COMPLETIONS_SETTINGS'
+}
+
+export interface UpdateCodeCompletionsSettingsMessage extends BaseMessage {
+  command: 'UPDATE_CODE_COMPLETIONS_SETTINGS'
+  settings: ApiToolSettings
+}
+
+export interface GetFileRefactoringSettingsMessage extends BaseMessage {
+  command: 'GET_FILE_REFACTORING_SETTINGS'
+}
+
+export interface UpdateFileRefactoringSettingsMessage extends BaseMessage {
+  command: 'UPDATE_FILE_REFACTORING_SETTINGS'
+  settings: ApiToolSettings
+}
+
+export interface GetApplyChatResponseSettingsMessage extends BaseMessage {
+  command: 'GET_APPLY_CHAT_RESPONSE_SETTINGS'
+}
+
+export interface UpdateApplyChatResponseSettingsMessage extends BaseMessage {
+  command: 'UPDATE_APPLY_CHAT_RESPONSE_SETTINGS'
+  settings: ApiToolSettings
+}
+
+export interface GetCommitMessageSettingsMessage extends BaseMessage {
+  command: 'GET_COMMIT_MESSAGE_SETTINGS'
+}
+
+export interface UpdateCommitMessageSettingsMessage extends BaseMessage {
+  command: 'UPDATE_COMMIT_MESSAGE_SETTINGS'
+  settings: ApiToolSettings
+}
+
 // Messages from extension to webview:
-export interface GeminiApiKeyUpdatedMessage extends BaseMessage {
-  command: 'GEMINI_API_KEY_UPDATED'
+export interface GeminiApiKeyMessage extends BaseMessage {
+  command: 'GEMINI_API_KEY'
   api_key: string
 }
 
-export interface OpenRouterApiKeyUpdatedMessage extends BaseMessage {
-  command: 'OPEN_ROUTER_API_KEY_UPDATED'
+export interface OpenRouterApiKeyMessage extends BaseMessage {
+  command: 'OPEN_ROUTER_API_KEY'
   api_key: string
 }
 
@@ -298,6 +342,26 @@ export interface OpenRouterModelSelectedMessage extends BaseMessage {
   model_id: string | undefined
 }
 
+export interface CodeCompletionsSettingsMessage extends BaseMessage {
+  command: 'CODE_COMPLETIONS_SETTINGS'
+  settings: ApiToolSettings
+}
+
+export interface FileRefactoringSettingsMessage extends BaseMessage {
+  command: 'FILE_REFACTORING_SETTINGS'
+  settings: ApiToolSettings
+}
+
+export interface ApplyChatResponseSettingsMessage extends BaseMessage {
+  command: 'APPLY_CHAT_RESPONSE_SETTINGS'
+  settings: ApiToolSettings
+}
+
+export interface CommitMessageSettingsMessage extends BaseMessage {
+  command: 'COMMIT_MESSAGE_SETTINGS'
+  settings: ApiToolSettings
+}
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | GetGeminiApiKeyMessage
@@ -333,10 +397,18 @@ export type WebviewMessage =
   | GetCustomProvidersMessage
   | GetOpenRouterModelsMessage
   | ShowOpenRouterModelPickerMessage
+  | GetCodeCompletionsSettingsMessage
+  | UpdateCodeCompletionsSettingsMessage
+  | GetFileRefactoringSettingsMessage
+  | UpdateFileRefactoringSettingsMessage
+  | GetApplyChatResponseSettingsMessage
+  | UpdateApplyChatResponseSettingsMessage
+  | GetCommitMessageSettingsMessage
+  | UpdateCommitMessageSettingsMessage
 
 export type ExtensionMessage =
-  | GeminiApiKeyUpdatedMessage
-  | OpenRouterApiKeyUpdatedMessage
+  | GeminiApiKeyMessage
+  | OpenRouterApiKeyMessage
   | ConnectionStatusMessage
   | PresetsMessage
   | SelectedPresetsMessage
@@ -356,3 +428,7 @@ export type ExtensionMessage =
   | CustomProvidersUpdatedMessage
   | OpenRouterModelsMessage
   | OpenRouterModelSelectedMessage
+  | CodeCompletionsSettingsMessage
+  | FileRefactoringSettingsMessage
+  | ApplyChatResponseSettingsMessage
+  | CommitMessageSettingsMessage

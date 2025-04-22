@@ -22,35 +22,35 @@ type Props = {
       description: string
     }
   }
-  
+
   gemini_api_key?: string
   open_router_api_key?: string
 
   code_completions_settings: ApiToolSettings
   file_refactoring_settings: ApiToolSettings
   apply_chat_response_settings: ApiToolSettings
+  commit_message_settings: ApiToolSettings
 
   on_code_completions_settings_update: (settings: ApiToolSettings) => void
   on_file_refactoring_settings_update: (settings: ApiToolSettings) => void
   on_apply_chat_response_settings_update: (settings: ApiToolSettings) => void
-
-
+  on_commit_message_settings_update: (settings: ApiToolSettings) => void
 
   get_newly_picked_open_router_model: () => Promise<string | undefined>
-
-  // Deprecated:
-  default_code_completion_model: string
-  default_refactoring_model: string
-  default_apply_changes_model: string
-  default_commit_message_model: string
-
-  model_options: string[]
   on_gemini_api_key_change: (api_key: string) => void
   on_open_router_api_key_change: (api_key: string) => void
-  on_fim_model_change: (model: string) => void
-  on_refactoring_model_change: (model: string) => void
-  on_apply_changes_model_change: (model: string) => void
-  on_commit_message_model_change: (model: string) => void
+
+  // Deprecated:
+  // default_code_completion_model: string
+  // default_refactoring_model: string
+  // default_apply_changes_model: string
+  // default_commit_message_model: string
+
+  // model_options: string[]
+  // on_fim_model_change: (model: string) => void
+  // on_refactoring_model_change: (model: string) => void
+  // on_apply_changes_model_change: (model: string) => void
+  // on_commit_message_model_change: (model: string) => void
 }
 
 export const ApiSettingsForm: React.FC<Props> = (props) => {
@@ -201,7 +201,7 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
         </div>
       </Field>
 
-      <Field label="Refactoring Model" htmlFor="refactoring-model">
+      {/* <Field label="Refactoring Model" htmlFor="refactoring-model">
         <select
           id="refactoring-model"
           value={props.default_refactoring_model}
@@ -244,7 +244,7 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
             </option>
           ))}
         </select>
-      </Field>
+      </Field> */}
     </div>
   )
 }

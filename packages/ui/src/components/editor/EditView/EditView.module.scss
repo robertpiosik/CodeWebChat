@@ -10,18 +10,19 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px;
+  height: var(--header-height);
+  gap: var(--padding-2px);
+  padding: 0 var(--padding-12px) var(--padding-6px) var(--padding-12px);
   border-bottom: 1px solid var(--vscode-sideBarSectionHeader-border);
 }
 
 .back-label {
-  font-size: 13px;
+  font-size: var(--font-size-13px);
   color: var(--vscode-foreground);
 }
 
 .content {
   flex: 1;
   overflow: auto;
-  padding: 12px;
+  padding: var(--padding-12px);
 }
