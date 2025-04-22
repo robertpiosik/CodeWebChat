@@ -16,8 +16,8 @@ import {
   SelectedPresetsMessage,
   DuplicatePresetMessage,
   CreatePresetMessage,
-  ApiKeyUpdatedMessage,
-  UpdateApiKeyMessage,
+  GeminiApiKeyUpdatedMessage,
+  UpdateGeminiApiKeyMessage,
   DefaultModelsUpdatedMessage,
   UpdateDefaultModelMessage,
   CustomProvidersUpdatedMessage,
@@ -252,7 +252,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       | SelectedPresetsMessage
       | DuplicatePresetMessage
       | CreatePresetMessage
-      | ApiKeyUpdatedMessage
+      | GeminiApiKeyUpdatedMessage
       | DefaultModelsUpdatedMessage
       | CustomProvidersUpdatedMessage
       | OpenRouterModelsMessage
@@ -999,23 +999,23 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                 `Failed to create preset: ${error}`
               )
             }
-          } else if (message.command == 'GET_API_KEY') {
+          } else if (message.command == 'GET_GEMINI_API_KEY') {
             const api_key = this._context.globalState.get<string>(
               GEMINI_API_KEY_STATE_KEY,
               ''
             )
-            this._send_message<ApiKeyUpdatedMessage>({
-              command: 'API_KEY_UPDATED',
+            this._send_message<GeminiApiKeyUpdatedMessage>({
+              command: 'GEMINI_API_KEY_UPDATED',
               api_key
             })
-          } else if (message.command == 'UPDATE_API_KEY') {
-            const update_msg = message as UpdateApiKeyMessage
+          } else if (message.command == 'UPDATE_GEMINI_API_KEY') {
+            const update_msg = message as UpdateGeminiApiKeyMessage
             await this._context.globalState.update(
               GEMINI_API_KEY_STATE_KEY,
               update_msg.api_key
             )
-            this._send_message<ApiKeyUpdatedMessage>({
-              command: 'API_KEY_UPDATED',
+            this._send_message<GeminiApiKeyUpdatedMessage>({
+              command: 'GEMINI_API_KEY_UPDATED',
               api_key: update_msg.api_key
             })
           } else if (message.command == 'GET_DEFAULT_MODELS') {
