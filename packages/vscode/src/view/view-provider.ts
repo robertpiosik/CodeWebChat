@@ -18,8 +18,6 @@ import {
   CreatePresetMessage,
   GeminiApiKeyMessage,
   UpdateGeminiApiKeyMessage,
-  DefaultModelsUpdatedMessage,
-  UpdateDefaultModelMessage,
   CustomProvidersUpdatedMessage,
   OpenRouterModelsMessage,
   ShowOpenRouterModelPickerMessage,
@@ -28,7 +26,7 @@ import {
   FileRefactoringSettingsMessage,
   ApplyChatResponseSettingsMessage,
   CommitMessageSettingsMessage,
-  ApiToolSettings // Assuming ApiToolSettings is defined here
+  ApiToolSettings
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -258,7 +256,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       | DuplicatePresetMessage
       | CreatePresetMessage
       | GeminiApiKeyMessage
-      | DefaultModelsUpdatedMessage
       | CustomProvidersUpdatedMessage
       | OpenRouterModelsMessage
       | OpenRouterModelSelectedMessage
@@ -665,8 +662,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             }
 
             vscode.window.showInformationMessage('Prompt copied to clipboard!')
-          } else if (message.command == 'SHOW_ERROR') {
-            vscode.window.showErrorMessage(message.message)
           } else if (message.command == 'SHOW_PRESET_PICKER') {
             const config = vscode.workspace.getConfiguration()
             const web_chat_presets = config.get<any[]>(
@@ -721,11 +716,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                 names: selected_names
               })
             }
-          } else if (message.command == 'OPEN_SETTINGS') {
-            await vscode.commands.executeCommand(
-              'workbench.action.openSettings',
-              'geminiCoder.presets'
-            )
           } else if (
             message.command == 'GET_FIM_MODE' ||
             message.command == 'SAVE_FIM_MODE'
@@ -1027,33 +1017,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               command: 'GEMINI_API_KEY',
               api_key: update_msg.api_key
             })
-          } else if (message.command == 'GET_DEFAULT_MODELS') {
-            this._send_default_models()
-          } else if (message.command == 'UPDATE_DEFAULT_MODEL') {
-            const update_msg = message as UpdateDefaultModelMessage
-            switch (update_msg.model_type) {
-              case 'code_completion':
-                this._model_manager.set_default_code_completion_model(
-                  update_msg.model
-                )
-                break
-              case 'refactoring':
-                this._model_manager.set_default_refactoring_model(
-                  update_msg.model
-                )
-                break
-              case 'apply_changes':
-                this._model_manager.set_default_apply_changes_model(
-                  update_msg.model
-                )
-                break
-              case 'commit_message':
-                this._model_manager.set_default_commit_message_model(
-                  update_msg.model
-                )
-                break
-            }
-            this._send_default_models()
           } else if (message.command == 'GET_CUSTOM_PROVIDERS') {
             const config = vscode.workspace.getConfiguration()
             const providers = config.get<any[]>('geminiCoder.providers', [])
@@ -1181,7 +1144,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
     this._update_active_file_info()
     this._send_presets_to_webview(webview_view.webview)
-    this._send_default_models()
     this._send_custom_providers()
 
     // Send initial settings for new tools
@@ -1282,20 +1244,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       </body>
       </html>
     `
-  }
-
-  private _send_default_models() {
-    this._send_message<DefaultModelsUpdatedMessage>({
-      command: 'DEFAULT_MODELS_UPDATED',
-      default_code_completion_model:
-        this._model_manager.get_default_fim_model(),
-      default_refactoring_model:
-        this._model_manager.get_default_refactoring_model(),
-      default_apply_changes_model:
-        this._model_manager.get_default_apply_changes_model(),
-      default_commit_message_model:
-        this._model_manager.get_default_commit_message_model()
-    })
   }
 
   private _send_custom_providers() {

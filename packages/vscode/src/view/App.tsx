@@ -9,12 +9,12 @@ import { EditPresetForm } from '@ui/components/editor/EditPresetForm'
 import { Preset } from '@shared/types/preset'
 import { ExtensionMessage } from './types/messages'
 import { use_open_router_models } from './hooks/use-open-router-models'
-
-import '@vscode/codicons/dist/codicon.css'
-import '@ui/styles/global.scss'
 import { ApiSettingsForm } from '@ui/components/editor/ApiSettingsForm'
 import { BUILT_IN_PROVIDERS } from '@/constants/built-in-providers'
 import { use_api_tools_configuration } from './hooks/use-api-tools-configuration'
+
+import '@vscode/codicons/dist/codicon.css'
+import '@ui/styles/global.scss'
 
 const vscode = acquireVsCodeApi()
 
@@ -120,19 +120,19 @@ const App = () => {
         }}
       >
         <ApiSettingsForm
+          gemini_api_key={gemini_api_key}
+          open_router_models={open_router_models}
           gemini_api_models={Object.fromEntries(
             BUILT_IN_PROVIDERS.map((provider) => [
               provider.model,
               provider.name
             ])
           )}
-          open_router_models={open_router_models}
-          gemini_api_key={gemini_api_key}
           open_router_api_key={open_router_api_key}
           code_completions_settings={code_completions_settings}
           file_refactoring_settings={file_refactoring_settings}
           apply_chat_response_settings={apply_chat_response_settings}
-          commit_message_settings={commit_message_settings}
+          commit_messages_settings={commit_message_settings}
           on_code_completions_settings_update={
             handle_code_completions_settings_change
           }
@@ -142,14 +142,15 @@ const App = () => {
           on_apply_chat_response_settings_update={
             handle_apply_chat_response_settings_change
           }
-          on_commit_message_settings_update={
+          on_commit_messages_settings_update={
             handle_commit_message_settings_change
-          }
-          get_newly_picked_open_router_model={
-            get_newly_picked_open_router_model
           }
           on_gemini_api_key_change={handle_gemini_api_key_change}
           on_open_router_api_key_change={handle_open_router_api_key_change}
+          request_open_router_models={request_open_router_models}
+          get_newly_picked_open_router_model={
+            get_newly_picked_open_router_model
+          }
         />
       </EditView>
     )

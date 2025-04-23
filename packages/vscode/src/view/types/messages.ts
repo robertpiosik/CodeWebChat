@@ -75,17 +75,8 @@ export interface CopyPromptMessage extends BaseMessage {
   instruction: string
 }
 
-export interface ShowErrorMessage extends BaseMessage {
-  command: 'SHOW_ERROR'
-  message: string
-}
-
 export interface ShowPresetPickerMessage extends BaseMessage {
   command: 'SHOW_PRESET_PICKER'
-}
-
-export interface OpenSettingsMessage extends BaseMessage {
-  command: 'OPEN_SETTINGS'
 }
 
 export interface GetFimModeMessage extends BaseMessage {
@@ -141,20 +132,6 @@ export interface DuplicatePresetMessage extends BaseMessage {
 
 export interface CreatePresetMessage extends BaseMessage {
   command: 'CREATE_PRESET'
-}
-
-export interface GetDefaultModelsMessage extends BaseMessage {
-  command: 'GET_DEFAULT_MODELS'
-}
-
-export interface UpdateDefaultModelMessage extends BaseMessage {
-  command: 'UPDATE_DEFAULT_MODEL'
-  model_type:
-    | 'code_completion'
-    | 'refactoring'
-    | 'apply_changes'
-    | 'commit_message'
-  model: string
 }
 
 export interface GetCustomProvidersMessage extends BaseMessage {
@@ -307,14 +284,6 @@ export interface PresetUpdated extends BaseMessage {
   command: 'PRESET_UPDATED'
 }
 
-export interface DefaultModelsUpdatedMessage extends BaseMessage {
-  command: 'DEFAULT_MODELS_UPDATED'
-  default_code_completion_model: string
-  default_refactoring_model: string
-  default_apply_changes_model: string
-  default_commit_message_model: string
-}
-
 export interface CustomProvidersUpdatedMessage extends BaseMessage {
   command: 'CUSTOM_PROVIDERS_UPDATED'
   custom_providers: Array<{
@@ -377,9 +346,7 @@ export type WebviewMessage =
   | SavePresetsOrderMessage
   | SendPromptMessage
   | CopyPromptMessage
-  | ShowErrorMessage
   | ShowPresetPickerMessage
-  | OpenSettingsMessage
   | GetFimModeMessage
   | SaveFimModeMessage
   | RequestEditorStateMessage
@@ -392,8 +359,6 @@ export type WebviewMessage =
   | DeletePresetMessage
   | DuplicatePresetMessage
   | CreatePresetMessage
-  | GetDefaultModelsMessage
-  | UpdateDefaultModelMessage
   | GetCustomProvidersMessage
   | GetOpenRouterModelsMessage
   | ShowOpenRouterModelPickerMessage
@@ -424,7 +389,6 @@ export type ExtensionMessage =
   | ActiveFileInfoMessage
   | PresetCreated
   | PresetUpdated
-  | DefaultModelsUpdatedMessage
   | CustomProvidersUpdatedMessage
   | OpenRouterModelsMessage
   | OpenRouterModelSelectedMessage
