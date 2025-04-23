@@ -459,12 +459,6 @@
           "description": "The prompt text used when generating commit messages.",
           "default": "Write a brief and precise summary for the following diff, limited to a single sentence if possible and nothing else. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
         },
-        "geminiCoder.temperature": {
-          "type": "number",
-          "scope": "resource",
-          "description": "Temperature to use with built-in Gemini models.",
-          "default": 0.2
-        },
         "geminiCoder.providers": {
           "type": "array",
           "default": [],
