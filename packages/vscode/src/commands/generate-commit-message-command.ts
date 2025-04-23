@@ -141,12 +141,7 @@ export function generate_commit_message_command(
 
               if (!response) {
                 vscode.window.showErrorMessage(
-                  'Failed to generate commit message. Please try again later.'
-                )
-                return
-              } else if (response == 'rate_limit') {
-                vscode.window.showInformationMessage(
-                  'Rate limit exceeded. Please try again later.'
+                  'Failed to generate commit message.'
                 )
               } else {
                 let commit_message = process_single_trailing_dot(response)

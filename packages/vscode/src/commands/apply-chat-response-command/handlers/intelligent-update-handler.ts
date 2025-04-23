@@ -31,7 +31,6 @@ async function process_file(params: {
   cancel_token?: CancelToken // Add cancelToken parameter
   on_progress?: (chunkLength: number, totalLength: number) => void
 }): Promise<string | null> {
-  // Removed 'rate_limit' from return type
   Logger.log({
     function_name: 'process_file',
     message: 'start',
@@ -101,19 +100,6 @@ async function process_file(params: {
         data: params.file_path
       })
       return null
-    }
-
-    // Explicitly handle rate limit return value as a failure
-    if (refactored_content == 'rate_limit') {
-      vscode.window.showErrorMessage(
-        `Applying changes to ${params.file_path} failed due to rate limit.`
-      )
-      Logger.warn({
-        function_name: 'process_file',
-        message: 'Rate limit reached',
-        data: params.file_path
-      })
-      return null // Treat rate limit as a failure, no fallback
     }
 
     const cleaned_content = cleanup_api_response({

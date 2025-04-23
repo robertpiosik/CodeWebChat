@@ -29,6 +29,7 @@ export class ApiToolsSettingsManager {
         api_key: this.get_gemini_api_key()
       }
     } else if (provider == 'OpenRouter') {
+      console.log( this.get_open_router_api_key())
       return {
         endpoint_url: 'https://openrouter.ai/api/v1',
         api_key: this.get_open_router_api_key()

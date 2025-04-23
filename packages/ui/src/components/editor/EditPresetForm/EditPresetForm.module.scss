@@ -17,41 +17,6 @@
   }
 }
 
-.temperature {
-  display: flex;
-  align-items: center;
-  gap: var(--padding-12px);
-
-  &__slider {
-    flex: 1;
-    margin: 0;
-    appearance: none;
-    background: transparent;
-
-    &:focus {
-      outline: none;
-    }
-
-    &::-webkit-slider-runnable-track {
-      background: var(--vscode-descriptionForeground);
-      height: 2px;
-    }
-
-    &::-webkit-slider-thumb {
-      appearance: none;
-      margin-top: -5px;
-      background-color: var(--vscode-button-background);
-      height: 12px;
-      width: 12px;
-      border-radius: 50%;
-    }
-  }
-
-  &__input {
-    width: 60px;
-  }
-}
-
 .options {
   display: flex;
   flex-direction: column;

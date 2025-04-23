@@ -175,12 +175,7 @@ export function refactor_command(params: {
               }
             )
 
-            if (refactored_content == 'rate_limit') {
-              vscode.window.showInformationMessage(
-                'Rate limit exceeded. Please try again later.'
-              )
-              return true
-            } else if (refactored_content) {
+            if (refactored_content) {
               result_content = cleanup_api_response({
                 content: refactored_content
               })

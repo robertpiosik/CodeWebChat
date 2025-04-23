@@ -6,6 +6,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { Icon } from '../Icon'
 import { Field } from '../Field'
 import { chatbot_to_icon } from '../../../constants/chatbot-to-icon'
+import { TemperatureControl } from '../TemperatureControl'
 
 type Props = {
   preset: Preset
@@ -265,32 +266,10 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
       {supports_temperature && (
         <Field label="Temperature" htmlFor="temperature">
-          <div className={styles.temperature}>
-            <input
-              id="temperature"
-              type="number"
-              min="0"
-              max="1"
-              step="0.01"
-              value={temperature}
-              onChange={(e) => {
-                const value = parseFloat(e.target.value)
-                if (!isNaN(value) && value >= 0 && value <= 1) {
-                  set_temperature(value)
-                }
-              }}
-              className={styles.temperature__input}
-            />
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.01"
-              value={temperature}
-              onChange={(e) => set_temperature(parseFloat(e.target.value))}
-              className={styles.temperature__slider}
-            />
-          </div>
+          <TemperatureControl
+            value={temperature || 0}
+            onChange={set_temperature}
+          />
         </Field>
       )}
 

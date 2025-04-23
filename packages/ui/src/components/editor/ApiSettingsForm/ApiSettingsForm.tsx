@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './ApiSettingsForm.module.scss'
 import { Field } from '../Field'
 import { IconButton } from '../IconButton/IconButton'
+import { TemperatureControl } from '../TemperatureControl'
+import { ConfigurationHeader } from '../ConfigurationHeader'
 
 type Provider = 'Gemini API' | 'OpenRouter'
 
@@ -87,11 +89,16 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
 
   const render_api_tool_settings = (params: {
     title: string
+    description: string
     settings: ApiToolSettings
     on_update: (settings: ApiToolSettings) => void
   }) => (
     <>
-      <p>{params.title}</p>
+      <ConfigurationHeader
+        top_line="API TOOL"
+        bottom_line={params.title}
+        description={params.description}
+      />
 
       <Field
         label="Provider"
@@ -194,6 +201,22 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
             </select>
           </Field>
         ))}
+      <Field
+        label="Temperature"
+        htmlFor={`${params.title
+          .toLowerCase()
+          .replaceAll(' ', '-')}-temperature`}
+      >
+        <TemperatureControl
+          value={params.settings.temperature || 0}
+          onChange={(value) => {
+            params.on_update({
+              ...params.settings,
+              temperature: value
+            })
+          }}
+        />
+      </Field>
     </>
   )
 
@@ -265,21 +288,29 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
 
       {render_api_tool_settings({
         title: 'Code Completions',
+        description:
+          'Use state-of-the-art models for top-quality inline code completions. Selected context is attached.',
         settings: props.code_completions_settings,
         on_update: props.on_code_completions_settings_update
       })}
       {render_api_tool_settings({
         title: 'File Refactoring',
+        description:
+          'Modify the active editor based on natural language instructions. Selected context is attached.',
         settings: props.file_refactoring_settings,
         on_update: props.on_file_refactoring_settings_update
       })}
       {render_api_tool_settings({
         title: 'Apply Chat Response',
+        description:
+          'Integrate chat responses with the codebase using separate, concurrently executed requests for each modified file.',
         settings: props.apply_chat_response_settings,
         on_update: props.on_apply_chat_response_settings_update
       })}
       {render_api_tool_settings({
         title: 'Commit Messages',
+        description:
+          'Create meaningful commit messages based on fully attached files and diffs of changes.',
         settings: props.commit_messages_settings,
         on_update: props.on_commit_messages_settings_update
       })}

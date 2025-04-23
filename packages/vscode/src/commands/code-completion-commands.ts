@@ -180,11 +180,7 @@ async function perform_code_completion(
             cancel_token_source.token
           )
 
-          if (completion == 'rate_limit') {
-            vscode.window.showInformationMessage(
-              'Rate limit exceeded. Please try again later.'
-            )
-          } else if (completion) {
+          if (completion) {
             const match = completion.match(
               /<replacement>([\s\S]*?)<\/replacement>/i
             )

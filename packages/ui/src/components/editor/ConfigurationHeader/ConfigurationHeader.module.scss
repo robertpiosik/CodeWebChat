@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--padding-16px);
+
+  &__top {
+    font-size: 13px;
+    color: var(--vscode-descriptionForeground);
+  }
+
+  &__bottom {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 2px 0 6px 0;
+    color: var(--vscode-editor-foreground);
+  }
+
+  &__description {
+    font-size: 12px;
+    color: var(--vscode-editor-foreground);
+  }
+}
