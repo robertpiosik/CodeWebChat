@@ -1,17 +1,11 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
-import { Provider } from '../../types/provider'
-import { BUILT_IN_PROVIDERS } from '../../constants/built-in-providers'
-import { ModelManager } from '../../services/model-manager'
 import {
   parse_clipboard_multiple_files,
   is_multiple_files_clipboard,
   ClipboardFile
 } from './utils/clipboard-parser'
-import {
-  GEMINI_API_KEY_STATE_KEY,
-  LAST_APPLIED_CHANGES_STATE_KEY
-} from '../../constants/state-keys'
+import { LAST_APPLIED_CHANGES_STATE_KEY } from '../../constants/state-keys'
 import { Logger } from '../../helpers/logger'
 import { OriginalFileState } from '../../types/common'
 import { revert_files } from './utils/file-operations'
@@ -20,116 +14,7 @@ import { handle_intelligent_update } from './handlers/intelligent-update-handler
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { check_for_diff_markers } from '@/utils/check-for-diff-markers'
-
-async function get_selected_provider(
-  context: vscode.ExtensionContext,
-  all_providers: Provider[],
-  default_model_name: string | undefined
-): Promise<Provider | undefined> {
-  Logger.log({ function_name: 'get_selected_provider', message: 'start' })
-  // Ensure default model exists if provided
-  if (
-    default_model_name &&
-    !all_providers.some((p) => p.name == default_model_name)
-  ) {
-    vscode.window.showWarningMessage(
-      `Default model "${default_model_name}" not found. Please check settings.`
-    )
-    Logger.warn({
-      function_name: 'get_selected_provider',
-      message: `Default model "${default_model_name}" not found.`
-    })
-    default_model_name = undefined // Unset default if invalid
-  }
-
-  // Get the last used models from global state
-  let last_used_models = context.globalState.get<string[]>(
-    'lastUsedApplyChatResponseModels',
-    []
-  )
-
-  // Filter out invalid or non-existent models from last used
-  last_used_models = last_used_models.filter((model_name) =>
-    all_providers.some((p) => p.name == model_name)
-  )
-
-  // Filter out the default model from last used models if it exists
-  if (default_model_name) {
-    last_used_models = last_used_models.filter(
-      (model) => model != default_model_name
-    )
-  }
-
-  // Construct the QuickPick items
-  const quick_pick_items: vscode.QuickPickItem[] = []
-
-  // Add default model first if it exists
-  if (default_model_name) {
-    quick_pick_items.push({
-      label: default_model_name,
-      description: 'Currently set as default'
-    })
-  }
-
-  // Add last used models next
-  quick_pick_items.push(
-    ...last_used_models.map((model_name) => ({ label: model_name }))
-  )
-
-  // Add remaining providers, excluding default and last used
-  const remaining_providers = all_providers.filter(
-    (p) => p.name != default_model_name && !last_used_models.includes(p.name)
-  )
-  quick_pick_items.push(...remaining_providers.map((p) => ({ label: p.name })))
-
-  // Show the QuickPick selector
-  const selected_item = await vscode.window.showQuickPick(quick_pick_items, {
-    placeHolder: 'Select a model for applying changes'
-  })
-
-  if (!selected_item) {
-    Logger.log({
-      function_name: 'get_selected_provider',
-      message: 'User cancelled provider selection.'
-    })
-    return undefined // User cancelled
-  }
-
-  // Determine selected model name
-  const selected_model_name = selected_item.label
-
-  const selected_provider = all_providers.find(
-    (p) => p.name == selected_model_name
-  )
-  // This check should ideally not fail due to how items are constructed, but good for safety
-  if (!selected_provider) {
-    vscode.window.showErrorMessage(
-      `Model "${selected_model_name}" not found unexpectedly.`
-    )
-    Logger.error({
-      function_name: 'get_selected_provider',
-      message: `Selected model "${selected_model_name}" not found in all_providers.`
-    })
-    return undefined
-  }
-
-  // Update the last used models in global state (put selected on top)
-  const updated_last_used = [
-    selected_model_name,
-    ...last_used_models.filter((model) => model != selected_model_name)
-  ].slice(0, 5) // Keep only the top 5 most recent
-  context.globalState.update(
-    'lastUsedApplyChatResponseModels',
-    updated_last_used
-  )
-
-  Logger.log({
-    function_name: 'get_selected_provider',
-    message: 'Selected provider',
-    data: selected_provider.name
-  })
-  return selected_provider
-}
+import { ApiToolsSettingsManager } from '@/services/api-tools-settings-manager'
 
 async function check_if_all_files_new(
   files: ClipboardFile[]
@@ -176,15 +61,12 @@ export function apply_chat_response_command(params: {
   use_default_model?: boolean
   mode?: 'Fast replace' | 'Intelligent update'
 }) {
-  const model_manager = new ModelManager(params.context)
-
   return vscode.commands.registerCommand(params.command, async () => {
     Logger.log({
       function_name: 'apply_chat_response_command',
       message: 'start',
       data: { command: params.command, mode: params.mode }
     })
-    const config = vscode.workspace.getConfiguration()
     const clipboard_text = await vscode.env.clipboard.readText()
 
     if (!clipboard_text) {
@@ -199,65 +81,6 @@ export function apply_chat_response_command(params: {
     // Check if workspace has only one root folder
     const is_single_root_folder_workspace =
       vscode.workspace.workspaceFolders?.length == 1
-
-    const user_providers = config.get<Provider[]>('geminiCoder.providers') || []
-    const gemini_api_key = params.context.globalState.get<string>(
-      GEMINI_API_KEY_STATE_KEY,
-      ''
-    )
-    const gemini_temperature = config.get<number>('geminiCoder.temperature')
-
-    // Get default model from global state instead of config
-    const default_model_name = model_manager.get_default_apply_changes_model()
-
-    const all_providers = [
-      ...BUILT_IN_PROVIDERS.map((provider) => ({
-        ...provider,
-        apiKey: gemini_api_key || '', // Use configured API key
-        temperature: gemini_temperature // Use configured temperature
-      })),
-      ...user_providers // User providers should have their own keys/temp configured
-    ].filter((p) => p.name && p.model) // Basic validation
-
-    let provider: Provider | undefined
-    if (params.use_default_model) {
-      provider = all_providers.find((p) => p.name == default_model_name)
-      if (!provider) {
-        vscode.window.showErrorMessage(
-          `Default apply changes model "${
-            default_model_name || 'Not set'
-          }" is not configured or invalid. Please set it in the settings.`
-        )
-        Logger.warn({
-          function_name: 'apply_chat_response_command',
-          message: 'Default apply changes model is not set or invalid.'
-        })
-        return
-      }
-      Logger.log({
-        function_name: 'apply_chat_response_command',
-        message: 'Using default model',
-        data: default_model_name
-      })
-    } else {
-      provider = await get_selected_provider(
-        params.context,
-        all_providers,
-        default_model_name
-      )
-      if (!provider) {
-        Logger.log({
-          function_name: 'apply_chat_response_command',
-          message: 'Provider selection cancelled or failed.'
-        })
-        return // Provider selection failed or was cancelled
-      }
-      Logger.log({
-        function_name: 'apply_chat_response_command',
-        message: 'Selected provider',
-        data: provider.name
-      })
-    }
 
     // --- Mode Selection ---
     let selected_mode_label: 'Fast replace' | 'Intelligent update' | undefined =
@@ -372,30 +195,26 @@ export function apply_chat_response_command(params: {
         data: { success: result.success }
       })
     } else if (selected_mode_label == 'Intelligent update') {
-      // Check for API key *before* calling the handler
-      if (!provider.apiKey) {
-        vscode.window.showErrorMessage(
-          `API key is missing for provider "${provider.name}". Please add it in the settings.`
-        )
-        Logger.warn({
-          function_name: 'apply_chat_response_command',
-          message: 'API key is missing for Intelligent update',
-          data: provider.name
-        })
-        return
-      }
+      const api_tool_settings_manager = new ApiToolsSettingsManager(
+        params.context
+      )
 
-      const system_instructions = provider.systemInstructions // Get system instructions from selected provider
+      const apply_chat_response_settings =
+        api_tool_settings_manager.get_apply_chat_response_settings()
+      const connection_details =
+        api_tool_settings_manager.provider_to_connection_details(
+          apply_chat_response_settings.provider
+        )
 
       final_original_states = await handle_intelligent_update({
-        provider,
+        endpoint_url: connection_details.endpoint_url,
+        api_key: connection_details.api_key,
+        model: apply_chat_response_settings.model,
+        temperature: apply_chat_response_settings.temperature,
         clipboard_text,
         is_multiple_files,
         context: params.context,
-        all_providers,
-        default_model_name,
-        is_single_root_folder_workspace,
-        system_instructions
+        is_single_root_folder_workspace
       })
 
       if (final_original_states) {

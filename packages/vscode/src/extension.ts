@@ -14,9 +14,7 @@ import {
   refactor_command,
   refactor_to_clipboard_command,
   code_completion_command,
-  code_completion_with_command,
   code_completion_with_suggestions_command,
-  code_completion_with_suggestions_with_command,
   web_chat_command,
   web_chat_with_command,
   chat_to_clipboard_command,
@@ -108,14 +106,12 @@ export async function activate(context: vscode.ExtensionContext) {
       file_tree_provider: workspace_provider,
       open_editors_provider: open_editors_provider,
       context,
-      use_default_model: true
     }),
     apply_chat_response_command({
       command: 'geminiCoder.applyChatResponseFastReplace',
       file_tree_provider: workspace_provider,
       open_editors_provider: open_editors_provider,
       context,
-      use_default_model: true,
       mode: 'Fast replace'
     }),
     apply_chat_response_command({
@@ -123,39 +119,21 @@ export async function activate(context: vscode.ExtensionContext) {
       file_tree_provider: workspace_provider,
       open_editors_provider: open_editors_provider,
       context,
-      use_default_model: true,
       mode: 'Intelligent update'
     }),
     refactor_command({
-      command: 'geminiCoder.refactor',
       context,
       file_tree_provider: workspace_provider,
       open_editors_provider: open_editors_provider,
       use_default_model: true
-    }),
-    refactor_command({
-      command: 'geminiCoder.refactorWith',
-      context,
-      file_tree_provider: workspace_provider,
-      open_editors_provider: open_editors_provider
     }),
     refactor_to_clipboard_command(
       context,
       workspace_provider,
       open_editors_provider
     ),
-    code_completion_with_command(
-      workspace_provider,
-      open_editors_provider,
-      context
-    ),
     code_completion_command(workspace_provider, open_editors_provider, context),
     code_completion_with_suggestions_command(
-      workspace_provider,
-      open_editors_provider,
-      context
-    ),
-    code_completion_with_suggestions_with_command(
       workspace_provider,
       open_editors_provider,
       context

@@ -167,11 +167,6 @@
         "icon": "$(save-all)"
       },
       {
-        "command": "geminiCoder.codeCompletionWith",
-        "title": "Code Completion with...",
-        "category": "Gemini Coder"
-      },
-      {
         "command": "geminiCoder.codeCompletion",
         "title": "Code Completion",
         "category": "Gemini Coder"
@@ -179,11 +174,6 @@
       {
         "command": "geminiCoder.codeCompletionWithSuggestions",
         "title": "Code Completion with Suggestions",
-        "category": "Gemini Coder"
-      },
-      {
-        "command": "geminiCoder.codeCompletionWithSuggestionsWith",
-        "title": "Code Completion with Suggestions with...",
         "category": "Gemini Coder"
       },
       {

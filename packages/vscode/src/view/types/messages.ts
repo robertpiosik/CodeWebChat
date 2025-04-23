@@ -1,13 +1,6 @@
+import { ApiToolSettings } from '@/services/api-tools-settings-manager'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Preset } from '@shared/types/preset'
-
-export type Provider = 'Gemini API' | 'OpenRouter'
-
-export type ApiToolSettings = {
-  provider?: Provider
-  model?: string
-  temperature?: number
-}
 
 export interface BaseMessage {
   command: string

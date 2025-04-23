@@ -36,14 +36,13 @@ import { apply_preset_affixes_to_instruction } from '../helpers/apply-preset-aff
 import { token_count_emitter } from '@/context/context-initialization'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { ApiToolSettings, ApiToolsSettingsManager } from '@/services/api-tools-settings-manager'
+import {
+  ApiToolSettings,
+  ApiToolsSettingsManager
+} from '@/services/api-tools-settings-manager'
 import axios from 'axios'
 import { Logger } from '@/helpers/logger'
 import { OpenRouterModelsResponse } from '@/types/open-router-models-response'
-import {
-  GEMINI_API_KEY_STATE_KEY,
-  OPEN_ROUTER_API_KEY_STATE_KEY
-} from '@/constants/state-keys'
 
 type ConfigPresetFormat = {
   name: string
@@ -1062,43 +1061,27 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               )
             }
           } else if (message.command == 'GET_GEMINI_API_KEY') {
-            const api_key = this._context.globalState.get<string>(
-              GEMINI_API_KEY_STATE_KEY,
-              ''
-            )
+            const api_key =
+              this._api_tools_settings_manager.get_gemini_api_key()
             this._send_message<GeminiApiKeyMessage>({
               command: 'GEMINI_API_KEY',
+              api_key
+            })
+          } else if (message.command == 'GET_OPEN_ROUTER_API_KEY') {
+            const api_key =
+              this._api_tools_settings_manager.get_open_router_api_key()
+            this._send_message<OpenRouterApiKeyMessage>({
+              command: 'OPEN_ROUTER_API_KEY',
               api_key
             })
           } else if (message.command == 'UPDATE_GEMINI_API_KEY') {
-            const update_msg = message as UpdateGeminiApiKeyMessage
-            await this._context.globalState.update(
-              GEMINI_API_KEY_STATE_KEY,
-              update_msg.api_key
+            await this._api_tools_settings_manager.set_gemini_api_key(
+              (message as UpdateGeminiApiKeyMessage).api_key
             )
-            this._send_message<GeminiApiKeyMessage>({
-              command: 'GEMINI_API_KEY',
-              api_key: update_msg.api_key
-            })
-          } else if (message.command == 'GET_OPEN_ROUTER_API_KEY') {
-            const api_key = this._context.globalState.get<string>(
-              OPEN_ROUTER_API_KEY_STATE_KEY,
-              ''
-            )
-            this._send_message<OpenRouterApiKeyMessage>({
-              command: 'OPEN_ROUTER_API_KEY',
-              api_key
-            })
           } else if (message.command == 'UPDATE_OPEN_ROUTER_API_KEY') {
-            const update_msg = message as UpdateOpenRouterApiKeyMessage
-            await this._context.globalState.update(
-              OPEN_ROUTER_API_KEY_STATE_KEY,
-              update_msg.api_key
+            await this._api_tools_settings_manager.set_open_router_api_key(
+              (message as UpdateOpenRouterApiKeyMessage).api_key
             )
-            this._send_message<OpenRouterApiKeyMessage>({
-              command: 'OPEN_ROUTER_API_KEY',
-              api_key: update_msg.api_key
-            })
           } else if (message.command == 'GET_CUSTOM_PROVIDERS') {
             const config = vscode.workspace.getConfiguration()
             const providers = config.get<any[]>('geminiCoder.providers', [])

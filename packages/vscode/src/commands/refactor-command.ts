@@ -1,111 +1,22 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import { Provider } from '../types/provider'
 import { make_api_request } from '../helpers/make-api-request'
-import { BUILT_IN_PROVIDERS } from '../constants/built-in-providers'
 import { cleanup_api_response } from '../helpers/cleanup-api-response'
-import { handle_rate_limit_fallback } from '../helpers/handle-rate-limit-fallback'
 import { TEMP_REFACTORING_INSTRUCTION_KEY } from '../status-bar/create-refactor-status-bar-item'
 import { FilesCollector } from '../helpers/files-collector'
-import { ModelManager } from '../services/model-manager'
-import {
-  GEMINI_API_KEY_STATE_KEY,
-  LAST_APPLIED_CHANGES_STATE_KEY
-} from '../constants/state-keys'
+import { LAST_APPLIED_CHANGES_STATE_KEY } from '../constants/state-keys'
 import { Logger } from '../helpers/logger'
-
-async function get_selected_provider(
-  context: vscode.ExtensionContext,
-  all_providers: Provider[],
-  default_model_name: string | undefined
-): Promise<Provider | undefined> {
-  if (
-    !default_model_name ||
-    !all_providers.some((p) => p.name == default_model_name)
-  ) {
-    vscode.window.showErrorMessage('Default model is not set or valid.')
-    return undefined
-  }
-
-  // Get the last used models from global state
-  let last_used_models = context.globalState.get<string[]>(
-    'lastUsedRefactoringModels',
-    []
-  )
-
-  // Filter out the default model from last used models (it will be added at the beginning)
-  last_used_models = last_used_models.filter(
-    (model) => model != default_model_name
-  )
-
-  // Construct the QuickPick items, prioritizing the default model and last used models
-  const quick_pick_items: any[] = [
-    {
-      label: default_model_name,
-      description: 'Currently set as default'
-    },
-    ...last_used_models
-      .map((model_name) => {
-        const model_provider = all_providers.find((p) => p.name == model_name)
-        if (model_provider) {
-          return {
-            label: model_name
-          }
-        }
-        return null
-      })
-      .filter((item) => item !== null),
-    ...all_providers
-      .filter(
-        (p) =>
-          p.name != default_model_name && !last_used_models.includes(p.name)
-      )
-      .map((p) => ({
-        label: p.name
-      }))
-  ]
-
-  // Show the QuickPick selector
-  const selected_item = await vscode.window.showQuickPick(quick_pick_items, {
-    placeHolder: 'Select a model for code refactoring'
-  })
-
-  if (!selected_item) {
-    return undefined // User cancelled
-  }
-
-  // Determine selected model name
-  const selected_model_name = selected_item.label
-
-  const selected_provider = all_providers.find(
-    (p) => p.name == selected_model_name
-  )
-  if (!selected_provider) {
-    vscode.window.showErrorMessage(`Model "${selected_model_name}" not found.`)
-    return undefined
-  }
-
-  // Update the last used models in global state
-  last_used_models = [
-    selected_model_name,
-    ...last_used_models.filter((model) => model != selected_model_name)
-  ]
-  context.globalState.update('lastUsedRefactoringModels', last_used_models)
-
-  return selected_provider
-}
+import { ApiToolsSettingsManager } from '../services/api-tools-settings-manager'
 
 export function refactor_command(params: {
-  command: string
   context: vscode.ExtensionContext
   file_tree_provider: any
   open_editors_provider?: any
   use_default_model?: boolean
 }) {
-  const model_manager = new ModelManager(params.context)
+  const api_tool_settings_manager = new ApiToolsSettingsManager(params.context)
 
-  return vscode.commands.registerCommand(params.command, async () => {
-    const config = vscode.workspace.getConfiguration()
+  return vscode.commands.registerCommand('geminiCoder.refactor', async () => {
     const editor = vscode.window.activeTextEditor
 
     if (!editor) {
@@ -169,56 +80,23 @@ export function refactor_command(params: {
       }
     }
 
-    const user_providers = config.get<Provider[]>('geminiCoder.providers') || []
-    const gemini_api_key = params.context.globalState.get<string>(
-      GEMINI_API_KEY_STATE_KEY,
-      ''
-    )
-    const gemini_temperature = config.get<number>('geminiCoder.temperature')
-
-    // Get default model from global state instead of config
-    const default_model_name = model_manager.get_default_refactoring_model()
-
-    const all_providers = [
-      ...BUILT_IN_PROVIDERS.map((provider) => ({
-        ...provider,
-        apiKey: gemini_api_key || '',
-        temperature: gemini_temperature
-      })),
-      ...user_providers
-    ]
-
-    let provider: Provider | undefined
-    if (params.use_default_model) {
-      provider = all_providers.find((p) => p.name == default_model_name)
-      if (!provider) {
-        vscode.window.showErrorMessage(
-          `Default model is not set or invalid. Please set it in the settings.`
-        )
-        return
-      }
-    } else {
-      provider = await get_selected_provider(
-        params.context,
-        all_providers,
-        default_model_name
+    // Get refactoring settings
+    const refactoring_settings =
+      api_tool_settings_manager.get_file_refactoring_settings()
+    const connection_details =
+      api_tool_settings_manager.provider_to_connection_details(
+        refactoring_settings.provider
       )
-    }
 
-    if (!provider) {
-      return // Provider selection failed or was cancelled
-    }
-
-    if (!provider.apiKey) {
+    if (!connection_details.api_key) {
       vscode.window.showErrorMessage(
         'API key is missing. Please add it in the settings.'
       )
       return
     }
 
-    const model = provider.model
-    const temperature = provider.temperature
-    const system_instructions = provider.systemInstructions
+    const model = refactoring_settings.model
+    const temperature = refactoring_settings.temperature
 
     // Create files collector with both providers
     const files_collector = new FilesCollector(
@@ -245,9 +123,6 @@ export function refactor_command(params: {
     const content = `${refactoring_instruction}\n${files}\n${refactoring_instruction}`
 
     const messages = [
-      ...(system_instructions
-        ? [{ role: 'system', content: system_instructions }]
-        : []),
       {
         role: 'user',
         content
@@ -289,7 +164,8 @@ export function refactor_command(params: {
 
           try {
             const refactored_content = await make_api_request(
-              provider,
+              connection_details.endpoint_url,
+              connection_details.api_key,
               body,
               cancel_token_source.token,
               (chunk: string) => {
@@ -299,35 +175,16 @@ export function refactor_command(params: {
               }
             )
 
-            if (!refactored_content) {
-              vscode.window.showErrorMessage(
-                'Refactoring failed. Please try again later.'
+            if (refactored_content == 'rate_limit') {
+              vscode.window.showInformationMessage(
+                'Rate limit exceeded. Please try again later.'
               )
-              return false
-            } else if (refactored_content == 'rate_limit') {
-              const fallback_content = await handle_rate_limit_fallback(
-                all_providers,
-                default_model_name,
-                body,
-                cancel_token_source.token
-              )
-
-              if (!fallback_content) {
-                return false
-              }
-
-              // Store the cleaned content for use after progress completes
-              result_content = cleanup_api_response({
-                content: fallback_content
-              })
-              success = true
               return true
+            } else if (refactored_content) {
+              result_content = cleanup_api_response({
+                content: refactored_content
+              })
             }
-
-            // Store the cleaned content for use after progress completes
-            result_content = cleanup_api_response({
-              content: refactored_content
-            })
             success = true
             return true
           } catch (error) {

@@ -2,10 +2,8 @@ import * as vscode from 'vscode'
 import axios, { CancelToken } from 'axios'
 import * as path from 'path'
 import * as fs from 'fs'
-import { Provider } from '../../../types/provider'
 import { make_api_request } from '../../../helpers/make-api-request'
 import { cleanup_api_response } from '../../../helpers/cleanup-api-response'
-import { handle_rate_limit_fallback } from '../../../helpers/handle-rate-limit-fallback'
 import { apply_changes_instruction } from '../../../constants/instructions'
 import {
   ClipboardFile,
@@ -23,27 +21,27 @@ import { create_file_if_needed } from '../utils/file-operations'
 const MAX_CONCURRENCY = 10 // Define concurrency limit
 
 async function process_file(params: {
-  provider: Provider
+  endpoint_url: string
+  api_key: string
+  model: string
+  temperature: number
   file_path: string
   file_content: string
   instruction: string
-  system_instructions?: string
   cancel_token?: CancelToken // Add cancelToken parameter
   on_progress?: (chunkLength: number, totalLength: number) => void
-}): Promise<string | null | 'rate_limit'> {
+}): Promise<string | null> {
+  // Removed 'rate_limit' from return type
   Logger.log({
     function_name: 'process_file',
     message: 'start',
-    data: { file_path: params.file_path, provider: params.provider.name }
+    data: { file_path: params.file_path }
   })
   const apply_changes_prompt = `${apply_changes_instruction} ${params.instruction}`
   const file_content_block = `<file name="${params.file_path}">\n<![CDATA[\n${params.file_content}\n]]>\n</file>\n`
   const content = `${file_content_block}\n${apply_changes_prompt}`
 
   const messages = [
-    ...(params.system_instructions
-      ? [{ role: 'system', content: params.system_instructions }]
-      : []),
     {
       role: 'user',
       content
@@ -52,8 +50,8 @@ async function process_file(params: {
 
   const body = {
     messages,
-    model: params.provider.model,
-    temperature: params.provider.temperature
+    model: params.model,
+    temperature: params.temperature
   }
 
   Logger.log({
@@ -67,7 +65,8 @@ async function process_file(params: {
     let received_length = 0
 
     const refactored_content = await make_api_request(
-      params.provider,
+      params.endpoint_url,
+      params.api_key,
       body,
       params.cancel_token,
       (chunk: string) => {
@@ -102,13 +101,19 @@ async function process_file(params: {
         data: params.file_path
       })
       return null
-    } else if (refactored_content == 'rate_limit') {
+    }
+
+    // Explicitly handle rate limit return value as a failure
+    if (refactored_content == 'rate_limit') {
+      vscode.window.showErrorMessage(
+        `Applying changes to ${params.file_path} failed due to rate limit.`
+      )
       Logger.warn({
         function_name: 'process_file',
         message: 'Rate limit reached',
         data: params.file_path
       })
-      return 'rate_limit'
+      return null // Treat rate limit as a failure, no fallback
     }
 
     const cleaned_content = cleanup_api_response({
@@ -149,14 +154,14 @@ async function process_file(params: {
 }
 
 export async function handle_intelligent_update(params: {
-  provider: Provider
+  endpoint_url: string
+  api_key: string
+  model: string
+  temperature: number
   clipboard_text: string
   is_multiple_files: boolean
   context: vscode.ExtensionContext
-  all_providers: Provider[]
-  default_model_name: string | undefined
   is_single_root_folder_workspace: boolean
-  system_instructions?: string
 }): Promise<OriginalFileState[] | null> {
   const workspace_map = new Map<string, string>()
   if (vscode.workspace.workspaceFolders) {
@@ -486,11 +491,13 @@ export async function handle_intelligent_update(params: {
                   : document_text // Use stored original if available
 
                 const updated_content_result = await process_file({
-                  provider: params.provider,
+                  endpoint_url: params.endpoint_url,
+                  api_key: params.api_key,
+                  model: params.model,
+                  temperature: params.temperature,
                   file_path: file.file_path,
                   file_content: original_content_for_api, // Send original content to AI
                   instruction: file.content, // Clipboard content is the instruction
-                  system_instructions: params.system_instructions,
                   cancel_token: cancel_token_source.token,
                   on_progress: (receivedLength, totalLength) => {
                     if (
@@ -515,50 +522,15 @@ export async function handle_intelligent_update(params: {
                 if (token.isCancellationRequested)
                   throw new Error('Operation cancelled')
 
+                // If process_file returned null (due to error, cancellation, or rate limit)
                 if (!updated_content_result) {
                   throw new Error(
                     `Failed to apply changes to ${file.file_path}`
                   )
                 }
 
-                let final_content: string
-                if (updated_content_result == 'rate_limit') {
-                  const fallback_body = {
-                    messages: [
-                      ...(params.system_instructions
-                        ? [
-                            {
-                              role: 'system',
-                              content: params.system_instructions
-                            }
-                          ]
-                        : []),
-                      {
-                        role: 'user',
-                        content: `<file name="${file.file_path}">\n<![CDATA[\n${original_content_for_api}\n]]>\n</file>\n${apply_changes_instruction} ${file.content}`
-                      }
-                    ],
-                    model: params.provider.model,
-                    temperature: params.provider.temperature
-                  }
-                  const fallback_content = await handle_rate_limit_fallback(
-                    params.all_providers,
-                    params.default_model_name,
-                    fallback_body,
-                    cancel_token_source.token
-                  )
-
-                  if (!fallback_content) {
-                    throw new Error(
-                      `Rate limit reached for ${file.file_path} and fallback failed`
-                    )
-                  }
-                  final_content = cleanup_api_response({
-                    content: fallback_content
-                  })
-                } else {
-                  final_content = updated_content_result // Already cleaned in process_file
-                }
+                // No rate limit fallback needed, just use the result
+                const final_content = updated_content_result // Already cleaned in process_file
 
                 // Update progress for the largest file if processing finished
                 if (
@@ -772,11 +744,13 @@ export async function handle_intelligent_update(params: {
 
         try {
           const process_result = await process_file({
-            provider: params.provider,
+            endpoint_url: params.endpoint_url,
+            api_key: params.api_key,
+            model: params.model,
+            temperature: params.temperature,
             file_path: file_path,
             file_content: document_text, // Send current content
             instruction,
-            system_instructions: params.system_instructions,
             cancel_token: cancel_token_source.token,
             on_progress: (receivedLength, totalLength) => {
               const actual_increment = receivedLength - previous_length
@@ -789,12 +763,11 @@ export async function handle_intelligent_update(params: {
             }
           })
 
+          // If process_file returned null (due to cancellation, empty response, or rate limit)
           if (token.isCancellationRequested || !process_result) {
             if (!token.isCancellationRequested) {
-              // process_file returned null, likely an error or non-cancellation API issue
-              vscode.window.showErrorMessage(
-                'Applying changes failed. Please try again later.'
-              )
+              // process_file returned null, likely an error, empty response, or rate limit
+              // An error message is already shown in process_file for empty response/rate limit
               Logger.error({
                 function_name: 'handle_intelligent_update',
                 message:
@@ -807,48 +780,8 @@ export async function handle_intelligent_update(params: {
               })
             }
             return // Stop progress
-          }
-
-          if (process_result == 'rate_limit') {
-            const body = {
-              messages: [
-                ...(params.system_instructions
-                  ? [{ role: 'system', content: params.system_instructions }]
-                  : []),
-                {
-                  role: 'user',
-                  content: `<file name="${file_path}">\n<![CDATA[\n${document_text}\n]]>\n</file>\n${apply_changes_instruction} ${instruction}`
-                }
-              ],
-              model: params.provider.model,
-              temperature: params.provider.temperature
-            }
-            const fallback_content = await handle_rate_limit_fallback(
-              params.all_providers,
-              params.default_model_name,
-              body,
-              cancel_token_source.token
-            )
-
-            if (!fallback_content) {
-              Logger.error({
-                function_name: 'handle_intelligent_update',
-                message:
-                  'Single file processing failed - rate limit fallback failed.'
-              })
-              vscode.window.showErrorMessage(
-                'Rate limit reached and fallback model failed.'
-              )
-              return // Stop progress
-            }
-            result_content = cleanup_api_response({ content: fallback_content })
-            success = true
-            Logger.log({
-              function_name: 'handle_intelligent_update',
-              message:
-                'Single file processing recovered from rate limit using fallback.'
-            })
           } else {
+            // No rate limit fallback needed, just use the result
             result_content = process_result // Already cleaned
             success = true
             Logger.log({
