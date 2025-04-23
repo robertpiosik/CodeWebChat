@@ -20,7 +20,6 @@ import {
   web_chat_command,
   web_chat_with_command,
   chat_to_clipboard_command,
-  change_default_model_command,
   close_editor_command,
   close_all_editors_command,
   save_all_command,
@@ -181,10 +180,6 @@ export async function activate(context: vscode.ExtensionContext) {
       open_editors_provider,
       websocket_server_instance
     ),
-    change_default_model_command('fim', context),
-    change_default_model_command('refactoring', context),
-    change_default_model_command('apply_changes', context),
-    change_default_model_command('commit_message', context),
     web_chat_command(
       context,
       workspace_provider,

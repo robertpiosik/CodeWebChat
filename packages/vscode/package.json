@@ -207,21 +207,6 @@
         "category": "Gemini Coder"
       },
       {
-        "command": "geminiCoder.changeDefaultCodeCompletionModel",
-        "title": "Change Default Code Completion Model",
-        "category": "Gemini Coder"
-      },
-      {
-        "command": "geminiCoder.changeDefaultRefactoringModel",
-        "title": "Change Default Refactoring Model",
-        "category": "Gemini Coder"
-      },
-      {
-        "command": "geminiCoder.changeDefaultApplyChatResponseModel",
-        "title": "Change Default Apply Chat Response Model",
-        "category": "Gemini Coder"
-      },
-      {
         "command": "geminiCoder.applyChatResponse",
         "title": "Apply Chat Response",
         "category": "Gemini Coder"
@@ -298,11 +283,6 @@
         "title": "Generate Commit Message with Gemini Coder",
         "category": "Gemini Coder",
         "icon": "$(sparkle)"
-      },
-      {
-        "command": "geminiCoder.changeDefaultCommitMessageModel",
-        "title": "Change Default Commit Message Model",
-        "category": "Gemini Coder"
       }
     ],
     "menus": {
