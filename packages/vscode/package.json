@@ -729,7 +729,7 @@
         "geminiCoder.codeCompletionsSettings": {
           "type": "object",
           "scope": "resource",
-          "description": "Settings for code completions.",
+          "description": "Settings for code completions API tool.",
           "properties": {
             "provider": {
               "type": "string",
@@ -752,7 +752,7 @@
         "geminiCoder.fileRefactoringSettings": {
           "type": "object",
           "scope": "resource",
-          "description": "Settings for file refactoring.",
+          "description": "Settings for file refactoring API tool.",
           "properties": {
             "provider": {
               "type": "string",
@@ -775,7 +775,7 @@
         "geminiCoder.applyChatResponseSettings": {
           "type": "object",
           "scope": "resource",
-          "description": "Settings for applying chat responses.",
+          "description": "Settings for applying chat responses API tool.",
           "properties": {
             "provider": {
               "type": "string",
@@ -798,7 +798,7 @@
         "geminiCoder.commitMessageSettings": {
           "type": "object",
           "scope": "resource",
-          "description": "Settings for commit messages.",
+          "description": "Settings for commit messages API tool.",
           "properties": {
             "provider": {
               "type": "string",
