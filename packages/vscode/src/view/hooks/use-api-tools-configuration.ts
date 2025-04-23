@@ -39,7 +39,7 @@ export const use_api_tools_configuration = (vscode: any) => {
       command: 'GET_APPLY_CHAT_RESPONSE_SETTINGS'
     } as GetApplyChatResponseSettingsMessage)
     vscode.postMessage({
-      command: 'GET_COMMIT_MESSAGE_SETTINGS'
+      command: 'GET_COMMIT_MESSAGES_SETTINGS'
     } as GetCommitMessageSettingsMessage)
 
     const handle_message = (event: MessageEvent<ExtensionMessage>) => {
@@ -54,7 +54,7 @@ export const use_api_tools_configuration = (vscode: any) => {
         set_file_refactoring_settings(message.settings)
       } else if (message.command == 'APPLY_CHAT_RESPONSE_SETTINGS') {
         set_apply_chat_response_settings(message.settings)
-      } else if (message.command == 'COMMIT_MESSAGE_SETTINGS') {
+      } else if (message.command == 'COMMIT_MESSAGES_SETTINGS') {
         set_commit_message_settings(message.settings)
       }
     }
@@ -111,7 +111,7 @@ export const use_api_tools_configuration = (vscode: any) => {
   const handle_commit_message_settings_change = (settings: ApiToolSettings) => {
     set_commit_message_settings(settings)
     vscode.postMessage({
-      command: 'UPDATE_COMMIT_MESSAGE_SETTINGS',
+      command: 'UPDATE_COMMIT_MESSAGES_SETTINGS',
       settings
     })
   }

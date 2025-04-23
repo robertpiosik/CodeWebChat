@@ -179,11 +179,11 @@ export interface UpdateApplyChatResponseSettingsMessage extends BaseMessage {
 }
 
 export interface GetCommitMessageSettingsMessage extends BaseMessage {
-  command: 'GET_COMMIT_MESSAGE_SETTINGS'
+  command: 'GET_COMMIT_MESSAGES_SETTINGS'
 }
 
 export interface UpdateCommitMessageSettingsMessage extends BaseMessage {
-  command: 'UPDATE_COMMIT_MESSAGE_SETTINGS'
+  command: 'UPDATE_COMMIT_MESSAGES_SETTINGS'
   settings: ApiToolSettings
 }
 
@@ -326,8 +326,8 @@ export interface ApplyChatResponseSettingsMessage extends BaseMessage {
   settings: ApiToolSettings
 }
 
-export interface CommitMessageSettingsMessage extends BaseMessage {
-  command: 'COMMIT_MESSAGE_SETTINGS'
+export interface CommitMessagesSettingsMessage extends BaseMessage {
+  command: 'COMMIT_MESSAGES_SETTINGS'
   settings: ApiToolSettings
 }
 
@@ -395,4 +395,4 @@ export type ExtensionMessage =
   | CodeCompletionsSettingsMessage
   | FileRefactoringSettingsMessage
   | ApplyChatResponseSettingsMessage
-  | CommitMessageSettingsMessage
+  | CommitMessagesSettingsMessage

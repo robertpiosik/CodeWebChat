@@ -25,7 +25,7 @@ import {
   CodeCompletionsSettingsMessage,
   FileRefactoringSettingsMessage,
   ApplyChatResponseSettingsMessage,
-  CommitMessageSettingsMessage,
+  CommitMessagesSettingsMessage,
   ApiToolSettings
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
@@ -262,7 +262,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       | CodeCompletionsSettingsMessage
       | FileRefactoringSettingsMessage
       | ApplyChatResponseSettingsMessage
-      | CommitMessageSettingsMessage
+      | CommitMessagesSettingsMessage
   >(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -1099,16 +1099,16 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               'apply_chat_response_settings',
               message.settings
             )
-          } else if (message.command == 'GET_COMMIT_MESSAGE_SETTINGS') {
+          } else if (message.command == 'GET_COMMIT_MESSAGES_SETTINGS') {
             const settings = this._context.globalState.get<ApiToolSettings>(
               'commit_message_settings',
               {} as ApiToolSettings // Provide a default empty object cast to the type
             )
-            this._send_message<CommitMessageSettingsMessage>({
-              command: 'COMMIT_MESSAGE_SETTINGS',
+            this._send_message<CommitMessagesSettingsMessage>({
+              command: 'COMMIT_MESSAGES_SETTINGS',
               settings
             })
-          } else if (message.command == 'UPDATE_COMMIT_MESSAGE_SETTINGS') {
+          } else if (message.command == 'UPDATE_COMMIT_MESSAGES_SETTINGS') {
             await this._context.globalState.update(
               'commit_message_settings',
               message.settings
@@ -1168,8 +1168,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         {} as ApiToolSettings
       )
     })
-    this._send_message<CommitMessageSettingsMessage>({
-      command: 'COMMIT_MESSAGE_SETTINGS',
+    this._send_message<CommitMessagesSettingsMessage>({
+      command: 'COMMIT_MESSAGES_SETTINGS',
       settings: this._context.globalState.get<ApiToolSettings>(
         'commit_message_settings',
         {} as ApiToolSettings
