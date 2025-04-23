@@ -3,12 +3,12 @@ import {
   ExtensionMessage,
   GetGeminiApiKeyMessage,
   GetOpenRouterApiKeyMessage,
-  ApiToolSettings,
   GetCodeCompletionsSettingsMessage,
   GetFileRefactoringSettingsMessage,
   GetApplyChatResponseSettingsMessage,
   GetCommitMessageSettingsMessage
 } from '../types/messages'
+import { ApiToolSettings } from '@/services/api-tools-settings-manager'
 
 export const use_api_tools_configuration = (vscode: any) => {
   const [gemini_api_key, set_gemini_api_key] = useState('')
