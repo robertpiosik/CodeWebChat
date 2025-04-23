@@ -14,7 +14,7 @@ export const ApiToolsTab: React.FC<Props> = (props) => {
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
       <Button on_click={props.on_configure_api_tools_click}>
-        Configure API Tools
+        Configuration
       </Button>
     </div>
   )
