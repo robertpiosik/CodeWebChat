@@ -1,7 +1,4 @@
 export const GEMINI_API_KEY_STATE_KEY = 'geminiApiKey'
-export const DEFAULT_FIM_MODEL_KEY = 'defaultFimModel'
-export const DEFAULT_REFACTORING_MODEL_KEY = 'defaultRefactoringModel'
-export const DEFAULT_APPLY_CHANGES_MODEL_KEY = 'defaultApplyChatResponseModel'
-export const DEFAULT_COMMIT_MESSAGE_MODEL_KEY = 'defaultCommitMessageModel'
+export const OPEN_ROUTER_API_KEY_STATE_KEY = 'openRouterApiKey'
 export const LAST_APPLIED_CHANGES_STATE_KEY = 'lastAppliedChangesState'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
