@@ -78,6 +78,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       }
     })
 
+    // Listen for changes to the new configuration keys
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
         if (
@@ -95,6 +96,62 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           this._send_message<CustomProvidersUpdatedMessage>({
             command: 'CUSTOM_PROVIDERS_UPDATED',
             custom_providers: providers
+          })
+        }
+        if (
+          event.affectsConfiguration('geminiCoder.codeCompletionsSettings') &&
+          this._webview_view
+        ) {
+          const config = vscode.workspace.getConfiguration()
+          const settings = config.get<ApiToolSettings>(
+            'geminiCoder.codeCompletionsSettings',
+            {} as ApiToolSettings
+          )
+          this._send_message<CodeCompletionsSettingsMessage>({
+            command: 'CODE_COMPLETIONS_SETTINGS',
+            settings
+          })
+        }
+        if (
+          event.affectsConfiguration('geminiCoder.fileRefactoringSettings') &&
+          this._webview_view
+        ) {
+          const config = vscode.workspace.getConfiguration()
+          const settings = config.get<ApiToolSettings>(
+            'geminiCoder.fileRefactoringSettings',
+            {} as ApiToolSettings
+          )
+          this._send_message<FileRefactoringSettingsMessage>({
+            command: 'FILE_REFACTORING_SETTINGS',
+            settings
+          })
+        }
+        if (
+          event.affectsConfiguration('geminiCoder.applyChatResponseSettings') &&
+          this._webview_view
+        ) {
+          const config = vscode.workspace.getConfiguration()
+          const settings = config.get<ApiToolSettings>(
+            'geminiCoder.applyChatResponseSettings',
+            {} as ApiToolSettings
+          )
+          this._send_message<ApplyChatResponseSettingsMessage>({
+            command: 'APPLY_CHAT_RESPONSE_SETTINGS',
+            settings
+          })
+        }
+        if (
+          event.affectsConfiguration('geminiCoder.commitMessagesSettings') &&
+          this._webview_view
+        ) {
+          const config = vscode.workspace.getConfiguration()
+          const settings = config.get<ApiToolSettings>(
+            'geminiCoder.commitMessagesSettings',
+            {} as ApiToolSettings
+          )
+          this._send_message<CommitMessagesSettingsMessage>({
+            command: 'COMMIT_MESSAGES_SETTINGS',
+            settings
           })
         }
       }
@@ -743,7 +800,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await config.update(
               'geminiCoder.presets',
               config_formatted_presets,
-              true // Update globally
+              vscode.ConfigurationTarget.Global
             )
           } else if (message.command == 'UPDATE_PRESET') {
             const update_msg = message as UpdatePresetMessage
@@ -797,7 +854,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               await config.update(
                 'geminiCoder.presets',
                 updated_presets,
-                true // Update globally
+                vscode.ConfigurationTarget.Global
               )
 
               // Update selected (default) presets
@@ -863,7 +920,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               await config.update(
                 'geminiCoder.presets',
                 updated_presets,
-                true // Update globally
+                vscode.ConfigurationTarget.Global
               )
 
               // Show notification with undo option
@@ -881,7 +938,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                 await config.update(
                   'geminiCoder.presets',
                   restored_presets,
-                  true
+                  vscode.ConfigurationTarget.Global
                 )
                 vscode.window.showInformationMessage(
                   `Preset "${presetName}" restored`
@@ -1058,60 +1115,72 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               })
             }
           } else if (message.command == 'GET_CODE_COMPLETIONS_SETTINGS') {
-            const settings = this._context.globalState.get<ApiToolSettings>(
-              'code_completions_settings',
-              {} as ApiToolSettings // Provide a default empty object cast to the type
+            const config = vscode.workspace.getConfiguration()
+            const settings = config.get<ApiToolSettings>(
+              'geminiCoder.codeCompletionsSettings',
+              {} as ApiToolSettings
             )
             this._send_message<CodeCompletionsSettingsMessage>({
               command: 'CODE_COMPLETIONS_SETTINGS',
               settings
             })
           } else if (message.command == 'UPDATE_CODE_COMPLETIONS_SETTINGS') {
-            await this._context.globalState.update(
-              'code_completions_settings',
-              message.settings
+            const config = vscode.workspace.getConfiguration()
+            await config.update(
+              'geminiCoder.codeCompletionsSettings',
+              message.settings,
+              vscode.ConfigurationTarget.Global
             )
           } else if (message.command == 'GET_FILE_REFACTORING_SETTINGS') {
-            const settings = this._context.globalState.get<ApiToolSettings>(
-              'file_refactoring_settings',
-              {} as ApiToolSettings // Provide a default empty object cast to the type
+            const config = vscode.workspace.getConfiguration()
+            const settings = config.get<ApiToolSettings>(
+              'geminiCoder.fileRefactoringSettings',
+              {} as ApiToolSettings
             )
             this._send_message<FileRefactoringSettingsMessage>({
               command: 'FILE_REFACTORING_SETTINGS',
               settings
             })
           } else if (message.command == 'UPDATE_FILE_REFACTORING_SETTINGS') {
-            await this._context.globalState.update(
-              'file_refactoring_settings',
-              message.settings
+            const config = vscode.workspace.getConfiguration()
+            await config.update(
+              'geminiCoder.fileRefactoringSettings',
+              message.settings,
+              vscode.ConfigurationTarget.Global
             )
           } else if (message.command == 'GET_APPLY_CHAT_RESPONSE_SETTINGS') {
-            const settings = this._context.globalState.get<ApiToolSettings>(
-              'apply_chat_response_settings',
-              {} as ApiToolSettings // Provide a default empty object cast to the type
+            const config = vscode.workspace.getConfiguration()
+            const settings = config.get<ApiToolSettings>(
+              'geminiCoder.applyChatResponseSettings',
+              {} as ApiToolSettings
             )
             this._send_message<ApplyChatResponseSettingsMessage>({
               command: 'APPLY_CHAT_RESPONSE_SETTINGS',
               settings
             })
           } else if (message.command == 'UPDATE_APPLY_CHAT_RESPONSE_SETTINGS') {
-            await this._context.globalState.update(
-              'apply_chat_response_settings',
-              message.settings
+            const config = vscode.workspace.getConfiguration()
+            await config.update(
+              'geminiCoder.applyChatResponseSettings',
+              message.settings,
+              vscode.ConfigurationTarget.Global
             )
           } else if (message.command == 'GET_COMMIT_MESSAGES_SETTINGS') {
-            const settings = this._context.globalState.get<ApiToolSettings>(
-              'commit_message_settings',
-              {} as ApiToolSettings // Provide a default empty object cast to the type
+            const config = vscode.workspace.getConfiguration()
+            const settings = config.get<ApiToolSettings>(
+              'geminiCoder.commitMessagesSettings',
+              {} as ApiToolSettings
             )
             this._send_message<CommitMessagesSettingsMessage>({
               command: 'COMMIT_MESSAGES_SETTINGS',
               settings
             })
           } else if (message.command == 'UPDATE_COMMIT_MESSAGES_SETTINGS') {
-            await this._context.globalState.update(
-              'commit_message_settings',
-              message.settings
+            const config = vscode.workspace.getConfiguration()
+            await config.update(
+              'geminiCoder.commitMessagesSettings',
+              message.settings,
+              vscode.ConfigurationTarget.Global
             )
           }
         } catch (error: any) {
@@ -1147,31 +1216,32 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this._send_custom_providers()
 
     // Send initial settings for new tools
+    const config = vscode.workspace.getConfiguration()
     this._send_message<CodeCompletionsSettingsMessage>({
       command: 'CODE_COMPLETIONS_SETTINGS',
-      settings: this._context.globalState.get<ApiToolSettings>(
-        'code_completions_settings',
+      settings: config.get<ApiToolSettings>(
+        'geminiCoder.codeCompletionsSettings',
         {} as ApiToolSettings
       )
     })
     this._send_message<FileRefactoringSettingsMessage>({
       command: 'FILE_REFACTORING_SETTINGS',
-      settings: this._context.globalState.get<ApiToolSettings>(
-        'file_refactoring_settings',
+      settings: config.get<ApiToolSettings>(
+        'geminiCoder.fileRefactoringSettings',
         {} as ApiToolSettings
       )
     })
     this._send_message<ApplyChatResponseSettingsMessage>({
       command: 'APPLY_CHAT_RESPONSE_SETTINGS',
-      settings: this._context.globalState.get<ApiToolSettings>(
-        'apply_chat_response_settings',
+      settings: config.get<ApiToolSettings>(
+        'geminiCoder.applyChatResponseSettings',
         {} as ApiToolSettings
       )
     })
     this._send_message<CommitMessagesSettingsMessage>({
       command: 'COMMIT_MESSAGES_SETTINGS',
-      settings: this._context.globalState.get<ApiToolSettings>(
-        'commit_message_settings',
+      settings: config.get<ApiToolSettings>(
+        'geminiCoder.commitMessagesSettings',
         {} as ApiToolSettings
       )
     })

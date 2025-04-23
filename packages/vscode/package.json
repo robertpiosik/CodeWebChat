@@ -725,6 +725,98 @@
               "chatbot"
             ]
           }
+        },
+        "geminiCoder.codeCompletionsSettings": {
+          "type": "object",
+          "scope": "resource",
+          "description": "Settings for code completions.",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": [
+                "Gemini API",
+                "OpenRouter"
+              ],
+              "description": "Provider to use for code completions."
+            },
+            "model": {
+              "type": "string",
+              "description": "Model to use for code completions."
+            },
+            "temperature": {
+              "type": "number",
+              "description": "Temperature setting for code completions."
+            }
+          }
+        },
+        "geminiCoder.fileRefactoringSettings": {
+          "type": "object",
+          "scope": "resource",
+          "description": "Settings for file refactoring.",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": [
+                "Gemini API",
+                "OpenRouter"
+              ],
+              "description": "Provider to use for file refactoring."
+            },
+            "model": {
+              "type": "string",
+              "description": "Model to use for file refactoring."
+            },
+            "temperature": {
+              "type": "number",
+              "description": "Temperature setting for file refactoring."
+            }
+          }
+        },
+        "geminiCoder.applyChatResponseSettings": {
+          "type": "object",
+          "scope": "resource",
+          "description": "Settings for applying chat responses.",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": [
+                "Gemini API",
+                "OpenRouter"
+              ],
+              "description": "Provider to use for applying chat responses."
+            },
+            "model": {
+              "type": "string",
+              "description": "Model to use for applying chat responses."
+            },
+            "temperature": {
+              "type": "number",
+              "description": "Temperature setting for applying chat responses."
+            }
+          }
+        },
+        "geminiCoder.commitMessageSettings": {
+          "type": "object",
+          "scope": "resource",
+          "description": "Settings for commit messages.",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": [
+                "Gemini API",
+                "OpenRouter"
+              ],
+              "description": "Provider to use for commit messages."
+            },
+            "model": {
+              "type": "string",
+              "description": "Model to use for commit messages."
+            },
+            "temperature": {
+              "type": "number",
+              "description": "Temperature setting for commit messages."
+            }
+          }
         }
       }
     }
