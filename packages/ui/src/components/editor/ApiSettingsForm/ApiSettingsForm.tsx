@@ -4,14 +4,7 @@ import { Field } from '../Field'
 import { IconButton } from '../IconButton/IconButton'
 import { TemperatureControl } from '../TemperatureControl'
 import { ConfigurationHeader } from '../ConfigurationHeader'
-
-type Provider = 'Gemini API' | 'OpenRouter'
-
-type ApiToolSettings = {
-  provider?: Provider
-  model?: string
-  temperature?: number
-}
+import { ApiToolSettings, Provider } from '@shared/types/api-tool-settings'
 
 type Props = {
   gemini_api_models: {
@@ -116,6 +109,7 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
           }}
           className={styles.input}
         >
+          <option value="">—</option>
           <option value="Gemini API">Gemini API</option>
           <option value="OpenRouter">OpenRouter</option>
         </select>
@@ -138,6 +132,7 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
             }}
             className={styles.input}
           >
+            <option value="">—</option>
             {Object.entries(props.gemini_api_models).map(([id, name]) => (
               <option key={id} value={id}>
                 {name}
@@ -183,6 +178,7 @@ export const ApiSettingsForm: React.FC<Props> = (props) => {
                   }}
                   className={styles.input}
                 >
+                  <option value="">—</option>
                   {Object.entries(props.open_router_models).map(
                     ([id, model_info]) => (
                       <option key={id} value={id}>

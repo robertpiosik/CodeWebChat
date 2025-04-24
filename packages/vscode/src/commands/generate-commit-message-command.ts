@@ -69,10 +69,30 @@ export function generate_commit_message_command(
             .map((ext) => ext.toLowerCase().replace(/^\./, ''))
         )
 
-        // Get commit message settings
         const api_tool_settings_manager = new ApiToolsSettingsManager(context)
         const commit_message_settings =
           api_tool_settings_manager.get_commit_messages_settings()
+
+        if (!commit_message_settings.provider) {
+          vscode.window.showErrorMessage(
+            'API provider is not specified for Commit Messages tool. Please configure them in API Tools -> Configuration.'
+          )
+          Logger.warn({
+            function_name: 'generate_commit_message_command',
+            message: 'API provider is not specified for Commit Messages tool.'
+          })
+          return
+        } else if (!commit_message_settings.model) {
+          vscode.window.showErrorMessage(
+            'Model is not specified for Commit Messages tool. Please configure them in API Tools -> Configuration.'
+          )
+          Logger.warn({
+            function_name: 'generate_commit_message_command',
+            message: 'Model is not specified for Commit Messages tool.'
+          })
+          return
+        }
+
         const connection_details =
           api_tool_settings_manager.provider_to_connection_details(
             commit_message_settings.provider
@@ -121,7 +141,7 @@ export function generate_commit_message_command(
             const body = {
               messages,
               model: commit_message_settings.model,
-              temperature: commit_message_settings.temperature
+              temperature: commit_message_settings.temperature || 0
             }
 
             // Make API request

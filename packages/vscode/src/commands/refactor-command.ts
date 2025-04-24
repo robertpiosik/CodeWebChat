@@ -80,9 +80,29 @@ export function refactor_command(params: {
       }
     }
 
-    // Get refactoring settings
     const refactoring_settings =
       api_tool_settings_manager.get_file_refactoring_settings()
+
+    if (!refactoring_settings.provider) {
+      vscode.window.showErrorMessage(
+        'API provider is not specified for File Refactoring tool. Please configure them in API Tools -> Configuration.'
+      )
+      Logger.warn({
+        function_name: 'refactor_command',
+        message: 'API provider is not specified for File Refactoring tool.'
+      })
+      return
+    } else if (!refactoring_settings.model) {
+      vscode.window.showErrorMessage(
+        'Model is not specified for File Refactoring tool. Please configure them in API Tools -> Configuration.'
+      )
+      Logger.warn({
+        function_name: 'refactor_command',
+        message: 'Model is not specified for File Refactoring tool.'
+      })
+      return
+    }
+
     const connection_details =
       api_tool_settings_manager.provider_to_connection_details(
         refactoring_settings.provider
@@ -94,9 +114,6 @@ export function refactor_command(params: {
       )
       return
     }
-
-    const model = refactoring_settings.model
-    const temperature = refactoring_settings.temperature
 
     // Create files collector with both providers
     const files_collector = new FilesCollector(
@@ -131,8 +148,8 @@ export function refactor_command(params: {
 
     const body = {
       messages,
-      model,
-      temperature
+      model: refactoring_settings.model,
+      temperature: refactoring_settings.temperature || 0
     }
 
     Logger.log({

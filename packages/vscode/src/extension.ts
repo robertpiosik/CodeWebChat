@@ -9,8 +9,7 @@ import {
   apply_chat_response_command,
   refactor_command,
   refactor_to_clipboard_command,
-  code_completion_command,
-  code_completion_with_suggestions_command,
+  code_completion_commands,
   web_chat_command,
   web_chat_with_command,
   chat_to_clipboard_command,
@@ -112,8 +111,7 @@ export async function activate(context: vscode.ExtensionContext) {
       workspace_provider,
       open_editors_provider
     ),
-    code_completion_command(workspace_provider, open_editors_provider, context),
-    code_completion_with_suggestions_command(
+    ...code_completion_commands(
       workspace_provider,
       open_editors_provider,
       context

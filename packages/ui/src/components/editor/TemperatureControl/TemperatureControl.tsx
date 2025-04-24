@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './TemperatureControl.module.scss'
 
 type Props = {
@@ -6,7 +6,9 @@ type Props = {
   onChange: (value: number) => void
 }
 
-export const TemperatureControl: React.FC<Props> = ({ value, onChange }) => {
+export const TemperatureControl: React.FC<Props> = (props) => {
+  const [temp, set_temp] = useState(props.value)
+
   return (
     <div className={styles.temperature}>
       <input
@@ -14,11 +16,12 @@ export const TemperatureControl: React.FC<Props> = ({ value, onChange }) => {
         min="0"
         max="1"
         step="0.01"
-        value={value}
+        value={temp}
         onChange={(e) => {
+          set_temp(parseFloat(e.target.value))
           const value = parseFloat(e.target.value)
           if (!isNaN(value) && value >= 0 && value <= 1) {
-            onChange(value)
+            props.onChange(value)
           }
         }}
         className={styles.temperature__input}
@@ -28,8 +31,9 @@ export const TemperatureControl: React.FC<Props> = ({ value, onChange }) => {
         min="0"
         max="1"
         step="0.01"
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
+        value={temp}
+        onChange={(e) => set_temp(parseFloat(e.target.value))}
+        onMouseUp={() => props.onChange(temp)}
         className={styles.temperature__slider}
       />
     </div>

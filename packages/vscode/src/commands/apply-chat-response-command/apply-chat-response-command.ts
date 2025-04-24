@@ -201,6 +201,27 @@ export function apply_chat_response_command(params: {
 
       const apply_chat_response_settings =
         api_tool_settings_manager.get_apply_chat_response_settings()
+
+      if (!apply_chat_response_settings.provider) {
+        vscode.window.showErrorMessage(
+          'API provider is not specified for Apply Chat Response tool. Please configure them in API Tools -> Configuration.'
+        )
+        Logger.warn({
+          function_name: 'apply_chat_response_command',
+          message: 'API provider is not specified for Apply Chat Response tool.'
+        })
+        return
+      } else if (!apply_chat_response_settings.model) {
+        vscode.window.showErrorMessage(
+          'Model is not specified for Apply Chat Response tool. Please configure them in API Tools -> Configuration.'
+        )
+        Logger.warn({
+          function_name: 'apply_chat_response_command',
+          message: 'Model is not specified for Apply Chat Response tool.'
+        })
+        return
+      }
+
       const connection_details =
         api_tool_settings_manager.provider_to_connection_details(
           apply_chat_response_settings.provider
@@ -210,7 +231,7 @@ export function apply_chat_response_command(params: {
         endpoint_url: connection_details.endpoint_url,
         api_key: connection_details.api_key,
         model: apply_chat_response_settings.model,
-        temperature: apply_chat_response_settings.temperature,
+        temperature: apply_chat_response_settings.temperature || 0,
         clipboard_text,
         is_multiple_files,
         context: params.context,

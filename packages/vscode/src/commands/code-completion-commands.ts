@@ -51,7 +51,7 @@ async function build_completion_payload(
 async function show_inline_completion(
   editor: vscode.TextEditor,
   position: vscode.Position,
-  completionText: string
+  completion_text: string
 ) {
   const document = editor.document
   const controller = vscode.languages.registerInlineCompletionItemProvider(
@@ -59,7 +59,7 @@ async function show_inline_completion(
     {
       provideInlineCompletionItems: () => {
         const item = {
-          insertText: completionText,
+          insertText: completion_text,
           range: new vscode.Range(position, position)
         }
         return [item]
@@ -95,12 +95,34 @@ async function perform_code_completion(
   file_tree_provider: any,
   open_editors_provider: any,
   context: vscode.ExtensionContext,
-  with_suggestions: boolean = false
+  with_suggestions: boolean,
+  auto_accept: boolean
 ) {
   const api_tool_settings_manager = new ApiToolsSettingsManager(context)
 
   const code_completions_settings =
     api_tool_settings_manager.get_code_completions_settings()
+
+  if (!code_completions_settings.provider) {
+    vscode.window.showErrorMessage(
+      'API provider is not specified for Code Completions tool. Please configure them in API Tools -> Configuration.'
+    )
+    Logger.warn({
+      function_name: 'perform_code_completion',
+      message: 'API provider is not specified for Code Completions tool.'
+    })
+    return
+  } else if (!code_completions_settings.model) {
+    vscode.window.showErrorMessage(
+      'Model is not specified for Code Completions tool. Please configure them in API Tools -> Configuration.'
+    )
+    Logger.warn({
+      function_name: 'perform_code_completion',
+      message: 'Model is not specified for Code Completions tool.'
+    })
+    return
+  }
+
   const connection_details =
     api_tool_settings_manager.provider_to_connection_details(
       code_completions_settings.provider
@@ -125,9 +147,6 @@ async function perform_code_completion(
     return
   }
 
-  const model = code_completions_settings.model
-  const temperature = code_completions_settings.temperature
-
   const editor = vscode.window.activeTextEditor
   if (editor) {
     const cancel_token_source = axios.CancelToken.source()
@@ -151,8 +170,8 @@ async function perform_code_completion(
 
     const body = {
       messages,
-      model,
-      temperature
+      model: code_completions_settings.model,
+      temperature: code_completions_settings.temperature || 0
     }
 
     Logger.log({
@@ -185,8 +204,22 @@ async function perform_code_completion(
               /<replacement>([\s\S]*?)<\/replacement>/i
             )
             if (match && match[1]) {
-              const decodedCompletion = he.decode(match[1].trim())
-              await show_inline_completion(editor, position, decodedCompletion)
+              const decoded_completion = he.decode(match[1].trim())
+              if (auto_accept) {
+                await editor.edit((editBuilder) => {
+                  editBuilder.insert(position, decoded_completion)
+                })
+                await vscode.commands.executeCommand(
+                  'editor.action.formatDocument',
+                  document.uri
+                )
+              } else {
+                await show_inline_completion(
+                  editor,
+                  position,
+                  decoded_completion
+                )
+              }
             }
           }
         } catch (err: any) {
@@ -195,9 +228,7 @@ async function perform_code_completion(
             message: 'Completion error',
             data: err
           })
-          vscode.window.showErrorMessage(
-            `An error occurred during completion: ${err.message}. See console for details.`
-          )
+          vscode.window.showErrorMessage(err.message)
         } finally {
           cursor_listener.dispose()
           progress.report({ increment: 100 })
@@ -207,36 +238,42 @@ async function perform_code_completion(
   }
 }
 
-export function code_completion_command(
+export function code_completion_commands(
   file_tree_provider: any,
   open_editors_provider: any,
   context: vscode.ExtensionContext
 ) {
-  return vscode.commands.registerCommand(
-    'geminiCoder.codeCompletion',
-    async () =>
+  return [
+    vscode.commands.registerCommand('geminiCoder.codeCompletion', async () =>
       perform_code_completion(
         file_tree_provider,
         open_editors_provider,
         context,
+        false,
         false
       )
-  )
-}
-
-export function code_completion_with_suggestions_command(
-  file_tree_provider: any,
-  open_editors_provider: any,
-  context: vscode.ExtensionContext
-) {
-  return vscode.commands.registerCommand(
-    'geminiCoder.codeCompletionWithSuggestions',
-    async () =>
-      perform_code_completion(
-        file_tree_provider,
-        open_editors_provider,
-        context,
-        true
-      )
-  )
+    ),
+    vscode.commands.registerCommand(
+      'geminiCoder.codeCompletionAutoAccept',
+      async () =>
+        perform_code_completion(
+          file_tree_provider,
+          open_editors_provider,
+          context,
+          false,
+          true
+        )
+    ),
+    vscode.commands.registerCommand(
+      'geminiCoder.codeCompletionWithSuggestions',
+      async () =>
+        perform_code_completion(
+          file_tree_provider,
+          open_editors_provider,
+          context,
+          true,
+          false
+        )
+    )
+  ]
 }

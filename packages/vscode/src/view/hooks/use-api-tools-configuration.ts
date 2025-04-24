@@ -6,21 +6,21 @@ import {
   GetCodeCompletionsSettingsMessage,
   GetFileRefactoringSettingsMessage,
   GetApplyChatResponseSettingsMessage,
-  GetCommitMessageSettingsMessage
+  GetCommitMessagesSettingsMessage
 } from '../types/messages'
-import { ApiToolSettings } from '@/services/api-tools-settings-manager'
+import { ApiToolSettings } from '@shared/types/api-tool-settings'
 
 export const use_api_tools_configuration = (vscode: any) => {
   const [gemini_api_key, set_gemini_api_key] = useState('')
   const [open_router_api_key, set_open_router_api_key] = useState('')
   const [code_completions_settings, set_code_completions_settings] =
-    useState<ApiToolSettings>({})
+    useState<ApiToolSettings>()
   const [file_refactoring_settings, set_file_refactoring_settings] =
-    useState<ApiToolSettings>({})
+    useState<ApiToolSettings>()
   const [apply_chat_response_settings, set_apply_chat_response_settings] =
-    useState<ApiToolSettings>({})
+    useState<ApiToolSettings>()
   const [commit_message_settings, set_commit_message_settings] =
-    useState<ApiToolSettings>({})
+    useState<ApiToolSettings>()
 
   useEffect(() => {
     vscode.postMessage({
@@ -40,7 +40,7 @@ export const use_api_tools_configuration = (vscode: any) => {
     } as GetApplyChatResponseSettingsMessage)
     vscode.postMessage({
       command: 'GET_COMMIT_MESSAGES_SETTINGS'
-    } as GetCommitMessageSettingsMessage)
+    } as GetCommitMessagesSettingsMessage)
 
     const handle_message = (event: MessageEvent<ExtensionMessage>) => {
       const message = event.data

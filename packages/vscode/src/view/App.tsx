@@ -24,6 +24,7 @@ const App = () => {
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [is_configuring_api_tools, set_is_configuring_api_tools] =
     useState(false)
+  const [has_active_editor, set_has_active_editor] = useState(false)
   const {
     open_router_models,
     request_open_router_models,
@@ -63,12 +64,22 @@ const App = () => {
       if (message.command == 'PRESET_UPDATED') {
         set_updated_preset(undefined)
         set_updating_preset(undefined)
+      } else if (message.command == 'EDITOR_STATE_CHANGED') {
+        set_has_active_editor(message.has_active_editor)
       }
     }
     window.addEventListener('message', handle_message)
     return () => window.removeEventListener('message', handle_message)
   }, [])
   // --- END back click handling in edit preset form ---
+
+  if (
+    !code_completions_settings ||
+    !file_refactoring_settings ||
+    !apply_chat_response_settings ||
+    !commit_message_settings
+  )
+    return null
 
   const tabs = (
     <>
@@ -92,6 +103,7 @@ const App = () => {
         vscode={vscode}
         is_visible={active_tab == 'api'}
         on_configure_api_tools_click={() => set_is_configuring_api_tools(true)}
+        has_active_editor={has_active_editor}
       />
     </>
   )

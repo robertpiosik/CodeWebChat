@@ -26,18 +26,18 @@ export const Header: React.FC<Props> = (props) => {
             [styles['tabs__tab--active']]: props.active_tab == 'chat'
           })}
           onClick={props.on_chat_tab_click}
-          data-text={window_width >= 320 ? 'Web Chat' : 'Chats'}
+          data-text={window_width >= 320 ? 'Web Chat' : 'Chat'}
         >
-          {window_width >= 320 ? 'Web Chat' : 'Chats'}
+          {window_width >= 320 ? 'Web Chat' : 'Chat'}
         </button>
         <button
           className={cn(styles.tabs__tab, {
             [styles['tabs__tab--active']]: props.active_tab == 'api'
           })}
           onClick={props.on_api_tab_click}
-          data-text={window_width >= 320 ? 'API tools' : 'API'}
+          data-text={window_width >= 320 ? 'API Tools' : 'API'}
         >
-          {window_width >= 320 ? 'API tools' : 'API'}
+          {window_width >= 320 ? 'API Tools' : 'API'}
         </button>
       </div>
       <div className={styles.right}>

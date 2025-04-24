@@ -3,18 +3,7 @@ import {
   GEMINI_API_KEY_STATE_KEY,
   OPEN_ROUTER_API_KEY_STATE_KEY
 } from '@/constants/state-keys'
-
-export type Provider = 'Gemini API' | 'OpenRouter'
-
-export type ApiToolSettings = {
-  provider?: Provider
-  model?: string
-  temperature?: number
-}
-
-const default_provider = 'Gemini API'
-const default_model = 'gemini-2.0-flash'
-const default_temperature = 0.3
+import { ApiToolSettings, Provider } from '@shared/types/api-tool-settings'
 
 export class ApiToolsSettingsManager {
   constructor(private readonly context: vscode.ExtensionContext) {}
@@ -29,7 +18,6 @@ export class ApiToolsSettingsManager {
         api_key: this.get_gemini_api_key()
       }
     } else if (provider == 'OpenRouter') {
-      console.log( this.get_open_router_api_key())
       return {
         endpoint_url: 'https://openrouter.ai/api/v1',
         api_key: this.get_open_router_api_key()
@@ -63,9 +51,9 @@ export class ApiToolsSettingsManager {
       {} as ApiToolSettings
     )
     return {
-      provider: settings.provider || default_provider,
-      model: settings.model || default_model,
-      temperature: settings.temperature || default_temperature
+      provider: settings.provider,
+      model: settings.model,
+      temperature: settings.temperature
     }
   }
 
@@ -76,9 +64,9 @@ export class ApiToolsSettingsManager {
       {} as ApiToolSettings
     )
     return {
-      provider: settings.provider || default_provider,
-      model: settings.model || default_model,
-      temperature: settings.temperature || default_temperature
+      provider: settings.provider,
+      model: settings.model,
+      temperature: settings.temperature
     }
   }
 
@@ -89,9 +77,9 @@ export class ApiToolsSettingsManager {
       {} as ApiToolSettings
     )
     return {
-      provider: settings.provider || default_provider,
-      model: settings.model || default_model,
-      temperature: settings.temperature || default_temperature
+      provider: settings.provider,
+      model: settings.model,
+      temperature: settings.temperature
     }
   }
 
@@ -102,9 +90,9 @@ export class ApiToolsSettingsManager {
       {} as ApiToolSettings
     )
     return {
-      provider: settings.provider || default_provider,
-      model: settings.model || default_model,
-      temperature: settings.temperature || default_temperature
+      provider: settings.provider,
+      model: settings.model,
+      temperature: settings.temperature
     }
   }
 

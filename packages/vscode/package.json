@@ -172,6 +172,11 @@
         "category": "Gemini Coder"
       },
       {
+        "command": "geminiCoder.codeCompletionAutoAccept",
+        "title": "Code Completion",
+        "category": "Gemini Coder"
+      },
+      {
         "command": "geminiCoder.codeCompletionWithSuggestions",
         "title": "Code Completion with Suggestions",
         "category": "Gemini Coder"
@@ -339,6 +344,10 @@
         },
         {
           "command": "geminiCoder.generateCommitMessage",
+          "when": "false"
+        },
+        {
+          "command": "geminiCoder.codeCompletionAutoAccept",
           "when": "false"
         }
       ],
@@ -779,7 +788,7 @@
             }
           }
         },
-        "geminiCoder.commitMessageSettings": {
+        "geminiCoder.commitMessagesSettings": {
           "type": "object",
           "scope": "resource",
           "description": "Settings for commit messages API tool.",

@@ -2,4 +2,18 @@
   overflow: auto;
   padding: var(--padding-12px) var(--padding-12px) var(--padding-24px)
     var(--padding-12px);
+  display: flex;
+  flex-direction: column;
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
+    margin: var(--padding-12px) 0;
+  }
+}
+
+.button_group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-12px);
 }

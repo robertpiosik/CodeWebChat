@@ -27,7 +27,8 @@ import {
   ApplyChatResponseSettingsMessage,
   CommitMessagesSettingsMessage,
   OpenRouterApiKeyMessage,
-  UpdateOpenRouterApiKeyMessage
+  UpdateOpenRouterApiKeyMessage,
+  ExecuteCommandMessage
 } from './types/messages'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -36,13 +37,11 @@ import { apply_preset_affixes_to_instruction } from '../helpers/apply-preset-aff
 import { token_count_emitter } from '@/context/context-initialization'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import {
-  ApiToolSettings,
-  ApiToolsSettingsManager
-} from '@/services/api-tools-settings-manager'
+import { ApiToolsSettingsManager } from '@/services/api-tools-settings-manager'
 import axios from 'axios'
 import { Logger } from '@/helpers/logger'
 import { OpenRouterModelsResponse } from '@/types/open-router-models-response'
+import { ApiToolSettings } from '@shared/types/api-tool-settings'
 
 type ConfigPresetFormat = {
   name: string
@@ -178,7 +177,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         if (this._webview_view) {
           this._send_message<ExtensionMessage>({
             command: 'EDITOR_STATE_CHANGED',
-            hasActiveEditor: has_active_editor
+            has_active_editor: has_active_editor
           })
         }
       }
@@ -325,6 +324,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       | FileRefactoringSettingsMessage
       | ApplyChatResponseSettingsMessage
       | CommitMessagesSettingsMessage
+      | ExecuteCommandMessage
   >(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -786,7 +786,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'REQUEST_EDITOR_STATE') {
             this._send_message<ExtensionMessage>({
               command: 'EDITOR_STATE_CHANGED',
-              hasActiveEditor: this._has_active_editor
+              has_active_editor: this._has_active_editor
             })
           } else if (message.command == 'REQUEST_EDITOR_SELECTION_STATE') {
             this._send_message<ExtensionMessage>({
@@ -1166,6 +1166,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             this._api_tools_settings_manager.set_commit_messages_settings(
               message.settings
             )
+          } else if (message.command == 'EXECUTE_COMMAND') {
+            vscode.commands.executeCommand(message.command_id)
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)
@@ -1184,7 +1186,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
     this._send_message<ExtensionMessage>({
       command: 'EDITOR_STATE_CHANGED',
-      hasActiveEditor: this._has_active_editor
+      has_active_editor: this._has_active_editor
     })
     this._send_message<ExtensionMessage>({
       command: 'EDITOR_SELECTION_CHANGED',

@@ -29,7 +29,7 @@ export const WebChatsTab: React.FC<Props> = (props) => {
   const [is_connected, set_is_connected] = useState<boolean>()
   const [presets, set_presets] = useState<Preset[]>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])
-  const [is_fim_mode, set_is_fim_mode] = useState<boolean>(false)
+  const [is_code_completions_mode, set_is_code_completions_mode] = useState<boolean>(false)
   const [has_active_editor, set_has_active_editor] = useState<boolean>()
   const [has_active_selection, set_has_active_selection] = useState<boolean>()
   const [chat_history, set_chat_history] = useState<string[]>()
@@ -73,17 +73,17 @@ export const WebChatsTab: React.FC<Props> = (props) => {
           )
           break
         case 'FIM_MODE':
-          set_is_fim_mode((message as FimModeMessage).enabled)
+          set_is_code_completions_mode((message as FimModeMessage).enabled)
           break
         case 'EDITOR_STATE_CHANGED':
           set_has_active_editor(
-            (message as EditorStateChangedMessage).hasActiveEditor
+            (message as EditorStateChangedMessage).has_active_editor
           )
           if (
-            !(message as EditorStateChangedMessage).hasActiveEditor &&
-            is_fim_mode
+            !(message as EditorStateChangedMessage).has_active_editor &&
+            is_code_completions_mode
           ) {
-            set_is_fim_mode(false)
+            set_is_code_completions_mode(false)
             props.vscode.postMessage({
               command: 'SAVE_FIM_MODE',
               enabled: false
@@ -120,7 +120,7 @@ export const WebChatsTab: React.FC<Props> = (props) => {
 
     window.addEventListener('message', handle_message)
     return () => window.removeEventListener('message', handle_message)
-  }, [is_fim_mode])
+  }, [is_code_completions_mode])
 
   const handle_initialize_chats = async (params: {
     instruction: string
@@ -158,7 +158,7 @@ export const WebChatsTab: React.FC<Props> = (props) => {
     } as WebviewMessage)
 
     // Update the appropriate chat history based on mode
-    if (is_fim_mode) {
+    if (is_code_completions_mode) {
       // Check if this instruction is already at the top of history
       const is_duplicate =
         chat_history_fim_mode &&
@@ -210,9 +210,9 @@ export const WebChatsTab: React.FC<Props> = (props) => {
   const handle_fim_mode_click = () => {
     props.vscode.postMessage({
       command: 'SAVE_FIM_MODE',
-      enabled: !is_fim_mode
+      enabled: !is_code_completions_mode
     } as WebviewMessage)
-    set_is_fim_mode(!is_fim_mode)
+    set_is_code_completions_mode(!is_code_completions_mode)
   }
 
   const handle_presets_reorder = (reordered_presets: Preset[]) => {
@@ -270,7 +270,7 @@ export const WebChatsTab: React.FC<Props> = (props) => {
   if (
     is_connected === undefined ||
     presets === undefined ||
-    is_fim_mode === undefined ||
+    is_code_completions_mode === undefined ||
     has_active_editor === undefined ||
     has_active_selection === undefined ||
     chat_history === undefined ||
@@ -289,7 +289,7 @@ export const WebChatsTab: React.FC<Props> = (props) => {
       selected_presets={selected_presets}
       on_create_preset={handle_create_preset}
       has_active_editor={has_active_editor}
-      is_fim_mode={is_fim_mode && has_active_editor}
+      is_fim_mode={is_code_completions_mode && has_active_editor}
       on_fim_mode_click={handle_fim_mode_click}
       has_active_selection={has_active_selection}
       chat_history={chat_history}

@@ -1,5 +1,5 @@
-import { ApiToolSettings } from '@/services/api-tools-settings-manager'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { ApiToolSettings } from '@shared/types/api-tool-settings'
 import { Preset } from '@shared/types/preset'
 
 export interface BaseMessage {
@@ -171,13 +171,18 @@ export interface UpdateApplyChatResponseSettingsMessage extends BaseMessage {
   settings: ApiToolSettings
 }
 
-export interface GetCommitMessageSettingsMessage extends BaseMessage {
+export interface GetCommitMessagesSettingsMessage extends BaseMessage {
   command: 'GET_COMMIT_MESSAGES_SETTINGS'
 }
 
-export interface UpdateCommitMessageSettingsMessage extends BaseMessage {
+export interface UpdateCommitMessagesSettingsMessage extends BaseMessage {
   command: 'UPDATE_COMMIT_MESSAGES_SETTINGS'
   settings: ApiToolSettings
+}
+
+export interface ExecuteCommandMessage extends BaseMessage {
+  command: 'EXECUTE_COMMAND'
+  command_id: string
 }
 
 // Messages from extension to webview:
@@ -235,7 +240,7 @@ export interface FimModeMessage extends BaseMessage {
 
 export interface EditorStateChangedMessage extends BaseMessage {
   command: 'EDITOR_STATE_CHANGED'
-  hasActiveEditor: boolean
+  has_active_editor: boolean
 }
 
 export interface EditorSelectionChangedMessage extends BaseMessage {
@@ -361,8 +366,9 @@ export type WebviewMessage =
   | UpdateFileRefactoringSettingsMessage
   | GetApplyChatResponseSettingsMessage
   | UpdateApplyChatResponseSettingsMessage
-  | GetCommitMessageSettingsMessage
-  | UpdateCommitMessageSettingsMessage
+  | GetCommitMessagesSettingsMessage
+  | UpdateCommitMessagesSettingsMessage
+  | ExecuteCommandMessage
 
 export type ExtensionMessage =
   | GeminiApiKeyMessage
