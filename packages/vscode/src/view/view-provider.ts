@@ -62,7 +62,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   private _config_listener: vscode.Disposable | undefined
   private _has_active_editor: boolean = false
   private _has_active_selection: boolean = false
-  private _is_code_completion_mode: boolean = false
+  private _is_code_completions_mode: boolean = false
   private _api_tools_settings_manager: ApiToolsSettingsManager
 
   constructor(
@@ -257,7 +257,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         this._update_active_file_info()
 
         // Also recalculate token count when active file changes in FIM mode
-        if (this._is_code_completion_mode && this._webview_view) {
+        if (this._is_code_completions_mode && this._webview_view) {
           this._calculate_token_count()
         }
       }
@@ -276,7 +276,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
     const options = {
       disable_xml: true,
-      ...(this._is_code_completion_mode && active_path
+      ...(this._is_code_completions_mode && active_path
         ? { exclude_path: active_path }
         : {})
     }
@@ -286,7 +286,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       .then((context_text) => {
         let current_token_count = Math.floor(context_text.length / 4)
 
-        if (active_editor && this._is_code_completion_mode) {
+        if (active_editor && this._is_code_completions_mode) {
           const document = active_editor.document
           const text = document.getText()
           const file_token_count = Math.floor(text.length / 4)
@@ -422,8 +422,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     if (message.command == 'GET_CODE_COMPLETIONS_MODE') {
       const has_active_editor = !!vscode.window.activeTextEditor
 
-      if (this._is_code_completion_mode && !has_active_editor) {
-        this._is_code_completion_mode = false
+      if (this._is_code_completions_mode && !has_active_editor) {
+        this._is_code_completions_mode = false
         this._send_message<ExtensionMessage>({
           command: 'CODE_COMPLETIONS_MODE',
           enabled: false
@@ -431,11 +431,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       } else {
         this._send_message<ExtensionMessage>({
           command: 'CODE_COMPLETIONS_MODE',
-          enabled: this._is_code_completion_mode
+          enabled: this._is_code_completions_mode
         })
       }
     } else if (message.command == 'SAVE_CODE_COMPLETIONS_MODE') {
-      this._is_code_completion_mode = (message as SaveFimModeMessage).enabled
+      this._is_code_completions_mode = (message as SaveFimModeMessage).enabled
       this._calculate_token_count()
     }
   }
@@ -598,7 +598,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             const active_editor = vscode.window.activeTextEditor
             const active_path = active_editor?.document.uri.fsPath
 
-            if (this._is_code_completion_mode && active_editor) {
+            if (this._is_code_completions_mode && active_editor) {
               const document = active_editor.document
               const position = active_editor.selection.active
 
@@ -636,7 +636,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                 text,
                 valid_preset_names
               )
-            } else if (!this._is_code_completion_mode) {
+            } else if (!this._is_code_completions_mode) {
               const context_text = await files_collector.collect_files({
                 active_path
               })
@@ -689,7 +689,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
             let text_to_send: string
 
-            if (this._is_code_completion_mode && active_editor) {
+            if (this._is_code_completions_mode && active_editor) {
               const document = active_editor.document
               const position = active_editor.selection.active
 
@@ -727,7 +727,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                 text_to_send,
                 preview_msg.preset
               )
-            } else if (!this._is_code_completion_mode) {
+            } else if (!this._is_code_completions_mode) {
               const context_text = await files_collector.collect_files({
                 active_path
               })
@@ -769,7 +769,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
             const active_editor = vscode.window.activeTextEditor
 
-            if (this._is_code_completion_mode && active_editor) {
+            if (this._is_code_completions_mode && active_editor) {
               const document = active_editor.document
               const position = active_editor.selection.active
               const active_path = document.uri.fsPath
@@ -803,7 +803,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               }`
 
               await vscode.env.clipboard.writeText(text)
-            } else if (!this._is_code_completion_mode) {
+            } else if (!this._is_code_completions_mode) {
               const active_path = active_editor?.document.uri.fsPath
               const context_text = await files_collector.collect_files({
                 active_path
@@ -1359,7 +1359,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
     this._send_message<ExtensionMessage>({
       command: 'CODE_COMPLETIONS_MODE',
-      enabled: this._is_code_completion_mode
+      enabled: this._is_code_completions_mode
     })
 
     this._update_active_file_info()
