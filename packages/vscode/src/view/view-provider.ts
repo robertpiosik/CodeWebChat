@@ -461,11 +461,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     return {
       name: configPreset.name,
       chatbot: configPreset.chatbot,
-      prompt_prefix: configPreset.promptPrefix || '',
-      prompt_suffix: configPreset.promptSuffix || '',
+      prompt_prefix: configPreset.promptPrefix,
+      prompt_suffix: configPreset.promptSuffix,
       model: configPreset.model,
       temperature: configPreset.temperature,
-      system_instructions: configPreset.systemInstructions || '',
+      system_instructions: configPreset.systemInstructions,
       options: configPreset.options,
       port: configPreset.port
     }
@@ -1182,13 +1182,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               name: new_name,
               chatbot: 'AI Studio',
               model: Object.keys(CHATBOTS['AI Studio'].models)[0],
-              promptPrefix: '',
-              promptSuffix: '',
               temperature: 0.5,
               systemInstructions:
-                CHATBOTS['AI Studio'].default_system_instructions,
-              options: [],
-              port: undefined
+                CHATBOTS['AI Studio'].default_system_instructions
             }
 
             const updated_presets = [...current_presets, new_preset]

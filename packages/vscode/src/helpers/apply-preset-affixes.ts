@@ -15,8 +15,8 @@ export function get_presets_by_names(preset_names: string[]): Array<{
     .filter((preset) => preset_names.includes(preset.name))
     .map((preset) => ({
       name: preset.name,
-      prompt_prefix: preset.promptPrefix || '',
-      prompt_suffix: preset.promptSuffix || ''
+      prompt_prefix: preset.promptPrefix,
+      prompt_suffix: preset.promptSuffix
     }))
 }
 

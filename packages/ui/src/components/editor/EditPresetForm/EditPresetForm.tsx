@@ -24,29 +24,17 @@ type Props = {
 export const EditPresetForm: React.FC<Props> = (props) => {
   const [chatbot, set_chatbot] = useState(props.preset.chatbot)
   const [name, set_name] = useState(props.preset.name)
-  const [temperature, set_temperature] = useState(
-    props.preset.temperature !== undefined
-      ? props.preset.temperature
-      : CHATBOTS[props.preset.chatbot].supports_custom_temperature
-      ? 0.5
-      : undefined
-  )
-  const [model, set_model] = useState(
-    props.preset.model
-      ? props.preset.model
-      : Object.keys(CHATBOTS[props.preset.chatbot].models)[0] || undefined
-  )
+  const [temperature, set_temperature] = useState(props.preset.temperature)
+  const [model, set_model] = useState(props.preset.model)
   const [system_instructions, set_system_instructions] = useState(
-    props.preset.system_instructions ||
-      CHATBOTS[props.preset.chatbot].default_system_instructions ||
-      undefined
+    props.preset.system_instructions
   )
   const [port, set_port] = useState(props.preset.port)
   const [prompt_prefix, set_prompt_prefix] = useState(
-    props.preset.prompt_prefix || ''
+    props.preset.prompt_prefix
   )
   const [prompt_suffix, set_prompt_suffix] = useState(
-    props.preset.prompt_suffix || ''
+    props.preset.prompt_suffix
   )
   const [options, set_options] = useState<string[]>(props.preset.options || [])
   const [open_router_models, set_open_router_models] = useState<{
@@ -67,16 +55,15 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     props.on_update({
-      ...props.preset,
       name,
       chatbot,
-      prompt_prefix,
-      prompt_suffix,
-      ...(supports_temperature ? { temperature } : {}),
+      ...(prompt_prefix ? { prompt_prefix } : {}),
+      ...(prompt_suffix ? { prompt_suffix } : {}),
+      ...(temperature !== undefined ? { temperature } : {}),
       ...(model ? { model } : {}),
-      ...(supports_system_instructions ? { system_instructions } : {}),
-      ...(supports_port ? { port } : {}),
-      options
+      ...(system_instructions ? { system_instructions } : {}),
+      ...(port !== undefined ? { port } : {}),
+      ...(options.length ? { options } : {})
     })
   }, [
     name,
