@@ -488,6 +488,12 @@
             "description": "File extension to ignore (without the dot)"
           }
         },
+        "geminiCoder.chatStyleInstructions": {
+          "type": "string",
+          "scope": "resource",
+          "description": "Style instructions for chat responses.",
+          "default": "Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their path in the first line comment.\nExample of a code block with a file path in the first line comment:\n```typescript\n// src/filename.ts\ncontents of file\n```\nUse ellipsis comments, e.g. \"// ...\", when necessary."
+        },
         "geminiCoder.presets": {
           "type": "array",
           "default": [
@@ -498,7 +504,7 @@
               "promptSuffix": "",
               "model": "gemini-2.5-pro-preview-03-25",
               "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their path in the first line comment.\nExample of a code block with a file path in the first line comment:\n```typescript\n// src/filename.ts\ncontents of file\n```\nUse ellipsis comments \"// ...\", when necessary."
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "2.5 Flash",
@@ -507,7 +513,7 @@
               "promptSuffix": "",
               "model": "gemini-2.5-flash-preview-04-17",
               "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their path in the first line comment.\nExample of a code block with a file path in the first line comment:\n```typescript\n// src/filename.ts\ncontents of file\n```\nUse ellipsis comments \"// ...\", when necessary."
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "2.0 Flash",
@@ -516,7 +522,7 @@
               "promptSuffix": "",
               "model": "gemini-2.0-flash",
               "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their path in the first line comment.\nExample of a code block with a file path in the first line comment:\n```typescript\n// src/filename.ts\ncontents of file\n```\nUse ellipsis comments \"// ...\", when necessary."
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "2.5 Pro",
@@ -559,7 +565,7 @@
               "promptPrefix": "",
               "promptSuffix": "",
               "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant. Whenever proposing a file use the file block syntax.\nFiles must be represented as code blocks with their path in the first line comment.\nExample of a code block with a file path in the first line comment:\n```typescript\n// src/filename.ts\ncontents of file\n```\nUse ellipsis comments \"// ...\", when necessary."
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "ChatGPT",

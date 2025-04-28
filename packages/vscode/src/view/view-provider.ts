@@ -85,6 +85,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     // Listen for changes to the new configuration keys
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
+        const config = vscode.workspace.getConfiguration()
+
         if (
           event.affectsConfiguration('geminiCoder.presets') &&
           this._webview_view
@@ -95,7 +97,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           event.affectsConfiguration('geminiCoder.providers') &&
           this._webview_view
         ) {
-          const config = vscode.workspace.getConfiguration()
           const providers = config.get<any[]>('geminiCoder.providers', [])
           this._send_message<CustomProvidersUpdatedMessage>({
             command: 'CUSTOM_PROVIDERS_UPDATED',
@@ -639,23 +640,28 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               const context_text = await files_collector.collect_files({
                 active_path
               })
-
-              // Replace @selection with selected text if present
-              const instruction = this._replace_selection_placeholder(
+              let instruction = this._replace_selection_placeholder(
                 message.instruction
               )
-
-              // Apply prefixes and suffixes to the instruction
-              const modified_instruction = apply_preset_affixes_to_instruction(
+              instruction = apply_preset_affixes_to_instruction(
                 instruction,
                 valid_preset_names
               )
 
+              const config = vscode.workspace.getConfiguration()
+              const chat_style_instructions = config.get<string>(
+                'geminiCoder.chatStyleInstructions',
+                ''
+              )
+              if (chat_style_instructions) {
+                instruction += '\n' + chat_style_instructions
+              }
+
               const text = `${
                 context_text
-                  ? `${modified_instruction}\n<files>\n${context_text}</files>\n`
+                  ? `${instruction}\n<files>\n${context_text}</files>\n`
                   : ''
-              }${modified_instruction}`
+              }${instruction}`
 
               this.websocket_server_instance.initialize_chats(
                 text,
