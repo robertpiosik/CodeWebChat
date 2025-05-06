@@ -10,6 +10,7 @@ import Mistral from '../../../assets/icons/mistral.svg'
 import Grok from '../../../assets/icons/grok.svg'
 import HuggingChat from '../../../assets/icons/hugging-chat.svg'
 import Qwen from '../../../assets/icons/qwen.svg'
+import Yuanbao from '../../../assets/icons/yuanbao.svg'
 
 export namespace Icon {
   export type Variant =
@@ -25,6 +26,7 @@ export namespace Icon {
     | 'GROK'
     | 'HUGGING_CHAT'
     | 'QWEN'
+    | 'YUANBAO'
 
   export type Props = {
     variant: Variant
@@ -70,6 +72,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'QWEN':
       icon = <Qwen />
+      break
+    case 'YUANBAO':
+      icon = <Yuanbao />
       break
     default:
       // Handle cases where variant might not match any known icon
