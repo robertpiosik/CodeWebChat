@@ -4,7 +4,7 @@
   "name": "Gemini Coder Connector",
   "short_name": "gemini-coder-connector",
   "description": "Initialize web chats hands-free, integrate responses with the codebase and include any website in the context.",
-  "version": "0.1.64",
+  "version": "0.1.66",
   "homepage_url": "https://github.com/robertpiosik/gemini-coder",
   "icons": {
     "16": "icons/icon16.png",

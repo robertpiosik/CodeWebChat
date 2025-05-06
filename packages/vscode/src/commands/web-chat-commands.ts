@@ -3,6 +3,7 @@ import { FilesCollector } from '../helpers/files-collector'
 import { WebSocketManager } from '../services/websocket-manager'
 import { apply_preset_affixes_to_instruction } from '../helpers/apply-preset-affixes'
 import { replace_selection_placeholder } from '../utils/replace-selection-placeholder'
+import { EditFormat } from '@shared/types/edit-format'
 
 // Shared logic extracted to a helper function
 async function handle_chat_command(
@@ -24,7 +25,7 @@ async function handle_chat_command(
     await context.workspaceState.update('last-chat-prompt', value)
   })
 
-  let instruction = await new Promise<string | undefined>((resolve) => {
+  let instructions = await new Promise<string | undefined>((resolve) => {
     input_box.onDidAccept(() => {
       resolve(input_box.value)
       input_box.hide()
@@ -33,15 +34,12 @@ async function handle_chat_command(
     input_box.show()
   })
 
-  if (!instruction) {
+  if (!instructions) {
     return // User cancelled
   }
 
-  const current_history = context.workspaceState.get<string[]>(
-    'history',
-    []
-  )
-  const updated_history = [instruction, ...current_history].slice(0, 100)
+  const current_history = context.workspaceState.get<string[]>('history', [])
+  const updated_history = [instructions, ...current_history].slice(0, 100)
   await context.workspaceState.update('history', updated_history)
 
   // Files Collection using FilesCollector
@@ -61,22 +59,24 @@ async function handle_chat_command(
     return
   }
 
-  instruction = replace_selection_placeholder(instruction)
-  instruction = apply_preset_affixes_to_instruction(instruction, preset_names)
+  instructions = replace_selection_placeholder(instructions)
+  instructions = apply_preset_affixes_to_instruction(instructions, preset_names)
 
   const config = vscode.workspace.getConfiguration()
-  const chat_style_instructions = config.get<string>(
-    'geminiCoder.chatStyleInstructions',
-    ''
+  const edit_format = config.get<EditFormat>('geminiCoder.editFormat')!
+  const edit_format_instructions = config.get<string>(
+    `geminiCoder.editFormatInstructions${
+      edit_format.charAt(0).toUpperCase() + edit_format.slice(1)
+    }`
   )
 
-  if (chat_style_instructions) {
-    instruction += `\n${chat_style_instructions}`
+  if (edit_format_instructions) {
+    instructions += `\n${edit_format_instructions}`
   }
 
   const text = `${
-    context_text ? `${instruction}\n<files>\n${context_text}</files>\n` : ''
-  }${instruction}`
+    context_text ? `${instructions}\n<files>\n${context_text}</files>\n` : ''
+  }${instructions}`
 
   // Initialize chats with selected preset names
   websocket_server_instance.initialize_chats(text, preset_names)

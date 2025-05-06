@@ -76,6 +76,7 @@ As everyone have their own favourite web chat interface, each with unique featur
 - Grok
 - HuggingChat
 - Mistral
+- OpenRouter Chat
 - Qwen
 
 The Connector extension is vailable in [Chrome Web Store](https://chromewebstore.google.com/detail/gemini-coder-connector/ljookipcanaglfaocjbgdicfbdhhjffp) and [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/).
@@ -101,7 +102,11 @@ Use any model for accurate code completions. The tool attaches selected context 
 
 #### 🛠️ File refactoring
 
-Modify the active file based on natural language instructions. When used directly, the tool attaches selected context in each request. Indirect use involves modyfing files when applying a chat response of which code blocks contain truncation comments, e.g. "// ..."
+Modify the active file based on natural language instructions. The tool attaches selected context in each request.
+
+#### 🛠️ Apply chat response
+
+Automatically integrate chat responses with your codebase. The tool detects whether the clipboard contains complete files (replaces them directly), diffs or truncated files with ellipsis commments, e.g. "// ..." (applies them intelligently).
 
 #### 🛠️ Commit messages
 

@@ -2,11 +2,11 @@ import { Message } from '@/types/messages'
 import { Chatbot } from '../types/chatbot'
 import { debounce } from '@/utils/debounce'
 import browser from 'webextension-polyfill'
-import { extract_path_from_comment } from '@shared/utils/extract-path-from-comment'
 import {
   apply_chat_response_button_style,
   set_button_disabled_state
 } from '../utils/apply-response'
+import { is_eligible_code_block } from '../utils/is-eligible-code-block'
 
 export const openrouter: Chatbot = {
   wait_until_ready: async () => {
@@ -150,7 +150,7 @@ export const openrouter: Chatbot = {
       let has_eligible_block = false
       for (const code_block of Array.from(first_lines_of_code_blocks)) {
         const first_line_text = code_block?.textContent?.split('\n')[0]
-        if (first_line_text && extract_path_from_comment(first_line_text)) {
+        if (first_line_text && is_eligible_code_block(first_line_text)) {
           has_eligible_block = true
           break
         }

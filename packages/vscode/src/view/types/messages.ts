@@ -1,6 +1,8 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ApiToolSettings } from '@shared/types/api-tool-settings'
+import { EditFormat } from '@shared/types/edit-format'
 import { Preset } from '@shared/types/preset'
+import { EditFormatSelectorVisibility } from './edit-format-selector-visibility'
 
 export interface BaseMessage {
   command: string
@@ -41,6 +43,24 @@ export interface SaveInstructionsMessage extends BaseMessage {
 export interface SaveCodeCompletionSuggestionsMessage extends BaseMessage {
   command: 'SAVE_CODE_COMPLETION_SUGGESTIONS'
   instruction: string
+}
+
+export interface GetEditFormat extends BaseMessage {
+  command: 'GET_EDIT_FORMAT'
+}
+
+export interface SaveEditFormatMessage extends BaseMessage {
+  command: 'SAVE_EDIT_FORMAT'
+  edit_format: EditFormat
+}
+
+export interface GetEditFormatSelectorVisibility extends BaseMessage {
+  command: 'GET_EDIT_FORMAT_SELECTOR_VISIBILITY'
+}
+
+export interface SaveEditFormatSelectorVisibilityMessage extends BaseMessage {
+  command: 'SAVE_EDIT_FORMAT_SELECTOR_VISIBILITY'
+  visibility: 'visible' | 'hidden'
 }
 
 export interface GetConnectionStatusMessage extends BaseMessage {
@@ -154,7 +174,8 @@ export interface GetApiToolCodeCompletionsSettingsMessage extends BaseMessage {
   command: 'GET_CODE_COMPLETIONS_SETTINGS'
 }
 
-export interface UpdateApiToolCodeCompletionsSettingsMessage extends BaseMessage {
+export interface UpdateApiToolCodeCompletionsSettingsMessage
+  extends BaseMessage {
   command: 'UPDATE_CODE_COMPLETIONS_SETTINGS'
   settings: ApiToolSettings
 }
@@ -163,7 +184,8 @@ export interface GetApiToolFileRefactoringSettingsMessage extends BaseMessage {
   command: 'GET_FILE_REFACTORING_SETTINGS'
 }
 
-export interface UpdateApiToolFileRefactoringSettingsMessage extends BaseMessage {
+export interface UpdateApiToolFileRefactoringSettingsMessage
+  extends BaseMessage {
   command: 'UPDATE_FILE_REFACTORING_SETTINGS'
   settings: ApiToolSettings
 }
@@ -230,6 +252,16 @@ export interface CodeCompletionSuggestionsMessage extends BaseMessage {
 export interface ConnectionStatusMessage extends BaseMessage {
   command: 'CONNECTION_STATUS'
   connected: boolean
+}
+
+export interface EditFormatMessage extends BaseMessage {
+  command: 'EDIT_FORMAT'
+  edit_format: EditFormat
+}
+
+export interface EditFormatSelectorVisibilityMessage extends BaseMessage {
+  command: 'EDIT_FORMAT_SELECTOR_VISIBILITY'
+  visibility: EditFormatSelectorVisibility
 }
 
 export interface PresetMessageFormat {
@@ -372,6 +404,10 @@ export type WebviewMessage =
   | GetCodeCompletionSuggestionsMessage
   | SaveInstructionsMessage
   | SaveCodeCompletionSuggestionsMessage
+  | GetEditFormat
+  | SaveEditFormatMessage
+  | GetEditFormatSelectorVisibility // Added
+  | SaveEditFormatSelectorVisibilityMessage // Added
   | GetConnectionStatusMessage
   | GetPresetsMessage
   | GetSelectedPresetsMessage
@@ -413,6 +449,8 @@ export type ExtensionMessage =
   | InstructionsMessage
   | CodeCompletionSuggestionsMessage
   | ConnectionStatusMessage
+  | EditFormatMessage
+  | EditFormatSelectorVisibilityMessage // Added
   | PresetsMessage
   | SelectedPresetsMessage
   | PresetsSelectedFromPickerMessage

@@ -88,6 +88,7 @@ As everyone have their own favourite web chat interface, each with unique featur
 - Grok
 - HuggingChat
 - Mistral
+- OpenRouter Chat
 - Qwen
 
 The Connector extension is available in [Chrome Web Store](https://chromewebstore.google.com/detail/gemini-coder-connector/ljookipcanaglfaocjbgdicfbdhhjffp) and [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/).
@@ -113,7 +114,11 @@ Use any model for accurate code completions. The tool attaches selected context 
 
 #### 🛠️ File refactoring
 
-Modify the active file based on natural language instructions. When used directly, the tool attaches selected context in each request. Indirect use involves modyfing files when applying a chat response of which code blocks contain truncation comments, e.g. "// ..."
+Modify the active file based on natural language instructions. The tool attaches selected context in each request.
+
+#### 🛠️ Apply chat response
+
+Automatically integrate chat responses with your codebase. The tool detects whether the clipboard contains complete files (replaces them directly), diffs or truncated files with ellipsis commments, e.g. "// ..." (applies them intelligently).
 
 #### 🛠️ Commit messages
 
@@ -171,24 +176,12 @@ Generate meaningful commit messages based on contents of affected files and diff
 
 All contributions are welcome. Feel free to submit pull requests or create issues and discussions.
 
+## Donations
+
+If you find Gemini Coder helpful, please consider a [donation](https://buymeacoffee.com/robertpiosik). Thank you 🙏
+
 ## License
 
-Copyright ©️ 2025 [Robert Piosik](https://buymeacoffee.com/robertpiosik).
+Copyright ©️ 2025 [Robert Piosik](https://x.com/robertpiosik).
 </br>📨 `robertpiosik[at]gmail.com`
 </br>📃 [MIT License](https://github.com/robertpiosik/gemini-coder/blob/master/LICENSE)
-
-## Kind Words From Users
-
-_"You did exactly what I wished, I feel you bro. Thank you very much for the early Christmas gift!"_ — [Coffee from Dat LQ.](https://buymeacoffee.com/robertpiosik)
-
-_"Gemini Coder is amazing!"_ — [Coffee from Matt](https://buymeacoffee.com/robertpiosik)
-
-_"You've built something incredibly helpful and useful man. Saves money and time. Thanks"_ — [Coffee from Kieron Dixon](https://buymeacoffee.com/robertpiosik)
-
-_"First time I've used a tool that improved my life so substantially that clicking the "buymeacoffee" button was a no brainer"_ — [Coffee from Gabriel Bryk](https://buymeacoffee.com/robertpiosik)
-
-_"This has been SUPER helpful with coding. Appreciate you putting it out into the world!"_ — [Coffee from Sebastian Kipman](https://buymeacoffee.com/robertpiosik)
-
-_"Seriously love Gemini Coder and your fast support! It's genuinely the best tool I've found for actually understanding big codebases and learning new things. Really hope more people discover this gem! Thanks!"_ — [Coffee from mazuralexandru](https://buymeacoffee.com/robertpiosik)
-
-_"Love this plugin, perfectly emulates my preferred way to AI pair program (using browser rather than IDE autocomplete)"_ — [Coffee from wecraw](https://buymeacoffee.com/robertpiosik)

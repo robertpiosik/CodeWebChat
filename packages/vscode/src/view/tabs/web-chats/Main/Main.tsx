@@ -3,14 +3,14 @@ import styles from './Main.module.scss'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
 import { Separator as UiSeparator } from '@ui/components/editor/Separator'
+import { EditFormatSelector as UiEditFormatSelector } from '@ui/components/editor/EditFormatSelector'
 import { Preset } from '@shared/types/preset'
+import { EditFormat } from '@shared/types/edit-format'
+import { EditFormatSelectorVisibility } from '@/view/types/edit-format-selector-visibility'
 
 type Props = {
   is_visible: boolean
-  initialize_chats: (params: {
-    prompt: string
-    preset_names: string[]
-  }) => void
+  initialize_chats: (params: { prompt: string; preset_names: string[] }) => void
   copy_to_clipboard: (instruction: string) => void
   on_create_preset: () => void
   is_connected: boolean
@@ -26,6 +26,9 @@ type Props = {
   token_count: number
   selection_text?: string
   active_file_length?: number
+  edit_format_selector_visibility: EditFormatSelectorVisibility
+  edit_format: EditFormat
+  on_edit_format_change: (edit_format: EditFormat) => void
   on_presets_reorder: (reordered_presets: Preset[]) => void
   on_preset_edit: (preset_name: string) => void
   on_preset_duplicate: (preset_name: string) => void
@@ -153,6 +156,16 @@ export const Main: React.FC<Props> = (props) => {
           has_active_selection={props.has_active_selection}
         />
       </div>
+
+      {props.edit_format_selector_visibility == 'visible' && (
+        <>
+          <UiSeparator size="medium" />
+          <UiEditFormatSelector
+            format={props.edit_format}
+            on_change={props.on_edit_format_change}
+          />
+        </>
+      )}
 
       {!props.is_connected && (
         <>

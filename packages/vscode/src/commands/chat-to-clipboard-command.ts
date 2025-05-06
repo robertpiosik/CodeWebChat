@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { FilesCollector } from '../helpers/files-collector'
 import { replace_selection_placeholder } from '../utils/replace-selection-placeholder'
+import { EditFormat } from '@shared/types/edit-format'
 
 export function chat_to_clipboard_command(
   context: vscode.ExtensionContext,
@@ -21,7 +22,7 @@ export function chat_to_clipboard_command(
         await context.workspaceState.update('last-chat-prompt', value)
       })
 
-      let instruction = await new Promise<string | undefined>((resolve) => {
+      let instructions = await new Promise<string | undefined>((resolve) => {
         input_box.onDidAccept(() => {
           resolve(input_box.value)
           input_box.hide()
@@ -30,7 +31,7 @@ export function chat_to_clipboard_command(
         input_box.show()
       })
 
-      if (!instruction) {
+      if (!instructions) {
         return // User cancelled
       }
 
@@ -38,7 +39,7 @@ export function chat_to_clipboard_command(
         'history',
         []
       )
-      const updated_history = [instruction, ...current_history].slice(0, 100)
+      const updated_history = [instructions, ...current_history].slice(0, 100)
       await context.workspaceState.update('history', updated_history)
 
       const files_collector = new FilesCollector(
@@ -62,21 +63,25 @@ export function chat_to_clipboard_command(
         return
       }
 
-      instruction = replace_selection_placeholder(instruction)
+      instructions = replace_selection_placeholder(instructions)
 
       const config = vscode.workspace.getConfiguration()
-      const chat_style_instructions = config.get<string>(
-        'geminiCoder.chatStyleInstructions',
-        ''
+      const edit_format = config.get<EditFormat>('geminiCoder.editFormat')!
+      const edit_format_instructions = config.get<string>(
+        `geminiCoder.editFormatInstructions${
+          edit_format.charAt(0).toUpperCase() + edit_format.slice(1)
+        }`
       )
 
-      if (chat_style_instructions) {
-        instruction += `\n${chat_style_instructions}`
+      if (edit_format_instructions) {
+        instructions += `\n${edit_format_instructions}`
       }
 
       const text = `${
-        context_text ? `${instruction}\n<files>\n${context_text}</files>\n` : ''
-      }${instruction}`
+        context_text
+          ? `${instructions}\n<files>\n${context_text}</files>\n`
+          : ''
+      }${instructions}`
 
       await vscode.env.clipboard.writeText(text)
       vscode.window.showInformationMessage('Chat prompt copied to clipboard!')

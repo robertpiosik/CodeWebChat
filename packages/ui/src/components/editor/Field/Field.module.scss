@@ -59,6 +59,7 @@
     font-family: inherit;
     font-size: var(--font-size-13px);
     padding: var(--padding-5px) var(--padding-6px);
+    border: none;
 
     &:focus {
       outline: 1px solid var(--vscode-focusBorder);

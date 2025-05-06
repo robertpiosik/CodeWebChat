@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Gemini Coder - free AI coding",
   "description": "Copy folders and files for chatbots or initialize them hands-free! Use built-in API tools for code completions, file refactoring and applying chat responses.",
-  "version": "1.0.433",
+  "version": "1.0.442",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "npm run compile",
@@ -568,11 +568,42 @@
             "description": "File extension to ignore (without the dot)"
           }
         },
-        "geminiCoder.chatStyleInstructions": {
+        "geminiCoder.editFormat": {
+          "type": "string",
+          "description": "Edit format to use in chat responses.",
+          "enum": [
+            "truncated",
+            "whole",
+            "diff"
+          ],
+          "default": "truncated"
+        },
+        "geminiCoder.editFormatSelectorVisibility": {
+          "type": "string",
+          "description": "Control visibility of the edit format selector.",
+          "enum": [
+            "visible",
+            "hidden"
+          ],
+          "default": "visible"
+        },
+        "geminiCoder.editFormatInstructionsTruncated": {
           "type": "string",
           "scope": "resource",
-          "description": "Style instructions for chat responses.",
+          "description": "Style instructions for chat responses when using truncated format.",
           "default": "Whenever proposing a file use the code block syntax, with its path in the first line comment. Use ellipsis comments, e.g. \"// ...\", when necessary."
+        },
+        "geminiCoder.editFormatInstructionsWhole": {
+          "type": "string",
+          "scope": "resource",
+          "description": "Style instructions for chat responses when showing complete files.",
+          "default": "Whenever proposing a file use the code block syntax, with its path in the first line comment. Modified files should be sent fully for copy and paste."
+        },
+        "geminiCoder.editFormatInstructionsDiff": {
+          "type": "string",
+          "scope": "resource",
+          "description": "Style instructions for chat responses when using diff format.",
+          "default": "Whenever proposing a file use the code block syntax. Each code block should be a diff patch."
         },
         "geminiCoder.chatCodeCompletionInstructions": {
           "type": "string",
