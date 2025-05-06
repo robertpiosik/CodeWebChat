@@ -10,6 +10,7 @@ import { chatgpt } from './chatbots/chatgpt'
 import { gemini } from './chatbots/gemini'
 import { ai_studio } from './chatbots/ai-studio'
 import { qwen } from './chatbots/qwen'
+import { yuanbao } from './chatbots/yuanbao'
 import { Chatbot } from './types/chatbot'
 import { Message } from '@/types/messages'
 
@@ -50,6 +51,9 @@ const is_mistral = current_url.startsWith('https://chat.mistral.ai/chat')
 const qwen_url = 'https://chat.qwen.ai/'
 const is_qwen = current_url.startsWith('https://chat.qwen.ai/')
 
+const yuanbao_url = 'https://yuanbao.tencent.com/chat'
+const is_yuanbao = current_url.startsWith('https://yuanbao.tencent.com/chat')
+
 // const grok_url = 'https://grok.com/'
 const is_grok = current_url.startsWith('https://grok.com/')
 
@@ -81,6 +85,8 @@ if (is_ai_studio) {
   chatbot = openrouter
 } else if (is_qwen) {
   chatbot = qwen
+} else if (is_yuanbao) {
+  chatbot = yuanbao
 }
 
 export const get_textarea_element = () => {
@@ -92,7 +98,8 @@ export const get_textarea_element = () => {
     [claude_url]: 'div[contenteditable=true]',
     [deepseek_url]: 'textarea',
     [mistral_url]: 'textarea',
-    [qwen_url]: 'textarea'
+    [qwen_url]: 'textarea',
+    [yuanbao_url]: 'div[contenteditable="true"]'
   } as any
 
   // Find the appropriate selector based on the URL without the hash
@@ -118,6 +125,7 @@ const enter_message_and_send = async (params: {
     params.input_element.innerText = params.message
     params.input_element.dispatchEvent(new Event('input', { bubbles: true }))
     params.input_element.dispatchEvent(new Event('change', { bubbles: true }))
+    await new Promise((r) => requestAnimationFrame(r))
     const form = params.input_element.closest('form')
     if (is_claude) {
       await new Promise((r) => setTimeout(r, 500))
@@ -130,9 +138,7 @@ const enter_message_and_send = async (params: {
       ) as HTMLButtonElement
       submit_button.click()
     } else if (form) {
-      requestAnimationFrame(() => {
-        form.requestSubmit()
-      })
+      form.requestSubmit()
     } else {
       const enter_event = new KeyboardEvent('keydown', {
         key: 'Enter',

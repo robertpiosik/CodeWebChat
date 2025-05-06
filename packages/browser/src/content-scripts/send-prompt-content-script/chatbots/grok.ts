@@ -15,7 +15,7 @@ export const grok: Chatbot = {
     })
   },
   set_options: async (options: string[]) => {
-    const supported_options = CHATBOTS['Grok'].supported_options || {}
+    const supported_options = CHATBOTS['Grok'].supported_options
     for (const option of options) {
       if (option == 'think' && supported_options['think']) {
         const think_button = document.querySelector(

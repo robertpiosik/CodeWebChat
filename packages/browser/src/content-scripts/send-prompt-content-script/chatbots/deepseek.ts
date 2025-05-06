@@ -20,7 +20,7 @@ export const deepseek: Chatbot = {
     })
   },
   set_options: async (options: string[]) => {
-    const supported_options = CHATBOTS['DeepSeek'].supported_options || {}
+    const supported_options = CHATBOTS['DeepSeek'].supported_options
     let should_ensure_deep_think_is_unchecked = true
     let should_ensure_search_is_unchecked = true
     for (const option of options) {

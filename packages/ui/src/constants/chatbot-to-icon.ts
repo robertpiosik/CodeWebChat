@@ -11,5 +11,6 @@ export const chatbot_to_icon = {
   Mistral: 'MISTRAL',
   Grok: 'GROK',
   HuggingChat: 'HUGGING_CHAT',
-  Qwen: 'QWEN'
+  Qwen: 'QWEN',
+  Yuanbao: 'YUANBAO'
 } as Record<string, Icon.Variant>

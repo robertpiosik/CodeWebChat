@@ -50,7 +50,7 @@ export const gemini: Chatbot = {
     }
   },
   set_options: async (options: string[]) => {
-    const supported_options = CHATBOTS['Gemini'].supported_options || {}
+    const supported_options = CHATBOTS['Gemini'].supported_options
     for (const option of options) {
       if (option == 'canvas' && supported_options['canvas']) {
         const canvas_button = Array.from(

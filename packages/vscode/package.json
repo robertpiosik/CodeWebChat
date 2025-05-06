@@ -662,10 +662,12 @@
             },
             {
               "name": "Qwen",
-              "chatbot": "Qwen",
-              "options": [
-                "thinking"
-              ]
+              "chatbot": "Qwen"
+            },
+            {
+              "name": "Yuanbao",
+              "chatbot": "Yuanbao",
+              "model": "deepseek"
             },
             {
               "name": "Mistral",
@@ -703,6 +705,7 @@
                   "Grok",
                   "DeepSeek",
                   "Qwen",
+                  "Yuanbao",
                   "Mistral",
                   "HuggingChat"
                 ],

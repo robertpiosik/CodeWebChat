@@ -145,17 +145,7 @@ export const openrouter: Chatbot = {
 
       if (existing_apply_response_button) return
 
-      // Find the parent chat-turn-container
       const chat_turn = params.footer.closest('.duration-200') as HTMLElement
-
-      if (!chat_turn) {
-        console.error(
-          'Chat turn container not found for footer:',
-          params.footer
-        )
-        return
-      }
-
       const first_lines_of_code_blocks = chat_turn.querySelectorAll('code')
       let has_eligible_block = false
       for (const code_block of Array.from(first_lines_of_code_blocks)) {

@@ -52,7 +52,7 @@ export const qwen: Chatbot = {
       }
     }
     // Now check click any feature requested
-    const supported_options = CHATBOTS['Qwen'].supported_options || {}
+    const supported_options = CHATBOTS['Qwen'].supported_options
     for (const option of options) {
       if (option == 'thinking' && supported_options['thinking']) {
         const buttons = document.querySelectorAll(
