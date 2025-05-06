@@ -171,5 +171,17 @@ export const CHATBOTS = {
       'qwen3-32b': 'Qwen3-32B',
       'qwen2.5-max': 'Qwen2.5-Max'
     }
+  },
+  Yuanbao: {
+    url: 'https://yuanbao.tencent.com/chat',
+    supports_custom_temperature: false,
+    supports_custom_top_p: false,
+    supports_system_instructions: false,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    default_system_instructions: '',
+    supported_options: { 'deep-think': 'DeepThink' },
+    default_top_p: 0,
+    models: {}
   }
 } satisfies Chatbot

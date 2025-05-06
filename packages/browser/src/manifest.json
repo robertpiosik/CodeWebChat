@@ -34,6 +34,7 @@
         "https://chat.mistral.ai/chat",
         "https://huggingface.co/chat/",
         "https://chat.qwen.ai/",
+        "https://yuanbao.tencent.com/chat*",
         "http://localhost/",
         "http://openwebui/"
       ],
