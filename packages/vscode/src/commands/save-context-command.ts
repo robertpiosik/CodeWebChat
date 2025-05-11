@@ -315,6 +315,43 @@ export function save_context_command(
         })
       }
 
+      // Sort the collected paths alphabetically
+      all_prefixed_paths.sort((a, b) => {
+        const workspace_folders = vscode.workspace.workspaceFolders;
+
+        const get_path_part_for_sorting = (full_path: string): string => {
+          if (workspace_folders && workspace_folders.length > 1) {
+            for (const folder of workspace_folders) {
+              const prefix = `${folder.name}:`;
+              if (full_path.startsWith(prefix)) {
+                if (full_path.length > prefix.length) {
+                  return full_path.substring(prefix.length);
+                } else if (full_path.length === prefix.length) {
+                  // Should ideally not happen if paths are like "WorkspaceName:."
+                  return ".";
+                }
+              }
+            }
+          }
+          return full_path;
+        };
+
+        const path_part_a = get_path_part_for_sorting(a);
+        const path_part_b = get_path_part_for_sorting(b);
+
+        const is_nested_a = path_part_a.includes(path.sep);
+        const is_nested_b = path_part_b.includes(path.sep);
+
+        if (is_nested_a && !is_nested_b) {
+          return -1; // 'a' is nested, 'b' is root; 'a' comes first.
+        }
+        if (!is_nested_a && is_nested_b) {
+          return 1;  // 'a' is root, 'b' is nested; 'a' comes after.
+        }
+
+        return a.localeCompare(b);
+      });
+
       // Check if .vscode/contexts.json exists in the primary workspace root
       const contexts_file_path = path.join(
         workspace_root,
@@ -392,7 +429,7 @@ export function save_context_command(
             } catch (error) {
               vscode.window.showWarningMessage(
                 `Error reading contexts file. Starting with empty contexts list.` +
-                  `Details: ${error}` // Added error details for debugging
+                `Details: ${error}` // Added error details for debugging
               )
               file_contexts = []
             }
@@ -432,9 +469,8 @@ export function save_context_command(
               },
               ...file_contexts.map((context) => ({
                 label: context.name,
-                description: `${context.paths.length} ${
-                  context.paths.length > 1 ? 'paths' : 'path'
-                }`
+                description: `${context.paths.length} ${context.paths.length > 1 ? 'paths' : 'path'
+                  }`
               }))
             ]
 
@@ -577,9 +613,8 @@ export function save_context_command(
           },
           ...saved_contexts.map((context) => ({
             label: context.name,
-            description: `${context.paths.length} ${
-              context.paths.length > 1 ? 'paths' : 'path'
-            }`
+            description: `${context.paths.length} ${context.paths.length > 1 ? 'paths' : 'path'
+              }`
           }))
         ]
 
