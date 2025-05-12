@@ -309,7 +309,11 @@ export const parse_clipboard_content = async (
   is_single_root_folder_workspace: boolean
 ): Promise<ClipboardContent> => {
   // First check for diff patches
-  if (clipboard_text.includes('```diff')) {
+  if (
+    clipboard_text.includes('```diff') ||
+    clipboard_text.includes('```patch') ||
+    clipboard_text.startsWith('--- ')
+  ) {
     const patches = await extract_diff_patches(clipboard_text)
     if (patches.length > 0) {
       return {

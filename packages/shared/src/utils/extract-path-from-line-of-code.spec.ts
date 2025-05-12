@@ -7,10 +7,22 @@ describe('extract_path_from_line_of_code', () => {
     )
   })
 
-  it('should extract filename from // comment', () => {
+  it('should extract filename with special characters in path components', () => {
     expect(extract_path_from_line_of_code('// [path]/(to)/file.ts')).toBe(
       '[path]/(to)/file.ts'
     )
+  })
+
+  it('should extract only the path when extra text precedes', () => {
+    expect(
+      extract_path_from_line_of_code('// lorem ipsum path/to/file.ts')
+    ).toBe('path/to/file.ts')
+  })
+
+  it('should extract only the path when extra text follows', () => {
+    expect(
+      extract_path_from_line_of_code('// path/to/file.ts lorem ipsum')
+    ).toBe('path/to/file.ts')
   })
 
   it('should extract filename from // comment starting with dot', () => {
@@ -119,28 +131,19 @@ describe('extract_path_from_line_of_code', () => {
 
   it('should extract path from XML-style file tag', () => {
     expect(
-      extract_path_from_line_of_code(
-        '<file path="path/to/file.ts">'
-      )
-    ).toBe(
-      'path/to/file.ts'
-    )
+      extract_path_from_line_of_code('<file path="path/to/file.ts">')
+    ).toBe('path/to/file.ts')
   })
 
   it('should extract path from XML-style file tag with single quotes', () => {
     expect(
-      extract_path_from_line_of_code(
-        "<file path='path/to/file.ts'>"
-      )
+      extract_path_from_line_of_code("<file path='path/to/file.ts'>")
     ).toBe('path/to/file.ts')
   })
 
-
   it('should extract path from XML-style file tag with attributes after path', () => {
     expect(
-      extract_path_from_line_of_code(
-        '<file path="path/to/file.ts" active>'
-      )
+      extract_path_from_line_of_code('<file path="path/to/file.ts" active>')
     ).toBe('path/to/file.ts')
   })
 })

@@ -4,7 +4,6 @@ import * as fs from 'fs'
 import { exec } from 'child_process'
 import { Logger } from '../../../helpers/logger'
 import { promisify } from 'util'
-import { cleanup_api_response } from '../../../helpers/cleanup-api-response'
 import { OriginalFileState } from '../../../types/common'
 import { format_document } from './format-document'
 import { create_safe_path } from '@/utils/path-sanitizer'
@@ -23,96 +22,104 @@ export async function extract_diff_patches(
   const patches: DiffPatch[] = []
   // Normalize line endings to LF
   const normalized_text = clipboard_text.replace(/\r\n/g, '\n')
-  const lines = normalized_text.split('\n')
 
-  let in_diff_block = false
-  let current_patch = ''
-  let current_workspace: string | undefined
-  let current_file_path: string | undefined
+  // Check if the text starts directly with patch content (---) and lacks markdown fences
+  if (clipboard_text.startsWith('---')) {
+    // Treat the entire text as a single patch
+    const lines = normalized_text.split('\n')
+    let current_file_path: string | undefined
 
-  for (const line of lines) {
-    // Check for diff or patch block start
-    if (line.trim() == '```diff' || line.trim() == '```patch') {
-      in_diff_block = true
-      current_patch = ''
-      current_workspace = undefined
-      current_file_path = undefined
-      continue
+    // Try to extract file path from +++ b/ line
+    for (const line of lines) {
+      const file_path_match = line.match(/^\+\+\+ b\/(.+)$/)
+      if (file_path_match) {
+        current_file_path = file_path_match[1]
+        break // Use the first file path found
+      }
     }
 
-    // Check for diff block end
-    if (in_diff_block && line.trim() == '```') {
-      // Only add if patch is valid (starts with --- or +++) and we have a file path
-      const cleaned_content = cleanup_api_response({ content: current_patch })
-      if (cleaned_content.trim().match(/^(---|\+\+\+)/m) && current_file_path) {
-        // Ensure patch ends with a newline
-        let patchContent = cleaned_content
-        if (!patchContent.endsWith('\n')) {
-          patchContent += '\n'
-        }
-
-        patches.push({
-          file_path: current_file_path,
-          content: patchContent,
-          workspace_name: current_workspace
-        })
-      }
-      in_diff_block = false
-      continue
-    }
-
-    // Inside diff block
-    if (in_diff_block) {
-      // Check for file path comment on first line of patch
-      if (!current_patch) {
-        if (line.trim().startsWith('//')) {
-          // Check for workspace comment
-          const workspace_match = line.match(/\/\/\s*workspace:\s*(\w+)/)
-          if (workspace_match) {
-            current_workspace = workspace_match[1]
-            continue
-          }
-
-          // Check for file path comment
-          const file_path_match = line.match(/\/\/\s*file_path:\s*(.+)/)
-          if (file_path_match) {
-            current_file_path = file_path_match[1].trim()
-            continue
-          }
-        }
-      }
-
-      // Also extract file path from the patch content itself
-      if (!current_file_path) {
-        const file_path_match = line.match(/^\+\+\+ b\/(.+)$/)
-        if (file_path_match) {
-          current_file_path = file_path_match[1]
-        }
-      }
-
-      current_patch += line + '\n'
-    }
-  }
-
-  // Handle last patch if block wasn't closed
-  if (in_diff_block && current_file_path) {
-    const cleaned_content = cleanup_api_response({ content: current_patch })
-    if (cleaned_content.trim().match(/^(---|\+\+\+)/m)) {
+    if (current_file_path) {
+      let patch_content = normalized_text
       // Ensure patch ends with a newline
-      let patchContent = cleaned_content
-      if (!patchContent.endsWith('\n')) {
-        patchContent += '\n'
+      if (!patch_content.endsWith('\n')) {
+        patch_content += '\n'
       }
-
       patches.push({
         file_path: current_file_path,
-        content: patchContent,
-        workspace_name: current_workspace
+        content: patch_content
+      })
+    } else {
+      Logger.log({
+        function_name: 'extract_diff_patches',
+        message:
+          'Direct patch detected but no file path found (+++ b/ line missing).',
+        data: { clipboard_start: normalized_text.substring(0, 100) }
       })
     }
-  }
+    return patches
+  } else {
+    const lines = normalized_text.split('\n')
+    let in_diff_block = false
+    // Diffs sometimes start with "diff --git ...", we skip all lines until "--- [PATH]"
+    let diff_header_detected = false
+    let current_patch = ''
+    let current_workspace: string | undefined
+    let current_file_path: string | undefined
 
-  return patches
+    for (const line of lines) {
+      // Check for diff or patch block start
+      if (line == '```diff' || line == '```patch') {
+        in_diff_block = true
+        current_patch = ''
+        current_workspace = undefined
+        current_file_path = undefined
+        continue
+      }
+
+      if (line.startsWith('---')) {
+        diff_header_detected = true
+      }
+
+      if (!diff_header_detected) {
+        continue
+      }
+
+      // Check for diff block end
+      if (in_diff_block && line == '```') {
+        // Only add if patch is valid (starts with ---) and we have a file path
+        if (current_patch.startsWith('---') && current_file_path) {
+          // Ensure patch ends with a newline
+          let patch_content = current_patch
+          if (!patch_content.endsWith('\n')) {
+            patch_content += '\n'
+          }
+
+          patches.push({
+            file_path: current_file_path,
+            content: patch_content,
+            workspace_name: current_workspace
+          })
+        }
+        in_diff_block = false
+        continue
+      }
+
+      // Inside diff block
+      if (in_diff_block) {
+        // Extract file path from the +++ line
+        if (!current_file_path) {
+          const file_path_match = line.match(/^\+\+\+ b\/(.+)$/)
+          if (file_path_match) {
+            current_file_path = file_path_match[1]
+          }
+        }
+
+        current_patch += line + '\n'
+      }
+    }
+
+    return patches
+  }
 }
 
 export function extract_file_paths_from_patch(patch_content: string): string[] {

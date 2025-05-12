@@ -150,7 +150,7 @@ export function apply_chat_response_command(params: {
             : `Failed to apply ${failure_count} patch${
                 failure_count != 1 ? 'es' : ''
               }.`,
-          'Fix failed with refactoring tool',
+          'Use intelligent update',
           ...(success_count > 0 ? ['Revert'] : [])
         )
 
@@ -160,7 +160,7 @@ export function apply_chat_response_command(params: {
             LAST_APPLIED_CHANGES_STATE_KEY,
             null
           )
-        } else if (response == 'Fix failed with refactoring tool') {
+        } else if (response == 'Use intelligent update') {
           const api_tool_settings_manager = new ApiToolsSettingsManager(
             params.context
           )
@@ -223,14 +223,7 @@ export function apply_chat_response_command(params: {
                 )
               }
             } else {
-              // Intelligent update was canceled - show option to revert successful patches
-              const response = await vscode.window.showInformationMessage(
-                'Fix attempt with the refactoring tool was canceled. Would you like to revert the successfully applied patches?',
-                'Keep changes',
-                'Revert'
-              )
-
-              if (response == 'Revert' && all_original_states.length > 0) {
+              if (success_count > 0 && all_original_states.length > 0) {
                 await revert_files(all_original_states)
                 params.context.workspaceState.update(
                   LAST_APPLIED_CHANGES_STATE_KEY,

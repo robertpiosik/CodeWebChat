@@ -1,7 +1,7 @@
 <div >
   <img src="https://raw.githubusercontent.com/robertpiosik/CodeWebChat/refs/heads/master/packages/vscode/media/logo.png" alt="logo" width="60">
   <br/>
-  <h1>Code Web Chat <sup>(CWC)</sup></h1>
+  <h1>Code Web Chat (CWC)</h1>
   <h4 style="line-height: 1.8">
   👉 Copy selected folders and files for web chats or initialize them hands-free!
   <br/>

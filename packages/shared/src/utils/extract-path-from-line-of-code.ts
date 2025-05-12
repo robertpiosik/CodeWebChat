@@ -16,16 +16,13 @@ export const extract_path_from_line_of_code = (line: string): string | null => {
     .replace(/^(?:\/\/|#|--|\/\*|\*|<!--)\s*/, '')
     .trim()
 
-  // Match a path pattern that can include special characters like (), [], etc.
-  // First, try to match until the first whitespace or end of string
-  const path_match = stripped.match(/^([^\s]+)/)
+  // Look for path pattern anywhere in comment with file extension
+  // Matches sequences like "path/to/file.ext" or "./file.ext" or "../file.ext" or ".gitignore"
+  const path_match = stripped.match(
+    /(?:^|\s)((?:\.|[.\/\w\-\[\]\(\)]+\.)[\w\-]{1,10})(?:\s|$)/
+  )
   if (path_match) {
-    const potential_path = path_match[1]
-
-    // Check if it has an extension
-    if (/\.\w{1,10}$/.test(potential_path)) {
-      return potential_path
-    }
+    return path_match[1]
   }
 
   return null

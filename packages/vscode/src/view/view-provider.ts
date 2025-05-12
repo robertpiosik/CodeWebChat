@@ -89,19 +89,25 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     // Listen for changes to the new configuration keys
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
-        if (event.affectsConfiguration('presets') && this._webview_view) {
+        if (
+          event.affectsConfiguration('codeWebChat.presets') &&
+          this._webview_view
+        ) {
           this._send_presets_to_webview(this._webview_view.webview)
-        }
-        if (event.affectsConfiguration('providers') && this._webview_view) {
+        } else if (
+          event.affectsConfiguration('codeWebChat.providers') &&
+          this._webview_view
+        ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const providers = config.get<any[]>('providers', [])
           this._send_message<CustomProvidersUpdatedMessage>({
             command: 'CUSTOM_PROVIDERS_UPDATED',
             custom_providers: providers
           })
-        }
-        if (
-          event.affectsConfiguration('apiToolCodeCompletionsSettings') &&
+        } else if (
+          event.affectsConfiguration(
+            'codeWebChat.apiToolCodeCompletionsSettings'
+          ) &&
           this._webview_view
         ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -113,9 +119,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             command: 'CODE_COMPLETIONS_SETTINGS',
             settings
           })
-        }
-        if (
-          event.affectsConfiguration('apiToolFileRefactoringSettings') &&
+        } else if (
+          event.affectsConfiguration(
+            'codeWebChat.apiToolFileRefactoringSettings'
+          ) &&
           this._webview_view
         ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -127,9 +134,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             command: 'FILE_REFACTORING_SETTINGS',
             settings
           })
-        }
-        if (
-          event.affectsConfiguration('apiToolCommitMessageSettings') &&
+        } else if (
+          event.affectsConfiguration(
+            'codeWebChat.apiToolCommitMessageSettings'
+          ) &&
           this._webview_view
         ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -141,17 +149,20 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             command: 'COMMIT_MESSAGES_SETTINGS',
             settings
           })
-        }
-        if (event.affectsConfiguration('editFormat') && this._webview_view) {
+        } else if (
+          event.affectsConfiguration('codeWebChat.editFormat') &&
+          this._webview_view
+        ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const edit_format = config.get<EditFormat>('editFormat')!
           this._send_message<ExtensionMessage>({
             command: 'EDIT_FORMAT',
             edit_format
           })
-        }
-        if (
-          event.affectsConfiguration('editFormatSelectorVisibility') &&
+        } else if (
+          event.affectsConfiguration(
+            'codeWebChat.editFormatSelectorVisibility'
+          ) &&
           this._webview_view
         ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
