@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styles from './ToolsConfiguration.module.scss'
 import { Field } from '../Field'
-import { IconButton } from '../IconButton/IconButton'
 import { Slider } from '../Slider'
 import { ConfigurationHeader } from '../ConfigurationHeader'
 import { ToolSettings, Provider } from '@shared/types/tool-settings'
@@ -16,9 +15,6 @@ type Props = {
       description: string
     }
   }
-
-  gemini_api_key?: string
-  open_router_api_key?: string
 
   code_completions_settings: ToolSettings
   file_refactoring_settings: ToolSettings
@@ -36,17 +32,7 @@ type Props = {
 }
 
 export const ToolsConfiguration: React.FC<Props> = (props) => {
-  const [show_gemini_api_key, set_show_api_key] = useState(false)
-  const [show_open_router_api_key, set_show_open_router_api_key] =
-    useState(false)
   const fetched_open_router_models = useRef(false) // open router models should be fetched once (stale-while-revalidate)
-
-  const toggle_gemini_api_key_visibility = () => {
-    set_show_api_key(!show_gemini_api_key)
-  }
-  const toggle_open_router_api_key_visibility = () => {
-    set_show_open_router_api_key(!show_open_router_api_key)
-  }
 
   useEffect(() => {
     if (
@@ -216,70 +202,6 @@ export const ToolsConfiguration: React.FC<Props> = (props) => {
 
   return (
     <div className={styles.form}>
-      <Field
-        label="Gemini API Key"
-        html_for="gemini-api-key"
-        info={
-          !props.gemini_api_key && (
-            <>
-              Create yours in{' '}
-              <a href="https://aistudio.google.com/app/apikey">AI Studio</a>.
-            </>
-          )
-        }
-      >
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <input
-            id="gemini-api-key"
-            type={show_gemini_api_key ? 'text' : 'password'}
-            value={props.gemini_api_key}
-            onChange={(e) => props.on_gemini_api_key_change(e.target.value)}
-            className={styles.input}
-            placeholder="Enter your API key"
-            style={{ flex: 1 }}
-          />
-          <IconButton
-            codicon_icon={show_gemini_api_key ? 'eye-closed' : 'eye'}
-            on_click={toggle_gemini_api_key_visibility}
-            title={show_gemini_api_key ? 'Hide API key' : 'Show API key'}
-          />
-        </div>
-      </Field>
-      <Field
-        label="Open Router API Key"
-        html_for="open-router-api-key"
-        info={
-          !props.open_router_api_key && (
-            <>
-              Create yours in{' '}
-              <a href="https://openrouter.ai/settings/keys">
-                Open Router Settings
-              </a>
-              .
-            </>
-          )
-        }
-      >
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <input
-            id="open-router-api-key"
-            type={show_open_router_api_key ? 'text' : 'password'}
-            value={props.open_router_api_key}
-            onChange={(e) =>
-              props.on_open_router_api_key_change(e.target.value)
-            }
-            className={styles.input}
-            placeholder="Enter your API key"
-            style={{ flex: 1 }}
-          />
-          <IconButton
-            codicon_icon={show_open_router_api_key ? 'eye-closed' : 'eye'}
-            on_click={toggle_open_router_api_key_visibility}
-            title={show_open_router_api_key ? 'Hide API key' : 'Show API key'}
-          />
-        </div>
-      </Field>
-
       {render_api_tool_settings({
         title: 'Code Completions',
         description:
