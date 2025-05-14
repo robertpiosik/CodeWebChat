@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.providers {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.provider {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background-color: var(--vscode-editorWidget-background);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--vscode-editorWidget-border);
+}
+
+.provider-header {
+  font-weight: bold;
+  margin-bottom: 8px;
+}

@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input {
+  background-color: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border);
+  color: var(--vscode-input-foreground);
+  padding: var(--padding-4px) var(--padding-8px);
+  border-radius: var(--border-radius);
+  outline: none;
+
+  &:focus {
+    border-color: var(--vscode-focusBorder);
+  }
+
+  &::placeholder {
+    color: var(--vscode-input-placeholderForeground);
+  }
+}

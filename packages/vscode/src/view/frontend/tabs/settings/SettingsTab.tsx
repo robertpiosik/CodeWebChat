@@ -3,6 +3,8 @@ import { ToolsConfiguration as UiToolsConfiguration } from '@ui/components/edito
 import { BUILT_IN_PROVIDERS } from '@/constants/built-in-providers'
 import { use_api_tools_configuration } from '../../hooks/use-api-tools-configuration'
 import { use_open_router_models } from '../../hooks/use-open-router-models'
+import { Providers as UiProviders } from '@ui/components/editor/Providers'
+import { use_providers } from '../../hooks/use-providers'
 
 type Props = {
   vscode: any
@@ -12,6 +14,8 @@ type Props = {
 export const SettingsTab: React.FC<Props> = (props) => {
   const api_tools_configuration_hook = use_api_tools_configuration(props.vscode)
   const open_router_models_hook = use_open_router_models(props.vscode)
+  const { providers, handle_providers_update, handle_add_provider } =
+    use_providers(props.vscode)
 
   if (
     !api_tools_configuration_hook.code_completions_settings ||
@@ -26,6 +30,12 @@ export const SettingsTab: React.FC<Props> = (props) => {
       className={styles.container}
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
+      <UiProviders
+        providers={providers}
+        on_providers_updated={handle_providers_update}
+        on_add_provider_click={handle_add_provider}
+      />
+
       <UiToolsConfiguration
         gemini_api_key={api_tools_configuration_hook.gemini_api_key}
         open_router_models={open_router_models_hook.open_router_models}

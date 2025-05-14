@@ -55,7 +55,9 @@ import {
   handle_save_code_completions_mode,
   handle_request_editor_state,
   handle_request_editor_selection_state,
-  handle_get_open_router_api_key
+  handle_get_open_router_api_key,
+  handle_save_providers,
+  handle_get_providers
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -459,6 +461,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_save_edit_format_selector_visibility(this, message)
           } else if (message.command == 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
+          } else if (message.command == 'GET_PROVIDERS') {
+            handle_get_providers(this)
+          } else if (message.command == 'SAVE_PROVIDERS') {
+            await handle_save_providers(this, message)
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)

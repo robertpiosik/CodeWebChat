@@ -3,6 +3,7 @@ import { ToolSettings } from '@shared/types/tool-settings'
 import { EditFormat } from '@shared/types/edit-format'
 import { Preset } from '@shared/types/preset'
 import { EditFormatSelectorVisibility } from './edit-format-selector-visibility'
+import { PROVIDERS } from '@shared/constants/providers'
 
 export interface BaseMessage {
   command: string
@@ -228,6 +229,27 @@ export interface CaretPositionChangedWebviewMessage extends BaseMessage {
   caret_position: number
 }
 
+export interface GetProvidersMessage extends BaseMessage {
+  command: 'GET_PROVIDERS'
+}
+
+export interface SaveProvidersMessage extends BaseMessage {
+  command: 'SAVE_PROVIDERS'
+  providers: Array<
+    | {
+        type: 'built-in'
+        id: keyof typeof PROVIDERS
+        api_key: string
+      }
+    | {
+        type: 'custom'
+        name: string
+        base_url: string
+        api_key: string
+      }
+  >
+}
+
 // Messages from extension to webview:
 export interface GeminiApiKeyMessage extends BaseMessage {
   command: 'GEMINI_API_KEY'
@@ -394,6 +416,23 @@ export interface SelectedCodeCompletionPresetsMessage extends BaseMessage {
   names: string[]
 }
 
+export interface ProvidersMessage extends BaseMessage {
+  command: 'PROVIDERS'
+  providers: Array<
+    | {
+        type: 'built-in'
+        id: keyof typeof PROVIDERS
+        api_key: string
+      }
+    | {
+        type: 'custom'
+        name: string
+        base_url: string
+        api_key: string
+      }
+  >
+}
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | GetGeminiApiKeyMessage
@@ -442,6 +481,8 @@ export type WebviewMessage =
   | GetSelectedCodeCompletionPresetsMessage
   | SaveSelectedCodeCompletionPresetsMessage
   | CaretPositionChangedWebviewMessage
+  | GetProvidersMessage
+  | SaveProvidersMessage
 
 export type ExtensionMessage =
   | GeminiApiKeyMessage
@@ -472,3 +513,4 @@ export type ExtensionMessage =
   | ApiToolCommitMessageSettingsMessage
   | SelectedCodeCompletionPresetsMessage
   | ExecuteCommandMessage
+  | ProvidersMessage

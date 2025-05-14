@@ -1,13 +1,13 @@
 type Providers = {
-  [name: string]: {
+  [id: string]: {
     display_name: string
     base_url: string
   }
 }
 
 export const PROVIDERS = {
-  google: {
-    display_name: 'Gemini API',
+  gemini: {
+    display_name: 'Gemini',
     base_url: 'https://generativelanguage.googleapis.com/v1beta'
   },
   openrouter: {
