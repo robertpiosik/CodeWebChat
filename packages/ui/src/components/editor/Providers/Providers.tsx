@@ -35,19 +35,20 @@ export const Providers: React.FC<Providers.Props> = (props) => {
           if (provider.type == 'built-in') {
             return (
               <div key={i}>
-                <div>{PROVIDERS[provider.id].display_name}</div>
-                <_ApiKeyField
-                  value={provider.api_key}
-                  on_change={(new_key) => {
-                    const updated_providers = props.providers.map((p) => {
-                      if (p.type == 'built-in' && p.id == provider.id) {
-                        return { ...p, api_key: new_key }
-                      }
-                      return p
-                    })
-                    props.on_providers_updated(updated_providers)
-                  }}
-                />
+                <Field label={`${PROVIDERS[provider.id].display_name} API key`}>
+                  <_ApiKeyField
+                    value={provider.api_key}
+                    on_change={(new_key) => {
+                      const updated_providers = props.providers.map((p) => {
+                        if (p.type == 'built-in' && p.id == provider.id) {
+                          return { ...p, api_key: new_key }
+                        }
+                        return p
+                      })
+                      props.on_providers_updated(updated_providers)
+                    }}
+                  />
+                </Field>
               </div>
             )
           } else {

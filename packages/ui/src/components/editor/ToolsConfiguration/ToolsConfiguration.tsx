@@ -209,7 +209,7 @@ export const ToolsConfiguration: React.FC<Props> = (props) => {
       {render_api_tool_settings({
         title: 'File Refactoring',
         description:
-          'Modify the active file based on natural language instructions. The tool is also used when integrating truncated markdown code block of chat responses.',
+          'Modify the active file based on natural language instructions or integrate truncated code of chat responses.',
         settings: props.file_refactoring_settings,
         on_update: props.on_file_refactoring_settings_update
       })}
