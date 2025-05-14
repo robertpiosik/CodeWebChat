@@ -6,7 +6,6 @@ import { ExtensionMessage } from '@/view/types/messages'
 type Props = {
   vscode: any
   is_visible: boolean
-  on_configure_api_tools_click: () => void
 }
 
 export const ToolsTab: React.FC<Props> = (props) => {
@@ -79,8 +78,6 @@ export const ToolsTab: React.FC<Props> = (props) => {
     ? undefined
     : 'Requires an active editor'
 
-  const configuration_title = 'Configure API tool settings'
-
   return (
     <div
       className={styles.container}
@@ -113,16 +110,6 @@ export const ToolsTab: React.FC<Props> = (props) => {
           Apply Copied Chat Response
         </Button>
       </div>
-
-      <hr />
-
-      <Button
-        on_click={props.on_configure_api_tools_click}
-        codicon="settings-gear"
-        title={configuration_title}
-      >
-        Configure Tools
-      </Button>
     </div>
   )
 }

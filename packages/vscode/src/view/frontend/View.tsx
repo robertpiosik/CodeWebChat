@@ -13,19 +13,17 @@ import {
   WebviewMessage
 } from '../types/messages'
 import { use_open_router_models } from './hooks/use-open-router-models'
-import { ToolsConfiguration as UiToolsConfiguration } from '@ui/components/editor/ToolsConfiguration'
-import { BUILT_IN_PROVIDERS } from '@/constants/built-in-providers'
-import { use_api_tools_configuration } from './hooks/use-api-tools-configuration'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
+import { SettingsTab } from './tabs/settings/SettingsTab'
 
 const vscode = acquireVsCodeApi()
 
 export const View = () => {
-  const [active_tab, set_active_tab] = useState<'chat' | 'tools'>('chat')
+  const [active_tab, set_active_tab] = useState<'chat' | 'tools' | 'settings'>(
+    'chat'
+  )
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
-  const [is_configuring_api_tools, set_is_configuring_api_tools] =
-    useState(false)
   const [is_in_code_completions_mode, set_is_in_code_completions_mode] =
     useState(false)
   const [instructions, set_instructions] = useState<string | undefined>(
@@ -35,7 +33,6 @@ export const View = () => {
     useState<string | undefined>(undefined)
 
   const open_router_models_hook = use_open_router_models(vscode)
-  const api_tools_configuration_hook = use_api_tools_configuration(vscode)
 
   const handle_instructions_change = (value: string) => {
     set_instructions(value)
@@ -98,13 +95,7 @@ export const View = () => {
     })
   }
 
-  if (
-    !api_tools_configuration_hook.code_completions_settings ||
-    !api_tools_configuration_hook.file_refactoring_settings ||
-    !api_tools_configuration_hook.commit_message_settings ||
-    instructions === undefined ||
-    code_completion_suggestions === undefined
-  ) {
+  if (instructions === undefined || code_completion_suggestions === undefined) {
     return null
   }
 
@@ -117,6 +108,9 @@ export const View = () => {
         }}
         on_tools_tab_click={() => {
           set_active_tab('tools')
+        }}
+        on_settings_tab_click={() => {
+          set_active_tab('settings')
         }}
       />
       <ChatTab
@@ -132,11 +126,8 @@ export const View = () => {
           handle_code_completion_suggestions_change
         }
       />
-      <ToolsTab
-        vscode={vscode}
-        is_visible={active_tab == 'tools'}
-        on_configure_api_tools_click={() => set_is_configuring_api_tools(true)}
-      />
+      <ToolsTab vscode={vscode} is_visible={active_tab == 'tools'} />
+      <SettingsTab vscode={vscode} is_visible={active_tab == 'settings'} />
     </>
   )
 
@@ -171,56 +162,6 @@ export const View = () => {
             open_router_models_hook.request_open_router_models
           }
           open_router_models={open_router_models_hook.open_router_models}
-          get_newly_picked_open_router_model={
-            open_router_models_hook.get_newly_picked_open_router_model
-          }
-        />
-      </UiEditView>
-    )
-  } else if (is_configuring_api_tools) {
-    edit_view = (
-      <UiEditView
-        on_back_click={() => {
-          set_is_configuring_api_tools(false)
-        }}
-      >
-        <UiToolsConfiguration
-          gemini_api_key={api_tools_configuration_hook.gemini_api_key}
-          open_router_models={open_router_models_hook.open_router_models}
-          gemini_api_models={Object.fromEntries(
-            BUILT_IN_PROVIDERS.map((provider) => [
-              provider.model,
-              provider.name
-            ])
-          )}
-          open_router_api_key={api_tools_configuration_hook.open_router_api_key}
-          code_completions_settings={
-            api_tools_configuration_hook.code_completions_settings
-          }
-          file_refactoring_settings={
-            api_tools_configuration_hook.file_refactoring_settings
-          }
-          commit_messages_settings={
-            api_tools_configuration_hook.commit_message_settings
-          }
-          on_code_completions_settings_update={
-            api_tools_configuration_hook.handle_code_completions_settings_change
-          }
-          on_file_refactoring_settings_update={
-            api_tools_configuration_hook.handle_file_refactoring_settings_change
-          }
-          on_commit_messages_settings_update={
-            api_tools_configuration_hook.handle_commit_message_settings_change
-          }
-          on_gemini_api_key_change={
-            api_tools_configuration_hook.handle_gemini_api_key_change
-          }
-          on_open_router_api_key_change={
-            api_tools_configuration_hook.handle_open_router_api_key_change
-          }
-          request_open_router_models={
-            open_router_models_hook.request_open_router_models
-          }
           get_newly_picked_open_router_model={
             open_router_models_hook.get_newly_picked_open_router_model
           }
