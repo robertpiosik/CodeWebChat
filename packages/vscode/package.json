@@ -905,7 +905,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
-    "@babel/preset-env": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@types/he": "^1.2.3",
@@ -922,18 +922,18 @@
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^6.5.1",
     "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.2",
+    "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-react": "^7.37.5",
     "jest": "^29.7.0",
     "mini-css-extract-plugin": "^2.9.2",
-    "sass-embedded": "^1.87.0",
+    "sass-embedded": "^1.88.0",
     "sass-loader": "^12.6.0",
     "style-loader": "^3.3.4",
     "ts-jest": "^29.3.2",
     "ts-loader": "^9.5.2",
     "typed-css-modules": "^0.9.1",
     "typescript": "^5.8.3",
-    "webpack": "^5.99.7",
+    "webpack": "^5.99.8",
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
@@ -952,6 +952,6 @@
     "react-dom": "^18.2.0",
     "ui": "workspace:*",
     "utf-8-validate": "^6.0.5",
-    "ws": "^8.18.1"
+    "ws": "^8.18.2"
   }
 }
