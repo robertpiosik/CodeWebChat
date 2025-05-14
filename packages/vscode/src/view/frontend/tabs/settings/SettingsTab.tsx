@@ -37,12 +37,10 @@ export const SettingsTab: React.FC<Props> = (props) => {
       />
 
       <UiToolsConfiguration
-        gemini_api_key={api_tools_configuration_hook.gemini_api_key}
         open_router_models={open_router_models_hook.open_router_models}
         gemini_api_models={Object.fromEntries(
           BUILT_IN_PROVIDERS.map((provider) => [provider.model, provider.name])
         )}
-        open_router_api_key={api_tools_configuration_hook.open_router_api_key}
         code_completions_settings={
           api_tools_configuration_hook.code_completions_settings
         }
@@ -60,12 +58,6 @@ export const SettingsTab: React.FC<Props> = (props) => {
         }
         on_commit_messages_settings_update={
           api_tools_configuration_hook.handle_commit_message_settings_change
-        }
-        on_gemini_api_key_change={
-          api_tools_configuration_hook.handle_gemini_api_key_change
-        }
-        on_open_router_api_key_change={
-          api_tools_configuration_hook.handle_open_router_api_key_change
         }
         request_open_router_models={
           open_router_models_hook.request_open_router_models

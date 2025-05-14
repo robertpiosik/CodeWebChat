@@ -24,9 +24,6 @@ type Props = {
   on_file_refactoring_settings_update: (settings: ToolSettings) => void
   on_commit_messages_settings_update: (settings: ToolSettings) => void
 
-  on_gemini_api_key_change: (api_key: string) => void
-  on_open_router_api_key_change: (api_key: string) => void
-
   request_open_router_models: () => void
   get_newly_picked_open_router_model: () => Promise<string | undefined>
 }

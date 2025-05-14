@@ -55,7 +55,6 @@ import {
   handle_save_code_completions_mode,
   handle_request_editor_state,
   handle_request_editor_selection_state,
-  handle_get_open_router_api_key,
   handle_save_providers,
   handle_get_providers
 } from './message-handlers'
@@ -392,22 +391,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_duplicate_preset(this, message, webview_view)
           } else if (message.command == 'CREATE_PRESET') {
             await handle_create_preset(this)
-          } else if (message.command == 'GET_GEMINI_API_KEY') {
-            const api_key = this.api_tools_settings_manager.get_gemini_api_key()
-            this.send_message<ExtensionMessage>({
-              command: 'GEMINI_API_KEY',
-              api_key
-            })
-          } else if (message.command == 'GET_OPEN_ROUTER_API_KEY') {
-            handle_get_open_router_api_key(this)
-          } else if (message.command == 'UPDATE_GEMINI_API_KEY') {
-            await this.api_tools_settings_manager.set_gemini_api_key(
-              message.api_key
-            )
-          } else if (message.command == 'UPDATE_OPEN_ROUTER_API_KEY') {
-            await this.api_tools_settings_manager.set_open_router_api_key(
-              message.api_key
-            )
           } else if (message.command == 'GET_OPEN_ROUTER_MODELS') {
             await handle_get_open_router_models(this)
           } else if (message.command == 'SHOW_OPEN_ROUTER_MODEL_PICKER') {

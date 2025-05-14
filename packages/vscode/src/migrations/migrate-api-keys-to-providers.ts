@@ -1,18 +1,14 @@
 import * as vscode from 'vscode'
 import { Logger } from '../helpers/logger'
-import {
-  GEMINI_API_KEY_STATE_KEY,
-  OPEN_ROUTER_API_KEY_STATE_KEY,
-  SAVED_PROVIDERS_STATE_KEY
-} from '@/constants/state-keys'
+import { SAVED_PROVIDERS_STATE_KEY } from '@/constants/state-keys'
 
-const MIGRATION_ID = 'create-providers-from-api-keys-migration-150525'
+const MIGRATION_ID = 'api-keys-to-providers-migration-150525'
 
 /**
  * Migration to create providers for Gemini and OpenRouter if their API keys are saved.
  * This migration runs only once per extension installation.
  */
-export async function migrate_create_providers_from_api_keys(
+export async function migrate_api_keys_to_providers(
   context: vscode.ExtensionContext
 ): Promise<void> {
   try {
@@ -26,12 +22,9 @@ export async function migrate_create_providers_from_api_keys(
       return
     }
 
-    const gemini_api_key = context.globalState.get<string>(
-      GEMINI_API_KEY_STATE_KEY
-    )
-    const open_router_api_key = context.globalState.get<string>(
-      OPEN_ROUTER_API_KEY_STATE_KEY
-    )
+    const gemini_api_key = context.globalState.get<string>('geminiApiKey')
+    const open_router_api_key =
+      context.globalState.get<string>('openRouterApiKey')
     const existing_providers = context.globalState.get<any[]>(
       SAVED_PROVIDERS_STATE_KEY,
       []

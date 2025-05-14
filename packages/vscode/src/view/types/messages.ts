@@ -10,24 +10,6 @@ export interface BaseMessage {
 }
 
 // Messages from webview to extension
-export interface GetGeminiApiKeyMessage extends BaseMessage {
-  command: 'GET_GEMINI_API_KEY'
-}
-
-export interface UpdateGeminiApiKeyMessage extends BaseMessage {
-  command: 'UPDATE_GEMINI_API_KEY'
-  api_key: string
-}
-
-export interface GetOpenRouterApiKeyMessage extends BaseMessage {
-  command: 'GET_OPEN_ROUTER_API_KEY'
-}
-
-export interface UpdateOpenRouterApiKeyMessage extends BaseMessage {
-  command: 'UPDATE_OPEN_ROUTER_API_KEY'
-  api_key: string
-}
-
 export interface GetInstructionsMessage extends BaseMessage {
   command: 'GET_INSTRUCTIONS'
 }
@@ -251,16 +233,6 @@ export interface SaveProvidersMessage extends BaseMessage {
 }
 
 // Messages from extension to webview:
-export interface GeminiApiKeyMessage extends BaseMessage {
-  command: 'GEMINI_API_KEY'
-  api_key: string
-}
-
-export interface OpenRouterApiKeyMessage extends BaseMessage {
-  command: 'OPEN_ROUTER_API_KEY'
-  api_key: string
-}
-
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
   value: string
@@ -435,10 +407,6 @@ export interface ProvidersMessage extends BaseMessage {
 
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
-  | GetGeminiApiKeyMessage
-  | UpdateGeminiApiKeyMessage
-  | GetOpenRouterApiKeyMessage
-  | UpdateOpenRouterApiKeyMessage
   | GetInstructionsMessage
   | GetCodeCompletionSuggestionsMessage
   | SaveInstructionsMessage
@@ -485,8 +453,6 @@ export type WebviewMessage =
   | SaveProvidersMessage
 
 export type ExtensionMessage =
-  | GeminiApiKeyMessage
-  | OpenRouterApiKeyMessage
   | InstructionsMessage
   | CodeCompletionSuggestionsMessage
   | ConnectionStatusMessage

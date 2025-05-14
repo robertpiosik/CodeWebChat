@@ -33,7 +33,7 @@ import {
 } from './commands'
 import { migrate_settings_prefix } from './migrations/migrate-settings-prefix'
 import { migrate_keybindings } from './migrations/migrate-keybindings'
-import { migrate_create_providers_from_api_keys } from './migrations/migrate-create-providers-from-api-keys'
+import { migrate_api_keys_to_providers } from './migrations/migrate-api-keys-to-providers'
 
 // Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
@@ -57,7 +57,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // Remove a few weeks after 9 May 2025
     await migrate_settings_prefix(context)
     await migrate_keybindings(context)
-    await migrate_create_providers_from_api_keys(context)
+    await migrate_api_keys_to_providers(context)
   }
 
   await migrations()
