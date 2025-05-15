@@ -52,7 +52,7 @@ export const handle_configure_api_providers = async (
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_provider_items()
     quick_pick.title = 'Configure API Providers'
-    quick_pick.placeholder = 'Select a provider to edit or create a new one'
+    quick_pick.placeholder = 'Select an API provider to edit or add a new one'
 
     return new Promise<void>((resolve) => {
       quick_pick.onDidAccept(async () => {
@@ -203,42 +203,20 @@ export const handle_configure_api_providers = async (
       }
     })
     if (!name) {
-      await show_create_provider_quick_pick() // Go back to type selection
+      await show_create_provider_quick_pick()
       return
     }
 
-    const base_url = await vscode.window.showInputBox({
-      title: 'Base URL',
-      prompt: 'Enter the base URL for the API',
-      validateInput: (value) => (!value.trim() ? 'Base URL is required' : null)
-    })
-    if (!base_url) {
-      await show_create_provider_quick_pick() // Go back to type selection
-      return
-    }
-
-    const api_key = await vscode.window.showInputBox({
-      title: 'API Key',
-      prompt: 'Enter your API key',
-      validateInput: (value) => (!value.trim() ? 'API key is required' : null)
-    })
-    if (!api_key) {
-      await show_create_provider_quick_pick() // Go back to type selection
-      return
+    const new_provider: CustomProvider = {
+      type: 'custom' as const,
+      name: name.trim(),
+      base_url: '',
+      api_key: ''
     }
 
     const providers = providers_manager.get_providers()
-    await providers_manager.save_providers([
-      ...providers,
-      {
-        type: 'custom' as const,
-        name: name.trim(),
-        base_url: base_url.trim(),
-        api_key: api_key.trim()
-      }
-    ])
-
-    await show_providers_quick_pick() // Return to main list
+    await providers_manager.save_providers([...providers, new_provider])
+    await edit_custom_provider(new_provider)
   }
 
   const create_built_in_provider = async (name: keyof typeof PROVIDERS) => {
@@ -248,7 +226,7 @@ export const handle_configure_api_providers = async (
       validateInput: (value) => (!value.trim() ? 'API key is required' : null)
     })
     if (!api_key) {
-      await show_create_provider_quick_pick() // Go back to type selection
+      await show_create_provider_quick_pick()
       return
     }
 
@@ -262,7 +240,7 @@ export const handle_configure_api_providers = async (
       }
     ])
 
-    await show_providers_quick_pick() // Return to main list
+    await show_providers_quick_pick()
   }
 
   const edit_provider = async (provider: Provider) => {
@@ -274,7 +252,6 @@ export const handle_configure_api_providers = async (
   }
 
   const edit_custom_provider = async (provider: CustomProvider) => {
-    // Function to show field selection for custom provider
     const show_field_selection = async () => {
       const field_to_edit = await vscode.window.showQuickPick(
         [
@@ -318,7 +295,7 @@ export const handle_configure_api_providers = async (
           }
         })
         if (new_name === undefined) {
-          await show_field_selection() // Go back to field selection
+          await show_field_selection()
           return
         }
         if (new_name) {
@@ -333,7 +310,7 @@ export const handle_configure_api_providers = async (
             !value.trim() ? 'Base URL is required' : null
         })
         if (new_base_url === undefined) {
-          await show_field_selection() // Go back to field selection
+          await show_field_selection()
           return
         }
         if (new_base_url) {
@@ -346,7 +323,7 @@ export const handle_configure_api_providers = async (
           placeHolder: '(Keep current API key)'
         })
         if (new_api_key === undefined) {
-          await show_field_selection() // Go back to field selection
+          await show_field_selection()
           return
         }
         if (new_api_key) {
@@ -396,7 +373,7 @@ export const handle_configure_api_providers = async (
     )
     await providers_manager.save_providers(updated_providers)
 
-    await show_providers_quick_pick() // Return to main list
+    await show_providers_quick_pick()
   }
 
   await show_providers_quick_pick()
