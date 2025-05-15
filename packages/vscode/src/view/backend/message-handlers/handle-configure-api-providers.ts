@@ -18,6 +18,16 @@ export const handle_configure_api_providers = async (
     tooltip: 'Delete provider'
   }
 
+  const move_up_button = {
+    iconPath: new vscode.ThemeIcon('chevron-up'),
+    tooltip: 'Move up'
+  }
+
+  const move_down_button = {
+    iconPath: new vscode.ThemeIcon('chevron-down'),
+    tooltip: 'Move down'
+  }
+
   const create_provider_items = () => {
     const saved_providers = providers_manager.get_providers()
 
@@ -26,14 +36,15 @@ export const handle_configure_api_providers = async (
         label: '$(add) Create new...',
         description: 'Configure a new API provider'
       },
-      ...saved_providers.map((provider) => ({
+      ...saved_providers.map((provider, index) => ({
         label: provider.name,
         description:
           provider.type == 'built-in'
             ? 'Built-in API provider'
             : 'Custom API provider',
-        buttons: [delete_button],
-        provider
+        buttons: [move_up_button, move_down_button, delete_button],
+        provider,
+        index
       }))
     ]
   }
@@ -58,7 +69,10 @@ export const handle_configure_api_providers = async (
       })
 
       quick_pick.onDidTriggerItemButton(async (event) => {
-        const item = event.item as vscode.QuickPickItem & { provider: Provider }
+        const item = event.item as vscode.QuickPickItem & {
+          provider: Provider
+          index: number
+        }
 
         if (event.button === delete_button) {
           const confirm = await vscode.window.showWarningMessage(
@@ -87,6 +101,38 @@ export const handle_configure_api_providers = async (
               quick_pick.show() // Ensure quick pick stays visible
             }
           }
+        } else if (
+          event.button === move_up_button ||
+          event.button === move_down_button
+        ) {
+          const providers = providers_manager.get_providers()
+          const current_index = item.index
+
+          // Calculate new index based on direction
+          const is_moving_up = event.button === move_up_button
+          const new_index = is_moving_up
+            ? Math.max(0, current_index - 1)
+            : Math.min(providers.length - 1, current_index + 1)
+
+          // Don't do anything if already at the boundary
+          if (new_index == current_index) {
+            return
+          }
+
+          // Create a new array with reordered providers
+          const reordered_providers = [...providers]
+
+          // Remove the provider from the current position
+          const [moved_provider] = reordered_providers.splice(current_index, 1)
+
+          // Insert the provider at the new position
+          reordered_providers.splice(new_index, 0, moved_provider)
+
+          // Save the reordered providers
+          await providers_manager.save_providers(reordered_providers)
+
+          // Update quick pick items to reflect the new order
+          quick_pick.items = create_provider_items()
         }
       })
 
