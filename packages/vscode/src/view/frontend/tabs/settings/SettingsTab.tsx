@@ -3,8 +3,8 @@ import { ToolsConfiguration as UiToolsConfiguration } from '@ui/components/edito
 import { BUILT_IN_PROVIDERS } from '@/constants/built-in-providers'
 import { use_api_tools_configuration } from '../../hooks/use-api-tools-configuration'
 import { use_open_router_models } from '../../hooks/use-open-router-models'
-import { Providers as UiProviders } from '@ui/components/editor/Providers'
-import { use_providers } from '../../hooks/use-providers'
+import { Button } from '@ui/components/editor/Button'
+import { WebviewMessage } from '@/view/types/messages'
 
 type Props = {
   vscode: any
@@ -14,8 +14,12 @@ type Props = {
 export const SettingsTab: React.FC<Props> = (props) => {
   const api_tools_configuration_hook = use_api_tools_configuration(props.vscode)
   const open_router_models_hook = use_open_router_models(props.vscode)
-  const { providers, handle_providers_update, handle_add_provider } =
-    use_providers(props.vscode)
+
+  const handle_configure_api_providers_click = () => {
+    props.vscode.postMessage({
+      command: 'CONFIGURE_API_PROVIDERS'
+    } as WebviewMessage)
+  }
 
   if (
     !api_tools_configuration_hook.code_completions_settings ||
@@ -30,12 +34,9 @@ export const SettingsTab: React.FC<Props> = (props) => {
       className={styles.container}
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
-      <UiProviders
-        providers={providers}
-        on_providers_updated={handle_providers_update}
-        on_add_provider_click={handle_add_provider}
-      />
-
+      <Button on_click={handle_configure_api_providers_click}>
+        Configure API Providers
+      </Button>
       <UiToolsConfiguration
         open_router_models={open_router_models_hook.open_router_models}
         gemini_api_models={Object.fromEntries(

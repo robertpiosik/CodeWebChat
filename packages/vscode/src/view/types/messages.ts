@@ -211,25 +211,8 @@ export interface CaretPositionChangedWebviewMessage extends BaseMessage {
   caret_position: number
 }
 
-export interface GetProvidersMessage extends BaseMessage {
-  command: 'GET_PROVIDERS'
-}
-
-export interface SaveProvidersMessage extends BaseMessage {
-  command: 'SAVE_PROVIDERS'
-  providers: Array<
-    | {
-        type: 'built-in'
-        id: keyof typeof PROVIDERS
-        api_key: string
-      }
-    | {
-        type: 'custom'
-        name: string
-        base_url: string
-        api_key: string
-      }
-  >
+export interface ConfigureApiProvidersMessage extends BaseMessage {
+  command: 'CONFIGURE_API_PROVIDERS'
 }
 
 // Messages from extension to webview:
@@ -340,19 +323,6 @@ export interface PresetUpdatedMessage extends BaseMessage {
   command: 'PRESET_UPDATED'
 }
 
-export interface CustomProvidersUpdatedMessage extends BaseMessage {
-  command: 'CUSTOM_PROVIDERS_UPDATED'
-  custom_providers: Array<{
-    name: string
-    endpointUrl: string
-    apiKey: string
-    model: string
-    temperature?: number
-    top_p?: number
-    systemInstructions?: string
-  }>
-}
-
 export interface OpenRouterModelsMessage extends BaseMessage {
   command: 'OPEN_ROUTER_MODELS'
   models: {
@@ -388,7 +358,7 @@ export interface SelectedCodeCompletionPresetsMessage extends BaseMessage {
   names: string[]
 }
 
-export interface ProvidersMessage extends BaseMessage {
+export interface ApiProvidersMessage extends BaseMessage {
   command: 'PROVIDERS'
   providers: Array<
     | {
@@ -449,8 +419,7 @@ export type WebviewMessage =
   | GetSelectedCodeCompletionPresetsMessage
   | SaveSelectedCodeCompletionPresetsMessage
   | CaretPositionChangedWebviewMessage
-  | GetProvidersMessage
-  | SaveProvidersMessage
+  | ConfigureApiProvidersMessage
 
 export type ExtensionMessage =
   | InstructionsMessage
@@ -479,4 +448,4 @@ export type ExtensionMessage =
   | ApiToolCommitMessageSettingsMessage
   | SelectedCodeCompletionPresetsMessage
   | ExecuteCommandMessage
-  | ProvidersMessage
+  | ApiProvidersMessage

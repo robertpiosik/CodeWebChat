@@ -1,8 +1,8 @@
 import * as vscode from 'vscode'
 import { Logger } from '../helpers/logger'
-import { SAVED_PROVIDERS_STATE_KEY } from '@/constants/state-keys'
+import { SAVED_API_PROVIDERS_STATE_KEY } from '@/constants/state-keys'
 
-const MIGRATION_ID = 'api-keys-to-providers-migration-150525'
+const MIGRATION_ID = 'api-keys-to-providers-migration-1505251700'
 
 /**
  * Migration to create providers for Gemini and OpenRouter if their API keys are saved.
@@ -26,7 +26,7 @@ export async function migrate_api_keys_to_providers(
     const open_router_api_key =
       context.globalState.get<string>('openRouterApiKey')
     const existing_providers = context.globalState.get<any[]>(
-      SAVED_PROVIDERS_STATE_KEY,
+      SAVED_API_PROVIDERS_STATE_KEY,
       []
     )
 
@@ -34,10 +34,10 @@ export async function migrate_api_keys_to_providers(
     const new_providers = [...existing_providers]
 
     // Check if Gemini provider should be added
-    if (gemini_api_key && !existing_providers.some((p) => p.id === 'gemini')) {
+    if (gemini_api_key && !existing_providers.some((p) => p.name == 'Gemini')) {
       new_providers.push({
         type: 'built-in',
-        id: 'gemini',
+        name: 'Gemini',
         api_key: gemini_api_key
       })
       providers_updated = true
@@ -50,11 +50,11 @@ export async function migrate_api_keys_to_providers(
     // Check if OpenRouter provider should be added
     if (
       open_router_api_key &&
-      !existing_providers.some((p) => p.id === 'openrouter')
+      !existing_providers.some((p) => p.name == 'OpenRouter')
     ) {
       new_providers.push({
         type: 'built-in',
-        id: 'openrouter',
+        name: 'OpenRouter',
         api_key: open_router_api_key
       })
       providers_updated = true
@@ -65,7 +65,7 @@ export async function migrate_api_keys_to_providers(
     }
 
     if (providers_updated) {
-      await context.globalState.update(SAVED_PROVIDERS_STATE_KEY, new_providers)
+      await context.globalState.update(SAVED_API_PROVIDERS_STATE_KEY, new_providers)
       Logger.log({
         function_name: 'migrate_create_providers_from_api_keys',
         message: 'Updated providers list with new providers from API keys'
