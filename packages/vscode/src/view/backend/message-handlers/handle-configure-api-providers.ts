@@ -33,8 +33,7 @@ export const handle_configure_api_providers = async (
 
     return [
       {
-        label: '$(add) Create new...',
-        description: 'Configure a new API provider'
+        label: '$(add) Add new...'
       },
       ...saved_providers.map((provider, index) => ({
         label: provider.name,
@@ -58,7 +57,7 @@ export const handle_configure_api_providers = async (
     return new Promise<void>((resolve) => {
       quick_pick.onDidAccept(async () => {
         const selected = quick_pick.selectedItems[0]
-        if (selected.label == '$(add) Create new...') {
+        if (selected.label == '$(add) Add new...') {
           quick_pick.hide()
           await show_create_provider_quick_pick()
         } else if ('provider' in selected) {
@@ -91,7 +90,7 @@ export const handle_configure_api_providers = async (
             quick_pick.items = create_provider_items()
             // If no items left, hide the quick pick
             if (quick_pick.items.length <= 1) {
-              // Only "Create new..." remains
+              // Only "Add new..." remains
               quick_pick.hide()
               vscode.window.showInformationMessage(
                 'All API providers have been removed.'
@@ -267,88 +266,133 @@ export const handle_configure_api_providers = async (
   }
 
   const edit_provider = async (provider: Provider) => {
-    let updated_provider: Provider
-
     if (provider.type == 'custom') {
-      const name = await vscode.window.showInputBox({
-        title: 'Provider Name',
-        prompt: 'Enter a new name for the custom provider',
-        value: provider.name,
-        validateInput: (value) => {
-          if (!value.trim()) return 'Name is required'
-          if (
-            value.trim() != provider.name &&
-            providers_manager
-              .get_providers()
-              .some((p) => p.type == 'custom' && p.name == value.trim())
-          ) {
-            return 'A provider with this name already exists'
-          }
-          return null
-        }
-      })
-      if (!name) {
-        await show_providers_quick_pick() // Go back to main list
-        return
-      }
-
-      const base_url = await vscode.window.showInputBox({
-        title: 'Base URL',
-        prompt: 'Enter the new base URL for the API',
-        value: provider.base_url,
-        validateInput: (value) =>
-          !value.trim() ? 'Base URL is required' : null
-      })
-      if (!base_url) {
-        await show_providers_quick_pick() // Go back to main list
-        return
-      }
-
-      const api_key = await vscode.window.showInputBox({
-        title: 'API Key',
-        prompt: 'Enter your API key',
-        placeHolder: '(Keep current API key)'
-      })
-      if (api_key === undefined) {
-        // User cancelled
-        await show_providers_quick_pick() // Go back to main list
-        return
-      }
-
-      updated_provider = {
-        ...provider,
-        name: name.trim(),
-        base_url: base_url.trim(),
-        api_key: api_key.trim() || provider.api_key
-      } as CustomProvider
+      await edit_custom_provider(provider as CustomProvider)
     } else {
-      // Built-in provider
-      const api_key = await vscode.window.showInputBox({
-        title: 'API Key',
-        prompt: `Enter your API key`,
-        placeHolder: '(Keep current API key)'
-      })
-      if (api_key === undefined) {
-        // User cancelled
+      await edit_built_in_provider(provider as BuiltInProvider)
+    }
+  }
+
+  const edit_custom_provider = async (provider: CustomProvider) => {
+    // Function to show field selection for custom provider
+    const show_field_selection = async () => {
+      const field_to_edit = await vscode.window.showQuickPick(
+        [
+          {
+            label: '$(arrow-left) Back',
+            description: 'Return to all API providers'
+          },
+          { label: 'Name', description: 'Edit name' },
+          { label: 'API Key', description: 'Edit API key' },
+          { label: 'Base URL', description: 'Edit base URL' }
+        ],
+        {
+          title: `Edit Custom API Provider: ${provider.name}`,
+          placeHolder: 'Select field to edit'
+        }
+      )
+
+      if (!field_to_edit || field_to_edit.label === '$(arrow-left) Back') {
         await show_providers_quick_pick() // Go back to main list
         return
       }
 
-      updated_provider = {
-        ...provider,
-        api_key: api_key.trim() || provider.api_key
-      } as BuiltInProvider
+      const updated_provider: CustomProvider = { ...provider }
+
+      if (field_to_edit.label === 'Name') {
+        const new_name = await vscode.window.showInputBox({
+          title: 'Provider Name',
+          prompt: 'Enter a new name for the custom provider',
+          value: provider.name,
+          validateInput: (value) => {
+            if (!value.trim()) return 'Name is required'
+            if (
+              value.trim() != provider.name &&
+              providers_manager
+                .get_providers()
+                .some((p) => p.type == 'custom' && p.name == value.trim())
+            ) {
+              return 'A provider with this name already exists'
+            }
+            return null
+          }
+        })
+        if (new_name === undefined) {
+          await show_field_selection() // Go back to field selection
+          return
+        }
+        if (new_name) {
+          updated_provider.name = new_name.trim()
+        }
+      } else if (field_to_edit.label === 'Base URL') {
+        const new_base_url = await vscode.window.showInputBox({
+          title: 'Base URL',
+          prompt: 'Enter the new base URL for the API',
+          value: provider.base_url,
+          validateInput: (value) =>
+            !value.trim() ? 'Base URL is required' : null
+        })
+        if (new_base_url === undefined) {
+          await show_field_selection() // Go back to field selection
+          return
+        }
+        if (new_base_url) {
+          updated_provider.base_url = new_base_url.trim()
+        }
+      } else if (field_to_edit.label === 'API Key') {
+        const new_api_key = await vscode.window.showInputBox({
+          title: 'API Key',
+          prompt: 'Enter your API key',
+          placeHolder: '(Keep current API key)'
+        })
+        if (new_api_key === undefined) {
+          await show_field_selection() // Go back to field selection
+          return
+        }
+        if (new_api_key) {
+          updated_provider.api_key = new_api_key.trim()
+        }
+      }
+
+      // Save the updated provider
+      const providers = providers_manager.get_providers()
+      const updated_providers = providers.map((p) =>
+        p.type == 'custom' && p.name == provider.name ? updated_provider : p
+      )
+      await providers_manager.save_providers(updated_providers)
+
+      // Update the provider reference for future edits
+      provider = updated_provider
+
+      // Return to field selection after editing a field
+      await show_field_selection()
     }
+
+    // Start the field selection
+    await show_field_selection()
+  }
+
+  const edit_built_in_provider = async (provider: BuiltInProvider) => {
+    const api_key = await vscode.window.showInputBox({
+      title: 'API Key',
+      prompt: `Enter your API key`,
+      placeHolder: '(Keep current API key)'
+    })
+    if (api_key === undefined) {
+      // User cancelled
+      await show_providers_quick_pick() // Go back to main list
+      return
+    }
+
+    const updated_provider = {
+      ...provider,
+      api_key: api_key.trim() || provider.api_key
+    } as BuiltInProvider
 
     // Save the updated provider
     const providers = providers_manager.get_providers()
     const updated_providers = providers.map((p) =>
-      p.type == updated_provider.type &&
-      (p.type == 'built-in'
-        ? p.name == updated_provider.name
-        : p.name == provider.name)
-        ? updated_provider
-        : p
+      p.type == 'built-in' && p.name == provider.name ? updated_provider : p
     )
     await providers_manager.save_providers(updated_providers)
 
