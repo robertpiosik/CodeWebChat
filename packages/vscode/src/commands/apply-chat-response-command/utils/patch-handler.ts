@@ -265,13 +265,27 @@ export async function apply_git_patch(
 
     // Apply the patch
     try {
-      // Apply diff patch using custom diff processor
-      const paths = extract_file_paths_from_patch(normalized_patch_content)
-      const file_path_safe = create_safe_path(workspace_path, paths[0])
-
-      if (await process_diff_patch(file_path_safe ?? "", temp_file) == false)
+      try 
       {
-        throw new Error('Failed to apply diff patch')
+        // Attempt to apply the patch using git
+        // Add the --ignore-whitespace flag to handle whitespace differences on Windows
+        await execAsync('git apply --whitespace=fix --ignore-whitespace ' + temp_file,
+        {
+          cwd: workspace_path
+        })
+      }
+      catch (error) {
+        // git apply failed, now trying to apply with custom diff processor as fallback
+        const paths = extract_file_paths_from_patch(normalized_patch_content)
+        const file_path_safe = create_safe_path(workspace_path, paths[0])
+
+        if (file_path_safe == null) {
+          throw new Error('File path is null')
+        }
+
+        if (await process_diff_patch(file_path_safe, temp_file) == false) {
+          throw new Error('Failed to apply diff patch for all methods')
+        }
       }
 
       Logger.log({
@@ -295,7 +309,7 @@ export async function apply_git_patch(
 
       if (has_rejects) {
         vscode.window.showWarningMessage(
-          'Some parts of the patch could not be applied.'
+          'Some parts of the patch could not be applied. Check .rej files for details.'
         )
 
         // Even with partial failure, try to format the files that were modified
