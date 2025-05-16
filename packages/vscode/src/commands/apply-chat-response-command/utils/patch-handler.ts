@@ -7,6 +7,7 @@ import { promisify } from 'util'
 import { OriginalFileState } from '../../../types/common'
 import { format_document } from './format-document'
 import { create_safe_path } from '@/utils/path-sanitizer'
+import { process_diff_patch } from './diff-patch-processor';
 
 const execAsync = promisify(exec)
 
@@ -264,13 +265,28 @@ export async function apply_git_patch(
 
     // Apply the patch
     try {
-      // Add the --ignore-whitespace flag to handle whitespace differences on Windows
-      await execAsync(
-        'git apply --whitespace=fix --ignore-whitespace ' + temp_file,
+      try 
+      {
+        // Attempt to apply the patch using git
+        // Add the --ignore-whitespace flag to handle whitespace differences on Windows
+        await execAsync('git apply --whitespace=fix --ignore-whitespace ' + temp_file,
         {
           cwd: workspace_path
+        })
+      }
+      catch (error) {
+        // git apply failed, now trying to apply with custom diff processor as fallback
+        const paths = extract_file_paths_from_patch(normalized_patch_content)
+        const file_path_safe = create_safe_path(workspace_path, paths[0])
+
+        if (file_path_safe == null) {
+          throw new Error('File path is null')
         }
-      )
+
+        if (await process_diff_patch(file_path_safe, temp_file) == false) {
+          throw new Error('Failed to apply diff patch for all methods')
+        }
+      }
 
       Logger.log({
         function_name: 'apply_git_patch',
@@ -288,6 +304,7 @@ export async function apply_git_patch(
       return { success: true, original_states }
     } catch (error: any) {
       // Check if there are .rej files indicating partial failure
+      // NOTE: This has not been implementred yet in the custom diff processor. Can be added later.
       const has_rejects = error.message.includes('.rej')
 
       if (has_rejects) {
