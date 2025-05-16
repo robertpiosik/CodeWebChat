@@ -111,7 +111,6 @@ export const handle_setup_api_tool = async (
           await show_config_options()
           return
         }
-
         config.model = new_model
         config.temperature = default_temperature
         updated = true
@@ -121,18 +120,14 @@ export const handle_setup_api_tool = async (
           await show_config_options()
           return
         }
-
         config.temperature = new_temperature
         updated = true
       }
-
       if (updated) {
         await save_tool_config(config)
       }
-
       await show_config_options()
     }
-
     await show_config_options()
   }
 
@@ -198,8 +193,9 @@ export const handle_setup_api_tool = async (
       }
     })
 
-    if (temperature_input === undefined || temperature_input === '')
-      default_temperature
+    if (temperature_input === undefined || temperature_input == '') {
+      return default_temperature
+    }
 
     return Number(temperature_input)
   }
