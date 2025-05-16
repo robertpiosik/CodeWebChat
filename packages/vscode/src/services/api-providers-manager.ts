@@ -19,13 +19,14 @@ export type CustomProvider = {
   api_key: string
 }
 
+export type Provider = BuiltInProvider | CustomProvider
+
 export type ToolConfig = {
+  provider_type: string
   provider_name: string
   model: string
   temperature?: number
 }
-
-export type Provider = BuiltInProvider | CustomProvider
 
 export class ApiProvidersManager {
   private _providers: Provider[] = []
@@ -63,10 +64,27 @@ export class ApiProvidersManager {
     )
   }
 
+  private _validate_tool_config(
+    config: ToolConfig | undefined
+  ): ToolConfig | undefined {
+    if (!config) return undefined
+
+    const provider = this._providers.find(
+      (p) => p.type == config.provider_type && p.name == config.provider_name
+    )
+
+    if (!provider) {
+      return undefined
+    }
+
+    return config
+  }
+
   public get_file_refactoring_tool_config(): ToolConfig | undefined {
-    return this._vscode.globalState.get<ToolConfig>(
+    const config = this._vscode.globalState.get<ToolConfig>(
       TOOL_CONFIG_FILE_REFACTORING_STATE_KEY
     )
+    return this._validate_tool_config(config)
   }
 
   public async save_commit_messages_tool_config(config: ToolConfig) {
@@ -77,8 +95,9 @@ export class ApiProvidersManager {
   }
 
   public get_commit_messages_tool_config(): ToolConfig | undefined {
-    return this._vscode.globalState.get<ToolConfig>(
+    const config = this._vscode.globalState.get<ToolConfig>(
       TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
     )
+    return this._validate_tool_config(config)
   }
 }
