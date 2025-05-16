@@ -195,4 +195,5 @@ Participate in [discussions](https://github.com/robertpiosik/CodeWebChat/discuss
 
 Copyright © 2025-present [Robert Piosik](https://x.com/robertpiosik)
 </br>📨 `robertpiosik@gmail.com`
+</br>Telegram: `@robertpiosik`
 </br>📃 [GPL-3.0 license](https://github.com/robertpiosik/CodeWebChat/blob/master/LICENSE)

@@ -7,3 +7,6 @@ export const COMMIT_MESSAGE_GENERATION_HISTORY_KEY =
 export const LAST_CONTEXT_SAVE_LOCATION_KEY = 'lastSaveLocation'
 export const LAST_CONTEXT_READ_LOCATION_KEY = 'lastReadLocation'
 export const SAVED_API_PROVIDERS_STATE_KEY = 'savedApiProviders'
+export const TOOL_CONFIG_FILE_REFACTORING_STATE_KEY =
+  'toolConfigFileRefactoring'
+export const TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY = 'toolConfigCommitMessages'

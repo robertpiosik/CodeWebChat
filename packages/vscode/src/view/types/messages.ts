@@ -215,6 +215,18 @@ export interface ConfigureApiProvidersMessage extends BaseMessage {
   command: 'CONFIGURE_API_PROVIDERS'
 }
 
+export interface SetupApiToolCodeCompletionsMessage extends BaseMessage {
+  command: 'SETUP_API_TOOL_CODE_COMPLETIONS'
+}
+
+export interface SetupApiToolFileRefactoringMessage extends BaseMessage {
+  command: 'SETUP_API_TOOL_FILE_REFACTORING'
+}
+
+export interface SetupApiToolCommitMessagesMessage extends BaseMessage {
+  command: 'SETUP_API_TOOL_COMMIT_MESSAGES'
+}
+
 // Messages from extension to webview:
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
@@ -420,6 +432,9 @@ export type WebviewMessage =
   | SaveSelectedCodeCompletionPresetsMessage
   | CaretPositionChangedWebviewMessage
   | ConfigureApiProvidersMessage
+  | SetupApiToolCodeCompletionsMessage
+  | SetupApiToolFileRefactoringMessage
+  | SetupApiToolCommitMessagesMessage
 
 export type ExtensionMessage =
   | InstructionsMessage

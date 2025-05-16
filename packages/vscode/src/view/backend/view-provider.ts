@@ -55,7 +55,9 @@ import {
   handle_save_code_completions_mode,
   handle_request_editor_state,
   handle_request_editor_selection_state,
-  handle_configure_api_providers
+  handle_configure_api_providers,
+  handle_setup_api_tool_code_completions,
+  handle_setup_api_tool
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -445,6 +447,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             this.caret_position = message.caret_position
           } else if (message.command == 'CONFIGURE_API_PROVIDERS') {
             handle_configure_api_providers(this)
+          } else if (message.command == 'SETUP_API_TOOL_CODE_COMPLETIONS') {
+            await handle_setup_api_tool_code_completions(this)
+          } else if (message.command == 'SETUP_API_TOOL_FILE_REFACTORING') {
+            await handle_setup_api_tool(this, 'file-refactoring')
+          } else if (message.command == 'SETUP_API_TOOL_COMMIT_MESSAGES') {
+            await handle_setup_api_tool(this, 'commit-messages')
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)
