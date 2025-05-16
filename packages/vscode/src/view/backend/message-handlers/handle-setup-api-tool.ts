@@ -11,6 +11,7 @@ export const handle_setup_api_tool = async (
   tool: 'file-refactoring' | 'commit-messages'
 ): Promise<void> => {
   const providers_manager = new ApiProvidersManager(provider.context)
+  const default_temperature = tool == 'file-refactoring' ? 0 : 0.3
 
   const get_tool_config = () => {
     return tool == 'file-refactoring'
@@ -37,22 +38,17 @@ export const handle_setup_api_tool = async (
   async function setup_new_config() {
     // Step 1: Select provider
     const provider_info = await select_provider()
-    if (!provider_info) return // User cancelled
+    if (!provider_info) return
 
     // Step 2: Select model
     const model = await select_model()
-    if (!model) return // User cancelled
+    if (!model) return
 
-    // Step 3: Set temperature
-    const temperature = await set_temperature()
-    if (temperature === undefined) return // User cancelled
-
-    // Save the complete configuration
     const config: ToolConfig = {
       provider_type: provider_info.type,
       provider_name: provider_info.name,
       model,
-      temperature
+      temperature: default_temperature
     }
 
     await save_tool_config(config)
@@ -61,72 +57,85 @@ export const handle_setup_api_tool = async (
     )
   }
 
-  // Function to update existing configuration
   async function update_existing_config(config: ToolConfig) {
+    const api_provider_label = 'API Provider'
+    const model_label = 'Model'
+    const temperature_label = 'Temperature'
     const show_config_options = async () => {
       const options = [
-        { label: 'Provider', description: config.provider_name },
-        { label: 'Model', description: config.model },
+        { label: api_provider_label, description: config.provider_name },
+        { label: model_label, description: config.model },
         {
-          label: 'Temperature',
-          description: `${
-            config.temperature !== undefined ? config.temperature : 'Not set'
+          label: temperature_label,
+          description: `${config.temperature.toString()}${
+            config.temperature == default_temperature ? ' (default)' : ''
           }`
         }
       ]
 
       const selection = await vscode.window.showQuickPick(options, {
-        title: `Update ${tool} Configuration`,
+        title: `Update ${
+          tool == 'commit-messages' ? 'Commit Messages' : 'File Refactoring'
+        } Configuration`,
         placeHolder: 'Select setting to update'
       })
 
-      if (!selection) return // User cancelled
+      if (!selection) return
 
       let updated = false
 
-      if (selection.label == 'Provider') {
+      if (selection.label == api_provider_label) {
         const provider_info = await select_provider()
-        if (!provider_info) return // User cancelled
+        if (!provider_info) {
+          await show_config_options()
+          return
+        }
 
-        // If provider changed, model selection is mandatory
         const model = await select_model()
-        if (!model) return // User cancelled
+        if (!model) {
+          await show_config_options()
+          return
+        }
 
         config = {
           ...config,
           provider_type: provider_info.type,
           provider_name: provider_info.name,
-          model
+          model,
+          temperature: default_temperature
         }
         updated = true
-      } else if (selection.label == 'Model') {
+      } else if (selection.label == model_label) {
         const new_model = await select_model()
-        if (!new_model) return // User cancelled
+        if (!new_model) {
+          await show_config_options()
+          return
+        }
+
         config.model = new_model
+        config.temperature = default_temperature
         updated = true
-      } else if (selection.label == 'Temperature') {
-        const new_temperature = await set_temperature()
-        if (new_temperature === undefined) return // User cancelled
+      } else if (selection.label == temperature_label) {
+        const new_temperature = await set_temperature(config.temperature)
+        if (new_temperature === undefined) {
+          await show_config_options()
+          return
+        }
+
         config.temperature = new_temperature
         updated = true
       }
 
       if (updated) {
         await save_tool_config(config)
-        vscode.window.showInformationMessage(
-          `${tool} configuration updated successfully.`
-        )
       }
 
-      // Show the options again after updating
       await show_config_options()
     }
 
-    // Start the configuration loop
     await show_config_options()
   }
 
-  // Helper function to select a provider
   async function select_provider(): Promise<
     Pick<Provider, 'type' | 'name'> | undefined
   > {
@@ -173,10 +182,13 @@ export const handle_setup_api_tool = async (
     return selected?.label
   }
 
-  async function set_temperature(): Promise<number | undefined> {
+  async function set_temperature(
+    temperature: number
+  ): Promise<number | undefined> {
     const temperature_input = await vscode.window.showInputBox({
       title: 'Set Temperature',
-      prompt: 'Enter a value between 0 and 1',
+      prompt: 'Enter a value between 0 and 1 (required)',
+      value: temperature.toString(),
       placeHolder: '',
       validateInput: (value) => {
         const num = Number(value)
@@ -186,7 +198,8 @@ export const handle_setup_api_tool = async (
       }
     })
 
-    if (temperature_input === undefined) return undefined
+    if (temperature_input === undefined || temperature_input === '')
+      default_temperature
 
     return Number(temperature_input)
   }

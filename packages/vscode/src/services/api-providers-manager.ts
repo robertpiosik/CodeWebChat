@@ -25,7 +25,7 @@ export type ToolConfig = {
   provider_type: string
   provider_name: string
   model: string
-  temperature?: number
+  temperature: number
 }
 
 export class ApiProvidersManager {
