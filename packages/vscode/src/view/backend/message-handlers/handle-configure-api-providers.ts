@@ -8,6 +8,10 @@ import {
 } from '@/services/api-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 
+const normalize_base_url = (url: string): string => {
+  return url.trim().replace(/\/+$/, '')
+}
+
 export const handle_configure_api_providers = async (
   provider: ViewProvider
 ): Promise<void> => {
@@ -337,8 +341,9 @@ export const handle_configure_api_providers = async (
           await show_field_selection()
           return
         }
-        if (new_base_url) {
-          updated_provider.base_url = new_base_url.trim()
+        if (new_base_url !== undefined) {
+          // Normalize base URL to not end with slash
+          updated_provider.base_url = normalize_base_url(new_base_url)
         }
       } else if (field_to_edit.label == edit_api_key_label) {
         const new_api_key = await vscode.window.showInputBox({

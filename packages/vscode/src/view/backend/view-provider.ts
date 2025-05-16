@@ -26,8 +26,6 @@ import {
   handle_get_api_tool_code_completions_settings,
   handle_get_api_tool_file_refactoring_settings,
   handle_get_api_tool_commit_messages_settings,
-  handle_get_open_router_models,
-  handle_show_open_router_model_picker,
   handle_show_preset_picker,
   handle_copy_prompt,
   handle_send_prompt,
@@ -392,10 +390,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_duplicate_preset(this, message, webview_view)
           } else if (message.command == 'CREATE_PRESET') {
             await handle_create_preset(this)
-          } else if (message.command == 'GET_OPEN_ROUTER_MODELS') {
-            await handle_get_open_router_models(this)
-          } else if (message.command == 'SHOW_OPEN_ROUTER_MODEL_PICKER') {
-            await handle_show_open_router_model_picker(this, message.models)
           } else if (
             message.command == 'GET_API_TOOL_CODE_COMPLETIONS_SETTINGS'
           ) {

@@ -5,12 +5,15 @@ import {
   Provider,
   ToolConfig
 } from '@/services/api-providers-manager'
+import { ModelFetcher } from '@/services/model-fetcher'
+import { PROVIDERS } from '@shared/constants/providers'
 
 export const handle_setup_api_tool = async (
   provider: ViewProvider,
   tool: 'file-refactoring' | 'commit-messages'
 ): Promise<void> => {
   const providers_manager = new ApiProvidersManager(provider.context)
+  const model_fetcher = new ModelFetcher()
   const default_temperature = tool == 'file-refactoring' ? 0 : 0.3
 
   const get_tool_config = () => {
@@ -41,7 +44,7 @@ export const handle_setup_api_tool = async (
     if (!provider_info) return
 
     // Step 2: Select model
-    const model = await select_model()
+    const model = await select_model(provider_info)
     if (!model) return
 
     const config: ToolConfig = {
@@ -91,7 +94,7 @@ export const handle_setup_api_tool = async (
           return
         }
 
-        const model = await select_model()
+        const model = await select_model(provider_info)
         if (!model) {
           await show_config_options()
           return
@@ -106,7 +109,14 @@ export const handle_setup_api_tool = async (
         }
         updated = true
       } else if (selection.label == model_label) {
-        const new_model = await select_model()
+        const provider_info: {
+          type: Provider['type']
+          name: Provider['name']
+        } = {
+          type: config.provider_type as any,
+          name: config.provider_name
+        }
+        const new_model = await select_model(provider_info)
         if (!new_model) {
           await show_config_options()
           return
@@ -162,19 +172,55 @@ export const handle_setup_api_tool = async (
     }
   }
 
-  async function select_model(): Promise<string | undefined> {
-    const model_items = [
-      { label: 'gpt-4' },
-      { label: 'gpt-3.5-turbo' },
-      { label: 'claude-3-opus' }
-    ]
+  async function select_model(
+    provider_info: Pick<Provider, 'type' | 'name'>
+  ): Promise<string | undefined> {
+    try {
+      const provider = providers_manager.get_provider(provider_info.name)
+      if (!provider) {
+        throw new Error(`Provider ${provider_info.name} not found`)
+      }
 
-    const selected = await vscode.window.showQuickPick(model_items, {
-      title: 'Select Model',
-      placeHolder: 'Choose an AI model'
-    })
+      const base_url =
+        provider.type == 'built-in'
+          ? PROVIDERS[provider.name].base_url
+          : provider.base_url
 
-    return selected?.label
+      if (!base_url) {
+        throw new Error(`Base URL not found for provider ${provider_info.name}`)
+      }
+
+      const models = await model_fetcher.get_models({
+        base_url,
+        api_key: provider.api_key
+      })
+
+      if (!models.length) {
+        vscode.window.showWarningMessage(
+          `No models found for ${provider_info.name}.`
+        )
+      }
+
+      const model_items = models.map((model) => ({
+        label: model.name || model.id,
+        description: model.name ? model.id : undefined,
+        detail: model.description
+      }))
+
+      const selected = await vscode.window.showQuickPick(model_items, {
+        title: 'Select Model',
+        placeHolder: 'Choose an AI model'
+      })
+
+      return selected?.label
+    } catch (error) {
+      console.error('Error fetching models:', error)
+      vscode.window.showErrorMessage(
+        `Failed to fetch models: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      )
+    }
   }
 
   async function set_temperature(

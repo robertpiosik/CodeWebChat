@@ -57,6 +57,10 @@ export class ApiProvidersManager {
     return this._providers
   }
 
+  public get_provider(name: string): Provider | undefined {
+    return this._providers.find((provider) => provider.name == name)
+  }
+
   public async save_file_refactoring_tool_config(config: ToolConfig) {
     await this._vscode.globalState.update(
       TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,

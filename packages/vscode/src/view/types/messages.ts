@@ -136,19 +136,6 @@ export interface CreatePresetMessage extends BaseMessage {
   command: 'CREATE_PRESET'
 }
 
-export interface GetOpenRouterModelsMessage extends BaseMessage {
-  command: 'GET_OPEN_ROUTER_MODELS'
-}
-
-export interface ShowOpenRouterModelPickerMessage extends BaseMessage {
-  command: 'SHOW_OPEN_ROUTER_MODEL_PICKER'
-  models: {
-    id: string
-    name: string
-    description: string
-  }[]
-}
-
 export interface GetApiToolCodeCompletionsSettingsMessage extends BaseMessage {
   command: 'GET_API_TOOL_CODE_COMPLETIONS_SETTINGS'
 }
@@ -417,8 +404,6 @@ export type WebviewMessage =
   | DeletePresetMessage
   | DuplicatePresetMessage
   | CreatePresetMessage
-  | GetOpenRouterModelsMessage
-  | ShowOpenRouterModelPickerMessage
   | GetApiToolCodeCompletionsSettingsMessage
   | UpdateApiToolCodeCompletionsSettingsMessage
   | GetToolFileRefactoringSettingsMessage
