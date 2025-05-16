@@ -35,12 +35,13 @@ export const handle_configure_api_providers = async (
       {
         label: '$(add) Add new...'
       },
+      {
+        label: '',
+        kind: vscode.QuickPickItemKind.Separator
+      },
       ...saved_providers.map((provider, index) => ({
-        label: provider.name,
-        description:
-          provider.type == 'built-in'
-            ? 'Built-in API provider'
-            : 'Custom API provider',
+        label: `$(edit) ${provider.name}`,
+        description: provider.type == 'built-in' ? 'Built-in' : 'Custom',
         buttons: [move_up_button, move_down_button, delete_button],
         provider,
         index
@@ -74,8 +75,10 @@ export const handle_configure_api_providers = async (
         }
 
         if (event.button === delete_button) {
+          // Remove $(edit) prefix for the confirmation message
+          const provider_name_for_confirm = item.label.replace('$(edit) ', '')
           const confirm = await vscode.window.showWarningMessage(
-            `Are you sure you want to delete "${item.label}"?`,
+            `Are you sure you want to delete "${provider_name_for_confirm}"?`,
             { modal: true },
             'Delete'
           )
@@ -88,9 +91,8 @@ export const handle_configure_api_providers = async (
             await providers_manager.save_providers(updated_providers)
             // Update quick pick items after deletion
             quick_pick.items = create_provider_items()
-            // If no items left, hide the quick pick
-            if (quick_pick.items.length <= 1) {
-              // Only "Add new..." remains
+            // If no items left (only "Add new..." and separator), hide the quick pick
+            if (quick_pick.items.length <= 2) {
               quick_pick.hide()
               vscode.window.showInformationMessage(
                 'All API providers have been removed.'
@@ -109,9 +111,12 @@ export const handle_configure_api_providers = async (
 
           // Calculate new index based on direction
           const is_moving_up = event.button === move_up_button
+          // Adjust bounds because of the "Add new..." item and separator at the start
+          const min_index = 0
+          const max_index = providers.length - 1
           const new_index = is_moving_up
-            ? Math.max(0, current_index - 1)
-            : Math.min(providers.length - 1, current_index + 1)
+            ? Math.max(min_index, current_index - 1)
+            : Math.min(max_index, current_index + 1)
 
           // Don't do anything if already at the boundary
           if (new_index == current_index) {
@@ -153,19 +158,31 @@ export const handle_configure_api_providers = async (
       ([id]) => !saved_provider_names.includes(id as keyof typeof PROVIDERS)
     )
 
+    const back_label = '$(arrow-left) Back'
+    const custom_label = '$(add) Custom...'
+
     const items: vscode.QuickPickItem[] = [
       {
-        label: 'Custom...',
-        description: 'Configure a custom API provider'
+        label: back_label,
+        description: 'Return to providers list'
+      },
+      {
+        label: '',
+        kind: vscode.QuickPickItemKind.Separator
       },
       ...available_built_in.map((built_in_provider) => ({
-        label: built_in_provider[0]
-      }))
+        label: `$(add) ${built_in_provider[0]}`,
+        description: 'Predefined provider'
+      })),
+      {
+        label: custom_label,
+        description: 'You will specify base URL'
+      }
     ]
 
     const selected = await vscode.window.showQuickPick(items, {
       title: 'Select Provider Type',
-      placeHolder: 'Choose a built-in provider or create a custom one'
+      placeHolder: 'Choose a predefined provider or create a custom one'
     })
 
     if (!selected) {
@@ -174,11 +191,14 @@ export const handle_configure_api_providers = async (
       return
     }
 
-    if (selected.label == 'Custom...') {
+    if (selected.label == back_label) {
+      await show_providers_quick_pick()
+      return
+    } else if (selected.label == custom_label) {
       await create_custom_provider()
     } else {
       const selected_api_provider_id = available_built_in.find(
-        (p) => p[0] == selected.label
+        (p) => `$(add) ${p[0]}` == selected.label
       )![0]
       await create_built_in_provider(
         selected_api_provider_id as keyof typeof PROVIDERS
@@ -253,15 +273,20 @@ export const handle_configure_api_providers = async (
 
   const edit_custom_provider = async (provider: CustomProvider) => {
     const show_field_selection = async () => {
+      const back_label = '$(arrow-left) Back'
+      const edit_name_label = '$(edit) Name'
+      const edit_api_key_label = '$(edit) API Key'
+      const edit_base_url_label = '$(edit) Base URL'
       const field_to_edit = await vscode.window.showQuickPick(
         [
+          { label: back_label },
           {
-            label: '$(arrow-left) Back',
-            description: 'Return to all API providers'
+            label: '',
+            kind: vscode.QuickPickItemKind.Separator
           },
-          { label: 'Name', description: 'Edit name' },
-          { label: 'API Key', description: 'Edit API key' },
-          { label: 'Base URL', description: 'Edit base URL' }
+          { label: edit_name_label },
+          { label: edit_api_key_label },
+          { label: edit_base_url_label }
         ],
         {
           title: `Edit Custom API Provider: ${provider.name}`,
@@ -269,14 +294,14 @@ export const handle_configure_api_providers = async (
         }
       )
 
-      if (!field_to_edit || field_to_edit.label === '$(arrow-left) Back') {
-        await show_providers_quick_pick() // Go back to main list
+      if (!field_to_edit || field_to_edit.label == back_label) {
+        await show_providers_quick_pick()
         return
       }
 
       const updated_provider: CustomProvider = { ...provider }
 
-      if (field_to_edit.label === 'Name') {
+      if (field_to_edit.label == edit_name_label) {
         const new_name = await vscode.window.showInputBox({
           title: 'Provider Name',
           prompt: 'Enter a new name for the custom provider',
@@ -301,10 +326,10 @@ export const handle_configure_api_providers = async (
         if (new_name) {
           updated_provider.name = new_name.trim()
         }
-      } else if (field_to_edit.label === 'Base URL') {
+      } else if (field_to_edit.label == edit_base_url_label) {
         const new_base_url = await vscode.window.showInputBox({
           title: 'Base URL',
-          prompt: 'Enter the new base URL for the API',
+          prompt: 'Enter base URL for the API',
           value: provider.base_url,
           validateInput: (value) =>
             !value.trim() ? 'Base URL is required' : null
@@ -316,7 +341,7 @@ export const handle_configure_api_providers = async (
         if (new_base_url) {
           updated_provider.base_url = new_base_url.trim()
         }
-      } else if (field_to_edit.label === 'API Key') {
+      } else if (field_to_edit.label == edit_api_key_label) {
         const new_api_key = await vscode.window.showInputBox({
           title: 'API Key',
           prompt: 'Enter your API key',
