@@ -159,12 +159,11 @@ export const handle_configure_api_providers = async (
     )
 
     const back_label = '$(arrow-left) Back'
-    const custom_label = '$(add) Custom...'
+    const custom_label = '$(add) Custom'
 
     const items: vscode.QuickPickItem[] = [
       {
-        label: back_label,
-        description: 'Return to providers list'
+        label: back_label
       },
       {
         label: '',
@@ -275,8 +274,8 @@ export const handle_configure_api_providers = async (
     const show_field_selection = async () => {
       const back_label = '$(arrow-left) Back'
       const edit_name_label = '$(edit) Name'
-      const edit_api_key_label = '$(edit) API Key'
       const edit_base_url_label = '$(edit) Base URL'
+      const edit_api_key_label = '$(edit) API Key'
       const field_to_edit = await vscode.window.showQuickPick(
         [
           { label: back_label },
@@ -285,8 +284,8 @@ export const handle_configure_api_providers = async (
             kind: vscode.QuickPickItemKind.Separator
           },
           { label: edit_name_label },
-          { label: edit_api_key_label },
-          { label: edit_base_url_label }
+          { label: edit_base_url_label },
+          { label: edit_api_key_label }
         ],
         {
           title: `Edit Custom API Provider: ${provider.name}`,
@@ -376,8 +375,8 @@ export const handle_configure_api_providers = async (
 
   const edit_built_in_provider = async (provider: BuiltInProvider) => {
     const api_key = await vscode.window.showInputBox({
-      title: 'API Key',
-      prompt: `Enter your API key`,
+      title: `API Key for ${provider.name}`,
+      prompt: `Enter your API key for ${provider.name}`,
       placeHolder: '(Keep current API key)'
     })
     if (api_key === undefined) {
