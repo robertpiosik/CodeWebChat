@@ -42,7 +42,7 @@ export const handle_configure_api_providers = async (
 
     return [
       {
-        label: '$(add) Add new API provider...'
+        label: '$(add) Add another API provider...'
       },
       {
         label: '',
@@ -67,7 +67,7 @@ export const handle_configure_api_providers = async (
     return new Promise<void>((resolve) => {
       quick_pick.onDidAccept(async () => {
         const selected = quick_pick.selectedItems[0]
-        if (selected.label == '$(add) Add new API provider...') {
+        if (selected.label == '$(add) Add another API provider...') {
           quick_pick.hide()
           await show_create_provider_quick_pick()
         } else if ('provider' in selected) {
@@ -103,7 +103,7 @@ export const handle_configure_api_providers = async (
             await providers_manager.save_providers(updated_providers)
             // Update quick pick items after deletion
             quick_pick.items = create_provider_items()
-            // If no items left (only "Add new..." and separator), hide the quick pick
+            // If no items left (only "Add another..." and separator), hide the quick pick
             if (quick_pick.items.length <= 2) {
               quick_pick.hide()
               vscode.window.showInformationMessage(
@@ -123,7 +123,7 @@ export const handle_configure_api_providers = async (
 
           // Calculate new index based on direction
           const is_moving_up = event.button === move_up_button
-          // Adjust bounds because of the "Add new..." item and separator at the start
+          // Adjust bounds because of the "Add another..." item and separator at the start
           const min_index = 0
           const max_index = providers.length - 1
           const new_index = is_moving_up
@@ -171,7 +171,7 @@ export const handle_configure_api_providers = async (
     )
 
     const back_label = '$(arrow-left) Back'
-    const custom_label = '$(add) Custom'
+    const custom_label = 'Custom...'
 
     const items: vscode.QuickPickItem[] = [
       {
@@ -182,19 +182,18 @@ export const handle_configure_api_providers = async (
         kind: vscode.QuickPickItemKind.Separator
       },
       ...available_built_in.map((built_in_provider) => ({
-        label: `$(add) ${built_in_provider[0]}`,
-        description: 'Built-in API provider'
+        label: built_in_provider[0]
       })),
       {
         label: custom_label,
-        description:
-          'Add endpoint of any OpenAI-API compatible provider, e.g. https://api.example.com/v1'
+        description: 'Add any OpenAI-API compatible provider'
       }
     ]
 
     const selected = await vscode.window.showQuickPick(items, {
       title: 'Select Provider Type',
-      placeHolder: 'Choose a predefined provider or create a custom one'
+      placeHolder: 'Choose a predefined provider or create a custom one',
+      ignoreFocusOut: true
     })
 
     if (!selected) {
@@ -210,7 +209,7 @@ export const handle_configure_api_providers = async (
       await create_custom_provider()
     } else {
       const selected_api_provider_id = available_built_in.find(
-        (p) => `$(add) ${p[0]}` == selected.label
+        (p) => p[0] == selected.label
       )![0]
       await create_built_in_provider(
         selected_api_provider_id as keyof typeof PROVIDERS

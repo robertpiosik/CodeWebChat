@@ -43,7 +43,7 @@ export const handle_setup_api_tool_code_completions = async (
       index?: number
     })[] = [
       {
-        label: '$(add) Add new configuration...'
+        label: '$(add) Add another configuration...'
       }
     ]
 
@@ -72,13 +72,18 @@ export const handle_setup_api_tool_code_completions = async (
   }
 
   const show_configs_quick_pick = async (): Promise<void> => {
+    if (current_configs.length == 0) {
+      await add_configuration()
+      if (current_configs.length > 0) {
+        return show_configs_quick_pick()
+      }
+      return
+    }
+
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_config_items()
     quick_pick.title = 'Code Completions Configurations'
-    quick_pick.placeholder =
-      current_configs.length == 0
-        ? 'No configurations set up. Add a new one.'
-        : 'Select a configuration to edit or add a new one'
+    quick_pick.placeholder = 'Select a configuration to edit or add another one'
 
     return new Promise<void>((resolve) => {
       quick_pick.onDidAccept(async () => {
@@ -89,7 +94,7 @@ export const handle_setup_api_tool_code_completions = async (
           return
         }
 
-        if (selected.label == '$(add) Add new configuration...') {
+        if (selected.label == '$(add) Add another configuration...') {
           quick_pick.hide()
           await add_configuration()
           await show_configs_quick_pick()
@@ -125,13 +130,17 @@ export const handle_setup_api_tool_code_completions = async (
             vscode.window.showInformationMessage(
               `Removed configuration: ${item.config.provider_name} / ${item.config.model}`
             )
-            quick_pick.items = create_config_items()
 
             if (current_configs.length == 0) {
-              quick_pick.placeholder =
-                'No configurations set up. Add a new one.'
+              quick_pick.hide()
+              await add_configuration()
+              if (current_configs.length > 0) {
+                await show_configs_quick_pick()
+              }
+            } else {
+              quick_pick.items = create_config_items()
+              quick_pick.show()
             }
-            quick_pick.show()
           }
         } else if (
           event.button === move_up_button ||
