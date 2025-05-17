@@ -17,9 +17,14 @@ export const handle_configure_api_providers = async (
 ): Promise<void> => {
   const providers_manager = new ApiProvidersManager(provider.context)
 
+  const edit_button = {
+    iconPath: new vscode.ThemeIcon('edit'),
+    tooltip: 'Edit'
+  }
+
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: 'Delete provider'
+    tooltip: 'Delete'
   }
 
   const move_up_button = {
@@ -44,9 +49,12 @@ export const handle_configure_api_providers = async (
         kind: vscode.QuickPickItemKind.Separator
       },
       ...saved_providers.map((provider, index) => ({
-        label: `$(edit) ${provider.name}`,
-        description: provider.type == 'built-in' ? 'Built-in' : 'Custom',
-        buttons: [move_up_button, move_down_button, delete_button],
+        label: provider.name,
+        description:
+          provider.type == 'built-in'
+            ? 'Built-in API Provider'
+            : 'Custom API Provider',
+        buttons: [move_up_button, move_down_button, edit_button, delete_button],
         provider,
         index
       }))
@@ -66,6 +74,7 @@ export const handle_configure_api_providers = async (
           quick_pick.hide()
           await show_create_provider_quick_pick()
         } else if ('provider' in selected) {
+          // Handle selection of an existing provider item (clicking the label)
           quick_pick.hide()
           await edit_provider(selected.provider as Provider)
         }
@@ -78,11 +87,13 @@ export const handle_configure_api_providers = async (
           index: number
         }
 
-        if (event.button === delete_button) {
-          // Remove $(edit) prefix for the confirmation message
-          const provider_name_for_confirm = item.label.replace('$(edit) ', '')
+        if (event.button === edit_button) {
+          quick_pick.hide()
+          await edit_provider(item.provider)
+          resolve()
+        } else if (event.button === delete_button) {
           const confirm = await vscode.window.showWarningMessage(
-            `Are you sure you want to delete "${provider_name_for_confirm}"?`,
+            `Are you sure you want to delete "${item.label}"?`,
             { modal: true },
             'Delete'
           )
@@ -277,9 +288,9 @@ export const handle_configure_api_providers = async (
   const edit_custom_provider = async (provider: CustomProvider) => {
     const show_field_selection = async () => {
       const back_label = '$(arrow-left) Back'
-      const edit_name_label = '$(edit) Name'
-      const edit_base_url_label = '$(edit) Base URL'
-      const edit_api_key_label = '$(edit) API Key'
+      const edit_name_label = 'Edit Name'
+      const edit_base_url_label = 'Edit Base URL'
+      const change_api_key_label = 'Change API Key'
       const field_to_edit = await vscode.window.showQuickPick(
         [
           { label: back_label },
@@ -289,7 +300,7 @@ export const handle_configure_api_providers = async (
           },
           { label: edit_name_label },
           { label: edit_base_url_label },
-          { label: edit_api_key_label }
+          { label: change_api_key_label }
         ],
         {
           title: `Edit Custom API Provider: ${provider.name}`,
@@ -362,7 +373,7 @@ export const handle_configure_api_providers = async (
           // Normalize base URL to not end with slash
           updated_provider.base_url = normalize_base_url(new_base_url)
         }
-      } else if (field_to_edit.label == edit_api_key_label) {
+      } else if (field_to_edit.label == change_api_key_label) {
         const new_api_key = await vscode.window.showInputBox({
           title: 'API Key',
           prompt: 'Enter your API key',
