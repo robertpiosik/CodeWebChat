@@ -79,7 +79,7 @@ export const handle_setup_api_tool_code_completions = async (
           return
         }
 
-        if (selected.label == '$(add) Add new configuration') {
+        if (selected.label == '$(add) Add new configuration...') {
           quick_pick.hide()
           await add_configuration()
           // After adding, show the quick pick again
@@ -217,8 +217,12 @@ export const handle_setup_api_tool_code_completions = async (
   }
 
   async function edit_configuration(config: ToolConfig) {
+    const back_label = '$(arrow-left) Back'
+
     // Show edit options: provider, model, or temperature
     const edit_options = [
+      { label: back_label },
+      { label: '', kind: vscode.QuickPickItemKind.Separator },
       { label: '$(edit) Provider', description: config.provider_name },
       { label: '$(edit) Model', description: config.model },
       {
@@ -232,8 +236,8 @@ export const handle_setup_api_tool_code_completions = async (
       placeHolder: 'Select what to update'
     })
 
-    if (!selected_option) {
-      return // User cancelled, return to main quick pick
+    if (!selected_option || selected_option.label === back_label) {
+      return // User cancelled or chose back, return to main quick pick
     }
 
     // Store original config for comparison and keep track of changes
