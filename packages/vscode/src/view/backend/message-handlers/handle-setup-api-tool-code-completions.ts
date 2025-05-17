@@ -86,8 +86,9 @@ export const handle_setup_api_tool_code_completions = async (
           await show_configs_quick_pick()
         } else if ('config' in selected && selected.config) {
           quick_pick.hide()
+          // Start the recursive edit flow
           await edit_configuration(selected.config as ToolConfig)
-          // After editing, show the quick pick again
+          // After editing flow finishes (user selected back), show the main quick pick again
           await show_configs_quick_pick()
         }
       })
@@ -237,30 +238,39 @@ export const handle_setup_api_tool_code_completions = async (
     })
 
     if (!selected_option || selected_option.label === back_label) {
-      return // User cancelled or chose back, return to main quick pick
+      // User cancelled or chose back, exit the recursive edit flow
+      return // This return goes back to the show_configs_quick_pick loop
     }
 
-    // Store original config for comparison and keep track of changes
-    const original_config = { ...config }
-    const updated_config = { ...config }
-    let config_changed = false
+    // Store original config state for comparison and finding in array
+    const original_config_state = { ...config }
+    const updated_config_state = { ...config }
+    let config_changed_in_this_step = false // Did the user select an option that resulted in a potential change?
 
     // Handle option based on selection
     if (selected_option.label == '$(edit) Provider') {
       const new_provider = await select_provider()
-      if (!new_provider) return
+      if (!new_provider) {
+        // User cancelled provider selection, re-show edit menu with current config state
+        await edit_configuration(config)
+        return
+      }
 
-      updated_config.provider_type = new_provider.type
-      updated_config.provider_name = new_provider.name
-      config_changed = true
+      updated_config_state.provider_type = new_provider.type
+      updated_config_state.provider_name = new_provider.name
+      config_changed_in_this_step = true
 
       // If provider changes, model must also be selected
       const new_model = await select_model(new_provider)
-      if (!new_model) return // User cancelled model selection after provider
+      if (!new_model) {
+        // User cancelled model selection after provider, re-show edit menu with current config state
+        await edit_configuration(config)
+        return
+      }
 
-      updated_config.model = new_model
+      updated_config_state.model = new_model
+      // config_changed_in_this_step remains true
     } else if (selected_option.label == '$(edit) Model') {
-      // If provider wasn't changed, use the current one
       const provider_info = {
         type: config.provider_type,
         name: config.provider_name
@@ -269,52 +279,91 @@ export const handle_setup_api_tool_code_completions = async (
       const new_model = await select_model(
         provider_info as Pick<Provider, 'type' | 'name'>
       )
-      if (!new_model) return
+      if (!new_model) {
+        // User cancelled model selection, re-show edit menu with current config state
+        await edit_configuration(config)
+        return
+      }
 
-      updated_config.model = new_model
-      config_changed = true
+      updated_config_state.model = new_model
+      config_changed_in_this_step = true
     } else if (selected_option.label == '$(edit) Temperature') {
       const new_temperature = await set_temperature(config.temperature)
-      if (new_temperature === undefined) return
+      if (new_temperature === undefined) {
+        // User cancelled temperature input, re-show edit menu with current config state
+        await edit_configuration(config)
+        return
+      }
 
-      updated_config.temperature = new_temperature
-      config_changed = true
+      // Only mark as changed if the value is actually different
+      if (new_temperature !== config.temperature) {
+        updated_config_state.temperature = new_temperature
+        config_changed_in_this_step = true
+      } else {
+        // Value didn't change, just re-show the edit menu with current config state
+        await edit_configuration(config)
+        return
+      }
     }
 
-    // If any changes were made, update the configuration
-    if (config_changed) {
-      // Check if the updated configuration would be a duplicate
+    // If any changes were made in this step (i.e., a field was selected and potentially updated)
+    if (config_changed_in_this_step) {
+      // Find the *original* config object in the current_configs array
+      // to exclude it from the duplicate check.
+      const original_config_in_array = current_configs.find(
+        (c) =>
+          c.provider_name === original_config_state.provider_name &&
+          c.provider_type === original_config_state.provider_type &&
+          c.model === original_config_state.model
+      )
+
       const would_be_duplicate = current_configs.some(
         (c) =>
-          c !== original_config && // Not the same config we're editing
-          c.provider_type == updated_config.provider_type &&
-          c.provider_name == updated_config.provider_name &&
-          c.model == updated_config.model
+          c !== original_config_in_array && // Exclude the config we are currently editing
+          c.provider_type == updated_config_state.provider_type &&
+          c.provider_name == updated_config_state.provider_name &&
+          c.model == updated_config_state.model
       )
 
       if (would_be_duplicate) {
         vscode.window.showErrorMessage(
-          `A configuration for ${updated_config.provider_name} / ${updated_config.model} already exists.`
+          `A configuration for ${updated_config_state.provider_name} / ${updated_config_state.model} already exists.`
         )
+        // Re-show the edit menu with the *original* config state for this edit session
+        await edit_configuration(config)
         return
       }
 
       // Find and update the config in the local array
+      // Find by original key fields in case provider/model changed
       const index = current_configs.findIndex(
         (c) =>
-          c.provider_name == original_config.provider_name &&
-          c.provider_type == original_config.provider_type &&
-          c.model == original_config.model
+          c.provider_name == original_config_state.provider_name &&
+          c.provider_type == original_config_state.provider_type &&
+          c.model == original_config_state.model
       )
 
       if (index !== -1) {
         // Update the local array reference
-        current_configs[index] = updated_config
+        current_configs[index] = updated_config_state
         await providers_manager.save_code_completions_tool_config(
           current_configs
         )
+        vscode.window.showInformationMessage('Configuration updated.')
+      } else {
+        // This case should ideally not happen if the original config was found
+        // in the duplicate check, but good practice to handle.
+        console.error('Could not find original config in array to update.')
+        // Re-show edit menu with original config state
+        await edit_configuration(config)
+        return
       }
     }
+
+    // After successfully handling the selected option (either updated and saved,
+    // or value didn't change), re-show the edit configuration quick pick
+    // with the potentially updated config state. This continues the edit loop.
+    await edit_configuration(updated_config_state)
   }
 
   async function select_provider(): Promise<

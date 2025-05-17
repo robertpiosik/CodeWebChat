@@ -61,9 +61,9 @@ export const handle_setup_api_tool = async (
   }
 
   async function update_existing_config(config: ToolConfig) {
-    const api_provider_label = 'API Provider'
-    const model_label = 'Model'
-    const temperature_label = 'Temperature'
+    const api_provider_label = '$(edit) API Provider'
+    const model_label = '$(edit) Model'
+    const temperature_label = '$(edit) Temperature'
     const show_config_options = async () => {
       const options = [
         { label: api_provider_label, description: config.provider_name },
