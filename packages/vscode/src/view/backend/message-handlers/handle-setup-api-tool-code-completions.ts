@@ -3,7 +3,7 @@ import * as vscode from 'vscode'
 import {
   ApiProvidersManager,
   Provider,
-  ToolConfig,
+  ToolConfig
 } from '@/services/api-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
@@ -17,63 +17,124 @@ export const handle_setup_api_tool_code_completions = async (
 
   const current_configs = providers_manager.get_code_completions_tool_config()
 
-  // Main options for managing configurations
-  const add_option = 'Add new configuration'
-  const edit_option = 'Edit configuration'
-  const remove_option = 'Remove configuration'
-  const done_option = 'Done'
+  const delete_button = {
+    iconPath: new vscode.ThemeIcon('trash'),
+    tooltip: 'Delete configuration'
+  }
 
-  await manage_configurations()
-
-  async function manage_configurations() {
-    const options = [add_option]
+  const create_config_items = () => {
+    const items: (vscode.QuickPickItem & {
+      config?: ToolConfig
+      index?: number
+    })[] = [
+      {
+        label: '$(add) Add new configuration'
+      }
+    ]
 
     if (current_configs.length > 0) {
-      options.push(edit_option, remove_option)
+      items.push({
+        label: '',
+        kind: vscode.QuickPickItemKind.Separator
+      })
+      items.push(
+        ...current_configs.map((config, index) => ({
+          label: config.provider_name,
+          description: config.model,
+          buttons: [delete_button],
+          config,
+          index
+        }))
+      )
     }
 
-    options.push(done_option)
+    return items
+  }
 
-    const config_status =
+  const show_configs_quick_pick = async (): Promise<void> => {
+    const quick_pick = vscode.window.createQuickPick()
+    quick_pick.items = create_config_items()
+    quick_pick.title = 'Code Completions Configurations'
+    quick_pick.placeholder =
       current_configs.length === 0
-        ? 'No configurations set up'
-        : `${current_configs.length} configuration(s) set up`
+        ? 'No configurations set up. Add a new one.'
+        : 'Select a configuration to edit or add a new one'
 
-    const selection = await vscode.window.showQuickPick(options, {
-      title: 'Code Completions Configuration',
-      placeHolder: config_status
+    return new Promise<void>((resolve) => {
+      quick_pick.onDidAccept(async () => {
+        const selected = quick_pick.selectedItems[0]
+        if (!selected) {
+          quick_pick.hide()
+          resolve()
+          return
+        }
+
+        if (selected.label === '$(add) Add new configuration') {
+          quick_pick.hide()
+          await add_configuration()
+          // After adding, show the quick pick again
+          await show_configs_quick_pick()
+        } else if ('config' in selected && selected.config) {
+          quick_pick.hide()
+          await edit_configuration(selected.config as ToolConfig)
+          // After editing, show the quick pick again
+          await show_configs_quick_pick()
+        }
+      })
+
+      quick_pick.onDidTriggerItemButton(async (event) => {
+        const item = event.item as vscode.QuickPickItem & {
+          config: ToolConfig
+          index: number
+        }
+
+        if (event.button === delete_button) {
+          const confirm = await vscode.window.showWarningMessage(
+            `Are you sure you want to delete "${item.config.provider_name} / ${item.config.model}"?`,
+            { modal: true },
+            'Delete'
+          )
+
+          if (confirm === 'Delete') {
+            current_configs.splice(item.index, 1)
+            await providers_manager.save_code_completions_tool_config(
+              current_configs
+            )
+            vscode.window.showInformationMessage(
+              `Removed configuration: ${item.config.provider_name} / ${item.config.model}`
+            )
+            // Refresh the items in the quick pick
+            quick_pick.items = create_config_items()
+
+            if (current_configs.length === 0) {
+              quick_pick.placeholder =
+                'No configurations set up. Add a new one.'
+            }
+            // Keep the quick pick open
+            quick_pick.show()
+          }
+        }
+      })
+
+      quick_pick.onDidHide(() => {
+        resolve()
+      })
+
+      quick_pick.show()
     })
-
-    if (!selection) return
-
-    switch (selection) {
-      case add_option:
-        await add_configuration()
-        break
-      case edit_option:
-        await edit_configuration()
-        break
-      case remove_option:
-        await remove_configuration()
-        break
-      case done_option:
-        return
-    }
   }
 
   async function add_configuration() {
     // Step 1: Select provider
     const provider_info = await select_provider()
     if (!provider_info) {
-      await manage_configurations()
-      return
+      return // User cancelled, return to main quick pick
     }
 
     // Step 2: Select model
     const model = await select_model(provider_info)
     if (!model) {
-      await manage_configurations()
-      return
+      return // User cancelled, return to main quick pick
     }
 
     // Check if this provider/model combination already exists
@@ -88,15 +149,13 @@ export const handle_setup_api_tool_code_completions = async (
       vscode.window.showErrorMessage(
         `A configuration for ${provider_info.name} / ${model} already exists.`
       )
-      await manage_configurations()
-      return
+      return // Return to main quick pick
     }
 
     // Step 3: Set temperature
     const temperature = await set_temperature(default_temperature)
     if (temperature === undefined) {
-      await manage_configurations()
-      return
+      return // User cancelled, return to main quick pick
     }
 
     const new_config: ToolConfig = {
@@ -111,107 +170,102 @@ export const handle_setup_api_tool_code_completions = async (
     vscode.window.showInformationMessage(
       `Added configuration: ${provider_info.name} / ${model}`
     )
-
-    await manage_configurations()
   }
 
-  async function edit_configuration() {
-    if (current_configs.length === 0) {
-      await manage_configurations()
-      return
-    }
-
-    // Select which configuration to edit
-    const config_items = current_configs.map((config, index) => ({
-      label: `${config.provider_name} / ${config.model}`,
-      description: `Temperature: ${config.temperature}`,
-      index
-    }))
-
-    const selected = await vscode.window.showQuickPick(config_items, {
-      title: 'Select Configuration to Edit',
-      placeHolder: 'Choose a configuration to edit'
-    })
-
-    if (!selected) {
-      await manage_configurations()
-      return
-    }
-
-    const config = current_configs[selected.index]
-
-    // Choose what to edit
-    const temperature_label = 'Temperature'
-    const options = [
-      {
-        label: temperature_label,
-        description: `${config.temperature} (current)`
-      }
+  async function edit_configuration(config: ToolConfig) {
+    // Show edit options: provider, model, or temperature
+    const edit_options = [
+      { label: 'Provider', description: config.provider_name },
+      { label: 'Model', description: config.model },
+      { label: 'Temperature', description: config.temperature.toString() }
     ]
 
-    const edit_selection = await vscode.window.showQuickPick(options, {
-      title: `Edit ${config.provider_name} / ${config.model} Configuration`,
-      placeHolder: 'Select setting to update'
+    const selected_option = await vscode.window.showQuickPick(edit_options, {
+      title: `Edit Configuration: ${config.provider_name} / ${config.model}`,
+      placeHolder: 'Select what to update'
     })
 
-    if (!edit_selection) {
-      await manage_configurations()
-      return
+    if (!selected_option) {
+      return // User cancelled, return to main quick pick
     }
 
-    if (edit_selection.label === temperature_label) {
+    // Store original config for comparison and keep track of changes
+    const original_config = { ...config }
+    const updated_config = { ...config }
+    let config_changed = false
+
+    // Handle option based on selection
+    if (selected_option.label === 'Provider') {
+      const new_provider = await select_provider()
+      if (!new_provider) {
+        return // User cancelled
+      }
+
+      updated_config.provider_type = new_provider.type
+      updated_config.provider_name = new_provider.name
+      config_changed = true
+    } else if (selected_option.label === 'Model') {
+      // If provider wasn't changed, use the current one
+      const provider_info = {
+        type: config.provider_type,
+        name: config.provider_name
+      }
+
+      const new_model = await select_model(
+        provider_info as Pick<Provider, 'type' | 'name'>
+      )
+      if (!new_model) {
+        return // User cancelled
+      }
+
+      updated_config.model = new_model
+      config_changed = true
+    } else if (selected_option.label === 'Temperature') {
       const new_temperature = await set_temperature(config.temperature)
-      if (new_temperature !== undefined) {
-        current_configs[selected.index].temperature = new_temperature
+      if (new_temperature === undefined) {
+        return // User cancelled
+      }
+
+      updated_config.temperature = new_temperature
+      config_changed = true
+    }
+
+    // If any changes were made, update the configuration
+    if (config_changed) {
+      // Check if the updated configuration would be a duplicate
+      const would_be_duplicate = current_configs.some(
+        (c) =>
+          c !== original_config && // Not the same config we're editing
+          c.provider_type === updated_config.provider_type &&
+          c.provider_name === updated_config.provider_name &&
+          c.model === updated_config.model
+      )
+
+      if (would_be_duplicate) {
+        vscode.window.showErrorMessage(
+          `A configuration for ${updated_config.provider_name} / ${updated_config.model} already exists.`
+        )
+        return
+      }
+
+      // Find and update the config
+      const index = current_configs.findIndex(
+        (c) =>
+          c.provider_name === original_config.provider_name &&
+          c.provider_type === original_config.provider_type &&
+          c.model === original_config.model
+      )
+
+      if (index !== -1) {
+        current_configs[index] = updated_config
         await providers_manager.save_code_completions_tool_config(
           current_configs
         )
         vscode.window.showInformationMessage(
-          `Updated temperature for ${config.provider_name} / ${config.model}`
+          `Updated configuration: ${updated_config.provider_name} / ${updated_config.model}`
         )
       }
     }
-
-    await manage_configurations()
-  }
-
-  async function remove_configuration() {
-    if (current_configs.length === 0) {
-      await manage_configurations()
-      return
-    }
-
-    const config_items = current_configs.map((config, index) => ({
-      label: `${config.provider_name} / ${config.model}`,
-      description: `Temperature: ${config.temperature}`,
-      index
-    }))
-
-    const selected = await vscode.window.showQuickPick(config_items, {
-      title: 'Select Configuration to Remove',
-      placeHolder: 'Choose a configuration to remove'
-    })
-
-    if (!selected) {
-      await manage_configurations()
-      return
-    }
-
-    const config = current_configs[selected.index]
-    const confirmation = await vscode.window.showQuickPick(['Yes', 'No'], {
-      title: `Remove ${config.provider_name} / ${config.model}?`,
-      placeHolder: 'Confirm removal'
-    })
-
-    if (confirmation === 'Yes') {
-      current_configs.splice(selected.index, 1)
-      await providers_manager.save_code_completions_tool_config(current_configs)
-      vscode.window.showInformationMessage(
-        `Removed configuration: ${config.provider_name} / ${config.model}`
-      )
-    }
-
-    await manage_configurations()
   }
 
   async function select_provider(): Promise<
@@ -256,7 +310,7 @@ export const handle_setup_api_tool_code_completions = async (
 
       const base_url =
         provider.type == 'built-in'
-          ? PROVIDERS[provider.name].base_url
+          ? PROVIDERS[provider.name]?.base_url // Use optional chaining
           : provider.base_url
 
       if (!base_url) {
@@ -272,6 +326,7 @@ export const handle_setup_api_tool_code_completions = async (
         vscode.window.showWarningMessage(
           `No models found for ${provider_info.name}.`
         )
+        return undefined
       }
 
       const model_items = models.map((model) => ({
@@ -293,6 +348,7 @@ export const handle_setup_api_tool_code_completions = async (
           error instanceof Error ? error.message : String(error)
         }`
       )
+      return undefined
     }
   }
 
@@ -312,10 +368,14 @@ export const handle_setup_api_tool_code_completions = async (
       }
     })
 
-    if (temperature_input === undefined || temperature_input == '') {
-      return default_temperature
+    if (temperature_input === undefined || temperature_input === '') {
+      // User cancelled or entered empty string
+      return undefined
     }
 
     return Number(temperature_input)
   }
+
+  // Start the configuration flow
+  await show_configs_quick_pick()
 }
