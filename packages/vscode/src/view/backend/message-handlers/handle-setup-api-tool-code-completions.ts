@@ -56,7 +56,7 @@ export const handle_setup_api_tool_code_completions = async (
     quick_pick.items = create_config_items()
     quick_pick.title = 'Code Completions Configurations'
     quick_pick.placeholder =
-      current_configs.length === 0
+      current_configs.length == 0
         ? 'No configurations set up. Add a new one.'
         : 'Select a configuration to edit or add a new one'
 
@@ -69,7 +69,7 @@ export const handle_setup_api_tool_code_completions = async (
           return
         }
 
-        if (selected.label === '$(add) Add new configuration') {
+        if (selected.label == '$(add) Add new configuration') {
           quick_pick.hide()
           await add_configuration()
           // After adding, show the quick pick again
@@ -95,7 +95,7 @@ export const handle_setup_api_tool_code_completions = async (
             'Delete'
           )
 
-          if (confirm === 'Delete') {
+          if (confirm == 'Delete') {
             current_configs.splice(item.index, 1)
             await providers_manager.save_code_completions_tool_config(
               current_configs
@@ -106,7 +106,7 @@ export const handle_setup_api_tool_code_completions = async (
             // Refresh the items in the quick pick
             quick_pick.items = create_config_items()
 
-            if (current_configs.length === 0) {
+            if (current_configs.length == 0) {
               quick_pick.placeholder =
                 'No configurations set up. Add a new one.'
             }
@@ -140,9 +140,9 @@ export const handle_setup_api_tool_code_completions = async (
     // Check if this provider/model combination already exists
     const provider_model_exists = current_configs.some(
       (config) =>
-        config.provider_type === provider_info.type &&
-        config.provider_name === provider_info.name &&
-        config.model === model
+        config.provider_type == provider_info.type &&
+        config.provider_name == provider_info.name &&
+        config.model == model
     )
 
     if (provider_model_exists) {
@@ -152,17 +152,11 @@ export const handle_setup_api_tool_code_completions = async (
       return // Return to main quick pick
     }
 
-    // Step 3: Set temperature
-    const temperature = await set_temperature(default_temperature)
-    if (temperature === undefined) {
-      return // User cancelled, return to main quick pick
-    }
-
     const new_config: ToolConfig = {
       provider_type: provider_info.type,
       provider_name: provider_info.name,
       model,
-      temperature
+      temperature: default_temperature
     }
 
     current_configs.push(new_config)
@@ -195,16 +189,19 @@ export const handle_setup_api_tool_code_completions = async (
     let config_changed = false
 
     // Handle option based on selection
-    if (selected_option.label === 'Provider') {
+    if (selected_option.label == 'Provider') {
       const new_provider = await select_provider()
-      if (!new_provider) {
-        return // User cancelled
-      }
+      if (!new_provider) return
 
       updated_config.provider_type = new_provider.type
       updated_config.provider_name = new_provider.name
       config_changed = true
-    } else if (selected_option.label === 'Model') {
+
+      const new_model = await select_model(new_provider)
+      if (!new_model) return
+
+      updated_config.model = new_model
+    } else if (selected_option.label == 'Model') {
       // If provider wasn't changed, use the current one
       const provider_info = {
         type: config.provider_type,
@@ -214,17 +211,13 @@ export const handle_setup_api_tool_code_completions = async (
       const new_model = await select_model(
         provider_info as Pick<Provider, 'type' | 'name'>
       )
-      if (!new_model) {
-        return // User cancelled
-      }
+      if (!new_model) return
 
       updated_config.model = new_model
       config_changed = true
-    } else if (selected_option.label === 'Temperature') {
+    } else if (selected_option.label == 'Temperature') {
       const new_temperature = await set_temperature(config.temperature)
-      if (new_temperature === undefined) {
-        return // User cancelled
-      }
+      if (new_temperature === undefined) return
 
       updated_config.temperature = new_temperature
       config_changed = true
@@ -236,9 +229,9 @@ export const handle_setup_api_tool_code_completions = async (
       const would_be_duplicate = current_configs.some(
         (c) =>
           c !== original_config && // Not the same config we're editing
-          c.provider_type === updated_config.provider_type &&
-          c.provider_name === updated_config.provider_name &&
-          c.model === updated_config.model
+          c.provider_type == updated_config.provider_type &&
+          c.provider_name == updated_config.provider_name &&
+          c.model == updated_config.model
       )
 
       if (would_be_duplicate) {
@@ -251,18 +244,15 @@ export const handle_setup_api_tool_code_completions = async (
       // Find and update the config
       const index = current_configs.findIndex(
         (c) =>
-          c.provider_name === original_config.provider_name &&
-          c.provider_type === original_config.provider_type &&
-          c.model === original_config.model
+          c.provider_name == original_config.provider_name &&
+          c.provider_type == original_config.provider_type &&
+          c.model == original_config.model
       )
 
       if (index !== -1) {
         current_configs[index] = updated_config
         await providers_manager.save_code_completions_tool_config(
           current_configs
-        )
-        vscode.window.showInformationMessage(
-          `Updated configuration: ${updated_config.provider_name} / ${updated_config.model}`
         )
       }
     }
@@ -368,7 +358,7 @@ export const handle_setup_api_tool_code_completions = async (
       }
     })
 
-    if (temperature_input === undefined || temperature_input === '') {
+    if (temperature_input === undefined || temperature_input == '') {
       // User cancelled or entered empty string
       return undefined
     }
