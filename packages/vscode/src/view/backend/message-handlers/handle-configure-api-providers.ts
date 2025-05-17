@@ -37,7 +37,7 @@ export const handle_configure_api_providers = async (
     tooltip: 'Move down'
   }
 
-  const create_provider_items = () => {
+  const create_provider_items = (): vscode.QuickPickItem[] => {
     const saved_providers = providers_manager.get_providers()
 
     return [
@@ -48,17 +48,39 @@ export const handle_configure_api_providers = async (
         label: '',
         kind: vscode.QuickPickItemKind.Separator
       },
-      ...saved_providers.map((provider, index) => ({
-        label: provider.name,
-        description: provider.type == 'built-in' ? '(built-in)' : '(custom)',
-        buttons: [move_up_button, move_down_button, edit_button, delete_button],
-        provider,
-        index
-      }))
+      ...saved_providers.map((provider, index) => {
+        const masked_api_key = provider.api_key
+          ? `...${provider.api_key.slice(-4)}`
+          : 'Not set'
+
+        return {
+          label: provider.name,
+          description: masked_api_key,
+          detail:
+            provider.type == 'custom'
+              ? provider.base_url || 'Not set'
+              : PROVIDERS[provider.name].base_url,
+          buttons: [
+            move_up_button,
+            move_down_button,
+            edit_button,
+            delete_button
+          ],
+          provider,
+          index
+        }
+      })
     ]
   }
 
   const show_providers_quick_pick = async () => {
+    const saved_providers = providers_manager.get_providers()
+
+    if (saved_providers.length == 0) {
+      await show_create_provider_quick_pick()
+      return
+    }
+
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_provider_items()
     quick_pick.title = 'Configure API Providers'
@@ -101,17 +123,16 @@ export const handle_configure_api_providers = async (
               (p) => p.name != item.provider.name
             )
             await providers_manager.save_providers(updated_providers)
-            // Update quick pick items after deletion
             quick_pick.items = create_provider_items()
-            // If no items left (only "Add another..." and separator), hide the quick pick
-            if (quick_pick.items.length <= 2) {
+            if (updated_providers.length === 0) {
               quick_pick.hide()
               vscode.window.showInformationMessage(
                 'All API providers have been removed.'
               )
-              resolve() // Resolve the promise as the flow is finished
+              await show_create_provider_quick_pick()
+              resolve()
             } else {
-              quick_pick.show() // Ensure quick pick stays visible
+              quick_pick.show()
             }
           }
         } else if (
@@ -121,33 +142,21 @@ export const handle_configure_api_providers = async (
           const providers = providers_manager.get_providers()
           const current_index = item.index
 
-          // Calculate new index based on direction
           const is_moving_up = event.button === move_up_button
-          // Adjust bounds because of the "Add another..." item and separator at the start
           const min_index = 0
           const max_index = providers.length - 1
           const new_index = is_moving_up
             ? Math.max(min_index, current_index - 1)
             : Math.min(max_index, current_index + 1)
 
-          // Don't do anything if already at the boundary
           if (new_index == current_index) {
             return
           }
 
-          // Create a new array with reordered providers
           const reordered_providers = [...providers]
-
-          // Remove the provider from the current position
           const [moved_provider] = reordered_providers.splice(current_index, 1)
-
-          // Insert the provider at the new position
           reordered_providers.splice(new_index, 0, moved_provider)
-
-          // Save the reordered providers
           await providers_manager.save_providers(reordered_providers)
-
-          // Update quick pick items to reflect the new order
           quick_pick.items = create_provider_items()
         }
       })
@@ -174,31 +183,30 @@ export const handle_configure_api_providers = async (
     const custom_label = 'Custom...'
 
     const items: vscode.QuickPickItem[] = [
-      {
-        label: back_label
-      },
+      ...(saved_providers.length > 0 ? [{ label: back_label }] : []),
       {
         label: '',
         kind: vscode.QuickPickItemKind.Separator
       },
       ...available_built_in.map((built_in_provider) => ({
-        label: built_in_provider[0]
+        label: built_in_provider[0],
+        detail: built_in_provider[1].base_url
       })),
       {
         label: custom_label,
-        description: 'Add any OpenAI-API compatible provider'
+        description: 'Any OpenAI-API compatible provider'
       }
     ]
 
     const selected = await vscode.window.showQuickPick(items, {
       title: 'Select Provider Type',
-      placeHolder: 'Choose a predefined provider or create a custom one',
-      ignoreFocusOut: true
+      placeHolder: 'Choose a predefined provider or create a custom one'
     })
 
     if (!selected) {
-      // If user cancels creation, return to the main providers list
-      await show_providers_quick_pick()
+      if (saved_providers.length > 0) {
+        await show_providers_quick_pick()
+      }
       return
     }
 
@@ -289,14 +297,9 @@ export const handle_configure_api_providers = async (
       const edit_base_url_label = 'Base URL'
       const change_api_key_label = 'API Key'
 
-      const masked_api_key =
-        provider.api_key.length > 15
-          ? `${provider.api_key.substring(0, 8)}...${provider.api_key.slice(
-              -3
-            )}`
-          : provider.api_key.length > 0
-          ? '(API key set)'
-          : '(Not set)'
+      const masked_api_key = provider.api_key
+        ? `...${provider.api_key.slice(-4)}`
+        : 'Not set'
 
       const field_to_edit = await vscode.window.showQuickPick(
         [
@@ -308,7 +311,7 @@ export const handle_configure_api_providers = async (
           { label: edit_name_label, description: provider.name },
           {
             label: edit_base_url_label,
-            description: `${provider.base_url || '(Not set)'}`
+            description: `${provider.base_url || 'Not set'}`
           },
           {
             label: change_api_key_label,
