@@ -242,7 +242,7 @@ export const handle_setup_api_tool_code_completions = async (
     const updated_config_state = { ...config }
     let config_changed_in_this_step = false
 
-    if (selected_option.label.startsWith('Provider:')) {
+    if (selected_option.label.startsWith('Provider')) {
       const new_provider = await select_provider()
       if (!new_provider) {
         await edit_configuration(config)
@@ -268,7 +268,7 @@ export const handle_setup_api_tool_code_completions = async (
         await edit_configuration(config)
         return
       }
-    } else if (selected_option.label.startsWith('Model:')) {
+    } else if (selected_option.label.startsWith('Model')) {
       const provider_info = {
         type: config.provider_type,
         name: config.provider_name
@@ -289,7 +289,7 @@ export const handle_setup_api_tool_code_completions = async (
         await edit_configuration(config)
         return
       }
-    } else if (selected_option.label.startsWith('Temperature:')) {
+    } else if (selected_option.label.startsWith('Temperature')) {
       const new_temperature = await set_temperature(config.temperature)
       if (new_temperature === undefined) {
         await edit_configuration(config)
@@ -326,7 +326,7 @@ export const handle_setup_api_tool_code_completions = async (
 
       if (would_be_duplicate) {
         vscode.window.showErrorMessage(
-          `A configuration for ${updated_config_state.provider_name} / ${updated_config_state.model} already exists.`
+          `A configuration for ${updated_config_state.model} from ${updated_config_state.provider_name} already exists.`
         )
         await edit_configuration(config)
         return
@@ -369,7 +369,7 @@ export const handle_setup_api_tool_code_completions = async (
 
     const provider_items = providers.map((p) => ({
       label: p.name,
-      description: p.type == 'built-in' ? 'Built-in' : 'Custom',
+      description: p.type == 'built-in' ? '(built-in)' : '(custom)',
       provider: p
     }))
 
