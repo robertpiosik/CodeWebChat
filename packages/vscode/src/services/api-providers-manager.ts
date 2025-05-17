@@ -3,7 +3,8 @@ import { PROVIDERS } from '@shared/constants/providers'
 import {
   SAVED_API_PROVIDERS_STATE_KEY,
   TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
-  TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
+  TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
+  TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY
 } from '@/constants/state-keys'
 
 export type BuiltInProvider = {
@@ -27,6 +28,8 @@ export type ToolConfig = {
   model: string
   temperature: number
 }
+
+export type CodeCompletionsConfig = ToolConfig[]
 
 export class ApiProvidersManager {
   private _providers: Provider[] = []
@@ -61,13 +64,6 @@ export class ApiProvidersManager {
     return this._providers.find((provider) => provider.name == name)
   }
 
-  public async save_file_refactoring_tool_config(config: ToolConfig) {
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
-      config
-    )
-  }
-
   private _validate_tool_config(
     config: ToolConfig | undefined
   ): ToolConfig | undefined {
@@ -84,6 +80,14 @@ export class ApiProvidersManager {
     return config
   }
 
+  public get_code_completions_tool_config(): CodeCompletionsConfig {
+    const config = this._vscode.globalState.get<CodeCompletionsConfig>(
+      TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
+      []
+    )
+    return config.filter((c) => this._validate_tool_config(c) !== undefined)
+  }
+
   public get_file_refactoring_tool_config(): ToolConfig | undefined {
     const config = this._vscode.globalState.get<ToolConfig>(
       TOOL_CONFIG_FILE_REFACTORING_STATE_KEY
@@ -91,17 +95,33 @@ export class ApiProvidersManager {
     return this._validate_tool_config(config)
   }
 
-  public async save_commit_messages_tool_config(config: ToolConfig) {
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
-      config
-    )
-  }
-
   public get_commit_messages_tool_config(): ToolConfig | undefined {
     const config = this._vscode.globalState.get<ToolConfig>(
       TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
     )
     return this._validate_tool_config(config)
+  }
+
+  public async save_code_completions_tool_config(
+    config: CodeCompletionsConfig
+  ) {
+    await this._vscode.globalState.update(
+      TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
+      config
+    )
+  }
+
+  public async save_file_refactoring_tool_config(config: ToolConfig) {
+    await this._vscode.globalState.update(
+      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+      config
+    )
+  }
+
+  public async save_commit_messages_tool_config(config: ToolConfig) {
+    await this._vscode.globalState.update(
+      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
+      config
+    )
   }
 }
