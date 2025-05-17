@@ -185,6 +185,10 @@ export interface SetupApiToolCommitMessagesMessage extends BaseMessage {
   command: 'SETUP_API_TOOL_COMMIT_MESSAGES'
 }
 
+export interface PickOpenRouterModel extends BaseMessage {
+  command: 'PICK_OPEN_ROUTER_MODEL'
+}
+
 // Messages from extension to webview:
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
@@ -293,19 +297,9 @@ export interface PresetUpdatedMessage extends BaseMessage {
   command: 'PRESET_UPDATED'
 }
 
-export interface OpenRouterModelsMessage extends BaseMessage {
-  command: 'OPEN_ROUTER_MODELS'
-  models: {
-    [model_id: string]: {
-      name: string
-      description: string
-    }
-  }
-}
-
-export interface OpenRouterModelSelectedMessage extends BaseMessage {
-  command: 'OPEN_ROUTER_MODEL_SELECTED'
-  model_id: string | undefined
+export interface NewlyPickedOpenRouterModelMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_OPEN_ROUTER_MODEL'
+  model_id: string
 }
 
 export interface SelectedCodeCompletionPresetsMessage extends BaseMessage {
@@ -370,6 +364,7 @@ export type WebviewMessage =
   | SetupApiToolCodeCompletionsMessage
   | SetupApiToolFileRefactoringMessage
   | SetupApiToolCommitMessagesMessage
+  | PickOpenRouterModel
 
 export type ExtensionMessage =
   | InstructionsMessage
@@ -391,8 +386,7 @@ export type ExtensionMessage =
   | ActiveFileInfoMessage
   | PresetCreatedMessage
   | PresetUpdatedMessage
-  | OpenRouterModelsMessage
-  | OpenRouterModelSelectedMessage
+  | NewlyPickedOpenRouterModelMessage
   | SelectedCodeCompletionPresetsMessage
   | ExecuteCommandMessage
   | ApiProvidersMessage

@@ -37,6 +37,11 @@ export const handle_configure_api_providers = async (
     tooltip: 'Move down'
   }
 
+  const change_api_key_button = {
+    iconPath: new vscode.ThemeIcon('key'),
+    tooltip: 'Change API key'
+  }
+
   const create_provider_items = (): vscode.QuickPickItem[] => {
     const saved_providers = providers_manager.get_providers()
 
@@ -51,19 +56,19 @@ export const handle_configure_api_providers = async (
       ...saved_providers.map((provider, index) => {
         const masked_api_key = provider.api_key
           ? `...${provider.api_key.slice(-4)}`
-          : 'Not set'
+          : '⚠ Missing API key'
 
         return {
           label: provider.name,
           description: masked_api_key,
           detail:
             provider.type == 'custom'
-              ? provider.base_url || 'Not set'
-              : PROVIDERS[provider.name].base_url,
+              ? provider.base_url || '⚠ Missing base URL'
+              : `${PROVIDERS[provider.name].base_url} (predefined)`,
           buttons: [
             move_up_button,
             move_down_button,
-            edit_button,
+            provider.type === 'built-in' ? change_api_key_button : edit_button,
             delete_button
           ],
           provider,
@@ -109,6 +114,10 @@ export const handle_configure_api_providers = async (
         if (event.button === edit_button) {
           quick_pick.hide()
           await edit_provider(item.provider)
+          resolve()
+        } else if (event.button === change_api_key_button) {
+          quick_pick.hide()
+          await edit_built_in_provider(item.provider as BuiltInProvider)
           resolve()
         } else if (event.button === delete_button) {
           const confirm = await vscode.window.showWarningMessage(
@@ -180,22 +189,26 @@ export const handle_configure_api_providers = async (
     )
 
     const back_label = '$(arrow-left) Back'
-    const custom_label = 'Custom...'
+    const custom_label = '$(edit) Custom...'
 
     const items: vscode.QuickPickItem[] = [
       ...(saved_providers.length > 0 ? [{ label: back_label }] : []),
       {
+        label: custom_label,
+        description: 'Any OpenAI-API compatible provider'
+      },
+      {
         label: '',
+        kind: vscode.QuickPickItemKind.Separator
+      },
+      {
+        label: 'Predefined providers',
         kind: vscode.QuickPickItemKind.Separator
       },
       ...available_built_in.map((built_in_provider) => ({
         label: built_in_provider[0],
         detail: built_in_provider[1].base_url
-      })),
-      {
-        label: custom_label,
-        description: 'Any OpenAI-API compatible provider'
-      }
+      }))
     ]
 
     const selected = await vscode.window.showQuickPick(items, {
@@ -286,6 +299,8 @@ export const handle_configure_api_providers = async (
     if (provider.type == 'custom') {
       await edit_custom_provider(provider as CustomProvider)
     } else {
+      // This case is now primarily handled by the change_api_key_button,
+      // but keeping this function for completeness if the label is clicked.
       await edit_built_in_provider(provider as BuiltInProvider)
     }
   }

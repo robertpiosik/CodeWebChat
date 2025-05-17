@@ -155,11 +155,11 @@ export const View = () => {
         <UiEditPresetForm
           preset={updating_preset}
           on_update={set_updated_preset}
-          request_open_router_models={() => {}}
-          open_router_models={{}}
-          get_newly_picked_open_router_model={async () => {
-            return ''
-          }}
+          pick_open_router_model={
+            () => {
+              vscode.postMessage({ command: 'PICK_OPEN_ROUTER_MODEL' })
+            }
+          }
         />
       </UiEditView>
     )

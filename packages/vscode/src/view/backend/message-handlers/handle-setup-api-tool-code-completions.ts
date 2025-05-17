@@ -127,9 +127,6 @@ export const handle_setup_api_tool_code_completions = async (
             await providers_manager.save_code_completions_tool_configs(
               current_configs
             )
-            vscode.window.showInformationMessage(
-              `Removed configuration: ${item.config.provider_name} / ${item.config.model}`
-            )
 
             if (current_configs.length == 0) {
               quick_pick.hide()
@@ -215,9 +212,6 @@ export const handle_setup_api_tool_code_completions = async (
 
     current_configs.push(new_config)
     await providers_manager.save_code_completions_tool_configs(current_configs)
-    vscode.window.showInformationMessage(
-      `Added configuration: ${provider_info.name} / ${model}`
-    )
   }
 
   async function edit_configuration(config: ToolConfig) {
@@ -335,7 +329,7 @@ export const handle_setup_api_tool_code_completions = async (
 
       if (would_be_duplicate) {
         vscode.window.showErrorMessage(
-          `A configuration for ${updated_config_state.model} from ${updated_config_state.provider_name} already exists.`
+          `A configuration for ${updated_config_state.model} provided by ${updated_config_state.provider_name} already exists.`
         )
         await edit_configuration(config)
         return
@@ -353,7 +347,6 @@ export const handle_setup_api_tool_code_completions = async (
         await providers_manager.save_code_completions_tool_configs(
           current_configs
         )
-        vscode.window.showInformationMessage('Configuration updated.')
       } else {
         console.error('Could not find original config in array to update.')
         await edit_configuration(config)
@@ -436,7 +429,7 @@ export const handle_setup_api_tool_code_completions = async (
         placeHolder: 'Choose an AI model'
       })
 
-      return selected?.label
+      return selected?.description || selected?.label
     } catch (error) {
       console.error('Error fetching models:', error)
       vscode.window.showErrorMessage(
