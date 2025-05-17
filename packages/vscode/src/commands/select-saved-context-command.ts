@@ -373,7 +373,7 @@ export function select_saved_context_command(
       try {
         const edit_button = {
           iconPath: new vscode.ThemeIcon('edit'),
-          tooltip: 'Edit context name'
+          tooltip: 'Rename'
         }
         const delete_button = {
           iconPath: new vscode.ThemeIcon('trash'),

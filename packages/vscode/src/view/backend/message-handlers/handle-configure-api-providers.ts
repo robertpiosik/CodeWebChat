@@ -50,10 +50,7 @@ export const handle_configure_api_providers = async (
       },
       ...saved_providers.map((provider, index) => ({
         label: provider.name,
-        description:
-          provider.type == 'built-in'
-            ? 'Built-in API Provider'
-            : 'Custom API Provider',
+        description: provider.type == 'built-in' ? '(built-in)' : '(custom)',
         buttons: [move_up_button, move_down_button, edit_button, delete_button],
         provider,
         index
@@ -186,11 +183,12 @@ export const handle_configure_api_providers = async (
       },
       ...available_built_in.map((built_in_provider) => ({
         label: `$(add) ${built_in_provider[0]}`,
-        description: 'Predefined provider'
+        description: 'Built-in API provider'
       })),
       {
         label: custom_label,
-        description: 'You will specify base URL'
+        description:
+          'Add endpoint of any OpenAI-API compatible provider, e.g. https://api.example.com/v1'
       }
     ]
 
@@ -288,9 +286,19 @@ export const handle_configure_api_providers = async (
   const edit_custom_provider = async (provider: CustomProvider) => {
     const show_field_selection = async () => {
       const back_label = '$(arrow-left) Back'
-      const edit_name_label = 'Edit Name'
-      const edit_base_url_label = 'Edit Base URL'
-      const change_api_key_label = 'Change API Key'
+      const edit_name_label = 'Name'
+      const edit_base_url_label = 'Base URL'
+      const change_api_key_label = 'API Key'
+
+      const masked_api_key =
+        provider.api_key.length > 15
+          ? `${provider.api_key.substring(0, 8)}...${provider.api_key.slice(
+              -3
+            )}`
+          : provider.api_key.length > 0
+          ? '(API key set)'
+          : '(Not set)'
+
       const field_to_edit = await vscode.window.showQuickPick(
         [
           { label: back_label },
@@ -298,13 +306,20 @@ export const handle_configure_api_providers = async (
             label: '',
             kind: vscode.QuickPickItemKind.Separator
           },
-          { label: edit_name_label },
-          { label: edit_base_url_label },
-          { label: change_api_key_label }
+          { label: edit_name_label, description: provider.name },
+          {
+            label: edit_base_url_label,
+            description: `${provider.base_url || '(Not set)'}`
+          },
+          {
+            label: change_api_key_label,
+            description: masked_api_key
+          }
         ],
         {
           title: `Edit Custom API Provider: ${provider.name}`,
-          placeHolder: 'Select field to edit'
+          placeHolder: 'Select what to edit',
+          ignoreFocusOut: true
         }
       )
 
