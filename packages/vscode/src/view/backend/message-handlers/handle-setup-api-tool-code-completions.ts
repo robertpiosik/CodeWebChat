@@ -50,7 +50,8 @@ export const handle_setup_api_tool_code_completions = async (
       })
       items.push(
         ...current_configs.map((config, index) => ({
-          label: `$(edit) ${config.provider_name} / ${config.model}`,
+          label: `${config.model}`,
+          description: config.provider_name,
           buttons: [move_up_button, move_down_button, delete_button],
           config,
           index
@@ -224,11 +225,11 @@ export const handle_setup_api_tool_code_completions = async (
     const edit_options = [
       { label: back_label },
       { label: '', kind: vscode.QuickPickItemKind.Separator },
-      { label: '$(edit) Provider', description: config.provider_name },
-      { label: '$(edit) Model', description: config.model },
+      { label: `${config.provider_name}`, description: 'Provider' },
+      { label: `${config.model}`, description: 'Model' },
       {
-        label: '$(edit) Temperature',
-        description: config.temperature.toString()
+        label: config.temperature.toString(),
+        description: 'Temperature'
       }
     ]
 

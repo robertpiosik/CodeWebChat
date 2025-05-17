@@ -326,8 +326,25 @@ export const handle_configure_api_providers = async (
           await show_field_selection()
           return
         }
-        if (new_name) {
+        if (new_name && new_name.trim() != provider.name) {
+          const old_name = provider.name
           updated_provider.name = new_name.trim()
+
+          const providers = providers_manager.get_providers()
+          const updated_providers = providers.map((p) =>
+            p.type == 'custom' && p.name == old_name ? updated_provider : p
+          )
+          await providers_manager.save_providers(updated_providers)
+
+          await providers_manager.update_provider_name_in_configs({
+            old_name,
+            new_name: updated_provider.name
+          })
+
+          provider = updated_provider
+
+          await show_field_selection()
+          return
         }
       } else if (field_to_edit.label == edit_base_url_label) {
         const new_base_url = await vscode.window.showInputBox({
@@ -360,14 +377,15 @@ export const handle_configure_api_providers = async (
         }
       }
 
-      // Save the updated provider
+      // Save the updated provider (for URL and API key changes, or if name wasn't changed)
+      // This save happens only if the name change block didn't execute and return
       const providers = providers_manager.get_providers()
       const updated_providers = providers.map((p) =>
         p.type == 'custom' && p.name == provider.name ? updated_provider : p
       )
       await providers_manager.save_providers(updated_providers)
 
-      // Update the provider reference for future edits
+      // Update the provider reference for future edits in this session
       provider = updated_provider
 
       // Return to field selection after editing a field

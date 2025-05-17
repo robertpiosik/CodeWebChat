@@ -124,4 +124,69 @@ export class ApiProvidersManager {
       config
     )
   }
+
+  /**
+   * Updates provider name references in all tool configurations
+   * when a provider is renamed
+   */
+  public async update_provider_name_in_configs(params: {
+    old_name: string
+    new_name: string
+  }): Promise<void> {
+    const { old_name, new_name } = params
+
+    // Update code completions configs
+    const completionsConfig =
+      this._vscode.globalState.get<CodeCompletionsConfig>(
+        TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
+        []
+      )
+
+    const updatedCompletionsConfig = completionsConfig.map((config) => {
+      if (
+        config.provider_type === 'custom' &&
+        config.provider_name === old_name
+      ) {
+        return { ...config, provider_name: new_name }
+      }
+      return config
+    })
+
+    await this._vscode.globalState.update(
+      TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
+      updatedCompletionsConfig
+    )
+
+    // Update file refactoring config
+    const fileRefactoringConfig = this._vscode.globalState.get<ToolConfig>(
+      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY
+    )
+
+    if (
+      fileRefactoringConfig &&
+      fileRefactoringConfig.provider_type === 'custom' &&
+      fileRefactoringConfig.provider_name === old_name
+    ) {
+      await this._vscode.globalState.update(
+        TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+        { ...fileRefactoringConfig, provider_name: new_name }
+      )
+    }
+
+    // Update commit messages config
+    const commitMessagesConfig = this._vscode.globalState.get<ToolConfig>(
+      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
+    )
+
+    if (
+      commitMessagesConfig &&
+      commitMessagesConfig.provider_type === 'custom' &&
+      commitMessagesConfig.provider_name === old_name
+    ) {
+      await this._vscode.globalState.update(
+        TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
+        { ...commitMessagesConfig, provider_name: new_name }
+      )
+    }
+  }
 }
