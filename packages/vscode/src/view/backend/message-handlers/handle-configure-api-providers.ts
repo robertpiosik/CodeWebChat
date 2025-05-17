@@ -37,7 +37,7 @@ export const handle_configure_api_providers = async (
 
     return [
       {
-        label: '$(add) Add new...'
+        label: '$(add) Add new API provider...'
       },
       {
         label: '',
@@ -62,7 +62,7 @@ export const handle_configure_api_providers = async (
     return new Promise<void>((resolve) => {
       quick_pick.onDidAccept(async () => {
         const selected = quick_pick.selectedItems[0]
-        if (selected.label == '$(add) Add new...') {
+        if (selected.label == '$(add) Add new API provider...') {
           quick_pick.hide()
           await show_create_provider_quick_pick()
         } else if ('provider' in selected) {

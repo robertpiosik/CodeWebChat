@@ -15,11 +15,22 @@ export const handle_setup_api_tool_code_completions = async (
   const model_fetcher = new ModelFetcher()
   const default_temperature = 0.2
 
-  const current_configs = providers_manager.get_code_completions_tool_config()
+  // Use let because current_configs will be updated when items are deleted or reordered
+  let current_configs = providers_manager.get_code_completions_tool_config()
 
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
     tooltip: 'Delete configuration'
+  }
+
+  const move_up_button = {
+    iconPath: new vscode.ThemeIcon('chevron-up'),
+    tooltip: 'Move up'
+  }
+
+  const move_down_button = {
+    iconPath: new vscode.ThemeIcon('chevron-down'),
+    tooltip: 'Move down'
   }
 
   const create_config_items = () => {
@@ -28,7 +39,7 @@ export const handle_setup_api_tool_code_completions = async (
       index?: number
     })[] = [
       {
-        label: '$(add) Add new configuration'
+        label: '$(add) Add new configuration...'
       }
     ]
 
@@ -39,9 +50,8 @@ export const handle_setup_api_tool_code_completions = async (
       })
       items.push(
         ...current_configs.map((config, index) => ({
-          label: config.provider_name,
-          description: config.model,
-          buttons: [delete_button],
+          label: `$(edit) ${config.provider_name} / ${config.model}`,
+          buttons: [move_up_button, move_down_button, delete_button],
           config,
           index
         }))
@@ -96,6 +106,7 @@ export const handle_setup_api_tool_code_completions = async (
           )
 
           if (confirm == 'Delete') {
+            // Update the local array reference
             current_configs.splice(item.index, 1)
             await providers_manager.save_code_completions_tool_config(
               current_configs
@@ -113,6 +124,44 @@ export const handle_setup_api_tool_code_completions = async (
             // Keep the quick pick open
             quick_pick.show()
           }
+        } else if (
+          event.button === move_up_button ||
+          event.button === move_down_button
+        ) {
+          const current_index = item.index
+          const is_moving_up = event.button === move_up_button
+
+          // Calculate new index based on direction
+          const min_index = 0
+          const max_index = current_configs.length - 1
+          const new_index = is_moving_up
+            ? Math.max(min_index, current_index - 1)
+            : Math.min(max_index, current_index + 1)
+
+          // Don't do anything if already at the boundary
+          if (new_index == current_index) {
+            return
+          }
+
+          // Create a new array with reordered configs
+          const reordered_configs = [...current_configs]
+
+          // Remove the config from the current position
+          const [moved_config] = reordered_configs.splice(current_index, 1)
+
+          // Insert the config at the new position
+          reordered_configs.splice(new_index, 0, moved_config)
+
+          // Update the local array reference
+          current_configs = reordered_configs
+
+          // Save the reordered configs
+          await providers_manager.save_code_completions_tool_config(
+            current_configs
+          )
+
+          // Update quick pick items to reflect the new order
+          quick_pick.items = create_config_items()
         }
       })
 
@@ -159,6 +208,7 @@ export const handle_setup_api_tool_code_completions = async (
       temperature: default_temperature
     }
 
+    // Update the local array reference
     current_configs.push(new_config)
     await providers_manager.save_code_completions_tool_config(current_configs)
     vscode.window.showInformationMessage(
@@ -169,9 +219,12 @@ export const handle_setup_api_tool_code_completions = async (
   async function edit_configuration(config: ToolConfig) {
     // Show edit options: provider, model, or temperature
     const edit_options = [
-      { label: 'Provider', description: config.provider_name },
-      { label: 'Model', description: config.model },
-      { label: 'Temperature', description: config.temperature.toString() }
+      { label: '$(edit) Provider', description: config.provider_name },
+      { label: '$(edit) Model', description: config.model },
+      {
+        label: '$(edit) Temperature',
+        description: config.temperature.toString()
+      }
     ]
 
     const selected_option = await vscode.window.showQuickPick(edit_options, {
@@ -189,7 +242,7 @@ export const handle_setup_api_tool_code_completions = async (
     let config_changed = false
 
     // Handle option based on selection
-    if (selected_option.label == 'Provider') {
+    if (selected_option.label == '$(edit) Provider') {
       const new_provider = await select_provider()
       if (!new_provider) return
 
@@ -197,11 +250,12 @@ export const handle_setup_api_tool_code_completions = async (
       updated_config.provider_name = new_provider.name
       config_changed = true
 
+      // If provider changes, model must also be selected
       const new_model = await select_model(new_provider)
-      if (!new_model) return
+      if (!new_model) return // User cancelled model selection after provider
 
       updated_config.model = new_model
-    } else if (selected_option.label == 'Model') {
+    } else if (selected_option.label == '$(edit) Model') {
       // If provider wasn't changed, use the current one
       const provider_info = {
         type: config.provider_type,
@@ -215,7 +269,7 @@ export const handle_setup_api_tool_code_completions = async (
 
       updated_config.model = new_model
       config_changed = true
-    } else if (selected_option.label == 'Temperature') {
+    } else if (selected_option.label == '$(edit) Temperature') {
       const new_temperature = await set_temperature(config.temperature)
       if (new_temperature === undefined) return
 
@@ -241,7 +295,7 @@ export const handle_setup_api_tool_code_completions = async (
         return
       }
 
-      // Find and update the config
+      // Find and update the config in the local array
       const index = current_configs.findIndex(
         (c) =>
           c.provider_name == original_config.provider_name &&
@@ -250,6 +304,7 @@ export const handle_setup_api_tool_code_completions = async (
       )
 
       if (index !== -1) {
+        // Update the local array reference
         current_configs[index] = updated_config
         await providers_manager.save_code_completions_tool_config(
           current_configs
