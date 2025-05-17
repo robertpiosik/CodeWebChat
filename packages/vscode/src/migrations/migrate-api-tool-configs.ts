@@ -54,7 +54,7 @@ export async function migrate_api_tool_configs(
         temperature: completions_settings.temperature || 0.2
       }
 
-      await api_providers_manager.save_code_completions_tool_config([config])
+      await api_providers_manager.save_code_completions_tool_configs([config])
 
       Logger.log({
         function_name: 'migrate_api_tool_config',

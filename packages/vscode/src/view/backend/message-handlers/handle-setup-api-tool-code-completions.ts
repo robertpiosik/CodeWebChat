@@ -15,7 +15,7 @@ export const handle_setup_api_tool_code_completions = async (
   const model_fetcher = new ModelFetcher()
   const default_temperature = 0.2
 
-  let current_configs = providers_manager.get_code_completions_tool_config()
+  let current_configs = providers_manager.get_code_completions_tool_configs()
 
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
@@ -119,7 +119,7 @@ export const handle_setup_api_tool_code_completions = async (
 
           if (confirm == 'Delete') {
             current_configs.splice(item.index, 1)
-            await providers_manager.save_code_completions_tool_config(
+            await providers_manager.save_code_completions_tool_configs(
               current_configs
             )
             vscode.window.showInformationMessage(
@@ -154,7 +154,7 @@ export const handle_setup_api_tool_code_completions = async (
           const [moved_config] = reordered_configs.splice(current_index, 1)
           reordered_configs.splice(new_index, 0, moved_config)
           current_configs = reordered_configs
-          await providers_manager.save_code_completions_tool_config(
+          await providers_manager.save_code_completions_tool_configs(
             current_configs
           )
 
@@ -205,7 +205,7 @@ export const handle_setup_api_tool_code_completions = async (
     }
 
     current_configs.push(new_config)
-    await providers_manager.save_code_completions_tool_config(current_configs)
+    await providers_manager.save_code_completions_tool_configs(current_configs)
     vscode.window.showInformationMessage(
       `Added configuration: ${provider_info.name} / ${model}`
     )
@@ -341,7 +341,7 @@ export const handle_setup_api_tool_code_completions = async (
 
       if (index != -1) {
         current_configs[index] = updated_config_state
-        await providers_manager.save_code_completions_tool_config(
+        await providers_manager.save_code_completions_tool_configs(
           current_configs
         )
         vscode.window.showInformationMessage('Configuration updated.')

@@ -29,7 +29,7 @@ export type ToolConfig = {
   temperature: number
 }
 
-export type CodeCompletionsConfig = ToolConfig[]
+export type CodeCompletionsConfigs = ToolConfig[]
 
 export class ApiProvidersManager {
   private _providers: Provider[] = []
@@ -80,12 +80,12 @@ export class ApiProvidersManager {
     return config
   }
 
-  public get_code_completions_tool_config(): CodeCompletionsConfig {
-    const config = this._vscode.globalState.get<CodeCompletionsConfig>(
+  public get_code_completions_tool_configs(): CodeCompletionsConfigs {
+    const configs = this._vscode.globalState.get<CodeCompletionsConfigs>(
       TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
       []
     )
-    return config.filter((c) => this._validate_tool_config(c) !== undefined)
+    return configs.filter((c) => this._validate_tool_config(c) !== undefined)
   }
 
   public get_file_refactoring_tool_config(): ToolConfig | undefined {
@@ -102,12 +102,12 @@ export class ApiProvidersManager {
     return this._validate_tool_config(config)
   }
 
-  public async save_code_completions_tool_config(
-    config: CodeCompletionsConfig
+  public async save_code_completions_tool_configs(
+    configs: CodeCompletionsConfigs
   ) {
     await this._vscode.globalState.update(
       TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
-      config
+      configs
     )
   }
 
@@ -137,7 +137,7 @@ export class ApiProvidersManager {
 
     // Update code completions configs
     const completionsConfig =
-      this._vscode.globalState.get<CodeCompletionsConfig>(
+      this._vscode.globalState.get<CodeCompletionsConfigs>(
         TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
         []
       )

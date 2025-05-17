@@ -8,7 +8,6 @@ import {
   TokenCountMessage,
   SelectionTextMessage,
   ActiveFileInfoMessage,
-  ApiToolCommitMessageSettingsMessage,
   InstructionsMessage,
   CodeCompletionSuggestionsMessage,
   EditFormatSelectorVisibilityMessage
@@ -18,14 +17,9 @@ import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
 import { Preset } from '@shared/types/preset'
-import { ApiToolsSettingsManager } from '@/services/api-tools-settings-manager'
-import { ToolSettings } from '@shared/types/tool-settings'
 import { EditFormat } from '@shared/types/edit-format'
 import { EditFormatSelectorVisibility } from '../types/edit-format-selector-visibility'
 import {
-  handle_get_api_tool_code_completions_settings,
-  handle_get_api_tool_file_refactoring_settings,
-  handle_get_api_tool_commit_messages_settings,
   handle_show_preset_picker,
   handle_copy_prompt,
   handle_send_prompt,
@@ -68,7 +62,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public has_active_editor: boolean = false
   public has_active_selection: boolean = false
   public is_code_completions_mode: boolean = false
-  public api_tools_settings_manager: ApiToolsSettingsManager
   public caret_position: number = 0
   public instructions: string = ''
   public code_completion_suggestions: string = ''
@@ -104,30 +97,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         if (event.affectsConfiguration('codeWebChat.presets')) {
           this.send_presets_to_webview(this._webview_view.webview)
         } else if (
-          event.affectsConfiguration(
-            'codeWebChat.apiToolCodeCompletionsSettings'
-          )
-        ) {
-          handle_get_api_tool_code_completions_settings(this)
-        } else if (
-          event.affectsConfiguration(
-            'codeWebChat.apiToolFileRefactoringSettings'
-          )
-        ) {
-          handle_get_api_tool_file_refactoring_settings(this)
-        } else if (
-          event.affectsConfiguration('codeWebChat.apiToolCommitMessageSettings')
-        ) {
-          const config = vscode.workspace.getConfiguration('codeWebChat')
-          const settings = config.get<ToolSettings>(
-            'apiToolCommitMessageSettings',
-            {}
-          )
-          this.send_message<ApiToolCommitMessageSettingsMessage>({
-            command: 'API_TOOL_COMMIT_MESSAGES_SETTINGS',
-            settings
-          })
-        } else if (
           event.affectsConfiguration('codeWebChat.editFormatSelectorVisibility')
         ) {
           const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -149,7 +118,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
 
     this.context.subscriptions.push(this._config_listener)
-    this.api_tools_settings_manager = new ApiToolsSettingsManager(this.context)
 
     this.instructions = this.context.workspaceState.get<string>(
       'instructions',
@@ -390,36 +358,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_duplicate_preset(this, message, webview_view)
           } else if (message.command == 'CREATE_PRESET') {
             await handle_create_preset(this)
-          } else if (
-            message.command == 'GET_API_TOOL_CODE_COMPLETIONS_SETTINGS'
-          ) {
-            handle_get_api_tool_code_completions_settings(this)
-          } else if (
-            message.command == 'UPDATE_TOOL_CODE_COMPLETIONS_SETTINGS'
-          ) {
-            this.api_tools_settings_manager.set_code_completions_settings(
-              message.settings
-            )
-          } else if (
-            message.command == 'GET_API_TOOL_FILE_REFACTORING_SETTINGS'
-          ) {
-            handle_get_api_tool_file_refactoring_settings(this)
-          } else if (
-            message.command == 'UPDATE_TOOL_FILE_REFACTORING_SETTINGS'
-          ) {
-            this.api_tools_settings_manager.set_file_refactoring_settings(
-              message.settings
-            )
-          } else if (
-            message.command == 'GET_API_TOOL_COMMIT_MESSAGES_SETTINGS'
-          ) {
-            handle_get_api_tool_commit_messages_settings(this)
-          } else if (
-            message.command == 'UPDATE_TOOL_COMMIT_MESSAGES_SETTINGS'
-          ) {
-            this.api_tools_settings_manager.set_commit_messages_settings(
-              message.settings
-            )
           } else if (message.command == 'EXECUTE_COMMAND') {
             vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'SHOW_QUICK_PICK') {

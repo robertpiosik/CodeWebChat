@@ -1,5 +1,4 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { ToolSettings } from '@shared/types/tool-settings'
 import { EditFormat } from '@shared/types/edit-format'
 import { Preset } from '@shared/types/preset'
 import { EditFormatSelectorVisibility } from './edit-format-selector-visibility'
@@ -134,34 +133,6 @@ export interface DuplicatePresetMessage extends BaseMessage {
 
 export interface CreatePresetMessage extends BaseMessage {
   command: 'CREATE_PRESET'
-}
-
-export interface GetApiToolCodeCompletionsSettingsMessage extends BaseMessage {
-  command: 'GET_API_TOOL_CODE_COMPLETIONS_SETTINGS'
-}
-
-export interface UpdateApiToolCodeCompletionsSettingsMessage
-  extends BaseMessage {
-  command: 'UPDATE_TOOL_CODE_COMPLETIONS_SETTINGS'
-  settings: ToolSettings
-}
-
-export interface GetToolFileRefactoringSettingsMessage extends BaseMessage {
-  command: 'GET_API_TOOL_FILE_REFACTORING_SETTINGS'
-}
-
-export interface UpdateToolFileRefactoringSettingsMessage extends BaseMessage {
-  command: 'UPDATE_TOOL_FILE_REFACTORING_SETTINGS'
-  settings: ToolSettings
-}
-
-export interface GetApiToolCommitMessageSettingsMessage extends BaseMessage {
-  command: 'GET_API_TOOL_COMMIT_MESSAGES_SETTINGS'
-}
-
-export interface UpdateApiToolCommitMessageSettingsMessage extends BaseMessage {
-  command: 'UPDATE_TOOL_COMMIT_MESSAGES_SETTINGS'
-  settings: ToolSettings
 }
 
 export interface ExecuteCommandMessage extends BaseMessage {
@@ -337,21 +308,6 @@ export interface OpenRouterModelSelectedMessage extends BaseMessage {
   model_id: string | undefined
 }
 
-export interface ApiToolCodeCompletionsSettingsMessage extends BaseMessage {
-  command: 'API_TOOL_CODE_COMPLETIONS_SETTINGS'
-  settings: ToolSettings
-}
-
-export interface ApiToolFileRefactoringSettingsMessage extends BaseMessage {
-  command: 'API_TOOL_FILE_REFACTORING_SETTINGS'
-  settings: ToolSettings
-}
-
-export interface ApiToolCommitMessageSettingsMessage extends BaseMessage {
-  command: 'API_TOOL_COMMIT_MESSAGES_SETTINGS'
-  settings: ToolSettings
-}
-
 export interface SelectedCodeCompletionPresetsMessage extends BaseMessage {
   command: 'SELECTED_CODE_COMPLETION_PRESETS'
   names: string[]
@@ -404,12 +360,6 @@ export type WebviewMessage =
   | DeletePresetMessage
   | DuplicatePresetMessage
   | CreatePresetMessage
-  | GetApiToolCodeCompletionsSettingsMessage
-  | UpdateApiToolCodeCompletionsSettingsMessage
-  | GetToolFileRefactoringSettingsMessage
-  | UpdateToolFileRefactoringSettingsMessage
-  | GetApiToolCommitMessageSettingsMessage
-  | UpdateApiToolCommitMessageSettingsMessage
   | ExecuteCommandMessage
   | ShowQuickPickMessage
   | PreviewPresetMessage
@@ -443,9 +393,6 @@ export type ExtensionMessage =
   | PresetUpdatedMessage
   | OpenRouterModelsMessage
   | OpenRouterModelSelectedMessage
-  | ApiToolCodeCompletionsSettingsMessage
-  | ApiToolFileRefactoringSettingsMessage
-  | ApiToolCommitMessageSettingsMessage
   | SelectedCodeCompletionPresetsMessage
   | ExecuteCommandMessage
   | ApiProvidersMessage
