@@ -58,6 +58,18 @@ export const handle_configure_api_providers = async (
           ? `...${provider.api_key.slice(-4)}`
           : '⚠ Missing API key'
 
+        const buttons = []
+
+        if (saved_providers.length > 1) {
+          buttons.push(move_up_button)
+          buttons.push(move_down_button)
+        }
+
+        buttons.push(
+          provider.type == 'built-in' ? change_api_key_button : edit_button
+        )
+        buttons.push(delete_button)
+
         return {
           label: provider.name,
           description: masked_api_key,
@@ -65,12 +77,7 @@ export const handle_configure_api_providers = async (
             provider.type == 'custom'
               ? provider.base_url || '⚠ Missing base URL'
               : `${PROVIDERS[provider.name].base_url} (predefined)`,
-          buttons: [
-            move_up_button,
-            move_down_button,
-            provider.type === 'built-in' ? change_api_key_button : edit_button,
-            delete_button
-          ],
+          buttons: buttons,
           provider,
           index
         }

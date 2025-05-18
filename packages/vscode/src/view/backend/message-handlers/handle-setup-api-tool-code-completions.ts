@@ -53,18 +53,20 @@ export const handle_setup_api_tool_code_completions = async (
         kind: vscode.QuickPickItemKind.Separator
       })
       items.push(
-        ...current_configs.map((config, index) => ({
-          label: `${config.model}`,
-          description: config.provider_name,
-          buttons: [
-            move_up_button,
-            move_down_button,
-            edit_button,
-            delete_button
-          ],
-          config,
-          index
-        }))
+        ...current_configs.map((config, index) => {
+          const buttons =
+            current_configs.length > 1
+              ? [move_up_button, move_down_button, edit_button, delete_button]
+              : [edit_button, delete_button]
+
+          return {
+            label: `${config.model}`,
+            description: config.provider_name,
+            buttons,
+            config,
+            index
+          }
+        })
       )
     }
 
