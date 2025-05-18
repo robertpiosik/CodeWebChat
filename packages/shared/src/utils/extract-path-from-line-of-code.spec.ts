@@ -7,6 +7,12 @@ describe('extract_path_from_line_of_code', () => {
     )
   })
 
+  it('should extract filename from // comment with back slashes', () => {
+    expect(extract_path_from_line_of_code('// path\\to\\file.ts')).toBe(
+      'path/to/file.ts'
+    )
+  })
+
   it('should extract filename with special characters in path components', () => {
     expect(extract_path_from_line_of_code('// [path]/(to)/file.ts')).toBe(
       '[path]/(to)/file.ts'

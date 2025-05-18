@@ -13,7 +13,8 @@ import {
   grok,
   openrouter,
   qwen,
-  yuanbao
+  yuanbao,
+  doubao
 } from './chatbots'
 
 // In case it changes before finding textarea element (e.g. in mobile AI Studio, when changing model)
@@ -57,6 +58,9 @@ const is_yuanbao = current_url.startsWith(yuanbao_url)
 const grok_url = 'https://grok.com/'
 const is_grok = current_url.startsWith(grok_url)
 
+const doubao_url = 'https://www.doubao.com/chat/'
+const is_doubao = current_url.startsWith(doubao_url)
+
 // No need for special handling
 // const huggingchat_url = 'https://huggingface.co/chat/'
 // const is_huggingchat = current_url == huggingchat_url
@@ -87,6 +91,8 @@ if (is_ai_studio) {
   chatbot = qwen
 } else if (is_yuanbao) {
   chatbot = yuanbao
+} else if (is_doubao) {
+  chatbot = doubao
 }
 
 export const get_textarea_element = () => {
@@ -98,7 +104,8 @@ export const get_textarea_element = () => {
     [claude_url]: 'div[contenteditable=true]',
     [deepseek_url]: 'textarea',
     [mistral_url]: 'textarea',
-    [yuanbao_url]: 'div[contenteditable="true"]'
+    [yuanbao_url]: 'div[contenteditable="true"]',
+    [doubao_url]: 'textarea'
   } as any
 
   // Find the appropriate selector based on the URL without the hash

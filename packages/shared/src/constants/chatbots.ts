@@ -1,5 +1,5 @@
-type Chatbot = {
-  [key: string]: {
+type Chatbots = {
+  [name: string]: {
     url: string
     supports_custom_temperature: boolean
     supports_custom_top_p: boolean
@@ -189,5 +189,17 @@ export const CHATBOTS = {
       deepseek: 'DeepSeek',
       hunyuan: 'Hunyuan'
     }
+  },
+  Doubao: {
+    url: 'https://www.doubao.com/chat/',
+    supports_custom_temperature: false,
+    supports_custom_top_p: false,
+    supports_system_instructions: false,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    default_system_instructions: '',
+    supported_options: { 'deep-thinking': 'Deep Thinking' },
+    default_top_p: 0,
+    models: {}
   }
-} satisfies Chatbot
+} satisfies Chatbots

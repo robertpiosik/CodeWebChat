@@ -3,7 +3,7 @@
   "author": "Robert Piosik",
   "name": "Code Web Chat Connector",
   "short_name": "code-web-chat-connector",
-  "description": "Initialize any web chat with your code.",
+  "description": "Initialize any web chat with your code. Add websites to context.",
   "version": "0.1.70",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
@@ -35,6 +35,7 @@
         "https://huggingface.co/chat/",
         "https://chat.qwen.ai/",
         "https://yuanbao.tencent.com/chat*",
+        "https://www.doubao.com/chat/",
         "http://localhost/",
         "http://openwebui/"
       ],

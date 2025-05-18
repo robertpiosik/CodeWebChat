@@ -19,10 +19,11 @@ export const extract_path_from_line_of_code = (line: string): string | null => {
   // Look for path pattern anywhere in comment with file extension
   // Matches sequences like "path/to/file.ext" or "./file.ext" or "../file.ext" or ".gitignore"
   const path_match = stripped.match(
-    /(?:^|\s)((?:\.|[.\/\w\-\[\]\(\)]+\.)[\w\-]{1,10})(?:\s|$)/
+    /(?:^|\s)((?:\.|[.\/\\\w\-\[\]\(\)]+\.)[\w\-]{1,10})(?:\s|$)/
   )
   if (path_match) {
-    return path_match[1]
+    // Normalize backslashes to forward slashes
+    return path_match[1].replace(/\\/g, '/')
   }
 
   return null

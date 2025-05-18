@@ -119,6 +119,20 @@ describe('clipboard-parser', () => {
       )
       expect(frontendFile).toBeUndefined()
     })
+
+    it('should parse paths with backslashes', () => {
+      const text = load_clipboard_text('backslash-paths.txt')
+      const result = parse_clipboard_multiple_files({
+        clipboard_text: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0].file_path).toBe('src/index.ts')
+      expect(result[0].content).toBe('console.log("hello")')
+      expect(result[1].file_path).toBe('src/utils.py')
+      expect(result[1].content).toBe(`print("hello")`)
+    })
   })
 
   describe('parse_file_content_only', () => {

@@ -5,7 +5,6 @@ import { FileItem } from './workspace-provider'
 import { SharedFileState } from '../shared-file-state'
 import { ignored_extensions } from '../constants/ignored-extensions'
 import { should_ignore_file } from '../utils/extension-utils'
-import { natural_sort } from '../../utils/natural-sort'
 
 export class OpenEditorsProvider
   implements vscode.TreeDataProvider<FileItem>, vscode.Disposable
@@ -338,13 +337,6 @@ export class OpenEditorsProvider
   async create_open_editor_items(): Promise<FileItem[]> {
     const items: FileItem[] = []
     const open_files = this._get_open_editors()
-
-    // Sort open files using natural sort
-    open_files.sort((a, b) => {
-      const a_name = path.basename(a.fsPath)
-      const b_name = path.basename(b.fsPath)
-      return natural_sort(a_name, b_name)
-    })
 
     for (const file_uri of open_files) {
       const file_path = file_uri.fsPath
