@@ -4,6 +4,7 @@ import { ViewProvider } from './view/backend/view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import { migrate_remove_copilot_presets } from './migrations/migrate-remove-copilot-presets'
 import { migrate_api_tool_settings } from './migrations/migrate-api-tool-settings'
+import { migrate_file_refactoring_to_array } from './migrations/migrate-file-refactoring-to-array'
 import {
   apply_chat_response_command,
   refactor_command,
@@ -62,8 +63,10 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_api_keys_to_providers(context)
     // Remove a few weeks after 17 May 2025
     await migrate_api_tool_configs(context)
-    // Remove a few weeks after 25 May 2025
+    // Remove a few weeks after 20 May 2025
     await migrate_api_providers_to_secret_storage(context)
+    // Remove a few weeks after 22 May 2025
+    await migrate_file_refactoring_to_array(context)
   }
 
   await migrations()

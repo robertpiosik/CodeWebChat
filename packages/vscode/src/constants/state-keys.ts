@@ -13,6 +13,10 @@ export const TOOL_CONFIG_FILE_REFACTORING_STATE_KEY =
 export const TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY = 'toolConfigCommitMessages'
 export const DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY =
   'defaultCodeCompletionsConfiguration'
+export const DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY =
+  'defaultFileRefactoringConfiguration'
 export const LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_KEY =
   'lastSelectedCodeCompletionConfigIndex'
+export const LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY =
+  'lastSelectedFileRefactoringConfigIndex'
 export const LAST_SELECTED_PRESET_KEY = 'lastSelectedPreset'
