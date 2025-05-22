@@ -7,7 +7,7 @@ import { migrate_api_tool_settings } from './migrations/migrate-api-tool-setting
 import { migrate_file_refactoring_to_array } from './migrations/migrate-file-refactoring-to-array'
 import {
   apply_chat_response_command,
-  refactor_command,
+  refactor_commands,
   refactor_to_clipboard_command,
   code_completion_commands,
   web_chat_command,
@@ -102,11 +102,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     apply_chat_response_command(context),
-    refactor_command({
+    ...refactor_commands({
       context,
-      file_tree_provider: workspace_provider,
-      open_editors_provider: open_editors_provider,
-      use_default_model: true
+      workspace_provider,
+      open_editors_provider
     }),
     refactor_to_clipboard_command(
       context,

@@ -174,7 +174,7 @@ async function get_code_completion_config(
         return {
           label: config.model,
           description: `${config.provider_name}${
-            is_default ? ' • default' : ''
+            is_default ? ' • default configuration' : ''
           }`,
           config,
           index,

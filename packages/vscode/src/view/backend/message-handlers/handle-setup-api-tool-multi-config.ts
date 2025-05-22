@@ -162,7 +162,7 @@ export const handle_setup_api_tool_multi_config = async (params: {
           return {
             label: config.model,
             description: `${config.provider_name}${
-              is_default ? ` • default` : ''
+              is_default ? ` • default configuration` : ''
             }`,
             buttons,
             config,

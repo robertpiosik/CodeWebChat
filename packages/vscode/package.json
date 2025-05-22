@@ -256,6 +256,11 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.refactorUsing",
+        "title": "Refactor using...",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.refactorToClipboard",
         "title": "Refactor to Clipboard",
         "category": "Code Web Chat"

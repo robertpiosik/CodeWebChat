@@ -15,6 +15,7 @@ import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragm
 import { ApiProvidersManager } from '@/services/api-providers-manager'
 import { apply_git_patch, DiffPatch } from './utils/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
+import { LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY } from '../../constants/state-keys'
 
 async function check_if_all_files_new(
   files: ClipboardFile[]
@@ -51,6 +52,222 @@ async function check_if_all_files_new(
   }
 
   return true // All files are new
+}
+
+async function get_file_refactoring_config(
+  api_providers_manager: ApiProvidersManager,
+  show_quick_pick: boolean = false,
+  context: vscode.ExtensionContext
+): Promise<{ provider: any; config: any } | undefined> {
+  const file_refactoring_configs =
+    await api_providers_manager.get_file_refactoring_tool_configs()
+
+  if (file_refactoring_configs.length === 0) {
+    vscode.window.showErrorMessage(
+      'File Refactoring tool is not configured. Go to Code Web Chat panel -> Settings tab.'
+    )
+    Logger.warn({
+      function_name: 'get_file_refactoring_config',
+      message: 'File Refactoring tool is not configured.'
+    })
+    return
+  }
+
+  let selected_config = null
+
+  if (!show_quick_pick) {
+    selected_config =
+      await api_providers_manager.get_default_file_refactoring_config()
+  }
+
+  if (!selected_config || show_quick_pick) {
+    const move_up_button = {
+      iconPath: new vscode.ThemeIcon('chevron-up'),
+      tooltip: 'Move up'
+    }
+
+    const move_down_button = {
+      iconPath: new vscode.ThemeIcon('chevron-down'),
+      tooltip: 'Move down'
+    }
+
+    const set_default_button = {
+      iconPath: new vscode.ThemeIcon('star'),
+      tooltip: 'Set as default'
+    }
+
+    const unset_default_button = {
+      iconPath: new vscode.ThemeIcon('star-full'),
+      tooltip: 'Unset default'
+    }
+
+    const create_items = async () => {
+      const default_config =
+        await api_providers_manager.get_default_file_refactoring_config()
+
+      return file_refactoring_configs.map((config, index) => {
+        const buttons = []
+
+        const is_default =
+          default_config &&
+          default_config.provider_type == config.provider_type &&
+          default_config.provider_name == config.provider_name &&
+          default_config.model == config.model
+
+        if (file_refactoring_configs.length > 1) {
+          if (index > 0) {
+            buttons.push(move_up_button)
+          }
+
+          if (index < file_refactoring_configs.length - 1) {
+            buttons.push(move_down_button)
+          }
+        }
+
+        if (is_default) {
+          buttons.push(unset_default_button)
+        } else {
+          buttons.push(set_default_button)
+        }
+
+        return {
+          label: config.model,
+          description: `${config.provider_name}${
+            is_default ? ' • default configuration' : ''
+          }`,
+          config,
+          index,
+          buttons
+        }
+      })
+    }
+
+    const quick_pick = vscode.window.createQuickPick()
+    const items = await create_items()
+    quick_pick.items = items
+    quick_pick.placeholder = 'Select file refactoring configuration'
+    quick_pick.matchOnDescription = true
+
+    const last_selected_index = context.globalState.get<number>(
+      LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY,
+      0
+    )
+
+    if (last_selected_index >= 0 && last_selected_index < items.length) {
+      quick_pick.activeItems = [items[last_selected_index]]
+    } else if (items.length > 0) {
+      quick_pick.activeItems = [items[0]]
+    }
+
+    return new Promise<{ provider: any; config: any } | undefined>(
+      (resolve) => {
+        quick_pick.onDidTriggerItemButton(async (event) => {
+          const item = event.item as any
+          const button = event.button
+          const index = item.index
+
+          if (button === set_default_button) {
+            await api_providers_manager.set_default_file_refactoring_config(
+              file_refactoring_configs[index]
+            )
+            quick_pick.items = await create_items()
+          } else if (button === unset_default_button) {
+            await api_providers_manager.set_default_file_refactoring_config(
+              null as any
+            )
+            quick_pick.items = await create_items()
+          } else if (button.tooltip == 'Move up' && index > 0) {
+            const temp = file_refactoring_configs[index]
+            file_refactoring_configs[index] =
+              file_refactoring_configs[index - 1]
+            file_refactoring_configs[index - 1] = temp
+
+            await api_providers_manager.save_file_refactoring_tool_configs(
+              file_refactoring_configs
+            )
+
+            quick_pick.items = await create_items()
+          } else if (
+            button.tooltip == 'Move down' &&
+            index < file_refactoring_configs.length - 1
+          ) {
+            const temp = file_refactoring_configs[index]
+            file_refactoring_configs[index] =
+              file_refactoring_configs[index + 1]
+            file_refactoring_configs[index + 1] = temp
+
+            await api_providers_manager.save_file_refactoring_tool_configs(
+              file_refactoring_configs
+            )
+
+            quick_pick.items = await create_items()
+          }
+        })
+
+        quick_pick.onDidAccept(async () => {
+          const selected = quick_pick.selectedItems[0] as any
+          quick_pick.hide()
+
+          if (!selected) {
+            resolve(undefined)
+            return
+          }
+
+          context.globalState.update(
+            LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY,
+            selected.index
+          )
+
+          const provider = await api_providers_manager.get_provider(
+            selected.config.provider_name
+          )
+          if (!provider) {
+            vscode.window.showErrorMessage(
+              'API provider not found for File Refactoring tool. Go to Code Web Chat panel -> Settings tab.'
+            )
+            Logger.warn({
+              function_name: 'get_file_refactoring_config',
+              message: 'API provider not found for File Refactoring tool.'
+            })
+            resolve(undefined)
+            return
+          }
+
+          resolve({
+            provider,
+            config: selected.config
+          })
+        })
+
+        quick_pick.onDidHide(() => {
+          quick_pick.dispose()
+          resolve(undefined)
+        })
+
+        quick_pick.show()
+      }
+    )
+  }
+
+  const provider = await api_providers_manager.get_provider(
+    selected_config.provider_name
+  )
+
+  if (!provider) {
+    vscode.window.showErrorMessage(
+      'API provider not found for File Refactoring tool. Go to Code Web Chat panel -> Settings tab.'
+    )
+    Logger.warn({
+      function_name: 'get_file_refactoring_config',
+      message: 'API provider not found for File Refactoring tool.'
+    })
+    return
+  }
+
+  return {
+    provider,
+    config: selected_config
+  }
 }
 
 export function apply_chat_response_command(context: vscode.ExtensionContext) {
@@ -153,30 +370,21 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
           } else if (response == 'Use intelligent update') {
             const api_providers_manager = new ApiProvidersManager(context)
-            const file_refactoring_settings =
-              await api_providers_manager.get_file_refactoring_tool_config()
-
-            if (!file_refactoring_settings) {
-              vscode.window.showErrorMessage(
-                'API provider or model is not configured for Intelligent update.'
-              )
-              return
-            }
-
-            const provider = await api_providers_manager.get_provider(
-              file_refactoring_settings.provider_name
+            const config_result = await get_file_refactoring_config(
+              api_providers_manager,
+              false,
+              context
             )
 
-            if (!provider) {
-              vscode.window.showErrorMessage(
-                'API provider not found for Intelligent update.'
-              )
+            if (!config_result) {
               return
             }
+
+            const { provider, config: file_refactoring_config } = config_result
 
             let endpoint_url = ''
             if (provider.type == 'built-in') {
-              const provider_info = PROVIDERS[provider.name]
+              const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
               endpoint_url = provider_info.base_url
             } else {
               endpoint_url = provider.base_url
@@ -192,8 +400,8 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 {
                   endpoint_url,
                   api_key: provider.api_key,
-                  model: file_refactoring_settings.model,
-                  temperature: file_refactoring_settings.temperature,
+                  model: file_refactoring_config.model,
+                  temperature: file_refactoring_config.temperature,
                   clipboard_text: failed_patches_text,
                   context: context,
                   is_single_root_folder_workspace
@@ -274,30 +482,21 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
 
             // Then try with intelligent update
             const api_providers_manager = new ApiProvidersManager(context)
-            const file_refactoring_settings =
-              await api_providers_manager.get_file_refactoring_tool_config()
-
-            if (!file_refactoring_settings) {
-              vscode.window.showErrorMessage(
-                'API provider or model is not configured for Intelligent update.'
-              )
-              return
-            }
-
-            const provider = await api_providers_manager.get_provider(
-              file_refactoring_settings.provider_name
+            const config_result = await get_file_refactoring_config(
+              api_providers_manager,
+              false,
+              context
             )
 
-            if (!provider) {
-              vscode.window.showErrorMessage(
-                'API provider not found for Intelligent update.'
-              )
+            if (!config_result) {
               return
             }
+
+            const { provider, config: file_refactoring_config } = config_result
 
             let endpoint_url = ''
             if (provider.type == 'built-in') {
-              const provider_info = PROVIDERS[provider.name]
+              const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
               endpoint_url = provider_info.base_url
             } else {
               endpoint_url = provider.base_url
@@ -313,8 +512,8 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 {
                   endpoint_url,
                   api_key: provider.api_key,
-                  model: file_refactoring_settings.model,
-                  temperature: file_refactoring_settings.temperature,
+                  model: file_refactoring_config.model,
+                  temperature: file_refactoring_config.temperature,
                   clipboard_text: all_patches_text,
                   context: context,
                   is_single_root_folder_workspace
@@ -424,53 +623,21 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
         } else if (selected_mode_label == 'Intelligent update') {
           const api_providers_manager = new ApiProvidersManager(context)
 
-          const file_refactoring_settings =
-            await api_providers_manager.get_file_refactoring_tool_config()
-
-          if (!file_refactoring_settings) {
-            vscode.window.showErrorMessage(
-              'API provider is not specified for File Refactoring tool. Go to Code Web Chat panel -> Settings tab.'
-            )
-            Logger.warn({
-              function_name: 'apply_chat_response_command',
-              message:
-                'API provider is not specified for File Refactoring tool.'
-            })
-            return
-          } else if (!file_refactoring_settings.provider_name) {
-            vscode.window.showErrorMessage(
-              'Provider is not specified for File Refactoring tool. Go to Code Web Chat panel -> Settings tab.'
-            )
-            Logger.warn({
-              function_name: 'apply_chat_response_command',
-              message: 'Provider is not specified for File Refactoring tool.'
-            })
-            return
-          } else if (!file_refactoring_settings.model) {
-            vscode.window.showErrorMessage(
-              'Model is not specified for File Refactoring tool. Go to Code Web Chat panel -> Settings tab.'
-            )
-            Logger.warn({
-              function_name: 'apply_chat_response_command',
-              message: 'Model is not specified for File Refactoring tool.'
-            })
-            return
-          }
-
-          const provider = await api_providers_manager.get_provider(
-            file_refactoring_settings.provider_name
+          const config_result = await get_file_refactoring_config(
+            api_providers_manager,
+            false,
+            context
           )
 
-          if (!provider) {
-            vscode.window.showErrorMessage(
-              'API provider not found for File Refactoring tool.'
-            )
+          if (!config_result) {
             return
           }
+
+          const { provider, config: file_refactoring_config } = config_result
 
           let endpoint_url = ''
           if (provider.type == 'built-in') {
-            const provider_info = PROVIDERS[provider.name]
+            const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
             endpoint_url = provider_info.base_url
           } else {
             endpoint_url = provider.base_url
@@ -479,8 +646,8 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
           final_original_states = await handle_intelligent_update({
             endpoint_url,
             api_key: provider.api_key,
-            model: file_refactoring_settings.model,
-            temperature: file_refactoring_settings.temperature,
+            model: file_refactoring_config.model,
+            temperature: file_refactoring_config.temperature,
             clipboard_text,
             context: context,
             is_single_root_folder_workspace
@@ -562,28 +729,22 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
 
               // Then trigger intelligent update
               const api_providers_manager = new ApiProvidersManager(context)
-              const file_refactoring_settings =
-                await api_providers_manager.get_file_refactoring_tool_config()
-
-              if (!file_refactoring_settings) {
-                vscode.window.showErrorMessage(
-                  'API provider or model is not configured for Intelligent update. Go to Code Web Chat panel -> Settings tab.'
-                )
-                return
-              }
-
-              const provider = await api_providers_manager.get_provider(
-                file_refactoring_settings.provider_name
+              const config_result = await get_file_refactoring_config(
+                api_providers_manager,
+                false,
+                context
               )
 
-              if (!provider) {
-                vscode.window.showErrorMessage('API provider not found.')
+              if (!config_result) {
                 return
               }
+
+              const { provider, config: file_refactoring_config } =
+                config_result
 
               let endpoint_url = ''
               if (provider.type == 'built-in') {
-                const provider_info = PROVIDERS[provider.name]
+                const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
                 endpoint_url = provider_info.base_url
               } else {
                 endpoint_url = provider.base_url
@@ -593,8 +754,8 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 final_original_states = await handle_intelligent_update({
                   endpoint_url,
                   api_key: provider.api_key,
-                  model: file_refactoring_settings.model,
-                  temperature: file_refactoring_settings.temperature,
+                  model: file_refactoring_config.model,
+                  temperature: file_refactoring_config.temperature,
                   clipboard_text,
                   context: context,
                   is_single_root_folder_workspace
