@@ -314,7 +314,7 @@ export const handle_setup_api_tool_multi_config = async (params: {
 
     if (provider_model_exists) {
       vscode.window.showErrorMessage(
-        `A configuration for ${provider_info.name} / ${model} already exists.`
+        `A configuration for ${model} (${provider_info.name}) already exists.`
       )
       return
     }
@@ -328,12 +328,6 @@ export const handle_setup_api_tool_multi_config = async (params: {
 
     current_configs.push(new_config)
     await tool_methods.save_configs(current_configs)
-
-    if (current_configs.length == 1 || !default_config) {
-      default_config = { ...new_config }
-      await tool_methods.set_default_config(default_config)
-    }
-
     await edit_configuration(new_config)
   }
 
