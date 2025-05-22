@@ -9,28 +9,14 @@ import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 
 export const handle_setup_api_tool = async (
-  provider: ViewProvider,
-  tool: 'file-refactoring' | 'commit-messages'
+  provider: ViewProvider
 ): Promise<void> => {
   const providers_manager = new ApiProvidersManager(provider.context)
   const model_fetcher = new ModelFetcher()
-  const default_temperature = tool == 'file-refactoring' ? 0 : 0.3
+  const default_temperature = 0.3
 
-  const get_tool_config = async () => {
-    return tool == 'file-refactoring'
-      ? await providers_manager.get_file_refactoring_tool_config()
-      : await providers_manager.get_commit_messages_tool_config()
-  }
-
-  const save_tool_config = async (config: ToolConfig) => {
-    if (tool == 'file-refactoring') {
-      await providers_manager.save_file_refactoring_tool_config(config)
-    } else {
-      await providers_manager.save_commit_messages_tool_config(config)
-    }
-  }
-
-  const current_config = await get_tool_config()
+  const current_config =
+    await providers_manager.get_commit_messages_tool_config()
 
   if (!current_config) {
     await setup_new_config()
@@ -54,9 +40,9 @@ export const handle_setup_api_tool = async (
       temperature: default_temperature
     }
 
-    await save_tool_config(config)
+    await providers_manager.save_commit_messages_tool_config(config)
     vscode.window.showInformationMessage(
-      `${tool} tool configuration completed successfully.`
+      'Commit Messages tool configuration completed successfully.'
     )
   }
 
@@ -77,9 +63,7 @@ export const handle_setup_api_tool = async (
       ]
 
       const selection = await vscode.window.showQuickPick(options, {
-        title: `Update ${
-          tool == 'commit-messages' ? 'Commit Messages' : 'File Refactoring'
-        } Configuration`,
+        title: 'Update Commit Messages Configuration',
         placeHolder: 'Select setting to update'
       })
 
@@ -134,7 +118,7 @@ export const handle_setup_api_tool = async (
         updated = true
       }
       if (updated) {
-        await save_tool_config(config)
+        await providers_manager.save_commit_messages_tool_config(config)
       }
       await show_config_options()
     }

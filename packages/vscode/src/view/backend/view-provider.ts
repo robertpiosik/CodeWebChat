@@ -391,7 +391,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               tool: 'file-refactoring'
             })
           } else if (message.command == 'SETUP_API_TOOL_COMMIT_MESSAGES') {
-            await handle_setup_api_tool(this, 'commit-messages')
+            await handle_setup_api_tool(this)
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
           }

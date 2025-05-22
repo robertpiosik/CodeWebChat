@@ -63,15 +63,17 @@ export async function migrate_api_tool_configs(
     }
 
     if (refactoring_settings?.provider && refactoring_settings.model) {
-      await api_providers_manager.save_file_refactoring_tool_config({
-        provider_type: 'built-in',
-        provider_name:
-          refactoring_settings.provider == 'Gemini API'
-            ? 'Gemini'
-            : 'OpenRouter',
-        model: refactoring_settings.model,
-        temperature: refactoring_settings.temperature || 0
-      })
+      await api_providers_manager.save_file_refactoring_tool_configs([
+        {
+          provider_type: 'built-in',
+          provider_name:
+            refactoring_settings.provider == 'Gemini API'
+              ? 'Gemini'
+              : 'OpenRouter',
+          model: refactoring_settings.model,
+          temperature: refactoring_settings.temperature || 0
+        }
+      ])
 
       Logger.log({
         function_name: 'migrate_api_tool_config',
