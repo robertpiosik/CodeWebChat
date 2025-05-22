@@ -235,19 +235,44 @@ export class ApiProvidersManager {
       )
     }
 
-    // Update file refactoring config
-    const file_refactoring_config = this._vscode.globalState.get<ToolConfig>(
-      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY
+    // Update file refactoring configs
+    const file_refactoring_configs =
+      this._vscode.globalState.get<FileRefactoringConfigs>(
+        TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+        []
+      )
+
+    const updated_file_refactoring_configs = file_refactoring_configs.map(
+      (config) => {
+        if (
+          config.provider_type == 'custom' &&
+          config.provider_name == old_name
+        ) {
+          return { ...config, provider_name: new_name }
+        }
+        return config
+      }
     )
 
+    await this._vscode.globalState.update(
+      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+      updated_file_refactoring_configs
+    )
+
+    // Update default file refactoring config if affected
+    const default_file_refactoring_config =
+      this._vscode.globalState.get<ToolConfig>(
+        DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY
+      )
+
     if (
-      file_refactoring_config &&
-      file_refactoring_config.provider_type == 'custom' &&
-      file_refactoring_config.provider_name == old_name
+      default_file_refactoring_config &&
+      default_file_refactoring_config.provider_type == 'custom' &&
+      default_file_refactoring_config.provider_name == old_name
     ) {
       await this._vscode.globalState.update(
-        TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
-        { ...file_refactoring_config, provider_name: new_name }
+        DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY,
+        { ...default_file_refactoring_config, provider_name: new_name }
       )
     }
 

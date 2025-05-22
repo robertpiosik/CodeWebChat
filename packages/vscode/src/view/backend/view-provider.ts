@@ -381,9 +381,15 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'CONFIGURE_API_PROVIDERS') {
             handle_configure_api_providers(this)
           } else if (message.command == 'SETUP_API_TOOL_CODE_COMPLETIONS') {
-            await handle_setup_api_tool_multi_config(this)
+            await handle_setup_api_tool_multi_config({
+              provider: this,
+              tool: 'code-completions'
+            })
           } else if (message.command == 'SETUP_API_TOOL_FILE_REFACTORING') {
-            await handle_setup_api_tool(this, 'file-refactoring')
+            await handle_setup_api_tool_multi_config({
+              provider: this,
+              tool: 'file-refactoring'
+            })
           } else if (message.command == 'SETUP_API_TOOL_COMMIT_MESSAGES') {
             await handle_setup_api_tool(this, 'commit-messages')
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {

@@ -3,24 +3,73 @@ import * as vscode from 'vscode'
 import {
   ApiProvidersManager,
   Provider,
-  ToolConfig
+  ToolConfig,
+  CodeCompletionsConfigs,
+  FileRefactoringConfigs
 } from '@/services/api-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 
 const DEFAULT_TEMPERATURE = 0.2
 
-export const handle_setup_api_tool_multi_config = async (
+type SupportedTool = 'code-completions' | 'file-refactoring'
+
+interface ToolMethods {
+  get_configs: () => Promise<ToolConfig[]>
+  save_configs: (configs: ToolConfig[]) => Promise<void>
+  get_default_config: () => Promise<ToolConfig | undefined>
+  set_default_config: (config: ToolConfig | null) => Promise<void>
+  get_display_name: () => string
+}
+
+export const handle_setup_api_tool_multi_config = async (params: {
   provider: ViewProvider
-): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  tool: SupportedTool
+}): Promise<void> => {
+  const providers_manager = new ApiProvidersManager(params.provider.context)
   const model_fetcher = new ModelFetcher()
 
-  let current_configs =
-    await providers_manager.get_code_completions_tool_configs()
-  let default_config =
-    await providers_manager.get_default_code_completions_config()
+  const get_tool_methods = (tool: SupportedTool): ToolMethods => {
+    switch (tool) {
+      case 'code-completions':
+        return {
+          get_configs: () =>
+            providers_manager.get_code_completions_tool_configs(),
+          save_configs: (configs: CodeCompletionsConfigs) =>
+            providers_manager.save_code_completions_tool_configs(configs),
+          get_default_config: () =>
+            providers_manager.get_default_code_completions_config(),
+          set_default_config: (config: ToolConfig | null) =>
+            providers_manager.set_default_code_completions_config(
+              config as any
+            ),
+          get_display_name: () => 'Code Completions'
+        }
+      case 'file-refactoring':
+        return {
+          get_configs: () =>
+            providers_manager.get_file_refactoring_tool_configs(),
+          save_configs: (configs: FileRefactoringConfigs) =>
+            providers_manager.save_file_refactoring_tool_configs(configs),
+          get_default_config: () =>
+            providers_manager.get_default_file_refactoring_config(),
+          set_default_config: (config: ToolConfig | null) =>
+            providers_manager.set_default_file_refactoring_config(
+              config as any
+            ),
+          get_display_name: () => 'File Refactoring'
+        }
+      default:
+        throw new Error(`Unsupported tool: ${tool}`)
+    }
+  }
 
+  const tool_methods = get_tool_methods(params.tool)
+
+  let current_configs = await tool_methods.get_configs()
+  let default_config = await tool_methods.get_default_config()
+
+  // UI button definitions
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
     tooltip: 'Edit configuration'
@@ -137,7 +186,7 @@ export const handle_setup_api_tool_multi_config = async (
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_config_items()
-    quick_pick.title = 'Code Completions Configurations'
+    quick_pick.title = `${tool_methods.get_display_name()} Configurations`
     quick_pick.placeholder = 'Select a configuration to edit or add another one'
 
     return new Promise<void>((resolve) => {
@@ -179,9 +228,7 @@ export const handle_setup_api_tool_multi_config = async (
 
           if (confirm == 'Delete') {
             current_configs.splice(item.index, 1)
-            await providers_manager.save_code_completions_tool_configs(
-              current_configs
-            )
+            await tool_methods.save_configs(current_configs)
 
             if (
               default_config &&
@@ -190,9 +237,7 @@ export const handle_setup_api_tool_multi_config = async (
               default_config.model == item.config.model
             ) {
               default_config = undefined
-              await providers_manager.set_default_code_completions_config(
-                null as any
-              )
+              await tool_methods.set_default_config(null)
             }
 
             if (current_configs.length == 0) {
@@ -227,22 +272,16 @@ export const handle_setup_api_tool_multi_config = async (
           const [moved_config] = reordered_configs.splice(current_index, 1)
           reordered_configs.splice(new_index, 0, moved_config)
           current_configs = reordered_configs
-          await providers_manager.save_code_completions_tool_configs(
-            current_configs
-          )
+          await tool_methods.save_configs(current_configs)
 
           quick_pick.items = create_config_items()
         } else if (event.button === set_default_button) {
           default_config = { ...item.config }
-          await providers_manager.set_default_code_completions_config(
-            default_config
-          )
+          await tool_methods.set_default_config(default_config)
           quick_pick.items = create_config_items()
         } else if (event.button === unset_default_button) {
           default_config = undefined
-          await providers_manager.set_default_code_completions_config(
-            null as any
-          )
+          await tool_methods.set_default_config(null)
           quick_pick.items = create_config_items()
         }
       })
@@ -288,13 +327,11 @@ export const handle_setup_api_tool_multi_config = async (
     }
 
     current_configs.push(new_config)
-    await providers_manager.save_code_completions_tool_configs(current_configs)
+    await tool_methods.save_configs(current_configs)
 
     if (current_configs.length == 1 || !default_config) {
       default_config = { ...new_config }
-      await providers_manager.set_default_code_completions_config(
-        default_config
-      )
+      await tool_methods.set_default_config(default_config)
     }
 
     await edit_configuration(new_config)
@@ -347,15 +384,13 @@ export const handle_setup_api_tool_multi_config = async (
 
     if (selected_option.label == set_as_default_label) {
       default_config = { ...config }
-      await providers_manager.set_default_code_completions_config(
-        default_config
-      )
+      await tool_methods.set_default_config(default_config)
       return
     }
 
     if (selected_option.label == unset_default_label) {
       default_config = undefined
-      await providers_manager.set_default_code_completions_config(null as any)
+      await tool_methods.set_default_config(null)
       return
     }
 
@@ -462,9 +497,7 @@ export const handle_setup_api_tool_multi_config = async (
 
       if (index != -1) {
         current_configs[index] = updated_config_state
-        await providers_manager.save_code_completions_tool_configs(
-          current_configs
-        )
+        await tool_methods.save_configs(current_configs)
 
         if (
           default_config &&
@@ -473,9 +506,7 @@ export const handle_setup_api_tool_multi_config = async (
           default_config.model == original_config_state.model
         ) {
           default_config = updated_config_state
-          await providers_manager.set_default_code_completions_config(
-            updated_config_state
-          )
+          await tool_methods.set_default_config(updated_config_state)
         }
       } else {
         console.error('Could not find original config in array to update.')
