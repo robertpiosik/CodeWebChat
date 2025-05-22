@@ -4,7 +4,8 @@ import {
   TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
   TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
   TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
-  DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY
+  DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
+  DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY
 } from '@/constants/state-keys'
 import { SECRET_STORAGE_API_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
 
@@ -31,6 +32,7 @@ export type ToolConfig = {
 }
 
 export type CodeCompletionsConfigs = ToolConfig[]
+export type FileRefactoringConfigs = ToolConfig[]
 
 export class ApiProvidersManager {
   private _providers: Provider[] = []
@@ -124,14 +126,48 @@ export class ApiProvidersManager {
     )
   }
 
-  public async get_file_refactoring_tool_config(): Promise<
+  public async save_code_completions_tool_configs(
+    configs: CodeCompletionsConfigs
+  ) {
+    await this._vscode.globalState.update(
+      TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
+      configs
+    )
+  }
+
+  public async get_file_refactoring_tool_configs(): Promise<FileRefactoringConfigs> {
+    await this._load_promise
+    const configs = this._vscode.globalState.get<FileRefactoringConfigs>(
+      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+      []
+    )
+    return configs.filter((c) => this._validate_tool_config(c) !== undefined)
+  }
+
+  public async get_default_file_refactoring_config(): Promise<
     ToolConfig | undefined
   > {
     await this._load_promise
     const config = this._vscode.globalState.get<ToolConfig>(
-      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY
+      DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY
     )
     return this._validate_tool_config(config)
+  }
+
+  public async set_default_file_refactoring_config(config: ToolConfig) {
+    await this._vscode.globalState.update(
+      DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY,
+      config
+    )
+  }
+
+  public async save_file_refactoring_tool_configs(
+    configs: FileRefactoringConfigs
+  ) {
+    await this._vscode.globalState.update(
+      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+      configs
+    )
   }
 
   public async get_commit_messages_tool_config(): Promise<
@@ -142,22 +178,6 @@ export class ApiProvidersManager {
       TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
     )
     return this._validate_tool_config(config)
-  }
-
-  public async save_code_completions_tool_configs(
-    configs: CodeCompletionsConfigs
-  ) {
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
-      configs
-    )
-  }
-
-  public async save_file_refactoring_tool_config(config: ToolConfig) {
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
-      config
-    )
   }
 
   public async save_commit_messages_tool_config(config: ToolConfig) {
