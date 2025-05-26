@@ -1,6 +1,6 @@
 ---
-hide_table_of_contents: true
-sidebar_position: 3
+title: Code Completions
+sidebar_position: 2
 ---
 
 import Tabs from '@theme/Tabs'
@@ -8,68 +8,24 @@ import TabItem from '@theme/TabItem'
 
 # Code completions
 
-This feature enables you inserting code completions directly at cursor's position while using the selected context. Code completions in Code Web Chat use big and capable models which have latency too high for automatic invocation on each keystroke but the results are of much greater quality.
+The tool is designed to provide you with the highest quality autocomplete suggestions at the cost of latency. Intented to be used on-demand through the Tools tab, via the command palette or a keybinding. Setup multiple configurations and choose between them based on difficulty of the completion.
 
-_Structure of the generated API request:_
-
-<Tabs groupId="fim-message-structure">
-  <TabItem value="api" label="API">
+## API message structure
 
 ```
 <files>
-  <file path="...">...</file> (Context files)
-  ...
-  <file path="...">
+  <text title="...">...</text>
+  // other websites...
+  <file path="...">...</file>
+  // other files excl. current editor...
+  <file path="..."> // current editor
     ...
-    <missing text>
-    ...
-  </file>
-</files>
-Somewhere in files you encountered the <missing text> symbol. Send the missing code only, without explanations, or any other text.
-```
-
-  </TabItem>
-  <TabItem value="chat" label="CHAT">
-
-Chat instruction asks for reasoning behind the decision about completion.
-
-```
-<files>
-  <file path="...">...</file> (Context files)
-  ...
-  <file path="...">
-    ...
-    <missing text>
+    <missing text> // cursor position
     ...
   </file>
 </files>
-Somewhere in files you encountered the <missing text> symbol. Send the missing code and explain your reasoning.
+Find correct replacement for <missing text> symbol. Respond with replacement text in "replacement" XML tags, without explanations or any other text.
 ```
-
-  </TabItem>
-</Tabs>
-
-## How it works
-
-### Select context
-
-Open the extension's panel and choose relevant folders and files.
-
-### Position cursor
-
-Place your cursor where you want to generate completion.
-
-### Run FIM
-
-Execute `Code Web Chat: Code Completion` from the Command Palette to use the default model or use `Code Web Chat: Code Completion with...` to select any other model. You can also enter "FIM mode" in the chat which is convenient for follow-ups.
-
-### Completion
-
-AI generated completion is inserted.
-
-:::info
-Bind `Code Web Chat: Code Completion` to a keyboard shortcut for fastest access.
-:::
 
 ## Available commands
 
@@ -77,7 +33,7 @@ Bind `Code Web Chat: Code Completion` to a keyboard shortcut for fastest access.
 
 Inserts the AI-generated completion directly at the cursor's position using the default FIM model.
 
-##### `Code Web Chat: Code Completion with...`
+##### `Code Web Chat: Code Completion using...`
 
 Lets you select which model to use for FIM completion.
 
@@ -85,7 +41,7 @@ Lets you select which model to use for FIM completion.
 
 Prompts for optional suggestions (e.g., "Avoid writing comments") before generating the FIM completion using the default model.
 
-##### `Code Web Chat: Code Completion with Suggestions with...`
+##### `Code Web Chat: Code Completion with Suggestions using...`
 
 Prompts for optional suggestions and lets you select which model to use for FIM completion.
 
@@ -97,14 +53,16 @@ Instead of inserting completion directly, copies the FIM completion prompt conte
 
 Prompts for optional suggestions, then copies the FIM completion prompt content (including context and suggestions) to your clipboard.
 
-##### `Code Web Chat: FIM in Chat`
+##### `Code Web Chat: Code Completion in Chat`
 
 Prompts for optional suggestions, then sends the FIM completion prompt content (including context and suggestions) to the previously selected web chat preset(s) via the browser connector.
 
-##### `Code Web Chat: FIM in Chat with...`
+##### `Code Web Chat: Code Completion in Chat with...`
 
 Prompts for optional suggestions, lets you select a specific web chat preset, and then sends the FIM completion prompt content (including context and suggestions) to that preset via the browser connector.
 
-##### `Code Web Chat: Change Default FIM Model`
+## Settings
 
-Configure which model should be used as the default for FIM completions.
+##### `Code Web Chat: Chat Code Completions Instructions`
+
+Instructions for code completions in chat.

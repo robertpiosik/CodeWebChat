@@ -5,24 +5,24 @@ hide_table_of_contents: true
 
 # Features
 
-Code Web Chat offers a suite of AI-driven features designed to aid your software development workflow in VS Code. These tools empower you to write, refactor, and comprehend code with greater efficiency.
+Learn about all the tools CWC ships with.
 
 ### [Chat](./chat)
 
-Utilize AI Studio, Gemini and other popular chatbots directly, with hands-free initialization.
+Enter instructions and copy well structured prompt to clipboard or initialize any web chat hands-free!
 
 ### [Code completions](./code-completions)
 
-Use the biggest models for top-quality inline code completions.
+Use selected context for accurate code completions using your favourite model.
 
 ### [File refactoring](./file-refactoring)
 
-Modify a file based on your instructions.
+Modify a file based on natural language instructions.
 
-### [Apply changes](./apply-changes)
+### [Apply chat response](./apply-chat-response)
 
 Integrate chat responses with the codebase.
 
-### [Generate Commit Message](./generate-commit-message))
+### [Generate Commit Message](./generate-commit-message)
 
-Generate meaningful commit messages automatically.
+Generate meaningful commit messages.

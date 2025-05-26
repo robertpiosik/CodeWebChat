@@ -1,30 +1,15 @@
 ---
-sidebar_position: 6
-hide_table_of_contents: true
+sidebar_position: 5
 ---
 
 # Tips
 
-Here are some tips and best practices for using Code Web Chat effectively.
+Here are some tips and best practices for using CWC effectively.
 
 ## Context
 
-- Avoid context pollution, for the best performance keep it around 20k tokens.
-- Use saved contexts when you often switch between features in a monorepo.
-- Include files that demonstrate your team's coding conventions.
-- Monitor the token count to stay within reasonable context lengths (~15k).
+Keep your context as short as possible carefully selecting what you show the model. LLMs are excellent pattern matchers and carefully scoping context pays off.
 
-## Chat
+## Instructions
 
-- Compare responses across different AI platforms for challenging problems.
-- Create task-specific presets (debugging, refactoring, explaining).
-
-## Fill-In-the-Middle (FIM)
-
-- Learn when smaller, faster models are sufficient and when you need to resort to priecier, slower ones.
-- Bind the FIM completion command to a keyboard shortcut for faster access.
-- Use inline documentation comments above cursor.
-
-## Refactoring and applying changes
-
-- Review the applied changes before commiting.
+Always prefer single-turns by refining initial instructions over "chatting". Context once polluted, won't recover. Rather than delegating big detailed task to be implemented all at once, divide it into smaller chunks for easier assessment.

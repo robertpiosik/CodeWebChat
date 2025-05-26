@@ -226,19 +226,14 @@ export const ChatTabView: React.FC<Props> = (props) => {
           <UiSeparator size="large" />
           <div className={styles['browser-extension-message']}>
             <span>
-              Get the{' '}
-              <a href="https://gemini-coder.netlify.app/docs/installation/web-browser-integration">
-                Code Web Chat Connector
-              </a>{' '}
-              for hands-free chat inititalizations.
+              Get the connector browser extension for hands-free chat
+              inititalizations.
             </span>
-
             <a href="https://chromewebstore.google.com/detail/gemini-coder-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
-              - Install for Chrome
+              Install for Chrome
             </a>
-
             <a href="https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/">
-              - Install for Firefox
+              Install for Firefox
             </a>
           </div>
         </>

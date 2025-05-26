@@ -4,8 +4,7 @@ import type * as Preset from '@docusaurus/preset-classic'
 
 const config: Config = {
   title: 'Code Web Chat',
-  tagline:
-    'Copy selected folders and files for web chats or initialize them hands-free! Use the same context with your favorite models for quality code completions and file refactorings.',
+  tagline: 'Initialize any web chat with your code',
   favicon: 'img/favicon.ico',
   url: 'https://codeweb.chat/',
   baseUrl: '/',
@@ -27,13 +26,9 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           path: '../../docs',
           editUrl:
-            'https://github.com/robertpiosik/CodeWebChat/tree/master/packages/website/'
+            'https://github.com/robertpiosik/CodeWebChat/tree/dev/docs/docs/'
         },
         blog: {
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true
-          },
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn'
@@ -46,7 +41,13 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
+    metadata: [
+      {
+        name: 'og:description',
+        content: 'Initialize any web chat with your code'
+      }
+    ],
+    // image: 'img/docusaurus-social-card.jpg',
     navbar: {
       title: 'Code Web Chat',
       logo: {

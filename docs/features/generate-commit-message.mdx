@@ -1,31 +1,23 @@
 ---
-hide_table_of_contents: true
-sidebar_position: 6
+title: Generate Commit Message
+sidebar_position: 5
 ---
-
-# Generate Commit Message
 
 Code Web Chat's Generate Commit Message feature automatically creates meaningful commit messages. This saves you time and ensures your commit history remains descriptive and consistent.
 
-_Structure of the generated API request:_
+## API message structure
 
 ```
 <files>
-  <file path="...">...</file> (Affected files)
-  ...
+  <file path="...">...</file>
+  // other affected files...
 </files>
-[COMMIT MESSAGE PROMPT] (Write a brief and precise summary for the following diff, limited to a single sentence if possible. Use an imperative tone to ensure clarity and focus on the primary change or purpose.)
+Write a brief and precise summary for the following diff, limited to a single sentence if possible and nothing else. Use an imperative tone to ensure clarity and focus on the primary change or purpose.
 [DIFF OF CHANGES]
 ```
 
-## Available commands
+## Settings
 
-##### `Code Web Chat: Change Default Commit Message Model`
+##### `Code Web Chat: Commit Message Instructions`
 
-Configure which model should be used as the default for generating commit messages.
-
-## Configuration
-
-##### `codeWebChat.commitMessageInstructions`
-
-The prompt text used when generating commit messages.
+The instructions used when generating a commit message.

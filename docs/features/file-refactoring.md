@@ -1,69 +1,22 @@
 ---
-hide_table_of_contents: true
-sidebar_position: 4
+title: File Refactoring
+sidebar_position: 3
 ---
 
-# File refactoring
+Modify a file based on natural language instructions.
 
-This feature allows you to modify the current file based on your refactoring instructions.
-
-_Structure of the generated API request:_
+## API message structure
 
 ```
 <files>
-  <file path="...">...</file> (Context files)
-  ...
-  <file path="...">...</file> (Current editor)
+  <text title="...">...</text>
+  // other websites...
+  <file path="...">...</file>
+  // other files excl. current editor...
+  <file path="...">...</file> // current editor
 </files>
-User requested refactor of a file "[NAME]". In your response send fully updated file only, without explanations or any other text.
-[REFACTORING INSTRUCTIONS]
+User requested refactor of a file `[PATH]`. Please show me the full code of the updated <file>, without explanations or any other text. I have a disability which means I can't type and need to be able to copy and paste the full code.
 ```
-
-## How it works
-
-### Select context
-
-Choose relevant files to provide the AI with necessary context about your codebase.
-
-### Choose target file
-
-Open the file you want to refactor in the editor.
-
-### Run command
-
-Execute one of the refactoring commands and provide your instruction.
-
-### Review changes
-
-The AI will generate a complete new version of your file with the requested changes.
-
-## Best practices
-
-### Be specific
-
-Clearly describe what aspects of the code should change and why.
-
-### Select text
-
-Optionally select specific code blocks to focus the refactoring on particular sections.
-
-### Include context
-
-Select relevant files that contain patterns, conventions, or dependencies that should inform the refactoring.
-
-### Review changes
-
-Always carefully review the AI-generated changes before committing them.
-
-## Example instructions
-
-Here are some effective refactoring instructions:
-
-- "Refactor this code to use async/await instead of promises with .then()"
-- "Convert this class-based component to a functional component with hooks"
-- "Implement the repository pattern for database access in this file"
-- "Extract the duplicate logic into reusable functions"
-- "Refactor to follow the SOLID principles, focusing on single responsibility"
 
 ## Available commands
 

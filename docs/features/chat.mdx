@@ -1,0 +1,87 @@
+---
+title: Chat
+sidebar_position: 1
+---
+
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+
+Initialize any web chat with your code, hands-free!
+
+:::tip Practice single-turns
+
+Chat conversations are only a construct of product interfaces, they hurt the quality of responses from the model and once your context is "poisoned" it will not recover. Whenever you're not satisfied with a reponse, **the best practice is to alawys refine your initial instructions and re-initialize a chat**.
+
+:::
+
+## Generated prompt structure
+
+<Tabs groupId="mode">
+  <TabItem value="general" label="General">
+
+```
+[INSTRUCTIONS]
+<files>
+  <text title="">...</text>
+  // other websites...
+  <file path="...">...</file>
+  // other files...
+</files>
+[INSTRUCTIONS]
+```
+
+For model's greater adherence to instructions, they're palced at both ends of the prompt.<br />
+[🔗 OpenAI Cookbook/Prompt Organization](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#prompt-organization)
+
+  </TabItem>
+  <TabItem value="code completions" label="Code Completions">
+
+```
+<files>
+  <text title="...">...</text>
+  // other websites...
+  <file path="...">...</file>
+  // other files excl. current editor...
+  <file path="..."> // current editor
+    ...
+    <missing text> // cursor position
+    ...
+  </file>
+</files>
+Find correct replacement text for the <missing text> symbol. Correctly formatted response begins with a code block containing replacement text end then proceeds with explanation. Always refer to symbol "<missing_text>" as "cursor position" and "replacement" as "completion".
+```
+
+  </TabItem>
+</Tabs>
+
+## Presets
+
+Create general or purpose-tailored chat configurations.
+
+## Available commands
+
+##### `Code Web Chat: Web Chat`
+
+Opens a chat session in your browser with the current context and prompt.
+
+##### `Code Web Chat: Web Chat with...`
+
+Lets you select which AI platform to use for your chat session.
+
+##### `Code Web Chat: Chat to Clipboard`
+
+Instead of opening a chat directly, copies the context and prompt to your clipboard for manual pasting.
+
+## Settings
+
+##### `Code Web Chat: Edit Format Instructions Truncated`
+
+Style instructions for chat responses when using truncated format.
+
+##### `Code Web Chat: Edit Format Instructions Whole`
+
+Style instructions for chat responses when showing complete files.
+
+##### `Code Web Chat: Edit Format Instructions Diff`
+
+Whenever proposing a file use the markdown code block syntax. Each code block should be a diff patch.

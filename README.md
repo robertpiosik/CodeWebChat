@@ -11,28 +11,29 @@
   <strong>👉 Generate meaningful commit messages</strong>
   <br/>
   <br/>
-  <p>
-  <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Download-VS_Code_Marketplace-blue" alt="Download from Visual Studio Code Marketplace" /></a>&nbsp;<a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-blue" alt="Download from Visual Studio Code Marketplace" /></a>&nbsp;<a href="https://github.com/robertpiosik/CodeWebChat" target="_blank"><img src="https://img.shields.io/github/stars/robertpiosik/CodeWebChat" alt="stars" /></a><br/><a href="https://x.com/robertpiosik" target="_blank"><img src="https://img.shields.io/badge/Created_by-@robertpiosik-black?logo=x" alt="X" /></a>&nbsp;<a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow-@CodeWebChat-black?logo=x" alt="X" /></a>&nbsp;<a href="https://www.reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join-r%2FCodeWebChat-orange?logo=reddit&logoColor=white" alt="Join r/CodeWebChat" /></a><br/>
-  <a href="https://codeweb.chat/" target="_blank"><strong>Documentation</strong></a>
-  </p>
+
+<a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Download-VS_Code_Marketplace-blue" alt="Download from Visual Studio Code Marketplace" /></a>&nbsp;<a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-blue" alt="Download from Visual Studio Code Marketplace" /></a>&nbsp;<a href="https://github.com/robertpiosik/CodeWebChat" target="_blank"><img src="https://img.shields.io/github/stars/robertpiosik/CodeWebChat" alt="stars" /></a><br/><a href="https://x.com/robertpiosik" target="_blank"><img src="https://img.shields.io/badge/Created_by-@robertpiosik-black?logo=x" alt="X" /></a>&nbsp;<a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow-@CodeWebChat-black?logo=x" alt="X" /></a>&nbsp;<a href="https://www.reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join-r%2FCodeWebChat-orange?logo=reddit&logoColor=white" alt="Join r/CodeWebChat" /></a><br/>
+<a href="https://codeweb.chat/" target="_blank"><strong>Documentation</strong></a>
+
 </div>
 
-# What is CWC?
+## What is CWC?
 
-CWC enables developers getting the best quality AI-assistance with a game-changing cost efficiency.
+CWC is a tool built by an independent developer enabling engineers getting the best quality AI-assistance with a game-changing cost efficiency.
 
+🧩 Compatible with VS Code, Cursor and Windsurf<br/>
 ✌️ 100% free and open source!
 
-Guiding Principles:
+**Guiding Principles:**
 
-- initialize popular chatbots but don't game them
-- fully-featured, yet simple to use
-- zero telemetry
-- robust and lightweight
+- initialize popular chatbots—but don't game them
+- everything you need—nothing you don’t
+- respect privacy—zero tracking
+- lightweight—under 1MB
 
-CWC is for you if:
+**CWC is for you if:**
 
-- you're an experienced engineer working on a large project
+- you're an experienced engineer working on a large codebase
 - you're a student or hobbyist on a budget
 - you love open source software! 🫶
 
@@ -40,7 +41,7 @@ CWC is for you if:
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/walkthrough.gif" alt="Walkthrough" />
 </p>
 
-# Context
+## Context
 
 Other tools try to "guess" what pieces of the codebase matter for the given task, often struggling to get it right. They workaround this by overloading context hurting model's performance and your wallet.
 
@@ -53,7 +54,7 @@ The result? Unmatched in accuracy and cost AI assistance.
 
 > Too many tokens fighting for attention may _decrease_ performance due to being too "distracting", diffusing attention too broadly and decreasing a signal to noise ratio in the features. ~Andrej Karpathy
 
-# Web chats
+## Web chats
 
 Use your favorite chatbot without tedious copy-pasting contents of files you want to include with your instructions.
 
@@ -62,11 +63,11 @@ Use your favorite chatbot without tedious copy-pasting contents of files you wan
 - General<br/>_Ask anything_
 - Code Completions <br/>_Ask what fits the cursor position_
 
-Prompts with context and instructions can be copied to clipboard or sent directly to the chosen chatbot.
+Prompts with context and instructions can be copied to clipboard or sent directly to any supported chatbot.
 
 **Apply Chat Response** is a smart tool that automatically integrates multi-file changes with the codebase by modyfing exisitng files or creating new ones. Works with chat responses in three edit formats: truncated, whole and diff.
 
-### Supported chatbots:
+### Supported chatbots
 
 _(alphabetically)_
 
@@ -92,7 +93,7 @@ The Connector extension is available in [Chrome Web Store](https://chromewebstor
 
 Chat conversations are only a construct of product interfaces, they hurt the quality of responses from the model and once your context is "poisoned" it will not recover. Whenever you're not satisfied with a reponse, **the best practice is to alawys refine your initial instructions and re-initialize a chat**.
 
-# API Tools
+## API Tools
 
 CWC will elevate your workflow with must-have API features.
 
@@ -116,46 +117,28 @@ _(alphabetically)_
 ℹ️ Any OpenAI-API compatible endpoint works with CWC.<br/>
 🔒️ API keys are stored securely in the [Secret Storage](https://code.visualstudio.com/api/references/vscode-api#SecretStorage).
 
-## Code completions
+### Code completions
 
 The tool is designed to provide you with the highest quality autocomplete suggestions at the cost of latency. Intented to be used on-demand through the Tools tab, via the command palette or a keybinding. Setup multiple configurations and choose between them based on difficulty of the completion.
 
-✓ Includes selected context
-<br />
+✓ Includes selected context<br />
 ✓ Works great with any model
 
-## File refactoring
+### File refactoring
 
 Modify a file based on natural language instructions.
 
-✓ Includes selected context
-<br />
+✓ Includes selected context<br />
 ✓ Reliable single-file edits
 
-## Commit messages
+### Commit messages
 
 Generate meaningful commit messages. The tool first attaches affected files, then the customizable instructions, then diff of changes. Not lobotomized context ensures unmatched accuracy.
 
-✓ Includes affected files in full
-<br />
+✓ Includes affected files in full<br />
 ✓ Customizable instructions
 
-# Quick start for chat
-
-1. Open the new Code Web Chat view from the activity bar (sparkles icon).
-2. Select folders and files to include in the context.
-3. Enter instructions and copy generated prompt.
-4. (optional) Install [browser integration](https://gemini-coder.netlify.app/docs/installation/web-browser-integration) for hands-free initializations.
-
-# Quick start for code completions
-
-1. Open the new Code Web Chat view from the activity bar (sparkles icon).
-2. Select folders and files to include in the context.
-3. Place caret where you want code completion to appear.
-4. Use Command Palette (Ctrl/Cmd + Shift + P) and type "Code Completion".
-5. Bind the command to a keyboard shortcut by opening Keyboard Shortcuts (Ctrl/Cmd+K Ctrl/Cmd+S), searching for `Code Web Chat: Code Completion`, clicking the + icon, and pressing your preferred key combination (e.g. Ctrl/Cmd+I).
-
-# Commands
+## Commands
 
 ### Code completions
 
@@ -186,11 +169,11 @@ Generate meaningful commit messages. The tool first attaches affected files, the
 
 - `Code Web Chat: Copy Context` - Copy selected folders/files and websites to clipboard.
 
-# Community
+## Community
 
 Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/discussions) and in our subreddit [/r/CodeWebChat](https://www.reddit.com/r/CodeWebChat).
 
-# Donations
+## Donations
 
 If you find CWC helpful, please consider buying the author a [coffee](https://buymeacoffee.com/robertpiosik). Thank you for your support! 🙏
 
@@ -202,11 +185,11 @@ If you find CWC helpful, please consider buying the author a [coffee](https://bu
 
 **XMR:** 84whVjApZJtSeRb2eEbZ1pJ7yuBoGoWHGA4JuiFvdXVBXnaRYyQ3S4kTEuzgKjpxyr3nxn1XHt9yWTRqZ3XGfY35L4yDm6R
 
-# Contributing
+## Contributing
 
 All contributions are welcome. Feel free to submit pull requests, feature requests and bug reports.
 
-# License
+## License
 
 Copyright © 2025-present [Robert Piosik](https://x.com/robertpiosik)
 <br/>📨 `robertpiosik@gmail.com`
