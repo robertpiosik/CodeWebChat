@@ -228,11 +228,17 @@ export async function apply_git_patch(
           throw new Error('File path is null')
         }
 
-        if ((await process_diff_patch(file_path_safe, temp_file)) == false) {
-          throw new Error('Failed to apply diff patch for all methods')
+        try {
+          await process_diff_patch(file_path_safe, temp_file)
+          used_fallback = true
+        } catch (error: any) {
+          Logger.error({
+            function_name: 'apply_git_patch',
+            message: 'Custom diff processor failed',
+            data: error
+          })
+          throw new Error(`Failed to apply diff patch: ${error.message}`)
         }
-
-        used_fallback = true
       }
 
       Logger.log({

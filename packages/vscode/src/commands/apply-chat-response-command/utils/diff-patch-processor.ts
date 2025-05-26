@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
+import { Logger } from '@/helpers/logger'
 
 class SearchBlock {
   public search_lines: string[]
@@ -25,10 +26,10 @@ class SearchBlock {
   }
 }
 
-export async function process_diff_patch(
+export const process_diff_patch = async (
   file_path: string,
   diff_path_patch: string
-): Promise<boolean> {
+): Promise<void> => {
   if (!fs.existsSync(file_path)) {
     // Check if file exists, if not then create it and any directories
     try {
@@ -42,11 +43,16 @@ export async function process_diff_patch(
       // Delay to prevent file system issues when creating a lot of files quickly
       await new Promise((f) => setTimeout(f, 500))
 
-      console.log(`File created successfully at: ${file_path}`)
+      Logger.log({
+        function_name: 'process_diff_patch',
+        message: `File created successfully at: ${file_path}`
+      })
     } catch (error: any) {
-      console.error(`Error creating file: ${error.message}`)
-
-      return false
+      Logger.error({
+        function_name: 'process_diff_patch',
+        message: `Error creating file: ${error.message}`
+      })
+      throw new Error(`Failed to create file: ${error.message}`)
     }
   }
 
@@ -64,25 +70,27 @@ export async function process_diff_patch(
     result = apply_diff_patch(file_content, diff_patch_content)
   }
 
-  if (result == 'error') {
-    return false
-  }
-
   // Save result to file
   try {
     await vscode.workspace.fs.writeFile(
       vscode.Uri.file(file_path),
       Buffer.from(result, 'utf8')
     )
-    console.log('File saved successfully')
-    return true // Return true after successful write
+    Logger.log({
+      function_name: 'process_diff_patch',
+      message: 'File saved successfully'
+    })
   } catch (error) {
-    console.error('Error saving file:', error)
-    return false // Return false if write fails
+    Logger.error({
+      function_name: 'process_diff_patch',
+      message: 'Error saving file',
+      data: error
+    })
+    throw new Error('Failed to save file after applying diff patch')
   }
 }
 
-function create_new_file_from_patch(diff_patch: string): string {
+const create_new_file_from_patch = (diff_patch: string): string => {
   let new_file_content = ''
 
   const patch_normalized = diff_patch.replace(/\r\n/g, '\n')
@@ -109,7 +117,10 @@ function create_new_file_from_patch(diff_patch: string): string {
   return new_file_content
 }
 
-function apply_diff_patch(original_code: string, diff_patch: string): string {
+const apply_diff_patch = (
+  original_code: string,
+  diff_patch: string
+): string => {
   try {
     const original_code_normalized = original_code.replace(/\r\n/g, '\n') // Remove windows line endings
     const original_code_lines = original_code_normalized.split(/^/m) // Split by new line
@@ -295,8 +306,7 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
     if (search_chunks.length > 0) {
       // When there are only + lines in the last search block and corresponding no replace lines remove a trailing ~nnn if exists
       // A extra trailing new line is sometimes added by the AI model
-      if (search_chunks[search_chunks.length - 1] == '~nnn')
-      {
+      if (search_chunks[search_chunks.length - 1] == '~nnn') {
         // If the last search chunk ends in a ~nnn (blank new line), remove it and it's corresponding replace chunk new line
         search_chunks.pop()
         replace_chunks.pop()
@@ -334,7 +344,7 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
         )
         const chunk_string = chunk.map((line) => line.value).join('')
 
-        //console.log('Chunk string: ' + chunk_string);
+        // console.log('Chunk string: ' + chunk_string);
 
         // Check if the chunk matches the search string
         if (chunk_string == search_string) {
@@ -357,15 +367,19 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
 
       // If not found, set the search_block_start_index to -1
       if (!found) {
-        console.log('Search block not found: ' + search_string)
-        console.log(('search_replace_block: ' + JSON.stringify(search_replace_block)))
+        const error_message = `Search block not found: ${search_string}`
+        Logger.error({
+          function_name: 'apply_diff_patch',
+          message: error_message
+        })
+        Logger.error({
+          function_name: 'apply_diff_patch',
+          message: `search_replace_block: ${JSON.stringify(
+            search_replace_block
+          )}`
+        })
 
-        search_replace_block.search_block_start_index = -1 // Not found
-
-        //print_debug(original_code_lines, original_code_lines_normalized, patch_lines_normalized, search_replace_blocks);
-
-        return 'error'
-        //throw new Error('Search block not found: ' + search_string);
+        throw new Error(`Search block not found: ${search_string}`)
       }
     }
 
@@ -388,11 +402,12 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
 
       if (start_index < 0 || start_index > result_lines.length) {
         // start_index can be == result_lines.length for appending
-        console.error(
-          `Invalid start index ${start_index} for block application. Max index: ${
+        Logger.error({
+          function_name: 'apply_diff_patch',
+          message: `Invalid start index ${start_index} for block application. Max index: ${
             result_lines.length - 1
           }`
-        )
+        })
         continue
       }
 
@@ -402,7 +417,7 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
         result_lines.length - start_index
       )
 
-      //console.log(`Applying block at index ${start_index}: removing ${actual_search_count} lines, inserting ${replacement_content.length} lines.`);
+      // console.log(`Applying block at index ${start_index}: removing ${actual_search_count} lines, inserting ${replacement_content.length} lines.`);
       // Apply the replacement
       result_lines.splice(
         start_index,
@@ -411,48 +426,58 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
       )
     }
 
-    //print_debug(result_lines, original_code_lines, original_code_lines_normalized, patch_lines_normalized, search_replace_blocks);
+    // print_debug(result_lines, original_code_lines, original_code_lines_normalized, patch_lines_normalized, search_replace_blocks);
 
     return result_lines.join('')
   } catch (error) {
-    console.error('Error during diff processing:', error)
-
-    return 'error'
-    //throw new Error('Error during diff processing: ' + error);
+    Logger.error({
+      function_name: 'apply_diff_patch',
+      message: 'Error during diff processing',
+      data: error
+    })
+    throw error
   }
 }
 
-function print_debug(original_code_lines: string[], original_code_lines_normalized: any[], patch_lines_normalized: string[], search_replace_blocks: SearchBlock[]) {
-  // Output the original code lines
-  console.log('\n=== Original Code Lines ===');
-  console.log(JSON.stringify(original_code_lines, null, 2));
+// function print_debug(
+//   original_code_lines: string[],
+//   original_code_lines_normalized: any[],
+//   patch_lines_normalized: string[],
+//   search_replace_blocks: SearchBlock[]
+// ) {
+//   // Output the original code lines
+//   console.log('\n=== Original Code Lines ===')
+//   console.log(JSON.stringify(original_code_lines, null, 2))
 
-  // Output the search_replace_blocks in JSON format
-  console.log('=== Search and Replace Blocks ===');
-  console.log(JSON.stringify(search_replace_blocks, null, 2));
+//   // Output the search_replace_blocks in JSON format
+//   console.log('=== Search and Replace Blocks ===')
+//   console.log(JSON.stringify(search_replace_blocks, null, 2))
 
-  let output_code_lines = "";
-  for (let i = 0; i < original_code_lines_normalized.length; i++) {
-      output_code_lines += original_code_lines_normalized[i].key + " " + original_code_lines_normalized[i].value + "\n";
-  }
+//   let output_code_lines = ''
+//   for (let i = 0; i < original_code_lines_normalized.length; i++) {
+//     output_code_lines +=
+//       original_code_lines_normalized[i].key +
+//       ' ' +
+//       original_code_lines_normalized[i].value +
+//       '\n'
+//   }
 
-  // Output the normalized lines
-  console.log('=== Normalized Original Code Lines ===');
-  console.log(output_code_lines);
+//   // Output the normalized lines
+//   console.log('=== Normalized Original Code Lines ===')
+//   console.log(output_code_lines)
 
-  console.log('=== Normalized Patch Lines ===');
-  console.log(patch_lines_normalized.join('\n'));
-}
+//   console.log('=== Normalized Patch Lines ===')
+//   console.log(patch_lines_normalized.join('\n'))
+// }
 
-function count_trailing_new_lines(text: string): number {
+const count_trailing_new_lines = (text: string): number => {
   let count = 0
   for (let i = text.length - 1; i >= 0; i--) {
-    if (text[i] === '\n') {
+    if (text[i] == '\n') {
       count++
     } else {
       break
     }
   }
-
   return count
 }
