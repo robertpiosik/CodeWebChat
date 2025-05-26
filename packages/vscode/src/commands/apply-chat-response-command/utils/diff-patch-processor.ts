@@ -293,6 +293,15 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
 
     // Reached end of patch. Add the final search block to the searchReplaceBlocks
     if (search_chunks.length > 0) {
+      // When there are only + lines in the last search block and corresponding no replace lines remove a trailing ~nnn if exists
+      // A extra trailing new line is sometimes added by the AI model
+      if (search_chunks[search_chunks.length - 1] == '~nnn')
+      {
+        // If the last search chunk ends in a ~nnn (blank new line), remove it and it's corresponding replace chunk new line
+        search_chunks.pop()
+        replace_chunks.pop()
+      }
+
       // Add the final search block to the searchReplaceBlocks
       // This is crucial for diffs that only have deletions
       search_replace_blocks.push(
@@ -349,7 +358,11 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
       // If not found, set the search_block_start_index to -1
       if (!found) {
         console.log('Search block not found: ' + search_string)
+        console.log(('search_replace_block: ' + JSON.stringify(search_replace_block)))
+
         search_replace_block.search_block_start_index = -1 // Not found
+
+        //print_debug(original_code_lines, original_code_lines_normalized, patch_lines_normalized, search_replace_blocks);
 
         return 'error'
         //throw new Error('Search block not found: ' + search_string);
@@ -398,6 +411,8 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
       )
     }
 
+    //print_debug(result_lines, original_code_lines, original_code_lines_normalized, patch_lines_normalized, search_replace_blocks);
+
     return result_lines.join('')
   } catch (error) {
     console.error('Error during diff processing:', error)
@@ -405,6 +420,28 @@ function apply_diff_patch(original_code: string, diff_patch: string): string {
     return 'error'
     //throw new Error('Error during diff processing: ' + error);
   }
+}
+
+function print_debug(original_code_lines: string[], original_code_lines_normalized: any[], patch_lines_normalized: string[], search_replace_blocks: SearchBlock[]) {
+  // Output the original code lines
+  console.log('\n=== Original Code Lines ===');
+  console.log(JSON.stringify(original_code_lines, null, 2));
+
+  // Output the search_replace_blocks in JSON format
+  console.log('=== Search and Replace Blocks ===');
+  console.log(JSON.stringify(search_replace_blocks, null, 2));
+
+  let output_code_lines = "";
+  for (let i = 0; i < original_code_lines_normalized.length; i++) {
+      output_code_lines += original_code_lines_normalized[i].key + " " + original_code_lines_normalized[i].value + "\n";
+  }
+
+  // Output the normalized lines
+  console.log('=== Normalized Original Code Lines ===');
+  console.log(output_code_lines);
+
+  console.log('=== Normalized Patch Lines ===');
+  console.log(patch_lines_normalized.join('\n'));
 }
 
 function count_trailing_new_lines(text: string): number {
