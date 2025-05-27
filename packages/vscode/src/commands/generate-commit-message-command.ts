@@ -78,7 +78,7 @@ export function generate_commit_message_command(
 
         if (!commit_message_config) {
           vscode.window.showErrorMessage(
-            'Commit Messages API tool is not configured. Navigate to Settings tab, configure API providers and setup the tool.'
+            'Commit Messages API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
           )
           Logger.warn({
             function_name: 'generate_commit_message_command',
@@ -93,7 +93,7 @@ export function generate_commit_message_command(
 
         if (!provider) {
           vscode.window.showErrorMessage(
-            'API provider not found for Commit Messages tool. Navigate to Settings tab, configure API providers and setup the tool.'
+            'API provider not found for Commit Messages tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
           )
           Logger.warn({
             function_name: 'generate_commit_message_command',
@@ -104,7 +104,7 @@ export function generate_commit_message_command(
 
         if (!provider.api_key) {
           vscode.window.showErrorMessage(
-            'API key is missing for the selected provider. Please add it in the settings.'
+            'API key is missing for the selected provider. Please add it in the Settings tab.'
           )
           return
         }

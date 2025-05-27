@@ -39,7 +39,8 @@ import {
   code_completion_with_suggestions_to_clipboard_command,
   reference_in_chat_command,
   open_settings_command,
-  open_url_command
+  open_url_command,
+  agent_commands
 } from './commands'
 
 // Store WebSocketServer instance at module level
@@ -109,6 +110,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     apply_chat_response_command(context),
+    ...agent_commands({
+      context,
+      workspace_provider,
+      open_editors_provider
+    }),
     ...refactor_commands({
       context,
       workspace_provider,

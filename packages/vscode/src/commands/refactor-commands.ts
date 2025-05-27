@@ -13,17 +13,17 @@ import { ApiProvidersManager } from '../services/api-providers-manager'
 import { get_refactoring_instruction } from '@/constants/instructions'
 import { PROVIDERS } from '@shared/constants/providers'
 
-async function get_refactor_config(
+export const get_refactor_config = async (
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext
-): Promise<{ provider: any; config: any } | undefined> {
+): Promise<{ provider: any; config: any } | undefined> => {
   const refactor_configs =
     await api_providers_manager.get_file_refactoring_tool_configs()
 
   if (refactor_configs.length === 0) {
     vscode.window.showErrorMessage(
-      'File Refactoring API tool is not configured. Navigate to Settings tab, configure API providers and setup the tool.'
+      'File Refactoring API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
     )
     Logger.warn({
       function_name: 'get_refactor_config',
@@ -180,7 +180,7 @@ async function get_refactor_config(
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              'API provider not found for File Refactoring tool. Navigate to Settings tab, configure API providers and setup the tool.'
+              'API provider not found for File Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
             )
             Logger.warn({
               function_name: 'get_refactor_config',
@@ -212,7 +212,7 @@ async function get_refactor_config(
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      'API provider not found for File Refactoring tool. Navigate to Settings tab, configure API providers and setup the tool.'
+      'API provider not found for File Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
     )
     Logger.warn({
       function_name: 'get_refactor_config',
@@ -227,12 +227,12 @@ async function get_refactor_config(
   }
 }
 
-async function perform_refactor(params: {
+const perform_refactor = async (params: {
   context: vscode.ExtensionContext
   file_tree_provider: any
-  open_editors_provider?: any
-  show_quick_pick?: boolean
-}) {
+  open_editors_provider: any
+  show_quick_pick: boolean
+}) => {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
   const editor = vscode.window.activeTextEditor
@@ -288,7 +288,7 @@ async function perform_refactor(params: {
 
   if (!refactoring_settings.provider_name) {
     vscode.window.showErrorMessage(
-      'API provider is not specified for File Refactoring tool. Navigate to Settings tab, configure API providers and setup the tool.'
+      'API provider is not specified for File Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
     )
     Logger.warn({
       function_name: 'perform_refactor',
@@ -297,7 +297,7 @@ async function perform_refactor(params: {
     return
   } else if (!refactoring_settings.model) {
     vscode.window.showErrorMessage(
-      'Model is not specified for File Refactoring tool. Navigate to Settings tab, configure API providers and setup the tool.'
+      'Model is not specified for File Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
     )
     Logger.warn({
       function_name: 'perform_refactor',
@@ -308,7 +308,7 @@ async function perform_refactor(params: {
 
   if (!provider.api_key) {
     vscode.window.showErrorMessage(
-      'API key is missing. Please add it in the settings.'
+      'API key is missing. Please add it in the Settings tab.'
     )
     return
   }
@@ -318,7 +318,7 @@ async function perform_refactor(params: {
     const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
     if (!provider_info) {
       vscode.window.showErrorMessage(
-        `Built-in provider "${provider.name}" not found. Navigate to Settings tab, configure API providers and setup the tool.`
+        `Built-in provider "${provider.name}" not found. Navigate to the Settings tab, configure API providers and setup the API tool.`
       )
       Logger.warn({
         function_name: 'perform_refactor',
@@ -354,7 +354,6 @@ async function perform_refactor(params: {
     }
   }
 
-  // Create files collector with both providers
   const files_collector = new FilesCollector(
     params.file_tree_provider,
     params.open_editors_provider
@@ -509,14 +508,14 @@ async function perform_refactor(params: {
     })
 }
 
-export function refactor_commands(params: {
+export const refactor_commands = (params: {
   context: vscode.ExtensionContext
   workspace_provider: any
   open_editors_provider?: any
   use_default_model?: boolean
-}) {
+}) => {
   return [
-    vscode.commands.registerCommand('codeWebChat.refactor', async () =>
+    vscode.commands.registerCommand('codeWebChat.refactor', () =>
       perform_refactor({
         context: params.context,
         file_tree_provider: params.workspace_provider,
@@ -524,7 +523,7 @@ export function refactor_commands(params: {
         show_quick_pick: false
       })
     ),
-    vscode.commands.registerCommand('codeWebChat.refactorUsing', async () =>
+    vscode.commands.registerCommand('codeWebChat.refactorUsing', () =>
       perform_refactor({
         context: params.context,
         file_tree_provider: params.workspace_provider,
