@@ -132,7 +132,7 @@ const perform_agent_task = async (params: {
           cancel_token_source.cancel('Cancelled by user.')
         })
 
-        return await make_api_request(
+        return make_api_request(
           endpoint_url,
           provider.api_key,
           body,

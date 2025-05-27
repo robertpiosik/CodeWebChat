@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC, prev. Gemini Coder)",
   "description": "Initialize any web chat with your code",
-  "version": "1.17.0",
+  "version": "1.18.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "npm run compile",

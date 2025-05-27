@@ -148,21 +148,13 @@ export async function make_api_request(
           }
         }
 
-        let content = accumulated_content.trim()
-
-        const regex = /^```(\w+)?\n([\s\S]*?)\n```$/
-        const match = content.match(regex)
-        if (match) {
-          content = match[2]
-        }
-
         Logger.log({
           function_name: 'make_api_request',
           message: 'Combined code received:',
-          data: content
+          data: accumulated_content
         })
 
-        resolve(content)
+        resolve(accumulated_content)
       })
 
       response.data.on('error', (error: Error) => {
