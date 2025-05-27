@@ -243,7 +243,6 @@ describe('clipboard-parser', () => {
 `)
     })
 
-
     it('should parse direct diff format in variant f', () => {
       const text = load_clipboard_text('diff-direct-variant-f.txt')
       const result = parse_clipboard_content(text, true)
@@ -392,6 +391,58 @@ describe('clipboard-parser', () => {
 
     it('should parse multiple diff files format in variant f', () => {
       const text = load_clipboard_text('diff-multiple-files-variant-f.txt')
+      const result = parse_clipboard_content(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(2)
+
+      expect(result.patches![0].file_path).toBe('src/lorem.ts')
+      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
+
+      expect(result.patches![0].content).toBe(`--- a/src/lorem.ts
++++ b/src/lorem.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old lorem")
++console.log("new lorem")
+`)
+      expect(result.patches![1].content).toBe(`--- a/src/ipsum.ts
++++ b/src/ipsum.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old ipsum")
++console.log("new ipsum")
+`)
+    })
+
+    it('should parse multiple diff files format in variant g', () => {
+      const text = load_clipboard_text('diff-multiple-files-variant-g.txt')
+      const result = parse_clipboard_content(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(2)
+
+      expect(result.patches![0].file_path).toBe('src/lorem.ts')
+      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
+
+      expect(result.patches![0].content).toBe(`--- a/src/lorem.ts
++++ b/src/lorem.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old lorem")
++console.log("new lorem")
+`)
+      expect(result.patches![1].content).toBe(`--- a/src/ipsum.ts
++++ b/src/ipsum.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old ipsum")
++console.log("new ipsum")
+`)
+    })
+
+    it('should parse multiple diff files format in variant h', () => {
+      const text = load_clipboard_text('diff-multiple-files-variant-h.txt')
       const result = parse_clipboard_content(text, true)
 
       expect(result.type).toBe('patches')
