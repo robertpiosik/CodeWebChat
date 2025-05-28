@@ -261,21 +261,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.refactorToClipboard",
-        "title": "Refactor to Clipboard",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.agent",
-        "title": "Agent",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.agentUsing",
-        "title": "Agent using...",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.newFolder",
         "title": "New Folder...",
         "icon": "$(new-folder)"

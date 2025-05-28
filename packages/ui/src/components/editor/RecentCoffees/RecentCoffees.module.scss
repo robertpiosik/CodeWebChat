@@ -1,0 +1,33 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-12px);
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-4px);
+
+    &__heading {
+      display: flex;
+      align-items: center;
+      color: var(--vscode-descriptionForeground);
+
+      &__username {
+        color: black;
+        background-color: #ffdd00;
+        padding: var(--padding-2px) var(--padding-5px);
+        font-weight: 600;
+        margin-right: var(--padding-4px);
+        border-radius: var(--border-radius-8px);
+      }
+    }
+
+    &__note {
+      font-size: var(--font-size-14px);
+      background-color: var(--vscode-list-hoverBackground);
+      border-radius: var(--border-radius-8px);
+      padding: var(--padding-4px) var(--padding-6px);
+    }
+  }
+}

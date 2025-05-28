@@ -1,19 +1,13 @@
 import * as vscode from 'vscode'
-import axios from 'axios'
-import { make_api_request } from '../helpers/make-api-request'
-import { cleanup_api_response } from '../helpers/cleanup-api-response'
 import { FilesCollector } from '../helpers/files-collector'
-import {
-  LAST_APPLIED_CHANGES_STATE_KEY,
-  TEMP_REFACTORING_INSTRUCTION_STATE_KEY,
-  LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY
-} from '../constants/state-keys'
 import { Logger } from '../helpers/logger'
 import { ApiProvidersManager } from '../services/api-providers-manager'
-import { get_refactoring_instruction } from '@/constants/instructions'
+import { make_api_request } from '../helpers/make-api-request'
+import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
+import { LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY } from '@/constants/state-keys'
 
-export const get_refactor_config = async (
+const get_refactor_config = async (
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext
@@ -23,11 +17,11 @@ export const get_refactor_config = async (
 
   if (refactor_configs.length === 0) {
     vscode.window.showErrorMessage(
-      'File Refactoring API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'Refactoring API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
     )
     Logger.warn({
       function_name: 'get_refactor_config',
-      message: 'File Refactoring API tool is not configured.'
+      message: 'Refactoring API tool is not configured.'
     })
     return
   }
@@ -180,11 +174,11 @@ export const get_refactor_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              'API provider not found for File Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+              'API provider not found for Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
             )
             Logger.warn({
               function_name: 'get_refactor_config',
-              message: 'API provider not found for File Refactoring tool.'
+              message: 'API provider not found for Refactoring tool.'
             })
             resolve(undefined)
             return
@@ -212,11 +206,11 @@ export const get_refactor_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      'API provider not found for File Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'API provider not found for Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
     )
     Logger.warn({
       function_name: 'get_refactor_config',
-      message: 'API provider not found for File Refactoring tool.'
+      message: 'API provider not found for Refactoring tool.'
     })
     return
   }
@@ -227,51 +221,67 @@ export const get_refactor_config = async (
   }
 }
 
-const perform_refactor = async (params: {
+const perform_refactoring = async (params: {
   context: vscode.ExtensionContext
   file_tree_provider: any
-  open_editors_provider: any
-  show_quick_pick: boolean
+  open_editors_provider?: any
+  show_quick_pick?: boolean
 }) => {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
   const editor = vscode.window.activeTextEditor
+  let current_file_path = ''
+  let selected_text = ''
 
-  if (!editor) {
-    vscode.window.showErrorMessage('No active editor found.')
+  if (editor) {
+    const document = editor.document
+    current_file_path = vscode.workspace.asRelativePath(document.uri)
+
+    const selection = editor.selection
+    selected_text = editor.document.getText(selection)
+  }
+
+  const files_collector = new FilesCollector(
+    params.file_tree_provider,
+    params.open_editors_provider
+  )
+
+  const collected_files = await files_collector.collect_files({
+    active_path: editor?.document?.uri.fsPath
+  })
+
+  if (!collected_files) {
+    vscode.window.showErrorMessage('Unable to work with empty context.')
     return
   }
 
-  let instruction = params.context.workspaceState.get<string>(
-    TEMP_REFACTORING_INSTRUCTION_STATE_KEY
-  )
+  const last_chat_prompt =
+    params.context.workspaceState.get<string>('last-chat-prompt') || ''
 
-  // If no instruction in workspace state (direct command invocation), prompt for one
-  if (!instruction) {
-    const last_instruction = params.context.globalState.get<string>(
-      'lastRefactoringInstruction',
-      ''
-    )
+  const input_box = vscode.window.createInputBox()
+  input_box.placeholder = 'Enter instructions'
+  input_box.value = last_chat_prompt
 
-    instruction = await vscode.window.showInputBox({
-      prompt: 'Enter refactoring instructions',
-      placeHolder: 'e.g., "Refactor this code to use async/await"',
-      value: last_instruction,
-      validateInput: (value) => {
-        params.context.globalState.update('lastRefactoringInstruction', value)
-        return null
+  input_box.onDidChangeValue(async (value) => {
+    await params.context.workspaceState.update('last-chat-prompt', value)
+  })
+
+  const instructions = await new Promise<string | undefined>((resolve) => {
+    input_box.onDidAccept(() => {
+      const value = input_box.value.trim()
+      if (value.length === 0) {
+        vscode.window.showErrorMessage('Instruction cannot be empty')
+        return
       }
+      resolve(value)
+      input_box.hide()
     })
+    input_box.onDidHide(() => resolve(undefined))
+    input_box.show()
+  })
 
-    if (!instruction) {
-      return // User cancelled the instruction input
-    }
-  } else {
-    // Clear the temporary instruction immediately after getting it
-    await params.context.workspaceState.update(
-      TEMP_REFACTORING_INSTRUCTION_STATE_KEY,
-      undefined
-    )
+  if (!instructions) {
+    return
   }
 
   const config_result = await get_refactor_config(
@@ -284,27 +294,7 @@ const perform_refactor = async (params: {
     return
   }
 
-  const { provider, config: refactoring_settings } = config_result
-
-  if (!refactoring_settings.provider_name) {
-    vscode.window.showErrorMessage(
-      'API provider is not specified for File Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
-    )
-    Logger.warn({
-      function_name: 'perform_refactor',
-      message: 'API provider is not specified for File Refactoring tool.'
-    })
-    return
-  } else if (!refactoring_settings.model) {
-    vscode.window.showErrorMessage(
-      'Model is not specified for File Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
-    )
-    Logger.warn({
-      function_name: 'perform_refactor',
-      message: 'Model is not specified for File Refactoring tool.'
-    })
-    return
-  }
+  const { provider, config: refactor_settings } = config_result
 
   if (!provider.api_key) {
     vscode.window.showErrorMessage(
@@ -321,7 +311,7 @@ const perform_refactor = async (params: {
         `Built-in provider "${provider.name}" not found. Navigate to the Settings tab, configure API providers and setup the API tool.`
       )
       Logger.warn({
-        function_name: 'perform_refactor',
+        function_name: 'perform_refactor_task',
         message: `Built-in provider "${provider.name}" not found.`
       })
       return
@@ -331,50 +321,16 @@ const perform_refactor = async (params: {
     endpoint_url = provider.base_url
   }
 
-  const document = editor.document
-  const document_path = document.uri.fsPath
-  const document_text = document.getText()
-
-  // Store original content for potential reversion
-  const original_content = document_text
-
-  // Get the relative path of the file in the workspace
-  const file_path = vscode.workspace.asRelativePath(document.uri)
-
-  // Determine which workspace this file belongs to (for multi-root workspaces)
-  let workspace_name: string | undefined = undefined
-  if (
-    vscode.workspace.workspaceFolders &&
-    vscode.workspace.workspaceFolders.length > 1
-  ) {
-    // Find the workspace folder that contains this file
-    const workspace_folder = vscode.workspace.getWorkspaceFolder(document.uri)
-    if (workspace_folder) {
-      workspace_name = workspace_folder.name
-    }
-  }
-
-  const files_collector = new FilesCollector(
-    params.file_tree_provider,
-    params.open_editors_provider
-  )
-
-  const collected_files = await files_collector.collect_files({
-    exclude_path: document_path
-  })
-
-  const current_file_path = vscode.workspace.asRelativePath(document.uri)
-  const selection = editor.selection
-  const selected_text = editor.document.getText(selection)
-  let refactoring_instruction = get_refactoring_instruction(file_path)
+  let refactor_instructions = ''
   if (selected_text) {
-    refactoring_instruction += ` Regarding the following snippet \`\`\`${selected_text}\`\`\` ${instruction}`
-  } else {
-    refactoring_instruction += ` ${instruction}`
+    refactor_instructions += `\`${current_file_path}\`\n\`\`\`\n${selected_text}\n\`\`\`\n`
   }
+  refactor_instructions += instructions
 
-  const files = `<files>${collected_files}\n<file path="${current_file_path}"><![CDATA[${document_text}]]></file>\n</files>`
-  const content = `${refactoring_instruction}\n${files}\n${refactoring_instruction}`
+  const files = `<files>${collected_files}\n</files>`
+  const edit_format_instructions =
+    'Whenever proposing a file use the markdown code block syntax. Each code block should be a diff patch. Do not send explanations.'
+  const content = `${refactor_instructions}\n${edit_format_instructions}\n${files}\n${refactor_instructions}\n${edit_format_instructions}`
 
   const messages = [
     {
@@ -385,30 +341,23 @@ const perform_refactor = async (params: {
 
   const body = {
     messages,
-    model: refactoring_settings.model,
-    temperature: refactoring_settings.temperature
+    model: refactor_settings.model,
+    temperature: refactor_settings.temperature
   }
 
   Logger.log({
-    function_name: 'perform_refactor',
-    message: 'Refactor Prompt:',
+    function_name: 'perform_refactor_task',
+    message: 'refactor Prompt:',
     data: content
   })
 
   const cancel_token_source = axios.CancelToken.source()
 
-  // Track total length and received length for progress
-  const total_length = document_text.length
-
-  // Variables to hold processing results outside the progress scope
-  let result_content = ''
-  let success = false
-
-  await vscode.window
-    .withProgress(
+  try {
+    const response = await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: 'Updating file...',
+        title: 'Waiting for response',
         cancellable: true
       },
       async (progress, token) => {
@@ -416,115 +365,57 @@ const perform_refactor = async (params: {
           cancel_token_source.cancel('Cancelled by user.')
         })
 
-        try {
-          const refactored_content = await make_api_request(
-            endpoint_url,
-            provider.api_key,
-            body,
-            cancel_token_source.token,
-            (chunk: string) => {
-              progress.report({
-                increment: (chunk.length / total_length) * 100
-              })
-            }
-          )
+        let total_tokens = 0
 
-          if (refactored_content) {
-            result_content = cleanup_api_response({
-              content: refactored_content
+        return make_api_request(
+          endpoint_url,
+          provider.api_key,
+          body,
+          cancel_token_source.token,
+          (chunk: string) => {
+            total_tokens += Math.ceil(chunk.length / 4)
+            progress.report({
+              message: `received ${total_tokens} tokens...`
             })
           }
-          success = true
-          return true
-        } catch (error) {
-          if (axios.isCancel(error)) return false
-          Logger.error({
-            function_name: 'perform_refactor',
-            message: 'Refactoring error',
-            data: error
-          })
-          vscode.window.showErrorMessage(
-            'An error occurred during refactoring. See console for details.'
-          )
-          return false
-        }
+        )
       }
     )
-    .then(async () => {
-      // Only proceed if we have successful results
-      if (success && result_content) {
-        const full_range = new vscode.Range(
-          document.positionAt(0),
-          document.positionAt(document_text.length)
-        )
-        await editor.edit((edit_builder) => {
-          edit_builder.replace(full_range, result_content)
-        })
 
-        await vscode.commands.executeCommand(
-          'editor.action.formatDocument',
-          document.uri
-        )
-        await document.save()
-
-        // Store original file state for potential reversion using the revert command
-        // Include workspace_name for multi-root workspace support
-        await params.context.workspaceState.update(
-          LAST_APPLIED_CHANGES_STATE_KEY,
-          [
-            {
-              file_path: file_path,
-              content: original_content,
-              is_new: false,
-              workspace_name
-            }
-          ]
-        )
-
-        // Show success message with Revert option
-        const response = await vscode.window.showInformationMessage(
-          'File has been refactored.',
-          'Revert'
-        )
-
-        // Handle revert action if selected
-        if (response == 'Revert') {
-          await editor.edit((editBuilder) => {
-            const full_range = new vscode.Range(
-              document.positionAt(0),
-              document.positionAt(document.getText().length)
-            )
-            editBuilder.replace(full_range, original_content)
-          })
-          await document.save()
-          vscode.window.showInformationMessage('Refactoring has been reverted.')
-          // Clear the saved state since we've reverted
-          await params.context.workspaceState.update(
-            LAST_APPLIED_CHANGES_STATE_KEY,
-            null
-          )
-        }
-      }
+    if (response) {
+      vscode.env.clipboard.writeText(response)
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      await vscode.commands.executeCommand('codeWebChat.applyChatResponse')
+    }
+  } catch (error) {
+    if (axios.isCancel(error)) return
+    Logger.error({
+      function_name: 'perform_refactor_task',
+      message: 'refactor task error',
+      data: error
     })
+    vscode.window.showErrorMessage(
+      'An error occurred during refactor task. See console for details.'
+    )
+  }
 }
 
 export const refactor_commands = (params: {
   context: vscode.ExtensionContext
   workspace_provider: any
   open_editors_provider?: any
-  use_default_model?: boolean
 }) => {
   return [
-    vscode.commands.registerCommand('codeWebChat.refactor', () =>
-      perform_refactor({
+    vscode.commands.registerCommand('codeWebChat.refactor', async () =>
+      perform_refactoring({
         context: params.context,
         file_tree_provider: params.workspace_provider,
         open_editors_provider: params.open_editors_provider,
         show_quick_pick: false
       })
     ),
-    vscode.commands.registerCommand('codeWebChat.refactorUsing', () =>
-      perform_refactor({
+    vscode.commands.registerCommand('codeWebChat.refactorUsing', async () =>
+      perform_refactoring({
         context: params.context,
         file_tree_provider: params.workspace_provider,
         open_editors_provider: params.open_editors_provider,

@@ -70,11 +70,14 @@ export const Settings: React.FC<Props> = (props) => {
       })}
 
       {render_api_tool_settings({
-        title: 'File Refactoring',
-        description: 'Modify a file based on natural language instructions.',
-        checkmarks: ['Includes selected context', 'Reliable single-file edits'],
+        title: 'Refactoring',
+        description: 'Modify files based on natural language instructions.',
+        checkmarks: [
+          'Includes selected context',
+          'Like chat in diff edit format'
+        ],
         on_setup_click: handle_setup_file_refactoring_click,
-        button_label: 'Setup File Refactoring API Tool'
+        button_label: 'Setup Refactoring API Tool'
       })}
 
       {render_api_tool_settings({

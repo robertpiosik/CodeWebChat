@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  width: 150px;
+  color: black;
+  background-color: #ffdd00;
+  transition: all 0.15s ease-out;
+
+  &:hover {
+    transform: scale(0.98);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}

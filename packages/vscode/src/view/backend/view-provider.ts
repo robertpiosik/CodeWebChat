@@ -388,7 +388,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SETUP_API_TOOL_FILE_REFACTORING') {
             await handle_setup_api_tool_multi_config({
               provider: this,
-              tool: 'file-refactoring'
+              tool: 'refactoring'
             })
           } else if (message.command == 'SETUP_API_TOOL_COMMIT_MESSAGES') {
             await handle_setup_api_tool({

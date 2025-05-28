@@ -1,5 +1,5 @@
 import { Chat } from './tabs/chat/Chat'
-import { Tools } from './tabs/tools/Tools'
+import { Donations } from './tabs/donations/Donations'
 import { Header as UiHeader } from '@ui/components/editor/Header'
 import { useEffect, useState } from 'react'
 import { Template as UiTemplate } from '@ui/components/editor/Template'
@@ -18,7 +18,7 @@ import { Settings } from './tabs/settings/Settings'
 const vscode = acquireVsCodeApi()
 
 export const View = () => {
-  const [active_tab, set_active_tab] = useState<'chat' | 'tools' | 'settings'>(
+  const [active_tab, set_active_tab] = useState<'chat' | 'settings' | 'donations'>(
     'chat'
   )
   const [updating_preset, set_updating_preset] = useState<Preset>()
@@ -103,8 +103,8 @@ export const View = () => {
         on_chat_tab_click={() => {
           set_active_tab('chat')
         }}
-        on_tools_tab_click={() => {
-          set_active_tab('tools')
+        on_donate_tab_click={() => {
+          set_active_tab('donations')
         }}
         on_settings_tab_click={() => {
           set_active_tab('settings')
@@ -123,8 +123,8 @@ export const View = () => {
           handle_code_completion_suggestions_change
         }
       />
-      <Tools vscode={vscode} is_visible={active_tab == 'tools'} />
       <Settings vscode={vscode} is_visible={active_tab == 'settings'} />
+      <Donations vscode={vscode} is_visible={active_tab == 'donations'} />
     </>
   )
 
@@ -155,11 +155,9 @@ export const View = () => {
         <UiEditPresetForm
           preset={updating_preset}
           on_update={set_updated_preset}
-          pick_open_router_model={
-            () => {
-              vscode.postMessage({ command: 'PICK_OPEN_ROUTER_MODEL' })
-            }
-          }
+          pick_open_router_model={() => {
+            vscode.postMessage({ command: 'PICK_OPEN_ROUTER_MODEL' })
+          }}
         />
       </UiEditView>
     )

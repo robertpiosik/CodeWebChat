@@ -15,9 +15,9 @@ Enter instructions and copy well structured prompt to clipboard or initialize an
 
 Use selected context for accurate code completions using your favourite model.
 
-### [File refactoring](./file-refactoring)
+### [Refactoring](./refactoring)
 
-Modify a file based on natural language instructions.
+Modify files based on natural language instructions.
 
 ### [Apply chat response](./apply-chat-response)
 

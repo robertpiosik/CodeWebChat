@@ -16,8 +16,6 @@ import {
 } from './migrations'
 import {
   apply_chat_response_command,
-  refactor_commands,
-  refactor_to_clipboard_command,
   code_completion_commands,
   chat_command,
   chat_using_command,
@@ -40,7 +38,7 @@ import {
   reference_in_chat_command,
   open_settings_command,
   open_url_command,
-  agent_commands
+  refactor_commands
 } from './commands'
 
 // Store WebSocketServer instance at module level
@@ -103,28 +101,14 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   }
 
-  // Register the custom open file command
   context.subscriptions.push(
-    open_file_from_workspace_command(open_editors_provider)
-  )
-
-  context.subscriptions.push(
+    open_file_from_workspace_command(open_editors_provider),
     apply_chat_response_command(context),
-    ...agent_commands({
-      context,
-      workspace_provider,
-      open_editors_provider
-    }),
     ...refactor_commands({
       context,
       workspace_provider,
       open_editors_provider
     }),
-    refactor_to_clipboard_command(
-      context,
-      workspace_provider,
-      open_editors_provider
-    ),
     ...code_completion_commands(
       workspace_provider,
       open_editors_provider,

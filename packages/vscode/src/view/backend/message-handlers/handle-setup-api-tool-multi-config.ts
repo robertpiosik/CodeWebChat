@@ -11,11 +11,11 @@ import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@/helpers/logger'
 
-type SupportedTool = 'code-completions' | 'file-refactoring'
+type SupportedTool = 'code-completions' | 'refactoring'
 
 const DEFAULT_TEMPERATURE: { [key in SupportedTool]: number } = {
   'code-completions': 0.2,
-  'file-refactoring': 0.2
+  'refactoring': 0.2
 }
 
 interface ToolMethods {
@@ -49,7 +49,7 @@ export const handle_setup_api_tool_multi_config = async (params: {
             ),
           get_display_name: () => 'Code Completions'
         }
-      case 'file-refactoring':
+      case 'refactoring':
         return {
           get_configs: () =>
             providers_manager.get_file_refactoring_tool_configs(),
@@ -61,7 +61,7 @@ export const handle_setup_api_tool_multi_config = async (params: {
             providers_manager.set_default_file_refactoring_config(
               config as any
             ),
-          get_display_name: () => 'File Refactoring'
+          get_display_name: () => 'Refactoring'
         }
       default:
         throw new Error(`Unsupported tool: ${tool}`)

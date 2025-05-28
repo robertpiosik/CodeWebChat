@@ -27,7 +27,7 @@ CWC is a non-agentic coding tool for AI-assisted programming built by an indepen
 **Guiding Principles:**
 
 - initialize popular chatbots—but don't game them
-- API features—ecomonic on token usage
+- API features—powerful yet simple to use
 - respect privacy—zero tracking
 - lightweight—under 2MB
 
@@ -124,12 +124,12 @@ The tool is designed to provide you with the highest quality autocomplete sugges
 ✓ Includes selected context<br />
 ✓ Works great with any model
 
-### File refactoring
+### Refactoring
 
-Modify a file based on natural language instructions.
+Modify files based on natural language instructions.
 
 ✓ Includes selected context<br />
-✓ Reliable single-file edits
+✓ Like chat in diff edit format
 
 ### Commit messages
 
@@ -151,8 +151,7 @@ Generate meaningful commit messages. The tool first attaches affected files, the
 
 ### Refactoring
 
-- `Code Web Chat: Refactor` - Refactor active editor.
-- `Code Web Chat: Refactor to Clipboard` - Copy refactoring prompt to clipboard.
+- `Code Web Chat: Refactor` - Modify files based on natural language instructions.
 
 ### Applying chat responses
 

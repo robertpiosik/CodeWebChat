@@ -2,13 +2,14 @@
   overflow-y: scroll;
   height: 100%;
   padding: var(--padding-12px);
-  gap: var(--padding-20px);
   display: flex;
   flex-direction: column;
 }
 
-.api-tool {
-  display: flex;
-  flex-direction: column;
-  gap: var(--padding-10px);
+.recent-donations {
+  display: block;
+
+  &--loading {
+    opacity: var(--disabled-opacity);
+  }
 }
