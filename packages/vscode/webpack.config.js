@@ -1,4 +1,3 @@
-// packages/vscode/webpack.config.js
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const crypto = require('crypto')
@@ -12,11 +11,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const config = [
   // Extension Configuration (Node.js environment)
   (env, argv) => {
-    // Make this a function to accept argv
-    const isProduction = argv.mode === 'production'
+    const isProduction = argv.mode == 'production'
     return {
       name: 'extension',
-      mode: isProduction ? 'production' : 'development', // Set mode based on argv
+      mode: isProduction ? 'production' : 'development', 
       target: 'node',
       entry: {
         extension: './src/extension.ts',
@@ -73,9 +71,9 @@ const config = [
       stats: 'errors-only'
     }
   },
-  // View Configuration (Web environment) - This part was already a function
+  // View Configuration (Web environment)
   (env, argv) => {
-    const isProduction = argv.mode === 'production'
+    const isProduction = argv.mode == 'production'
     return {
       name: 'view',
       mode: isProduction ? 'production' : 'development',
