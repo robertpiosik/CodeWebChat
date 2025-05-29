@@ -542,9 +542,9 @@ export class WorkspaceProvider
           selected_token_count < total_token_count
         ) {
           const formatted_selected = format_token_count(selected_token_count)
-          display_description = `${formatted_total} (${formatted_selected})`
+          display_description = `${formatted_total} • ${formatted_selected}`
         } else if (
-          selected_token_count === total_token_count &&
+          selected_token_count == total_token_count &&
           total_token_count > 0
         ) {
           // Ensure total_token_count > 0 before adding checkmark
@@ -561,13 +561,13 @@ export class WorkspaceProvider
 
     const trimmed_description = display_description.trim()
     element.description =
-      trimmed_description === '' ? undefined : trimmed_description
+      trimmed_description == '' ? undefined : trimmed_description
 
     // Tooltip updates
     const tooltip_parts = [element.resourceUri.fsPath]
     if (total_token_count !== undefined) {
       tooltip_parts.push(
-        `Total: ${format_token_count(total_token_count)} tokens`
+        `• About ${format_token_count(total_token_count)} tokens`
       )
     }
     if (
@@ -575,11 +575,20 @@ export class WorkspaceProvider
       selected_token_count !== undefined &&
       selected_token_count > 0
     ) {
-      tooltip_parts.push(
-        `Selected: ${format_token_count(selected_token_count)} tokens`
-      )
+      if (
+        total_token_count !== undefined &&
+        selected_token_count == total_token_count &&
+        total_token_count > 0
+      ) {
+        tooltip_parts.push('(Fully selected)')
+      } else {
+        tooltip_parts.push(
+          `(${format_token_count(selected_token_count)} selected)`
+        )
+      }
     }
-    element.tooltip = tooltip_parts.join(' - ')
+
+    element.tooltip = tooltip_parts.join(' ')
 
     // For workspace root items, add a special context value and icon
     if (element.isWorkspaceRoot) {
@@ -588,13 +597,13 @@ export class WorkspaceProvider
       // Workspace root tooltip is primarily its name and role, token info is appended if available
       let root_tooltip = `${element.label} (Workspace Root)`
       if (total_token_count !== undefined) {
-        root_tooltip += ` - Total: ${format_token_count(
+        root_tooltip += ` • About ${format_token_count(
           total_token_count
         )} tokens`
         if (selected_token_count !== undefined && selected_token_count > 0) {
-          root_tooltip += `, Selected: ${format_token_count(
+          root_tooltip += ` (${format_token_count(
             selected_token_count
-          )} tokens`
+          )} selected)`
         }
       }
       element.tooltip = root_tooltip
@@ -1292,7 +1301,7 @@ export class WorkspaceProvider
   }
 
   public is_excluded(relative_path: string): boolean {
-    if (!relative_path || relative_path.trim() === '') {
+    if (!relative_path || relative_path.trim() == '') {
       return false // Skip empty paths instead of trying to process them
     }
 
