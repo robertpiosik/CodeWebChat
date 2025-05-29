@@ -7,9 +7,12 @@ import { should_ignore_file } from '../utils/extension-utils'
 import { natural_sort } from '../../utils/natural-sort'
 import { Logger } from '@/helpers/logger'
 
+function format_token_count(count: number): string {
+  return count >= 1000 ? `${Math.floor(count / 1000)}k` : `${count}`;
+}
+
 export class WorkspaceProvider
-  implements vscode.TreeDataProvider<FileItem>, vscode.Disposable
-{
+  implements vscode.TreeDataProvider<FileItem>, vscode.Disposable {
   private _on_did_change_tree_data: vscode.EventEmitter<
     FileItem | undefined | null | void
   > = new vscode.EventEmitter<FileItem | undefined | null | void>()
@@ -25,6 +28,7 @@ export class WorkspaceProvider
   private gitignore_watcher: vscode.FileSystemWatcher
   private file_token_counts: Map<string, number> = new Map() // Cache token counts
   private directory_token_counts: Map<string, number> = new Map() // Cache directory token counts
+  private directory_selected_token_counts: Map<string, number> = new Map() // Cache directory selected token counts
   private config_change_handler: vscode.Disposable
   private _on_did_change_checked_files = new vscode.EventEmitter<void>()
   readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
@@ -335,12 +339,14 @@ export class WorkspaceProvider
       // Traverse up the directory tree and clear cache for each parent
       while (workspace_root && dir_path.startsWith(workspace_root)) {
         this.directory_token_counts.delete(dir_path)
+        this.directory_selected_token_counts.delete(dir_path)
         dir_path = path.dirname(dir_path)
       }
     } else {
       // If no specific file path provided, clear all caches (fallback)
       this.file_token_counts.clear()
       this.directory_token_counts.clear()
+      this.directory_selected_token_counts.clear()
     }
 
     this.refresh()
@@ -358,12 +364,14 @@ export class WorkspaceProvider
       // Traverse up the directory tree and clear cache for each parent
       while (workspace_root && dir_path.startsWith(workspace_root)) {
         this.directory_token_counts.delete(dir_path)
+        this.directory_selected_token_counts.delete(dir_path)
         dir_path = path.dirname(dir_path)
       }
     } else {
       // If no specific file path provided, clear all caches (fallback)
       this.file_token_counts.clear()
       this.directory_token_counts.clear()
+      this.directory_selected_token_counts.clear()
     }
 
     // Update the file to workspace mapping
@@ -478,6 +486,7 @@ export class WorkspaceProvider
 
     // Clear partially checked directories
     this.partially_checked_dirs.clear()
+    this.directory_selected_token_counts.clear()
 
     // Update parent directories for open files
     for (const file_path of open_files) {
@@ -495,8 +504,7 @@ export class WorkspaceProvider
     if (checked_open_files.length > 0) {
       vscode.window
         .showInformationMessage(
-          `${checked_open_files.length} file${
-            checked_open_files.length == 1 ? '' : 's'
+          `${checked_open_files.length} file${checked_open_files.length == 1 ? '' : 's'
           } remain${checked_open_files.length == 1 ? 's' : ''} checked.`,
           'Clear open editors'
         )
@@ -518,40 +526,70 @@ export class WorkspaceProvider
 
     element.checkboxState = checkbox_state
 
-    // Get token count and add it to description
-    const token_count = element.tokenCount
+    const total_token_count = element.tokenCount
+    const selected_token_count = element.selectedTokenCount
 
-    if (token_count !== undefined) {
-      // Format token count for display (e.g., 1.2k for 1,200)
-      const formatted_token_count =
-        token_count >= 1000
-          ? `${Math.floor(token_count / 1000)}k`
-          : `${token_count}`
+    let display_description = ''
 
-      // Add token count to description
-      if (element.description) {
-        element.description = `${formatted_token_count} ${element.description}`
-      } else {
-        element.description = formatted_token_count
+    if (element.isDirectory) {
+      if (total_token_count !== undefined && total_token_count > 0) {
+        const formatted_total = format_token_count(total_token_count)
+        if (
+          selected_token_count !== undefined &&
+          selected_token_count > 0 &&
+          selected_token_count < total_token_count
+        ) {
+          const formatted_selected = format_token_count(selected_token_count)
+          display_description = `${formatted_total} (${formatted_selected})`
+        }
+        else if (selected_token_count === total_token_count && total_token_count > 0) { // Ensure total_token_count > 0 before adding checkmark
+          display_description = formatted_total + ' ✓'
+        }
+        else {
+          display_description = formatted_total
+        }
+      }
+    } else {
+      // File
+      if (
+        total_token_count !== undefined &&
+        total_token_count > 0 &&
+        checkbox_state === vscode.TreeItemCheckboxState.Checked
+      ) {
+        display_description = format_token_count(total_token_count)
       }
     }
 
-    // Add visual indicator for partially checked directories
-    if (element.isDirectory && this.partially_checked_dirs.has(key)) {
-      // Add an indicator to the description
-      element.description = element.description
-        ? `${element.description} ✓`
-        : '✓'
+    const trimmed_description = display_description.trim();
+    element.description = trimmed_description === "" ? undefined : trimmed_description;
 
-      // You could also add an icon overlay or modify the tooltip
-      element.tooltip = `${element.tooltip || ''} (Partially selected)`
+    // Tooltip updates
+    const tooltip_parts = [element.resourceUri.fsPath]
+    if (total_token_count !== undefined) {
+      tooltip_parts.push(`Total: ${format_token_count(total_token_count)} tokens`)
     }
+    if (
+      element.isDirectory &&
+      selected_token_count !== undefined &&
+      selected_token_count > 0
+    ) {
+      tooltip_parts.push(`Selected: ${format_token_count(selected_token_count)} tokens`)
+    }
+    element.tooltip = tooltip_parts.join(' - ')
 
     // For workspace root items, add a special context value and icon
     if (element.isWorkspaceRoot) {
       element.contextValue = 'workspaceRoot'
       element.iconPath = new vscode.ThemeIcon('root-folder')
-      element.tooltip = `${element.label} (Workspace Root)`
+      // Workspace root tooltip is primarily its name and role, token info is appended if available
+      let root_tooltip = `${element.label} (Workspace Root)`
+      if (total_token_count !== undefined) {
+        root_tooltip += ` - Total: ${format_token_count(total_token_count)} tokens`
+        if (selected_token_count !== undefined && selected_token_count > 0) {
+          root_tooltip += `, Selected: ${format_token_count(selected_token_count)} tokens`
+        }
+      }
+      element.tooltip = root_tooltip
     }
 
     return element
@@ -592,25 +630,36 @@ export class WorkspaceProvider
   }
 
   // Create top-level workspace folder items
-  private getWorkspaceFolderItems(): FileItem[] {
-    return this.workspace_roots.map((root, index) => {
+  private async getWorkspaceFolderItems(): Promise<FileItem[]> {
+    const items: FileItem[] = []
+    for (let i = 0; i < this.workspace_roots.length; i++) {
+      const root = this.workspace_roots[i]
       const uri = vscode.Uri.file(root)
-      const name = this.workspace_names[index]
+      const name = this.workspace_names[i]
 
-      return new FileItem(
-        name,
-        uri,
-        vscode.TreeItemCollapsibleState.Collapsed,
-        true, // Is directory
-        this.checked_items.get(root) ?? vscode.TreeItemCheckboxState.Unchecked,
-        false, // Is not git ignored
-        false, // Is not symbolic link
-        false, // Is not open file
-        undefined, // Token count will be calculated on demand
-        undefined, // Description
-        true // Is workspace root
+      const total_tokens = await this.calculate_directory_tokens(root)
+      const selected_tokens =
+        await this._calculate_directory_selected_tokens(root)
+
+      items.push(
+        new FileItem(
+          name,
+          uri,
+          vscode.TreeItemCollapsibleState.Collapsed,
+          true, // Is directory
+          this.checked_items.get(root) ??
+          vscode.TreeItemCheckboxState.Unchecked,
+          false, // Is not git ignored
+          false, // Is not symbolic link
+          false, // Is not open file
+          total_tokens,
+          selected_tokens,
+          undefined, // Initial description, will be formatted in getTreeItem
+          true // Is workspace root
+        )
       )
-    })
+    }
+    return items
   }
 
   // Calculate token count for a file
@@ -721,6 +770,79 @@ export class WorkspaceProvider
     }
   }
 
+  private async _calculate_directory_selected_tokens(
+    dir_path: string
+  ): Promise<number> {
+    if (this.directory_selected_token_counts.has(dir_path)) {
+      return this.directory_selected_token_counts.get(dir_path)!
+    }
+
+    let selected_tokens = 0
+    try {
+      const workspace_root = this.get_workspace_root_for_file(dir_path)
+      if (!workspace_root) return 0
+
+      const relative_dir_path = path.relative(workspace_root, dir_path)
+      if (this.is_excluded(relative_dir_path)) {
+        this.directory_selected_token_counts.set(dir_path, 0)
+        return 0
+      }
+
+      const entries = await fs.promises.readdir(dir_path, {
+        withFileTypes: true
+      })
+      for (const entry of entries) {
+        const full_path = path.join(dir_path, entry.name)
+        const relative_path = path.relative(workspace_root, full_path)
+
+        if (
+          this.is_excluded(relative_path) ||
+          should_ignore_file(entry.name, this.ignored_extensions)
+        ) {
+          continue
+        }
+
+        const checkbox_state =
+          this.checked_items.get(full_path) ??
+          vscode.TreeItemCheckboxState.Unchecked
+
+        let entry_is_directory = entry.isDirectory()
+        if (entry.isSymbolicLink()) {
+          try {
+            entry_is_directory = (
+              await fs.promises.stat(full_path)
+            ).isDirectory()
+          } catch {
+            continue /* broken symlink */
+          }
+        }
+
+        if (entry_is_directory) {
+          if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
+            selected_tokens += await this.calculate_directory_tokens(full_path)
+          } else if (this.partially_checked_dirs.has(full_path)) {
+            selected_tokens +=
+              await this._calculate_directory_selected_tokens(full_path)
+          }
+        } else {
+          // File
+          if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
+            selected_tokens += await this.calculate_file_tokens(full_path)
+          }
+        }
+      }
+    } catch (error) {
+      Logger.error({
+        function_name: '_calculate_directory_selected_tokens',
+        message: `Error calculating selected tokens for dir ${dir_path}`,
+        data: error
+      });
+      return 0
+    }
+    this.directory_selected_token_counts.set(dir_path, selected_tokens)
+    return selected_tokens
+  }
+
   private async get_files_and_directories(
     dir_path: string
   ): Promise<FileItem[]> {
@@ -818,6 +940,10 @@ export class WorkspaceProvider
           ? await this.calculate_directory_tokens(full_path)
           : await this.calculate_file_tokens(full_path)
 
+        const selected_token_count = is_directory
+          ? await this._calculate_directory_selected_tokens(full_path)
+          : undefined
+
         const item = new FileItem(
           entry.name,
           uri,
@@ -830,6 +956,7 @@ export class WorkspaceProvider
           is_symbolic_link,
           false, // is not an open file
           token_count,
+          selected_token_count, // Pass selectedTokenCount
           undefined
         )
 
@@ -858,6 +985,7 @@ export class WorkspaceProvider
     }
 
     this.checked_items.set(key, state)
+    this.directory_selected_token_counts.delete(key); // Invalidate self
 
     if (item.isDirectory) {
       await this.update_directory_check_state(key, state, false)
@@ -867,6 +995,7 @@ export class WorkspaceProvider
     let dir_path = path.dirname(key)
     const workspace_root = this.get_workspace_root_for_file(key)
     while (workspace_root && dir_path.startsWith(workspace_root)) {
+      this.directory_selected_token_counts.delete(dir_path); // Invalidate parents
       await this.update_parent_state(dir_path)
       dir_path = path.dirname(dir_path)
     }
@@ -876,6 +1005,7 @@ export class WorkspaceProvider
   }
 
   private async update_parent_state(dir_path: string): Promise<void> {
+    this.directory_selected_token_counts.delete(dir_path); // Invalidate selected count for this dir
     try {
       const workspace_root = this.get_workspace_root_for_file(dir_path)
       if (!workspace_root) return
@@ -1052,6 +1182,7 @@ export class WorkspaceProvider
     // Clear existing checks
     this.checked_items.clear()
     this.partially_checked_dirs.clear()
+    this.directory_selected_token_counts.clear();
 
     // First pass: handle directories and create a list of all files to check
     const all_files_to_check: string[] = []
@@ -1124,9 +1255,8 @@ export class WorkspaceProvider
           .map((rule) =>
             relative_gitignore_path == ''
               ? rule
-              : `${relative_gitignore_path}${
-                  rule.startsWith('/') ? rule : `/${rule}`
-                }`
+              : `${relative_gitignore_path}${rule.startsWith('/') ? rule : `/${rule}`
+              }`
           )
 
         this.combined_gitignore.add(rules_with_prefix)
@@ -1145,6 +1275,7 @@ export class WorkspaceProvider
     // After updating gitignore rules, clear token caches since exclusions may have changed
     this.file_token_counts.clear()
     this.directory_token_counts.clear()
+    this.directory_selected_token_counts.clear()
 
     this.refresh()
   }
@@ -1179,6 +1310,7 @@ export class WorkspaceProvider
     // Clear token caches since exclusions have changed
     this.file_token_counts.clear()
     this.directory_token_counts.clear()
+    this.directory_selected_token_counts.clear()
   }
 
   public async check_all(): Promise<void> {
@@ -1189,6 +1321,7 @@ export class WorkspaceProvider
         vscode.TreeItemCheckboxState.Checked
       )
       this.partially_checked_dirs.delete(workspace_root)
+      this.directory_selected_token_counts.delete(workspace_root);
 
       // Get all files and directories in this workspace root
       const items = await this.get_files_and_directories(workspace_root)
@@ -1198,6 +1331,7 @@ export class WorkspaceProvider
         const key = item.resourceUri.fsPath
         this.checked_items.set(key, vscode.TreeItemCheckboxState.Checked)
         this.partially_checked_dirs.delete(key)
+        this.directory_selected_token_counts.delete(key);
 
         if (item.isDirectory) {
           await this.update_directory_check_state(
@@ -1254,6 +1388,7 @@ export class FileItem extends vscode.TreeItem {
     public isSymbolicLink: boolean = false,
     public isOpenFile: boolean = false,
     public tokenCount?: number,
+    public selectedTokenCount?: number,
     description?: string,
     public isWorkspaceRoot: boolean = false
   ) {
