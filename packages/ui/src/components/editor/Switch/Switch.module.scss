@@ -2,14 +2,15 @@
   display: flex;
   border-radius: 6px;
   padding: var(--padding-2px);
-  border: 1px solid var(--vscode-sideBarSectionHeader-border);
+  border: 1px solid var(--vscode-commandCenter-inactiveBorder);
   gap: var(--padding-2px);
 }
 
 .option {
   flex: 1;
   text-align: center;
-  padding: var(--padding-4px) var(--padding-8px);
+  padding: 0 var(--padding-6px);
+  height: 21px;
   cursor: pointer;
   font-size: var(--font-size-12px);
   user-select: none;
@@ -41,7 +42,7 @@
     }
 
     &:hover {
-      background-color: var(--vscode-button-hoverBackground);
+      background-color: var(--vscode-button-background);
     }
   }
 }

@@ -7,7 +7,8 @@ import { HorizontalSelector as UiHorizontalSelector } from '@ui/components/edito
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import { EditFormatSelectorVisibility } from '@/view/types/edit-format-selector-visibility'
-import { Button as UiButton} from '@ui/components/editor/Button'
+import { Button as UiButton } from '@ui/components/editor/Button'
+import { Switch } from '@ui/components/editor/Switch'
 
 type Props = {
   is_visible: boolean
@@ -144,6 +145,11 @@ export const HomeView: React.FC<Props> = (props) => {
       className={styles.container}
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
+      <div className={styles.top}>
+        <Switch value="Web" onChange={() => {}} />
+        <div></div>
+      </div>
+      <UiSeparator size="small" />
       <div className={styles['chat-input']}>
         <UiChatInput
           value={current_prompt}
