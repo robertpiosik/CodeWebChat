@@ -554,12 +554,7 @@ export class WorkspaceProvider
         }
       }
     } else {
-      // File
-      if (
-        total_token_count !== undefined &&
-        total_token_count > 0 &&
-        checkbox_state === vscode.TreeItemCheckboxState.Checked
-      ) {
+      if (total_token_count !== undefined && total_token_count > 0) {
         display_description = format_token_count(total_token_count)
       }
     }
