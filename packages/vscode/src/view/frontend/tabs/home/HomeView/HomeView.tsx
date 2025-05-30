@@ -154,7 +154,9 @@ export const HomeView: React.FC<Props> = (props) => {
         />
         <div></div>
       </div>
+
       <UiSeparator size="small" />
+
       <div className={styles['chat-input']}>
         <UiChatInput
           value={current_prompt}
@@ -163,7 +165,7 @@ export const HomeView: React.FC<Props> = (props) => {
           on_change={handle_input_change}
           on_submit={handle_submit}
           on_submit_with_control={handle_submit_with_control}
-          on_copy={handle_copy}
+          on_copy={props.home_view_type == 'Web' ? handle_copy : undefined}
           is_connected={props.is_connected}
           token_count={total_token_count}
           submit_disabled_title={
@@ -176,7 +178,9 @@ export const HomeView: React.FC<Props> = (props) => {
           on_caret_position_change={props.on_caret_position_change}
         />
       </div>
+
       <UiSeparator size="small" />
+
       <UiHorizontalSelector
         heading="Mode"
         options={[
@@ -203,37 +207,40 @@ export const HomeView: React.FC<Props> = (props) => {
         }
       />
 
-      {props.edit_format_selector_visibility == 'visible' && (
-        <>
-          <UiSeparator size="small" />
-          <UiHorizontalSelector
-            heading="Edit Format"
-            options={[
-              {
-                value: 'truncated',
-                label: 'Truncated',
-                title: 'The model will skip unchanged fragments.'
-              },
-              {
-                value: 'whole',
-                label: 'Whole',
-                title: 'The model will output complete files.'
-              },
-              {
-                value: 'diff',
-                label: 'Diff',
-                title: 'The model will output diffs.'
+      {props.edit_format_selector_visibility == 'visible' &&
+        props.home_view_type == 'Web' && (
+          <>
+            <UiSeparator size="small" />
+            <UiHorizontalSelector
+              heading="Edit Format"
+              options={[
+                {
+                  value: 'truncated',
+                  label: 'Truncated',
+                  title: 'The model will skip unchanged fragments.'
+                },
+                {
+                  value: 'whole',
+                  label: 'Whole',
+                  title: 'The model will output complete files.'
+                },
+                {
+                  value: 'diff',
+                  label: 'Diff',
+                  title: 'The model will output diffs.'
+                }
+              ]}
+              selected_value={
+                !props.is_in_code_completions_mode
+                  ? props.edit_format
+                  : undefined
               }
-            ]}
-            selected_value={
-              !props.is_in_code_completions_mode ? props.edit_format : undefined
-            }
-            on_select={props.on_edit_format_change}
-            is_disabled={props.is_in_code_completions_mode}
-            disabled_state_title="Edit format selection is only available in General mode"
-          />
-        </>
-      )}
+              on_select={props.on_edit_format_change}
+              is_disabled={props.is_in_code_completions_mode}
+              disabled_state_title="Edit format selection is only available in General mode"
+            />
+          </>
+        )}
 
       <UiSeparator size="large" />
 
@@ -256,33 +263,37 @@ export const HomeView: React.FC<Props> = (props) => {
         </>
       )}
 
-      <UiPresets
-        presets={props.presets.map((preset) => {
-          return {
-            ...preset,
-            has_affixes: !!(preset.prompt_prefix || preset.prompt_suffix)
+      {props.home_view_type == 'Web' && (
+        <UiPresets
+          presets={props.presets.map((preset) => {
+            return {
+              ...preset,
+              has_affixes: !!(preset.prompt_prefix || preset.prompt_suffix)
+            }
+          })}
+          is_disabled={!props.is_connected}
+          selected_presets={props.selected_presets}
+          selected_code_completion_presets={
+            props.selected_code_completion_presets
           }
-        })}
-        is_disabled={!props.is_connected}
-        selected_presets={props.selected_presets}
-        selected_code_completion_presets={
-          props.selected_code_completion_presets
-        }
-        on_create_preset={props.on_create_preset}
-        on_preset_click={(name) => {
-          props.initialize_chats({
-            prompt: current_prompt,
-            preset_names: [name]
-          })
-        }}
-        on_preset_copy={handle_preset_copy}
-        on_preset_edit={props.on_preset_edit}
-        is_code_completions_mode={props.is_in_code_completions_mode}
-        on_presets_reorder={props.on_presets_reorder}
-        on_preset_duplicate={props.on_preset_duplicate}
-        on_preset_delete={props.on_preset_delete}
-        on_set_default_presets={props.on_set_default_presets}
-      />
+          on_create_preset={props.on_create_preset}
+          on_preset_click={(name) => {
+            props.initialize_chats({
+              prompt: current_prompt,
+              preset_names: [name]
+            })
+          }}
+          on_preset_copy={handle_preset_copy}
+          on_preset_edit={props.on_preset_edit}
+          is_code_completions_mode={props.is_in_code_completions_mode}
+          on_presets_reorder={props.on_presets_reorder}
+          on_preset_duplicate={props.on_preset_duplicate}
+          on_preset_delete={props.on_preset_delete}
+          on_set_default_presets={props.on_set_default_presets}
+        />
+      )}
+
+      {props.home_view_type == 'API' && <div>refactoring configurations</div>}
 
       <UiSeparator size="medium" />
 
