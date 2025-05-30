@@ -35,6 +35,7 @@ export type ToolConfig = {
 
 export type CodeCompletionsConfigs = ToolConfig[]
 export type FileRefactoringConfigs = ToolConfig[]
+export type IntelligentUpdateConfigs = ToolConfig[]
 
 export class ApiProvidersManager {
   private _providers: Provider[] = []
@@ -224,20 +225,22 @@ export class ApiProvidersManager {
     )
   }
 
-  // Updates provider name references in all tool configurations when a provider is renamed
+  /**
+   * Updates provider name references in all tool configurations when a provider is renamed
+   */
   public async update_provider_name_in_configs(params: {
     old_name: string
     new_name: string
   }): Promise<void> {
     const { old_name, new_name } = params
 
-    const completionsConfig =
+    const completions_configs =
       this._vscode.globalState.get<CodeCompletionsConfigs>(
         TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
         []
       )
 
-    const updated_completions_config = completionsConfig.map((config) => {
+    const updated_completions_configs = completions_configs.map((config) => {
       if (
         config.provider_type == 'custom' &&
         config.provider_name == old_name
@@ -249,7 +252,7 @@ export class ApiProvidersManager {
 
     await this._vscode.globalState.update(
       TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
-      updated_completions_config
+      updated_completions_configs
     )
 
     const default_completions_config = this._vscode.globalState.get<ToolConfig>(
@@ -306,21 +309,6 @@ export class ApiProvidersManager {
       )
     }
 
-    const commit_messages_config = this._vscode.globalState.get<ToolConfig>(
-      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
-    )
-
-    if (
-      commit_messages_config &&
-      commit_messages_config.provider_type == 'custom' &&
-      commit_messages_config.provider_name == old_name
-    ) {
-      await this._vscode.globalState.update(
-        TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
-        { ...commit_messages_config, provider_name: new_name }
-      )
-    }
-
     const intelligent_update_configs =
       this._vscode.globalState.get<FileRefactoringConfigs>(
         TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
@@ -357,6 +345,21 @@ export class ApiProvidersManager {
       await this._vscode.globalState.update(
         DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY,
         { ...default_intelligent_update_config, provider_name: new_name }
+      )
+    }
+
+    const commit_messages_config = this._vscode.globalState.get<ToolConfig>(
+      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
+    )
+
+    if (
+      commit_messages_config &&
+      commit_messages_config.provider_type == 'custom' &&
+      commit_messages_config.provider_name == old_name
+    ) {
+      await this._vscode.globalState.update(
+        TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
+        { ...commit_messages_config, provider_name: new_name }
       )
     }
   }

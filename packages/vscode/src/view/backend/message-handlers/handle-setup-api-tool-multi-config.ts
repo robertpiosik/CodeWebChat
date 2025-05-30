@@ -5,7 +5,8 @@ import {
   Provider,
   ToolConfig,
   CodeCompletionsConfigs,
-  FileRefactoringConfigs
+  FileRefactoringConfigs,
+  IntelligentUpdateConfigs
 } from '@/services/api-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
@@ -68,7 +69,7 @@ export const handle_setup_api_tool_multi_config = async (params: {
         return {
           get_configs: () =>
             providers_manager.get_intelligent_update_tool_configs(),
-          save_configs: (configs: FileRefactoringConfigs) =>
+          save_configs: (configs: IntelligentUpdateConfigs) =>
             providers_manager.save_intelligent_update_tool_configs(configs),
           get_default_config: () =>
             providers_manager.get_default_intelligent_update_config(),

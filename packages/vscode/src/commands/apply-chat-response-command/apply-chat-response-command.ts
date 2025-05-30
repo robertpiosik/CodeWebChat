@@ -1,9 +1,6 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
-import {
-  parse_response,
-  ClipboardFile
-} from './utils/clipboard-parser'
+import { parse_response, ClipboardFile } from './utils/clipboard-parser'
 import { LAST_APPLIED_CHANGES_STATE_KEY } from '../../constants/state-keys'
 import { Logger } from '../../helpers/logger'
 import { OriginalFileState } from '../../types/common'
@@ -15,7 +12,7 @@ import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragm
 import { ApiProvidersManager } from '@/services/api-providers-manager'
 import { apply_git_patch } from './utils/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY } from '../../constants/state-keys'
+import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
 
 async function check_if_all_files_new(
@@ -55,21 +52,21 @@ async function check_if_all_files_new(
   return true // All files are new
 }
 
-async function get_file_refactoring_config(
+async function get_intelligent_update_config(
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext
 ): Promise<{ provider: any; config: any } | undefined> {
-  const file_refactoring_configs =
-    await api_providers_manager.get_file_refactoring_tool_configs()
+  const intelligent_update_configs =
+    await api_providers_manager.get_intelligent_update_tool_configs()
 
-  if (file_refactoring_configs.length === 0) {
+  if (intelligent_update_configs.length === 0) {
     vscode.window.showErrorMessage(
-      'Refactoring API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'Intelligent Update API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
     )
     Logger.warn({
-      function_name: 'get_file_refactoring_config',
-      message: 'Refactoring API tool is not configured.'
+      function_name: 'get_intelligent_update_config',
+      message: 'Intelligent Update API tool is not configured.'
     })
     return
   }
@@ -78,7 +75,7 @@ async function get_file_refactoring_config(
 
   if (!show_quick_pick) {
     selected_config =
-      await api_providers_manager.get_default_file_refactoring_config()
+      await api_providers_manager.get_default_intelligent_update_config()
   }
 
   if (!selected_config || show_quick_pick) {
@@ -104,9 +101,9 @@ async function get_file_refactoring_config(
 
     const create_items = async () => {
       const default_config =
-        await api_providers_manager.get_default_file_refactoring_config()
+        await api_providers_manager.get_default_intelligent_update_config()
 
-      return file_refactoring_configs.map((config, index) => {
+      return intelligent_update_configs.map((config, index) => {
         const buttons = []
 
         const is_default =
@@ -115,12 +112,12 @@ async function get_file_refactoring_config(
           default_config.provider_name == config.provider_name &&
           default_config.model == config.model
 
-        if (file_refactoring_configs.length > 1) {
+        if (intelligent_update_configs.length > 1) {
           if (index > 0) {
             buttons.push(move_up_button)
           }
 
-          if (index < file_refactoring_configs.length - 1) {
+          if (index < intelligent_update_configs.length - 1) {
             buttons.push(move_down_button)
           }
         }
@@ -146,11 +143,11 @@ async function get_file_refactoring_config(
     const quick_pick = vscode.window.createQuickPick()
     const items = await create_items()
     quick_pick.items = items
-    quick_pick.placeholder = 'Select file refactoring configuration'
+    quick_pick.placeholder = 'Select intelligent update configuration'
     quick_pick.matchOnDescription = true
 
     const last_selected_index = context.globalState.get<number>(
-      LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY,
+      LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY,
       0
     )
 
@@ -168,37 +165,37 @@ async function get_file_refactoring_config(
           const index = item.index
 
           if (button === set_default_button) {
-            await api_providers_manager.set_default_file_refactoring_config(
-              file_refactoring_configs[index]
+            await api_providers_manager.set_default_intelligent_update_config(
+              intelligent_update_configs[index]
             )
             quick_pick.items = await create_items()
           } else if (button === unset_default_button) {
-            await api_providers_manager.set_default_file_refactoring_config(
+            await api_providers_manager.set_default_intelligent_update_config(
               null as any
             )
             quick_pick.items = await create_items()
           } else if (button.tooltip == 'Move up' && index > 0) {
-            const temp = file_refactoring_configs[index]
-            file_refactoring_configs[index] =
-              file_refactoring_configs[index - 1]
-            file_refactoring_configs[index - 1] = temp
+            const temp = intelligent_update_configs[index]
+            intelligent_update_configs[index] =
+              intelligent_update_configs[index - 1]
+            intelligent_update_configs[index - 1] = temp
 
-            await api_providers_manager.save_file_refactoring_tool_configs(
-              file_refactoring_configs
+            await api_providers_manager.save_intelligent_update_tool_configs(
+              intelligent_update_configs
             )
 
             quick_pick.items = await create_items()
           } else if (
             button.tooltip == 'Move down' &&
-            index < file_refactoring_configs.length - 1
+            index < intelligent_update_configs.length - 1
           ) {
-            const temp = file_refactoring_configs[index]
-            file_refactoring_configs[index] =
-              file_refactoring_configs[index + 1]
-            file_refactoring_configs[index + 1] = temp
+            const temp = intelligent_update_configs[index]
+            intelligent_update_configs[index] =
+              intelligent_update_configs[index + 1]
+            intelligent_update_configs[index + 1] = temp
 
-            await api_providers_manager.save_file_refactoring_tool_configs(
-              file_refactoring_configs
+            await api_providers_manager.save_intelligent_update_tool_configs(
+              intelligent_update_configs
             )
 
             quick_pick.items = await create_items()
@@ -215,7 +212,7 @@ async function get_file_refactoring_config(
           }
 
           context.globalState.update(
-            LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY,
+            LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY,
             selected.index
           )
 
@@ -224,11 +221,11 @@ async function get_file_refactoring_config(
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              'API provider not found for Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+              'API provider not found for Intelligent Update tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
             )
             Logger.warn({
-              function_name: 'get_file_refactoring_config',
-              message: 'API provider not found for Refactoring tool.'
+              function_name: 'get_intelligent_update_config',
+              message: 'API provider not found for Intelligent Update tool.'
             })
             resolve(undefined)
             return
@@ -256,11 +253,11 @@ async function get_file_refactoring_config(
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      'API provider not found for Refactoring tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'API provider not found for Intelligent Update tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
     )
     Logger.warn({
-      function_name: 'get_file_refactoring_config',
-      message: 'API provider not found for Refactoring tool.'
+      function_name: 'get_intelligent_update_config',
+      message: 'API provider not found for Intelligent Update tool.'
     })
     return
   }
@@ -363,7 +360,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
         // Handle results
         if (failure_count > 0) {
           const api_providers_manager = new ApiProvidersManager(context)
-          const config_result = await get_file_refactoring_config(
+          const config_result = await get_intelligent_update_config(
             api_providers_manager,
             false,
             context
@@ -381,7 +378,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             return
           }
 
-          const { provider, config: file_refactoring_config } = config_result
+          const { provider, config: intelligent_update_config } = config_result
 
           let endpoint_url = ''
           if (provider.type == 'built-in') {
@@ -403,7 +400,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             const intelligent_update_states = await handle_intelligent_update({
               endpoint_url,
               api_key: provider.api_key,
-              model: file_refactoring_config.model,
+              model: intelligent_update_config.model,
               response: failed_patches_as_code_blocks,
               context: context,
               is_single_root_folder_workspace
@@ -450,7 +447,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             })
 
             const response = await vscode.window.showErrorMessage(
-              'Error during fix attempt with the refactoring tool. Would you like to revert the successfully applied patches?',
+              'Error during fix attempt with the intelligent update tool. Would you like to revert the successfully applied patches?',
               'Keep changes',
               'Revert'
             )
@@ -486,7 +483,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
 
             // Then try with intelligent update
             const api_providers_manager = new ApiProvidersManager(context)
-            const config_result = await get_file_refactoring_config(
+            const config_result = await get_intelligent_update_config(
               api_providers_manager,
               false,
               context
@@ -496,7 +493,8 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
               return
             }
 
-            const { provider, config: file_refactoring_config } = config_result
+            const { provider, config: intelligent_update_config } =
+              config_result
 
             let endpoint_url = ''
             if (provider.type == 'built-in') {
@@ -517,7 +515,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 {
                   endpoint_url,
                   api_key: provider.api_key,
-                  model: file_refactoring_config.model,
+                  model: intelligent_update_config.model,
                   response: all_patches_text,
                   context: context,
                   is_single_root_folder_workspace
@@ -549,11 +547,11 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             } catch (error) {
               Logger.error({
                 function_name: 'apply_chat_response_command',
-                message: 'Error during refactoring of all patches'
+                message: 'Error during intelligent update of all patches'
               })
 
               vscode.window.showErrorMessage(
-                'Error during refactoring. Original patches have been reverted.'
+                'Error during intelligent update. Original patches have been reverted.'
               )
             }
           }
@@ -626,7 +624,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
         } else if (selected_mode_label == 'Intelligent update') {
           const api_providers_manager = new ApiProvidersManager(context)
 
-          const config_result = await get_file_refactoring_config(
+          const config_result = await get_intelligent_update_config(
             api_providers_manager,
             false,
             context
@@ -636,7 +634,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             return
           }
 
-          const { provider, config: file_refactoring_config } = config_result
+          const { provider, config: intelligent_update_config } = config_result
 
           let endpoint_url = ''
           if (provider.type == 'built-in') {
@@ -650,7 +648,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
           final_original_states = await handle_intelligent_update({
             endpoint_url,
             api_key: provider.api_key,
-            model: file_refactoring_config.model,
+            model: intelligent_update_config.model,
             response,
             context: context,
             is_single_root_folder_workspace
@@ -732,7 +730,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
 
               // Then trigger intelligent update
               const api_providers_manager = new ApiProvidersManager(context)
-              const config_result = await get_file_refactoring_config(
+              const config_result = await get_intelligent_update_config(
                 api_providers_manager,
                 false,
                 context
@@ -742,7 +740,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 return
               }
 
-              const { provider, config: file_refactoring_config } =
+              const { provider, config: intelligent_update_config } =
                 config_result
 
               let endpoint_url = ''
@@ -758,7 +756,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 final_original_states = await handle_intelligent_update({
                   endpoint_url,
                   api_key: provider.api_key,
-                  model: file_refactoring_config.model,
+                  model: intelligent_update_config.model,
                   response,
                   context: context,
                   is_single_root_folder_workspace
