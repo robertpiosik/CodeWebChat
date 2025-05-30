@@ -8,15 +8,14 @@
 
 .option {
   flex: 1;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  position: relative;
   padding: 0 var(--padding-6px);
   height: 21px;
   cursor: pointer;
   font-size: var(--font-size-12px);
-  user-select: none;
   border-radius: var(--border-radius-4px);
-  position: relative;
-  font-weight: normal;
 
   &::before {
     content: attr(data-text);

@@ -10,7 +10,7 @@ import {
   ActiveFileInfoMessage,
   InstructionsMessage,
   CodeCompletionSuggestionsMessage,
-  EditFormatSelectorVisibilityMessage
+  EditFormatSelectorVisibilityMessage,
 } from '../types/messages'
 import { WebsitesProvider } from '../../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -57,6 +57,8 @@ import {
   ConfigPresetFormat
 } from '@/view/backend/helpers/preset-format-converters'
 
+const HOME_VIEW_TYPE_STATE_KEY = 'homeViewType'
+
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
@@ -67,6 +69,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public instructions: string = ''
   public code_completion_suggestions: string = ''
   public edit_format: EditFormat
+  public home_view_type: 'Web' | 'API' = 'Web'
 
   constructor(
     public readonly extension_uri: vscode.Uri,
@@ -89,6 +92,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this.edit_format = this.context.workspaceState.get<EditFormat>(
       'editFormat',
       'truncated'
+    )
+
+    // Initialize home view type from workspace state
+    this.home_view_type = this.context.workspaceState.get<'Web' | 'API'>(
+      HOME_VIEW_TYPE_STATE_KEY,
+      'Web'
     )
 
     // Listen for changes to the new configuration keys
@@ -265,6 +274,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       })
       .catch((error) => {
         console.error('Error calculating token count:', error)
+        vscode.window.showErrorMessage(
+          `Error calculating token count: ${error.message}`
+        )
         this.send_message<TokenCountMessage>({
           command: 'TOKEN_COUNT_UPDATED',
           tokenCount: 0
@@ -397,6 +409,21 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             })
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
+          } else if (message.command == 'SAVE_HOME_VIEW_TYPE') {
+            this.home_view_type = message.view_type
+            await this.context.workspaceState.update(
+              HOME_VIEW_TYPE_STATE_KEY,
+              message.view_type
+            )
+            this.send_message<ExtensionMessage>({
+              command: 'HOME_VIEW_TYPE',
+              view_type: message.view_type
+            })
+          } else if (message.command == 'GET_HOME_VIEW_TYPE') {
+            this.send_message<ExtensionMessage>({
+              command: 'HOME_VIEW_TYPE',
+              view_type: this.home_view_type
+            })
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)

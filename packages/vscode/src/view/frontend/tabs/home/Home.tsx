@@ -39,6 +39,7 @@ export const Home: React.FC<Props> = (props) => {
   const [edit_format, set_edit_format] = useState<EditFormat>()
   const [edit_format_selector_visibility, set_edit_format_selector_visibility] =
     useState<'visible' | 'hidden'>('visible')
+  const [home_view_type, set_home_view_type] = useState<'Web' | 'API'>('Web')
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
@@ -105,6 +106,9 @@ export const Home: React.FC<Props> = (props) => {
         case 'EDIT_FORMAT_SELECTOR_VISIBILITY':
           set_edit_format_selector_visibility(message.visibility)
           break
+        case 'HOME_VIEW_TYPE':
+          set_home_view_type(message.view_type)
+          break
       }
     }
 
@@ -124,7 +128,8 @@ export const Home: React.FC<Props> = (props) => {
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_CODE_COMPLETION_SUGGESTIONS' },
       { command: 'GET_EDIT_FORMAT' },
-      { command: 'GET_EDIT_FORMAT_SELECTOR_VISIBILITY' }
+      { command: 'GET_EDIT_FORMAT_SELECTOR_VISIBILITY' },
+      { command: 'GET_HOME_VIEW_TYPE' }
     ]
     initial_messages.forEach((message) => props.vscode.postMessage(message))
 
@@ -290,6 +295,13 @@ export const Home: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_home_view_type_change = (view_type: 'Web' | 'API') => {
+    props.vscode.postMessage({
+      command: 'SAVE_HOME_VIEW_TYPE',
+      view_type
+    } as WebviewMessage)
+  }
+
   if (
     is_connected === undefined ||
     presets === undefined ||
@@ -301,7 +313,8 @@ export const Home: React.FC<Props> = (props) => {
     props.normal_instructions === undefined ||
     props.code_completion_suggestions === undefined ||
     edit_format === undefined ||
-    edit_format_selector_visibility === undefined
+    edit_format_selector_visibility === undefined ||
+    home_view_type === undefined
   ) {
     return <></>
   }
@@ -342,6 +355,8 @@ export const Home: React.FC<Props> = (props) => {
       set_code_completion_suggestions={props.set_code_completion_suggestions}
       edit_format_selector_visibility={edit_format_selector_visibility}
       on_caret_position_change={handle_caret_position_change}
+      home_view_type={home_view_type}
+      on_home_view_type_change={handle_home_view_type_change}
     />
   )
 }

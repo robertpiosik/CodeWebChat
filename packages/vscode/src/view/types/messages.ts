@@ -189,6 +189,15 @@ export interface PickOpenRouterModel extends BaseMessage {
   command: 'PICK_OPEN_ROUTER_MODEL'
 }
 
+export interface SaveHomeViewTypeMessage extends BaseMessage {
+  command: 'SAVE_HOME_VIEW_TYPE'
+  view_type: 'Web' | 'API'
+}
+
+export interface GetHomeViewTypeMessage extends BaseMessage {
+  command: 'GET_HOME_VIEW_TYPE'
+}
+
 // Messages from extension to webview:
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
@@ -324,6 +333,11 @@ export interface ApiProvidersMessage extends BaseMessage {
   >
 }
 
+export interface HomeViewTypeMessage extends BaseMessage {
+  command: 'HOME_VIEW_TYPE'
+  view_type: 'Web' | 'API'
+}
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | GetInstructionsMessage
@@ -365,6 +379,8 @@ export type WebviewMessage =
   | SetupApiToolFileRefactoringMessage
   | SetupApiToolCommitMessagesMessage
   | PickOpenRouterModel
+  | SaveHomeViewTypeMessage
+  | GetHomeViewTypeMessage
 
 export type ExtensionMessage =
   | InstructionsMessage
@@ -390,3 +406,4 @@ export type ExtensionMessage =
   | SelectedCodeCompletionPresetsMessage
   | ExecuteCommandMessage
   | ApiProvidersMessage
+  | HomeViewTypeMessage

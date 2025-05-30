@@ -20,3 +20,4 @@ export const LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_KEY =
 export const LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY =
   'lastSelectedFileRefactoringConfigIndex'
 export const LAST_SELECTED_PRESET_KEY = 'lastSelectedPreset'
+export const HOME_VIEW_TYPE_STATE_KEY = 'homeViewType'
