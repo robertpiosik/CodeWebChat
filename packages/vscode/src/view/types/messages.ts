@@ -177,8 +177,12 @@ export interface SetupApiToolCodeCompletionsMessage extends BaseMessage {
   command: 'SETUP_API_TOOL_CODE_COMPLETIONS'
 }
 
-export interface SetupApiToolFileRefactoringMessage extends BaseMessage {
-  command: 'SETUP_API_TOOL_FILE_REFACTORING'
+export interface SetupApiToolRefactoringMessage extends BaseMessage {
+  command: 'SETUP_API_TOOL_REFACTORING'
+}
+
+export interface SetupApiToolIntelligentUpdateMessage extends BaseMessage {
+  command: 'SETUP_API_TOOL_INTELLIGENT_UPDATE'
 }
 
 export interface SetupApiToolCommitMessagesMessage extends BaseMessage {
@@ -376,7 +380,8 @@ export type WebviewMessage =
   | CaretPositionChangedWebviewMessage
   | ConfigureApiProvidersMessage
   | SetupApiToolCodeCompletionsMessage
-  | SetupApiToolFileRefactoringMessage
+  | SetupApiToolRefactoringMessage
+  | SetupApiToolIntelligentUpdateMessage
   | SetupApiToolCommitMessagesMessage
   | PickOpenRouterModel
   | SaveHomeViewTypeMessage

@@ -398,10 +398,15 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               provider: this,
               tool: 'code-completions'
             })
-          } else if (message.command == 'SETUP_API_TOOL_FILE_REFACTORING') {
+          } else if (message.command == 'SETUP_API_TOOL_REFACTORING') {
             await handle_setup_api_tool_multi_config({
               provider: this,
               tool: 'refactoring'
+            })
+          } else if (message.command == 'SETUP_API_TOOL_INTELLIGENT_UPDATE') {
+            await handle_setup_api_tool_multi_config({
+              provider: this,
+              tool: 'intelligent-update'
             })
           } else if (message.command == 'SETUP_API_TOOL_COMMIT_MESSAGES') {
             await handle_setup_api_tool({

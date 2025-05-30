@@ -80,10 +80,10 @@ export const handle_configure_api_providers = async (
           description: masked_api_key,
           detail:
             provider.type == 'custom'
-              ? `Custom • ${
+              ? `${
                   provider.base_url ? provider.base_url : '⚠ Missing base URL'
                 }`
-              : `Predefined • ${PROVIDERS[provider.name].base_url}`,
+              : PROVIDERS[provider.name].base_url,
           buttons: buttons,
           provider,
           index
@@ -346,7 +346,7 @@ export const handle_configure_api_providers = async (
         ],
         {
           title: `Edit Custom API Provider: ${provider.name}`,
-          placeHolder: 'Select what to edit',
+          placeHolder: 'Select field to edit',
           ignoreFocusOut: true
         }
       )
