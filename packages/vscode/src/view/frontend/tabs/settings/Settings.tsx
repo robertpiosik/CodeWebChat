@@ -71,13 +71,10 @@ export const Settings: React.FC<Props> = (props) => {
       {render_api_tool_settings({
         title: 'Code Completions',
         description:
-          'Flawlessly correct autocomplete at the cost of latency. Intented to be used on-demand via Home tab, command palette or a keybinding. Multiple configurations lets you choose between faster and slower models based on complexity of a problem.',
+          'The best quality inline suggestions at the cost of latency. Designed to be used on demand.',
         on_setup_click: handle_setup_code_completions_click,
         button_label: 'Setup Code Completions API Tool',
-        checkmarks: [
-          'Includes selected context',
-          'Designed to work with any model'
-        ]
+        checkmarks: ['Includes selected context', 'Works with any model']
       })}
 
       {render_api_tool_settings({
@@ -85,7 +82,7 @@ export const Settings: React.FC<Props> = (props) => {
         description: 'Modify files based on natural language instructions.',
         checkmarks: [
           'Includes selected context',
-          'Multi-file updates in just one API call'
+          'Multi-file updates in one API call'
         ],
         on_setup_click: handle_setup_refactoring_click,
         button_label: 'Setup Refactoring API Tool'
@@ -94,10 +91,10 @@ export const Settings: React.FC<Props> = (props) => {
       {render_api_tool_settings({
         title: 'Intelligent Update',
         description:
-          'Apply changes of code blocks in truncated edit format or fix malformed diffs. Changes are treated as instructions to update the original file.',
+          'Update original files based on code blocks in truncated edit format and fix malformed diffs.',
         checkmarks: [
           'Regnerates whole files in concurrent API calls',
-          'Smaller models like Gemini Flash are enough'
+          'Smaller models like Gemini Flash are sufficient'
         ],
         on_setup_click: handle_setup_intelligent_update_click,
         button_label: 'Setup Intelligent Update API Tool'

@@ -7,7 +7,7 @@ import { ApiProvidersManager } from '../services/api-providers-manager'
 import { Logger } from '../helpers/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_KEY } from '../constants/state-keys'
+import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '../constants/state-keys'
 
 async function build_completion_payload(params: {
   document: vscode.TextDocument
@@ -190,7 +190,7 @@ async function get_code_completion_config(
     quick_pick.matchOnDescription = true
 
     const last_selected_index = context.globalState.get<number>(
-      LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_KEY,
+      LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
       0
     )
 
@@ -255,7 +255,7 @@ async function get_code_completion_config(
           }
 
           context.globalState.update(
-            LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_KEY,
+            LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
             selected.index
           )
 

@@ -117,24 +117,24 @@ _(alphabetically)_
 
 ### Code Completions
 
-Flawlessly correct autocomplete at the cost of latency. Intended to be used on-demand via Home tab, command palette or a keybinding. Multiple configurations let you choose between faster and slower models based on complexity of a problem.
+The best quality inline suggestions at the cost of latency. Designed to be used on demand.
 
 ✓ Includes selected context<br />
-✓ Designed to work with any model
+✓ Works with any model
 
 ### Refactoring
 
 Modify files based on natural language instructions.
 
 ✓ Includes selected context<br />
-✓ Multi-file updates in just one API call
+✓ Multi-file updates in one API call
 
 ### Intelligent Update
 
-Apply changes of code blocks in truncated edit format or fix malformed diffs. Changes are treated as instructions to update the original file.
+Update original files based on code blocks in truncated edit format and fix malformed diffs.
 
 ✓ Regenerates whole files in concurrent API calls<br />
-✓ Smaller models like Gemini Flash are enough
+✓ Smaller models like Gemini Flash are sufficient
 
 ### Commit Messages
 

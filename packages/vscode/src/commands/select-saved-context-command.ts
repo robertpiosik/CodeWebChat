@@ -5,7 +5,7 @@ import * as glob from 'glob'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import {
   SAVED_CONTEXTS_STATE_KEY,
-  LAST_CONTEXT_READ_LOCATION_KEY
+  LAST_CONTEXT_READ_LOCATION_STATE_KEY
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '../helpers/logger'
@@ -231,7 +231,7 @@ export function select_saved_context_command(
       // Get the last used read location from extension context
       const last_read_location = extension_context.workspaceState.get<
         'internal' | 'file'
-      >(LAST_CONTEXT_READ_LOCATION_KEY, 'internal')
+      >(LAST_CONTEXT_READ_LOCATION_STATE_KEY, 'internal')
 
       // Get saved contexts from workspace state
       let internal_contexts: SavedContext[] =
@@ -342,7 +342,7 @@ export function select_saved_context_command(
 
         // Save the selected option as the last used option
         await extension_context.workspaceState.update(
-          LAST_CONTEXT_READ_LOCATION_KEY,
+          LAST_CONTEXT_READ_LOCATION_STATE_KEY,
           context_source
         )
       } else if (internal_contexts.length > 0) {
@@ -350,7 +350,7 @@ export function select_saved_context_command(
         context_source = 'internal'
         // If only internal exists, set it as last used
         await extension_context.workspaceState.update(
-          LAST_CONTEXT_READ_LOCATION_KEY,
+          LAST_CONTEXT_READ_LOCATION_STATE_KEY,
           context_source
         )
       } else if (file_contexts.length > 0) {
@@ -358,7 +358,7 @@ export function select_saved_context_command(
         context_source = 'file'
         // If only file exists, set it as last used
         await extension_context.workspaceState.update(
-          LAST_CONTEXT_READ_LOCATION_KEY,
+          LAST_CONTEXT_READ_LOCATION_STATE_KEY,
           context_source
         )
       }
