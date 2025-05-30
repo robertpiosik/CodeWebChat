@@ -10,7 +10,7 @@ import {
   ActiveFileInfoMessage,
   InstructionsMessage,
   CodeCompletionSuggestionsMessage,
-  EditFormatSelectorVisibilityMessage,
+  EditFormatSelectorVisibilityMessage
 } from '../types/messages'
 import { WebsitesProvider } from '../../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -50,14 +50,15 @@ import {
   handle_configure_api_providers,
   handle_setup_api_tool_multi_config,
   handle_setup_api_tool,
-  handle_pick_open_router_model
+  handle_pick_open_router_model,
+  handle_save_home_view_type,
+  handle_get_home_view_type
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
   ConfigPresetFormat
 } from '@/view/backend/helpers/preset-format-converters'
-
-const HOME_VIEW_TYPE_STATE_KEY = 'homeViewType'
+import { HOME_VIEW_TYPE_STATE_KEY } from '@/constants/state-keys'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -410,20 +411,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
           } else if (message.command == 'SAVE_HOME_VIEW_TYPE') {
-            this.home_view_type = message.view_type
-            await this.context.workspaceState.update(
-              HOME_VIEW_TYPE_STATE_KEY,
-              message.view_type
-            )
-            this.send_message<ExtensionMessage>({
-              command: 'HOME_VIEW_TYPE',
-              view_type: message.view_type
-            })
+            await handle_save_home_view_type(this, message)
           } else if (message.command == 'GET_HOME_VIEW_TYPE') {
-            this.send_message<ExtensionMessage>({
-              command: 'HOME_VIEW_TYPE',
-              view_type: this.home_view_type
-            })
+            handle_get_home_view_type(this)
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)
