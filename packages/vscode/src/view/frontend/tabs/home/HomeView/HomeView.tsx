@@ -43,6 +43,8 @@ type Props = {
   code_completion_suggestions: string
   set_code_completion_suggestions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
+  home_view_type: 'Web' | 'API'
+  on_home_view_type_change: (value: 'Web' | 'API') => void
 }
 
 export const HomeView: React.FC<Props> = (props) => {
@@ -146,7 +148,10 @@ export const HomeView: React.FC<Props> = (props) => {
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
       <div className={styles.top}>
-        <Switch value="Web" onChange={() => {}} />
+        <Switch
+          value={props.home_view_type}
+          onChange={props.on_home_view_type_change}
+        />
         <div></div>
       </div>
       <UiSeparator size="small" />
