@@ -6,9 +6,7 @@
   <br/>
   <strong>👉 Apply chat responses in truncated, whole or diff edit formats</strong>
   <br/>
-  <strong>👉 Use any model for quality code completions and file refactorings</strong>
-  <br/>
-  <strong>👉 Generate meaningful commit messages</strong>
+  <strong>👉 API tools for code completions, refactorings and commit messages</strong>
   <br/>
   <br/>
 
@@ -117,23 +115,30 @@ _(alphabetically)_
 ℹ️ Any OpenAI-API compatible endpoint works with CWC.<br/>
 🔒️ API keys are stored securely in the [Secret Storage](https://code.visualstudio.com/api/references/vscode-api#SecretStorage).
 
-### Code completions
+### Code Completions
 
-The tool is designed to provide you with the highest quality autocomplete suggestions at the cost of latency. Intented to be used on-demand through the Tools tab, via the command palette or a keybinding. Setup multiple configurations and choose between them based on difficulty of the completion.
+Flawlessly correct autocomplete at the cost of latency. Intended to be used on-demand via Home tab, command palette or a keybinding. Multiple configurations let you choose between faster and slower models based on complexity of a problem.
 
 ✓ Includes selected context<br />
-✓ Works great with any model
+✓ Designed to work with any model
 
 ### Refactoring
 
 Modify files based on natural language instructions.
 
 ✓ Includes selected context<br />
-✓ Like chat in diff edit format
+✓ Multi-file updates in just one API call
 
-### Commit messages
+### Intelligent Update
 
-Generate meaningful commit messages. The tool first attaches affected files, then the customizable instructions, then diff of changes. Not lobotomized context ensures unmatched accuracy.
+Apply changes of code blocks in truncated edit format or fix malformed diffs. Changes are treated as instructions to update the original file.
+
+✓ Regenerates whole files in concurrent API calls<br />
+✓ Smaller models like Gemini Flash are enough
+
+### Commit Messages
+
+Generate meaningful commit messages precisely adhering to your preferred style.
 
 ✓ Includes affected files in full<br />
 ✓ Customizable instructions
