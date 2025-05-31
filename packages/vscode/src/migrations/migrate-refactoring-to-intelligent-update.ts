@@ -51,15 +51,20 @@ export async function migrate_refactoring_to_intelligent_update(
       refactoring_configs.length > 0 &&
       existing_intelligent_update_configs.length === 0
     ) {
-      // Copy refactoring configs to intelligent update
+      // Copy refactoring configs to intelligent update with temperature set to 0
+      const intelligent_update_configs = refactoring_configs.map((config) => ({
+        ...config,
+        temperature: 0
+      }))
+
       await context.globalState.update(
         TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
-        refactoring_configs
+        intelligent_update_configs
       )
 
       Logger.log({
         function_name: 'migrate_refactoring_to_intelligent_update',
-        message: `Copied ${refactoring_configs.length} refactoring configs to intelligent update configs`
+        message: `Copied ${refactoring_configs.length} refactoring configs to intelligent update configs with temperature set to 0`
       })
 
       // Also copy default config if it exists
@@ -70,13 +75,16 @@ export async function migrate_refactoring_to_intelligent_update(
       if (default_refactoring_config) {
         await context.globalState.update(
           DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY,
-          default_refactoring_config
+          {
+            ...default_refactoring_config,
+            temperature: 0
+          }
         )
 
         Logger.log({
           function_name: 'migrate_refactoring_to_intelligent_update',
           message:
-            'Copied default refactoring config to default intelligent update config'
+            'Copied default refactoring config to default intelligent update config with temperature set to 0'
         })
       }
     } else {
