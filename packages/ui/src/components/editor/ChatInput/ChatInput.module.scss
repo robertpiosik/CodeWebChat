@@ -7,8 +7,12 @@
   border: 1px solid var(--vscode-commandCenter-inactiveBorder);
   position: relative;
 
-  &:focus-within {
+  &:hover {
     border-color: var(--vscode-commandCenter-activeBorder);
+  }
+
+  &:focus-within {
+    border-color: var(--vscode-focusBorder);
   }
 }
 

@@ -21,15 +21,21 @@ export const Settings: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
-  const handle_setup_file_refactoring_click = () => {
+  const handle_setup_refactoring_click = () => {
     props.vscode.postMessage({
-      command: 'SETUP_API_TOOL_FILE_REFACTORING'
+      command: 'SETUP_API_TOOL_REFACTORING'
     } as WebviewMessage)
   }
 
   const handle_setup_commit_messages_click = () => {
     props.vscode.postMessage({
       command: 'SETUP_API_TOOL_COMMIT_MESSAGES'
+    } as WebviewMessage)
+  }
+
+  const handle_setup_intelligent_update_click = () => {
+    props.vscode.postMessage({
+      command: 'SETUP_API_TOOL_INTELLIGENT_UPDATE'
     } as WebviewMessage)
   }
 
@@ -65,10 +71,10 @@ export const Settings: React.FC<Props> = (props) => {
       {render_api_tool_settings({
         title: 'Code Completions',
         description:
-          'The tool is designed to provide you with the highest quality autocomplete suggestions at the cost of latency. Intented to be used on-demand through the Tools tab, via the command palette or a keybinding. Setup multiple configurations and choose between them based on difficulty of the completion.',
+          'The best quality inline suggestions at the cost of latency. Designed to be used on demand.',
         on_setup_click: handle_setup_code_completions_click,
         button_label: 'Setup Code Completions API Tool',
-        checkmarks: ['Includes selected context', 'Works great with any model']
+        checkmarks: ['Includes selected context', 'Works with any model']
       })}
 
       {render_api_tool_settings({
@@ -76,16 +82,28 @@ export const Settings: React.FC<Props> = (props) => {
         description: 'Modify files based on natural language instructions.',
         checkmarks: [
           'Includes selected context',
-          'Like chat in diff edit format'
+          'Multi-file updates in one API call'
         ],
-        on_setup_click: handle_setup_file_refactoring_click,
+        on_setup_click: handle_setup_refactoring_click,
         button_label: 'Setup Refactoring API Tool'
+      })}
+
+      {render_api_tool_settings({
+        title: 'Intelligent Update',
+        description:
+          'Update files based on code blocks in truncated edit format and fix malformed diffs.',
+        checkmarks: [
+          'Regnerates whole files in concurrent API calls',
+          'Smaller models like Gemini Flash are sufficient'
+        ],
+        on_setup_click: handle_setup_intelligent_update_click,
+        button_label: 'Setup Intelligent Update API Tool'
       })}
 
       {render_api_tool_settings({
         title: 'Commit Messages',
         description:
-          'Generate meaningful commit messages. The tool first attaches affected files, then the customizable instructions, then diff of changes. Not lobotomized context ensures unmatched accuracy.',
+          'Generate meaningful commit messages precisely adhering to your preffered style.',
         checkmarks: [
           'Includes affected files in full',
           'Customizable instructions'

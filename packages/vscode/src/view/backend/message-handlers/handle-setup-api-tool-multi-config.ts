@@ -5,17 +5,19 @@ import {
   Provider,
   ToolConfig,
   CodeCompletionsConfigs,
-  FileRefactoringConfigs
+  FileRefactoringConfigs,
+  IntelligentUpdateConfigs
 } from '@/services/api-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@/helpers/logger'
 
-type SupportedTool = 'code-completions' | 'refactoring'
+type SupportedTool = 'code-completions' | 'refactoring' | 'intelligent-update'
 
 const DEFAULT_TEMPERATURE: { [key in SupportedTool]: number } = {
-  'code-completions': 0.2,
-  'refactoring': 0.2
+  'code-completions': 0.3,
+  refactoring: 0.3,
+  'intelligent-update': 0
 }
 
 interface ToolMethods {
@@ -62,6 +64,20 @@ export const handle_setup_api_tool_multi_config = async (params: {
               config as any
             ),
           get_display_name: () => 'Refactoring'
+        }
+      case 'intelligent-update':
+        return {
+          get_configs: () =>
+            providers_manager.get_intelligent_update_tool_configs(),
+          save_configs: (configs: IntelligentUpdateConfigs) =>
+            providers_manager.save_intelligent_update_tool_configs(configs),
+          get_default_config: () =>
+            providers_manager.get_default_intelligent_update_config(),
+          set_default_config: (config: ToolConfig | null) =>
+            providers_manager.set_default_intelligent_update_config(
+              config as any
+            ),
+          get_display_name: () => 'Intelligent Update'
         }
       default:
         throw new Error(`Unsupported tool: ${tool}`)
@@ -166,7 +182,7 @@ export const handle_setup_api_tool_multi_config = async (params: {
           return {
             label: config.model,
             description: `${config.provider_name}${
-              is_default ? ` • default configuration` : ''
+              is_default ? ` • Default configuration` : ''
             }`,
             buttons,
             config,
@@ -562,7 +578,6 @@ export const handle_setup_api_tool_multi_config = async (params: {
 
     const provider_items = providers.map((p) => ({
       label: p.name,
-      description: p.type == 'built-in' ? 'Predefined' : 'Custom',
       provider: p
     }))
 

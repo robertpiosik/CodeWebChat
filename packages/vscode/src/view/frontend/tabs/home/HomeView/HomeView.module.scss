@@ -3,7 +3,13 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-12px) 0;
+  padding: var(--padding-8px) 0 var(--padding-12px) 0;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--padding-12px);
 }
 
 .chat-input {

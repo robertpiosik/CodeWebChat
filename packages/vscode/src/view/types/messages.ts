@@ -177,8 +177,12 @@ export interface SetupApiToolCodeCompletionsMessage extends BaseMessage {
   command: 'SETUP_API_TOOL_CODE_COMPLETIONS'
 }
 
-export interface SetupApiToolFileRefactoringMessage extends BaseMessage {
-  command: 'SETUP_API_TOOL_FILE_REFACTORING'
+export interface SetupApiToolRefactoringMessage extends BaseMessage {
+  command: 'SETUP_API_TOOL_REFACTORING'
+}
+
+export interface SetupApiToolIntelligentUpdateMessage extends BaseMessage {
+  command: 'SETUP_API_TOOL_INTELLIGENT_UPDATE'
 }
 
 export interface SetupApiToolCommitMessagesMessage extends BaseMessage {
@@ -187,6 +191,15 @@ export interface SetupApiToolCommitMessagesMessage extends BaseMessage {
 
 export interface PickOpenRouterModel extends BaseMessage {
   command: 'PICK_OPEN_ROUTER_MODEL'
+}
+
+export interface SaveHomeViewTypeMessage extends BaseMessage {
+  command: 'SAVE_HOME_VIEW_TYPE'
+  view_type: 'Web' | 'API'
+}
+
+export interface GetHomeViewTypeMessage extends BaseMessage {
+  command: 'GET_HOME_VIEW_TYPE'
 }
 
 // Messages from extension to webview:
@@ -324,6 +337,11 @@ export interface ApiProvidersMessage extends BaseMessage {
   >
 }
 
+export interface HomeViewTypeMessage extends BaseMessage {
+  command: 'HOME_VIEW_TYPE'
+  view_type: 'Web' | 'API'
+}
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | GetInstructionsMessage
@@ -362,9 +380,12 @@ export type WebviewMessage =
   | CaretPositionChangedWebviewMessage
   | ConfigureApiProvidersMessage
   | SetupApiToolCodeCompletionsMessage
-  | SetupApiToolFileRefactoringMessage
+  | SetupApiToolRefactoringMessage
+  | SetupApiToolIntelligentUpdateMessage
   | SetupApiToolCommitMessagesMessage
   | PickOpenRouterModel
+  | SaveHomeViewTypeMessage
+  | GetHomeViewTypeMessage
 
 export type ExtensionMessage =
   | InstructionsMessage
@@ -390,3 +411,4 @@ export type ExtensionMessage =
   | SelectedCodeCompletionPresetsMessage
   | ExecuteCommandMessage
   | ApiProvidersMessage
+  | HomeViewTypeMessage

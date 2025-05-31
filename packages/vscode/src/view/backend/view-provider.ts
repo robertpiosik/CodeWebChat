@@ -50,12 +50,15 @@ import {
   handle_configure_api_providers,
   handle_setup_api_tool_multi_config,
   handle_setup_api_tool,
-  handle_pick_open_router_model
+  handle_pick_open_router_model,
+  handle_save_home_view_type,
+  handle_get_home_view_type
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
   ConfigPresetFormat
 } from '@/view/backend/helpers/preset-format-converters'
+import { HOME_VIEW_TYPE_STATE_KEY } from '@/constants/state-keys'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -67,6 +70,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public instructions: string = ''
   public code_completion_suggestions: string = ''
   public edit_format: EditFormat
+  public home_view_type: 'Web' | 'API' = 'Web'
 
   constructor(
     public readonly extension_uri: vscode.Uri,
@@ -89,6 +93,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this.edit_format = this.context.workspaceState.get<EditFormat>(
       'editFormat',
       'truncated'
+    )
+
+    // Initialize home view type from workspace state
+    this.home_view_type = this.context.workspaceState.get<'Web' | 'API'>(
+      HOME_VIEW_TYPE_STATE_KEY,
+      'Web'
     )
 
     // Listen for changes to the new configuration keys
@@ -265,6 +275,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       })
       .catch((error) => {
         console.error('Error calculating token count:', error)
+        vscode.window.showErrorMessage(
+          `Error calculating token count: ${error.message}`
+        )
         this.send_message<TokenCountMessage>({
           command: 'TOKEN_COUNT_UPDATED',
           tokenCount: 0
@@ -385,10 +398,15 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               provider: this,
               tool: 'code-completions'
             })
-          } else if (message.command == 'SETUP_API_TOOL_FILE_REFACTORING') {
+          } else if (message.command == 'SETUP_API_TOOL_REFACTORING') {
             await handle_setup_api_tool_multi_config({
               provider: this,
               tool: 'refactoring'
+            })
+          } else if (message.command == 'SETUP_API_TOOL_INTELLIGENT_UPDATE') {
+            await handle_setup_api_tool_multi_config({
+              provider: this,
+              tool: 'intelligent-update'
             })
           } else if (message.command == 'SETUP_API_TOOL_COMMIT_MESSAGES') {
             await handle_setup_api_tool({
@@ -397,6 +415,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             })
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
+          } else if (message.command == 'SAVE_HOME_VIEW_TYPE') {
+            await handle_save_home_view_type(this, message)
+          } else if (message.command == 'GET_HOME_VIEW_TYPE') {
+            handle_get_home_view_type(this)
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)

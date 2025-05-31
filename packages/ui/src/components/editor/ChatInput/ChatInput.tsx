@@ -10,7 +10,7 @@ type Props = {
   on_change: (value: string) => void
   on_submit: () => void
   on_submit_with_control: () => void
-  on_copy: () => void
+  on_copy?: () => void
   token_count?: number
   is_connected: boolean
   submit_disabled_title?: string
@@ -105,12 +105,6 @@ export const ChatInput: React.FC<Props> = (props) => {
       props.on_submit()
     }
     set_history_index(-1) // Reset history index after submitting
-  }
-
-  const handle_copy = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    if (!props.is_in_code_completions_mode && !props.value) return
-    props.on_copy()
   }
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -295,14 +289,20 @@ export const ChatInput: React.FC<Props> = (props) => {
               {format_token_count(props.token_count)}
             </div>
           )}
-          <button
-            className={styles.footer__right__button}
-            onClick={handle_copy}
-            title="Copy to clipboard"
-            disabled={!props.is_in_code_completions_mode && !props.value}
-          >
-            <div className={cn('codicon', 'codicon-copy')} />
-          </button>
+          {props.on_copy && (
+            <button
+              className={styles.footer__right__button}
+              onClick={(e) => {
+                e.stopPropagation()
+                if (!props.is_in_code_completions_mode && !props.value) return
+                props.on_copy!()
+              }}
+              title="Copy to clipboard"
+              disabled={!props.is_in_code_completions_mode && !props.value}
+            >
+              <div className={cn('codicon', 'codicon-copy')} />
+            </button>
+          )}
           <button
             className={styles.footer__right__button}
             onClick={handle_submit}

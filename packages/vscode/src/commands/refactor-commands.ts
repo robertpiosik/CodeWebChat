@@ -5,7 +5,7 @@ import { ApiProvidersManager } from '../services/api-providers-manager'
 import { make_api_request } from '../helpers/make-api-request'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY } from '@/constants/state-keys'
+import { LAST_SELECTED_REFACTORING_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 
 const get_refactor_config = async (
   api_providers_manager: ApiProvidersManager,
@@ -86,7 +86,7 @@ const get_refactor_config = async (
         return {
           label: config.model,
           description: `${config.provider_name}${
-            is_default ? ' • default configuration' : ''
+            is_default ? ' • Default configuration' : ''
           }`,
           config,
           index,
@@ -102,7 +102,7 @@ const get_refactor_config = async (
     quick_pick.matchOnDescription = true
 
     const last_selected_index = context.globalState.get<number>(
-      LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY,
+      LAST_SELECTED_REFACTORING_CONFIG_INDEX_STATE_KEY,
       0
     )
 
@@ -165,7 +165,7 @@ const get_refactor_config = async (
           }
 
           context.globalState.update(
-            LAST_SELECTED_FILE_REFACTORING_CONFIG_INDEX_KEY,
+            LAST_SELECTED_REFACTORING_CONFIG_INDEX_STATE_KEY,
             selected.index
           )
 

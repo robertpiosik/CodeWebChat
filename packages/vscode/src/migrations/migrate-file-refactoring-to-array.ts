@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { Logger } from '../helpers/logger'
-import { TOOL_CONFIG_FILE_REFACTORING_STATE_KEY } from '../constants/state-keys'
+import { TOOL_CONFIG_REFACTORING_STATE_KEY } from '../constants/state-keys'
 
 const MIGRATION_ID = 'file-refactoring-to-array-migration-20250522'
 
@@ -31,7 +31,7 @@ export async function migrate_file_refactoring_to_array(
     }
 
     const existing_config = context.globalState.get<ToolConfig>(
-      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY
+      TOOL_CONFIG_REFACTORING_STATE_KEY
     )
 
     if (existing_config) {
@@ -39,7 +39,7 @@ export async function migrate_file_refactoring_to_array(
       const config_array = [existing_config]
 
       await context.globalState.update(
-        TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+        TOOL_CONFIG_REFACTORING_STATE_KEY,
         config_array
       )
 

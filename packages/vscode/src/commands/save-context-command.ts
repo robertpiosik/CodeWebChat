@@ -6,7 +6,7 @@ import { should_ignore_file } from '../context/utils/extension-utils'
 import { ignored_extensions } from '../context/constants/ignored-extensions'
 import {
   SAVED_CONTEXTS_STATE_KEY,
-  LAST_CONTEXT_SAVE_LOCATION_KEY
+  LAST_CONTEXT_SAVE_LOCATION_STATE_KEY
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
 
@@ -362,7 +362,7 @@ export function save_context_command(
       // Get the last used save location from extension context
       const last_save_location = extContext.workspaceState.get<
         'internal' | 'file'
-      >(LAST_CONTEXT_SAVE_LOCATION_KEY, 'internal')
+      >(LAST_CONTEXT_SAVE_LOCATION_STATE_KEY, 'internal')
 
       // Create quick pick items with the last used option first
       let quick_pick_storage_options = [
@@ -398,7 +398,7 @@ export function save_context_command(
 
       // Save the selected option as the last used option
       await extContext.workspaceState.update(
-        LAST_CONTEXT_SAVE_LOCATION_KEY,
+        LAST_CONTEXT_SAVE_LOCATION_STATE_KEY,
         save_location
       )
 
