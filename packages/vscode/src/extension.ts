@@ -12,7 +12,8 @@ import {
   migrate_api_tool_configs,
   migrate_api_providers_to_secret_storage,
   migrate_commit_message_prompt_to_instructions,
-  migrate_chat_code_completion_instructions
+  migrate_chat_code_completion_instructions,
+  migrate_refactoring_to_intelligent_update
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -73,6 +74,8 @@ export async function activate(context: vscode.ExtensionContext) {
     // Remove a few weeks after 25 May 2025
     await migrate_commit_message_prompt_to_instructions(context)
     await migrate_chat_code_completion_instructions(context)
+    // Remove a few weeks after 31 May 2025
+    await migrate_refactoring_to_intelligent_update(context)
   }
 
   await migrations()
