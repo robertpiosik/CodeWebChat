@@ -1,11 +1,11 @@
 import * as vscode from 'vscode'
 import { PROVIDERS } from '@shared/constants/providers'
 import {
-  TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+  TOOL_CONFIG_REFACTORING_STATE_KEY,
   TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
   TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
   DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
-  DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY,
+  DEFAULT_REFACTORING_CONFIGURATION_STATE_KEY,
   TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
   DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
 } from '@/constants/state-keys'
@@ -141,7 +141,7 @@ export class ApiProvidersManager {
   public async get_file_refactoring_tool_configs(): Promise<FileRefactoringConfigs> {
     await this._load_promise
     const configs = this._vscode.globalState.get<FileRefactoringConfigs>(
-      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+      TOOL_CONFIG_REFACTORING_STATE_KEY,
       []
     )
     return configs.filter((c) => this._validate_tool_config(c) !== undefined)
@@ -152,14 +152,14 @@ export class ApiProvidersManager {
   > {
     await this._load_promise
     const config = this._vscode.globalState.get<ToolConfig>(
-      DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY
+      DEFAULT_REFACTORING_CONFIGURATION_STATE_KEY
     )
     return this._validate_tool_config(config)
   }
 
   public async set_default_file_refactoring_config(config: ToolConfig) {
     await this._vscode.globalState.update(
-      DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY,
+      DEFAULT_REFACTORING_CONFIGURATION_STATE_KEY,
       config
     )
   }
@@ -168,7 +168,7 @@ export class ApiProvidersManager {
     configs: FileRefactoringConfigs
   ) {
     await this._vscode.globalState.update(
-      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+      TOOL_CONFIG_REFACTORING_STATE_KEY,
       configs
     )
   }
@@ -272,7 +272,7 @@ export class ApiProvidersManager {
 
     const file_refactoring_configs =
       this._vscode.globalState.get<FileRefactoringConfigs>(
-        TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+        TOOL_CONFIG_REFACTORING_STATE_KEY,
         []
       )
 
@@ -289,13 +289,13 @@ export class ApiProvidersManager {
     )
 
     await this._vscode.globalState.update(
-      TOOL_CONFIG_FILE_REFACTORING_STATE_KEY,
+      TOOL_CONFIG_REFACTORING_STATE_KEY,
       updated_file_refactoring_configs
     )
 
     const default_file_refactoring_config =
       this._vscode.globalState.get<ToolConfig>(
-        DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY
+        DEFAULT_REFACTORING_CONFIGURATION_STATE_KEY
       )
 
     if (
@@ -304,7 +304,7 @@ export class ApiProvidersManager {
       default_file_refactoring_config.provider_name == old_name
     ) {
       await this._vscode.globalState.update(
-        DEFAULT_FILE_REFACTORING_CONFIGURATION_STATE_KEY,
+        DEFAULT_REFACTORING_CONFIGURATION_STATE_KEY,
         { ...default_file_refactoring_config, provider_name: new_name }
       )
     }
