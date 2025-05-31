@@ -7,7 +7,7 @@ import {
   DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
 } from '../constants/state-keys'
 
-const MIGRATION_ID = 'refactoring-to-intelligent-update-migration-20250531'
+const MIGRATION_ID = 'refactoring-to-intelligent-update-migration-202505310200'
 
 type ToolConfig = {
   provider_type: string
@@ -35,23 +35,19 @@ export async function migrate_refactoring_to_intelligent_update(
       return
     }
 
-    // Get existing refactoring configs
     const refactoring_configs = context.globalState.get<ToolConfig[]>(
       TOOL_CONFIG_REFACTORING_STATE_KEY,
       []
     )
 
-    // Get existing intelligent update configs
     const existing_intelligent_update_configs = context.globalState.get<
       ToolConfig[]
     >(TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY, [])
 
-    // Only proceed if there are refactoring configs but no intelligent update configs
     if (
       refactoring_configs.length > 0 &&
       existing_intelligent_update_configs.length === 0
     ) {
-      // Copy refactoring configs to intelligent update with temperature set to 0
       const intelligent_update_configs = refactoring_configs.map((config) => ({
         ...config,
         temperature: 0
@@ -67,7 +63,6 @@ export async function migrate_refactoring_to_intelligent_update(
         message: `Copied ${refactoring_configs.length} refactoring configs to intelligent update configs with temperature set to 0`
       })
 
-      // Also copy default config if it exists
       const default_refactoring_config = context.globalState.get<ToolConfig>(
         DEFAULT_REFACTORING_CONFIGURATION_STATE_KEY
       )
@@ -97,7 +92,6 @@ export async function migrate_refactoring_to_intelligent_update(
       })
     }
 
-    // Mark migration as completed
     await context.globalState.update(MIGRATION_ID, true)
   } catch (error) {
     Logger.error({
@@ -105,6 +99,5 @@ export async function migrate_refactoring_to_intelligent_update(
       message: 'Error copying refactoring configs to intelligent update',
       data: error instanceof Error ? error.message : String(error)
     })
-    // Do NOT mark as completed if an error occurred
   }
 }

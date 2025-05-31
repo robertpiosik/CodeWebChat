@@ -131,7 +131,7 @@ async function get_intelligent_update_config(
         return {
           label: config.model,
           description: `${config.provider_name}${
-            is_default ? ' • default configuration' : ''
+            is_default ? ' • Default configuration' : ''
           }`,
           config,
           index,
