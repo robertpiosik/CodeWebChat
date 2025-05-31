@@ -91,7 +91,7 @@ export const Settings: React.FC<Props> = (props) => {
       {render_api_tool_settings({
         title: 'Intelligent Update',
         description:
-          'Update original files based on code blocks in truncated edit format and fix malformed diffs.',
+          'Update files based on code blocks in truncated edit format and fix malformed diffs.',
         checkmarks: [
           'Regnerates whole files in concurrent API calls',
           'Smaller models like Gemini Flash are sufficient'

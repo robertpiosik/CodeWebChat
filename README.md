@@ -131,7 +131,7 @@ Modify files based on natural language instructions.
 
 ### Intelligent Update
 
-Update original files based on code blocks in truncated edit format and fix malformed diffs.
+Update files based on code blocks in truncated edit format and fix malformed diffs.
 
 ✓ Regenerates whole files in concurrent API calls<br />
 ✓ Smaller models like Gemini Flash are sufficient
