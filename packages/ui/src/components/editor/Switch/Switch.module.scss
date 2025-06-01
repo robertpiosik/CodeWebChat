@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  border-radius: 6px;
+  border-radius: var(--border-radius-999px);
   padding: var(--padding-2px);
   border: 1px solid var(--vscode-commandCenter-inactiveBorder);
   gap: var(--padding-2px);
@@ -11,11 +11,11 @@
   display: flex;
   align-items: center;
   position: relative;
-  padding: 0 var(--padding-6px);
-  height: 21px;
+  padding: 0 var(--padding-8px);
+  height: 22px;
   cursor: pointer;
   font-size: var(--font-size-12px);
-  border-radius: var(--border-radius-4px);
+  border-radius: var(--border-radius-999px);
 
   &::before {
     content: attr(data-text);

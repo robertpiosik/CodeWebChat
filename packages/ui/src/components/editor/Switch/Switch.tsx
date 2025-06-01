@@ -2,32 +2,31 @@ import React from 'react'
 import styles from './Switch.module.scss'
 import cn from 'classnames'
 
-type Props = {
-  value: 'Web' | 'API'
-  onChange: (value: 'Web' | 'API') => void
+type Props<T extends string> = {
+  value: T
+  onChange: (value: T) => void
+  options: T[]
 }
 
-export const Switch: React.FC<Props> = (props) => {
+export const Switch = <T extends string>({
+  value,
+  onChange,
+  options
+}: Props<T>) => {
   return (
     <div className={styles.container}>
-      <div
-        className={cn(styles.option, {
-          [styles['option--active']]: props.value == 'Web'
-        })}
-        onClick={() => props.onChange('Web')}
-        data-text="Web"
-      >
-        Web
-      </div>
-      <div
-        className={cn(styles.option, {
-          [styles['option--active']]: props.value == 'API'
-        })}
-        onClick={() => props.onChange('API')}
-        data-text="API"
-      >
-        API
-      </div>
+      {options.map((option) => (
+        <div
+          key={option}
+          className={cn(styles.option, {
+            [styles['option--active']]: value === option
+          })}
+          onClick={() => onChange(option)}
+          data-text={option}
+        >
+          {option}
+        </div>
+      ))}
     </div>
   )
 }

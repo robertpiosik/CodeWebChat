@@ -82,7 +82,8 @@ export const Settings: React.FC<Props> = (props) => {
         description: 'Modify files based on natural language instructions.',
         checkmarks: [
           'Includes selected context',
-          'Multi-file updates in one API call'
+          'Multi-file updates in a single API call',
+          'Efficient in output tokens—requests diffs'
         ],
         on_setup_click: handle_setup_refactoring_click,
         button_label: 'Setup Refactoring API Tool'

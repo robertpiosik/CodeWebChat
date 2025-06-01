@@ -151,6 +151,7 @@ export const HomeView: React.FC<Props> = (props) => {
         <Switch
           value={props.home_view_type}
           onChange={props.on_home_view_type_change}
+          options={['Web', 'API']}
         />
         <div></div>
       </div>

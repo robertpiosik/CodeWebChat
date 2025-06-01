@@ -17,10 +17,16 @@ import { Settings } from './tabs/settings/Settings'
 
 const vscode = acquireVsCodeApi()
 
+const TAB_NAMES = {
+  HOME: 'Home',
+  SETTINGS: 'Settings',
+  DONATIONS: 'Donations'
+} as const
+
+type TabName = (typeof TAB_NAMES)[keyof typeof TAB_NAMES]
+
 export const View = () => {
-  const [active_tab, set_active_tab] = useState<
-    'home' | 'settings' | 'donations'
-  >('home')
+  const [active_tab, set_active_tab] = useState<TabName>(TAB_NAMES.HOME)
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [is_in_code_completions_mode, set_is_in_code_completions_mode] =
@@ -99,20 +105,13 @@ export const View = () => {
   const tabs = (
     <>
       <UiHeader
+        tabs={Object.values(TAB_NAMES)}
         active_tab={active_tab}
-        on_home_tab_click={() => {
-          set_active_tab('home')
-        }}
-        on_donations_tab_click={() => {
-          set_active_tab('donations')
-        }}
-        on_settings_tab_click={() => {
-          set_active_tab('settings')
-        }}
+        on_tab_click={set_active_tab}
       />
       <Home
         vscode={vscode}
-        is_visible={active_tab == 'home'}
+        is_visible={active_tab == TAB_NAMES.HOME}
         on_preset_edit={(preset) => {
           set_updating_preset(preset)
         }}
@@ -123,8 +122,11 @@ export const View = () => {
           handle_code_completion_suggestions_change
         }
       />
-      <Settings vscode={vscode} is_visible={active_tab == 'settings'} />
-      <Donations vscode={vscode} is_visible={active_tab == 'donations'} />
+      <Settings vscode={vscode} is_visible={active_tab == TAB_NAMES.SETTINGS} />
+      <Donations
+        vscode={vscode}
+        is_visible={active_tab == TAB_NAMES.DONATIONS}
+      />
     </>
   )
 

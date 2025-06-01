@@ -9,7 +9,11 @@ export const Default = () => {
   const [value, set_value] = useState<'Web' | 'API'>('Web')
   return (
     <div style={{ display: 'flex' }}>
-      <Switch value={value} onChange={set_value} />
+      <Switch<'Web' | 'API'>
+        value={value}
+        onChange={set_value}
+        options={['Web', 'API']}
+      />
     </div>
   )
 }
@@ -18,7 +22,24 @@ export const InitialAPI = () => {
   const [value, set_value] = useState<'Web' | 'API'>('API')
   return (
     <div style={{ display: 'flex' }}>
-      <Switch value={value} onChange={set_value} />
+      <Switch<'Web' | 'API'>
+        value={value}
+        onChange={set_value}
+        options={['Web', 'API']}
+      />
+    </div>
+  )
+}
+
+export const MultipleOptions = () => {
+  const [value, set_value] = useState<'Light' | 'Dark' | 'System'>('Light')
+  return (
+    <div style={{ display: 'flex' }}>
+      <Switch<'Light' | 'Dark' | 'System'>
+        value={value}
+        onChange={set_value}
+        options={['Light', 'Dark', 'System']}
+      />
     </div>
   )
 }

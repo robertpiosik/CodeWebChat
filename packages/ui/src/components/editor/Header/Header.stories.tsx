@@ -6,16 +6,14 @@ export default {
 }
 
 export const Default = () => {
-  const [active_tab, set_active_tab] = useState<
-    'home' | 'donations' | 'settings'
-  >('home')
+  const [active_tab, set_active_tab] = useState<string>('Home')
+  const tabs = ['Home', 'Settings', 'Donations']
 
   return (
-    <Header
+    <Header<string>
+      tabs={tabs}
       active_tab={active_tab}
-      on_home_tab_click={() => set_active_tab('home')}
-      on_donations_tab_click={() => set_active_tab('donations')}
-      on_settings_tab_click={() => set_active_tab('settings')}
+      on_tab_click={set_active_tab}
     />
   )
 }

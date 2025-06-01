@@ -1,44 +1,28 @@
 import styles from './Header.module.scss'
 import cn from 'classnames'
 
-type Props = {
-  active_tab: 'home' | 'settings' | 'donations'
-  on_home_tab_click: () => void
-  on_donations_tab_click: () => void
-  on_settings_tab_click: () => void
+type Props<T extends string> = {
+  tabs: T[]
+  active_tab: T
+  on_tab_click: (tab: T) => void
 }
 
-export const Header: React.FC<Props> = (props) => {
+export const Header = <T extends string>(props: Props<T>) => {
   return (
     <div className={styles.container}>
       <div className={styles.tabs}>
-        <button
-          className={cn(styles.tabs__tab, {
-            [styles['tabs__tab--active']]: props.active_tab == 'home'
-          })}
-          onClick={props.on_home_tab_click}
-          data-text="Home"
-        >
-          Home
-        </button>
-        <button
-          className={cn(styles.tabs__tab, {
-            [styles['tabs__tab--active']]: props.active_tab == 'settings'
-          })}
-          onClick={props.on_settings_tab_click}
-          data-text="Settings"
-        >
-          Settings
-        </button>
-        <button
-          className={cn(styles.tabs__tab, {
-            [styles['tabs__tab--active']]: props.active_tab == 'donations'
-          })}
-          onClick={props.on_donations_tab_click}
-          data-text="Donations"
-        >
-          Donations
-        </button>
+        {props.tabs.map((tab) => (
+          <button
+            key={tab}
+            className={cn(styles.tabs__tab, {
+              [styles['tabs__tab--active']]: props.active_tab === tab
+            })}
+            onClick={() => props.on_tab_click(tab)}
+            data-text={tab}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
     </div>
   )
