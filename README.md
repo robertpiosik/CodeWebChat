@@ -127,7 +127,8 @@ The best quality inline suggestions at the cost of latency. Designed to be used 
 Modify files based on natural language instructions.
 
 ✓ Includes selected context<br />
-✓ Multi-file updates in one API call
+✓ Multi-file updates in a single API call<br />
+✓ Efficient in output tokens—requests diffs
 
 ### Intelligent Update
 
