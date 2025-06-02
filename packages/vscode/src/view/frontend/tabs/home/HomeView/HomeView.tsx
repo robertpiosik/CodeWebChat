@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styles from './HomeView.module.scss'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
@@ -7,9 +7,9 @@ import { HorizontalSelector as UiHorizontalSelector } from '@ui/components/edito
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import { EditFormatSelectorVisibility } from '@/view/types/edit-format-selector-visibility'
-import { Button as UiButton } from '@ui/components/editor/Button'
 import { Switch } from '@ui/components/editor/Switch'
 import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
+import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 
 type Props = {
   is_visible: boolean
@@ -50,6 +50,7 @@ type Props = {
 
 export const HomeView: React.FC<Props> = (props) => {
   const [estimated_input_tokens, set_estimated_input_tokens] = useState(0)
+  const container_ref = useRef<HTMLDivElement>(null)
 
   const current_prompt = props.is_in_code_completions_mode
     ? props.code_completion_suggestions
@@ -143,9 +144,14 @@ export const HomeView: React.FC<Props> = (props) => {
 
   const total_token_count = props.token_count + estimated_input_tokens
 
+  useEffect(() => {
+    container_ref.current!.scrollTop = 0
+  }, [props.is_visible])
+
   return (
     <div
       className={styles.container}
+      ref={container_ref}
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
       <div className={styles.top}>
@@ -154,7 +160,15 @@ export const HomeView: React.FC<Props> = (props) => {
           on_change={props.on_home_view_type_change}
           options={Object.values(HOME_VIEW_TYPES)}
         />
-        <div></div>
+        {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+          <div>
+            <UiTextButton
+              on_click={props.on_apply_copied_chat_response_more_click}
+            >
+              Apply chat response
+            </UiTextButton>
+          </div>
+        )}
       </div>
 
       <UiSeparator size="small" />
@@ -172,16 +186,26 @@ export const HomeView: React.FC<Props> = (props) => {
               ? handle_copy
               : undefined
           }
+          is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
           is_connected={props.is_connected}
           token_count={total_token_count}
           submit_disabled_title={
             !props.is_connected
               ? 'WebSocket connection not established. Please install the browser extension.'
-              : 'Enter instructions'
+              : 'Type something'
           }
           is_in_code_completions_mode={props.is_in_code_completions_mode}
           has_active_selection={props.has_active_selection}
           on_caret_position_change={props.on_caret_position_change}
+          translations={{
+            ask_anything: 'Ask anything',
+            refactoring_instructions: 'Refactoring instructions',
+            optional_suggestions: 'Optional suggestions',
+            edit_files: 'Edit files',
+            initialize: 'Initialize',
+            select_preset: 'Select preset',
+            select_config: 'Select config'
+          }}
         />
       </div>
 
@@ -192,8 +216,14 @@ export const HomeView: React.FC<Props> = (props) => {
         options={[
           {
             value: 'general',
-            label: 'General',
-            title: 'Ask anything'
+            label:
+              props.home_view_type == HOME_VIEW_TYPES.WEB
+                ? 'General'
+                : 'Refactoring',
+            title:
+              props.home_view_type == HOME_VIEW_TYPES.WEB
+                ? 'Ask anything'
+                : 'Enter refactoring instructions'
           },
           {
             value: 'code-completions',
@@ -298,23 +328,6 @@ export const HomeView: React.FC<Props> = (props) => {
           on_set_default_presets={props.on_set_default_presets}
         />
       )}
-
-      {props.home_view_type == HOME_VIEW_TYPES.API && (
-        <div>refactoring configurations</div>
-      )}
-
-      <UiSeparator size="medium" />
-
-      <div className={styles['apply-copied-chat-response']}>
-        <UiButton
-          on_click={props.on_apply_copied_chat_response_click}
-          on_quick_pick_trigger_click={
-            props.on_apply_copied_chat_response_more_click
-          }
-        >
-          Apply Copied Chat Response
-        </UiButton>
-      </div>
     </div>
   )
 }

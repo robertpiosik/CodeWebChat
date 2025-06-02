@@ -2,6 +2,7 @@ import { useRef, useEffect, useMemo, useState } from 'react'
 import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
+import { Icon } from '../Icon'
 
 type Props = {
   value: string
@@ -17,6 +18,16 @@ type Props = {
   is_in_code_completions_mode: boolean
   has_active_selection: boolean
   on_caret_position_change: (caret_position: number) => void
+  is_web_mode: boolean
+  translations: {
+    ask_anything: string
+    refactoring_instructions: string
+    optional_suggestions: string
+    edit_files: string
+    initialize: string
+    select_preset: string
+    select_config: string
+  }
 }
 
 const format_token_count = (count?: number) => {
@@ -91,7 +102,8 @@ export const ChatInput: React.FC<Props> = (props) => {
   const handle_submit = (
     e:
       | React.KeyboardEvent<HTMLTextAreaElement>
-      | React.MouseEvent<HTMLButtonElement>
+      | React.MouseEvent<HTMLButtonElement>,
+    with_control?: boolean
   ) => {
     e.stopPropagation()
     if (
@@ -99,7 +111,7 @@ export const ChatInput: React.FC<Props> = (props) => {
       (!props.is_in_code_completions_mode && !props.value)
     )
       return
-    if (e.ctrlKey || e.metaKey) {
+    if (with_control || e.ctrlKey || e.metaKey) {
       props.on_submit_with_control()
     } else {
       props.on_submit()
@@ -228,20 +240,27 @@ export const ChatInput: React.FC<Props> = (props) => {
 
     if (props.is_in_code_completions_mode) {
       if (active_history.length > 0 && is_history_enabled) {
-        return 'Enter optional suggestions (⇅ for history)'
+        return `${props.translations.optional_suggestions} (⇅ for history)`
       } else {
-        return 'Enter optional suggestions'
+        return props.translations.optional_suggestions
       }
     }
 
     return active_history.length > 0 && is_history_enabled
-      ? 'Ask anything (⇅ for history)'
-      : 'Ask anything'
+      ? `${
+          props.is_web_mode
+            ? props.translations.ask_anything
+            : props.translations.refactoring_instructions
+        } (⇅ for history)`
+      : props.is_web_mode
+      ? props.translations.ask_anything
+      : props.translations.refactoring_instructions
   }, [
     props.is_in_code_completions_mode,
     props.chat_history,
     props.chat_history_fim_mode,
-    is_history_enabled
+    is_history_enabled,
+    props.is_web_mode
   ])
 
   return (
@@ -289,9 +308,10 @@ export const ChatInput: React.FC<Props> = (props) => {
               {format_token_count(props.token_count)}
             </div>
           )}
+
           {props.on_copy && (
             <button
-              className={styles.footer__right__button}
+              className={styles['footer__right__icon-button']}
               onClick={(e) => {
                 e.stopPropagation()
                 if (!props.is_in_code_completions_mode && !props.value) return
@@ -303,6 +323,36 @@ export const ChatInput: React.FC<Props> = (props) => {
               <div className={cn('codicon', 'codicon-copy')} />
             </button>
           )}
+
+          <button
+            className={styles.footer__right__button}
+            onClick={(e) => handle_submit(e, true)}
+            disabled={
+              !props.is_connected ||
+              (!props.is_in_code_completions_mode && !props.value)
+            }
+            title={
+              !props.is_connected ||
+              (!props.is_in_code_completions_mode && !props.value)
+                ? props.submit_disabled_title
+                : props.is_web_mode
+                ? props.translations.select_preset
+                : props.translations.select_config
+            }
+          >
+            {navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? (
+              <Icon variant="COMMAND" />
+            ) : (
+              <div className={styles.footer__right__button__ctrl}>Ctrl</div>
+            )}
+            <Icon variant="ENTER" />
+            <span>
+              {props.is_web_mode
+                ? props.translations.select_preset
+                : props.translations.select_config}
+            </span>
+          </button>
+
           <button
             className={styles.footer__right__button}
             onClick={handle_submit}
@@ -314,10 +364,17 @@ export const ChatInput: React.FC<Props> = (props) => {
               !props.is_connected ||
               (!props.is_in_code_completions_mode && !props.value)
                 ? props.submit_disabled_title
-                : 'Send'
+                : props.is_web_mode
+                ? props.translations.initialize
+                : props.translations.edit_files
             }
           >
-            <div className={cn('codicon', 'codicon-send')} />
+            <Icon variant="ENTER" />
+            <span>
+              {props.is_web_mode
+                ? props.translations.initialize
+                : props.translations.edit_files}
+            </span>
           </button>
         </div>
       </div>

@@ -131,17 +131,66 @@
       margin-right: 3px;
     }
 
-    &__button {
+    &__icon-button {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 3px;
       height: 20px;
       width: 20px;
       border-radius: 5px;
       color: var(--vscode-icon-foreground);
 
+      > svg {
+        width: 9px;
+        fill: var(--vscode-icon-foreground);
+      }
+
       &:hover:enabled {
         background-color: var(--vscode-toolbar-hoverBackground);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        &:hover {
+          background-color: none;
+        }
+      }
+    }
+
+    &__button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      height: 20px;
+      padding: 0 4px;
+      border-radius: 5px;
+      color: var(--vscode-editor-foreground);
+      border: 1px solid var(--vscode-commandCenter-inactiveBorder);
+      font-size: 12px;
+
+      > svg {
+        width: 9px;
+        fill: var(--vscode-icon-foreground);
+      }
+
+      &:hover:enabled {
+        background-color: var(--vscode-toolbar-hoverBackground);
+        border-color: var(--vscode-commandCenter-activeBorder);
+      }
+
+      &__ctrl {
+        color: var(--vscode-icon-foreground);
+        letter-spacing: -0.6px;
+      }
+
+      @media (max-width: 380px) {
+        > span {
+          display: none;
+        }
       }
 
       &:disabled {
