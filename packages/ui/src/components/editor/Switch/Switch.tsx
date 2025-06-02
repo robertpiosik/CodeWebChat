@@ -8,18 +8,14 @@ type SwitchProps<T extends string> = {
   options: T[]
 }
 
-export const Switch = <T extends string>({
-  value,
-  on_change,
-  options
-}: SwitchProps<T>) => {
+export const Switch = <T extends string>(props: SwitchProps<T>) => {
   const container_ref = useRef<HTMLDivElement>(null)
   const [pill_style, set_pill_style] = useState<React.CSSProperties>({})
-  const [delayed_active_value, set_delayed_active_value] = useState(value)
+  const [delayed_active_value, set_delayed_active_value] = useState(props.value)
 
   useEffect(() => {
     if (container_ref.current) {
-      const active_index = options.indexOf(value)
+      const active_index = props.options.indexOf(props.value)
       const option_elements = container_ref.current.querySelectorAll(
         `.${styles.option}`
       )
@@ -35,27 +31,27 @@ export const Switch = <T extends string>({
         })
       }
     }
-  }, [value, options])
+  }, [props.value])
 
   useEffect(() => {
     const timeout_handler = setTimeout(() => {
-      set_delayed_active_value(value)
+      set_delayed_active_value(props.value)
     }, 70)
 
     return () => clearTimeout(timeout_handler)
-  }, [value])
+  }, [props.value])
 
   return (
     <div className={styles.container} ref={container_ref}>
       <div className={styles.pill} style={pill_style} />
-      {options.map((option) => (
+      {props.options.map((option) => (
         <div
           key={option}
           className={cn(styles.option, {
-            [styles['option--active']]: delayed_active_value === option,
-            [styles['option--active-immediate']]: value === option
+            [styles['option--active']]: delayed_active_value == option,
+            [styles['option--active-immediate']]: props.value == option
           })}
-          onClick={() => on_change(option)}
+          onClick={() => props.on_change(option)}
           data-text={option}
         >
           {option}
