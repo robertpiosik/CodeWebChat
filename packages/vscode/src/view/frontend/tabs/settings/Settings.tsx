@@ -2,6 +2,7 @@ import styles from './Settings.module.scss'
 import { Button as UiButton } from '@ui/components/editor/Button'
 import { WebviewMessage } from '@/view/types/messages'
 import { ApiTool as UiApiTool } from '@ui/components/editor/ApiTool'
+import { useRef, useEffect } from 'react'
 
 type Props = {
   vscode: any
@@ -9,6 +10,12 @@ type Props = {
 }
 
 export const Settings: React.FC<Props> = (props) => {
+  const container_ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    container_ref.current!.scrollTop = 0
+  }, [props.is_visible])
+
   const handle_configure_api_providers_click = () => {
     props.vscode.postMessage({
       command: 'CONFIGURE_API_PROVIDERS'
@@ -61,6 +68,7 @@ export const Settings: React.FC<Props> = (props) => {
 
   return (
     <div
+      ref={container_ref}
       className={styles.container}
       style={{ display: !props.is_visible ? 'none' : undefined }}
     >
