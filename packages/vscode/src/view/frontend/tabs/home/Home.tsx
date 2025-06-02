@@ -283,25 +283,24 @@ export const Home: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
-  const handle_apply_copied_chat_response_more_click = () => {
-    const items = [
-      {
-        label: 'Revert last applied chat response',
-        command: 'codeWebChat.revert'
-      }
-    ]
-
-    props.vscode.postMessage({
-      command: 'SHOW_QUICK_PICK',
-      items,
-      title: 'More actions...'
-    })
-  }
-
   const handle_home_view_type_change = (view_type: HomeViewType) => {
     props.vscode.postMessage({
       command: 'SAVE_HOME_VIEW_TYPE',
       view_type
+    } as WebviewMessage)
+  }
+
+  const handle_refactor_click = () => {
+    props.vscode.postMessage({
+      command: 'REFACTOR',
+      use_quick_pick: false
+    } as WebviewMessage)
+  }
+
+  const handle_refactor_with_quick_pick_click = () => {
+    props.vscode.postMessage({
+      command: 'REFACTOR',
+      use_quick_pick: true
     } as WebviewMessage)
   }
 
@@ -333,9 +332,6 @@ export const Home: React.FC<Props> = (props) => {
       selected_code_completion_presets={selected_code_completion_presets}
       on_create_preset={handle_create_preset}
       on_apply_copied_chat_response_click={handle_apply_copied_chat_response}
-      on_apply_copied_chat_response_more_click={
-        handle_apply_copied_chat_response_more_click
-      }
       has_active_editor={has_active_editor}
       is_in_code_completions_mode={is_in_code_completions_mode}
       on_code_completions_mode_click={handle_code_completions_mode_click}
@@ -360,6 +356,8 @@ export const Home: React.FC<Props> = (props) => {
       on_caret_position_change={handle_caret_position_change}
       home_view_type={home_view_type}
       on_home_view_type_change={handle_home_view_type_change}
+      on_refactor_click={handle_refactor_click}
+      on_refactor_with_quick_pick_click={handle_refactor_with_quick_pick_click}
     />
   )
 }

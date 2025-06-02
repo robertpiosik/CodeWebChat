@@ -362,6 +362,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_create_preset(this)
           } else if (message.command == 'EXECUTE_COMMAND') {
             vscode.commands.executeCommand(message.command_id)
+          } else if (message.command == 'REFACTOR') {
+            vscode.commands.executeCommand(
+              message.use_quick_pick
+                ? 'codeWebChat.refactorUsing'
+                : 'codeWebChat.refactor',
+              { instructions: this.instructions }
+            )
           } else if (message.command == 'SHOW_QUICK_PICK') {
             await handle_show_quick_pick(message)
           } else if (message.command == 'GET_EDIT_FORMAT') {

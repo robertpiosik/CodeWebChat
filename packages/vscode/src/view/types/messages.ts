@@ -203,6 +203,11 @@ export interface GetHomeViewTypeMessage extends BaseMessage {
   command: 'GET_HOME_VIEW_TYPE'
 }
 
+export interface RefactorMessage extends BaseMessage {
+  command: 'REFACTOR'
+  use_quick_pick: boolean
+}
+
 // Messages from extension to webview:
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
@@ -387,6 +392,7 @@ export type WebviewMessage =
   | PickOpenRouterModel
   | SaveHomeViewTypeMessage
   | GetHomeViewTypeMessage
+  | RefactorMessage
 
 export type ExtensionMessage =
   | InstructionsMessage

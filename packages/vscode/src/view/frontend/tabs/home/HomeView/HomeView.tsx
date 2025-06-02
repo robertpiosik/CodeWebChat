@@ -17,7 +17,6 @@ type Props = {
   copy_to_clipboard: (instruction: string) => void
   on_create_preset: () => void
   on_apply_copied_chat_response_click: () => void
-  on_apply_copied_chat_response_more_click: () => void
   is_connected: boolean
   presets: Preset[]
   selected_presets: string[]
@@ -46,6 +45,8 @@ type Props = {
   on_caret_position_change: (caret_position: number) => void
   home_view_type: HomeViewType
   on_home_view_type_change: (value: HomeViewType) => void
+  on_refactor_click: () => void
+  on_refactor_with_quick_pick_click: () => void
 }
 
 export const HomeView: React.FC<Props> = (props) => {
@@ -94,20 +95,28 @@ export const HomeView: React.FC<Props> = (props) => {
   }
 
   const handle_submit = async () => {
-    props.initialize_chats({
-      prompt: current_prompt,
-      preset_names: !props.is_in_code_completions_mode
-        ? props.selected_presets
-        : props.selected_code_completion_presets
-    })
+    if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
+      props.initialize_chats({
+        prompt: current_prompt,
+        preset_names: !props.is_in_code_completions_mode
+          ? props.selected_presets
+          : props.selected_code_completion_presets
+      })
+    } else {
+      props.on_refactor_click()
+    }
   }
 
   // Let user select a preset
   const handle_submit_with_control = async () => {
-    props.initialize_chats({
-      prompt: current_prompt,
-      preset_names: []
-    })
+    if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
+      props.initialize_chats({
+        prompt: current_prompt,
+        preset_names: []
+      })
+    } else {
+      props.on_refactor_with_quick_pick_click()
+    }
   }
 
   const handle_copy = () => {
@@ -161,9 +170,10 @@ export const HomeView: React.FC<Props> = (props) => {
           options={Object.values(HOME_VIEW_TYPES)}
         />
         {props.home_view_type == HOME_VIEW_TYPES.WEB && (
-          <div>
+          <div className={styles.top__right}>
             <UiTextButton
-              on_click={props.on_apply_copied_chat_response_more_click}
+              on_click={props.on_apply_copied_chat_response_click}
+              title="Apply chat response copied to clipboard"
             >
               Apply chat response
             </UiTextButton>
@@ -202,6 +212,7 @@ export const HomeView: React.FC<Props> = (props) => {
             refactoring_instructions: 'Refactoring instructions',
             optional_suggestions: 'Optional suggestions',
             edit_files: 'Edit files',
+            autocomplete: 'Autocomplete',
             initialize: 'Initialize',
             select_preset: 'Select preset',
             select_config: 'Select config'

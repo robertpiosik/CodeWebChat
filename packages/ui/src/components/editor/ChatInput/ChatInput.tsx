@@ -24,6 +24,7 @@ type Props = {
     refactoring_instructions: string
     optional_suggestions: string
     edit_files: string
+    autocomplete: string
     initialize: string
     select_preset: string
     select_config: string
@@ -366,6 +367,8 @@ export const ChatInput: React.FC<Props> = (props) => {
                 ? props.submit_disabled_title
                 : props.is_web_mode
                 ? props.translations.initialize
+                : props.is_in_code_completions_mode
+                ? props.translations.autocomplete
                 : props.translations.edit_files
             }
           >
@@ -373,6 +376,8 @@ export const ChatInput: React.FC<Props> = (props) => {
             <span>
               {props.is_web_mode
                 ? props.translations.initialize
+                : props.is_in_code_completions_mode
+                ? props.translations.autocomplete
                 : props.translations.edit_files}
             </span>
           </button>

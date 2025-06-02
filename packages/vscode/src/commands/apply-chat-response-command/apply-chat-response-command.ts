@@ -559,10 +559,9 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
 
         return
       } else {
-        // If no patches found, continue with regular file handling
         if (!clipboard_content.files || clipboard_content.files.length == 0) {
           vscode.window.showErrorMessage(
-            'Clipboard content must contain properly formatted code blocks. Each code block should start with a commented file path or be a diff.'
+            'Clipboard content must contain properly formatted code blocks. Each code block should start with a file path or be a diff.'
           )
           return
         }
