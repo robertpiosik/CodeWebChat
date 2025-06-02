@@ -58,6 +58,7 @@ import {
   ConfigPresetFormat
 } from '@/view/backend/helpers/preset-format-converters'
 import { HOME_VIEW_TYPE_STATE_KEY } from '@/constants/state-keys'
+import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -69,7 +70,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public instructions: string = ''
   public code_completion_suggestions: string = ''
   public edit_format: EditFormat
-  public home_view_type: 'Web' | 'API' = 'Web'
+  public home_view_type: HomeViewType = HOME_VIEW_TYPES.WEB
 
   constructor(
     public readonly extension_uri: vscode.Uri,
@@ -95,9 +96,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     )
 
     // Initialize home view type from workspace state
-    this.home_view_type = this.context.workspaceState.get<'Web' | 'API'>(
+    this.home_view_type = this.context.workspaceState.get<HomeViewType>(
       HOME_VIEW_TYPE_STATE_KEY,
-      'Web'
+      HOME_VIEW_TYPES.WEB
     )
 
     // Listen for changes to the new configuration keys

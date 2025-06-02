@@ -9,6 +9,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { EditFormatSelectorVisibility } from '@/view/types/edit-format-selector-visibility'
 import { Button as UiButton } from '@ui/components/editor/Button'
 import { Switch } from '@ui/components/editor/Switch'
+import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
 
 type Props = {
   is_visible: boolean
@@ -43,8 +44,8 @@ type Props = {
   code_completion_suggestions: string
   set_code_completion_suggestions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
-  home_view_type: 'Web' | 'API'
-  on_home_view_type_change: (value: 'Web' | 'API') => void
+  home_view_type: HomeViewType
+  on_home_view_type_change: (value: HomeViewType) => void
 }
 
 export const HomeView: React.FC<Props> = (props) => {
@@ -150,8 +151,8 @@ export const HomeView: React.FC<Props> = (props) => {
       <div className={styles.top}>
         <Switch
           value={props.home_view_type}
-          onChange={props.on_home_view_type_change}
-          options={['Web', 'API']}
+          on_change={props.on_home_view_type_change}
+          options={Object.values(HOME_VIEW_TYPES)}
         />
         <div></div>
       </div>
@@ -166,7 +167,11 @@ export const HomeView: React.FC<Props> = (props) => {
           on_change={handle_input_change}
           on_submit={handle_submit}
           on_submit_with_control={handle_submit_with_control}
-          on_copy={props.home_view_type == 'Web' ? handle_copy : undefined}
+          on_copy={
+            props.home_view_type == HOME_VIEW_TYPES.WEB
+              ? handle_copy
+              : undefined
+          }
           is_connected={props.is_connected}
           token_count={total_token_count}
           submit_disabled_title={
@@ -209,7 +214,7 @@ export const HomeView: React.FC<Props> = (props) => {
       />
 
       {props.edit_format_selector_visibility == 'visible' &&
-        props.home_view_type == 'Web' && (
+        props.home_view_type == HOME_VIEW_TYPES.WEB && (
           <>
             <UiSeparator size="small" />
             <UiHorizontalSelector
@@ -264,7 +269,7 @@ export const HomeView: React.FC<Props> = (props) => {
         </>
       )}
 
-      {props.home_view_type == 'Web' && (
+      {props.home_view_type == HOME_VIEW_TYPES.WEB && (
         <UiPresets
           presets={props.presets.map((preset) => {
             return {
@@ -294,7 +299,9 @@ export const HomeView: React.FC<Props> = (props) => {
         />
       )}
 
-      {props.home_view_type == 'API' && <div>refactoring configurations</div>}
+      {props.home_view_type == HOME_VIEW_TYPES.API && (
+        <div>refactoring configurations</div>
+      )}
 
       <UiSeparator size="medium" />
 

@@ -4,6 +4,7 @@
   padding: var(--padding-2px);
   border: 1px solid var(--vscode-commandCenter-inactiveBorder);
   gap: var(--padding-2px);
+  position: relative;
 }
 
 .option {
@@ -16,6 +17,7 @@
   cursor: pointer;
   font-size: var(--font-size-12px);
   border-radius: var(--border-radius-999px);
+  white-space: nowrap;
 
   &::before {
     content: attr(data-text);
@@ -31,17 +33,28 @@
     background-color: var(--vscode-toolbar-hoverBackground);
   }
 
+  &--active-immediate {
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
   &--active {
-    background-color: var(--vscode-button-background);
     color: transparent;
 
     &::before {
       visibility: visible;
       color: var(--vscode-button-foreground);
     }
-
-    &:hover {
-      background-color: var(--vscode-button-background);
-    }
   }
+}
+
+.pill {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: var(--border-radius-999px);
+  background-color: var(--vscode-button-background);
+  transition: all 0.15s linear;
+  z-index: 0;
 }

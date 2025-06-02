@@ -7,6 +7,7 @@ import {
 } from '../../../types/messages'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
+import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
 
 type Props = {
   vscode: any
@@ -39,7 +40,9 @@ export const Home: React.FC<Props> = (props) => {
   const [edit_format, set_edit_format] = useState<EditFormat>()
   const [edit_format_selector_visibility, set_edit_format_selector_visibility] =
     useState<'visible' | 'hidden'>('visible')
-  const [home_view_type, set_home_view_type] = useState<'Web' | 'API'>('Web')
+  const [home_view_type, set_home_view_type] = useState<HomeViewType>(
+    HOME_VIEW_TYPES.WEB
+  )
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
@@ -295,7 +298,7 @@ export const Home: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_home_view_type_change = (view_type: 'Web' | 'API') => {
+  const handle_home_view_type_change = (view_type: HomeViewType) => {
     props.vscode.postMessage({
       command: 'SAVE_HOME_VIEW_TYPE',
       view_type

@@ -3,6 +3,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { Preset } from '@shared/types/preset'
 import { EditFormatSelectorVisibility } from './edit-format-selector-visibility'
 import { PROVIDERS } from '@shared/constants/providers'
+import { HomeViewType } from './home-view-type'
 
 export interface BaseMessage {
   command: string
@@ -195,7 +196,7 @@ export interface PickOpenRouterModel extends BaseMessage {
 
 export interface SaveHomeViewTypeMessage extends BaseMessage {
   command: 'SAVE_HOME_VIEW_TYPE'
-  view_type: 'Web' | 'API'
+  view_type: HomeViewType
 }
 
 export interface GetHomeViewTypeMessage extends BaseMessage {
@@ -339,7 +340,7 @@ export interface ApiProvidersMessage extends BaseMessage {
 
 export interface HomeViewTypeMessage extends BaseMessage {
   command: 'HOME_VIEW_TYPE'
-  view_type: 'Web' | 'API'
+  view_type: HomeViewType
 }
 
 // Union type of all possible incoming messages from webview
