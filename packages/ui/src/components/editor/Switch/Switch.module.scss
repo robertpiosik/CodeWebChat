@@ -55,6 +55,6 @@
   bottom: 2px;
   border-radius: var(--border-radius-999px);
   background-color: var(--vscode-button-background);
-  transition: all 0.15s linear;
+  transition: all 0.15s ease-out;
   z-index: 0;
 }

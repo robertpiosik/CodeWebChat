@@ -6,13 +6,13 @@ export default {
 }
 
 export const Default = () => {
-  const [value, set_value] = useState<'Web' | 'API lorem ipsum'>('Web')
+  const [value, set_value] = useState<'Web' | 'API'>('Web')
   return (
     <div style={{ display: 'flex' }}>
-      <Switch<'Web' | 'API lorem ipsum'>
+      <Switch<'Web' | 'API'>
         value={value}
         on_change={set_value}
-        options={['Web', 'API lorem ipsum']}
+        options={['Web', 'API']}
       />
     </div>
   )

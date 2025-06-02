@@ -40,7 +40,7 @@ export const Switch = <T extends string>({
   useEffect(() => {
     const timeout_handler = setTimeout(() => {
       set_delayed_active_value(value)
-    }, 90)
+    }, 70)
 
     return () => clearTimeout(timeout_handler)
   }, [value])
