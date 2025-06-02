@@ -320,7 +320,7 @@ export class WorkspaceProvider
   }
 
   // Get workspace name for a specific root
-  public getWorkspaceName(root_path: string): string {
+  public get_workspace_name(root_path: string): string {
     const index = this.workspace_roots.indexOf(root_path)
     if (index !== -1) {
       return this.workspace_names[index]
@@ -674,23 +674,30 @@ export class WorkspaceProvider
     return items
   }
 
-  // Calculate token count for a file
-  private async calculate_file_tokens(file_path: string): Promise<number> {
-    // Check if we've already calculated this file
+  async calculate_file_tokens(file_path: string): Promise<number> {
     if (this.file_token_counts.has(file_path)) {
       return this.file_token_counts.get(file_path)!
     }
 
     try {
-      // Read file content
+      const workspace_root = this.get_workspace_root_for_file(file_path)
       const content = await fs.promises.readFile(file_path, 'utf8')
+      let content_xml = ''
 
-      // Simple token estimation: character count / 4
-      const token_count = Math.floor(content.length / 4)
+      if (!workspace_root) {
+        content_xml = `<file path="${file_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+      } else {
+        const relative_path = path.relative(workspace_root, file_path)
+        if (this.workspace_roots.length > 1) {
+          const workspace_name = this.get_workspace_name(workspace_root)
+          content_xml = `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+        } else {
+          content_xml = `<file path="${relative_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+        }
+      }
 
-      // Cache the result
+      const token_count = Math.floor(content_xml.length / 4)
       this.file_token_counts.set(file_path, token_count)
-
       return token_count
     } catch (error) {
       Logger.error({
@@ -1367,18 +1374,15 @@ export class WorkspaceProvider
 
     for (const file_path of checked_files) {
       try {
-        // Ensure it's a file before calculating tokens
         if (fs.statSync(file_path).isFile()) {
           if (this.file_token_counts.has(file_path)) {
             total += this.file_token_counts.get(file_path)!
           } else {
-            // Calculate if not cached
             const count = await this.calculate_file_tokens(file_path)
             total += count
           }
         }
       } catch (error) {
-        // Handle cases where the file might have been deleted since get_checked_files was called
         Logger.error({
           function_name: 'get_checked_files_token_count',
           message: `Error accessing file ${file_path} for token count`,

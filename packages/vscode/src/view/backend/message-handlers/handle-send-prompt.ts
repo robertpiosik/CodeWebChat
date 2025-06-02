@@ -60,10 +60,14 @@ export const handle_send_prompt = async (
 
     const text = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
 
-    provider.websocket_server_instance.initialize_chats(
-      text,
-      valid_preset_names
-    )
+    const chats = valid_preset_names.map((preset_name) => {
+      return {
+        text,
+        preset_name
+      }
+    })
+
+    provider.websocket_server_instance.initialize_chats(chats)
   } else if (!provider.is_code_completions_mode) {
     if (!provider.instructions) return
 
@@ -71,12 +75,8 @@ export const handle_send_prompt = async (
       active_path
     })
 
-    let instructions = provider.instructions
-    instructions = replace_selection_placeholder(instructions)
-    instructions = apply_preset_affixes_to_instruction(
-      instructions,
-      valid_preset_names
-    )
+    let base_instructions = provider.instructions
+    base_instructions = replace_selection_placeholder(base_instructions)
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const edit_format_instructions = config.get<string>(
@@ -85,18 +85,26 @@ export const handle_send_prompt = async (
         provider.edit_format.slice(1)
       }`
     )
-    if (edit_format_instructions) {
-      instructions += `\n${edit_format_instructions}`
-    }
 
-    const text = `${
-      context_text ? `${instructions}\n<files>\n${context_text}</files>\n` : ''
-    }${instructions}`
+    const chats = valid_preset_names.map((preset_name) => {
+      let instructions = apply_preset_affixes_to_instruction(
+        base_instructions,
+        preset_name
+      )
 
-    provider.websocket_server_instance.initialize_chats(
-      text,
-      valid_preset_names
-    )
+      if (edit_format_instructions) {
+        instructions += `\n${edit_format_instructions}`
+      }
+
+      return {
+        text: context_text
+          ? `${instructions}\n<files>\n${context_text}</files>\n${instructions}`
+          : instructions,
+        preset_name
+      }
+    })
+
+    provider.websocket_server_instance.initialize_chats(chats)
   }
 
   vscode.window.showInformationMessage(

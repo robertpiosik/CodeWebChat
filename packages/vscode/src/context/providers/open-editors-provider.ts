@@ -5,6 +5,7 @@ import { FileItem } from './workspace-provider'
 import { SharedFileState } from '../shared-file-state'
 import { ignored_extensions } from '../constants/ignored-extensions'
 import { should_ignore_file } from '../utils/extension-utils'
+import { WorkspaceProvider } from './workspace-provider'
 
 export class OpenEditorsProvider
   implements vscode.TreeDataProvider<FileItem>, vscode.Disposable
@@ -35,11 +36,16 @@ export class OpenEditorsProvider
   private _shared_state: SharedFileState
   // Config change handler
   private _config_change_handler: vscode.Disposable
+  private workspace_provider: WorkspaceProvider
 
-  // Updated constructor to take workspace folders
-  constructor(workspace_folders: vscode.WorkspaceFolder[]) {
+  // Updated constructor to take workspace folders and workspace provider
+  constructor(
+    workspace_folders: vscode.WorkspaceFolder[],
+    workspace_provider: WorkspaceProvider
+  ) {
     this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
     this._shared_state = SharedFileState.getInstance()
+    this.workspace_provider = workspace_provider
 
     // Load ignored extensions
     this._load_ignored_extensions()
@@ -309,30 +315,6 @@ export class OpenEditorsProvider
     return Array.from(open_files_map.values())
   }
 
-  // Calculate token count for a file
-  private async _calculate_file_tokens(file_path: string): Promise<number> {
-    // Check if we've already calculated this file
-    if (this._file_token_counts.has(file_path)) {
-      return this._file_token_counts.get(file_path)!
-    }
-
-    try {
-      // Read file content
-      const content = await fs.promises.readFile(file_path, 'utf8')
-
-      // Simple token estimation: character count / 4
-      const token_count = Math.floor(content.length / 4)
-
-      // Cache the result
-      this._file_token_counts.set(file_path, token_count)
-
-      return token_count
-    } catch (error) {
-      console.error(`Error calculating tokens for ${file_path}:`, error)
-      return 0
-    }
-  }
-
   // Modified to check all workspace roots and add workspace folder name to description
   async create_open_editor_items(): Promise<FileItem[]> {
     const items: FileItem[] = []
@@ -390,8 +372,10 @@ export class OpenEditorsProvider
           : workspace_folder_name
       }
 
-      // Calculate token count
-      const token_count = await this._calculate_file_tokens(file_path)
+      // Calculate token count using workspace provider
+      const token_count = await this.workspace_provider.calculate_file_tokens(
+        file_path
+      )
 
       const item = new FileItem(
         file_name,

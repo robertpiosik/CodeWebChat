@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import { FilesCollector } from '../../helpers/files-collector'
 import { WebSocketManager } from '@/services/websocket-manager'
 import {
   WebviewMessage,
@@ -240,26 +239,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   }
 
   public calculate_token_count() {
-    const files_collector = new FilesCollector(
-      this.workspace_provider,
-      this.open_editors_provider,
-      this.websites_provider
-    )
-
     const active_editor = vscode.window.activeTextEditor
-    const active_path = active_editor?.document.uri.fsPath
 
-    const options = {
-      disable_xml: true,
-      ...(this.is_code_completions_mode && active_path
-        ? { exclude_path: active_path }
-        : {})
-    }
-
-    files_collector
-      .collect_files(options)
-      .then((context_text) => {
-        let current_token_count = Math.floor(context_text.length / 4)
+    Promise.all([
+      this.workspace_provider.get_checked_files_token_count(),
+      this.websites_provider.get_checked_websites_token_count()
+    ])
+      .then(([workspace_tokens, websites_tokens]) => {
+        let current_token_count = workspace_tokens + websites_tokens
 
         if (active_editor && this.is_code_completions_mode) {
           const document = active_editor.document

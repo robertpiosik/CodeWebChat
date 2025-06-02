@@ -267,9 +267,9 @@ export class WebSocketManager {
     return this.has_connected_browsers
   }
 
+  // TODO: This needs attention - should be renamed to "initialize-chat" and handle only one at a time.
   public async initialize_chats(
-    text: string,
-    preset_names: string[]
+    chats: Array<{ text: string; preset_name: string }>
   ): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -278,28 +278,29 @@ export class WebSocketManager {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_chat_presets = config.get<any[]>('presets') ?? []
 
-    const message: InitializeChatsMessage = {
-      action: 'initialize-chats',
-      text,
-      chats: preset_names
-        .map((name) => {
-          const preset = web_chat_presets.find((p) => p.name == name)
-          if (!preset) {
-            return null
-          }
+    for (const chat of chats) {
+      const preset = web_chat_presets.find((p) => p.name == chat.preset_name)
+      if (!preset) {
+        continue
+      }
 
-          const chatbot = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
-          let url: string
-          if (preset.chatbot == 'Open WebUI') {
-            if (preset.port) {
-              url = `http://localhost:${preset.port}/`
-            } else {
-              url = 'http://openwebui/'
-            }
-          } else {
-            url = chatbot.url
-          }
-          return {
+      const chatbot = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
+      let url: string
+      if (preset.chatbot == 'Open WebUI') {
+        if (preset.port) {
+          url = `http://localhost:${preset.port}/`
+        } else {
+          url = 'http://openwebui/'
+        }
+      } else {
+        url = chatbot.url
+      }
+
+      const message: InitializeChatsMessage = {
+        action: 'initialize-chats',
+        text: chat.text,
+        chats: [
+          {
             url,
             model: preset.model,
             temperature: preset.temperature,
@@ -307,18 +308,18 @@ export class WebSocketManager {
             system_instructions: preset.systemInstructions,
             options: preset.options
           }
-        })
-        .filter((chat) => chat !== null), // Filter out any null chats
-      client_id: this.client_id || 0 // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+        ],
+        client_id: this.client_id || 0 // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+      }
+
+      Logger.log({
+        function_name: 'initialize_chats',
+        message: 'Sending initialize chat message',
+        data: message
+      })
+
+      this.client?.send(JSON.stringify(message))
     }
-
-    Logger.log({
-      function_name: 'initialize_chats',
-      message: 'Sending initialize chats message',
-      data: message
-    })
-
-    this.client?.send(JSON.stringify(message))
   }
 
   public async preview_preset(

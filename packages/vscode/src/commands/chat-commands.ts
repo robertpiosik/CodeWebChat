@@ -62,8 +62,6 @@ async function handle_chat_command(
     return
   }
 
-  instructions = apply_preset_affixes_to_instruction(instructions, preset_names)
-
   const edit_format = context.workspaceState.get<EditFormat>(
     'editFormat',
     'truncated'
@@ -76,15 +74,27 @@ async function handle_chat_command(
       }`
     )
 
-  if (edit_format_instructions && context_text) {
-    instructions += `\n${edit_format_instructions}`
-  }
+  const chats = preset_names.map((preset_name) => {
+    let processed_instructions = apply_preset_affixes_to_instruction(
+      instructions,
+      preset_name
+    )
 
-  const text = `${
-    context_text ? `${instructions}\n<files>\n${context_text}</files>\n` : ''
-  }${instructions}`
+    if (edit_format_instructions && context_text) {
+      processed_instructions += `\n${edit_format_instructions}`
+    }
 
-  websocket_server_instance.initialize_chats(text, preset_names)
+    const chat_text = context_text
+      ? `${processed_instructions}\n<files>\n${context_text}</files>\n${processed_instructions}`
+      : processed_instructions
+
+    return {
+      text: chat_text,
+      preset_name: preset_name
+    }
+  })
+
+  websocket_server_instance.initialize_chats(chats)
 }
 
 export function chat_using_command(
@@ -176,7 +186,7 @@ export function chat_using_command(
 
     processed_instructions = apply_preset_affixes_to_instruction(
       processed_instructions,
-      [selected_preset.label]
+      selected_preset.label
     )
 
     const edit_format = config.get<EditFormat>('editFormat')!
@@ -196,7 +206,10 @@ export function chat_using_command(
         : processed_instructions
     }`
 
-    websocket_server_instance.initialize_chats(text, [selected_preset.label])
+    // Update initialize_chats call to match the new signature
+    websocket_server_instance.initialize_chats([
+      { text: text, preset_name: selected_preset.label }
+    ])
   })
 }
 

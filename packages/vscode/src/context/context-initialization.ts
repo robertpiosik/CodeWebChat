@@ -22,9 +22,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
   let workspace_view: vscode.TreeView<FileItem>
 
   if (!workspace_folders) {
-    vscode.window.showInformationMessage(
-      'Please open a project to use CWC.'
-    )
+    vscode.window.showInformationMessage('Please open a project to use CWC.')
     return {}
   }
 
@@ -33,7 +31,8 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
   // Use the first workspace folder for open editors provider
   const open_editors_provider = new OpenEditorsProvider(
-    workspace_folders as any
+    workspace_folders as any,
+    workspace_provider
   )
   const websites_provider = new WebsitesProvider()
 

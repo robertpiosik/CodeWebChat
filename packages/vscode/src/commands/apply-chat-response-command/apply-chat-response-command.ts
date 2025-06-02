@@ -272,13 +272,13 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
     async (args?: { response?: string }) => {
-      let response = args?.response
+      let chat_response = args?.response
 
-      if (!response) {
-        response = await vscode.env.clipboard.readText()
+      if (!chat_response) {
+        chat_response = await vscode.env.clipboard.readText()
       }
 
-      if (!response) {
+      if (!chat_response) {
         vscode.window.showErrorMessage(
           'No response text provided and clipboard is empty.'
         )
@@ -295,7 +295,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
 
       // Parse clipboard content which can now contain either files or patches
       const clipboard_content = parse_response(
-        response,
+        chat_response,
         is_single_root_folder_workspace
       )
 
@@ -401,7 +401,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
               endpoint_url,
               api_key: provider.api_key,
               model: intelligent_update_config.model,
-              response: failed_patches_as_code_blocks,
+              chat_response: failed_patches_as_code_blocks,
               context: context,
               is_single_root_folder_workspace
             })
@@ -516,7 +516,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                   endpoint_url,
                   api_key: provider.api_key,
                   model: intelligent_update_config.model,
-                  response: all_patches_text,
+                  chat_response: all_patches_text,
                   context: context,
                   is_single_root_folder_workspace
                 }
@@ -649,7 +649,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             endpoint_url,
             api_key: provider.api_key,
             model: intelligent_update_config.model,
-            response,
+            chat_response,
             context: context,
             is_single_root_folder_workspace
           })
@@ -757,7 +757,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                   endpoint_url,
                   api_key: provider.api_key,
                   model: intelligent_update_config.model,
-                  response,
+                  chat_response,
                   context: context,
                   is_single_root_folder_workspace
                 })

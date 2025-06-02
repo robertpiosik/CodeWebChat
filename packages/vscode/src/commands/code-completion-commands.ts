@@ -451,7 +451,13 @@ async function perform_code_completion(params: {
               /<replacement>([\s\S]*?)<\/replacement>/i
             )
             if (match && match[1]) {
-              const decoded_completion = he.decode(match[1].trim())
+              let decoded_completion = he.decode(match[1].trim())
+              // Clean potential CDATA tags from the replacement
+              decoded_completion = decoded_completion
+                .replace(/<!\[CDATA\[/g, '')
+                .replace(/\]\]>/g, '')
+                .trim()
+
               if (params.auto_accept) {
                 await editor.edit((editBuilder) => {
                   editBuilder.insert(position, decoded_completion)

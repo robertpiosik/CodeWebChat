@@ -24,7 +24,6 @@ export class FilesCollector {
   }
 
   async collect_files(params?: {
-    disable_xml?: boolean
     exclude_path?: string
     active_path?: string
   }): Promise<string> {
@@ -42,11 +41,7 @@ export class FilesCollector {
       const checked_websites = this.websites_provider.get_checked_websites()
 
       for (const website of checked_websites) {
-        if (params?.disable_xml) {
-          collected_text += website.content
-        } else {
-          collected_text += `<text title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</text>\n`
-        }
+        collected_text += `<text title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</text>\n`
       }
     }
 
@@ -60,41 +55,30 @@ export class FilesCollector {
 
         const content = fs.readFileSync(file_path, 'utf8')
 
-        // Find which workspace root this file belongs to
         const workspace_root = this.get_workspace_root_for_file(file_path)
 
         if (!workspace_root) {
-          // File is outside any workspace - use full path as name
-          if (params?.disable_xml) {
-            collected_text += content
-          } else {
-            const is_active = params?.active_path == file_path
-            collected_text += `<file path="${file_path}"${
-              is_active ? ' active' : ''
-            }>\n<![CDATA[\n${content}\n]]>\n</file>\n`
-          }
+          const is_active = params?.active_path == file_path
+          collected_text += `<file path="${file_path}"${
+            is_active ? ' active' : ''
+          }>\n<![CDATA[\n${content}\n]]>\n</file>\n`
           continue
         }
 
-        // Convert absolute path to workspace-relative path
         const relative_path = path.relative(workspace_root, file_path)
 
         // Get the workspace name to prefix the path if there are multiple workspaces
         let display_path = relative_path
         if (this.workspace_roots.length > 1) {
           const workspace_name =
-            this.workspace_provider.getWorkspaceName(workspace_root)
+            this.workspace_provider.get_workspace_name(workspace_root)
           display_path = `${workspace_name}/${relative_path}`
         }
 
-        if (params?.disable_xml) {
-          collected_text += content
-        } else {
-          const is_active = params?.active_path == file_path
-          collected_text += `<file path="${display_path}"${
-            is_active ? ' active' : ''
-          }>\n<![CDATA[\n${content}\n]]>\n</file>\n`
-        }
+        const is_active = params?.active_path == file_path
+        collected_text += `<file path="${display_path}"${
+          is_active ? ' active' : ''
+        }>\n<![CDATA[\n${content}\n]]>\n</file>\n`
       } catch (error) {
         console.error(`Error reading file ${file_path}:`, error)
       }

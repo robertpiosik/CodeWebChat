@@ -14,8 +14,8 @@ export class WebsiteItem extends vscode.TreeItem {
   ) {
     super(title, vscode.TreeItemCollapsibleState.None)
 
-    // Calculate token count for this website (simple approximation)
-    this.token_count = Math.floor(content.length / 4)
+    const content_xml = `<text title="${title}">\n<![CDATA[\n${content}\n]]>\n</text>\n`
+    this.token_count = Math.floor(content_xml.length / 4)
     const formatted_token_count =
       this.token_count >= 1000
         ? `${Math.floor(this.token_count / 1000)}k`
@@ -137,7 +137,10 @@ export class WebsitesProvider
 
   get_checked_websites_token_count(): number {
     return this.get_checked_websites()
-      .map((website) => Math.floor(website.content.length / 4))
+      .map((website) => {
+        const content_xml = `<text title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</text>\n`
+        return Math.floor(content_xml.length / 4)
+      })
       .reduce((sum, count) => sum + count, 0)
   }
 

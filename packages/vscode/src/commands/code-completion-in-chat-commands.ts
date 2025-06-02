@@ -93,8 +93,15 @@ async function handle_code_completion_in_chat_command(
       )
     }
 
+    const chats = preset_names.map((preset_name) => {
+      return {
+        text,
+        preset_name
+      }
+    })
+
     // Initialize chats with selected preset names in FIM mode
-    websocket_server_instance.initialize_chats(text, preset_names)
+    websocket_server_instance.initialize_chats(chats)
   } catch (error: any) {
     console.error('Error in FIM in Chat:', error)
     vscode.window.showErrorMessage('Error in FIM in Chat: ' + error.message)

@@ -144,7 +144,7 @@ export async function handle_intelligent_update(params: {
   endpoint_url: string
   api_key: string
   model: string
-  response: string
+  chat_response: string
   context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
 }): Promise<OriginalFileState[] | null> {
@@ -174,7 +174,7 @@ export async function handle_intelligent_update(params: {
   })
   // Handle multiple files with AI processing ('Intelligent update' mode)
   const raw_files = parse_multiple_files({
-    response: params.response,
+    response: params.chat_response,
     is_single_root_folder_workspace: params.is_single_root_folder_workspace
   })
 
