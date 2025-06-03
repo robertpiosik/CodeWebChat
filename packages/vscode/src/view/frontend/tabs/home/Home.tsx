@@ -304,6 +304,20 @@ export const Home: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
+  const handle_code_completion_click = () => {
+    props.vscode.postMessage({
+      command: 'CODE_COMPLETION',
+      use_quick_pick: false
+    } as WebviewMessage)
+  }
+
+  const handle_code_completion_with_quick_pick_click = () => {
+    props.vscode.postMessage({
+      command: 'CODE_COMPLETION',
+      use_quick_pick: true
+    } as WebviewMessage)
+  }
+
   if (
     is_connected === undefined ||
     presets === undefined ||
@@ -358,6 +372,10 @@ export const Home: React.FC<Props> = (props) => {
       on_home_view_type_change={handle_home_view_type_change}
       on_refactor_click={handle_refactor_click}
       on_refactor_with_quick_pick_click={handle_refactor_with_quick_pick_click}
+      on_code_completion_click={handle_code_completion_click}
+      on_code_completion_with_quick_pick_click={
+        handle_code_completion_with_quick_pick_click
+      }
     />
   )
 }

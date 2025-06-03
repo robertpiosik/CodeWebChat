@@ -208,6 +208,11 @@ export interface RefactorMessage extends BaseMessage {
   use_quick_pick: boolean
 }
 
+export interface CodeCompletionMessage extends BaseMessage {
+  command: 'CODE_COMPLETION'
+  use_quick_pick: boolean
+}
+
 // Messages from extension to webview:
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
@@ -393,6 +398,7 @@ export type WebviewMessage =
   | SaveHomeViewTypeMessage
   | GetHomeViewTypeMessage
   | RefactorMessage
+  | CodeCompletionMessage
 
 export type ExtensionMessage =
   | InstructionsMessage

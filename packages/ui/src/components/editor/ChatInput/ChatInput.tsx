@@ -17,6 +17,7 @@ type Props = {
   submit_disabled_title?: string
   is_in_code_completions_mode: boolean
   has_active_selection: boolean
+  has_active_editor: boolean
   on_caret_position_change: (caret_position: number) => void
   is_web_mode: boolean
   translations: {
@@ -28,6 +29,8 @@ type Props = {
     initialize: string
     select_preset: string
     select_config: string
+    code_completions_mode_unavailable_with_text_selection: string
+    code_completions_mode_unavailable_without_active_editor: string
   }
 }
 
@@ -265,122 +268,150 @@ export const ChatInput: React.FC<Props> = (props) => {
   ])
 
   return (
-    <div
-      className={styles.container}
-      onClick={handle_container_click}
-      ref={container_ref}
-    >
-      <div className={styles['highlight-container']} ref={highlight_ref}>
-        {get_highlighted_text(props.value)}
-      </div>
-      <TextareaAutosize
-        ref={textarea_ref}
-        placeholder={placeholder}
-        value={props.value}
-        onChange={handle_input_change}
-        onKeyDown={handle_key_down}
-        onFocus={handle_focus}
-        onSelect={handle_select}
-        autoFocus
-        className={styles.textarea}
-        minRows={1}
-      />
-      <div className={styles.footer}>
-        <div className={styles.footer__left}>
-          {can_insert_selection_placeholder && (
-            <button
-              onClick={insert_selection_placeholder}
-              className={cn(
-                styles.footer__left__button,
-                styles['footer__left__button--selection']
-              )}
-              title="Insert @selection placeholder"
-            >
-              <span>@selection</span>
-            </button>
-          )}
+    <div className={styles.container}>
+      {props.has_active_selection && props.is_in_code_completions_mode && (
+        <div className={styles.container__error}>
+          {
+            props.translations
+              .code_completions_mode_unavailable_with_text_selection
+          }
         </div>
-        <div className={styles.footer__right}>
-          {props.token_count !== undefined && props.token_count > 1 && (
-            <div
-              className={styles.footer__right__count}
-              title="Approximate message length in tokens"
-            >
-              {format_token_count(props.token_count)}
-            </div>
-          )}
+      )}
 
-          {props.on_copy && (
-            <button
-              className={styles['footer__right__icon-button']}
-              onClick={(e) => {
-                e.stopPropagation()
-                if (!props.is_in_code_completions_mode && !props.value) return
-                props.on_copy!()
-              }}
-              title="Copy to clipboard"
-              disabled={!props.is_in_code_completions_mode && !props.value}
-            >
-              <div className={cn('codicon', 'codicon-copy')} />
-            </button>
-          )}
+      {props.is_in_code_completions_mode && !props.has_active_editor && (
+        <div className={styles.container__error}>
+          {
+            props.translations
+              .code_completions_mode_unavailable_without_active_editor
+          }
+        </div>
+      )}
 
-          <button
-            className={styles.footer__right__button}
-            onClick={(e) => handle_submit(e, true)}
-            disabled={
-              !props.is_connected ||
-              (!props.is_in_code_completions_mode && !props.value)
-            }
-            title={
-              !props.is_connected ||
-              (!props.is_in_code_completions_mode && !props.value)
-                ? props.submit_disabled_title
-                : props.is_web_mode
-                ? props.translations.select_preset
-                : props.translations.select_config
-            }
-          >
-            {navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? (
-              <Icon variant="COMMAND" />
-            ) : (
-              <div className={styles.footer__right__button__ctrl}>Ctrl</div>
+      <div
+        className={cn(styles.container__inner, {
+          [styles['container__inner--disabled']]:
+            props.is_in_code_completions_mode &&
+            (props.has_active_selection || !props.has_active_editor)
+        })}
+        onClick={handle_container_click}
+        ref={container_ref}
+      >
+        <div className={styles['highlight-container']} ref={highlight_ref}>
+          {get_highlighted_text(props.value)}
+        </div>
+        <TextareaAutosize
+          ref={textarea_ref}
+          placeholder={placeholder}
+          value={props.value}
+          onChange={handle_input_change}
+          onKeyDown={handle_key_down}
+          onFocus={handle_focus}
+          onSelect={handle_select}
+          autoFocus
+          className={styles.textarea}
+          minRows={1}
+        />
+        <div className={styles.footer}>
+          <div className={styles.footer__left}>
+            {can_insert_selection_placeholder && (
+              <button
+                onClick={insert_selection_placeholder}
+                className={cn(
+                  styles.footer__left__button,
+                  styles['footer__left__button--selection']
+                )}
+                title="Insert @selection placeholder"
+              >
+                <span>@selection</span>
+              </button>
             )}
-            <Icon variant="ENTER" />
-            <span>
-              {props.is_web_mode
-                ? props.translations.select_preset
-                : props.translations.select_config}
-            </span>
-          </button>
+          </div>
+          <div className={styles.footer__right}>
+            {props.token_count !== undefined && props.token_count > 1 && (
+              <div
+                className={styles.footer__right__count}
+                title="Approximate message length in tokens"
+              >
+                {format_token_count(props.token_count)}
+              </div>
+            )}
 
-          <button
-            className={styles.footer__right__button}
-            onClick={handle_submit}
-            disabled={
-              !props.is_connected ||
-              (!props.is_in_code_completions_mode && !props.value)
-            }
-            title={
-              !props.is_connected ||
-              (!props.is_in_code_completions_mode && !props.value)
-                ? props.submit_disabled_title
-                : props.is_web_mode
-                ? props.translations.initialize
-                : props.is_in_code_completions_mode
-                ? props.translations.autocomplete
-                : props.translations.edit_files
-            }
-          >
-            <Icon variant="ENTER" />
-            <span>
-              {props.is_web_mode
-                ? props.translations.initialize
-                : props.is_in_code_completions_mode
-                ? props.translations.autocomplete
-                : props.translations.edit_files}
-            </span>
-          </button>
+            {props.on_copy && (
+              <button
+                className={styles['footer__right__icon-button']}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (!props.is_in_code_completions_mode && !props.value) return
+                  props.on_copy!()
+                }}
+                title={
+                  !props.value
+                    ? props.submit_disabled_title
+                    : 'Copy to clipboard'
+                }
+                disabled={!props.is_in_code_completions_mode && !props.value}
+              >
+                <div className={cn('codicon', 'codicon-copy')} />
+              </button>
+            )}
+
+            <button
+              className={styles.footer__right__button}
+              onClick={(e) => handle_submit(e, true)}
+              disabled={
+                !props.is_connected ||
+                (!props.is_in_code_completions_mode && !props.value)
+              }
+              title={
+                !props.is_connected ||
+                (!props.is_in_code_completions_mode && !props.value)
+                  ? props.submit_disabled_title
+                  : props.is_web_mode
+                  ? props.translations.select_preset
+                  : props.translations.select_config
+              }
+            >
+              {navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? (
+                <Icon variant="COMMAND" />
+              ) : (
+                <div className={styles.footer__right__button__ctrl}>Ctrl</div>
+              )}
+              <Icon variant="ENTER" />
+              <span>
+                {props.is_web_mode
+                  ? props.translations.select_preset
+                  : props.translations.select_config}
+              </span>
+            </button>
+
+            <button
+              className={styles.footer__right__button}
+              onClick={handle_submit}
+              disabled={
+                !props.is_connected ||
+                (!props.is_in_code_completions_mode && !props.value)
+              }
+              title={
+                !props.is_connected ||
+                (!props.is_in_code_completions_mode && !props.value)
+                  ? props.submit_disabled_title
+                  : props.is_web_mode
+                  ? props.translations.initialize
+                  : props.is_in_code_completions_mode
+                  ? props.translations.autocomplete
+                  : props.translations.edit_files
+              }
+            >
+              <Icon variant="ENTER" />
+              <span>
+                {props.is_web_mode
+                  ? props.translations.initialize
+                  : props.is_in_code_completions_mode
+                  ? props.translations.autocomplete
+                  : props.translations.edit_files}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

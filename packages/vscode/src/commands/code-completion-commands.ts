@@ -318,11 +318,12 @@ async function perform_code_completion(params: {
   with_suggestions: boolean
   auto_accept: boolean
   show_quick_pick?: boolean
+  suggestions?: string
 }) {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
-  let suggestions: string | undefined
-  if (params.with_suggestions) {
+  let suggestions: string | undefined = params.suggestions
+  if (params.with_suggestions && !suggestions) {
     suggestions = await vscode.window.showInputBox({
       placeHolder: 'Enter suggestions',
       prompt: 'E.g. include explanatory comments'
@@ -507,14 +508,15 @@ export function code_completion_commands(
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionAutoAccept',
-      async () =>
+      async (args?: { suggestions?: string }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
           context,
           with_suggestions: false,
           auto_accept: true,
-          show_quick_pick: false
+          show_quick_pick: false,
+          suggestions: args?.suggestions
         })
     ),
     vscode.commands.registerCommand(
@@ -531,14 +533,15 @@ export function code_completion_commands(
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionWithSuggestionsAutoAccept',
-      async () =>
+      async (args?: { suggestions?: string }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
           context,
           with_suggestions: true,
           auto_accept: true,
-          show_quick_pick: false
+          show_quick_pick: false,
+          suggestions: args?.suggestions
         })
     ),
     vscode.commands.registerCommand(
@@ -555,26 +558,28 @@ export function code_completion_commands(
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionUsingAutoAccept',
-      async () =>
+      async (args?: { suggestions?: string }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
           context,
           with_suggestions: false,
           auto_accept: true,
-          show_quick_pick: true
+          show_quick_pick: true,
+          suggestions: args?.suggestions
         })
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionWithSuggestionsUsingAutoAccept',
-      async () =>
+      async (args?: { suggestions?: string }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
           context,
           with_suggestions: true,
           auto_accept: true,
-          show_quick_pick: true
+          show_quick_pick: true,
+          suggestions: args?.suggestions
         })
     ),
     vscode.commands.registerCommand(

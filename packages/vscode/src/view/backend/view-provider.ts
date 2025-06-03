@@ -51,7 +51,10 @@ import {
   handle_setup_api_tool,
   handle_pick_open_router_model,
   handle_save_home_view_type,
-  handle_get_home_view_type
+  handle_get_home_view_type,
+  handle_refactor,
+  handle_code_completion,
+  handle_get_edit_format
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -157,7 +160,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     )
     update_editor_state()
 
-    // Add selection change listener
     vscode.window.onDidChangeTextEditorSelection((event) => {
       const has_selection = !event.textEditor.selection.isEmpty
       if (has_selection != this.has_active_selection) {
@@ -166,15 +168,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           this.send_message<ExtensionMessage>({
             command: 'EDITOR_SELECTION_CHANGED',
             has_selection: has_selection
-          })
-        }
-      }
-      if (has_selection && this.is_code_completions_mode) {
-        this.is_code_completions_mode = false
-        if (this._webview_view) {
-          this.send_message<ExtensionMessage>({
-            command: 'CODE_COMPLETIONS_MODE',
-            enabled: false
           })
         }
       }
@@ -363,19 +356,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'EXECUTE_COMMAND') {
             vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'REFACTOR') {
-            vscode.commands.executeCommand(
-              message.use_quick_pick
-                ? 'codeWebChat.refactorUsing'
-                : 'codeWebChat.refactor',
-              { instructions: this.instructions }
-            )
+            await handle_refactor(this, message)
+          } else if (message.command == 'CODE_COMPLETION') {
+            await handle_code_completion(this, message)
           } else if (message.command == 'SHOW_QUICK_PICK') {
             await handle_show_quick_pick(message)
           } else if (message.command == 'GET_EDIT_FORMAT') {
-            this.send_message<ExtensionMessage>({
-              command: 'EDIT_FORMAT',
-              edit_format: this.edit_format
-            })
+            handle_get_edit_format(this)
           } else if (message.command == 'SAVE_EDIT_FORMAT') {
             await handle_save_edit_format(this, message.edit_format)
           } else if (message.command == 'GET_EDIT_FORMAT_SELECTOR_VISIBILITY') {

@@ -1,18 +1,40 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  border-radius: 5px;
-  background-color: var(--vscode-input-background);
-  cursor: text;
-  border: 1px solid var(--vscode-commandCenter-inactiveBorder);
   position: relative;
 
-  &:hover {
-    border-color: var(--vscode-commandCenter-activeBorder);
+  &__error {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    padding: 0 var(--padding-8px);
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    color: var(--vscode-errorForeground);
+    z-index: 1;
   }
 
-  &:focus-within {
-    border-color: var(--vscode-focusBorder);
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    background-color: var(--vscode-input-background);
+    cursor: text;
+    border: 1px solid var(--vscode-commandCenter-inactiveBorder);
+    position: relative;
+
+    &:hover {
+      border-color: var(--vscode-commandCenter-activeBorder);
+    }
+
+    &:focus-within {
+      border-color: var(--vscode-focusBorder);
+    }
+
+    &--disabled {
+      opacity: var(--disabled-opacity);
+      pointer-events: none;
+      filter: blur(1px);
+    }
   }
 }
 

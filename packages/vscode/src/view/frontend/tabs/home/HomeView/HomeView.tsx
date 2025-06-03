@@ -47,6 +47,8 @@ type Props = {
   on_home_view_type_change: (value: HomeViewType) => void
   on_refactor_click: () => void
   on_refactor_with_quick_pick_click: () => void
+  on_code_completion_click: () => void
+  on_code_completion_with_quick_pick_click: () => void
 }
 
 export const HomeView: React.FC<Props> = (props) => {
@@ -103,11 +105,14 @@ export const HomeView: React.FC<Props> = (props) => {
           : props.selected_code_completion_presets
       })
     } else {
-      props.on_refactor_click()
+      if (props.is_in_code_completions_mode) {
+        props.on_code_completion_click()
+      } else {
+        props.on_refactor_click()
+      }
     }
   }
 
-  // Let user select a preset
   const handle_submit_with_control = async () => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({
@@ -115,7 +120,11 @@ export const HomeView: React.FC<Props> = (props) => {
         preset_names: []
       })
     } else {
-      props.on_refactor_with_quick_pick_click()
+      if (props.is_in_code_completions_mode) {
+        props.on_code_completion_with_quick_pick_click()
+      } else {
+        props.on_refactor_with_quick_pick_click()
+      }
     }
   }
 
@@ -140,11 +149,7 @@ export const HomeView: React.FC<Props> = (props) => {
   }
 
   const handle_mode_click = (mode: 'general' | 'code-completions') => {
-    if (
-      mode == 'code-completions' &&
-      !props.is_in_code_completions_mode &&
-      props.has_active_editor
-    ) {
+    if (mode == 'code-completions' && !props.is_in_code_completions_mode) {
       props.on_code_completions_mode_click(true)
     } else if (mode == 'general' && props.is_in_code_completions_mode) {
       props.on_code_completions_mode_click(false)
@@ -173,7 +178,7 @@ export const HomeView: React.FC<Props> = (props) => {
           <div className={styles.top__right}>
             <UiTextButton
               on_click={props.on_apply_copied_chat_response_click}
-              title="Apply chat response copied to clipboard"
+              title="Integrate changes from the copied chat response with the codebase"
             >
               Apply chat response
             </UiTextButton>
@@ -206,6 +211,7 @@ export const HomeView: React.FC<Props> = (props) => {
           }
           is_in_code_completions_mode={props.is_in_code_completions_mode}
           has_active_selection={props.has_active_selection}
+          has_active_editor={props.has_active_editor}
           on_caret_position_change={props.on_caret_position_change}
           translations={{
             ask_anything: 'Ask anything',
@@ -215,7 +221,11 @@ export const HomeView: React.FC<Props> = (props) => {
             autocomplete: 'Autocomplete',
             initialize: 'Initialize',
             select_preset: 'Select preset',
-            select_config: 'Select config'
+            select_config: 'Select config',
+            code_completions_mode_unavailable_with_text_selection:
+              'Unavailable with text selection',
+            code_completions_mode_unavailable_without_active_editor:
+              'Unavailable without active editor'
           }}
         />
       </div>
@@ -233,8 +243,8 @@ export const HomeView: React.FC<Props> = (props) => {
                 : 'Refactoring',
             title:
               props.home_view_type == HOME_VIEW_TYPES.WEB
-                ? 'Ask anything'
-                : 'Enter refactoring instructions'
+                ? 'Ask anything and integrate chat responses with the codebase'
+                : 'Modify files based on natural language instructions'
           },
           {
             value: 'code-completions',
@@ -246,12 +256,6 @@ export const HomeView: React.FC<Props> = (props) => {
           props.is_in_code_completions_mode ? 'code-completions' : 'general'
         }
         on_select={handle_mode_click}
-        is_disabled={!props.has_active_editor || props.has_active_selection}
-        disabled_state_title={
-          props.has_active_selection
-            ? 'Code completions mode is not available when text is selected'
-            : 'Code completions mode is only available when any file is open'
-        }
       />
 
       {props.edit_format_selector_visibility == 'visible' &&

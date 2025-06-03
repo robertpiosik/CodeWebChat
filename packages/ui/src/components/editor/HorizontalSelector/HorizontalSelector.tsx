@@ -13,8 +13,8 @@ export namespace HorizontalSelector {
     options: Option<T>[]
     selected_value?: T
     on_select: (value: T) => void
-    is_disabled: boolean
-    disabled_state_title: string
+    is_disabled?: boolean
+    disabled_state_title?: string
   }
 }
 
