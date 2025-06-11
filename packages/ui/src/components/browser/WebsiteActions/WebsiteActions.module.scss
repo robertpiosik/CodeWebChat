@@ -40,3 +40,33 @@
   font-size: 14px;
   text-align: center;
 }
+
+.tabNavigation {
+  display: flex;
+  border-bottom: 1px solid #ccc; // Example border
+  margin-bottom: 10px; // Space between tabs and content
+}
+
+.tabButton {
+  padding: 10px 15px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  font-size: 1em; // Match existing font size if applicable
+
+  &:hover {
+    background-color: #f0f0f0; // Example hover effect
+  }
+}
+
+.activeTabButton {
+  font-weight: bold;
+  border-bottom: 2px solid blue; // Example active indicator
+  color: blue; // Example active text color
+}
+
+.tabContent {
+  // Add any specific styling for the content area if needed
+  // For example, padding:
+  // padding: 10px;
+}
