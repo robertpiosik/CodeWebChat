@@ -147,10 +147,9 @@ const config = [
               {
                 loader: 'sass-loader',
                 options: {
-                  additionalData: `@use "${path.resolve(
-                    __dirname,
-                    '../ui/src/styles/foundation'
-                  )}" as *;`
+                  additionalData: `@use "${path
+                    .resolve(__dirname, '../ui/src/styles/foundation')
+                    .replace(/\\/g, '/')}" as *;`
                 }
               }
             ]
