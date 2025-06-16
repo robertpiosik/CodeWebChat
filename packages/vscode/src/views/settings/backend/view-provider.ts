@@ -42,6 +42,10 @@ export class SettingsViewProvider {
     webview: vscode.Webview,
     extension_uri: vscode.Uri
   ) {
+    const resources_uri = webview.asWebviewUri(
+      vscode.Uri.joinPath(extension_uri, 'resources')
+    )
+
     const script_uri = webview.asWebviewUri(
       vscode.Uri.joinPath(extension_uri, 'out', 'settings.js')
     )
@@ -57,9 +61,11 @@ export class SettingsViewProvider {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="${style_uri}">
+        <script>
+          window.resources_uri = "${resources_uri}";
+        </script>
         <style>
-          body, html, #root {
-            height: 100%;
+          body {
             overflow: hidden;
           }
         </style>

@@ -92,6 +92,11 @@ export async function activate(context: vscode.ExtensionContext) {
       reference_in_chat_command(main_view_provider, workspace_provider)
     )
   }
+  context.subscriptions.push(
+    vscode.commands.registerCommand('codeWebChat.openSettings', () => {
+      SettingsViewProvider.create_or_show(context.extensionUri)
+    })
+  )
 
   context.subscriptions.push(
     open_file_from_workspace_command(open_editors_provider),
@@ -177,9 +182,6 @@ export async function activate(context: vscode.ExtensionContext) {
     open_url_command({
       command: 'codeWebChat.donate',
       url: 'https://buymeacoffee.com/robertpiosik'
-    }),
-    vscode.commands.registerCommand('codeWebChat.openSettings', () => {
-      SettingsViewProvider.create_or_show(context.extensionUri)
     }),
     apply_context_from_clipboard_command(workspace_provider)
   )
