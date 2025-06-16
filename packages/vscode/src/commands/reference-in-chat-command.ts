@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { ViewProvider } from '../view/backend/view-provider'
+import { MainViewProvider } from '../views/main/backend/view-provider'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { FileItem } from '../context/providers/workspace-provider'
 import { SharedFileState } from '../context/shared-file-state'
 
 export function reference_in_chat_command(
-  view_provider: ViewProvider | undefined,
+  view_provider: MainViewProvider | undefined,
   workspace_provider: WorkspaceProvider | undefined
 ) {
   return vscode.commands.registerCommand(

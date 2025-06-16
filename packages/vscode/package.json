@@ -97,7 +97,7 @@
           "icon": "resources/activity-bar-icon.svg"
         },
         {
-          "id": "codeWebChatView",
+          "id": "codeWebChatViewMain",
           "name": "Code Web Chat",
           "type": "webview",
           "icon": "resources/activity-bar-icon.svg"

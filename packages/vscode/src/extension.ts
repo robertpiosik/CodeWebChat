@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
-import { ViewProvider } from './view/backend/view-provider'
+import { MainViewProvider } from './views/main/backend/view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
   migrate_file_refactoring_to_array,
@@ -69,9 +69,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
   await migrations()
 
-  // View
+  // Views
   if (workspace_provider && open_editors_provider && websites_provider) {
-    const view_provider = new ViewProvider(
+    const main_view_provider = new MainViewProvider(
       context.extensionUri,
       workspace_provider,
       open_editors_provider,
@@ -81,15 +81,15 @@ export async function activate(context: vscode.ExtensionContext) {
     )
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(
-        'codeWebChatView',
-        view_provider,
+        'codeWebChatViewMain',
+        main_view_provider,
         {
           webviewOptions: {
             retainContextWhenHidden: true
           }
         }
       ),
-      reference_in_chat_command(view_provider, workspace_provider)
+      reference_in_chat_command(main_view_provider, workspace_provider)
     )
   }
 

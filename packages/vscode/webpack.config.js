@@ -84,7 +84,7 @@ const config = [
       mode: isProduction ? 'production' : 'development',
       target: 'web',
       entry: {
-        view: './src/view/frontend/App.tsx'
+        view: './src/views/main/frontend/App.tsx'
       },
       output: {
         path: path.resolve(__dirname, 'out'),
