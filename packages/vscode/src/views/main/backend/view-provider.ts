@@ -437,7 +437,7 @@ export class MainViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SHOW_QUICK_ACTIONS') {
             await handle_show_quick_actions(this)
           } else if (message.command == 'OPEN_SETTINGS') {
-            
+            vscode.commands.executeCommand('codeWebChat.openSettings')
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)

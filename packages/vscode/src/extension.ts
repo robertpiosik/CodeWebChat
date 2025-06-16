@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
 import { MainViewProvider } from './views/main/backend/view-provider'
+import { SettingsViewProvider } from './views/settings/backend/view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
   migrate_file_refactoring_to_array,
@@ -33,7 +34,6 @@ import {
   code_completion_to_clipboard_command,
   code_completion_with_suggestions_to_clipboard_command,
   reference_in_chat_command,
-  open_settings_command,
   open_url_command,
   edit_context_commands,
   apply_context_from_clipboard_command
@@ -178,7 +178,9 @@ export async function activate(context: vscode.ExtensionContext) {
       command: 'codeWebChat.donate',
       url: 'https://buymeacoffee.com/robertpiosik'
     }),
-    open_settings_command(),
+    vscode.commands.registerCommand('codeWebChat.openSettings', () => {
+      SettingsViewProvider.create_or_show(context.extensionUri)
+    }),
     apply_context_from_clipboard_command(workspace_provider)
   )
 }
