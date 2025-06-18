@@ -80,10 +80,10 @@ CWC includes battle-tested must-have API tools.
 
 ### Code Completions
 
-The best quality inline suggestions at the cost of latency. Designed to be used on demand.
+Get code at cursor position from state-of-the-art reasoning models.
 
 ✅ Includes selected context<br />
-✅ Works with any model
+✅ Designed for on-demand use
 
 ### Edit Context
 

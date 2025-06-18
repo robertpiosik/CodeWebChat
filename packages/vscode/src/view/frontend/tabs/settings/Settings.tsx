@@ -80,10 +80,10 @@ export const Settings: React.FC<Props> = (props) => {
       {render_api_tool_settings({
         title: 'Code Completions',
         description:
-          'The best quality inline suggestions at the cost of latency. Designed to be used on demand.',
+          'Get code at cursor position from state-of-the-art reasoning models.',
         on_setup_click: handle_setup_code_completions_click,
         button_label: 'Setup Code Completions API Tool',
-        checkmarks: ['Includes selected context', 'Works with any model']
+        checkmarks: ['Includes selected context', 'Designed for on-demand use']
       })}
 
       {render_api_tool_settings({
