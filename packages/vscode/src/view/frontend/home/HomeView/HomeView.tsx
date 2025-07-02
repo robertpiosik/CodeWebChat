@@ -447,7 +447,7 @@ export const HomeView: React.FC<Props> = (props) => {
             </a>
             <a href="https://buymeacoffee.com/robertpiosik">
               <span className="codicon codicon-coffee"></span>{' '}
-              <span>Donate</span>
+              <span>Buy me a coffee</span>
             </a>
           </div>
         </div>
