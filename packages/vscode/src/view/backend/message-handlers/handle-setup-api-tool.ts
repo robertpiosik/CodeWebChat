@@ -259,7 +259,7 @@ export const handle_setup_api_tool = async (params: {
         placeHolder: 'Choose an AI model'
       })
 
-      return selected?.label
+      return selected?.description || selected?.label
     } catch (error) {
       console.error('Error fetching models:', error)
       vscode.window.showErrorMessage(
@@ -298,8 +298,7 @@ export const handle_setup_api_tool = async (params: {
   ): Promise<number | undefined> {
     const threshold_input = await vscode.window.showInputBox({
       title: 'Set Confirmation Threshold',
-      prompt:
-        'Enter token count above which to show affected fiels picker',
+      prompt: 'Enter token count above which to show affected fiels picker',
       value: current_threshold.toString(),
       validateInput: (value) => {
         // Allow empty value to restore default
