@@ -77,7 +77,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     >
       <div className={styles['my-presets']}>
         <div className={styles['my-presets__left']}>
-          <span>MY PRESETS</span>
+          <span>MY CHAT PRESETS</span>
 
           <IconButton
             codicon_icon="info"
