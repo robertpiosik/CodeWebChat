@@ -145,6 +145,10 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 - `Code Web Chat: Commit Changes` - Generate a commit message for staged changes and commit.
 
+### Misc
+
+- `Code Web Chat: Settings` - Open settings wizard
+
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Settings</span>
 
 ### Chatbot initialization
