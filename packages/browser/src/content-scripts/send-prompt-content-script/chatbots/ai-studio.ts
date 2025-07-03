@@ -118,7 +118,37 @@ export const ai_studio: Chatbot = {
       ).find(
         (button) => button.textContent?.trim() == 'close'
       ) as HTMLButtonElement
-      close_button.click()
+      close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+    }
+  },
+  set_thinking_budget: async (thinking_budget: number) => {
+    if (window.innerWidth <= 768) {
+      const tune_button = Array.from(
+        document.querySelectorAll('prompt-header button')
+      ).find(
+        (button) => button.textContent?.trim() == 'tune'
+      ) as HTMLButtonElement
+      tune_button.click()
+      await new Promise((r) => requestAnimationFrame(r))
+    }
+    const manual_budget_toggle = document.querySelector(
+      'mat-slide-toggle[data-test-toggle="manual-budget"] button'
+    ) as HTMLElement
+    manual_budget_toggle.click()
+    await new Promise((r) => requestAnimationFrame(r))
+    const budget_input = document.querySelector(
+      'div[data-test-id="user-setting-budget-animation-wrapper"] input'
+    ) as HTMLInputElement
+    budget_input.value = thinking_budget.toString()
+    budget_input.dispatchEvent(new Event('input', { bubbles: true }))
+    budget_input.dispatchEvent(new Event('change', { bubbles: true }))
+    if (window.innerWidth <= 768) {
+      const close_button = Array.from(
+        document.querySelectorAll('ms-run-settings button')
+      ).find(
+        (button) => button.textContent?.trim() == 'close'
+      ) as HTMLButtonElement
+      close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
     }
   },
   set_top_p: async (top_p: number) => {
@@ -142,7 +172,7 @@ export const ai_studio: Chatbot = {
       ).find(
         (button) => button.textContent?.trim() == 'close'
       ) as HTMLButtonElement
-      close_button.click()
+      close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
     }
   },
   inject_apply_response_button: (client_id: number) => {
