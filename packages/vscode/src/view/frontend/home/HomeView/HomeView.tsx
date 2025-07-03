@@ -52,6 +52,7 @@ type Props = {
   on_edit_context_with_quick_pick_click: () => void
   on_code_completion_click: () => void
   on_code_completion_with_quick_pick_click: () => void
+  on_review_click: () => void
 }
 
 const web_mode_labels: Record<WebMode, string> = {
@@ -441,9 +442,15 @@ export const HomeView: React.FC<Props> = (props) => {
             </a>
           </div>
           <div className={styles.footer__links__right}>
-            <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder&ssr=false#review-details">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault()
+                props.on_review_click()
+              }}
+            >
               <span className="codicon codicon-feedback"></span>{' '}
-              <span>Rate</span>
+              <span>Review</span>
             </a>
             <a href="https://buymeacoffee.com/robertpiosik">
               <span className="codicon codicon-coffee"></span>{' '}

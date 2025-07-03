@@ -46,7 +46,8 @@ import {
   handle_save_mode_api,
   handle_save_home_view_type,
   handle_get_home_view_type,
-  handle_open_settings
+  handle_open_settings,
+  handle_review
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -397,6 +398,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_at_sign_quick_pick(this, this.context)
           } else if (message.command == 'OPEN_SETTINGS') {
             await handle_open_settings(this)
+          } else if (message.command == 'REVIEW') {
+            await handle_review()
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)

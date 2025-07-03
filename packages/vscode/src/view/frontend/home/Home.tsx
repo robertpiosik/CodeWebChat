@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { HomeView } from './HomeView'
-
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
@@ -385,6 +384,12 @@ export const Home: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
+  const handle_review_click = () => {
+    props.vscode.postMessage({
+      command: 'REVIEW'
+    } as WebviewMessage)
+  }
+
   const handle_quick_action_click = (command: string) => {
     props.vscode.postMessage({
       command: 'EXECUTE_COMMAND',
@@ -488,6 +493,7 @@ export const Home: React.FC<Props> = (props) => {
       on_code_completion_with_quick_pick_click={
         handle_code_completion_with_quick_pick_click
       }
+      on_review_click={handle_review_click}
     />
   )
 }
