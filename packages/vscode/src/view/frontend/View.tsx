@@ -12,7 +12,6 @@ const vscode = acquireVsCodeApi()
 
 export const View = () => {
   const [updating_preset, set_updating_preset] = useState<Preset>()
-  const [viewing_settings, set_viewing_settings] = useState(false)
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [is_in_code_completions_mode, set_is_in_code_completions_mode] =
     useState(false)
@@ -126,15 +125,6 @@ export const View = () => {
         />
       </UiPage>
     )
-  } else if (viewing_settings) {
-    overlay = (
-      <UiPage
-        on_close_click={() => set_viewing_settings(false)}
-        title="Settings"
-      >
-        <Settings vscode={vscode} />
-      </UiPage>
-    )
   }
 
   return (
@@ -145,12 +135,6 @@ export const View = () => {
           vscode={vscode}
           on_preset_edit={(preset) => {
             set_updating_preset(preset)
-          }}
-          on_settings_click={() => {
-            // set_viewing_settings(true)
-            vscode.postMessage({
-              command: 'OPEN_SETTINGS'
-            } as WebviewMessage)
           }}
           ask_instructions={ask_instructions}
           edit_instructions={edit_instructions}

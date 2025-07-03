@@ -170,7 +170,7 @@ export async function activate(context: vscode.ExtensionContext) {
       command: 'codeWebChat.rateExtension',
       url: 'https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder&ssr=false#review-details'
     }),
-    open_settings_command(),
+    open_settings_command(context),
     apply_context_from_clipboard_command(workspace_provider)
   )
 }

@@ -1,4 +1,3 @@
-import { ViewProvider } from '@/view/backend/view-provider'
 import * as vscode from 'vscode'
 import {
   ApiProvidersManager,
@@ -21,10 +20,10 @@ const DEFAULT_CONFIRMATION_THRESHOLD = 20000
 const BACK_LABEL = '$(arrow-left) Back'
 
 export const setup_api_tool = async (params: {
-  provider: ViewProvider
+  context: vscode.ExtensionContext
   tool: SupportedTool
 }): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(params.provider.context)
+  const providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
   const current_config =
@@ -53,7 +52,7 @@ export const setup_api_tool = async (params: {
     await providers_manager.save_commit_messages_tool_config(config)
 
     if (params.tool == 'commit-messages') {
-      await params.provider.context.globalState.update(
+      await params.context.globalState.update(
         COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
         DEFAULT_CONFIRMATION_THRESHOLD
       )
@@ -73,7 +72,7 @@ export const setup_api_tool = async (params: {
 
     let showMenu = true
     while (showMenu) {
-      const current_threshold = params.provider.context.globalState.get<number>(
+      const current_threshold = params.context.globalState.get<number>(
         COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
         DEFAULT_CONFIRMATION_THRESHOLD
       )
@@ -176,7 +175,7 @@ export const setup_api_tool = async (params: {
           current_threshold
         )
         if (new_threshold !== undefined) {
-          await params.provider.context.globalState.update(
+          await params.context.globalState.update(
             COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
             new_threshold
           )

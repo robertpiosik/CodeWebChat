@@ -12,12 +12,10 @@ import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { Dropdown as UiDropdown } from '@ui/components/editor/Dropdown'
 import { QuickAction as UiQuickAction } from '@ui/components/editor/QuickAction'
-import { IconButton } from '@ui/components/editor/IconButton/IconButton'
 
 type Props = {
   initialize_chats: (params: { prompt: string; preset_names: string[] }) => void
   copy_to_clipboard: (instruction: string, preset_name?: string) => void
-  on_settings_click: () => void
   on_create_preset: () => void
   on_at_sign_click: () => void
   on_quick_action_click: (command: string) => void
@@ -84,7 +82,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
     const container_width = container_ref.current.offsetWidth
     const switch_width = switch_container_ref.current.offsetWidth
-    const calculated_width = container_width - switch_width - 60
+    const calculated_width = container_width - switch_width - 32
 
     set_dropdown_max_width(calculated_width)
   }
@@ -257,11 +255,11 @@ export const HomeView: React.FC<Props> = (props) => {
                     max_width={dropdown_max_width}
                   />
                 )}
-                <IconButton
+                {/* <IconButton
                   codicon_icon="settings-gear"
                   title="Settings"
                   on_click={props.on_settings_click}
-                />
+                /> */}
               </div>
             </div>
 

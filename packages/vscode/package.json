@@ -310,10 +310,10 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.openSettings",
-        "title": "Open Settings",
+        "command": "codeWebChat.settings",
+        "title": "Settings",
         "category": "Code Web Chat",
-        "icon": "$(settings)"
+        "icon": "$(settings-gear)"
       },
       {
         "command": "codeWebChat.openRepository",
@@ -427,10 +427,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.openSettings",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.openRepository",
           "when": "false"
         },
@@ -520,7 +516,7 @@
           "group": "navigation@4"
         },
         {
-          "command": "codeWebChat.openSettings",
+          "command": "codeWebChat.settings",
           "when": "view == codeWebChatView",
           "group": "navigation@7"
         }

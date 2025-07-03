@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/view/backend/view-provider'
 import {
   ApiProvidersManager,
   BuiltInProvider,
@@ -13,9 +12,9 @@ const normalize_base_url = (url: string): string => {
 }
 
 export const configure_api_providers = async (
-  provider: ViewProvider
+  context: vscode.ExtensionContext
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ApiProvidersManager(context)
 
   const back_label = '$(arrow-left) Back'
 

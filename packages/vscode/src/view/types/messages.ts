@@ -144,10 +144,6 @@ export interface CaretPositionChangedWebviewMessage extends BaseMessage {
   caret_position: number
 }
 
-export interface OpenSettingsMessage extends BaseMessage {
-  command: 'OPEN_SETTINGS'
-}
-
 export interface PickOpenRouterModel extends BaseMessage {
   command: 'PICK_OPEN_ROUTER_MODEL'
 }
@@ -364,7 +360,6 @@ export type WebviewMessage =
   | GetSelectedCodeCompletionPresetsMessage
   | SaveSelectedCodeCompletionPresetsMessage
   | CaretPositionChangedWebviewMessage
-  | OpenSettingsMessage
   | PickOpenRouterModel
   | SaveHomeViewTypeMessage
   | GetHomeViewTypeMessage

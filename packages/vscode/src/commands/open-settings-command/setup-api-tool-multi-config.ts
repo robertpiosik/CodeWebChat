@@ -1,4 +1,3 @@
-import { ViewProvider } from '@/view/backend/view-provider'
 import * as vscode from 'vscode'
 import {
   ApiProvidersManager,
@@ -29,10 +28,10 @@ interface ToolMethods {
 }
 
 export const setup_api_tool_multi_config = async (params: {
-  provider: ViewProvider
+  context: vscode.ExtensionContext
   tool: SupportedTool
 }): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(params.provider.context)
+  const providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
   const back_label = '$(arrow-left) Back'
