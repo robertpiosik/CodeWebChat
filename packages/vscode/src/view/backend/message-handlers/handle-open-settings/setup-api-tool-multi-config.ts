@@ -35,6 +35,8 @@ export const setup_api_tool_multi_config = async (params: {
   const providers_manager = new ApiProvidersManager(params.provider.context)
   const model_fetcher = new ModelFetcher()
 
+  const back_label = '$(arrow-left) Back'
+
   const get_tool_methods = (tool: SupportedTool): ToolMethods => {
     switch (tool) {
       case 'code-completions':
@@ -122,6 +124,7 @@ export const setup_api_tool_multi_config = async (params: {
       config?: ToolConfig
       index?: number
     })[] = [
+      { label: back_label },
       {
         label: '$(add) Add another configuration...'
       }
@@ -193,19 +196,14 @@ export const setup_api_tool_multi_config = async (params: {
   }
 
   const show_configs_quick_pick = async (): Promise<void> => {
-    if (current_configs.length == 0) {
-      await add_configuration()
-      if (current_configs.length > 0) {
-        return show_configs_quick_pick()
-      }
-      return
-    }
-
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_config_items()
     quick_pick.title = `${tool_methods.get_display_name()} Configurations`
     quick_pick.matchOnDescription = true
-    quick_pick.placeholder = 'Select a configuration to edit or add another one'
+    quick_pick.placeholder =
+      current_configs.length > 0
+        ? 'Select a configuration to edit or add another one'
+        : 'No configurations found. Add one to continue.'
 
     let is_accepted = false
 
@@ -214,6 +212,12 @@ export const setup_api_tool_multi_config = async (params: {
         is_accepted = true
         const selected = quick_pick.selectedItems[0]
         if (!selected) {
+          quick_pick.hide()
+          resolve()
+          return
+        }
+
+        if (selected.label === back_label) {
           quick_pick.hide()
           resolve()
           return
@@ -268,10 +272,7 @@ export const setup_api_tool_multi_config = async (params: {
             if (current_configs.length == 0) {
               is_accepted = true
               quick_pick.hide()
-              await add_configuration()
-              if (current_configs.length > 0) {
-                await show_configs_quick_pick()
-              }
+              await show_configs_quick_pick()
               resolve()
             } else {
               quick_pick.items = create_config_items()
@@ -323,7 +324,7 @@ export const setup_api_tool_multi_config = async (params: {
     })
   }
 
-  async function add_configuration() {
+  async function add_configuration(): Promise<void> {
     const provider_info = await select_provider()
     if (!provider_info) {
       return

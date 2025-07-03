@@ -7,7 +7,8 @@ import { setup_api_tool } from './setup-api-tool'
 export const handle_open_settings = async (
   provider: ViewProvider
 ): Promise<void> => {
-  const show_main_menu = async () => {
+  let showMenu = true
+  while (showMenu) {
     const selected = await vscode.window.showQuickPick(
       [
         {
@@ -20,23 +21,23 @@ export const handle_open_settings = async (
           kind: vscode.QuickPickItemKind.Separator
         },
         {
-          label: 'Code Completions',
-          description: 'Get code at cursor from state-of-the-art reasoning models.'
+          label: '$(tools) Code Completions',
+          description:
+            'Get code at cursor from state-of-the-art reasoning models'
         },
         {
-          label: 'Edit Context',
+          label: '$(tools) Edit Context',
           description:
-            'Create and modify files in context based on natural language instructions.'
+            'Create and modify files in context based on natural language instructions'
         },
         {
-          label: 'Intelligent Update',
-          description:
-            'Handle "truncated" edit format and fix malformed diffs.'
+          label: '$(tools) Intelligent Update',
+          description: 'Handle "truncated" edit format and fix malformed diffs'
         },
         {
-          label: 'Commit Messages',
+          label: '$(tools) Commit Messages',
           description:
-            'Generate meaningful commit messages precisely adhering to your style.'
+            'Generate meaningful commit messages precisely adhering to your style'
         }
       ],
       {
@@ -46,26 +47,27 @@ export const handle_open_settings = async (
     )
 
     if (!selected) {
-      return
+      showMenu = false
+      continue
     }
 
     switch (selected.label) {
       case 'Configure API Providers':
         await configure_api_providers(provider)
         break
-      case 'Code Completions':
+      case '$(tools) Code Completions':
         await setup_api_tool_multi_config({
           provider,
           tool: 'code-completions'
         })
         break
-      case 'Edit Context':
+      case '$(tools) Edit Context':
         await setup_api_tool_multi_config({
           provider,
           tool: 'edit-context'
         })
         break
-      case 'Intelligent Update':
+      case '$(tools) Intelligent Update':
         await setup_api_tool_multi_config({
           provider,
           tool: 'intelligent-update'
@@ -78,10 +80,5 @@ export const handle_open_settings = async (
         })
         break
     }
-
-    // Return to main menu after completing any operation
-    await show_main_menu()
   }
-
-  await show_main_menu()
 }

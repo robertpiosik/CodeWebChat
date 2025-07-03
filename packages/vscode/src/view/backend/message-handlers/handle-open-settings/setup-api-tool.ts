@@ -18,6 +18,8 @@ const DEFAULT_TEMPERATURE: { [key in SupportedTool]: number } = {
 
 const DEFAULT_CONFIRMATION_THRESHOLD = 20000
 
+const BACK_LABEL = '$(arrow-left) Back'
+
 export const setup_api_tool = async (params: {
   provider: ViewProvider
   tool: SupportedTool
@@ -69,13 +71,15 @@ export const setup_api_tool = async (params: {
     const edit_instructions_label = 'Instructions'
     const confirmation_threshold_label = 'Ask for confirmation above'
 
-    const show_config_options = async () => {
+    let showMenu = true
+    while (showMenu) {
       const current_threshold = params.provider.context.globalState.get<number>(
         COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
         DEFAULT_CONFIRMATION_THRESHOLD
       )
 
       const options: vscode.QuickPickItem[] = [
+        { label: BACK_LABEL },
         { label: api_provider_label, description: config.provider_name },
         { label: model_label, description: config.model },
         {
@@ -113,21 +117,22 @@ export const setup_api_tool = async (params: {
         placeHolder: 'Select setting to update'
       })
 
-      if (!selection) return
+      if (!selection || selection.label === BACK_LABEL) {
+        showMenu = false
+        continue
+      }
 
       let updated = false
 
       if (selection.label == api_provider_label) {
         const provider_info = await select_provider()
         if (!provider_info) {
-          await show_config_options()
-          return
+          continue
         }
 
         const model = await select_model(provider_info)
         if (!model) {
-          await show_config_options()
-          return
+          continue
         }
 
         config = {
@@ -148,8 +153,7 @@ export const setup_api_tool = async (params: {
         }
         const new_model = await select_model(provider_info)
         if (!new_model) {
-          await show_config_options()
-          return
+          continue
         }
         config.model = new_model
         config.temperature = DEFAULT_TEMPERATURE[params.tool]
@@ -157,8 +161,7 @@ export const setup_api_tool = async (params: {
       } else if (selection.label == temperature_label) {
         const new_temperature = await set_temperature(config.temperature)
         if (new_temperature === undefined) {
-          await show_config_options()
-          return
+          continue
         }
         config.temperature = new_temperature
         updated = true
@@ -183,9 +186,7 @@ export const setup_api_tool = async (params: {
       if (updated) {
         await providers_manager.save_commit_messages_tool_config(config)
       }
-      await show_config_options()
     }
-    await show_config_options()
   }
 
   async function select_provider(): Promise<
