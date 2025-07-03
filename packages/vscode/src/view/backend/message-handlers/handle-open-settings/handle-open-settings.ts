@@ -4,6 +4,12 @@ import { configure_api_providers } from './configure-api-providers'
 import { setup_api_tool_multi_config } from './setup-api-tool-multi-config'
 import { setup_api_tool } from './setup-api-tool'
 
+const LABEL_API_PROVIDERS = '$(key) API Providers'
+const LABEL_CODE_COMPLETIONS = 'Setup API tool: Code Completions'
+const LABEL_EDIT_CONTEXT = 'Setup API tool: Edit Context'
+const LABEL_INTELLIGENT_UPDATE = 'Setup API tool: Intelligent Update'
+const LABEL_COMMIT_MESSAGES = 'Setup API tool: Commit Messages'
+
 export const handle_open_settings = async (
   provider: ViewProvider
 ): Promise<void> => {
@@ -12,31 +18,27 @@ export const handle_open_settings = async (
     const selected = await vscode.window.showQuickPick(
       [
         {
-          label: 'Configure API Providers',
+          label: LABEL_API_PROVIDERS,
           description:
             'Add OpenAI-compatible API endpoints to use by API tools',
           detail: 'API keys are stored encrypted and never leave your device.'
         },
         {
-          label: 'API tools',
-          kind: vscode.QuickPickItemKind.Separator
-        },
-        {
-          label: 'API tool: Code Completions',
+          label: LABEL_CODE_COMPLETIONS,
           description:
             'Get code at cursor from state-of-the-art reasoning models'
         },
         {
-          label: 'API tool: Edit Context',
+          label: LABEL_EDIT_CONTEXT,
           description:
             'Create and modify files based on natural language instructions'
         },
         {
-          label: 'API tool: Intelligent Update',
+          label: LABEL_INTELLIGENT_UPDATE,
           description: 'Handle "truncated" edit format and fix malformed diffs'
         },
         {
-          label: 'API tool: Commit Messages',
+          label: LABEL_COMMIT_MESSAGES,
           description:
             'Generate meaningful commit messages adhering to your style'
         }
@@ -53,28 +55,28 @@ export const handle_open_settings = async (
     }
 
     switch (selected.label) {
-      case 'Configure API Providers':
+      case LABEL_API_PROVIDERS:
         await configure_api_providers(provider)
         break
-      case 'API tool: Code Completions':
+      case LABEL_CODE_COMPLETIONS:
         await setup_api_tool_multi_config({
           provider,
           tool: 'code-completions'
         })
         break
-      case 'API tool: Edit Context':
+      case LABEL_EDIT_CONTEXT:
         await setup_api_tool_multi_config({
           provider,
           tool: 'edit-context'
         })
         break
-      case 'API tool: Intelligent Update':
+      case LABEL_INTELLIGENT_UPDATE:
         await setup_api_tool_multi_config({
           provider,
           tool: 'intelligent-update'
         })
         break
-      case 'API tool: Commit Messages':
+      case LABEL_COMMIT_MESSAGES:
         await setup_api_tool({
           provider,
           tool: 'commit-messages'
