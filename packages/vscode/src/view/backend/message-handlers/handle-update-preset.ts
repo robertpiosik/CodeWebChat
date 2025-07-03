@@ -43,6 +43,7 @@ export const handle_update_preset = async (
       a.model == b.model &&
       a.temperature === b.temperature && // can be undefined and 0
       a.top_p === b.top_p && // same
+      a.thinking_budget === b.thinking_budget && // same
       a.system_instructions == b.system_instructions &&
       JSON.stringify(a.options) == JSON.stringify(b.options) &&
       a.port == b.port

@@ -8,6 +8,7 @@ export type Preset = {
   model?: string
   temperature?: number
   top_p?: number
+  thinking_budget?: number
   system_instructions?: string
   options?: string[]
   port?: number

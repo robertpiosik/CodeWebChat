@@ -303,6 +303,7 @@ export class WebSocketManager {
         model: preset.model,
         temperature: preset.temperature,
         top_p: preset.top_p,
+        thinking_budget: preset.thinkingBudget,
         system_instructions: preset.systemInstructions,
         options: preset.options,
         client_id: this.client_id || 0 // 0 is a temporary fallback and should be removed few weeks from 28.03.25
@@ -345,6 +346,7 @@ export class WebSocketManager {
       model: preset.model,
       temperature: preset.temperature,
       top_p: preset.top_p,
+      thinking_budget: preset.thinking_budget,
       system_instructions: preset.system_instructions,
       options: preset.options,
       client_id: this.client_id || 0 // 0 is a temporary fallback and should be removed few weeks from 28.03.25

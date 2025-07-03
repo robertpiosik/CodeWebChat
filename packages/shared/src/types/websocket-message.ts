@@ -2,6 +2,7 @@ export type Chat = {
   url: string
   model?: string
   temperature?: number
+  thinking_budget?: number
   top_p?: number
   system_instructions?: string
   options?: string[]
@@ -22,6 +23,7 @@ export type InitializeChatMessage = {
   client_id: number // Client ID to identify which editor sent this message
   model?: string
   temperature?: number
+  thinking_budget?: number
   top_p?: number
   system_instructions?: string
   options?: string[]

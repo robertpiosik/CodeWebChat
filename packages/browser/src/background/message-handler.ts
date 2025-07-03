@@ -166,6 +166,7 @@ const handle_initialize_chat_message = async (
     url: message.url,
     model: message.model,
     temperature: message.temperature,
+    thinking_budget: message.thinking_budget,
     top_p: message.top_p,
     system_instructions: message.system_instructions,
     options: message.options

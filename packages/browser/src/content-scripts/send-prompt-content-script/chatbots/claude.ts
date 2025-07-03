@@ -11,6 +11,7 @@ import {
   apply_response_button_title
 } from '../constants/copy'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
+import { CHATBOTS } from '@shared/constants/chatbots'
 
 export const claude: Chatbot = {
   wait_until_ready: async () => {
@@ -24,6 +25,32 @@ export const claude: Chatbot = {
       }
       check_for_element()
     })
+  },
+  set_model: async (model: string) => {
+    const model_selector_button = document.querySelector(
+      'button[data-testid="model-selector-dropdown"]'
+    ) as HTMLButtonElement
+    if (!model_selector_button) return
+
+    const model_name_to_find = (CHATBOTS['Claude'].models as any)[model]
+    if (!model_name_to_find) return
+
+    if (model_selector_button.textContent?.includes(model_name_to_find)) {
+      return
+    }
+
+    model_selector_button.click()
+    await new Promise((r) => requestAnimationFrame(r))
+
+    const menu_items = document.querySelectorAll('div[role="menuitem"]')
+
+    for (const item of Array.from(menu_items)) {
+      if (item.textContent?.includes(model_name_to_find)) {
+        ;(item as HTMLElement).click()
+        break
+      }
+    }
+    await new Promise((r) => requestAnimationFrame(r))
   },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (params: { footer: Element }) => {

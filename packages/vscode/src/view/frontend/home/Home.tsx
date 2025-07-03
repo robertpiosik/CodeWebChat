@@ -249,6 +249,7 @@ export const Home: React.FC<Props> = (props) => {
         model: preset.model,
         temperature: preset.temperature,
         top_p: preset.top_p,
+        thinking_budget: preset.thinking_budget,
         system_instructions: preset.system_instructions,
         options: preset.options,
         port: preset.port

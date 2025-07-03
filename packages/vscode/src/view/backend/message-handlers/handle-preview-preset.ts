@@ -5,6 +5,7 @@ import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/utils/replace-selection-placeholder'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_changes_placeholder } from '@/utils/replace-changes-placeholder'
+import { Preset } from '@shared/types/preset'
 
 export const handle_preview_preset = async (
   provider: ViewProvider,
@@ -131,9 +132,23 @@ export const handle_preview_preset = async (
     return
   }
 
+  const preset_for_preview: Preset = {
+    name: message.preset.name,
+    chatbot: message.preset.chatbot,
+    prompt_prefix: message.preset.prompt_prefix,
+    prompt_suffix: message.preset.prompt_suffix,
+    model: message.preset.model,
+    temperature: message.preset.temperature,
+    top_p: message.preset.top_p,
+    thinking_budget: message.preset.thinking_budget,
+    system_instructions: message.preset.system_instructions,
+    options: message.preset.options,
+    port: message.preset.port
+  }
+
   provider.websocket_server_instance.preview_preset(
     text_to_send,
-    message.preset
+    preset_for_preview
   )
   vscode.window.showInformationMessage(
     'Preset preview sent to the connected browser.'

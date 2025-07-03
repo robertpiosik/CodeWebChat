@@ -211,6 +211,12 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
   if (params.chat.top_p !== undefined && chatbot?.set_top_p) {
     await chatbot.set_top_p(params.chat.top_p)
   }
+  if (
+    params.chat.thinking_budget !== undefined &&
+    chatbot?.set_thinking_budget
+  ) {
+    await chatbot.set_thinking_budget(params.chat.thinking_budget)
+  }
   if (chatbot?.set_options) {
     await chatbot.set_options(params.chat.options || [])
   }

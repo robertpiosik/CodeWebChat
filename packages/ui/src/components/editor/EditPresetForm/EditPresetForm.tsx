@@ -19,6 +19,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const [name, set_name] = useState(props.preset.name)
   const [temperature, set_temperature] = useState(props.preset.temperature)
   const [top_p, set_top_p] = useState(props.preset.top_p)
+  const [thinking_budget, set_thinking_budget] = useState(
+    props.preset.thinking_budget
+  )
   const [model, set_model] = useState(props.preset.model)
   const [system_instructions, set_system_instructions] = useState(
     props.preset.system_instructions
@@ -34,6 +37,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
   const supports_temperature = CHATBOTS[chatbot].supports_custom_temperature
   const supports_top_p = CHATBOTS[chatbot].supports_custom_top_p
+  const supports_thinking_budget = CHATBOTS[chatbot].supports_thinking_budget
   const supports_system_instructions =
     CHATBOTS[chatbot].supports_system_instructions
   const supports_port = CHATBOTS[chatbot].supports_user_provided_port
@@ -50,6 +54,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       ...(prompt_suffix ? { prompt_suffix } : {}),
       ...(temperature !== undefined ? { temperature } : {}),
       ...(top_p !== CHATBOTS[chatbot].default_top_p ? { top_p } : {}),
+      ...(thinking_budget !== undefined ? { thinking_budget } : {}),
       ...(model ? { model } : {}),
       ...(system_instructions ? { system_instructions } : {}),
       ...(port !== undefined ? { port } : {}),
@@ -59,6 +64,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     name,
     temperature,
     top_p,
+    thinking_budget,
     chatbot,
     model,
     system_instructions,
@@ -77,6 +83,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       CHATBOTS[new_chatbot].supports_custom_temperature ? 0.5 : undefined
     )
     set_top_p(undefined)
+    set_thinking_budget(undefined)
     if (CHATBOTS[new_chatbot].supports_system_instructions) {
       set_system_instructions(CHATBOTS[new_chatbot].default_system_instructions)
     } else {
@@ -146,10 +153,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           >
             <div style={{ cursor: 'pointer' }}>
               <div style={{ pointerEvents: 'none' }}>
-                <select
-                  id="open-router-model"
-                  value={model}
-                >
+                <select id="open-router-model" value={model}>
                   {model ? (
                     <option value={model}>{model}</option>
                   ) : (
@@ -246,6 +250,24 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           <Slider
             value={top_p || CHATBOTS[chatbot].default_top_p}
             onChange={set_top_p}
+          />
+        </Field>
+      )}
+
+      {supports_thinking_budget && (
+        <Field label="Thinking Budget" html_for="thinking-budget">
+          <input
+            id="thinking-budget"
+            type="text"
+            value={thinking_budget ?? ''}
+            onChange={(e) => {
+              const num = parseInt(e.target.value, 10)
+              set_thinking_budget(isNaN(num) ? undefined : num)
+            }}
+            placeholder="e.g. 8000"
+            onKeyDown={(e) =>
+              !/[0-9]/.test(e.key) && e.key != 'Backspace' && e.preventDefault()
+            }
           />
         </Field>
       )}
