@@ -412,13 +412,14 @@ async function perform_code_completion(params: {
     const body = {
       messages,
       model: code_completions_config.model,
-      temperature: code_completions_config.temperature
+      temperature: code_completions_config.temperature,
+      reasoning_effort: code_completions_config.reasoning_effort
     }
 
     Logger.log({
       function_name: 'perform_fim_completion',
-      message: 'Prompt:',
-      data: content
+      message: 'Request body',
+      data: body
     })
 
     const cursor_listener = vscode.workspace.onDidChangeTextDocument(() => {

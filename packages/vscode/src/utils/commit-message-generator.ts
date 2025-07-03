@@ -6,7 +6,10 @@ import { make_api_request } from './make-api-request'
 import { Logger } from './logger'
 import { should_ignore_file } from '../context/utils/should-ignore-file'
 import { process_single_trailing_dot } from '@/utils/process-single-trailing-dot/process-single-trailing-dot'
-import { ApiProvidersManager } from '../services/api-providers-manager'
+import {
+  ApiProvidersManager,
+  ReasoningEffort
+} from '../services/api-providers-manager'
 import { ignored_extensions } from '@/context/constants/ignored-extensions'
 import { PROVIDERS } from '@shared/constants/providers'
 import { COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY } from '../constants/state-keys'
@@ -25,6 +28,7 @@ export interface CommitMessageConfig {
   provider_name: string
   model: string
   temperature: number
+  reasoning_effort?: ReasoningEffort
 }
 
 export async function get_commit_message_config(
@@ -295,6 +299,10 @@ export async function generate_commit_message_with_api(
         messages,
         model: config.model,
         temperature: config.temperature
+      } as any
+
+      if (config.reasoning_effort) {
+        body.reasoning_effort = config.reasoning_effort
       }
 
       const cancel_token_source = axios.CancelToken.source()

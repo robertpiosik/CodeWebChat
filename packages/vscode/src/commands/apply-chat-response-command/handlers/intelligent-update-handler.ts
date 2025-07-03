@@ -13,6 +13,7 @@ import {
 import { Logger } from '../../../utils/logger'
 import { format_document } from '../utils/format-document'
 import { OriginalFileState } from '../../../types/common'
+import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
 
 const MAX_CONCURRENCY = 20
@@ -21,6 +22,8 @@ async function process_file(params: {
   endpoint_url: string
   api_key: string
   model: string
+  temperature: number
+  reasoning_effort?: ReasoningEffort
   file_path: string
   file_content: string
   instruction: string
@@ -48,7 +51,8 @@ async function process_file(params: {
   const body = {
     messages,
     model: params.model,
-    temperature: 0
+    temperature: params.temperature,
+    reasoning_effort: params.reasoning_effort
   }
 
   Logger.log({
@@ -140,7 +144,7 @@ async function process_file(params: {
 export async function handle_intelligent_update(params: {
   endpoint_url: string
   api_key: string
-  model: string
+  config: ToolConfig
   chat_response: string
   context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
@@ -465,7 +469,9 @@ export async function handle_intelligent_update(params: {
               const updated_content_result = await process_file({
                 endpoint_url: params.endpoint_url,
                 api_key: params.api_key,
-                model: params.model,
+                model: params.config.model,
+                temperature: params.config.temperature,
+                reasoning_effort: params.config.reasoning_effort,
                 file_path: file.file_path,
                 file_content: original_content_for_api, // Send original content to AI
                 instruction: file.content, // Clipboard content is the instruction

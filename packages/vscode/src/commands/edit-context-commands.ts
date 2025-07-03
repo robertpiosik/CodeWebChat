@@ -376,7 +376,8 @@ const perform_context_editing = async (params: {
   const body = {
     messages,
     model: edit_context_config.model,
-    temperature: edit_context_config.temperature
+    temperature: edit_context_config.temperature,
+    reasoning_effort: edit_context_config.reasoning_effort
   }
 
   Logger.log({

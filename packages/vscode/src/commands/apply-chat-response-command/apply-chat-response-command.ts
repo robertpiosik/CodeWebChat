@@ -488,7 +488,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             const intelligent_update_states = await handle_intelligent_update({
               endpoint_url,
               api_key: provider.api_key,
-              model: intelligent_update_config.model,
+              config: intelligent_update_config,
               chat_response: failed_patches_as_code_blocks,
               context: context,
               is_single_root_folder_workspace
@@ -603,7 +603,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 {
                   endpoint_url,
                   api_key: provider.api_key,
-                  model: intelligent_update_config.model,
+                  config: intelligent_update_config,
                   chat_response: all_patches_text,
                   context: context,
                   is_single_root_folder_workspace
@@ -734,7 +734,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
           final_original_states = await handle_intelligent_update({
             endpoint_url,
             api_key: provider.api_key,
-            model: intelligent_update_config.model,
+            config: intelligent_update_config,
             chat_response,
             context: context,
             is_single_root_folder_workspace
@@ -842,7 +842,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 final_original_states = await handle_intelligent_update({
                   endpoint_url,
                   api_key: provider.api_key,
-                  model: intelligent_update_config.model,
+                  config: intelligent_update_config,
                   chat_response,
                   context: context,
                   is_single_root_folder_workspace

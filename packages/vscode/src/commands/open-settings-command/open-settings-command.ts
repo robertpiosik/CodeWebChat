@@ -3,11 +3,11 @@ import { configure_api_providers } from './configure-api-providers'
 import { setup_api_tool_multi_config } from './setup-api-tool-multi-config'
 import { setup_api_tool } from './setup-api-tool'
 
-const LABEL_API_PROVIDERS = '$(key) My API Providers'
-const LABEL_CODE_COMPLETIONS = 'API tool: Code Completions'
-const LABEL_EDIT_CONTEXT = 'API tool: Edit Context'
-const LABEL_INTELLIGENT_UPDATE = 'API tool: Intelligent Update'
-const LABEL_COMMIT_MESSAGES = 'API tool: Commit Messages'
+const LABEL_PROVIDERS = '$(key) API Providers'
+const LABEL_CODE_COMPLETIONS = 'Code Completions'
+const LABEL_EDIT_CONTEXT = 'Edit Context'
+const LABEL_INTELLIGENT_UPDATE = 'Intelligent Update'
+const LABEL_COMMIT_MESSAGES = 'Commit Messages'
 
 export const open_settings_command = (context: vscode.ExtensionContext) => {
   return vscode.commands.registerCommand('codeWebChat.settings', async () => {
@@ -16,28 +16,33 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
       const selected = await vscode.window.showQuickPick(
         [
           {
-            label: LABEL_API_PROVIDERS,
+            label: LABEL_PROVIDERS,
             detail: 'API keys are stored encrypted and never leave your device.'
           },
           {
+            label: 'API tools',
+            kind: vscode.QuickPickItemKind.Separator
+          },
+          {
             label: LABEL_CODE_COMPLETIONS,
-            description:
-              'Get code at cursor from state-of-the-art reasoning models'
+            description: 'API tool',
+            detail: 'Get code at cursor from state-of-the-art reasoning models.'
           },
           {
             label: LABEL_EDIT_CONTEXT,
-            description:
-              'Create and modify files based on natural language instructions'
+            description: 'API tool',
+            detail:
+              'Create and modify files based on natural language instructions.'
           },
           {
             label: LABEL_INTELLIGENT_UPDATE,
-            description:
-              'Handle "truncated" edit format and fix malformed diffs'
+            description: 'API tool',
+            detail: 'Handle "truncated" edit format and fix malformed diffs.'
           },
           {
             label: LABEL_COMMIT_MESSAGES,
-            description:
-              'Generate meaningful commit messages adhering to your style'
+            description: 'API tool',
+            detail: 'Generate meaningful commit messages adhering to your style.'
           }
         ],
         {
@@ -52,7 +57,7 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
       }
 
       switch (selected.label) {
-        case LABEL_API_PROVIDERS:
+        case LABEL_PROVIDERS:
           await configure_api_providers(context)
           break
         case LABEL_CODE_COMPLETIONS:
