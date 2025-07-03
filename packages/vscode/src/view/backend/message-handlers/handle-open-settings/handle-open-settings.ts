@@ -7,37 +7,38 @@ import { setup_api_tool } from './setup-api-tool'
 export const handle_open_settings = async (
   provider: ViewProvider
 ): Promise<void> => {
-  let showMenu = true
-  while (showMenu) {
+  let show_menu = true
+  while (show_menu) {
     const selected = await vscode.window.showQuickPick(
       [
         {
           label: 'Configure API Providers',
-          detail:
-            'OpenAI-compatible API endpoints to use by API tools. API keys never leave your device.'
+          description:
+            'Add OpenAI-compatible API endpoints to use by API tools',
+          detail: 'API keys are stored encrypted and never leave your device.'
         },
         {
           label: 'API tools',
           kind: vscode.QuickPickItemKind.Separator
         },
         {
-          label: '$(tools) Code Completions',
+          label: 'API tool: Code Completions',
           description:
             'Get code at cursor from state-of-the-art reasoning models'
         },
         {
-          label: '$(tools) Edit Context',
+          label: 'API tool: Edit Context',
           description:
-            'Create and modify files in context based on natural language instructions'
+            'Create and modify files based on natural language instructions'
         },
         {
-          label: '$(tools) Intelligent Update',
+          label: 'API tool: Intelligent Update',
           description: 'Handle "truncated" edit format and fix malformed diffs'
         },
         {
-          label: '$(tools) Commit Messages',
+          label: 'API tool: Commit Messages',
           description:
-            'Generate meaningful commit messages precisely adhering to your style'
+            'Generate meaningful commit messages adhering to your style'
         }
       ],
       {
@@ -47,7 +48,7 @@ export const handle_open_settings = async (
     )
 
     if (!selected) {
-      showMenu = false
+      show_menu = false
       continue
     }
 
@@ -55,25 +56,25 @@ export const handle_open_settings = async (
       case 'Configure API Providers':
         await configure_api_providers(provider)
         break
-      case '$(tools) Code Completions':
+      case 'API tool: Code Completions':
         await setup_api_tool_multi_config({
           provider,
           tool: 'code-completions'
         })
         break
-      case '$(tools) Edit Context':
+      case 'API tool: Edit Context':
         await setup_api_tool_multi_config({
           provider,
           tool: 'edit-context'
         })
         break
-      case '$(tools) Intelligent Update':
+      case 'API tool: Intelligent Update':
         await setup_api_tool_multi_config({
           provider,
           tool: 'intelligent-update'
         })
         break
-      case 'Commit Messages':
+      case 'API tool: Commit Messages':
         await setup_api_tool({
           provider,
           tool: 'commit-messages'
