@@ -130,8 +130,12 @@ async function get_intelligent_update_config(
 
         return {
           label: config.model,
-          description: `${config.provider_name}${
-            is_default ? ' · Default configuration' : ''
+          description: `${
+            config.reasoning_effort ? `${config.reasoning_effort}` : ''
+          }${
+            config.reasoning_effort
+              ? ` · ${config.provider_name}`
+              : `${config.provider_name}`
           }`,
           config,
           index,

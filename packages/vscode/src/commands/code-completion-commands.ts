@@ -170,8 +170,12 @@ async function get_code_completion_config(
 
         return {
           label: config.model,
-          description: `${config.provider_name}${
-            is_default ? ' · Default configuration' : ''
+          description: `${
+            config.reasoning_effort ? `${config.reasoning_effort}` : ''
+          }${
+            config.reasoning_effort
+              ? ` · ${config.provider_name}`
+              : `${config.provider_name}`
           }`,
           config,
           index,
