@@ -35,7 +35,14 @@ export const setup_api_tool_multi_config = async (params: {
   const providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
-  const back_label = '$(arrow-left) Back'
+  const BACK_LABEL = '$(arrow-left) Back'
+  const ADD_CONFIGURATION_LABEL = '$(add) Add another configuration...'
+  const SET_AS_DEFAULT_LABEL = '$(star) Set as default'
+  const UNSET_DEFAULT_LABEL = '$(star-full) Unset default'
+  const PROVIDER_LABEL = 'Provider'
+  const MODEL_LABEL = 'Model'
+  const TEMPERATURE_LABEL = 'Temperature'
+  const REASONING_EFFORT_LABEL = 'Reasoning effort'
 
   const get_tool_methods = (tool: SupportedTool): ToolMethods => {
     switch (tool) {
@@ -124,9 +131,9 @@ export const setup_api_tool_multi_config = async (params: {
       config?: ToolConfig
       index?: number
     })[] = [
-      { label: back_label },
+      { label: BACK_LABEL },
       {
-        label: '$(add) Add another configuration...'
+        label: ADD_CONFIGURATION_LABEL
       }
     ]
 
@@ -217,13 +224,13 @@ export const setup_api_tool_multi_config = async (params: {
           return
         }
 
-        if (selected.label === back_label) {
+        if (selected.label === BACK_LABEL) {
           quick_pick.hide()
           resolve()
           return
         }
 
-        if (selected.label == '$(add) Add another configuration...') {
+        if (selected.label == ADD_CONFIGURATION_LABEL) {
           quick_pick.hide()
           await add_configuration()
           await show_configs_quick_pick()
@@ -362,25 +369,21 @@ export const setup_api_tool_multi_config = async (params: {
   }
 
   async function edit_configuration(config: ToolConfig) {
-    const back_label = '$(arrow-left) Back'
-    const set_as_default_label = '$(star) Set as default'
-    const unset_default_label = '$(star-full) Unset default'
-
     const create_edit_options = () => {
       const options = [
-        { label: back_label },
+        { label: BACK_LABEL },
         { label: '', kind: vscode.QuickPickItemKind.Separator },
         {
-          label: `Provider`,
+          label: PROVIDER_LABEL,
           description: config.provider_name
         },
-        { label: `Model`, description: config.model },
+        { label: MODEL_LABEL, description: config.model },
         {
-          label: `Temperature`,
+          label: TEMPERATURE_LABEL,
           description: config.temperature.toString()
         },
         {
-          label: `Reasoning effort`,
+          label: REASONING_EFFORT_LABEL,
           description: config.reasoning_effort
             ? config.reasoning_effort.charAt(0).toUpperCase() +
               config.reasoning_effort.slice(1)
@@ -396,11 +399,11 @@ export const setup_api_tool_multi_config = async (params: {
 
       if (current_is_default) {
         options.push({
-          label: unset_default_label
+          label: UNSET_DEFAULT_LABEL
         })
       } else {
         options.push({
-          label: set_as_default_label
+          label: SET_AS_DEFAULT_LABEL
         })
       }
 
@@ -418,20 +421,20 @@ export const setup_api_tool_multi_config = async (params: {
       quick_pick.onDidAccept(async () => {
         is_accepted = true
         const selected_option = quick_pick.selectedItems[0]
-        if (!selected_option || selected_option.label == back_label) {
+        if (!selected_option || selected_option.label == BACK_LABEL) {
           quick_pick.hide()
           resolve()
           return
         }
 
-        if (selected_option.label == set_as_default_label) {
+        if (selected_option.label == SET_AS_DEFAULT_LABEL) {
           default_config = { ...config }
           await tool_methods.set_default_config(default_config)
           quick_pick.items = create_edit_options()
           return
         }
 
-        if (selected_option.label == unset_default_label) {
+        if (selected_option.label == UNSET_DEFAULT_LABEL) {
           default_config = undefined
           await tool_methods.set_default_config(null)
           quick_pick.items = create_edit_options()
@@ -444,7 +447,7 @@ export const setup_api_tool_multi_config = async (params: {
         const updated_config_state = { ...config }
         let config_changed_in_this_step = false
 
-        if (selected_option.label == 'Provider') {
+        if (selected_option.label == PROVIDER_LABEL) {
           const new_provider = await select_provider()
           if (!new_provider) {
             await edit_configuration(config)
@@ -473,7 +476,7 @@ export const setup_api_tool_multi_config = async (params: {
             resolve()
             return
           }
-        } else if (selected_option.label == 'Model') {
+        } else if (selected_option.label == MODEL_LABEL) {
           const provider_info = {
             type: config.provider_type,
             name: config.provider_name
@@ -496,7 +499,7 @@ export const setup_api_tool_multi_config = async (params: {
             resolve()
             return
           }
-        } else if (selected_option.label == 'Temperature') {
+        } else if (selected_option.label == TEMPERATURE_LABEL) {
           const new_temperature = await set_temperature(config.temperature)
           if (new_temperature === undefined) {
             await edit_configuration(config)
@@ -512,7 +515,7 @@ export const setup_api_tool_multi_config = async (params: {
             resolve()
             return
           }
-        } else if (selected_option.label == 'Reasoning effort') {
+        } else if (selected_option.label == REASONING_EFFORT_LABEL) {
           const new_reasoning_effort = await select_reasoning_effort(
             config.reasoning_effort
           )
