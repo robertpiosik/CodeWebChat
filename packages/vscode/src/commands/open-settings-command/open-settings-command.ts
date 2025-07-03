@@ -10,80 +10,76 @@ const LABEL_INTELLIGENT_UPDATE = 'API tool: Intelligent Update'
 const LABEL_COMMIT_MESSAGES = 'API tool: Commit Messages'
 
 export const open_settings_command = (context: vscode.ExtensionContext) => {
-  return vscode.commands.registerCommand(
-    'codeWebChat.settings',
-    async () => {
-      let show_menu = true
-      while (show_menu) {
-        const selected = await vscode.window.showQuickPick(
-          [
-            {
-              label: LABEL_API_PROVIDERS,
-              description:
-                'API keys are stored encrypted and never leave your device'
-            },
-            {
-              label: LABEL_CODE_COMPLETIONS,
-              description:
-                'Get code at cursor from state-of-the-art reasoning models'
-            },
-            {
-              label: LABEL_EDIT_CONTEXT,
-              description:
-                'Create and modify files based on natural language instructions'
-            },
-            {
-              label: LABEL_INTELLIGENT_UPDATE,
-              description:
-                'Handle "truncated" edit format and fix malformed diffs'
-            },
-            {
-              label: LABEL_COMMIT_MESSAGES,
-              description:
-                'Generate meaningful commit messages adhering to your style'
-            }
-          ],
+  return vscode.commands.registerCommand('codeWebChat.settings', async () => {
+    let show_menu = true
+    while (show_menu) {
+      const selected = await vscode.window.showQuickPick(
+        [
           {
-            title: 'Settings',
-            placeHolder: 'Select option'
+            label: LABEL_API_PROVIDERS,
+            detail: 'API keys are stored encrypted and never leave your device'
+          },
+          {
+            label: LABEL_CODE_COMPLETIONS,
+            description:
+              'Get code at cursor from state-of-the-art reasoning models'
+          },
+          {
+            label: LABEL_EDIT_CONTEXT,
+            description:
+              'Create and modify files based on natural language instructions'
+          },
+          {
+            label: LABEL_INTELLIGENT_UPDATE,
+            description:
+              'Handle "truncated" edit format and fix malformed diffs'
+          },
+          {
+            label: LABEL_COMMIT_MESSAGES,
+            description:
+              'Generate meaningful commit messages adhering to your style'
           }
-        )
-
-        if (!selected) {
-          show_menu = false
-          continue
+        ],
+        {
+          title: 'Settings',
+          placeHolder: 'Select option'
         }
+      )
 
-        switch (selected.label) {
-          case LABEL_API_PROVIDERS:
-            await configure_api_providers(context)
-            break
-          case LABEL_CODE_COMPLETIONS:
-            await setup_api_tool_multi_config({
-              context,
-              tool: 'code-completions'
-            })
-            break
-          case LABEL_EDIT_CONTEXT:
-            await setup_api_tool_multi_config({
-              context,
-              tool: 'edit-context'
-            })
-            break
-          case LABEL_INTELLIGENT_UPDATE:
-            await setup_api_tool_multi_config({
-              context,
-              tool: 'intelligent-update'
-            })
-            break
-          case LABEL_COMMIT_MESSAGES:
-            await setup_api_tool({
-              context,
-              tool: 'commit-messages'
-            })
-            break
-        }
+      if (!selected) {
+        show_menu = false
+        continue
+      }
+
+      switch (selected.label) {
+        case LABEL_API_PROVIDERS:
+          await configure_api_providers(context)
+          break
+        case LABEL_CODE_COMPLETIONS:
+          await setup_api_tool_multi_config({
+            context,
+            tool: 'code-completions'
+          })
+          break
+        case LABEL_EDIT_CONTEXT:
+          await setup_api_tool_multi_config({
+            context,
+            tool: 'edit-context'
+          })
+          break
+        case LABEL_INTELLIGENT_UPDATE:
+          await setup_api_tool_multi_config({
+            context,
+            tool: 'intelligent-update'
+          })
+          break
+        case LABEL_COMMIT_MESSAGES:
+          await setup_api_tool({
+            context,
+            tool: 'commit-messages'
+          })
+          break
       }
     }
-  )
+  })
 }
