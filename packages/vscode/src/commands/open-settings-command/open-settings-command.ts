@@ -3,7 +3,7 @@ import { configure_api_providers } from './configure-api-providers'
 import { setup_api_tool_multi_config } from './setup-api-tool-multi-config'
 import { setup_api_tool } from './setup-api-tool'
 
-const LABEL_API_PROVIDERS = 'My API Providers'
+const LABEL_API_PROVIDERS = '$(key) My API Providers'
 const LABEL_CODE_COMPLETIONS = 'API tool: Code Completions'
 const LABEL_EDIT_CONTEXT = 'API tool: Edit Context'
 const LABEL_INTELLIGENT_UPDATE = 'API tool: Intelligent Update'
