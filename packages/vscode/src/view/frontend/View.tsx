@@ -6,7 +6,6 @@ import { EditPresetForm as UiEditPresetForm } from '@ui/components/editor/EditPr
 import { Preset } from '@shared/types/preset'
 import { ExtensionMessage, WebviewMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
-import { Settings } from './settings/Settings'
 
 const vscode = acquireVsCodeApi()
 
