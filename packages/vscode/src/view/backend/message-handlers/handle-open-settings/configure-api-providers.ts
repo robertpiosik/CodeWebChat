@@ -12,7 +12,7 @@ const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
 }
 
-export const handle_configure_api_providers = async (
+export const configure_api_providers = async (
   provider: ViewProvider
 ): Promise<void> => {
   const providers_manager = new ApiProvidersManager(provider.context)
@@ -92,7 +92,7 @@ export const handle_configure_api_providers = async (
     ]
   }
 
-  const show_providers_quick_pick = async () => {
+  const show_providers_quick_pick = async (): Promise<void> => {
     const saved_providers = await providers_manager.get_providers()
 
     if (saved_providers.length == 0) {
@@ -106,13 +106,16 @@ export const handle_configure_api_providers = async (
     quick_pick.placeholder = 'Select an API provider to edit or add a new one'
 
     return new Promise<void>((resolve) => {
+      let is_accepted = false
+
       quick_pick.onDidAccept(async () => {
+        is_accepted = true
         const selected = quick_pick.selectedItems[0]
+        quick_pick.hide()
+
         if (selected.label == '$(add) Add another API provider...') {
-          quick_pick.hide()
           await show_create_provider_quick_pick()
         } else if ('provider' in selected) {
-          quick_pick.hide()
           await edit_provider(selected.provider as Provider)
         }
         resolve()
@@ -124,13 +127,17 @@ export const handle_configure_api_providers = async (
           index: number
         }
 
-        if (event.button === edit_button) {
+        if (
+          event.button === edit_button ||
+          event.button === change_api_key_button
+        ) {
+          is_accepted = true
           quick_pick.hide()
-          await edit_provider(item.provider)
-          resolve()
-        } else if (event.button === change_api_key_button) {
-          quick_pick.hide()
-          await edit_built_in_provider(item.provider as BuiltInProvider)
+          if (event.button === edit_button) {
+            await edit_provider(item.provider)
+          } else if (event.button === change_api_key_button) {
+            await edit_built_in_provider(item.provider as BuiltInProvider)
+          }
           resolve()
         } else if (event.button === delete_button) {
           const confirm = await vscode.window.showWarningMessage(
@@ -145,8 +152,9 @@ export const handle_configure_api_providers = async (
               (p) => p.name != item.provider.name
             )
             await providers_manager.save_providers(updated_providers)
-            quick_pick.items = await create_provider_items()
+
             if (updated_providers.length === 0) {
+              is_accepted = true
               quick_pick.hide()
               vscode.window.showInformationMessage(
                 'All API providers have been removed.'
@@ -154,6 +162,7 @@ export const handle_configure_api_providers = async (
               await show_create_provider_quick_pick()
               resolve()
             } else {
+              quick_pick.items = await create_provider_items()
               quick_pick.show()
             }
           }
@@ -184,7 +193,9 @@ export const handle_configure_api_providers = async (
       })
 
       quick_pick.onDidHide(() => {
-        resolve()
+        if (!is_accepted) {
+          resolve()
+        }
       })
 
       quick_pick.show()

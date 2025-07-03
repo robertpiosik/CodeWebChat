@@ -4,11 +4,7 @@ import { Template as UiTemplate } from '@ui/components/editor/Template'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm as UiEditPresetForm } from '@ui/components/editor/EditPresetForm'
 import { Preset } from '@shared/types/preset'
-import {
-  ExtensionMessage,
-  SaveInstructionsMessage,
-  WebviewMessage
-} from '../types/messages'
+import { ExtensionMessage, WebviewMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 import { Settings } from './settings/Settings'
 
@@ -46,7 +42,7 @@ export const View = () => {
       command: 'SAVE_INSTRUCTIONS',
       instruction: value,
       mode: mode
-    } as SaveInstructionsMessage)
+    } as WebviewMessage)
   }
 
   useEffect(() => {
@@ -77,14 +73,14 @@ export const View = () => {
       command: 'UPDATE_PRESET',
       updating_preset: updating_preset,
       updated_preset: updated_preset
-    })
+    } as WebviewMessage)
   }
 
   const handle_preview_preset = () => {
     vscode.postMessage({
       command: 'PREVIEW_PRESET',
       preset: updated_preset
-    })
+    } as WebviewMessage)
   }
 
   if (
@@ -151,7 +147,10 @@ export const View = () => {
             set_updating_preset(preset)
           }}
           on_settings_click={() => {
-            set_viewing_settings(true)
+            // set_viewing_settings(true)
+            vscode.postMessage({
+              command: 'OPEN_SETTINGS'
+            } as WebviewMessage)
           }}
           ask_instructions={ask_instructions}
           edit_instructions={edit_instructions}

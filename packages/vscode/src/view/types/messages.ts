@@ -144,24 +144,8 @@ export interface CaretPositionChangedWebviewMessage extends BaseMessage {
   caret_position: number
 }
 
-export interface ConfigureApiProvidersMessage extends BaseMessage {
-  command: 'CONFIGURE_API_PROVIDERS'
-}
-
-export interface SetupApiToolCodeCompletionsMessage extends BaseMessage {
-  command: 'SETUP_API_TOOL_CODE_COMPLETIONS'
-}
-
-export interface SetupApiToolEditContextMessage extends BaseMessage {
-  command: 'SETUP_API_TOOL_EDIT_CONTEXT'
-}
-
-export interface SetupApiToolIntelligentUpdateMessage extends BaseMessage {
-  command: 'SETUP_API_TOOL_INTELLIGENT_UPDATE'
-}
-
-export interface SetupApiToolCommitMessagesMessage extends BaseMessage {
-  command: 'SETUP_API_TOOL_COMMIT_MESSAGES'
+export interface OpenSettingsMessage extends BaseMessage {
+  command: 'OPEN_SETTINGS'
 }
 
 export interface PickOpenRouterModel extends BaseMessage {
@@ -375,11 +359,7 @@ export type WebviewMessage =
   | GetSelectedCodeCompletionPresetsMessage
   | SaveSelectedCodeCompletionPresetsMessage
   | CaretPositionChangedWebviewMessage
-  | ConfigureApiProvidersMessage
-  | SetupApiToolCodeCompletionsMessage
-  | SetupApiToolEditContextMessage
-  | SetupApiToolIntelligentUpdateMessage
-  | SetupApiToolCommitMessagesMessage
+  | OpenSettingsMessage
   | PickOpenRouterModel
   | SaveHomeViewTypeMessage
   | GetHomeViewTypeMessage

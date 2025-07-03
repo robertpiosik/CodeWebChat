@@ -28,7 +28,7 @@ interface ToolMethods {
   get_display_name: () => string
 }
 
-export const handle_setup_api_tool_multi_config = async (params: {
+export const setup_api_tool_multi_config = async (params: {
   provider: ViewProvider
   tool: SupportedTool
 }): Promise<void> => {
@@ -207,8 +207,11 @@ export const handle_setup_api_tool_multi_config = async (params: {
     quick_pick.matchOnDescription = true
     quick_pick.placeholder = 'Select a configuration to edit or add another one'
 
+    let is_accepted = false
+
     return new Promise<void>((resolve) => {
       quick_pick.onDidAccept(async () => {
+        is_accepted = true
         const selected = quick_pick.selectedItems[0]
         if (!selected) {
           quick_pick.hide()
@@ -220,10 +223,12 @@ export const handle_setup_api_tool_multi_config = async (params: {
           quick_pick.hide()
           await add_configuration()
           await show_configs_quick_pick()
+          resolve()
         } else if ('config' in selected && selected.config) {
           quick_pick.hide()
           await edit_configuration(selected.config as ToolConfig)
           await show_configs_quick_pick()
+          resolve()
         }
       })
 
@@ -234,9 +239,11 @@ export const handle_setup_api_tool_multi_config = async (params: {
         }
 
         if (event.button === edit_button) {
+          is_accepted = true
           quick_pick.hide()
           await edit_configuration(item.config)
           await show_configs_quick_pick()
+          resolve()
         } else if (event.button === delete_button) {
           const confirm = await vscode.window.showWarningMessage(
             `Are you sure you want to delete ${item.config.model} (${item.config.provider_name})?`,
@@ -259,11 +266,13 @@ export const handle_setup_api_tool_multi_config = async (params: {
             }
 
             if (current_configs.length == 0) {
+              is_accepted = true
               quick_pick.hide()
               await add_configuration()
               if (current_configs.length > 0) {
                 await show_configs_quick_pick()
               }
+              resolve()
             } else {
               quick_pick.items = create_config_items()
               quick_pick.show()
@@ -305,7 +314,9 @@ export const handle_setup_api_tool_multi_config = async (params: {
       })
 
       quick_pick.onDidHide(() => {
-        resolve()
+        if (!is_accepted) {
+          resolve()
+        }
       })
 
       quick_pick.show()

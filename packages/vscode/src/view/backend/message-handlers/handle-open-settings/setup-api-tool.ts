@@ -18,7 +18,7 @@ const DEFAULT_TEMPERATURE: { [key in SupportedTool]: number } = {
 
 const DEFAULT_CONFIRMATION_THRESHOLD = 20000
 
-export const handle_setup_api_tool = async (params: {
+export const setup_api_tool = async (params: {
   provider: ViewProvider
   tool: SupportedTool
 }): Promise<void> => {

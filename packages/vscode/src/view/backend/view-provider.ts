@@ -36,12 +36,6 @@ import {
   handle_get_instructions,
   handle_request_editor_state,
   handle_request_editor_selection_state,
-  handle_configure_api_providers,
-  handle_setup_api_tool_multi_config,
-  handle_setup_api_tool,
-  handle_pick_open_router_model,
-  handle_save_home_view_type,
-  handle_get_home_view_type,
   handle_edit_context,
   handle_code_completion,
   handle_get_edit_format,
@@ -49,7 +43,10 @@ import {
   handle_get_mode_web,
   handle_save_mode_web,
   handle_get_mode_api,
-  handle_save_mode_api
+  handle_save_mode_api,
+  handle_save_home_view_type,
+  handle_get_home_view_type,
+  handle_open_settings
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -347,7 +344,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'PREVIEW_PRESET') {
             await handle_preview_preset(this, message)
           } else if (message.command == 'COPY_PROMPT') {
-            await handle_copy_prompt(this, message.instruction, message.preset_name)
+            await handle_copy_prompt(
+              this,
+              message.instruction,
+              message.preset_name
+            )
           } else if (message.command == 'SHOW_PRESET_PICKER') {
             await handle_show_preset_picker(this)
           } else if (message.command == 'REQUEST_EDITOR_STATE') {
@@ -388,36 +389,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_save_edit_format(this, message)
           } else if (message.command == 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
-          } else if (message.command == 'CONFIGURE_API_PROVIDERS') {
-            handle_configure_api_providers(this)
-          } else if (message.command == 'SETUP_API_TOOL_CODE_COMPLETIONS') {
-            await handle_setup_api_tool_multi_config({
-              provider: this,
-              tool: 'code-completions'
-            })
-          } else if (message.command == 'SETUP_API_TOOL_EDIT_CONTEXT') {
-            await handle_setup_api_tool_multi_config({
-              provider: this,
-              tool: 'edit-context'
-            })
-          } else if (message.command == 'SETUP_API_TOOL_INTELLIGENT_UPDATE') {
-            await handle_setup_api_tool_multi_config({
-              provider: this,
-              tool: 'intelligent-update'
-            })
-          } else if (message.command == 'SETUP_API_TOOL_COMMIT_MESSAGES') {
-            await handle_setup_api_tool({
-              provider: this,
-              tool: 'commit-messages'
-            })
-          } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
-            await handle_pick_open_router_model(this)
           } else if (message.command == 'SAVE_HOME_VIEW_TYPE') {
             await handle_save_home_view_type(this, message)
           } else if (message.command == 'GET_HOME_VIEW_TYPE') {
             handle_get_home_view_type(this)
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
             await handle_at_sign_quick_pick(this, this.context)
+          } else if (message.command == 'OPEN_SETTINGS') {
+            await handle_open_settings(this)
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)
