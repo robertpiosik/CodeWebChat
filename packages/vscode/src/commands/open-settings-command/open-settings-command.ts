@@ -17,7 +17,7 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
         [
           {
             label: LABEL_API_PROVIDERS,
-            detail: 'API keys are stored encrypted and never leave your device'
+            detail: 'API keys are stored encrypted and never leave your device.'
           },
           {
             label: LABEL_CODE_COMPLETIONS,

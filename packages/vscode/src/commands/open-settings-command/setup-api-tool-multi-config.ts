@@ -5,7 +5,8 @@ import {
   ToolConfig,
   CodeCompletionsConfigs,
   EditContextConfigs,
-  IntelligentUpdateConfigs
+  IntelligentUpdateConfigs,
+  ReasoningEffort
 } from '@/services/api-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
@@ -377,6 +378,13 @@ export const setup_api_tool_multi_config = async (params: {
         {
           label: `Temperature`,
           description: config.temperature.toString()
+        },
+        {
+          label: `Reasoning effort`,
+          description: config.reasoning_effort
+            ? config.reasoning_effort.charAt(0).toUpperCase() +
+              config.reasoning_effort.slice(1)
+            : undefined
         }
       ]
 
@@ -436,7 +444,7 @@ export const setup_api_tool_multi_config = async (params: {
         const updated_config_state = { ...config }
         let config_changed_in_this_step = false
 
-        if (selected_option.label.startsWith('Provider')) {
+        if (selected_option.label == 'Provider') {
           const new_provider = await select_provider()
           if (!new_provider) {
             await edit_configuration(config)
@@ -465,7 +473,7 @@ export const setup_api_tool_multi_config = async (params: {
             resolve()
             return
           }
-        } else if (selected_option.label.startsWith('Model')) {
+        } else if (selected_option.label == 'Model') {
           const provider_info = {
             type: config.provider_type,
             name: config.provider_name
@@ -488,7 +496,7 @@ export const setup_api_tool_multi_config = async (params: {
             resolve()
             return
           }
-        } else if (selected_option.label.startsWith('Temperature')) {
+        } else if (selected_option.label == 'Temperature') {
           const new_temperature = await set_temperature(config.temperature)
           if (new_temperature === undefined) {
             await edit_configuration(config)
@@ -498,6 +506,27 @@ export const setup_api_tool_multi_config = async (params: {
 
           if (new_temperature != config.temperature) {
             updated_config_state.temperature = new_temperature
+            config_changed_in_this_step = true
+          } else {
+            await edit_configuration(config)
+            resolve()
+            return
+          }
+        } else if (selected_option.label == 'Reasoning effort') {
+          const new_reasoning_effort = await select_reasoning_effort(
+            config.reasoning_effort
+          )
+          if (new_reasoning_effort.cancelled) {
+            await edit_configuration(config)
+            resolve()
+            return
+          }
+
+          if (
+            new_reasoning_effort.value !==
+            (config.reasoning_effort || undefined)
+          ) {
+            updated_config_state.reasoning_effort = new_reasoning_effort.value
             config_changed_in_this_step = true
           } else {
             await edit_configuration(config)
@@ -686,6 +715,41 @@ export const setup_api_tool_multi_config = async (params: {
     }
 
     return Number(temperature_input)
+  }
+
+  async function select_reasoning_effort(
+    current_effort: ReasoningEffort | undefined
+  ): Promise<{ value: ReasoningEffort | undefined; cancelled: boolean }> {
+    const effort_levels: (ReasoningEffort | undefined)[] = [
+      undefined,
+      'none',
+      'low',
+      'medium',
+      'high'
+    ]
+    const items = effort_levels.map((level) => {
+      const is_current = current_effort !== undefined && level == current_effort
+
+      return {
+        label:
+          level === undefined
+            ? 'Unset'
+            : level.charAt(0).toUpperCase() + level.slice(1),
+        description: is_current ? 'Current' : '',
+        effort: level
+      }
+    })
+
+    const selected = await vscode.window.showQuickPick(items, {
+      title: 'Select Reasoning Effort',
+      placeHolder: 'Choose a reasoning effort level'
+    })
+
+    if (!selected) {
+      return { value: undefined, cancelled: true }
+    }
+
+    return { value: selected.effort, cancelled: false }
   }
 
   await show_configs_quick_pick()

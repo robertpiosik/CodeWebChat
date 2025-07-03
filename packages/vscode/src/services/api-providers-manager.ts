@@ -26,11 +26,14 @@ export type CustomProvider = {
 
 export type Provider = BuiltInProvider | CustomProvider
 
+export type ReasoningEffort = 'none' | 'low' | 'medium' | 'high'
+
 export type ToolConfig = {
   provider_type: string
   provider_name: string
   model: string
   temperature: number
+  reasoning_effort?: ReasoningEffort
 }
 
 export type CodeCompletionsConfigs = ToolConfig[]

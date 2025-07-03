@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import {
   ApiProvidersManager,
   Provider,
+  ReasoningEffort,
   ToolConfig
 } from '@/services/api-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
@@ -64,14 +65,15 @@ export const setup_api_tool = async (params: {
   }
 
   async function update_existing_config(config: ToolConfig) {
-    const api_provider_label = 'API Provider'
+    const api_provider_label = 'API provider'
     const model_label = 'Model'
     const temperature_label = 'Temperature'
+    const reasoning_effort_label = 'Reasoning effort'
     const edit_instructions_label = 'Instructions'
     const confirmation_threshold_label = 'Ask for confirmation above'
 
-    let showMenu = true
-    while (showMenu) {
+    let show_menu = true
+    while (show_menu) {
       const current_threshold = params.context.globalState.get<number>(
         COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
         DEFAULT_CONFIRMATION_THRESHOLD
@@ -88,6 +90,10 @@ export const setup_api_tool = async (params: {
               ? ' (default)'
               : ''
           }`
+        },
+        {
+          label: reasoning_effort_label,
+          description: config.reasoning_effort
         }
       ]
 
@@ -117,7 +123,7 @@ export const setup_api_tool = async (params: {
       })
 
       if (!selection || selection.label === BACK_LABEL) {
-        showMenu = false
+        show_menu = false
         continue
       }
 
@@ -163,6 +169,15 @@ export const setup_api_tool = async (params: {
           continue
         }
         config.temperature = new_temperature
+        updated = true
+      } else if (selection.label == reasoning_effort_label) {
+        const new_reasoning_effort = await select_reasoning_effort(
+          config.reasoning_effort
+        )
+        if (new_reasoning_effort.cancelled) {
+          continue
+        }
+        config.reasoning_effort = new_reasoning_effort.value
         updated = true
       } else if (selection.label == edit_instructions_label) {
         await vscode.commands.executeCommand(
@@ -291,6 +306,41 @@ export const setup_api_tool = async (params: {
     }
 
     return Number(temperature_input)
+  }
+
+  async function select_reasoning_effort(
+    current_effort: ReasoningEffort | undefined
+  ): Promise<{ value: ReasoningEffort | undefined; cancelled: boolean }> {
+    const effort_levels: (ReasoningEffort | undefined)[] = [
+      undefined,
+      'none',
+      'low',
+      'medium',
+      'high'
+    ]
+    const items = effort_levels.map((level) => {
+      const is_current = current_effort !== undefined && level == current_effort
+
+      return {
+        label:
+          level === undefined
+            ? 'Unset'
+            : level.charAt(0).toUpperCase() + level.slice(1),
+        description: is_current ? 'Current' : '',
+        effort: level
+      }
+    })
+
+    const selected = await vscode.window.showQuickPick(items, {
+      title: 'Select Reasoning Effort',
+      placeHolder: 'Choose a reasoning effort level'
+    })
+
+    if (!selected) {
+      return { value: current_effort, cancelled: true }
+    }
+
+    return { value: selected.effort, cancelled: false }
   }
 
   async function set_confirmation_threshold(
