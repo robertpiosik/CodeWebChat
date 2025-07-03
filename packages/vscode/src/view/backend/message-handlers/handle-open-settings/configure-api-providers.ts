@@ -17,6 +17,8 @@ export const configure_api_providers = async (
 ): Promise<void> => {
   const providers_manager = new ApiProvidersManager(provider.context)
 
+  const back_label = '$(arrow-left) Back'
+
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
     tooltip: 'Edit'
@@ -46,6 +48,9 @@ export const configure_api_providers = async (
     const saved_providers = await providers_manager.get_providers()
 
     return [
+      {
+        label: back_label
+      },
       {
         label: '$(add) Add another API provider...'
       },
@@ -212,7 +217,6 @@ export const configure_api_providers = async (
       ([id]) => !saved_provider_names.includes(id as keyof typeof PROVIDERS)
     )
 
-    const back_label = '$(arrow-left) Back'
     const custom_label = '$(edit) Custom endpoint...'
 
     const items: vscode.QuickPickItem[] = [
@@ -329,7 +333,6 @@ export const configure_api_providers = async (
 
   const edit_custom_provider = async (provider: CustomProvider) => {
     const show_field_selection = async () => {
-      const back_label = '$(arrow-left) Back'
       const edit_name_label = 'Name'
       const edit_base_url_label = 'Base URL'
       const change_api_key_label = 'API Key'
