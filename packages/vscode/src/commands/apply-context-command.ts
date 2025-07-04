@@ -37,47 +37,38 @@ export async function resolve_glob_patterns(
     const current_actual_pattern = is_exclude
       ? pattern_string.substring(1)
       : pattern_string
+    const normalized_pattern = path.normalize(current_actual_pattern)
 
     const files_this_rule_applies_to = new Set<string>()
 
-    let direct_match_found_for_current_pattern = false
-    if (all_files_in_cache.has(current_actual_pattern)) {
-      files_this_rule_applies_to.add(current_actual_pattern)
-      direct_match_found_for_current_pattern = true
-    }
-
-    if (!direct_match_found_for_current_pattern) {
+    if (fs.existsSync(normalized_pattern)) {
+      if (fs.lstatSync(normalized_pattern).isDirectory()) {
+        const dir_path = normalized_pattern
+        for (const cached_file of all_files_in_cache) {
+          const normalized_cached_file = path.normalize(cached_file)
+          if (normalized_cached_file.startsWith(dir_path + path.sep)) {
+            files_this_rule_applies_to.add(cached_file)
+          }
+        }
+      } else if (fs.lstatSync(normalized_pattern).isFile()) {
+        if (all_files_in_cache.has(normalized_pattern)) {
+          files_this_rule_applies_to.add(normalized_pattern)
+        }
+      }
+    } else {
       try {
-        const glob_matches = glob.sync(current_actual_pattern, {
-          cwd: process.cwd(),
-          absolute: true,
-          matchBase: true
-        })
+        const glob_matches = glob.sync(normalized_pattern, { absolute: true })
         glob_matches.forEach((match) => {
-          if (all_files_in_cache.has(match)) {
-            files_this_rule_applies_to.add(match)
-          } else {
-            const normalized_match = path.normalize(match)
-            const directory_path_prefix = normalized_match.endsWith(path.sep)
-              ? normalized_match
-              : normalized_match + path.sep
-
-            for (const cached_file of all_files_in_cache) {
-              const normalized_cached_file = path.normalize(cached_file)
-              if (normalized_cached_file.startsWith(directory_path_prefix)) {
-                files_this_rule_applies_to.add(cached_file)
-              }
-            }
+          const normalized_match = path.normalize(match)
+          if (all_files_in_cache.has(normalized_match)) {
+            files_this_rule_applies_to.add(normalized_match)
           }
         })
       } catch (error) {
         console.warn(
-          `Failed to resolve glob pattern "${current_actual_pattern}" (during sequential processing):`,
+          `Failed to resolve glob pattern "${normalized_pattern}":`,
           error
         )
-        if (all_files_in_cache.has(current_actual_pattern)) {
-          files_this_rule_applies_to.add(current_actual_pattern)
-        }
       }
     }
 
