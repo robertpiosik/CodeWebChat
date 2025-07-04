@@ -283,35 +283,27 @@ export const setup_api_tool_multi_config = async (params: {
           quick_pick.items = create_config_items()
           quick_pick.show()
         } else if (event.button === delete_button) {
-          const confirm = await vscode.window.showWarningMessage(
-            `Are you sure you want to delete ${item.config.model} (${item.config.provider_name})?`,
-            { modal: true },
-            'Delete'
-          )
+          current_configs.splice(item.index, 1)
+          await tool_methods.save_configs(current_configs)
 
-          if (confirm == 'Delete') {
-            current_configs.splice(item.index, 1)
-            await tool_methods.save_configs(current_configs)
+          if (
+            default_config &&
+            default_config.provider_type == item.config.provider_type &&
+            default_config.provider_name == item.config.provider_name &&
+            default_config.model == item.config.model
+          ) {
+            default_config = undefined
+            await tool_methods.set_default_config(null)
+          }
 
-            if (
-              default_config &&
-              default_config.provider_type == item.config.provider_type &&
-              default_config.provider_name == item.config.provider_name &&
-              default_config.model == item.config.model
-            ) {
-              default_config = undefined
-              await tool_methods.set_default_config(null)
-            }
-
-            if (current_configs.length == 0) {
-              is_accepted = true
-              quick_pick.hide()
-              await show_configs_quick_pick()
-              resolve()
-            } else {
-              quick_pick.items = create_config_items()
-              quick_pick.show()
-            }
+          if (current_configs.length == 0) {
+            is_accepted = true
+            quick_pick.hide()
+            await show_configs_quick_pick()
+            resolve()
+          } else {
+            quick_pick.items = create_config_items()
+            quick_pick.show()
           }
         } else if (
           event.button === move_up_button ||

@@ -144,31 +144,23 @@ export const configure_api_providers = async (
           }
           resolve()
         } else if (event.button === delete_button) {
-          const confirm = await vscode.window.showWarningMessage(
-            `Are you sure you want to delete "${item.label}"?`,
-            { modal: true },
-            'Delete'
+          const providers = await providers_manager.get_providers()
+          const updated_providers = providers.filter(
+            (p) => p.name != item.provider.name
           )
+          await providers_manager.save_providers(updated_providers)
 
-          if (confirm == 'Delete') {
-            const providers = await providers_manager.get_providers()
-            const updated_providers = providers.filter(
-              (p) => p.name != item.provider.name
+          if (updated_providers.length == 0) {
+            is_accepted = true
+            quick_pick.hide()
+            vscode.window.showInformationMessage(
+              'All API providers have been removed.'
             )
-            await providers_manager.save_providers(updated_providers)
-
-            if (updated_providers.length === 0) {
-              is_accepted = true
-              quick_pick.hide()
-              vscode.window.showInformationMessage(
-                'All API providers have been removed.'
-              )
-              await show_create_provider_quick_pick()
-              resolve()
-            } else {
-              quick_pick.items = await create_provider_items()
-              quick_pick.show()
-            }
+            await show_create_provider_quick_pick()
+            resolve()
+          } else {
+            quick_pick.items = await create_provider_items()
+            quick_pick.show()
           }
         } else if (
           event.button === move_up_button ||
