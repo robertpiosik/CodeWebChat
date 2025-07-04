@@ -101,6 +101,11 @@ export const setup_api_tool_multi_config = async (params: {
     tooltip: 'Edit configuration'
   }
 
+  const copy_button = {
+    iconPath: new vscode.ThemeIcon('copy'),
+    tooltip: 'Copy configuration'
+  }
+
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
     tooltip: 'Delete configuration'
@@ -167,6 +172,7 @@ export const setup_api_tool_multi_config = async (params: {
               buttons = [
                 ...navigation_buttons,
                 set_default_button,
+                copy_button,
                 edit_button,
                 delete_button
               ]
@@ -174,15 +180,26 @@ export const setup_api_tool_multi_config = async (params: {
               buttons = [
                 ...navigation_buttons,
                 unset_default_button,
+                copy_button,
                 edit_button,
                 delete_button
               ]
             }
           } else {
             if (!is_default) {
-              buttons = [set_default_button, edit_button, delete_button]
+              buttons = [
+                set_default_button,
+                copy_button,
+                edit_button,
+                delete_button
+              ]
             } else {
-              buttons = [unset_default_button, edit_button, delete_button]
+              buttons = [
+                unset_default_button,
+                copy_button,
+                edit_button,
+                delete_button
+              ]
             }
           }
 
@@ -259,6 +276,12 @@ export const setup_api_tool_multi_config = async (params: {
           await edit_configuration(item.config)
           await show_configs_quick_pick()
           resolve()
+        } else if (event.button === copy_button) {
+          const new_config = { ...item.config }
+          current_configs.splice(item.index + 1, 0, new_config)
+          await tool_methods.save_configs(current_configs)
+          quick_pick.items = create_config_items()
+          quick_pick.show()
         } else if (event.button === delete_button) {
           const confirm = await vscode.window.showWarningMessage(
             `Are you sure you want to delete ${item.config.model} (${item.config.provider_name})?`,
@@ -343,20 +366,6 @@ export const setup_api_tool_multi_config = async (params: {
 
     const model = await select_model(provider_info)
     if (!model) {
-      return
-    }
-
-    const provider_model_exists = current_configs.some(
-      (config) =>
-        config.provider_type == provider_info.type &&
-        config.provider_name == provider_info.name &&
-        config.model == model
-    )
-
-    if (provider_model_exists) {
-      vscode.window.showErrorMessage(
-        `A configuration for ${model} (${provider_info.name}) already exists.`
-      )
       return
     }
 
@@ -549,36 +558,7 @@ export const setup_api_tool_multi_config = async (params: {
         }
 
         if (config_changed_in_this_step) {
-          const original_config_in_array = current_configs.find(
-            (c) =>
-              c.provider_name == original_config_state.provider_name &&
-              c.provider_type == original_config_state.provider_type &&
-              c.model == original_config_state.model
-          )
-
-          const would_be_duplicate = current_configs.some(
-            (c) =>
-              c !== original_config_in_array &&
-              c.provider_type == updated_config_state.provider_type &&
-              c.provider_name == updated_config_state.provider_name &&
-              c.model == updated_config_state.model
-          )
-
-          if (would_be_duplicate) {
-            vscode.window.showErrorMessage(
-              `A configuration for ${updated_config_state.model} provided by ${updated_config_state.provider_name} already exists.`
-            )
-            await edit_configuration(config)
-            resolve()
-            return
-          }
-
-          const index = current_configs.findIndex(
-            (c) =>
-              c.provider_name == original_config_state.provider_name &&
-              c.provider_type == original_config_state.provider_type &&
-              c.model == original_config_state.model
-          )
+          const index = current_configs.indexOf(config)
 
           if (index != -1) {
             current_configs[index] = updated_config_state
