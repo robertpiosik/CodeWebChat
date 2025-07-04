@@ -43,7 +43,7 @@ export const gemini: Chatbot = {
           )
           for (const option of model_options) {
             const name_element = option.querySelector(
-              '.title-and-description > span:first-child'
+              '.title-and-description > span:last-child'
             )
             if (
               name_element &&
