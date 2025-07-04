@@ -417,9 +417,7 @@ export const setup_api_tool_multi_config = async (params: {
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_edit_options()
-    quick_pick.title = `Edit Configuration: ${config.provider_name} / ${
-      config.model
-    }${config.reasoning_effort ? ` / ${config.reasoning_effort}` : ''}`
+    quick_pick.title = 'Edit Configuration'
     quick_pick.placeholder = 'Select what to update'
 
     let is_accepted = false
