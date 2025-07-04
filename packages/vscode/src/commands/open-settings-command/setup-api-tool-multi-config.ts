@@ -153,7 +153,9 @@ export const setup_api_tool_multi_config = async (params: {
             default_config &&
             default_config.provider_type == config.provider_type &&
             default_config.provider_name == config.provider_name &&
-            default_config.model == config.model
+            default_config.model == config.model &&
+            default_config.temperature == config.temperature &&
+            default_config.reasoning_effort == config.reasoning_effort
 
           let buttons = []
           if (current_configs.length > 1) {
@@ -204,14 +206,20 @@ export const setup_api_tool_multi_config = async (params: {
           }
 
           return {
-            label: config.model,
+            label: is_default ? `$(star) ${config.model}` : config.model,
             description: `${
-              config.reasoning_effort ? `${config.reasoning_effort}` : ''
-            }${
               config.reasoning_effort
-                ? ` · ${config.provider_name}`
-                : `${config.provider_name}`
+                ? `Reasoning effort: ${config.reasoning_effort}`
+                : ''
+            }${
+              config.temperature &&
+              config.temperature != DEFAULT_TEMPERATURE[params.tool]
+                ? config.reasoning_effort
+                  ? ` · Temperature: ${config.temperature}`
+                  : `Temperature: ${config.temperature}`
+                : ''
             }`,
+            detail: config.provider_name,
             buttons,
             config,
             index
