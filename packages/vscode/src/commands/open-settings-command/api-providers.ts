@@ -11,7 +11,7 @@ const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
 }
 
-export const configure_api_providers = async (
+export const api_providers = async (
   context: vscode.ExtensionContext
 ): Promise<void> => {
   const providers_manager = new ApiProvidersManager(context)
@@ -51,7 +51,7 @@ export const configure_api_providers = async (
         label: back_label
       },
       {
-        label: '$(add) Add another API provider...'
+        label: '$(add) Add API provider...'
       },
       {
         label: '',
@@ -106,7 +106,7 @@ export const configure_api_providers = async (
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = await create_provider_items()
-    quick_pick.title = 'Configure API Providers'
+    quick_pick.title = 'API Providers'
     quick_pick.placeholder = 'Select an API provider to edit or add a new one'
 
     return new Promise<void>((resolve) => {
@@ -117,7 +117,7 @@ export const configure_api_providers = async (
         const selected = quick_pick.selectedItems[0]
         quick_pick.hide()
 
-        if (selected.label == '$(add) Add another API provider...') {
+        if (selected.label == '$(add) Add API provider...') {
           await show_create_provider_quick_pick()
         } else if ('provider' in selected) {
           await edit_provider(selected.provider as Provider)

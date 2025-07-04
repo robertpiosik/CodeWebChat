@@ -288,8 +288,9 @@ export const setup_api_tool = async (params: {
       title: 'Set Temperature',
       prompt: 'Enter a value between 0 and 1',
       value: temperature.toString(),
-      placeHolder: '',
+      placeHolder: 'Leave empty to restore default',
       validateInput: (value) => {
+        if (value === '') return null // Allow empty to restore default
         const num = Number(value)
         if (isNaN(num)) return 'Please enter a valid number'
         if (num < 0 || num > 1) return 'Temperature must be between 0 and 1'
@@ -297,7 +298,11 @@ export const setup_api_tool = async (params: {
       }
     })
 
-    if (temperature_input === undefined || temperature_input == '') {
+    if (temperature_input === undefined) {
+      return undefined
+    }
+
+    if (temperature_input == '') {
       return DEFAULT_TEMPERATURE[params.tool]
     }
 
