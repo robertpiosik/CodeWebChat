@@ -36,7 +36,7 @@ export const setup_api_tool_multi_config = async (params: {
   const model_fetcher = new ModelFetcher()
 
   const BACK_LABEL = '$(arrow-left) Back'
-  const ADD_CONFIGURATION_LABEL = '$(add) Add another configuration...'
+  const ADD_CONFIGURATION_LABEL = '$(add) Add configuration...'
   const SET_AS_DEFAULT_LABEL = '$(star) Set as default'
   const UNSET_DEFAULT_LABEL = '$(star-full) Unset default'
   const PROVIDER_LABEL = 'Provider'
@@ -400,7 +400,7 @@ export const setup_api_tool_multi_config = async (params: {
           description: config.reasoning_effort
             ? config.reasoning_effort.charAt(0).toUpperCase() +
               config.reasoning_effort.slice(1)
-            : undefined
+            : 'Not set'
         }
       ]
 
