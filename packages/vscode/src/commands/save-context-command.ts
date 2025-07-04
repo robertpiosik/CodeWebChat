@@ -120,51 +120,9 @@ function condense_paths(
       condensed_paths.add(dir)
 
       for (const p of Array.from(condensed_paths)) {
-        if (p !== dir && p.startsWith(dir + path.sep)) {
+        if (p != dir && p.startsWith(dir + path.sep)) {
           condensed_paths.delete(p)
         }
-      }
-    }
-  }
-
-  directories.sort(
-    (a, b) => a.split(path.sep).length - b.split(path.sep).length
-  )
-
-  for (const dir of directories) {
-    if (dir == '.') continue
-
-    const parent_dir = path.dirname(dir)
-    if (parent_dir != '.') {
-      const parent_children = fs
-        .readdirSync(path.join(workspace_root, parent_dir))
-        .map((child) => path.join(parent_dir, child))
-        .filter((child_path) => {
-          const abs_child_path = path.join(workspace_root, child_path)
-          // IMPORTANT: Use the current workspace root for this file
-          const current_workspace_root =
-            workspace_provider.get_workspace_root_for_file(abs_child_path) ||
-            workspace_root
-          const relative_child_path = path.relative(
-            current_workspace_root,
-            abs_child_path
-          )
-          return (
-            fs.existsSync(abs_child_path) &&
-            fs.lstatSync(abs_child_path).isDirectory() &&
-            !workspace_provider.is_excluded(relative_child_path)
-          )
-        })
-
-      const all_subdirs_selected = parent_children.every((child) =>
-        condensed_paths.has(child)
-      )
-
-      if (all_subdirs_selected && parent_children.length > 0) {
-        for (const child of parent_children) {
-          condensed_paths.delete(child)
-        }
-        condensed_paths.add(parent_dir)
       }
     }
   }
@@ -198,26 +156,26 @@ function add_workspace_prefix(
 function group_files_by_workspace(
   checked_files: string[]
 ): Map<string, string[]> {
-  const workspaceFolders = vscode.workspace.workspaceFolders || []
-  const filesByWorkspace = new Map<string, string[]>()
+  const workspace_folders = vscode.workspace.workspaceFolders || []
+  const files_by_workspace = new Map<string, string[]>()
 
-  workspaceFolders.forEach((folder) => {
-    filesByWorkspace.set(folder.uri.fsPath, [])
+  workspace_folders.forEach((folder) => {
+    files_by_workspace.set(folder.uri.fsPath, [])
   })
 
   for (const file of checked_files) {
-    const workspace = workspaceFolders.find((folder) =>
+    const workspace = workspace_folders.find((folder) =>
       file.startsWith(folder.uri.fsPath)
     )
 
     if (workspace) {
-      const files = filesByWorkspace.get(workspace.uri.fsPath) || []
+      const files = files_by_workspace.get(workspace.uri.fsPath) || []
       files.push(file)
-      filesByWorkspace.set(workspace.uri.fsPath, files)
+      files_by_workspace.set(workspace.uri.fsPath, files)
     }
   }
 
-  return filesByWorkspace
+  return files_by_workspace
 }
 
 export function save_context_command(
@@ -278,9 +236,7 @@ export function save_context_command(
         })
       }
 
-      all_prefixed_paths = all_prefixed_paths.map((p) =>
-        p.replace(/\\/g, '/')
-      )
+      all_prefixed_paths = all_prefixed_paths.map((p) => p.replace(/\\/g, '/'))
 
       all_prefixed_paths.sort((a, b) => {
         const workspace_folders = vscode.workspace.workspaceFolders
