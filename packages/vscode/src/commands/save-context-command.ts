@@ -103,7 +103,16 @@ function condense_paths(
 
   const condensed_paths = new Set(relative_paths)
 
-  const directories = Array.from(dir_to_children.keys())
+  const all_dirs_set = new Set<string>()
+  for (const dir of dir_to_children.keys()) {
+    let current_dir = dir
+    while (current_dir != '.' && current_dir != '/') {
+      all_dirs_set.add(current_dir)
+      current_dir = path.dirname(current_dir)
+    }
+  }
+
+  const directories = Array.from(all_dirs_set)
   directories.sort(
     (a, b) => b.split(path.sep).length - a.split(path.sep).length
   )
@@ -113,7 +122,7 @@ function condense_paths(
     if (dir == '.') continue
 
     if (are_all_files_selected(dir, condensed_paths)) {
-      for (const file of dir_to_children.get(dir)!) {
+      for (const file of dir_to_children.get(dir) || []) {
         condensed_paths.delete(file)
       }
 
