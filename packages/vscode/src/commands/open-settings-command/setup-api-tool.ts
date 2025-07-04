@@ -8,13 +8,7 @@ import {
 import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY } from '@/constants/state-keys'
-
-type SupportedTool = 'commit-messages' | 'some-other-introduced-later'
-
-const DEFAULT_TEMPERATURE: { [key in SupportedTool]: number } = {
-  'commit-messages': 0.3,
-  'some-other-introduced-later': 0.3
-}
+import { DEFAULT_TEMPERATURE, SupportedTool } from '@shared/constants/api-tools'
 
 const DEFAULT_CONFIRMATION_THRESHOLD = 20000
 

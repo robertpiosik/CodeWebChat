@@ -11,14 +11,7 @@ import {
 import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@/utils/logger'
-
-type SupportedTool = 'code-completions' | 'edit-context' | 'intelligent-update'
-
-const DEFAULT_TEMPERATURE: { [key in SupportedTool]: number } = {
-  'code-completions': 0.3,
-  'edit-context': 0.3,
-  'intelligent-update': 0
-}
+import { DEFAULT_TEMPERATURE, SupportedTool } from '@shared/constants/api-tools'
 
 interface ToolMethods {
   get_configs: () => Promise<ToolConfig[]>

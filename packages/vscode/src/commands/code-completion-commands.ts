@@ -8,6 +8,7 @@ import { Logger } from '../utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '../constants/state-keys'
+import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 
 async function build_completion_payload(params: {
   document: vscode.TextDocument
@@ -171,12 +172,18 @@ async function get_code_completion_config(
         return {
           label: config.model,
           description: `${
-            config.reasoning_effort ? `${config.reasoning_effort}` : ''
-          }${
             config.reasoning_effort
-              ? ` · ${config.provider_name}`
-              : `${config.provider_name}`
+              ? `Reasoning effort: ${config.reasoning_effort}`
+              : ''
+          }${
+            config.temperature &&
+            config.temperature != DEFAULT_TEMPERATURE['code-completions']
+              ? config.reasoning_effort
+                ? ` · Temperature: ${config.temperature}`
+                : `Temperature: ${config.temperature}`
+              : ''
           }`,
+          detail: config.provider_name,
           config,
           index,
           buttons
