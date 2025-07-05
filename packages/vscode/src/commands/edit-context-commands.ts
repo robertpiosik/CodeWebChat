@@ -7,7 +7,6 @@ import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
-import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 
 const get_edit_context_config = async (
   api_providers_manager: ApiProvidersManager,
@@ -91,13 +90,8 @@ const get_edit_context_config = async (
             config.reasoning_effort
               ? `Reasoning effort: ${config.reasoning_effort}`
               : ''
-          }${
-            config.temperature &&
-            config.temperature != DEFAULT_TEMPERATURE['edit-context']
-              ? config.reasoning_effort
-                ? ` · Temperature: ${config.temperature}`
-                : `Temperature: ${config.temperature}`
-              : ''
+          }${config.reasoning_effort ? ' · ' : ''}Temperature: ${
+            config.temperature
           }`,
           detail: config.provider_name,
           config,
