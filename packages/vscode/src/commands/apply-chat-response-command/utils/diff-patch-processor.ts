@@ -312,8 +312,8 @@ const apply_diff_patch = (
         replace_chunks.pop()
       }
 
-      if (search_chunks.length != 0 || replace_chunks.length != 0) // Don't add search or replace blocks if empty
-      {
+      if (search_chunks.length != 0 || replace_chunks.length != 0) {
+        // Don't add search or replace blocks if empty
         // Add the final search block to the searchReplaceBlocks
         // This is crucial for diffs that only have deletions
         search_replace_blocks.push(
@@ -343,24 +343,24 @@ const apply_diff_patch = (
         j++
       ) {
         // Create a chunk of lines from originalCodeLinesNormalized
-        const chunk = original_code_lines_normalized.slice(
-          j,
-          j + search_replace_block.search_lines.length
-        )
-        const chunk_string = chunk.map((line) => line.value).join('')
+        // const chunk = original_code_lines_normalized.slice(
+        //   j,
+        //   j + search_replace_block.search_lines.length
+        // )
+        // const chunk_string = chunk.map((line) => line.value).join('')
 
         // console.log('Chunk string: ' + chunk_string);
 
         // If we have no search lines and only replace lines and our previous found index is 0
         // assume we are at the start of the file and set the search block start index to 0
         // This is a special case when a patch hunk starts with one or more + lines and no context lines
-        if (search_replace_block.search_lines.length == 0 && previous_found_index == 0) 
-        {
+        if (
+          search_replace_block.search_lines.length == 0 &&
+          previous_found_index == 0
+        ) {
           search_replace_block.search_block_start_index = -1 // insert at the start of the file
           found = true
-        }
-        else
-        {
+        } else {
           // Create a chunk of lines from originalCodeLinesNormalized
           const chunk = original_code_lines_normalized.slice(
             j,
@@ -372,7 +372,7 @@ const apply_diff_patch = (
           //console.log('Chunk string: ' + chunk_string);
           //console.log('Previous found index: ' + previous_found_index);
           //console.log('Chunk: ' + JSON.stringify(chunk, null, 2));
-       
+
           // Check if the chunk matches the search string
           if (chunk_string == search_string) {
             // Check if found index is greater than the previous found index
@@ -397,7 +397,7 @@ const apply_diff_patch = (
       if (!found) {
         search_replace_block.search_block_start_index = -2 // Not found
 
-         const error_message = `Search block not found: ${search_string}`
+        const error_message = `Search block not found: ${search_string}`
         Logger.error({
           function_name: 'apply_diff_patch',
           message: error_message
@@ -426,7 +426,8 @@ const apply_diff_patch = (
 
     // Iterrate over the valid blocks and apply them
     for (const block of valid_blocks) {
-      const start_index = block.get_start_index() == -1 ? 0 : block.get_start_index() // When -1, insert at the start of the file
+      const start_index =
+        block.get_start_index() == -1 ? 0 : block.get_start_index() // When -1, insert at the start of the file
       const search_count = block.get_search_count()
       const replacement_content = block.replace_lines // These are original lines
 

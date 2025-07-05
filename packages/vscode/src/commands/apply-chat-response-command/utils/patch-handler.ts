@@ -150,7 +150,7 @@ async function process_modified_files(
       try {
         const uri = vscode.Uri.file(safe_path)
         const document = await vscode.workspace.openTextDocument(uri)
-        await vscode.window.showTextDocument(document)
+        await vscode.window.showTextDocument(document, { preview: false })
 
         // Format the document
         await format_document(document)

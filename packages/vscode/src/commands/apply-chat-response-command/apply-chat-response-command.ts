@@ -315,7 +315,9 @@ async function handle_code_completion(completion: {
 
   try {
     const document = await vscode.workspace.openTextDocument(safe_path)
-    const editor = await vscode.window.showTextDocument(document)
+    const editor = await vscode.window.showTextDocument(document, {
+      preview: false
+    })
 
     // VSCode position is 0-based, so we subtract 1
     const line_index = completion.line - 1
