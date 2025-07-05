@@ -394,7 +394,7 @@ export const setup_api_tool_multi_config = async (params: {
           description: config.reasoning_effort
             ? config.reasoning_effort.charAt(0).toUpperCase() +
               config.reasoning_effort.slice(1)
-            : 'Not set'
+            : 'Not set / Auto'
         }
       ]
 

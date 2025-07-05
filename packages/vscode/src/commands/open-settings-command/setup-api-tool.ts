@@ -89,7 +89,7 @@ export const setup_api_tool = async (params: {
           label: reasoning_effort_label,
           description: config.reasoning_effort
             ? config.reasoning_effort
-            : 'Not set'
+            : 'Not set / Auto'
         }
       ]
 
