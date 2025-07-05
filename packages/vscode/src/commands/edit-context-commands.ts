@@ -66,7 +66,9 @@ const get_edit_context_config = async (
           default_config &&
           default_config.provider_type == config.provider_type &&
           default_config.provider_name == config.provider_name &&
-          default_config.model == config.model
+          default_config.model == config.model &&
+          default_config.temperature == config.temperature &&
+          default_config.reasoning_effort == config.reasoning_effort
 
         if (edit_context_configs.length > 1) {
           if (index > 0) {
@@ -85,7 +87,7 @@ const get_edit_context_config = async (
         }
 
         return {
-          label: config.model,
+          label: is_default ? `$(star) ${config.model}` : config.model,
           description: `${
             config.reasoning_effort
               ? `Reasoning effort: ${config.reasoning_effort}`
