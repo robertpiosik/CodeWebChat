@@ -205,12 +205,9 @@ export const setup_api_tool_multi_config = async (params: {
                 ? `Reasoning effort: ${config.reasoning_effort}`
                 : ''
             }${
-              config.temperature &&
-              config.temperature != DEFAULT_TEMPERATURE[params.tool]
-                ? config.reasoning_effort
-                  ? ` · Temperature: ${config.temperature}`
-                  : `Temperature: ${config.temperature}`
-                : ''
+              config.reasoning_effort
+                ? ` · Temperature: ${config.temperature}`
+                : `Temperature: ${config.temperature}`
             }`,
             detail: config.provider_name,
             buttons,
@@ -386,7 +383,11 @@ export const setup_api_tool_multi_config = async (params: {
         { label: MODEL_LABEL, description: config.model },
         {
           label: TEMPERATURE_LABEL,
-          description: config.temperature.toString()
+          description: `${config.temperature.toString()}${
+            config.temperature == DEFAULT_TEMPERATURE[params.tool]
+              ? ' (default)'
+              : ''
+          }`
         },
         {
           label: REASONING_EFFORT_LABEL,
