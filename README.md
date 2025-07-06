@@ -13,15 +13,17 @@
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Meet CWC</span>
 
-100% free and open source VS Code extension for AI-assisted programming. CWC treats the AI model less like a teammate and more like a calculator; by giving you full control over the context, it modifies it predictably, accurately, quickly, thus cost-efficiently. Enjoy a modern software development workflow with a tool that doesn't try hard to replace You.
+100% free and open source VS Code extension for AI-assisted programming. CWC treats the AI model less like a teammate and more like a calculator; by emphasizing context management, it modifies it predictably, accurately, quickly, thus cost-efficiently. Enjoy a modern software development workflow with a tool that doesn't try hard to replace You.
 
+⚡️ Non-agentic - designed to one-shot any task \
 🧩 Compatible with VS Code derivatives (Cursor, Windsurf, VSCodium, etc.) \
-🙋 Created by an independent developer
+🙋 Created by an independent developer \
+☕️ Supported by donations
 
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
-- API tools—get the job done in a single request
+- API tools call providers directly
 - privacy first—zero telemetry
 - lightweight—about 1MB of code
 
@@ -29,6 +31,7 @@
 
 - you're an experienced engineer working on a large codebase
 - you're a student or hobbyist on a budget
+- automated agents failed you too many times
 
 **See how simple it is to implement a feature with ChatGPT:**
 
@@ -42,7 +45,7 @@
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Context selection</span>
 
-With today's advancements in LLMs capabilities, the technology is dramatically accelerating the pace a new code is created through the work of coding agents. For some it is too fast too keep up though. Over time, they lose confidence in their understanding of the codebase they work on - verifying changes becomes challenging, making it easier for bugs or unintended behaviors to slip in.
+With today's advancements in LLMs capabilities, the technology is dramatically accelerating the pace a new code is created through the work of automated agents. For some it is too fast too keep up though. Over time, they lose confidence in their understanding of the codebase they work on - verifying changes becomes challenging, making it easier for bugs or unintended behaviors to slip in.
 
 CWC does not prompt-engineer any form of autonomous coding, instead, it expects programmer to be in the loop with the evolving codebase by manual context management.
 
