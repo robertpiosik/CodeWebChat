@@ -62,7 +62,7 @@ export const handle_show_history_quick_pick = async (
   }
 
   const quick_pick = vscode.window.createQuickPick()
-  quick_pick.placeholder = 'Search chat history'
+  quick_pick.placeholder = 'Search prompt history'
 
   const to_quick_pick_item = (
     text: string,

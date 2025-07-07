@@ -38,7 +38,8 @@
       z-index: 1;
       top: 0;
       right: 0;
-      padding: var(--padding-1px) var(--padding-3px);
+      padding: var(--padding-1px) var(--padding-3px) var(--padding-6px)
+        var(--padding-3px);
       color: var(--vscode-icon-foreground);
       cursor: pointer;
       opacity: 0.7;

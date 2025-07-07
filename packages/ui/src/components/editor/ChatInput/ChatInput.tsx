@@ -262,11 +262,10 @@ export const ChatInput: React.FC<Props> = (props) => {
         onClick={handle_container_click}
         onKeyDown={(e) => {
           if (e.key == 'f' && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault()
+            e.stopPropagation()
             props.on_search_click()
           }
         }}
-        tabIndex={0}
         ref={container_ref}
       >
         <div
@@ -303,7 +302,7 @@ export const ChatInput: React.FC<Props> = (props) => {
           onClick={props.on_search_click}
           title={`${props.translations.search} (${
             navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? '⌘' : 'Ctrl'
-          }F)`}
+          }+F)`}
         ></button>
 
         <div className={styles.footer}>
