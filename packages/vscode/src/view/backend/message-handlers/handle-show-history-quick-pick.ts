@@ -104,8 +104,10 @@ export const handle_show_history_quick_pick = async (
           ]
         : []),
       {
-        iconPath: new vscode.ThemeIcon('trash'),
-        tooltip: is_pinned ? 'Delete from pinned' : 'Delete from history'
+        iconPath: new vscode.ThemeIcon('close'),
+        tooltip: is_pinned
+          ? 'Delete from Pinned Prompts'
+          : 'Remove from Recent Prompts'
       }
     ]
   })
@@ -137,6 +139,15 @@ export const handle_show_history_quick_pick = async (
   }
 
   quick_pick.items = items
+
+  if (history.length > 0) {
+    const firstRecentItemIndex = items.findIndex(
+      (item) => item.label === history[0]
+    )
+    if (firstRecentItemIndex !== -1) {
+      quick_pick.activeItems = [items[firstRecentItemIndex]]
+    }
+  }
 
   const disposables: vscode.Disposable[] = []
 
@@ -204,7 +215,7 @@ export const handle_show_history_quick_pick = async (
             pinned_history
           )
         } else if (
-          button_index ===
+          button_index ==
           (up_button_exists
             ? down_button_exists
               ? 1
