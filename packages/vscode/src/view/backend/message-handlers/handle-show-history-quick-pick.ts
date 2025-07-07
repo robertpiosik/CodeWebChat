@@ -66,20 +66,46 @@ export const handle_show_history_quick_pick = async (
 
   const to_quick_pick_item = (
     text: string,
-    is_pinned: boolean = false
+    is_pinned: boolean,
+    pinned_index?: number,
+    total_pinned?: number
   ): vscode.QuickPickItem => ({
     label: text,
-    kind: is_pinned
-      ? vscode.QuickPickItemKind.Default
-      : vscode.QuickPickItemKind.Default,
     buttons: [
-      {
-        iconPath: new vscode.ThemeIcon('pinned'),
-        tooltip: is_pinned ? 'Unpin from history' : 'Pin to history'
-      },
+      ...(is_pinned &&
+      pinned_index !== undefined &&
+      total_pinned !== undefined &&
+      total_pinned > 1
+        ? [
+            ...(pinned_index > 0
+              ? [
+                  {
+                    iconPath: new vscode.ThemeIcon('chevron-up'),
+                    tooltip: 'Move up'
+                  }
+                ]
+              : []),
+            ...(pinned_index < total_pinned - 1
+              ? [
+                  {
+                    iconPath: new vscode.ThemeIcon('chevron-down'),
+                    tooltip: 'Move down'
+                  }
+                ]
+              : [])
+          ]
+        : []),
+      ...(!is_pinned
+        ? [
+            {
+              iconPath: new vscode.ThemeIcon('pinned'),
+              tooltip: 'Pin this entry'
+            }
+          ]
+        : []),
       {
         iconPath: new vscode.ThemeIcon('trash'),
-        tooltip: 'Delete from history'
+        tooltip: is_pinned ? 'Delete from pinned' : 'Delete from history'
       }
     ]
   })
@@ -91,7 +117,11 @@ export const handle_show_history_quick_pick = async (
       label: 'Pinned Entries',
       kind: vscode.QuickPickItemKind.Separator
     })
-    items.push(...pinned_history.map((item) => to_quick_pick_item(item, true)))
+    items.push(
+      ...pinned_history.map((item, index) =>
+        to_quick_pick_item(item, true, index, pinned_history.length)
+      )
+    )
   }
 
   if (history.length > 0) {
@@ -99,7 +129,11 @@ export const handle_show_history_quick_pick = async (
       label: 'Recent History',
       kind: vscode.QuickPickItemKind.Separator
     })
-    items.push(...history.map((item) => to_quick_pick_item(item, false)))
+    items.push(
+      ...history.map((item) =>
+        to_quick_pick_item(item, !!pinned_history.find((i) => i == item))
+      )
+    )
   }
 
   quick_pick.items = items
@@ -150,14 +184,61 @@ export const handle_show_history_quick_pick = async (
     quick_pick.onDidTriggerItemButton(async (e) => {
       const item_to_handle = e.item
       const button_index = e.item.buttons?.indexOf(e.button) ?? -1
+      const is_currently_pinned = pinned_history.includes(item_to_handle.label)
+      const pinned_index = pinned_history.indexOf(item_to_handle.label)
 
-      if (button_index == 0) {
+      // Handle up/down chevrons for pinned items
+      if (is_currently_pinned && pinned_index >= 0) {
+        const up_button_exists = pinned_index > 0
+        const down_button_exists = pinned_index < pinned_history.length - 1
+
+        if (button_index === 0 && up_button_exists) {
+          // Move up
+          const temp = pinned_history[pinned_index]
+          pinned_history[pinned_index] = pinned_history[pinned_index - 1]
+          pinned_history[pinned_index - 1] = temp
+          await provider.context.workspaceState.update(
+            pinned_history_key,
+            pinned_history
+          )
+        } else if (
+          (button_index === 1 && up_button_exists && down_button_exists) ||
+          (button_index === 0 && !up_button_exists && down_button_exists)
+        ) {
+          // Move down
+          const temp = pinned_history[pinned_index]
+          pinned_history[pinned_index] = pinned_history[pinned_index + 1]
+          pinned_history[pinned_index + 1] = temp
+          await provider.context.workspaceState.update(
+            pinned_history_key,
+            pinned_history
+          )
+        } else {
+          // Handle pin/delete buttons (adjusted for chevron buttons)
+          const pin_button_index =
+            up_button_exists && down_button_exists
+              ? 2
+              : up_button_exists || down_button_exists
+              ? 1
+              : 0
+          const delete_button_index = pin_button_index + 1
+
+          if (button_index === delete_button_index) {
+            // Delete button clicked
+            pinned_history = pinned_history.filter(
+              (h) => h !== item_to_handle.label
+            )
+            await provider.context.workspaceState.update(
+              pinned_history_key,
+              pinned_history
+            )
+          }
+        }
+      } else if (button_index === 0 && !is_currently_pinned) {
         // Pin/Unpin button clicked
-        const is_currently_pinned = pinned_history.includes(
-          item_to_handle.label
-        )
+        const is_item_pinned = pinned_history.includes(item_to_handle.label)
 
-        if (!is_currently_pinned) {
+        if (!is_item_pinned) {
           // Pin the item
           if (!pinned_history.includes(item_to_handle.label)) {
             pinned_history.unshift(item_to_handle.label)
@@ -178,7 +259,7 @@ export const handle_show_history_quick_pick = async (
           pinned_history_key,
           pinned_history
         )
-      } else if (button_index === 1) {
+      } else if (button_index === 1 && !is_currently_pinned) {
         // Delete button clicked
         history = history.filter((h) => h !== item_to_handle.label)
         pinned_history = pinned_history.filter(
@@ -199,7 +280,9 @@ export const handle_show_history_quick_pick = async (
           kind: vscode.QuickPickItemKind.Separator
         })
         updated_items.push(
-          ...pinned_history.map((item) => to_quick_pick_item(item, true))
+          ...pinned_history.map((item, index) =>
+            to_quick_pick_item(item, true, index, pinned_history.length)
+          )
         )
       }
 
