@@ -30,3 +30,8 @@ export const HISTORY_ASK_STATE_KEY = 'history-ask'
 export const HISTORY_EDIT_STATE_KEY = 'history-edit'
 export const HISTORY_CODE_COMPLETIONS_STATE_KEY = 'history-code-completions'
 export const HISTORY_NO_CONTEXT_STATE_KEY = 'history-no-context'
+
+export const PINNED_HISTORY_ASK_STATE_KEY = 'pinned-history-ask'
+export const PINNED_HISTORY_EDIT_STATE_KEY = 'pinned-history-edit'
+export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY = 'pinned-history-code-completions'
+export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'

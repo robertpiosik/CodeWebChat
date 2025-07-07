@@ -3,7 +3,11 @@ import {
   HISTORY_ASK_STATE_KEY,
   HISTORY_CODE_COMPLETIONS_STATE_KEY,
   HISTORY_EDIT_STATE_KEY,
-  HISTORY_NO_CONTEXT_STATE_KEY
+  HISTORY_NO_CONTEXT_STATE_KEY,
+  PINNED_HISTORY_ASK_STATE_KEY,
+  PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY,
+  PINNED_HISTORY_EDIT_STATE_KEY,
+  PINNED_HISTORY_NO_CONTEXT_STATE_KEY
 } from '@/constants/state-keys'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { HOME_VIEW_TYPES } from '@/view/types/home-view-type'
@@ -23,28 +27,34 @@ export const handle_show_history_quick_pick = async (
     return
   }
 
-  let history_key: string | undefined
+  let history_key: string | undefined, pinned_history_key: string | undefined
   switch (mode) {
     case 'ask':
       history_key = HISTORY_ASK_STATE_KEY
+      pinned_history_key = PINNED_HISTORY_ASK_STATE_KEY
       break
     case 'edit':
       history_key = HISTORY_EDIT_STATE_KEY
+      pinned_history_key = PINNED_HISTORY_EDIT_STATE_KEY
       break
     case 'code-completions':
       history_key = HISTORY_CODE_COMPLETIONS_STATE_KEY
+      pinned_history_key = PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY
       break
     case 'no-context':
       history_key = HISTORY_NO_CONTEXT_STATE_KEY
+      pinned_history_key = PINNED_HISTORY_NO_CONTEXT_STATE_KEY
       break
   }
 
-  if (!history_key) return
+  if (!history_key || !pinned_history_key) return
 
   let history =
     provider.context.workspaceState.get<string[]>(history_key, []) || []
+  let pinned_history =
+    provider.context.workspaceState.get<string[]>(pinned_history_key, []) || []
 
-  if (!history.length) {
+  if (!history.length && !pinned_history.length) {
     vscode.window.showInformationMessage(
       'No history to show for the current mode.'
     )
@@ -54,9 +64,19 @@ export const handle_show_history_quick_pick = async (
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.placeholder = 'Search chat history'
 
-  const to_quick_pick_item = (text: string): vscode.QuickPickItem => ({
+  const to_quick_pick_item = (
+    text: string,
+    is_pinned: boolean = false
+  ): vscode.QuickPickItem => ({
     label: text,
+    kind: is_pinned
+      ? vscode.QuickPickItemKind.Default
+      : vscode.QuickPickItemKind.Default,
     buttons: [
+      {
+        iconPath: new vscode.ThemeIcon('pinned'),
+        tooltip: is_pinned ? 'Unpin from history' : 'Pin to history'
+      },
       {
         iconPath: new vscode.ThemeIcon('trash'),
         tooltip: 'Delete from history'
@@ -64,7 +84,25 @@ export const handle_show_history_quick_pick = async (
     ]
   })
 
-  quick_pick.items = history.map(to_quick_pick_item)
+  const items: vscode.QuickPickItem[] = []
+
+  if (pinned_history.length > 0) {
+    items.push({
+      label: 'Pinned Entries',
+      kind: vscode.QuickPickItemKind.Separator
+    })
+    items.push(...pinned_history.map((item) => to_quick_pick_item(item, true)))
+  }
+
+  if (history.length > 0) {
+    items.push({
+      label: 'Recent History',
+      kind: vscode.QuickPickItemKind.Separator
+    })
+    items.push(...history.map((item) => to_quick_pick_item(item, false)))
+  }
+
+  quick_pick.items = items
 
   const disposables: vscode.Disposable[] = []
 
@@ -110,10 +148,72 @@ export const handle_show_history_quick_pick = async (
       quick_pick.hide()
     }),
     quick_pick.onDidTriggerItemButton(async (e) => {
-      const item_to_delete = e.item
-      history = history.filter((h) => h != item_to_delete.label)
-      await provider.context.workspaceState.update(history_key, history)
-      quick_pick.items = history.map(to_quick_pick_item)
+      const item_to_handle = e.item
+      const button_index = e.item.buttons?.indexOf(e.button) ?? -1
+
+      if (button_index == 0) {
+        // Pin/Unpin button clicked
+        const is_currently_pinned = pinned_history.includes(
+          item_to_handle.label
+        )
+
+        if (!is_currently_pinned) {
+          // Pin the item
+          if (!pinned_history.includes(item_to_handle.label)) {
+            pinned_history.unshift(item_to_handle.label)
+          }
+        } else {
+          // Unpin the item
+          pinned_history = pinned_history.filter(
+            (h) => h !== item_to_handle.label
+          )
+          // Add back to regular history if not already there
+          if (!history.includes(item_to_handle.label)) {
+            history.unshift(item_to_handle.label)
+          }
+        }
+
+        await provider.context.workspaceState.update(history_key, history)
+        await provider.context.workspaceState.update(
+          pinned_history_key,
+          pinned_history
+        )
+      } else if (button_index === 1) {
+        // Delete button clicked
+        history = history.filter((h) => h !== item_to_handle.label)
+        pinned_history = pinned_history.filter(
+          (h) => h !== item_to_handle.label
+        )
+        await provider.context.workspaceState.update(history_key, history)
+        await provider.context.workspaceState.update(
+          pinned_history_key,
+          pinned_history
+        )
+      }
+
+      const updated_items: vscode.QuickPickItem[] = []
+
+      if (pinned_history.length > 0) {
+        updated_items.push({
+          label: 'Pinned Entries',
+          kind: vscode.QuickPickItemKind.Separator
+        })
+        updated_items.push(
+          ...pinned_history.map((item) => to_quick_pick_item(item, true))
+        )
+      }
+
+      if (history.length > 0) {
+        updated_items.push({
+          label: 'Recent History',
+          kind: vscode.QuickPickItemKind.Separator
+        })
+        updated_items.push(
+          ...history.map((item) => to_quick_pick_item(item, false))
+        )
+      }
+
+      quick_pick.items = updated_items
       handle_get_history(provider)
     }),
     quick_pick.onDidHide(() => {
