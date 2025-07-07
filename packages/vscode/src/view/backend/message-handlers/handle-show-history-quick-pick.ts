@@ -188,11 +188,13 @@ export const handle_show_history_quick_pick = async (
       const pinned_index = pinned_history.indexOf(item_to_handle.label)
 
       // Handle up/down chevrons for pinned items
-      if (is_currently_pinned && pinned_index >= 0) {
+      if (is_currently_pinned) {
         const up_button_exists = pinned_index > 0
         const down_button_exists = pinned_index < pinned_history.length - 1
 
-        if (button_index === 0 && up_button_exists) {
+        const up_button_index = up_button_exists ? 0 : -1
+
+        if (button_index === up_button_index) {
           // Move up
           const temp = pinned_history[pinned_index]
           pinned_history[pinned_index] = pinned_history[pinned_index - 1]
@@ -202,8 +204,14 @@ export const handle_show_history_quick_pick = async (
             pinned_history
           )
         } else if (
-          (button_index === 1 && up_button_exists && down_button_exists) ||
-          (button_index === 0 && !up_button_exists && down_button_exists)
+          button_index ===
+          (up_button_exists
+            ? down_button_exists
+              ? 1
+              : -1
+            : down_button_exists
+            ? 0
+            : -1)
         ) {
           // Move down
           const temp = pinned_history[pinned_index]
@@ -215,15 +223,19 @@ export const handle_show_history_quick_pick = async (
           )
         } else {
           // Handle pin/delete buttons (adjusted for chevron buttons)
-          const pin_button_index =
-            up_button_exists && down_button_exists
-              ? 2
-              : up_button_exists || down_button_exists
-              ? 1
-              : 0
-          const delete_button_index = pin_button_index + 1
+          // For a pinned item, there is no "pin" button, only a "delete" button.
+          // We calculate its index based on how many chevron buttons are present.
+          let delete_button_index = 0
+          if (up_button_exists) delete_button_index++
+          if (down_button_exists) delete_button_index++
 
-          if (button_index === delete_button_index) {
+          // The delete button is always the last button for a pinned item.
+          // Since there is no pin button, we can check if it's the delete button.
+          // The trash icon is the last button.
+          const is_delete_button =
+            e.button.tooltip?.startsWith('Delete from pinned')
+
+          if (is_delete_button || button_index === delete_button_index) {
             // Delete button clicked
             pinned_history = pinned_history.filter(
               (h) => h !== item_to_handle.label
@@ -292,7 +304,9 @@ export const handle_show_history_quick_pick = async (
           kind: vscode.QuickPickItemKind.Separator
         })
         updated_items.push(
-          ...history.map((item) => to_quick_pick_item(item, false))
+          ...history.map((item) =>
+            to_quick_pick_item(item, pinned_history.includes(item))
+          )
         )
       }
 
