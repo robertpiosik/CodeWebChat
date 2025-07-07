@@ -99,7 +99,7 @@ export const handle_show_history_quick_pick = async (
         ? [
             {
               iconPath: new vscode.ThemeIcon('pinned'),
-              tooltip: 'Pin this entry'
+              tooltip: 'Add to pinned'
             }
           ]
         : []),
@@ -114,7 +114,7 @@ export const handle_show_history_quick_pick = async (
 
   if (pinned_history.length > 0) {
     items.push({
-      label: 'Pinned Entries',
+      label: 'pinned',
       kind: vscode.QuickPickItemKind.Separator
     })
     items.push(
@@ -126,7 +126,7 @@ export const handle_show_history_quick_pick = async (
 
   if (history.length > 0) {
     items.push({
-      label: 'Recent History',
+      label: 'recent',
       kind: vscode.QuickPickItemKind.Separator
     })
     items.push(
@@ -222,23 +222,17 @@ export const handle_show_history_quick_pick = async (
             pinned_history
           )
         } else {
-          // Handle pin/delete buttons (adjusted for chevron buttons)
-          // For a pinned item, there is no "pin" button, only a "delete" button.
-          // We calculate its index based on how many chevron buttons are present.
           let delete_button_index = 0
           if (up_button_exists) delete_button_index++
           if (down_button_exists) delete_button_index++
 
-          // The delete button is always the last button for a pinned item.
-          // Since there is no pin button, we can check if it's the delete button.
-          // The trash icon is the last button.
           const is_delete_button =
             e.button.tooltip?.startsWith('Delete from pinned')
 
-          if (is_delete_button || button_index === delete_button_index) {
+          if (is_delete_button || button_index == delete_button_index) {
             // Delete button clicked
             pinned_history = pinned_history.filter(
-              (h) => h !== item_to_handle.label
+              (h) => h != item_to_handle.label
             )
             await provider.context.workspaceState.update(
               pinned_history_key,
@@ -246,19 +240,19 @@ export const handle_show_history_quick_pick = async (
             )
           }
         }
-      } else if (button_index === 0 && !is_currently_pinned) {
+      } else if (button_index == 0 && !is_currently_pinned) {
         // Pin/Unpin button clicked
         const is_item_pinned = pinned_history.includes(item_to_handle.label)
 
         if (!is_item_pinned) {
           // Pin the item
           if (!pinned_history.includes(item_to_handle.label)) {
-            pinned_history.unshift(item_to_handle.label)
+            pinned_history.push(item_to_handle.label)
           }
         } else {
           // Unpin the item
           pinned_history = pinned_history.filter(
-            (h) => h !== item_to_handle.label
+            (h) => h != item_to_handle.label
           )
           // Add back to regular history if not already there
           if (!history.includes(item_to_handle.label)) {
@@ -271,12 +265,10 @@ export const handle_show_history_quick_pick = async (
           pinned_history_key,
           pinned_history
         )
-      } else if (button_index === 1 && !is_currently_pinned) {
+      } else if (button_index == 1 && !is_currently_pinned) {
         // Delete button clicked
-        history = history.filter((h) => h !== item_to_handle.label)
-        pinned_history = pinned_history.filter(
-          (h) => h !== item_to_handle.label
-        )
+        history = history.filter((h) => h != item_to_handle.label)
+        pinned_history = pinned_history.filter((h) => h != item_to_handle.label)
         await provider.context.workspaceState.update(history_key, history)
         await provider.context.workspaceState.update(
           pinned_history_key,
@@ -288,7 +280,7 @@ export const handle_show_history_quick_pick = async (
 
       if (pinned_history.length > 0) {
         updated_items.push({
-          label: 'Pinned Entries',
+          label: 'pinned',
           kind: vscode.QuickPickItemKind.Separator
         })
         updated_items.push(
@@ -300,7 +292,7 @@ export const handle_show_history_quick_pick = async (
 
       if (history.length > 0) {
         updated_items.push({
-          label: 'Recent History',
+          label: 'recent',
           kind: vscode.QuickPickItemKind.Separator
         })
         updated_items.push(
