@@ -38,6 +38,31 @@
       z-index: 1;
       top: 0;
       right: 0;
+      padding: var(--padding-1px) var(--padding-3px) var(--padding-5px)
+        var(--padding-3px);
+      color: var(--vscode-icon-foreground);
+      cursor: pointer;
+      opacity: 0.7;
+
+      &::before {
+        font-size: var(--font-size-13px);
+      }
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &:first-of-type {
+        z-index: 2;
+      }
+    }
+
+    &__copy-button {
+      display: flex;
+      position: absolute;
+      z-index: 1;
+      top: 20px;
+      right: 0;
       padding: var(--padding-1px) var(--padding-3px) var(--padding-6px)
         var(--padding-3px);
       color: var(--vscode-icon-foreground);
@@ -123,6 +148,11 @@
   right: 0;
   padding: var(--padding-6px);
   justify-content: space-between;
+  overflow: hidden;
+
+  > div {
+    flex-shrink: 0;
+  }
 
   &__left {
     display: flex;
@@ -159,35 +189,6 @@
       font-size: 0.9em;
       color: var(--vscode-descriptionForeground);
       margin-right: 3px;
-    }
-
-    &__icon-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      height: 20px;
-      width: 20px;
-      border-radius: 5px;
-      color: var(--vscode-icon-foreground);
-
-      > svg {
-        width: 9px;
-        fill: var(--vscode-icon-foreground);
-      }
-
-      &:hover:enabled {
-        background-color: var(--vscode-toolbar-hoverBackground);
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-
-        &:hover {
-          background-color: none;
-        }
-      }
     }
 
     &__button {
@@ -227,7 +228,7 @@
       }
 
       &--secondary {
-        @media (max-width: 370px) {
+        @media (max-width: 330px) {
           > span {
             display: none;
           }

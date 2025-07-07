@@ -265,6 +265,14 @@ export const ChatInput: React.FC<Props> = (props) => {
             e.stopPropagation()
             props.on_search_click()
           }
+          if (e.key == 'c' && (e.ctrlKey || e.metaKey)) {
+            if (props.on_copy) {
+              e.stopPropagation()
+              e.preventDefault()
+              if (!props.is_in_code_completions_mode && !props.value) return
+              props.on_copy()
+            }
+          }
         }}
         ref={container_ref}
       >
@@ -305,6 +313,31 @@ export const ChatInput: React.FC<Props> = (props) => {
           }+F)`}
         ></button>
 
+        {props.on_copy && (
+          <button
+            className={cn(
+              styles['container__inner__copy-button'],
+              'codicon',
+              'codicon-copy'
+            )}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (!props.is_in_code_completions_mode && !props.value) return
+              props.on_copy!()
+            }}
+            title={
+              !props.is_in_code_completions_mode && !props.value
+                ? props.submit_disabled_title ?? ''
+                : `Copy to clipboard (${
+                    navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
+                      ? '⌘'
+                      : 'Ctrl'
+                  }+C)`
+            }
+            disabled={!props.is_in_code_completions_mode && !props.value}
+          ></button>
+        )}
+
         <div className={styles.footer}>
           <div className={styles.footer__left}>
             {!props.is_in_code_completions_mode && (
@@ -325,25 +358,6 @@ export const ChatInput: React.FC<Props> = (props) => {
               >
                 {format_token_count(props.token_count)}
               </div>
-            )}
-
-            {props.on_copy && (
-              <button
-                className={styles['footer__right__icon-button']}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (!props.is_in_code_completions_mode && !props.value) return
-                  props.on_copy!()
-                }}
-                title={
-                  !props.value
-                    ? props.submit_disabled_title
-                    : 'Copy to clipboard'
-                }
-                disabled={!props.is_in_code_completions_mode && !props.value}
-              >
-                <div className={cn('codicon', 'codicon-copy')} />
-              </button>
             )}
 
             <button
