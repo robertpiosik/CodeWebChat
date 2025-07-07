@@ -49,9 +49,9 @@ export const handle_show_history_quick_pick = async (
 
   if (!history_key || !pinned_history_key) return
 
-  let history =
+  const history =
     provider.context.workspaceState.get<string[]>(history_key, []) || []
-  let pinned_history =
+  const pinned_history =
     provider.context.workspaceState.get<string[]>(pinned_history_key, []) || []
 
   if (!history.length && !pinned_history.length) {
@@ -66,13 +66,14 @@ export const handle_show_history_quick_pick = async (
 
   const to_quick_pick_item = (
     text: string,
+    list: 'recents' | 'pinned',
     is_pinned: boolean,
     pinned_index?: number,
     total_pinned?: number
   ): vscode.QuickPickItem => ({
     label: text,
     buttons: [
-      ...(is_pinned &&
+      ...(list == 'pinned' &&
       pinned_index !== undefined &&
       total_pinned !== undefined &&
       total_pinned > 1
@@ -99,15 +100,16 @@ export const handle_show_history_quick_pick = async (
         ? [
             {
               iconPath: new vscode.ThemeIcon('pinned'),
-              tooltip: 'Add to pinned'
+              tooltip: 'Add to Pinned Prompts'
             }
           ]
         : []),
       {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip: is_pinned
-          ? 'Delete from Pinned Prompts'
-          : 'Remove from Recent Prompts'
+        tooltip:
+          list == 'pinned'
+            ? 'Remove from Pinned Prompts'
+            : 'Remove from Recent Prompts'
       }
     ]
   })
@@ -121,7 +123,7 @@ export const handle_show_history_quick_pick = async (
     })
     items.push(
       ...pinned_history.map((item, index) =>
-        to_quick_pick_item(item, true, index, pinned_history.length)
+        to_quick_pick_item(item, 'pinned', true, index, pinned_history.length)
       )
     )
   }
@@ -133,17 +135,26 @@ export const handle_show_history_quick_pick = async (
     })
     items.push(
       ...history.map((item) =>
-        to_quick_pick_item(item, !!pinned_history.find((i) => i == item))
+        to_quick_pick_item(
+          item,
+          'recents',
+          !!pinned_history.find((i) => i == item)
+        )
       )
     )
   }
 
   quick_pick.items = items
 
+  // Set the active item to the first recent item (not separator)
   if (history.length > 0) {
-    const firstRecentItemIndex = items.findIndex(
-      (item) => item.label === history[0]
-    )
+    const firstRecentItemIndex = items.findIndex((item, index) => {
+      // Find the first item after the "recent" separator that's not a separator itself
+      const recentSeparatorIndex = items.findIndex(i => i.label === 'recent' && i.kind === vscode.QuickPickItemKind.Separator)
+      return recentSeparatorIndex !== -1 &&
+             index > recentSeparatorIndex &&
+             item.kind !== vscode.QuickPickItemKind.Separator
+    })
     if (firstRecentItemIndex !== -1) {
       quick_pick.activeItems = [items[firstRecentItemIndex]]
     }
@@ -194,97 +205,68 @@ export const handle_show_history_quick_pick = async (
     }),
     quick_pick.onDidTriggerItemButton(async (e) => {
       const item_to_handle = e.item
-      const button_index = e.item.buttons?.indexOf(e.button) ?? -1
-      const is_currently_pinned = pinned_history.includes(item_to_handle.label)
-      const pinned_index = pinned_history.indexOf(item_to_handle.label)
+      const button_tooltip = e.button.tooltip
+      const item_text = item_to_handle.label
 
-      // Handle up/down chevrons for pinned items
-      if (is_currently_pinned) {
-        const up_button_exists = pinned_index > 0
-        const down_button_exists = pinned_index < pinned_history.length - 1
+      // Handle chevron up/down for pinned items
+      if (button_tooltip === 'Move up') {
+        const current_index = pinned_history.indexOf(item_text)
+        if (current_index > 0) {
+          // Swap with the item above
+          const temp = pinned_history[current_index - 1]
+          pinned_history[current_index - 1] = pinned_history[current_index]
+          pinned_history[current_index] = temp
 
-        const up_button_index = up_button_exists ? 0 : -1
-
-        if (button_index === up_button_index) {
-          // Move up
-          const temp = pinned_history[pinned_index]
-          pinned_history[pinned_index] = pinned_history[pinned_index - 1]
-          pinned_history[pinned_index - 1] = temp
           await provider.context.workspaceState.update(
             pinned_history_key,
             pinned_history
           )
-        } else if (
-          button_index ==
-          (up_button_exists
-            ? down_button_exists
-              ? 1
-              : -1
-            : down_button_exists
-            ? 0
-            : -1)
-        ) {
-          // Move down
-          const temp = pinned_history[pinned_index]
-          pinned_history[pinned_index] = pinned_history[pinned_index + 1]
-          pinned_history[pinned_index + 1] = temp
+        }
+      } else if (button_tooltip === 'Move down') {
+        const current_index = pinned_history.indexOf(item_text)
+        if (current_index < pinned_history.length - 1) {
+          // Swap with the item below
+          const temp = pinned_history[current_index + 1]
+          pinned_history[current_index + 1] = pinned_history[current_index]
+          pinned_history[current_index] = temp
+
           await provider.context.workspaceState.update(
             pinned_history_key,
             pinned_history
           )
-        } else {
-          let delete_button_index = 0
-          if (up_button_exists) delete_button_index++
-          if (down_button_exists) delete_button_index++
-
-          const is_delete_button =
-            e.button.tooltip?.startsWith('Delete from pinned')
-
-          if (is_delete_button || button_index == delete_button_index) {
-            // Delete button clicked
-            pinned_history = pinned_history.filter(
-              (h) => h != item_to_handle.label
-            )
-            await provider.context.workspaceState.update(
-              pinned_history_key,
-              pinned_history
-            )
-          }
         }
-      } else if (button_index == 0 && !is_currently_pinned) {
-        // Pin/Unpin button clicked
-        const is_item_pinned = pinned_history.includes(item_to_handle.label)
-
-        if (!is_item_pinned) {
-          // Pin the item
-          if (!pinned_history.includes(item_to_handle.label)) {
-            pinned_history.push(item_to_handle.label)
-          }
-        } else {
-          // Unpin the item
-          pinned_history = pinned_history.filter(
-            (h) => h != item_to_handle.label
+      } else if (button_tooltip === 'Add to Pinned Prompts') {
+        // Add item to pinned history if not already there
+        if (!pinned_history.includes(item_text)) {
+          pinned_history.push(item_text)
+          await provider.context.workspaceState.update(
+            pinned_history_key,
+            pinned_history
           )
-          // Add back to regular history if not already there
-          if (!history.includes(item_to_handle.label)) {
-            history.unshift(item_to_handle.label)
-          }
         }
+      } else if (button_tooltip === 'Remove from Pinned Prompts') {
+        // Remove from pinned history
+        const index = pinned_history.indexOf(item_text)
+        if (index !== -1) {
+          pinned_history.splice(index, 1)
+          await provider.context.workspaceState.update(
+            pinned_history_key,
+            pinned_history
+          )
+        }
+      } else if (button_tooltip === 'Remove from Recent Prompts') {
+        // Remove from recent history
+        const index = history.indexOf(item_text)
+        if (index !== -1) {
+          history.splice(index, 1)
+          await provider.context.workspaceState.update(history_key, history)
+        }
+      }
 
-        await provider.context.workspaceState.update(history_key, history)
-        await provider.context.workspaceState.update(
-          pinned_history_key,
-          pinned_history
-        )
-      } else if (button_index == 1 && !is_currently_pinned) {
-        // Delete button clicked
-        history = history.filter((h) => h != item_to_handle.label)
-        pinned_history = pinned_history.filter((h) => h != item_to_handle.label)
-        await provider.context.workspaceState.update(history_key, history)
-        await provider.context.workspaceState.update(
-          pinned_history_key,
-          pinned_history
-        )
+      // Check if we should close the quick pick if no items remain
+      if (history.length === 0 && pinned_history.length === 0) {
+        quick_pick.hide()
+        return
       }
 
       const updated_items: vscode.QuickPickItem[] = []
@@ -296,7 +278,13 @@ export const handle_show_history_quick_pick = async (
         })
         updated_items.push(
           ...pinned_history.map((item, index) =>
-            to_quick_pick_item(item, true, index, pinned_history.length)
+            to_quick_pick_item(
+              item,
+              'pinned',
+              true,
+              index,
+              pinned_history.length
+            )
           )
         )
       }
@@ -308,7 +296,7 @@ export const handle_show_history_quick_pick = async (
         })
         updated_items.push(
           ...history.map((item) =>
-            to_quick_pick_item(item, pinned_history.includes(item))
+            to_quick_pick_item(item, 'recents', pinned_history.includes(item))
           )
         )
       }
