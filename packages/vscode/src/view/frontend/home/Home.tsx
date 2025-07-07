@@ -384,6 +384,12 @@ export const Home: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
+  const handle_search_click = () => {
+    props.vscode.postMessage({
+      command: 'SHOW_HISTORY_QUICK_PICK'
+    } as WebviewMessage)
+  }
+
   const handle_review_click = () => {
     props.vscode.postMessage({
       command: 'REVIEW'
@@ -454,6 +460,7 @@ export const Home: React.FC<Props> = (props) => {
     <HomeView
       initialize_chats={handle_initialize_chats}
       copy_to_clipboard={handle_copy_to_clipboard}
+      on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       is_connected={is_connected}
       presets={presets}

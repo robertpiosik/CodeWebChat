@@ -14,7 +14,8 @@ const translations = {
   code_completions_mode_unavailable_with_text_selection:
     'Code completions mode unavailable with text selection',
   code_completions_mode_unavailable_without_active_editor:
-    'Code completions mode unavailable without active editor'
+    'Code completions mode unavailable without active editor',
+  search: 'Search'
 }
 
 export const Empty = () => (
@@ -32,6 +33,7 @@ export const Empty = () => (
     is_web_mode={false}
     translations={translations}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
   />
 )
@@ -51,6 +53,7 @@ export const WithText = () => (
     is_web_mode={false}
     translations={translations}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
   />
 )
@@ -71,6 +74,7 @@ export const DisabledSubmit = () => (
     is_web_mode={false}
     translations={translations}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
   />
 )
@@ -90,6 +94,7 @@ export const MultilineText = () => (
     is_web_mode={false}
     translations={translations}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
   />
 )
@@ -109,6 +114,7 @@ export const LongText = () => (
     is_web_mode={false}
     translations={translations}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
   />
 )
@@ -128,6 +134,7 @@ export const WithTokenCount = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_search_click={() => console.log('Search clicked')}
     translations={translations}
     on_submit_with_control={() => {}}
   />
@@ -148,6 +155,7 @@ export const WithLargeTokenCount = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_search_click={() => console.log('Search clicked')}
     translations={translations}
     on_submit_with_control={() => {}}
   />
@@ -165,6 +173,7 @@ export const CodeCompletionsMode = () => (
     has_active_editor={true}
     has_active_selection={false}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
     translations={translations}
@@ -184,6 +193,7 @@ export const WithActiveSelection = () => (
     has_active_editor={true}
     has_active_selection={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
     on_submit_with_control={() => {}}
@@ -203,6 +213,7 @@ export const WithSavedContextPlaceholder = () => (
     has_active_editor={true}
     has_active_selection={false}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
     on_submit_with_control={() => {}}
@@ -222,6 +233,7 @@ export const WithActiveSelectionAndPlaceholder = () => (
     has_active_editor={true}
     has_active_selection={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
     on_submit_with_control={() => {}}
@@ -241,10 +253,10 @@ export const WithPlaceholderNoSelection = () => (
     has_active_editor={true}
     has_active_selection={false}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
     on_submit_with_control={() => {}}
     translations={translations}
   />
 )
-

@@ -30,6 +30,17 @@
       border-color: var(--vscode-focusBorder);
     }
 
+    &__search-button {
+      position: absolute;
+      z-index: 1;
+      top: var(--padding-5px);
+      right: var(--padding-7px);
+      background: none;
+      border: none;
+      color: var(--vscode-icon-foreground);
+      cursor: pointer;
+    }
+
     &--disabled {
       opacity: 0.4;
       pointer-events: none;

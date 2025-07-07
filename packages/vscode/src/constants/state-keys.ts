@@ -25,3 +25,8 @@ export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY =
 export const LAST_SELECTED_PRESET_KEY = 'lastSelectedPreset'
 export const LAST_CHOSEN_COMMAND_BY_VIEW_TYPE_STATE_KEY =
   'lastChosenCommandByViewType'
+
+export const HISTORY_ASK_STATE_KEY = 'history-ask'
+export const HISTORY_EDIT_STATE_KEY = 'history-edit'
+export const HISTORY_CODE_COMPLETIONS_STATE_KEY = 'history-code-completions'
+export const HISTORY_NO_CONTEXT_STATE_KEY = 'history-no-context'

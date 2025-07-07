@@ -16,6 +16,7 @@ import { QuickAction as UiQuickAction } from '@ui/components/editor/QuickAction'
 type Props = {
   initialize_chats: (params: { prompt: string; preset_names: string[] }) => void
   copy_to_clipboard: (instruction: string, preset_name?: string) => void
+  on_search_click: () => void
   on_create_preset: () => void
   on_at_sign_click: () => void
   on_quick_action_click: (command: string) => void
@@ -298,6 +299,7 @@ export const HomeView: React.FC<Props> = (props) => {
                     ? handle_copy
                     : undefined
                 }
+                on_search_click={props.on_search_click}
                 on_at_sign_click={props.on_at_sign_click}
                 is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
                 is_connected={props.is_connected}
@@ -321,7 +323,8 @@ export const HomeView: React.FC<Props> = (props) => {
                   code_completions_mode_unavailable_with_text_selection:
                     'Unable to work with text selection',
                   code_completions_mode_unavailable_without_active_editor:
-                    'This mode requires active editor'
+                    'This mode requires active editor',
+                  search: 'Search history'
                 }}
               />
             </div>

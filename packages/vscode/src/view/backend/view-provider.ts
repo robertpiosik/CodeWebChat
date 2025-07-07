@@ -26,6 +26,7 @@ import {
   handle_preview_preset,
   handle_show_quick_pick,
   handle_save_edit_format,
+  handle_show_history_quick_pick,
   handle_save_presets_order,
   handle_get_selected_presets,
   handle_get_selected_code_completion_presets,
@@ -373,6 +374,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_edit_context(this, message)
           } else if (message.command == 'CODE_COMPLETION') {
             await handle_code_completion(this, message)
+          } else if (message.command == 'SHOW_HISTORY_QUICK_PICK') {
+            await handle_show_history_quick_pick(this)
           } else if (message.command == 'SHOW_QUICK_PICK') {
             await handle_show_quick_pick(message)
           } else if (message.command == 'GET_WEB_MODE') {

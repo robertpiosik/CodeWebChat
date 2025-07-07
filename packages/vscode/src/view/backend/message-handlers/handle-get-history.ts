@@ -1,22 +1,28 @@
+import {
+  HISTORY_ASK_STATE_KEY,
+  HISTORY_CODE_COMPLETIONS_STATE_KEY,
+  HISTORY_EDIT_STATE_KEY,
+  HISTORY_NO_CONTEXT_STATE_KEY
+} from '@/constants/state-keys'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { ExtensionMessage } from '@/view/types/messages'
 
 export const handle_get_history = (provider: ViewProvider): void => {
   const ask_history = provider.context.workspaceState.get<string[]>(
-    'history-ask',
+    HISTORY_ASK_STATE_KEY,
     []
   )
   const edit_history = provider.context.workspaceState.get<string[]>(
-    'history-edit',
-    []
-  )
-  const no_context_history = provider.context.workspaceState.get<string[]>(
-    'history-no-context',
+    HISTORY_EDIT_STATE_KEY,
     []
   )
   const code_completions_history = provider.context.workspaceState.get<
     string[]
-  >('history-code-completions', [])
+  >(HISTORY_CODE_COMPLETIONS_STATE_KEY, [])
+  const no_context_history = provider.context.workspaceState.get<string[]>(
+    HISTORY_NO_CONTEXT_STATE_KEY,
+    []
+  )
 
   provider.send_message<ExtensionMessage>({
     command: 'CHAT_HISTORY',
