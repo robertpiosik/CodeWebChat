@@ -23,7 +23,6 @@
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
-- API tools call providers directly
 - privacy first—zero telemetry
 - lightweight—about 1MB of code
 
@@ -31,7 +30,6 @@
 
 - you're an experienced engineer working on a large codebase
 - you're a student or hobbyist on a budget
-- automated agents failed you too many times
 
 **See how simple it is to implement a feature with ChatGPT:**
 
