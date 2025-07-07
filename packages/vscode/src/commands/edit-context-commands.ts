@@ -95,7 +95,7 @@ const get_edit_context_config = async (
           }${config.reasoning_effort ? ' · ' : ''}Temperature: ${
             config.temperature
           }`,
-          detail: config.provider_name,
+          detail: `Provided by ${config.provider_name}`,
           config,
           index,
           buttons

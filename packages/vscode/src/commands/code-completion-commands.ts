@@ -179,7 +179,7 @@ async function get_code_completion_config(
           }${config.reasoning_effort ? ' · ' : ''}Temperature: ${
             config.temperature
           }`,
-          detail: config.provider_name,
+          detail: `Provided by ${config.provider_name}`,
           config,
           index,
           buttons

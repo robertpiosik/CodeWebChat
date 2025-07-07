@@ -209,7 +209,7 @@ export const setup_api_tool_multi_config = async (params: {
                 ? ` · Temperature: ${config.temperature}`
                 : `Temperature: ${config.temperature}`
             }`,
-            detail: config.provider_name,
+            detail: `Provided by ${config.provider_name}`,
             buttons,
             config,
             index
