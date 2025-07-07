@@ -94,9 +94,9 @@ export const setup_api_tool_multi_config = async (params: {
     tooltip: 'Edit configuration'
   }
 
-  const copy_button = {
+  const duplicate_button = {
     iconPath: new vscode.ThemeIcon('copy'),
-    tooltip: 'Copy configuration'
+    tooltip: 'Duplicate configuration'
   }
 
   const delete_button = {
@@ -167,7 +167,7 @@ export const setup_api_tool_multi_config = async (params: {
               buttons = [
                 ...navigation_buttons,
                 set_default_button,
-                copy_button,
+                duplicate_button,
                 edit_button,
                 delete_button
               ]
@@ -175,7 +175,7 @@ export const setup_api_tool_multi_config = async (params: {
               buttons = [
                 ...navigation_buttons,
                 unset_default_button,
-                copy_button,
+                duplicate_button,
                 edit_button,
                 delete_button
               ]
@@ -184,14 +184,14 @@ export const setup_api_tool_multi_config = async (params: {
             if (!is_default) {
               buttons = [
                 set_default_button,
-                copy_button,
+                duplicate_button,
                 edit_button,
                 delete_button
               ]
             } else {
               buttons = [
                 unset_default_button,
-                copy_button,
+                duplicate_button,
                 edit_button,
                 delete_button
               ]
@@ -274,7 +274,7 @@ export const setup_api_tool_multi_config = async (params: {
           await edit_configuration(item.config)
           await show_configs_quick_pick()
           resolve()
-        } else if (event.button === copy_button) {
+        } else if (event.button === duplicate_button) {
           const new_config = { ...item.config }
           current_configs.splice(item.index + 1, 0, new_config)
           await tool_methods.save_configs(current_configs)
