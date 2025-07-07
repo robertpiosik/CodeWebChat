@@ -1,4 +1,6 @@
 .container {
+  --padding: var(--padding-5px) var(--padding-18px) var(--padding-7px)
+    var(--padding-5px);
   position: relative;
 
   &__error {
@@ -31,14 +33,23 @@
     }
 
     &__search-button {
+      display: flex;
       position: absolute;
       z-index: 1;
-      top: var(--padding-5px);
-      right: var(--padding-7px);
-      background: none;
-      border: none;
+      top: 0;
+      right: 0;
+      padding: var(--padding-1px) var(--padding-3px);
       color: var(--vscode-icon-foreground);
       cursor: pointer;
+      opacity: 0.7;
+
+      &::before {
+        font-size: var(--font-size-13px);
+      }
+
+      &:hover {
+        opacity: 1;
+      }
     }
 
     &--disabled {
@@ -49,7 +60,7 @@
 }
 
 .textarea {
-  padding: var(--padding-5px) var(--padding-7px);
+  padding: var(--padding);
   font-family: sans-serif;
   font-size: inherit;
   line-height: 1.5;
@@ -76,7 +87,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: var(--padding-5px) var(--padding-7px);
+  padding: var(--padding);
   font-family: sans-serif;
   font-size: inherit;
   line-height: 1.5;

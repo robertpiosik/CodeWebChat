@@ -295,14 +295,16 @@ export const ChatInput: React.FC<Props> = (props) => {
           }
         />
         <button
-          className={styles['container__inner__search-button']}
+          className={cn(
+            styles['container__inner__search-button'],
+            'codicon',
+            'codicon-search'
+          )}
           onClick={props.on_search_click}
           title={`${props.translations.search} (${
             navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? '⌘' : 'Ctrl'
           }F)`}
-        >
-          <div className={cn('codicon', 'codicon-search')} />
-        </button>
+        ></button>
 
         <div className={styles.footer}>
           <div className={styles.footer__left}>
