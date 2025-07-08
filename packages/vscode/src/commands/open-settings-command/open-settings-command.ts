@@ -8,6 +8,7 @@ const LABEL_CODE_COMPLETIONS = '$(tools) Code Completions'
 const LABEL_EDIT_CONTEXT = '$(tools) Edit Context'
 const LABEL_INTELLIGENT_UPDATE = '$(tools) Intelligent Update'
 const LABEL_COMMIT_MESSAGES = '$(tools) Commit Messages'
+const LABEL_EDIT_SETTINGS = '$(settings) Open Settings'
 
 export const open_settings_command = (context: vscode.ExtensionContext) => {
   return vscode.commands.registerCommand('codeWebChat.settings', async () => {
@@ -15,6 +16,11 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
     while (show_menu) {
       const selected = await vscode.window.showQuickPick(
         [
+          {
+            label: LABEL_EDIT_SETTINGS,
+            detail:
+              'Modify "edit format" instructions attached to your prompts, edit presets in JSON and more.'
+          },
           {
             label: LABEL_PROVIDERS,
             detail: 'API keys are stored encrypted and never leave your device.'
@@ -54,6 +60,13 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
       }
 
       switch (selected.label) {
+        case LABEL_EDIT_SETTINGS:
+          await vscode.commands.executeCommand(
+            'workbench.action.openSettings',
+            '@ext:robertpiosik.gemini-coder'
+          )
+          show_menu = false
+          break
         case LABEL_PROVIDERS:
           await api_providers(context)
           break
