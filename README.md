@@ -18,12 +18,12 @@
 ⚡️ World's fastest AI coding - one-shot tasks in a single chat or API call \
 🧩 Compatible with VS Code derivatives (Cursor, Windsurf, VSCodium, etc.) \
 🙋 Created by an independent developer \
-☕️ Supported by donations
+☕️ Backed by voluntary donations
 
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
-- univarsal—allow any workflow
+- univarsal—enable any workflow
 - privacy first—zero telemetry
 - lightweight—about 1MB of code
 
