@@ -15,7 +15,7 @@
 
 100% free and open source VS Code extension for AI-assisted programming. CWC treats the AI model less like a teammate and more like a calculator; by emphasizing context management, it modifies it predictably, accurately, quickly, thus cost-efficiently. Enjoy a modern software development workflow with a tool that doesn't try hard to replace You.
 
-⚡️ Non-agentic - designed to one-shot any task \
+⚡️ World's fastest AI coding - one-shot tasks in a single chat or API call \
 🧩 Compatible with VS Code derivatives (Cursor, Windsurf, VSCodium, etc.) \
 🙋 Created by an independent developer \
 ☕️ Supported by donations
@@ -23,6 +23,7 @@
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
+- univarsal—allow any workflow
 - privacy first—zero telemetry
 - lightweight—about 1MB of code
 
@@ -30,6 +31,7 @@
 
 - you're an experienced engineer working on a large codebase
 - you're a student or hobbyist on a budget
+- you believe software should be crafted, not generated
 
 **See how simple it is to implement a feature with ChatGPT:**
 
@@ -50,8 +52,8 @@ CWC does not prompt-engineer any form of autonomous coding, instead, it expects 
 The benefits of this friction include:
 
 - developing a mental model of the codebase,
-- eliminating idle time waiting for agentic runs to finish,
-- predictability of AI-generated outputs.
+- quick results from a single chat or API call,
+- predictable outputs.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
