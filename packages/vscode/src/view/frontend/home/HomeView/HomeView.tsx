@@ -450,7 +450,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 props.on_review_click()
               }}
             >
-              <span className="codicon codicon-feedback"></span>{' '}
+              <span className="codicon codicon-star-empty"></span>{' '}
               <span>Rate</span>
             </a>
             <a href="https://buymeacoffee.com/robertpiosik">
