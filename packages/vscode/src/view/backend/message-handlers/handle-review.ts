@@ -17,7 +17,7 @@ export const handle_review = async (): Promise<void> => {
   ]
 
   const selected_option = await vscode.window.showQuickPick(options, {
-    placeHolder: 'Where would you like to leave a review?'
+    placeHolder: 'Where would you like to rate the extension?'
   })
 
   if (selected_option) {
