@@ -24,7 +24,7 @@ interface ToolMethods {
 export const setup_api_tool_multi_config = async (params: {
   context: vscode.ExtensionContext
   tool: SupportedTool
-}): Promise<void> => {
+}): Promise<boolean> => {
   const providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
@@ -221,7 +221,7 @@ export const setup_api_tool_multi_config = async (params: {
     return items
   }
 
-  const show_configs_quick_pick = async (): Promise<void> => {
+  const show_configs_quick_pick = async (): Promise<boolean> => {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_config_items()
     quick_pick.title = `${tool_methods.get_display_name()} Configurations`
@@ -233,32 +233,30 @@ export const setup_api_tool_multi_config = async (params: {
 
     let is_accepted = false
 
-    return new Promise<void>((resolve) => {
+    return new Promise<boolean>((resolve) => {
       quick_pick.onDidAccept(async () => {
         is_accepted = true
         const selected = quick_pick.selectedItems[0]
         if (!selected) {
           quick_pick.hide()
-          resolve()
+          resolve(false)
           return
         }
 
         if (selected.label === BACK_LABEL) {
           quick_pick.hide()
-          resolve()
+          resolve(false)
           return
         }
 
         if (selected.label == ADD_CONFIGURATION_LABEL) {
           quick_pick.hide()
           await add_configuration()
-          await show_configs_quick_pick()
-          resolve()
+          resolve(await show_configs_quick_pick())
         } else if ('config' in selected && selected.config) {
           quick_pick.hide()
           await edit_configuration(selected.config as ToolConfig)
-          await show_configs_quick_pick()
-          resolve()
+          resolve(await show_configs_quick_pick())
         }
       })
 
@@ -272,8 +270,7 @@ export const setup_api_tool_multi_config = async (params: {
           is_accepted = true
           quick_pick.hide()
           await edit_configuration(item.config)
-          await show_configs_quick_pick()
-          resolve()
+          resolve(await show_configs_quick_pick())
         } else if (event.button === duplicate_button) {
           const new_config = { ...item.config }
           current_configs.splice(item.index + 1, 0, new_config)
@@ -297,8 +294,7 @@ export const setup_api_tool_multi_config = async (params: {
           if (current_configs.length == 0) {
             is_accepted = true
             quick_pick.hide()
-            await show_configs_quick_pick()
-            resolve()
+            resolve(await show_configs_quick_pick())
           } else {
             quick_pick.items = create_config_items()
             quick_pick.show()
@@ -340,7 +336,7 @@ export const setup_api_tool_multi_config = async (params: {
 
       quick_pick.onDidHide(() => {
         if (!is_accepted) {
-          resolve()
+          resolve(false)
         }
       })
 
@@ -348,15 +344,15 @@ export const setup_api_tool_multi_config = async (params: {
     })
   }
 
-  async function add_configuration(): Promise<void> {
+  async function add_configuration(): Promise<boolean> {
     const provider_info = await select_provider()
     if (!provider_info) {
-      return
+      return false
     }
 
     const model = await select_model(provider_info)
     if (!model) {
-      return
+      return false
     }
 
     const new_config: ToolConfig = {
@@ -368,10 +364,10 @@ export const setup_api_tool_multi_config = async (params: {
 
     current_configs.push(new_config)
     await tool_methods.save_configs(current_configs)
-    await edit_configuration(new_config)
+    return await edit_configuration(new_config)
   }
 
-  async function edit_configuration(config: ToolConfig) {
+  async function edit_configuration(config: ToolConfig): Promise<boolean> {
     const create_edit_options = () => {
       const options = [
         { label: BACK_LABEL },
@@ -424,13 +420,13 @@ export const setup_api_tool_multi_config = async (params: {
 
     let is_accepted = false
 
-    return new Promise<void>((resolve) => {
+    return new Promise<boolean>((resolve) => {
       quick_pick.onDidAccept(async () => {
         is_accepted = true
         const selected_option = quick_pick.selectedItems[0]
         if (!selected_option || selected_option.label == BACK_LABEL) {
           quick_pick.hide()
-          resolve()
+          resolve(false)
           return
         }
 
@@ -457,15 +453,13 @@ export const setup_api_tool_multi_config = async (params: {
         if (selected_option.label == PROVIDER_LABEL) {
           const new_provider = await select_provider()
           if (!new_provider) {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
 
           const new_model = await select_model(new_provider)
           if (!new_model) {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
 
@@ -479,8 +473,7 @@ export const setup_api_tool_multi_config = async (params: {
             updated_config_state.model = new_model
             config_changed_in_this_step = true
           } else {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
         } else if (selected_option.label == MODEL_LABEL) {
@@ -493,8 +486,7 @@ export const setup_api_tool_multi_config = async (params: {
             provider_info as Pick<Provider, 'type' | 'name'>
           )
           if (!new_model) {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
 
@@ -502,15 +494,13 @@ export const setup_api_tool_multi_config = async (params: {
             updated_config_state.model = new_model
             config_changed_in_this_step = true
           } else {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
         } else if (selected_option.label == TEMPERATURE_LABEL) {
           const new_temperature = await set_temperature(config.temperature)
           if (new_temperature === undefined) {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
 
@@ -518,8 +508,7 @@ export const setup_api_tool_multi_config = async (params: {
             updated_config_state.temperature = new_temperature
             config_changed_in_this_step = true
           } else {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
         } else if (selected_option.label == REASONING_EFFORT_LABEL) {
@@ -527,8 +516,7 @@ export const setup_api_tool_multi_config = async (params: {
             config.reasoning_effort
           )
           if (new_reasoning_effort.cancelled) {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
 
@@ -539,13 +527,11 @@ export const setup_api_tool_multi_config = async (params: {
             updated_config_state.reasoning_effort = new_reasoning_effort.value
             config_changed_in_this_step = true
           } else {
-            await edit_configuration(config)
-            resolve()
+            resolve(await edit_configuration(config))
             return
           }
         } else {
-          await edit_configuration(config)
-          resolve()
+          resolve(await edit_configuration(config))
           return
         }
 
@@ -569,18 +555,17 @@ export const setup_api_tool_multi_config = async (params: {
             }
           } else {
             console.error('Could not find original config in array to update.')
-            resolve()
+            resolve(false)
             return
           }
         }
 
-        await edit_configuration(updated_config_state)
-        resolve()
+        resolve(await edit_configuration(updated_config_state))
       })
 
       quick_pick.onDidHide(() => {
         if (!is_accepted) {
-          resolve()
+          resolve(false)
         }
       })
 
@@ -738,5 +723,5 @@ export const setup_api_tool_multi_config = async (params: {
     return { value: selected.effort, cancelled: false }
   }
 
-  await show_configs_quick_pick()
+  return await show_configs_quick_pick()
 }

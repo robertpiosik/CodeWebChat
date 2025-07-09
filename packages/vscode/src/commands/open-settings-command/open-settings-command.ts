@@ -88,12 +88,16 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             tool: 'intelligent-update'
           })
           break
-        case LABEL_COMMIT_MESSAGES:
-          await setup_api_tool({
+        case LABEL_COMMIT_MESSAGES: {
+          const exit_menu = await setup_api_tool({
             context,
             tool: 'commit-messages'
           })
+          if (exit_menu) {
+            show_menu = false
+          }
           break
+        }
       }
     }
   })

@@ -17,7 +17,7 @@ const BACK_LABEL = '$(arrow-left) Back'
 export const setup_api_tool = async (params: {
   context: vscode.ExtensionContext
   tool: SupportedTool
-}): Promise<void> => {
+}): Promise<boolean> => {
   const providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
@@ -26,8 +26,9 @@ export const setup_api_tool = async (params: {
 
   if (!current_config) {
     await setup_new_config()
+    return false
   } else {
-    await update_existing_config(current_config)
+    return await update_existing_config(current_config)
   }
 
   async function setup_new_config() {
@@ -58,7 +59,7 @@ export const setup_api_tool = async (params: {
     )
   }
 
-  async function update_existing_config(config: ToolConfig) {
+  async function update_existing_config(config: ToolConfig): Promise<boolean> {
     const api_provider_label = 'API provider'
     const model_label = 'Model'
     const temperature_label = 'Temperature'
@@ -180,7 +181,7 @@ export const setup_api_tool = async (params: {
           'workbench.action.openSettings',
           'codeWebChat.commitMessageInstructions'
         )
-        return
+        return true
       } else if (selection.label == confirmation_threshold_label) {
         const new_threshold = await set_confirmation_threshold(
           current_threshold
@@ -197,6 +198,7 @@ export const setup_api_tool = async (params: {
         await providers_manager.save_commit_messages_tool_config(config)
       }
     }
+    return false
   }
 
   async function select_provider(): Promise<
