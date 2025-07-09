@@ -601,8 +601,11 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
 
             // Convert all patches to clipboard format for intelligent update
             const all_patches_text = clipboard_content.patches
-              .map((patch) => `// ${patch.file_path}\n${patch.content}`)
-              .join('\n\n')
+              .map(
+                (patch) =>
+                  `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
+              )
+              .join('\n')
 
             try {
               const intelligent_update_states = await handle_intelligent_update(
