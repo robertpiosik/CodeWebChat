@@ -134,7 +134,8 @@ export async function create_file_if_needed(
  * Reverts applied changes to files based on their original states.
  */
 export async function revert_files(
-  original_states: OriginalFileState[]
+  original_states: OriginalFileState[],
+  show_message = true
 ): Promise<boolean> {
   Logger.log({
     function_name: 'revert_files',
@@ -262,7 +263,9 @@ export async function revert_files(
       }
     }
 
-    vscode.window.showInformationMessage('Changes successfully reverted.')
+    if (show_message) {
+      vscode.window.showInformationMessage('Changes successfully reverted.')
+    }
     Logger.log({
       function_name: 'revert_files',
       message: 'Changes successfully reverted.'

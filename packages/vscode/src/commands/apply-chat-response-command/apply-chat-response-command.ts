@@ -413,6 +413,11 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
         let all_original_states: OriginalFileState[] = []
         const failed_patches: DiffPatch[] = []
         let any_patch_used_fallback = false
+        const applied_patches: {
+          patch: DiffPatch
+          original_states: OriginalFileState[]
+          used_fallback: boolean
+        }[] = []
 
         // Process patches
         const total_patches = clipboard_content.patches.length
@@ -433,6 +438,11 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
               all_original_states = all_original_states.concat(
                 result.original_states
               )
+              applied_patches.push({
+                patch,
+                original_states: result.original_states,
+                used_fallback: !!result.used_fallback
+              })
             }
             if (result.used_fallback) {
               any_patch_used_fallback = true
@@ -572,8 +582,23 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             await revert_files(all_original_states)
             context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
           } else if (response == 'Looks off, use intelligent update') {
-            // Revert the applied patches first
-            await revert_files(all_original_states)
+            const fallback_patches_info = applied_patches.filter(
+              (p) => p.used_fallback
+            )
+            const good_patches_info = applied_patches.filter(
+              (p) => !p.used_fallback
+            )
+
+            const fallback_patches = fallback_patches_info.map((p) => p.patch)
+            const fallback_states = fallback_patches_info.flatMap(
+              (p) => p.original_states
+            )
+            const good_states = good_patches_info.flatMap(
+              (p) => p.original_states
+            )
+
+            // Revert only the patches that used fallback, without showing a message
+            await revert_files(fallback_states, false)
 
             // Then try with intelligent update
             const api_providers_manager = new ApiProvidersManager(context)
@@ -584,14 +609,28 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             )
 
             if (!config_result) {
+              // Config was cancelled. The fallback patches are reverted.
+              // The state should now be just the good patches.
+              context.workspaceState.update(
+                LAST_APPLIED_CHANGES_STATE_KEY,
+                good_states.length > 0 ? good_states : null
+              )
               return
             }
 
             const { provider, config: intelligent_update_config } =
               config_result
 
+            // Convert only fallback patches to clipboard format
+            const fallback_patches_text = fallback_patches
+              .map(
+                (patch) =>
+                  `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
+              )
+              .join('\n')
+
             let endpoint_url = ''
-            if (provider.type == 'built-in') {
+            if (provider.type === 'built-in') {
               const provider_info =
                 PROVIDERS[provider.name as keyof typeof PROVIDERS]
               endpoint_url = provider_info.base_url
@@ -599,30 +638,26 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
               endpoint_url = provider.base_url
             }
 
-            // Convert all patches to clipboard format for intelligent update
-            const all_patches_text = clipboard_content.patches
-              .map(
-                (patch) =>
-                  `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
-              )
-              .join('\n')
-
             try {
               const intelligent_update_states = await handle_intelligent_update(
                 {
                   endpoint_url,
                   api_key: provider.api_key,
                   config: intelligent_update_config,
-                  chat_response: all_patches_text,
+                  chat_response: fallback_patches_text,
                   context: context,
                   is_single_root_folder_workspace
                 }
               )
 
               if (intelligent_update_states) {
+                const combined_states = [
+                  ...good_states,
+                  ...intelligent_update_states
+                ]
                 context.workspaceState.update(
                   LAST_APPLIED_CHANGES_STATE_KEY,
-                  intelligent_update_states
+                  combined_states
                 )
                 const response = await vscode.window.showInformationMessage(
                   `Successfully applied patches using intelligent update.`,
@@ -630,25 +665,33 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 )
 
                 if (response == 'Revert') {
-                  await revert_files(intelligent_update_states)
+                  await revert_files(combined_states)
                   context.workspaceState.update(
                     LAST_APPLIED_CHANGES_STATE_KEY,
                     null
                   )
                 }
               } else {
+                // Intelligent update was canceled.
+                context.workspaceState.update(
+                  LAST_APPLIED_CHANGES_STATE_KEY,
+                  good_states.length > 0 ? good_states : null
+                )
                 vscode.window.showInformationMessage(
-                  'Intelligent update was canceled. Original changes have been reverted.'
+                  'Intelligent update was canceled. Fallback changes reverted; clean changes kept.'
                 )
               }
             } catch (error) {
               Logger.error({
                 function_name: 'apply_chat_response_command',
-                message: 'Error during intelligent update of all patches'
+                message: 'Error during intelligent update of fallback patches'
               })
-
+              context.workspaceState.update(
+                LAST_APPLIED_CHANGES_STATE_KEY,
+                good_states.length > 0 ? good_states : null
+              )
               vscode.window.showErrorMessage(
-                'Error during intelligent update. Original patches have been reverted.'
+                'Error during intelligent update. Fallback changes reverted; clean changes kept.'
               )
             }
           }
