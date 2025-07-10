@@ -51,16 +51,17 @@
   color: var(--vscode-quickInput-foreground);
   border: 1px solid var(--vscode-widget-border);
   box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+  pointer-events: none;
 
   &--visible {
     transform: translateY(0);
     opacity: 1;
+    pointer-events: all;
   }
 }
 
 .footer {
   display: flex;
-  overflow: hidden;
   gap: var(--padding-8px);
   padding: var(--padding-8px) var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
@@ -68,12 +69,13 @@
   &__button {
     display: flex;
     align-items: center;
-    gap: var(--padding-6px);
+    gap: var(--padding-4px);
     height: 24px;
     padding: 0 5px;
     border-radius: var(--border-radius-4px);
     text-decoration: none;
     color: var(--vscode-foreground);
+    white-space: nowrap;
 
     &:hover {
       color: var(--vscode-foreground);
@@ -117,6 +119,32 @@
       &:hover {
         border-color: var(--vscode-focusBorder);
       }
+    }
+
+    &--quick-actions {
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        top: -19px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 10px;
+        height: 10px;
+        border-bottom: 1px solid var(--vscode-widget-border);
+        border-right: 1px solid var(--vscode-widget-border);
+        transform: translateY(5px) rotate(45deg);
+        background-color: var(--vscode-quickInput-background);
+        transition: all 0.1s ease-in-out;
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    &--quick-actions-after-visible::after {
+      transform: rotate(45deg) translateY(0);
+      opacity: 1;
     }
   }
 }

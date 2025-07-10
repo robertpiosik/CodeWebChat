@@ -476,67 +476,27 @@ export const HomeView: React.FC<Props> = (props) => {
         </a>
         <button
           className={cn(
-            'commands',
             styles.footer__button,
             styles['footer__button--outlined'],
-            is_showing_commands ? styles['footer__button--outlined-active'] : ''
+            is_showing_commands
+              ? styles['footer__button--outlined-active']
+              : '',
+            styles['footer__button--quick-actions'],
+            is_showing_commands
+              ? styles['footer__button--quick-actions-after-visible']
+              : ''
           )}
           onClick={() => {
             set_is_showing_commands(!is_showing_commands)
           }}
         >
-          COMMANDS
+          {is_showing_commands ? (
+            <span className="codicon codicon-chevron-down" />
+          ) : (
+            <span className="codicon codicon-chevron-up" />
+          )}
+          QUICK ACTIONS
         </button>
-        {/* <div className={styles['footer__commands']}>
-          <div className={styles['footer__commands__heading']}>
-            ONE-CLICK ACTIONS
-          </div>
-          <div className={styles['footer__commands__inner']}>
-            <UiQuickAction
-              title="Apply Chat Response"
-              description="Integrate copied message or a code block"
-              on_click={() =>
-                props.on_quick_action_click('codeWebChat.applyChatResponse')
-              }
-            />
-            <UiQuickAction
-              title="Revert Last Changes"
-              description="Restore saved state of the codebase"
-              on_click={() => props.on_quick_action_click('codeWebChat.revert')}
-            />
-            <UiQuickAction
-              title="Commit Changes"
-              description="Generate a commit message and commit"
-              on_click={() =>
-                props.on_quick_action_click('codeWebChat.commitChanges')
-              }
-            />
-          </div>
-        </div>
-        <div className={styles.footer__links}>
-          <div className={styles.footer__links__left}>
-            <a href="https://codeweb.chat/">
-              <span className="codicon codicon-book"></span>{' '}
-              <span>Documentation</span>
-            </a>
-          </div>
-          <div className={styles.footer__links__right}>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault()
-                props.on_review_click()
-              }}
-            >
-              <span className="codicon codicon-star-empty"></span>{' '}
-              <span>Rate</span>
-            </a>
-            <a href="https://buymeacoffee.com/robertpiosik">
-              <span className="codicon codicon-coffee"></span>{' '}
-              <span>Buy me a coffee</span>
-            </a>
-          </div>
-        </div> */}
       </div>
     </div>
   )
