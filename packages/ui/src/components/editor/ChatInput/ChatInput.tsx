@@ -265,7 +265,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             e.stopPropagation()
             props.on_search_click()
           }
-          if (e.key == 'c' && e.shiftKey && (e.ctrlKey || e.metaKey)) {
+          if (e.key == 'c' && e.altKey && (e.ctrlKey || e.metaKey)) {
             if (props.on_copy) {
               e.stopPropagation()
               e.preventDefault()
@@ -332,8 +332,8 @@ export const ChatInput: React.FC<Props> = (props) => {
                 ? props.submit_disabled_title ?? ''
                 : `Copy to clipboard (${
                     navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
-                      ? '⇧⌘C'
-                      : 'Ctrl+Shift+C'
+                      ? '⌥⌘C'
+                      : 'Ctrl+Alt+C'
                   })`
             }
             disabled={!props.is_in_code_completions_mode && !props.value}
