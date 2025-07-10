@@ -320,24 +320,6 @@
         "title": "Repository",
         "category": "Code Web Chat",
         "icon": "$(github-alt)"
-      },
-      {
-        "command": "codeWebChat.openX",
-        "title": "@CodeWebChat",
-        "category": "Code Web Chat",
-        "icon": {
-          "light": "resources/x-logo-light.svg",
-          "dark": "resources/x-logo-dark.svg"
-        }
-      },
-      {
-        "command": "codeWebChat.openReddit",
-        "title": "/r/CodeWebChat",
-        "category": "Code Web Chat",
-        "icon": {
-          "light": "resources/reddit-logo-light.svg",
-          "dark": "resources/reddit-logo-dark.svg"
-        }
       }
     ],
     "menus": {
@@ -429,14 +411,6 @@
         {
           "command": "codeWebChat.openRepository",
           "when": "false"
-        },
-        {
-          "command": "codeWebChat.openX",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.openReddit",
-          "when": "false"
         }
       ],
       "view/title": [
@@ -503,22 +477,12 @@
         {
           "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
-          "group": "navigation@2"
-        },
-        {
-          "command": "codeWebChat.openX",
-          "when": "view == codeWebChatView",
-          "group": "navigation@3"
-        },
-        {
-          "command": "codeWebChat.openReddit",
-          "when": "view == codeWebChatView",
-          "group": "navigation@4"
+          "group": "navigation@1"
         },
         {
           "command": "codeWebChat.settings",
           "when": "view == codeWebChatView",
-          "group": "navigation@7"
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [
@@ -804,7 +768,8 @@
     "typed-css-modules": "^0.9.1",
     "typescript": "^5.8.3",
     "webpack": "^5.99.9",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^6.0.1",
+    "react-outside-click-handler": "1.3.0"
   },
   "dependencies": {
     "@svgr/webpack": "^8.1.0",
@@ -823,6 +788,7 @@
     "simplebar-react": "^3.3.1",
     "ui": "workspace:*",
     "utf-8-validate": "^6.0.5",
-    "ws": "^8.18.3"
+    "ws": "^8.18.3",
+    "@types/react-outside-click-handler": "1.3.0"
   }
 }

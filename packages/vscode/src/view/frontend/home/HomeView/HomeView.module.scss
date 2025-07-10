@@ -1,4 +1,5 @@
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -29,67 +30,93 @@
   display: flex;
   flex-direction: column;
   padding: var(--padding-4px) 0 var(--padding-12px) 0;
+  &--with-commands-tooltip-visible {
+    padding: var(--padding-4px) 0 92px 0;
+  }
+}
+
+.commands {
+  position: absolute;
+  z-index: 1;
+  bottom: calc(24px + 16px + 1px + 4px);
+  left: 0;
+  margin: 0 8px;
+  padding: 4px 0;
+  width: calc(100% - 16px);
+  border-radius: var(--border-radius-4px);
+  transform: translateY(5px);
+  transition: all 0.1s ease-in-out;
+  opacity: 0;
+  background-color: var(--vscode-quickInput-background);
+  color: var(--vscode-quickInput-foreground);
+  border: 1px solid var(--vscode-widget-border);
+  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+
+  &--visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .footer {
   display: flex;
-  flex-direction: column;
-  gap: var(--padding-2px);
-  width: 100%;
-  background: var(--vscode-sideBar-background);
-  padding: var(--padding-6px) 0 var(--padding-4px) 0;
+  overflow: hidden;
+  gap: var(--padding-8px);
+  padding: var(--padding-8px) var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
 
-  &__commands {
+  &__button {
     display: flex;
-    flex-direction: column;
-    gap: var(--padding-2px);
-
-    &__heading {
-      padding: 0 var(--padding-12px);
-      font-size: 13px;
-      color: var(--vscode-foreground);
-      opacity: 0.7;
-    }
-
-    &__inner {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  &__links {
-    padding: 0 var(--padding-12px);
-    display: flex;
+    align-items: center;
     gap: var(--padding-6px);
-    justify-content: space-between;
-    color: black;
+    height: 24px;
+    padding: 0 5px;
+    border-radius: var(--border-radius-4px);
+    text-decoration: none;
+    color: var(--vscode-foreground);
 
-    a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      gap: var(--padding-2px);
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      span:last-child:hover {
-        text-decoration: underline;
+    &:hover {
+      color: var(--vscode-foreground);
+    }
+
+    > svg {
+      flex-shrink: 0;
+      fill: var(--vscode-icon-foreground);
+      width: 16px;
+      height: 16px;
+    }
+
+    &--buy-me-a-coffee {
+      background-color: #f7d600;
+
+      &:hover {
+        background-color: #ebcb00;
+      }
+
+      > svg {
+        fill: black;
       }
     }
 
-    &__left {
-      overflow: hidden;
-      a > span:last-child {
-        text-overflow: ellipsis;
-        overflow: hidden;
+    &--filled {
+      background-color: var(--vscode-list-hoverBackground);
+      &:hover {
+        background-color: var(--vscode-toolbar-hoverBackground);
       }
     }
 
-    &__right {
-      display: flex;
-      gap: var(--padding-6px);
+    &--outlined {
+      border: 1px solid var(--vscode-commandCenter-inactiveBorder);
+      &:hover {
+        border-color: var(--vscode-commandCenter-activeBorder);
+      }
+    }
+
+    &--outlined-active {
+      border-color: var(--vscode-focusBorder);
+      &:hover {
+        border-color: var(--vscode-focusBorder);
+      }
     }
   }
 }

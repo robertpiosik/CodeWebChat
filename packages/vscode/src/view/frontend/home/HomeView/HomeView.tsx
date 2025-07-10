@@ -11,6 +11,8 @@ import { Switch as UiSwitch } from '@ui/components/editor/Switch'
 import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { Dropdown as UiDropdown } from '@ui/components/editor/Dropdown'
+import { Icon } from '@ui/components/editor/Icon'
+import cn from 'classnames'
 import { QuickAction as UiQuickAction } from '@ui/components/editor/QuickAction'
 
 type Props = {
@@ -77,6 +79,7 @@ export const HomeView: React.FC<Props> = (props) => {
   const container_ref = useRef<HTMLDivElement>(null)
   const switch_container_ref = useRef<HTMLDivElement>(null)
   const simplebar_ref = useRef<any>(null)
+  const [is_showing_commands, set_is_showing_commands] = useState(false)
 
   const calculate_dropdown_max_width = () => {
     if (!container_ref.current || !switch_container_ref.current) return
@@ -222,7 +225,12 @@ export const HomeView: React.FC<Props> = (props) => {
             height: '100%'
           }}
         >
-          <div className={styles.inner}>
+          <div
+            className={cn(styles.inner, {
+              [styles['inner--with-commands-tooltip-visible']]:
+                is_showing_commands
+            })}
+          >
             <div className={styles.top}>
               <div ref={switch_container_ref}>
                 <UiSwitch
@@ -408,8 +416,78 @@ export const HomeView: React.FC<Props> = (props) => {
         </SimpleBar>
       </div>
 
+      <div
+        className={cn(styles.commands, {
+          [styles['commands--visible']]: is_showing_commands
+        })}
+      >
+        <UiQuickAction
+          title="Apply Chat Response"
+          description="Integrate copied message or a code block"
+          on_click={() =>
+            props.on_quick_action_click('codeWebChat.applyChatResponse')
+          }
+        />
+        <UiQuickAction
+          title="Revert Last Changes"
+          description="Restore saved state of the codebase"
+          on_click={() => props.on_quick_action_click('codeWebChat.revert')}
+        />
+        <UiQuickAction
+          title="Commit Changes"
+          description="Generate a commit message and commit"
+          on_click={() =>
+            props.on_quick_action_click('codeWebChat.commitChanges')
+          }
+        />
+      </div>
+
       <div className={styles.footer}>
-        <div className={styles['footer__commands']}>
+        <a
+          className={cn(
+            styles.footer__button,
+            styles['footer__button--buy-me-a-coffee']
+          )}
+          href="https://buymeacoffee.com/robertpiosik"
+        >
+          <Icon variant="BUY_ME_A_COFFEE" />
+        </a>
+        <a
+          className={cn(
+            styles.footer__button,
+            styles['footer__button--filled']
+          )}
+          href="https://x.com/CodeWebChat"
+        >
+          <Icon variant="X" />
+        </a>
+        <a
+          className={cn(
+            styles.footer__button,
+            styles['footer__button--filled']
+          )}
+          href="https://www.reddit.com/r/CodeWebChat/"
+          style={{ overflow: 'hidden' }}
+        >
+          <Icon variant="REDDIT" />
+          <span style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
+            COMMUNITY
+          </span>
+        </a>
+        <button
+          className={cn(
+            'commands',
+            styles.footer__button,
+            styles['footer__button--outlined'],
+            is_showing_commands ? styles['footer__button--outlined-active'] : ''
+          )}
+          onClick={() => {
+            set_is_showing_commands(!is_showing_commands)
+          }}
+        >
+          COMMANDS
+        </button>
+        {/* <div className={styles['footer__commands']}>
           <div className={styles['footer__commands__heading']}>
             ONE-CLICK ACTIONS
           </div>
@@ -458,7 +536,7 @@ export const HomeView: React.FC<Props> = (props) => {
               <span>Buy me a coffee</span>
             </a>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )
