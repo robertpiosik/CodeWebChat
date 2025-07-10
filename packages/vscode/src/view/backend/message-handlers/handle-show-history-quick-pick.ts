@@ -69,7 +69,8 @@ export const handle_show_history_quick_pick = async (
     list: 'recents' | 'pinned',
     is_pinned: boolean,
     pinned_index?: number,
-    total_pinned?: number
+    total_pinned?: number,
+    is_searching?: boolean
   ): vscode.QuickPickItem => ({
     label: text,
     buttons: [
@@ -77,24 +78,26 @@ export const handle_show_history_quick_pick = async (
       pinned_index !== undefined &&
       total_pinned !== undefined &&
       total_pinned > 1
-        ? [
-            ...(pinned_index > 0
-              ? [
-                  {
-                    iconPath: new vscode.ThemeIcon('chevron-up'),
-                    tooltip: 'Move up'
-                  }
-                ]
-              : []),
-            ...(pinned_index < total_pinned - 1
-              ? [
-                  {
-                    iconPath: new vscode.ThemeIcon('chevron-down'),
-                    tooltip: 'Move down'
-                  }
-                ]
-              : [])
-          ]
+        ? is_searching
+          ? []
+          : [
+              ...(pinned_index > 0
+                ? [
+                    {
+                      iconPath: new vscode.ThemeIcon('chevron-up'),
+                      tooltip: 'Move up'
+                    }
+                  ]
+                : []),
+              ...(pinned_index < total_pinned - 1
+                ? [
+                    {
+                      iconPath: new vscode.ThemeIcon('chevron-down'),
+                      tooltip: 'Move down'
+                    }
+                  ]
+                : [])
+            ]
         : []),
       ...(!is_pinned
         ? [
@@ -115,6 +118,7 @@ export const handle_show_history_quick_pick = async (
   })
 
   const items: vscode.QuickPickItem[] = []
+  let current_search_value = ''
 
   if (pinned_history.length > 0) {
     items.push({
@@ -146,16 +150,19 @@ export const handle_show_history_quick_pick = async (
 
   quick_pick.items = items
 
-  // Set the active item to the first recent item (not separator)
   if (history.length > 0) {
     const firstRecentItemIndex = items.findIndex((item, index) => {
-      // Find the first item after the "recent" separator that's not a separator itself
-      const recentSeparatorIndex = items.findIndex(i => i.label === 'recent' && i.kind === vscode.QuickPickItemKind.Separator)
-      return recentSeparatorIndex !== -1 &&
-             index > recentSeparatorIndex &&
-             item.kind !== vscode.QuickPickItemKind.Separator
+      const recentSeparatorIndex = items.findIndex(
+        (i) =>
+          i.label === 'recent' && i.kind === vscode.QuickPickItemKind.Separator
+      )
+      return (
+        recentSeparatorIndex != -1 &&
+        index > recentSeparatorIndex &&
+        item.kind !== vscode.QuickPickItemKind.Separator
+      )
     })
-    if (firstRecentItemIndex !== -1) {
+    if (firstRecentItemIndex != -1) {
       quick_pick.activeItems = [items[firstRecentItemIndex]]
     }
   }
@@ -208,11 +215,9 @@ export const handle_show_history_quick_pick = async (
       const button_tooltip = e.button.tooltip
       const item_text = item_to_handle.label
 
-      // Handle chevron up/down for pinned items
-      if (button_tooltip === 'Move up') {
+      if (button_tooltip == 'Move up') {
         const current_index = pinned_history.indexOf(item_text)
         if (current_index > 0) {
-          // Swap with the item above
           const temp = pinned_history[current_index - 1]
           pinned_history[current_index - 1] = pinned_history[current_index]
           pinned_history[current_index] = temp
@@ -222,10 +227,9 @@ export const handle_show_history_quick_pick = async (
             pinned_history
           )
         }
-      } else if (button_tooltip === 'Move down') {
+      } else if (button_tooltip == 'Move down') {
         const current_index = pinned_history.indexOf(item_text)
         if (current_index < pinned_history.length - 1) {
-          // Swap with the item below
           const temp = pinned_history[current_index + 1]
           pinned_history[current_index + 1] = pinned_history[current_index]
           pinned_history[current_index] = temp
@@ -235,8 +239,7 @@ export const handle_show_history_quick_pick = async (
             pinned_history
           )
         }
-      } else if (button_tooltip === 'Add to Pinned Prompts') {
-        // Add item to pinned history if not already there
+      } else if (button_tooltip == 'Add to Pinned Prompts') {
         if (!pinned_history.includes(item_text)) {
           pinned_history.push(item_text)
           await provider.context.workspaceState.update(
@@ -244,27 +247,24 @@ export const handle_show_history_quick_pick = async (
             pinned_history
           )
         }
-      } else if (button_tooltip === 'Remove from Pinned Prompts') {
-        // Remove from pinned history
+      } else if (button_tooltip == 'Remove from Pinned Prompts') {
         const index = pinned_history.indexOf(item_text)
-        if (index !== -1) {
+        if (index != -1) {
           pinned_history.splice(index, 1)
           await provider.context.workspaceState.update(
             pinned_history_key,
             pinned_history
           )
         }
-      } else if (button_tooltip === 'Remove from Recent Prompts') {
-        // Remove from recent history
+      } else if (button_tooltip == 'Remove from Recent Prompts') {
         const index = history.indexOf(item_text)
-        if (index !== -1) {
+        if (index != -1) {
           history.splice(index, 1)
           await provider.context.workspaceState.update(history_key, history)
         }
       }
 
-      // Check if we should close the quick pick if no items remain
-      if (history.length === 0 && pinned_history.length === 0) {
+      if (history.length == 0 && pinned_history.length == 0) {
         quick_pick.hide()
         return
       }
@@ -283,7 +283,8 @@ export const handle_show_history_quick_pick = async (
               'pinned',
               true,
               index,
-              pinned_history.length
+              pinned_history.length,
+              !!current_search_value
             )
           )
         )
@@ -296,13 +297,48 @@ export const handle_show_history_quick_pick = async (
         })
         updated_items.push(
           ...history.map((item) =>
-            to_quick_pick_item(item, 'recents', pinned_history.includes(item))
+            to_quick_pick_item(
+              item,
+              'recents',
+              pinned_history.includes(item),
+              undefined
+            )
           )
         )
       }
 
       quick_pick.items = updated_items
       handle_get_history(provider)
+    }),
+    quick_pick.onDidChangeValue(() => {
+      if (quick_pick.value == current_search_value) return
+      current_search_value = quick_pick.value
+      const is_searching = current_search_value.length > 0
+
+      const new_items: vscode.QuickPickItem[] = []
+      if (pinned_history.length > 0) {
+        new_items.push({
+          label: 'pinned',
+          kind: vscode.QuickPickItemKind.Separator
+        })
+        new_items.push(
+          ...pinned_history.map((item, index) =>
+            to_quick_pick_item(
+              item,
+              'pinned',
+              true,
+              index,
+              pinned_history.length,
+              is_searching
+            )
+          )
+        )
+      }
+
+      const recent_items = quick_pick.items.filter(
+        (i) => (i as { list?: string }).list == 'recents'
+      )
+      quick_pick.items = [...new_items, ...recent_items]
     }),
     quick_pick.onDidHide(() => {
       disposables.forEach((d) => d.dispose())
