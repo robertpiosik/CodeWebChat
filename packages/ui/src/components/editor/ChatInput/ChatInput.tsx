@@ -265,7 +265,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             e.stopPropagation()
             props.on_search_click()
           }
-          if (e.key == 'c' && (e.ctrlKey || e.metaKey)) {
+          if (e.key == 'c' && e.shiftKey && (e.ctrlKey || e.metaKey)) {
             if (props.on_copy) {
               e.stopPropagation()
               e.preventDefault()
@@ -309,8 +309,10 @@ export const ChatInput: React.FC<Props> = (props) => {
           )}
           onClick={props.on_search_click}
           title={`${props.translations.search} (${
-            navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? '⌘' : 'Ctrl'
-          }+F)`}
+            navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
+              ? '⌘F'
+              : 'Ctrl+F'
+          })`}
         />
 
         {props.on_copy && (
@@ -330,9 +332,9 @@ export const ChatInput: React.FC<Props> = (props) => {
                 ? props.submit_disabled_title ?? ''
                 : `Copy to clipboard (${
                     navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
-                      ? '⌘'
-                      : 'Ctrl'
-                  }+C)`
+                      ? '⇧⌘C'
+                      : 'Ctrl+Shift+C'
+                  })`
             }
             disabled={!props.is_in_code_completions_mode && !props.value}
           />
