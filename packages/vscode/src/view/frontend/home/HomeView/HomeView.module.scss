@@ -30,19 +30,15 @@
   display: flex;
   flex-direction: column;
   padding: var(--padding-4px) 0 var(--padding-12px) 0;
-  &--with-commands-tooltip-visible {
-    padding: var(--padding-4px) 0 92px 0;
-  }
 }
 
 .commands {
   position: absolute;
   z-index: 1;
   bottom: calc(24px + 16px + 1px + 4px);
-  left: 0;
-  margin: 0 8px;
+  right: 8px;
   padding: 4px 0;
-  width: calc(100% - 16px);
+  width: 65vw;
   border-radius: var(--border-radius-4px);
   transform: translateY(5px);
   transition: all 0.1s ease-in-out;
@@ -90,9 +86,10 @@
 
     &--buy-me-a-coffee {
       background-color: #f7d600;
+      transition: all 0.2s ease-in-out;
 
       &:hover {
-        background-color: #ebcb00;
+        transform: scale(1.1) rotate(-7deg);
       }
 
       > svg {

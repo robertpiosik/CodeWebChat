@@ -225,12 +225,7 @@ export const HomeView: React.FC<Props> = (props) => {
             height: '100%'
           }}
         >
-          <div
-            className={cn(styles.inner, {
-              [styles['inner--with-commands-tooltip-visible']]:
-                is_showing_commands
-            })}
-          >
+          <div className={styles.inner}>
             <div className={styles.top}>
               <div ref={switch_container_ref}>
                 <UiSwitch
@@ -264,11 +259,6 @@ export const HomeView: React.FC<Props> = (props) => {
                     max_width={dropdown_max_width}
                   />
                 )}
-                {/* <IconButton
-                  codicon_icon="settings-gear"
-                  title="Settings"
-                  on_click={props.on_settings_click}
-                /> */}
               </div>
             </div>
 
@@ -449,6 +439,7 @@ export const HomeView: React.FC<Props> = (props) => {
             styles['footer__button--buy-me-a-coffee']
           )}
           href="https://buymeacoffee.com/robertpiosik"
+          title="Support author"
         >
           <Icon variant="BUY_ME_A_COFFEE" />
         </a>
@@ -458,6 +449,7 @@ export const HomeView: React.FC<Props> = (props) => {
             styles['footer__button--filled']
           )}
           href="https://x.com/CodeWebChat"
+          title="@CodeWebChat"
         >
           <Icon variant="X" />
         </a>
@@ -468,6 +460,7 @@ export const HomeView: React.FC<Props> = (props) => {
           )}
           href="https://www.reddit.com/r/CodeWebChat/"
           style={{ overflow: 'hidden' }}
+          title="Join /r/CodeWebChat"
         >
           <Icon variant="REDDIT" />
           <span style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
@@ -489,6 +482,7 @@ export const HomeView: React.FC<Props> = (props) => {
           onClick={() => {
             set_is_showing_commands(!is_showing_commands)
           }}
+          title="Important commands at a glance"
         >
           {is_showing_commands ? (
             <span className="codicon codicon-chevron-down" />
