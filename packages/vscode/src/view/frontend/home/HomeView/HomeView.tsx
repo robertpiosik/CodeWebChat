@@ -53,7 +53,6 @@ type Props = {
   on_edit_context_with_quick_pick_click: () => void
   on_code_completion_click: () => void
   on_code_completion_with_quick_pick_click: () => void
-  on_review_click: () => void
 }
 
 const web_mode_labels: Record<WebMode, string> = {

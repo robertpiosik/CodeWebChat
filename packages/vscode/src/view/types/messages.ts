@@ -193,10 +193,6 @@ export interface SaveApiModeMessage extends BaseMessage {
   mode: ApiMode
 }
 
-export interface ReviewMessage extends BaseMessage {
-  command: 'REVIEW'
-}
-
 // Messages from extension to webview:
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
@@ -375,7 +371,6 @@ export type WebviewMessage =
   | GetWebModeMessage
   | GetApiModeMessage
   | SaveApiModeMessage
-  | ReviewMessage
 
 export type ExtensionMessage =
   | InstructionsMessage

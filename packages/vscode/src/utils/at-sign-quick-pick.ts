@@ -11,16 +11,15 @@ export async function at_sign_quick_pick(
   const items = [
     {
       label: '@Selection',
-      description: 'Inject text selection of the active editor'
+      description: 'Text selection of the active editor'
     },
     {
       label: '@Changes',
-      description:
-        'Inject changes between the current branch and the selected branch'
+      description: 'Changes between the current branch and the selected branch'
     },
     {
       label: '@SavedContext',
-      description: 'Inject files from a saved context'
+      description: 'Files from a saved context'
     }
   ]
 

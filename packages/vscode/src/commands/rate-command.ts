@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 
-export const handle_review = async (): Promise<void> => {
+const rate = async (): Promise<void> => {
   const options = [
     {
       label: 'Visual Studio Marketplace',
@@ -24,3 +24,6 @@ export const handle_review = async (): Promise<void> => {
     vscode.env.openExternal(vscode.Uri.parse(selected_option.url))
   }
 }
+
+export const rate_command = () =>
+  vscode.commands.registerCommand('codeWebChat.rate', rate)

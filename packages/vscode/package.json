@@ -117,6 +117,18 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.openRepository",
+        "title": "Repository",
+        "category": "Code Web Chat",
+        "icon": "$(github-alt)"
+      },
+      {
+        "command": "codeWebChat.rate",
+        "title": "Rate",
+        "category": "Code Web Chat",
+        "icon": "$(star)"
+      },
+      {
         "command": "codeWebChat.applyContext",
         "title": "Apply Context",
         "category": "Code Web Chat",
@@ -329,6 +341,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.rate",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.clearChecksOpenEditors",
           "when": "false"
         },
@@ -480,9 +496,14 @@
           "group": "navigation@1"
         },
         {
-          "command": "codeWebChat.settings",
+          "command": "codeWebChat.rate",
           "when": "view == codeWebChatView",
           "group": "navigation@2"
+        },
+        {
+          "command": "codeWebChat.settings",
+          "when": "view == codeWebChatView",
+          "group": "navigation@3"
         }
       ],
       "view/item/context": [
