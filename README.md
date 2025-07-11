@@ -6,19 +6,18 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-100% free and open source AI workflow tool that connects your editor with 10+ popular chatbots and has all the necessary API tools built-in.
+100% free and open source AI workflow tool that connects your editor with any chatbot and has all the necessary API tools built-in.
 
 **With CWC you can:**
 
 - Granularly select folders and files from your project to copy them as XML-formatted text.
-- Type your task and initialize any chatbot, or send an API request.
-- Get code completions using reasoning models and all selected files as context.
+- Type your task and initialize a chatbot, or send an API request.
+- Get accurate code completions using reasoning models and all selected files as context.
 - Generate precise commit messages by referencing the original state of the modified files.
 
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
-- univarsal—enable any workflow
 - privacy first—zero telemetry
 - lightweight—about 1MB of code
 
@@ -36,13 +35,24 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 
 **Supported chatbots:**
 
-**AI Studio** • **ChatGPT** • **Claude** • **DeepSeek** • **Doubao** • **Gemini** • **Grok** • **HuggingChat** • **Mistral** • **Open WebUI** • **OpenRouter Chat** • **Perplexity** • **Qwen** • **Yuanbao**
+- AI Studio
+- ChatGPT
+- Claude
+- DeepSeek
+- Doubao
+- Gemini
+- Grok
+- HuggingChat
+- Mistral
+- Open WebUI
+- OpenRouter Chat
+- Perplexity
+- Qwen
+- Yuanbao
 
 > <small>**Legal Disclaimer:** After chat initialization, the extension does not read the incoming message. The injected _Apply response_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.</small>
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
-
-CWC includes all the necessary API tools.
 
 ### Code Completions
 
@@ -71,13 +81,6 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 ✅ Includes affected files in full \
 ✅ Customizable instructions
-
-**Predefined API providers:**
-
-**Anthropic** • **Cerebras** • **Chutes** • **DeepInfra** • **DeepSeek** • **Fireworks** • **Gemini** • **Hyperbolic** • **Mistral** • **OpenAI** • **OpenRouter** • **TogetherAI**
-
-ℹ️ Any OpenAI-API compatible endpoint works with CWC \
-🔒️ API keys are [stored encrypted](https://code.visualstudio.com/api/references/vscode-api#SecretStorage)
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Commands</span>
 
@@ -120,17 +123,17 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Settings</span>
 
-### Chatbot initialization
-
 - `Code Web Chat: Edit Format Instructions Truncated` - Style instructions for chat responses when using truncated format.
 
 - `Code Web Chat: Edit Format Instructions Whole` - Style instructions for chat responses when showing complete files.
 
 - `Code Web Chat: Edit Format Instructions Diff` - Style instructions for chat responses when using diff format.
 
-### Commit Messages
-
 - `Code Web Chat: Commit Message Instructions` - The instructions used when generating a commit message.
+
+- `Code Web Chat: Ignored Extensions` - List of file extensions to ignore in the context.
+
+- `Code Web Chat: Presets` - A preset is a general or task specific web chat configuration.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
