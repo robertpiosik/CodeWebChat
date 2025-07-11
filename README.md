@@ -27,18 +27,6 @@
 - you're an experienced engineer working on a large codebase
 - you're a student or hobbyist on a budget
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Context selection</span>
-
-With today's advancements in LLMs capabilities, the technology is dramatically accelerating the pace a new code is created through the work of automated agents. For some it is too fast too keep up though. Over time, they lose confidence in their understanding of the codebase they work on - verifying changes becomes challenging, making it easier for bugs or unintended behaviors to slip in.
-
-CWC does not prompt-engineer any form of autonomous coding, instead, it expects programmer to be in the loop with the evolving codebase by manual context management.
-
-The benefits of this friction include:
-
-- developing a mental model of the codebase,
-- quick results from a single chat or API call,
-- predictable outputs.
-
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
 Code with your favorite chatbot without tedious copy-pasting and apply responses with a single click.
