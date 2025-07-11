@@ -125,7 +125,7 @@ Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Donations</span>
 
-If you find CWC helpful, please consider [supporting the project](https://buymeacoffee.com/robertpiosik). Thank you!
+If you like Code Web Chat, [buying a coffee](https://buymeacoffee.com/robertpiosik) is a great way to show your support for the project.
 
 **BTC:** bc1qfzajl0fc4347knr6n5hhuk52ufr4sau04su5te
 
@@ -139,7 +139,7 @@ All contributions are welcome. Feel free to submit pull requests, feature reques
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">License</span>
 
-License: [GPL-3.0](https://github.com/robertpiosik/CodeWebChat/blob/master/LICENSE) \
+[GPL-3.0](https://github.com/robertpiosik/CodeWebChat/blob/master/LICENSE) \
 Copyright © 2025-present [Robert Piosik](https://x.com/robertpiosik) \
 E-mail: robertpiosik@gmail.com \
-Telegram: @robertpiosik
+Telegram: @robertpiosik (telegram)
