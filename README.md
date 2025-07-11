@@ -14,6 +14,7 @@
 - Type your task and initialize a chatbot, or send an API request.
 - Get accurate code completions using reasoning models and all selected files as context.
 - Generate precise commit messages by referencing the original state of the modified files.
+- Parse websites for context through the Connector browser extension.
 
 **Guiding principles:**
 
