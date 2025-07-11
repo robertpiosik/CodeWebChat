@@ -81,7 +81,7 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 - `Code Web Chat: Edit Context` - Create and modify files in context based on natural language instructions.
 
-### Applying chat responses
+### Handling AI responses
 
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied overall chat response or a single code block.
 - `Code Web Chat: Revert Last Changes` - Revert last applied chat response or the Edit Context API tool use.
