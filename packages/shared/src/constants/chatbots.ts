@@ -150,7 +150,11 @@ export const CHATBOTS = {
     default_system_instructions: '',
     supported_options: { think: 'Think' },
     default_top_p: 0,
-    models: {}
+    models: {
+      'grok-3': 'Grok 3',
+      'grok-4': 'Grok 4',
+      'grok-4-heavy': 'Grok 4 Heavy'
+    }
   },
   HuggingChat: {
     url: 'https://huggingface.co/chat/',

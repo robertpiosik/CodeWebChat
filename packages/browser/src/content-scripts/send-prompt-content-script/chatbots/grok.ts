@@ -39,6 +39,35 @@ export const grok: Chatbot = {
       }
     }
   },
+  set_model: async (model: string) => {
+    const model_selector_button = document.querySelector(
+      'form > div > div > div:last-child > div > div:last-child > button'
+    ) as HTMLButtonElement
+    if (!model_selector_button) return
+
+    const model_name_to_find = (CHATBOTS['Grok'].models as any)[model]
+    if (!model_name_to_find) return
+
+    if (model_selector_button.textContent == model_name_to_find) return
+
+    model_selector_button.click()
+    await new Promise((r) => requestAnimationFrame(r))
+
+    const dropdown = document.querySelector(
+      'div[data-radix-popper-content-wrapper]'
+    )
+    if (!dropdown) return
+
+    const menu_items = dropdown.querySelectorAll('div[role="menuitem"]')
+
+    for (const item of Array.from(menu_items)) {
+      if (item.textContent?.includes(model_name_to_find)) {
+        ;(item as HTMLElement).click()
+        break
+      }
+    }
+    await new Promise((r) => requestAnimationFrame(r))
+  },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (params: { footer: Element }) => {
       // Check if buttons already exist by text content to avoid duplicates
