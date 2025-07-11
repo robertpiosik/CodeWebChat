@@ -13,7 +13,14 @@
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Meet CWC</span>
 
-100% free and open source universal coding extension for AI-assisted programming.
+100% free and open source AI workflow tool that connects your editor with 10+ popular chatbots and has all the necessary API tools built-in.
+
+With CWC you can:
+
+- Granularly select folders and files from your project to copy them as XML-formatted text.
+- Type your task and initialize any chatbot, or send an API request.
+- Get code completions using reasoning models and all selected files as context.
+- Generate precise commit messages by referencing the original state of the modified files.
 
 ⚡️ World's fastest AI coding - one-shot tasks in a single chat or API call \
 🧩 Compatible with VS Code derivatives (Cursor, Windsurf, VSCodium, etc.) \
