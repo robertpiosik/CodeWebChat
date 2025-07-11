@@ -6,7 +6,6 @@ type SwitchProps<T extends string> = {
   value: T
   on_change: (value: T) => void
   options: T[]
-  title?: string
 }
 
 export const Switch = <T extends string>(props: SwitchProps<T>) => {
@@ -43,7 +42,7 @@ export const Switch = <T extends string>(props: SwitchProps<T>) => {
   }, [props.value])
 
   return (
-    <div className={styles.container} ref={container_ref} title={props.title}>
+    <div className={styles.container} ref={container_ref}>
       <div className={styles.pill} style={pill_style} />
       {props.options.map((option) => (
         <div

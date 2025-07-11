@@ -231,7 +231,6 @@ export const HomeView: React.FC<Props> = (props) => {
                   value={props.home_view_type}
                   on_change={props.on_home_view_type_change}
                   options={Object.values(HOME_VIEW_TYPES)}
-                  title="Initialize web chats or update files right away"
                 />
               </div>
 
