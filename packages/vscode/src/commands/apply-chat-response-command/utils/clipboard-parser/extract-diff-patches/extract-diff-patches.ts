@@ -192,6 +192,11 @@ const extract_file_path_from_lines = (lines: string[]): string | undefined => {
   let to_path: string | undefined
 
   for (const line of lines) {
+    const git_diff_match = line.match(/^diff --git a\/(.+?) b\/(.+)$/)
+    if (git_diff_match) {
+      if (git_diff_match[2]) to_path = git_diff_match[2]
+      if (git_diff_match[1]) from_path = git_diff_match[1]
+    }
     const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
     if (from_match && from_match[1]) {
       from_path = from_match[1]
@@ -284,7 +289,7 @@ const format_hunk_headers = (lines: string[]): string[] => {
   const formatted_lines: string[] = []
   for (const line of lines) {
     const hunk_match = line.match(/^(@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@)(.*)$/)
-    if (hunk_match && hunk_match[2].trim() !== '') {
+    if (hunk_match && hunk_match[2].trim() != '') {
       formatted_lines.push(hunk_match[1])
       if (hunk_match[2].length > 0) {
         formatted_lines.push(hunk_match[2])
