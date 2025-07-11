@@ -42,7 +42,7 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-CWC includes battle-tested must-have API tools.
+CWC includes all the necessary API tools.
 
 ### Code Completions
 
