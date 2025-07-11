@@ -31,13 +31,10 @@ export const process_diff_patch = async (
   diff_path_patch: string
 ): Promise<void> => {
   if (!fs.existsSync(file_path)) {
-    // Check if file exists, if not then create it and any directories
     try {
-      // Ensure the directory exists
       const dir_path = path.dirname(file_path)
       await fs.promises.mkdir(dir_path, { recursive: true })
 
-      // Write the new file
       await fs.promises.writeFile(file_path, '', { flag: 'w' })
 
       // Delay to prevent file system issues when creating a lot of files quickly
@@ -61,16 +58,12 @@ export const process_diff_patch = async (
 
   let result = ''
 
-  // New file or apply diff
   if (diff_patch_content.includes('--- /dev/null')) {
-    // New file
     result = create_new_file_from_patch(diff_patch_content)
   } else {
-    // Apply diff
     result = apply_diff_patch(file_content, diff_patch_content)
   }
 
-  // Save result to file
   try {
     await vscode.workspace.fs.writeFile(
       vscode.Uri.file(file_path),
@@ -122,12 +115,12 @@ const apply_diff_patch = (
   diff_patch: string
 ): string => {
   try {
-    const original_code_normalized = original_code.replace(/\r\n/g, '\n') // Remove windows line endings
-    const original_code_lines = original_code_normalized.split(/^/m) // Split by new line
+    const original_code_normalized = original_code.replace(/\r\n/g, '\n')
+    const original_code_lines = original_code_normalized.split(/^/m)
     const original_code_lines_normalized = []
 
-    const patch_normalized = diff_patch.replace(/\r\n/g, '\n') // Remove windows line endings
-    const patch_lines = patch_normalized.split('\n') // Split by new line
+    const patch_normalized = diff_patch.replace(/\r\n/g, '\n')
+    const patch_lines = patch_normalized.split('\n')
     const patch_lines_original = []
     const patch_lines_normalized = []
 
@@ -149,19 +142,14 @@ const apply_diff_patch = (
         line = '~nnn'
       }
 
-      // Remove all line endings
       const line_normalized = line
         .replace(/\r\n/g, '')
         .replace(/\r/g, '')
         .replace(/\n/g, '')
 
-      // Remove all white spaces
       const line_normalized_2 = line_normalized.replace(/\s+/g, '')
-
-      // Change to lower case
       const line_normalized_3 = line_normalized_2.toLowerCase()
 
-      // Store the normilized code line
       original_code_lines_normalized.push({
         key: line_count,
         value: line_normalized_3
@@ -186,13 +174,10 @@ const apply_diff_patch = (
 
       // Treat empty new lines as ~nnn
       if (line.trim() === '') {
-        // Orignal empty line
         line = '~nnn'
       } else if (line.trim() === '+') {
-        // Add empty line
         line = '+~nnn'
       } else if (line.trim() === '-') {
-        // Remove empty line
         line = '-~nnn'
       }
 
@@ -201,7 +186,6 @@ const apply_diff_patch = (
         line.startsWith(' ') ? line.substring(1, line.length) : line
       )
 
-      // Remove all line endings
       let line_normalized = line
         .replace(/\r\n/g, '')
         .replace(/\r/g, '')
@@ -212,25 +196,12 @@ const apply_diff_patch = (
         line_normalized = line_normalized.replace(/^\s+/, '~')
       }
 
-      // Remove all white spaces
       const line_normalized_2 = line_normalized.replace(/\s+/g, '')
-
-      // Change to lower case
       const line_normalized_3 = line_normalized_2.toLowerCase()
-
-      // Store the normilized patch line
       patch_lines_normalized.push(line_normalized_3)
     }
 
-    // if line does not start with + or - then is unmodified code add to search and replace
-    // if line starts with - then add to search
-    // if line starts with ~ then add to search and replace
-    // if line starts with + then add to replace
-
-    // Contains the search and replace chunks
     const search_replace_blocks = []
-
-    // Contains the search and replace lines for each chunk
     let search_chunks = []
     let replace_chunks = []
 
@@ -241,8 +212,6 @@ const apply_diff_patch = (
       const line_original = patch_lines_original[i]
 
       if (line.startsWith('@@')) {
-        // Start of new hunk
-        // Reset for new hunk
         search_chunks = []
         replace_chunks = []
         inside_replace_block = false
@@ -255,13 +224,11 @@ const apply_diff_patch = (
 
           // Don't add the block if there is no matching search or replace
           if (search_chunks.length > 0 || replace_chunks.length > 0) {
-            // Add the previous search block to the searchReplaceBlocks
             search_replace_blocks.push(
               new SearchBlock(search_chunks, replace_chunks, -1)
             )
           }
 
-          // Clear the search and replace chunks
           search_chunks = []
           replace_chunks = []
         }
@@ -296,7 +263,6 @@ const apply_diff_patch = (
           // Remove new line tag from start of line
           replace_chunks.push(line_original.replace(/^\+~nnn/, '') + '\n')
         } else {
-          // Remove + from start of line
           replace_chunks.push(line_original.replace(/^\+/, '') + '\n')
         }
       }
@@ -322,17 +288,11 @@ const apply_diff_patch = (
       }
     }
 
-    //print_debug(original_code_lines, original_code_lines_normalized, patch_lines_normalized, search_replace_blocks);
-
     // === Work through search and replace blocks finding start of search block ===
     let previous_found_index = 0
     for (let i = 0; i < search_replace_blocks.length; i++) {
       const search_replace_block = search_replace_blocks[i]
-
-      // Create search string chunk from searchReplaceBlock
       const search_string = search_replace_block.search_lines.join('')
-
-      //console.log('Search string: ' + search_string);
 
       // Iterate over the originalCodeLinesNormalized to find the search string
       // We start search from the previous found index to ensure duplicate code is not found at wrong index
@@ -342,15 +302,6 @@ const apply_diff_patch = (
         j < original_code_lines_normalized.length;
         j++
       ) {
-        // Create a chunk of lines from originalCodeLinesNormalized
-        // const chunk = original_code_lines_normalized.slice(
-        //   j,
-        //   j + search_replace_block.search_lines.length
-        // )
-        // const chunk_string = chunk.map((line) => line.value).join('')
-
-        // console.log('Chunk string: ' + chunk_string);
-
         // If we have no search lines and only replace lines and our previous found index is 0
         // assume we are at the start of the file and set the search block start index to 0
         // This is a special case when a patch hunk starts with one or more + lines and no context lines
@@ -361,7 +312,6 @@ const apply_diff_patch = (
           search_replace_block.search_block_start_index = -1 // insert at the start of the file
           found = true
         } else {
-          // Create a chunk of lines from originalCodeLinesNormalized
           const chunk = original_code_lines_normalized.slice(
             j,
             j + search_replace_block.search_lines.length
@@ -369,25 +319,16 @@ const apply_diff_patch = (
 
           const chunk_string = chunk.map((line) => line.value).join('')
 
-          //console.log('Chunk string: ' + chunk_string);
-          //console.log('Previous found index: ' + previous_found_index);
-          //console.log('Chunk: ' + JSON.stringify(chunk, null, 2));
-
-          // Check if the chunk matches the search string
           if (chunk_string == search_string) {
-            // Check if found index is greater than the previous found index
             if (previous_found_index > chunk[0].key) {
               // This should never happen
               throw new Error('Found index is less than previous found index')
             }
 
-            // Store the index of the first line of the search block
             search_replace_block.search_block_start_index = chunk[0].key
             found = true
 
             previous_found_index = chunk[0].key // Update the previous index
-
-            //console.log('Found search block at line ' + chunk[0].key);
             break
           }
         }
@@ -414,17 +355,13 @@ const apply_diff_patch = (
     }
 
     // === Apply the search and replace blocks ===
-    // Get all blocks with a valid start index
     const valid_blocks = search_replace_blocks.filter(
       (block) => block.get_start_index() !== -2
     )
-
-    // Sort blocks by descending index
     valid_blocks.sort((a, b) => b.get_start_index() - a.get_start_index())
 
     const result_lines = [...original_code_lines] // Operate on a copy
 
-    // Iterrate over the valid blocks and apply them
     for (const block of valid_blocks) {
       const start_index =
         block.get_start_index() == -1 ? 0 : block.get_start_index() // When -1, insert at the start of the file
@@ -448,16 +385,12 @@ const apply_diff_patch = (
         result_lines.length - start_index
       )
 
-      // console.log(`Applying block at index ${start_index}: removing ${actual_search_count} lines, inserting ${replacement_content.length} lines.`);
-      // Apply the replacement
       result_lines.splice(
         start_index,
         actual_search_count,
         ...replacement_content
       )
     }
-
-    // print_debug(result_lines, original_code_lines, original_code_lines_normalized, patch_lines_normalized, search_replace_blocks);
 
     return result_lines.join('')
   } catch (error) {
@@ -469,37 +402,6 @@ const apply_diff_patch = (
     throw error
   }
 }
-
-// function print_debug(
-//   original_code_lines: string[],
-//   original_code_lines_normalized: any[],
-//   patch_lines_normalized: string[],
-//   search_replace_blocks: SearchBlock[]
-// ) {
-//   // Output the original code lines
-//   console.log('\n=== Original Code Lines ===')
-//   console.log(JSON.stringify(original_code_lines, null, 2))
-
-//   // Output the search_replace_blocks in JSON format
-//   console.log('=== Search and Replace Blocks ===')
-//   console.log(JSON.stringify(search_replace_blocks, null, 2))
-
-//   let output_code_lines = ''
-//   for (let i = 0; i < original_code_lines_normalized.length; i++) {
-//     output_code_lines +=
-//       original_code_lines_normalized[i].key +
-//       ' ' +
-//       original_code_lines_normalized[i].value +
-//       '\n'
-//   }
-
-//   // Output the normalized lines
-//   console.log('=== Normalized Original Code Lines ===')
-//   console.log(output_code_lines)
-
-//   console.log('=== Normalized Patch Lines ===')
-//   console.log(patch_lines_normalized.join('\n'))
-// }
 
 const count_trailing_new_lines = (text: string): number => {
   let count = 0
