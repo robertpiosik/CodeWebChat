@@ -54,33 +54,17 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-### Code Completions
-
+**Code Completions** \
 Get code at cursor from state-of-the-art reasoning models.
 
-✅ Includes selected context \
-✅ Designed for on-demand use
-
-### Edit Context
-
+**Edit Context** \
 Create and modify files in context based on natural language instructions.
 
-✅ Multi-file updates in a single API call \
-✅ Works like web chat->apply response
+**Intelligent Update** \
+Update files based on code blocks in "truncated" edit format. Fix malformed diffs.
 
-### Intelligent Update
-
-When applying chat response, update files based on code blocks in truncated edit format and fix malformed diffs.
-
-✅ Regenerates whole files in concurrent API calls \
-✅ Smaller models like Gemini Flash are sufficient
-
-### Commit Messages
-
+**Commit Messages** \
 Generate meaningful commit messages precisely adhering to your preferred style.
-
-✅ Includes affected files in full \
-✅ Customizable instructions
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Commands</span>
 
