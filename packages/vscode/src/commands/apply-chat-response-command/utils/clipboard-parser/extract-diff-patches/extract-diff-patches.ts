@@ -188,24 +188,26 @@ export const extract_diff_patches = (clipboard_text: string): DiffPatch[] => {
 }
 
 const extract_file_path_from_lines = (lines: string[]): string | undefined => {
+  let from_path: string | undefined
+  let to_path: string | undefined
+
   for (const line of lines) {
-    const file_path_match = line.match(
-      /^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/
-    )
-    if (file_path_match && file_path_match[1]) {
-      return file_path_match[1]
+    const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
+    if (from_match && from_match[1]) {
+      from_path = from_match[1]
+    }
+    const to_match = line.match(/^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/)
+    if (to_match && to_match[1]) {
+      to_path = to_match[1]
     }
   }
 
-  for (const line of lines) {
-    const git_diff_match = line.match(
-      /^diff --git [^ ]+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/
-    )
-    if (git_diff_match && git_diff_match[1]) {
-      return git_diff_match[1]
-    }
+  if (to_path && to_path != '/dev/null') {
+    return to_path
   }
-
+  if (from_path && from_path != '/dev/null') {
+    return from_path
+  }
   return undefined
 }
 

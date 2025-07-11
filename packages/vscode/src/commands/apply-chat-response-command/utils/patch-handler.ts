@@ -14,16 +14,28 @@ const execAsync = promisify(exec)
 export function extract_file_paths_from_patch(patch_content: string): string[] {
   const file_paths: string[] = []
   const lines = patch_content.split('\n')
+  let from_path: string | undefined
+  let to_path: string | undefined
 
   for (const line of lines) {
     // Look for lines starting with +++ b/ which indicate target files in git patches
     const match = line.match(/^\+\+\+ b\/(.+)$/)
     if (match && match[1]) {
-      file_paths.push(match[1])
+      to_path = match[1]
+    }
+    const from_match = line.match(/^--- a\/(.+)$/)
+    if (from_match && from_match[1]) {
+      from_path = from_match[1]
     }
   }
 
-  return file_paths
+  if (to_path && to_path != '/dev/null') {
+    file_paths.push(to_path.trim().replace(/\t.*$/, ''))
+  } else if (from_path && from_path != '/dev/null') {
+    file_paths.push(from_path.trim().replace(/\t.*$/, ''))
+  }
+
+  return [...new Set(file_paths)]
 }
 
 export async function store_original_file_states(
