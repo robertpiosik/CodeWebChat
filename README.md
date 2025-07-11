@@ -6,7 +6,7 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-100% free and open source AI workflow tool that connects your editor with any chatbot and has all the necessary API tools built-in.
+100% free and open source AI workflow tool that connects your editor with 10+ chatbots and has all the necessary API tools built-in.
 
 **With CWC you can:**
 
