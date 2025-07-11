@@ -159,54 +159,28 @@ async function process_modified_files(
 
     // Only process if the file exists after the patch application
     if (fs.existsSync(safe_path)) {
-      if (fs.readFileSync(safe_path, 'utf8').trim() === '') {
-        try {
-          const uri = vscode.Uri.file(safe_path)
-          const text_editors = vscode.window.visibleTextEditors.filter(
-            (editor) => editor.document.uri.toString() === uri.toString()
-          )
-          for (const editor of text_editors) {
-            await vscode.window.showTextDocument(editor.document, {
-              preview: false,
-              preserveFocus: false
-            })
-            await vscode.commands.executeCommand(
-              'workbench.action.closeActiveEditor'
-            )
-          }
+      try {
+        const uri = vscode.Uri.file(safe_path)
+        const document = await vscode.workspace.openTextDocument(uri)
+        await vscode.window.showTextDocument(document, { preview: false })
 
-          fs.unlinkSync(safe_path)
-          Logger.log({
-            function_name: 'process_modified_files',
-            message: 'File was empty after patch, removed from disk.',
-            data: { file_path }
-          })
-        } catch (error) {
-          Logger.error({
-            function_name: 'process_modified_files',
-            message: 'Error deleting empty file',
-            data: { file_path, error }
-          })
-        }
-      } else {
-        try {
-          const uri = vscode.Uri.file(safe_path)
-          const document = await vscode.workspace.openTextDocument(uri)
-          await vscode.window.showTextDocument(document, { preview: false })
-          await format_document(document)
-          await document.save()
-          Logger.log({
-            function_name: 'process_modified_files',
-            message: 'Successfully processed file',
-            data: { file_path }
-          })
-        } catch (error) {
-          Logger.error({
-            function_name: 'process_modified_files',
-            message: 'Error processing file',
-            data: { file_path, error }
-          })
-        }
+        // Format the document
+        await format_document(document)
+
+        // Save the document
+        await document.save()
+
+        Logger.log({
+          function_name: 'process_modified_files',
+          message: 'Successfully processed file',
+          data: { file_path }
+        })
+      } catch (error) {
+        Logger.error({
+          function_name: 'process_modified_files',
+          message: 'Error processing file',
+          data: { file_path, error }
+        })
       }
     } else {
       Logger.log({

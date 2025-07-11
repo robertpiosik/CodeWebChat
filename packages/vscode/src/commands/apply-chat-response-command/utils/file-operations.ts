@@ -228,64 +228,37 @@ export async function revert_files(
           }
         }
       } else {
-        if (!fs.existsSync(safe_path)) {
-          try {
-            const dir = path.dirname(safe_path)
-            if (!fs.existsSync(dir)) {
-              fs.mkdirSync(dir, { recursive: true })
-            }
-            fs.writeFileSync(safe_path, state.content)
-            Logger.log({
-              function_name: 'revert_files',
-              message: 'Recreated deleted file.',
-              data: { file_path: state.file_path }
-            })
-            const doc = await vscode.workspace.openTextDocument(safe_path)
-            await vscode.window.showTextDocument(doc)
-            await format_document(doc)
-            await doc.save()
-          } catch (err) {
-            Logger.warn({
-              function_name: 'revert_files',
-              message: 'Error recreating deleted file',
-              data: { error: err, file_path: state.file_path }
-            })
-            vscode.window.showWarningMessage(
-              `Could not recreate file: ${state.file_path}.`
-            )
-          }
-        } else {
-          const file_uri = vscode.Uri.file(safe_path)
+        // For existing files that were modified, restore original content
+        const file_uri = vscode.Uri.file(safe_path)
 
-          try {
-            const document = await vscode.workspace.openTextDocument(file_uri)
-            const editor = await vscode.window.showTextDocument(document)
-            await editor.edit((edit) => {
-              edit.replace(
-                new vscode.Range(
-                  document.positionAt(0),
-                  document.positionAt(document.getText().length)
-                ),
-                state.content
-              )
-            })
-            await document.save()
-            Logger.log({
-              function_name: 'revert_files',
-              message: 'Existing file reverted to original content',
-              data: safe_path
-            })
-          } catch (err) {
-            Logger.warn({
-              function_name: 'revert_files',
-              message: 'Error reverting file',
-              data: { error: err, file_path: state.file_path }
-            })
-            console.error(`Error reverting file ${state.file_path}:`, err)
-            vscode.window.showWarningMessage(
-              `Could not revert file: ${state.file_path}. It might have been closed or deleted.`
+        try {
+          const document = await vscode.workspace.openTextDocument(file_uri)
+          const editor = await vscode.window.showTextDocument(document)
+          await editor.edit((edit) => {
+            edit.replace(
+              new vscode.Range(
+                document.positionAt(0),
+                document.positionAt(document.getText().length)
+              ),
+              state.content
             )
-          }
+          })
+          await document.save()
+          Logger.log({
+            function_name: 'revert_files',
+            message: 'Existing file reverted to original content',
+            data: safe_path
+          })
+        } catch (err) {
+          Logger.warn({
+            function_name: 'revert_files',
+            message: 'Error reverting file',
+            data: { error: err, file_path: state.file_path }
+          })
+          console.error(`Error reverting file ${state.file_path}:`, err)
+          vscode.window.showWarningMessage(
+            `Could not revert file: ${state.file_path}. It might have been closed or deleted.`
+          )
         }
       }
     }
