@@ -34,9 +34,7 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/)
 
-<hr />
-
-### Supported chatbots
+**Supported chatbots:**
 
 **AI Studio** • **ChatGPT** • **Claude** • **DeepSeek** • **Doubao** • **Gemini** • **Grok** • **HuggingChat** • **Mistral** • **Open WebUI** • **OpenRouter Chat** • **Perplexity** • **Qwen** • **Yuanbao**
 
@@ -74,9 +72,7 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 ✅ Includes affected files in full \
 ✅ Customizable instructions
 
-<hr />
-
-### Predefined API providers
+**Predefined API providers:**
 
 **Anthropic** • **Cerebras** • **Chutes** • **DeepInfra** • **DeepSeek** • **Fireworks** • **Gemini** • **Hyperbolic** • **Mistral** • **OpenAI** • **OpenRouter** • **TogetherAI**
 
