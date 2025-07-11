@@ -137,9 +137,8 @@ If you like Code Web Chat, [buying a coffee](https://buymeacoffee.com/robertpios
 
 All contributions are welcome. Feel free to submit pull requests, feature requests and bug reports.
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">License</span>
+<hr />
 
-[GPL-3.0](https://github.com/robertpiosik/CodeWebChat/blob/master/LICENSE) \
-Copyright © 2025-present [Robert Piosik](https://x.com/robertpiosik) \
+Copyright © 2025 [Robert Piosik](https://x.com/robertpiosik) \
 E-mail: robertpiosik@gmail.com \
-Telegram: @robertpiosik (telegram)
+Telegram: @robertpiosik
