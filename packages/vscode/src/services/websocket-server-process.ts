@@ -1,7 +1,7 @@
 import * as http from 'http'
 import * as process from 'process'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const WebSocket = require('ws') // ws works only with requrie
+const WebSocket = require('ws')
 
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { Website } from '@shared/types/websocket-message'
@@ -70,7 +70,6 @@ class WebSocketServer {
   }
 
   private _handle_connection(ws: any, request: any): void {
-    // Verify security token
     const url = new URL(request.url || '', `http://localhost:${DEFAULT_PORT}`)
     const token = url.searchParams.get('token')
 
@@ -79,7 +78,6 @@ class WebSocketServer {
       return
     }
 
-    // Track if this is a browser connection
     const is_browser_client = token == SECURITY_TOKENS.BROWSERS
 
     if (is_browser_client) {
@@ -90,18 +88,13 @@ class WebSocketServer {
 
     this.connections.add(ws)
 
-    // Handle messages from clients
     ws.on('message', (message: any) => this._handle_message(message))
-
-    // Handle client disconnection
     ws.on('close', () => this._handle_disconnection(ws, is_browser_client))
   }
 
   private _handle_browser_connection(ws: WebSocket, url: URL): void {
-    // Extract version from URL parameters
     const version = url.searchParams.get('version') || 'unknown'
 
-    // Check if there is already a connected browser client
     if (
       this.current_browser_client &&
       this.current_browser_client.ws.readyState == WebSocket.OPEN
@@ -110,9 +103,8 @@ class WebSocketServer {
       return
     }
 
-    // Store the new browser client
     this.current_browser_client = { ws, version }
-    this._notify_vscode_clients() // Notify when a browser connects
+    this._notify_vscode_clients()
   }
 
   private _handle_vscode_connection(ws: WebSocket, url: URL): void {
@@ -140,7 +132,6 @@ class WebSocketServer {
     const client_id = this._generate_client_id()
     this.vscode_clients.set(client_id, { ws, client_id })
 
-    // Send the client ID to the VS Code client
     ws.send(
       JSON.stringify({
         action: 'client-id-assignment',
@@ -148,7 +139,6 @@ class WebSocketServer {
       })
     )
 
-    // Send initial status to new VS Code client
     ws.send(
       JSON.stringify({
         action: 'browser-connection-status',
@@ -156,10 +146,8 @@ class WebSocketServer {
       })
     )
 
-    // Send saved websites to new VS Code client
     this._send_saved_websites_to_client(ws)
 
-    // Notify browser when a new VSCode client connects (if browser is connected)
     if (
       this.current_browser_client &&
       this.current_browser_client.ws.readyState === WebSocket.OPEN
@@ -209,15 +197,12 @@ class WebSocketServer {
           }
           this.current_browser_client.ws.send(JSON.stringify(legacy_message))
         } else {
-          // Forward the message as-is for newer browser clients
           this.current_browser_client.ws.send(msg_string)
         }
       }
     } else if (msg_data.action == 'update-saved-websites') {
-      // Store the updated websites
       this.saved_websites = msg_data.websites
 
-      // Forward to VS Code clients
       for (const client of this.vscode_clients.values()) {
         if (client.ws.readyState == WebSocket.OPEN) {
           client.ws.send(msg_string)
@@ -227,7 +212,6 @@ class WebSocketServer {
       msg_data.action == 'invoke-fast-replace' || // <-- remove few weeks after 19 Apr 2025
       msg_data.action == 'apply-chat-response'
     ) {
-      // Forward the message to the specific VS Code client based on client_id
       const target_client_id = msg_data.client_id
       const target_client = this.vscode_clients.get(target_client_id)
       if (target_client && target_client.ws.readyState == WebSocket.OPEN) {
@@ -252,9 +236,8 @@ class WebSocketServer {
       this.current_browser_client.ws === ws
     ) {
       this.current_browser_client = null
-      this._notify_vscode_clients() // Notify when the browser disconnects
+      this._notify_vscode_clients()
     } else {
-      // Find and remove the disconnected VS Code client
       let disconnected_client_id: number | null = null
       for (const [client_id, client] of this.vscode_clients.entries()) {
         if (client.ws === ws) {
@@ -264,7 +247,6 @@ class WebSocketServer {
         }
       }
 
-      // Notify browser when a VSCode client disconnects (if browser is connected)
       if (
         disconnected_client_id !== null &&
         this.current_browser_client &&
@@ -359,7 +341,7 @@ class WebSocketServer {
       if (p1 > p2) return true
       if (p1 < p2) return false
     }
-    return false // Versions are equal or v1 is not newer
+    return false
   }
 
   private _is_version_lower_than(
@@ -377,7 +359,7 @@ class WebSocketServer {
       if (p1 < p2) return true
       if (p1 > p2) return false
     }
-    return false // Versions are equal
+    return false
   }
 }
 

@@ -52,11 +52,9 @@ export class WebSocketManager {
       const tester = net
         .createServer()
         .once('error', () => {
-          // Port is in use
           resolve(true)
         })
         .once('listening', () => {
-          // Port is free
           tester.close()
           resolve(false)
         })
@@ -121,13 +119,11 @@ export class WebSocketManager {
   }
 
   private async _connect_as_client() {
-    // Close existing connection if any
     if (this.client) {
       this.client.close()
       this.client = null
     }
 
-    // Reset client ID when reconnecting
     this.client_id = null
 
     // Check if server is running, restart if not
@@ -143,23 +139,20 @@ export class WebSocketManager {
         })
         // If server fails to start, don't attempt to connect immediately
         if (this.should_reconnect) {
-          // Only schedule reconnect if allowed
           this._schedule_reconnect()
         }
-        return // Exit the function
+        return
       }
     }
 
-    // Connect to the WebSocket server
-    const wsUrl = `ws://localhost:${this.port}?token=${this.security_token}&vscode_extension_version=${this.current_extension_version}`
-    this.client = new WebSocket.WebSocket(wsUrl)
+    const ws_url = `ws://localhost:${this.port}?token=${this.security_token}&vscode_extension_version=${this.current_extension_version}`
+    this.client = new WebSocket.WebSocket(ws_url)
 
     this.client.on('open', () => {
       Logger.log({
         function_name: 'connect_to_server',
         message: 'Connected to WebSocket server'
       })
-      // Start ping interval to keep connection alive
     })
 
     this.client.on('message', async (data) => {
@@ -215,9 +208,7 @@ export class WebSocketManager {
       this.has_connected_browsers = false
       this._on_connection_status_change.fire(false)
 
-      // Schedule reconnect
       if (this.should_reconnect) {
-        // Only schedule reconnect if allowed
         this._schedule_reconnect()
       }
     })
@@ -230,9 +221,7 @@ export class WebSocketManager {
       this.has_connected_browsers = false
       this._on_connection_status_change.fire(false)
 
-      // Schedule reconnect
       if (this.should_reconnect) {
-        // Only schedule reconnect if allowed
         this._schedule_reconnect()
       }
     })
