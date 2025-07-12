@@ -185,7 +185,7 @@ export class WebSocketManager {
               this.should_reconnect = false
               this.client?.close()
               vscode.window.showErrorMessage(
-                'A newer version of the Code Web Chat (CWC) extension is running in some other window, please open command palette and run: Restart Extension Host.'
+                'CWC has been updated. Open the command palette and type "Reload Window" to load the latest version in this workspace.'
               )
             }
           }
