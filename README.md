@@ -118,11 +118,11 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 - `Code Web Chat: Ignored Extensions` - List of file extensions to ignore in the context.
 
-- `Code Web Chat: Presets` - Conveniently edit chat presets as saved in JSON.
+- `Code Web Chat: Presets` - Conveniently edit chat presets as they're stored in JSON.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
-Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/discussions) and in our subreddit [/r/CodeWebChat](https://www.reddit.com/r/CodeWebChat).
+Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/discussions) and [/r/CodeWebChat](https://www.reddit.com/r/CodeWebChat).
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Donations</span>
 
