@@ -208,10 +208,6 @@ export const ChatInput: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_container_click = () => {
-    textarea_ref.current?.focus()
-  }
-
   const placeholder = useMemo(() => {
     const active_history = props.chat_history
 
@@ -259,7 +255,6 @@ export const ChatInput: React.FC<Props> = (props) => {
             props.is_in_code_completions_mode &&
             (props.has_active_selection || !props.has_active_editor)
         })}
-        onClick={handle_container_click}
         onKeyDown={(e) => {
           if (e.key == 'f' && (e.ctrlKey || e.metaKey)) {
             e.stopPropagation()
@@ -340,8 +335,18 @@ export const ChatInput: React.FC<Props> = (props) => {
           />
         )}
 
-        <div className={styles.footer}>
-          <div className={styles.footer__left}>
+        <div
+          className={styles.footer}
+          onClick={() => {
+            textarea_ref.current?.select()
+          }}
+        >
+          <div
+            className={styles.footer__left}
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+          >
             {!props.is_in_code_completions_mode && (
               <button
                 onClick={props.on_at_sign_click}
@@ -352,7 +357,12 @@ export const ChatInput: React.FC<Props> = (props) => {
               </button>
             )}
           </div>
-          <div className={styles.footer__right}>
+          <div
+            className={styles.footer__right}
+            onClick={(e) => {
+              e.stopPropagation()
+            }}
+          >
             {props.token_count !== undefined && props.token_count > 1 && (
               <div
                 className={styles.footer__right__count}
