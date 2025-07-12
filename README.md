@@ -11,7 +11,7 @@
 **With CWC you can:**
 
 - Granularly select folders and files from your project to copy them as XML-formatted text.
-- Type your task and initialize a chatbot, or send an API request.
+- Type your task, initialize a chatbot, or send an API request and integrate response hands-free.
 - Get accurate code completions using reasoning models and all selected files as context.
 - Generate precise commit messages by referencing the original state of the modified files.
 - Parse websites for context through the Connector browser extension.
