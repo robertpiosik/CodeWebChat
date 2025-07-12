@@ -68,7 +68,10 @@ const config = [
           patterns: [
             {
               from: '../../README.md',
-              to: '../README.md'
+              to: '../README.md',
+              transform(content) {
+                return content.toString().split('\n').slice(4).join('\n')
+              }
             }
           ]
         })
