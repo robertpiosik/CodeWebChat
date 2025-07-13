@@ -109,8 +109,8 @@ export const CHATBOTS = {
     supported_options: {},
     default_top_p: 0,
     models: {
-      'opus-4': 'Opus 4',
-      'sonnet-4': 'Sonnet 4'
+      'sonnet-4': 'Sonnet 4',
+      'opus-4': 'Opus 4'
     }
   },
   DeepSeek: {
