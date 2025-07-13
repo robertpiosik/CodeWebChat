@@ -48,6 +48,7 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 - Open WebUI
 - OpenRouter Chat
 - Perplexity
+- Kimi
 - Qwen
 - Yuanbao
 

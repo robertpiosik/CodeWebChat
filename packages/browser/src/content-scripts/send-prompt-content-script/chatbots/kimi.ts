@@ -37,10 +37,6 @@ export const kimi: Chatbot = {
     // Focus the element first
     input_element.focus()
 
-    // Clear existing content by selecting all and deleting
-    document.execCommand('selectAll', false)
-    document.execCommand('delete', false)
-
     // Insert the new text using execCommand which works better with Lexical
     document.execCommand('insertText', false, message)
 
