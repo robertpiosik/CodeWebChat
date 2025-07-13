@@ -15,7 +15,8 @@ import {
   qwen,
   yuanbao,
   doubao,
-  huggingchat
+  huggingchat,
+  kimi
 } from './chatbots'
 import { perplexity } from './chatbots/perplexity'
 
@@ -70,7 +71,9 @@ const is_doubao = current_url.startsWith(doubao_url)
 const huggingchat_url = 'https://huggingface.co/chat/'
 const is_huggingchat = current_url.startsWith(huggingchat_url)
 
-// perplexity
+const kimi_url = 'https://www.kimi.com/'
+const is_kimi = current_url.startsWith(kimi_url)
+
 const perplexity_url = 'https://www.perplexity.ai/'
 const is_perplexity = current_url.startsWith(perplexity_url)
 
@@ -106,6 +109,8 @@ if (is_ai_studio) {
   chatbot = huggingchat
 } else if (is_perplexity) {
   chatbot = perplexity
+} else if (is_kimi) {
+  chatbot = kimi
 }
 
 export const get_textarea_element = () => {
@@ -118,6 +123,7 @@ export const get_textarea_element = () => {
     [deepseek_url]: 'textarea',
     [mistral_url]: 'div[contenteditable="true"]',
     [yuanbao_url]: 'div[contenteditable="true"]',
+    [kimi_url]: 'div[contenteditable="true"]',
     [doubao_url]: 'textarea',
     [perplexity_url]: 'textarea'
   } as any
@@ -173,7 +179,6 @@ const enter_message_and_send = async (params: {
     params.input_element &&
     params.input_element.tagName == 'TEXTAREA'
   ) {
-    const form = params.input_element.closest('form')
     ;(params.input_element as HTMLTextAreaElement).value = params.message
     params.input_element.dispatchEvent(new Event('input', { bubbles: true }))
     params.input_element.dispatchEvent(new Event('change', { bubbles: true }))
@@ -181,6 +186,7 @@ const enter_message_and_send = async (params: {
     if (is_openrouter || is_mistral) {
       await new Promise((r) => setTimeout(r, 500))
     }
+    const form = params.input_element.closest('form')
     if (form) {
       form.requestSubmit()
     } else if (is_ai_studio) {

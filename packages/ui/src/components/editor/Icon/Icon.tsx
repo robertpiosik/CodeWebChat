@@ -9,6 +9,7 @@ import DeepSeek from '../../../assets/icons/deepseek.svg'
 import Mistral from '../../../assets/icons/mistral.svg'
 import Grok from '../../../assets/icons/grok.svg'
 import HuggingChat from '../../../assets/icons/hugging-chat.svg'
+import Kimi from '../../../assets/icons/kimi.svg'
 import Qwen from '../../../assets/icons/qwen.svg'
 import Yuanbao from '../../../assets/icons/yuanbao.svg'
 import Doubao from '../../../assets/icons/doubao.svg'
@@ -31,6 +32,7 @@ export namespace Icon {
     | 'MISTRAL'
     | 'GROK'
     | 'HUGGING_CHAT'
+    | 'KIMI'
     | 'QWEN'
     | 'YUANBAO'
     | 'DOUBAO'
@@ -81,6 +83,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'HUGGING_CHAT':
       icon = <HuggingChat />
+      break
+    case 'KIMI':
+      icon = <Kimi />
       break
     case 'QWEN':
       icon = <Qwen />
