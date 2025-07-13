@@ -52,6 +52,28 @@ export const claude: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
+  enter_message_and_send: async (message: string) => {
+    const input_element = document.querySelector(
+      'div[contenteditable=true]'
+    ) as HTMLElement
+
+    if (input_element) {
+      input_element.innerText = message
+      input_element.dispatchEvent(new Event('input', { bubbles: true }))
+      input_element.dispatchEvent(new Event('change', { bubbles: true }))
+      await new Promise((r) => setTimeout(r, 500))
+      const submit_button = Array.from(
+        document.querySelectorAll('fieldset button')
+      ).find((button) =>
+        button.querySelector(
+          'path[d="M208.49,120.49a12,12,0,0,1-17,0L140,69V216a12,12,0,0,1-24,0V69L64.49,120.49a12,12,0,0,1-17-17l72-72a12,12,0,0,1,17,0l72,72A12,12,0,0,1,208.49,120.49Z"]'
+        )
+      ) as HTMLButtonElement
+      if (submit_button) {
+        submit_button.click()
+      }
+    }
+  },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (params: { footer: Element }) => {
       // Check if buttons already exist by text content to avoid duplicates

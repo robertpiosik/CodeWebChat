@@ -27,22 +27,17 @@ export const kimi: Chatbot = {
   },
   enter_message_and_send: async (message: string) => {
     const input_element = document.querySelector(
-      '.chat-input-editor[data-lexical-editor="true"]'
+      'div[contenteditable=true]'
     ) as HTMLElement
 
-    if (!input_element) {
-      throw new Error('Kimi input element not found')
-    }
-
-    // Focus the element first
-    input_element.focus()
-
-    // Insert the new text using execCommand which works better with Lexical
-    document.execCommand('insertText', false, message)
-
-    // Dispatch input event to trigger Lexical's change detection
-    input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    input_element.dispatchEvent(new Event('change', { bubbles: true }))
+    input_element.dispatchEvent(
+      new InputEvent('input', {
+        bubbles: true,
+        cancelable: true,
+        inputType: 'insertText',
+        data: message
+      })
+    )
 
     new Promise<void>((resolve) => {
       const check_button_state = () => {

@@ -119,7 +119,6 @@ export const get_textarea_element = () => {
     [gemini_url]: 'div[contenteditable="true"]',
     [openrouter_url]: 'textarea',
     [chatgpt_url]: 'div#prompt-textarea',
-    [claude_url]: 'div[contenteditable=true]',
     [deepseek_url]: 'textarea',
     [mistral_url]: 'div[contenteditable="true"]',
     [yuanbao_url]: 'div[contenteditable="true"]',
@@ -153,17 +152,7 @@ const enter_message_and_send = async (params: {
     params.input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
     const form = params.input_element.closest('form')
-    if (is_claude) {
-      await new Promise((r) => setTimeout(r, 500))
-      const submit_button = Array.from(
-        document.querySelectorAll('fieldset button')
-      ).find((button) =>
-        button.querySelector(
-          'path[d="M208.49,120.49a12,12,0,0,1-17,0L140,69V216a12,12,0,0,1-24,0V69L64.49,120.49a12,12,0,0,1-17-17l72-72a12,12,0,0,1,17,0l72,72A12,12,0,0,1,208.49,120.49Z"]'
-        )
-      ) as HTMLButtonElement
-      submit_button.click()
-    } else if (form) {
+    if (form) {
       form.requestSubmit()
     } else {
       const enter_event = new KeyboardEvent('keydown', {
