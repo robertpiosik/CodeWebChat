@@ -126,7 +126,7 @@
         "command": "codeWebChat.rate",
         "title": "Rate",
         "category": "Code Web Chat",
-        "icon": "$(star)"
+        "icon": "$(feedback)"
       },
       {
         "command": "codeWebChat.applyContext",
@@ -491,12 +491,12 @@
           "group": "navigation@4"
         },
         {
-          "command": "codeWebChat.rate",
+          "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
           "group": "navigation@1"
         },
         {
-          "command": "codeWebChat.openRepository",
+          "command": "codeWebChat.rate",
           "when": "view == codeWebChatView",
           "group": "navigation@2"
         },
