@@ -18,8 +18,9 @@ export const handle_update_preset = async (
   webview_view: vscode.WebviewView
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
+  const presets_config_key = provider.get_presets_config_key()
   const current_presets =
-    config.get<ConfigPresetFormat[]>('chatPresetsForEditContext', []) || []
+    config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
   const preset_index = current_presets.findIndex(
     (p) => p.name == message.updating_preset.name
@@ -122,7 +123,7 @@ export const handle_update_preset = async (
   updated_presets[preset_index] = ui_preset_to_config_format(updated_ui_preset)
 
   await config.update(
-    'chatPresetsForEditContext',
+    presets_config_key,
     updated_presets,
     vscode.ConfigurationTarget.Global
   )

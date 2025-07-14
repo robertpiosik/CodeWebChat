@@ -10,8 +10,9 @@ export const handle_delete_preset = async (
 ): Promise<void> => {
   const preset_name = message.name
   const config = vscode.workspace.getConfiguration('codeWebChat')
+  const presets_config_key = provider.get_presets_config_key()
   const current_presets =
-    config.get<ConfigPresetFormat[]>('chatPresetsForEditContext', []) || []
+    config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
   const is_unnamed = !preset_name || /^\(\d+\)$/.test(preset_name.trim())
   const display_preset_name = is_unnamed ? 'Unnamed' : preset_name
@@ -38,7 +39,7 @@ export const handle_delete_preset = async (
 
   try {
     await config.update(
-      'chatPresetsForEditContext',
+      presets_config_key,
       updated_presets,
       vscode.ConfigurationTarget.Global
     )
@@ -56,7 +57,7 @@ export const handle_delete_preset = async (
       restored_presets.splice(preset_index, 0, deleted_preset)
 
       await config.update(
-        'chatPresetsForEditContext',
+        presets_config_key,
         restored_presets,
         vscode.ConfigurationTarget.Global
       )

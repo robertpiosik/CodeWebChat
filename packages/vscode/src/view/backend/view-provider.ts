@@ -73,6 +73,21 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public api_mode: ApiMode
   public home_view_type: HomeViewType = HOME_VIEW_TYPES.WEB
 
+  public get_presets_config_key(): string {
+    switch (this.web_mode) {
+      case 'ask':
+        return 'chatPresetsForAskAboutContext'
+      case 'edit':
+        return 'chatPresetsForEditContext'
+      case 'code-completions':
+        return 'chatPresetsForCodeAtCursor'
+      case 'no-context':
+        return 'chatPresetsForNoContext'
+      default:
+        return 'chatPresetsForEditContext'
+    }
+  }
+
   constructor(
     public readonly extension_uri: vscode.Uri,
     public readonly workspace_provider: WorkspaceProvider,
@@ -105,9 +120,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
         if (!this._webview_view) return
-        if (
-          event.affectsConfiguration('codeWebChat.chatPresetsForEditContext')
-        ) {
+        const all_preset_keys = [
+          'codeWebChat.chatPresetsForAskAboutContext',
+          'codeWebChat.chatPresetsForEditContext',
+          'codeWebChat.chatPresetsForCodeAtCursor',
+          'codeWebChat.chatPresetsForNoContext'
+        ]
+        if (all_preset_keys.some((key) => event.affectsConfiguration(key))) {
           this.send_presets_to_webview(this._webview_view.webview)
         }
       }
@@ -361,7 +380,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_CURRENT_TOKEN_COUNT') {
             this.calculate_token_count()
           } else if (message.command == 'SAVE_PRESETS_ORDER') {
-            await handle_save_presets_order(message)
+            await handle_save_presets_order(this, message)
           } else if (message.command == 'UPDATE_PRESET') {
             await handle_update_preset(this, message, webview_view)
           } else if (message.command == 'DELETE_PRESET') {
@@ -383,7 +402,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_WEB_MODE') {
             handle_get_mode_web(this)
           } else if (message.command == 'SAVE_WEB_MODE') {
-            await handle_save_mode_web(this, message.mode)
+            handle_save_mode_web(this, message.mode)
+            this.send_presets_to_webview(webview_view.webview)
           } else if (message.command == 'GET_API_MODE') {
             handle_get_mode_api(this)
           } else if (message.command == 'SAVE_API_MODE') {
@@ -417,8 +437,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
   public send_presets_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
+    const presets_config_key = this.get_presets_config_key()
     const web_chat_presets_config =
-      config.get<ConfigPresetFormat[]>('chatPresetsForEditContext', []) || []
+      config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
     const presets_for_ui: Preset[] = web_chat_presets_config
       .filter((preset_config) => CHATBOTS[preset_config.chatbot])

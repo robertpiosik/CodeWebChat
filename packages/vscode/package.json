@@ -620,6 +620,18 @@
             {
               "name": "(3)",
               "chatbot": "Claude"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "Qwen"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -736,6 +748,18 @@
             {
               "name": "(3)",
               "chatbot": "Claude"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "Qwen"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -852,6 +876,18 @@
             {
               "name": "(3)",
               "chatbot": "Claude"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "Qwen"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -938,6 +974,18 @@
             {
               "name": "(3)",
               "chatbot": "Claude"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "Qwen"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",

@@ -10,8 +10,9 @@ export const handle_duplicate_preset = async (
 ): Promise<void> => {
   const preset_name = message.name
   const config = vscode.workspace.getConfiguration('codeWebChat')
+  const presets_config_key = provider.get_presets_config_key()
   const current_presets =
-    config.get<ConfigPresetFormat[]>('chatPresetsForEditContext', []) || []
+    config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
   const preset_to_duplicate = current_presets.find((p) => p.name == preset_name)
   if (!preset_to_duplicate) {
@@ -22,25 +23,28 @@ export const handle_duplicate_preset = async (
   const original_index = current_presets.findIndex((p) => p.name == preset_name)
 
   const parenthetical_match = preset_name.match(/^(.*?)(?:\s*\((\d+)\))?$/)
-  const base_name = parenthetical_match?.[1]?.trim() || ''
-  const existing_number = parenthetical_match?.[2]
-    ? parseInt(parenthetical_match[2], 10)
-    : 0
+  const original_base_name = parenthetical_match?.[1]?.trim()
+  const existing_number_str = parenthetical_match?.[2]
 
-  let new_name: string
-  let copy_number: number
+  const base_for_duplication =
+    existing_number_str !== undefined && original_base_name !== undefined
+      ? original_base_name
+      : preset_name.trim()
 
-  if (existing_number > 0) {
-    copy_number = existing_number + 1
-    new_name = base_name ? `${base_name} (${copy_number})` : `(${copy_number})`
-  } else {
-    copy_number = 1
-    new_name = `${preset_name} (${copy_number})`
-  }
+  let copy_number =
+    existing_number_str !== undefined
+      ? parseInt(existing_number_str, 10) + 1
+      : 1
 
-  while (current_presets.some((p) => p.name == new_name)) {
+  let new_name = base_for_duplication
+    ? `${base_for_duplication} (${copy_number})`
+    : `(${copy_number})`
+
+  while (current_presets.some((p) => p.name === new_name)) {
     copy_number++
-    new_name = base_name ? `${base_name} (${copy_number})` : `(${copy_number})`
+    new_name = base_for_duplication
+      ? `${base_for_duplication} (${copy_number})`
+      : `(${copy_number})`
   }
 
   const duplicated_preset = {
@@ -52,7 +56,7 @@ export const handle_duplicate_preset = async (
   updated_presets.splice(original_index + 1, 0, duplicated_preset)
 
   try {
-    await config.update('chatPresetsForEditContext', updated_presets, true)
+    await config.update(presets_config_key, updated_presets, true)
     provider.send_presets_to_webview(webview_view.webview)
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to duplicate preset: ${error}`)
