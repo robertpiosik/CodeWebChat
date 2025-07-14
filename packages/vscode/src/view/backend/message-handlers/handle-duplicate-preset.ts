@@ -40,7 +40,7 @@ export const handle_duplicate_preset = async (
     ? `${base_for_duplication} (${copy_number})`
     : `(${copy_number})`
 
-  while (current_presets.some((p) => p.name === new_name)) {
+  while (current_presets.some((p) => p.name == new_name)) {
     copy_number++
     new_name = base_for_duplication
       ? `${base_for_duplication} (${copy_number})`

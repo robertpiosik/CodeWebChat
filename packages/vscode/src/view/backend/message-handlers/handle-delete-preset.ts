@@ -87,24 +87,6 @@ export const handle_delete_preset = async (
         names: updated_selected
       })
     }
-
-    const selected_fim_names = provider.context.globalState.get<string[]>(
-      'selectedCodeCompletionPresets',
-      []
-    )
-    if (selected_fim_names.includes(preset_name)) {
-      const updated_selected = selected_fim_names.filter(
-        (n) => n != preset_name
-      )
-      await provider.context.globalState.update(
-        'selectedCodeCompletionPresets',
-        updated_selected
-      )
-      provider.send_message<ExtensionMessage>({
-        command: 'SELECTED_CODE_COMPLETION_PRESETS',
-        names: updated_selected
-      })
-    }
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to delete preset: ${error}`)
   }

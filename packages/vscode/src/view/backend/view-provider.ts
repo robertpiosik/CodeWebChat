@@ -29,7 +29,6 @@ import {
   handle_show_history_quick_pick,
   handle_save_presets_order,
   handle_get_selected_presets,
-  handle_get_selected_code_completion_presets,
   handle_get_connection_status,
   handle_get_history,
   handle_save_history,
@@ -346,17 +345,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SAVE_SELECTED_PRESETS') {
             await this.context.globalState.update(
               'selectedPresets',
-              message.names
-            )
-          } else if (
-            message.command == 'GET_SELECTED_CODE_COMPLETION_PRESETS'
-          ) {
-            handle_get_selected_code_completion_presets(this)
-          } else if (
-            message.command == 'SAVE_SELECTED_CODE_COMPLETION_PRESETS'
-          ) {
-            await this.context.globalState.update(
-              'selectedCodeCompletionPresets',
               message.names
             )
           } else if (message.command == 'SEND_PROMPT') {

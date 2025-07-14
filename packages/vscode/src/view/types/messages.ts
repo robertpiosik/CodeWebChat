@@ -134,15 +134,6 @@ export interface PreviewPresetMessage extends BaseMessage {
   preset: Preset
 }
 
-export interface GetSelectedCodeCompletionPresetsMessage extends BaseMessage {
-  command: 'GET_SELECTED_CODE_COMPLETION_PRESETS'
-}
-
-export interface SaveSelectedCodeCompletionPresetsMessage extends BaseMessage {
-  command: 'SAVE_SELECTED_CODE_COMPLETION_PRESETS'
-  names: string[]
-}
-
 export interface CaretPositionChangedWebviewMessage extends BaseMessage {
   command: 'CARET_POSITION_CHANGED'
   caret_position: number
@@ -298,11 +289,6 @@ export interface NewlyPickedOpenRouterModelMessage extends BaseMessage {
   model_id: string
 }
 
-export interface SelectedCodeCompletionPresetsMessage extends BaseMessage {
-  command: 'SELECTED_CODE_COMPLETION_PRESETS'
-  names: string[]
-}
-
 export interface ApiProvidersMessage extends BaseMessage {
   command: 'PROVIDERS'
   providers: Array<
@@ -367,8 +353,6 @@ export type WebviewMessage =
   | ShowHistoryQuickPickMessage
   | ShowQuickPickMessage
   | PreviewPresetMessage
-  | GetSelectedCodeCompletionPresetsMessage
-  | SaveSelectedCodeCompletionPresetsMessage
   | CaretPositionChangedWebviewMessage
   | PickOpenRouterModel
   | SaveHomeViewTypeMessage
@@ -399,7 +383,6 @@ export type ExtensionMessage =
   | PresetCreatedMessage
   | PresetUpdatedMessage
   | NewlyPickedOpenRouterModelMessage
-  | SelectedCodeCompletionPresetsMessage
   | ExecuteCommandMessage
   | ApiProvidersMessage
   | HomeViewTypeMessage

@@ -52,10 +52,6 @@
       }
     }
 
-    &--disabled {
-      cursor: not-allowed;
-    }
-
     &__left {
       display: flex;
       align-items: center;
@@ -75,10 +71,6 @@
 
         &--selected > svg {
           fill: var(--vscode-textLink-foreground);
-        }
-
-        &--disabled {
-          opacity: var(--disabled-opacity);
         }
       }
 

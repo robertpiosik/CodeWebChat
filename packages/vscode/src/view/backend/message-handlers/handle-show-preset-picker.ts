@@ -82,16 +82,9 @@ export const handle_show_preset_picker = async (
       selected_names
     )
 
-    if (provider.web_mode == 'code-completions') {
-      provider.send_message<ExtensionMessage>({
-        command: 'SELECTED_CODE_COMPLETION_PRESETS',
-        names: selected_names
-      })
-    } else {
-      provider.send_message<ExtensionMessage>({
-        command: 'SELECTED_PRESETS',
-        names: selected_names
-      })
-    }
+    provider.send_message<ExtensionMessage>({
+      command: 'SELECTED_PRESETS',
+      names: selected_names
+    })
   }
 }

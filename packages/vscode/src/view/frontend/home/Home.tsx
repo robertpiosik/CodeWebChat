@@ -28,10 +28,6 @@ export const Home: React.FC<Props> = (props) => {
   const [is_connected, set_is_connected] = useState<boolean>()
   const [presets, set_presets] = useState<Preset[]>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])
-  const [
-    selected_code_completion_presets,
-    set_selected_code_completion_presets
-  ] = useState<string[]>([])
   const [has_active_editor, set_has_active_editor] = useState<boolean>()
   const [has_active_selection, set_has_active_selection] = useState<boolean>()
   const [ask_history, set_ask_history] = useState<string[]>()
@@ -65,9 +61,6 @@ export const Home: React.FC<Props> = (props) => {
           break
         case 'SELECTED_PRESETS':
           set_selected_presets(message.names)
-          break
-        case 'SELECTED_CODE_COMPLETION_PRESETS':
-          set_selected_code_completion_presets(message.names)
           break
         case 'PRESETS_SELECTED_FROM_PICKER':
           set_selected_presets(message.names)
@@ -125,7 +118,6 @@ export const Home: React.FC<Props> = (props) => {
       { command: 'GET_CONNECTION_STATUS' },
       { command: 'GET_PRESETS' },
       { command: 'GET_SELECTED_PRESETS' },
-      { command: 'GET_SELECTED_CODE_COMPLETION_PRESETS' },
       { command: 'REQUEST_EDITOR_STATE' },
       { command: 'REQUEST_EDITOR_SELECTION_STATE' },
       { command: 'GET_HISTORY' },
@@ -461,7 +453,6 @@ export const Home: React.FC<Props> = (props) => {
       is_connected={is_connected}
       presets={presets}
       selected_presets={selected_presets}
-      selected_code_completion_presets={selected_code_completion_presets}
       on_create_preset={handle_create_preset}
       on_quick_action_click={handle_quick_action_click}
       has_active_editor={has_active_editor}

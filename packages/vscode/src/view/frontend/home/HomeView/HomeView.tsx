@@ -27,7 +27,6 @@ type Props = {
   is_connected: boolean
   presets: Preset[]
   selected_presets: string[]
-  selected_code_completion_presets: string[]
   has_active_editor: boolean
   has_active_selection: boolean
   chat_history: string[]
@@ -177,9 +176,7 @@ export const HomeView: React.FC<Props> = (props) => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({
         prompt: current_prompt,
-        preset_names: !is_in_code_completions_mode
-          ? props.selected_presets
-          : props.selected_code_completion_presets
+        preset_names: props.selected_presets
       })
     } else {
       if (is_in_code_completions_mode) {
@@ -394,9 +391,6 @@ export const HomeView: React.FC<Props> = (props) => {
                   })}
                   is_disabled={!props.is_connected}
                   selected_presets={props.selected_presets}
-                  selected_code_completion_presets={
-                    props.selected_code_completion_presets
-                  }
                   on_create_preset={props.on_create_preset}
                   on_preset_click={(name) => {
                     props.initialize_chats({
@@ -406,7 +400,6 @@ export const HomeView: React.FC<Props> = (props) => {
                   }}
                   on_preset_copy={handle_preset_copy}
                   on_preset_edit={props.on_preset_edit}
-                  is_in_code_completions_mode={is_in_code_completions_mode}
                   on_presets_reorder={props.on_presets_reorder}
                   on_preset_duplicate={props.on_preset_duplicate}
                   on_preset_delete={props.on_preset_delete}

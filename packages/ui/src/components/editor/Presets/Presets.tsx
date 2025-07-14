@@ -23,9 +23,7 @@ export namespace Presets {
     is_disabled: boolean
     on_preset_click: (name: string) => void
     selected_presets: string[]
-    selected_code_completion_presets: string[]
     on_create_preset: () => void
-    is_in_code_completions_mode: boolean
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
@@ -99,9 +97,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           handle={`.${styles.presets__item__right__drag_handle}`}
         >
           {props.presets.map((preset, i) => {
-            const is_disabled_in_code_completion_mode =
-              props.is_in_code_completions_mode && preset.has_affixes
-
             const is_unnamed =
               !preset.name || /^\(\d+\)$/.test(preset.name.trim())
             const display_name = is_unnamed ? preset.chatbot : preset.name
@@ -129,45 +124,26 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 key={i}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
-                    highlighted_preset_name == preset.name,
-                  [styles['presets__item--disabled']]:
-                    is_disabled_in_code_completion_mode
+                    highlighted_preset_name == preset.name
                 })}
                 onClick={() => {
-                  if (is_disabled_in_code_completion_mode) return
                   props.on_preset_click(preset.name)
                   set_highlighted_preset_name(preset.name)
                 }}
                 role="button"
-                title={
-                  is_disabled_in_code_completion_mode
-                    ? `${display_name} (Presets with prompt prefix or suffix are unaviailable for code completions)`
-                    : display_name
-                }
+                title={display_name}
               >
                 <div className={styles.presets__item__left}>
                   <ChatbotIcon
                     chatbot={preset.chatbot}
-                    is_selected={
-                      !props.is_in_code_completions_mode
-                        ? props.selected_presets.includes(preset.name)
-                        : props.selected_code_completion_presets.includes(
-                            preset.name
-                          )
-                    }
-                    is_disabled={is_disabled_in_code_completion_mode}
+                    is_selected={props.selected_presets.includes(preset.name)}
+                    is_disabled={false}
                   />
 
                   <div
                     className={cn(styles.presets__item__left__text, {
                       [styles['presets__item__left__text--selected']]:
-                        !props.is_in_code_completions_mode
-                          ? props.selected_presets.includes(preset.name)
-                          : props.selected_code_completion_presets.includes(
-                              preset.name
-                            ),
-                      [styles['presets__item__left__text--disabled']]:
-                        is_disabled_in_code_completion_mode
+                        props.selected_presets.includes(preset.name)
                     })}
                   >
                     <span>{display_name}</span>

@@ -3,7 +3,6 @@ import { ViewProvider } from '@/view/backend/view-provider'
 import {
   ExtensionMessage,
   SelectedPresetsMessage,
-  SelectedCodeCompletionPresetsMessage,
   UpdatePresetMessage
 } from '@/view/types/messages'
 import { Preset } from '@shared/types/preset'
@@ -146,49 +145,6 @@ export const handle_update_preset = async (
       command: 'SELECTED_PRESETS',
       names: updated_selected_names
     })
-  }
-
-  // Handle selected code completion presets
-  const selected_fim_names = provider.context.globalState.get<string[]>(
-    'selectedCodeCompletionPresets',
-    []
-  )
-  const was_in_selected_fim = selected_fim_names.includes(
-    message.updating_preset.name
-  )
-
-  if (was_in_selected_fim) {
-    // Check if preset now has prefix or suffix (making it ineligible for FIM)
-    const has_affixes =
-      updated_ui_preset.prompt_prefix || updated_ui_preset.prompt_suffix
-
-    if (has_affixes) {
-      // Remove from selected FIM presets
-      const updated_selected_fim = selected_fim_names.filter(
-        (name) => name !== message.updating_preset.name
-      )
-      await provider.context.globalState.update(
-        'selectedCodeCompletionPresets',
-        updated_selected_fim
-      )
-      provider.send_message<SelectedCodeCompletionPresetsMessage>({
-        command: 'SELECTED_CODE_COMPLETION_PRESETS',
-        names: updated_selected_fim
-      })
-    } else if (final_name != message.updating_preset.name) {
-      // Just update the name if it changed but still no affixes
-      const updated_selected_fim = selected_fim_names.map((name) =>
-        name == message.updating_preset.name ? final_name : name
-      )
-      await provider.context.globalState.update(
-        'selectedCodeCompletionPresets',
-        updated_selected_fim
-      )
-      provider.send_message<SelectedCodeCompletionPresetsMessage>({
-        command: 'SELECTED_CODE_COMPLETION_PRESETS',
-        names: updated_selected_fim
-      })
-    }
   }
 
   provider.send_presets_to_webview(webview_view.webview)
