@@ -143,6 +143,9 @@ export const Home: React.FC<Props> = (props) => {
       mode: new_mode
     } as WebviewMessage)
     props.vscode.postMessage({
+      command: 'GET_SELECTED_PRESETS'
+    } as WebviewMessage)
+    props.vscode.postMessage({
       command: 'GET_CURRENT_TOKEN_COUNT'
     } as WebviewMessage)
   }
@@ -152,6 +155,9 @@ export const Home: React.FC<Props> = (props) => {
     props.vscode.postMessage({
       command: 'SAVE_API_MODE',
       mode: new_mode
+    } as WebviewMessage)
+    props.vscode.postMessage({
+      command: 'GET_SELECTED_PRESETS'
     } as WebviewMessage)
     props.vscode.postMessage({
       command: 'GET_CURRENT_TOKEN_COUNT'

@@ -187,7 +187,7 @@ export function code_completion_in_chat_command(
       }
 
       let selected_names = context.globalState.get<string[]>(
-        'selectedPresets',
+        'selectedPresets.code-completions',
         []
       )
 
@@ -217,13 +217,16 @@ export function code_completion_in_chat_command(
         }
 
         selected_names = selected_presets.map((preset) => preset.label)
-        await context.globalState.update('selectedPresets', selected_names)
+        await context.globalState.update(
+          'selectedPresets.code-completions',
+          selected_names
+        )
       } else {
         selected_names = valid_selected_names
 
         if (valid_selected_names.length !== selected_names.length) {
           await context.globalState.update(
-            'selectedPresets',
+            'selectedPresets.code-completions',
             valid_selected_names
           )
         }

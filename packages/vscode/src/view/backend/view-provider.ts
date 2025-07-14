@@ -85,6 +85,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     }
   }
 
+  public get_selected_presets_state_key(): string {
+    return `selectedPresets.${this.web_mode}`
+  }
+
   constructor(
     public readonly extension_uri: vscode.Uri,
     public readonly workspace_provider: WorkspaceProvider,
@@ -343,10 +347,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_SELECTED_PRESETS') {
             handle_get_selected_presets(this)
           } else if (message.command == 'SAVE_SELECTED_PRESETS') {
-            await this.context.globalState.update(
-              'selectedPresets',
-              message.names
-            )
+            const state_key = this.get_selected_presets_state_key()
+            await this.context.globalState.update(state_key, message.names)
           } else if (message.command == 'SEND_PROMPT') {
             await handle_send_prompt(this, message.preset_names)
           } else if (message.command == 'PREVIEW_PRESET') {

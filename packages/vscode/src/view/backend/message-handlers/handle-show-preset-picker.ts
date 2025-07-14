@@ -12,11 +12,7 @@ export const handle_show_preset_picker = async (
   const web_chat_presets =
     config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
-  const selected_preset_names_state_key =
-    provider.web_mode == 'code-completions'
-      ? 'selectedCodeCompletionPresets'
-      : 'selectedPresets'
-
+  const selected_preset_names_state_key = provider.get_selected_presets_state_key()
   const available_preset_names = web_chat_presets
 
     .filter(
@@ -76,7 +72,7 @@ export const handle_show_preset_picker = async (
   )
 
   if (selected_presets) {
-    const selected_names = selected_presets.map((preset) => preset.label)
+    const selected_names = selected_presets.map((preset: any) => preset.name)
     await provider.context.globalState.update(
       selected_preset_names_state_key,
       selected_names

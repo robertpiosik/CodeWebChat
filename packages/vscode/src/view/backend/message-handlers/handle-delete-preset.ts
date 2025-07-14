@@ -70,23 +70,27 @@ export const handle_delete_preset = async (
 
     provider.send_presets_to_webview(webview_view.webview)
 
-    const selected_chat_names = provider.context.globalState.get<string[]>(
-      'selectedPresets',
-      []
-    )
-    if (selected_chat_names.includes(preset_name)) {
-      const updated_selected = selected_chat_names.filter(
-        (n) => n != preset_name
+    const modes = ['ask', 'edit', 'code-completions', 'no-context']
+    for (const mode of modes) {
+      const state_key = `selectedPresets.${mode}`
+      const selected_names = provider.context.globalState.get<string[]>(
+        state_key,
+        []
       )
-      await provider.context.globalState.update(
-        'selectedPresets',
-        updated_selected
-      )
-      provider.send_message<ExtensionMessage>({
-        command: 'SELECTED_PRESETS',
-        names: updated_selected
-      })
+      if (selected_names.includes(preset_name)) {
+        const updated_selected = selected_names.filter((n) => n != preset_name)
+        await provider.context.globalState.update(state_key, updated_selected)
+      }
     }
+
+    const current_mode_state_key = provider.get_selected_presets_state_key()
+    const current_mode_selected_presets = provider.context.globalState.get<
+      string[]
+    >(current_mode_state_key, [])
+    provider.send_message<ExtensionMessage>({
+      command: 'SELECTED_PRESETS',
+      names: current_mode_selected_presets
+    })
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to delete preset: ${error}`)
   }

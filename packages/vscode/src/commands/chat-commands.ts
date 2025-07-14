@@ -287,7 +287,7 @@ export function chat_command(
     )
 
     let selected_names = context.globalState.get<string[]>(
-      'selectedPresets',
+      'selectedPresets.edit',
       []
     )
 
@@ -315,7 +315,7 @@ export function chat_command(
       }
 
       selected_names = selected_presets.map((preset) => preset.label)
-      await context.globalState.update('selectedPresets', selected_names)
+      await context.globalState.update('selectedPresets.edit', selected_names)
     }
 
     await handle_chat_command(
