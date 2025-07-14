@@ -604,16 +604,6 @@
           "type": "array",
           "default": [
             {
-              "name": "(0)",
-              "chatbot": "AI Studio",
-              "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(1)",
-              "chatbot": "Gemini"
-            },
-            {
               "name": "(2)",
               "chatbot": "ChatGPT"
             },
@@ -622,42 +612,12 @@
               "chatbot": "Claude"
             },
             {
-              "name": "(4)",
-              "chatbot": "Grok"
+              "name": "(1)",
+              "chatbot": "Gemini"
             },
             {
-              "name": "(5)",
-              "chatbot": "Perplexity"
-            },
-            {
-              "name": "(6)",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "(7)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Yuanbao",
-              "model": "deepseek"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "HuggingChat"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Open WebUI",
-              "port": 3000,
+              "name": "(0)",
+              "chatbot": "AI Studio",
               "temperature": 0.5,
               "systemInstructions": "You're a helpful coding assistant."
             }
@@ -686,6 +646,7 @@
                   "Doubao",
                   "Mistral",
                   "HuggingChat",
+                  "Kimi",
                   "Perplexity"
                 ],
                 "description": "Choose among supported chatbots."
