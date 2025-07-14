@@ -349,17 +349,20 @@ export const HomeView: React.FC<Props> = (props) => {
                       {
                         value: 'whole',
                         label: 'whole',
-                        title: 'The model will output complete files'
+                        title:
+                          'The model will output modified files in full. The best quality, especially from smaller models.'
                       },
                       {
                         value: 'truncated',
                         label: 'truncated',
-                        title: 'The model will skip unchanged fragments'
+                        title:
+                          'The model will skip unchanged fragments in modified files. Readable but requires Intelligent Update tool to apply.'
                       },
                       {
                         value: 'diff',
                         label: 'diff',
-                        title: 'The model will output diffs'
+                        title:
+                          'The model will output patches. Less readable but fast to apply. Smaller models may struggle with diff correctness.'
                       }
                     ]}
                     selected_value={

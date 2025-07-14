@@ -5,7 +5,7 @@ import { EditPresetForm as UiEditPresetForm } from '@ui/components/editor/EditPr
 import { Preset } from '@shared/types/preset'
 import { ExtensionMessage, WebviewMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
-import { IntroView } from './intro'
+import { Intro } from './intro'
 import styles from './View.module.scss'
 import cn from 'classnames'
 
@@ -155,7 +155,7 @@ export const View = () => {
           [styles.hidden]: active_view != 'intro'
         })}
       >
-        <IntroView on_open_home_view={() => set_active_view('home')} />
+        <Intro on_open_home_view={() => set_active_view('home')} />
       </div>
     </div>
   )
