@@ -230,7 +230,10 @@ export function chat_using_command(
     if (!instructions) return
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_chat_presets = config.get<ConfigPresetFormat[]>('presets', [])
+    const web_chat_presets = config.get<ConfigPresetFormat[]>(
+      'chatPresetsForEditContext',
+      []
+    )
 
     const preset_quick_pick_items = web_chat_presets
       .filter((preset) => CHATBOTS[preset.chatbot])
@@ -278,7 +281,10 @@ export function chat_command(
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_chat_presets = config.get<ConfigPresetFormat[]>('presets', [])
+    const chat_presets = config.get<ConfigPresetFormat[]>(
+      'chatPresetsForEditContext',
+      []
+    )
 
     let selected_names = context.globalState.get<string[]>(
       'selectedPresets',
@@ -286,7 +292,7 @@ export function chat_command(
     )
 
     if (!selected_names.length) {
-      const preset_quick_pick_items = web_chat_presets
+      const preset_quick_pick_items = chat_presets
         .filter((preset) => CHATBOTS[preset.chatbot])
         .map((preset) => ({
           label: preset.name,

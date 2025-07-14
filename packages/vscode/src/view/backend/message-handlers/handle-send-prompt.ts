@@ -183,7 +183,10 @@ async function validate_presets(params: {
   instructions: string
 }): Promise<string[]> {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const presets = config.get<ConfigPresetFormat[]>('presets', [])
+  const presets = config.get<ConfigPresetFormat[]>(
+    'chatPresetsForEditContext',
+    []
+  )
   const available_presets = presets.filter((preset) =>
     !params.is_code_completions_mode
       ? true

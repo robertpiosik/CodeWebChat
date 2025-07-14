@@ -600,7 +600,7 @@
           "description": "Style instructions for chat responses when using diff format.",
           "default": "Whenever proposing a file use the markdown code block syntax. Each code block should be a diff patch."
         },
-        "codeWebChat.presets": {
+        "codeWebChat.chatPresetsForEditContext": {
           "type": "array",
           "default": [
             {

@@ -118,7 +118,10 @@ export function code_completion_in_chat_with_command(
     'codeWebChat.codeCompletionInChatUsing',
     async () => {
       const config = vscode.workspace.getConfiguration('codeWebChat')
-      const all_presets = config.get<ConfigPresetFormat[]>('presets', [])
+      const all_presets = config.get<ConfigPresetFormat[]>(
+        'chatPresetsForEditContext',
+        []
+      )
       const presets = filter_presets_with_affixes(all_presets)
 
       if (presets.length == 0) {
@@ -170,7 +173,10 @@ export function code_completion_in_chat_command(
     'codeWebChat.codeCompletionInChat',
     async () => {
       const config = vscode.workspace.getConfiguration('codeWebChat')
-      const all_presets = config.get<ConfigPresetFormat[]>('presets', [])
+      const all_presets = config.get<ConfigPresetFormat[]>(
+        'chatPresetsForEditContext',
+        []
+      )
       const presets = filter_presets_with_affixes(all_presets)
 
       if (presets.length == 0) {

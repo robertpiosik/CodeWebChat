@@ -8,7 +8,10 @@ export const handle_show_preset_picker = async (
   provider: ViewProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const web_chat_presets = config.get<ConfigPresetFormat[]>('presets', [])
+  const web_chat_presets = config.get<ConfigPresetFormat[]>(
+    'chatPresetsForEditContext',
+    []
+  )
 
   const selected_preset_names_state_key =
     provider.web_mode == 'code-completions'

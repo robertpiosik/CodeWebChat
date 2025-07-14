@@ -10,7 +10,8 @@ export const handle_duplicate_preset = async (
 ): Promise<void> => {
   const preset_name = message.name
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const current_presets = config.get<ConfigPresetFormat[]>('presets', []) || []
+  const current_presets =
+    config.get<ConfigPresetFormat[]>('chatPresetsForEditContext', []) || []
 
   const preset_to_duplicate = current_presets.find((p) => p.name == preset_name)
   if (!preset_to_duplicate) {
@@ -51,7 +52,7 @@ export const handle_duplicate_preset = async (
   updated_presets.splice(original_index + 1, 0, duplicated_preset)
 
   try {
-    await config.update('presets', updated_presets, true)
+    await config.update('chatPresetsForEditContext', updated_presets, true)
     provider.send_presets_to_webview(webview_view.webview)
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to duplicate preset: ${error}`)

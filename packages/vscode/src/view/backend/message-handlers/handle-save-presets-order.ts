@@ -10,7 +10,7 @@ export const handle_save_presets_order = async (
     ui_preset_to_config_format(preset)
   )
   await config.update(
-    'presets',
+    'chatPresetsForEditContext',
     config_formatted_presets,
     vscode.ConfigurationTarget.Global
   )

@@ -10,11 +10,10 @@ import {
 export const handle_create_preset = async (
   provider: ViewProvider
 ): Promise<void> => {
-  // Get current presets
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const current_presets = config.get<ConfigPresetFormat[]>('presets', []) || []
+  const current_presets =
+    config.get<ConfigPresetFormat[]>('chatPresetsForEditContext', []) || []
 
-  // Generate unique name
   let new_name = ''
   let copy_number = 0
   while (current_presets.some((p) => p.name == new_name)) {
@@ -36,7 +35,7 @@ export const handle_create_preset = async (
       command: 'PRESET_CREATED',
       preset: config_preset_to_ui_format(new_preset)
     })
-    await config.update('presets', updated_presets, true)
+    await config.update('chatPresetsForEditContext', updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to create preset: ${error}`)
   }

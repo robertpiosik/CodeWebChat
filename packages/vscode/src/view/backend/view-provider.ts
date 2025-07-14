@@ -105,7 +105,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
         if (!this._webview_view) return
-        if (event.affectsConfiguration('codeWebChat.presets')) {
+        if (
+          event.affectsConfiguration('codeWebChat.chatPresetsForEditContext')
+        ) {
           this.send_presets_to_webview(this._webview_view.webview)
         }
       }
@@ -416,7 +418,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public send_presets_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_chat_presets_config =
-      config.get<ConfigPresetFormat[]>('presets', []) || []
+      config.get<ConfigPresetFormat[]>('chatPresetsForEditContext', []) || []
 
     const presets_for_ui: Preset[] = web_chat_presets_config
       .filter((preset_config) => CHATBOTS[preset_config.chatbot])

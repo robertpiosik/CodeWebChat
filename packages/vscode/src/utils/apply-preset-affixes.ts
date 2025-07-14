@@ -7,7 +7,10 @@ export function get_presets_by_names(preset_names: string[]): Array<{
   prompt_suffix?: string
 }> {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const all_presets = config.get<ConfigPresetFormat[]>('presets', [])
+  const all_presets = config.get<ConfigPresetFormat[]>(
+    'chatPresetsForEditContext',
+    []
+  )
 
   return all_presets
     .filter((preset) => preset_names.includes(preset.name))

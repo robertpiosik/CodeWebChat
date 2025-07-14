@@ -119,7 +119,7 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 - `Code Web Chat: Ignored Extensions` - List of file extensions to ignore in the context.
 
-- `Code Web Chat: Presets` - Conveniently edit chat presets as they're stored in JSON.
+- `Code Web Chat: Chat Presets For Edit Context` - Conveniently edit chat presets as they're stored in JSON.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 

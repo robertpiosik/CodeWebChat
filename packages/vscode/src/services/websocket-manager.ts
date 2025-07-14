@@ -265,7 +265,8 @@ export class WebSocketManager {
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_chat_presets = config.get<any[]>('presets') ?? []
+    const web_chat_presets =
+      config.get<any[]>('chatPresetsForEditContext') ?? []
 
     for (const chat of chats) {
       const preset = web_chat_presets.find((p) => p.name == chat.preset_name)
