@@ -16,14 +16,8 @@
   margin-bottom: var(--padding-2px);
 
   &__left {
-    display: flex;
-    align-items: center;
-    gap: var(--padding-4px);
     opacity: 0.7;
-
-    > span {
-      color: var(--vscode-foreground);
-    }
+    color: var(--vscode-foreground);
   }
 }
 

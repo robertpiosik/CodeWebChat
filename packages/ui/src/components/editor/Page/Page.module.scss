@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--padding-8px) var(--padding-12px) var(--padding-6px)
-    var(--padding-14px);
+    var(--padding-12px);
   border-bottom: 1px solid var(--vscode-sideBarSectionHeader-border);
   position: relative;
 
@@ -22,18 +22,6 @@
     font-weight: 600;
     transform: translateX(-50%);
     font-size: var(--font-size-14px);
-  }
-
-  &__back {
-    display: flex;
-    align-items: center;
-    gap: var(--padding-2px);
-
-    > span {
-      font-size: var(--font-size-13px);
-      font-weight: 500;
-      color: var(--vscode-editor-foreground);
-    }
   }
 
   &__right {

@@ -1,15 +1,18 @@
 import { Home } from './home'
 import { useEffect, useState } from 'react'
-import { Template as UiTemplate } from '@ui/components/editor/Template'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm as UiEditPresetForm } from '@ui/components/editor/EditPresetForm'
 import { Preset } from '@shared/types/preset'
 import { ExtensionMessage, WebviewMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
+import { IntroView } from './intro'
+import styles from './View.module.scss'
+import cn from 'classnames'
 
 const vscode = acquireVsCodeApi()
 
 export const View = () => {
+  const [active_view, set_active_view] = useState<'intro' | 'home'>('intro')
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [is_in_code_completions_mode, set_is_in_code_completions_mode] =
@@ -127,21 +130,33 @@ export const View = () => {
   }
 
   return (
-    <UiTemplate
-      overlay_slot={overlay}
-      base_slot={
+    <div className={styles.container}>
+      {overlay && <div className={styles.slot}>{overlay}</div>}
+      <div
+        className={cn(styles.slot, {
+          [styles.hidden]: active_view != 'home'
+        })}
+      >
         <Home
           vscode={vscode}
           on_preset_edit={(preset) => {
             set_updating_preset(preset)
           }}
+          on_show_intro={() => set_active_view('intro')}
           ask_instructions={ask_instructions}
           edit_instructions={edit_instructions}
           no_context_instructions={no_context_instructions}
           code_completions_instructions={code_completions_instructions}
           set_instructions={handle_instructions_change}
         />
-      }
-    />
+      </div>
+      <div
+        className={cn(styles.slot, {
+          [styles.hidden]: active_view != 'intro'
+        })}
+      >
+        <IntroView on_open_home_view={() => set_active_view('home')} />
+      </div>
+    </div>
   )
 }

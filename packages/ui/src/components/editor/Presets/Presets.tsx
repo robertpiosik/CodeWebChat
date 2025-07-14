@@ -76,14 +76,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
       })}
     >
       <div className={styles['my-presets']}>
-        <div className={styles['my-presets__left']}>
-          <span>MY CHAT PRESETS</span>
-
-          <IconButton
-            codicon_icon="info"
-            href="https://codeweb.chat/chatbot-initialization/#presets"
-          />
-        </div>
+        <div className={styles['my-presets__left']}>MY PRESETS</div>
 
         <TextButton
           on_click={props.on_set_default_presets}

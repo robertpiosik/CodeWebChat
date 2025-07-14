@@ -13,6 +13,7 @@ import {
 type Props = {
   vscode: any
   on_preset_edit: (preset: Preset) => void
+  on_show_intro: () => void
   ask_instructions: string
   edit_instructions: string
   no_context_instructions: string
@@ -452,6 +453,7 @@ export const Home: React.FC<Props> = (props) => {
 
   return (
     <HomeView
+      on_show_intro={props.on_show_intro}
       initialize_chats={handle_initialize_chats}
       copy_to_clipboard={handle_copy_to_clipboard}
       on_search_click={handle_search_click}

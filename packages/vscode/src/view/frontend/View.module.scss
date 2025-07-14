@@ -9,3 +9,8 @@
   display: flex;
   flex-direction: column;
 }
+
+.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
