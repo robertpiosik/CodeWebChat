@@ -20,12 +20,17 @@ export const Intro: React.FC<Props> = (props) => {
           <span className="codicon codicon-arrow-right" />
           <span>Continue</span>
         </button>
+        <a className={styles.top__button} href="https://codeweb.chat/">
+          <span className="codicon codicon-link-external" />
+          <span>Documentation</span>
+        </a>
       </div>
       <div className={styles.bottom}>
         <div className={styles.bottom__version}>{props.version}</div>
-        <a className={styles.bottom__website} href="https://codeweb.chat/">
-          https://codeweb.chat
-        </a>
+        <div className={styles.bottom__author}>
+          © {new Date().getFullYear()}{' '}
+          <a href="https://x.com/robertpiosik">Robert Piosik</a>
+        </div>
       </div>
     </div>
   )
