@@ -14,10 +14,12 @@ import { Dropdown as UiDropdown } from '@ui/components/editor/Dropdown'
 import { Icon } from '@ui/components/editor/Icon'
 import cn from 'classnames'
 import { QuickAction as UiQuickAction } from '@ui/components/editor/QuickAction'
+import { IconButton } from '@ui/components/editor/IconButton/IconButton'
 
 type Props = {
   initialize_chats: (params: { prompt: string; preset_names: string[] }) => void
   copy_to_clipboard: (instruction: string, preset_name?: string) => void
+  on_show_intro: () => void
   on_search_click: () => void
   on_create_preset: () => void
   on_at_sign_click: () => void
@@ -85,7 +87,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
     const container_width = container_ref.current.offsetWidth
     const switch_width = switch_container_ref.current.offsetWidth
-    const calculated_width = container_width - switch_width - 32
+    const calculated_width = container_width - switch_width - 56
 
     set_dropdown_max_width(calculated_width)
   }
@@ -226,12 +228,19 @@ export const HomeView: React.FC<Props> = (props) => {
         >
           <div className={styles.inner}>
             <div className={styles.top}>
-              <div ref={switch_container_ref}>
-                <UiSwitch
-                  value={props.home_view_type}
-                  on_change={props.on_home_view_type_change}
-                  options={Object.values(HOME_VIEW_TYPES)}
+              <div className={styles.top__left}>
+                <IconButton
+                  codicon_icon="chevron-left"
+                  on_click={props.on_show_intro}
+                  title="Return to intro screen"
                 />
+                <div ref={switch_container_ref}>
+                  <UiSwitch
+                    value={props.home_view_type}
+                    on_change={props.on_home_view_type_change}
+                    options={Object.values(HOME_VIEW_TYPES)}
+                  />
+                </div>
               </div>
 
               <div className={styles.top__right} ref={dropdown_container_ref}>
@@ -330,25 +339,30 @@ export const HomeView: React.FC<Props> = (props) => {
               (props.home_view_type == HOME_VIEW_TYPES.API &&
                 props.api_mode == 'edit')) && (
               <>
-                <UiSeparator height={10} />
                 <div className={styles['edit-format']}>
-                  <span>RESPONSE EDIT FORMAT</span>
+                  <span>
+                    + <i title="Style of generated code blocks">edit format</i>{' '}
+                    instructions:
+                  </span>
                   <UiHorizontalSelector
                     options={[
                       {
                         value: 'whole',
-                        label: 'Whole',
-                        title: 'The model will output complete files'
+                        label: 'whole',
+                        title:
+                          'The model will output modified files in full. The best quality, especially from smaller models.'
                       },
                       {
                         value: 'truncated',
-                        label: 'Truncated',
-                        title: 'The model will skip unchanged fragments'
+                        label: 'truncated',
+                        title:
+                          'The model will skip unchanged fragments in modified files. Readable but requires Intelligent Update API tool to apply.'
                       },
                       {
                         value: 'diff',
-                        label: 'Diff',
-                        title: 'The model will output diffs'
+                        label: 'diff',
+                        title:
+                          'The model will output patches. Less readable but fast to apply. Smaller models may struggle with diff correctness.'
                       }
                     ]}
                     selected_value={
@@ -368,7 +382,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
             {props.home_view_type == HOME_VIEW_TYPES.WEB && (
               <>
-                <UiSeparator height={12} />
+                <UiSeparator height={16} />
                 <UiPresets
                   presets={props.presets.map((preset) => {
                     return {
@@ -480,7 +494,7 @@ export const HomeView: React.FC<Props> = (props) => {
           onClick={() => {
             set_is_showing_commands(!is_showing_commands)
           }}
-          title="Important commands at a glance"
+          title="Handy access to core commands"
         >
           {is_showing_commands ? (
             <span className="codicon codicon-chevron-down" />

@@ -1,0 +1,16 @@
+.container {
+  position: relative;
+}
+
+.slot {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  background-color: var(--vscode-sideBar-background);
+
+  &--hidden {
+    visibility: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+}

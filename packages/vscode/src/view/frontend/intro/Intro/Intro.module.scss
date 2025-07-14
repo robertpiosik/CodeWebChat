@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  padding: var(--padding-24px);
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-8px);
+  width: 100%;
+
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-2px);
+
+    &__title {
+      font-size: 28px;
+      color: var(--vscode-foreground);
+    }
+
+    &__subtitle {
+      font-size: 17px;
+      color: var(--vscode-descriptionForeground);
+    }
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-6px);
+    color: var(--vscode-textLink-foreground);
+
+    > span:first-child {
+      font-size: 20px;
+    }
+  }
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--padding-4px);
+
+  &__website {
+    color: var(--vscode-textLink-foreground);
+  }
+
+  &__version {
+    color: var(--vscode-descriptionForeground);
+  }
+}

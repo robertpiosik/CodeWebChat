@@ -18,6 +18,7 @@ import Enter from '../../../assets/icons/enter.svg'
 import Perplexity from '../../../assets/icons/perplexity.svg'
 import Reddit from '../../../assets/icons/reddit.svg'
 import X from '../../../assets/icons/x.svg'
+import CodeWebChat from '../../../assets/icons/code-web-chat.svg'
 
 export namespace Icon {
   export type Variant =
@@ -41,6 +42,7 @@ export namespace Icon {
     | 'PERPLEXITY'
     | 'REDDIT'
     | 'X'
+    | 'CODE_WEB_CHAT'
 
   export type Props = {
     variant: Variant
@@ -110,6 +112,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'X':
       icon = <X />
+      break
+    case 'CODE_WEB_CHAT':
+      icon = <CodeWebChat />
       break
     default:
       // Handle cases where variant might not match any known icon

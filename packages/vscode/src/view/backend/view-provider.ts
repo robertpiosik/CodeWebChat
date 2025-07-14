@@ -46,7 +46,8 @@ import {
   handle_get_mode_api,
   handle_save_mode_api,
   handle_save_home_view_type,
-  handle_get_home_view_type
+  handle_get_home_view_type,
+  handle_get_version
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -395,6 +396,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_save_home_view_type(this, message)
           } else if (message.command == 'GET_HOME_VIEW_TYPE') {
             handle_get_home_view_type(this)
+          } else if (message.command == 'GET_VERSION') {
+            handle_get_version(this)
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
             await handle_at_sign_quick_pick(this, this.context)
           }

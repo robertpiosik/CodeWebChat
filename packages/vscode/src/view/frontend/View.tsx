@@ -1,15 +1,19 @@
 import { Home } from './home'
 import { useEffect, useState } from 'react'
-import { Template as UiTemplate } from '@ui/components/editor/Template'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm as UiEditPresetForm } from '@ui/components/editor/EditPresetForm'
 import { Preset } from '@shared/types/preset'
 import { ExtensionMessage, WebviewMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
+import { Intro } from './intro'
+import styles from './View.module.scss'
+import cn from 'classnames'
 
 const vscode = acquireVsCodeApi()
 
 export const View = () => {
+  const [active_view, set_active_view] = useState<'intro' | 'home'>('intro')
+  const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [is_in_code_completions_mode, set_is_in_code_completions_mode] =
@@ -56,11 +60,16 @@ export const View = () => {
         set_edit_instructions(message.edit)
         set_no_context_instructions(message.no_context)
         set_code_completions_instructions(message.code_completions)
+      } else if (message.command == 'VERSION') {
+        set_version(message.version)
       }
     }
     window.addEventListener('message', handle_message)
 
-    const initial_messages: WebviewMessage[] = [{ command: 'GET_INSTRUCTIONS' }]
+    const initial_messages: WebviewMessage[] = [
+      { command: 'GET_INSTRUCTIONS' },
+      { command: 'GET_VERSION' }
+    ]
     initial_messages.forEach((message) => vscode.postMessage(message))
 
     return () => window.removeEventListener('message', handle_message)
@@ -85,6 +94,7 @@ export const View = () => {
     ask_instructions === undefined ||
     edit_instructions === undefined ||
     no_context_instructions === undefined ||
+    !version ||
     code_completions_instructions === undefined
   ) {
     return null
@@ -127,21 +137,29 @@ export const View = () => {
   }
 
   return (
-    <UiTemplate
-      overlay_slot={overlay}
-      base_slot={
+    <div className={styles.container}>
+      {overlay && <div className={styles.slot}>{overlay}</div>}
+      <div className={cn(styles.slot, {
+        [styles['slot--hidden']]: active_view != 'home'
+      })}>
         <Home
           vscode={vscode}
           on_preset_edit={(preset) => {
             set_updating_preset(preset)
           }}
+          on_show_intro={() => set_active_view('intro')}
           ask_instructions={ask_instructions}
           edit_instructions={edit_instructions}
           no_context_instructions={no_context_instructions}
           code_completions_instructions={code_completions_instructions}
           set_instructions={handle_instructions_change}
         />
-      }
-    />
+      </div>
+      <div className={cn(styles.slot, {
+        [styles['slot--hidden']]: active_view != 'intro'
+      })}>
+        <Intro on_open_home_view={() => set_active_view('home')} version={version} />
+      </div>
+    </div>
   )
 }

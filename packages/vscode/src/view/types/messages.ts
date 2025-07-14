@@ -193,6 +193,10 @@ export interface SaveApiModeMessage extends BaseMessage {
   mode: ApiMode
 }
 
+export interface GetVersionMessage extends BaseMessage {
+  command: 'GET_VERSION'
+}
+
 // Messages from extension to webview:
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
@@ -331,6 +335,11 @@ export interface ApiModeMessage extends BaseMessage {
   mode: ApiMode
 }
 
+export interface VersionMessage extends BaseMessage {
+  command: 'VERSION'
+  version: string
+}
+
 // Union type of all possible incoming messages from webview
 export type WebviewMessage =
   | GetInstructionsMessage
@@ -371,6 +380,7 @@ export type WebviewMessage =
   | GetWebModeMessage
   | GetApiModeMessage
   | SaveApiModeMessage
+  | GetVersionMessage
 
 export type ExtensionMessage =
   | InstructionsMessage
@@ -395,3 +405,4 @@ export type ExtensionMessage =
   | HomeViewTypeMessage
   | WebModeMessage
   | ApiModeMessage
+  | VersionMessage
