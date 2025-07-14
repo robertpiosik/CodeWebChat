@@ -22,10 +22,10 @@ export const Intro: React.FC<Props> = (props) => {
         </button>
       </div>
       <div className={styles.bottom}>
+        <div className={styles.bottom__version}>{props.version}</div>
         <a className={styles.bottom__website} href="https://codeweb.chat/">
           https://codeweb.chat
         </a>
-        <div className={styles.bottom__version}>{props.version}</div>
       </div>
     </div>
   )

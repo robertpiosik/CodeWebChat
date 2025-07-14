@@ -60,13 +60,13 @@ type Props = {
 const web_mode_labels: Record<WebMode, string> = {
   ask: 'Ask about context',
   edit: 'Edit context',
-  'code-completions': 'Code at cursor with context',
+  'code-completions': 'Code at cursor',
   'no-context': 'No context'
 }
 
 const api_mode_labels: Record<ApiMode, string> = {
   edit: 'Edit context',
-  'code-completions': 'Code at cursor with context'
+  'code-completions': 'Code at cursor'
 }
 
 export const HomeView: React.FC<Props> = (props) => {

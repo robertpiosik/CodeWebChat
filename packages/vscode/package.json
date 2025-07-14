@@ -600,26 +600,344 @@
           "description": "Style instructions for chat responses when using diff format.",
           "default": "Whenever proposing a file use the markdown code block syntax. Each code block should be a diff patch."
         },
-        "codeWebChat.chatPresetsForEditContext": {
+        "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",
           "default": [
             {
-              "name": "(2)",
+              "name": "(0)",
               "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(3)",
-              "chatbot": "Claude"
             },
             {
               "name": "(1)",
               "chatbot": "Gemini"
             },
             {
-              "name": "(0)",
+              "name": "(2)",
               "chatbot": "AI Studio",
               "temperature": 0.5,
               "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(3)",
+              "chatbot": "Claude"
+            }
+          ],
+          "description": "Preset is a general or task specific web chat configuration.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the preset."
+              },
+              "chatbot": {
+                "type": "string",
+                "enum": [
+                  "AI Studio",
+                  "Gemini",
+                  "Open WebUI",
+                  "OpenRouter",
+                  "ChatGPT",
+                  "Claude",
+                  "Grok",
+                  "DeepSeek",
+                  "Qwen",
+                  "Yuanbao",
+                  "Doubao",
+                  "Mistral",
+                  "HuggingChat",
+                  "Kimi",
+                  "Perplexity"
+                ],
+                "description": "Choose among supported chatbots."
+              },
+              "promptPrefix": {
+                "type": "string",
+                "examples": [
+                  "Outline the steps needed to achieve:",
+                  "Draft a roadmap for accomplishing:",
+                  "Propose various approaches for addressing:",
+                  "Identify potential challenges in developing:",
+                  "Describe the purpose of this code:",
+                  "I need assistance troubleshooting this issue:",
+                  "Help diagnose this error:",
+                  "Generate commit message based on changes:",
+                  "Write tests for:"
+                ],
+                "description": "Prefix prepended to all prompts sent with this chat."
+              },
+              "promptSuffix": {
+                "type": "string",
+                "examples": [
+                  "Keep your response concise.",
+                  "Think step by step.",
+                  "Show only changed fragments.",
+                  "Summarize your understanding of the problem.",
+                  "Highlight what needs to change.",
+                  "Detail the key considerations.",
+                  "Suggest any alternative approaches.",
+                  "Identify potential drawbacks.",
+                  "Ask for clarifications if needed before proceeding."
+                ],
+                "description": "Suffix appended to all prompts sent with this chat."
+              },
+              "model": {
+                "type": "string",
+                "description": "Model to use."
+              },
+              "options": {
+                "type": "array",
+                "description": "Options to enable, e.g. canvas.",
+                "items": {
+                  "type": "string",
+                  "description": "Option name."
+                }
+              },
+              "temperature": {
+                "type": "number",
+                "description": "Temperature to use."
+              },
+              "top_p": {
+                "type": "number",
+                "description": "Top P setting to use."
+              },
+              "systemInstructions": {
+                "type": "string",
+                "description": "System instructions to use."
+              },
+              "port": {
+                "type": "number",
+                "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+              }
+            },
+            "required": [
+              "name",
+              "chatbot"
+            ]
+          }
+        },
+        "codeWebChat.chatPresetsForEditContext": {
+          "type": "array",
+          "default": [
+            {
+              "name": "(0)",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "(1)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(2)",
+              "chatbot": "AI Studio",
+              "temperature": 0.5,
+              "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(3)",
+              "chatbot": "Claude"
+            }
+          ],
+          "description": "Preset is a general or task specific web chat configuration.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the preset."
+              },
+              "chatbot": {
+                "type": "string",
+                "enum": [
+                  "AI Studio",
+                  "Gemini",
+                  "Open WebUI",
+                  "OpenRouter",
+                  "ChatGPT",
+                  "Claude",
+                  "Grok",
+                  "DeepSeek",
+                  "Qwen",
+                  "Yuanbao",
+                  "Doubao",
+                  "Mistral",
+                  "HuggingChat",
+                  "Kimi",
+                  "Perplexity"
+                ],
+                "description": "Choose among supported chatbots."
+              },
+              "promptPrefix": {
+                "type": "string",
+                "examples": [
+                  "Outline the steps needed to achieve:",
+                  "Draft a roadmap for accomplishing:",
+                  "Propose various approaches for addressing:",
+                  "Identify potential challenges in developing:",
+                  "Describe the purpose of this code:",
+                  "I need assistance troubleshooting this issue:",
+                  "Help diagnose this error:",
+                  "Generate commit message based on changes:",
+                  "Write tests for:"
+                ],
+                "description": "Prefix prepended to all prompts sent with this chat."
+              },
+              "promptSuffix": {
+                "type": "string",
+                "examples": [
+                  "Keep your response concise.",
+                  "Think step by step.",
+                  "Show only changed fragments.",
+                  "Summarize your understanding of the problem.",
+                  "Highlight what needs to change.",
+                  "Detail the key considerations.",
+                  "Suggest any alternative approaches.",
+                  "Identify potential drawbacks.",
+                  "Ask for clarifications if needed before proceeding."
+                ],
+                "description": "Suffix appended to all prompts sent with this chat."
+              },
+              "model": {
+                "type": "string",
+                "description": "Model to use."
+              },
+              "options": {
+                "type": "array",
+                "description": "Options to enable, e.g. canvas.",
+                "items": {
+                  "type": "string",
+                  "description": "Option name."
+                }
+              },
+              "temperature": {
+                "type": "number",
+                "description": "Temperature to use."
+              },
+              "top_p": {
+                "type": "number",
+                "description": "Top P setting to use."
+              },
+              "systemInstructions": {
+                "type": "string",
+                "description": "System instructions to use."
+              },
+              "port": {
+                "type": "number",
+                "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+              }
+            },
+            "required": [
+              "name",
+              "chatbot"
+            ]
+          }
+        },
+        "codeWebChat.chatPresetsForCodeAtCursor": {
+          "type": "array",
+          "default": [
+            {
+              "name": "(0)",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "(1)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(2)",
+              "chatbot": "AI Studio",
+              "temperature": 0.5,
+              "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(3)",
+              "chatbot": "Claude"
+            }
+          ],
+          "description": "Preset is a general or task specific web chat configuration.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the preset."
+              },
+              "chatbot": {
+                "type": "string",
+                "enum": [
+                  "AI Studio",
+                  "Gemini",
+                  "Open WebUI",
+                  "OpenRouter",
+                  "ChatGPT",
+                  "Claude",
+                  "Grok",
+                  "DeepSeek",
+                  "Qwen",
+                  "Yuanbao",
+                  "Doubao",
+                  "Mistral",
+                  "HuggingChat",
+                  "Kimi",
+                  "Perplexity"
+                ],
+                "description": "Choose among supported chatbots."
+              },
+              "model": {
+                "type": "string",
+                "description": "Model to use."
+              },
+              "options": {
+                "type": "array",
+                "description": "Options to enable, e.g. canvas.",
+                "items": {
+                  "type": "string",
+                  "description": "Option name."
+                }
+              },
+              "temperature": {
+                "type": "number",
+                "description": "Temperature to use."
+              },
+              "top_p": {
+                "type": "number",
+                "description": "Top P setting to use."
+              },
+              "systemInstructions": {
+                "type": "string",
+                "description": "System instructions to use."
+              },
+              "port": {
+                "type": "number",
+                "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+              }
+            },
+            "required": [
+              "name",
+              "chatbot"
+            ]
+          }
+        },
+        "codeWebChat.chatPresetsForNoContext": {
+          "type": "array",
+          "default": [
+            {
+              "name": "(0)",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "(1)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(2)",
+              "chatbot": "AI Studio",
+              "temperature": 0.5,
+              "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(3)",
+              "chatbot": "Claude"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
