@@ -83,8 +83,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         return 'chatPresetsForCodeAtCursor'
       case 'no-context':
         return 'chatPresetsForNoContext'
-      default:
-        return 'chatPresetsForEditContext'
     }
   }
 
