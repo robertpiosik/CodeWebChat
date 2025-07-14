@@ -356,7 +356,7 @@ export const HomeView: React.FC<Props> = (props) => {
                         value: 'truncated',
                         label: 'truncated',
                         title:
-                          'The model will skip unchanged fragments in modified files. Readable but requires Intelligent Update tool to apply.'
+                          'The model will skip unchanged fragments in modified files. Readable but requires Intelligent Update API tool to apply.'
                       },
                       {
                         value: 'diff',
