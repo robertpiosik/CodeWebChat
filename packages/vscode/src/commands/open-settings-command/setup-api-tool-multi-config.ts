@@ -285,7 +285,9 @@ export const setup_api_tool_multi_config = async (params: {
             default_config &&
             default_config.provider_type == item.config.provider_type &&
             default_config.provider_name == item.config.provider_name &&
-            default_config.model == item.config.model
+            default_config.model == item.config.model &&
+            default_config.temperature == item.config.temperature &&
+            default_config.reasoning_effort == item.config.reasoning_effort
           ) {
             default_config = undefined
             await tool_methods.set_default_config(null)
@@ -398,7 +400,9 @@ export const setup_api_tool_multi_config = async (params: {
         default_config &&
         default_config.provider_type == config.provider_type &&
         default_config.provider_name == config.provider_name &&
-        default_config.model == config.model
+        default_config.model == config.model &&
+        default_config.temperature == config.temperature &&
+        default_config.reasoning_effort == config.reasoning_effort
 
       if (current_is_default) {
         options.push({
@@ -548,7 +552,10 @@ export const setup_api_tool_multi_config = async (params: {
                 original_config_state.provider_type &&
               default_config.provider_name ==
                 original_config_state.provider_name &&
-              default_config.model == original_config_state.model
+              default_config.model == original_config_state.model &&
+              default_config.temperature == original_config_state.temperature &&
+              default_config.reasoning_effort ==
+                original_config_state.reasoning_effort
             ) {
               default_config = updated_config_state
               await tool_methods.set_default_config(updated_config_state)
