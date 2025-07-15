@@ -44,7 +44,6 @@ const with_ids = (
 
 const ChatbotIcon: React.FC<{
   chatbot: keyof typeof CHATBOTS
-  is_selected: boolean
   is_disabled: boolean
 }> = (params) => {
   const icon_variant = chatbot_to_icon[params.chatbot]
@@ -54,7 +53,6 @@ const ChatbotIcon: React.FC<{
   return (
     <div
       className={cn(styles.presets__item__left__icon, {
-        [styles['presets__item__left__icon--selected']]: params.is_selected,
         [styles['presets__item__left__icon--disabled']]: params.is_disabled
       })}
     >
@@ -74,7 +72,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
       })}
     >
       <div className={styles['my-presets']}>
-        <div className={styles['my-presets__left']}>MY PRESETS</div>
+        <div className={styles['my-presets__left']}>MY CHAT PRESETS</div>
 
         <TextButton
           on_click={props.on_set_default_presets}
@@ -134,11 +132,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 title={display_name}
               >
                 <div className={styles.presets__item__left}>
-                  <ChatbotIcon
-                    chatbot={preset.chatbot}
-                    is_selected={props.selected_presets.includes(preset.name)}
-                    is_disabled={false}
-                  />
+                  <ChatbotIcon chatbot={preset.chatbot} is_disabled={false} />
 
                   <div
                     className={cn(styles.presets__item__left__text, {

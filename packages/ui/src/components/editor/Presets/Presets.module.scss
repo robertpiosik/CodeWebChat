@@ -68,18 +68,14 @@
           width: 16px;
           height: 16px;
         }
-
-        &--selected > svg {
-          fill: var(--vscode-textLink-foreground);
-        }
       }
 
       &__text {
         overflow: hidden;
         text-overflow: ellipsis;
 
-        &--selected {
-          color: var(--vscode-textLink-foreground);
+        &--selected > span:first-child {
+          font-weight: 600;
         }
 
         &--disabled {

@@ -25,7 +25,8 @@ export const handle_copy_prompt = async (
   if (preset_name !== undefined) {
     final_instruction = apply_preset_affixes_to_instruction(
       instruction_to_copy,
-      preset_name
+      preset_name,
+      provider.get_presets_config_key()
     )
   }
 

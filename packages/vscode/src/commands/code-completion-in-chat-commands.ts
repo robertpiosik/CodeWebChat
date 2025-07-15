@@ -90,7 +90,10 @@ async function handle_code_completion_in_chat_command(
       }
     })
 
-    websocket_server_instance.initialize_chats(chats)
+    websocket_server_instance.initialize_chats(
+      chats,
+      'chatPresetsForCodeAtCursor'
+    )
   } catch (error: any) {
     console.error('Error in FIM in Chat:', error)
     vscode.window.showErrorMessage('Error in FIM in Chat: ' + error.message)
@@ -119,7 +122,7 @@ export function code_completion_in_chat_with_command(
     async () => {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const all_presets = config.get<ConfigPresetFormat[]>(
-        'chatPresetsForEditContext',
+        'chatPresetsForCodeAtCursor',
         []
       )
       const presets = filter_presets_with_affixes(all_presets)
@@ -174,7 +177,7 @@ export function code_completion_in_chat_command(
     async () => {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const all_presets = config.get<ConfigPresetFormat[]>(
-        'chatPresetsForEditContext',
+        'chatPresetsForCodeAtCursor',
         []
       )
       const presets = filter_presets_with_affixes(all_presets)

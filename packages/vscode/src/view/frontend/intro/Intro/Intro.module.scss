@@ -11,6 +11,7 @@
 .top {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: var(--padding-8px);
   width: 100%;
 
@@ -21,6 +22,7 @@
 
     &__title {
       font-size: 28px;
+      font-weight: 600;
       color: var(--vscode-foreground);
     }
 

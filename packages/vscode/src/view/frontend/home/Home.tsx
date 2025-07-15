@@ -22,6 +22,12 @@ type Props = {
     value: string,
     mode: 'ask' | 'edit' | 'no-context' | 'code-completions'
   ) => void
+  home_view_type: HomeViewType
+  web_mode: WebMode
+  api_mode: ApiMode
+  on_home_view_type_change: (view_type: HomeViewType) => void
+  on_web_mode_change: (mode: WebMode) => void
+  on_api_mode_change: (mode: ApiMode) => void
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -37,17 +43,14 @@ export const Home: React.FC<Props> = (props) => {
     useState<string[]>()
   const [token_count, set_token_count] = useState<number>(0)
   const [selection_text, set_selection_text] = useState<string>('')
-  const [home_view_type, set_home_view_type] = useState<HomeViewType>(
-    HOME_VIEW_TYPES.WEB
-  )
-  const [web_mode, set_web_mode] = useState<WebMode>()
-  const [api_mode, set_api_mode] = useState<ApiMode>()
   const [chat_edit_format, set_chat_edit_format] = useState<EditFormat>()
   const [api_edit_format, set_api_edit_format] = useState<EditFormat>()
 
   const is_in_code_completions_mode =
-    (home_view_type == HOME_VIEW_TYPES.WEB && web_mode == 'code-completions') ||
-    (home_view_type == HOME_VIEW_TYPES.API && api_mode == 'code-completions')
+    (props.home_view_type == HOME_VIEW_TYPES.WEB &&
+      props.web_mode == 'code-completions') ||
+    (props.home_view_type == HOME_VIEW_TYPES.API &&
+      props.api_mode == 'code-completions')
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
@@ -100,15 +103,6 @@ export const Home: React.FC<Props> = (props) => {
           set_chat_edit_format(message.chat_edit_format)
           set_api_edit_format(message.api_edit_format)
           break
-        case 'HOME_VIEW_TYPE':
-          set_home_view_type(message.view_type)
-          break
-        case 'WEB_MODE':
-          set_web_mode(message.mode)
-          break
-        case 'API_MODE':
-          set_api_mode(message.mode)
-          break
       }
     }
 
@@ -123,10 +117,7 @@ export const Home: React.FC<Props> = (props) => {
       { command: 'GET_HISTORY' },
       { command: 'GET_CURRENT_TOKEN_COUNT' },
       { command: 'GET_INSTRUCTIONS' },
-      { command: 'GET_EDIT_FORMAT' },
-      { command: 'GET_HOME_VIEW_TYPE' },
-      { command: 'GET_WEB_MODE' },
-      { command: 'GET_API_MODE' }
+      { command: 'GET_EDIT_FORMAT' }
     ]
     initial_messages.forEach((message) => props.vscode.postMessage(message))
 
@@ -134,35 +125,9 @@ export const Home: React.FC<Props> = (props) => {
   }, [])
 
   const current_mode =
-    home_view_type == HOME_VIEW_TYPES.WEB ? web_mode : api_mode
-
-  const handle_web_mode_change = (new_mode: WebMode) => {
-    set_web_mode(new_mode)
-    props.vscode.postMessage({
-      command: 'SAVE_WEB_MODE',
-      mode: new_mode
-    } as WebviewMessage)
-    props.vscode.postMessage({
-      command: 'GET_SELECTED_PRESETS'
-    } as WebviewMessage)
-    props.vscode.postMessage({
-      command: 'GET_CURRENT_TOKEN_COUNT'
-    } as WebviewMessage)
-  }
-
-  const handle_api_mode_change = (new_mode: ApiMode) => {
-    set_api_mode(new_mode)
-    props.vscode.postMessage({
-      command: 'SAVE_API_MODE',
-      mode: new_mode
-    } as WebviewMessage)
-    props.vscode.postMessage({
-      command: 'GET_SELECTED_PRESETS'
-    } as WebviewMessage)
-    props.vscode.postMessage({
-      command: 'GET_CURRENT_TOKEN_COUNT'
-    } as WebviewMessage)
-  }
+    props.home_view_type == HOME_VIEW_TYPES.WEB
+      ? props.web_mode
+      : props.api_mode
 
   const update_chat_history = (instruction: string) => {
     if (!instruction.trim()) {
@@ -311,18 +276,14 @@ export const Home: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
-  const handle_home_view_type_change = (view_type: HomeViewType) => {
-    props.vscode.postMessage({
-      command: 'SAVE_HOME_VIEW_TYPE',
-      view_type
-    } as WebviewMessage)
-  }
-
   const get_current_instructions = () => {
     if (is_in_code_completions_mode) {
       return props.code_completions_instructions
     }
-    const mode = home_view_type == HOME_VIEW_TYPES.WEB ? web_mode : api_mode
+    const mode =
+      props.home_view_type == HOME_VIEW_TYPES.WEB
+        ? props.web_mode
+        : props.api_mode
     if (mode == 'ask') return props.ask_instructions
     if (mode == 'edit') return props.edit_instructions
     if (mode == 'no-context') return props.no_context_instructions
@@ -441,10 +402,7 @@ export const Home: React.FC<Props> = (props) => {
     is_in_code_completions_mode === undefined ||
     instructions === undefined ||
     chat_edit_format === undefined ||
-    api_edit_format === undefined ||
-    home_view_type === undefined ||
-    web_mode === undefined ||
-    api_mode === undefined
+    api_edit_format === undefined
   ) {
     return <></>
   }
@@ -466,10 +424,10 @@ export const Home: React.FC<Props> = (props) => {
       chat_history={current_history || []}
       token_count={token_count}
       selection_text={selection_text}
-      web_mode={web_mode}
-      api_mode={api_mode}
-      on_web_mode_change={handle_web_mode_change}
-      on_api_mode_change={handle_api_mode_change}
+      web_mode={props.web_mode}
+      api_mode={props.api_mode}
+      on_web_mode_change={props.on_web_mode_change}
+      on_api_mode_change={props.on_api_mode_change}
       chat_edit_format={chat_edit_format}
       api_edit_format={api_edit_format}
       on_chat_edit_format_change={handle_chat_edit_format_change}
@@ -482,8 +440,8 @@ export const Home: React.FC<Props> = (props) => {
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}
-      home_view_type={home_view_type}
-      on_home_view_type_change={handle_home_view_type_change}
+      home_view_type={props.home_view_type}
+      on_home_view_type_change={props.on_home_view_type_change}
       on_edit_context_click={handle_edit_context_click}
       on_edit_context_with_quick_pick_click={
         handle_edit_context_with_quick_pick_click

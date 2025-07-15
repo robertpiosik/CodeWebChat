@@ -73,7 +73,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public home_view_type: HomeViewType = HOME_VIEW_TYPES.WEB
 
   public get_presets_config_key(): string {
-    switch (this.web_mode) {
+    const mode =
+      this.home_view_type === HOME_VIEW_TYPES.API
+        ? this.api_mode
+        : this.web_mode
+    switch (mode) {
       case 'ask':
         return 'chatPresetsForAskAboutContext'
       case 'edit':

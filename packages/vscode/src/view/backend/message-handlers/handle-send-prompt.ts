@@ -41,7 +41,6 @@ export const handle_send_prompt = async (
   const valid_preset_names = await validate_presets({
     provider,
     preset_names: preset_names,
-    is_code_completions_mode: provider.web_mode == 'code-completions',
     context: provider.context,
     instructions: current_instructions
   })
@@ -59,7 +58,9 @@ export const handle_send_prompt = async (
   const active_editor = vscode.window.activeTextEditor
   const active_path = active_editor?.document.uri.fsPath
 
-  if (provider.web_mode == 'code-completions' && active_editor) {
+  if (provider.web_mode == 'code-completions') {
+    if (!active_editor) return
+
     const document = active_editor.document
     const position = active_editor.selection.active
 
@@ -96,12 +97,12 @@ export const handle_send_prompt = async (
       }
     })
 
-    provider.websocket_server_instance.initialize_chats(chats)
-  } else if (provider.web_mode != 'code-completions') {
-    if (!current_instructions) return
-
+    provider.websocket_server_instance.initialize_chats(
+      chats,
+      provider.get_presets_config_key()
+    )
+  } else if (current_instructions) {
     const editor = vscode.window.activeTextEditor
-
     const base_instructions = current_instructions
 
     const context_text =
@@ -113,7 +114,8 @@ export const handle_send_prompt = async (
       valid_preset_names.map(async (preset_name) => {
         let instructions = apply_preset_affixes_to_instruction(
           base_instructions,
-          preset_name
+          preset_name,
+          provider.get_presets_config_key()
         )
 
         if (editor && !editor.selection.isEmpty) {
@@ -167,7 +169,10 @@ export const handle_send_prompt = async (
       })
     )
 
-    provider.websocket_server_instance.initialize_chats(chats)
+    provider.websocket_server_instance.initialize_chats(
+      chats,
+      provider.get_presets_config_key()
+    )
   }
 
   vscode.window.showInformationMessage(
@@ -180,19 +185,13 @@ export const handle_send_prompt = async (
 async function validate_presets(params: {
   provider: ViewProvider
   preset_names: string[]
-  is_code_completions_mode: boolean
   context: vscode.ExtensionContext
   instructions: string
 }): Promise<string[]> {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.provider.get_presets_config_key()
   const presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
-  const available_presets = presets.filter((preset) =>
-    !params.is_code_completions_mode
-      ? true
-      : !preset.promptPrefix && !preset.promptSuffix
-  )
-  const available_preset_names = available_presets.map((preset) => preset.name)
+  const available_preset_names = presets.map((preset) => preset.name)
 
   const valid_presets = params.preset_names.filter((name) =>
     available_preset_names.includes(name)
@@ -205,7 +204,7 @@ async function validate_presets(params: {
     )
 
     const create_items = () => {
-      return available_presets.map((preset) => {
+      return presets.map((preset) => {
         const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
         const model = preset.model
           ? (CHATBOTS[preset.chatbot] as any).models[preset.model] ||

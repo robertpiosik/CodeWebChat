@@ -258,15 +258,15 @@ export class WebSocketManager {
 
   // TODO: This needs attention - should be renamed to "initialize-chat" and handle only one at a time.
   public async initialize_chats(
-    chats: Array<{ text: string; preset_name: string }>
+    chats: Array<{ text: string; preset_name: string }>,
+    presets_config_key: string
   ): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_chat_presets =
-      config.get<any[]>('chatPresetsForEditContext') ?? []
+    const web_chat_presets = config.get<any[]>(presets_config_key) ?? []
 
     for (const chat of chats) {
       const preset = web_chat_presets.find((p) => p.name == chat.preset_name)

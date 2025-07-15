@@ -5,9 +5,11 @@ import { EditPresetForm as UiEditPresetForm } from '@ui/components/editor/EditPr
 import { Preset } from '@shared/types/preset'
 import { ExtensionMessage, WebviewMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
+import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { Intro } from './intro'
 import styles from './View.module.scss'
 import cn from 'classnames'
+import { ApiMode, WebMode } from '@shared/types/modes'
 
 const vscode = acquireVsCodeApi()
 
@@ -16,8 +18,6 @@ export const View = () => {
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
-  const [is_in_code_completions_mode, set_is_in_code_completions_mode] =
-    useState(false)
   const [ask_instructions, set_ask_instructions] = useState<
     string | undefined
   >()
@@ -29,6 +29,9 @@ export const View = () => {
   >()
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
+  const [home_view_type, set_home_view_type] = useState<HomeViewType>()
+  const [web_mode, set_web_mode] = useState<WebMode>()
+  const [api_mode, set_api_mode] = useState<ApiMode>()
 
   const handle_instructions_change = (
     value: string,
@@ -50,9 +53,7 @@ export const View = () => {
   useEffect(() => {
     const handle_message = (event: MessageEvent<ExtensionMessage>) => {
       const message = event.data
-      if (message.command == 'CODE_COMPLETIONS_MODE') {
-        set_is_in_code_completions_mode(message.enabled)
-      } else if (message.command == 'PRESET_UPDATED') {
+      if (message.command == 'PRESET_UPDATED') {
         set_updating_preset(undefined)
         set_updated_preset(undefined)
       } else if (message.command == 'INSTRUCTIONS') {
@@ -62,13 +63,22 @@ export const View = () => {
         set_code_completions_instructions(message.code_completions)
       } else if (message.command == 'VERSION') {
         set_version(message.version)
+      } else if (message.command == 'HOME_VIEW_TYPE') {
+        set_home_view_type(message.view_type)
+      } else if (message.command == 'WEB_MODE') {
+        set_web_mode(message.mode)
+      } else if (message.command == 'API_MODE') {
+        set_api_mode(message.mode)
       }
     }
     window.addEventListener('message', handle_message)
 
     const initial_messages: WebviewMessage[] = [
       { command: 'GET_INSTRUCTIONS' },
-      { command: 'GET_VERSION' }
+      { command: 'GET_VERSION' },
+      { command: 'GET_HOME_VIEW_TYPE' },
+      { command: 'GET_WEB_MODE' },
+      { command: 'GET_API_MODE' }
     ]
     initial_messages.forEach((message) => vscode.postMessage(message))
 
@@ -90,12 +100,51 @@ export const View = () => {
     } as WebviewMessage)
   }
 
+  const handle_web_mode_change = (new_mode: WebMode) => {
+    set_web_mode(new_mode)
+    vscode.postMessage({
+      command: 'SAVE_WEB_MODE',
+      mode: new_mode
+    } as WebviewMessage)
+    vscode.postMessage({
+      command: 'GET_SELECTED_PRESETS'
+    } as WebviewMessage)
+    vscode.postMessage({
+      command: 'GET_CURRENT_TOKEN_COUNT'
+    } as WebviewMessage)
+  }
+
+  const handle_api_mode_change = (new_mode: ApiMode) => {
+    set_api_mode(new_mode)
+    vscode.postMessage({
+      command: 'SAVE_API_MODE',
+      mode: new_mode
+    } as WebviewMessage)
+    vscode.postMessage({
+      command: 'GET_SELECTED_PRESETS'
+    } as WebviewMessage)
+    vscode.postMessage({
+      command: 'GET_CURRENT_TOKEN_COUNT'
+    } as WebviewMessage)
+  }
+
+  const handle_home_view_type_change = (view_type: HomeViewType) => {
+    set_home_view_type(view_type)
+    vscode.postMessage({
+      command: 'SAVE_HOME_VIEW_TYPE',
+      view_type
+    } as WebviewMessage)
+  }
+
   if (
     ask_instructions === undefined ||
     edit_instructions === undefined ||
     no_context_instructions === undefined ||
     !version ||
-    code_completions_instructions === undefined
+    code_completions_instructions === undefined ||
+    home_view_type === undefined ||
+    web_mode === undefined ||
+    api_mode === undefined
   ) {
     return null
   }
@@ -108,21 +157,7 @@ export const View = () => {
         on_back_click={edit_preset_back_click_handler}
         title="Edit Preset"
         header_slot={
-          <UiTextButton
-            on_click={handle_preview_preset}
-            disabled={
-              is_in_code_completions_mode &&
-              !!(updated_preset?.prompt_prefix || updated_preset?.prompt_suffix)
-            }
-            title={
-              is_in_code_completions_mode &&
-              !!(updated_preset?.prompt_prefix || updated_preset?.prompt_suffix)
-                ? 'Preview is not available for presets with prompt prefix or suffix in code completions mode.'
-                : undefined
-            }
-          >
-            Preview
-          </UiTextButton>
+          <UiTextButton on_click={handle_preview_preset}>Preview</UiTextButton>
         }
       >
         <UiEditPresetForm
@@ -131,6 +166,12 @@ export const View = () => {
           pick_open_router_model={() => {
             vscode.postMessage({ command: 'PICK_OPEN_ROUTER_MODEL' })
           }}
+          can_set_affixes={
+            !(
+              home_view_type == HOME_VIEW_TYPES.WEB &&
+              web_mode == 'code-completions'
+            )
+          }
         />
       </UiPage>
     )
@@ -139,9 +180,11 @@ export const View = () => {
   return (
     <div className={styles.container}>
       {overlay && <div className={styles.slot}>{overlay}</div>}
-      <div className={cn(styles.slot, {
-        [styles['slot--hidden']]: active_view != 'home'
-      })}>
+      <div
+        className={cn(styles.slot, {
+          [styles['slot--hidden']]: active_view != 'home'
+        })}
+      >
         <Home
           vscode={vscode}
           on_preset_edit={(preset) => {
@@ -153,12 +196,23 @@ export const View = () => {
           no_context_instructions={no_context_instructions}
           code_completions_instructions={code_completions_instructions}
           set_instructions={handle_instructions_change}
+          home_view_type={home_view_type}
+          web_mode={web_mode}
+          api_mode={api_mode}
+          on_home_view_type_change={handle_home_view_type_change}
+          on_web_mode_change={handle_web_mode_change}
+          on_api_mode_change={handle_api_mode_change}
         />
       </div>
-      <div className={cn(styles.slot, {
-        [styles['slot--hidden']]: active_view != 'intro'
-      })}>
-        <Intro on_open_home_view={() => set_active_view('home')} version={version} />
+      <div
+        className={cn(styles.slot, {
+          [styles['slot--hidden']]: active_view != 'intro'
+        })}
+      >
+        <Intro
+          on_open_home_view={() => set_active_view('home')}
+          version={version}
+        />
       </div>
     </div>
   )

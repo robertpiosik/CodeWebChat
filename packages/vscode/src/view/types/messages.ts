@@ -242,11 +242,6 @@ export interface ExpandedPresetsMessage extends BaseMessage {
   indices: number[]
 }
 
-export interface CodeCompletionsModeMessage extends BaseMessage {
-  command: 'CODE_COMPLETIONS_MODE'
-  enabled: boolean
-}
-
 export interface EditorStateChangedMessage extends BaseMessage {
   command: 'EDITOR_STATE_CHANGED'
   has_active_editor: boolean
@@ -374,7 +369,6 @@ export type ExtensionMessage =
   | SelectedPresetsMessage
   | PresetsSelectedFromPickerMessage
   | ExpandedPresetsMessage
-  | CodeCompletionsModeMessage
   | EditorStateChangedMessage
   | EditorSelectionChangedMessage
   | ChatHistoryMessage

@@ -111,7 +111,8 @@ async function process_chat_instructions(
   preset_names: string[],
   context: vscode.ExtensionContext,
   workspace_provider: any,
-  open_editors_provider: any
+  open_editors_provider: any,
+  presets_config_key: string
 ) {
   const files_collector = new FilesCollector(
     workspace_provider,
@@ -143,7 +144,8 @@ async function process_chat_instructions(
     preset_names.map(async (preset_name) => {
       let base_instructions = apply_preset_affixes_to_instruction(
         instructions,
-        preset_name
+        preset_name,
+        presets_config_key
       )
 
       if (base_instructions.includes('@Selection')) {
@@ -195,7 +197,8 @@ export async function handle_chat_command(
   file_tree_provider: any,
   open_editors_provider: any,
   websocket_server_instance: WebSocketManager,
-  preset_names: string[]
+  preset_names: string[],
+  presets_config_key: string
 ) {
   const instructions = await get_chat_instructions(context)
   if (!instructions) return
@@ -205,11 +208,12 @@ export async function handle_chat_command(
     preset_names,
     context,
     file_tree_provider,
-    open_editors_provider
+    open_editors_provider,
+    presets_config_key
   )
   if (!chats) return
 
-  websocket_server_instance.initialize_chats(chats)
+  websocket_server_instance.initialize_chats(chats, presets_config_key)
 }
 
 export function chat_using_command(
@@ -230,8 +234,9 @@ export function chat_using_command(
     if (!instructions) return
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
+    const presets_config_key = 'chatPresetsForEditContext'
     const web_chat_presets = config.get<ConfigPresetFormat[]>(
-      'chatPresetsForEditContext',
+      presets_config_key,
       []
     )
 
@@ -258,11 +263,12 @@ export function chat_using_command(
       [selected_preset.label],
       context,
       file_tree_provider,
-      open_editors_provider
+      open_editors_provider,
+      presets_config_key
     )
     if (!chats) return
 
-    websocket_server_instance.initialize_chats(chats)
+    websocket_server_instance.initialize_chats(chats, presets_config_key)
   })
 }
 
@@ -323,7 +329,8 @@ export function chat_command(
       file_tree_provider,
       open_editors_provider,
       websocket_server_instance,
-      selected_names
+      selected_names,
+      'chatPresetsForEditContext'
     )
   })
 }

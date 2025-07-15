@@ -12,6 +12,7 @@ type Props = {
   preset: Preset
   on_update: (updated_preset: Preset) => void
   pick_open_router_model: () => void
+  can_set_affixes: boolean
 }
 
 export const EditPresetForm: React.FC<Props> = (props) => {
@@ -284,29 +285,33 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         </Field>
       )}
 
-      <Field
-        label="Prompt Prefix"
-        html_for="prefix"
-        info="Text prepended to prompts used with this preset"
-      >
-        <textarea
-          id="prefix"
-          value={prompt_prefix}
-          onChange={(e) => set_prompt_prefix(e.target.value)}
-        />
-      </Field>
+      {props.can_set_affixes && (
+        <>
+          <Field
+            label="Prompt Prefix"
+            html_for="prefix"
+            info="Text prepended to prompts used with this preset"
+          >
+            <textarea
+              id="prefix"
+              value={prompt_prefix}
+              onChange={(e) => set_prompt_prefix(e.target.value)}
+            />
+          </Field>
 
-      <Field
-        label="Prompt Suffix"
-        html_for="suffix"
-        info="Text appended to prompts used with this preset"
-      >
-        <textarea
-          id="suffix"
-          value={prompt_suffix}
-          onChange={(e) => set_prompt_suffix(e.target.value)}
-        />
-      </Field>
+          <Field
+            label="Prompt Suffix"
+            html_for="suffix"
+            info="Text appended to prompts used with this preset"
+          >
+            <textarea
+              id="suffix"
+              value={prompt_suffix}
+              onChange={(e) => set_prompt_suffix(e.target.value)}
+            />
+          </Field>
+        </>
+      )}
     </div>
   )
 }
