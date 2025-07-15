@@ -37,8 +37,8 @@ import {
   open_settings_command,
   open_url_command,
   rate_command,
-  edit_context_commands,
-  apply_context_from_clipboard_command
+  apply_context_from_clipboard_command,
+  edit_context_commands
 } from './commands'
 
 // Store WebSocketServer instance at module level
