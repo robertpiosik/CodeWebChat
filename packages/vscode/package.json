@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC)",
   "description": "Connect VS Code with 15+ chatbots",
-  "version": "1.163.0",
+  "version": "1.164.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "npm run compile",
@@ -126,7 +126,7 @@
         "command": "codeWebChat.rate",
         "title": "Rate",
         "category": "Code Web Chat",
-        "icon": "$(feedback)"
+        "icon": "$(star)"
       },
       {
         "command": "codeWebChat.applyContext",
