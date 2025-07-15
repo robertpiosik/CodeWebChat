@@ -189,7 +189,7 @@ export const HomeView: React.FC<Props> = (props) => {
               <IconButton
                 codicon_icon="chevron-left"
                 on_click={props.on_show_intro}
-                title="Return to intro screen"
+                title="Return to getting started"
               />
               <div ref={switch_container_ref}>
                 <UiSwitch
