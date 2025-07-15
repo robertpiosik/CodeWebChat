@@ -1,9 +1,37 @@
 .container {
+  position: relative;
+  display: flex;
+  height: 100%;
+}
+
+.scrollable {
+  overflow: hidden;
+  flex: 1;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    height: 3px;
+    width: 100%;
+    opacity: 0;
+    box-shadow: var(--vscode-scrollbar-shadow) 0 6px 6px -6px inset;
+    top: 0;
+  }
+
+  &--shadow::before {
+    opacity: 1;
+  }
+}
+
+.inner {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  height: 100vh;
+  gap: var(--padding-24px);
+  min-height: 100vh;
   width: 100%;
   padding: var(--padding-20px);
 }
@@ -53,13 +81,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--padding-8px);
+  gap: var(--padding-4px);
+  font-size: var(--font-size-12px);
 
   &__version {
     color: var(--vscode-descriptionForeground);
   }
 
-  &__author > a:hover {
+  a:hover {
     text-decoration: underline;
   }
 }
