@@ -4,27 +4,6 @@
   height: 100%;
 }
 
-.scrollable {
-  overflow: hidden;
-  flex: 1;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    z-index: 1;
-    height: 3px;
-    width: 100%;
-    opacity: 0;
-    box-shadow: var(--vscode-scrollbar-shadow) 0 6px 6px -6px inset;
-    top: 0;
-  }
-
-  &--shadow::before {
-    opacity: 1;
-  }
-}
-
 .inner {
   display: flex;
   flex-direction: column;

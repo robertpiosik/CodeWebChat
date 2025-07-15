@@ -13,7 +13,6 @@
   justify-content: space-between;
   padding: var(--padding-8px) var(--padding-12px) var(--padding-6px)
     var(--padding-12px);
-  border-bottom: 1px solid var(--vscode-sideBarSectionHeader-border);
   position: relative;
 
   &__title {
@@ -33,10 +32,6 @@
   }
 }
 
-.content {
-  overflow: hidden;
-
-  &__inner {
-    padding: var(--padding-12px);
-  }
+.content__inner {
+  padding: var(--padding-12px);
 }

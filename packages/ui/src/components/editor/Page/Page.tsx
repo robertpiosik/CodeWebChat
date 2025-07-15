@@ -1,6 +1,6 @@
 import styles from './Page.module.scss'
 import { IconButton } from '../IconButton/IconButton'
-import SimpleBar from 'simplebar-react'
+import { Scrollable } from '../Scrollable'
 
 type Props = {
   title?: string
@@ -35,15 +35,9 @@ export const Page: React.FC<Props> = (props) => {
           )}
         </div>
       </div>
-      <div className={styles.content}>
-        <SimpleBar
-          style={{
-            height: '100%'
-          }}
-        >
-          <div className={styles.content__inner}>{props.children}</div>
-        </SimpleBar>
-      </div>
+      <Scrollable>
+        <div className={styles.content__inner}>{props.children}</div>
+      </Scrollable>
     </div>
   )
 }

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './HomeView.module.scss'
-import SimpleBar from 'simplebar-react'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
 import { Separator as UiSeparator } from '@ui/components/editor/Separator'
@@ -15,6 +14,7 @@ import { Icon } from '@ui/components/editor/Icon'
 import cn from 'classnames'
 import { QuickAction as UiQuickAction } from '@ui/components/editor/QuickAction'
 import { IconButton } from '@ui/components/editor/IconButton/IconButton'
+import { Scrollable } from '@ui/components/editor/Scrollable'
 
 type Props = {
   initialize_chats: (params: { prompt: string; preset_names: string[] }) => void
@@ -73,12 +73,10 @@ export const HomeView: React.FC<Props> = (props) => {
   const [dropdown_max_width, set_dropdown_max_width] = useState<
     number | undefined
   >(undefined)
-  const [has_top_shadow, set_has_top_shadow] = useState(false)
 
   const dropdown_container_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
   const switch_container_ref = useRef<HTMLDivElement>(null)
-  const simplebar_ref = useRef<any>(null)
   const [is_showing_commands, set_is_showing_commands] = useState(false)
 
   const calculate_dropdown_max_width = () => {
@@ -104,36 +102,6 @@ export const HomeView: React.FC<Props> = (props) => {
     calculate_dropdown_max_width()
 
     return () => {
-      resize_observer.disconnect()
-    }
-  }, [])
-
-  useEffect(() => {
-    const simplebar_instance = simplebar_ref.current
-    if (!simplebar_instance) return
-
-    const scroll_element = simplebar_instance.getScrollElement()
-    if (!scroll_element) return
-
-    const update_shadows = () => {
-      const { scrollTop, scrollHeight, clientHeight } = scroll_element
-      const is_scrollable = scrollHeight > clientHeight
-
-      set_has_top_shadow(is_scrollable && scrollTop > 0)
-    }
-
-    update_shadows()
-
-    scroll_element.addEventListener('scroll', update_shadows)
-
-    const content_element = simplebar_instance.getContentElement()
-    const resize_observer = new ResizeObserver(update_shadows)
-    if (content_element) {
-      resize_observer.observe(content_element)
-    }
-
-    return () => {
-      scroll_element.removeEventListener('scroll', update_shadows)
       resize_observer.disconnect()
     }
   }, [])
@@ -212,18 +180,8 @@ export const HomeView: React.FC<Props> = (props) => {
 
   return (
     <div ref={container_ref} className={styles.container}>
-      <div
-        className={`${styles.scrollable} ${
-          has_top_shadow ? styles['scrollable--shadow'] : ''
-        }`}
-      >
-        <SimpleBar
-          ref={simplebar_ref}
-          style={{
-            height: '100%'
-          }}
-        >
-          <div className={styles.inner}>
+      <Scrollable>
+        <div className={styles.inner}>
             <div className={styles.top}>
               <div className={styles.top__left}>
                 <IconButton
@@ -407,10 +365,8 @@ export const HomeView: React.FC<Props> = (props) => {
                 />
               </>
             )}
-          </div>
-        </SimpleBar>
-      </div>
-
+        </div>
+      </Scrollable>
       <div
         className={cn(styles.commands, {
           [styles['commands--visible']]: is_showing_commands
