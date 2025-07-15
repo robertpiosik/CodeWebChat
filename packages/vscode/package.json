@@ -254,18 +254,18 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.chat",
-        "title": "Chat",
+        "command": "codeWebChat.editContextInChat",
+        "title": "Edit Context in Chat",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.chatUsing",
-        "title": "Chat using...",
+        "command": "codeWebChat.editContextInChatUsing",
+        "title": "Edit Context in Chat using...",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.chatToClipboard",
-        "title": "Chat to Clipboard",
+        "command": "codeWebChat.editContextToClipboard",
+        "title": "Edit Context to Clipboard",
         "category": "Code Web Chat"
       },
       {

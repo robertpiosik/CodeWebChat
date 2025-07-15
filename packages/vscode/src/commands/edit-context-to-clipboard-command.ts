@@ -35,13 +35,13 @@ async function handle_at_sign_in_chat_input(
   return new_value
 }
 
-export function chat_to_clipboard_command(
+export function edit_context_to_clipboard_command(
   context: vscode.ExtensionContext,
   file_tree_provider: any,
   open_editors_provider?: any
 ) {
   return vscode.commands.registerCommand(
-    'codeWebChat.chatToClipboard',
+    'codeWebChat.editContextToClipboard',
     async () => {
       const last_chat_prompt =
         context.workspaceState.get<string>('last-chat-prompt') || ''

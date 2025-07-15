@@ -23,7 +23,7 @@ type Props = {
   on_at_sign_click: () => void
   translations: {
     type_something: string
-    optional_suggestions: string
+    completion_instructions: string
     send_request: string
     initialize_chat: string
     select_preset: string
@@ -213,9 +213,9 @@ export const ChatInput: React.FC<Props> = (props) => {
 
     if (props.is_in_code_completions_mode) {
       if (active_history.length > 0 && is_history_enabled) {
-        return `${props.translations.optional_suggestions} (⇅ for history)`
+        return `${props.translations.completion_instructions} (⇅ for history)`
       } else {
-        return props.translations.optional_suggestions
+        return props.translations.completion_instructions
       }
     }
 

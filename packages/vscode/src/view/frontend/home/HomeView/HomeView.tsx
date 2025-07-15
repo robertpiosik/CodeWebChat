@@ -317,7 +317,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_caret_position_change={props.on_caret_position_change}
                 translations={{
                   type_something: 'Type something',
-                  optional_suggestions: 'Optional suggestions',
+                  completion_instructions: 'Completion instructions',
                   send_request: 'Send request',
                   initialize_chat: 'Initialize chat',
                   select_preset: 'Select preset',

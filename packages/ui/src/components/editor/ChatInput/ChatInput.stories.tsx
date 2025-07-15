@@ -6,7 +6,7 @@ export default {
 
 const translations = {
   type_something: 'Type something',
-  optional_suggestions: 'Optional suggestions',
+  completion_instructions: 'Completion instructions',
   send_request: 'Send request',
   initialize_chat: 'Initialize chat',
   select_preset: 'Select preset',

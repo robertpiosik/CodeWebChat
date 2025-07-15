@@ -90,9 +90,9 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 ### Chat
 
-- `Code Web Chat: Chat` - Type instructions and open chatbot with default preset.
-- `Code Web Chat: Chat using...` - Type instructions and open chatbot with preset selection.
-- `Code Web Chat: Chat to Clipboard` - Enter instructions and copy prompt to clipboard.
+- `Code Web Chat: Edit Context in Chat` - Type instructions and open chatbot with default preset.
+- `Code Web Chat: Edit Context in Chat using...` - Type instructions and open chatbot with preset selection.
+- `Code Web Chat: Edit Context to Clipboard` - Enter instructions and copy prompt to clipboard.
 
 ### Context
 
