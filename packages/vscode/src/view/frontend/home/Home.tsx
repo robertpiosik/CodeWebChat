@@ -32,7 +32,9 @@ type Props = {
 
 export const Home: React.FC<Props> = (props) => {
   const [is_connected, set_is_connected] = useState<boolean>()
-  const [presets, set_presets] = useState<Preset[]>()
+  const [all_presets, set_all_presets] = useState<{
+    [T in WebMode]: Preset[]
+  }>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])
   const [has_active_editor, set_has_active_editor] = useState<boolean>()
   const [has_active_selection, set_has_active_selection] = useState<boolean>()
@@ -60,7 +62,7 @@ export const Home: React.FC<Props> = (props) => {
           set_is_connected(message.connected)
           break
         case 'PRESETS':
-          set_presets((message as PresetsMessage).presets)
+          set_all_presets((message as PresetsMessage).presets)
           break
         case 'SELECTED_PRESETS':
           set_selected_presets(message.names)
@@ -198,8 +200,10 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   const handle_presets_reorder = (reordered_presets: Preset[]) => {
-    // Update local state
-    set_presets(reordered_presets)
+    if (all_presets) {
+      // Update local state
+      set_all_presets({ ...all_presets, [current_mode]: reordered_presets })
+    }
 
     // Send message to extension to save the new order
     props.vscode.postMessage({
@@ -227,7 +231,14 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   const handle_preset_edit = (name: string) => {
-    const preset = presets?.find((preset) => preset.name == name)
+    const current_presets = all_presets
+      ? all_presets[
+          props.home_view_type === HOME_VIEW_TYPES.WEB
+            ? props.web_mode
+            : props.api_mode
+        ]
+      : []
+    const preset = current_presets.find((preset) => preset.name == name)
     if (preset) props.on_preset_edit(preset)
   }
 
@@ -392,7 +403,7 @@ export const Home: React.FC<Props> = (props) => {
 
   if (
     is_connected === undefined ||
-    presets === undefined ||
+    all_presets === undefined ||
     has_active_editor === undefined ||
     has_active_selection === undefined ||
     ask_history === undefined ||
@@ -407,6 +418,13 @@ export const Home: React.FC<Props> = (props) => {
     return <></>
   }
 
+  const presets_for_current_mode =
+    all_presets[
+      props.home_view_type === HOME_VIEW_TYPES.WEB
+        ? props.web_mode
+        : props.api_mode
+    ]
+
   return (
     <HomeView
       on_show_intro={props.on_show_intro}
@@ -415,7 +433,7 @@ export const Home: React.FC<Props> = (props) => {
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       is_connected={is_connected}
-      presets={presets}
+      presets={presets_for_current_mode}
       selected_presets={selected_presets}
       on_create_preset={handle_create_preset}
       on_quick_action_click={handle_quick_action_click}

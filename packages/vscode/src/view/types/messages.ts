@@ -1,4 +1,3 @@
-import { CHATBOTS } from '@shared/constants/chatbots'
 import { EditFormat } from '@shared/types/edit-format'
 import { Preset } from '@shared/types/preset'
 import { PROVIDERS } from '@shared/constants/providers'
@@ -208,23 +207,9 @@ export interface EditFormatMessage extends BaseMessage {
   api_edit_format: EditFormat
 }
 
-export interface PresetMessageFormat {
-  name: string
-  chatbot: keyof typeof CHATBOTS
-  prompt_prefix?: string
-  prompt_suffix?: string
-  model?: string
-  temperature?: number
-  top_p?: number
-  thinking_budget?: number
-  system_instructions?: string
-  options?: string[]
-  port?: number
-}
-
 export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
-  presets: PresetMessageFormat[]
+  presets: { [T in WebMode]: Preset[] }
 }
 
 export interface SelectedPresetsMessage extends BaseMessage {

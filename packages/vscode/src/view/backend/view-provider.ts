@@ -394,8 +394,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_WEB_MODE') {
             handle_get_mode_web(this)
           } else if (message.command == 'SAVE_WEB_MODE') {
-            handle_save_mode_web(this, message.mode)
-            this.send_presets_to_webview(webview_view.webview)
+            await handle_save_mode_web(this, message.mode)
           } else if (message.command == 'GET_API_MODE') {
             handle_get_mode_api(this)
           } else if (message.command == 'SAVE_API_MODE') {
@@ -429,17 +428,32 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
   public send_presets_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const presets_config_key = this.get_presets_config_key()
-    const web_chat_presets_config =
-      config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
-
-    const presets_for_ui: Preset[] = web_chat_presets_config
-      .filter((preset_config) => CHATBOTS[preset_config.chatbot])
-      .map((preset_config) => config_preset_to_ui_format(preset_config))
-
+    const web_modes: WebMode[] = [
+      'ask',
+      'edit',
+      'code-completions',
+      'no-context'
+    ]
+    const mode_to_config_key: Record<WebMode, string> = {
+      ask: 'chatPresetsForAskAboutContext',
+      edit: 'chatPresetsForEditContext',
+      'code-completions': 'chatPresetsForCodeAtCursor',
+      'no-context': 'chatPresetsForNoContext'
+    }
+    const all_presets = Object.fromEntries(
+      web_modes.map((mode) => {
+        const presets_config_key = mode_to_config_key[mode]
+        const presets_config =
+          config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
+        const presets_ui = presets_config
+          .filter((preset_config) => CHATBOTS[preset_config.chatbot])
+          .map((preset_config) => config_preset_to_ui_format(preset_config))
+        return [mode, presets_ui]
+      })
+    ) as { [T in WebMode]: Preset[] }
     this.send_message<PresetsMessage>({
       command: 'PRESETS',
-      presets: presets_for_ui
+      presets: all_presets
     })
   }
 
