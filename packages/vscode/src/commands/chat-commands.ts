@@ -9,6 +9,8 @@ import { replace_changes_placeholder } from '../utils/replace-changes-placeholde
 import { at_sign_quick_pick } from '../utils/at-sign-quick-pick'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { ConfigPresetFormat } from '@/view/backend/helpers/preset-format-converters'
+import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 
 async function handle_at_sign_in_chat_input(
   input_box: vscode.InputBox,
@@ -110,9 +112,13 @@ async function process_chat_instructions(
   instructions: string,
   preset_names: string[],
   context: vscode.ExtensionContext,
-  workspace_provider: any,
-  open_editors_provider: any,
-  presets_config_key: string
+  workspace_provider: WorkspaceProvider,
+  open_editors_provider: OpenEditorsProvider,
+  presets_config_key: string,
+  options: { with_context: boolean; with_edit_format: boolean } = {
+    with_context: true,
+    with_edit_format: true
+  }
 ) {
   const files_collector = new FilesCollector(
     workspace_provider,
@@ -120,25 +126,30 @@ async function process_chat_instructions(
   )
   let context_text = ''
 
-  try {
-    context_text = await files_collector.collect_files()
-  } catch (error: any) {
-    console.error('Error collecting files:', error)
-    vscode.window.showErrorMessage('Error collecting files: ' + error.message)
-    return null
+  if (options.with_context) {
+    try {
+      context_text = await files_collector.collect_files()
+    } catch (error: any) {
+      console.error('Error collecting files:', error)
+      vscode.window.showErrorMessage('Error collecting files: ' + error.message)
+      return null
+    }
   }
 
-  const edit_format = context.workspaceState.get<EditFormat>(
-    'editFormat',
-    'truncated'
-  )
-  const edit_format_instructions = vscode.workspace
-    .getConfiguration('codeWebChat')
-    .get<string>(
-      `editFormatInstructions${
-        edit_format.charAt(0).toUpperCase() + edit_format.slice(1)
-      }`
+  let edit_format_instructions: string | undefined
+  if (options.with_edit_format) {
+    const edit_format = context.workspaceState.get<EditFormat>(
+      'editFormat',
+      'truncated'
     )
+    edit_format_instructions = vscode.workspace
+      .getConfiguration('codeWebChat')
+      .get<string>(
+        `editFormatInstructions${
+          edit_format.charAt(0).toUpperCase() + edit_format.slice(1)
+        }`
+      )
+  }
 
   return Promise.all(
     preset_names.map(async (preset_name) => {
@@ -192,34 +203,10 @@ async function process_chat_instructions(
   )
 }
 
-export async function handle_edit_context_in_chat_command(
-  context: vscode.ExtensionContext,
-  file_tree_provider: any,
-  open_editors_provider: any,
-  websocket_server_instance: WebSocketManager,
-  preset_names: string[],
-  presets_config_key: string
-) {
-  const instructions = await get_chat_instructions(context)
-  if (!instructions) return
-
-  const chats = await process_chat_instructions(
-    instructions,
-    preset_names,
-    context,
-    file_tree_provider,
-    open_editors_provider,
-    presets_config_key
-  )
-  if (!chats) return
-
-  websocket_server_instance.initialize_chats(chats, presets_config_key)
-}
-
 export function edit_context_in_chat_using_command(
   context: vscode.ExtensionContext,
-  file_tree_provider: any,
-  open_editors_provider: any,
+  workspace_provider: WorkspaceProvider,
+  open_editors_provider: OpenEditorsProvider,
   websocket_server_instance: WebSocketManager
 ) {
   return vscode.commands.registerCommand(
@@ -264,9 +251,10 @@ export function edit_context_in_chat_using_command(
         instructions,
         [selected_preset.label],
         context,
-        file_tree_provider,
+        workspace_provider,
         open_editors_provider,
-        presets_config_key
+        presets_config_key,
+        { with_context: true, with_edit_format: true }
       )
       if (!chats) return
 
@@ -291,9 +279,13 @@ export function edit_context_in_chat_command(
         return
       }
 
+      const instructions = await get_chat_instructions(context)
+      if (!instructions) return
+
       const config = vscode.workspace.getConfiguration('codeWebChat')
+      const presets_config_key = 'chatPresetsForEditContext'
       const chat_presets = config.get<ConfigPresetFormat[]>(
-        'chatPresetsForEditContext',
+        presets_config_key,
         []
       )
 
@@ -309,34 +301,253 @@ export function edit_context_in_chat_command(
             label: preset.name,
             description: `${preset.chatbot}${
               preset.model ? ` - ${preset.model}` : ''
-            }`,
-            picked: false
+            }`
           }))
 
-        const selected_presets = await vscode.window.showQuickPick(
+        const selected_preset = await vscode.window.showQuickPick(
           preset_quick_pick_items,
           {
-            placeHolder: 'Select one or more chat presets',
-            canPickMany: true
+            placeHolder: 'Select one chat preset'
           }
         )
 
-        if (!selected_presets || selected_presets.length == 0) {
+        if (!selected_preset) {
           return
         }
 
-        selected_names = selected_presets.map((preset) => preset.label)
-        await context.globalState.update('selectedPresets.edit', selected_names)
+        selected_names = [selected_preset.label]
       }
 
-      await handle_edit_context_in_chat_command(
+      const chats = await process_chat_instructions(
+        instructions,
+        selected_names,
         context,
         file_tree_provider,
         open_editors_provider,
-        websocket_server_instance,
-        selected_names,
-        'chatPresetsForEditContext'
+        presets_config_key,
+        { with_context: true, with_edit_format: true }
       )
+      if (!chats) return
+
+      websocket_server_instance.initialize_chats(chats, presets_config_key)
+    }
+  )
+}
+
+export function ask_about_context_command(
+  context: vscode.ExtensionContext,
+  file_tree_provider: any,
+  open_editors_provider: any,
+  websocket_server_instance: WebSocketManager
+) {
+  return vscode.commands.registerCommand(
+    'codeWebChat.askAboutContext',
+    async () => {
+      if (!websocket_server_instance.is_connected_with_browser()) {
+        vscode.window.showInformationMessage(
+          'Could not connect to the web browser. Please check if it is running and if the connector extension is installed.'
+        )
+        return
+      }
+
+      const instructions = await get_chat_instructions(context)
+      if (!instructions) return
+
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const presets_config_key = 'chatPresetsForAskAboutContext'
+      const chat_presets = config.get<ConfigPresetFormat[]>(
+        'chatPresetsForAskAboutContext',
+        []
+      )
+
+      let selected_names = context.globalState.get<string[]>(
+        'selectedPresets.ask',
+        []
+      )
+
+      if (!selected_names.length) {
+        const preset_quick_pick_items = chat_presets
+          .filter((preset) => CHATBOTS[preset.chatbot])
+          .map((preset) => ({
+            label: preset.name,
+            description: `${preset.chatbot}${
+              preset.model ? ` - ${preset.model}` : ''
+            }`
+          }))
+
+        const selected_preset = await vscode.window.showQuickPick(
+          preset_quick_pick_items,
+          {
+            placeHolder: 'Select one chat preset'
+          }
+        )
+
+        if (!selected_preset) {
+          return
+        }
+
+        selected_names = [selected_preset.label]
+      }
+
+      const chats = await process_chat_instructions(
+        instructions,
+        selected_names,
+        context,
+        file_tree_provider,
+        open_editors_provider,
+        presets_config_key,
+        { with_context: true, with_edit_format: false }
+      )
+      if (!chats) return
+
+      websocket_server_instance.initialize_chats(chats, presets_config_key)
+    }
+  )
+}
+
+export function ask_about_context_using_command(
+  context: vscode.ExtensionContext,
+  workspace_provider: WorkspaceProvider,
+  open_editors_provider: OpenEditorsProvider,
+  websocket_server_instance: WebSocketManager
+) {
+  return vscode.commands.registerCommand(
+    'codeWebChat.askAboutContextUsing',
+    async () => {
+      if (!websocket_server_instance.is_connected_with_browser()) {
+        vscode.window.showInformationMessage(
+          'Could not connect to the web browser. Please check if it is running and if the connector extension is installed.'
+        )
+        return
+      }
+      const instructions = await get_chat_instructions(context)
+      if (!instructions) return
+
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const presets_config_key = 'chatPresetsForAskAboutContext'
+      const web_chat_presets = config.get<ConfigPresetFormat[]>(
+        presets_config_key,
+        []
+      )
+
+      const preset_quick_pick_items = web_chat_presets
+        .filter((preset) => CHATBOTS[preset.chatbot])
+        .map((preset) => ({
+          label: preset.name,
+          description: `${preset.chatbot}${
+            preset.model ? ` - ${preset.model}` : ''
+          }`
+        }))
+
+      const selected_preset = await vscode.window.showQuickPick(
+        preset_quick_pick_items,
+        {
+          placeHolder: 'Select preset'
+        }
+      )
+
+      if (!selected_preset) return
+
+      const chats = await process_chat_instructions(
+        instructions,
+        [selected_preset.label],
+        context,
+        workspace_provider,
+        open_editors_provider,
+        presets_config_key,
+        { with_context: true, with_edit_format: false }
+      )
+      if (!chats) return
+
+      websocket_server_instance.initialize_chats(chats, presets_config_key)
+    }
+  )
+}
+
+export function no_context_chat_command(
+  context: vscode.ExtensionContext,
+  workspace_provider: WorkspaceProvider,
+  open_editors_provider: OpenEditorsProvider,
+  websocket_server_instance: WebSocketManager
+) {
+  return vscode.commands.registerCommand(
+    'codeWebChat.noContextChat',
+    async () => {
+      const instructions = await get_chat_instructions(context)
+      if (!instructions) return
+
+      const presets_config_key = 'chatPresetsForNoContext'
+      const chats = await process_chat_instructions(
+        instructions,
+        ['(0)'], // Default preset
+        context,
+        workspace_provider,
+        open_editors_provider,
+        presets_config_key,
+        { with_context: false, with_edit_format: false }
+      )
+      if (!chats) return
+
+      websocket_server_instance.initialize_chats(chats, presets_config_key)
+    }
+  )
+}
+
+export function no_context_chat_using_command(
+  context: vscode.ExtensionContext,
+  workspace_provider: WorkspaceProvider,
+  open_editors_provider: OpenEditorsProvider,
+  websocket_server_instance: WebSocketManager
+) {
+  return vscode.commands.registerCommand(
+    'codeWebChat.noContextChatUsing',
+    async () => {
+      if (!websocket_server_instance.is_connected_with_browser()) {
+        vscode.window.showInformationMessage(
+          'Could not connect to the web browser. Please check if it is running and if the connector extension is installed.'
+        )
+        return
+      }
+      const instructions = await get_chat_instructions(context)
+      if (!instructions) return
+
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const presets_config_key = 'chatPresetsForNoContext'
+      const web_chat_presets = config.get<ConfigPresetFormat[]>(
+        presets_config_key,
+        []
+      )
+
+      const preset_quick_pick_items = web_chat_presets
+        .filter((preset) => CHATBOTS[preset.chatbot])
+        .map((preset) => ({
+          label: preset.name,
+          description: `${preset.chatbot}${
+            preset.model ? ` - ${preset.model}` : ''
+          }`
+        }))
+
+      const selected_preset = await vscode.window.showQuickPick(
+        preset_quick_pick_items,
+        {
+          placeHolder: 'Select preset'
+        }
+      )
+
+      if (!selected_preset) return
+
+      const chats = await process_chat_instructions(
+        instructions,
+        [selected_preset.label],
+        context,
+        workspace_provider,
+        open_editors_provider,
+        presets_config_key,
+        { with_context: false, with_edit_format: false }
+      )
+      if (!chats) return
+
+      websocket_server_instance.initialize_chats(chats, presets_config_key)
     }
   )
 }

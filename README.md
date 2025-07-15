@@ -90,6 +90,10 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 ### Chat
 
+- `Code Web Chat: Ask about Context` - Type instructions and open chatbot with context but without edit format instructions.
+- `Code Web Chat: Ask about Context using...` - Same as above, but with preset selection.
+- `Code Web Chat: No context chat` - Open chatbot without any context.
+- `Code Web Chat: No context chat using...` - Same as above, but with preset selection.
 - `Code Web Chat: Edit Context in Chat` - Type instructions and open chatbot with default preset.
 - `Code Web Chat: Edit Context in Chat using...` - Type instructions and open chatbot with preset selection.
 - `Code Web Chat: Edit Context to Clipboard` - Enter instructions and copy prompt to clipboard.

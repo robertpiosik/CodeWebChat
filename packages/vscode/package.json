@@ -346,12 +346,6 @@
         "title": "Settings",
         "category": "Code Web Chat",
         "icon": "$(settings-gear)"
-      },
-      {
-        "command": "codeWebChat.openRepository",
-        "title": "Repository",
-        "category": "Code Web Chat",
-        "icon": "$(github-alt)"
       }
     ],
     "menus": {
