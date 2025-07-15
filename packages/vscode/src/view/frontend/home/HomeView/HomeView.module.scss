@@ -130,6 +130,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 var(--padding-12px);
+  gap: var(--padding-8px);
 
   &__left {
     display: flex;
@@ -139,10 +140,6 @@
 
   &__right {
     flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: var(--padding-6px);
   }
 }
 

@@ -13,6 +13,7 @@
   cursor: pointer;
   background-color: var(--vscode-dropdown-background);
   color: var(--vscode-dropdown-foreground);
+  width: 100%;
 
   &--open {
     border-color: var(--vscode-focusBorder);

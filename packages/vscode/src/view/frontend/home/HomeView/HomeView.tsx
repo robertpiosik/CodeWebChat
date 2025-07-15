@@ -70,6 +70,8 @@ const api_mode_labels: Record<ApiMode, string> = {
 
 export const HomeView: React.FC<Props> = (props) => {
   const [estimated_input_tokens, set_estimated_input_tokens] = useState(0)
+  // We need this because we can't use overflow: hidden
+  // due to absolutely positioned dropdown menu
   const [dropdown_max_width, set_dropdown_max_width] = useState<
     number | undefined
   >(undefined)
@@ -182,189 +184,189 @@ export const HomeView: React.FC<Props> = (props) => {
     <div ref={container_ref} className={styles.container}>
       <Scrollable>
         <div className={styles.inner}>
-            <div className={styles.top}>
-              <div className={styles.top__left}>
-                <IconButton
-                  codicon_icon="chevron-left"
-                  on_click={props.on_show_intro}
-                  title="Return to intro screen"
-                />
-                <div ref={switch_container_ref}>
-                  <UiSwitch
-                    value={props.home_view_type}
-                    on_change={props.on_home_view_type_change}
-                    options={Object.values(HOME_VIEW_TYPES)}
-                  />
-                </div>
-              </div>
-
-              <div className={styles.top__right} ref={dropdown_container_ref}>
-                {props.home_view_type == HOME_VIEW_TYPES.WEB && (
-                  <UiDropdown
-                    options={Object.entries(web_mode_labels).map(
-                      ([value, label]) => ({ value: value as WebMode, label })
-                    )}
-                    selected_value={props.web_mode}
-                    on_change={props.on_web_mode_change}
-                    title={`Current mode: ${web_mode_labels[props.web_mode]}`}
-                    max_width={dropdown_max_width}
-                  />
-                )}
-                {props.home_view_type == HOME_VIEW_TYPES.API && (
-                  <UiDropdown
-                    options={Object.entries(api_mode_labels).map(
-                      ([value, label]) => ({ value: value as ApiMode, label })
-                    )}
-                    selected_value={props.api_mode}
-                    on_change={props.on_api_mode_change}
-                    title={`Current mode: ${api_mode_labels[props.api_mode]}`}
-                    max_width={dropdown_max_width}
-                  />
-                )}
-              </div>
-            </div>
-
-            <UiSeparator height={8} />
-
-            {!props.is_connected &&
-              props.home_view_type == HOME_VIEW_TYPES.WEB && (
-                <>
-                  <div className={styles['browser-extension-message']}>
-                    <span>
-                      Get the Connector browser extension for hands-free chat
-                      inititalizations
-                    </span>
-                    <a href="https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
-                      Chrome Web Store ↗
-                    </a>
-                    <a href="https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/">
-                      Firefox Add-ons ↗
-                    </a>
-                  </div>
-
-                  <UiSeparator height={8} />
-                </>
-              )}
-
-            <div className={styles['chat-input']}>
-              <UiChatInput
-                value={current_prompt}
-                chat_history={props.chat_history}
-                on_change={handle_input_change}
-                on_submit={handle_submit}
-                on_submit_with_control={handle_submit_with_control}
-                on_copy={
-                  props.home_view_type == HOME_VIEW_TYPES.WEB &&
-                  props.web_mode != 'no-context'
-                    ? handle_copy
-                    : undefined
-                }
-                on_search_click={props.on_search_click}
-                on_at_sign_click={props.on_at_sign_click}
-                is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
-                is_connected={props.is_connected}
-                token_count={estimated_input_tokens}
-                submit_disabled_title={
-                  !props.is_connected
-                    ? 'WebSocket connection not established. Please install the browser extension.'
-                    : 'Type something'
-                }
-                is_in_code_completions_mode={is_in_code_completions_mode}
-                has_active_selection={props.has_active_selection}
-                has_active_editor={props.has_active_editor}
-                on_caret_position_change={props.on_caret_position_change}
-                translations={{
-                  type_something: 'Type something',
-                  completion_instructions: 'Completion instructions',
-                  send_request: 'Send request',
-                  initialize_chat: 'Initialize chat',
-                  select_preset: 'Select preset',
-                  select_config: 'Select config',
-                  code_completions_mode_unavailable_with_text_selection:
-                    'Unable to work with text selection',
-                  code_completions_mode_unavailable_without_active_editor:
-                    'This mode requires active editor',
-                  search: 'Search history'
-                }}
+          <div className={styles.top}>
+            <div className={styles.top__left}>
+              <IconButton
+                codicon_icon="chevron-left"
+                on_click={props.on_show_intro}
+                title="Return to intro screen"
               />
+              <div ref={switch_container_ref}>
+                <UiSwitch
+                  value={props.home_view_type}
+                  on_change={props.on_home_view_type_change}
+                  options={Object.values(HOME_VIEW_TYPES)}
+                />
+              </div>
             </div>
 
-            {((props.home_view_type == HOME_VIEW_TYPES.WEB &&
-              props.web_mode == 'edit') ||
-              (props.home_view_type == HOME_VIEW_TYPES.API &&
-                props.api_mode == 'edit')) && (
+            <div className={styles.top__right} ref={dropdown_container_ref}>
+              {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+                <UiDropdown
+                  options={Object.entries(web_mode_labels).map(
+                    ([value, label]) => ({ value: value as WebMode, label })
+                  )}
+                  selected_value={props.web_mode}
+                  on_change={props.on_web_mode_change}
+                  title={`Current mode: ${web_mode_labels[props.web_mode]}`}
+                  max_width={dropdown_max_width}
+                />
+              )}
+              {props.home_view_type == HOME_VIEW_TYPES.API && (
+                <UiDropdown
+                  options={Object.entries(api_mode_labels).map(
+                    ([value, label]) => ({ value: value as ApiMode, label })
+                  )}
+                  selected_value={props.api_mode}
+                  on_change={props.on_api_mode_change}
+                  title={`Current mode: ${api_mode_labels[props.api_mode]}`}
+                  max_width={dropdown_max_width}
+                />
+              )}
+            </div>
+          </div>
+
+          <UiSeparator height={8} />
+
+          {!props.is_connected &&
+            props.home_view_type == HOME_VIEW_TYPES.WEB && (
               <>
-                <div className={styles['edit-format']}>
+                <div className={styles['browser-extension-message']}>
                   <span>
-                    + <i title="Style of generated code blocks">edit format</i>{' '}
-                    instructions:
+                    Get the Connector browser extension for hands-free chat
+                    inititalizations
                   </span>
-                  <UiHorizontalSelector
-                    options={[
-                      {
-                        value: 'whole',
-                        label: 'whole',
-                        title:
-                          'The model will output modified files in full. The best quality, especially from smaller models.'
-                      },
-                      {
-                        value: 'truncated',
-                        label: 'truncated',
-                        title:
-                          'The model will skip unchanged fragments in modified files. Readable but requires Intelligent Update API tool to apply.'
-                      },
-                      {
-                        value: 'diff',
-                        label: 'diff',
-                        title:
-                          'The model will output patches. Less readable but fast to apply. Smaller models may struggle with diff correctness.'
-                      }
-                    ]}
-                    selected_value={
-                      props.home_view_type == HOME_VIEW_TYPES.WEB
-                        ? props.chat_edit_format
-                        : props.api_edit_format
-                    }
-                    on_select={(value) =>
-                      props.home_view_type == HOME_VIEW_TYPES.WEB
-                        ? props.on_chat_edit_format_change(value as EditFormat)
-                        : props.on_api_edit_format_change(value as EditFormat)
-                    }
-                  />
+                  <a href="https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
+                    Chrome Web Store ↗
+                  </a>
+                  <a href="https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/">
+                    Firefox Add-ons ↗
+                  </a>
                 </div>
+
+                <UiSeparator height={8} />
               </>
             )}
 
-            {props.home_view_type == HOME_VIEW_TYPES.WEB && (
-              <>
-                <UiSeparator height={16} />
-                <UiPresets
-                  presets={props.presets.map((preset) => {
-                    return {
-                      ...preset,
-                      has_affixes: !!(
-                        preset.prompt_prefix || preset.prompt_suffix
-                      )
+          <div className={styles['chat-input']}>
+            <UiChatInput
+              value={current_prompt}
+              chat_history={props.chat_history}
+              on_change={handle_input_change}
+              on_submit={handle_submit}
+              on_submit_with_control={handle_submit_with_control}
+              on_copy={
+                props.home_view_type == HOME_VIEW_TYPES.WEB &&
+                props.web_mode != 'no-context'
+                  ? handle_copy
+                  : undefined
+              }
+              on_search_click={props.on_search_click}
+              on_at_sign_click={props.on_at_sign_click}
+              is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
+              is_connected={props.is_connected}
+              token_count={estimated_input_tokens}
+              submit_disabled_title={
+                !props.is_connected
+                  ? 'WebSocket connection not established. Please install the browser extension.'
+                  : 'Type something'
+              }
+              is_in_code_completions_mode={is_in_code_completions_mode}
+              has_active_selection={props.has_active_selection}
+              has_active_editor={props.has_active_editor}
+              on_caret_position_change={props.on_caret_position_change}
+              translations={{
+                type_something: 'Type something',
+                completion_instructions: 'Completion instructions',
+                send_request: 'Send request',
+                initialize_chat: 'Initialize chat',
+                select_preset: 'Select preset',
+                select_config: 'Select config',
+                code_completions_mode_unavailable_with_text_selection:
+                  'Unable to work with text selection',
+                code_completions_mode_unavailable_without_active_editor:
+                  'This mode requires active editor',
+                search: 'Search history'
+              }}
+            />
+          </div>
+
+          {((props.home_view_type == HOME_VIEW_TYPES.WEB &&
+            props.web_mode == 'edit') ||
+            (props.home_view_type == HOME_VIEW_TYPES.API &&
+              props.api_mode == 'edit')) && (
+            <>
+              <div className={styles['edit-format']}>
+                <span>
+                  + <i title="Style of generated code blocks">edit format</i>{' '}
+                  instructions:
+                </span>
+                <UiHorizontalSelector
+                  options={[
+                    {
+                      value: 'whole',
+                      label: 'whole',
+                      title:
+                        'The model will output modified files in full. The best quality, especially from smaller models.'
+                    },
+                    {
+                      value: 'truncated',
+                      label: 'truncated',
+                      title:
+                        'The model will skip unchanged fragments in modified files. Readable but requires Intelligent Update API tool to apply.'
+                    },
+                    {
+                      value: 'diff',
+                      label: 'diff',
+                      title:
+                        'The model will output patches. Less readable but fast to apply. Smaller models may struggle with diff correctness.'
                     }
-                  })}
-                  is_disabled={!props.is_connected}
-                  selected_presets={props.selected_presets}
-                  on_create_preset={props.on_create_preset}
-                  on_preset_click={(name) => {
-                    props.initialize_chats({
-                      prompt: current_prompt,
-                      preset_names: [name]
-                    })
-                  }}
-                  on_preset_copy={handle_preset_copy}
-                  on_preset_edit={props.on_preset_edit}
-                  on_presets_reorder={props.on_presets_reorder}
-                  on_preset_duplicate={props.on_preset_duplicate}
-                  on_preset_delete={props.on_preset_delete}
-                  on_set_default_presets={props.on_set_default_presets}
+                  ]}
+                  selected_value={
+                    props.home_view_type == HOME_VIEW_TYPES.WEB
+                      ? props.chat_edit_format
+                      : props.api_edit_format
+                  }
+                  on_select={(value) =>
+                    props.home_view_type == HOME_VIEW_TYPES.WEB
+                      ? props.on_chat_edit_format_change(value as EditFormat)
+                      : props.on_api_edit_format_change(value as EditFormat)
+                  }
                 />
-              </>
-            )}
+              </div>
+            </>
+          )}
+
+          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+            <>
+              <UiSeparator height={16} />
+              <UiPresets
+                presets={props.presets.map((preset) => {
+                  return {
+                    ...preset,
+                    has_affixes: !!(
+                      preset.prompt_prefix || preset.prompt_suffix
+                    )
+                  }
+                })}
+                is_disabled={!props.is_connected}
+                selected_presets={props.selected_presets}
+                on_create_preset={props.on_create_preset}
+                on_preset_click={(name) => {
+                  props.initialize_chats({
+                    prompt: current_prompt,
+                    preset_names: [name]
+                  })
+                }}
+                on_preset_copy={handle_preset_copy}
+                on_preset_edit={props.on_preset_edit}
+                on_presets_reorder={props.on_presets_reorder}
+                on_preset_duplicate={props.on_preset_duplicate}
+                on_preset_delete={props.on_preset_delete}
+                on_set_default_presets={props.on_set_default_presets}
+              />
+            </>
+          )}
         </div>
       </Scrollable>
       <div
