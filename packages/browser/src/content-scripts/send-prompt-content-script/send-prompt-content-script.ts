@@ -122,9 +122,7 @@ export const get_textarea_element = () => {
     [deepseek_url]: 'textarea',
     [mistral_url]: 'div[contenteditable="true"]',
     [yuanbao_url]: 'div[contenteditable="true"]',
-    [kimi_url]: 'div[contenteditable="true"]',
-    [doubao_url]: 'textarea',
-    [perplexity_url]: 'textarea'
+    [doubao_url]: 'textarea'
   } as any
 
   // Find the appropriate selector based on the URL without the hash

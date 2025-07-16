@@ -45,16 +45,21 @@ export const perplexity: Chatbot = {
       })
     }
 
-    // Enter instructions
     const input_element = document.querySelector(
-      'textarea'
-    ) as HTMLTextAreaElement
-    input_element.value = instructions
-    input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    input_element.dispatchEvent(new Event('change', { bubbles: true }))
+      'div[contenteditable=true]'
+    ) as HTMLElement
+
+    input_element.dispatchEvent(
+      new InputEvent('input', {
+        bubbles: true,
+        cancelable: true,
+        inputType: 'insertText',
+        data: instructions
+      })
+    )
+
     await new Promise((r) => requestAnimationFrame(r))
 
-    // Submit
     const submit_button = document.querySelector(
       'button[data-testid="submit-button"]'
     ) as HTMLButtonElement

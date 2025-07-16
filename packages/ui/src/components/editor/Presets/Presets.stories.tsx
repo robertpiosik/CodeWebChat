@@ -27,12 +27,10 @@ export const Multiple = () => {
       }}
       is_disabled={false}
       selected_presets={[]}
-      selected_code_completion_presets={[]}
       on_preset_delete={(name) => console.log('on_preset_delete', name)}
       on_preset_edit={(name) => console.log('on_preset_edit', name)}
       on_preset_duplicate={(name) => console.log('on_preset_duplicate', name)}
       on_create_preset={() => console.log('on_create_preset')}
-      is_in_code_completions_mode={false}
       on_preset_copy={(name) => console.log('on_preset_copy', name)}
       on_presets_reorder={(reordered) =>
         console.log('on_presets_reorder', reordered)
@@ -51,12 +49,10 @@ export const CodeCompletionsMode = () => {
       }}
       is_disabled={false}
       selected_presets={[]}
-      selected_code_completion_presets={[]}
       on_preset_delete={(name) => console.log('on_preset_delete', name)}
       on_preset_edit={(name) => console.log('on_preset_edit', name)}
       on_preset_duplicate={(name) => console.log('on_preset_duplicate', name)}
       on_create_preset={() => console.log('on_create_preset')}
-      is_in_code_completions_mode={true}
       on_preset_copy={(name) => console.log('on_preset_copy', name)}
       on_presets_reorder={(reordered) =>
         console.log('on_presets_reorder', reordered)
