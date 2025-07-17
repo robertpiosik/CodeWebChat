@@ -7,7 +7,16 @@ export const handle_at_sign_quick_pick = async (
   provider: ViewProvider,
   context: vscode.ExtensionContext
 ): Promise<void> => {
-  const replacement = await at_sign_quick_pick(context)
+  const is_in_code_completions_mode =
+    (provider.home_view_type == HOME_VIEW_TYPES.WEB &&
+      provider.web_mode == 'code-completions') ||
+    (provider.home_view_type === HOME_VIEW_TYPES.API &&
+      provider.api_mode == 'code-completions')
+
+  const replacement = await at_sign_quick_pick(
+    context,
+    is_in_code_completions_mode
+  )
 
   if (!replacement) {
     return
@@ -16,7 +25,7 @@ export const handle_at_sign_quick_pick = async (
   let current_text = ''
 
   const mode =
-    provider.home_view_type === HOME_VIEW_TYPES.WEB
+    provider.home_view_type == HOME_VIEW_TYPES.WEB
       ? provider.web_mode
       : provider.api_mode
   if (mode == 'ask') {

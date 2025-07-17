@@ -317,19 +317,19 @@ export const HomeView: React.FC<Props> = (props) => {
                       value: 'whole',
                       label: 'whole',
                       title:
-                        'The model will output modified files in full. The best quality, especially from smaller models.'
+                        'The model will output modified files in full. The best quality, especially from smaller models. Changed fragments are not clearly visible in a web chat interface.'
                     },
                     {
                       value: 'truncated',
                       label: 'truncated',
                       title:
-                        'The model will skip unchanged fragments in modified files. Changes are clearly visible although requires Intelligent Update API tool to apply.'
+                        'The model will skip unchanged fragments in modified files. Changes are clearly visible but requires Intelligent Update API tool to apply. Smaller, fast models like Gemini Flash are sufficient.'
                     },
                     {
                       value: 'diff',
                       label: 'diff',
                       title:
-                        'The model will output patches. Less readable but fast to apply. Smaller models may struggle with diff correctness.'
+                        'The model will output patches. Less readable, cheap to generate and fast to apply. Models may struggle with diff correctness - might use the Intelligent Update API tool in a fallback mechanism.'
                     }
                   ]}
                   selected_value={
