@@ -123,10 +123,10 @@
         "icon": "$(github-alt)"
       },
       {
-        "command": "codeWebChat.rate",
-        "title": "Rate",
+        "command": "codeWebChat.feedback",
+        "title": "Feedback",
         "category": "Code Web Chat",
-        "icon": "$(star)"
+        "icon": "$(feedback)"
       },
       {
         "command": "codeWebChat.applyContext",
@@ -355,7 +355,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.rate",
+          "command": "codeWebChat.feedback",
           "when": "false"
         },
         {
@@ -510,7 +510,7 @@
           "group": "navigation@1"
         },
         {
-          "command": "codeWebChat.rate",
+          "command": "codeWebChat.feedback",
           "when": "view == codeWebChatView",
           "group": "navigation@2"
         },

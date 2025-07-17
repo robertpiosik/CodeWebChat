@@ -40,7 +40,7 @@ import {
   reference_in_chat_command,
   open_settings_command,
   open_url_command,
-  rate_command,
+  feedback_command,
   apply_context_from_clipboard_command,
   edit_context_commands
 } from './commands'
@@ -190,7 +190,7 @@ export async function activate(context: vscode.ExtensionContext) {
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'
     }),
-    rate_command(),
+    feedback_command(),
     open_settings_command(context),
     apply_context_from_clipboard_command(workspace_provider)
   )

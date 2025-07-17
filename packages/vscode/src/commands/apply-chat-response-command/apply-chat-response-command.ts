@@ -60,9 +60,9 @@ async function get_intelligent_update_config(
   const intelligent_update_configs =
     await api_providers_manager.get_intelligent_update_tool_configs()
 
-  if (intelligent_update_configs.length === 0) {
+  if (intelligent_update_configs.length == 0) {
     vscode.window.showErrorMessage(
-      'Intelligent Update API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'Intelligent Update API tool is needed to apply this chat response. Go to settings (gear icon) and add a configuration.'
     )
     Logger.warn({
       function_name: 'get_intelligent_update_config',

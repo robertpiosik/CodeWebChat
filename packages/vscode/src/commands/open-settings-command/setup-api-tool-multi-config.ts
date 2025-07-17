@@ -229,7 +229,7 @@ export const setup_api_tool_multi_config = async (params: {
     quick_pick.placeholder =
       current_configs.length > 0
         ? 'Select a configuration to edit or add another one'
-        : 'No configurations found. Add one to continue.'
+        : 'No configurations found, add one to use this API tool'
 
     let is_accepted = false
 
