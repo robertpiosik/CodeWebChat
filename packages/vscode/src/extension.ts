@@ -7,6 +7,7 @@ import {
   migrate_api_tool_configs,
   migrate_api_providers_to_secret_storage,
   migrate_commit_message_prompt_to_instructions,
+  migrate_commit_messages_config_to_array,
   migrate_chat_code_completion_instructions,
   migrate_refactoring_to_intelligent_update,
   migrate_presets_to_chat_presets_for_edit_context
@@ -73,6 +74,8 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_refactoring_to_intelligent_update(context)
     // 14 July 2025
     await migrate_presets_to_chat_presets_for_edit_context(context)
+    // 18 July 2025
+    await migrate_commit_messages_config_to_array(context)
   }
 
   await migrations()

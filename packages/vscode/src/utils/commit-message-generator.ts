@@ -12,7 +12,10 @@ import {
 } from '../services/api-providers-manager'
 import { ignored_extensions } from '@/context/constants/ignored-extensions'
 import { PROVIDERS } from '@shared/constants/providers'
-import { COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY } from '../constants/state-keys'
+import {
+  COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
+  LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY
+} from '../constants/state-keys'
 import { GitRepository } from './git-repository-utils'
 
 export interface FileData {
@@ -39,8 +42,164 @@ export async function get_commit_message_config(
   endpoint_url: string
 } | null> {
   const api_providers_manager = new ApiProvidersManager(context)
-  const commit_message_config =
-    await api_providers_manager.get_commit_messages_tool_config()
+  let commit_message_config: CommitMessageConfig | null | undefined =
+    await api_providers_manager.get_default_commit_messages_config()
+
+  if (!commit_message_config) {
+    const configs =
+      await api_providers_manager.get_commit_messages_tool_configs()
+    if (configs.length === 1) {
+      commit_message_config = configs[0]
+    } else if (configs.length > 1) {
+      const move_up_button = {
+        iconPath: new vscode.ThemeIcon('chevron-up'),
+        tooltip: 'Move up'
+      }
+
+      const move_down_button = {
+        iconPath: new vscode.ThemeIcon('chevron-down'),
+        tooltip: 'Move down'
+      }
+
+      const set_default_button = {
+        iconPath: new vscode.ThemeIcon('star'),
+        tooltip: 'Set as default'
+      }
+
+      const unset_default_button = {
+        iconPath: new vscode.ThemeIcon('star-full'),
+        tooltip: 'Unset default'
+      }
+
+      const create_items = async () => {
+        const default_config =
+          await api_providers_manager.get_default_commit_messages_config()
+
+        return configs.map((config, index) => {
+          const buttons = []
+
+          const is_default =
+            default_config &&
+            default_config.provider_name == config.provider_name &&
+            default_config.model == config.model &&
+            default_config.temperature == config.temperature &&
+            default_config.reasoning_effort == config.reasoning_effort
+
+          if (configs.length > 1) {
+            if (index > 0) {
+              buttons.push(move_up_button)
+            }
+
+            if (index < configs.length - 1) {
+              buttons.push(move_down_button)
+            }
+          }
+
+          if (is_default) {
+            buttons.push(unset_default_button)
+          } else {
+            buttons.push(set_default_button)
+          }
+
+          return {
+            label: is_default ? `$(star) ${config.model}` : config.model,
+            description: `${
+              config.reasoning_effort
+                ? `Reasoning effort: ${config.reasoning_effort}`
+                : ''
+            }${config.reasoning_effort ? ' · ' : ''}Temperature: ${
+              config.temperature
+            }`,
+            detail: `Provided by ${config.provider_name}`,
+            config,
+            index,
+            buttons
+          }
+        })
+      }
+
+      const quick_pick = vscode.window.createQuickPick()
+      quick_pick.items = await create_items()
+      quick_pick.placeholder = 'Select configuration for commit message'
+      quick_pick.matchOnDescription = true
+
+      const last_selected_index = context.globalState.get<number>(
+        LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY,
+        0
+      )
+
+      if (
+        last_selected_index >= 0 &&
+        last_selected_index < quick_pick.items.length
+      ) {
+        quick_pick.activeItems = [quick_pick.items[last_selected_index]]
+      } else if (quick_pick.items.length > 0) {
+        quick_pick.activeItems = [quick_pick.items[0]]
+      }
+
+      commit_message_config = await new Promise<
+        CommitMessageConfig | undefined
+      >((resolve) => {
+        quick_pick.onDidTriggerItemButton(async (event) => {
+          const item = event.item as any
+          const button = event.button
+          const index = item.index
+
+          if (button === set_default_button) {
+            await api_providers_manager.set_default_commit_messages_config(
+              configs[index]
+            )
+          } else if (button === unset_default_button) {
+            await api_providers_manager.set_default_commit_messages_config(
+              null as any
+            )
+          } else if (button.tooltip == 'Move up' && index > 0) {
+            const temp = configs[index]
+            configs[index] = configs[index - 1]
+            configs[index - 1] = temp
+            await api_providers_manager.save_commit_messages_tool_configs(
+              configs
+            )
+          } else if (
+            button.tooltip == 'Move down' &&
+            index < configs.length - 1
+          ) {
+            const temp = configs[index]
+            configs[index] = configs[index + 1]
+            configs[index + 1] = temp
+            await api_providers_manager.save_commit_messages_tool_configs(
+              configs
+            )
+          }
+          quick_pick.items = await create_items()
+        })
+
+        quick_pick.onDidAccept(async () => {
+          const selected = quick_pick.selectedItems[0] as any
+          quick_pick.hide()
+
+          if (selected) {
+            context.globalState.update(
+              LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY,
+              selected.index
+            )
+            resolve(selected.config)
+          } else {
+            resolve(undefined)
+          }
+        })
+
+        quick_pick.onDidHide(() => {
+          quick_pick.dispose()
+          if (quick_pick.selectedItems.length === 0) {
+            resolve(undefined)
+          }
+        })
+
+        quick_pick.show()
+      })
+    }
+  }
 
   if (!commit_message_config) {
     vscode.window.showErrorMessage(
@@ -351,4 +510,44 @@ export function build_commit_message_prompt(
   diff: string
 ): string {
   return `${commit_message_prompt}\n${affected_files}\n${diff}\n${commit_message_prompt}`
+}
+
+export async function generate_commit_message_from_diff(
+  context: vscode.ExtensionContext,
+  repository: GitRepository,
+  progress_title: string,
+  diff: string
+): Promise<string | null> {
+  const config = vscode.workspace.getConfiguration('codeWebChat')
+  const commit_message_prompt = config.get<string>('commitMessageInstructions')
+  const all_ignored_extensions = get_ignored_extensions()
+
+  const api_config = await get_commit_message_config(context)
+  if (!api_config) return null
+
+  const affected_files_data = await collect_affected_files_with_metadata(
+    repository,
+    all_ignored_extensions
+  )
+
+  const selected_files = await handle_file_selection_if_needed(
+    context,
+    affected_files_data
+  )
+  if (!selected_files) return null
+
+  const affected_files = build_files_content(selected_files)
+  const message = build_commit_message_prompt(
+    commit_message_prompt!,
+    affected_files,
+    diff
+  )
+
+  return await generate_commit_message_with_api(
+    api_config.endpoint_url,
+    api_config.provider,
+    api_config.config,
+    message,
+    progress_title
+  )
 }

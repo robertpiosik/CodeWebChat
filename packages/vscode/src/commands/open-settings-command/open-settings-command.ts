@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import { api_providers } from './api-providers'
 import { setup_api_tool_multi_config } from './setup-api-tool-multi-config'
-import { setup_api_tool } from './setup-api-tool'
 
 const LABEL_PROVIDERS = '$(key) API Providers'
 const LABEL_CODE_COMPLETIONS = '$(tools) Code Completions'
@@ -88,16 +87,12 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             tool: 'intelligent-update'
           })
           break
-        case LABEL_COMMIT_MESSAGES: {
-          const exit_menu = await setup_api_tool({
+        case LABEL_COMMIT_MESSAGES:
+          await setup_api_tool_multi_config({
             context,
             tool: 'commit-messages'
           })
-          if (exit_menu) {
-            show_menu = false
-          }
           break
-        }
       }
     }
   })

@@ -5,6 +5,7 @@ import {
   TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
   TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
   DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
+  DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
   DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY,
   TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
   DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
@@ -39,6 +40,7 @@ export type ToolConfig = {
 export type CodeCompletionsConfigs = ToolConfig[]
 export type EditContextConfigs = ToolConfig[]
 export type IntelligentUpdateConfigs = ToolConfig[]
+export type CommitMessagesConfigs = ToolConfig[]
 
 export class ApiProvidersManager {
   private _providers: Provider[] = []
@@ -174,20 +176,36 @@ export class ApiProvidersManager {
     )
   }
 
-  public async get_commit_messages_tool_config(): Promise<
+  public async get_commit_messages_tool_configs(): Promise<CommitMessagesConfigs> {
+    await this._load_promise
+    const configs = this._vscode.globalState.get<CommitMessagesConfigs>(
+      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
+      []
+    )
+    return configs.filter((c) => this._validate_tool_config(c) !== undefined)
+  }
+
+  public async get_default_commit_messages_config(): Promise<
     ToolConfig | undefined
   > {
     await this._load_promise
     const config = this._vscode.globalState.get<ToolConfig>(
-      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
+      DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY
     )
     return this._validate_tool_config(config)
   }
 
-  public async save_commit_messages_tool_config(config: ToolConfig) {
+  public async set_default_commit_messages_config(config: ToolConfig | null) {
+    await this._vscode.globalState.update(
+      DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
+      config
+    )
+  }
+
+  public async save_commit_messages_tool_configs(configs: CommitMessagesConfigs) {
     await this._vscode.globalState.update(
       TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
-      config
+      configs
     )
   }
 
@@ -347,18 +365,42 @@ export class ApiProvidersManager {
       )
     }
 
-    const commit_messages_config = this._vscode.globalState.get<ToolConfig>(
-      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY
+    const commit_messages_configs =
+      this._vscode.globalState.get<CommitMessagesConfigs>(
+        TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
+        []
+      )
+
+    const updated_commit_messages_configs = commit_messages_configs.map(
+      (config) => {
+        if (
+          config.provider_type == 'custom' &&
+          config.provider_name == old_name
+        ) {
+          return { ...config, provider_name: new_name }
+        }
+        return config
+      }
     )
 
+    await this._vscode.globalState.update(
+      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
+      updated_commit_messages_configs
+    )
+
+    const default_commit_messages_config =
+      this._vscode.globalState.get<ToolConfig>(
+        DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY
+      )
+
     if (
-      commit_messages_config &&
-      commit_messages_config.provider_type == 'custom' &&
-      commit_messages_config.provider_name == old_name
+      default_commit_messages_config &&
+      default_commit_messages_config.provider_type == 'custom' &&
+      default_commit_messages_config.provider_name == old_name
     ) {
       await this._vscode.globalState.update(
-        TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
-        { ...commit_messages_config, provider_name: new_name }
+        DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
+        { ...default_commit_messages_config, provider_name: new_name }
       )
     }
   }

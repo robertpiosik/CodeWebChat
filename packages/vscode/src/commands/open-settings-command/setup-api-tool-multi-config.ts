@@ -4,6 +4,7 @@ import {
   Provider,
   ToolConfig,
   CodeCompletionsConfigs,
+  CommitMessagesConfigs,
   EditContextConfigs,
   IntelligentUpdateConfigs,
   ReasoningEffort
@@ -12,6 +13,9 @@ import { ModelFetcher } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@/utils/logger'
 import { DEFAULT_TEMPERATURE, SupportedTool } from '@shared/constants/api-tools'
+import { COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY } from '@/constants/state-keys'
+
+const DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK = 20000
 
 interface ToolMethods {
   get_configs: () => Promise<ToolConfig[]>
@@ -27,6 +31,9 @@ export const setup_api_tool_multi_config = async (params: {
 }): Promise<boolean> => {
   const providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
+
+  const EDIT_INSTRUCTIONS_LABEL = 'Instructions'
+  const CONFIRMATION_THRESHOLD_LABEL = 'Show file picker threshold'
 
   const BACK_LABEL = '$(arrow-left) Back'
   const ADD_CONFIGURATION_LABEL = '$(add) Add configuration...'
@@ -77,6 +84,18 @@ export const setup_api_tool_multi_config = async (params: {
               config as any
             ),
           get_display_name: () => 'Intelligent Update'
+        }
+      case 'commit-messages':
+        return {
+          get_configs: () =>
+            providers_manager.get_commit_messages_tool_configs(),
+          save_configs: (configs: CommitMessagesConfigs) =>
+            providers_manager.save_commit_messages_tool_configs(configs),
+          get_default_config: () =>
+            providers_manager.get_default_commit_messages_config(),
+          set_default_config: (config: ToolConfig | null) =>
+            providers_manager.set_default_commit_messages_config(config as any),
+          get_display_name: () => 'Commit Messages'
         }
       default:
         throw new Error(`Unsupported tool: ${tool}`)
@@ -371,7 +390,10 @@ export const setup_api_tool_multi_config = async (params: {
 
   async function edit_configuration(config: ToolConfig): Promise<boolean> {
     const create_edit_options = () => {
-      const options = [
+      const options: (vscode.QuickPickItem & {
+        config?: ToolConfig
+        index?: number
+      })[] = [
         { label: BACK_LABEL },
         { label: '', kind: vscode.QuickPickItemKind.Separator },
         {
@@ -395,6 +417,32 @@ export const setup_api_tool_multi_config = async (params: {
             : 'Not set / Auto'
         }
       ]
+
+      if (params.tool == 'commit-messages') {
+        const current_threshold = params.context.globalState.get<number>(
+          COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
+          DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK
+        )
+
+        const current_prompt = vscode.workspace
+          .getConfiguration('codeWebChat')
+          .get<string>('commitMessageInstructions', '')
+
+        options.push(
+          {
+            label: EDIT_INSTRUCTIONS_LABEL,
+            detail: current_prompt
+          },
+          {
+            label: CONFIRMATION_THRESHOLD_LABEL,
+            description: `${current_threshold.toString()} tokens${
+              current_threshold == DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK
+                ? ' (default)'
+                : ''
+            }`
+          }
+        )
+      }
 
       const current_is_default =
         default_config &&
@@ -431,6 +479,28 @@ export const setup_api_tool_multi_config = async (params: {
         if (!selected_option || selected_option.label == BACK_LABEL) {
           quick_pick.hide()
           resolve(false)
+          return
+        }
+
+        if (
+          params.tool == 'commit-messages' &&
+          selected_option.label == EDIT_INSTRUCTIONS_LABEL
+        ) {
+          await vscode.commands.executeCommand(
+            'workbench.action.openSettings',
+            'codeWebChat.commitMessageInstructions'
+          )
+          resolve(await edit_configuration(config))
+          return
+        }
+
+        if (
+          params.tool == 'commit-messages' &&
+          selected_option.label == CONFIRMATION_THRESHOLD_LABEL
+        ) {
+          quick_pick.hide()
+          await handle_confirmation_threshold_update()
+          resolve(await edit_configuration(config))
           return
         }
 
@@ -578,6 +648,26 @@ export const setup_api_tool_multi_config = async (params: {
 
       quick_pick.show()
     })
+  }
+
+  async function handle_confirmation_threshold_update() {
+    const current_threshold = params.context.globalState.get<number>(
+      COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
+      DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK
+    )
+    const new_threshold = await set_confirmation_threshold(current_threshold)
+    if (new_threshold !== undefined) {
+      await params.context.globalState.update(
+        COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
+        new_threshold
+      )
+
+      if (current_threshold != new_threshold) {
+        vscode.window.showInformationMessage(
+          `Confirmation threshold updated to ${new_threshold} tokens.`
+        )
+      }
+    }
   }
 
   async function select_provider(): Promise<
@@ -728,6 +818,36 @@ export const setup_api_tool_multi_config = async (params: {
     }
 
     return { value: selected.effort, cancelled: false }
+  }
+
+  async function set_confirmation_threshold(
+    current_threshold: number
+  ): Promise<number | undefined> {
+    const threshold_input = await vscode.window.showInputBox({
+      title: 'Set Confirmation Threshold',
+      prompt: 'Enter token count above which to show affected files picker',
+      value: current_threshold.toString(),
+      placeHolder: 'Leave empty to restore default',
+      validateInput: (value) => {
+        if (value == '') return null
+
+        const num = Number(value)
+        if (isNaN(num)) return 'Please enter a valid number'
+        if (num < 0) return 'Threshold must be 0 or greater'
+        if (num > 1000000) return 'Threshold seems too large'
+        return null
+      }
+    })
+
+    if (threshold_input === undefined) {
+      return undefined
+    }
+
+    if (threshold_input === '') {
+      return DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK
+    }
+
+    return Number(threshold_input)
   }
 
   return await show_configs_quick_pick()

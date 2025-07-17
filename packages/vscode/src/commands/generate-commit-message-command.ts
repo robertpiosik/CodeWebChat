@@ -4,15 +4,7 @@ import {
   get_git_repository,
   prepare_staged_changes
 } from '../utils/git-repository-utils'
-import {
-  get_commit_message_config,
-  get_ignored_extensions,
-  collect_affected_files_with_metadata,
-  handle_file_selection_if_needed,
-  build_files_content,
-  generate_commit_message_with_api,
-  build_commit_message_prompt
-} from '../utils/commit-message-generator'
+import { generate_commit_message_from_diff } from '../utils/commit-message-generator'
 
 export function generate_commit_message_command(
   context: vscode.ExtensionContext
@@ -27,39 +19,11 @@ export function generate_commit_message_command(
         const diff = await prepare_staged_changes(repository)
         if (!diff) return
 
-        const config = vscode.workspace.getConfiguration('codeWebChat')
-        const commit_message_prompt = config.get<string>(
-          'commitMessageInstructions'
-        )
-        const all_ignored_extensions = get_ignored_extensions()
-
-        const api_config = await get_commit_message_config(context)
-        if (!api_config) return
-
-        const affected_files_data = await collect_affected_files_with_metadata(
-          repository,
-          all_ignored_extensions
-        )
-
-        const selected_files = await handle_file_selection_if_needed(
+        const commit_message = await generate_commit_message_from_diff(
           context,
-          affected_files_data
-        )
-        if (!selected_files) return
-
-        const affected_files = build_files_content(selected_files)
-        const message = build_commit_message_prompt(
-          commit_message_prompt!,
-          affected_files,
+          repository,
+          'Waiting for a commit message...',
           diff
-        )
-
-        const commit_message = await generate_commit_message_with_api(
-          api_config.endpoint_url,
-          api_config.provider,
-          api_config.config,
-          message,
-          'Waiting for a commit message...'
         )
 
         if (commit_message) {

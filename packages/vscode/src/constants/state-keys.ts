@@ -14,12 +14,16 @@ export const DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY =
   'defaultCodeCompletionsConfiguration'
 export const DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY =
   'defaultFileRefactoringConfiguration'
+export const DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY =
+  'defaultCommitMessagesConfiguration'
 export const DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY =
   'defaultIntelligentUpdateConfiguration'
 export const LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY =
   'lastSelectedCodeCompletionConfigIndex'
 export const LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY =
   'lastSelectedFileRefactoringConfigIndex'
+export const LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY =
+  'lastSelectedCommitMessagesConfigIndex'
 export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY =
   'lastSelectedIntelligentUpdateConfigIndex'
 export const LAST_SELECTED_PRESET_KEY = 'lastSelectedPreset'
