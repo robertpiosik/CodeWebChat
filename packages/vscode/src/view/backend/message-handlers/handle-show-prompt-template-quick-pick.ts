@@ -206,11 +206,6 @@ export const handle_show_prompt_template_quick_pick = async (
                 prompt_templates,
                 vscode.ConfigurationTarget.Global
               )
-              templates_quick_pick.items =
-                create_template_items(prompt_templates)
-              // Refresh the prompt_templates from config to ensure consistency
-              prompt_templates =
-                config.get<PromptTemplate[]>(prompt_templates_key, []) || []
               next_template_state = updated_template
             }
             await edit_template(next_template_state, index)
@@ -234,11 +229,6 @@ export const handle_show_prompt_template_quick_pick = async (
                 prompt_templates,
                 vscode.ConfigurationTarget.Global
               )
-              templates_quick_pick.items =
-                create_template_items(prompt_templates)
-              // Refresh the prompt_templates from config to ensure consistency
-              prompt_templates =
-                config.get<PromptTemplate[]>(prompt_templates_key, []) || []
               next_template_state = updated_template
             }
             await edit_template(next_template_state, index)
@@ -260,6 +250,9 @@ export const handle_show_prompt_template_quick_pick = async (
   templates_quick_pick.items = create_template_items(prompt_templates)
 
   const disposables: vscode.Disposable[] = []
+  let is_disposed = false
+  let is_showing_dialog = false
+
   disposables.push(
     templates_quick_pick.onDidAccept(async () => {
       const [selected_template] = templates_quick_pick.selectedItems
@@ -286,27 +279,26 @@ export const handle_show_prompt_template_quick_pick = async (
               newTemplate.name = name.trim()
             }
 
-            // Update the local array first
             prompt_templates = [...prompt_templates, newTemplate]
 
-            // Then update the configuration
             await config.update(
               prompt_templates_key,
               prompt_templates,
               vscode.ConfigurationTarget.Global
             )
-
-            // No need to refresh from config since we already have the updated array
           }
         }
         templates_quick_pick.items = create_template_items(prompt_templates)
         is_editing_template = false
-        templates_quick_pick.show()
+        if (!is_disposed) {
+          templates_quick_pick.show()
+        }
       } else if (
         'template' in selected_template &&
         selected_template.template
       ) {
         templates_quick_pick.hide()
+        is_disposed = true
         let prompt_text = selected_template.template.template
         const variable_regex = /\{([^{}]+)\}/g
         const matches = [...prompt_text.matchAll(variable_regex)]
@@ -315,7 +307,8 @@ export const handle_show_prompt_template_quick_pick = async (
         if (variables.length > 0) {
           for (const variable of variables) {
             const value = await vscode.window.showInputBox({
-              prompt: `Enter a value for "${variable}"`
+              prompt: `Enter a value for the variable.`,
+              placeHolder: variable
             })
 
             if (value === undefined) {
@@ -346,19 +339,37 @@ export const handle_show_prompt_template_quick_pick = async (
         is_editing_template = true
         await edit_template(item.template, item.index)
         templates_quick_pick.items = create_template_items(prompt_templates)
-        templates_quick_pick.show()
+        if (!is_disposed) {
+          templates_quick_pick.show()
+        }
         is_editing_template = false
       } else if (event.button === delete_button) {
         const template_to_delete = item.template
         const template_name = template_to_delete.name || 'Unnamed'
+        const is_unnamed = !template_to_delete.name
         const delete_button_text = 'Delete'
+
+        // Set flag before hiding to prevent disposal
+        is_showing_dialog = true
+        templates_quick_pick.hide()
+
+        const delete_message = is_unnamed
+          ? `Are you sure you want to delete this template?`
+          : `Are you sure you want to delete the template "${template_name}"?`
+
         const result = await vscode.window.showWarningMessage(
-          `Are you sure you want to delete the template "${template_name}"?`,
+          delete_message,
           { modal: true },
           delete_button_text
         )
 
+        is_showing_dialog = false // Reset flag after dialog closes
+
         if (result !== delete_button_text) {
+          // User cancelled, show the quick pick again
+          if (!is_disposed) {
+            templates_quick_pick.show()
+          }
           return
         }
 
@@ -377,25 +388,46 @@ export const handle_show_prompt_template_quick_pick = async (
         prompt_templates = updated_templates
         templates_quick_pick.items = create_template_items(prompt_templates)
 
-        const undo_button_text = 'Undo'
-        const undo_result = await vscode.window.showInformationMessage(
-          `Template "${template_name}" has been deleted.`,
-          undo_button_text
-        )
-
-        if (undo_result === undo_button_text && deleted_template) {
-          prompt_templates.splice(original_index, 0, deleted_template)
-          await config.update(
-            prompt_templates_key,
-            prompt_templates,
-            vscode.ConfigurationTarget.Global
-          )
-          templates_quick_pick.items = create_template_items(prompt_templates)
-          vscode.window.showInformationMessage(
-            `Template "${template_name}" has been restored.`
-          )
+        // Show the quick pick immediately after deletion
+        if (!is_disposed) {
+          templates_quick_pick.show()
         }
-        templates_quick_pick.show()
+
+        // Handle undo asynchronously without blocking the UI
+        const undo_button_text = 'Undo'
+        const deletion_message = is_unnamed
+          ? `Unnamed template has been deleted.`
+          : `Template "${template_name}" has been deleted.`
+
+        vscode.window
+          .showInformationMessage(deletion_message, undo_button_text)
+          .then(async (undo_result) => {
+            if (undo_result === undo_button_text && deleted_template) {
+              if (!is_disposed) {
+                templates_quick_pick.hide()
+              }
+
+              prompt_templates.splice(original_index, 0, deleted_template)
+              await config.update(
+                prompt_templates_key,
+                prompt_templates,
+                vscode.ConfigurationTarget.Global
+              )
+              templates_quick_pick.items =
+                create_template_items(prompt_templates)
+
+              const restoration_message = is_unnamed
+                ? `Unnamed template has been restored.`
+                : `Template "${template_name}" has been restored.`
+
+              vscode.window.showInformationMessage(restoration_message)
+
+              // Show the quick pick again after undo
+              if (!is_disposed) {
+                templates_quick_pick.show()
+              }
+            }
+          })
       } else if (event.button === move_up_button) {
         if (item.index > 0) {
           const temp = prompt_templates[item.index - 1]
@@ -423,11 +455,14 @@ export const handle_show_prompt_template_quick_pick = async (
       }
     }),
     templates_quick_pick.onDidHide(() => {
-      if (is_editing_template) {
+      if (is_editing_template || is_showing_dialog) {
         // We are editing a template, which involves showing input boxes that hide the quick pick.
-        // We don't want to dispose of everything in this case.
+        // Or we are showing a dialog (warning/info message) which also hides the quick pick.
+        // We don't want to dispose of everything in these cases.
         return
       }
+
+      is_disposed = true
       disposables.forEach((d) => d.dispose())
     })
   )
