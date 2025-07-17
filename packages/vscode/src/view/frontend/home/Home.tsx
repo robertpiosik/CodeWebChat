@@ -355,6 +355,12 @@ export const Home: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
+  const handle_curly_braces_click = () => {
+    props.vscode.postMessage({
+      command: 'SHOW_PROMPT_TEMPLATE_QUICK_PICK'
+    } as WebviewMessage)
+  }
+
   const handle_search_click = () => {
     props.vscode.postMessage({
       command: 'SHOW_HISTORY_QUICK_PICK'
@@ -432,6 +438,7 @@ export const Home: React.FC<Props> = (props) => {
       copy_to_clipboard={handle_copy_to_clipboard}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
+      on_curly_braces_click={handle_curly_braces_click}
       is_connected={is_connected}
       presets={presets_for_current_mode}
       selected_presets={selected_presets}

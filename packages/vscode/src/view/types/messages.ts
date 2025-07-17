@@ -128,6 +128,10 @@ export interface ShowHistoryQuickPickMessage extends BaseMessage {
   command: 'SHOW_HISTORY_QUICK_PICK'
 }
 
+export interface ShowPromptTemplateQuickPickMessage extends BaseMessage {
+  command: 'SHOW_PROMPT_TEMPLATE_QUICK_PICK'
+}
+
 export interface PreviewPresetMessage extends BaseMessage {
   command: 'PREVIEW_PRESET'
   preset: Preset
@@ -331,6 +335,7 @@ export type WebviewMessage =
   | CreatePresetMessage
   | ExecuteCommandMessage
   | ShowHistoryQuickPickMessage
+  | ShowPromptTemplateQuickPickMessage
   | ShowQuickPickMessage
   | PreviewPresetMessage
   | CaretPositionChangedWebviewMessage

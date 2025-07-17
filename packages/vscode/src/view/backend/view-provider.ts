@@ -46,7 +46,8 @@ import {
   handle_save_mode_api,
   handle_save_home_view_type,
   handle_get_home_view_type,
-  handle_get_version
+  handle_get_version,
+  handle_show_prompt_template_quick_pick
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -389,6 +390,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_code_completion(this, message)
           } else if (message.command == 'SHOW_HISTORY_QUICK_PICK') {
             await handle_show_history_quick_pick(this)
+          } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
+            await handle_show_prompt_template_quick_pick(this)
           } else if (message.command == 'SHOW_QUICK_PICK') {
             await handle_show_quick_pick(message)
           } else if (message.command == 'GET_WEB_MODE') {

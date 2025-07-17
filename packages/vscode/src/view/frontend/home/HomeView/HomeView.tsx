@@ -23,6 +23,7 @@ type Props = {
   on_search_click: () => void
   on_create_preset: () => void
   on_at_sign_click: () => void
+  on_curly_braces_click: () => void
   on_quick_action_click: (command: string) => void
   is_connected: boolean
   presets: Preset[]
@@ -263,6 +264,7 @@ export const HomeView: React.FC<Props> = (props) => {
               }
               on_search_click={props.on_search_click}
               on_at_sign_click={props.on_at_sign_click}
+              on_curly_braces_click={props.on_curly_braces_click}
               is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
               is_connected={props.is_connected}
               token_count={estimated_input_tokens}
@@ -301,7 +303,10 @@ export const HomeView: React.FC<Props> = (props) => {
                   +{' '}
                   <span
                     title="Style of generated code blocks"
-                    style={{ textDecoration: 'dotted underline' }}
+                    style={{
+                      textDecoration: 'dotted underline',
+                      cursor: 'help'
+                    }}
                   >
                     edit format
                   </span>{' '}
@@ -319,13 +324,13 @@ export const HomeView: React.FC<Props> = (props) => {
                       value: 'truncated',
                       label: 'truncated',
                       title:
-                        'The model will skip unchanged fragments in modified files. The best quality and readability but requires the Intelligent Update API tool to apply.'
+                        'The model will skip unchanged fragments in modified files. Changes are clearly visible although requires Intelligent Update API tool to apply.'
                     },
                     {
                       value: 'diff',
                       label: 'diff',
                       title:
-                        'The model will output patches. Lower readability, instantaneous integration. Smaller models may struggle with correctness of the format.'
+                        'The model will output patches. Less readable but fast to apply. Smaller models may struggle with diff correctness.'
                     }
                   ]}
                   selected_value={
