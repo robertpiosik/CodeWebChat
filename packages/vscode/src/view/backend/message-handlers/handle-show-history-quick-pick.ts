@@ -315,13 +315,13 @@ export const handle_show_history_quick_pick = async (
       current_search_value = quick_pick.value
       const is_searching = current_search_value.length > 0
 
-      const new_items: vscode.QuickPickItem[] = []
+      const updated_items: vscode.QuickPickItem[] = []
       if (pinned_history.length > 0) {
-        new_items.push({
+        updated_items.push({
           label: 'pinned',
           kind: vscode.QuickPickItemKind.Separator
         })
-        new_items.push(
+        updated_items.push(
           ...pinned_history.map((item, index) =>
             to_quick_pick_item(
               item,
@@ -335,10 +335,18 @@ export const handle_show_history_quick_pick = async (
         )
       }
 
-      const recent_items = quick_pick.items.filter(
-        (i) => (i as { list?: string }).list == 'recents'
-      )
-      quick_pick.items = [...new_items, ...recent_items]
+      if (history.length > 0) {
+        updated_items.push({
+          label: 'recent',
+          kind: vscode.QuickPickItemKind.Separator
+        })
+        updated_items.push(
+          ...history.map((item) =>
+            to_quick_pick_item(item, 'recents', pinned_history.includes(item))
+          )
+        )
+      }
+      quick_pick.items = updated_items
     }),
     quick_pick.onDidHide(() => {
       disposables.forEach((d) => d.dispose())
