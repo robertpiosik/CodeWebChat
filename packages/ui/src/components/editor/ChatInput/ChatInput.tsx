@@ -335,15 +335,13 @@ export const ChatInput: React.FC<Props> = (props) => {
               e.stopPropagation()
             }}
           >
-            {!props.is_in_code_completions_mode && (
-              <button
-                onClick={props.on_at_sign_click}
-                className={cn(styles['footer__left__button'])}
-                title="Insert symbol"
-              >
-                <span>@</span>
-              </button>
-            )}
+            <button
+              onClick={props.on_at_sign_click}
+              className={cn(styles['footer__left__button'])}
+              title="Insert symbol"
+            >
+              <span>@</span>
+            </button>
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}

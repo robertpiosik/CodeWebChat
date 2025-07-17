@@ -304,8 +304,7 @@ export const HomeView: React.FC<Props> = (props) => {
                   <span
                     title="Style of generated code blocks"
                     style={{
-                      textDecoration: 'dotted underline',
-                      cursor: 'help'
+                      textDecoration: 'dotted underline'
                     }}
                   >
                     edit format
