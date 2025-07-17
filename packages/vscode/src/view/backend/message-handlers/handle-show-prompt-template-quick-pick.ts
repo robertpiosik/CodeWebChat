@@ -125,10 +125,7 @@ export const handle_show_prompt_template_quick_pick = async (
           buttons.push(edit_button, delete_button)
 
           return {
-            label: template.name || template.template.substring(0, 80),
-            description: template.name
-              ? template.template.substring(0, 100)
-              : undefined,
+            label: template.name || 'Unnamed',
             detail: template.template,
             buttons,
             template,
@@ -138,6 +135,126 @@ export const handle_show_prompt_template_quick_pick = async (
       )
     }
     return items
+  }
+
+  const edit_template = async (
+    template: PromptTemplate,
+    index: number
+  ): Promise<void> => {
+    const BACK_LABEL = '$(arrow-left) Back'
+    const NAME_LABEL = 'Name'
+    const TEMPLATE_LABEL = 'Template'
+
+    const create_edit_options = () => {
+      return [
+        { label: BACK_LABEL },
+        { label: '', kind: vscode.QuickPickItemKind.Separator },
+        {
+          label: NAME_LABEL,
+          description: template.name || 'Not set'
+        },
+        {
+          label: TEMPLATE_LABEL,
+          description:
+            template.template.length > 50
+              ? template.template.substring(0, 50) + '...'
+              : template.template
+        }
+      ]
+    }
+
+    const edit_quick_pick = vscode.window.createQuickPick()
+    edit_quick_pick.items = create_edit_options()
+    edit_quick_pick.title = 'Edit Template'
+    edit_quick_pick.placeholder = 'Select what to edit'
+
+    return new Promise<void>((resolve) => {
+      let is_accepted = false
+      const edit_disposables: vscode.Disposable[] = []
+
+      edit_disposables.push(
+        edit_quick_pick.onDidAccept(async () => {
+          is_accepted = true
+          const selected = edit_quick_pick.selectedItems[0]
+          if (!selected || selected.label === BACK_LABEL) {
+            edit_quick_pick.hide()
+            resolve()
+            return
+          }
+
+          edit_quick_pick.hide()
+
+          if (selected.label === NAME_LABEL) {
+            const new_name = await vscode.window.showInputBox({
+              prompt: 'Enter an optional name for the template.',
+              value: template.name,
+              placeHolder: 'Leave empty to remove name'
+            })
+
+            let next_template_state = template
+            if (new_name !== undefined) {
+              const updated_template: PromptTemplate = { ...template }
+              if (new_name.trim()) {
+                updated_template.name = new_name.trim()
+              } else {
+                delete updated_template.name
+              }
+
+              prompt_templates[index] = updated_template
+              await config.update(
+                prompt_templates_key,
+                prompt_templates,
+                vscode.ConfigurationTarget.Global
+              )
+              templates_quick_pick.items =
+                create_template_items(prompt_templates)
+              // Refresh the prompt_templates from config to ensure consistency
+              prompt_templates =
+                config.get<PromptTemplate[]>(prompt_templates_key, []) || []
+              next_template_state = updated_template
+            }
+            await edit_template(next_template_state, index)
+            resolve()
+          } else if (selected.label === TEMPLATE_LABEL) {
+            const new_template_text = await vscode.window.showInputBox({
+              prompt: 'Enter the prompt template.',
+              value: template.template,
+              placeHolder:
+                'E.g., Rewrite {function name} without redundant comments.'
+            })
+            let next_template_state = template
+            if (new_template_text !== undefined && new_template_text.trim()) {
+              const updated_template: PromptTemplate = {
+                ...template,
+                template: new_template_text.trim()
+              }
+              prompt_templates[index] = updated_template
+              await config.update(
+                prompt_templates_key,
+                prompt_templates,
+                vscode.ConfigurationTarget.Global
+              )
+              templates_quick_pick.items =
+                create_template_items(prompt_templates)
+              // Refresh the prompt_templates from config to ensure consistency
+              prompt_templates =
+                config.get<PromptTemplate[]>(prompt_templates_key, []) || []
+              next_template_state = updated_template
+            }
+            await edit_template(next_template_state, index)
+            resolve()
+          }
+        }),
+        edit_quick_pick.onDidHide(() => {
+          if (!is_accepted) {
+            resolve()
+          }
+          edit_disposables.forEach((d) => d.dispose())
+        })
+      )
+
+      edit_quick_pick.show()
+    })
   }
 
   templates_quick_pick.items = create_template_items(prompt_templates)
@@ -151,31 +268,40 @@ export const handle_show_prompt_template_quick_pick = async (
       }
 
       if (selected_template.label == '$(add) Add new template') {
+        is_editing_template = true
         const name = await vscode.window.showInputBox({
           prompt: 'Enter an optional name for the template.'
         })
-        if (name === undefined) return
+        if (name !== undefined) {
+          const templateText = await vscode.window.showInputBox({
+            prompt: 'Enter the prompt template.',
+            placeHolder:
+              'E.g., Rewrite {function name} without redundant comments.'
+          })
+          if (templateText !== undefined && templateText.trim()) {
+            const newTemplate: PromptTemplate = {
+              template: templateText.trim()
+            }
+            if (name.trim()) {
+              newTemplate.name = name.trim()
+            }
 
-        const templateText = await vscode.window.showInputBox({
-          prompt: 'Enter the prompt template.',
-          placeHolder:
-            'E.g., Rewrite {function name} without redundant comments.'
-        })
-        if (templateText === undefined) return
+            // Update the local array first
+            prompt_templates = [...prompt_templates, newTemplate]
 
-        if (templateText) {
-          const newTemplate: PromptTemplate = { template: templateText }
-          if (name) {
-            newTemplate.name = name
+            // Then update the configuration
+            await config.update(
+              prompt_templates_key,
+              prompt_templates,
+              vscode.ConfigurationTarget.Global
+            )
+
+            // No need to refresh from config since we already have the updated array
           }
-          prompt_templates = [...prompt_templates, newTemplate]
-          await config.update(
-            prompt_templates_key,
-            prompt_templates,
-            vscode.ConfigurationTarget.Global
-          )
-          templates_quick_pick.items = create_template_items(prompt_templates)
         }
+        templates_quick_pick.items = create_template_items(prompt_templates)
+        is_editing_template = false
+        templates_quick_pick.show()
       } else if (
         'template' in selected_template &&
         selected_template.template
@@ -218,44 +344,58 @@ export const handle_show_prompt_template_quick_pick = async (
 
       if (event.button === edit_button) {
         is_editing_template = true
-        const new_name = await vscode.window.showInputBox({
-          prompt: 'Enter an optional name for the template.',
-          value: item.template.name
-        })
-
-        if (new_name !== undefined) {
-          const new_template_text = await vscode.window.showInputBox({
-            prompt: 'Enter the prompt template.',
-            value: item.template.template
-          })
-
-          if (new_template_text !== undefined) {
-            const updated_template: PromptTemplate = {
-              template: new_template_text
-            }
-            if (new_name) {
-              updated_template.name = new_name
-            }
-
-            prompt_templates[item.index] = updated_template
-            await config.update(
-              prompt_templates_key,
-              prompt_templates,
-              vscode.ConfigurationTarget.Global
-            )
-            templates_quick_pick.items = create_template_items(prompt_templates)
-          }
-        }
-        is_editing_template = false
+        await edit_template(item.template, item.index)
+        templates_quick_pick.items = create_template_items(prompt_templates)
         templates_quick_pick.show()
+        is_editing_template = false
       } else if (event.button === delete_button) {
-        prompt_templates.splice(item.index, 1)
+        const template_to_delete = item.template
+        const template_name = template_to_delete.name || 'Unnamed'
+        const delete_button_text = 'Delete'
+        const result = await vscode.window.showWarningMessage(
+          `Are you sure you want to delete the template "${template_name}"?`,
+          { modal: true },
+          delete_button_text
+        )
+
+        if (result !== delete_button_text) {
+          return
+        }
+
+        const deleted_template = prompt_templates[item.index]
+        const original_index = item.index
+
+        const updated_templates = prompt_templates.filter(
+          (_, index) => index !== item.index
+        )
+
         await config.update(
           prompt_templates_key,
-          prompt_templates,
+          updated_templates,
           vscode.ConfigurationTarget.Global
         )
+        prompt_templates = updated_templates
         templates_quick_pick.items = create_template_items(prompt_templates)
+
+        const undo_button_text = 'Undo'
+        const undo_result = await vscode.window.showInformationMessage(
+          `Template "${template_name}" has been deleted.`,
+          undo_button_text
+        )
+
+        if (undo_result === undo_button_text && deleted_template) {
+          prompt_templates.splice(original_index, 0, deleted_template)
+          await config.update(
+            prompt_templates_key,
+            prompt_templates,
+            vscode.ConfigurationTarget.Global
+          )
+          templates_quick_pick.items = create_template_items(prompt_templates)
+          vscode.window.showInformationMessage(
+            `Template "${template_name}" has been restored.`
+          )
+        }
+        templates_quick_pick.show()
       } else if (event.button === move_up_button) {
         if (item.index > 0) {
           const temp = prompt_templates[item.index - 1]
