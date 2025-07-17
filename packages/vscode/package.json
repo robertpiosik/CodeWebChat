@@ -42,10 +42,11 @@
     "Gemini",
     "ChatGPT",
     "Claude",
+    "Perplexity",
+    "Mistral",
     "DeepSeek",
     "Qwen",
     "Grok",
-    "Mistral",
     "HuggingChat",
     "openai",
     "typescript",
@@ -641,11 +642,31 @@
             },
             {
               "name": "(5)",
-              "chatbot": "DeepSeek"
+              "chatbot": "Perplexity"
             },
             {
               "name": "(6)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(7)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(8)",
               "chatbot": "Qwen"
+            },
+            {
+              "name": "(9)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(10)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Kimi"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -666,14 +687,14 @@
                   "ChatGPT",
                   "Claude",
                   "Grok",
+                  "Perplexity",
+                  "Mistral",
                   "DeepSeek",
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "Mistral",
                   "HuggingChat",
-                  "Kimi",
-                  "Perplexity"
+                  "Kimi"
                 ],
                 "description": "Choose among supported chatbots."
               },
@@ -769,11 +790,31 @@
             },
             {
               "name": "(5)",
-              "chatbot": "DeepSeek"
+              "chatbot": "Perplexity"
             },
             {
               "name": "(6)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(7)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(8)",
               "chatbot": "Qwen"
+            },
+            {
+              "name": "(9)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(10)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Kimi"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -794,14 +835,14 @@
                   "ChatGPT",
                   "Claude",
                   "Grok",
+                  "Perplexity",
+                  "Mistral",
                   "DeepSeek",
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "Mistral",
                   "HuggingChat",
-                  "Kimi",
-                  "Perplexity"
+                  "Kimi"
                 ],
                 "description": "Choose among supported chatbots."
               },
@@ -897,11 +938,31 @@
             },
             {
               "name": "(5)",
-              "chatbot": "DeepSeek"
+              "chatbot": "Perplexity"
             },
             {
               "name": "(6)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(7)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(8)",
               "chatbot": "Qwen"
+            },
+            {
+              "name": "(9)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(10)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Kimi"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -922,14 +983,14 @@
                   "ChatGPT",
                   "Claude",
                   "Grok",
+                  "Perplexity",
+                  "Mistral",
                   "DeepSeek",
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "Mistral",
                   "HuggingChat",
-                  "Kimi",
-                  "Perplexity"
+                  "Kimi"
                 ],
                 "description": "Choose among supported chatbots."
               },
@@ -995,11 +1056,31 @@
             },
             {
               "name": "(5)",
-              "chatbot": "DeepSeek"
+              "chatbot": "Perplexity"
             },
             {
               "name": "(6)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(7)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(8)",
               "chatbot": "Qwen"
+            },
+            {
+              "name": "(9)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(10)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Kimi"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -1020,14 +1101,14 @@
                   "ChatGPT",
                   "Claude",
                   "Grok",
+                  "Perplexity",
+                  "Mistral",
                   "DeepSeek",
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "Mistral",
                   "HuggingChat",
-                  "Kimi",
-                  "Perplexity"
+                  "Kimi"
                 ],
                 "description": "Choose among supported chatbots."
               },
