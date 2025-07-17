@@ -135,11 +135,6 @@
   &--error {
     background-color: var(--vscode-diffEditor-removedLineBackground);
   }
-
-  &--clickable {
-    cursor: pointer;
-    text-decoration: underline;
-  }
 }
 
 .footer {
@@ -156,16 +151,17 @@
 
   &__left {
     display: flex;
-    gap: var(--padding-4px);
+    gap: var(--padding-2px);
     overflow: hidden;
 
-    &__at-sign-button {
+    &__button {
+      --size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: var(--padding-4px);
-      height: 20px;
-      width: 20px;
+      height: var(--size);
+      width: var(--size);
       border-radius: 5px;
       color: var(--vscode-icon-foreground);
 
@@ -228,7 +224,7 @@
       }
 
       &--secondary {
-        @media (max-width: 330px) {
+        @media (max-width: 355px) {
           > span {
             display: none;
           }

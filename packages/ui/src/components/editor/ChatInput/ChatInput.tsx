@@ -21,6 +21,7 @@ type Props = {
   is_web_mode: boolean
   on_search_click: () => void
   on_at_sign_click: () => void
+  on_curly_braces_click: () => void
   translations: {
     type_something: string
     completion_instructions: string
@@ -69,25 +70,12 @@ export const ChatInput: React.FC<Props> = (props) => {
     const parts = text.split(regex)
     return parts.map((part, index) => {
       if (part == '@Selection') {
-        const is_clickable = !!props.on_at_sign_click
         return (
           <span
             key={index}
-            className={cn(
-              styles['selection-keyword'],
-              {
-                [styles['selection-keyword--error']]:
-                  !props.has_active_selection
-              },
-              { [styles['selection-keyword--clickable']]: is_clickable }
-            )}
-            title={
-              is_clickable
-                ? 'Click to remove @Selection'
-                : !props.has_active_selection
-                ? 'No active selection in editor'
-                : undefined
-            }
+            className={cn(styles['selection-keyword'], {
+              [styles['selection-keyword--error']]: !props.has_active_selection
+            })}
           >
             {part}
           </span>
@@ -350,12 +338,19 @@ export const ChatInput: React.FC<Props> = (props) => {
             {!props.is_in_code_completions_mode && (
               <button
                 onClick={props.on_at_sign_click}
-                className={cn(styles['footer__left__at-sign-button'])}
+                className={cn(styles['footer__left__button'])}
                 title="Insert symbol"
               >
                 <span>@</span>
               </button>
             )}
+            <button
+              onClick={props.on_curly_braces_click}
+              className={cn(styles['footer__left__button'])}
+              title="Use prompt template"
+            >
+              <span className="codicon codicon-json" />
+            </button>
           </div>
           <div
             className={styles.footer__right}

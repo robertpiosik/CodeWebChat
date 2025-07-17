@@ -72,7 +72,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
       })}
     >
       <div className={styles['my-presets']}>
-        <div className={styles['my-presets__left']}>MY PRESETS</div>
+        <div className={styles['my-presets__left']}>MY CHAT PRESETS</div>
 
         <TextButton
           on_click={props.on_set_default_presets}

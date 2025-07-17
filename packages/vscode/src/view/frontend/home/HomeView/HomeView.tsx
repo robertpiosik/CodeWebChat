@@ -319,13 +319,13 @@ export const HomeView: React.FC<Props> = (props) => {
                       value: 'truncated',
                       label: 'truncated',
                       title:
-                        'The model will skip unchanged fragments in modified files. Readable but requires Intelligent Update API tool to apply.'
+                        'The model will skip unchanged fragments in modified files. The best quality and readability but requires the Intelligent Update API tool to apply.'
                     },
                     {
                       value: 'diff',
                       label: 'diff',
                       title:
-                        'The model will output patches. Less readable but fast to apply. Smaller models may struggle with diff correctness.'
+                        'The model will output patches. Lower readability, instantaneous integration. Smaller models may struggle with correctness of the format.'
                     }
                   ]}
                   selected_value={

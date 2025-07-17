@@ -1176,6 +1176,90 @@
               "chatbot"
             ]
           }
+        },
+        "codeWebChat.promptTemplatesForAskAboutContext": {
+          "type": "array",
+          "default": [],
+          "description": "Prompt templates for 'Ask about context' mode.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the prompt template."
+              },
+              "template": {
+                "type": "string",
+                "description": "The prompt template."
+              }
+            },
+            "required": [
+              "template"
+            ]
+          }
+        },
+        "codeWebChat.promptTemplatesForEditContext": {
+          "type": "array",
+          "default": [],
+          "description": "Prompt templates for 'Edit context' mode.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the prompt template."
+              },
+              "template": {
+                "type": "string",
+                "description": "The prompt template."
+              }
+            },
+            "required": [
+              "template"
+            ]
+          }
+        },
+        "codeWebChat.promptTemplatesForCodeAtCursor": {
+          "type": "array",
+          "default": [],
+          "description": "Prompt templates for 'Code at cursor' mode.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the prompt template."
+              },
+              "template": {
+                "type": "string",
+                "description": "The prompt template."
+              }
+            },
+            "required": [
+              "template"
+            ]
+          }
+        },
+        "codeWebChat.promptTemplatesForNoContext": {
+          "type": "array",
+          "default": [],
+          "description": "Prompt templates for 'No context' mode.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the prompt template."
+              },
+              "template": {
+                "type": "string",
+                "description": "The prompt template."
+              }
+            },
+            "required": [
+              "template"
+            ]
+          }
         }
       }
     }
