@@ -298,7 +298,13 @@ export const HomeView: React.FC<Props> = (props) => {
             <>
               <div className={styles['edit-format']}>
                 <span>
-                  + <i title="Style of generated code blocks">edit format</i>{' '}
+                  +{' '}
+                  <span
+                    title="Style of generated code blocks"
+                    style={{ textDecoration: 'dotted underline' }}
+                  >
+                    edit format
+                  </span>{' '}
                   instructions:
                 </span>
                 <UiHorizontalSelector
