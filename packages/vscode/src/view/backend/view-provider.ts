@@ -75,9 +75,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
   public get_presets_config_key(): string {
     const mode =
-      this.home_view_type === HOME_VIEW_TYPES.API
-        ? this.api_mode
-        : this.web_mode
+      this.home_view_type == HOME_VIEW_TYPES.API ? this.api_mode : this.web_mode
     switch (mode) {
       case 'ask':
         return 'chatPresetsForAskAboutContext'
@@ -252,68 +250,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public calculate_token_count() {
-    const active_editor = vscode.window.activeTextEditor
-
-    const is_code_completions_mode =
-      (this.home_view_type == HOME_VIEW_TYPES.WEB &&
-        this.web_mode == 'code-completions') ||
-      (this.home_view_type == HOME_VIEW_TYPES.API &&
-        this.api_mode == 'code-completions')
-
-    Promise.all([
-      this.workspace_provider.get_checked_files_token_count({
-        exclude_file_path:
-          is_code_completions_mode && active_editor
-            ? active_editor.document.uri.fsPath
-            : undefined
-      }),
-      this.websites_provider.get_checked_websites_token_count()
-    ])
-      .then(([workspace_tokens, websites_tokens]) => {
-        let current_token_count = workspace_tokens + websites_tokens
-
-        if (active_editor && is_code_completions_mode) {
-          const document = active_editor.document
-          const text = document.getText()
-          const file_path = document.uri.fsPath
-          const workspace_root =
-            this.workspace_provider.get_workspace_root_for_file(file_path)
-          let content_xml = ''
-
-          if (!workspace_root) {
-            content_xml = `<file path="${file_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
-          } else {
-            const relative_path = path.relative(workspace_root, file_path)
-            if (this.workspace_provider.getWorkspaceRoots().length > 1) {
-              const workspace_name =
-                this.workspace_provider.get_workspace_name(workspace_root)
-              content_xml = `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
-            } else {
-              content_xml = `<file path="${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
-            }
-          }
-          const file_token_count = Math.floor(content_xml.length / 4)
-          current_token_count += file_token_count
-        }
-
-        this.send_message<TokenCountMessage>({
-          command: 'TOKEN_COUNT_UPDATED',
-          token_count: current_token_count
-        })
-      })
-      .catch((error) => {
-        console.error('Error calculating token count:', error)
-        vscode.window.showErrorMessage(
-          `Error calculating token count: ${error.message}`
-        )
-        this.send_message<TokenCountMessage>({
-          command: 'TOKEN_COUNT_UPDATED',
-          token_count: 0
-        })
-      })
-  }
-
   public send_message<T>(message: T) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -427,6 +363,68 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     )
 
     this.send_presets_to_webview(webview_view.webview)
+  }
+
+  public calculate_token_count() {
+    const active_editor = vscode.window.activeTextEditor
+
+    const is_code_completions_mode =
+      (this.home_view_type == HOME_VIEW_TYPES.WEB &&
+        this.web_mode == 'code-completions') ||
+      (this.home_view_type == HOME_VIEW_TYPES.API &&
+        this.api_mode == 'code-completions')
+
+    Promise.all([
+      this.workspace_provider.get_checked_files_token_count({
+        exclude_file_path:
+          is_code_completions_mode && active_editor
+            ? active_editor.document.uri.fsPath
+            : undefined
+      }),
+      this.websites_provider.get_checked_websites_token_count()
+    ])
+      .then(([workspace_tokens, websites_tokens]) => {
+        let current_token_count = workspace_tokens + websites_tokens
+
+        if (active_editor && is_code_completions_mode) {
+          const document = active_editor.document
+          const text = document.getText()
+          const file_path = document.uri.fsPath
+          const workspace_root =
+            this.workspace_provider.get_workspace_root_for_file(file_path)
+          let content_xml = ''
+
+          if (!workspace_root) {
+            content_xml = `<file path="${file_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
+          } else {
+            const relative_path = path.relative(workspace_root, file_path)
+            if (this.workspace_provider.getWorkspaceRoots().length > 1) {
+              const workspace_name =
+                this.workspace_provider.get_workspace_name(workspace_root)
+              content_xml = `<file path="${workspace_name}/${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
+            } else {
+              content_xml = `<file path="${relative_path}">\n<![CDATA[\n${text}\n]]>\n</file>\n`
+            }
+          }
+          const file_token_count = Math.floor(content_xml.length / 4)
+          current_token_count += file_token_count
+        }
+
+        this.send_message<TokenCountMessage>({
+          command: 'TOKEN_COUNT_UPDATED',
+          token_count: current_token_count
+        })
+      })
+      .catch((error) => {
+        console.error('Error calculating token count:', error)
+        vscode.window.showErrorMessage(
+          `Error calculating token count: ${error.message}`
+        )
+        this.send_message<TokenCountMessage>({
+          command: 'TOKEN_COUNT_UPDATED',
+          token_count: 0
+        })
+      })
   }
 
   public send_presets_to_webview(_: vscode.Webview) {
