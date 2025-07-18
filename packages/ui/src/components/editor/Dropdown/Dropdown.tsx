@@ -74,9 +74,19 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
         <span className={styles.button__label}>
           {selected_option ? selected_option.label : 'Select an option'}
         </span>
-        <span
-          className={cn('codicon', 'codicon-chevron-down', styles.button__icon)}
-        />
+        {is_open ? (
+          <span
+            className={cn(
+              'codicon',
+              'codicon-chevron-up',
+              styles.button__icon
+            )}
+          />
+        ) : (
+          <span
+            className={cn('codicon', 'codicon-chevron-down', styles.button__icon)}
+          />
+        )}
       </button>
 
       {is_open && (
