@@ -455,14 +455,14 @@ export const HomeView: React.FC<Props> = (props) => {
           onClick={() => {
             set_is_showing_commands(!is_showing_commands)
           }}
-          title="Handy access to core commands"
+          title="Handy access to commands"
         >
           {is_showing_commands ? (
             <span className="codicon codicon-chevron-down" />
           ) : (
             <span className="codicon codicon-chevron-up" />
           )}
-          QUICK ACTIONS
+          PINNED COMMANDS
         </button>
       </div>
     </div>
