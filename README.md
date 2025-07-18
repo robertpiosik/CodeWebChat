@@ -111,20 +111,6 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 - `Code Web Chat: Settings` - Open settings wizard
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Settings</span>
-
-- `Code Web Chat: Edit Format Instructions Truncated` - Style instructions for chat responses when using truncated format.
-
-- `Code Web Chat: Edit Format Instructions Whole` - Style instructions for chat responses when showing complete files.
-
-- `Code Web Chat: Edit Format Instructions Diff` - Style instructions for chat responses when using diff format.
-
-- `Code Web Chat: Commit Message Instructions` - The instructions used when generating a commit message.
-
-- `Code Web Chat: Ignored Extensions` - List of file extensions to ignore in the context.
-
-- `Code Web Chat: Chat Presets For Edit Context` - Conveniently edit chat presets as they're stored in JSON.
-
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
 Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/discussions) and [/r/CodeWebChat](https://www.reddit.com/r/CodeWebChat).

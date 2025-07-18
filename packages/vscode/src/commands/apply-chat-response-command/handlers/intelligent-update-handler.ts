@@ -16,7 +16,7 @@ import { OriginalFileState } from '../../../types/common'
 import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
 
-const MAX_CONCURRENCY = 20
+const MAX_CONCURRENCY = 10
 
 async function process_file(params: {
   endpoint_url: string
