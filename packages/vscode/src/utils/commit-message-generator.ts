@@ -516,14 +516,22 @@ export async function generate_commit_message_from_diff(
   context: vscode.ExtensionContext,
   repository: GitRepository,
   progress_title: string,
-  diff: string
+  diff: string,
+  api_config?: {
+    // Make api_config optional parameter
+    config: CommitMessageConfig
+    provider: any
+    endpoint_url: string
+  }
 ): Promise<string | null> {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const commit_message_prompt = config.get<string>('commitMessageInstructions')
   const all_ignored_extensions = get_ignored_extensions()
 
-  const api_config = await get_commit_message_config(context)
-  if (!api_config) return null
+  // Use provided config or get it if not provided (for backward compatibility)
+  const resolved_api_config =
+    api_config || (await get_commit_message_config(context))
+  if (!resolved_api_config) return null
 
   const affected_files_data = await collect_affected_files_with_metadata(
     repository,
@@ -544,9 +552,9 @@ export async function generate_commit_message_from_diff(
   )
 
   return await generate_commit_message_with_api(
-    api_config.endpoint_url,
-    api_config.provider,
-    api_config.config,
+    resolved_api_config.endpoint_url,
+    resolved_api_config.provider,
+    resolved_api_config.config,
     message,
     progress_title
   )

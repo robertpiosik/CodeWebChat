@@ -5,7 +5,10 @@ import {
   get_git_repository,
   prepare_staged_changes
 } from '../utils/git-repository-utils'
-import { generate_commit_message_from_diff } from '../utils/commit-message-generator'
+import {
+  generate_commit_message_from_diff,
+  get_commit_message_config
+} from '../utils/commit-message-generator'
 
 export function commit_changes_command(context: vscode.ExtensionContext) {
   return vscode.commands.registerCommand(
@@ -15,6 +18,10 @@ export function commit_changes_command(context: vscode.ExtensionContext) {
       if (!repository) return
 
       try {
+        // Check configuration first before any git operations
+        const api_config = await get_commit_message_config(context)
+        if (!api_config) return
+
         const diff = await prepare_staged_changes(repository)
         if (!diff) return
 
@@ -22,7 +29,8 @@ export function commit_changes_command(context: vscode.ExtensionContext) {
           context,
           repository,
           'Generating commit message and committing...',
-          diff
+          diff,
+          api_config // Pass the already resolved config
         )
 
         if (!commit_message) return
