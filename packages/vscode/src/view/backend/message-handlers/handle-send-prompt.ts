@@ -212,6 +212,10 @@ async function validate_presets(params: {
       tooltip: 'Move down'
     }
 
+    const quick_pick = vscode.window.createQuickPick<
+      vscode.QuickPickItem & { name: string; index: number }
+    >()
+
     const create_items = () => {
       return presets.map((preset, index) => {
         const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
@@ -221,7 +225,8 @@ async function validate_presets(params: {
           : ''
 
         const buttons = []
-        if (presets.length > 1) {
+        // Only show move buttons when not searching and there's more than one preset
+        if (!quick_pick.value && presets.length > 1) {
           if (index > 0) buttons.push(move_up_button)
           if (index < presets.length - 1) buttons.push(move_down_button)
         }
@@ -238,16 +243,14 @@ async function validate_presets(params: {
       })
     }
 
-    const quick_pick = vscode.window.createQuickPick<
-      vscode.QuickPickItem & { name: string; index: number }
-    >()
-    const items = create_items()
-    quick_pick.items = items
+    quick_pick.items = create_items()
     quick_pick.placeholder = 'Select preset'
     quick_pick.matchOnDescription = true
 
     if (last_selected_item) {
-      const last_item = items.find((item) => item.name == last_selected_item)
+      const last_item = quick_pick.items.find(
+        (item) => item.name == last_selected_item
+      )
       if (last_item) {
         quick_pick.activeItems = [last_item]
       }
@@ -257,11 +260,16 @@ async function validate_presets(params: {
       const disposables: vscode.Disposable[] = []
 
       disposables.push(
+        quick_pick.onDidChangeValue(() => {
+          // Refresh items when search value changes to show/hide move buttons
+          quick_pick.items = create_items()
+        }),
         quick_pick.onDidTriggerItemButton(async (event) => {
           const item = event.item as vscode.QuickPickItem & {
             name: string
             index: number
           }
+
           if (event.button === move_up_button) {
             if (item.index > 0) {
               const temp = presets[item.index - 1]
@@ -311,6 +319,7 @@ async function validate_presets(params: {
         quick_pick.dispose()
         resolve([])
       })
+
       disposables.push(quick_pick)
       quick_pick.show()
     })
