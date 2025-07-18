@@ -19,7 +19,7 @@ export const Intro: React.FC<Props> = (props) => {
             >
               <div className={styles.top__heading__title}>Code Web Chat</div>
               <div className={styles.top__heading__subtitle}>
-                AI pair programming
+                AI pair programming for engineers
               </div>
             </div>
             <button
