@@ -107,7 +107,6 @@ export const setup_api_tool_multi_config = async (params: {
   let current_configs = await tool_methods.get_configs()
   let default_config = await tool_methods.get_default_config()
 
-  // UI button definitions
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
     tooltip: 'Edit configuration'
@@ -299,14 +298,13 @@ export const setup_api_tool_multi_config = async (params: {
           quick_pick.show()
         } else if (event.button === delete_button) {
           const config_to_delete = item.config
-          const config_name = config_to_delete.model
           const delete_button_text = 'Delete'
 
           // Set flag before hiding to prevent disposal
           is_showing_dialog = true
           quick_pick.hide()
 
-          const delete_message = `Are you sure you want to delete the configuration "${config_name}" (${config_to_delete.provider_name})?`
+          const delete_message = `Are you sure you want to delete the configuration ${config_to_delete.model}/${config_to_delete.provider_name}?`
 
           const result = await vscode.window.showWarningMessage(
             delete_message,
@@ -316,7 +314,7 @@ export const setup_api_tool_multi_config = async (params: {
 
           is_showing_dialog = false // Reset flag after dialog closes
 
-          if (result !== delete_button_text) {
+          if (result != delete_button_text) {
             // User cancelled, show the quick pick again
             resolve(await show_configs_quick_pick())
             return
@@ -331,7 +329,6 @@ export const setup_api_tool_multi_config = async (params: {
             default_config.temperature == deleted_config.temperature &&
             default_config.reasoning_effort == deleted_config.reasoning_effort
 
-          // Remove the config
           current_configs.splice(item.index, 1)
           await tool_methods.save_configs(current_configs)
 
@@ -345,7 +342,6 @@ export const setup_api_tool_multi_config = async (params: {
             is_accepted = true
             resolve(await show_configs_quick_pick())
           } else {
-            // Show the quick pick immediately after deletion
             resolve(await show_configs_quick_pick())
           }
         } else if (

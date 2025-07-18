@@ -318,7 +318,7 @@ export const handle_show_prompt_template_quick_pick = async (
         if (variables.length > 0) {
           for (const variable of variables) {
             const value = await vscode.window.showInputBox({
-              prompt: `Enter a value for the variable.`,
+              prompt: `Enter a value for the variable "${variable}".`,
               placeHolder: variable
             })
 
