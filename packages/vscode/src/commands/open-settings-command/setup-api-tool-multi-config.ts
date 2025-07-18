@@ -216,7 +216,7 @@ export const setup_api_tool_multi_config = async (params: {
             }
           }
 
-          const description_parts = []
+          const description_parts = [config.provider_name]
           if (config.temperature != DEFAULT_TEMPERATURE[params.tool]) {
             description_parts.push(`Temperature: ${config.temperature}`)
           }
@@ -232,7 +232,6 @@ export const setup_api_tool_multi_config = async (params: {
           return {
             label: is_default ? `$(pass-filled) ${config.model}` : config.model,
             description: description_parts.join(' · '),
-            detail: `Provided by ${config.provider_name}`,
             buttons,
             config,
             index

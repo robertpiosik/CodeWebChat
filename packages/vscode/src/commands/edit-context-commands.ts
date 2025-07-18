@@ -87,7 +87,7 @@ const get_edit_context_config = async (
           buttons.push(set_default_button)
         }
 
-        const description_parts = []
+        const description_parts = [config.provider_name]
         if (config.temperature != DEFAULT_TEMPERATURE['edit-context']) {
           description_parts.push(`Temperature: ${config.temperature}`)
         }
@@ -98,7 +98,6 @@ const get_edit_context_config = async (
         return {
           label: is_default ? `$(pass-filled) ${config.model}` : config.model,
           description: description_parts.join(' · '),
-          detail: `Provided by ${config.provider_name}`,
           config,
           index,
           buttons

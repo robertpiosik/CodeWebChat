@@ -171,7 +171,7 @@ async function get_code_completion_config(
           buttons.push(set_default_button)
         }
 
-        const description_parts = []
+        const description_parts = [config.provider_name]
         if (config.temperature != DEFAULT_TEMPERATURE['code-completions']) {
           description_parts.push(`Temperature: ${config.temperature}`)
         }
@@ -182,7 +182,6 @@ async function get_code_completion_config(
         return {
           label: is_default ? `$(pass-filled) ${config.model}` : config.model,
           description: description_parts.join(' · '),
-          detail: `Provided by ${config.provider_name}`,
           config,
           index,
           buttons

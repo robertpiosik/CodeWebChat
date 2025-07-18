@@ -102,7 +102,7 @@ export async function get_commit_message_config(
             buttons.push(set_default_button)
           }
 
-          const description_parts = []
+          const description_parts = [config.provider_name]
           if (config.reasoning_effort) {
             description_parts.push(
               `Reasoning effort: ${config.reasoning_effort}`
@@ -115,7 +115,6 @@ export async function get_commit_message_config(
           return {
             label: is_default ? `$(pass-filled) ${config.model}` : config.model,
             description: description_parts.join(' · '),
-            detail: `Provided by ${config.provider_name}`,
             config,
             index,
             buttons
