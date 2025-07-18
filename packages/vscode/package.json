@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC)",
-  "description": "Free AI pair programming",
+  "description": "Connect the editor to 15+ chatbots",
   "version": "1.167.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
