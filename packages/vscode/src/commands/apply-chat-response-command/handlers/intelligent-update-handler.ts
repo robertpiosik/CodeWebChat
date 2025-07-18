@@ -16,8 +16,6 @@ import { OriginalFileState } from '../../../types/common'
 import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
 
-const MAX_CONCURRENCY = 10
-
 async function process_file(params: {
   endpoint_url: string
   api_key: string
@@ -319,6 +317,7 @@ export async function handle_intelligent_update(params: {
   // Store original file states for reversion
   const original_states: OriginalFileState[] = []
   let operation_successful = false
+  const max_concurrency = params.config.max_concurrency ?? 10 // Use configured value or default
 
   await vscode.window.withProgress(
     {
@@ -409,7 +408,7 @@ export async function handle_intelligent_update(params: {
         }
 
         // Process all files in parallel batches
-        for (let i = 0; i < files.length; i += MAX_CONCURRENCY) {
+        for (let i = 0; i < files.length; i += max_concurrency) {
           if (token.isCancellationRequested) {
             Logger.log({
               function_name: 'handle_intelligent_update',
@@ -419,7 +418,7 @@ export async function handle_intelligent_update(params: {
             throw new Error('Operation cancelled')
           }
 
-          const batch = files.slice(i, i + MAX_CONCURRENCY)
+          const batch = files.slice(i, i + max_concurrency)
           const promises = batch.map(async (file) => {
             let workspace_root = default_workspace_path!
             if (file.workspace_name && workspace_map.has(file.workspace_name)) {

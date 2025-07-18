@@ -43,6 +43,7 @@ export const setup_api_tool_multi_config = async (params: {
   const MODEL_LABEL = 'Model'
   const TEMPERATURE_LABEL = 'Temperature'
   const REASONING_EFFORT_LABEL = 'Reasoning effort'
+  const MAX_CONCURRENCY_LABEL = 'Max concurrency'
 
   const get_tool_methods = (tool: SupportedTool): ToolMethods => {
     switch (tool) {
@@ -80,9 +81,7 @@ export const setup_api_tool_multi_config = async (params: {
           get_default_config: () =>
             providers_manager.get_default_intelligent_update_config(),
           set_default_config: (config: ToolConfig | null) =>
-            providers_manager.set_default_intelligent_update_config(
-              config as any
-            ),
+            providers_manager.set_default_intelligent_update_config(config),
           get_display_name: () => 'Intelligent Update'
         }
       case 'commit-messages':
@@ -166,7 +165,8 @@ export const setup_api_tool_multi_config = async (params: {
             default_config.provider_name == config.provider_name &&
             default_config.model == config.model &&
             default_config.temperature == config.temperature &&
-            default_config.reasoning_effort == config.reasoning_effort
+            default_config.reasoning_effort == config.reasoning_effort &&
+            default_config.max_concurrency == config.max_concurrency
 
           let buttons = []
           if (current_configs.length > 1) {
@@ -216,17 +216,21 @@ export const setup_api_tool_multi_config = async (params: {
             }
           }
 
+          const description_parts = []
+          if (config.reasoning_effort) {
+            description_parts.push(
+              `Reasoning effort: ${config.reasoning_effort}`
+            )
+          }
+          description_parts.push(`Temperature: ${config.temperature}`)
+
+          if (params.tool == 'intelligent-update' && config.max_concurrency) {
+            description_parts.push(`Concurrency: ${config.max_concurrency}`)
+          }
+
           return {
             label: is_default ? `$(pass-filled) ${config.model}` : config.model,
-            description: `${
-              config.reasoning_effort
-                ? `Reasoning effort: ${config.reasoning_effort}`
-                : ''
-            }${
-              config.reasoning_effort
-                ? ` · Temperature: ${config.temperature}`
-                : `Temperature: ${config.temperature}`
-            }`,
+            description: description_parts.join(' · '),
             detail: `Provided by ${config.provider_name}`,
             buttons,
             config,
@@ -327,7 +331,9 @@ export const setup_api_tool_multi_config = async (params: {
             default_config.provider_name == deleted_config.provider_name &&
             default_config.model == deleted_config.model &&
             default_config.temperature == deleted_config.temperature &&
-            default_config.reasoning_effort == deleted_config.reasoning_effort
+            default_config.reasoning_effort ==
+              deleted_config.reasoning_effort &&
+            default_config.max_concurrency == deleted_config.max_concurrency
 
           current_configs.splice(item.index, 1)
           await tool_methods.save_configs(current_configs)
@@ -448,6 +454,16 @@ export const setup_api_tool_multi_config = async (params: {
         }
       ]
 
+      if (params.tool == 'intelligent-update') {
+        const DEFAULT_MAX_CONCURRENCY = 10
+        options.push({
+          label: MAX_CONCURRENCY_LABEL,
+          description: `${config.max_concurrency ?? DEFAULT_MAX_CONCURRENCY}${
+            config.max_concurrency === undefined ? ' (default)' : ''
+          }`
+        })
+      }
+
       if (params.tool == 'commit-messages') {
         const current_threshold = params.context.globalState.get<number>(
           COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
@@ -480,7 +496,8 @@ export const setup_api_tool_multi_config = async (params: {
         default_config.provider_name == config.provider_name &&
         default_config.model == config.model &&
         default_config.temperature == config.temperature &&
-        default_config.reasoning_effort == config.reasoning_effort
+        default_config.reasoning_effort == config.reasoning_effort &&
+        default_config.max_concurrency == config.max_concurrency
 
       if (current_is_default) {
         options.push({
@@ -634,6 +651,27 @@ export const setup_api_tool_multi_config = async (params: {
             resolve(await edit_configuration(config))
             return
           }
+        } else if (
+          params.tool == 'intelligent-update' &&
+          selected_option.label == MAX_CONCURRENCY_LABEL
+        ) {
+          const new_max_concurrency = await set_max_concurrency(
+            config.max_concurrency
+          )
+          if (new_max_concurrency.cancelled) {
+            resolve(await edit_configuration(config))
+            return
+          }
+
+          if (
+            new_max_concurrency.value !== (config.max_concurrency || undefined)
+          ) {
+            updated_config_state.max_concurrency = new_max_concurrency.value
+            config_changed_in_this_step = true
+          } else {
+            resolve(await edit_configuration(config))
+            return
+          }
         } else {
           resolve(await edit_configuration(config))
           return
@@ -655,7 +693,9 @@ export const setup_api_tool_multi_config = async (params: {
               default_config.model == original_config_state.model &&
               default_config.temperature == original_config_state.temperature &&
               default_config.reasoning_effort ==
-                original_config_state.reasoning_effort
+                original_config_state.reasoning_effort &&
+              default_config.max_concurrency ==
+                original_config_state.max_concurrency
             ) {
               default_config = updated_config_state
               await tool_methods.set_default_config(updated_config_state)
@@ -850,6 +890,37 @@ export const setup_api_tool_multi_config = async (params: {
     return { value: selected.effort, cancelled: false }
   }
 
+  async function set_max_concurrency(
+    current_concurrency: number | undefined
+  ): Promise<{ value: number | undefined; cancelled: boolean }> {
+    const DEFAULT_MAX_CONCURRENCY = 10
+    const concurrency_input = await vscode.window.showInputBox({
+      title: 'Set Max Concurrency',
+      prompt: 'Enter number of files to process in parallel',
+      value: current_concurrency?.toString() ?? '',
+      placeHolder: `Default: ${DEFAULT_MAX_CONCURRENCY}. Leave empty to restore default.`,
+      validateInput: (value) => {
+        if (value == '') return null // Allow empty to restore default
+        const num = Number(value)
+        if (isNaN(num)) return 'Please enter a valid number'
+        if (!Number.isInteger(num)) return 'Please enter a whole number'
+        if (num < 1) return 'Concurrency must be at least 1'
+        if (num > 100) return 'Concurrency seems too large'
+        return null
+      }
+    })
+
+    if (concurrency_input === undefined) {
+      return { value: undefined, cancelled: true }
+    }
+
+    if (concurrency_input == '') {
+      return { value: undefined, cancelled: false } // undefined means use default
+    }
+
+    return { value: Number(concurrency_input), cancelled: false }
+  }
+
   async function set_confirmation_threshold(
     current_threshold: number
   ): Promise<number | undefined> {
@@ -873,7 +944,7 @@ export const setup_api_tool_multi_config = async (params: {
       return undefined
     }
 
-    if (threshold_input === '') {
+    if (threshold_input == '') {
       return DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK
     }
 

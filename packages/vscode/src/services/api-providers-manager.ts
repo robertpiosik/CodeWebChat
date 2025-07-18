@@ -35,6 +35,7 @@ export type ToolConfig = {
   model: string
   temperature: number
   reasoning_effort?: ReasoningEffort
+  max_concurrency?: number
 }
 
 export type CodeCompletionsConfigs = ToolConfig[]
@@ -202,16 +203,18 @@ export class ApiProvidersManager {
     )
   }
 
-  public async save_commit_messages_tool_configs(configs: CommitMessagesConfigs) {
+  public async save_commit_messages_tool_configs(
+    configs: CommitMessagesConfigs
+  ) {
     await this._vscode.globalState.update(
       TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
       configs
     )
   }
 
-  public async get_intelligent_update_tool_configs(): Promise<EditContextConfigs> {
+  public async get_intelligent_update_tool_configs(): Promise<IntelligentUpdateConfigs> {
     await this._load_promise
-    const configs = this._vscode.globalState.get<EditContextConfigs>(
+    const configs = this._vscode.globalState.get<IntelligentUpdateConfigs>(
       TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
       []
     )
@@ -228,7 +231,9 @@ export class ApiProvidersManager {
     return this._validate_tool_config(config)
   }
 
-  public async set_default_intelligent_update_config(config: ToolConfig) {
+  public async set_default_intelligent_update_config(
+    config: ToolConfig | null
+  ) {
     await this._vscode.globalState.update(
       DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY,
       config
@@ -236,7 +241,7 @@ export class ApiProvidersManager {
   }
 
   public async save_intelligent_update_tool_configs(
-    configs: EditContextConfigs
+    configs: IntelligentUpdateConfigs
   ) {
     await this._vscode.globalState.update(
       TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
@@ -327,7 +332,7 @@ export class ApiProvidersManager {
     }
 
     const intelligent_update_configs =
-      this._vscode.globalState.get<EditContextConfigs>(
+      this._vscode.globalState.get<IntelligentUpdateConfigs>(
         TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
         []
       )
