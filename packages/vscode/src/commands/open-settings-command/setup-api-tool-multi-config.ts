@@ -251,6 +251,7 @@ export const setup_api_tool_multi_config = async (params: {
         : 'No configurations found, add one to use this API tool'
 
     let is_accepted = false
+    let is_showing_dialog = false
 
     return new Promise<boolean>((resolve) => {
       quick_pick.onDidAccept(async () => {
@@ -297,28 +298,55 @@ export const setup_api_tool_multi_config = async (params: {
           quick_pick.items = create_config_items()
           quick_pick.show()
         } else if (event.button === delete_button) {
+          const config_to_delete = item.config
+          const config_name = config_to_delete.model
+          const delete_button_text = 'Delete'
+
+          // Set flag before hiding to prevent disposal
+          is_showing_dialog = true
+          quick_pick.hide()
+
+          const delete_message = `Are you sure you want to delete the configuration "${config_name}" (${config_to_delete.provider_name})?`
+
+          const result = await vscode.window.showWarningMessage(
+            delete_message,
+            { modal: true },
+            delete_button_text
+          )
+
+          is_showing_dialog = false // Reset flag after dialog closes
+
+          if (result !== delete_button_text) {
+            // User cancelled, show the quick pick again
+            resolve(await show_configs_quick_pick())
+            return
+          }
+
+          const deleted_config = current_configs[item.index]
+          const was_default =
+            default_config &&
+            default_config.provider_type == deleted_config.provider_type &&
+            default_config.provider_name == deleted_config.provider_name &&
+            default_config.model == deleted_config.model &&
+            default_config.temperature == deleted_config.temperature &&
+            default_config.reasoning_effort == deleted_config.reasoning_effort
+
+          // Remove the config
           current_configs.splice(item.index, 1)
           await tool_methods.save_configs(current_configs)
 
-          if (
-            default_config &&
-            default_config.provider_type == item.config.provider_type &&
-            default_config.provider_name == item.config.provider_name &&
-            default_config.model == item.config.model &&
-            default_config.temperature == item.config.temperature &&
-            default_config.reasoning_effort == item.config.reasoning_effort
-          ) {
+          // Clear default if the deleted config was the default
+          if (was_default) {
             default_config = undefined
             await tool_methods.set_default_config(null)
           }
 
           if (current_configs.length == 0) {
             is_accepted = true
-            quick_pick.hide()
             resolve(await show_configs_quick_pick())
           } else {
-            quick_pick.items = create_config_items()
-            quick_pick.show()
+            // Show the quick pick immediately after deletion
+            resolve(await show_configs_quick_pick())
           }
         } else if (
           event.button === move_up_button ||
@@ -356,6 +384,12 @@ export const setup_api_tool_multi_config = async (params: {
       })
 
       quick_pick.onDidHide(() => {
+        if (is_showing_dialog) {
+          // We are showing a dialog (warning/info message) which hides the quick pick.
+          // We don't want to dispose of everything in this case.
+          return
+        }
+
         if (!is_accepted) {
           resolve(false)
         }
