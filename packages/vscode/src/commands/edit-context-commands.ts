@@ -5,6 +5,7 @@ import { ApiProvidersManager } from '../services/api-providers-manager'
 import { make_api_request } from '../utils/make-api-request'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
+import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 
@@ -86,15 +87,17 @@ const get_edit_context_config = async (
           buttons.push(set_default_button)
         }
 
+        const description_parts = []
+        if (config.temperature != DEFAULT_TEMPERATURE['edit-context']) {
+          description_parts.push(`Temperature: ${config.temperature}`)
+        }
+        if (config.reasoning_effort) {
+          description_parts.push(`Reasoning effort: ${config.reasoning_effort}`)
+        }
+
         return {
           label: is_default ? `$(pass-filled) ${config.model}` : config.model,
-          description: `${
-            config.reasoning_effort
-              ? `Reasoning effort: ${config.reasoning_effort}`
-              : ''
-          }${config.reasoning_effort ? ' · ' : ''}Temperature: ${
-            config.temperature
-          }`,
+          description: description_parts.join(' · '),
           detail: `Provided by ${config.provider_name}`,
           config,
           index,

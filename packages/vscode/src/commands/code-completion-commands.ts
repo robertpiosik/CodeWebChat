@@ -8,6 +8,7 @@ import { Logger } from '../utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '../constants/state-keys'
+import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 
 async function build_completion_payload(params: {
   document: vscode.TextDocument
@@ -170,15 +171,17 @@ async function get_code_completion_config(
           buttons.push(set_default_button)
         }
 
+        const description_parts = []
+        if (config.temperature != DEFAULT_TEMPERATURE['code-completions']) {
+          description_parts.push(`Temperature: ${config.temperature}`)
+        }
+        if (config.reasoning_effort) {
+          description_parts.push(`Reasoning effort: ${config.reasoning_effort}`)
+        }
+
         return {
           label: is_default ? `$(pass-filled) ${config.model}` : config.model,
-          description: `${
-            config.reasoning_effort
-              ? `Reasoning effort: ${config.reasoning_effort}`
-              : ''
-          }${config.reasoning_effort ? ' · ' : ''}Temperature: ${
-            config.temperature
-          }`,
+          description: description_parts.join(' · '),
           detail: `Provided by ${config.provider_name}`,
           config,
           index,

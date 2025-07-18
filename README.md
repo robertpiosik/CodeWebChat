@@ -6,7 +6,7 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-100% free and open source AI workflow tool that connects VS Code with 15+ chatbots and has all the necessary API tools built-in.
+100% free and open source AI pair programming tool designed for software engineers. CWC connects VS Code with 15+ chatbots and has all the necessary API tools built-in. Created by an independent developer.
 
 **With CWC you can:**
 
@@ -19,12 +19,12 @@
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
-- privacy first—zero telemetry
+- privacy first—100% local processing
 - lightweight—about 1MB of code
 
 **CWC is for you if:**
 
-- you're an experienced engineer working on a large codebase
+- you're an experienced developer working on a large codebase
 - you're a student or hobbyist on a budget
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>

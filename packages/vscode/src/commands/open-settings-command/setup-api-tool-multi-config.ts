@@ -217,13 +217,14 @@ export const setup_api_tool_multi_config = async (params: {
           }
 
           const description_parts = []
+          if (config.temperature != DEFAULT_TEMPERATURE[params.tool]) {
+            description_parts.push(`Temperature: ${config.temperature}`)
+          }
           if (config.reasoning_effort) {
             description_parts.push(
               `Reasoning effort: ${config.reasoning_effort}`
             )
           }
-          description_parts.push(`Temperature: ${config.temperature}`)
-
           if (params.tool == 'intelligent-update' && config.max_concurrency) {
             description_parts.push(`Concurrency: ${config.max_concurrency}`)
           }
