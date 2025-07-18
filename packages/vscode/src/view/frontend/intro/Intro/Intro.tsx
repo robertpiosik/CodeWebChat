@@ -15,6 +15,7 @@ export const Intro: React.FC<Props> = (props) => {
             <div
               className={styles.top__heading}
               onClick={props.on_open_home_view}
+              role="button"
             >
               <div className={styles.top__heading__title}>Code Web Chat</div>
               <div className={styles.top__heading__subtitle}>
@@ -37,7 +38,7 @@ export const Intro: React.FC<Props> = (props) => {
               href="https://buymeacoffee.com/robertpiosik"
             >
               <span className="codicon codicon-coffee" />
-              <span>Support author</span>
+              <span>Buy me a coffee</span>
             </a>
           </div>
           <div className={styles.bottom}>

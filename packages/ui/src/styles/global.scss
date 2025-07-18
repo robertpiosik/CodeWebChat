@@ -22,6 +22,10 @@ button {
   font-family: inherit;
 }
 
+div[role='button'] {
+  cursor: pointer;
+}
+
 a {
   text-decoration: none;
 }
