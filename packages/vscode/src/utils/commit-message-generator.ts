@@ -12,6 +12,7 @@ import {
 } from '../services/api-providers-manager'
 import { ignored_extensions } from '@/context/constants/ignored-extensions'
 import { PROVIDERS } from '@shared/constants/providers'
+import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import {
   COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
   LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY
@@ -101,15 +102,19 @@ export async function get_commit_message_config(
             buttons.push(set_default_button)
           }
 
+          const description_parts = []
+          if (config.reasoning_effort) {
+            description_parts.push(
+              `Reasoning effort: ${config.reasoning_effort}`
+            )
+          }
+          if (config.temperature != DEFAULT_TEMPERATURE['commit-messages']) {
+            description_parts.push(`Temperature: ${config.temperature}`)
+          }
+
           return {
             label: is_default ? `$(pass-filled) ${config.model}` : config.model,
-            description: `${
-              config.reasoning_effort
-                ? `Reasoning effort: ${config.reasoning_effort}`
-                : ''
-            }${config.reasoning_effort ? ' · ' : ''}Temperature: ${
-              config.temperature
-            }`,
+            description: description_parts.join(' · '),
             detail: `Provided by ${config.provider_name}`,
             config,
             index,

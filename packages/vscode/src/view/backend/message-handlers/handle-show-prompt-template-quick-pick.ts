@@ -92,14 +92,6 @@ export const handle_show_prompt_template_quick_pick = async (
     iconPath: new vscode.ThemeIcon('trash'),
     tooltip: 'Delete template'
   }
-  const move_up_button = {
-    iconPath: new vscode.ThemeIcon('chevron-up'),
-    tooltip: 'Move up'
-  }
-  const move_down_button = {
-    iconPath: new vscode.ThemeIcon('chevron-down'),
-    tooltip: 'Move down'
-  }
 
   const create_template_items = (templates: PromptTemplate[]) => {
     const items: (vscode.QuickPickItem & {
@@ -107,8 +99,7 @@ export const handle_show_prompt_template_quick_pick = async (
       index?: number
     })[] = [
       {
-        label: '$(add) Add new template',
-        alwaysShow: true
+        label: '$(add) Add new template'
       }
     ]
     if (templates.length > 0) {
@@ -118,12 +109,7 @@ export const handle_show_prompt_template_quick_pick = async (
       })
       items.push(
         ...templates.map((template, index) => {
-          const buttons = []
-          if (templates.length > 1) {
-            if (index > 0) buttons.push(move_up_button)
-            if (index < templates.length - 1) buttons.push(move_down_button)
-          }
-          buttons.push(edit_button, delete_button)
+          const buttons = [edit_button, delete_button]
 
           return {
             label: template.name || 'Unnamed',
@@ -451,30 +437,6 @@ export const handle_show_prompt_template_quick_pick = async (
               }
             }
           })
-      } else if (event.button === move_up_button) {
-        if (item.index > 0) {
-          const temp = prompt_templates[item.index - 1]
-          prompt_templates[item.index - 1] = prompt_templates[item.index]
-          prompt_templates[item.index] = temp
-          await config.update(
-            prompt_templates_key,
-            prompt_templates,
-            vscode.ConfigurationTarget.Global
-          )
-          templates_quick_pick.items = create_template_items(prompt_templates)
-        }
-      } else if (event.button === move_down_button) {
-        if (item.index < prompt_templates.length - 1) {
-          const temp = prompt_templates[item.index + 1]
-          prompt_templates[item.index + 1] = prompt_templates[item.index]
-          prompt_templates[item.index] = temp
-          await config.update(
-            prompt_templates_key,
-            prompt_templates,
-            vscode.ConfigurationTarget.Global
-          )
-          templates_quick_pick.items = create_template_items(prompt_templates)
-        }
       }
     }),
     templates_quick_pick.onDidHide(() => {
