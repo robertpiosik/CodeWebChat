@@ -130,12 +130,12 @@ async function get_code_completion_config(
     }
 
     const set_default_button = {
-      iconPath: new vscode.ThemeIcon('star'),
+      iconPath: new vscode.ThemeIcon('pass'),
       tooltip: 'Set as default'
     }
 
     const unset_default_button = {
-      iconPath: new vscode.ThemeIcon('star-full'),
+      iconPath: new vscode.ThemeIcon('pass-filled'),
       tooltip: 'Unset default'
     }
 
@@ -171,7 +171,7 @@ async function get_code_completion_config(
         }
 
         return {
-          label: is_default ? `$(star) ${config.model}` : config.model,
+          label: is_default ? `$(pass-filled) ${config.model}` : config.model,
           description: `${
             config.reasoning_effort
               ? `Reasoning effort: ${config.reasoning_effort}`

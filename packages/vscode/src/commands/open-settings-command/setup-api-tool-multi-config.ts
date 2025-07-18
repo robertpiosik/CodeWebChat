@@ -37,8 +37,8 @@ export const setup_api_tool_multi_config = async (params: {
 
   const BACK_LABEL = '$(arrow-left) Back'
   const ADD_CONFIGURATION_LABEL = '$(add) Add configuration...'
-  const SET_AS_DEFAULT_LABEL = '$(star) Set as default'
-  const UNSET_DEFAULT_LABEL = '$(star-full) Unset default'
+  const SET_AS_DEFAULT_LABEL = '$(pass) Set as default'
+  const UNSET_DEFAULT_LABEL = '$(pass-filled) Unset default'
   const PROVIDER_LABEL = 'Provider'
   const MODEL_LABEL = 'Model'
   const TEMPERATURE_LABEL = 'Temperature'
@@ -133,12 +133,12 @@ export const setup_api_tool_multi_config = async (params: {
   }
 
   const set_default_button = {
-    iconPath: new vscode.ThemeIcon('star'),
+    iconPath: new vscode.ThemeIcon('pass'),
     tooltip: 'Set as default'
   }
 
   const unset_default_button = {
-    iconPath: new vscode.ThemeIcon('star-full'),
+    iconPath: new vscode.ThemeIcon('pass-filled'),
     tooltip: 'Unset default'
   }
 
@@ -217,7 +217,7 @@ export const setup_api_tool_multi_config = async (params: {
           }
 
           return {
-            label: is_default ? `$(star) ${config.model}` : config.model,
+            label: is_default ? `$(pass-filled) ${config.model}` : config.model,
             description: `${
               config.reasoning_effort
                 ? `Reasoning effort: ${config.reasoning_effort}`

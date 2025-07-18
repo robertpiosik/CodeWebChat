@@ -102,7 +102,7 @@ export async function get_commit_message_config(
           }
 
           return {
-            label: is_default ? `$(star) ${config.model}` : config.model,
+            label: is_default ? `$(pass-filled) ${config.model}` : config.model,
             description: `${
               config.reasoning_effort
                 ? `Reasoning effort: ${config.reasoning_effort}`
