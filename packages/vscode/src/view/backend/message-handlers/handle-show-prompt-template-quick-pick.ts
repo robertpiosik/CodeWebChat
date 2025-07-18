@@ -81,6 +81,7 @@ export const handle_show_prompt_template_quick_pick = async (
   const templates_quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { template?: PromptTemplate; index?: number }
   >()
+  templates_quick_pick.matchOnDetail = true
   templates_quick_pick.placeholder = 'Manage and use your prompt templates'
 
   const edit_button = {
@@ -300,9 +301,19 @@ export const handle_show_prompt_template_quick_pick = async (
         templates_quick_pick.hide()
         is_disposed = true
         let prompt_text = selected_template.template.template
-        const variable_regex = /\{([^{}]+)\}/g
-        const matches = [...prompt_text.matchAll(variable_regex)]
-        const variables = [...new Set(matches.map((match) => match[1].trim()))]
+
+        const single_brace_regex = /\{([^{}]+)\}/g
+        const double_brace_regex = /\{\{([^{}]+)\}\}/g
+
+        const single_matches = [...prompt_text.matchAll(single_brace_regex)]
+        const double_matches = [...prompt_text.matchAll(double_brace_regex)]
+
+        const variables = [
+          ...new Set([
+            ...single_matches.map((match) => match[1].trim()),
+            ...double_matches.map((match) => match[1].trim())
+          ])
+        ]
 
         if (variables.length > 0) {
           for (const variable of variables) {
@@ -311,18 +322,30 @@ export const handle_show_prompt_template_quick_pick = async (
               placeHolder: variable
             })
 
-            if (value === undefined) {
-              return // User cancelled
-            }
+            if (value) {
+              // Handle double braces first to avoid conflicts
+              const double_regex = new RegExp(
+                `\\{\\{\\s*${variable.replace(
+                  /[.*+?^${}()|[\]\\]/g,
+                  '\\$&'
+                )}\\s*\\}\\}`,
+                'g'
+              )
 
-            const regex = new RegExp(
-              `\\{\\s*${variable.replace(
-                /[.*+?^${}()|[\]\\]/g,
-                '\\$&'
-              )}\\s*\\}`,
-              'g'
-            )
-            prompt_text = prompt_text.replace(regex, value)
+              // Handle single braces
+              const single_regex = new RegExp(
+                `\\{\\s*${variable.replace(
+                  /[.*+?^${}()|[\]\\]/g,
+                  '\\$&'
+                )}\\s*\\}`,
+                'g'
+              )
+
+              // Replace double braces with the value (no braces left)
+              prompt_text = prompt_text.replace(double_regex, value)
+              // Replace single braces with the value (no braces left)
+              prompt_text = prompt_text.replace(single_regex, value)
+            }
           }
         }
 
