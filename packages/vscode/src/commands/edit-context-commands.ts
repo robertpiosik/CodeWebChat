@@ -377,6 +377,11 @@ const perform_context_editing = async (params: {
 
   const messages = [
     {
+      role: 'system',
+      content:
+        'You are an AI programming assistant. Do not include any explanations or other text.'
+    },
+    {
       role: 'user',
       content
     }
