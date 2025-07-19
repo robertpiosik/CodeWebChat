@@ -8,6 +8,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { replace_changes_placeholder } from '../utils/replace-changes-placeholder'
 import { at_sign_quick_pick } from '../utils/at-sign-quick-pick'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { LAST_SELECTED_PRESET_KEY } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '@/view/backend/helpers/preset-format-converters'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -204,10 +205,11 @@ async function process_chat_instructions(
 }
 
 function create_preset_quick_pick_with_reordering(
+  context: vscode.ExtensionContext,
   presets: ConfigPresetFormat[],
   presets_config_key: string,
   placeholder: string = 'Select preset'
-): Promise<{ label: string } | undefined> {
+): Promise<{ name: string } | undefined> {
   const move_up_button = {
     iconPath: new vscode.ThemeIcon('chevron-up'),
     tooltip: 'Move up'
@@ -259,7 +261,19 @@ function create_preset_quick_pick_with_reordering(
   quick_pick.placeholder = placeholder
   quick_pick.matchOnDescription = true
 
-  return new Promise<{ label: string } | undefined>((resolve) => {
+  const last_selected_item = context.globalState.get<string>(
+    LAST_SELECTED_PRESET_KEY
+  )
+  if (last_selected_item) {
+    const last_item = quick_pick.items.find(
+      (item) => item.preset.name === last_selected_item
+    )
+    if (last_item) {
+      quick_pick.activeItems = [last_item]
+    }
+  }
+
+  return new Promise<{ name: string } | undefined>((resolve) => {
     const disposables: vscode.Disposable[] = []
 
     disposables.push(
@@ -308,7 +322,11 @@ function create_preset_quick_pick_with_reordering(
       quick_pick.hide()
 
       if (selected) {
-        resolve({ label: selected.label })
+        context.globalState.update(
+          LAST_SELECTED_PRESET_KEY,
+          selected.preset.name
+        )
+        resolve({ name: selected.preset.name })
       } else {
         resolve(undefined)
       }
@@ -352,6 +370,7 @@ export function edit_context_in_chat_using_command(
       )
 
       const selected_preset = await create_preset_quick_pick_with_reordering(
+        context,
         web_chat_presets,
         presets_config_key,
         'Select preset'
@@ -361,7 +380,7 @@ export function edit_context_in_chat_using_command(
 
       const chats = await process_chat_instructions(
         instructions,
-        [selected_preset.label],
+        [selected_preset.name],
         context,
         workspace_provider,
         open_editors_provider,
@@ -408,6 +427,7 @@ export function edit_context_in_chat_command(
 
       if (!selected_names.length) {
         const selected_preset = await create_preset_quick_pick_with_reordering(
+          context,
           chat_presets,
           presets_config_key,
           'Select one chat preset'
@@ -417,7 +437,7 @@ export function edit_context_in_chat_command(
           return
         }
 
-        selected_names = [selected_preset.label]
+        selected_names = [selected_preset.name]
       }
 
       const chats = await process_chat_instructions(
@@ -469,6 +489,7 @@ export function ask_about_context_command(
 
       if (!selected_names.length) {
         const selected_preset = await create_preset_quick_pick_with_reordering(
+          context,
           chat_presets,
           presets_config_key,
           'Select one chat preset'
@@ -478,7 +499,7 @@ export function ask_about_context_command(
           return
         }
 
-        selected_names = [selected_preset.label]
+        selected_names = [selected_preset.name]
       }
 
       const chats = await process_chat_instructions(
@@ -523,6 +544,7 @@ export function ask_about_context_using_command(
       )
 
       const selected_preset = await create_preset_quick_pick_with_reordering(
+        context,
         web_chat_presets,
         presets_config_key,
         'Select preset'
@@ -532,7 +554,7 @@ export function ask_about_context_using_command(
 
       const chats = await process_chat_instructions(
         instructions,
-        [selected_preset.label],
+        [selected_preset.name],
         context,
         workspace_provider,
         open_editors_provider,
@@ -601,6 +623,7 @@ export function no_context_chat_using_command(
       )
 
       const selected_preset = await create_preset_quick_pick_with_reordering(
+        context,
         web_chat_presets,
         presets_config_key,
         'Select preset'
@@ -610,7 +633,7 @@ export function no_context_chat_using_command(
 
       const chats = await process_chat_instructions(
         instructions,
-        [selected_preset.label],
+        [selected_preset.name],
         context,
         workspace_provider,
         open_editors_provider,
