@@ -14,8 +14,15 @@
   color: var(--vscode-foreground);
   width: 100%;
 
+  &:hover {
+    border-color: var(--vscode-commandCenter-activeBorder);
+  }
+
   &--open {
     border-color: var(--vscode-focusBorder);
+    &:hover {
+      border-color: var(--vscode-focusBorder);
+    }
   }
 
   &__label {
