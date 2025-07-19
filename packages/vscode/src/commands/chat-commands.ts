@@ -203,6 +203,128 @@ async function process_chat_instructions(
   )
 }
 
+function create_preset_quick_pick_with_reordering(
+  presets: ConfigPresetFormat[],
+  presets_config_key: string,
+  placeholder: string = 'Select preset'
+): Promise<{ label: string } | undefined> {
+  const move_up_button = {
+    iconPath: new vscode.ThemeIcon('chevron-up'),
+    tooltip: 'Move up'
+  }
+  const move_down_button = {
+    iconPath: new vscode.ThemeIcon('chevron-down'),
+    tooltip: 'Move down'
+  }
+
+  const quick_pick = vscode.window.createQuickPick<
+    vscode.QuickPickItem & { preset: ConfigPresetFormat; index: number }
+  >()
+
+  const create_items = () => {
+    return presets
+      .filter((preset) => CHATBOTS[preset.chatbot])
+      .map((preset, index) => {
+        const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+        const chatbot_info = CHATBOTS[preset.chatbot] as any
+        const model_display_name = preset.model
+          ? (chatbot_info &&
+              chatbot_info.models &&
+              chatbot_info.models[preset.model]) ||
+            preset.model
+          : ''
+
+        const buttons = []
+        // Only show move buttons when not searching and there's more than one preset
+        if (!quick_pick.value && presets.length > 1) {
+          if (index > 0) buttons.push(move_up_button)
+          if (index < presets.length - 1) buttons.push(move_down_button)
+        }
+
+        return {
+          label: is_unnamed ? preset.chatbot : preset.name,
+          description: is_unnamed
+            ? model_display_name
+            : `${preset.chatbot}${
+                model_display_name ? ` · ${model_display_name}` : ''
+              }`,
+          preset,
+          index,
+          buttons
+        }
+      })
+  }
+
+  quick_pick.items = create_items()
+  quick_pick.placeholder = placeholder
+  quick_pick.matchOnDescription = true
+
+  return new Promise<{ label: string } | undefined>((resolve) => {
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      quick_pick.onDidChangeValue(() => {
+        // Refresh items when search value changes to show/hide move buttons
+        quick_pick.items = create_items()
+      }),
+      quick_pick.onDidTriggerItemButton(async (event) => {
+        const item = event.item as vscode.QuickPickItem & {
+          preset: ConfigPresetFormat
+          index: number
+        }
+
+        const config = vscode.workspace.getConfiguration('codeWebChat')
+
+        if (event.button === move_up_button) {
+          if (item.index > 0) {
+            const temp = presets[item.index - 1]
+            presets[item.index - 1] = presets[item.index]
+            presets[item.index] = temp
+            await config.update(
+              presets_config_key,
+              presets,
+              vscode.ConfigurationTarget.Global
+            )
+            quick_pick.items = create_items()
+          }
+        } else if (event.button === move_down_button) {
+          if (item.index < presets.length - 1) {
+            const temp = presets[item.index + 1]
+            presets[item.index + 1] = presets[item.index]
+            presets[item.index] = temp
+            await config.update(
+              presets_config_key,
+              presets,
+              vscode.ConfigurationTarget.Global
+            )
+            quick_pick.items = create_items()
+          }
+        }
+      })
+    )
+
+    quick_pick.onDidAccept(() => {
+      const selected = quick_pick.selectedItems[0]
+      quick_pick.hide()
+
+      if (selected) {
+        resolve({ label: selected.label })
+      } else {
+        resolve(undefined)
+      }
+    })
+
+    quick_pick.onDidHide(() => {
+      disposables.forEach((d) => d.dispose())
+      quick_pick.dispose()
+      resolve(undefined)
+    })
+
+    disposables.push(quick_pick)
+    quick_pick.show()
+  })
+}
+
 export function edit_context_in_chat_using_command(
   context: vscode.ExtensionContext,
   workspace_provider: WorkspaceProvider,
@@ -229,20 +351,10 @@ export function edit_context_in_chat_using_command(
         []
       )
 
-      const preset_quick_pick_items = web_chat_presets
-        .filter((preset) => CHATBOTS[preset.chatbot])
-        .map((preset) => ({
-          label: preset.name,
-          description: `${preset.chatbot}${
-            preset.model ? ` - ${preset.model}` : ''
-          }`
-        }))
-
-      const selected_preset = await vscode.window.showQuickPick(
-        preset_quick_pick_items,
-        {
-          placeHolder: 'Select preset'
-        }
+      const selected_preset = await create_preset_quick_pick_with_reordering(
+        web_chat_presets,
+        presets_config_key,
+        'Select preset'
       )
 
       if (!selected_preset) return
@@ -265,8 +377,8 @@ export function edit_context_in_chat_using_command(
 
 export function edit_context_in_chat_command(
   context: vscode.ExtensionContext,
-  file_tree_provider: any,
-  open_editors_provider: any,
+  workspace_provider: WorkspaceProvider,
+  open_editors_provider: OpenEditorsProvider,
   websocket_server_instance: WebSocketManager
 ) {
   return vscode.commands.registerCommand(
@@ -295,20 +407,10 @@ export function edit_context_in_chat_command(
       )
 
       if (!selected_names.length) {
-        const preset_quick_pick_items = chat_presets
-          .filter((preset) => CHATBOTS[preset.chatbot])
-          .map((preset) => ({
-            label: preset.name,
-            description: `${preset.chatbot}${
-              preset.model ? ` - ${preset.model}` : ''
-            }`
-          }))
-
-        const selected_preset = await vscode.window.showQuickPick(
-          preset_quick_pick_items,
-          {
-            placeHolder: 'Select one chat preset'
-          }
+        const selected_preset = await create_preset_quick_pick_with_reordering(
+          chat_presets,
+          presets_config_key,
+          'Select one chat preset'
         )
 
         if (!selected_preset) {
@@ -322,7 +424,7 @@ export function edit_context_in_chat_command(
         instructions,
         selected_names,
         context,
-        file_tree_provider,
+        workspace_provider,
         open_editors_provider,
         presets_config_key,
         { with_context: true, with_edit_format: true }
@@ -336,8 +438,8 @@ export function edit_context_in_chat_command(
 
 export function ask_about_context_command(
   context: vscode.ExtensionContext,
-  file_tree_provider: any,
-  open_editors_provider: any,
+  workspace_provider: WorkspaceProvider,
+  open_editors_provider: OpenEditorsProvider,
   websocket_server_instance: WebSocketManager
 ) {
   return vscode.commands.registerCommand(
@@ -366,20 +468,10 @@ export function ask_about_context_command(
       )
 
       if (!selected_names.length) {
-        const preset_quick_pick_items = chat_presets
-          .filter((preset) => CHATBOTS[preset.chatbot])
-          .map((preset) => ({
-            label: preset.name,
-            description: `${preset.chatbot}${
-              preset.model ? ` - ${preset.model}` : ''
-            }`
-          }))
-
-        const selected_preset = await vscode.window.showQuickPick(
-          preset_quick_pick_items,
-          {
-            placeHolder: 'Select one chat preset'
-          }
+        const selected_preset = await create_preset_quick_pick_with_reordering(
+          chat_presets,
+          presets_config_key,
+          'Select one chat preset'
         )
 
         if (!selected_preset) {
@@ -393,7 +485,7 @@ export function ask_about_context_command(
         instructions,
         selected_names,
         context,
-        file_tree_provider,
+        workspace_provider,
         open_editors_provider,
         presets_config_key,
         { with_context: true, with_edit_format: false }
@@ -430,20 +522,10 @@ export function ask_about_context_using_command(
         []
       )
 
-      const preset_quick_pick_items = web_chat_presets
-        .filter((preset) => CHATBOTS[preset.chatbot])
-        .map((preset) => ({
-          label: preset.name,
-          description: `${preset.chatbot}${
-            preset.model ? ` - ${preset.model}` : ''
-          }`
-        }))
-
-      const selected_preset = await vscode.window.showQuickPick(
-        preset_quick_pick_items,
-        {
-          placeHolder: 'Select preset'
-        }
+      const selected_preset = await create_preset_quick_pick_with_reordering(
+        web_chat_presets,
+        presets_config_key,
+        'Select preset'
       )
 
       if (!selected_preset) return
@@ -518,20 +600,10 @@ export function no_context_chat_using_command(
         []
       )
 
-      const preset_quick_pick_items = web_chat_presets
-        .filter((preset) => CHATBOTS[preset.chatbot])
-        .map((preset) => ({
-          label: preset.name,
-          description: `${preset.chatbot}${
-            preset.model ? ` - ${preset.model}` : ''
-          }`
-        }))
-
-      const selected_preset = await vscode.window.showQuickPick(
-        preset_quick_pick_items,
-        {
-          placeHolder: 'Select preset'
-        }
+      const selected_preset = await create_preset_quick_pick_with_reordering(
+        web_chat_presets,
+        presets_config_key,
+        'Select preset'
       )
 
       if (!selected_preset) return
