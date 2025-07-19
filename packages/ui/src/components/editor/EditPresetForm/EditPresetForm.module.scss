@@ -4,19 +4,6 @@
   gap: var(--padding-12px);
 }
 
-.chatbot-icon {
-  display: flex;
-  justify-content: center;
-  padding-top: var(--padding-12px);
-  margin-bottom: -8px;
-
-  > svg {
-    fill: var(--vscode-icon-foreground);
-    width: 50px;
-    height: 50px;
-  }
-}
-
 .options {
   display: flex;
   flex-direction: column;

@@ -3,9 +3,7 @@ import styles from './EditPresetForm.module.scss'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import TextareaAutosize from 'react-textarea-autosize'
-import { Icon } from '../Icon'
 import { Field } from '../Field'
-import { chatbot_to_icon } from '../../../constants/chatbot-to-icon'
 import { Slider } from '../Slider'
 
 type Props = {
@@ -114,10 +112,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
   return (
     <div className={styles.form}>
-      <div className={styles['chatbot-icon']}>
-        <Icon variant={chatbot_to_icon[chatbot]} />
-      </div>
-
       <Field label="Chatbot" html_for="chatbot">
         <select id="chatbot" value={chatbot} onChange={handle_chatbot_change}>
           {Object.keys(CHATBOTS).map((key) => (

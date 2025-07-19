@@ -6,8 +6,25 @@ import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
 import { useState } from 'react'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { chatbot_to_icon } from '../../../constants/chatbot-to-icon'
 import { TextButton } from '../TextButton'
+
+export const chatbot_to_icon = {
+  'AI Studio': 'AI_STUDIO',
+  Gemini: 'GEMINI',
+  'Open WebUI': 'OPEN_WEBUI',
+  OpenRouter: 'OPENROUTER',
+  ChatGPT: 'CHATGPT',
+  Claude: 'CLAUDE',
+  DeepSeek: 'DEEPSEEK',
+  Mistral: 'MISTRAL',
+  Grok: 'GROK',
+  HuggingChat: 'HUGGING_CHAT',
+  Qwen: 'QWEN',
+  Yuanbao: 'YUANBAO',
+  Kimi: 'KIMI',
+  Doubao: 'DOUBAO',
+  Perplexity: 'PERPLEXITY'
+} as Record<string, Icon.Variant>
 
 export namespace Presets {
   export type Preset = {
