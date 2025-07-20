@@ -27,7 +27,7 @@ export const Intro: React.FC<Props> = (props) => {
               onClick={props.on_open_home_view}
             >
               <span className="codicon codicon-arrow-right" />
-              <span>Open the tool</span>
+              <span>Launch CWC</span>
             </button>
             <a className={styles.top__button} href="https://codeweb.chat/">
               <span className="codicon codicon-link-external" />
