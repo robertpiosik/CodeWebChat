@@ -71,7 +71,7 @@ export const ChatInput: React.FC<Props> = (props) => {
       )
       props.on_caret_position_set()
     }
-  }, [props.value, props.caret_position_to_set, props.on_caret_position_set])
+  }, [props.value, props.caret_position_to_set])
 
   const get_highlighted_text = (text: string) => {
     if (props.is_in_code_completions_mode) {
@@ -206,7 +206,7 @@ export const ChatInput: React.FC<Props> = (props) => {
           const new_index = history_index - 1
           set_history_index(new_index)
           props.on_change(active_history[new_index])
-        } else if (history_index === 0) {
+        } else if (history_index == 0) {
           set_history_index(-1)
           props.on_change('')
         }
