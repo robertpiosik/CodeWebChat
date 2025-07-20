@@ -541,6 +541,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     const before_caret = current_instructions.slice(0, this.caret_position)
     const after_caret = current_instructions.slice(this.caret_position)
     new_instructions = before_caret + text + after_caret
+    new_instructions = new_instructions.replace(/  +/g, ' ')
     instruction_key = `${mode}-instructions`
 
     switch (mode) {
