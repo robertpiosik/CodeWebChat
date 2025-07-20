@@ -47,6 +47,9 @@ export const Home: React.FC<Props> = (props) => {
   const [selection_text, set_selection_text] = useState<string>('')
   const [chat_edit_format, set_chat_edit_format] = useState<EditFormat>()
   const [api_edit_format, set_api_edit_format] = useState<EditFormat>()
+  const [caret_position_to_set, set_caret_position_to_set] = useState<
+    number | undefined
+  >()
 
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
@@ -100,6 +103,11 @@ export const Home: React.FC<Props> = (props) => {
             props.set_instructions(message.no_context, 'no-context')
           if (message.code_completions !== undefined)
             props.set_instructions(message.code_completions, 'code-completions')
+          if (
+            message.caret_position !== undefined &&
+            message.caret_position >= 0
+          )
+            set_caret_position_to_set(message.caret_position)
           break
         case 'EDIT_FORMAT':
           set_chat_edit_format(message.chat_edit_format)
@@ -475,6 +483,8 @@ export const Home: React.FC<Props> = (props) => {
       on_code_completion_with_quick_pick_click={
         handle_code_completion_with_quick_pick_click
       }
+      caret_position_to_set={caret_position_to_set}
+      on_caret_position_set={() => set_caret_position_to_set(undefined)}
     />
   )
 }

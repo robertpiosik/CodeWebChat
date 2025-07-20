@@ -203,6 +203,7 @@ export interface InstructionsMessage extends BaseMessage {
   edit: string
   no_context: string
   code_completions: string
+  caret_position?: number
 }
 
 export interface ConnectionStatusMessage extends BaseMessage {

@@ -61,6 +61,7 @@ export const View = () => {
         set_edit_instructions(message.edit)
         set_no_context_instructions(message.no_context)
         set_code_completions_instructions(message.code_completions)
+        // Caret position is handled in Home.tsx
       } else if (message.command == 'VERSION') {
         set_version(message.version)
       } else if (message.command == 'HOME_VIEW_TYPE') {

@@ -540,7 +540,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
     const before_caret = current_instructions.slice(0, this.caret_position)
     const after_caret = current_instructions.slice(this.caret_position)
-    new_instructions = before_caret + text + after_caret
+
+    new_instructions = (before_caret + text + after_caret).replace(
+      /  +/g,
+      ' '
+    )
+    const new_caret_position = (before_caret + text).replace(/  +/g, ' ').length
+
     new_instructions = new_instructions.replace(/  +/g, ' ')
     instruction_key = `${mode}-instructions`
 
@@ -559,7 +565,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         break
     }
 
-    this.caret_position += text.length
+    this.caret_position = new_caret_position
 
     this.context.workspaceState.update(instruction_key, new_instructions)
     this.send_message<InstructionsMessage>({
@@ -567,7 +573,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       ask: this.ask_instructions,
       edit: this.edit_instructions,
       no_context: this.no_context_instructions,
-      code_completions: this.code_completions_instructions
+      code_completions: this.code_completions_instructions,
+      caret_position: this.caret_position
     })
   }
 }

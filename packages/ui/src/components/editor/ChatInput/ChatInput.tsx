@@ -33,6 +33,8 @@ type Props = {
     code_completions_mode_unavailable_without_active_editor: string
     search: string
   }
+  caret_position_to_set?: number
+  on_caret_position_set?: () => void
 }
 
 const format_token_count = (count?: number) => {
@@ -58,7 +60,18 @@ export const ChatInput: React.FC<Props> = (props) => {
     ) {
       textarea_ref.current.focus()
     }
-  }, [props.value])
+    if (
+      textarea_ref.current &&
+      props.caret_position_to_set !== undefined &&
+      props.on_caret_position_set
+    ) {
+      textarea_ref.current.setSelectionRange(
+        props.caret_position_to_set,
+        props.caret_position_to_set
+      )
+      props.on_caret_position_set()
+    }
+  }, [props.value, props.caret_position_to_set, props.on_caret_position_set])
 
   const get_highlighted_text = (text: string) => {
     if (props.is_in_code_completions_mode) {

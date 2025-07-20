@@ -55,6 +55,8 @@ type Props = {
   on_edit_context_with_quick_pick_click: () => void
   on_code_completion_click: () => void
   on_code_completion_with_quick_pick_click: () => void
+  caret_position_to_set?: number
+  on_caret_position_set?: () => void
 }
 
 const web_mode_labels: Record<WebMode, string> = {
@@ -290,6 +292,8 @@ export const HomeView: React.FC<Props> = (props) => {
                   'This mode requires active editor',
                 search: 'Search history'
               }}
+              caret_position_to_set={props.caret_position_to_set}
+              on_caret_position_set={props.on_caret_position_set}
             />
           </div>
 
