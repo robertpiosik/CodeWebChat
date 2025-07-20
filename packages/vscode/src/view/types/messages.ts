@@ -169,6 +169,11 @@ export interface ShowAtSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_AT_SIGN_QUICK_PICK'
 }
 
+export interface ShowAtSignQuickPickForPresetAffixMessage extends BaseMessage {
+  command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX'
+  is_for_code_completions: boolean
+}
+
 export interface GetWebModeMessage extends BaseMessage {
   command: 'GET_WEB_MODE'
 }
@@ -268,6 +273,12 @@ export interface PresetUpdatedMessage extends BaseMessage {
   command: 'PRESET_UPDATED'
 }
 
+export interface AtSignQuickPickForPresetAffixResultMessage
+  extends BaseMessage {
+  command: 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
+  text_to_insert: string
+}
+
 export interface NewlyPickedOpenRouterModelMessage extends BaseMessage {
   command: 'NEWLY_PICKED_OPEN_ROUTER_MODEL'
   model_id: string
@@ -345,6 +356,7 @@ export type WebviewMessage =
   | EditContextMessage
   | CodeCompletionMessage
   | ShowAtSignQuickPickMessage
+  | ShowAtSignQuickPickForPresetAffixMessage
   | SaveWebModeMessage
   | GetWebModeMessage
   | GetApiModeMessage
@@ -366,6 +378,7 @@ export type ExtensionMessage =
   | SelectionTextMessage
   | PresetCreatedMessage
   | PresetUpdatedMessage
+  | AtSignQuickPickForPresetAffixResultMessage
   | NewlyPickedOpenRouterModelMessage
   | ExecuteCommandMessage
   | ApiProvidersMessage

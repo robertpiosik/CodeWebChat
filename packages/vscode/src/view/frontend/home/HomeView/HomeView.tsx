@@ -422,7 +422,7 @@ export const HomeView: React.FC<Props> = (props) => {
             styles['footer__button--filled']
           )}
           href="https://x.com/CodeWebChat"
-          title="@CodeWebChat"
+          title="Follow on X"
         >
           <Icon variant="X" />
         </a>
@@ -433,7 +433,7 @@ export const HomeView: React.FC<Props> = (props) => {
           )}
           href="https://www.reddit.com/r/CodeWebChat/"
           style={{ overflow: 'hidden' }}
-          title="Join /r/CodeWebChat"
+          title="Join subreddit"
         >
           <Icon variant="REDDIT" />
           <span style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>

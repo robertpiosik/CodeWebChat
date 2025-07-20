@@ -151,6 +151,10 @@ export const View = () => {
 
   let overlay: React.ReactNode | undefined = undefined
 
+  const is_for_code_completions =
+    (home_view_type == HOME_VIEW_TYPES.WEB && web_mode == 'code-completions') ||
+    (home_view_type == HOME_VIEW_TYPES.API && api_mode == 'code-completions')
+
   if (updating_preset) {
     overlay = (
       <UiPage
@@ -166,12 +170,12 @@ export const View = () => {
           pick_open_router_model={() => {
             vscode.postMessage({ command: 'PICK_OPEN_ROUTER_MODEL' })
           }}
-          can_set_affixes={
-            !(
-              home_view_type == HOME_VIEW_TYPES.WEB &&
-              web_mode == 'code-completions'
-            )
-          }
+          on_at_sign_in_affix={() => {
+            vscode.postMessage({
+              command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX',
+              is_for_code_completions: is_for_code_completions
+            } as WebviewMessage)
+          }}
         />
       </UiPage>
     )

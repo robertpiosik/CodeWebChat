@@ -47,7 +47,8 @@ import {
   handle_save_home_view_type,
   handle_get_home_view_type,
   handle_get_version,
-  handle_show_prompt_template_quick_pick
+  handle_show_prompt_template_quick_pick,
+  handle_at_sign_quick_pick_for_preset_affix
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -352,6 +353,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             handle_get_version(this)
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
             await handle_at_sign_quick_pick(this, this.context)
+          } else if (
+            message.command == 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX'
+          ) {
+            await handle_at_sign_quick_pick_for_preset_affix(
+              this,
+              this.context,
+              message
+            )
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)

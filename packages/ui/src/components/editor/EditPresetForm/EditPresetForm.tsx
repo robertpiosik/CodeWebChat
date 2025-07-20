@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './EditPresetForm.module.scss'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
@@ -10,10 +10,13 @@ type Props = {
   preset: Preset
   on_update: (updated_preset: Preset) => void
   pick_open_router_model: () => void
-  can_set_affixes: boolean
+  on_at_sign_in_affix: () => void
 }
 
 export const EditPresetForm: React.FC<Props> = (props) => {
+  const prefix_ref = useRef<HTMLTextAreaElement>(null)
+  const suffix_ref = useRef<HTMLTextAreaElement>(null)
+
   const [chatbot, set_chatbot] = useState(props.preset.chatbot)
   const [name, set_name] = useState(props.preset.name)
   const [temperature, set_temperature] = useState(props.preset.temperature)
@@ -33,6 +36,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     props.preset.prompt_suffix
   )
   const [options, set_options] = useState<string[]>(props.preset.options || [])
+  const [active_field, set_active_field] = useState<
+    'prompt_prefix' | 'prompt_suffix' | null
+  >(null)
 
   const supports_temperature = CHATBOTS[chatbot].supports_custom_temperature
   const supports_top_p = CHATBOTS[chatbot].supports_custom_top_p
@@ -104,11 +110,60 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       const message = event.data
       if (message.command == 'NEWLY_PICKED_OPEN_ROUTER_MODEL') {
         set_model(message.model_id)
+      } else if (
+        message.command == 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
+      ) {
+        const text_to_insert = message.text_to_insert
+        console.log(text_to_insert)
+        let ref, value, setter
+        if (active_field == 'prompt_prefix') {
+          ref = prefix_ref
+          value = prompt_prefix
+          setter = set_prompt_prefix
+        } else if (active_field == 'prompt_suffix') {
+          ref = suffix_ref
+          value = prompt_suffix
+          setter = set_prompt_suffix
+        } else {
+          return
+        }
+
+        if (ref.current) {
+          const start = ref.current.selectionStart
+          const current_value = value || ''
+          const new_value =
+            current_value.slice(0, start) +
+            text_to_insert +
+            current_value.slice(start)
+          setter(new_value.replace(/  +/g, ' '))
+
+          setTimeout(() => {
+            if (ref.current) {
+              const new_caret_pos = start - 1 + text_to_insert.length
+              ref.current.focus()
+              ref.current.setSelectionRange(new_caret_pos, new_caret_pos)
+            }
+          }, 0)
+        }
       }
     }
     window.addEventListener('message', handle_message)
     return () => window.removeEventListener('message', handle_message)
-  }, [])
+  }, [active_field, prompt_prefix, prompt_suffix])
+
+  const handle_affix_change = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    setter: (value: string) => void
+  ) => {
+    const new_value = e.target.value
+    setter(new_value)
+
+    if (e.target.value.charAt(e.target.selectionStart - 1) == '@') {
+      setTimeout(() => {
+        props.on_at_sign_in_affix()
+      }, 150)
+    }
+  }
 
   return (
     <div className={styles.form}>
@@ -279,33 +334,35 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         </Field>
       )}
 
-      {props.can_set_affixes && (
-        <>
-          <Field
-            label="Prompt Prefix"
-            html_for="prefix"
-            info="Text prepended to prompts used with this preset"
-          >
-            <textarea
-              id="prefix"
-              value={prompt_prefix}
-              onChange={(e) => set_prompt_prefix(e.target.value)}
-            />
-          </Field>
+      <>
+        <Field
+          label="Prompt Prefix"
+          html_for="prefix"
+          info="Text prepended to prompts used with this preset"
+        >
+          <textarea
+            id="prefix"
+            ref={prefix_ref}
+            value={prompt_prefix}
+            onChange={(e) => handle_affix_change(e, set_prompt_prefix)}
+            onFocus={() => set_active_field('prompt_prefix')}
+          />
+        </Field>
 
-          <Field
-            label="Prompt Suffix"
-            html_for="suffix"
-            info="Text appended to prompts used with this preset"
-          >
-            <textarea
-              id="suffix"
-              value={prompt_suffix}
-              onChange={(e) => set_prompt_suffix(e.target.value)}
-            />
-          </Field>
-        </>
-      )}
+        <Field
+          label="Prompt Suffix"
+          html_for="suffix"
+          info="Text appended to prompts used with this preset"
+        >
+          <textarea
+            id="suffix"
+            ref={suffix_ref}
+            value={prompt_suffix}
+            onChange={(e) => handle_affix_change(e, set_prompt_suffix)}
+            onFocus={() => set_active_field('prompt_suffix')}
+          />
+        </Field>
+      </>
     </div>
   )
 }
