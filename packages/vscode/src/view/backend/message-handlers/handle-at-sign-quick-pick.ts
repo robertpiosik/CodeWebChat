@@ -10,7 +10,7 @@ export const handle_at_sign_quick_pick = async (
   const is_in_code_completions_mode =
     (provider.home_view_type == HOME_VIEW_TYPES.WEB &&
       provider.web_mode == 'code-completions') ||
-    (provider.home_view_type === HOME_VIEW_TYPES.API &&
+    (provider.home_view_type == HOME_VIEW_TYPES.API &&
       provider.api_mode == 'code-completions')
 
   const replacement = await at_sign_quick_pick(
