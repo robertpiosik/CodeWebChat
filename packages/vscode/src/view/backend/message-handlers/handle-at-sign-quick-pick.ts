@@ -30,7 +30,7 @@ export const handle_at_sign_quick_pick = async (
       : provider.api_mode
   if (mode == 'ask') {
     current_text = provider.ask_instructions
-  } else if (mode == 'edit') {
+  } else if (mode == 'edit-context') {
     current_text = provider.edit_instructions
   } else if (mode == 'no-context') {
     current_text = provider.no_context_instructions

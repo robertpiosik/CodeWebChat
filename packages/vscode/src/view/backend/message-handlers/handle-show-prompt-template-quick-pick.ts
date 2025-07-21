@@ -26,7 +26,7 @@ export const handle_show_prompt_template_quick_pick = async (
     case 'ask':
       prompt_templates_key = 'promptTemplatesForAskAboutContext'
       break
-    case 'edit':
+    case 'edit-context':
       prompt_templates_key = 'promptTemplatesForEditContext'
       break
     case 'code-completions':
@@ -50,7 +50,7 @@ export const handle_show_prompt_template_quick_pick = async (
         provider.ask_instructions = text
         instruction_key = 'ask-instructions'
         break
-      case 'edit':
+      case 'edit-context':
         provider.edit_instructions = text
         instruction_key = 'edit-instructions'
         break
@@ -70,7 +70,7 @@ export const handle_show_prompt_template_quick_pick = async (
     provider.send_message<InstructionsMessage>({
       command: 'INSTRUCTIONS',
       ask: provider.ask_instructions,
-      edit: provider.edit_instructions,
+      edit_context: provider.edit_instructions,
       no_context: provider.no_context_instructions,
       code_completions: provider.code_completions_instructions
     })

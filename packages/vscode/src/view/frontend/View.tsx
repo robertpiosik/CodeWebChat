@@ -35,10 +35,10 @@ export const View = () => {
 
   const handle_instructions_change = (
     value: string,
-    mode: 'ask' | 'edit' | 'no-context' | 'code-completions'
+    mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
   ) => {
     if (mode == 'ask') set_ask_instructions(value)
-    else if (mode == 'edit') set_edit_instructions(value)
+    else if (mode == 'edit-context') set_edit_instructions(value)
     else if (mode == 'no-context') set_no_context_instructions(value)
     else if (mode == 'code-completions')
       set_code_completions_instructions(value)
@@ -58,7 +58,7 @@ export const View = () => {
         set_updated_preset(undefined)
       } else if (message.command == 'INSTRUCTIONS') {
         set_ask_instructions(message.ask)
-        set_edit_instructions(message.edit)
+        set_edit_instructions(message.edit_context)
         set_no_context_instructions(message.no_context)
         set_code_completions_instructions(message.code_completions)
         // Caret position is handled in Home.tsx
@@ -184,7 +184,11 @@ export const View = () => {
 
   return (
     <div className={styles.container}>
-      {overlay && <div className={styles.slot}>{overlay}</div>}
+      {overlay && (
+        <div className={cn(styles.slot, styles['slot--overlay'])}>
+          {overlay}
+        </div>
+      )}
       <div
         className={cn(styles.slot, {
           [styles['slot--hidden']]: active_view != 'home'

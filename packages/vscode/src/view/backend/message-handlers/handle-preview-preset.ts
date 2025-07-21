@@ -26,7 +26,7 @@ export const handle_preview_preset = async (
   let current_instructions = ''
   if (provider.web_mode == 'ask') {
     current_instructions = provider.ask_instructions
-  } else if (provider.web_mode == 'edit') {
+  } else if (provider.web_mode == 'edit-context') {
     current_instructions = provider.edit_instructions
   } else if (provider.web_mode == 'no-context') {
     current_instructions = provider.no_context_instructions
@@ -108,7 +108,7 @@ export const handle_preview_preset = async (
       )
     }
 
-    if (provider.web_mode == 'edit') {
+    if (provider.web_mode == 'edit-context') {
       const config = vscode.workspace.getConfiguration('codeWebChat')
       const edit_format_instructions = config.get<string>(
         `editFormatInstructions${

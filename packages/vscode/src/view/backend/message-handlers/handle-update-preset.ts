@@ -128,7 +128,7 @@ export const handle_update_preset = async (
   )
 
   // Update selected (default) presets for all modes
-  const modes = ['ask', 'edit', 'code-completions', 'no-context']
+  const modes = ['ask', 'edit-context', 'code-completions', 'no-context']
   for (const mode of modes) {
     const state_key = `selectedPresets.${mode}`
     const selected_names = provider.context.globalState.get<string[]>(

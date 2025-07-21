@@ -27,7 +27,7 @@ export const handle_get_history = (provider: ViewProvider): void => {
   provider.send_message<ExtensionMessage>({
     command: 'CHAT_HISTORY',
     ask: ask_history,
-    edit: edit_history,
+    edit_context: edit_history,
     no_context: no_context_history,
     code_completions: code_completions_history
   })

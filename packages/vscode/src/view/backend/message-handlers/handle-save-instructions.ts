@@ -10,7 +10,7 @@ export const handle_save_instructions = async (
 
   if (mode == 'ask') {
     provider.ask_instructions = instruction
-  } else if (mode == 'edit') {
+  } else if (mode == 'edit-context') {
     provider.edit_instructions = instruction
   } else if (mode == 'no-context') {
     provider.no_context_instructions = instruction

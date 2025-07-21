@@ -347,6 +347,16 @@
         "title": "Settings",
         "category": "Code Web Chat",
         "icon": "$(settings-gear)"
+      },
+      {
+        "command": "codeWebChat.settings.codeCompletions",
+        "title": "Settings: Code Completions",
+        "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.settings.editContext",
+        "title": "Settings: Edit Context",
+        "category": "Code Web Chat"
       }
     ],
     "menus": {
@@ -441,6 +451,14 @@
         },
         {
           "command": "codeWebChat.openRepository",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.settings.codeCompletions",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.settings.editContext",
           "when": "false"
         }
       ],

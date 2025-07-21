@@ -33,7 +33,7 @@ export const handle_show_history_quick_pick = async (
       history_key = HISTORY_ASK_STATE_KEY
       pinned_history_key = PINNED_HISTORY_ASK_STATE_KEY
       break
-    case 'edit':
+    case 'edit-context':
       history_key = HISTORY_EDIT_STATE_KEY
       pinned_history_key = PINNED_HISTORY_EDIT_STATE_KEY
       break
@@ -181,7 +181,7 @@ export const handle_show_history_quick_pick = async (
         provider.ask_instructions = text
         instruction_key = 'ask-instructions'
         break
-      case 'edit':
+      case 'edit-context':
         provider.edit_instructions = text
         instruction_key = 'edit-instructions'
         break
@@ -201,7 +201,7 @@ export const handle_show_history_quick_pick = async (
     provider.send_message<InstructionsMessage>({
       command: 'INSTRUCTIONS',
       ask: provider.ask_instructions,
-      edit: provider.edit_instructions,
+      edit_context: provider.edit_instructions,
       no_context: provider.no_context_instructions,
       code_completions: provider.code_completions_instructions
     })

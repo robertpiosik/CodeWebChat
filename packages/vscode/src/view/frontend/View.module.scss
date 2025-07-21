@@ -4,10 +4,13 @@
 
 .slot {
   position: absolute;
-  z-index: 2; // Needed to hide triangle of pinned commands box
   height: 100vh;
   width: 100%;
   background-color: var(--vscode-sideBar-background);
+
+  &--overlay {
+    z-index: 2; // Needed to hide triangle of pinned commands box
+  }
 
   &--hidden {
     visibility: hidden;

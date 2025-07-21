@@ -225,12 +225,8 @@ async function get_intelligent_update_config(
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              'API provider not found for Intelligent Update tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+              'API provider for the selected API tool configuration was not found.'
             )
-            Logger.warn({
-              function_name: 'get_intelligent_update_config',
-              message: 'API provider not found for Intelligent Update tool.'
-            })
             resolve(undefined)
             return
           }
@@ -257,7 +253,7 @@ async function get_intelligent_update_config(
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      'API provider not found for Intelligent Update tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'API provider for the selected API tool configuration was not found.'
     )
     Logger.warn({
       function_name: 'get_intelligent_update_config',

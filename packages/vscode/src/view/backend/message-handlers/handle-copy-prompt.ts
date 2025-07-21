@@ -95,7 +95,7 @@ export const handle_copy_prompt = async (
       )
     }
 
-    if (mode == 'edit') {
+    if (mode == 'edit-context') {
       const edit_format =
         provider.home_view_type == HOME_VIEW_TYPES.WEB
           ? provider.chat_edit_format

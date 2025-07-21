@@ -104,12 +104,10 @@ export async function get_commit_message_config(
 
           const description_parts = [config.provider_name]
           if (config.reasoning_effort) {
-            description_parts.push(
-              `Reasoning effort: ${config.reasoning_effort}`
-            )
+            description_parts.push(`${config.reasoning_effort}`)
           }
           if (config.temperature != DEFAULT_TEMPERATURE['commit-messages']) {
-            description_parts.push(`Temperature: ${config.temperature}`)
+            description_parts.push(`${config.temperature}`)
           }
 
           return {
@@ -207,7 +205,7 @@ export async function get_commit_message_config(
 
   if (!commit_message_config) {
     vscode.window.showErrorMessage(
-      'Commit Messages API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'Commit Messages API tool is not configured.'
     )
     Logger.warn({
       function_name: 'get_commit_message_config',
@@ -222,7 +220,7 @@ export async function get_commit_message_config(
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      'API provider not found for Commit Messages tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'API provider for the selected API tool configuration was not found.'
     )
     Logger.warn({
       function_name: 'get_commit_message_config',

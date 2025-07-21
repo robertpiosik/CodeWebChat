@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import styles from './HomeView.module.scss'
+import { Configurations as UiConfigurations } from '@ui/components/editor/Configurations'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
 import { Separator as UiSeparator } from '@ui/components/editor/Separator'
@@ -15,6 +16,7 @@ import cn from 'classnames'
 import { QuickAction as UiQuickAction } from '@ui/components/editor/QuickAction'
 import { IconButton } from '@ui/components/editor/IconButton/IconButton'
 import { Scrollable } from '@ui/components/editor/Scrollable'
+import { ApiToolConfiguration } from '@/view/types/messages'
 
 type Props = {
   initialize_chats: (params: { prompt: string; preset_names: string[] }) => void
@@ -27,6 +29,8 @@ type Props = {
   on_quick_action_click: (command: string) => void
   is_connected: boolean
   presets: Preset[]
+  configurations: ApiToolConfiguration[]
+  on_manage_configurations_click: () => void
   selected_presets: string[]
   has_active_editor: boolean
   has_active_selection: boolean
@@ -61,13 +65,13 @@ type Props = {
 
 const web_mode_labels: Record<WebMode, string> = {
   ask: 'Ask about context',
-  edit: 'Edit context',
+  'edit-context': 'Edit context',
   'code-completions': 'Code at cursor',
   'no-context': 'No context'
 }
 
 const api_mode_labels: Record<ApiMode, string> = {
-  edit: 'Edit context',
+  'edit-context': 'Edit context',
   'code-completions': 'Code at cursor'
 }
 
@@ -298,9 +302,9 @@ export const HomeView: React.FC<Props> = (props) => {
           </div>
 
           {((props.home_view_type == HOME_VIEW_TYPES.WEB &&
-            props.web_mode == 'edit') ||
+            props.web_mode == 'edit-context') ||
             (props.home_view_type == HOME_VIEW_TYPES.API &&
-              props.api_mode == 'edit')) && (
+              props.api_mode == 'edit-context')) && (
             <>
               <div className={styles['edit-format']}>
                 <span>
@@ -378,6 +382,24 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_preset_duplicate={props.on_preset_duplicate}
                 on_preset_delete={props.on_preset_delete}
                 on_set_default_presets={props.on_set_default_presets}
+              />
+            </>
+          )}
+
+          {props.home_view_type == HOME_VIEW_TYPES.API && (
+            <>
+              <UiSeparator height={16} />
+              <UiConfigurations
+                api_mode={props.api_mode}
+                configurations={props.configurations.map((c) => ({
+                  model: c.model,
+                  provider: c.provider_name,
+                  reasoning_effort: c.reasoning_effort,
+                  temperature: c.temperature
+                }))}
+                is_disabled={false}
+                on_configuration_click={() => {}}
+                on_manage_configurations={props.on_manage_configurations_click}
               />
             </>
           )}

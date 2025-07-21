@@ -28,6 +28,7 @@ interface ToolMethods {
 export const setup_api_tool_multi_config = async (params: {
   context: vscode.ExtensionContext
   tool: SupportedTool
+  show_back_button?: boolean
 }): Promise<boolean> => {
   const providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
@@ -146,10 +147,8 @@ export const setup_api_tool_multi_config = async (params: {
       config?: ToolConfig
       index?: number
     })[] = [
-      { label: BACK_LABEL },
-      {
-        label: ADD_CONFIGURATION_LABEL
-      }
+      ...(params.show_back_button !== false ? [{ label: BACK_LABEL }] : []),
+      { label: ADD_CONFIGURATION_LABEL }
     ]
 
     if (current_configs.length > 0) {
@@ -218,15 +217,13 @@ export const setup_api_tool_multi_config = async (params: {
 
           const description_parts = [config.provider_name]
           if (config.temperature != DEFAULT_TEMPERATURE[params.tool]) {
-            description_parts.push(`Temperature: ${config.temperature}`)
+            description_parts.push(`${config.temperature}`)
           }
           if (config.reasoning_effort) {
-            description_parts.push(
-              `Reasoning effort: ${config.reasoning_effort}`
-            )
+            description_parts.push(`${config.reasoning_effort}`)
           }
           if (params.tool == 'intelligent-update' && config.max_concurrency) {
-            description_parts.push(`Concurrency: ${config.max_concurrency}`)
+            description_parts.push(`${config.max_concurrency} (concurrency)`)
           }
 
           return {

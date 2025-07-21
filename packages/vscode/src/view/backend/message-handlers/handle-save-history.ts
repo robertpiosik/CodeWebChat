@@ -16,7 +16,7 @@ export const handle_save_history = async (
     case 'ask':
       key = HISTORY_ASK_STATE_KEY
       break
-    case 'edit':
+    case 'edit-context':
       key = HISTORY_EDIT_STATE_KEY
       break
     case 'no-context':

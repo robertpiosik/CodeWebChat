@@ -17,10 +17,8 @@ const get_edit_context_config = async (
   const edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
 
-  if (edit_context_configs.length === 0) {
-    vscode.window.showErrorMessage(
-      'Edit Context API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
-    )
+  if (edit_context_configs.length == 0) {
+    vscode.window.showErrorMessage('Edit Context API tool is not configured.')
     Logger.warn({
       function_name: 'get_edit_context_config',
       message: 'Edit Context API tool is not configured.'
@@ -89,10 +87,10 @@ const get_edit_context_config = async (
 
         const description_parts = [config.provider_name]
         if (config.temperature != DEFAULT_TEMPERATURE['edit-context']) {
-          description_parts.push(`Temperature: ${config.temperature}`)
+          description_parts.push(`${config.temperature}`)
         }
         if (config.reasoning_effort) {
-          description_parts.push(`Reasoning effort: ${config.reasoning_effort}`)
+          description_parts.push(`${config.reasoning_effort}`)
         }
 
         return {
@@ -184,12 +182,8 @@ const get_edit_context_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              'API provider not found for Edit Context tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+              'API provider for the selected API tool configuration was not found.'
             )
-            Logger.warn({
-              function_name: 'get_edit_context_config',
-              message: 'API provider not found for Edit Context tool.'
-            })
             resolve(undefined)
             return
           }
@@ -216,7 +210,7 @@ const get_edit_context_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      'API provider not found for Edit Context tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'API provider for the selected API tool configuration was not found.'
     )
     Logger.warn({
       function_name: 'get_edit_context_config',
@@ -323,7 +317,7 @@ const perform_context_editing = async (params: {
     const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
     if (!provider_info) {
       vscode.window.showErrorMessage(
-        `Built-in provider "${provider.name}" not found. Navigate to the Settings tab, configure API providers and setup the API tool.`
+        `Built-in provider "${provider.name}" not found.`
       )
       Logger.warn({
         function_name: 'perform_context_editing',

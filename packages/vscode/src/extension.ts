@@ -10,7 +10,8 @@ import {
   migrate_commit_messages_config_to_array,
   migrate_chat_code_completion_instructions,
   migrate_refactoring_to_intelligent_update,
-  migrate_presets_to_chat_presets_for_edit_context
+  migrate_presets_to_chat_presets_for_edit_context,
+  migrate_edit_to_edit_context
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -76,6 +77,8 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_presets_to_chat_presets_for_edit_context(context)
     // 18 July 2025
     await migrate_commit_messages_config_to_array(context)
+    // 21 July 2025
+    await migrate_edit_to_edit_context(context)
   }
 
   await migrations()
@@ -194,7 +197,7 @@ export async function activate(context: vscode.ExtensionContext) {
       url: 'https://github.com/robertpiosik/CodeWebChat'
     }),
     feedback_command(),
-    open_settings_command(context),
+    ...open_settings_command(context),
     apply_context_from_clipboard_command(workspace_provider)
   )
 }

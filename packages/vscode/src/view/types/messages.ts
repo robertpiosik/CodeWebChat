@@ -8,6 +8,15 @@ export interface BaseMessage {
   command: string
 }
 
+export type ApiToolConfiguration = {
+  provider_type: string
+  provider_name: string
+  model: string
+  temperature: number
+  reasoning_effort?: string
+  max_concurrency?: number
+}
+
 // Messages from webview to extension
 export interface GetInstructionsMessage extends BaseMessage {
   command: 'GET_INSTRUCTIONS'
@@ -16,7 +25,7 @@ export interface GetInstructionsMessage extends BaseMessage {
 export interface SaveInstructionsMessage extends BaseMessage {
   command: 'SAVE_INSTRUCTIONS'
   instruction: string
-  mode: 'ask' | 'edit' | 'no-context' | 'code-completions'
+  mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
 }
 
 export interface GetEditFormat extends BaseMessage {
@@ -81,7 +90,7 @@ export interface GetHistoryMessage extends BaseMessage {
 export interface SaveHistoryMessage extends BaseMessage {
   command: 'SAVE_HISTORY'
   messages: string[]
-  mode: 'ask' | 'edit' | 'no-context' | 'code-completions'
+  mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
 }
 
 export interface GetCurrentTokenCountMessage extends BaseMessage {
@@ -192,6 +201,10 @@ export interface SaveApiModeMessage extends BaseMessage {
   mode: ApiMode
 }
 
+export interface GetApiToolConfigurationsMessage extends BaseMessage {
+  command: 'GET_API_TOOL_CONFIGURATIONS'
+}
+
 export interface GetVersionMessage extends BaseMessage {
   command: 'GET_VERSION'
 }
@@ -200,7 +213,7 @@ export interface GetVersionMessage extends BaseMessage {
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
   ask: string
-  edit: string
+  edit_context: string
   no_context: string
   code_completions: string
   caret_position?: number
@@ -220,6 +233,11 @@ export interface EditFormatMessage extends BaseMessage {
 export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
   presets: { [T in WebMode]: Preset[] }
+}
+
+export interface ApiToolConfigurationsMessage extends BaseMessage {
+  command: 'API_TOOL_CONFIGURATIONS'
+  configurations: { [T in ApiMode]?: ApiToolConfiguration[] }
 }
 
 export interface SelectedPresetsMessage extends BaseMessage {
@@ -250,7 +268,7 @@ export interface EditorSelectionChangedMessage extends BaseMessage {
 export interface ChatHistoryMessage extends BaseMessage {
   command: 'CHAT_HISTORY'
   ask: string[]
-  edit: string[]
+  edit_context: string[]
   no_context: string[]
   code_completions: string[]
 }
@@ -362,12 +380,14 @@ export type WebviewMessage =
   | GetWebModeMessage
   | GetApiModeMessage
   | SaveApiModeMessage
+  | GetApiToolConfigurationsMessage
   | GetVersionMessage
 
 export type ExtensionMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
   | EditFormatMessage
+  | ApiToolConfigurationsMessage
   | PresetsMessage
   | SelectedPresetsMessage
   | PresetsSelectedFromPickerMessage

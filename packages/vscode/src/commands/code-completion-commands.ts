@@ -101,9 +101,9 @@ async function get_code_completion_config(
   const code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
 
-  if (code_completions_configs.length === 0) {
+  if (code_completions_configs.length == 0) {
     vscode.window.showErrorMessage(
-      'Code Completions API tool is not configured. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'Code Completions API tool is not configured.'
     )
     Logger.warn({
       function_name: 'get_code_completion_config',
@@ -173,10 +173,10 @@ async function get_code_completion_config(
 
         const description_parts = [config.provider_name]
         if (config.temperature != DEFAULT_TEMPERATURE['code-completions']) {
-          description_parts.push(`Temperature: ${config.temperature}`)
+          description_parts.push(`${config.temperature}`)
         }
         if (config.reasoning_effort) {
-          description_parts.push(`Reasoning effort: ${config.reasoning_effort}`)
+          description_parts.push(`${config.reasoning_effort}`)
         }
 
         return {
@@ -270,12 +270,8 @@ async function get_code_completion_config(
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              'API provider not found for Code Completions tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+              'API provider for the selected API tool configuration was not found.'
             )
-            Logger.warn({
-              function_name: 'get_code_completion_config',
-              message: 'API provider not found for Code Completions tool.'
-            })
             resolve(undefined)
             return
           }
@@ -302,7 +298,7 @@ async function get_code_completion_config(
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      'API provider not found for Code Completions tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'API provider for the selected API tool configuration was not found.'
     )
     Logger.warn({
       function_name: 'get_code_completion_config',
@@ -354,7 +350,7 @@ async function perform_code_completion(params: {
 
   if (!code_completions_config.provider_name) {
     vscode.window.showErrorMessage(
-      'API provider is not specified for Code Completions tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'API provider is not specified for Code Completions tool.'
     )
     Logger.warn({
       function_name: 'perform_code_completion',
@@ -363,7 +359,7 @@ async function perform_code_completion(params: {
     return
   } else if (!code_completions_config.model) {
     vscode.window.showErrorMessage(
-      'Model is not specified for Code Completions tool. Navigate to the Settings tab, configure API providers and setup the API tool.'
+      'Model is not specified for Code Completions tool.'
     )
     Logger.warn({
       function_name: 'perform_code_completion',
@@ -377,7 +373,7 @@ async function perform_code_completion(params: {
     const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
     if (!provider_info) {
       vscode.window.showErrorMessage(
-        `Built-in provider "${provider.name}" not found. Navigate to the Settings tab, configure API providers and setup the API tool.`
+        `Built-in provider "${provider.name}" not found.`
       )
       Logger.warn({
         function_name: 'perform_code_completion',

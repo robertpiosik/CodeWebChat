@@ -48,7 +48,8 @@ import {
   handle_get_home_view_type,
   handle_get_version,
   handle_show_prompt_template_quick_pick,
-  handle_at_sign_quick_pick_for_preset_affix
+  handle_at_sign_quick_pick_for_preset_affix,
+  handle_get_api_tool_configurations
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -80,7 +81,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     switch (mode) {
       case 'ask':
         return 'chatPresetsForAskAboutContext'
-      case 'edit':
+      case 'edit-context':
         return 'chatPresetsForEditContext'
       case 'code-completions':
         return 'chatPresetsForCodeAtCursor'
@@ -118,8 +119,15 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       'api-edit-format',
       'diff'
     )
-    this.web_mode = this.context.workspaceState.get<WebMode>('web-mode', 'edit')
-    this.api_mode = this.context.workspaceState.get<ApiMode>('api-mode', 'edit')
+
+    this.web_mode = this.context.workspaceState.get<WebMode>(
+      'web-mode',
+      'edit-context'
+    )
+    this.api_mode = this.context.workspaceState.get<ApiMode>(
+      'api-mode',
+      'edit-context'
+    )
     this.home_view_type = HOME_VIEW_TYPES.WEB
 
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
@@ -333,6 +341,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_show_quick_pick(message)
           } else if (message.command == 'GET_WEB_MODE') {
             handle_get_mode_web(this)
+          } else if (message.command == 'GET_API_TOOL_CONFIGURATIONS') {
+            await handle_get_api_tool_configurations(this)
           } else if (message.command == 'SAVE_WEB_MODE') {
             await handle_save_mode_web(this, message.mode)
           } else if (message.command == 'GET_API_MODE') {
@@ -440,13 +450,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_modes: WebMode[] = [
       'ask',
-      'edit',
+      'edit-context',
       'code-completions',
       'no-context'
     ]
     const mode_to_config_key: Record<WebMode, string> = {
       ask: 'chatPresetsForAskAboutContext',
-      edit: 'chatPresetsForEditContext',
+      'edit-context': 'chatPresetsForEditContext',
       'code-completions': 'chatPresetsForCodeAtCursor',
       'no-context': 'chatPresetsForNoContext'
     }
@@ -525,7 +535,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       case 'ask':
         current_instructions = this.ask_instructions
         break
-      case 'edit':
+      case 'edit-context':
         current_instructions = this.edit_instructions
         break
       case 'no-context':
@@ -541,10 +551,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     const before_caret = current_instructions.slice(0, this.caret_position)
     const after_caret = current_instructions.slice(this.caret_position)
 
-    new_instructions = (before_caret + text + after_caret).replace(
-      /  +/g,
-      ' '
-    )
+    new_instructions = (before_caret + text + after_caret).replace(/  +/g, ' ')
     const new_caret_position = (before_caret + text).replace(/  +/g, ' ').length
 
     new_instructions = new_instructions.replace(/  +/g, ' ')
@@ -554,7 +561,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       case 'ask':
         this.ask_instructions = new_instructions
         break
-      case 'edit':
+      case 'edit-context':
         this.edit_instructions = new_instructions
         break
       case 'no-context':
@@ -571,7 +578,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this.send_message<InstructionsMessage>({
       command: 'INSTRUCTIONS',
       ask: this.ask_instructions,
-      edit: this.edit_instructions,
+      edit_context: this.edit_instructions,
       no_context: this.no_context_instructions,
       code_completions: this.code_completions_instructions,
       caret_position: this.caret_position

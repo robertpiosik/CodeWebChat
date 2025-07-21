@@ -70,7 +70,7 @@ export const handle_delete_preset = async (
 
     provider.send_presets_to_webview(webview_view.webview)
 
-    const modes = ['ask', 'edit', 'code-completions', 'no-context']
+    const modes = ['ask', 'edit-context', 'code-completions', 'no-context']
     for (const mode of modes) {
       const state_key = `selectedPresets.${mode}`
       const selected_names = provider.context.globalState.get<string[]>(

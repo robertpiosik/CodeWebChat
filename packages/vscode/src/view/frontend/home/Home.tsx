@@ -6,9 +6,11 @@ import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import {
   ExtensionMessage,
+  ApiToolConfigurationsMessage,
   PresetsMessage,
   WebviewMessage
 } from '@/view/types/messages'
+import { ApiToolConfiguration } from '@/view/types/messages'
 
 type Props = {
   vscode: any
@@ -20,7 +22,7 @@ type Props = {
   code_completions_instructions: string
   set_instructions: (
     value: string,
-    mode: 'ask' | 'edit' | 'no-context' | 'code-completions'
+    mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
   ) => void
   home_view_type: HomeViewType
   web_mode: WebMode
@@ -34,6 +36,9 @@ export const Home: React.FC<Props> = (props) => {
   const [is_connected, set_is_connected] = useState<boolean>()
   const [all_presets, set_all_presets] = useState<{
     [T in WebMode]: Preset[]
+  }>()
+  const [all_configurations, set_all_configurations] = useState<{
+    [T in ApiMode]?: ApiToolConfiguration[]
   }>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])
   const [has_active_editor, set_has_active_editor] = useState<boolean>()
@@ -67,6 +72,11 @@ export const Home: React.FC<Props> = (props) => {
         case 'PRESETS':
           set_all_presets((message as PresetsMessage).presets)
           break
+        case 'API_TOOL_CONFIGURATIONS':
+          set_all_configurations(
+            (message as ApiToolConfigurationsMessage).configurations
+          )
+          break
         case 'SELECTED_PRESETS':
           set_selected_presets(message.names)
           break
@@ -81,7 +91,7 @@ export const Home: React.FC<Props> = (props) => {
           break
         case 'CHAT_HISTORY':
           set_ask_history(message.ask || [])
-          set_edit_history(message.edit || [])
+          set_edit_history(message.edit_context || [])
           set_no_context_history(message.no_context || [])
           set_code_completions_history(message.code_completions || [])
           break
@@ -97,8 +107,8 @@ export const Home: React.FC<Props> = (props) => {
         case 'INSTRUCTIONS':
           if (message.ask !== undefined)
             props.set_instructions(message.ask, 'ask')
-          if (message.edit !== undefined)
-            props.set_instructions(message.edit, 'edit')
+          if (message.edit_context !== undefined)
+            props.set_instructions(message.edit_context, 'edit-context')
           if (message.no_context !== undefined)
             props.set_instructions(message.no_context, 'no-context')
           if (message.code_completions !== undefined)
@@ -127,7 +137,8 @@ export const Home: React.FC<Props> = (props) => {
       { command: 'GET_HISTORY' },
       { command: 'GET_CURRENT_TOKEN_COUNT' },
       { command: 'GET_INSTRUCTIONS' },
-      { command: 'GET_EDIT_FORMAT' }
+      { command: 'GET_EDIT_FORMAT' },
+      { command: 'GET_API_TOOL_CONFIGURATIONS' }
     ]
     initial_messages.forEach((message) => props.vscode.postMessage(message))
 
@@ -149,16 +160,16 @@ export const Home: React.FC<Props> = (props) => {
     let history: string[] | undefined
     let set_history: React.Dispatch<React.SetStateAction<string[] | undefined>>
 
-    if (current_mode === 'ask') {
+    if (current_mode == 'ask') {
       history = ask_history
       set_history = set_ask_history
-    } else if (current_mode === 'edit') {
+    } else if (current_mode == 'edit-context') {
       history = edit_history
       set_history = set_edit_history
-    } else if (current_mode === 'no-context') {
+    } else if (current_mode == 'no-context') {
       history = no_context_history
       set_history = set_no_context_history
-    } else if (current_mode === 'code-completions') {
+    } else if (current_mode == 'code-completions') {
       history = code_completions_history
       set_history = set_code_completions_history
     } else {
@@ -239,13 +250,7 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   const handle_preset_edit = (name: string) => {
-    const current_presets = all_presets
-      ? all_presets[
-          props.home_view_type === HOME_VIEW_TYPES.WEB
-            ? props.web_mode
-            : props.api_mode
-        ]
-      : []
+    const current_presets = all_presets ? all_presets[props.web_mode] : []
     const preset = current_presets.find((preset) => preset.name == name)
     if (preset) props.on_preset_edit(preset)
   }
@@ -304,7 +309,7 @@ export const Home: React.FC<Props> = (props) => {
         ? props.web_mode
         : props.api_mode
     if (mode == 'ask') return props.ask_instructions
-    if (mode == 'edit') return props.edit_instructions
+    if (mode == 'edit-context') return props.edit_instructions
     if (mode == 'no-context') return props.no_context_instructions
     return ''
   }
@@ -375,6 +380,20 @@ export const Home: React.FC<Props> = (props) => {
     } as WebviewMessage)
   }
 
+  const handle_manage_configurations_click = () => {
+    if (props.api_mode == 'edit-context') {
+      props.vscode.postMessage({
+        command: 'EXECUTE_COMMAND',
+        command_id: 'codeWebChat.settings.editContext'
+      } as WebviewMessage)
+    } else if (props.api_mode == 'code-completions') {
+      props.vscode.postMessage({
+        command: 'EXECUTE_COMMAND',
+        command_id: 'codeWebChat.settings.codeCompletions'
+      } as WebviewMessage)
+    }
+  }
+
   const handle_quick_action_click = (command: string) => {
     props.vscode.postMessage({
       command: 'EXECUTE_COMMAND',
@@ -383,31 +402,24 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   const instructions =
-    current_mode === 'ask'
+    current_mode == 'ask'
       ? props.ask_instructions
-      : current_mode === 'edit'
+      : current_mode == 'edit-context'
       ? props.edit_instructions
-      : current_mode === 'no-context'
+      : current_mode == 'no-context'
       ? props.no_context_instructions
-      : current_mode === 'code-completions'
+      : current_mode == 'code-completions'
       ? props.code_completions_instructions
       : ''
 
   const set_instructions = (value: string) => {
-    if (
-      current_mode === 'ask' ||
-      current_mode === 'edit' ||
-      current_mode === 'no-context' ||
-      current_mode === 'code-completions'
-    ) {
-      props.set_instructions(value, current_mode)
-    }
+    props.set_instructions(value, current_mode)
   }
 
   let current_history: string[] | undefined
   if (current_mode == 'ask') {
     current_history = ask_history
-  } else if (current_mode == 'edit') {
+  } else if (current_mode == 'edit-context') {
     current_history = edit_history
   } else if (current_mode == 'no-context') {
     current_history = no_context_history
@@ -418,6 +430,7 @@ export const Home: React.FC<Props> = (props) => {
   if (
     is_connected === undefined ||
     all_presets === undefined ||
+    all_configurations === undefined ||
     has_active_editor === undefined ||
     has_active_selection === undefined ||
     ask_history === undefined ||
@@ -432,18 +445,20 @@ export const Home: React.FC<Props> = (props) => {
     return <></>
   }
 
-  const presets_for_current_mode =
-    all_presets[
-      props.home_view_type === HOME_VIEW_TYPES.WEB
-        ? props.web_mode
-        : props.api_mode
-    ]
+  const presets_for_current_mode = all_presets[props.web_mode]
+
+  const configurations_for_current_mode =
+    all_configurations && props.home_view_type == HOME_VIEW_TYPES.API
+      ? all_configurations[props.api_mode]
+      : []
 
   return (
     <HomeView
       on_show_intro={props.on_show_intro}
       initialize_chats={handle_initialize_chats}
       copy_to_clipboard={handle_copy_to_clipboard}
+      configurations={configurations_for_current_mode || []}
+      on_manage_configurations_click={handle_manage_configurations_click}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       on_curly_braces_click={handle_curly_braces_click}

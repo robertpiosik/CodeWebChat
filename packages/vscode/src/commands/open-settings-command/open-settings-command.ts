@@ -10,90 +10,117 @@ const LABEL_COMMIT_MESSAGES = '$(tools) Commit Messages'
 const LABEL_EDIT_SETTINGS = '$(settings) Open Settings'
 
 export const open_settings_command = (context: vscode.ExtensionContext) => {
-  return vscode.commands.registerCommand('codeWebChat.settings', async () => {
-    let show_menu = true
-    while (show_menu) {
-      const selected = await vscode.window.showQuickPick(
-        [
+  const settings_command = vscode.commands.registerCommand(
+    'codeWebChat.settings',
+    async () => {
+      let show_menu = true
+      while (show_menu) {
+        const selected = await vscode.window.showQuickPick(
+          [
+            {
+              label: LABEL_EDIT_SETTINGS,
+              detail:
+                'Modify "edit format" instructions attached to your prompts, edit presets in JSON and more.'
+            },
+            {
+              label: LABEL_PROVIDERS,
+              detail:
+                'API keys are stored encrypted and never leave your device.'
+            },
+            {
+              label: 'API tools',
+              kind: vscode.QuickPickItemKind.Separator
+            },
+            {
+              label: LABEL_CODE_COMPLETIONS,
+              detail:
+                'Get code at cursor from state-of-the-art reasoning models.'
+            },
+            {
+              label: LABEL_EDIT_CONTEXT,
+              detail:
+                'Create and modify files based on natural language instructions.'
+            },
+            {
+              label: LABEL_INTELLIGENT_UPDATE,
+              detail: 'Handle "truncated" edit format and fix malformed diffs.'
+            },
+            {
+              label: LABEL_COMMIT_MESSAGES,
+              detail:
+                'Generate meaningful commit messages adhering to your style.'
+            }
+          ],
           {
-            label: LABEL_EDIT_SETTINGS,
-            detail:
-              'Modify "edit format" instructions attached to your prompts, edit presets in JSON and more.'
-          },
-          {
-            label: LABEL_PROVIDERS,
-            detail: 'API keys are stored encrypted and never leave your device.'
-          },
-          {
-            label: 'API tools',
-            kind: vscode.QuickPickItemKind.Separator
-          },
-          {
-            label: LABEL_CODE_COMPLETIONS,
-            detail: 'Get code at cursor from state-of-the-art reasoning models.'
-          },
-          {
-            label: LABEL_EDIT_CONTEXT,
-            detail:
-              'Create and modify files based on natural language instructions.'
-          },
-          {
-            label: LABEL_INTELLIGENT_UPDATE,
-            detail: 'Handle "truncated" edit format and fix malformed diffs.'
-          },
-          {
-            label: LABEL_COMMIT_MESSAGES,
-            detail:
-              'Generate meaningful commit messages adhering to your style.'
+            title: 'Settings',
+            placeHolder: 'Select option'
           }
-        ],
-        {
-          title: 'Settings',
-          placeHolder: 'Select option'
-        }
-      )
+        )
 
-      if (!selected) {
-        show_menu = false
-        continue
-      }
-
-      switch (selected.label) {
-        case LABEL_EDIT_SETTINGS:
-          await vscode.commands.executeCommand(
-            'workbench.action.openSettings',
-            '@ext:robertpiosik.gemini-coder'
-          )
+        if (!selected) {
           show_menu = false
-          break
-        case LABEL_PROVIDERS:
-          await api_providers(context)
-          break
-        case LABEL_CODE_COMPLETIONS:
-          await setup_api_tool_multi_config({
-            context,
-            tool: 'code-completions'
-          })
-          break
-        case LABEL_EDIT_CONTEXT:
-          await setup_api_tool_multi_config({
-            context,
-            tool: 'edit-context'
-          })
-          break
-        case LABEL_INTELLIGENT_UPDATE:
-          await setup_api_tool_multi_config({
-            context,
-            tool: 'intelligent-update'
-          })
-          break
-        case LABEL_COMMIT_MESSAGES:
-          await setup_api_tool_multi_config({
-            context,
-            tool: 'commit-messages'
-          })
-          break
+          continue
+        }
+
+        switch (selected.label) {
+          case LABEL_EDIT_SETTINGS:
+            await vscode.commands.executeCommand(
+              'workbench.action.openSettings',
+              '@ext:robertpiosik.gemini-coder'
+            )
+            show_menu = false
+            break
+          case LABEL_PROVIDERS:
+            await api_providers(context)
+            break
+          case LABEL_CODE_COMPLETIONS:
+            await setup_api_tool_multi_config({
+              context,
+              tool: 'code-completions'
+            })
+            break
+          case LABEL_EDIT_CONTEXT:
+            await setup_api_tool_multi_config({
+              context,
+              tool: 'edit-context'
+            })
+            break
+          case LABEL_INTELLIGENT_UPDATE:
+            await setup_api_tool_multi_config({
+              context,
+              tool: 'intelligent-update'
+            })
+            break
+          case LABEL_COMMIT_MESSAGES:
+            await setup_api_tool_multi_config({
+              context,
+              tool: 'commit-messages'
+            })
+            break
+        }
       }
     }
-  })
+  )
+
+  const code_completions_config_command = vscode.commands.registerCommand(
+    'codeWebChat.settings.codeCompletions',
+    () =>
+      setup_api_tool_multi_config({
+        context,
+        tool: 'code-completions',
+        show_back_button: false
+      })
+  )
+
+  const edit_context_config_command = vscode.commands.registerCommand(
+    'codeWebChat.settings.editContext',
+    () =>
+      setup_api_tool_multi_config({ context, tool: 'edit-context', show_back_button: false })
+  )
+
+  return [
+    settings_command,
+    code_completions_config_command,
+    edit_context_config_command
+  ]
 }

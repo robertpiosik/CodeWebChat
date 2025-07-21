@@ -31,7 +31,7 @@ export const handle_send_prompt = async (
         : provider.api_mode
     if (mode == 'ask') {
       current_instructions = provider.ask_instructions
-    } else if (mode == 'edit') {
+    } else if (mode == 'edit-context') {
       current_instructions = provider.edit_instructions
     } else if (mode == 'no-context') {
       current_instructions = provider.no_context_instructions
@@ -146,7 +146,7 @@ export const handle_send_prompt = async (
           )
         }
 
-        if (provider.web_mode == 'edit') {
+        if (provider.web_mode == 'edit-context') {
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const edit_format_instructions = config.get<string>(
             `editFormatInstructions${
