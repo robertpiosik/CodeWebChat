@@ -459,7 +459,7 @@ export const HomeView: React.FC<Props> = (props) => {
           onClick={() => {
             set_is_showing_commands(!is_showing_commands)
           }}
-          title="Handy access to commands"
+          title="Handy access to selected features"
         >
           <span className="codicon codicon-pinned" />
           PINNED COMMANDS
