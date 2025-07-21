@@ -461,11 +461,7 @@ export const HomeView: React.FC<Props> = (props) => {
           }}
           title="Handy access to commands"
         >
-          {is_showing_commands ? (
-            <span className="codicon codicon-chevron-down" />
-          ) : (
-            <span className="codicon codicon-chevron-up" />
-          )}
+          <span className="codicon codicon-pinned" />
           PINNED COMMANDS
         </button>
       </div>
