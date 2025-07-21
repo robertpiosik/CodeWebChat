@@ -8,7 +8,7 @@ export const apply_chat_response_button_style = (button: HTMLButtonElement) => {
   button.style.backgroundColor = '#fbb100'
   button.style.cursor = 'pointer'
   button.style.transition = 'opacity 0.2s ease-in-out'
-  button.style.border = 'none'
+  button.style.border = 'no think'
 }
 
 export const set_button_disabled_state = (button: HTMLButtonElement) => {

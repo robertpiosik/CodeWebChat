@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { PROVIDERS } from '@shared/constants/providers'
+import { EventEmitter } from 'events'
 import {
   TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
   TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
@@ -11,6 +12,8 @@ import {
   DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
 } from '@/constants/state-keys'
 import { SECRET_STORAGE_API_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
+
+export const api_tool_config_emitter = new EventEmitter()
 
 export type BuiltInProvider = {
   type: 'built-in'
@@ -27,7 +30,7 @@ export type CustomProvider = {
 
 export type Provider = BuiltInProvider | CustomProvider
 
-export type ReasoningEffort = 'none' | 'low' | 'medium' | 'high'
+export type ReasoningEffort = 'no think' | 'low' | 'medium' | 'high'
 
 export type ToolConfig = {
   provider_type: string
@@ -77,6 +80,7 @@ export class ApiProvidersManager {
         JSON.stringify(providers)
       )
       this._providers = providers
+      api_tool_config_emitter.emit('api-tools-updated')
     } catch (error) {
       console.error('Error saving providers to secret storage:', error)
       throw error
@@ -133,6 +137,7 @@ export class ApiProvidersManager {
       DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
       config
     )
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 
   public async save_code_completions_tool_configs(
@@ -142,6 +147,7 @@ export class ApiProvidersManager {
       TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
       configs
     )
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 
   public async get_edit_context_tool_configs(): Promise<EditContextConfigs> {
@@ -168,6 +174,7 @@ export class ApiProvidersManager {
       DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY,
       config
     )
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 
   public async save_edit_context_tool_configs(configs: EditContextConfigs) {
@@ -175,6 +182,7 @@ export class ApiProvidersManager {
       TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
       configs
     )
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 
   public async get_commit_messages_tool_configs(): Promise<CommitMessagesConfigs> {
@@ -201,6 +209,7 @@ export class ApiProvidersManager {
       DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
       config
     )
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 
   public async save_commit_messages_tool_configs(
@@ -210,6 +219,7 @@ export class ApiProvidersManager {
       TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
       configs
     )
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 
   public async get_intelligent_update_tool_configs(): Promise<IntelligentUpdateConfigs> {
@@ -238,6 +248,7 @@ export class ApiProvidersManager {
       DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY,
       config
     )
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 
   public async save_intelligent_update_tool_configs(
@@ -247,6 +258,7 @@ export class ApiProvidersManager {
       TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
       configs
     )
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 
   /**
@@ -408,5 +420,7 @@ export class ApiProvidersManager {
         { ...default_commit_messages_config, provider_name: new_name }
       )
     }
+
+    api_tool_config_emitter.emit('api-tools-updated')
   }
 }

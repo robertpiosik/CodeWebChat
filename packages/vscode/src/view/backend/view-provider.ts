@@ -58,6 +58,7 @@ import {
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
+import { api_tool_config_emitter } from '@/services/api-providers-manager'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -108,6 +109,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           command: 'CONNECTION_STATUS',
           connected
         })
+      }
+    })
+
+    api_tool_config_emitter.on('api-tools-updated', () => {
+      if (this._webview_view) {
+        void handle_get_api_tool_configurations(this)
       }
     })
 

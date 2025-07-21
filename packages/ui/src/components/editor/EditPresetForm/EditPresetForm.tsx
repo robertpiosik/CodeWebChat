@@ -202,7 +202,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             }}
           >
             <div style={{ cursor: 'pointer' }}>
-              <div style={{ pointerEvents: 'none' }}>
+              <div style={{ pointerEvents: 'no think' }}>
                 <select id="open-router-model" value={model}>
                   {model ? (
                     <option value={model}>{model}</option>

@@ -857,7 +857,7 @@ export const setup_api_tool_multi_config = async (params: {
   ): Promise<{ value: ReasoningEffort | undefined; cancelled: boolean }> {
     const effort_levels: (ReasoningEffort | undefined)[] = [
       undefined,
-      'none',
+      'no think',
       'low',
       'medium',
       'high'
