@@ -32,10 +32,6 @@
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
-
-      .configurations__item__right {
-        display: flex;
-      }
     }
 
     &__left {
@@ -46,51 +42,14 @@
       text-overflow: ellipsis;
       white-space: nowrap;
 
-      &__icon {
-        display: flex;
-
-        > svg {
-          fill: var(--vscode-icon-foreground);
-          width: 16px;
-          height: 16px;
-        }
-      }
-
       &__text {
         overflow: hidden;
         text-overflow: ellipsis;
-
-        &--selected > span:first-child {
-          font-weight: 600;
-        }
-
-        &--disabled {
-          opacity: var(--disabled-opacity);
-        }
 
         > span:nth-child(2) {
           margin-left: 0.5em;
           opacity: 0.7;
           font-size: 0.9em;
-        }
-      }
-    }
-
-    &__right {
-      display: none;
-      align-items: center;
-      gap: var(--padding-4px);
-      cursor: default;
-      padding-right: var(--padding-4px);
-
-      &__drag_handle {
-        display: flex;
-        align-items: center;
-        cursor: grab;
-        opacity: 0.5;
-
-        &:active {
-          cursor: grabbing;
         }
       }
     }
