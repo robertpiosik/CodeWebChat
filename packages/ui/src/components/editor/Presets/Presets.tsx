@@ -28,7 +28,6 @@ export const chatbot_to_icon = {
 
 export namespace Presets {
   export type Preset = {
-    id?: string | number
     name: string
     model?: string
     chatbot: keyof typeof CHATBOTS
@@ -55,7 +54,7 @@ const with_ids = (
 ): (Presets.Preset & { id: string })[] => {
   return presets.map((preset) => ({
     ...preset,
-    id: preset.id?.toString() || preset.name
+    id: preset.name
   }))
 }
 

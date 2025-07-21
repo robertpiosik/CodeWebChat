@@ -365,7 +365,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}
-              title="Use prompt template"
+              title="Prompt templates"
             >
               <span className="codicon codicon-json" />
             </button>
