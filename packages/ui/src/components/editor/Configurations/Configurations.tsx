@@ -15,7 +15,7 @@ export namespace Configurations {
     api_mode: 'edit-context' | 'code-completions'
     configurations: Configuration[]
     is_disabled: boolean
-    on_configuration_click: (configuration: Configuration) => void
+    on_configuration_click: (i: number) => void
     on_manage_configurations: () => void
   }
 }
@@ -49,7 +49,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               key={i}
               className={styles.configurations__item}
               onClick={() => {
-                props.on_configuration_click(configuration)
+                props.on_configuration_click(i)
               }}
               role="button"
             >

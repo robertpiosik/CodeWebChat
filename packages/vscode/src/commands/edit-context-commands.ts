@@ -12,7 +12,8 @@ import { EditFormat } from '@shared/types/edit-format'
 const get_edit_context_config = async (
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  config_index?: number
 ): Promise<{ provider: any; config: any } | undefined> => {
   const edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
@@ -28,7 +29,9 @@ const get_edit_context_config = async (
 
   let selected_config = null
 
-  if (!show_quick_pick) {
+  if (typeof config_index === 'number' && edit_context_configs[config_index]) {
+    selected_config = edit_context_configs[config_index]
+  } else if (!show_quick_pick) {
     selected_config =
       await api_providers_manager.get_default_edit_context_config()
   }
@@ -230,7 +233,8 @@ const perform_context_editing = async (params: {
   file_tree_provider: any
   open_editors_provider?: any
   show_quick_pick?: boolean
-  instructions?: string
+  instructions?: string,
+  config_index?: number
 }) => {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
@@ -296,7 +300,8 @@ const perform_context_editing = async (params: {
   const config_result = await get_edit_context_config(
     api_providers_manager,
     params.show_quick_pick,
-    params.context
+    params.context,
+    params.config_index
   )
 
   if (!config_result) {
@@ -451,13 +456,14 @@ export const edit_context_commands = (params: {
   return [
     vscode.commands.registerCommand(
       'codeWebChat.editContext',
-      async (args?: { instructions?: string }) =>
+      async (args?: { instructions?: string; config_index?: number }) =>
         perform_context_editing({
           context: params.context,
           file_tree_provider: params.workspace_provider,
           open_editors_provider: params.open_editors_provider,
           show_quick_pick: false,
-          instructions: args?.instructions
+          instructions: args?.instructions,
+          config_index: args?.config_index
         })
     ),
     vscode.commands.registerCommand(

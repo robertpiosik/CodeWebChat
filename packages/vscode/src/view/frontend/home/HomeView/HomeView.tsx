@@ -31,6 +31,7 @@ type Props = {
   presets: Preset[]
   configurations: ApiToolConfiguration[]
   on_manage_configurations_click: () => void
+  on_configuration_click: (index: number) => void
   selected_presets: string[]
   has_active_editor: boolean
   has_active_selection: boolean
@@ -398,7 +399,7 @@ export const HomeView: React.FC<Props> = (props) => {
                   temperature: c.temperature
                 }))}
                 is_disabled={false}
-                on_configuration_click={() => {}}
+                on_configuration_click={props.on_configuration_click}
                 on_manage_configurations={props.on_manage_configurations_click}
               />
             </>

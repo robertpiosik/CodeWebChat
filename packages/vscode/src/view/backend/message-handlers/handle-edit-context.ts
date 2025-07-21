@@ -10,6 +10,9 @@ export const handle_edit_context = async (
     message.use_quick_pick
       ? 'codeWebChat.editContextUsing'
       : 'codeWebChat.editContext',
-    { instructions: provider.edit_instructions }
+    {
+      instructions: provider.edit_instructions,
+      config_index: message.config_index
+    }
   )
 }

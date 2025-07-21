@@ -96,7 +96,8 @@ async function show_inline_completion(params: {
 async function get_code_completion_config(
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  config_index?: number
 ): Promise<{ provider: any; config: any } | undefined> {
   const code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
@@ -114,7 +115,12 @@ async function get_code_completion_config(
 
   let selected_config = null
 
-  if (!show_quick_pick) {
+  if (
+    typeof config_index === 'number' &&
+    code_completions_configs[config_index]
+  ) {
+    selected_config = code_completions_configs[config_index]
+  } else if (!show_quick_pick) {
     selected_config =
       await api_providers_manager.get_default_code_completions_config()
   }
@@ -321,6 +327,7 @@ async function perform_code_completion(params: {
   auto_accept: boolean
   show_quick_pick?: boolean
   suggestions?: string
+  config_index?: number
 }) {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
@@ -339,7 +346,8 @@ async function perform_code_completion(params: {
   const config_result = await get_code_completion_config(
     api_providers_manager,
     params.show_quick_pick,
-    params.context
+    params.context,
+    params.config_index
   )
 
   if (!config_result) {
@@ -510,7 +518,7 @@ export function code_completion_commands(
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionAutoAccept',
-      async (args?: { suggestions?: string }) =>
+      async (args?: { suggestions?: string; config_index?: number }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
@@ -518,7 +526,8 @@ export function code_completion_commands(
           with_suggestions: false,
           auto_accept: true,
           show_quick_pick: false,
-          suggestions: args?.suggestions
+          suggestions: args?.suggestions,
+          config_index: args?.config_index
         })
     ),
     vscode.commands.registerCommand(

@@ -394,6 +394,26 @@ export const Home: React.FC<Props> = (props) => {
     }
   }
 
+  const handle_configuration_click = (index: number) => {
+    const instruction = get_current_instructions()
+
+    if (props.api_mode == 'edit-context') {
+      props.vscode.postMessage({
+        command: 'EDIT_CONTEXT',
+        use_quick_pick: false,
+        config_index: index
+      } as WebviewMessage)
+    } else if (props.api_mode == 'code-completions') {
+      props.vscode.postMessage({
+        command: 'CODE_COMPLETION',
+        use_quick_pick: false,
+        config_index: index
+      } as WebviewMessage)
+    }
+
+    update_chat_history(instruction)
+  }
+
   const handle_quick_action_click = (command: string) => {
     props.vscode.postMessage({
       command: 'EXECUTE_COMMAND',
@@ -458,6 +478,7 @@ export const Home: React.FC<Props> = (props) => {
       initialize_chats={handle_initialize_chats}
       copy_to_clipboard={handle_copy_to_clipboard}
       configurations={configurations_for_current_mode || []}
+      on_configuration_click={handle_configuration_click}
       on_manage_configurations_click={handle_manage_configurations_click}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}

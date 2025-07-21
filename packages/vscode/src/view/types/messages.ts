@@ -167,11 +167,13 @@ export interface GetHomeViewTypeMessage extends BaseMessage {
 export interface EditContextMessage extends BaseMessage {
   command: 'EDIT_CONTEXT'
   use_quick_pick: boolean
+  config_index?: number
 }
 
 export interface CodeCompletionMessage extends BaseMessage {
   command: 'CODE_COMPLETION'
   use_quick_pick: boolean
+  config_index?: number
 }
 
 export interface ShowAtSignQuickPickMessage extends BaseMessage {

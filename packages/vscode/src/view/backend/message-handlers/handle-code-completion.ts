@@ -10,6 +10,9 @@ export const handle_code_completion = async (
     message.use_quick_pick
       ? 'codeWebChat.codeCompletionUsingAutoAccept'
       : 'codeWebChat.codeCompletionAutoAccept',
-    { suggestions: provider.code_completions_instructions }
+    {
+      suggestions: provider.code_completions_instructions,
+      config_index: message.config_index
+    }
   )
 }
