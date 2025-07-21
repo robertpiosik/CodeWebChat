@@ -115,10 +115,7 @@ async function get_code_completion_config(
 
   let selected_config = null
 
-  if (
-    typeof config_index === 'number' &&
-    code_completions_configs[config_index]
-  ) {
+  if (config_index !== undefined && code_completions_configs[config_index]) {
     selected_config = code_completions_configs[config_index]
   } else if (!show_quick_pick) {
     selected_config =
@@ -126,57 +123,8 @@ async function get_code_completion_config(
   }
 
   if (!selected_config || show_quick_pick) {
-    const move_up_button = {
-      iconPath: new vscode.ThemeIcon('chevron-up'),
-      tooltip: 'Move up'
-    }
-
-    const move_down_button = {
-      iconPath: new vscode.ThemeIcon('chevron-down'),
-      tooltip: 'Move down'
-    }
-
-    const set_default_button = {
-      iconPath: new vscode.ThemeIcon('pass'),
-      tooltip: 'Set as default'
-    }
-
-    const unset_default_button = {
-      iconPath: new vscode.ThemeIcon('pass-filled'),
-      tooltip: 'Unset default'
-    }
-
     const create_items = async () => {
-      const default_config =
-        await api_providers_manager.get_default_code_completions_config()
-
       return code_completions_configs.map((config, index) => {
-        const buttons = []
-
-        const is_default =
-          default_config &&
-          default_config.provider_type == config.provider_type &&
-          default_config.provider_name == config.provider_name &&
-          default_config.model == config.model &&
-          default_config.temperature == config.temperature &&
-          default_config.reasoning_effort == config.reasoning_effort
-
-        if (code_completions_configs.length > 1) {
-          if (index > 0) {
-            buttons.push(move_up_button)
-          }
-
-          if (index < code_completions_configs.length - 1) {
-            buttons.push(move_down_button)
-          }
-        }
-
-        if (is_default) {
-          buttons.push(unset_default_button)
-        } else {
-          buttons.push(set_default_button)
-        }
-
         const description_parts = [config.provider_name]
         if (config.temperature != DEFAULT_TEMPERATURE['code-completions']) {
           description_parts.push(`${config.temperature}`)
@@ -186,11 +134,10 @@ async function get_code_completion_config(
         }
 
         return {
-          label: is_default ? `$(pass-filled) ${config.model}` : config.model,
+          label: config.model,
           description: description_parts.join(' · '),
           config,
-          index,
-          buttons
+          index
         }
       })
     }
@@ -214,49 +161,6 @@ async function get_code_completion_config(
 
     return new Promise<{ provider: any; config: any } | undefined>(
       (resolve) => {
-        quick_pick.onDidTriggerItemButton(async (event) => {
-          const item = event.item as any
-          const button = event.button
-          const index = item.index
-
-          if (button === set_default_button) {
-            await api_providers_manager.set_default_code_completions_config(
-              code_completions_configs[index]
-            )
-            quick_pick.items = await create_items()
-          } else if (button === unset_default_button) {
-            await api_providers_manager.set_default_code_completions_config(
-              null as any
-            )
-            quick_pick.items = await create_items()
-          } else if (button.tooltip == 'Move up' && index > 0) {
-            const temp = code_completions_configs[index]
-            code_completions_configs[index] =
-              code_completions_configs[index - 1]
-            code_completions_configs[index - 1] = temp
-
-            await api_providers_manager.save_code_completions_tool_configs(
-              code_completions_configs
-            )
-
-            quick_pick.items = await create_items()
-          } else if (
-            button.tooltip == 'Move down' &&
-            index < code_completions_configs.length - 1
-          ) {
-            const temp = code_completions_configs[index]
-            code_completions_configs[index] =
-              code_completions_configs[index + 1]
-            code_completions_configs[index + 1] = temp
-
-            await api_providers_manager.save_code_completions_tool_configs(
-              code_completions_configs
-            )
-
-            quick_pick.items = await create_items()
-          }
-        })
-
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
