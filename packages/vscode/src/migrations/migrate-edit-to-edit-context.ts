@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { Logger } from '../utils/logger'
 
-const MIGRATION_ID = 'edit-to-edit-context-migration-20250721'
+const MIGRATION_ID = 'edit-to-edit-context-migration-20250720'
 
 export async function migrate_edit_to_edit_context(
   context: vscode.ExtensionContext
