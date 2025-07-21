@@ -203,47 +203,24 @@ async function validate_presets(params: {
       ''
     )
 
-    const move_up_button = {
-      iconPath: new vscode.ThemeIcon('chevron-up'),
-      tooltip: 'Move up'
-    }
-    const move_down_button = {
-      iconPath: new vscode.ThemeIcon('chevron-down'),
-      tooltip: 'Move down'
-    }
-
     const quick_pick = vscode.window.createQuickPick<
-      vscode.QuickPickItem & { name: string; index: number }
+      vscode.QuickPickItem & { name: string }
     >()
 
-    const create_items = () => {
-      return presets.map((preset, index) => {
-        const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
-        const model = preset.model
-          ? (CHATBOTS[preset.chatbot] as any).models[preset.model] ||
-            preset.model
-          : ''
+    quick_pick.items = presets.map((preset) => {
+      const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+      const model = preset.model
+        ? (CHATBOTS[preset.chatbot] as any).models[preset.model] || preset.model
+        : ''
 
-        const buttons = []
-        // Only show move buttons when not searching and there's more than one preset
-        if (!quick_pick.value && presets.length > 1) {
-          if (index > 0) buttons.push(move_up_button)
-          if (index < presets.length - 1) buttons.push(move_down_button)
-        }
-
-        return {
-          label: is_unnamed ? preset.chatbot : preset.name,
-          name: preset.name,
-          index: index,
-          buttons: buttons,
-          description: is_unnamed
-            ? model
-            : `${preset.chatbot}${model ? ` · ${model}` : ''}`
-        }
-      })
-    }
-
-    quick_pick.items = create_items()
+      return {
+        label: is_unnamed ? preset.chatbot : preset.name,
+        name: preset.name,
+        description: is_unnamed
+          ? model
+          : `${preset.chatbot}${model ? ` · ${model}` : ''}`
+      }
+    })
     quick_pick.placeholder = 'Select preset'
     quick_pick.matchOnDescription = true
 
@@ -258,45 +235,6 @@ async function validate_presets(params: {
 
     return new Promise<string[]>((resolve) => {
       const disposables: vscode.Disposable[] = []
-
-      disposables.push(
-        quick_pick.onDidChangeValue(() => {
-          // Refresh items when search value changes to show/hide move buttons
-          quick_pick.items = create_items()
-        }),
-        quick_pick.onDidTriggerItemButton(async (event) => {
-          const item = event.item as vscode.QuickPickItem & {
-            name: string
-            index: number
-          }
-
-          if (event.button === move_up_button) {
-            if (item.index > 0) {
-              const temp = presets[item.index - 1]
-              presets[item.index - 1] = presets[item.index]
-              presets[item.index] = temp
-              await config.update(
-                presets_config_key,
-                presets,
-                vscode.ConfigurationTarget.Global
-              )
-              quick_pick.items = create_items()
-            }
-          } else if (event.button === move_down_button) {
-            if (item.index < presets.length - 1) {
-              const temp = presets[item.index + 1]
-              presets[item.index + 1] = presets[item.index]
-              presets[item.index] = temp
-              await config.update(
-                presets_config_key,
-                presets,
-                vscode.ConfigurationTarget.Global
-              )
-              quick_pick.items = create_items()
-            }
-          }
-        })
-      )
 
       quick_pick.onDidAccept(async () => {
         const selected = quick_pick.selectedItems[0] as any
