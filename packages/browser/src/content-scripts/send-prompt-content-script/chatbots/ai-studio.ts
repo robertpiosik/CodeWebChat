@@ -94,6 +94,19 @@ export const ai_studio: Chatbot = {
           (button) => button.textContent?.trim() == 'tune'
         ) as HTMLButtonElement
         button.click()
+      } else if (
+        option == 'grounding-with-google-search' &&
+        supported_options['grounding-with-google-search']
+      ) {
+        const grounding_button = document.querySelector(
+          'div[data-test-id="searchAsAToolTooltip"] button'
+        ) as HTMLElement
+        grounding_button.click()
+      } else if (option == 'url-context' && supported_options['url-context']) {
+        const url_context_button = document.querySelector(
+          'div[data-test-id="browseAsAToolTooltip"] button'
+        ) as HTMLElement
+        url_context_button.click()
       }
     }
   },

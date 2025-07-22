@@ -31,13 +31,14 @@ export const CHATBOTS = {
     default_top_p: 0.95,
     supported_options: {
       'hide-panel': 'Hide panel',
-      'disable-thinking': 'Disable thinking'
+      'disable-thinking': 'Disable thinking',
+      'grounding-with-google-search': 'Grounding with Google Search',
+      'url-context': 'URL context'
     },
     models: {
       'gemini-2.5-pro': 'Gemini 2.5 Pro',
       'gemini-2.5-flash': 'Gemini 2.5 Flash',
-      'gemini-2.5-flash-lite-preview-06-17':
-        'Gemini 2.5 Flash Lite Preview 06-17'
+      'gemini-2.5-flash-lite': 'Gemini 2.5 Flash-Lite'
     }
   },
   Gemini: {
