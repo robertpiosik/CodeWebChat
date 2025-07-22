@@ -77,37 +77,37 @@ export const ai_studio: Chatbot = {
   },
   set_options: async (options: string[]) => {
     const supported_options = CHATBOTS['AI Studio'].supported_options
-    for (const option of options) {
-      if (
-        option == 'disable-thinking' &&
-        supported_options['disable-thinking']
-      ) {
-        const thinking_toggle = document.querySelector(
-          'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
-        ) as HTMLElement
-        thinking_toggle.click()
-      } else if (option == 'hide-panel' && supported_options['hide-panel']) {
-        const panel = document.querySelector(
-          'ms-right-side-panel'
-        ) as HTMLElement
-        const button = Array.from(panel.querySelectorAll('button')).find(
-          (button) => button.textContent?.trim() == 'tune'
-        ) as HTMLButtonElement
-        button.click()
-      } else if (
-        option == 'grounding-with-google-search' &&
-        supported_options['grounding-with-google-search']
-      ) {
-        const grounding_button = document.querySelector(
-          'div[data-test-id="searchAsAToolTooltip"] button'
-        ) as HTMLElement
+    if (
+      options.includes('disable-thinking') &&
+      supported_options['disable-thinking']
+    ) {
+      const thinking_toggle = document.querySelector(
+        'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
+      ) as HTMLElement
+      thinking_toggle.click()
+    }
+    if (options.includes('hide-panel') && supported_options['hide-panel']) {
+      const panel = document.querySelector('ms-right-side-panel') as HTMLElement
+      const button = Array.from(panel.querySelectorAll('button')).find(
+        (button) => button.textContent?.trim() == 'tune'
+      ) as HTMLButtonElement
+      button.click()
+    }
+    if (supported_options['grounding-with-google-search']) {
+      const grounding_button = document.querySelector(
+        'div[data-test-id="searchAsAToolTooltip"] button'
+      ) as HTMLElement
+      const is_checked = grounding_button.getAttribute('aria-checked') == 'true'
+      const should_be_checked = options.includes('grounding-with-google-search')
+      if (is_checked != should_be_checked) {
         grounding_button.click()
-      } else if (option == 'url-context' && supported_options['url-context']) {
-        const url_context_button = document.querySelector(
-          'div[data-test-id="browseAsAToolTooltip"] button'
-        ) as HTMLElement
-        url_context_button.click()
       }
+    }
+    if (options.includes('url-context') && supported_options['url-context']) {
+      const url_context_button = document.querySelector(
+        'div[data-test-id="browseAsAToolTooltip"] button'
+      ) as HTMLElement
+      url_context_button.click()
     }
   },
   set_temperature: async (temperature: number) => {
