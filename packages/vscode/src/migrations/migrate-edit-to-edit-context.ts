@@ -7,6 +7,7 @@ export async function migrate_edit_to_edit_context(
   context: vscode.ExtensionContext
 ): Promise<void> {
   try {
+    // Using workspace state because modes are stored there
     if (context.workspaceState.get(MIGRATION_ID)) {
       return
     }
