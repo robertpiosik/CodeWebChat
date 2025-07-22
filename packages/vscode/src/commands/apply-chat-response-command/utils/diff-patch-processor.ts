@@ -138,7 +138,7 @@ const apply_diff_patch = (
       let line = original_code_lines[i]
 
       // Treat empty new lines as ~nnn
-      if (line.trim() === '') {
+      if (line.trim() == '') {
         line = '~nnn'
       }
 
@@ -173,11 +173,11 @@ const apply_diff_patch = (
       }
 
       // Treat empty new lines as ~nnn
-      if (line.trim() === '') {
+      if (line.trim() == '') {
         line = '~nnn'
-      } else if (line.trim() === '+') {
+      } else if (line.trim() == '+') {
         line = '+~nnn'
-      } else if (line.trim() === '-') {
+      } else if (line.trim() == '-') {
         line = '-~nnn'
       }
 
@@ -260,7 +260,6 @@ const apply_diff_patch = (
           // Remove the leading '+' from the search line only if there are two +
           replace_chunks.push(line_original.substring(1, line.length) + '\n')
         } else if (line.startsWith('+~nnn')) {
-          // Remove new line tag from start of line
           replace_chunks.push(line_original.replace(/^\+~nnn/, '') + '\n')
         } else {
           replace_chunks.push(line_original.replace(/^\+/, '') + '\n')
@@ -279,8 +278,6 @@ const apply_diff_patch = (
       }
 
       if (search_chunks.length != 0 || replace_chunks.length != 0) {
-        // Don't add search or replace blocks if empty
-        // Add the final search block to the searchReplaceBlocks
         // This is crucial for diffs that only have deletions
         search_replace_blocks.push(
           new SearchBlock(search_chunks, replace_chunks, -1)
@@ -328,13 +325,12 @@ const apply_diff_patch = (
             search_replace_block.search_block_start_index = chunk[0].key
             found = true
 
-            previous_found_index = chunk[0].key // Update the previous index
+            previous_found_index = chunk[0].key
             break
           }
         }
       }
 
-      // If not found, set the search_block_start_index to -2
       if (!found) {
         search_replace_block.search_block_start_index = -2 // Not found
 
