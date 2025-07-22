@@ -184,10 +184,10 @@ export const CHATBOTS = {
     },
     default_top_p: 0,
     models: {
-      'qwen3-235b-a22b': 'Qwen3-235B-A22B',
+      'qwen3-coder': 'Qwen3-Coder',
+      'qwen3-235b-a22b-2507': 'Qwen3-235B-A22B-2507',
       'qwen3-30b-a3b': 'Qwen3-30B-A3B',
-      'qwen3-32b': 'Qwen3-32B',
-      'qwen2.5-max': 'Qwen2.5-Max'
+      'qwen3-32b': 'Qwen3-32B'
     }
   },
   Yuanbao: {

@@ -8,13 +8,11 @@ export default {
 const presets: Presets.Preset[] = [
   {
     name: 'Gemini with Flash 2.0',
-    chatbot: 'Gemini' as keyof typeof CHATBOTS,
-    has_affixes: true
+    chatbot: 'Gemini' as keyof typeof CHATBOTS
   },
   {
     name: 'Code review with AI Studio',
-    chatbot: 'AI Studio' as keyof typeof CHATBOTS,
-    has_affixes: false
+    chatbot: 'AI Studio' as keyof typeof CHATBOTS
   }
 ]
 
@@ -36,6 +34,8 @@ export const Multiple = () => {
         console.log('on_presets_reorder', reordered)
       }
       on_set_default_presets={() => console.log('on_set_default')}
+      has_instructions={true}
+      is_in_code_completions_mode={false}
     />
   )
 }
@@ -58,6 +58,8 @@ export const CodeCompletionsMode = () => {
         console.log('on_presets_reorder', reordered)
       }
       on_set_default_presets={() => console.log('on_set_default')}
+      has_instructions={true}
+      is_in_code_completions_mode={false}
     />
   )
 }
