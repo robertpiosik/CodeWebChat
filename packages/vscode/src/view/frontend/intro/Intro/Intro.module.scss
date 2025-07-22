@@ -27,6 +27,10 @@
     flex-direction: column;
     gap: var(--padding-2px);
 
+    &:hover {
+      opacity: 0.8;
+    }
+
     &__title {
       font-size: 28px;
       font-weight: 600;
