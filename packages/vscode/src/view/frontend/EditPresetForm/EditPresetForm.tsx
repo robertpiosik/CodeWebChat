@@ -3,8 +3,8 @@ import styles from './EditPresetForm.module.scss'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import TextareaAutosize from 'react-textarea-autosize'
-import { Field } from '../Field'
-import { Slider } from '../Slider'
+import { Field } from '@ui/components/editor/Field'
+import { Slider } from '@ui/components/editor/Slider'
 
 type Props = {
   preset: Preset

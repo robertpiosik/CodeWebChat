@@ -267,12 +267,6 @@ export interface PresetUpdatedMessage extends BaseMessage {
   command: 'PRESET_UPDATED'
 }
 
-export interface AtSignQuickPickForPresetAffixResultMessage
-  extends BaseMessage {
-  command: 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
-  text_to_insert: string
-}
-
 export interface NewlyPickedOpenRouterModelMessage extends BaseMessage {
   command: 'NEWLY_PICKED_OPEN_ROUTER_MODEL'
   model_id: string
@@ -353,7 +347,6 @@ export type ExtensionMessage =
   | SelectionTextMessage
   | PresetCreatedMessage
   | PresetUpdatedMessage
-  | AtSignQuickPickForPresetAffixResultMessage
   | NewlyPickedOpenRouterModelMessage
   | ExecuteCommandMessage
   | HomeViewTypeMessage

@@ -1,7 +1,7 @@
 import { Home } from './home'
 import { useEffect, useState } from 'react'
 import { Page as UiPage } from '@ui/components/editor/Page'
-import { EditPresetForm as UiEditPresetForm } from '@ui/components/editor/EditPresetForm'
+import { EditPresetForm } from '@/view/frontend/EditPresetForm'
 import { Preset } from '@shared/types/preset'
 import { ExtensionMessage, WebviewMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
@@ -165,7 +165,7 @@ export const View = () => {
           <UiTextButton on_click={handle_preview_preset}>Preview</UiTextButton>
         }
       >
-        <UiEditPresetForm
+        <EditPresetForm
           preset={updating_preset}
           on_update={set_updated_preset}
           pick_open_router_model={() => {

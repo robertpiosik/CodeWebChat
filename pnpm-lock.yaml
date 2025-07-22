@@ -145,7 +145,7 @@ importers:
         version: 29.7.0(@types/node@20.17.11)(babel-plugin-macros@3.1.0)
       ts-jest:
         specifier: ^29.3.1
-        version: 29.3.1(@babel/core@7.27.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.27.7))(jest@29.7.0(@types/node@20.17.11)(babel-plugin-macros@3.1.0))(typescript@5.8.3)
+        version: 29.3.1(@babel/core@7.27.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.27.7))(jest@29.7.0(babel-plugin-macros@3.1.0))(typescript@5.8.3)
       typescript:
         specifier: ^5.8.2
         version: 5.8.3
@@ -261,6 +261,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
+      react-textarea-autosize:
+        specifier: ^8.5.9
+        version: 8.5.9(@types/react@18.3.18)(react@18.3.1)
       simplebar-react:
         specifier: ^3.3.1
         version: 3.3.1(react@18.3.1)
@@ -20554,7 +20557,7 @@ snapshots:
 
   ts-dedent@2.2.0: {}
 
-  ts-jest@29.3.1(@babel/core@7.27.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.27.7))(jest@29.7.0(@types/node@20.17.11)(babel-plugin-macros@3.1.0))(typescript@5.8.3):
+  ts-jest@29.3.1(@babel/core@7.27.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.27.7))(jest@29.7.0(babel-plugin-macros@3.1.0))(typescript@5.8.3):
     dependencies:
       bs-logger: 0.2.6
       ejs: 3.1.10
