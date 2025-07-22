@@ -360,12 +360,12 @@ export const HomeView: React.FC<Props> = (props) => {
             <>
               <UiSeparator height={16} />
               <UiPresets
+                is_connected={props.is_connected}
                 has_instructions={!!props.instructions}
                 is_in_code_completions_mode={
                   props.web_mode == 'code-completions'
                 }
                 presets={props.presets}
-                is_disabled={!props.is_connected}
                 selected_presets={props.selected_presets}
                 on_create_preset={props.on_create_preset}
                 on_preset_click={(preset) => {

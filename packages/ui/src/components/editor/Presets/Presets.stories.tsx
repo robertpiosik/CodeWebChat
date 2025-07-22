@@ -19,11 +19,11 @@ const presets: Presets.Preset[] = [
 export const Multiple = () => {
   return (
     <Presets
+      is_connected={true}
       presets={presets}
       on_preset_click={(name) => {
         console.log('on_preset_click', name)
       }}
-      is_disabled={false}
       selected_presets={[]}
       on_preset_delete={(name) => console.log('on_preset_delete', name)}
       on_preset_edit={(name) => console.log('on_preset_edit', name)}
@@ -43,11 +43,11 @@ export const Multiple = () => {
 export const CodeCompletionsMode = () => {
   return (
     <Presets
+      is_connected={true}
       presets={presets}
       on_preset_click={(name) => {
         console.log('on_preset_click', name)
       }}
-      is_disabled={false}
       selected_presets={[]}
       on_preset_delete={(name) => console.log('on_preset_delete', name)}
       on_preset_edit={(name) => console.log('on_preset_edit', name)}

@@ -36,10 +36,10 @@ export namespace Presets {
   }
 
   export type Props = {
+    is_connected: boolean
     has_instructions: boolean
     is_in_code_completions_mode: boolean
     presets: Preset[]
-    is_disabled: boolean
     on_preset_click: (preset: Preset) => void
     selected_presets: string[]
     on_create_preset: () => void
@@ -85,11 +85,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     useState<string>()
 
   return (
-    <div
-      className={cn(styles.container, {
-        [styles['container--disabled']]: props.is_disabled
-      })}
-    >
+    <div className={styles.container}>
       <div className={styles['my-presets']}>
         <div className={styles['my-presets__left']}>MY CHAT PRESETS</div>
 
@@ -142,12 +138,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
                     highlighted_preset_name == preset.name,
-                  [styles['presets__item--disabled']]: !(
-                    props.is_in_code_completions_mode ||
-                    props.has_instructions ||
-                    preset.prompt_prefix ||
-                    preset.prompt_suffix
-                  )
+                  [styles['presets__item--disabled']]:
+                    !props.is_connected ||
+                    !(
+                      props.is_in_code_completions_mode ||
+                      props.has_instructions ||
+                      preset.prompt_prefix ||
+                      preset.prompt_suffix
+                    )
                 })}
                 onClick={() => {
                   if (
