@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  align-items: flex-start;
 
   &__label {
     font-size: 12px;
@@ -36,14 +35,10 @@
   }
 
   select {
+    width: 100%;
     cursor: pointer;
     border: none;
     padding: var(--padding-4px) var(--padding-2px);
-    width: 100%;
-  }
-
-  input[type='text'] {
-    width: 100%;
   }
 
   input[type='range'] {
