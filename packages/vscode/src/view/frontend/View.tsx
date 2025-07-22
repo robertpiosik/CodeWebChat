@@ -17,6 +17,7 @@ export const View = () => {
   const [active_view, set_active_view] = useState<'intro' | 'home'>('intro')
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
+  const [is_connected, set_is_connected] = useState<boolean>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [ask_instructions, set_ask_instructions] = useState<
     string | undefined
@@ -61,7 +62,8 @@ export const View = () => {
         set_edit_instructions(message.edit_context)
         set_no_context_instructions(message.no_context)
         set_code_completions_instructions(message.code_completions)
-        // Caret position is handled in Home.tsx
+      } else if (message.command == 'CONNECTION_STATUS') {
+        set_is_connected(message.connected)
       } else if (message.command == 'VERSION') {
         set_version(message.version)
       } else if (message.command == 'HOME_VIEW_TYPE') {
@@ -79,7 +81,8 @@ export const View = () => {
       { command: 'GET_VERSION' },
       { command: 'GET_HOME_VIEW_TYPE' },
       { command: 'GET_WEB_MODE' },
-      { command: 'GET_API_MODE' }
+      { command: 'GET_API_MODE' },
+      { command: 'GET_CONNECTION_STATUS' }
     ]
     initial_messages.forEach((message) => vscode.postMessage(message))
 
@@ -145,6 +148,7 @@ export const View = () => {
     code_completions_instructions === undefined ||
     home_view_type === undefined ||
     web_mode === undefined ||
+    is_connected === undefined ||
     api_mode === undefined
   ) {
     return null
@@ -171,7 +175,8 @@ export const View = () => {
     const has_affixes =
       !!updated_preset?.prompt_prefix || !!updated_preset?.prompt_suffix
     const has_instructions = !!get_current_instructions().trim()
-    const is_preview_disabled = !has_affixes && !has_instructions
+    const is_preview_disabled =
+      !is_connected || (!has_affixes && !has_instructions)
 
     overlay = (
       <UiPage
@@ -182,7 +187,9 @@ export const View = () => {
             on_click={handle_preview_preset}
             disabled={is_preview_disabled}
             title={
-              is_preview_disabled
+              !is_connected
+                ? 'Unable to preview when not connected'
+                : is_preview_disabled
                 ? 'Enter instructions or affixes to preview'
                 : ''
             }
@@ -225,6 +232,7 @@ export const View = () => {
           on_preset_edit={(preset) => {
             set_updating_preset(preset)
           }}
+          is_connected={is_connected}
           on_show_intro={() => set_active_view('intro')}
           ask_instructions={ask_instructions}
           edit_instructions={edit_instructions}

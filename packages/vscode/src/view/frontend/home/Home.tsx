@@ -16,6 +16,7 @@ type Props = {
   vscode: any
   on_preset_edit: (preset: Preset) => void
   on_show_intro: () => void
+  is_connected: boolean
   ask_instructions: string
   edit_instructions: string
   no_context_instructions: string
@@ -33,7 +34,6 @@ type Props = {
 }
 
 export const Home: React.FC<Props> = (props) => {
-  const [is_connected, set_is_connected] = useState<boolean>()
   const [all_presets, set_all_presets] = useState<{
     [T in WebMode]: Preset[]
   }>()
@@ -66,9 +66,6 @@ export const Home: React.FC<Props> = (props) => {
     const handle_message = async (event: MessageEvent) => {
       const message = event.data as ExtensionMessage
       switch (message.command) {
-        case 'CONNECTION_STATUS':
-          set_is_connected(message.connected)
-          break
         case 'PRESETS':
           set_all_presets((message as PresetsMessage).presets)
           break
@@ -126,7 +123,6 @@ export const Home: React.FC<Props> = (props) => {
     window.addEventListener('message', handle_message)
 
     const initial_messages: WebviewMessage[] = [
-      { command: 'GET_CONNECTION_STATUS' },
       { command: 'GET_PRESETS' },
       { command: 'GET_SELECTED_PRESETS' },
       { command: 'REQUEST_EDITOR_STATE' },
@@ -445,7 +441,6 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   if (
-    is_connected === undefined ||
     all_presets === undefined ||
     all_configurations === undefined ||
     has_active_editor === undefined ||
@@ -480,7 +475,7 @@ export const Home: React.FC<Props> = (props) => {
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       on_curly_braces_click={handle_curly_braces_click}
-      is_connected={is_connected}
+      is_connected={props.is_connected}
       presets={presets_for_current_mode}
       selected_presets={selected_presets}
       on_create_preset={handle_create_preset}
