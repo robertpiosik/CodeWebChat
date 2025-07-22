@@ -14,7 +14,7 @@
 - Type your task, initialize a chatbot, or send an API request and integrate the response hands-free.
 - Get accurate code completions using all selected files as context with SOTA reasoning models.
 - Generate precise commit messages by referencing the original state of the modified files.
-- Include in context web pages parsed to markdown.
+- Include in context any website parsed to markdown.
 
 **Guiding principles:**
 
