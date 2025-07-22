@@ -24,7 +24,6 @@ import {
   handle_duplicate_preset,
   handle_create_preset,
   handle_preview_preset,
-  handle_show_quick_pick,
   handle_save_edit_format,
   handle_show_history_quick_pick,
   handle_save_presets_order,
@@ -303,9 +302,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             this.send_presets_to_webview(webview_view.webview)
           } else if (message.command == 'GET_SELECTED_PRESETS') {
             handle_get_selected_presets(this)
-          } else if (message.command == 'SAVE_SELECTED_PRESETS') {
-            const state_key = this.get_selected_presets_state_key()
-            await this.context.globalState.update(state_key, message.names)
           } else if (message.command == 'SEND_PROMPT') {
             await handle_send_prompt(this, message.preset_names)
           } else if (message.command == 'PREVIEW_PRESET') {
@@ -344,8 +340,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_show_history_quick_pick(this)
           } else if (message.command == 'SHOW_PROMPT_TEMPLATE_QUICK_PICK') {
             await handle_show_prompt_template_quick_pick(this)
-          } else if (message.command == 'SHOW_QUICK_PICK') {
-            await handle_show_quick_pick(message)
           } else if (message.command == 'GET_WEB_MODE') {
             handle_get_mode_web(this)
           } else if (message.command == 'GET_API_TOOL_CONFIGURATIONS') {

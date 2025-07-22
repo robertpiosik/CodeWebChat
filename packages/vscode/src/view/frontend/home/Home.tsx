@@ -80,9 +80,6 @@ export const Home: React.FC<Props> = (props) => {
         case 'SELECTED_PRESETS':
           set_selected_presets(message.names)
           break
-        case 'PRESETS_SELECTED_FROM_PICKER':
-          set_selected_presets(message.names)
-          break
         case 'EDITOR_STATE_CHANGED':
           set_has_active_editor(message.has_active_editor)
           break

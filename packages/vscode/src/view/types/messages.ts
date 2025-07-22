@@ -1,6 +1,5 @@
 import { EditFormat } from '@shared/types/edit-format'
 import { Preset } from '@shared/types/preset'
-import { PROVIDERS } from '@shared/constants/providers'
 import { HomeViewType } from './home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 
@@ -48,11 +47,6 @@ export interface GetPresetsMessage extends BaseMessage {
 
 export interface GetSelectedPresetsMessage extends BaseMessage {
   command: 'GET_SELECTED_PRESETS'
-}
-
-export interface SaveSelectedPresetsMessage extends BaseMessage {
-  command: 'SAVE_SELECTED_PRESETS'
-  names: string[]
 }
 
 export interface SavePresetsOrderMessage extends BaseMessage {
@@ -120,17 +114,6 @@ export interface CreatePresetMessage extends BaseMessage {
 export interface ExecuteCommandMessage extends BaseMessage {
   command: 'EXECUTE_COMMAND'
   command_id: string
-}
-
-export interface ShowQuickPickMessage extends BaseMessage {
-  command: 'SHOW_QUICK_PICK'
-  title: string
-  items: {
-    label: string
-    description?: string
-    detail?: string
-    command: string
-  }[]
 }
 
 export interface ShowHistoryQuickPickMessage extends BaseMessage {
@@ -247,16 +230,6 @@ export interface SelectedPresetsMessage extends BaseMessage {
   names: string[]
 }
 
-export interface PresetsSelectedFromPickerMessage extends BaseMessage {
-  command: 'PRESETS_SELECTED_FROM_PICKER'
-  names: string[]
-}
-
-export interface ExpandedPresetsMessage extends BaseMessage {
-  command: 'EXPANDED_PRESETS'
-  indices: number[]
-}
-
 export interface EditorStateChangedMessage extends BaseMessage {
   command: 'EDITOR_STATE_CHANGED'
   has_active_editor: boolean
@@ -305,23 +278,6 @@ export interface NewlyPickedOpenRouterModelMessage extends BaseMessage {
   model_id: string
 }
 
-export interface ApiProvidersMessage extends BaseMessage {
-  command: 'PROVIDERS'
-  providers: Array<
-    | {
-        type: 'built-in'
-        id: keyof typeof PROVIDERS
-        api_key: string
-      }
-    | {
-        type: 'custom'
-        name: string
-        base_url: string
-        api_key: string
-      }
-  >
-}
-
 export interface HomeViewTypeMessage extends BaseMessage {
   command: 'HOME_VIEW_TYPE'
   view_type: HomeViewType
@@ -351,7 +307,6 @@ export type WebviewMessage =
   | GetConnectionStatusMessage
   | GetPresetsMessage
   | GetSelectedPresetsMessage
-  | SaveSelectedPresetsMessage
   | SavePresetsOrderMessage
   | SendPromptMessage
   | CopyPromptMessage
@@ -368,7 +323,6 @@ export type WebviewMessage =
   | ExecuteCommandMessage
   | ShowHistoryQuickPickMessage
   | ShowPromptTemplateQuickPickMessage
-  | ShowQuickPickMessage
   | PreviewPresetMessage
   | CaretPositionChangedWebviewMessage
   | PickOpenRouterModel
@@ -392,8 +346,6 @@ export type ExtensionMessage =
   | ApiToolConfigurationsMessage
   | PresetsMessage
   | SelectedPresetsMessage
-  | PresetsSelectedFromPickerMessage
-  | ExpandedPresetsMessage
   | EditorStateChangedMessage
   | EditorSelectionChangedMessage
   | ChatHistoryMessage
@@ -404,7 +356,6 @@ export type ExtensionMessage =
   | AtSignQuickPickForPresetAffixResultMessage
   | NewlyPickedOpenRouterModelMessage
   | ExecuteCommandMessage
-  | ApiProvidersMessage
   | HomeViewTypeMessage
   | WebModeMessage
   | ApiModeMessage
