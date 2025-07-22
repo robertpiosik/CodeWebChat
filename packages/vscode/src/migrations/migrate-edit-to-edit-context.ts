@@ -7,7 +7,7 @@ export async function migrate_edit_to_edit_context(
   context: vscode.ExtensionContext
 ): Promise<void> {
   try {
-    if (context.globalState.get(MIGRATION_ID)) {
+    if (context.workspaceState.get(MIGRATION_ID)) {
       return
     }
 
@@ -21,7 +21,7 @@ export async function migrate_edit_to_edit_context(
       await context.workspaceState.update('api-mode', 'edit-context')
     }
 
-    await context.globalState.update(MIGRATION_ID, true)
+    await context.workspaceState.update(MIGRATION_ID, true)
   } catch (error) {
     Logger.error({
       function_name: 'migrate_edit_to_edit_context',
