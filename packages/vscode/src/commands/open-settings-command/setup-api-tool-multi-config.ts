@@ -227,7 +227,7 @@ export const setup_api_tool_multi_config = async (params: {
           }
 
           return {
-            label: is_default ? `$(pass-filled) ${config.model}` : config.model,
+            label: is_default ? `Default: ${config.model}` : config.model,
             description: description_parts.join(' · '),
             buttons,
             config,
