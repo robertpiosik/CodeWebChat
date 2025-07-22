@@ -35,6 +35,7 @@ export const Empty = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -55,6 +56,7 @@ export const WithText = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -76,6 +78,7 @@ export const DisabledSubmit = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -96,6 +99,7 @@ export const MultilineText = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -116,6 +120,7 @@ export const LongText = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -137,6 +142,7 @@ export const WithTokenCount = () => (
     on_search_click={() => console.log('Search clicked')}
     translations={translations}
     on_submit_with_control={() => {}}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -158,6 +164,7 @@ export const WithLargeTokenCount = () => (
     on_search_click={() => console.log('Search clicked')}
     translations={translations}
     on_submit_with_control={() => {}}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -178,6 +185,7 @@ export const CodeCompletionsMode = () => (
     is_web_mode={false}
     translations={translations}
     on_submit_with_control={() => {}}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -198,6 +206,7 @@ export const WithActiveSelection = () => (
     is_web_mode={false}
     on_submit_with_control={() => {}}
     translations={translations}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -218,6 +227,7 @@ export const WithSavedContextPlaceholder = () => (
     is_web_mode={false}
     on_submit_with_control={() => {}}
     translations={translations}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -238,6 +248,7 @@ export const WithActiveSelectionAndPlaceholder = () => (
     is_web_mode={false}
     on_submit_with_control={() => {}}
     translations={translations}
+    on_curly_braces_click={() => {}}
   />
 )
 
@@ -258,5 +269,6 @@ export const WithPlaceholderNoSelection = () => (
     is_web_mode={false}
     on_submit_with_control={() => {}}
     translations={translations}
+    on_curly_braces_click={() => {}}
   />
 )

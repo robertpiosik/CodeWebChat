@@ -147,7 +147,9 @@ export const openrouter: Chatbot = {
 
       if (existing_apply_response_button) return
 
-      const chat_turn = params.footer.closest('.duration-200') as HTMLElement
+      const chat_turn = params.footer.closest(
+        'div[data-message-id]'
+      ) as HTMLElement
       const code_blocks = chat_turn.querySelectorAll('code')
       let has_eligible_block = false
       for (const code_block of Array.from(code_blocks)) {
@@ -207,7 +209,7 @@ export const openrouter: Chatbot = {
         show_response_ready_notification({ chatbot_name: 'OpenRouter' })
 
         const all_footers = document.querySelectorAll(
-          '.items-start.gap-2.flex-col.flex.group + div'
+          'div[data-message-id] > div > div:last-child > div'
         )
 
         all_footers.forEach((footer) => {
