@@ -31,13 +31,16 @@ export namespace Presets {
     name: string
     model?: string
     chatbot: keyof typeof CHATBOTS
-    has_affixes: boolean
+    prompt_prefix?: string
+    prompt_suffix?: string
   }
 
   export type Props = {
+    has_instructions: boolean
+    is_in_code_completions_mode: boolean
     presets: Preset[]
     is_disabled: boolean
-    on_preset_click: (name: string) => void
+    on_preset_click: (preset: Preset) => void
     selected_presets: string[]
     on_create_preset: () => void
     on_preset_copy: (name: string) => void
@@ -138,14 +141,36 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 key={i}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
-                    highlighted_preset_name == preset.name
+                    highlighted_preset_name == preset.name,
+                  [styles['presets__item--disabled']]: !(
+                    props.is_in_code_completions_mode ||
+                    props.has_instructions ||
+                    preset.prompt_prefix ||
+                    preset.prompt_suffix
+                  )
                 })}
                 onClick={() => {
-                  props.on_preset_click(preset.name)
-                  set_highlighted_preset_name(preset.name)
+                  if (
+                    props.is_in_code_completions_mode ||
+                    props.has_instructions ||
+                    preset.prompt_prefix ||
+                    preset.prompt_suffix
+                  ) {
+                    props.on_preset_click(preset)
+                    set_highlighted_preset_name(preset.name)
+                  }
                 }}
                 role="button"
-                title={display_name}
+                title={
+                  !(
+                    props.is_in_code_completions_mode ||
+                    props.has_instructions ||
+                    preset.prompt_prefix ||
+                    preset.prompt_suffix
+                  )
+                    ? 'Type something to use this preset'
+                    : ''
+                }
               >
                 <div className={styles.presets__item__left}>
                   <ChatbotIcon chatbot={preset.chatbot} is_disabled={false} />
@@ -166,7 +191,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     e.stopPropagation()
                   }}
                 >
-                  {preset.has_affixes && (
+                  {(preset.prompt_prefix || preset.prompt_suffix) && (
                     <IconButton
                       codicon_icon="copy"
                       title="Copy to clipboard"

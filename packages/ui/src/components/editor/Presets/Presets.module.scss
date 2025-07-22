@@ -44,6 +44,14 @@
       }
     }
 
+    &--disabled {
+      cursor: default !important;
+
+      > div:first-child {
+        opacity: var(--disabled-opacity);
+      }
+    }
+
     &--highlighted {
       background-color: var(--vscode-list-inactiveSelectionBackground);
 

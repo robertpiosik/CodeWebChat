@@ -360,21 +360,18 @@ export const HomeView: React.FC<Props> = (props) => {
             <>
               <UiSeparator height={16} />
               <UiPresets
-                presets={props.presets.map((preset) => {
-                  return {
-                    ...preset,
-                    has_affixes: !!(
-                      preset.prompt_prefix || preset.prompt_suffix
-                    )
-                  }
-                })}
+                has_instructions={!!props.instructions}
+                is_in_code_completions_mode={
+                  props.web_mode == 'code-completions'
+                }
+                presets={props.presets}
                 is_disabled={!props.is_connected}
                 selected_presets={props.selected_presets}
                 on_create_preset={props.on_create_preset}
-                on_preset_click={(name) => {
+                on_preset_click={(preset) => {
                   props.initialize_chats({
                     prompt: current_prompt,
-                    preset_names: [name]
+                    preset_names: [preset.name]
                   })
                 }}
                 on_preset_copy={handle_preset_copy}
