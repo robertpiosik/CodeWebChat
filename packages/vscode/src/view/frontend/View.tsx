@@ -28,6 +28,12 @@ export const View = () => {
   const [no_context_instructions, set_no_context_instructions] = useState<
     string | undefined
   >()
+  const [has_active_editor, set_has_active_editor] = useState<
+    boolean | undefined
+  >()
+  const [has_active_selection, set_has_active_selection] = useState<
+    boolean | undefined
+  >()
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
   const [home_view_type, set_home_view_type] = useState<HomeViewType>()
@@ -72,6 +78,10 @@ export const View = () => {
         set_web_mode(message.mode)
       } else if (message.command == 'API_MODE') {
         set_api_mode(message.mode)
+      } else if (message.command == 'EDITOR_STATE_CHANGED') {
+        set_has_active_editor(message.has_active_editor)
+      } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
+        set_has_active_selection(message.has_selection)
       }
     }
     window.addEventListener('message', handle_message)
@@ -82,7 +92,9 @@ export const View = () => {
       { command: 'GET_HOME_VIEW_TYPE' },
       { command: 'GET_WEB_MODE' },
       { command: 'GET_API_MODE' },
-      { command: 'GET_CONNECTION_STATUS' }
+      { command: 'GET_CONNECTION_STATUS' },
+      { command: 'REQUEST_EDITOR_STATE' },
+      { command: 'REQUEST_EDITOR_SELECTION_STATE' }
     ]
     initial_messages.forEach((message) => vscode.postMessage(message))
 
@@ -149,7 +161,9 @@ export const View = () => {
     home_view_type === undefined ||
     web_mode === undefined ||
     is_connected === undefined ||
-    api_mode === undefined
+    api_mode === undefined ||
+    has_active_editor === undefined ||
+    has_active_selection === undefined
   ) {
     return null
   }
@@ -176,7 +190,10 @@ export const View = () => {
       !!updated_preset?.prompt_prefix || !!updated_preset?.prompt_suffix
     const has_instructions = !!get_current_instructions().trim()
     const is_preview_disabled =
-      !is_connected || (!has_affixes && !has_instructions)
+      !is_connected ||
+      (!has_affixes && !has_instructions && web_mode != 'code-completions') ||
+      (web_mode == 'code-completions' &&
+        (!has_active_editor || has_active_selection))
 
     overlay = (
       <UiPage
@@ -189,7 +206,13 @@ export const View = () => {
             title={
               !is_connected
                 ? 'Unable to preview when not connected'
-                : is_preview_disabled
+                : web_mode == 'code-completions' && !has_active_editor
+                ? 'Cannot preview in code completion mode without an active editor'
+                : web_mode == 'code-completions' && has_active_selection
+                ? 'Unable to work with text selection'
+                : !has_affixes &&
+                  !has_instructions &&
+                  web_mode != 'code-completions'
                 ? 'Enter instructions or affixes to preview'
                 : ''
             }
@@ -243,6 +266,8 @@ export const View = () => {
           web_mode={web_mode}
           api_mode={api_mode}
           on_home_view_type_change={handle_home_view_type_change}
+          has_active_editor={has_active_editor}
+          has_active_selection={has_active_selection}
           on_web_mode_change={handle_web_mode_change}
           on_api_mode_change={handle_api_mode_change}
         />

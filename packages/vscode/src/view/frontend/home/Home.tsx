@@ -31,6 +31,8 @@ type Props = {
   on_home_view_type_change: (view_type: HomeViewType) => void
   on_web_mode_change: (mode: WebMode) => void
   on_api_mode_change: (mode: ApiMode) => void
+  has_active_editor: boolean
+  has_active_selection: boolean
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -41,8 +43,6 @@ export const Home: React.FC<Props> = (props) => {
     [T in ApiMode]?: ApiToolConfiguration[]
   }>()
   const [selected_presets, set_selected_presets] = useState<string[]>([])
-  const [has_active_editor, set_has_active_editor] = useState<boolean>()
-  const [has_active_selection, set_has_active_selection] = useState<boolean>()
   const [ask_history, set_ask_history] = useState<string[]>()
   const [edit_history, set_edit_history] = useState<string[]>()
   const [no_context_history, set_no_context_history] = useState<string[]>()
@@ -76,12 +76,6 @@ export const Home: React.FC<Props> = (props) => {
           break
         case 'SELECTED_PRESETS':
           set_selected_presets(message.names)
-          break
-        case 'EDITOR_STATE_CHANGED':
-          set_has_active_editor(message.has_active_editor)
-          break
-        case 'EDITOR_SELECTION_CHANGED':
-          set_has_active_selection(message.has_selection)
           break
         case 'CHAT_HISTORY':
           set_ask_history(message.ask || [])
@@ -125,8 +119,6 @@ export const Home: React.FC<Props> = (props) => {
     const initial_messages: WebviewMessage[] = [
       { command: 'GET_PRESETS' },
       { command: 'GET_SELECTED_PRESETS' },
-      { command: 'REQUEST_EDITOR_STATE' },
-      { command: 'REQUEST_EDITOR_SELECTION_STATE' },
       { command: 'GET_HISTORY' },
       { command: 'GET_CURRENT_TOKEN_COUNT' },
       { command: 'GET_INSTRUCTIONS' },
@@ -443,8 +435,6 @@ export const Home: React.FC<Props> = (props) => {
   if (
     all_presets === undefined ||
     all_configurations === undefined ||
-    has_active_editor === undefined ||
-    has_active_selection === undefined ||
     ask_history === undefined ||
     edit_history === undefined ||
     no_context_history === undefined ||
@@ -480,8 +470,8 @@ export const Home: React.FC<Props> = (props) => {
       selected_presets={selected_presets}
       on_create_preset={handle_create_preset}
       on_quick_action_click={handle_quick_action_click}
-      has_active_editor={has_active_editor}
-      has_active_selection={has_active_selection}
+      has_active_editor={props.has_active_editor}
+      has_active_selection={props.has_active_selection}
       chat_history={current_history || []}
       token_count={token_count}
       selection_text={selection_text}
