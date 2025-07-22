@@ -20,6 +20,8 @@ export const Multiple = () => {
   return (
     <Presets
       is_connected={true}
+      has_active_editor={true}
+      has_active_selection={false}
       presets={presets}
       on_preset_click={(name) => {
         console.log('on_preset_click', name)
@@ -44,6 +46,8 @@ export const CodeCompletionsMode = () => {
   return (
     <Presets
       is_connected={true}
+      has_active_editor={true}
+      has_active_selection={false}
       presets={presets}
       on_preset_click={(name) => {
         console.log('on_preset_click', name)
