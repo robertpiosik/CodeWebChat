@@ -157,12 +157,38 @@ export const View = () => {
     (home_view_type == HOME_VIEW_TYPES.API && api_mode == 'code-completions')
 
   if (updating_preset) {
+    const get_current_instructions = () => {
+      if (is_for_code_completions) {
+        return code_completions_instructions
+      }
+      const mode = home_view_type == HOME_VIEW_TYPES.WEB ? web_mode : api_mode
+      if (mode == 'ask') return ask_instructions
+      if (mode == 'edit-context') return edit_instructions
+      if (mode == 'no-context') return no_context_instructions
+      return ''
+    }
+
+    const has_affixes =
+      !!updated_preset?.prompt_prefix || !!updated_preset?.prompt_suffix
+    const has_instructions = !!get_current_instructions().trim()
+    const is_preview_disabled = !has_affixes && !has_instructions
+
     overlay = (
       <UiPage
         on_back_click={edit_preset_back_click_handler}
         title="Edit Preset"
         header_slot={
-          <UiTextButton on_click={handle_preview_preset}>Preview</UiTextButton>
+          <UiTextButton
+            on_click={handle_preview_preset}
+            disabled={is_preview_disabled}
+            title={
+              is_preview_disabled
+                ? 'Enter instructions or affixes to preview'
+                : ''
+            }
+          >
+            Preview
+          </UiTextButton>
         }
       >
         <EditPresetForm
