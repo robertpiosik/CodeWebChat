@@ -177,7 +177,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         preset.prompt_prefix ||
                         preset.prompt_suffix
                       )
-                    ? 'Type instructions or add a prefix/suffix to this preset to use it'
+                    ? 'Type something or add a prefix/suffix to this preset to use it'
                     : `Initialize chat with this preset`
                 }
               >
