@@ -38,6 +38,8 @@ export namespace Presets {
   export type Props = {
     is_connected: boolean
     has_instructions: boolean
+    has_active_editor: boolean
+    has_active_selection: boolean
     is_in_code_completions_mode: boolean
     presets: Preset[]
     on_preset_click: (preset: Preset) => void
@@ -145,7 +147,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       props.has_instructions ||
                       preset.prompt_prefix ||
                       preset.prompt_suffix
-                    )
+                    ) ||
+                    (props.is_in_code_completions_mode &&
+                      (!props.has_active_editor || props.has_active_selection))
                 })}
                 onClick={() => {
                   if (
@@ -160,14 +164,21 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 }}
                 role="button"
                 title={
-                  !(
-                    props.is_in_code_completions_mode ||
-                    props.has_instructions ||
-                    preset.prompt_prefix ||
-                    preset.prompt_suffix
-                  )
-                    ? 'Type something to use this preset'
-                    : ''
+                  !props.is_connected
+                    ? 'Not connected. Ensure the browser extension is active'
+                    : props.is_in_code_completions_mode
+                    ? !props.has_active_editor
+                      ? 'Preset in this mode requires an active editor'
+                      : props.has_active_selection
+                      ? 'Preset in this mode cannot be used with a text selection'
+                      : `Initialize chat with this preset`
+                    : !(
+                        props.has_instructions ||
+                        preset.prompt_prefix ||
+                        preset.prompt_suffix
+                      )
+                    ? 'Type instructions or add a prefix/suffix to this preset to use it'
+                    : `Initialize chat with this preset`
                 }
               >
                 <div className={styles.presets__item__left}>

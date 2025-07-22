@@ -361,6 +361,8 @@ export const HomeView: React.FC<Props> = (props) => {
               <UiSeparator height={16} />
               <UiPresets
                 is_connected={props.is_connected}
+                has_active_editor={props.has_active_editor}
+                has_active_selection={props.has_active_selection}
                 has_instructions={!!props.instructions}
                 is_in_code_completions_mode={
                   props.web_mode == 'code-completions'
