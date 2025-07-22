@@ -220,6 +220,7 @@ export async function apply_git_patch(
   used_fallback?: boolean
 }> {
   let closed_files: vscode.Uri[] = []
+  const temp_file = path.join(workspace_path, '.tmp_patch')
 
   try {
     const file_paths = extract_file_paths_from_patch(patch_content)
@@ -233,91 +234,113 @@ export async function apply_git_patch(
       workspace_path
     )
 
-    const temp_file = path.join(workspace_path, '.tmp_patch')
     await vscode.workspace.fs.writeFile(
       vscode.Uri.file(temp_file),
       Buffer.from(patch_content)
     )
 
-    // Apply the patch
+    let last_error: any = null
+    let success = false
+    let used_fallback = false
+
+    // Attempt 1: Standard git apply
     try {
-      let used_fallback = false
-      try {
-        await execAsync(
-          'git apply --whitespace=fix --ignore-whitespace --recount ' +
-            temp_file,
-          {
-            cwd: workspace_path
-          }
-        )
-      } catch (error) {
-        // git apply failed, now trying to apply with custom diff processor as fallback
-        const file_path_safe = create_safe_path(workspace_path, file_paths[0])
-
-        if (file_path_safe == null) {
-          throw new Error('File path is null')
-        }
-
-        try {
-          await process_diff_patch(file_path_safe, temp_file)
-          used_fallback = true
-        } catch (error: any) {
-          Logger.error({
-            function_name: 'apply_git_patch',
-            message: 'Custom diff processor failed',
-            data: error
-          })
-          throw new Error(`Failed to apply diff patch: ${error.message}`)
-        }
-      }
-
+      await execAsync(
+        `git apply --whitespace=fix --ignore-whitespace "${temp_file}"`,
+        { cwd: workspace_path }
+      )
+      success = true
       Logger.log({
         function_name: 'apply_git_patch',
-        message: `Patch applied successfully${
-          used_fallback ? ' using fallback' : ''
-        }`,
-        data: { workspace_path }
+        message: 'Patch applied successfully with standard git apply.'
       })
+    } catch (error) {
+      last_error = error
+    }
 
-      await process_modified_files(file_paths, workspace_path)
-
-      await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
-
-      return { success: true, original_states, used_fallback }
-    } catch (error: any) {
-      await reopen_closed_files(closed_files)
-
-      // NOTE: This has not been implementred yet in the custom diff processor. Can be added later.
-      const has_rejects = error.message.includes('.rej')
-
-      if (has_rejects) {
-        // Even with partial failure, try to format the files that were modified
-        await process_modified_files(file_paths, workspace_path)
-      }
-
-      Logger.error({
+    // Attempt 2: git apply with --recount
+    if (!success) {
+      Logger.warn({
         function_name: 'apply_git_patch',
-        message: 'Error applying patch',
-        data: { error, workspace_path }
+        message: 'Standard git apply failed, trying with --recount.',
+        data: { error: last_error }
       })
+      try {
+        await execAsync(
+          `git apply --whitespace=fix --ignore-whitespace --recount "${temp_file}"`,
+          { cwd: workspace_path }
+        )
+        success = true
+        used_fallback = true
+        Logger.log({
+          function_name: 'apply_git_patch',
+          message: 'Patch applied successfully with --recount fallback.'
+        })
+      } catch (error) {
+        last_error = error
+      }
+    }
 
+    // Attempt 3: Custom diff processor
+    if (!success) {
+      Logger.warn({
+        function_name: 'apply_git_patch',
+        message:
+          'git apply with --recount failed, trying custom diff processor.',
+        data: { error: last_error }
+      })
+      try {
+        const file_path_safe = create_safe_path(workspace_path, file_paths[0])
+        if (file_path_safe == null) throw new Error('File path is null')
+        await process_diff_patch(file_path_safe, temp_file)
+        success = true
+        used_fallback = true
+        Logger.log({
+          function_name: 'apply_git_patch',
+          message: 'Patch applied successfully with custom processor fallback.'
+        })
+      } catch (error) {
+        last_error = error
+      }
+    }
+
+    // Cleanup and return
+    if (success) {
+      await process_modified_files(file_paths, workspace_path)
       await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
-
-      return { success: false }
+      return { success: true, original_states, used_fallback }
+    } else {
+      // All methods failed, throw the last logged error to be handled by the outer catch
+      throw last_error
     }
   } catch (error: any) {
-    if (closed_files.length > 0) {
-      await reopen_closed_files(closed_files)
+    // This outer catch handles setup errors and final application failures
+    await reopen_closed_files(closed_files)
+
+    try {
+      if (fs.existsSync(temp_file)) {
+        await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
+      }
+    } catch (deleteError) {
+      Logger.warn({
+        function_name: 'apply_git_patch',
+        message: 'Failed to delete temp patch file in error handler.',
+        data: deleteError
+      })
+    }
+
+    const has_rejects = error?.message?.includes('.rej')
+    if (has_rejects) {
+      const file_paths = extract_file_paths_from_patch(patch_content)
+      await process_modified_files(file_paths, workspace_path)
     }
 
     Logger.error({
       function_name: 'apply_git_patch',
-      message: 'Error handling patch file',
+      message: 'Error during patch process',
       data: { error, workspace_path }
     })
-    vscode.window.showErrorMessage(
-      `Error handling patch: ${error.message || 'Unknown error'}`
-    )
+
     return { success: false }
   }
 }
