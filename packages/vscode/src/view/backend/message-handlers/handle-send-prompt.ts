@@ -8,7 +8,6 @@ import { LAST_SELECTED_PRESET_KEY } from '@/constants/state-keys'
 import { replace_changes_placeholder } from '@/utils/replace-changes-placeholder'
 import { chat_code_completion_instructions } from '@/constants/instructions'
 import { ConfigPresetFormat } from '../helpers/preset-format-converters'
-import { HOME_VIEW_TYPES } from '@/view/types/home-view-type'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
 export const handle_send_prompt = async (
@@ -16,24 +15,16 @@ export const handle_send_prompt = async (
   preset_names: string[]
 ): Promise<void> => {
   let current_instructions = ''
-  const is_in_code_completions_mode =
-    (provider.home_view_type == HOME_VIEW_TYPES.WEB &&
-      provider.web_mode == 'code-completions') ||
-    (provider.home_view_type == HOME_VIEW_TYPES.API &&
-      provider.api_mode == 'code-completions')
+  const is_in_code_completions_mode = provider.web_mode == 'code-completions'
 
   if (is_in_code_completions_mode) {
     current_instructions = provider.code_completions_instructions
   } else {
-    const mode =
-      provider.home_view_type == HOME_VIEW_TYPES.WEB
-        ? provider.web_mode
-        : provider.api_mode
-    if (mode == 'ask') {
+    if (provider.web_mode == 'ask') {
       current_instructions = provider.ask_instructions
-    } else if (mode == 'edit-context') {
+    } else if (provider.web_mode == 'edit-context') {
       current_instructions = provider.edit_instructions
-    } else if (mode == 'no-context') {
+    } else if (provider.web_mode == 'no-context') {
       current_instructions = provider.no_context_instructions
     }
   }
@@ -41,8 +32,7 @@ export const handle_send_prompt = async (
   const valid_preset_names = await validate_presets({
     provider,
     preset_names: preset_names,
-    context: provider.context,
-    instructions: current_instructions
+    context: provider.context
   })
 
   if (valid_preset_names.length == 0) return
@@ -101,9 +91,8 @@ export const handle_send_prompt = async (
       chats,
       provider.get_presets_config_key()
     )
-  } else if (current_instructions) {
+  } else {
     const editor = vscode.window.activeTextEditor
-    const base_instructions = current_instructions
 
     const context_text =
       provider.web_mode != 'no-context'
@@ -113,7 +102,7 @@ export const handle_send_prompt = async (
     const chats = await Promise.all(
       valid_preset_names.map(async (preset_name) => {
         let instructions = apply_preset_affixes_to_instruction(
-          base_instructions,
+          current_instructions,
           preset_name,
           provider.get_presets_config_key()
         )
@@ -186,7 +175,6 @@ async function validate_presets(params: {
   provider: ViewProvider
   preset_names: string[]
   context: vscode.ExtensionContext
-  instructions: string
 }): Promise<string[]> {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.provider.get_presets_config_key()
