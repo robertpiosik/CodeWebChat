@@ -11,8 +11,8 @@
 ✅ **Use your favorite chatbot for coding** \
 ✅ **Set model, thinking mode, etc. with presets** \
 ✅ **All the necessary API tools built-in** \
-⚡️ **Blazing fast coding that outpaces agents** \
-🙋 **Created by an independent developer**
+⚡️ **Blazing fast coding — agents can’t keep up!** \
+🙋 **Created by a dedicated developer**
 
 **With CWC you can:**
 
@@ -26,7 +26,7 @@
 
 - initialize chatbots—don't scrape responses
 - 100% local processing—complete privacy
-- lightweight—about 2MB of code
+- lightweight—about 1MB of code
 
 **CWC is for you if:**
 
