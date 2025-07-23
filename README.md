@@ -12,7 +12,7 @@
 ✅ **Set model, thinking mode, etc. with presets** \
 ✅ **All the necessary API tools built-in** \
 ⚡️ **Blazing fast coding — agents can’t keep up!** \
-🙋 **Created by a dedicated developer**
+🙋 **Created by an independent developer**
 
 **With CWC you can:**
 
