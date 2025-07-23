@@ -122,7 +122,7 @@ export const chatgpt: Chatbot = {
         show_response_ready_notification({ chatbot_name: 'ChatGPT' })
 
         const all_footers = document.querySelectorAll(
-          '.agent-turn > div > div:nth-of-type(2) > div'
+          '.agent-turn > div:nth-of-type(2) > div > div'
         )
         all_footers.forEach((footer) => {
           add_buttons({
