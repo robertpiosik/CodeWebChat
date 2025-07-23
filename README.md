@@ -25,7 +25,7 @@
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
-- 100% local processing—complete privacy
+- complete privacy—100% local processing
 - lightweight—about 1MB of code
 
 **CWC is for you if:**
