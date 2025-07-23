@@ -1,11 +1,6 @@
 .container {
   display: flex;
   flex-direction: column;
-
-  &--disabled {
-    opacity: var(--disabled-opacity);
-    pointer-events: none;
-  }
 }
 
 .my-configurations {
@@ -31,6 +26,14 @@
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
+    }
+
+    &--disabled {
+      cursor: default !important;
+
+      > div:first-child {
+        opacity: var(--disabled-opacity);
+      }
     }
 
     &__left {

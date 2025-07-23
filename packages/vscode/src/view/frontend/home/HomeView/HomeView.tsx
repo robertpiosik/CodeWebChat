@@ -390,6 +390,9 @@ export const HomeView: React.FC<Props> = (props) => {
             <>
               <UiSeparator height={16} />
               <UiConfigurations
+                has_active_editor={props.has_active_editor}
+                has_active_selection={props.has_active_selection}
+                has_instructions={!!props.instructions}
                 api_mode={props.api_mode}
                 configurations={props.configurations.map((c) => ({
                   model: c.model,
@@ -397,7 +400,6 @@ export const HomeView: React.FC<Props> = (props) => {
                   reasoning_effort: c.reasoning_effort,
                   temperature: c.temperature
                 }))}
-                is_disabled={false}
                 on_configuration_click={props.on_configuration_click}
                 on_manage_configurations={props.on_manage_configurations_click}
               />

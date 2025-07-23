@@ -14,19 +14,19 @@ export namespace Configurations {
   export type Props = {
     api_mode: 'edit-context' | 'code-completions'
     configurations: Configuration[]
-    is_disabled: boolean
     on_configuration_click: (i: number) => void
     on_manage_configurations: () => void
+    has_instructions: boolean
+    has_active_editor: boolean
+    has_active_selection: boolean
   }
 }
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
+  const is_in_code_completions_mode = props.api_mode === 'code-completions'
+
   return (
-    <div
-      className={cn(styles.container, {
-        [styles['container--disabled']]: props.is_disabled
-      })}
-    >
+    <div className={styles.container}>
       <div className={styles['my-configurations']}>MY CONFIGURATIONS</div>
 
       <div className={styles.configurations}>
@@ -44,20 +44,38 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
           const description = description_parts.join(' · ')
 
+          const is_item_disabled =
+            (!is_in_code_completions_mode && !props.has_instructions) ||
+            (is_in_code_completions_mode &&
+              (!props.has_active_editor || props.has_active_selection))
+
+          const base_title = `${configuration.model} ${description}`
+          const title = is_in_code_completions_mode
+            ? !props.has_active_editor
+              ? 'Configuration requires an active editor'
+              : props.has_active_selection
+              ? 'Configuration cannot be used with a text selection'
+              : base_title
+            : !props.has_instructions
+            ? 'Type something first'
+            : base_title
+
           return (
             <div
               key={i}
-              className={styles.configurations__item}
+              className={cn(styles.configurations__item, {
+                [styles['configurations__item--disabled']]: is_item_disabled
+              })}
               onClick={() => {
-                props.on_configuration_click(i)
+                if (!is_item_disabled) {
+                  props.on_configuration_click(i)
+                }
               }}
               role="button"
+              title={title}
             >
               <div className={styles.configurations__item__left}>
-                <div
-                  className={styles.configurations__item__left__text}
-                  title={`${configuration.model} ${description}`}
-                >
+                <div className={styles.configurations__item__left__text}>
                   <span>{configuration.model}</span>
                   <span>{description}</span>
                 </div>
