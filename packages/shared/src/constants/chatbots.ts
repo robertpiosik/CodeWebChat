@@ -136,7 +136,9 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_thinking_budget: false,
     default_system_instructions: '',
-    supported_options: {},
+    supported_options: {
+      think: 'Think'
+    },
     default_top_p: 0,
     models: {}
   },
@@ -167,7 +169,8 @@ export const CHATBOTS = {
     supports_thinking_budget: false,
     default_system_instructions: '',
     supported_options: {
-      thinking: 'Thinking'
+      thinking: 'Thinking',
+      search: 'Search'
     },
     default_top_p: 0,
     models: {

@@ -76,19 +76,6 @@ export const qwen: Chatbot = {
     await new Promise((r) => requestAnimationFrame(r))
   },
   set_options: async (options: string[]) => {
-    // Make sure thinking is not selected
-    const buttons = document.querySelectorAll(
-      '.chat-message-input button.chat-input-feature-btn'
-    ) as NodeListOf<HTMLButtonElement>
-    for (const button of Array.from(buttons)) {
-      if (button.querySelector('i.icon-line-deepthink-01')) {
-        // if button has class name active, click it
-        if (button.classList.contains('active')) {
-          button.click()
-        }
-      }
-    }
-    // Now check click any feature requested
     const supported_options = CHATBOTS['Qwen'].supported_options
     for (const option of options) {
       if (option == 'thinking' && supported_options['thinking']) {
@@ -100,6 +87,11 @@ export const qwen: Chatbot = {
             button.click()
           }
         }
+      } else if (option == 'search' && supported_options['search']) {
+        const search_button = document.querySelector(
+          'button.websearch_button'
+        ) as HTMLButtonElement
+        search_button.click()
       }
     }
   },

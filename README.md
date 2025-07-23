@@ -6,7 +6,7 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-100% free and open source AI pair programming tool designed for software engineers. Created by an independent developer.
+100% free and open source AI pair programming tool designed for software engineers.
 
 ✅ **Use your favorite chatbot for coding** \
 ✅ **Set model, thinking mode, etc. with presets** \
