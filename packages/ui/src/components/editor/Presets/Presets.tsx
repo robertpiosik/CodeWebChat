@@ -40,6 +40,8 @@ export namespace Presets {
     has_active_editor: boolean
     has_active_selection: boolean
     is_in_code_completions_mode: boolean
+    is_in_context_dependent_mode: boolean
+    has_context: boolean
     presets: Preset[]
     on_preset_click: (preset: Preset) => void
     selected_presets: string[]
@@ -133,52 +135,63 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               return chatbot
             }
 
+            const is_item_disabled =
+              !props.is_connected ||
+              (props.is_in_code_completions_mode &&
+                (!props.has_active_editor || props.has_active_selection)) ||
+              (props.is_in_context_dependent_mode && !props.has_context) ||
+              (!props.is_in_code_completions_mode &&
+                !props.is_in_context_dependent_mode &&
+                !(
+                  props.has_instructions ||
+                  preset.prompt_prefix ||
+                  preset.prompt_suffix
+                ))
+
+            const get_item_title = () => {
+              if (!props.is_connected) {
+                return 'Not connected. Ensure the browser extension is active'
+              } else if (props.is_in_code_completions_mode) {
+                return !props.has_active_editor
+                  ? 'Preset in this mode requires an active editor'
+                  : props.has_active_selection
+                  ? 'Preset in this mode cannot be used with a text selection'
+                  : `Initialize chat with this preset`
+              } else if (
+                props.is_in_context_dependent_mode &&
+                !props.has_context
+              ) {
+                return 'Add some files to the context first'
+              } else if (
+                !props.is_in_code_completions_mode &&
+                !props.is_in_context_dependent_mode &&
+                !(
+                  props.has_instructions ||
+                  preset.prompt_prefix ||
+                  preset.prompt_suffix
+                )
+              ) {
+                return 'Type something or add a prefix/suffix to this preset to use it'
+              }
+              return `Initialize chat with this preset`
+            }
+
             return (
               <div
                 key={i}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
                     highlighted_preset_name == preset.name,
-                  [styles['presets__item--disabled']]:
-                    !props.is_connected ||
-                    !(
-                      props.is_in_code_completions_mode ||
-                      props.has_instructions ||
-                      preset.prompt_prefix ||
-                      preset.prompt_suffix
-                    ) ||
-                    (props.is_in_code_completions_mode &&
-                      (!props.has_active_editor || props.has_active_selection))
+                  [styles['presets__item--disabled']]: is_item_disabled
                 })}
                 onClick={() => {
-                  if (
-                    props.is_in_code_completions_mode ||
-                    props.has_instructions ||
-                    preset.prompt_prefix ||
-                    preset.prompt_suffix
-                  ) {
+                  if (!is_item_disabled) {
                     props.on_preset_click(preset)
                     set_highlighted_preset_name(preset.name)
                   }
                 }}
                 role="button"
-                title={
-                  !props.is_connected
-                    ? 'Not connected. Ensure the browser extension is active'
-                    : props.is_in_code_completions_mode
-                    ? !props.has_active_editor
-                      ? 'Preset in this mode requires an active editor'
-                      : props.has_active_selection
-                      ? 'Preset in this mode cannot be used with a text selection'
-                      : `Initialize chat with this preset`
-                    : !(
-                        props.has_instructions ||
-                        preset.prompt_prefix ||
-                        preset.prompt_suffix
-                      )
-                    ? 'Type something or add a prefix/suffix to this preset to use it'
-                    : `Initialize chat with this preset`
-                }
+                title={get_item_title()}
               >
                 <div className={styles.presets__item__left}>
                   <ChatbotIcon chatbot={preset.chatbot} is_disabled={false} />

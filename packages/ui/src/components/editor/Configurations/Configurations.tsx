@@ -19,6 +19,7 @@ export namespace Configurations {
     has_instructions: boolean
     has_active_editor: boolean
     has_active_selection: boolean
+    has_context: boolean
   }
 }
 
@@ -45,19 +46,15 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           const description = description_parts.join(' · ')
 
           const is_item_disabled =
-            (!is_in_code_completions_mode && !props.has_instructions) ||
+            (!is_in_code_completions_mode && !props.has_context) ||
             (is_in_code_completions_mode &&
               (!props.has_active_editor || props.has_active_selection))
 
           const base_title = `${configuration.model} ${description}`
           const title = is_in_code_completions_mode
-            ? !props.has_active_editor
-              ? 'Configuration requires an active editor'
-              : props.has_active_selection
-              ? 'Configuration cannot be used with a text selection'
-              : base_title
-            : !props.has_instructions
-            ? 'Type something first'
+            ? !props.has_active_editor ? 'Configuration requires an active editor' : props.has_active_selection ? 'Configuration cannot be used with a text selection' : base_title
+            : !props.has_context
+            ? 'Add some files to the context first'
             : base_title
 
           return (

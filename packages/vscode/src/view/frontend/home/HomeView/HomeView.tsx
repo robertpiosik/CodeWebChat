@@ -364,6 +364,10 @@ export const HomeView: React.FC<Props> = (props) => {
                 has_active_editor={props.has_active_editor}
                 has_active_selection={props.has_active_selection}
                 has_instructions={!!props.instructions}
+                is_in_context_dependent_mode={
+                  props.web_mode == 'edit-context' || props.web_mode == 'ask'
+                }
+                has_context={props.token_count > 0}
                 is_in_code_completions_mode={
                   props.web_mode == 'code-completions'
                 }
@@ -393,6 +397,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 has_active_editor={props.has_active_editor}
                 has_active_selection={props.has_active_selection}
                 has_instructions={!!props.instructions}
+                has_context={props.token_count > 0}
                 api_mode={props.api_mode}
                 configurations={props.configurations.map((c) => ({
                   model: c.model,
