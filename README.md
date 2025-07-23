@@ -11,8 +11,7 @@
 ✅ **Use your favorite chatbot for coding** \
 ✅ **Set model, thinking mode, etc. with presets** \
 ✅ **Complete suite of API tools** \
-⚡️ **Blazing fast coding—agents are lagging behind** \
-🙋 **Created by an independent developer**
+⚡️ **Blazing fast coding—agents are lagging behind**
 
 **With CWC you can:**
 
