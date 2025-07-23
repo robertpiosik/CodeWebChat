@@ -12,20 +12,19 @@
 ✅ **Set model, thinking mode, etc. with presets** \
 ✅ **All the necessary API tools built-in**
 
-
 **With CWC you can:**
 
-- Granularly select folders and files from your project to copy them as XML-formatted text.
-- Type your task, initialize a chatbot, or send an API request and integrate the response hands-free.
-- Get accurate code completions using all selected files as context with SOTA reasoning models.
-- Generate precise commit messages by referencing the original state of the modified files.
-- Include in context any website parsed to markdown.
+- Granularly select folders and files to copy them as XML-formatted text.
+- Type your task, pick edit format (whole/truncated/diff), initialize a chatbot (or send an API request) and automatically integrate the response with the codebase.
+- Get accurate code completions using the selected context with SOTA reasoning models.
+- Generate meaningful commit messages by referencing the original state of the modified files.
+- Include websites parsed to markdown in context.
 
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
-- privacy first—100% local processing
-- lightweight—about 1MB of code
+- 100% local processing—complete privacy
+- lightweight—about 2MB of code
 
 **CWC is for you if:**
 
@@ -68,7 +67,7 @@ Get code at cursor from state-of-the-art reasoning models.
 Create and modify files in context based on natural language instructions.
 
 **Intelligent Update** \
-Update files based on code blocks in "truncated" edit format. Fix malformed diffs.
+Integrate chat/API responses in "truncated" edit format. Fix malformed diffs.
 
 **Commit Messages** \
 Generate meaningful commit messages precisely adhering to your preferred style.
@@ -91,17 +90,17 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 ### Handling AI responses
 
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied overall chat response or a single code block.
-- `Code Web Chat: Revert Last Changes` - Revert last applied chat response or the Edit Context API tool use.
+- `Code Web Chat: Revert Last Changes` - Revert above command.
 
 ### Chat
 
+- `Code Web Chat: Edit Context in Chat` - Type instructions and open chatbot with default preset.
+- `Code Web Chat: Edit Context in Chat using...` - Same as above, but with preset selection.
+- `Code Web Chat: Edit Context to Clipboard` - Enter instructions and copy prompt to clipboard.
 - `Code Web Chat: Ask about Context` - Type instructions and open chatbot with context but without edit format instructions.
 - `Code Web Chat: Ask about Context using...` - Same as above, but with preset selection.
 - `Code Web Chat: No context chat` - Open chatbot without any context.
 - `Code Web Chat: No context chat using...` - Same as above, but with preset selection.
-- `Code Web Chat: Edit Context in Chat` - Type instructions and open chatbot with default preset.
-- `Code Web Chat: Edit Context in Chat using...` - Same as above, but with preset selection.
-- `Code Web Chat: Edit Context to Clipboard` - Enter instructions and copy prompt to clipboard.
 
 ### Context
 
