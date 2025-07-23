@@ -122,11 +122,7 @@ export const qwen: Chatbot = {
       await new Promise((r) => requestAnimationFrame(r))
       await new Promise((resolve) => {
         const check_for_element = () => {
-          if (
-            !document.querySelector(
-              '.chat-message-input path[d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"]'
-            )
-          ) {
+          if (document.querySelector('i.icontxt1')) {
             resolve(null)
           } else {
             setTimeout(check_for_element, 100)
