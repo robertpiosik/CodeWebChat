@@ -48,7 +48,6 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 - Doubao
 - Gemini
 - Grok
-- HuggingChat
 - Mistral
 - Open WebUI
 - OpenRouter Chat

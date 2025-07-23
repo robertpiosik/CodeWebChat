@@ -47,7 +47,6 @@
     "DeepSeek",
     "Qwen",
     "Grok",
-    "HuggingChat",
     "openai",
     "typescript",
     "javascript",
@@ -711,7 +710,6 @@
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "HuggingChat",
                   "Kimi"
                 ],
                 "description": "Choose among supported chatbots."
@@ -859,7 +857,6 @@
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "HuggingChat",
                   "Kimi"
                 ],
                 "description": "Choose among supported chatbots."
@@ -1007,7 +1004,6 @@
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "HuggingChat",
                   "Kimi"
                 ],
                 "description": "Choose among supported chatbots."
@@ -1125,7 +1121,6 @@
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "HuggingChat",
                   "Kimi"
                 ],
                 "description": "Choose among supported chatbots."

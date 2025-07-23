@@ -18,7 +18,6 @@ export const chatbot_to_icon = {
   DeepSeek: 'DEEPSEEK',
   Mistral: 'MISTRAL',
   Grok: 'GROK',
-  HuggingChat: 'HUGGING_CHAT',
   Qwen: 'QWEN',
   Yuanbao: 'YUANBAO',
   Kimi: 'KIMI',

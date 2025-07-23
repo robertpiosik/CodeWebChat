@@ -15,7 +15,6 @@ import {
   qwen,
   yuanbao,
   doubao,
-  huggingchat,
   kimi
 } from './chatbots'
 import { perplexity } from './chatbots/perplexity'
@@ -68,9 +67,6 @@ const is_grok = current_url.startsWith(grok_url)
 const doubao_url = 'https://www.doubao.com/chat/'
 const is_doubao = current_url.startsWith(doubao_url)
 
-const huggingchat_url = 'https://huggingface.co/chat/'
-const is_huggingchat = current_url.startsWith(huggingchat_url)
-
 const kimi_url = 'https://www.kimi.com/'
 const is_kimi = current_url.startsWith(kimi_url)
 
@@ -105,8 +101,6 @@ if (is_ai_studio) {
   chatbot = yuanbao
 } else if (is_doubao) {
   chatbot = doubao
-} else if (is_huggingchat) {
-  chatbot = huggingchat
 } else if (is_perplexity) {
   chatbot = perplexity
 } else if (is_kimi) {
