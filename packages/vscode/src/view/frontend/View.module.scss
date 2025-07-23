@@ -9,7 +9,7 @@
   background-color: var(--vscode-sideBar-background);
 
   &--overlay {
-    z-index: 2; // Needed to hide triangle of pinned commands box
+    z-index: 3; // Needed to hide triangle of pinned commands box
   }
 
   &--hidden {

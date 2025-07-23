@@ -323,13 +323,16 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       )}
 
       {supports_system_instructions && (
-        <Field label="System Instructions" html_for="instructions">
+        <Field
+          label="System Instructions"
+          html_for="instructions"
+          info="Optional tone and style instructions for the model"
+        >
           <TextareaAutosize
             id="instructions"
             value={system_instructions}
             onChange={(e) => set_system_instructions(e.target.value)}
-            minRows={4}
-            placeholder="Optional tone and style instructions for the model"
+            minRows={2}
           />
         </Field>
       )}
@@ -340,12 +343,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           html_for="prefix"
           info="Text prepended to prompts used with this preset"
         >
-          <textarea
+          <TextareaAutosize
             id="prefix"
             ref={prefix_ref}
             value={prompt_prefix}
             onChange={(e) => handle_affix_change(e, set_prompt_prefix)}
             onFocus={() => set_active_field('prompt_prefix')}
+            minRows={2}
           />
         </Field>
 
@@ -354,12 +358,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           html_for="suffix"
           info="Text appended to prompts used with this preset"
         >
-          <textarea
+          <TextareaAutosize
             id="suffix"
             ref={suffix_ref}
             value={prompt_suffix}
             onChange={(e) => handle_affix_change(e, set_prompt_suffix)}
             onFocus={() => set_active_field('prompt_suffix')}
+            minRows={2}
           />
         </Field>
       </>
