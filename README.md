@@ -10,7 +10,8 @@
 
 ✅ **Use your favorite chatbot for coding** \
 ✅ **Set model, thinking mode, etc. with presets** \
-✅ **All the necessary API tools built-in**
+✅ **All the necessary API tools built-in** \
+⚡️ **Blazing fast coding compared to agents**
 
 **With CWC you can:**
 

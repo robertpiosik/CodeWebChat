@@ -15,7 +15,7 @@ async function build_completion_payload(params: {
   position: vscode.Position
   file_tree_provider: any
   open_editors_provider?: any
-  suggestions?: string
+  completion_instructions?: string
 }): Promise<string> {
   const document_path = params.document.uri.fsPath
   const text_before_cursor = params.document.getText(
@@ -45,7 +45,9 @@ async function build_completion_payload(params: {
   }
 
   const instructions = `${code_completion_instructions}${
-    params.suggestions ? ` Follow instructions: ${params.suggestions}` : ''
+    params.completion_instructions
+      ? ` Follow instructions: ${params.completion_instructions}`
+      : ''
   }`
 
   return `${instructions}\n${payload.before}<missing text>${payload.after}\n${instructions}`
@@ -227,24 +229,35 @@ async function perform_code_completion(params: {
   file_tree_provider: any
   open_editors_provider: any
   context: vscode.ExtensionContext
-  with_suggestions: boolean
+  with_completion_instructions: boolean
   auto_accept: boolean
   show_quick_pick?: boolean
-  suggestions?: string
+  completion_instructions?: string
   config_index?: number
 }) {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
-  let suggestions: string | undefined = params.suggestions
-  if (params.with_suggestions && !suggestions) {
-    suggestions = await vscode.window.showInputBox({
-      placeHolder: 'Enter suggestions',
-      prompt: 'E.g. include explanatory comments'
+  let completion_instructions: string | undefined =
+    params.completion_instructions
+  if (params.with_completion_instructions && !completion_instructions) {
+    const last_value =
+      params.context.workspaceState.get<string>(
+        'last-completion-instructions'
+      ) || ''
+    completion_instructions = await vscode.window.showInputBox({
+      placeHolder: 'Enter completion instructions',
+      prompt: 'E.g. "Include explanatory comments".',
+      value: last_value
     })
 
-    if (suggestions === undefined) {
+    if (completion_instructions === undefined) {
       return
     }
+
+    await params.context.workspaceState.update(
+      'last-completion-instructions',
+      completion_instructions || ''
+    )
   }
 
   const config_result = await get_code_completion_config(
@@ -316,7 +329,7 @@ async function perform_code_completion(params: {
       position,
       file_tree_provider: params.file_tree_provider,
       open_editors_provider: params.open_editors_provider,
-      suggestions
+      completion_instructions
     })
 
     const messages = [
@@ -415,7 +428,7 @@ export function code_completion_commands(
         file_tree_provider,
         open_editors_provider,
         context,
-        with_suggestions: false,
+        with_completion_instructions: false,
         auto_accept: false,
         show_quick_pick: false
       })
@@ -427,10 +440,10 @@ export function code_completion_commands(
           file_tree_provider,
           open_editors_provider,
           context,
-          with_suggestions: false,
+          with_completion_instructions: false,
           auto_accept: true,
           show_quick_pick: false,
-          suggestions: args?.suggestions,
+          completion_instructions: args?.suggestions,
           config_index: args?.config_index
         })
     ),
@@ -441,7 +454,7 @@ export function code_completion_commands(
           file_tree_provider,
           open_editors_provider,
           context,
-          with_suggestions: true,
+          with_completion_instructions: true,
           auto_accept: false,
           show_quick_pick: false
         })
@@ -453,10 +466,10 @@ export function code_completion_commands(
           file_tree_provider,
           open_editors_provider,
           context,
-          with_suggestions: true,
+          with_completion_instructions: true,
           auto_accept: true,
           show_quick_pick: false,
-          suggestions: args?.suggestions
+          completion_instructions: args?.suggestions
         })
     ),
     vscode.commands.registerCommand(
@@ -466,7 +479,7 @@ export function code_completion_commands(
           file_tree_provider,
           open_editors_provider,
           context,
-          with_suggestions: false,
+          with_completion_instructions: false,
           auto_accept: false,
           show_quick_pick: true
         })
@@ -478,10 +491,10 @@ export function code_completion_commands(
           file_tree_provider,
           open_editors_provider,
           context,
-          with_suggestions: false,
+          with_completion_instructions: false,
           auto_accept: true,
           show_quick_pick: true,
-          suggestions: args?.suggestions
+          completion_instructions: args?.suggestions
         })
     ),
     vscode.commands.registerCommand(
@@ -491,10 +504,10 @@ export function code_completion_commands(
           file_tree_provider,
           open_editors_provider,
           context,
-          with_suggestions: true,
+          with_completion_instructions: true,
           auto_accept: true,
           show_quick_pick: true,
-          suggestions: args?.suggestions
+          completion_instructions: args?.suggestions
         })
     ),
     vscode.commands.registerCommand(
@@ -504,7 +517,7 @@ export function code_completion_commands(
           file_tree_provider,
           open_editors_provider,
           context,
-          with_suggestions: true,
+          with_completion_instructions: true,
           auto_accept: false,
           show_quick_pick: true
         })

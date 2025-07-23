@@ -25,19 +25,22 @@ async function handle_code_completion_in_chat_command(
     return
   }
 
-  const last_fim_prompt =
-    context.workspaceState.get<string>('lastFimPrompt') || ''
+  const last_value =
+    context.workspaceState.get<string>('last-completion-instructions') || ''
   const suggestions = await vscode.window.showInputBox({
-    placeHolder: 'Enter Type suggestions',
-    prompt: 'e.g., "Avoid writing comments"',
-    value: last_fim_prompt
+    placeHolder: 'Completion instructions',
+    prompt: 'E.g. "Include explanatory comments".',
+    value: last_value
   })
 
   if (suggestions === undefined) {
     return
   }
 
-  await context.workspaceState.update('lastFimPrompt', suggestions || '')
+  await context.workspaceState.update(
+    'last-completion-instructions',
+    suggestions || ''
+  )
 
   const files_collector = new FilesCollector(
     file_tree_provider,
@@ -136,12 +139,27 @@ export function code_completion_in_chat_with_command(
 
       const preset_quick_pick_items = presets
         .filter((preset) => CHATBOTS[preset.chatbot])
-        .map((preset) => ({
-          label: preset.name,
-          description: `${preset.chatbot}${
-            preset.model ? ` - ${preset.model}` : ''
-          }`
-        }))
+        .map((preset) => {
+          const is_unnamed =
+            !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+          const chatbot_info = CHATBOTS[preset.chatbot] as any
+          const model_display_name = preset.model
+            ? (chatbot_info &&
+                chatbot_info.models &&
+                chatbot_info.models[preset.model]) ||
+              preset.model
+            : ''
+
+          return {
+            label: is_unnamed ? preset.chatbot : preset.name,
+            description: is_unnamed
+              ? model_display_name
+              : `${preset.chatbot}${
+                  model_display_name ? ` · ${model_display_name}` : ''
+                }`,
+            name: preset.name
+          }
+        })
 
       const selected_preset = await vscode.window.showQuickPick(
         preset_quick_pick_items,
@@ -159,7 +177,7 @@ export function code_completion_in_chat_with_command(
         file_tree_provider,
         open_editors_provider,
         websocket_server_instance,
-        [selected_preset.label]
+        [selected_preset.name]
       )
     }
   )
@@ -199,13 +217,27 @@ export function code_completion_in_chat_command(
       )
 
       if (!valid_selected_names.length) {
-        const preset_quick_pick_items = presets.map((preset) => ({
-          label: preset.name,
-          description: `${preset.chatbot}${
-            preset.model ? ` - ${preset.model}` : ''
-          }`,
-          picked: false
-        }))
+        const preset_quick_pick_items = presets.map((preset) => {
+          const is_unnamed =
+            !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+          const chatbot_info = CHATBOTS[preset.chatbot] as any
+          const model_display_name = preset.model
+            ? (chatbot_info &&
+                chatbot_info.models &&
+                chatbot_info.models[preset.model]) ||
+              preset.model
+            : ''
+          return {
+            label: is_unnamed ? preset.chatbot : preset.name,
+            description: is_unnamed
+              ? model_display_name
+              : `${preset.chatbot}${
+                  model_display_name ? ` · ${model_display_name}` : ''
+                }`,
+            picked: false,
+            name: preset.name
+          }
+        })
 
         const selected_presets = await vscode.window.showQuickPick(
           preset_quick_pick_items,
@@ -219,7 +251,7 @@ export function code_completion_in_chat_command(
           return
         }
 
-        selected_names = selected_presets.map((preset) => preset.label)
+        selected_names = selected_presets.map((preset) => preset.name)
         await context.globalState.update(
           'selectedPresets.code-completions',
           selected_names
