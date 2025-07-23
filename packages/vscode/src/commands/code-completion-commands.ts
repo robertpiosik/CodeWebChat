@@ -250,9 +250,7 @@ async function perform_code_completion(params: {
       value: last_value
     })
 
-    if (completion_instructions === undefined) {
-      return
-    }
+    if (completion_instructions === undefined) return
 
     await params.context.workspaceState.update(
       'last-completion-instructions',
@@ -435,7 +433,10 @@ export function code_completion_commands(
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionAutoAccept',
-      async (args?: { suggestions?: string; config_index?: number }) =>
+      async (args?: {
+        completion_instructions?: string
+        config_index?: number
+      }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
@@ -443,12 +444,12 @@ export function code_completion_commands(
           with_completion_instructions: false,
           auto_accept: true,
           show_quick_pick: false,
-          completion_instructions: args?.suggestions,
+          completion_instructions: args?.completion_instructions,
           config_index: args?.config_index
         })
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithSuggestions',
+      'codeWebChat.codeCompletionWithInstructions',
       async () =>
         perform_code_completion({
           file_tree_provider,
@@ -460,8 +461,8 @@ export function code_completion_commands(
         })
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithSuggestionsAutoAccept',
-      async (args?: { suggestions?: string }) =>
+      'codeWebChat.codeCompletionWithInstructionsAutoAccept',
+      async (args?: { completion_instructions?: string }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
@@ -469,7 +470,7 @@ export function code_completion_commands(
           with_completion_instructions: true,
           auto_accept: true,
           show_quick_pick: false,
-          completion_instructions: args?.suggestions
+          completion_instructions: args?.completion_instructions
         })
     ),
     vscode.commands.registerCommand(
@@ -486,7 +487,7 @@ export function code_completion_commands(
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionUsingAutoAccept',
-      async (args?: { suggestions?: string }) =>
+      async (args?: { completion_instructions?: string }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
@@ -494,12 +495,12 @@ export function code_completion_commands(
           with_completion_instructions: false,
           auto_accept: true,
           show_quick_pick: true,
-          completion_instructions: args?.suggestions
+          completion_instructions: args?.completion_instructions
         })
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithSuggestionsUsingAutoAccept',
-      async (args?: { suggestions?: string }) =>
+      'codeWebChat.codeCompletionWithInstructionsUsingAutoAccept',
+      async (args?: { completion_instructions?: string }) =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
@@ -507,11 +508,11 @@ export function code_completion_commands(
           with_completion_instructions: true,
           auto_accept: true,
           show_quick_pick: true,
-          completion_instructions: args?.suggestions
+          completion_instructions: args?.completion_instructions
         })
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithSuggestionsUsing',
+      'codeWebChat.codeCompletionWithInstructionsUsing',
       async () =>
         perform_code_completion({
           file_tree_provider,

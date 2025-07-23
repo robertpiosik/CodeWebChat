@@ -209,23 +209,23 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithSuggestions",
-        "title": "Code Completion with Suggestions",
+        "command": "codeWebChat.codeCompletionWithInstructions",
+        "title": "Code Completion with Instructions",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithSuggestionsUsing",
-        "title": "Code Completion with Suggestions using...",
+        "command": "codeWebChat.codeCompletionWithInstructionsUsing",
+        "title": "Code Completion with Instructions using...",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithSuggestionsUsingAutoAccept",
-        "title": "Code Completion with Suggestions using...",
+        "command": "codeWebChat.codeCompletionWithInstructionsUsingAutoAccept",
+        "title": "Code Completion with Instructions using...",
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithSuggestionsAutoAccept",
-        "title": "Code Completion with Suggestions",
+        "command": "codeWebChat.codeCompletionWithInstructionsAutoAccept",
+        "title": "Code Completion with Instructions",
         "category": "Code Web Chat"
       },
       {
@@ -234,8 +234,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithSuggestionsToClipboard",
-        "title": "Code Completion with Suggestions to Clipboard",
+        "command": "codeWebChat.codeCompletionWithInstructionsToClipboard",
+        "title": "Code Completion with Instructions to Clipboard",
         "category": "Code Web Chat"
       },
       {
@@ -437,11 +437,11 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.codeCompletionWithSuggestionsAutoAccept",
+          "command": "codeWebChat.codeCompletionWithInstructionsAutoAccept",
           "when": "false"
         },
         {
-          "command": "codeWebChat.codeCompletionWithSuggestionsUsingAutoAccept",
+          "command": "codeWebChat.codeCompletionWithInstructionsUsingAutoAccept",
           "when": "false"
         },
         {

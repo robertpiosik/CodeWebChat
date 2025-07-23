@@ -59,7 +59,7 @@ export const handle_show_prompt_template_quick_pick = async (
         instruction_key = 'no-context-instructions'
         break
       case 'code-completions':
-        provider.code_completions_instructions = text
+        provider.code_completion_instructions = text
         instruction_key = 'code-completions-instructions'
         break
       default:
@@ -72,7 +72,7 @@ export const handle_show_prompt_template_quick_pick = async (
       ask: provider.ask_instructions,
       edit_context: provider.edit_instructions,
       no_context: provider.no_context_instructions,
-      code_completions: provider.code_completions_instructions
+      code_completions: provider.code_completion_instructions
     })
   }
 

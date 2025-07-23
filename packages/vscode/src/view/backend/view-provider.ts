@@ -69,7 +69,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public ask_instructions: string = ''
   public edit_instructions: string = ''
   public no_context_instructions: string = ''
-  public code_completions_instructions: string = ''
+  public code_completion_instructions: string = ''
   public web_mode: WebMode
   public chat_edit_format: EditFormat
   public api_edit_format: EditFormat
@@ -172,7 +172,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       'no-context-instructions',
       ''
     )
-    this.code_completions_instructions =
+    this.code_completion_instructions =
       this.context.workspaceState.get<string>(
         'code-completions-instructions',
         ''
@@ -546,7 +546,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         current_instructions = this.no_context_instructions
         break
       case 'code-completions':
-        current_instructions = this.code_completions_instructions
+        current_instructions = this.code_completion_instructions
         break
       default:
         return
@@ -572,7 +572,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         this.no_context_instructions = new_instructions
         break
       case 'code-completions':
-        this.code_completions_instructions = new_instructions
+        this.code_completion_instructions = new_instructions
         break
     }
 
@@ -584,7 +584,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       ask: this.ask_instructions,
       edit_context: this.edit_instructions,
       no_context: this.no_context_instructions,
-      code_completions: this.code_completions_instructions,
+      code_completions: this.code_completion_instructions,
       caret_position: this.caret_position
     })
   }

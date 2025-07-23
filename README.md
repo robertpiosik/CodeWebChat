@@ -77,9 +77,9 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 ### Code completions
 
 - `Code Web Chat: Code Completion` - Get inline autocompletion at the cursor position.
-- `Code Web Chat: Code Completion with Suggestions` - Get inline autocompletion at the cursor position that follows given suggestions.
+- `Code Web Chat: Code Completion with Instructions` - Get inline autocompletion at the cursor position that follows given instructions.
 - `Code Web Chat: Code Completion to Clipboard` - Copy inline autocompletion prompt to clipboard.
-- `Code Web Chat: Code Completion with Suggestions to Clipboard` - Copy inline autocompletion with suggestions prompt to clipboard.
+- `Code Web Chat: Code Completion with Instructions to Clipboard` - Copy inline autocompletion with instructions prompt to clipboard.
 - `Code Web Chat: Code Completion in Chat` - Use chatbot for code completion.
 - `Code Web Chat: Code Completion in Chat with...` - Use chatbot for code completion with selected preset.
 

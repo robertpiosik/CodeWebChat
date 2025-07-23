@@ -2,10 +2,10 @@ import * as vscode from 'vscode'
 import { FilesCollector } from '../utils/files-collector'
 import { chat_code_completion_instructions } from '../constants/instructions'
 
-async function perform_fim_completion_to_clipboard(
+async function perform_code_completion_to_clipboard(
   file_tree_provider: any,
   open_editors_provider: any,
-  with_suggestions: boolean = false
+  with_instructions: boolean = false
 ) {
   const editor = vscode.window.activeTextEditor
   if (!editor) {
@@ -13,15 +13,15 @@ async function perform_fim_completion_to_clipboard(
     return
   }
 
-  let suggestions: string | undefined
-  if (with_suggestions) {
-    suggestions = await vscode.window.showInputBox({
-      placeHolder: 'Enter suggestions for code completion (optional)',
-      prompt: 'Provide guidance for the AI to follow when completing your code'
+  let completion_instructions: string | undefined
+  if (with_instructions) {
+    completion_instructions = await vscode.window.showInputBox({
+      placeHolder: 'Completion instructions',
+      prompt: 'E.g. "Include explanatory comments".'
     })
 
     // If user cancels the input box (not the same as empty input), return
-    if (suggestions === undefined) {
+    if (completion_instructions === undefined) {
       return
     }
   }
@@ -58,7 +58,11 @@ async function perform_fim_completion_to_clipboard(
       relative_path,
       position.line,
       position.character
-    )}${suggestions ? ` Follow instructions: ${suggestions}` : ''}`
+    )}${
+      completion_instructions
+        ? ` Follow instructions: ${completion_instructions}`
+        : ''
+    }`
 
     const content = `${instructions}\n${payload.before}<missing text>${payload.after}\n${instructions}`
 
@@ -78,7 +82,7 @@ export function code_completion_to_clipboard_command(
   return vscode.commands.registerCommand(
     'codeWebChat.codeCompletionToClipboard',
     async () => {
-      await perform_fim_completion_to_clipboard(
+      await perform_code_completion_to_clipboard(
         file_tree_provider,
         open_editors_provider,
         false
@@ -87,14 +91,14 @@ export function code_completion_to_clipboard_command(
   )
 }
 
-export function code_completion_with_suggestions_to_clipboard_command(
+export function code_completion_with_instructions_to_clipboard_command(
   file_tree_provider: any,
   open_editors_provider?: any
 ) {
   return vscode.commands.registerCommand(
-    'codeWebChat.codeCompletionWithSuggestionsToClipboard',
+    'codeWebChat.codeCompletionWithInstructionsToClipboard',
     async () => {
-      await perform_fim_completion_to_clipboard(
+      await perform_code_completion_to_clipboard(
         file_tree_provider,
         open_editors_provider,
         true

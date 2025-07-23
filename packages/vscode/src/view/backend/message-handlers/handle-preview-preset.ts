@@ -31,7 +31,7 @@ export const handle_preview_preset = async (
   } else if (provider.web_mode == 'no-context') {
     current_instructions = provider.no_context_instructions
   } else if (provider.web_mode == 'code-completions') {
-    current_instructions = provider.code_completions_instructions
+    current_instructions = provider.code_completion_instructions
   }
 
   if (provider.web_mode == 'code-completions' && active_editor) {

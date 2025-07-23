@@ -11,7 +11,7 @@ export const handle_code_completion = async (
       ? 'codeWebChat.codeCompletionUsingAutoAccept'
       : 'codeWebChat.codeCompletionAutoAccept',
     {
-      suggestions: provider.code_completions_instructions,
+      completion_instructions: provider.code_completion_instructions,
       config_index: message.config_index
     }
   )

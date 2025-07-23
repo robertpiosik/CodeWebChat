@@ -15,7 +15,7 @@ export const handle_save_instructions = async (
   } else if (mode == 'no-context') {
     provider.no_context_instructions = instruction
   } else if (mode == 'code-completions') {
-    provider.code_completions_instructions = instruction
+    provider.code_completion_instructions = instruction
   } else {
     return
   }

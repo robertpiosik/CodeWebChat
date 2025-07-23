@@ -27,19 +27,17 @@ async function handle_code_completion_in_chat_command(
 
   const last_value =
     context.workspaceState.get<string>('last-completion-instructions') || ''
-  const suggestions = await vscode.window.showInputBox({
+  const completion_instructions = await vscode.window.showInputBox({
     placeHolder: 'Completion instructions',
     prompt: 'E.g. "Include explanatory comments".',
     value: last_value
   })
 
-  if (suggestions === undefined) {
-    return
-  }
+  if (completion_instructions === undefined) return
 
   await context.workspaceState.update(
     'last-completion-instructions',
-    suggestions || ''
+    completion_instructions || ''
   )
 
   const files_collector = new FilesCollector(
@@ -70,16 +68,23 @@ async function handle_code_completion_in_chat_command(
       relative_path,
       position.line,
       position.character
-    )}${suggestions ? ` Follow instructions: ${suggestions}` : ''}`
+    )}${
+      completion_instructions
+        ? ` Follow instructions: ${completion_instructions}`
+        : ''
+    }`
 
     const text = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
 
-    if (suggestions) {
+    if (completion_instructions) {
       const current_history = context.workspaceState.get<string[]>(
         'code-completions-history',
         []
       )
-      const updated_history = [suggestions, ...current_history].slice(0, 100)
+      const updated_history = [
+        completion_instructions,
+        ...current_history
+      ].slice(0, 100)
       await context.workspaceState.update(
         'code-completions-history',
         updated_history

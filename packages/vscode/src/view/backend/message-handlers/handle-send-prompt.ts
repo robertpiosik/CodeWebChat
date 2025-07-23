@@ -18,7 +18,7 @@ export const handle_send_prompt = async (
   const is_in_code_completions_mode = provider.web_mode == 'code-completions'
 
   if (is_in_code_completions_mode) {
-    current_instructions = provider.code_completions_instructions
+    current_instructions = provider.code_completion_instructions
   } else {
     if (provider.web_mode == 'ask') {
       current_instructions = provider.ask_instructions
@@ -73,8 +73,8 @@ export const handle_send_prompt = async (
       position.line,
       position.character
     )}${
-      provider.code_completions_instructions
-        ? ` Follow instructions: ${provider.code_completions_instructions}`
+      provider.code_completion_instructions
+        ? ` Follow instructions: ${provider.code_completion_instructions}`
         : ''
     }`
 
