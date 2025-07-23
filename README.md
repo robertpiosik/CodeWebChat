@@ -6,7 +6,12 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-100% free and open source AI pair programming tool designed for software engineers. CWC connects VS Code with 15+ chatbots and has all the necessary API tools built-in. Created by an independent developer.
+100% free and open source AI pair programming tool designed for software engineers. Created by an independent developer.
+
+✅ **Use your favorite chatbot for coding** \
+✅ **Set model, thinking mode, etc. with presets** \
+✅ **All the necessary API tools built-in**
+
 
 **With CWC you can:**
 
