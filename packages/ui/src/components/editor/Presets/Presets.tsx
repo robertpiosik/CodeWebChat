@@ -141,7 +141,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 (!props.has_active_editor || props.has_active_selection)) ||
               (props.is_in_context_dependent_mode && !props.has_context) ||
               (!props.is_in_code_completions_mode &&
-                !props.is_in_context_dependent_mode &&
                 !(
                   props.has_instructions ||
                   preset.prompt_prefix ||
@@ -164,7 +163,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 return 'Add some files to the context first'
               } else if (
                 !props.is_in_code_completions_mode &&
-                !props.is_in_context_dependent_mode &&
                 !(
                   props.has_instructions ||
                   preset.prompt_prefix ||

@@ -22,6 +22,8 @@ type Props = {
   on_search_click: () => void
   on_at_sign_click: () => void
   on_curly_braces_click: () => void
+  is_in_context_dependent_mode: boolean
+  has_context: boolean
   translations: {
     type_something: string
     completion_instructions: string
@@ -165,6 +167,11 @@ export const ChatInput: React.FC<Props> = (props) => {
     }
     set_history_index(-1)
   }
+
+  const is_submit_disabled =
+    (!props.is_connected && props.is_web_mode) ||
+    (!props.is_in_code_completions_mode && !props.value) ||
+    (props.is_in_context_dependent_mode && !props.has_context)
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key == 'Enter' && e.shiftKey) {
@@ -328,18 +335,24 @@ export const ChatInput: React.FC<Props> = (props) => {
             onClick={(e) => {
               e.stopPropagation()
               if (!props.is_in_code_completions_mode && !props.value) return
+              if (props.is_in_context_dependent_mode && !props.has_context)
+                return
               props.on_copy!()
             }}
             title={
-              !props.is_in_code_completions_mode && !props.value
+              (!props.is_in_code_completions_mode && !props.value) ||
+              (props.is_in_context_dependent_mode && !props.has_context)
                 ? props.submit_disabled_title ?? ''
                 : `Copy to clipboard (${
                     navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
-                      ? '⌥⌘C'
+                      ? '���⌘C'
                       : 'Ctrl+Alt+C'
                   })`
             }
-            disabled={!props.is_in_code_completions_mode && !props.value}
+            disabled={
+              (!props.is_in_code_completions_mode && !props.value) ||
+              (props.is_in_context_dependent_mode && !props.has_context)
+            }
           />
         )}
 
@@ -391,13 +404,9 @@ export const ChatInput: React.FC<Props> = (props) => {
                 styles['footer__right__button--secondary']
               ])}
               onClick={(e) => handle_submit(e, true)}
-              disabled={
-                (!props.is_connected && props.is_web_mode) ||
-                (!props.is_in_code_completions_mode && !props.value)
-              }
+              disabled={is_submit_disabled}
               title={
-                !props.is_connected ||
-                (!props.is_in_code_completions_mode && !props.value)
+                is_submit_disabled
                   ? props.submit_disabled_title
                   : props.is_web_mode
                   ? props.translations.select_preset
@@ -420,13 +429,9 @@ export const ChatInput: React.FC<Props> = (props) => {
             <button
               className={styles.footer__right__button}
               onClick={handle_submit}
-              disabled={
-                (!props.is_connected && props.is_web_mode) ||
-                (!props.is_in_code_completions_mode && !props.value)
-              }
+              disabled={is_submit_disabled}
               title={
-                !props.is_connected ||
-                (!props.is_in_code_completions_mode && !props.value)
+                is_submit_disabled
                   ? props.submit_disabled_title
                   : props.is_web_mode
                   ? props.translations.initialize_chat

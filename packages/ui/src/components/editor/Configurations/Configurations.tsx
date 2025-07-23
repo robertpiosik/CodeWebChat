@@ -24,7 +24,7 @@ export namespace Configurations {
 }
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
-  const is_in_code_completions_mode = props.api_mode === 'code-completions'
+  const is_in_code_completions_mode = props.api_mode == 'code-completions'
 
   return (
     <div className={styles.container}>
@@ -46,16 +46,26 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           const description = description_parts.join(' · ')
 
           const is_item_disabled =
-            (!is_in_code_completions_mode && !props.has_context) ||
+            (props.api_mode == 'edit-context' &&
+              (!props.has_context || !props.has_instructions)) ||
             (is_in_code_completions_mode &&
               (!props.has_active_editor || props.has_active_selection))
 
           const base_title = `${configuration.model} ${description}`
-          const title = is_in_code_completions_mode
-            ? !props.has_active_editor ? 'Configuration requires an active editor' : props.has_active_selection ? 'Configuration cannot be used with a text selection' : base_title
-            : !props.has_context
-            ? 'Add some files to the context first'
-            : base_title
+          const get_title = () => {
+            if (props.api_mode == 'edit-context' && !props.has_context) {
+              return 'Add some files to the context first'
+            }
+            if (is_in_code_completions_mode) {
+              if (!props.has_active_editor) {
+                return 'Configuration in this mode requires an active editor'
+              }
+              if (props.has_active_selection) {
+                return 'Configuration in this mode cannot be used with a text selection'
+              }
+            }
+            return base_title
+          }
 
           return (
             <div
@@ -69,7 +79,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
                 }
               }}
               role="button"
-              title={title}
+              title={get_title()}
             >
               <div className={styles.configurations__item__left}>
                 <div className={styles.configurations__item__left__text}>
