@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Download-VS_Code_Marketplace-blue" alt="Download from Visual Studio Code Marketplace" /></a>
 
-Easy to use AI pair programming tool. Supports any workflow and saves you money.
+Easy to use AI pair programming tool. Faster than agentic coding tools and saves you money.
 
 ✅ **Use your favorite chatbot for coding** \
 ✅ **Set model, thinking mode, etc. with presets** \
