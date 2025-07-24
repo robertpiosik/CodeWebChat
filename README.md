@@ -2,16 +2,16 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Download-VS_Code_Marketplace-blue" alt="Download from Visual Studio Code Marketplace" /></a>
 
-<p>
-<img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
-</p>
-
 100% free and open source AI pair programming tool designed for software engineers.
 
 ✅ **Use your favorite chatbot for coding** \
 ✅ **Set model, thinking mode, etc. with presets** \
 ✅ **Complete suite of API tools** \
 ⚡️ **Blazing fast coding compared to agents**
+
+<p>
+<img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
+</p>
 
 **With CWC you can:**
 
