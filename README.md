@@ -6,8 +6,7 @@
 
 ✅ **Use your favorite chatbot for coding** \
 ✅ **Set model, thinking mode, etc. with presets** \
-✅ **Complete suite of API tools** \
-⚡️ **Blazing fast coding compared to agents**
+✅ **Complete suite of API tools**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
