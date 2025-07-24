@@ -20,6 +20,13 @@ export namespace Configurations {
     has_active_editor: boolean
     has_active_selection: boolean
     has_context: boolean
+    translations: {
+      my_configurations: string
+      add_files_to_context_first: string
+      configuration_requires_active_editor: string
+      configuration_cannot_be_used_with_selection: string
+      manage_configurations: string
+    }
   }
 }
 
@@ -28,7 +35,9 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles['my-configurations']}>MY CONFIGURATIONS</div>
+      <div className={styles['my-configurations']}>
+        {props.translations.my_configurations}
+      </div>
 
       <div className={styles.configurations}>
         {props.configurations.map((configuration, i) => {
@@ -54,14 +63,15 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           const base_title = `${configuration.model} ${description}`
           const get_title = () => {
             if (props.api_mode == 'edit-context' && !props.has_context) {
-              return 'Add some files to the context first'
+              return props.translations.add_files_to_context_first
             }
             if (is_in_code_completions_mode) {
               if (!props.has_active_editor) {
-                return 'Configuration in this mode requires an active editor'
+                return props.translations.configuration_requires_active_editor
               }
               if (props.has_active_selection) {
-                return 'Configuration in this mode cannot be used with a text selection'
+                return props.translations
+                  .configuration_cannot_be_used_with_selection
               }
             }
             return base_title
@@ -94,7 +104,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
       <div className={styles.configurations__create}>
         <Button on_click={props.on_manage_configurations}>
-          Manage Configurations
+          {props.translations.manage_configurations}
         </Button>
       </div>
     </div>

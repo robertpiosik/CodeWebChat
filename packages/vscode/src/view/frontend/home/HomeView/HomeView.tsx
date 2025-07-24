@@ -281,13 +281,6 @@ export const HomeView: React.FC<Props> = (props) => {
               is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
               is_connected={props.is_connected}
               token_count={estimated_input_tokens}
-              submit_disabled_title={
-                !props.is_connected
-                  ? 'WebSocket connection not established. Please install the browser extension.'
-                  : is_in_code_completions_mode
-                  ? props.instructions
-                  : 'Type something'
-              }
               is_in_code_completions_mode={is_in_code_completions_mode}
               has_active_selection={props.has_active_selection}
               has_active_editor={props.has_active_editor}
@@ -303,7 +296,16 @@ export const HomeView: React.FC<Props> = (props) => {
                   'Unable to work with text selection',
                 code_completions_mode_unavailable_without_active_editor:
                   'This mode requires active editor',
-                search: 'Search history'
+                search: 'Search history',
+                websocket_not_connected:
+                  'WebSocket connection not established. Please install the browser extension.',
+                add_files_to_context_first:
+                  'Add some files to the context first',
+                for_history_hint: '(⇅ for history)',
+                copy_to_clipboard: 'Copy to clipboard',
+                insert_symbol: 'Insert symbol',
+                prompt_templates: 'Prompt templates',
+                approximate_token_count: 'Approximate message length in tokens'
               }}
               caret_position_to_set={props.caret_position_to_set}
               on_caret_position_set={props.on_caret_position_set}
@@ -394,6 +396,29 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_preset_duplicate={props.on_preset_duplicate}
                 on_preset_delete={props.on_preset_delete}
                 on_set_default_presets={props.on_set_default_presets}
+                translations={{
+                  my_chat_presets: 'MY CHAT PRESETS',
+                  set_presets_opening_by_default:
+                    'Set presets opening by default',
+                  select_default: 'Select default',
+                  not_connected:
+                    'Not connected. Ensure the browser extension is active',
+                  preset_requires_active_editor:
+                    'Preset in this mode requires an active editor',
+                  preset_cannot_be_used_with_selection:
+                    'Preset in this mode cannot be used with a text selection',
+                  initialize_chat_with_preset:
+                    'Initialize chat with this preset',
+                  add_files_to_context_first:
+                    'Add some files to the context first',
+                  type_or_add_prompt_to_use_preset:
+                    'Type something or add a prefix/suffix to this preset to use it',
+                  copy_to_clipboard: 'Copy to clipboard',
+                  duplicate: 'Duplicate',
+                  edit: 'Edit',
+                  delete: 'Delete',
+                  create_preset: 'Create Preset'
+                }}
               />
             </>
           )}
@@ -415,6 +440,16 @@ export const HomeView: React.FC<Props> = (props) => {
                 }))}
                 on_configuration_click={props.on_configuration_click}
                 on_manage_configurations={props.on_manage_configurations_click}
+                translations={{
+                  my_configurations: 'MY CONFIGURATIONS',
+                  add_files_to_context_first:
+                    'Add some files to the context first',
+                  configuration_requires_active_editor:
+                    'Configuration in this mode requires an active editor',
+                  configuration_cannot_be_used_with_selection:
+                    'Configuration in this mode cannot be used with a text selection',
+                  manage_configurations: 'Manage Configurations'
+                }}
               />
             </>
           )}

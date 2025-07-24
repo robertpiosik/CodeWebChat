@@ -52,6 +52,22 @@ export namespace Presets {
     on_preset_duplicate: (name: string) => void
     on_preset_delete: (name: string) => void
     on_set_default_presets: () => void
+    translations: {
+      my_chat_presets: string
+      set_presets_opening_by_default: string
+      select_default: string
+      not_connected: string
+      preset_requires_active_editor: string
+      preset_cannot_be_used_with_selection: string
+      initialize_chat_with_preset: string
+      add_files_to_context_first: string
+      type_or_add_prompt_to_use_preset: string
+      copy_to_clipboard: string
+      duplicate: string
+      edit: string
+      delete: string
+      create_preset: string
+    }
   }
 }
 
@@ -90,13 +106,15 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles['my-presets']}>
-        <div className={styles['my-presets__left']}>MY CHAT PRESETS</div>
+        <div className={styles['my-presets__left']}>
+          {props.translations.my_chat_presets}
+        </div>
 
         <TextButton
           on_click={props.on_set_default_presets}
-          title="Set presets opening by default"
+          title={props.translations.set_presets_opening_by_default}
         >
-          Select default
+          {props.translations.select_default}
         </TextButton>
       </div>
 
@@ -149,18 +167,18 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
             const get_item_title = () => {
               if (!props.is_connected) {
-                return 'Not connected. Ensure the browser extension is active'
+                return props.translations.not_connected
               } else if (props.is_in_code_completions_mode) {
                 return !props.has_active_editor
-                  ? 'Preset in this mode requires an active editor'
+                  ? props.translations.preset_requires_active_editor
                   : props.has_active_selection
-                  ? 'Preset in this mode cannot be used with a text selection'
-                  : `Initialize chat with this preset`
+                  ? props.translations.preset_cannot_be_used_with_selection
+                  : props.translations.initialize_chat_with_preset
               } else if (
                 props.is_in_context_dependent_mode &&
                 !props.has_context
               ) {
-                return 'Add some files to the context first'
+                return props.translations.add_files_to_context_first
               } else if (
                 !props.is_in_code_completions_mode &&
                 !(
@@ -169,9 +187,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   preset.prompt_suffix
                 )
               ) {
-                return 'Type something or add a prefix/suffix to this preset to use it'
+                return props.translations.type_or_add_prompt_to_use_preset
               }
-              return `Initialize chat with this preset`
+              return props.translations.initialize_chat_with_preset
             }
 
             return (
@@ -213,7 +231,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   {(preset.prompt_prefix || preset.prompt_suffix) && (
                     <IconButton
                       codicon_icon="copy"
-                      title="Copy to clipboard"
+                      title={props.translations.copy_to_clipboard}
                       on_click={(e) => {
                         e.stopPropagation()
                         props.on_preset_copy(preset.name)
@@ -222,7 +240,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   )}
                   <IconButton
                     codicon_icon="files"
-                    title="Duplicate"
+                    title={props.translations.duplicate}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_duplicate(preset.name)
@@ -230,7 +248,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="edit"
-                    title="Edit"
+                    title={props.translations.edit}
                     on_click={(e) => {
                       e.stopPropagation()
                       set_highlighted_preset_name(preset.name)
@@ -239,7 +257,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="trash"
-                    title="Delete"
+                    title={props.translations.delete}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_delete(preset.name)
@@ -256,7 +274,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
       </div>
 
       <div className={styles.presets__create}>
-        <Button on_click={props.on_create_preset}>Create Preset</Button>
+        <Button on_click={props.on_create_preset}>
+          {props.translations.create_preset}
+        </Button>
       </div>
     </div>
   )

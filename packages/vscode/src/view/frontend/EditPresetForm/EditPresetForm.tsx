@@ -5,10 +5,12 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import TextareaAutosize from 'react-textarea-autosize'
 import { Field } from '@ui/components/editor/Field'
 import { Slider } from '@ui/components/editor/Slider'
+import { Button } from '@ui/components/editor/Button'
 
 type Props = {
   preset: Preset
   on_update: (updated_preset: Preset) => void
+  on_save: () => void
   pick_open_router_model: () => void
   on_at_sign_in_affix: () => void
 }
@@ -368,6 +370,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           />
         </Field>
       </>
+      <Button on_click={props.on_save}>Save</Button>
     </div>
   )
 }

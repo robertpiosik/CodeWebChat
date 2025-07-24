@@ -10,6 +10,7 @@ import { Intro } from './intro'
 import styles from './View.module.scss'
 import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
+import { post_message } from './utils/post_message'
 
 const vscode = acquireVsCodeApi()
 
@@ -102,10 +103,20 @@ export const View = () => {
   }, [])
 
   const edit_preset_back_click_handler = () => {
+    post_message(vscode, {
+      command: 'UPDATE_PRESET',
+      updating_preset: updating_preset!,
+      updated_preset: updated_preset!,
+      origin: 'back_button'
+    })
+  }
+
+  const edit_preset_save_handler = () => {
     vscode.postMessage({
       command: 'UPDATE_PRESET',
       updating_preset: updating_preset,
-      updated_preset: updated_preset
+      updated_preset: updated_preset,
+      origin: 'save_button'
     } as WebviewMessage)
   }
 
@@ -224,6 +235,7 @@ export const View = () => {
         <EditPresetForm
           preset={updating_preset}
           on_update={set_updated_preset}
+          on_save={edit_preset_save_handler}
           pick_open_router_model={() => {
             vscode.postMessage({ command: 'PICK_OPEN_ROUTER_MODEL' })
           }}

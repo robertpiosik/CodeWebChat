@@ -13,7 +13,6 @@ type Props = {
   on_copy?: () => void
   token_count?: number
   is_connected: boolean
-  submit_disabled_title?: string
   is_in_code_completions_mode: boolean
   has_active_selection: boolean
   has_active_editor: boolean
@@ -34,6 +33,13 @@ type Props = {
     code_completions_mode_unavailable_with_text_selection: string
     code_completions_mode_unavailable_without_active_editor: string
     search: string
+    websocket_not_connected: string
+    add_files_to_context_first: string
+    for_history_hint: string
+    copy_to_clipboard: string
+    insert_symbol: string
+    prompt_templates: string
+    approximate_token_count: string
   }
   caret_position_to_set?: number
   on_caret_position_set?: () => void
@@ -183,12 +189,15 @@ export const ChatInput: React.FC<Props> = (props) => {
       }
     }
     if (props.is_in_context_dependent_mode && !props.has_context) {
-      return 'Add some files to the context first'
+      return props.translations.add_files_to_context_first
     }
     if (!props.is_in_code_completions_mode && !props.value.trim()) {
       return props.translations.type_something
     }
-    return props.submit_disabled_title
+    if (!props.is_connected && props.is_web_mode) {
+      return props.translations.websocket_not_connected
+    }
+    return ''
   }
 
   const is_copy_disabled =
@@ -252,14 +261,14 @@ export const ChatInput: React.FC<Props> = (props) => {
 
     if (props.is_in_code_completions_mode) {
       if (active_history.length > 0 && is_history_enabled) {
-        return `${props.translations.completion_instructions} (⇅ for history)`
+        return `${props.translations.completion_instructions} ${props.translations.for_history_hint}`
       } else {
         return props.translations.completion_instructions
       }
     }
 
     return active_history.length > 0 && is_history_enabled
-      ? `${props.translations.type_something} (⇅ for history)`
+      ? `${props.translations.type_something} ${props.translations.for_history_hint}`
       : props.translations.type_something
   }, [
     props.is_in_code_completions_mode,
@@ -365,9 +374,9 @@ export const ChatInput: React.FC<Props> = (props) => {
             title={
               is_copy_disabled
                 ? get_disabled_title()
-                : `Copy to clipboard (${
+                : `${props.translations.copy_to_clipboard} (${
                     navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
-                      ? '���⌘C'
+                      ? '⌥⌘C'
                       : 'Ctrl+Alt+C'
                   })`
             }
@@ -390,14 +399,14 @@ export const ChatInput: React.FC<Props> = (props) => {
             <button
               onClick={props.on_at_sign_click}
               className={cn(styles['footer__left__button'])}
-              title="Insert symbol"
+              title={props.translations.insert_symbol}
             >
               <span>@</span>
             </button>
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}
-              title="Prompt templates"
+              title={props.translations.prompt_templates}
             >
               <span className="codicon codicon-json" />
             </button>
@@ -411,7 +420,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             {props.token_count !== undefined && props.token_count > 1 && (
               <div
                 className={styles.footer__right__count}
-                title="Approximate message length in tokens"
+                title={props.translations.approximate_token_count}
               >
                 {format_token_count(props.token_count)}
               </div>

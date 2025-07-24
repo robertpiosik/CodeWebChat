@@ -95,6 +95,7 @@ export interface UpdatePresetMessage extends BaseMessage {
   command: 'UPDATE_PRESET'
   updating_preset: Preset
   updated_preset: Preset
+  origin: 'back_button' | 'save_button'
 }
 
 export interface DeletePresetMessage extends BaseMessage {

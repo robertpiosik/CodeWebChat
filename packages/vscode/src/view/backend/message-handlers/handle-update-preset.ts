@@ -63,27 +63,29 @@ export const handle_update_preset = async (
     return
   }
 
-  const save_changes_button = 'Save'
-  const discard_changes = 'Discard Changes'
-  const result = await vscode.window.showInformationMessage(
-    'Save changes to the preset?',
-    {
-      modal: true,
-      detail: "If you don't save, updates to the preset will be lost."
-    },
-    save_changes_button,
-    discard_changes
-  )
+  if (message.origin === 'back_button') {
+    const save_changes_button = 'Save'
+    const discard_changes = 'Discard Changes'
+    const result = await vscode.window.showInformationMessage(
+      'Save changes to the preset?',
+      {
+        modal: true,
+        detail: "If you don't save, updates to the preset will be lost."
+      },
+      save_changes_button,
+      discard_changes
+    )
 
-  if (result == discard_changes) {
-    provider.send_message<ExtensionMessage>({
-      command: 'PRESET_UPDATED'
-    })
-    return
-  }
+    if (result == discard_changes) {
+      provider.send_message<ExtensionMessage>({
+        command: 'PRESET_UPDATED'
+      })
+      return
+    }
 
-  if (result != save_changes_button) {
-    return
+    if (result != save_changes_button) {
+      return
+    }
   }
 
   const updated_ui_preset = { ...message.updated_preset }
@@ -139,18 +141,22 @@ export const handle_update_preset = async (
       const updated_selected_names = selected_names.map((name) =>
         name == message.updating_preset.name ? final_name : name
       )
-      await provider.context.globalState.update(state_key, updated_selected_names)
+      await provider.context.globalState.update(
+        state_key,
+        updated_selected_names
+      )
     }
   }
 
   // Send updated selected presets to webview
   const current_mode_state_key = provider.get_selected_presets_state_key()
-  const current_mode_selected_presets =
-    provider.context.globalState.get<string[]>(current_mode_state_key, [])
-    provider.send_message<SelectedPresetsMessage>({
-      command: 'SELECTED_PRESETS',
-      names: current_mode_selected_presets
-    })
+  const current_mode_selected_presets = provider.context.globalState.get<
+    string[]
+  >(current_mode_state_key, [])
+  provider.send_message<SelectedPresetsMessage>({
+    command: 'SELECTED_PRESETS',
+    names: current_mode_selected_presets
+  })
 
   provider.send_presets_to_webview(webview_view.webview)
   provider.send_message<ExtensionMessage>({
