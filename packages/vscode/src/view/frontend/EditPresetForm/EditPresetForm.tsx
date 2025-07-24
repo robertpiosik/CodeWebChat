@@ -6,6 +6,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { Field } from '@ui/components/editor/Field'
 import { Slider } from '@ui/components/editor/Slider'
 import { Button } from '@ui/components/editor/Button'
+import { BackendMessage } from '@/view/types/messages'
 
 type Props = {
   preset: Preset
@@ -109,14 +110,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const handle_message = (event: MessageEvent) => {
-      const message = event.data
+      const message = event.data as BackendMessage
       if (message.command == 'NEWLY_PICKED_OPEN_ROUTER_MODEL') {
         set_model(message.model_id)
       } else if (
         message.command == 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
       ) {
         const text_to_insert = message.text_to_insert
-        console.log(text_to_insert)
         let ref, value, setter
         if (active_field == 'prompt_prefix') {
           ref = prefix_ref

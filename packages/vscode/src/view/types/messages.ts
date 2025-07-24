@@ -333,6 +333,11 @@ export interface VersionMessage extends BaseMessage {
   version: string
 }
 
+export interface AtSignQuickPickForPresetAffixResultMessage extends BaseMessage {
+  command: 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
+  text_to_insert: string
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
@@ -348,8 +353,8 @@ export type BackendMessage =
   | PresetCreatedMessage
   | PresetUpdatedMessage
   | NewlyPickedOpenRouterModelMessage
-  | ExecuteCommandMessage
   | HomeViewTypeMessage
   | WebModeMessage
   | ApiModeMessage
   | VersionMessage
+  | AtSignQuickPickForPresetAffixResultMessage
