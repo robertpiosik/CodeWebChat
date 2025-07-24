@@ -2,11 +2,11 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-100% free coding tool for AI-assisted pair programming. Faster than agents. Saves you money.
+100% free VS Code extension for AI-assisted pair programming. Faster and more accurate results than agentic coding tools. Saves you money.
 
 ✅ **Use your favorite chatbot for coding** \
-✅ **Set model, thinking mode, etc. with presets** \
-✅ **Complete suite of API tools**
+✅ **Complete suite of API tools** \
+🙋 Built by an independent developer
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
