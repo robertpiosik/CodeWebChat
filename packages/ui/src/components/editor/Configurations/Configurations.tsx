@@ -94,7 +94,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
       <div className={styles.configurations__create}>
         <Button on_click={props.on_manage_configurations}>
-          Manage configurations
+          Manage Configurations
         </Button>
       </div>
     </div>
