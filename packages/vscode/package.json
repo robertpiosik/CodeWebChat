@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC)",
   "description": "Connect VS Code to 15+ chatbots",
-  "version": "1.188.0",
+  "version": "1.189.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
