@@ -1,6 +1,6 @@
 import { ViewProvider } from '@/view/backend/view-provider'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
-import { ApiToolConfiguration, ExtensionMessage } from '@/view/types/messages'
+import { ApiToolConfiguration, BackendMessage } from '@/view/types/messages'
 import { ApiMode } from '@shared/types/modes'
 
 export const handle_get_api_tool_configurations = async (
@@ -18,7 +18,7 @@ export const handle_get_api_tool_configurations = async (
     'code-completions': configs[1]
   }
 
-  provider.send_message<ExtensionMessage>({
+  provider.send_message({
     command: 'API_TOOL_CONFIGURATIONS',
     configurations
   })

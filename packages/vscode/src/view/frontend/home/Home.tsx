@@ -5,12 +5,13 @@ import { EditFormat } from '@shared/types/edit-format'
 import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import {
-  ExtensionMessage,
+  BackendMessage,
   ApiToolConfigurationsMessage,
   PresetsMessage,
-  WebviewMessage
+  FrontendMessage
 } from '@/view/types/messages'
 import { ApiToolConfiguration } from '@/view/types/messages'
+import { post_message } from '../utils/post_message'
 
 type Props = {
   vscode: any
@@ -64,7 +65,7 @@ export const Home: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
-      const message = event.data as ExtensionMessage
+      const message = event.data as BackendMessage
       switch (message.command) {
         case 'PRESETS':
           set_all_presets((message as PresetsMessage).presets)
@@ -116,7 +117,7 @@ export const Home: React.FC<Props> = (props) => {
 
     window.addEventListener('message', handle_message)
 
-    const initial_messages: WebviewMessage[] = [
+    const initial_messages: FrontendMessage[] = [
       { command: 'GET_PRESETS' },
       { command: 'GET_SELECTED_PRESETS' },
       { command: 'GET_HISTORY' },
@@ -125,7 +126,7 @@ export const Home: React.FC<Props> = (props) => {
       { command: 'GET_EDIT_FORMAT' },
       { command: 'GET_API_TOOL_CONFIGURATIONS' }
     ]
-    initial_messages.forEach((message) => props.vscode.postMessage(message))
+    initial_messages.forEach((message) => post_message(props.vscode, message))
 
     return () => window.removeEventListener('message', handle_message)
   }, [])
@@ -168,11 +169,11 @@ export const Home: React.FC<Props> = (props) => {
       const new_history = [instruction, ...(history || [])].slice(0, 100)
       set_history(new_history)
 
-      props.vscode.postMessage({
+      post_message(props.vscode, {
         command: 'SAVE_HISTORY',
         messages: new_history,
         mode: current_mode
-      } as WebviewMessage)
+      })
     }
   }
 
@@ -180,10 +181,10 @@ export const Home: React.FC<Props> = (props) => {
     prompt: string
     preset_names: string[]
   }) => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'SEND_PROMPT',
       preset_names: params.preset_names
-    } as WebviewMessage)
+    })
 
     update_chat_history(params.prompt)
   }
@@ -192,11 +193,11 @@ export const Home: React.FC<Props> = (props) => {
     instruction: string,
     preset_name?: string
   ) => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'COPY_PROMPT',
       instruction,
       preset_name
-    } as WebviewMessage)
+    })
 
     if (instruction.trim() && !preset_name) {
       update_chat_history(instruction)
@@ -210,11 +211,11 @@ export const Home: React.FC<Props> = (props) => {
     }
 
     // Send message to extension to save the new order
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'SAVE_PRESETS_ORDER',
       presets: reordered_presets.map((preset) => ({
         name: preset.name,
-        chatbot: String(preset.chatbot),
+        chatbot: preset.chatbot,
         prompt_prefix: preset.prompt_prefix,
         prompt_suffix: preset.prompt_suffix,
         model: preset.model,
@@ -225,13 +226,13 @@ export const Home: React.FC<Props> = (props) => {
         options: preset.options,
         port: preset.port
       }))
-    } as WebviewMessage)
+    })
   }
 
   const handle_create_preset = () => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'CREATE_PRESET'
-    } as WebviewMessage)
+    })
   }
 
   const handle_preset_edit = (name: string) => {
@@ -241,48 +242,48 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   const handle_preset_duplicate = (name: string) => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'DUPLICATE_PRESET',
       name
-    } as WebviewMessage)
+    })
   }
 
   const handle_preset_delete = (name: string) => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'DELETE_PRESET',
       name
-    } as WebviewMessage)
+    })
   }
 
   const handle_set_default_presets = () => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'SHOW_PRESET_PICKER'
-    } as WebviewMessage)
+    })
   }
 
   const handle_chat_edit_format_change = (edit_format: EditFormat) => {
     set_chat_edit_format(edit_format)
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'SAVE_EDIT_FORMAT',
       target: 'chat',
       edit_format
-    } as WebviewMessage)
+    })
   }
 
   const handle_api_edit_format_change = (edit_format: EditFormat) => {
     set_api_edit_format(edit_format)
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'SAVE_EDIT_FORMAT',
       target: 'api',
       edit_format
-    } as WebviewMessage)
+    })
   }
 
   const handle_caret_position_change = (caret_position: number) => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'CARET_POSITION_CHANGED',
       caret_position
-    } as WebviewMessage)
+    })
   }
 
   const get_current_instructions = () => {
@@ -302,10 +303,10 @@ export const Home: React.FC<Props> = (props) => {
   const handle_edit_context_click = () => {
     const instruction = get_current_instructions()
 
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'EDIT_CONTEXT',
       use_quick_pick: false
-    } as WebviewMessage)
+    })
 
     update_chat_history(instruction)
   }
@@ -313,10 +314,10 @@ export const Home: React.FC<Props> = (props) => {
   const handle_edit_context_with_quick_pick_click = () => {
     const instruction = get_current_instructions()
 
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'EDIT_CONTEXT',
       use_quick_pick: true
-    } as WebviewMessage)
+    })
 
     update_chat_history(instruction)
   }
@@ -324,10 +325,10 @@ export const Home: React.FC<Props> = (props) => {
   const handle_code_completion_click = () => {
     const instruction = get_current_instructions()
 
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'CODE_COMPLETION',
       use_quick_pick: false
-    } as WebviewMessage)
+    })
 
     if (instruction.trim()) {
       update_chat_history(instruction)
@@ -337,10 +338,10 @@ export const Home: React.FC<Props> = (props) => {
   const handle_code_completion_with_quick_pick_click = () => {
     const instruction = get_current_instructions()
 
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'CODE_COMPLETION',
       use_quick_pick: true
-    } as WebviewMessage)
+    })
 
     if (instruction.trim()) {
       update_chat_history(instruction)
@@ -348,34 +349,34 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   const handle_at_sign_click = () => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'SHOW_AT_SIGN_QUICK_PICK'
-    } as WebviewMessage)
+    })
   }
 
   const handle_curly_braces_click = () => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'SHOW_PROMPT_TEMPLATE_QUICK_PICK'
-    } as WebviewMessage)
+    })
   }
 
   const handle_search_click = () => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'SHOW_HISTORY_QUICK_PICK'
-    } as WebviewMessage)
+    })
   }
 
   const handle_manage_configurations_click = () => {
     if (props.api_mode == 'edit-context') {
-      props.vscode.postMessage({
+      post_message(props.vscode, {
         command: 'EXECUTE_COMMAND',
         command_id: 'codeWebChat.settings.editContext'
-      } as WebviewMessage)
+      })
     } else if (props.api_mode == 'code-completions') {
-      props.vscode.postMessage({
+      post_message(props.vscode, {
         command: 'EXECUTE_COMMAND',
         command_id: 'codeWebChat.settings.codeCompletions'
-      } as WebviewMessage)
+      })
     }
   }
 
@@ -383,27 +384,27 @@ export const Home: React.FC<Props> = (props) => {
     const instruction = get_current_instructions()
 
     if (props.api_mode == 'edit-context') {
-      props.vscode.postMessage({
+      post_message(props.vscode, {
         command: 'EDIT_CONTEXT',
         use_quick_pick: false,
         config_index: index
-      } as WebviewMessage)
+      })
     } else if (props.api_mode == 'code-completions') {
-      props.vscode.postMessage({
+      post_message(props.vscode, {
         command: 'CODE_COMPLETION',
         use_quick_pick: false,
         config_index: index
-      } as WebviewMessage)
+      })
     }
 
     update_chat_history(instruction)
   }
 
   const handle_quick_action_click = (command: string) => {
-    props.vscode.postMessage({
+    post_message(props.vscode, {
       command: 'EXECUTE_COMMAND',
       command_id: command
-    } as WebviewMessage)
+    })
   }
 
   const instructions =

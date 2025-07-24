@@ -1,10 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/view/backend/view-provider'
-import {
-  ExtensionMessage,
-  SelectedPresetsMessage,
-  UpdatePresetMessage
-} from '@/view/types/messages'
+import { UpdatePresetMessage } from '@/view/types/messages'
 import { Preset } from '@shared/types/preset'
 import {
   ConfigPresetFormat,
@@ -57,7 +53,7 @@ export const handle_update_preset = async (
   )
 
   if (!has_changes) {
-    provider.send_message<ExtensionMessage>({
+    provider.send_message({
       command: 'PRESET_UPDATED'
     })
     return
@@ -77,7 +73,7 @@ export const handle_update_preset = async (
     )
 
     if (result == discard_changes) {
-      provider.send_message<ExtensionMessage>({
+      provider.send_message({
         command: 'PRESET_UPDATED'
       })
       return
@@ -153,13 +149,13 @@ export const handle_update_preset = async (
   const current_mode_selected_presets = provider.context.globalState.get<
     string[]
   >(current_mode_state_key, [])
-  provider.send_message<SelectedPresetsMessage>({
+  provider.send_message({
     command: 'SELECTED_PRESETS',
     names: current_mode_selected_presets
   })
 
   provider.send_presets_to_webview(webview_view.webview)
-  provider.send_message<ExtensionMessage>({
+  provider.send_message({
     command: 'PRESET_UPDATED'
   })
 }

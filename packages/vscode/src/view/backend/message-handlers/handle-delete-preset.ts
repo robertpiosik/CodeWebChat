@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/view/backend/view-provider'
-import { DeletePresetMessage, ExtensionMessage } from '@/view/types/messages'
+import { DeletePresetMessage, BackendMessage } from '@/view/types/messages'
 import { ConfigPresetFormat } from '@/view/backend/helpers/preset-format-converters'
 
 export const handle_delete_preset = async (
@@ -87,7 +87,7 @@ export const handle_delete_preset = async (
     const current_mode_selected_presets = provider.context.globalState.get<
       string[]
     >(current_mode_state_key, [])
-    provider.send_message<ExtensionMessage>({
+    provider.send_message({
       command: 'SELECTED_PRESETS',
       names: current_mode_selected_presets
     })

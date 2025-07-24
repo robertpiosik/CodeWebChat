@@ -1,5 +1,5 @@
-import { WebviewMessage } from '@/view/types/messages'
+import { FrontendMessage } from '@/view/types/messages'
 
-export const post_message = (vscode: any, message: WebviewMessage) => {
+export const post_message = (vscode: any, message: FrontendMessage) => {
   vscode.postMessage(message)
 }

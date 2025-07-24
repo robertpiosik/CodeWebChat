@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/view/backend/view-provider'
-import { ExtensionMessage } from '@/view/types/messages'
+import { BackendMessage } from '@/view/types/messages'
 import axios from 'axios'
 
 export const handle_pick_open_router_model = async (
@@ -22,7 +22,7 @@ export const handle_pick_open_router_model = async (
     })
 
     if (selected) {
-      provider.send_message<ExtensionMessage>({
+      provider.send_message({
         command: 'NEWLY_PICKED_OPEN_ROUTER_MODEL',
         model_id: selected.description!
       })

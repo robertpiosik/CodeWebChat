@@ -1,8 +1,8 @@
 import { ViewProvider } from '@/view/backend/view-provider'
-import { ExtensionMessage } from '@/view/types/messages'
+import { BackendMessage } from '@/view/types/messages'
 
 export const handle_get_instructions = (provider: ViewProvider): void => {
-  provider.send_message<ExtensionMessage>({
+  provider.send_message({
     command: 'INSTRUCTIONS',
     ask: provider.ask_instructions,
     edit_context: provider.edit_instructions,

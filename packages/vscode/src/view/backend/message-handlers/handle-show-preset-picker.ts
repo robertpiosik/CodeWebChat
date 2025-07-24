@@ -1,6 +1,5 @@
 import { ViewProvider } from '@/view/backend/view-provider'
 import * as vscode from 'vscode'
-import { ExtensionMessage } from '@/view/types/messages'
 import { ConfigPresetFormat } from '../helpers/preset-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
@@ -78,7 +77,7 @@ export const handle_show_preset_picker = async (
       selected_names
     )
 
-    provider.send_message<ExtensionMessage>({
+    provider.send_message({
       command: 'SELECTED_PRESETS',
       names: selected_names
     })

@@ -16,7 +16,7 @@ export type ApiToolConfiguration = {
   max_concurrency?: number
 }
 
-// Messages from webview to extension
+// Messages sent to the backend
 export interface GetInstructionsMessage extends BaseMessage {
   command: 'GET_INSTRUCTIONS'
 }
@@ -195,7 +195,47 @@ export interface GetVersionMessage extends BaseMessage {
   command: 'GET_VERSION'
 }
 
-// Messages from extension to webview:
+export type FrontendMessage =
+  | GetInstructionsMessage
+  | SaveInstructionsMessage
+  | GetEditFormat
+  | SaveEditFormatMessage
+  | GetConnectionStatusMessage
+  | GetPresetsMessage
+  | GetSelectedPresetsMessage
+  | SavePresetsOrderMessage
+  | SendPromptMessage
+  | CopyPromptMessage
+  | ShowPresetPickerMessage
+  | RequestEditorStateMessage
+  | RequestEditorSelectionStateMessage
+  | GetHistoryMessage
+  | SaveHistoryMessage
+  | GetCurrentTokenCountMessage
+  | UpdatePresetMessage
+  | DeletePresetMessage
+  | DuplicatePresetMessage
+  | CreatePresetMessage
+  | ExecuteCommandMessage
+  | ShowHistoryQuickPickMessage
+  | ShowPromptTemplateQuickPickMessage
+  | PreviewPresetMessage
+  | CaretPositionChangedWebviewMessage
+  | PickOpenRouterModel
+  | SaveHomeViewTypeMessage
+  | GetHomeViewTypeMessage
+  | EditContextMessage
+  | CodeCompletionMessage
+  | ShowAtSignQuickPickMessage
+  | ShowAtSignQuickPickForPresetAffixMessage
+  | SaveWebModeMessage
+  | GetWebModeMessage
+  | GetApiModeMessage
+  | SaveApiModeMessage
+  | GetApiToolConfigurationsMessage
+  | GetVersionMessage
+
+// Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
   ask: string
@@ -293,48 +333,7 @@ export interface VersionMessage extends BaseMessage {
   version: string
 }
 
-// Union type of all possible incoming messages from webview
-export type WebviewMessage =
-  | GetInstructionsMessage
-  | SaveInstructionsMessage
-  | GetEditFormat
-  | SaveEditFormatMessage
-  | GetConnectionStatusMessage
-  | GetPresetsMessage
-  | GetSelectedPresetsMessage
-  | SavePresetsOrderMessage
-  | SendPromptMessage
-  | CopyPromptMessage
-  | ShowPresetPickerMessage
-  | RequestEditorStateMessage
-  | RequestEditorSelectionStateMessage
-  | GetHistoryMessage
-  | SaveHistoryMessage
-  | GetCurrentTokenCountMessage
-  | UpdatePresetMessage
-  | DeletePresetMessage
-  | DuplicatePresetMessage
-  | CreatePresetMessage
-  | ExecuteCommandMessage
-  | ShowHistoryQuickPickMessage
-  | ShowPromptTemplateQuickPickMessage
-  | PreviewPresetMessage
-  | CaretPositionChangedWebviewMessage
-  | PickOpenRouterModel
-  | SaveHomeViewTypeMessage
-  | GetHomeViewTypeMessage
-  | EditContextMessage
-  | CodeCompletionMessage
-  | ShowAtSignQuickPickMessage
-  | ShowAtSignQuickPickForPresetAffixMessage
-  | SaveWebModeMessage
-  | GetWebModeMessage
-  | GetApiModeMessage
-  | SaveApiModeMessage
-  | GetApiToolConfigurationsMessage
-  | GetVersionMessage
-
-export type ExtensionMessage =
+export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
   | EditFormatMessage

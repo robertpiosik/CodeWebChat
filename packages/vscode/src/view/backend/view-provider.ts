@@ -2,12 +2,8 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import {
-  WebviewMessage,
-  ExtensionMessage,
-  PresetsMessage,
-  TokenCountMessage,
-  SelectionTextMessage,
-  InstructionsMessage
+  FrontendMessage,
+  BackendMessage,
 } from '../types/messages'
 import { WebsitesProvider } from '../../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
@@ -105,7 +101,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   ) {
     this.websocket_server_instance.on_connection_status_change((connected) => {
       if (this._webview_view) {
-        this.send_message<ExtensionMessage>({
+        this.send_message({
           command: 'CONNECTION_STATUS',
           connected
         })
@@ -172,18 +168,17 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       'no-context-instructions',
       ''
     )
-    this.code_completion_instructions =
-      this.context.workspaceState.get<string>(
-        'code-completions-instructions',
-        ''
-      )
+    this.code_completion_instructions = this.context.workspaceState.get<string>(
+      'code-completions-instructions',
+      ''
+    )
 
     const update_editor_state = () => {
       const has_active_editor = !!vscode.window.activeTextEditor
       if (has_active_editor != this.has_active_editor) {
         this.has_active_editor = has_active_editor
         if (this._webview_view) {
-          this.send_message<ExtensionMessage>({
+          this.send_message({
             command: 'EDITOR_STATE_CHANGED',
             has_active_editor: has_active_editor
           })
@@ -201,7 +196,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       if (has_selection != this.has_active_selection) {
         this.has_active_selection = has_selection
         if (this._webview_view) {
-          this.send_message<ExtensionMessage>({
+          this.send_message({
             command: 'EDITOR_SELECTION_CHANGED',
             has_selection: has_selection
           })
@@ -216,7 +211,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         : false
       this.has_active_selection = has_selection
       if (this._webview_view) {
-        this.send_message<ExtensionMessage>({
+        this.send_message({
           command: 'EDITOR_SELECTION_CHANGED',
           has_selection: has_selection
         })
@@ -231,7 +226,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         )
 
         if (this._webview_view) {
-          this.send_message<SelectionTextMessage>({
+          this.send_message({
             command: 'SELECTION_TEXT_UPDATED',
             text: selected_text
           })
@@ -266,7 +261,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public send_message<T>(message: T) {
+  public send_message(message: BackendMessage) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
     }
@@ -287,7 +282,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     webview_view.webview.html = this._get_html_for_webview(webview_view.webview)
 
     webview_view.webview.onDidReceiveMessage(
-      async (message: WebviewMessage) => {
+      async (message: FrontendMessage) => {
         try {
           if (message.command == 'GET_HISTORY') {
             handle_get_history(this)
@@ -433,7 +428,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           current_token_count += file_token_count
         }
 
-        this.send_message<TokenCountMessage>({
+        this.send_message({
           command: 'TOKEN_COUNT_UPDATED',
           token_count: current_token_count
         })
@@ -443,7 +438,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         vscode.window.showErrorMessage(
           `Error calculating token count: ${error.message}`
         )
-        this.send_message<TokenCountMessage>({
+        this.send_message({
           command: 'TOKEN_COUNT_UPDATED',
           token_count: 0
         })
@@ -475,7 +470,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         return [mode, presets_ui]
       })
     ) as { [T in WebMode]: Preset[] }
-    this.send_message<PresetsMessage>({
+    this.send_message({
       command: 'PRESETS',
       presets: all_presets
     })
@@ -579,7 +574,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this.caret_position = new_caret_position
 
     this.context.workspaceState.update(instruction_key, new_instructions)
-    this.send_message<InstructionsMessage>({
+    this.send_message({
       command: 'INSTRUCTIONS',
       ask: this.ask_instructions,
       edit_context: this.edit_instructions,

@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { HOME_VIEW_TYPES } from '@/view/types/home-view-type'
-import { InstructionsMessage } from '@/view/types/messages'
 import { ApiMode, WebMode } from '@shared/types/modes'
 
 type PromptTemplate = {
@@ -67,7 +66,7 @@ export const handle_show_prompt_template_quick_pick = async (
     }
 
     await provider.context.workspaceState.update(instruction_key, text)
-    provider.send_message<InstructionsMessage>({
+    provider.send_message({
       command: 'INSTRUCTIONS',
       ask: provider.ask_instructions,
       edit_context: provider.edit_instructions,

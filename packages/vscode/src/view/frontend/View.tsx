@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm } from '@/view/frontend/EditPresetForm'
 import { Preset } from '@shared/types/preset'
-import { ExtensionMessage, WebviewMessage } from '../types/messages'
+import { BackendMessage, FrontendMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { Intro } from './intro'
@@ -51,15 +51,15 @@ export const View = () => {
     else if (mode == 'code-completions')
       set_code_completions_instructions(value)
 
-    vscode.postMessage({
+    post_message(vscode, {
       command: 'SAVE_INSTRUCTIONS',
       instruction: value,
       mode: mode
-    } as WebviewMessage)
+    })
   }
 
   useEffect(() => {
-    const handle_message = (event: MessageEvent<ExtensionMessage>) => {
+    const handle_message = (event: MessageEvent<BackendMessage>) => {
       const message = event.data
       if (message.command == 'PRESET_UPDATED') {
         set_updating_preset(undefined)
@@ -87,7 +87,7 @@ export const View = () => {
     }
     window.addEventListener('message', handle_message)
 
-    const initial_messages: WebviewMessage[] = [
+    const initial_messages: FrontendMessage[] = [
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_VERSION' },
       { command: 'GET_HOME_VIEW_TYPE' },
@@ -97,7 +97,7 @@ export const View = () => {
       { command: 'REQUEST_EDITOR_STATE' },
       { command: 'REQUEST_EDITOR_SELECTION_STATE' }
     ]
-    initial_messages.forEach((message) => vscode.postMessage(message))
+    initial_messages.forEach((message) => post_message(vscode, message))
 
     return () => window.removeEventListener('message', handle_message)
   }, [])
@@ -112,55 +112,55 @@ export const View = () => {
   }
 
   const edit_preset_save_handler = () => {
-    vscode.postMessage({
+    post_message(vscode, {
       command: 'UPDATE_PRESET',
-      updating_preset: updating_preset,
-      updated_preset: updated_preset,
+      updating_preset: updating_preset!,
+      updated_preset: updated_preset!,
       origin: 'save_button'
-    } as WebviewMessage)
+    })
   }
 
   const handle_preview_preset = () => {
-    vscode.postMessage({
+    post_message(vscode, {
       command: 'PREVIEW_PRESET',
-      preset: updated_preset
-    } as WebviewMessage)
+      preset: updated_preset!
+    })
   }
 
   const handle_web_mode_change = (new_mode: WebMode) => {
     set_web_mode(new_mode)
-    vscode.postMessage({
+    post_message(vscode, {
       command: 'SAVE_WEB_MODE',
       mode: new_mode
-    } as WebviewMessage)
-    vscode.postMessage({
+    })
+    post_message(vscode, {
       command: 'GET_SELECTED_PRESETS'
-    } as WebviewMessage)
-    vscode.postMessage({
+    })
+    post_message(vscode, {
       command: 'GET_CURRENT_TOKEN_COUNT'
-    } as WebviewMessage)
+    })
   }
 
   const handle_api_mode_change = (new_mode: ApiMode) => {
     set_api_mode(new_mode)
-    vscode.postMessage({
+    post_message(vscode, {
       command: 'SAVE_API_MODE',
       mode: new_mode
-    } as WebviewMessage)
-    vscode.postMessage({
+    })
+    post_message(vscode, {
       command: 'GET_SELECTED_PRESETS'
-    } as WebviewMessage)
-    vscode.postMessage({
+    })
+    post_message(vscode, {
       command: 'GET_CURRENT_TOKEN_COUNT'
-    } as WebviewMessage)
+    })
   }
 
   const handle_home_view_type_change = (view_type: HomeViewType) => {
     set_home_view_type(view_type)
-    vscode.postMessage({
+    post_message(vscode, {
       command: 'SAVE_HOME_VIEW_TYPE',
       view_type
-    } as WebviewMessage)
+    })
   }
 
   if (
@@ -237,13 +237,13 @@ export const View = () => {
           on_update={set_updated_preset}
           on_save={edit_preset_save_handler}
           pick_open_router_model={() => {
-            vscode.postMessage({ command: 'PICK_OPEN_ROUTER_MODEL' })
+            post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
           }}
           on_at_sign_in_affix={() => {
-            vscode.postMessage({
+            post_message(vscode, {
               command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX',
               is_for_code_completions: is_for_code_completions
-            } as WebviewMessage)
+            })
           }}
         />
       </UiPage>
