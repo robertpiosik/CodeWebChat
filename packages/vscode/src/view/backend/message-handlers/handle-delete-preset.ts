@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/view/backend/view-provider'
-import { DeletePresetMessage, BackendMessage } from '@/view/types/messages'
+import { DeletePresetMessage } from '@/view/types/messages'
 import { ConfigPresetFormat } from '@/view/backend/helpers/preset-format-converters'
 
 export const handle_delete_preset = async (

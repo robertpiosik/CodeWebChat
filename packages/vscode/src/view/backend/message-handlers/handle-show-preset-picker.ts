@@ -11,17 +11,9 @@ export const handle_show_preset_picker = async (
   const web_chat_presets =
     config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
-  const selected_preset_names_state_key = provider.get_selected_presets_state_key()
-  const available_preset_names = web_chat_presets
-
-    .filter(
-      (preset) =>
-        CHATBOTS[preset.chatbot] &&
-        (provider.web_mode != 'code-completions'
-          ? preset
-          : !preset.promptPrefix && !preset.promptSuffix)
-    )
-    .map((preset) => preset.name)
+  const selected_preset_names_state_key =
+    provider.get_selected_presets_state_key()
+  const available_preset_names = web_chat_presets.map((preset) => preset.name)
   let selected_preset_names = provider.context.globalState.get<string[]>(
     selected_preset_names_state_key,
     []

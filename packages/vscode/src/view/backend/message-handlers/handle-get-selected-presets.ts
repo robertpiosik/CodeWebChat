@@ -1,5 +1,4 @@
 import { ViewProvider } from '@/view/backend/view-provider'
-import { BackendMessage } from '@/view/types/messages'
 
 export const handle_get_selected_presets = (provider: ViewProvider): void => {
   const state_key = provider.get_selected_presets_state_key()
