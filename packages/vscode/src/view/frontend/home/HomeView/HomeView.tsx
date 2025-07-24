@@ -284,6 +284,8 @@ export const HomeView: React.FC<Props> = (props) => {
               submit_disabled_title={
                 !props.is_connected
                   ? 'WebSocket connection not established. Please install the browser extension.'
+                  : is_in_code_completions_mode
+                  ? props.instructions
                   : 'Type something'
               }
               is_in_code_completions_mode={is_in_code_completions_mode}

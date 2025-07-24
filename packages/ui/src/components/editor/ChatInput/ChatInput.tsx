@@ -155,11 +155,7 @@ export const ChatInput: React.FC<Props> = (props) => {
     with_control?: boolean
   ) => {
     e.stopPropagation()
-    if (
-      (!props.is_connected && props.is_web_mode) ||
-      (!props.is_in_code_completions_mode && !props.value)
-    )
-      return
+    if (is_submit_disabled) return
     if (with_control || e.ctrlKey || e.metaKey) {
       props.on_submit_with_control()
     } else {
@@ -170,8 +166,36 @@ export const ChatInput: React.FC<Props> = (props) => {
 
   const is_submit_disabled =
     (!props.is_connected && props.is_web_mode) ||
-    (!props.is_in_code_completions_mode && !props.value) ||
-    (props.is_in_context_dependent_mode && !props.has_context)
+    (!props.is_in_code_completions_mode && !props.value.trim()) ||
+    (props.is_in_context_dependent_mode && !props.has_context) ||
+    (props.is_in_code_completions_mode &&
+      (props.has_active_selection || !props.has_active_editor))
+
+  const get_disabled_title = () => {
+    if (props.is_in_code_completions_mode) {
+      if (props.has_active_selection) {
+        return props.translations
+          .code_completions_mode_unavailable_with_text_selection
+      }
+      if (!props.has_active_editor) {
+        return props.translations
+          .code_completions_mode_unavailable_without_active_editor
+      }
+    }
+    if (props.is_in_context_dependent_mode && !props.has_context) {
+      return 'Add some files to the context first'
+    }
+    if (!props.is_in_code_completions_mode && !props.value.trim()) {
+      return props.translations.type_something
+    }
+    return props.submit_disabled_title
+  }
+
+  const is_copy_disabled =
+    (!props.is_in_code_completions_mode && !props.value.trim()) ||
+    (props.is_in_context_dependent_mode && !props.has_context) ||
+    (props.is_in_code_completions_mode &&
+      (props.has_active_selection || !props.has_active_editor))
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key == 'Enter' && e.shiftKey) {
@@ -335,24 +359,19 @@ export const ChatInput: React.FC<Props> = (props) => {
             onClick={(e) => {
               e.stopPropagation()
               if (!props.is_in_code_completions_mode && !props.value) return
-              if (props.is_in_context_dependent_mode && !props.has_context)
-                return
+              if (is_copy_disabled) return
               props.on_copy!()
             }}
             title={
-              (!props.is_in_code_completions_mode && !props.value) ||
-              (props.is_in_context_dependent_mode && !props.has_context)
-                ? props.submit_disabled_title ?? ''
+              is_copy_disabled
+                ? get_disabled_title()
                 : `Copy to clipboard (${
                     navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
                       ? '���⌘C'
                       : 'Ctrl+Alt+C'
                   })`
             }
-            disabled={
-              (!props.is_in_code_completions_mode && !props.value) ||
-              (props.is_in_context_dependent_mode && !props.has_context)
-            }
+            disabled={is_copy_disabled}
           />
         )}
 
@@ -407,7 +426,7 @@ export const ChatInput: React.FC<Props> = (props) => {
               disabled={is_submit_disabled}
               title={
                 is_submit_disabled
-                  ? props.submit_disabled_title
+                  ? get_disabled_title()
                   : props.is_web_mode
                   ? props.translations.select_preset
                   : props.translations.select_config
@@ -432,7 +451,7 @@ export const ChatInput: React.FC<Props> = (props) => {
               disabled={is_submit_disabled}
               title={
                 is_submit_disabled
-                  ? props.submit_disabled_title
+                  ? get_disabled_title()
                   : props.is_web_mode
                   ? props.translations.initialize_chat
                   : props.translations.send_request
