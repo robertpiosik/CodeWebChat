@@ -2,10 +2,10 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-100% free VS Code extension for AI-assisted pair programming. Faster and more accurate results than agentic coding tools. Saves you money.
+100% free VS Code extension for AI-assisted pair programming. Designed for faster and more accurate results than agentic coding tools. Saves you money.
 
-✅ **Use your favorite chatbot for coding** \
-✅ **Complete suite of API tools** \
+👉️ **Connect the editor with 15+ chatbots** \
+👉️ **Complete suite of API tools** \
 🙋 Built by an independent developer
 
 <p>
