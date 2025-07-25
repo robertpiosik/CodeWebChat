@@ -67,14 +67,19 @@
         var(--padding-3px);
       color: var(--vscode-icon-foreground);
       cursor: pointer;
-      opacity: 0.7;
+      opacity: 0.8;
 
       &::before {
         font-size: var(--font-size-13px);
       }
 
-      &:hover {
+      &:hover:enabled {
         opacity: 1;
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: default;
       }
     }
 

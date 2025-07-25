@@ -311,8 +311,8 @@ export const ChatInput: React.FC<Props> = (props) => {
           if (e.key == 'c' && e.altKey && (e.ctrlKey || e.metaKey)) {
             if (props.on_copy) {
               e.stopPropagation()
-              e.preventDefault()
-              if (!props.is_in_code_completions_mode && !props.value) return
+              e.preventDefault();
+              if (is_copy_disabled) return
               props.on_copy()
             }
           }
@@ -367,7 +367,6 @@ export const ChatInput: React.FC<Props> = (props) => {
             )}
             onClick={(e) => {
               e.stopPropagation()
-              if (!props.is_in_code_completions_mode && !props.value) return
               if (is_copy_disabled) return
               props.on_copy!()
             }}
