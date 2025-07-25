@@ -27,7 +27,8 @@ export const yuanbao: Chatbot = {
     })
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
-  set_model: async (model: string) => {
+  set_model: async (model?: string) => {
+    if(!model) return
     const model_selector_button = document.querySelector(
       'button[dt-button-id="model_switch"]'
     ) as HTMLElement
@@ -50,7 +51,8 @@ export const yuanbao: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     // Uncheck DeepThink
     const deep_think_button = document.querySelector(
       'button[dt-button-id="deep_think"]'

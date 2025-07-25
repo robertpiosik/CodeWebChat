@@ -26,7 +26,8 @@ export const deepseek: Chatbot = {
       check_for_element()
     })
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     // Uncheck deep think
     const deep_think_button = Array.from(
       document.querySelectorAll('div[role="button"]')

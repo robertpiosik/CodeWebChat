@@ -298,7 +298,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'COPY_PROMPT') {
             await handle_copy_prompt(
               this,
-              message.instruction,
+              message.instructions,
               message.preset_name
             )
           } else if (message.command == 'SHOW_PRESET_PICKER') {

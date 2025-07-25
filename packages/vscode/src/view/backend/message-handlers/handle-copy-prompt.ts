@@ -10,7 +10,7 @@ import { HOME_VIEW_TYPES } from '@/view/types/home-view-type'
 
 export const handle_copy_prompt = async (
   provider: ViewProvider,
-  instruction_to_copy: string,
+  instructions: string,
   preset_name?: string
 ): Promise<void> => {
   const files_collector = new FilesCollector(
@@ -21,10 +21,10 @@ export const handle_copy_prompt = async (
 
   const active_editor = vscode.window.activeTextEditor
 
-  let final_instruction = instruction_to_copy
+  let final_instruction = instructions
   if (preset_name !== undefined) {
     final_instruction = apply_preset_affixes_to_instruction(
-      instruction_to_copy,
+      instructions,
       preset_name,
       provider.get_presets_config_key()
     )
@@ -63,7 +63,7 @@ export const handle_copy_prompt = async (
 
     const text = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
 
-    vscode.env.clipboard.writeText(text)
+    vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_mode) {
     const mode =
       provider.home_view_type == HOME_VIEW_TYPES.WEB
@@ -115,7 +115,7 @@ export const handle_copy_prompt = async (
     const text = context_text
       ? `${pre_context_instructions}\n<files>\n${context_text}</files>\n${post_context_instructions}`
       : pre_context_instructions
-    vscode.env.clipboard.writeText(text)
+    vscode.env.clipboard.writeText(text.trim())
   } else {
     vscode.window.showWarningMessage(
       'Cannot copy prompt in code completion mode without an active editor.'

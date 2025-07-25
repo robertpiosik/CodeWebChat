@@ -30,7 +30,8 @@ export const doubao: Chatbot = {
       check_for_element()
     })
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     const deep_thinking_button = document.querySelector(
       'div[data-testid="chat_input"] input[data-testid="upload-file-input"] + button'
     ) as HTMLButtonElement

@@ -15,7 +15,14 @@ const translations = {
     'Code completions mode unavailable with text selection',
   code_completions_mode_unavailable_without_active_editor:
     'Code completions mode unavailable without active editor',
-  search: 'Search'
+  search: 'Search',
+  websocket_not_connected: 'Websocket not connected',
+  add_files_to_context_first: 'Add files to context first',
+  for_history_hint: 'for history hint',
+  copy_to_clipboard: 'Copy to clipboard',
+  insert_symbol: 'Insert symbol',
+  prompt_templates: 'Prompt templates',
+  approximate_token_count: 'Approximate token count'
 }
 
 export const Empty = () => (
@@ -36,6 +43,8 @@ export const Empty = () => (
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -57,6 +66,8 @@ export const WithText = () => (
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -68,7 +79,6 @@ export const DisabledSubmit = () => (
     on_submit={() => console.log('Submitted')}
     on_copy={() => console.log('Copied')}
     is_connected={false}
-    submit_disabled_title="Cannot submit at this time"
     is_in_code_completions_mode={false}
     has_active_selection={false}
     has_active_editor={true}
@@ -79,6 +89,8 @@ export const DisabledSubmit = () => (
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -100,6 +112,8 @@ export const MultilineText = () => (
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -121,6 +135,8 @@ export const LongText = () => (
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -143,6 +159,8 @@ export const WithTokenCount = () => (
     translations={translations}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -165,6 +183,8 @@ export const WithLargeTokenCount = () => (
     translations={translations}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -186,6 +206,8 @@ export const CodeCompletionsMode = () => (
     translations={translations}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -207,6 +229,8 @@ export const WithActiveSelection = () => (
     on_submit_with_control={() => {}}
     translations={translations}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -228,6 +252,8 @@ export const WithSavedContextPlaceholder = () => (
     on_submit_with_control={() => {}}
     translations={translations}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -249,6 +275,8 @@ export const WithActiveSelectionAndPlaceholder = () => (
     on_submit_with_control={() => {}}
     translations={translations}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )
 
@@ -270,5 +298,7 @@ export const WithPlaceholderNoSelection = () => (
     on_submit_with_control={() => {}}
     translations={translations}
     on_curly_braces_click={() => {}}
+    has_context={true}
+    is_in_context_dependent_mode={true}
   />
 )

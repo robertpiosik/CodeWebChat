@@ -57,7 +57,7 @@ export interface SendPromptMessage extends BaseMessage {
 
 export interface CopyPromptMessage extends BaseMessage {
   command: 'COPY_PROMPT'
-  instruction: string
+  instructions: string
   preset_name?: string
 }
 

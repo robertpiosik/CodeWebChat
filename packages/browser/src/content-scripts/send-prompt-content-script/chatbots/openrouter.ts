@@ -26,7 +26,8 @@ export const openrouter: Chatbot = {
     })
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
-  enter_system_instructions: async (system_instructions: string) => {
+  enter_system_instructions: async (system_instructions?: string) => {
+    if (!system_instructions) return
     const options_button = Array.from(
       document.querySelectorAll('main > div > div > div.flex-col button')
     ).find((button) => {
@@ -56,7 +57,8 @@ export const openrouter: Chatbot = {
     }) as HTMLButtonElement
     close_button.click()
   },
-  set_temperature: async (temperature: number) => {
+  set_temperature: async (temperature?: number) => {
+    if (!temperature) return
     const options_button = Array.from(
       document.querySelectorAll('main > div > div > div.flex-col button')
     ).find((button) => {
@@ -98,7 +100,8 @@ export const openrouter: Chatbot = {
     }) as HTMLButtonElement
     close_button.click()
   },
-  set_top_p: async (top_p: number) => {
+  set_top_p: async (top_p?: number) => {
+    if (!top_p) return
     const options_button = Array.from(
       document.querySelectorAll('main > div > div > div.flex-col button')
     ).find((button) => {

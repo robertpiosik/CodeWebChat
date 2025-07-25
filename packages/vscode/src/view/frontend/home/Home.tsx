@@ -184,18 +184,15 @@ export const Home: React.FC<Props> = (props) => {
     update_chat_history(params.prompt)
   }
 
-  const handle_copy_to_clipboard = (
-    instruction: string,
-    preset_name?: string
-  ) => {
+  const handle_copy_to_clipboard = (preset_name?: string) => {
     post_message(props.vscode, {
       command: 'COPY_PROMPT',
-      instruction,
+      instructions,
       preset_name
     })
 
-    if (instruction.trim() && !preset_name) {
-      update_chat_history(instruction)
+    if (instructions.trim()) {
+      update_chat_history(instructions)
     }
   }
 

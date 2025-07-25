@@ -26,7 +26,8 @@ export const gemini: Chatbot = {
       check_for_element()
     })
   },
-  set_model: async (model: string) => {
+  set_model: async (model?: string) => {
+    if(!model) return
     if (model && model in CHATBOTS['Gemini'].models) {
       const model_selector_trigger = document.querySelector(
         'bard-logo + button'
@@ -59,7 +60,8 @@ export const gemini: Chatbot = {
       }
     }
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     const supported_options = CHATBOTS['Gemini'].supported_options
     for (const option of options) {
       if (option == 'canvas' && supported_options['canvas']) {

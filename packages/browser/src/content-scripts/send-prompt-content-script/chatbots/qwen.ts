@@ -39,7 +39,8 @@ export const qwen: Chatbot = {
       check_for_element()
     })
   },
-  set_model: async (model: string) => {
+  set_model: async (model?: string) => {
+    if(!model) return
     const model_selector_button = document.querySelector(
       'button#model-selector-0-button'
     ) as HTMLElement
@@ -75,7 +76,8 @@ export const qwen: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     const supported_options = CHATBOTS['Qwen'].supported_options
     for (const option of options) {
       if (option == 'thinking' && supported_options['thinking']) {

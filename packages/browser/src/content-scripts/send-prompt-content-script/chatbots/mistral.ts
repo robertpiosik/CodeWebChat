@@ -26,7 +26,8 @@ export const mistral: Chatbot = {
     })
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     const think_button_icon_path = document.querySelector(
       'path[d="M9 18h6"]'
     ) as SVGPathElement

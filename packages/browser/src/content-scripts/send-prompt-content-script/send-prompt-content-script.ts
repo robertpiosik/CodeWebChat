@@ -186,22 +186,19 @@ const enter_message_and_send = async (params: {
 }
 
 const initialize_chat = async (params: { message: string; chat: Chat }) => {
-  if (params.chat.model && chatbot?.set_model) {
+  if (chatbot?.set_model) {
     await chatbot.set_model(params.chat.model)
   }
-  if (params.chat.system_instructions && chatbot?.enter_system_instructions) {
+  if (chatbot?.enter_system_instructions) {
     await chatbot.enter_system_instructions(params.chat.system_instructions)
   }
-  if (params.chat.temperature !== undefined && chatbot?.set_temperature) {
+  if (chatbot?.set_temperature) {
     await chatbot.set_temperature(params.chat.temperature)
   }
-  if (params.chat.top_p !== undefined && chatbot?.set_top_p) {
+  if (chatbot?.set_top_p) {
     await chatbot.set_top_p(params.chat.top_p)
   }
-  if (
-    params.chat.thinking_budget !== undefined &&
-    chatbot?.set_thinking_budget
-  ) {
+  if (chatbot?.set_thinking_budget) {
     await chatbot.set_thinking_budget(params.chat.thinking_budget)
   }
   if (chatbot?.set_options) {

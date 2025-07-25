@@ -31,7 +31,7 @@ export const CHATBOTS = {
     default_top_p: 0.95,
     supported_options: {
       'hide-panel': 'Hide panel',
-      'disable-thinking': 'Disable thinking',
+      'disable-thinking': 'Disable thinking (Flash only)',
       'grounding-with-google-search': 'Grounding with Google Search',
       'url-context': 'URL context'
     },

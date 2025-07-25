@@ -31,7 +31,8 @@ export const ai_studio: Chatbot = {
       }, 500)
     })
   },
-  set_model: async (model: string) => {
+  set_model: async (model?: string) => {
+    if (!model) return
     const model_selector = (document.querySelector(
       'ms-model-selector-two-column mat-form-field > div'
     ) ||
@@ -52,7 +53,8 @@ export const ai_studio: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
-  enter_system_instructions: async (system_instructions: string) => {
+  enter_system_instructions: async (system_instructions?: string) => {
+    if (!system_instructions) return
     const assignment_button = Array.from(
       document.querySelectorAll('ms-toolbar button')
     ).find(
@@ -75,16 +77,23 @@ export const ai_studio: Chatbot = {
     assignment_button.click()
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     const supported_options = CHATBOTS['AI Studio'].supported_options
+    const thinking_toggle = document.querySelector(
+      'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
+    ) as HTMLElement
     if (
       options.includes('disable-thinking') &&
       supported_options['disable-thinking']
     ) {
-      const thinking_toggle = document.querySelector(
-        'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
-      ) as HTMLElement
-      thinking_toggle.click()
+      if (thinking_toggle.getAttribute('aria-checked') == 'true') {
+        thinking_toggle.click()
+      }
+    } else {
+      if (thinking_toggle.getAttribute('aria-checked') == 'false') {
+        thinking_toggle.click()
+      }
     }
     if (options.includes('hide-panel') && supported_options['hide-panel']) {
       const panel = document.querySelector('ms-right-side-panel') as HTMLElement
@@ -109,8 +118,10 @@ export const ai_studio: Chatbot = {
       ) as HTMLElement
       url_context_button.click()
     }
+    await new Promise((r) => requestAnimationFrame(r))
   },
-  set_temperature: async (temperature: number) => {
+  set_temperature: async (temperature?: number) => {
+    if (!temperature) return
     if (window.innerWidth <= 768) {
       const tune_button = Array.from(
         document.querySelectorAll('prompt-header button')
@@ -134,37 +145,82 @@ export const ai_studio: Chatbot = {
       close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
     }
   },
-  set_thinking_budget: async (thinking_budget: number) => {
-    if (window.innerWidth <= 768) {
-      const tune_button = Array.from(
-        document.querySelectorAll('prompt-header button')
-      ).find(
-        (button) => button.textContent?.trim() == 'tune'
-      ) as HTMLButtonElement
-      tune_button.click()
+  set_thinking_budget: async (thinking_budget?: number) => {
+    if (thinking_budget === undefined) {
+      // uncheck "set thinking budget" when it has attribute aria-checked="true"
+      if (window.innerWidth <= 768) {
+        const tune_button = Array.from(
+          document.querySelectorAll('prompt-header button')
+        ).find(
+          (button) => button.textContent?.trim() == 'tune'
+        ) as HTMLButtonElement
+        tune_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
+      }
+      const manual_budget_toggle = document.querySelector(
+        'mat-slide-toggle[data-test-toggle="manual-budget"] button'
+      ) as HTMLElement
+      if (manual_budget_toggle?.getAttribute('aria-checked') == 'true') {
+        manual_budget_toggle.click()
+        await new Promise((r) => requestAnimationFrame(r))
+      } else {
+        console.warn('Manual budget toggle not found.')
+      }
+      if (window.innerWidth <= 768) {
+        const close_button = Array.from(
+          document.querySelectorAll('ms-run-settings button')
+        ).find(
+          (button) => button.textContent?.trim() == 'close'
+        ) as HTMLButtonElement
+        close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+      }
+    } else {
+      if (window.innerWidth <= 768) {
+        const tune_button = Array.from(
+          document.querySelectorAll('prompt-header button')
+        ).find(
+          (button) => button.textContent?.trim() == 'tune'
+        ) as HTMLButtonElement
+        tune_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
+      }
+      const thinking_toggle = document.querySelector(
+        'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
+      ) as HTMLElement
+      if (thinking_toggle.getAttribute('aria-checked') == 'false') {
+        thinking_toggle.click()
+        await new Promise((r) => requestAnimationFrame(r))
+      }
+      const manual_budget_toggle = document.querySelector(
+        'mat-slide-toggle[data-test-toggle="manual-budget"] button'
+      ) as HTMLElement
+      manual_budget_toggle?.click()
       await new Promise((r) => requestAnimationFrame(r))
-    }
-    const manual_budget_toggle = document.querySelector(
-      'mat-slide-toggle[data-test-toggle="manual-budget"] button'
-    ) as HTMLElement
-    manual_budget_toggle.click()
-    await new Promise((r) => requestAnimationFrame(r))
-    const budget_input = document.querySelector(
-      'div[data-test-id="user-setting-budget-animation-wrapper"] input'
-    ) as HTMLInputElement
-    budget_input.value = thinking_budget.toString()
-    budget_input.dispatchEvent(new Event('input', { bubbles: true }))
-    budget_input.dispatchEvent(new Event('change', { bubbles: true }))
-    if (window.innerWidth <= 768) {
-      const close_button = Array.from(
-        document.querySelectorAll('ms-run-settings button')
-      ).find(
-        (button) => button.textContent?.trim() == 'close'
-      ) as HTMLButtonElement
-      close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+      const budget_input = document.querySelector(
+        'div[data-test-id="user-setting-budget-animation-wrapper"] input'
+      ) as HTMLInputElement
+      if (budget_input) {
+        budget_input.value = thinking_budget.toString()
+        budget_input.dispatchEvent(new Event('input', { bubbles: true }))
+        budget_input.dispatchEvent(new Event('change', { bubbles: true }))
+      } else {
+        console.warn(
+          'Budget input not found for setting thinking budget:',
+          thinking_budget
+        )
+      }
+      if (window.innerWidth <= 768) {
+        const close_button = Array.from(
+          document.querySelectorAll('ms-run-settings button')
+        ).find(
+          (button) => button.textContent?.trim() == 'close'
+        ) as HTMLButtonElement
+        close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+      }
     }
   },
-  set_top_p: async (top_p: number) => {
+  set_top_p: async (top_p?: number) => {
+    if (!top_p) return
     if (window.innerWidth <= 768) {
       const tune_button = Array.from(
         document.querySelectorAll('prompt-header button')

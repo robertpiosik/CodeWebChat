@@ -35,7 +35,8 @@ export const chatgpt: Chatbot = {
       check_for_element()
     })
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     const supported_options = CHATBOTS['ChatGPT'].supported_options
     for (const option of options) {
       if (option == 'temporary' && supported_options['temporary']) {

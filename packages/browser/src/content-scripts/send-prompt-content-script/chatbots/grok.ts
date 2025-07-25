@@ -26,7 +26,8 @@ export const grok: Chatbot = {
       check_for_element()
     })
   },
-  set_options: async (options: string[]) => {
+  set_options: async (options?: string[]) => {
+    if (!options) return
     const supported_options = CHATBOTS['Grok'].supported_options
     for (const option of options) {
       if (option == 'think' && supported_options['think']) {
@@ -39,7 +40,8 @@ export const grok: Chatbot = {
       }
     }
   },
-  set_model: async (model: string) => {
+  set_model: async (model?: string) => {
+    if(!model) return
     const model_selector_button = document.querySelector(
       'form > div > div > div:last-child > div > div:last-child > button'
     ) as HTMLButtonElement

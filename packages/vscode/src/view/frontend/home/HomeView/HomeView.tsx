@@ -20,7 +20,7 @@ import { ApiToolConfiguration } from '@/view/types/messages'
 
 type Props = {
   initialize_chats: (params: { prompt: string; preset_names: string[] }) => void
-  copy_to_clipboard: (instruction: string, preset_name?: string) => void
+  copy_to_clipboard: (preset_name?: string) => void
   on_show_intro: () => void
   on_search_click: () => void
   on_create_preset: () => void
@@ -186,7 +186,7 @@ export const HomeView: React.FC<Props> = (props) => {
   }
 
   const handle_preset_copy = (preset_name: string) => {
-    props.copy_to_clipboard(current_prompt, preset_name)
+    props.copy_to_clipboard(preset_name)
   }
 
   return (
@@ -265,8 +265,7 @@ export const HomeView: React.FC<Props> = (props) => {
               on_submit={handle_submit}
               on_submit_with_control={handle_submit_with_control}
               on_copy={
-                props.home_view_type == HOME_VIEW_TYPES.WEB &&
-                props.web_mode != 'no-context'
+                props.home_view_type == HOME_VIEW_TYPES.WEB
                   ? handle_copy
                   : undefined
               }

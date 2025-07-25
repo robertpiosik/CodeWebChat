@@ -29,7 +29,8 @@ export const open_webui: Chatbot = {
     })
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
-  enter_system_instructions: async (system_instructions: string) => {
+  enter_system_instructions: async (system_instructions?: string) => {
+    if (!system_instructions) return
     const controls_button = document.querySelector(
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
@@ -54,7 +55,8 @@ export const open_webui: Chatbot = {
     ) as HTMLButtonElement
     close_button.click()
   },
-  set_temperature: async (temperature: number) => {
+  set_temperature: async (temperature?: number) => {
+    if (!temperature) return
     const controls_button = document.querySelector(
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
@@ -82,7 +84,8 @@ export const open_webui: Chatbot = {
     close_button.click()
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_top_p: async (top_p: number) => {
+  set_top_p: async (top_p?: number) => {
+    if (!top_p) return
     const controls_button = document.querySelector(
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
@@ -110,7 +113,8 @@ export const open_webui: Chatbot = {
     close_button.click()
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_model: async (model: string) => {
+  set_model: async (model?: string) => {
+    if (!model) return
     const model_selector_button = document.querySelector(
       'button#model-selector-0-button'
     ) as HTMLElement
