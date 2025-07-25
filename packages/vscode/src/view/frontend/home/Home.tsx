@@ -216,7 +216,8 @@ export const Home: React.FC<Props> = (props) => {
         thinking_budget: preset.thinking_budget,
         system_instructions: preset.system_instructions,
         options: preset.options,
-        port: preset.port
+        port: preset.port,
+        is_default: preset.is_default
       }))
     })
   }
