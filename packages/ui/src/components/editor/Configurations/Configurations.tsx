@@ -2,6 +2,7 @@ import styles from './Configurations.module.scss'
 import { Button } from '../Button/Button'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
+import { useState } from 'react'
 
 export namespace Configurations {
   export type Configuration = {
@@ -31,6 +32,10 @@ export namespace Configurations {
 }
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
+  const [
+    highlighted_configuration_index,
+    set_highlighted_configuration_index
+  ] = useState<number>()
   const is_in_code_completions_mode = props.api_mode == 'code-completions'
 
   return (
@@ -81,11 +86,14 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             <div
               key={i}
               className={cn(styles.configurations__item, {
+                [styles['configurations__item--highlighted']]:
+                  highlighted_configuration_index == i,
                 [styles['configurations__item--disabled']]: is_item_disabled
               })}
               onClick={() => {
                 if (!is_item_disabled) {
                   props.on_configuration_click(i)
+                  set_highlighted_configuration_index(i)
                 }
               }}
               role="button"

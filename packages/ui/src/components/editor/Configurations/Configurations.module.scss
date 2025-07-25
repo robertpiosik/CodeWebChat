@@ -28,6 +28,14 @@
       background-color: var(--vscode-list-hoverBackground);
     }
 
+    &--highlighted {
+      background-color: var(--vscode-list-inactiveSelectionBackground);
+
+      &:hover {
+        background-color: var(--vscode-list-inactiveSelectionBackground);
+      }
+    }
+
     &--disabled {
       cursor: default !important;
 
