@@ -355,12 +355,12 @@ export function edit_context_in_chat_command(
         []
       )
 
-      let selected_names = context.globalState.get<string[]>(
-        'selectedPresets.edit',
-        []
-      )
+      const default_preset = chat_presets.find((p) => p.isDefault)
+      let selected_names: string[] = []
 
-      if (!selected_names.length) {
+      if (default_preset) {
+        selected_names = [default_preset.name]
+      } else {
         const selected_preset = await create_preset_quick_pick(
           context,
           chat_presets,
@@ -416,12 +416,12 @@ export function ask_about_context_command(
         []
       )
 
-      let selected_names = context.globalState.get<string[]>(
-        'selectedPresets.ask',
-        []
-      )
+      const default_preset = chat_presets.find((p) => p.isDefault)
+      let selected_names: string[] = []
 
-      if (!selected_names.length) {
+      if (default_preset) {
+        selected_names = [default_preset.name]
+      } else {
         const selected_preset = await create_preset_quick_pick(
           context,
           chat_presets,
@@ -509,13 +509,42 @@ export function no_context_chat_command(
   return vscode.commands.registerCommand(
     'codeWebChat.noContextChat',
     async () => {
+      if (!websocket_server_instance.is_connected_with_browser()) {
+        vscode.window.showInformationMessage(
+          'Could not connect to the web browser. Please check if it is running and if the connector extension is installed.'
+        )
+        return
+      }
       const instructions = await get_chat_instructions(context)
       if (!instructions) return
 
+      const config = vscode.workspace.getConfiguration('codeWebChat')
       const presets_config_key = 'chatPresetsForNoContext'
+      const chat_presets = config.get<ConfigPresetFormat[]>(
+        presets_config_key,
+        []
+      )
+
+      const default_preset = chat_presets.find((p) => p.isDefault)
+      let selected_names: string[] = []
+
+      if (default_preset) {
+        selected_names = [default_preset.name]
+      } else {
+        const selected_preset = await create_preset_quick_pick(
+          context,
+          chat_presets,
+          'Select preset'
+        )
+
+        if (!selected_preset) return
+
+        selected_names = [selected_preset.name]
+      }
+
       const chats = await process_chat_instructions(
         instructions,
-        ['(0)'], // Default preset
+        selected_names,
         context,
         workspace_provider,
         open_editors_provider,

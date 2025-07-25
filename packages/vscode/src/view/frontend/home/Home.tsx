@@ -43,7 +43,6 @@ export const Home: React.FC<Props> = (props) => {
   const [all_configurations, set_all_configurations] = useState<{
     [T in ApiMode]?: ApiToolConfiguration[]
   }>()
-  const [selected_presets, set_selected_presets] = useState<string[]>([])
   const [ask_history, set_ask_history] = useState<string[]>()
   const [edit_history, set_edit_history] = useState<string[]>()
   const [no_context_history, set_no_context_history] = useState<string[]>()
@@ -74,9 +73,6 @@ export const Home: React.FC<Props> = (props) => {
           set_all_configurations(
             (message as ApiToolConfigurationsMessage).configurations
           )
-          break
-        case 'SELECTED_PRESETS':
-          set_selected_presets(message.names)
           break
         case 'CHAT_HISTORY':
           set_ask_history(message.ask || [])
@@ -119,7 +115,6 @@ export const Home: React.FC<Props> = (props) => {
 
     const initial_messages: FrontendMessage[] = [
       { command: 'GET_PRESETS' },
-      { command: 'GET_SELECTED_PRESETS' },
       { command: 'GET_HISTORY' },
       { command: 'GET_CURRENT_TOKEN_COUNT' },
       { command: 'GET_INSTRUCTIONS' },
@@ -468,7 +463,6 @@ export const Home: React.FC<Props> = (props) => {
       on_curly_braces_click={handle_curly_braces_click}
       is_connected={props.is_connected}
       presets={presets_for_current_mode}
-      selected_presets={selected_presets}
       on_create_preset={handle_create_preset}
       on_quick_action_click={handle_quick_action_click}
       has_active_editor={props.has_active_editor}

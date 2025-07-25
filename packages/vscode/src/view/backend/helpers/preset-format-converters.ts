@@ -13,6 +13,7 @@ export type ConfigPresetFormat = {
   systemInstructions?: string
   options?: string[]
   port?: number
+  isDefault?: boolean
 }
 
 export function config_preset_to_ui_format(
@@ -29,7 +30,8 @@ export function config_preset_to_ui_format(
     thinking_budget: config_preset.thinkingBudget,
     system_instructions: config_preset.systemInstructions,
     options: config_preset.options,
-    port: config_preset.port
+    port: config_preset.port,
+    is_default: config_preset.isDefault
   }
 }
 
@@ -45,6 +47,7 @@ export function ui_preset_to_config_format(preset: Preset): ConfigPresetFormat {
     thinkingBudget: preset.thinking_budget,
     systemInstructions: preset.system_instructions,
     options: preset.options,
-    port: preset.port
+    port: preset.port,
+    isDefault: preset.is_default
   }
 }

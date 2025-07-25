@@ -23,7 +23,6 @@ import {
   handle_save_edit_format,
   handle_show_history_quick_pick,
   handle_save_presets_order,
-  handle_get_selected_presets,
   handle_get_connection_status,
   handle_get_history,
   handle_save_history,
@@ -85,10 +84,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       case 'no-context':
         return 'chatPresetsForNoContext'
     }
-  }
-
-  public get_selected_presets_state_key(): string {
-    return `selectedPresets.${this.web_mode}`
   }
 
   constructor(
@@ -296,8 +291,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             handle_get_connection_status(this)
           } else if (message.command == 'GET_PRESETS') {
             this.send_presets_to_webview(webview_view.webview)
-          } else if (message.command == 'GET_SELECTED_PRESETS') {
-            handle_get_selected_presets(this)
           } else if (message.command == 'SEND_PROMPT') {
             await handle_send_prompt(this, message.preset_names)
           } else if (message.command == 'PREVIEW_PRESET') {

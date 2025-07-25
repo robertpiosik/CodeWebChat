@@ -32,6 +32,7 @@ export namespace Presets {
     chatbot: keyof typeof CHATBOTS
     prompt_prefix?: string
     prompt_suffix?: string
+    is_default?: boolean
   }
 
   export type Props = {
@@ -44,7 +45,6 @@ export namespace Presets {
     has_context: boolean
     presets: Preset[]
     on_preset_click: (preset: Preset) => void
-    selected_presets: string[]
     on_create_preset: () => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
@@ -215,7 +215,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   <div
                     className={cn(styles.presets__item__left__text, {
                       [styles['presets__item__left__text--selected']]:
-                        props.selected_presets.includes(preset.name)
+                        preset.is_default
                     })}
                   >
                     <span>{display_name}</span>

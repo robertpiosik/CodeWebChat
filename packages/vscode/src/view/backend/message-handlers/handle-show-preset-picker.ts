@@ -1,77 +1,69 @@
 import { ViewProvider } from '@/view/backend/view-provider'
 import * as vscode from 'vscode'
-import { ConfigPresetFormat } from '../helpers/preset-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { ConfigPresetFormat } from '../helpers/preset-format-converters'
 
 export const handle_show_preset_picker = async (
   provider: ViewProvider
 ): Promise<void> => {
+  const config_key = provider.get_presets_config_key()
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const presets_config_key = provider.get_presets_config_key()
-  const web_chat_presets =
-    config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
+  const presets = config.get<ConfigPresetFormat[]>(config_key, []) || []
 
-  const selected_preset_names_state_key =
-    provider.get_selected_presets_state_key()
-  const available_preset_names = web_chat_presets.map((preset) => preset.name)
-  let selected_preset_names = provider.context.globalState.get<string[]>(
-    selected_preset_names_state_key,
-    []
-  )
-  selected_preset_names = selected_preset_names.filter((name) =>
-    available_preset_names.includes(name)
-  )
-
-  await provider.context.globalState.update(
-    selected_preset_names_state_key,
-    selected_preset_names
-  )
-
-  const preset_quick_pick_items = web_chat_presets
-    .filter((preset) =>
-      provider.web_mode != 'code-completions'
-        ? preset
-        : !preset.promptPrefix && !preset.promptSuffix
+  if (presets.length == 0) {
+    vscode.window.showInformationMessage(
+      'No presets available for the current mode.'
     )
-    .map((preset) => {
-      const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
-      const model = preset.model
-        ? (CHATBOTS[preset.chatbot] as any).models[preset.model] || preset.model
-        : ''
+    return
+  }
 
-      return {
-        label: is_unnamed ? preset.chatbot : preset.name,
-        name: preset.name,
-        description: is_unnamed
-          ? model
-          : `${preset.chatbot}${model ? ` · ${model}` : ''}`,
-        picked: selected_preset_names.includes(preset.name)
-      }
-    })
-
-  const placeholder =
-    provider.web_mode == 'code-completions'
-      ? 'Select one or more code completion presets'
-      : 'Select one or more chat presets'
-
-  const selected_presets = await vscode.window.showQuickPick(
-    preset_quick_pick_items,
-    {
-      placeHolder: placeholder,
-      canPickMany: true
+  const quick_pick_items = presets.map((preset) => {
+    const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+    const chatbot_info = CHATBOTS[preset.chatbot] as any
+    const model_display_name = preset.model
+      ? (chatbot_info &&
+          chatbot_info.models &&
+          chatbot_info.models[preset.model]) ||
+        preset.model
+      : ''
+    return {
+      label: is_unnamed ? preset.chatbot : preset.name,
+      description: is_unnamed
+        ? model_display_name
+        : `${preset.chatbot}${
+            model_display_name ? ` · ${model_display_name}` : ''
+          }`,
+      // we need the original name to find the preset later
+      presetName: preset.name,
+      picked: !!preset.isDefault,
     }
-  )
+  })
 
-  if (selected_presets) {
-    const selected_names = selected_presets.map((preset: any) => preset.name)
-    await provider.context.globalState.update(
-      selected_preset_names_state_key,
-      selected_names
+  const selected_items = await vscode.window.showQuickPick(quick_pick_items, {
+    canPickMany: true,
+    title: 'Select Default Presets',
+    placeHolder: 'Choose which presets to open by default',
+  })
+
+  if (selected_items !== undefined) {
+    const selected_preset_names = new Set(
+      selected_items.map((item) => item.presetName)
     )
 
-    provider.send_message({
-      command: 'SELECTED_PRESETS',
-      names: selected_names
+    const updated_presets = presets.map((preset) => {
+      const new_preset = { ...preset }
+      if (selected_preset_names.has(preset.name)) {
+        new_preset.isDefault = true
+      } else {
+        delete new_preset.isDefault
+      }
+      return new_preset
     })
+
+    await config.update(
+      config_key,
+      updated_presets,
+      vscode.ConfigurationTarget.Global
+    )
   }
 }

@@ -32,7 +32,6 @@ type Props = {
   configurations: ApiToolConfiguration[]
   on_manage_configurations_click: () => void
   on_configuration_click: (index: number) => void
-  selected_presets: string[]
   has_active_editor: boolean
   has_active_selection: boolean
   chat_history: string[]
@@ -154,7 +153,9 @@ export const HomeView: React.FC<Props> = (props) => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({
         prompt: current_prompt,
-        preset_names: props.selected_presets
+        preset_names: props.presets
+          .filter((p) => p.is_default)
+          .map((p) => p.name)
       })
     } else {
       if (is_in_code_completions_mode) {
@@ -382,7 +383,6 @@ export const HomeView: React.FC<Props> = (props) => {
                   props.web_mode == 'code-completions'
                 }
                 presets={props.presets}
-                selected_presets={props.selected_presets}
                 on_create_preset={props.on_create_preset}
                 on_preset_click={(preset) => {
                   props.initialize_chats({

@@ -760,7 +760,7 @@
                 "type": "number",
                 "description": "Temperature to use."
               },
-              "top_p": {
+              "topP": {
                 "type": "number",
                 "description": "Top P setting to use."
               },
@@ -771,6 +771,10 @@
               "port": {
                 "type": "number",
                 "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+              },
+              "isDefault": {
+                "type": "boolean",
+                "description": "Whether this preset is used when initializing a new chat."
               }
             },
             "required": [
@@ -784,7 +788,8 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT"
+              "chatbot": "ChatGPT",
+              "isDefault": true
             },
             {
               "name": "(1)",
@@ -907,7 +912,7 @@
                 "type": "number",
                 "description": "Temperature to use."
               },
-              "top_p": {
+              "topP": {
                 "type": "number",
                 "description": "Top P setting to use."
               },
@@ -918,6 +923,10 @@
               "port": {
                 "type": "number",
                 "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+              },
+              "isDefault": {
+                "type": "boolean",
+                "description": "Whether this preset is used when initializing a new chat."
               }
             },
             "required": [
@@ -931,7 +940,8 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT"
+              "chatbot": "ChatGPT",
+              "isDefault": true
             },
             {
               "name": "(1)",
@@ -1024,7 +1034,7 @@
                 "type": "number",
                 "description": "Temperature to use."
               },
-              "top_p": {
+              "topP": {
                 "type": "number",
                 "description": "Top P setting to use."
               },
@@ -1035,6 +1045,10 @@
               "port": {
                 "type": "number",
                 "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+              },
+              "isDefault": {
+                "type": "boolean",
+                "description": "Whether this preset is used when initializing a new chat."
               }
             },
             "required": [
@@ -1048,7 +1062,8 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT"
+              "chatbot": "ChatGPT",
+              "isDefault": true
             },
             {
               "name": "(1)",
@@ -1171,7 +1186,7 @@
                 "type": "number",
                 "description": "Temperature to use."
               },
-              "top_p": {
+              "topP": {
                 "type": "number",
                 "description": "Top P setting to use."
               },
@@ -1182,6 +1197,10 @@
               "port": {
                 "type": "number",
                 "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+              },
+              "isDefault": {
+                "type": "boolean",
+                "description": "Whether this preset is used when initializing a new chat."
               }
             },
             "required": [

@@ -45,10 +45,6 @@ export interface GetPresetsMessage extends BaseMessage {
   command: 'GET_PRESETS'
 }
 
-export interface GetSelectedPresetsMessage extends BaseMessage {
-  command: 'GET_SELECTED_PRESETS'
-}
-
 export interface SavePresetsOrderMessage extends BaseMessage {
   command: 'SAVE_PRESETS_ORDER'
   presets: Preset[]
@@ -202,7 +198,6 @@ export type FrontendMessage =
   | SaveEditFormatMessage
   | GetConnectionStatusMessage
   | GetPresetsMessage
-  | GetSelectedPresetsMessage
   | SavePresetsOrderMessage
   | SendPromptMessage
   | CopyPromptMessage
@@ -333,7 +328,8 @@ export interface VersionMessage extends BaseMessage {
   version: string
 }
 
-export interface AtSignQuickPickForPresetAffixResultMessage extends BaseMessage {
+export interface AtSignQuickPickForPresetAffixResultMessage
+  extends BaseMessage {
   command: 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
   text_to_insert: string
 }

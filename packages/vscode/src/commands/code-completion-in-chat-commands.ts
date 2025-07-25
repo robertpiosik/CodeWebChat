@@ -212,16 +212,10 @@ export function code_completion_in_chat_command(
         return
       }
 
-      let selected_names = context.globalState.get<string[]>(
-        'selectedPresets.code-completions',
-        []
-      )
+      const default_presets = presets.filter((p) => p.isDefault)
+      let selected_names = default_presets.map((p) => p.name)
 
-      const valid_selected_names = selected_names.filter((name) =>
-        presets.some((preset) => preset.name == name)
-      )
-
-      if (!valid_selected_names.length) {
+      if (selected_names.length == 0) {
         const preset_quick_pick_items = presets.map((preset) => {
           const is_unnamed =
             !preset.name || /^\(\d+\)$/.test(preset.name.trim())
@@ -257,19 +251,6 @@ export function code_completion_in_chat_command(
         }
 
         selected_names = selected_presets.map((preset) => preset.name)
-        await context.globalState.update(
-          'selectedPresets.code-completions',
-          selected_names
-        )
-      } else {
-        selected_names = valid_selected_names
-
-        if (valid_selected_names.length !== selected_names.length) {
-          await context.globalState.update(
-            'selectedPresets.code-completions',
-            valid_selected_names
-          )
-        }
       }
 
       await handle_code_completion_in_chat_command(

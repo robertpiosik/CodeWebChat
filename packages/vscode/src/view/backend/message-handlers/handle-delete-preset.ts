@@ -69,28 +69,6 @@ export const handle_delete_preset = async (
     }
 
     provider.send_presets_to_webview(webview_view.webview)
-
-    const modes = ['ask', 'edit-context', 'code-completions', 'no-context']
-    for (const mode of modes) {
-      const state_key = `selectedPresets.${mode}`
-      const selected_names = provider.context.globalState.get<string[]>(
-        state_key,
-        []
-      )
-      if (selected_names.includes(preset_name)) {
-        const updated_selected = selected_names.filter((n) => n != preset_name)
-        await provider.context.globalState.update(state_key, updated_selected)
-      }
-    }
-
-    const current_mode_state_key = provider.get_selected_presets_state_key()
-    const current_mode_selected_presets = provider.context.globalState.get<
-      string[]
-    >(current_mode_state_key, [])
-    provider.send_message({
-      command: 'SELECTED_PRESETS',
-      names: current_mode_selected_presets
-    })
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to delete preset: ${error}`)
   }

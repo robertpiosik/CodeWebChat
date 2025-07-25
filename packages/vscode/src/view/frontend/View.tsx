@@ -134,9 +134,6 @@ export const View = () => {
       mode: new_mode
     })
     post_message(vscode, {
-      command: 'GET_SELECTED_PRESETS'
-    })
-    post_message(vscode, {
       command: 'GET_CURRENT_TOKEN_COUNT'
     })
   }
@@ -146,9 +143,6 @@ export const View = () => {
     post_message(vscode, {
       command: 'SAVE_API_MODE',
       mode: new_mode
-    })
-    post_message(vscode, {
-      command: 'GET_SELECTED_PRESETS'
     })
     post_message(vscode, {
       command: 'GET_CURRENT_TOKEN_COUNT'

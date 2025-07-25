@@ -43,7 +43,8 @@ export const handle_update_preset = async (
       a.thinking_budget === b.thinking_budget && // same
       a.system_instructions == b.system_instructions &&
       JSON.stringify(a.options) == JSON.stringify(b.options) &&
-      a.port == b.port
+      a.port == b.port &&
+      a.is_default == b.is_default
     )
   }
 
@@ -124,35 +125,6 @@ export const handle_update_preset = async (
     updated_presets,
     vscode.ConfigurationTarget.Global
   )
-
-  // Update selected (default) presets for all modes
-  const modes = ['ask', 'edit-context', 'code-completions', 'no-context']
-  for (const mode of modes) {
-    const state_key = `selectedPresets.${mode}`
-    const selected_names = provider.context.globalState.get<string[]>(
-      state_key,
-      []
-    )
-    if (selected_names.includes(message.updating_preset.name)) {
-      const updated_selected_names = selected_names.map((name) =>
-        name == message.updating_preset.name ? final_name : name
-      )
-      await provider.context.globalState.update(
-        state_key,
-        updated_selected_names
-      )
-    }
-  }
-
-  // Send updated selected presets to webview
-  const current_mode_state_key = provider.get_selected_presets_state_key()
-  const current_mode_selected_presets = provider.context.globalState.get<
-    string[]
-  >(current_mode_state_key, [])
-  provider.send_message({
-    command: 'SELECTED_PRESETS',
-    names: current_mode_selected_presets
-  })
 
   provider.send_presets_to_webview(webview_view.webview)
   provider.send_message({
