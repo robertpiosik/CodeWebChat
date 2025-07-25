@@ -2,11 +2,13 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-100% free VS Code extension for AI-assisted pair programming. Designed for faster and more accurate results than agentic coding tools. Saves you money.
+100% free VS Code extension for AI-assisted pair programming. Designed for faster and more accurate results than agentic coding tools.
 
-👉️ **Connect the editor with 15+ chatbots** \
-👉️ **Complete suite of API tools** \
-🙋 Built by an independent developer
+✅ **Initializes 15+ chatbots hands-free** \
+✅ **Integrates chat responses with the codebase** \
+✅ **Includes all the essential API tools**
+
+CWC saves you money and time.
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -15,7 +17,7 @@
 **With CWC you can:**
 
 - Granularly select folders and files to copy them as XML-formatted text.
-- Type your task, pick edit format (whole/truncated/diff), initialize a chatbot (or send an API request) and automatically integrate the response with the codebase.
+- Type your task, pick edit format (whole/truncated/diff), initialize a chatbot hands-free (or send an API request) and automatically integrate the response with the codebase.
 - Get accurate code completions using the selected context with SOTA reasoning models.
 - Generate meaningful commit messages by referencing the original state of the modified files.
 - Include websites parsed to markdown in context.
