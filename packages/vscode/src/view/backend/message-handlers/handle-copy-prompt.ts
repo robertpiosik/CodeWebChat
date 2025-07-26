@@ -100,12 +100,11 @@ export const handle_copy_prompt = async (
         provider.home_view_type == HOME_VIEW_TYPES.WEB
           ? provider.chat_edit_format
           : provider.api_edit_format
-      const config = vscode.workspace.getConfiguration('codeWebChat')
-      const edit_format_instructions = config.get<string>(
-        `editFormatInstructions${
-          edit_format.charAt(0).toUpperCase() + edit_format.slice(1)
-        }`
-      )
+      const all_instructions = vscode.workspace
+        .getConfiguration('codeWebChat')
+        .get<{ [key: string]: string }>('editFormatInstructions')
+      const edit_format_instructions = all_instructions?.[edit_format]
+
       if (edit_format_instructions) {
         pre_context_instructions += `\n${edit_format_instructions}`
         post_context_instructions += `\n${edit_format_instructions}`

@@ -143,13 +143,11 @@ async function process_chat_instructions(
       'editFormat',
       'truncated'
     )
-    edit_format_instructions = vscode.workspace
+    const all_instructions = vscode.workspace
       .getConfiguration('codeWebChat')
-      .get<string>(
-        `editFormatInstructions${
-          edit_format.charAt(0).toUpperCase() + edit_format.slice(1)
-        }`
-      )
+      .get<{ [key in EditFormat]: string }>('editFormatInstructions')
+
+    edit_format_instructions = all_instructions?.[edit_format]
   }
 
   return Promise.all(

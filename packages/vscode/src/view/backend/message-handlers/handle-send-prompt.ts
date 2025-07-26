@@ -136,13 +136,11 @@ export const handle_send_prompt = async (
         }
 
         if (provider.web_mode == 'edit-context') {
-          const config = vscode.workspace.getConfiguration('codeWebChat')
-          const edit_format_instructions = config.get<string>(
-            `editFormatInstructions${
-              provider.chat_edit_format.charAt(0).toUpperCase() +
-              provider.chat_edit_format.slice(1)
-            }`
-          )
+          const all_instructions = vscode.workspace
+            .getConfiguration('codeWebChat')
+            .get<{ [key: string]: string }>('editFormatInstructions')
+          const edit_format_instructions =
+            all_instructions?.[provider.chat_edit_format]
           if (edit_format_instructions) {
             pre_context_instructions += `\n${edit_format_instructions}`
             post_context_instructions += `\n${edit_format_instructions}`

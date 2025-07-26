@@ -252,34 +252,14 @@ const perform_context_editing = async (params: {
 
   const files = `<files>${collected_files}\n</files>`
 
-  const config = vscode.workspace.getConfiguration('codeWebChat')
   const edit_format = params.context.workspaceState.get<EditFormat>(
     'api-edit-format',
     'diff'
   )
-  let edit_format_instructions = ''
-
-  switch (edit_format) {
-    case 'truncated':
-      edit_format_instructions = config.get<string>(
-        'editFormatInstructionsTruncated',
-        ''
-      )
-      break
-    case 'whole':
-      edit_format_instructions = config.get<string>(
-        'editFormatInstructionsWhole',
-        ''
-      )
-      break
-    case 'diff':
-    default:
-      edit_format_instructions = config.get<string>(
-        'editFormatInstructionsDiff',
-        ''
-      )
-      break
-  }
+  const all_instructions = vscode.workspace
+    .getConfiguration('codeWebChat')
+    .get<{ [key in EditFormat]: string }>('editFormatInstructions')
+  const edit_format_instructions = all_instructions?.[edit_format] ?? ''
 
   const content = `${edit_context_instructions}\n${edit_format_instructions}\n${files}\n${edit_context_instructions}\n${edit_format_instructions}`
 

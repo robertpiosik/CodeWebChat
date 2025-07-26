@@ -20,7 +20,7 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             {
               label: LABEL_EDIT_SETTINGS,
               detail:
-                'Modify "edit format" instructions attached to your prompts, edit presets in JSON and more.'
+                'Modify "edit format" instructions, edit presets in JSON and more.'
             },
             {
               label: LABEL_PROVIDERS,

@@ -151,13 +151,10 @@ export function edit_context_to_clipboard_command(
         'editFormat',
         'truncated'
       )
-      const edit_format_instructions = vscode.workspace
+      const all_instructions = vscode.workspace
         .getConfiguration('codeWebChat')
-        .get<string>(
-          `editFormatInstructions${
-            edit_format.charAt(0).toUpperCase() + edit_format.slice(1)
-          }`
-        )
+        .get<{ [key in EditFormat]: string }>('editFormatInstructions')
+      const edit_format_instructions = all_instructions?.[edit_format]
 
       if (edit_format_instructions && context_text) {
         pre_context_instructions += `\n${edit_format_instructions}`
