@@ -39,6 +39,7 @@ export const Multiple = () => {
       is_in_code_completions_mode={false}
       has_context={true}
       is_in_context_dependent_mode={true}
+      web_mode='edit-context'
       translations={{
         my_chat_presets: 'My Chat Presets',
         set_presets_opening_by_default: 'Set presets opening by default',
@@ -84,6 +85,7 @@ export const CodeCompletionsMode = () => {
       is_in_code_completions_mode={false}
       has_context={true}
       is_in_context_dependent_mode={true}
+      web_mode='edit-context'
       translations={{
         my_chat_presets: 'My Chat Presets',
         set_presets_opening_by_default: 'Set presets opening by default',

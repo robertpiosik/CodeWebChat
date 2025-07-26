@@ -15,8 +15,6 @@ import { show_response_ready_notification } from '../utils/show-response-ready-n
 
 export const qwen: Chatbot = {
   wait_until_ready: async () => {
-    const start_timestamp = Date.now()
-    // Wait for model selector to be ready (includes one of the available models)
     await new Promise((resolve) => {
       const check_for_element = () => {
         const model_selector_button = document.querySelector(
@@ -24,12 +22,11 @@ export const qwen: Chatbot = {
         ) as HTMLElement
 
         if (
-          Date.now() - start_timestamp > 3000 ||
-          (model_selector_button &&
-            model_selector_button.textContent &&
-            Object.values(CHATBOTS['Qwen'].models).includes(
-              model_selector_button.textContent.trim()
-            ))
+          model_selector_button &&
+          model_selector_button.textContent &&
+          Object.values(CHATBOTS['Qwen'].models).includes(
+            model_selector_button.textContent.trim()
+          )
         ) {
           resolve(null)
         } else {
@@ -40,12 +37,11 @@ export const qwen: Chatbot = {
     })
   },
   set_model: async (model?: string) => {
-    if(!model) return
+    if (!model) return
     const model_selector_button = document.querySelector(
       'button#model-selector-0-button'
     ) as HTMLElement
 
-    // The model is already selected
     if (
       model_selector_button.textContent?.trim() ==
       (CHATBOTS['Qwen'].models as any)[model]
@@ -54,12 +50,7 @@ export const qwen: Chatbot = {
     }
 
     model_selector_button.click()
-    if (window.innerWidth >= 768) {
-      await new Promise((r) => requestAnimationFrame(r))
-    } else {
-      // Opening drawer...
-      await new Promise((r) => setTimeout(r, 500))
-    }
+    await new Promise((r) => requestAnimationFrame(r))
     const model_buttons = document.querySelectorAll(
       'div[aria-labelledby="model-selector-0-button"] button[aria-label="model-item"]'
     ) as NodeListOf<HTMLButtonElement>
@@ -94,6 +85,19 @@ export const qwen: Chatbot = {
           'button.websearch_button'
         ) as HTMLButtonElement
         search_button.click()
+      } else if (option == 'temporary' && supported_options['temporary']) {
+        const model_selector_button = document.querySelector(
+          'button#model-selector-0-button'
+        ) as HTMLElement
+        model_selector_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
+        const temporary_switch = document.querySelector(
+          'div[aria-labelledby="model-selector-0-button"] button[role="switch"]'
+        ) as HTMLButtonElement
+        temporary_switch.click()
+        await new Promise((r) => requestAnimationFrame(r))
+        model_selector_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
       }
     }
   },
@@ -199,7 +203,11 @@ export const qwen: Chatbot = {
 
     const observer = new MutationObserver((mutations) => {
       mutations.forEach(() => {
-        if (document.querySelector('i.icon-StopIcon')) return
+        if (
+          document.querySelector('i.icon-StopIcon') ||
+          !document.querySelector('.message-footer-buttons')
+        )
+          return
 
         show_response_ready_notification({ chatbot_name: 'Qwen' })
 

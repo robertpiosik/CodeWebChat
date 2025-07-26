@@ -170,7 +170,8 @@ export const CHATBOTS = {
     default_system_instructions: '',
     supported_options: {
       thinking: 'Thinking',
-      search: 'Search'
+      search: 'Search',
+      temporary: 'Temporary'
     },
     default_top_p: 0,
     models: {
