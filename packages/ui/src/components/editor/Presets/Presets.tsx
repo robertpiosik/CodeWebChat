@@ -36,6 +36,7 @@ export namespace Presets {
   }
 
   export type Props = {
+    web_mode: 'ask' | 'edit-context' | 'code-completions' | 'no-context'
     is_connected: boolean
     has_instructions: boolean
     has_active_editor: boolean
@@ -100,8 +101,9 @@ const ChatbotIcon: React.FC<{
 }
 
 export const Presets: React.FC<Presets.Props> = (props) => {
-  const [highlighted_preset_name, set_highlighted_preset_name] =
-    useState<string>()
+  const [highlighted_preset_name, set_highlighted_preset_name] = useState<
+    Record<Presets.Props['web_mode'], string>
+  >({} as any)
 
   return (
     <div className={styles.container}>
@@ -154,7 +156,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             }
 
             const is_item_disabled =
-              !props.is_connected ||
+              (false && !props.is_connected) ||
               (props.is_in_code_completions_mode &&
                 (!props.has_active_editor || props.has_active_selection)) ||
               (props.is_in_context_dependent_mode && !props.has_context) ||
@@ -197,13 +199,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 key={i}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
-                    highlighted_preset_name == preset.name,
+                    highlighted_preset_name[props.web_mode] === preset.name,
                   [styles['presets__item--disabled']]: is_item_disabled
                 })}
                 onClick={() => {
                   if (!is_item_disabled) {
                     props.on_preset_click(preset)
-                    set_highlighted_preset_name(preset.name)
+                    set_highlighted_preset_name({
+                      ...highlighted_preset_name,
+                      [props.web_mode]: preset.name
+                    })
                   }
                 }}
                 role="button"
@@ -251,7 +256,10 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     title={props.translations.edit}
                     on_click={(e) => {
                       e.stopPropagation()
-                      set_highlighted_preset_name(preset.name)
+                      set_highlighted_preset_name({
+                        ...highlighted_preset_name,
+                        [props.web_mode]: preset.name
+                      })
                       props.on_preset_edit(preset.name)
                     }}
                   />

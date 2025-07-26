@@ -32,10 +32,8 @@ export namespace Configurations {
 }
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
-  const [
-    highlighted_configuration_index,
-    set_highlighted_configuration_index
-  ] = useState<number>()
+  const [highlighted_configuration_index, set_highlighted_configuration_index] =
+    useState<Record<Configurations.Props['api_mode'], number>>({} as any)
   const is_in_code_completions_mode = props.api_mode == 'code-completions'
 
   return (
@@ -87,13 +85,16 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               key={i}
               className={cn(styles.configurations__item, {
                 [styles['configurations__item--highlighted']]:
-                  highlighted_configuration_index == i,
+                  highlighted_configuration_index[props.api_mode] == i,
                 [styles['configurations__item--disabled']]: is_item_disabled
               })}
               onClick={() => {
                 if (!is_item_disabled) {
                   props.on_configuration_click(i)
-                  set_highlighted_configuration_index(i)
+                  set_highlighted_configuration_index({
+                    ...highlighted_configuration_index,
+                    [props.api_mode]: i
+                  })
                 }
               }}
               role="button"
