@@ -92,7 +92,6 @@ const create_new_file_from_patch = (diff_patch: string): string => {
   for (let i = 0; i < patch_lines.length; i++) {
     const line = patch_lines[i]
 
-    // Skip patch header and chunk identifier lines
     if (
       line.startsWith('diff --git') ||
       line.startsWith('index') ||
@@ -291,7 +290,6 @@ const apply_diff_patch = (
       const search_replace_block = search_replace_blocks[i]
       const search_string = search_replace_block.search_lines.join('')
 
-      // Iterate over the originalCodeLinesNormalized to find the search string
       // We start search from the previous found index to ensure duplicate code is not found at wrong index
       let found = false
       for (

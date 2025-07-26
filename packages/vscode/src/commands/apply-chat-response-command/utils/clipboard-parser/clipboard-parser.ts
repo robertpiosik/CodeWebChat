@@ -23,7 +23,6 @@ export interface ClipboardContent {
   code_completion?: ClipboardCodeCompletion
 }
 
-// Helper function to check if path starts with a workspace name and extract it
 const extract_workspace_and_path = (
   file_path: string,
   is_single_root_folder_workspace = false
@@ -33,18 +32,14 @@ const extract_workspace_and_path = (
     return { relative_path: file_path }
   }
 
-  // Check if the path might contain a workspace prefix (contains a slash)
   if (!file_path.includes('/')) {
     return { relative_path: file_path }
   }
 
-  // Split by first slash to check for workspace prefix
   const first_slash_index = file_path.indexOf('/')
   if (first_slash_index > 0) {
     const possible_workspace = file_path.substring(0, first_slash_index)
     const rest_of_path = file_path.substring(first_slash_index + 1)
-
-    // Return both the possible workspace name and the rest of the path
     return {
       workspace_name: possible_workspace,
       relative_path: rest_of_path
@@ -54,12 +49,8 @@ const extract_workspace_and_path = (
   return { relative_path: file_path }
 }
 
-// Helper function to check if content has real code (not just comments or empty)
 const has_real_code = (content: string): boolean => {
-  // Remove comments and check if there's any non-whitespace content
   const lines = content.split('\n')
-
-  // Filter out empty lines and lines that are just comments
   const non_comment_lines = lines.filter((line) => {
     const trimmed = line.trim()
     return (
@@ -76,7 +67,6 @@ const has_real_code = (content: string): boolean => {
   return non_comment_lines.length > 0
 }
 
-// Helper function to extract file path from XML-style file tag
 const extract_file_path_from_xml = (line: string): string | null => {
   const match = line.match(/<file\s+path=["']([^"']+)["']/)
   return match ? match[1] : null
@@ -118,7 +108,6 @@ export const parse_code_completion = (params: {
   for (const line of lines) {
     if (line.trim().startsWith('```')) {
       if (in_code_block) {
-        // end of a code block
         if (first_line_of_block) {
           const completion_info = extract_path_and_position(first_line_of_block)
           if (completion_info) {
@@ -160,9 +149,7 @@ export const parse_code_completion = (params: {
   if (in_code_block && first_line_of_block) {
     const completion_info = extract_path_and_position(first_line_of_block)
     if (completion_info) {
-      // Return as if it's a valid completion, similar to logic above
-      // For brevity, assuming this is an unlikely edge case and won't be fully implemented.
-      // A full implementation would mirror the logic inside the loop.
+      // This case is not handled and will result in returning null.
     }
   }
 
@@ -191,31 +178,24 @@ export const parse_multiple_files = (params: {
   let xml_file_mode = false
   let in_cdata = false
 
-  // Split text into lines for easier processing
   const lines = params.response.split('\n')
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
 
-    // Check for code block start
     if (state == 'TEXT' && line.trim().startsWith('```')) {
       state = 'CONTENT'
-      current_workspace_name = undefined // Reset workspace name for new block
-      current_file_name = '' // Reset filename for new block
+      current_workspace_name = undefined
+      current_file_name = ''
       current_content = ''
       is_first_content_line = true
       xml_file_mode = false
       in_cdata = false
       continue
-    }
-    // Collect content lines
-    else if (state == 'CONTENT') {
-      // Check if line is end of code block
+    } else if (state == 'CONTENT') {
       if (line.trim() == '```') {
-        // We've found the end of the block
         state = 'TEXT'
 
-        // Clean up the collected content before adding/appending
         const cleaned_content = cleanup_api_response({
           content: current_content
         })
@@ -228,19 +208,16 @@ export const parse_multiple_files = (params: {
 
           if (files_map.has(file_key)) {
             const existing_file = files_map.get(file_key)!
-            // Append cleaned content
             existing_file.content += '\n\n' + cleaned_content
           } else {
             files_map.set(file_key, {
               file_path: current_file_name,
-              // Use cleaned content
               content: cleaned_content,
               workspace_name: current_workspace_name
             })
           }
         }
 
-        // Reset state variables
         current_file_name = ''
         current_content = ''
         is_first_content_line = false
@@ -248,7 +225,6 @@ export const parse_multiple_files = (params: {
         xml_file_mode = false
         in_cdata = false
       } else {
-        // Check for XML-style file tag
         if (is_first_content_line && line.trim().startsWith('<file')) {
           const extracted_filename = extract_file_path_from_xml(line)
           if (extracted_filename) {
@@ -296,27 +272,22 @@ export const parse_multiple_files = (params: {
           }
         }
 
-        // Check for CDATA start
         if (xml_file_mode && line.trim().startsWith('<![CDATA[')) {
           in_cdata = true
           continue
         }
 
-        // Check for CDATA end
         if (xml_file_mode && in_cdata && line.trim().includes(']]>')) {
           in_cdata = false
           continue
         }
 
-        // Check for XML closing tag
         if (xml_file_mode && !in_cdata && line.trim() == '</file>') {
           continue
         }
 
-        // We're not on first line anymore for subsequent iterations
         is_first_content_line = false
 
-        // Add to content
         if (current_content) {
           current_content += '\n' + line
         } else {
@@ -328,21 +299,17 @@ export const parse_multiple_files = (params: {
 
   // Handle edge case: last file in clipboard doesn't have closing ```
   if (state == 'CONTENT' && current_file_name) {
-    // Clean up the collected content before adding/appending
     const cleaned_content = cleanup_api_response({ content: current_content })
 
-    // Only add if it has real code
     if (has_real_code(cleaned_content)) {
       const file_key = `${current_workspace_name || ''}:${current_file_name}`
 
       if (files_map.has(file_key)) {
         const existing_file = files_map.get(file_key)!
-        // Append cleaned content
         existing_file.content += '\n\n' + cleaned_content
       } else {
         files_map.set(file_key, {
           file_path: current_file_name,
-          // Use cleaned content
           content: cleaned_content,
           workspace_name: current_workspace_name
         })
@@ -384,11 +351,9 @@ export const parse_file_content_only = (params: {
     params.is_single_root_folder_workspace
   )
 
-  // Get content (everything after the first line)
   const content = lines.slice(1).join('\n')
   const cleaned_content = cleanup_api_response({ content })
 
-  // Only return if it has real code
   if (has_real_code(cleaned_content)) {
     return {
       file_path: relative_path,

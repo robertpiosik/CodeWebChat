@@ -19,8 +19,6 @@ export async function handle_fast_replace(
     data: { file_count: files.length }
   })
   try {
-    const new_files: ClipboardFile[] = []
-    const existing_files: ClipboardFile[] = []
     const safe_files: ClipboardFile[] = []
     const unsafe_files: string[] = []
 
@@ -36,18 +34,14 @@ export async function handle_fast_replace(
       return { success: false }
     }
 
-    // Create a map of workspace names to their root paths
     const workspace_map = new Map<string, string>()
     vscode.workspace.workspaceFolders.forEach((folder) => {
       workspace_map.set(folder.name, folder.uri.fsPath)
     })
 
-    // Default workspace is the first one
     const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
 
-    // First validate all file paths
     for (const file of files) {
-      // Determine the correct workspace root
       let workspace_root = default_workspace
       if (file.workspace_name && workspace_map.has(file.workspace_name)) {
         workspace_root = workspace_map.get(file.workspace_name)!
@@ -60,11 +54,10 @@ export async function handle_fast_replace(
 
       const sanitized_path = sanitize_file_name(file.file_path)
 
-      // Check if the path would be safe
       if (create_safe_path(workspace_root, sanitized_path)) {
         safe_files.push({
           ...file,
-          file_path: sanitized_path // Use sanitized path
+          file_path: sanitized_path
         })
       } else {
         unsafe_files.push(file.file_path)
@@ -89,24 +82,6 @@ export async function handle_fast_replace(
 
       if (safe_files.length == 0) {
         return { success: false }
-      }
-    }
-
-    // Check existence for each file in its correct workspace
-    for (const file of safe_files) {
-      let workspace_root = default_workspace
-      if (file.workspace_name && workspace_map.has(file.workspace_name)) {
-        workspace_root = workspace_map.get(file.workspace_name)!
-      }
-
-      const full_path = path.normalize(
-        path.join(workspace_root, file.file_path)
-      )
-
-      if (fs.existsSync(full_path)) {
-        existing_files.push(file)
-      } else {
-        new_files.push(file)
       }
     }
 
@@ -136,7 +111,6 @@ export async function handle_fast_replace(
 
       try {
         if (file_exists) {
-          // Store original content for reversion
           const file_uri = vscode.Uri.file(safe_path)
           const document = await vscode.workspace.openTextDocument(file_uri)
           original_states.push({
@@ -146,7 +120,6 @@ export async function handle_fast_replace(
             workspace_name: file.workspace_name
           })
 
-          // Replace existing file
           const editor = await vscode.window.showTextDocument(document)
           await editor.edit((edit) => {
             edit.replace(
@@ -166,7 +139,6 @@ export async function handle_fast_replace(
             data: safe_path
           })
         } else {
-          // Mark as new file for reversion
           original_states.push({
             file_path: file.file_path,
             content: '',
@@ -174,7 +146,6 @@ export async function handle_fast_replace(
             workspace_name: file.workspace_name
           })
 
-          // Create new file in correct workspace
           const directory = path.dirname(safe_path)
           if (!fs.existsSync(directory)) {
             try {

@@ -16,7 +16,6 @@ export async function create_file_if_needed(
     message: 'start',
     data: { filePath, workspace_name }
   })
-  // Check if we have workspace folder(s)
   if (
     !vscode.workspace.workspaceFolders ||
     vscode.workspace.workspaceFolders.length == 0
@@ -43,11 +42,9 @@ export async function create_file_if_needed(
         message: `Workspace named "${workspace_name}" not found. Falling back to the first workspace.`,
         data: filePath
       })
-      // Fallback to the first workspace if the named one isn't found
       workspace_folder_path = vscode.workspace.workspaceFolders[0].uri.fsPath
     }
   } else {
-    // Default to the first workspace if no name is provided
     workspace_folder_path = vscode.workspace.workspaceFolders[0].uri.fsPath
   }
 
@@ -65,7 +62,6 @@ export async function create_file_if_needed(
     return false
   }
 
-  // Ensure directory exists
   const directory = path.dirname(safe_path)
   if (!fs.existsSync(directory)) {
     try {
@@ -86,7 +82,6 @@ export async function create_file_if_needed(
     }
   }
 
-  // Create the file
   try {
     fs.writeFileSync(safe_path, content)
     Logger.log({
@@ -104,7 +99,6 @@ export async function create_file_if_needed(
     return false
   }
 
-  // Open the file in editor
   try {
     const document = await vscode.workspace.openTextDocument(safe_path)
     await vscode.window.showTextDocument(document)
@@ -155,17 +149,14 @@ export async function revert_files(
       return false
     }
 
-    // Create a map of workspace names to their root paths
     const workspace_map = new Map<string, string>()
     vscode.workspace.workspaceFolders.forEach((folder) => {
       workspace_map.set(folder.name, folder.uri.fsPath)
     })
 
-    // Default workspace is the first one
     const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
 
     for (const state of original_states) {
-      // Determine the correct workspace root for this file
       let workspace_root = default_workspace
       if (state.workspace_name && workspace_map.has(state.workspace_name)) {
         workspace_root = workspace_map.get(state.workspace_name)!
@@ -176,7 +167,6 @@ export async function revert_files(
         })
       }
 
-      // Validate the file path for reversion
       const safe_path = create_safe_path(workspace_root, state.file_path)
 
       if (!safe_path) {
@@ -189,12 +179,9 @@ export async function revert_files(
         continue // Skip this file
       }
 
-      // For new files that were created, delete them
       if (state.is_new) {
         if (fs.existsSync(safe_path)) {
-          // Close any editors with the file open
           const uri = vscode.Uri.file(safe_path)
-          // Try to close the editor if it's open
           const text_editors = vscode.window.visibleTextEditors.filter(
             (editor) => editor.document.uri.toString() === uri.toString()
           )
@@ -208,7 +195,6 @@ export async function revert_files(
             )
           }
 
-          // Delete the file
           try {
             fs.unlinkSync(safe_path)
             Logger.log({
@@ -257,7 +243,6 @@ export async function revert_files(
             )
           }
         } else {
-          // For existing files that were modified, restore original content
           const file_uri = vscode.Uri.file(safe_path)
 
           try {

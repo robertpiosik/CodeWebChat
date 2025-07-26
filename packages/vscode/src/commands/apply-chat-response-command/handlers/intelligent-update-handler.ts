@@ -115,7 +115,6 @@ async function process_file(params: {
     })
     return cleaned_content
   } catch (error: any) {
-    // First check for cancellation
     if (axios.isCancel(error)) {
       Logger.log({
         function_name: 'process_file',
@@ -125,7 +124,6 @@ async function process_file(params: {
       return null // Silent cancellation
     }
 
-    // For other errors, show the error message as before
     Logger.error({
       function_name: 'process_file',
       message: 'Refactoring error',
@@ -171,7 +169,6 @@ export async function handle_intelligent_update(params: {
     function_name: 'handle_intelligent_update',
     message: 'Processing multiple files'
   })
-  // Handle multiple files with AI processing ('Intelligent update' mode)
   const raw_files = parse_multiple_files({
     response: params.chat_response,
     is_single_root_folder_workspace: params.is_single_root_folder_workspace
@@ -195,7 +192,6 @@ export async function handle_intelligent_update(params: {
 
     const sanitized_path = sanitize_file_name(file.file_path)
 
-    // Check if the path would be safe within its intended workspace
     if (create_safe_path(workspace_root, sanitized_path)) {
       files.push({
         ...file,
@@ -245,7 +241,6 @@ export async function handle_intelligent_update(params: {
   const existing_files: ClipboardFile[] = []
 
   for (const file of files) {
-    // Check if file exists in workspace
     let file_exists = false
     let workspace_root = default_workspace_path!
     if (file.workspace_name && workspace_map.has(file.workspace_name)) {
@@ -403,7 +398,6 @@ export async function handle_intelligent_update(params: {
 
             const file_exists = fs.existsSync(safe_path)
 
-            // For new files, just store the information for creation later
             if (!file_exists) {
               return {
                 document: null,
@@ -414,7 +408,6 @@ export async function handle_intelligent_update(params: {
               }
             }
 
-            // For existing files, process with AI
             try {
               const file_uri = vscode.Uri.file(safe_path)
               const document = await vscode.workspace.openTextDocument(file_uri)
@@ -464,7 +457,6 @@ export async function handle_intelligent_update(params: {
               if (token.isCancellationRequested)
                 throw new Error('Operation cancelled')
 
-              // If process_file returned null (due to error, cancellation, or rate limit)
               if (!updated_content_result) {
                 throw new Error(`Failed to apply changes to ${file.file_path}`)
               }
@@ -511,7 +503,6 @@ export async function handle_intelligent_update(params: {
             }
           })
 
-          // Wait for all promises in this batch
           const results = await Promise.all(promises)
           document_changes.push(...results)
         }
@@ -556,7 +547,6 @@ export async function handle_intelligent_update(params: {
               )
             }
           } else {
-            // Apply changes to existing file
             const document = change.document
             if (!document) {
               Logger.warn({
@@ -593,7 +583,7 @@ export async function handle_intelligent_update(params: {
           }
         }
 
-        operation_successful = true // Mark as successful if all applies finished (or were skipped gracefully)
+        operation_successful = true
       } catch (error: any) {
         cancel_token_source.cancel('Operation failed due to error.') // Cancel any pending requests
         Logger.error({
@@ -607,7 +597,6 @@ export async function handle_intelligent_update(params: {
             `An error occurred during processing: ${error.message}`
           )
         }
-        // Do not set operation_successful = true
       }
     }
   )
