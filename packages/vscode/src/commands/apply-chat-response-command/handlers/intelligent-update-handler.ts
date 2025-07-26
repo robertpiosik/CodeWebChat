@@ -262,40 +262,6 @@ export async function handle_intelligent_update(params: {
     }
   }
 
-  // If there are new files, ask for confirmation before proceeding
-  if (new_files.length > 0) {
-    const new_file_list = new_files
-      .map(
-        (file) =>
-          `${file.workspace_name ? `[${file.workspace_name}] ` : ''}${
-            file.file_path
-          }`
-      )
-      .join('\n')
-    const confirmation = await vscode.window.showWarningMessage(
-      `This will create ${new_files.length} new ${
-        new_files.length == 1 ? 'file' : 'files'
-      }:\n${new_file_list}\n\nDo you want to continue?`,
-      { modal: true },
-      'Yes'
-    )
-
-    if (confirmation != 'Yes') {
-      vscode.window.showInformationMessage(
-        'Operation cancelled. No files were modified.'
-      )
-      Logger.log({
-        function_name: 'handle_intelligent_update',
-        message: 'User cancelled new file creation in multi-file mode.'
-      })
-      return null
-    }
-    Logger.log({
-      function_name: 'handle_intelligent_update',
-      message: 'User confirmed new file creation in multi-file mode.'
-    })
-  }
-
   // Update the message to accurately reflect what's happening
   let progress_title = ''
   if (existing_files.length > 0 && new_files.length > 0) {

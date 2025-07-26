@@ -110,33 +110,6 @@ export async function handle_fast_replace(
       }
     }
 
-    // If there are new files, ask for confirmation before proceeding
-    if (new_files.length > 0) {
-      const new_file_list = new_files.map((file) => file.file_path).join('\n')
-      const confirmation = await vscode.window.showWarningMessage(
-        `This will create ${new_files.length} new ${
-          new_files.length === 1 ? 'file' : 'files'
-        }:\n${new_file_list}\n\nDo you want to continue?`,
-        { modal: true },
-        'Yes'
-      )
-
-      if (confirmation != 'Yes') {
-        vscode.window.showInformationMessage(
-          'Operation cancelled. No files were modified.'
-        )
-        Logger.log({
-          function_name: 'handle_fast_replace',
-          message: 'User cancelled new file creation.'
-        })
-        return { success: false }
-      }
-      Logger.log({
-        function_name: 'handle_fast_replace',
-        message: 'User confirmed new file creation.'
-      })
-    }
-
     // Store original file states for reversion
     const original_states: OriginalFileState[] = []
 
