@@ -619,9 +619,9 @@
           "scope": "resource",
           "description": "Style instructions for chat responses for different edit formats.",
           "default": {
-            "whole": "Whenever proposing a file use the markdown code block syntax and always add file path in the first line comment. Don't use XML for files. Please show me the full code of the changed files, I have a disability which means I can't type and need to be able to copy and paste the full code.",
-            "truncated": "Whenever proposing a file use the markdown code block syntax and always add file path in the first line comment. Don't use XML for files. Use ellipsis comments, e.g. \"// ...\", when appropriate.",
-            "diff": "Whenever proposing a file use the markdown code block syntax. Don't use XML for files. Each code block should be a diff patch."
+            "whole": "Whenever proposing a file use the markdown code block syntax and always add file path in the first line comment. Please show me the full code of the changed files, I have a disability which means I can't type and need to be able to copy and paste the full code. Don't use XML for files.",
+            "truncated": "Whenever proposing a file use the markdown code block syntax and always add file path in the first line comment. Use ellipsis comments, e.g. \"// ...\", when appropriate. Don't use XML for files.",
+            "diff": "Whenever proposing a file use the markdown code block syntax. Each code block should be a diff patch. Don't use XML for files."
           },
           "properties": {
             "whole": {
