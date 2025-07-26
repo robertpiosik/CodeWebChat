@@ -10,7 +10,7 @@ const THINK_OPEN = '<think>'
 const THINK_CLOSE = '</think>'
 
 async function process_stream_chunk(
-  chunk: Buffer,
+  chunk: string,
   buffer: string,
   accumulated_content: string,
   last_log_time: number,
@@ -34,7 +34,7 @@ async function process_stream_chunk(
   let updated_think_block_ended = think_block_ended
 
   try {
-    updated_buffer += chunk.toString()
+    updated_buffer += chunk
     const lines = updated_buffer.split('\n')
     updated_buffer = lines.pop() || ''
 
@@ -184,8 +184,10 @@ export async function make_api_request(
       }
     )
 
+    response.data.setEncoding('utf8');
+
     return new Promise((resolve, reject) => {
-      response.data.on('data', async (chunk: Buffer) => {
+      response.data.on('data', async (chunk: string) => {
         const processing_result = await process_stream_chunk(
           chunk,
           buffer,
