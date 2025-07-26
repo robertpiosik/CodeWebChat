@@ -21,6 +21,6 @@
     "src/**/*.tsx",
     "../shared/src/**/*.ts",
     "../ui/src/**/*"
-, "src/view/frontend/EditPresetForm"  ],
+  ],
   "exclude": ["node_modules"]
 }
