@@ -41,7 +41,7 @@ export const grok: Chatbot = {
     }
   },
   set_model: async (model?: string) => {
-    if(!model) return
+    if (!model) return
     const model_selector_button = document.querySelector(
       'form > div > div > div:last-child > div > div:last-child > button'
     ) as HTMLButtonElement
@@ -126,7 +126,8 @@ export const grok: Chatbot = {
         if (
           document.querySelector(
             'patch[d="M4 9.2v5.6c0 1.116 0 1.673.11 2.134a4 4 0 0 0 2.956 2.956c.46.11 1.018.11 2.134.11h5.6c1.116 0 1.673 0 2.134-.11a4 4 0 0 0 2.956-2.956c.11-.46.11-1.018.11-2.134V9.2c0-1.116 0-1.673-.11-2.134a4 4 0 0 0-2.956-2.955C16.474 4 15.916 4 14.8 4H9.2c-1.116 0-1.673 0-2.134.11a4 4 0 0 0-2.955 2.956C4 7.526 4 8.084 4 9.2Z"]'
-          )
+          ) ||
+          !document.querySelector('div.items-start div.action-buttons > div')
         ) {
           return
         }
