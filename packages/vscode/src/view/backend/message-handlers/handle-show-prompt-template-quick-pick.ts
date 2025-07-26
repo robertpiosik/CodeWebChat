@@ -118,7 +118,6 @@ export const handle_show_prompt_template_quick_pick = async (
         ...templates.map((template, index) => {
           let buttons = []
 
-          // Only show move buttons when not searching and there's more than one template
           if (!templates_quick_pick.value && templates.length > 1) {
             const is_first_item = index == 0
             const is_last_item = index == templates.length - 1
@@ -334,7 +333,6 @@ export const handle_show_prompt_template_quick_pick = async (
             })
 
             if (value) {
-              // Handle double braces first to avoid conflicts
               const double_regex = new RegExp(
                 `\\{\\{\\s*${variable.replace(
                   /[.*+?^${}()|[\]\\]/g,
@@ -342,8 +340,6 @@ export const handle_show_prompt_template_quick_pick = async (
                 )}\\s*\\}\\}`,
                 'g'
               )
-
-              // Handle single braces
               const single_regex = new RegExp(
                 `\\{\\s*${variable.replace(
                   /[.*+?^${}()|[\]\\]/g,
@@ -351,10 +347,7 @@ export const handle_show_prompt_template_quick_pick = async (
                 )}\\s*\\}`,
                 'g'
               )
-
-              // Replace double braces with the value (no braces left)
               prompt_text = prompt_text.replace(double_regex, value)
-              // Replace single braces with the value (no braces left)
               prompt_text = prompt_text.replace(single_regex, value)
             }
           }
@@ -364,7 +357,6 @@ export const handle_show_prompt_template_quick_pick = async (
       }
     }),
     templates_quick_pick.onDidChangeValue(() => {
-      // Refresh items when search value changes to show/hide move buttons
       templates_quick_pick.items = create_template_items(prompt_templates)
     }),
     templates_quick_pick.onDidTriggerItemButton(async (event) => {
@@ -455,13 +447,13 @@ export const handle_show_prompt_template_quick_pick = async (
         prompt_templates = updated_templates
         templates_quick_pick.items = create_template_items(prompt_templates)
 
-        // Show the quick pick immediately after deletion
         if (!is_disposed) {
           templates_quick_pick.show()
         }
 
         // Handle undo asynchronously without blocking the UI
         const undo_button_text = 'Undo'
+        is_showing_dialog = true
         const deletion_message = is_unnamed
           ? `Unnamed template has been deleted.`
           : `Template "${template_name}" has been deleted.`
@@ -469,6 +461,7 @@ export const handle_show_prompt_template_quick_pick = async (
         vscode.window
           .showInformationMessage(deletion_message, undo_button_text)
           .then(async (undo_result) => {
+            is_showing_dialog = false
             if (undo_result === undo_button_text && deleted_template) {
               if (!is_disposed) {
                 templates_quick_pick.hide()
@@ -489,7 +482,6 @@ export const handle_show_prompt_template_quick_pick = async (
 
               vscode.window.showInformationMessage(restoration_message)
 
-              // Show the quick pick again after undo
               if (!is_disposed) {
                 templates_quick_pick.show()
               }
