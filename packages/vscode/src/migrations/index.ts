@@ -1,5 +1,4 @@
 export * from './migrate-file-refactoring-to-array'
-export * from './migrate-api-tool-configs'
 export * from './migrate-api-providers-to-secret-storage'
 export * from './migrate-commit-message-prompt-to-instructions'
 export * from './migrate-commit-messages-config-to-array'

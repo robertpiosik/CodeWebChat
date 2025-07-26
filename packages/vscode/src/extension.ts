@@ -4,7 +4,6 @@ import { ViewProvider } from './view/backend/view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
   migrate_file_refactoring_to_array,
-  migrate_api_tool_configs,
   migrate_api_providers_to_secret_storage,
   migrate_commit_message_prompt_to_instructions,
   migrate_commit_messages_config_to_array,
@@ -62,8 +61,6 @@ export async function activate(context: vscode.ExtensionContext) {
   websocket_server_instance = new WebSocketManager(context, websites_provider)
 
   const migrations = async () => {
-    // 17 May 2025
-    await migrate_api_tool_configs(context)
     // 20 May 2025
     await migrate_api_providers_to_secret_storage(context)
     // 22 May 2025
