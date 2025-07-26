@@ -34,7 +34,6 @@ export namespace Configurations {
 export const Configurations: React.FC<Configurations.Props> = (props) => {
   const [highlighted_configuration_index, set_highlighted_configuration_index] =
     useState<Record<Configurations.Props['api_mode'], number>>({} as any)
-  const is_in_code_completions_mode = props.api_mode == 'code-completions'
 
   return (
     <div className={styles.container}>
@@ -60,7 +59,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           const is_item_disabled =
             (props.api_mode == 'edit-context' &&
               (!props.has_context || !props.has_instructions)) ||
-            (is_in_code_completions_mode &&
+            (props.api_mode == 'code-completions' &&
               (!props.has_active_editor || props.has_active_selection))
 
           const base_title = `${configuration.model} ${description}`
@@ -68,7 +67,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             if (props.api_mode == 'edit-context' && !props.has_context) {
               return props.translations.add_files_to_context_first
             }
-            if (is_in_code_completions_mode) {
+            if (props.api_mode == 'code-completions') {
               if (!props.has_active_editor) {
                 return props.translations.configuration_requires_active_editor
               }
