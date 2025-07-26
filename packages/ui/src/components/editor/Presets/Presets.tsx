@@ -214,19 +214,20 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 role="button"
                 title={get_item_title()}
               >
-                <div className={styles.presets__item__left}>
-                  <ChatbotIcon chatbot={preset.chatbot} is_disabled={false} />
+                {preset.is_default && (
+                  <div className={styles['presets__item__left__selected']} />
+                )}
 
-                  <div
-                    className={cn(styles.presets__item__left__text, {
-                      [styles['presets__item__left__text--selected']]:
-                        preset.is_default
-                    })}
-                  >
+                <div className={styles.presets__item__left}>
+                  <div className={styles.presets__item__left__icon}>
+                    <Icon variant={chatbot_to_icon[preset.chatbot]} />
+                  </div>
+                  <div className={styles.presets__item__left__text}>
                     <span>{display_name}</span>
                     <span>{get_subtitle()}</span>
                   </div>
                 </div>
+
                 <div
                   className={styles.presets__item__right}
                   onClick={(e) => {

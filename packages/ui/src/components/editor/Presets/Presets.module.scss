@@ -27,9 +27,9 @@
     justify-content: space-between;
     align-items: center;
     gap: var(--padding-4px);
-    height: 22px;
     padding: 0 var(--padding-12px);
     cursor: pointer;
+    height: 22px;
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
@@ -42,7 +42,7 @@
     &--disabled {
       cursor: default !important;
 
-      > div:first-child {
+      .presets__item__left {
         opacity: var(--disabled-opacity);
       }
     }
@@ -62,24 +62,26 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      position: relative;
 
-      &__icon {
-        display: flex;
+      &__selected {
+        position: absolute;
+        width: 2px;
+        height: 100%;
+        background-color: var(--vscode-button-background);
+        top: 0;
+        left: 0;
+      }
 
-        > svg {
-          fill: var(--vscode-icon-foreground);
-          width: 16px;
-          height: 16px;
-        }
+      &__icon > svg {
+        fill: var(--vscode-icon-foreground);
+        width: 16px;
+        height: 16px;
       }
 
       &__text {
         overflow: hidden;
         text-overflow: ellipsis;
-
-        &--selected > span:first-child {
-          font-weight: 600;
-        }
 
         &--disabled {
           opacity: var(--disabled-opacity);
