@@ -121,7 +121,7 @@ export const ai_studio: Chatbot = {
     await new Promise((r) => requestAnimationFrame(r))
   },
   set_temperature: async (temperature?: number) => {
-    if (!temperature) return
+    if (temperature === undefined) return
     if (window.innerWidth <= 768) {
       const tune_button = Array.from(
         document.querySelectorAll('prompt-header button')
@@ -220,7 +220,7 @@ export const ai_studio: Chatbot = {
     }
   },
   set_top_p: async (top_p?: number) => {
-    if (!top_p) return
+    if (top_p === undefined) return
     if (window.innerWidth <= 768) {
       const tune_button = Array.from(
         document.querySelectorAll('prompt-header button')
