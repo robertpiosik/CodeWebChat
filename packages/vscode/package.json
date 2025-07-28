@@ -46,6 +46,7 @@
     "Mistral",
     "DeepSeek",
     "Qwen",
+    "Z.AI",
     "Grok",
     "openai",
     "typescript",
@@ -687,6 +688,10 @@
             {
               "name": "(11)",
               "chatbot": "Kimi"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "Z.AI"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -713,7 +718,8 @@
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "Kimi"
+                  "Kimi",
+                  "Z.AI"
                 ],
                 "description": "Choose among supported chatbots."
               },
@@ -839,6 +845,10 @@
             {
               "name": "(11)",
               "chatbot": "Kimi"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "Z.AI"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -865,7 +875,8 @@
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "Kimi"
+                  "Kimi",
+                  "Z.AI"
                 ],
                 "description": "Choose among supported chatbots."
               },
@@ -991,6 +1002,10 @@
             {
               "name": "(11)",
               "chatbot": "Kimi"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "Z.AI"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -1017,7 +1032,8 @@
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "Kimi"
+                  "Kimi",
+                  "Z.AI"
                 ],
                 "description": "Choose among supported chatbots."
               },
@@ -1113,6 +1129,10 @@
             {
               "name": "(11)",
               "chatbot": "Kimi"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "Z.AI"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -1139,7 +1159,8 @@
                   "Qwen",
                   "Yuanbao",
                   "Doubao",
-                  "Kimi"
+                  "Kimi",
+                  "Z.AI"
                 ],
                 "description": "Choose among supported chatbots."
               },

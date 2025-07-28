@@ -290,7 +290,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 code_completions_mode_unavailable_with_text_selection:
                   'Remove text selection',
                 code_completions_mode_unavailable_without_active_editor:
-                  'Place cursor anywhere',
+                  'Place cursor for completion',
                 mode_unavailable_without_context: 'Select files for context',
                 search: 'Search history',
                 websocket_not_connected:
