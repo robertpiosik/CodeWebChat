@@ -1,5 +1,6 @@
 import { Website } from '@shared/types/websocket-message'
 import * as vscode from 'vscode'
+import { CONTEXT_CHECKED_URLS_STATE_KEY } from '../../constants/state-keys'
 
 export class WebsiteItem extends vscode.TreeItem {
   public readonly token_count: number
@@ -69,7 +70,9 @@ export class WebsitesProvider
   private _onDidChangeCheckedWebsites = new vscode.EventEmitter<void>()
   readonly onDidChangeCheckedWebsites = this._onDidChangeCheckedWebsites.event
 
-  constructor() {}
+  constructor(private context: vscode.ExtensionContext) {
+    this.onDidChangeCheckedWebsites(() => this.save_checked_websites_state())
+  }
 
   update_websites(websites: Website[]): void {
     const new_website_urls = new Set(websites.map((website) => website.url))
@@ -141,6 +144,26 @@ export class WebsitesProvider
     this._checked_websites.set(item.url, state)
     this._onDidChangeCheckedWebsites.fire()
     this._onDidChangeTreeData.fire()
+  }
+
+  private async save_checked_websites_state(): Promise<void> {
+    const checked_urls = this.get_checked_websites().map((w) => w.url)
+    await this.context.workspaceState.update(
+      CONTEXT_CHECKED_URLS_STATE_KEY,
+      checked_urls
+    )
+  }
+
+  public load_checked_websites_state(): void {
+    const checked_urls = this.context.workspaceState.get<string[]>(
+      CONTEXT_CHECKED_URLS_STATE_KEY
+    )
+    if (checked_urls) {
+      for (const url of checked_urls) {
+        this._checked_websites.set(url, vscode.TreeItemCheckboxState.Checked)
+      }
+      this._onDidChangeCheckedWebsites.fire()
+    }
   }
 
   dispose(): void {

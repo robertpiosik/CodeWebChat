@@ -2,6 +2,8 @@ export const LAST_APPLIED_CHANGES_STATE_KEY = 'lastAppliedChangesState'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
 export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'lastSaveLocation'
 export const LAST_CONTEXT_READ_LOCATION_STATE_KEY = 'lastReadLocation'
+export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
+export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
 export const TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY =
   'toolConfigCodeCompletions'
 export const TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY = 'toolConfigFileRefactoring'
@@ -37,5 +39,6 @@ export const HISTORY_NO_CONTEXT_STATE_KEY = 'history-no-context'
 
 export const PINNED_HISTORY_ASK_STATE_KEY = 'pinned-history-ask'
 export const PINNED_HISTORY_EDIT_STATE_KEY = 'pinned-history-edit'
-export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY = 'pinned-history-code-completions'
+export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY =
+  'pinned-history-code-completions'
 export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'

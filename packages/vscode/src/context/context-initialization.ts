@@ -26,13 +26,13 @@ export function context_initialization(context: vscode.ExtensionContext): {
     return {}
   }
 
-  workspace_provider = new WorkspaceProvider(workspace_folders as any)
+  workspace_provider = new WorkspaceProvider(workspace_folders as any, context)
 
   const open_editors_provider = new OpenEditorsProvider(
     workspace_folders as any,
     workspace_provider
   )
-  const websites_provider = new WebsitesProvider()
+  const websites_provider = new WebsitesProvider(context)
 
   const websites_view = vscode.window.createTreeView(
     'codeWebChatViewWebsites',
@@ -81,6 +81,9 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
   const shared_state = SharedFileState.get_instance()
   shared_state.set_providers(workspace_provider, open_editors_provider)
+
+  workspace_provider.load_checked_files_state()
+  websites_provider.load_checked_websites_state()
 
   context.subscriptions.push({
     dispose: () => shared_state.dispose()
@@ -268,15 +271,16 @@ export function context_initialization(context: vscode.ExtensionContext): {
     vscode.workspace.onDidChangeWorkspaceFolders(() => {
       if (vscode.workspace.workspaceFolders) {
         const new_workspace_provider = new WorkspaceProvider(
-          vscode.workspace.workspaceFolders as any
+          vscode.workspace.workspaceFolders as any,
+          context
         )
 
         if (workspace_provider) {
-          const checked_files = workspace_provider.get_checked_files()
+          const checked_paths = workspace_provider.get_all_checked_paths()
           workspace_provider.dispose()
           workspace_provider = new_workspace_provider
-          if (checked_files.length > 0) {
-            workspace_provider.set_checked_files(checked_files)
+          if (checked_paths.length > 0) {
+            workspace_provider.set_checked_files(checked_paths)
           }
         } else {
           workspace_provider = new_workspace_provider
