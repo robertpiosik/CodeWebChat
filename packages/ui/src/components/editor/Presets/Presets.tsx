@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { TextButton } from '../TextButton'
 
-export const chatbot_to_icon = {
+export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
   Gemini: 'GEMINI',
   'Open WebUI': 'OPEN_WEBUI',
@@ -22,8 +22,9 @@ export const chatbot_to_icon = {
   Yuanbao: 'YUANBAO',
   Kimi: 'KIMI',
   Doubao: 'DOUBAO',
-  Perplexity: 'PERPLEXITY'
-} as Record<string, Icon.Variant>
+  Perplexity: 'PERPLEXITY',
+  'Z.AI': 'Z_AI'
+}
 
 export namespace Presets {
   export type Preset = {

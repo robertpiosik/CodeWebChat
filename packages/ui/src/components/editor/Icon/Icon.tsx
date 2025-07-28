@@ -18,6 +18,7 @@ import Perplexity from '../../../assets/icons/perplexity.svg'
 import Reddit from '../../../assets/icons/reddit.svg'
 import X from '../../../assets/icons/x.svg'
 import CodeWebChat from '../../../assets/icons/code-web-chat.svg'
+import ZAI from '../../../assets/icons/z-ai.svg'
 
 export namespace Icon {
   export type Variant =
@@ -41,6 +42,7 @@ export namespace Icon {
     | 'REDDIT'
     | 'X'
     | 'CODE_WEB_CHAT'
+    | 'Z_AI'
 
   export type Props = {
     variant: Variant
@@ -111,9 +113,10 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'CODE_WEB_CHAT':
       icon = <CodeWebChat />
       break
+    case 'Z_AI':
+      icon = <ZAI />
+      break
     default:
-      // Handle cases where variant might not match any known icon
-      // This could be an empty fragment, a default icon, or throw an error
       icon = <></>
       break
   }
