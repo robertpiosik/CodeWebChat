@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--padding-4px);
+  padding: var(--padding-6px) var(--padding-10px) var(--padding-10px)
+    var(--padding-10px);
+  background-color: var(--vscode-inputOption-activeBackground);
+  color: var(--vscode-inputOption-activeForeground);
+  --border-radius: var(--border-radius-5px);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+
+  > span {
+    font-weight: 500;
+  }
+}
+
+.links {
+  display: flex;
+  gap: var(--padding-10px);
+
+  > a {
+    color: var(--vscode-inputOption-activeForeground);
+    display: flex;
+    gap: var(--padding-4px);
+    align-items: center;
+
+    > span:first-child {
+      font-size: var(--font-size-15px);
+    }
+
+    > span:last-child {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

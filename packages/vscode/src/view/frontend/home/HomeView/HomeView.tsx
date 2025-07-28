@@ -16,6 +16,7 @@ import cn from 'classnames'
 import { QuickAction as UiQuickAction } from '@ui/components/editor/QuickAction'
 import { IconButton } from '@ui/components/editor/IconButton/IconButton'
 import { Scrollable } from '@ui/components/editor/Scrollable'
+import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/view/types/messages'
 
 type Props = {
@@ -242,26 +243,14 @@ export const HomeView: React.FC<Props> = (props) => {
             </div>
           </div>
 
+          <UiSeparator height={8} />
+
           {!props.is_connected &&
             props.home_view_type == HOME_VIEW_TYPES.WEB && (
-              <>
-                <UiSeparator height={8} />
-
-                <div className={styles['browser-extension-message']}>
-                  <span>Install the Connector for chat inititalizations</span>
-                  <a href="https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
-                    <span className="codicon codicon-link-external" />
-                    <span>Chrome Web Store</span>
-                  </a>
-                  <a href="https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/">
-                    <span className="codicon codicon-link-external" />
-                    <span>Firefox Add-ons</span>
-                  </a>
-                </div>
-              </>
+              <div className={styles['browser-extension-message']}>
+                <UiBrowserExtensionMessage />
+              </div>
             )}
-
-          <UiSeparator height={8} />
 
           <div className={styles['chat-input']}>
             <UiChatInput

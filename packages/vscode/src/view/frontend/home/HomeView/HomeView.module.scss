@@ -168,38 +168,7 @@
 }
 
 .browser-extension-message {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--padding-4px);
-  border-radius: var(--border-radius-10px);
-  padding: var(--padding-8px) var(--padding-10px);
-  margin: 0 var(--padding-12px);
-  background-color: var(--vscode-inputOption-activeBackground);
-  color: var(--vscode-inputOption-activeForeground);
-
-  > span {
-    font-weight: 500;
-  }
-
-  > a {
-    color: var(--vscode-inputOption-activeForeground);
-    display: flex;
-    gap: var(--padding-4px);
-    align-items: center;
-
-    > span:first-child {
-      font-size: var(--font-size-15px);
-    }
-
-    > span:last-child {
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-}
-
-.apply-copied-chat-response {
   padding: 0 var(--padding-12px);
+  margin-bottom: -4px;
+  position: relative;
 }
