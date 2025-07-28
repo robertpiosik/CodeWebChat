@@ -288,13 +288,13 @@ export const HomeView: React.FC<Props> = (props) => {
                 select_preset: 'Select preset',
                 select_config: 'Select config',
                 code_completions_mode_unavailable_with_text_selection:
-                  'Unable to work with text selection',
+                  'Remove text selection',
                 code_completions_mode_unavailable_without_active_editor:
-                  'This mode requires active editor',
-                mode_unavailable_without_context: 'This mode requires context',
+                  'Place cursor anywhere',
+                mode_unavailable_without_context: 'Select folders and files',
                 search: 'Search history',
                 websocket_not_connected:
-                  'WebSocket connection not established. Please install the browser extension.',
+                  'Install or reload the browser extension',
                 for_history_hint: '(⇅ for history)',
                 copy_to_clipboard: 'Copy to clipboard',
                 insert_symbol: 'Insert symbol',
