@@ -248,7 +248,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 <UiSeparator height={8} />
 
                 <div className={styles['browser-extension-message']}>
-                  <span>Install CWC in browser for chat inititalizations</span>
+                  <span>Install the Connector for chat inititalizations</span>
                   <a href="https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
                     <span className="codicon codicon-link-external" />
                     <span>Chrome Web Store</span>

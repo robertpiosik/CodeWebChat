@@ -5,15 +5,24 @@
 
   &__error {
     position: absolute;
-    width: 100%;
+    display: flex;
     text-align: center;
-    padding: 0 var(--padding-8px);
+    padding: var(--padding-2px) var(--padding-10px) var(--padding-2px)
+      var(--padding-8px);
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    font-style: italic;
+    transform: translate(-50%, -50%);
     z-index: 1;
     font-weight: 500;
+    color: var(--vscode-activityWarningBadge-foreground);
+    background-color: var(--vscode-activityWarningBadge-background);
+    white-space: nowrap;
+    border-radius: var(--border-radius-999px);
+
+    &::before {
+      content: '⚠';
+      padding-right: 4px;
+    }
   }
 
   &__inner {
@@ -87,7 +96,6 @@
     &--disabled {
       opacity: 0.4;
       pointer-events: none;
-      filter: blur(1px);
     }
   }
 }
