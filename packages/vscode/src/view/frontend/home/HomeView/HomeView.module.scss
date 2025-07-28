@@ -37,9 +37,16 @@
 
 .footer {
   display: flex;
+  justify-content: space-between;
   gap: var(--padding-8px);
   padding: var(--padding-8px) var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
+
+  &__left {
+    display: flex;
+    gap: var(--padding-8px);
+    overflow: hidden;
+  }
 
   &__button {
     display: flex;

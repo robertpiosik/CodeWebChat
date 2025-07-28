@@ -302,8 +302,7 @@ export const HomeView: React.FC<Props> = (props) => {
                   'Unable to work with text selection',
                 code_completions_mode_unavailable_without_active_editor:
                   'This mode requires active editor',
-                mode_unavailable_without_context:
-                  'This mode requires context',
+                mode_unavailable_without_context: 'This mode requires context',
                 search: 'Search history',
                 websocket_not_connected:
                   'WebSocket connection not established. Please install the browser extension.',
@@ -488,60 +487,64 @@ export const HomeView: React.FC<Props> = (props) => {
       </div>
 
       <div className={styles.footer}>
-        <a
-          className={cn(
-            styles.footer__button,
-            styles['footer__button--buy-me-a-coffee']
-          )}
-          href="https://buymeacoffee.com/robertpiosik"
-          title="Support author"
-        >
-          <Icon variant="BUY_ME_A_COFFEE" />
-        </a>
-        <a
-          className={cn(
-            styles.footer__button,
-            styles['footer__button--filled']
-          )}
-          href="https://x.com/CodeWebChat"
-          title="Follow on X"
-        >
-          <Icon variant="X" />
-        </a>
-        <a
-          className={cn(
-            styles.footer__button,
-            styles['footer__button--filled']
-          )}
-          href="https://www.reddit.com/r/CodeWebChat/"
-          style={{ overflow: 'hidden' }}
-          title="Join subreddit"
-        >
-          <Icon variant="REDDIT" />
-          <span style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
-            COMMUNITY
-          </span>
-        </a>
-        <button
-          className={cn(
-            styles.footer__button,
-            styles['footer__button--outlined'],
-            is_showing_commands
-              ? styles['footer__button--outlined-active']
-              : '',
-            styles['footer__button--quick-actions'],
-            is_showing_commands
-              ? styles['footer__button--quick-actions-after-visible']
-              : ''
-          )}
-          onClick={() => {
-            set_is_showing_commands(!is_showing_commands)
-          }}
-          title="Handy access to selected features"
-        >
-          <span className="codicon codicon-pinned" />
-          PINNED COMMANDS
-        </button>
+        <div className={styles.footer__left}>
+          <a
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--buy-me-a-coffee']
+            )}
+            href="https://buymeacoffee.com/robertpiosik"
+            title="Support author"
+          >
+            <Icon variant="BUY_ME_A_COFFEE" />
+          </a>
+          <a
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--filled']
+            )}
+            href="https://x.com/CodeWebChat"
+            title="Follow on X"
+          >
+            <Icon variant="X" />
+          </a>
+          <a
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--filled']
+            )}
+            href="https://www.reddit.com/r/CodeWebChat/"
+            style={{ overflow: 'hidden' }}
+            title="Join subreddit"
+          >
+            <Icon variant="REDDIT" />
+            <span style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
+              COMMUNITY
+            </span>
+          </a>
+        </div>
+        <div>
+          <button
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--outlined'],
+              is_showing_commands
+                ? styles['footer__button--outlined-active']
+                : '',
+              styles['footer__button--quick-actions'],
+              is_showing_commands
+                ? styles['footer__button--quick-actions-after-visible']
+                : ''
+            )}
+            onClick={() => {
+              set_is_showing_commands(!is_showing_commands)
+            }}
+            title="Handy access to selected features"
+          >
+            <span className="codicon codicon-pinned" />
+            PINNED COMMANDS
+          </button>
+        </div>
       </div>
     </div>
   )
