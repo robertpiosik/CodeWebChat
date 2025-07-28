@@ -56,6 +56,7 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 - Kimi
 - Qwen
 - Yuanbao
+- Z.AI
 
 > <small>**Legal Disclaimer:** After chat initialization, the extension does not read the incoming message. The injected _Apply response_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.</small>
 

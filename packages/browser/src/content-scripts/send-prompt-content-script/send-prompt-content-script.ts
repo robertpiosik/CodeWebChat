@@ -18,6 +18,7 @@ import {
   kimi
 } from './chatbots'
 import { perplexity } from './chatbots/perplexity'
+import { z_ai } from './chatbots/z-ai'
 
 // In case it changes before finding textarea element (e.g. in mobile AI Studio, when changing model)
 const current_url = window.location.href
@@ -73,6 +74,9 @@ const is_kimi = current_url.startsWith(kimi_url)
 const perplexity_url = 'https://www.perplexity.ai/'
 const is_perplexity = current_url.startsWith(perplexity_url)
 
+const z_ai_url = 'https://chat.z.ai/'
+const is_z_ai = current_url.startsWith(z_ai_url)
+
 const is_open_webui = document.title.includes('Open WebUI')
 
 let chatbot: Chatbot | null = null
@@ -105,6 +109,8 @@ if (is_ai_studio) {
   chatbot = perplexity
 } else if (is_kimi) {
   chatbot = kimi
+} else if (is_z_ai) {
+  chatbot = z_ai
 }
 
 export const get_textarea_element = () => {
@@ -116,7 +122,8 @@ export const get_textarea_element = () => {
     [deepseek_url]: 'textarea',
     [mistral_url]: 'div[contenteditable="true"]',
     [yuanbao_url]: 'div[contenteditable="true"]',
-    [doubao_url]: 'textarea'
+    [doubao_url]: 'textarea',
+    [z_ai_url]: 'textarea'
   } as any
 
   // Find the appropriate selector based on the URL without the hash

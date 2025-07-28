@@ -4,7 +4,7 @@
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
   "description": "Initialize 15+ chatbots and manage websites for context.",
-  "version": "1.15.0",
+  "version": "1.16.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
@@ -37,6 +37,7 @@
         "https://www.doubao.com/chat/",
         "https://www.perplexity.ai/",
         "https://www.kimi.com/",
+        "https://chat.z.ai/",
         "http://localhost/",
         "http://openwebui/"
       ],
