@@ -87,7 +87,7 @@ export const ChatInput: React.FC<Props> = (props) => {
     }
 
     const regex =
-      /(@Selection|@Changes:\S+(?:\/\S+)?|@SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"|`[^`]+`)/g
+      /(@Selection|@Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?|@SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"|`[^`]+`)/g
     const parts = text.split(regex)
     return parts.map((part, index) => {
       if (part == '@Selection') {
@@ -102,7 +102,7 @@ export const ChatInput: React.FC<Props> = (props) => {
           </span>
         )
       }
-      if (part && /^@Changes:\S+(?:\/\S+)?$/.test(part)) {
+      if (part && /^@Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?$/.test(part)) {
         return (
           <span key={index} className={styles['selection-keyword']}>
             {part}

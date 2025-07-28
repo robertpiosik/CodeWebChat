@@ -6,7 +6,9 @@ import { Logger } from '../logger'
 export const replace_changes_placeholder = async (
   instruction: string
 ): Promise<string> => {
-  const matches = instruction.match(/@Changes:([^\s]+)/)
+  const matches = instruction.match(
+    /@Changes:([^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?)/
+  )
   if (!matches) {
     return instruction
   }
@@ -38,10 +40,15 @@ export const replace_changes_placeholder = async (
       // Get current branch name
       const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
         cwd: target_folder.uri.fsPath
-      }).toString().trim()
+      })
+        .toString()
+        .trim()
 
       // If comparing to same branch, use merge-base to show changes since branch point
-      const diff_command = current_branch == branch_name ? `git diff $(git merge-base HEAD origin/${branch_name})` : `git diff ${branch_name}`
+      const diff_command =
+        current_branch == branch_name
+          ? `git diff $(git merge-base HEAD origin/${branch_name})`
+          : `git diff ${branch_name}`
       const diff = execSync(diff_command, {
         cwd: target_folder.uri.fsPath
       }).toString()
@@ -84,10 +91,15 @@ export const replace_changes_placeholder = async (
       // Get current branch name
       const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
         cwd: repository.rootUri.fsPath
-      }).toString().trim()
+      })
+        .toString()
+        .trim()
 
       // If comparing to same branch, use merge-base to show changes since branch point
-      const diff_command = current_branch == branch_name ? `git diff $(git merge-base HEAD origin/${branch_name})` : `git diff ${branch_name}`
+      const diff_command =
+        current_branch == branch_name
+          ? `git diff $(git merge-base HEAD origin/${branch_name})`
+          : `git diff ${branch_name}`
       const diff = execSync(diff_command, {
         cwd: repository.rootUri.fsPath
       }).toString()
