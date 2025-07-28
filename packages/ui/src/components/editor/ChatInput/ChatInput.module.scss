@@ -13,6 +13,7 @@
     transform: translateX(-50%) translateY(-50%);
     font-style: italic;
     z-index: 1;
+    font-weight: 500;
   }
 
   &__inner {
@@ -86,6 +87,7 @@
     &--disabled {
       opacity: 0.4;
       pointer-events: none;
+      filter: blur(1px);
     }
   }
 }
