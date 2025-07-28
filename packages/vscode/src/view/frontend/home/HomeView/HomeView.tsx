@@ -291,7 +291,7 @@ export const HomeView: React.FC<Props> = (props) => {
                   'Remove text selection',
                 code_completions_mode_unavailable_without_active_editor:
                   'Place cursor anywhere',
-                mode_unavailable_without_context: 'Select folders and files',
+                mode_unavailable_without_context: 'Select files for context',
                 search: 'Search history',
                 websocket_not_connected:
                   'Install or reload the browser extension',
