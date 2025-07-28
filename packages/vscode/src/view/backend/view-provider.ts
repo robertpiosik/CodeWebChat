@@ -1,10 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
-import {
-  FrontendMessage,
-  BackendMessage,
-} from '../types/messages'
+import { FrontendMessage, BackendMessage } from '../types/messages'
 import { WebsitesProvider } from '../../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
@@ -150,23 +147,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
 
     this.context.subscriptions.push(this._config_listener)
-
-    this.ask_instructions = this.context.workspaceState.get<string>(
-      'ask-instructions',
-      ''
-    )
-    this.edit_instructions = this.context.workspaceState.get<string>(
-      'edit-instructions',
-      ''
-    )
-    this.no_context_instructions = this.context.workspaceState.get<string>(
-      'no-context-instructions',
-      ''
-    )
-    this.code_completion_instructions = this.context.workspaceState.get<string>(
-      'code-completions-instructions',
-      ''
-    )
 
     const update_editor_state = () => {
       const has_active_editor = !!vscode.window.activeTextEditor
@@ -566,7 +546,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
     this.caret_position = new_caret_position
 
-    this.context.workspaceState.update(instruction_key, new_instructions)
     this.send_message({
       command: 'INSTRUCTIONS',
       ask: this.ask_instructions,

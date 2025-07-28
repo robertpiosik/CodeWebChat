@@ -174,29 +174,23 @@ export const handle_show_history_quick_pick = async (
   }
 
   const set_instructions = async (text: string) => {
-    let instruction_key: string
     switch (mode) {
       case 'ask':
         provider.ask_instructions = text
-        instruction_key = 'ask-instructions'
         break
       case 'edit-context':
         provider.edit_instructions = text
-        instruction_key = 'edit-instructions'
         break
       case 'no-context':
         provider.no_context_instructions = text
-        instruction_key = 'no-context-instructions'
         break
       case 'code-completions':
         provider.code_completion_instructions = text
-        instruction_key = 'code-completions-instructions'
         break
       default:
         return
     }
 
-    await provider.context.workspaceState.update(instruction_key, text)
     provider.send_message({
       command: 'INSTRUCTIONS',
       ask: provider.ask_instructions,

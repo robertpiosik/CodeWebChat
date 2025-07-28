@@ -65,7 +65,6 @@ export const handle_show_prompt_template_quick_pick = async (
         return
     }
 
-    await provider.context.workspaceState.update(instruction_key, text)
     provider.send_message({
       command: 'INSTRUCTIONS',
       ask: provider.ask_instructions,

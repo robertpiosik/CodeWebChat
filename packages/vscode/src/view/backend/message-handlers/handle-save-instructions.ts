@@ -6,7 +6,6 @@ export const handle_save_instructions = async (
   message: SaveInstructionsMessage
 ): Promise<void> => {
   const { mode, instruction } = message
-  const key = `${mode}-instructions`
 
   if (mode == 'ask') {
     provider.ask_instructions = instruction
@@ -19,6 +18,4 @@ export const handle_save_instructions = async (
   } else {
     return
   }
-
-  await provider.context.workspaceState.update(key, instruction)
 }
