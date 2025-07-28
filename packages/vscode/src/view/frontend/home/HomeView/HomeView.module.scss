@@ -19,12 +19,12 @@
   padding: var(--padding-4px) 0;
   width: 65vw;
   border-radius: var(--border-radius-4px);
-  transform: translateY(5px);
-  transition: all 0.1s ease-in-out;
+  transform: translateY(10px);
+  transition: var(--transition);
   opacity: 0;
   background-color: var(--vscode-quickInput-background);
   color: var(--vscode-quickInput-foreground);
-  border: 1px solid var(--vscode-widget-border);
+  border: 1px solid var(--vscode-focusBorder);
   box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
   pointer-events: none;
 
@@ -115,11 +115,11 @@
         transform: translateX(-50%);
         width: 10px;
         height: 10px;
-        border-bottom: 1px solid var(--vscode-widget-border);
-        border-right: 1px solid var(--vscode-widget-border);
-        transform: translateY(5px) rotate(45deg);
+        border-bottom: 1px solid var(--vscode-focusBorder);
+        border-right: 1px solid var(--vscode-focusBorder);
+        transform: translateY(10px) rotate(45deg);
         background-color: var(--vscode-quickInput-background);
-        transition: all 0.1s ease-in-out;
+        transition: var(--transition);
         opacity: 0;
         pointer-events: none;
       }

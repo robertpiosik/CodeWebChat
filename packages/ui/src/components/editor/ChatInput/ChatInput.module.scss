@@ -1,15 +1,12 @@
 .container {
   --padding: var(--padding-4px) var(--padding-20px) var(--padding-7px)
     var(--padding-7px);
-  --border-radius: var(--border-radius-5px);
   position: relative;
-  background-color: var(--vscode-sideBar-background);
-  border-radius: var(--border-radius);
 
   &__inner {
     display: flex;
     flex-direction: column;
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius-5px);
     background-color: var(--vscode-input-background);
     cursor: text;
     border: 1px solid var(--vscode-commandCenter-inactiveBorder);
@@ -76,7 +73,9 @@
 
     &--disabled {
       pointer-events: none;
-      opacity: var(--disabled-opacity);
+      > * {
+        opacity: 0.3;
+      }
     }
   }
 }
