@@ -85,7 +85,7 @@
   position: absolute;
   z-index: 1;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 26px); // - footer height
   top: 0;
   left: 0;
   display: flex;
