@@ -744,26 +744,30 @@ export const setup_api_tool_multi_config = async (params: {
 
     if (providers.length == 0) {
       vscode.window.showErrorMessage(
-        'No API providers found. Please configure an API provider first.'
+        'No API providers found. Please add an API provider first.'
       )
       return undefined
     }
 
-    const provider_items = providers.map((p) => ({
-      label: p.name,
-      provider: p
-    }))
+    const provider_items: (vscode.QuickPickItem & { provider?: Provider })[] =
+      providers.map((p) => ({
+        label: p.name,
+        provider: p
+      }))
 
-    const selected = await vscode.window.showQuickPick(provider_items, {
+    const items = [{ label: BACK_LABEL }, ...provider_items]
+
+    const selected = await vscode.window.showQuickPick(items, {
       title: 'Configured API Providers',
       placeHolder: 'Choose an API provider'
     })
 
-    if (!selected) return undefined
+    if (!selected || selected.label === BACK_LABEL) return undefined
 
+    const selected_provider = selected as { provider: Provider }
     return {
-      type: selected.provider.type,
-      name: selected.provider.name
+      type: selected_provider.provider.type,
+      name: selected_provider.provider.name
     }
   }
 

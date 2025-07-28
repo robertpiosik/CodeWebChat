@@ -22,7 +22,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
   let workspace_view: vscode.TreeView<FileItem>
 
   if (!workspace_folders) {
-    vscode.window.showInformationMessage('Please open a project to use CWC.')
+    vscode.window.showInformationMessage('Please open a folder to use CWC.')
     return {}
   }
 
