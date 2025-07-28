@@ -243,7 +243,7 @@ export const setup_api_tool_multi_config = async (params: {
   const show_configs_quick_pick = async (): Promise<boolean> => {
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = create_config_items()
-    quick_pick.title = `${tool_methods.get_display_name()} Configurations`
+    quick_pick.title = `"${tool_methods.get_display_name()}" API Tool Configurations`
     quick_pick.matchOnDescription = true
     quick_pick.placeholder =
       current_configs.length > 0

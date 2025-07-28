@@ -1,6 +1,6 @@
 import { ViewProvider } from '@/view/backend/view-provider'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
-import { ApiToolConfiguration, BackendMessage } from '@/view/types/messages'
+import { ApiToolConfiguration } from '@/view/types/messages'
 import { ApiMode } from '@shared/types/modes'
 
 export const handle_get_api_tool_configurations = async (
