@@ -166,7 +166,6 @@
   align-items: flex-start;
   gap: var(--padding-4px);
   border-radius: var(--border-radius-10px);
-  border: 1px solid var(--vscode-inputOption-activeBorder);
   padding: var(--padding-8px) var(--padding-10px);
   margin: 0 var(--padding-12px);
   background-color: var(--vscode-inputOption-activeBackground);
@@ -178,6 +177,19 @@
 
   > a {
     color: var(--vscode-inputOption-activeForeground);
+    display: flex;
+    gap: var(--padding-4px);
+    align-items: center;
+
+    > span:first-child {
+      font-size: var(--font-size-15px);
+    }
+
+    > span:last-child {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 

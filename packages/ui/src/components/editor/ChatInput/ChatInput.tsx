@@ -14,6 +14,7 @@ type Props = {
   token_count?: number
   is_connected: boolean
   is_in_code_completions_mode: boolean
+  is_in_context_dependent_mode: boolean
   has_active_selection: boolean
   has_active_editor: boolean
   on_caret_position_change: (caret_position: number) => void
@@ -21,7 +22,6 @@ type Props = {
   on_search_click: () => void
   on_at_sign_click: () => void
   on_curly_braces_click: () => void
-  is_in_context_dependent_mode: boolean
   has_context: boolean
   translations: {
     type_something: string
@@ -32,9 +32,9 @@ type Props = {
     select_config: string
     code_completions_mode_unavailable_with_text_selection: string
     code_completions_mode_unavailable_without_active_editor: string
+    mode_unavailable_without_context: string
     search: string
     websocket_not_connected: string
-    add_files_to_context_first: string
     for_history_hint: string
     copy_to_clipboard: string
     insert_symbol: string
@@ -79,7 +79,7 @@ export const ChatInput: React.FC<Props> = (props) => {
       )
       props.on_caret_position_set()
     }
-  }, [props.value, props.caret_position_to_set])
+  }, [props.caret_position_to_set])
 
   const get_highlighted_text = (text: string) => {
     if (props.is_in_code_completions_mode) {
@@ -173,7 +173,6 @@ export const ChatInput: React.FC<Props> = (props) => {
   const is_submit_disabled =
     (!props.is_connected && props.is_web_mode) ||
     (!props.is_in_code_completions_mode && !props.value.trim()) ||
-    (props.is_in_context_dependent_mode && !props.has_context) ||
     (props.is_in_code_completions_mode &&
       (props.has_active_selection || !props.has_active_editor))
 
@@ -182,19 +181,13 @@ export const ChatInput: React.FC<Props> = (props) => {
       if (props.has_active_selection) {
         return props.translations
           .code_completions_mode_unavailable_with_text_selection
-      }
-      if (!props.has_active_editor) {
+      } else if (!props.has_active_editor) {
         return props.translations
           .code_completions_mode_unavailable_without_active_editor
       }
-    }
-    if (props.is_in_context_dependent_mode && !props.has_context) {
-      return props.translations.add_files_to_context_first
-    }
-    if (!props.is_in_code_completions_mode && !props.value.trim()) {
+    } else if (!props.is_in_code_completions_mode && !props.value.trim()) {
       return props.translations.type_something
-    }
-    if (!props.is_connected && props.is_web_mode) {
+    } else if (!props.is_connected && props.is_web_mode) {
       return props.translations.websocket_not_connected
     }
     return ''
@@ -202,7 +195,6 @@ export const ChatInput: React.FC<Props> = (props) => {
 
   const is_copy_disabled =
     (!props.is_in_code_completions_mode && !props.value.trim()) ||
-    (props.is_in_context_dependent_mode && !props.has_context) ||
     (props.is_in_code_completions_mode &&
       (props.has_active_selection || !props.has_active_editor))
 
@@ -297,11 +289,18 @@ export const ChatInput: React.FC<Props> = (props) => {
         </div>
       )}
 
+      {!props.has_context && props.is_in_context_dependent_mode && (
+        <div className={styles.container__error}>
+          {props.translations.mode_unavailable_without_context}
+        </div>
+      )}
+
       <div
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]:
-            props.is_in_code_completions_mode &&
-            (props.has_active_selection || !props.has_active_editor)
+            (props.is_in_code_completions_mode &&
+              (props.has_active_selection || !props.has_active_editor)) ||
+            (!props.has_context && props.is_in_context_dependent_mode)
         })}
         onKeyDown={(e) => {
           if (e.key == 'f' && (e.ctrlKey || e.metaKey)) {
@@ -311,7 +310,7 @@ export const ChatInput: React.FC<Props> = (props) => {
           if (e.key == 'c' && e.altKey && (e.ctrlKey || e.metaKey)) {
             if (props.on_copy) {
               e.stopPropagation()
-              e.preventDefault();
+              e.preventDefault()
               if (is_copy_disabled) return
               props.on_copy()
             }

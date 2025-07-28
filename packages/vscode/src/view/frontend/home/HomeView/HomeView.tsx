@@ -136,7 +136,14 @@ export const HomeView: React.FC<Props> = (props) => {
     }
 
     estimated_tokens = Math.ceil(text.length / 4)
-    set_estimated_input_tokens(props.token_count + estimated_tokens)
+    if (
+      props.home_view_type == HOME_VIEW_TYPES.WEB &&
+      props.web_mode == 'no-context'
+    ) {
+      set_estimated_input_tokens(estimated_tokens)
+    } else {
+      set_estimated_input_tokens(props.token_count + estimated_tokens)
+    }
   }, [
     current_prompt,
     props.home_view_type,
@@ -235,27 +242,26 @@ export const HomeView: React.FC<Props> = (props) => {
             </div>
           </div>
 
-          <UiSeparator height={8} />
-
           {!props.is_connected &&
             props.home_view_type == HOME_VIEW_TYPES.WEB && (
               <>
+                <UiSeparator height={8} />
+
                 <div className={styles['browser-extension-message']}>
-                  <span>
-                    Get the Connector browser extension for hands-free chat
-                    inititalizations
-                  </span>
+                  <span>Install CWC in browser for chat inititalizations</span>
                   <a href="https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
-                    Chrome Web Store ↗
+                    <span className="codicon codicon-link-external" />
+                    <span>Chrome Web Store</span>
                   </a>
                   <a href="https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/">
-                    Firefox Add-ons ↗
+                    <span className="codicon codicon-link-external" />
+                    <span>Firefox Add-ons</span>
                   </a>
                 </div>
-
-                <UiSeparator height={8} />
               </>
             )}
+
+          <UiSeparator height={8} />
 
           <div className={styles['chat-input']}>
             <UiChatInput
@@ -296,11 +302,11 @@ export const HomeView: React.FC<Props> = (props) => {
                   'Unable to work with text selection',
                 code_completions_mode_unavailable_without_active_editor:
                   'This mode requires active editor',
+                mode_unavailable_without_context:
+                  'This mode requires context',
                 search: 'Search history',
                 websocket_not_connected:
                   'WebSocket connection not established. Please install the browser extension.',
-                add_files_to_context_first:
-                  'Add some files to the context first',
                 for_history_hint: '(⇅ for history)',
                 copy_to_clipboard: 'Copy to clipboard',
                 insert_symbol: 'Insert symbol',

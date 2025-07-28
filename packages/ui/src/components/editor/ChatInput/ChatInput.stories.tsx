@@ -15,9 +15,9 @@ const translations = {
     'Code completions mode unavailable with text selection',
   code_completions_mode_unavailable_without_active_editor:
     'Code completions mode unavailable without active editor',
+  mode_unavailable_without_context: 'This mode requires context',
   search: 'Search',
   websocket_not_connected: 'Websocket not connected',
-  add_files_to_context_first: 'Add files to context first',
   for_history_hint: 'for history hint',
   copy_to_clipboard: 'Copy to clipboard',
   insert_symbol: 'Insert symbol',
