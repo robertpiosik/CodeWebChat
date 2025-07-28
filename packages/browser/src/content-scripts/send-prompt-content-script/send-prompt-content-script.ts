@@ -20,20 +20,14 @@ import {
 import { perplexity } from './chatbots/perplexity'
 import { z_ai } from './chatbots/z-ai'
 
-// In case it changes before finding textarea element (e.g. in mobile AI Studio, when changing model)
+// In case url changes on load
 const current_url = window.location.href
 
-// Extract batch ID from URL hash if available
 const hash = window.location.hash
-const hash_prefix_old = '#gemini-coder'
 const hash_prefix_new = '#cwc'
-const is_gemini_coder_hash = hash.startsWith(hash_prefix_old)
 const is_cwc_hash = hash.startsWith(hash_prefix_new)
-const batch_id = is_gemini_coder_hash
-  ? hash.substring(hash_prefix_old.length + 1) || 'default'
-  : is_cwc_hash
-  ? hash.substring(hash_prefix_new.length + 1) || 'default'
-  : ''
+
+const batch_id = hash.substring(hash_prefix_new.length + 1)
 
 const ai_studio_url = 'https://aistudio.google.com/prompts/new_chat'
 const is_ai_studio = current_url.startsWith(ai_studio_url)
@@ -228,7 +222,7 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
 }
 
 const main = async () => {
-  if (!is_gemini_coder_hash) return
+  if (!is_cwc_hash) return
 
   // Remove the hash from the URL to avoid reloading the content script if the page is refreshed
   history.replaceState(

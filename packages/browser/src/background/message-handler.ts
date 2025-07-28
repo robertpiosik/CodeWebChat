@@ -109,7 +109,7 @@ const process_next_chat = async () => {
     }
     const open_router_url = `${
       current_chat.url
-    }?${search_params.toString()}#gemini-coder-${batch_id}`
+    }?${search_params.toString()}#cwc-${batch_id}`
     browser.tabs.create({
       url: open_router_url,
       active: true
@@ -117,7 +117,7 @@ const process_next_chat = async () => {
   } else {
     // Open the tab with the current chat URL
     browser.tabs.create({
-      url: `${current_chat.url}#gemini-coder-${batch_id}`,
+      url: `${current_chat.url}#cwc-${batch_id}`,
       active: true
     })
   }
