@@ -67,6 +67,8 @@
   text-align: center;
   gap: var(--padding-4px);
   font-size: var(--font-size-12px);
+  user-select: text;
+  width: 100%; // For easier text selection
 
   &__version {
     color: var(--vscode-descriptionForeground);

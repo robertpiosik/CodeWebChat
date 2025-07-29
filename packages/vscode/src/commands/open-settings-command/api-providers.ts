@@ -111,6 +111,7 @@ export const api_providers = async (
 
     return new Promise<void>((resolve) => {
       let is_accepted = false
+      let is_showing_dialog = false
 
       quick_pick.onDidAccept(async () => {
         is_accepted = true
@@ -144,6 +145,24 @@ export const api_providers = async (
           }
           resolve()
         } else if (event.button === delete_button) {
+          const delete_button_text = 'Delete'
+          is_showing_dialog = true
+          quick_pick.hide()
+
+          const result = await vscode.window.showWarningMessage(
+            `Are you sure you want to delete the API provider "${item.provider.name}"?`,
+            { modal: true },
+            delete_button_text
+          )
+
+          is_showing_dialog = false
+
+          if (result !== delete_button_text) {
+            // User cancelled, show the quick pick again
+            resolve(await show_providers_quick_pick())
+            return
+          }
+
           const providers = await providers_manager.get_providers()
           const updated_providers = providers.filter(
             (p) => p.name != item.provider.name
@@ -189,6 +208,12 @@ export const api_providers = async (
       })
 
       quick_pick.onDidHide(() => {
+        if (is_showing_dialog) {
+          // We are showing a dialog which hides the quick pick.
+          // We don't want to dispose of everything in this case.
+          return
+        }
+
         if (!is_accepted) {
           resolve()
         }
