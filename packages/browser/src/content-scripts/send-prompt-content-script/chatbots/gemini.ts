@@ -27,7 +27,7 @@ export const gemini: Chatbot = {
     })
   },
   set_model: async (model?: string) => {
-    if(!model) return
+    if (!model) return
     if (model && model in CHATBOTS['Gemini'].models) {
       const model_selector_trigger = document.querySelector(
         'bard-logo + button'
@@ -108,13 +108,8 @@ export const gemini: Chatbot = {
 
         apply_response_button.addEventListener('click', async () => {
           set_button_disabled_state(apply_response_button)
-          const more_button = params.footer.querySelector(
-            'button[data-test-id="more-menu-button"]'
-          ) as HTMLElement
-          more_button.click()
-          await new Promise((r) => requestAnimationFrame(r))
-          const copy_button = document.querySelector(
-            '.cdk-overlay-container button[data-test-id="copy-button"]'
+          const copy_button = params.footer.querySelector(
+            'copy-button > button'
           ) as HTMLElement
           copy_button.click()
           await new Promise((resolve) => setTimeout(resolve, 500))
@@ -126,7 +121,7 @@ export const gemini: Chatbot = {
 
         params.footer.insertBefore(
           apply_response_button,
-          params.footer.children[5]
+          params.footer.children[params.footer.children.length - 1]
         )
 
         apply_response_button.focus()
