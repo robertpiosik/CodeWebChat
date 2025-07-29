@@ -91,11 +91,7 @@ const ChatbotIcon: React.FC<{
   if (!icon_variant) return null
 
   return (
-    <div
-      className={cn(styles.presets__item__left__icon, {
-        [styles['presets__item__left__icon--disabled']]: params.is_disabled
-      })}
-    >
+    <div className={styles.presets__item__left__icon}>
       <Icon variant={icon_variant} />
     </div>
   )
