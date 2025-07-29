@@ -14,7 +14,8 @@ export const apply_chat_response_button_style = (button: HTMLButtonElement) => {
 export const set_button_disabled_state = (button: HTMLButtonElement) => {
   button.disabled = true
   button.style.opacity = '0.5'
-  button.style.cursor = 'not-allowed'
+  button.style.cursor = ''
+
   setTimeout(() => {
     button.disabled = false
     button.style.opacity = ''
