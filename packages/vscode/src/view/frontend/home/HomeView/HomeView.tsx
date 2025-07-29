@@ -79,7 +79,7 @@ const api_mode_labels: Record<ApiMode, string> = {
 export const HomeView: React.FC<Props> = (props) => {
   const [estimated_input_tokens, set_estimated_input_tokens] = useState(0)
   // We need this because we can't use overflow: hidden
-  // due to absolutely positioned dropdown menu
+  // due to absolutely positioned dropdown menu.
   const [dropdown_max_width, set_dropdown_max_width] = useState<
     number | undefined
   >(undefined)
@@ -87,6 +87,8 @@ export const HomeView: React.FC<Props> = (props) => {
   const dropdown_container_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
   const switch_container_ref = useRef<HTMLDivElement>(null)
+  const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
+    useState(false)
   const [is_showing_commands, set_is_showing_commands] = useState(false)
 
   const calculate_dropdown_max_width = () => {
@@ -484,6 +486,8 @@ export const HomeView: React.FC<Props> = (props) => {
             )}
             href="https://buymeacoffee.com/robertpiosik"
             title="Support author"
+            onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
+            onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
           >
             <Icon variant="BUY_ME_A_COFFEE" />
           </a>
@@ -534,6 +538,23 @@ export const HomeView: React.FC<Props> = (props) => {
             PINNED COMMANDS
           </button>
         </div>
+        {is_buy_me_coffee_hovered &&
+          Array.from({ length: 20 }).map((_, i) => (
+            <span
+              key={i}
+              className={styles.footer__heart}
+              style={
+                {
+                  left: `${18 + (Math.random() - 0.5) * 20}px`,
+                  animationDelay: `${i == 0 ? 0 : (i + Math.random()) / 3}s`,
+                  animationDuration: `${2 - Math.random()}s`,
+                  fontSize: `${10 + Math.random() * 8}px`
+                } as React.CSSProperties
+              }
+            >
+              ❤️
+            </span>
+          ))}
       </div>
     </div>
   )

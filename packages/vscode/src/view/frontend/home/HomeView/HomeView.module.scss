@@ -36,6 +36,7 @@
 }
 
 .footer {
+  position: relative;
   display: flex;
   justify-content: space-between;
   gap: var(--padding-8px);
@@ -72,10 +73,10 @@
 
     &--buy-me-a-coffee {
       background-color: #f7d600;
-      transition: all 0.2s ease-in-out;
+      transition: var(--transition);
 
       &:hover {
-        transform: scale(1.1) rotate(-7deg);
+        transform: scale(0.95);
       }
 
       > svg {
@@ -129,6 +130,33 @@
       transform: rotate(45deg) translateY(0);
       opacity: 1;
     }
+  }
+
+  &__heart {
+    position: absolute;
+    bottom: 28px;
+    animation-name: float-up;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    pointer-events: none;
+    opacity: 0;
+  }
+}
+
+@keyframes float-up {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-60px);
+    opacity: 0;
   }
 }
 
