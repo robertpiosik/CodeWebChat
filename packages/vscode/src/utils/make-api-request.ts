@@ -6,21 +6,32 @@ type StreamCallback = (chunk: string) => void
 
 const DATA_PREFIX = 'data: '
 const DONE_TOKEN = '[DONE]'
+const THINK_OPEN = '<think>'
+const THINK_CLOSE = '</think>'
 
 async function process_stream_chunk(
   chunk: string,
   buffer: string,
   accumulated_content: string,
   last_log_time: number,
+  think_buffer: string,
+  in_think_block: boolean,
+  think_block_ended: boolean,
   on_chunk?: StreamCallback
 ): Promise<{
   updated_buffer: string
   updated_accumulated_content: string
   updated_last_log_time: number
+  updated_think_buffer: string
+  updated_in_think_block: boolean
+  updated_think_block_ended: boolean
 }> {
   let updated_buffer = buffer
   let updated_accumulated_content = accumulated_content
   let updated_last_log_time = last_log_time
+  let updated_think_buffer = think_buffer
+  let updated_in_think_block = in_think_block
+  let updated_think_block_ended = think_block_ended
 
   try {
     updated_buffer += chunk
@@ -41,9 +52,64 @@ async function process_stream_chunk(
             const new_content = json_data.choices[0].delta.content
             updated_accumulated_content += new_content
 
-            if (on_chunk) {
-              on_chunk(new_content)
+            // --- Think block handling logic ---
+            if (updated_think_block_ended) {
+              // If the first think block has already ended, stream all new content
+              if (on_chunk) {
+                on_chunk(new_content)
+              }
+            } else {
+              // We are either before, or inside, the first think block
+              updated_think_buffer += new_content
+
+              if (!updated_in_think_block) {
+                // We are currently *not* in a think block (haven't seen <think> yet)
+                const think_open_index =
+                  updated_think_buffer.indexOf(THINK_OPEN)
+                if (think_open_index !== -1) {
+                  // <think> tag found!
+                  updated_in_think_block = true
+                  // Stream content *before* <think>
+                  const pre_think_content = updated_think_buffer.substring(
+                    0,
+                    think_open_index
+                  )
+                  if (pre_think_content && on_chunk) {
+                    on_chunk(pre_think_content)
+                  }
+                  // The remaining part of updated_think_buffer now starts with <think>
+                  updated_think_buffer =
+                    updated_think_buffer.substring(think_open_index)
+                } else {
+                  // No <think> tag found yet, stream this content
+                  if (on_chunk) {
+                    on_chunk(new_content)
+                  }
+                }
+              }
+
+              // Now, if we are in a think block (either just entered or already were)
+              if (updated_in_think_block) {
+                const think_close_index =
+                  updated_think_buffer.indexOf(THINK_CLOSE)
+                if (think_close_index != -1) {
+                  // </think> tag found!
+                  updated_in_think_block = false
+                  updated_think_block_ended = true
+                  // Stream content *after* </think>
+                  const post_think_content = updated_think_buffer.substring(
+                    think_close_index + THINK_CLOSE.length
+                  )
+                  if (post_think_content && on_chunk) {
+                    on_chunk(post_think_content)
+                  }
+                  // Clear the think buffer as the first think block is fully processed
+                  updated_think_buffer = ''
+                }
+                // If </think> not found, we remain in_think_block and do not stream.
+              }
             }
+            // --- End think block handling logic ---
 
             const current_time = Date.now()
             if (current_time - updated_last_log_time >= 1000) {
@@ -75,7 +141,10 @@ async function process_stream_chunk(
   return {
     updated_buffer,
     updated_accumulated_content,
-    updated_last_log_time
+    updated_last_log_time,
+    updated_think_buffer,
+    updated_in_think_block,
+    updated_think_block_ended
   }
 }
 
@@ -92,6 +161,9 @@ export async function make_api_request(
     let accumulated_content = ''
     let last_log_time = Date.now()
     let buffer = ''
+    let think_buffer = ''
+    let in_think_block = false
+    let think_block_ended = false
 
     const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
       endpoint_url + '/chat/completions',
@@ -112,7 +184,7 @@ export async function make_api_request(
       }
     )
 
-    response.data.setEncoding('utf8')
+    response.data.setEncoding('utf8');
 
     return new Promise((resolve, reject) => {
       response.data.on('data', async (chunk: string) => {
@@ -121,11 +193,17 @@ export async function make_api_request(
           buffer,
           accumulated_content,
           last_log_time,
+          think_buffer,
+          in_think_block,
+          think_block_ended,
           on_chunk
         )
         buffer = processing_result.updated_buffer
         accumulated_content = processing_result.updated_accumulated_content
         last_log_time = processing_result.updated_last_log_time
+        think_buffer = processing_result.updated_think_buffer
+        in_think_block = processing_result.updated_in_think_block
+        think_block_ended = processing_result.updated_think_block_ended
       })
 
       response.data.on('end', () => {
