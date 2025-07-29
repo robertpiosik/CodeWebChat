@@ -69,7 +69,9 @@ export class ModelFetcher {
         data: error
       })
       if (axios.isAxiosError(error)) {
-        if (
+        if (error.response?.status == 404) {
+          throw new Error('/models route not found')
+        } else if (
           error.response?.status &&
           error.response?.status >= 400 &&
           error.response?.status < 500
