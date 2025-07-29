@@ -20,7 +20,8 @@
   width: 65vw;
   border-radius: var(--border-radius-4px);
   transform: translateY(10px);
-  transition: var(--transition);
+  transition: transform 0.15s var(--transition-timing-function),
+    opacity 0.15s var(--transition-timing-function);
   opacity: 0;
   background-color: var(--vscode-quickInput-background);
   color: var(--vscode-quickInput-foreground);
@@ -120,7 +121,7 @@
         border-right: 1px solid var(--vscode-focusBorder);
         transform: translateY(10px) rotate(45deg);
         background-color: var(--vscode-quickInput-background);
-        transition: var(--transition);
+        transition: all 0.15s var(--transition-timing-function);
         opacity: 0;
         pointer-events: none;
       }

@@ -89,7 +89,7 @@ export const HomeView: React.FC<Props> = (props) => {
   const switch_container_ref = useRef<HTMLDivElement>(null)
   const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
     useState(false)
-  const [is_showing_commands, set_is_showing_commands] = useState(false)
+  const [is_showing_commands, set_is_showing_commands] = useState(true)
 
   const calculate_dropdown_max_width = () => {
     if (!container_ref.current || !switch_container_ref.current) return
