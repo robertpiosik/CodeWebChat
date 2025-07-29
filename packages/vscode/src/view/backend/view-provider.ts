@@ -496,7 +496,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
     let current_instructions = ''
     let new_instructions = ''
-    let instruction_key = ''
     const mode: WebMode | ApiMode = is_in_code_completions_mode
       ? 'code-completions'
       : this.home_view_type === HOME_VIEW_TYPES.WEB
@@ -527,7 +526,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     const new_caret_position = (before_caret + text).replace(/  +/g, ' ').length
 
     new_instructions = new_instructions.replace(/  +/g, ' ')
-    instruction_key = `${mode}-instructions`
 
     switch (mode) {
       case 'ask':
