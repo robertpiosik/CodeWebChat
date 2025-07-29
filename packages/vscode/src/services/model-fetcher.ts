@@ -2,6 +2,8 @@ import { Logger } from '@/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
 import axios from 'axios'
 
+export const MODELS_ROUTE_NOT_FOUND_ERROR = '/models route not found'
+
 type Model = {
   id: string
   name?: string
@@ -70,7 +72,7 @@ export class ModelFetcher {
       })
       if (axios.isAxiosError(error)) {
         if (error.response?.status == 404) {
-          throw new Error('/models route not found')
+          throw new Error(MODELS_ROUTE_NOT_FOUND_ERROR)
         } else if (
           error.response?.status &&
           error.response?.status >= 400 &&

@@ -194,9 +194,9 @@ export const handle_show_prompt_template_quick_pick = async (
 
           edit_quick_pick.hide()
 
-          if (selected.label === NAME_LABEL) {
+          if (selected.label == NAME_LABEL) {
             const new_name = await vscode.window.showInputBox({
-              prompt: 'Enter an optional name for the template.',
+              prompt: 'Enter an optional name for the template',
               value: template.name,
               placeHolder: 'Leave empty to remove name'
             })
@@ -220,12 +220,12 @@ export const handle_show_prompt_template_quick_pick = async (
             }
             await edit_template(next_template_state, index)
             resolve()
-          } else if (selected.label === TEMPLATE_LABEL) {
+          } else if (selected.label == TEMPLATE_LABEL) {
             const new_template_text = await vscode.window.showInputBox({
-              prompt: 'Enter the prompt template.',
+              prompt: 'Enter the prompt template',
               value: template.template,
               placeHolder:
-                'E.g., Rewrite {function name} without redundant comments.'
+                'E.g., Rewrite {function name} without redundant comments'
             })
             let next_template_state = template
             if (new_template_text !== undefined && new_template_text.trim()) {
@@ -273,13 +273,13 @@ export const handle_show_prompt_template_quick_pick = async (
       if (selected_template.label == '$(add) Add new template') {
         is_editing_template = true
         const name = await vscode.window.showInputBox({
-          prompt: 'Enter an optional name for the template.'
+          prompt: 'Enter an optional name for the template'
         })
         if (name !== undefined) {
           const templateText = await vscode.window.showInputBox({
-            prompt: 'Enter the prompt template.',
+            prompt: 'Enter the prompt template',
             placeHolder:
-              'E.g., Rewrite {function name} without redundant comments.'
+              'E.g., Rewrite {function name} without redundant comments'
           })
           if (templateText !== undefined && templateText.trim()) {
             const newTemplate: PromptTemplate = {
@@ -327,7 +327,7 @@ export const handle_show_prompt_template_quick_pick = async (
         if (variables.length > 0) {
           for (const variable of variables) {
             const value = await vscode.window.showInputBox({
-              prompt: `Enter a value for the variable "${variable}".`,
+              prompt: `Enter a value for the variable "${variable}"`,
               placeHolder: variable
             })
 

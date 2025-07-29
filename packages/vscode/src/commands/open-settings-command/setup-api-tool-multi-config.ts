@@ -9,7 +9,10 @@ import {
   IntelligentUpdateConfigs,
   ReasoningEffort
 } from '@/services/api-providers-manager'
-import { ModelFetcher } from '@/services/model-fetcher'
+import {
+  ModelFetcher,
+  MODELS_ROUTE_NOT_FOUND_ERROR
+} from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@/utils/logger'
 import { DEFAULT_TEMPERATURE, SupportedTool } from '@shared/constants/api-tools'
@@ -830,6 +833,20 @@ export const setup_api_tool_multi_config = async (params: {
         message: 'Failed to fetch models',
         data: error
       })
+      if (
+        error instanceof Error &&
+        error.message == MODELS_ROUTE_NOT_FOUND_ERROR
+      ) {
+        vscode.window.showInformationMessage(
+          `The '/models' route was not found for ${provider_info.name}. This might mean the provider does not support listing models.`
+        )
+        return await vscode.window.showInputBox({
+          title: 'Enter Model Name',
+          placeHolder: 'e.g., gpt-4o, claude-4-opus',
+          prompt: `Enter a model name (ID)`
+        })
+      }
+
       vscode.window.showErrorMessage(
         `Failed to fetch models: ${
           error instanceof Error ? error.message : String(error)
