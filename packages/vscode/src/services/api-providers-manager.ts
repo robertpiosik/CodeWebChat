@@ -132,7 +132,7 @@ export class ApiProvidersManager {
     return this._validate_tool_config(config)
   }
 
-  public async set_default_code_completions_config(config: ToolConfig) {
+  public async set_default_code_completions_config(config: ToolConfig | null) {
     await this._vscode.globalState.update(
       DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
       config
@@ -169,7 +169,7 @@ export class ApiProvidersManager {
     return this._validate_tool_config(config)
   }
 
-  public async set_default_edit_context_config(config: ToolConfig) {
+  public async set_default_edit_context_config(config: ToolConfig | null) {
     await this._vscode.globalState.update(
       DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY,
       config

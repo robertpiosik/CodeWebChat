@@ -114,17 +114,17 @@ export const setup_api_tool_multi_config = async (params: {
 
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
-    tooltip: 'Edit configuration'
+    tooltip: 'Edit'
   }
 
   const duplicate_button = {
     iconPath: new vscode.ThemeIcon('copy'),
-    tooltip: 'Duplicate configuration'
+    tooltip: 'Duplicate'
   }
 
   const delete_button = {
     iconPath: new vscode.ThemeIcon('trash'),
-    tooltip: 'Delete configuration'
+    tooltip: 'Delete'
   }
 
   const move_up_button = {
@@ -234,7 +234,7 @@ export const setup_api_tool_multi_config = async (params: {
           }
 
           return {
-            label: is_default ? `Default: ${config.model}` : config.model,
+            label: is_default ? `$(check) ${config.model}` : config.model,
             description: description_parts.join(' · '),
             buttons,
             config,

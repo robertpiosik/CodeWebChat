@@ -8,6 +8,7 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
+import { ToolConfig } from '@/services/api-providers-manager'
 
 const get_edit_context_config = async (
   api_providers_manager: ApiProvidersManager,
@@ -15,7 +16,7 @@ const get_edit_context_config = async (
   context: vscode.ExtensionContext,
   config_index?: number
 ): Promise<{ provider: any; config: any } | undefined> => {
-  const edit_context_configs =
+  let edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
 
   if (edit_context_configs.length == 0) {
@@ -37,8 +38,39 @@ const get_edit_context_config = async (
   }
 
   if (!selected_config || show_quick_pick) {
+    const move_up_button = {
+      iconPath: new vscode.ThemeIcon('chevron-up'),
+      tooltip: 'Move up'
+    }
+
+    const move_down_button = {
+      iconPath: new vscode.ThemeIcon('chevron-down'),
+      tooltip: 'Move down'
+    }
+
+    const set_default_button = {
+      iconPath: new vscode.ThemeIcon('pass'),
+      tooltip: 'Set as default'
+    }
+
+    const unset_default_button = {
+      iconPath: new vscode.ThemeIcon('pass-filled'),
+      tooltip: 'Unset default'
+    }
+
     const create_items = async () => {
-      return edit_context_configs.map((config, index) => {
+      const default_config =
+        await api_providers_manager.get_default_edit_context_config()
+      return edit_context_configs.map((config: ToolConfig, index) => {
+        const is_default =
+          default_config &&
+          default_config.provider_type == config.provider_type &&
+          default_config.provider_name == config.provider_name &&
+          default_config.model == config.model &&
+          default_config.temperature == config.temperature &&
+          default_config.reasoning_effort == config.reasoning_effort &&
+          default_config.max_concurrency == config.max_concurrency
+
         const description_parts = [config.provider_name]
         if (config.temperature != DEFAULT_TEMPERATURE['edit-context']) {
           description_parts.push(`${config.temperature}`)
@@ -47,9 +79,36 @@ const get_edit_context_config = async (
           description_parts.push(`${config.reasoning_effort}`)
         }
 
+        let buttons = []
+        if (edit_context_configs.length > 1) {
+          const is_first_item = index == 0
+          const is_last_item = index == edit_context_configs.length - 1
+
+          const navigation_buttons = []
+          if (!is_first_item) {
+            navigation_buttons.push(move_up_button)
+          }
+          if (!is_last_item) {
+            navigation_buttons.push(move_down_button)
+          }
+
+          if (!is_default) {
+            buttons = [...navigation_buttons, set_default_button]
+          } else {
+            buttons = [...navigation_buttons, unset_default_button]
+          }
+        } else {
+          if (!is_default) {
+            buttons = [set_default_button]
+          } else {
+            buttons = [unset_default_button]
+          }
+        }
+
         return {
-          label: config.model,
+          label: is_default ? `$(check) ${config.model}` : config.model,
           description: description_parts.join(' · '),
+          buttons,
           config,
           index
         }
@@ -57,8 +116,7 @@ const get_edit_context_config = async (
     }
 
     const quick_pick = vscode.window.createQuickPick()
-    const items = await create_items()
-    quick_pick.items = items
+    quick_pick.items = await create_items()
     quick_pick.placeholder = 'Select configuration'
     quick_pick.matchOnDescription = true
 
@@ -67,6 +125,7 @@ const get_edit_context_config = async (
       0
     )
 
+    const items = quick_pick.items
     if (last_selected_index >= 0 && last_selected_index < items.length) {
       quick_pick.activeItems = [items[last_selected_index]]
     } else if (items.length > 0) {
@@ -75,6 +134,46 @@ const get_edit_context_config = async (
 
     return new Promise<{ provider: any; config: any } | undefined>(
       (resolve) => {
+        quick_pick.onDidTriggerItemButton(async (event) => {
+          const item = event.item as any
+
+          if (
+            event.button === move_up_button ||
+            event.button === move_down_button
+          ) {
+            const current_index = item.index
+            const is_moving_up = event.button === move_up_button
+
+            const min_index = 0
+            const max_index = edit_context_configs.length - 1
+            const new_index = is_moving_up
+              ? Math.max(min_index, current_index - 1)
+              : Math.min(max_index, current_index + 1)
+
+            if (new_index == current_index) {
+              return
+            }
+
+            const reordered_configs = [...edit_context_configs]
+            const [moved_config] = reordered_configs.splice(current_index, 1)
+            reordered_configs.splice(new_index, 0, moved_config)
+            edit_context_configs = reordered_configs
+            await api_providers_manager.save_edit_context_tool_configs(
+              edit_context_configs
+            )
+
+            quick_pick.items = await create_items()
+          } else if (event.button === set_default_button) {
+            await api_providers_manager.set_default_edit_context_config(
+              item.config
+            )
+            quick_pick.items = await create_items()
+          } else if (event.button === unset_default_button) {
+            await api_providers_manager.set_default_edit_context_config(null)
+            quick_pick.items = await create_items()
+          }
+        })
+
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
