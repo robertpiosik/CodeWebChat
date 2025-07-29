@@ -14,6 +14,7 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@/utils/logger'
 import { DEFAULT_TEMPERATURE, SupportedTool } from '@shared/constants/api-tools'
 import { COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY } from '@/constants/state-keys'
+import { api_providers } from './api-providers'
 
 const DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK = 20000
 
@@ -37,6 +38,7 @@ export const setup_api_tool_multi_config = async (params: {
   const CONFIRMATION_THRESHOLD_LABEL = 'Show file picker threshold'
 
   const BACK_LABEL = '$(arrow-left) Back'
+  const API_PROVIDERS_LABEL = '$(key) API Providers'
   const ADD_CONFIGURATION_LABEL = '$(add) Add configuration...'
   const SET_AS_DEFAULT_LABEL = '$(pass) Set as default'
   const UNSET_DEFAULT_LABEL = '$(pass-filled) Unset default'
@@ -146,10 +148,15 @@ export const setup_api_tool_multi_config = async (params: {
     const items: (vscode.QuickPickItem & {
       config?: ToolConfig
       index?: number
-    })[] = [
-      ...(params.show_back_button !== false ? [{ label: BACK_LABEL }] : []),
-      { label: ADD_CONFIGURATION_LABEL }
-    ]
+    })[] = []
+
+    if (params.show_back_button === false) {
+      items.push({ label: API_PROVIDERS_LABEL })
+    } else {
+      items.push({ label: BACK_LABEL })
+    }
+
+    items.push({ label: ADD_CONFIGURATION_LABEL })
 
     if (current_configs.length > 0) {
       items.push({
@@ -266,6 +273,13 @@ export const setup_api_tool_multi_config = async (params: {
         if (selected.label === BACK_LABEL) {
           quick_pick.hide()
           resolve(false)
+          return
+        }
+
+        if (selected.label === API_PROVIDERS_LABEL) {
+          quick_pick.hide()
+          await api_providers(params.context)
+          resolve(await show_configs_quick_pick())
           return
         }
 
