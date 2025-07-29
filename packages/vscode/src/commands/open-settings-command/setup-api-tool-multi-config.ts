@@ -229,9 +229,6 @@ export const setup_api_tool_multi_config = async (params: {
           if (config.reasoning_effort) {
             description_parts.push(`${config.reasoning_effort}`)
           }
-          if (params.tool == 'intelligent-update' && config.max_concurrency) {
-            description_parts.push(`${config.max_concurrency} (concurrency)`)
-          }
 
           return {
             label: is_default ? `Default: ${config.model}` : config.model,
