@@ -75,6 +75,7 @@
       pointer-events: none;
       > * {
         opacity: 0.3;
+        filter: blur(0.5px);
       }
     }
   }
