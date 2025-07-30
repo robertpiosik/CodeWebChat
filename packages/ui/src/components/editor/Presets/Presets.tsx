@@ -138,7 +138,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               const { chatbot, model } = preset
 
               const model_display_name = model
-                ? (CHATBOTS[chatbot] as any).models[model] || model
+                ? (CHATBOTS[chatbot].models as any)[model]?.label || model
                 : null
 
               if (is_unnamed) {

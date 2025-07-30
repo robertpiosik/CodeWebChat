@@ -23,8 +23,7 @@ export const handle_show_preset_picker = async (
     const model_display_name = preset.model
       ? (chatbot_info &&
           chatbot_info.models &&
-          chatbot_info.models[preset.model]) ||
-        preset.model
+          chatbot_info.models[preset.model]?.label) || preset.model
       : ''
     return {
       label: is_unnamed ? preset.chatbot : preset.name,

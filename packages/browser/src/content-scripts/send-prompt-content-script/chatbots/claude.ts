@@ -33,7 +33,7 @@ export const claude: Chatbot = {
     ) as HTMLButtonElement
     if (!model_selector_button) return
 
-    const model_name_to_find = (CHATBOTS['Claude'].models as any)[model]
+    const model_name_to_find = (CHATBOTS['Claude'].models as any)[model]?.label
     if (!model_name_to_find) return
 
     if (model_selector_button.textContent?.includes(model_name_to_find)) {

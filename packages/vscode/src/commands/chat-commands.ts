@@ -220,8 +220,7 @@ function create_preset_quick_pick(
         const model_display_name = preset.model
           ? (chatbot_info &&
               chatbot_info.models &&
-              chatbot_info.models[preset.model]) ||
-            preset.model
+              chatbot_info.models[preset.model]?.label) || preset.model
           : ''
 
         return {

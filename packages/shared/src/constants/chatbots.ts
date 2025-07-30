@@ -13,7 +13,10 @@ type Chatbots = {
       [option: string]: string
     }
     models: {
-      [model: string]: string
+      [model: string]: {
+        label: string
+        disabled_options?: string[]
+      }
     }
   }
 }
@@ -31,14 +34,21 @@ export const CHATBOTS = {
     default_top_p: 0.95,
     supported_options: {
       'hide-panel': 'Hide panel',
-      'disable-thinking': 'Disable thinking (Flash only)',
+      'disable-thinking': 'Disable thinking',
       'grounding-with-google-search': 'Grounding with Google Search',
       'url-context': 'URL context'
     },
     models: {
-      'gemini-2.5-pro': 'Gemini 2.5 Pro',
-      'gemini-2.5-flash': 'Gemini 2.5 Flash',
-      'gemini-2.5-flash-lite': 'Gemini 2.5 Flash-Lite'
+      'gemini-2.5-pro': {
+        label: 'Gemini 2.5 Pro',
+        disabled_options: ['disable-thinking']
+      },
+      'gemini-2.5-flash': {
+        label: 'Gemini 2.5 Flash'
+      },
+      'gemini-2.5-flash-lite': {
+        label: 'Gemini 2.5 Flash-Lite'
+      }
     }
   },
   Gemini: {
@@ -53,8 +63,8 @@ export const CHATBOTS = {
     default_system_instructions: '',
     default_top_p: 0,
     models: {
-      '2.5-flash': '2.5 Flash',
-      '2.5-pro': '2.5 Pro'
+      '2.5-flash': { label: '2.5 Flash' },
+      '2.5-pro': { label: '2.5 Pro' }
     }
   },
   'Open WebUI': {
@@ -110,8 +120,8 @@ export const CHATBOTS = {
     supported_options: {},
     default_top_p: 0,
     models: {
-      'sonnet-4': 'Sonnet 4',
-      'opus-4': 'Opus 4'
+      'sonnet-4': { label: 'Sonnet 4' },
+      'opus-4': { label: 'Opus 4' }
     }
   },
   DeepSeek: {
@@ -154,9 +164,9 @@ export const CHATBOTS = {
     supported_options: { think: 'Think' },
     default_top_p: 0,
     models: {
-      'grok-3': 'Grok 3',
-      'grok-4': 'Grok 4',
-      'grok-4-heavy': 'Grok 4 Heavy'
+      'grok-3': { label: 'Grok 3' },
+      'grok-4': { label: 'Grok 4' },
+      'grok-4-heavy': { label: 'Grok 4 Heavy' }
     }
   },
   Qwen: {
@@ -175,10 +185,12 @@ export const CHATBOTS = {
     },
     default_top_p: 0,
     models: {
-      'qwen3-coder': 'Qwen3-Coder',
-      'qwen3-235b-a22b-2507': 'Qwen3-235B-A22B-2507',
-      'qwen3-30b-a3b': 'Qwen3-30B-A3B',
-      'qwen3-32b': 'Qwen3-32B'
+      'qwen3-coder': { label: 'Qwen3-Coder' },
+      'qwen3-235b-a22b-2507': {
+        label: 'Qwen3-235B-A22B-2507'
+      },
+      'qwen3-30b-a3b': { label: 'Qwen3-30B-A3B' },
+      'qwen3-32b': { label: 'Qwen3-32B' }
     }
   },
   Yuanbao: {
@@ -193,8 +205,8 @@ export const CHATBOTS = {
     supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
     default_top_p: 0,
     models: {
-      deepseek: 'DeepSeek',
-      hunyuan: 'Hunyuan'
+      deepseek: { label: 'DeepSeek' },
+      hunyuan: { label: 'Hunyuan' }
     }
   },
   Doubao: {

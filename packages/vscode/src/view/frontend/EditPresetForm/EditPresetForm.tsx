@@ -43,6 +43,16 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     'prompt_prefix' | 'prompt_suffix' | null
   >(null)
 
+  useEffect(() => {
+    const model_info = model
+      ? (CHATBOTS[chatbot].models as any)[model]
+      : undefined
+    if (model_info) {
+      const disabled = model_info.disabled_options || []
+      set_options((prev) => prev.filter((o) => !disabled.includes(o)))
+    }
+  }, [model, chatbot])
+
   const supports_temperature = CHATBOTS[chatbot].supports_custom_temperature
   const supports_top_p = CHATBOTS[chatbot].supports_custom_top_p
   const supports_thinking_budget = CHATBOTS[chatbot].supports_thinking_budget
@@ -186,9 +196,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             value={model}
             onChange={(e) => set_model(e.target.value)}
           >
-            {Object.entries(models).map(([value, label]) => (
+            {Object.entries(models).map(([value, model_data]) => (
               <option key={value} value={value}>
-                {label}
+                {model_data.label}
               </option>
             ))}
           </select>
@@ -271,16 +281,20 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       {Object.keys(supported_options).length > 0 && (
         <Field label="Options">
           <div className={styles.options}>
-            {Object.entries(supported_options).map(([key, label]) => (
-              <label key={key} className={styles.options__item}>
-                <input
-                  type="checkbox"
-                  checked={options.includes(key)}
-                  onChange={() => handle_option_toggle(key)}
-                />
-                {label}
-              </label>
-            ))}
+            {Object.entries(supported_options).map(([key, label]) => {
+              const model_info = model ? (models as any)[model] : undefined
+              if (model_info?.disabled_options?.includes(key)) return null
+              return (
+                <label key={key} className={styles.options__item}>
+                  <input
+                    type="checkbox"
+                    checked={options.includes(key)}
+                    onChange={() => handle_option_toggle(key)}
+                  />
+                  {label}
+                </label>
+              )
+            })}
           </div>
         </Field>
       )}

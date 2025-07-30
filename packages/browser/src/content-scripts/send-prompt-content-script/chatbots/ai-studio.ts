@@ -46,7 +46,10 @@ export const ai_studio: Chatbot = {
       const model_name_element = option.querySelector(
         'ms-model-option > div:last-child'
       ) as HTMLElement
-      if (model_name_element?.textContent?.trim() == model) {
+      if (
+        model_name_element?.textContent?.trim() ==
+        (CHATBOTS['AI Studio'].models as any)[model]?.label
+      ) {
         ;(option as HTMLElement).click()
         break
       }

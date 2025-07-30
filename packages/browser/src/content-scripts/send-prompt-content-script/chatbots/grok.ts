@@ -47,7 +47,7 @@ export const grok: Chatbot = {
     ) as HTMLButtonElement
     if (!model_selector_button) return
 
-    const model_name_to_find = (CHATBOTS['Grok'].models as any)[model]
+    const model_name_to_find = (CHATBOTS['Grok'].models as any)[model]?.label
     if (!model_name_to_find) return
 
     if (model_selector_button.textContent == model_name_to_find) return

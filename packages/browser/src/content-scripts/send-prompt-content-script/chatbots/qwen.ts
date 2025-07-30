@@ -24,9 +24,9 @@ export const qwen: Chatbot = {
         if (
           model_selector_button &&
           model_selector_button.textContent &&
-          Object.values(CHATBOTS['Qwen'].models).includes(
-            model_selector_button.textContent.trim()
-          )
+          Object.values(CHATBOTS['Qwen'].models)
+            .map((model) => model.label)
+            .includes(model_selector_button.textContent.trim())
         ) {
           resolve(null)
         } else {
@@ -44,7 +44,7 @@ export const qwen: Chatbot = {
 
     if (
       model_selector_button.textContent?.trim() ==
-      (CHATBOTS['Qwen'].models as any)[model]
+      (CHATBOTS['Qwen'].models as any)[model]?.label
     ) {
       return
     }
@@ -59,7 +59,7 @@ export const qwen: Chatbot = {
         button.querySelector('div.text-15')) as HTMLDivElement
       if (
         model_name_element.textContent ==
-        (CHATBOTS['Qwen'].models as any)[model]
+        (CHATBOTS['Qwen'].models as any)[model]?.label
       ) {
         button.click()
         break

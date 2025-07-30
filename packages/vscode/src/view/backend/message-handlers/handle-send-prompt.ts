@@ -195,8 +195,10 @@ async function validate_presets(params: {
 
     quick_pick.items = presets.map((preset) => {
       const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+      const chatbot_models = (CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
+        .models as any)
       const model = preset.model
-        ? (CHATBOTS[preset.chatbot] as any).models[preset.model] || preset.model
+        ? chatbot_models[preset.model]?.label || preset.model
         : ''
 
       return {

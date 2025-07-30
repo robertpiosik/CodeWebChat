@@ -28,7 +28,7 @@ export const yuanbao: Chatbot = {
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
   set_model: async (model?: string) => {
-    if(!model) return
+    if (!model) return
     const model_selector_button = document.querySelector(
       'button[dt-button-id="model_switch"]'
     ) as HTMLElement
@@ -43,7 +43,7 @@ export const yuanbao: Chatbot = {
       ) as HTMLDivElement
       if (
         model_name_element.textContent ==
-        (CHATBOTS['Yuanbao'].models as any)[model]
+        (CHATBOTS['Yuanbao'].models as any)[model]?.label
       ) {
         button.click()
         break

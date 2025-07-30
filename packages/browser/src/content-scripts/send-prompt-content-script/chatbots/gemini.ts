@@ -49,7 +49,7 @@ export const gemini: Chatbot = {
             if (
               name_element &&
               name_element.textContent?.trim() ==
-                (CHATBOTS['Gemini'].models as any)[model]
+                (CHATBOTS['Gemini'].models as any)[model].label
             ) {
               ;(option as HTMLElement).click()
               await new Promise((r) => requestAnimationFrame(r))
