@@ -76,7 +76,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       ...(model ? { model } : {}),
       ...(system_instructions ? { system_instructions } : {}),
       ...(port !== undefined ? { port } : {}),
-      ...(options.length ? { options } : {})
+      ...(options.length ? { options } : {}),
+      is_default: props.preset.is_default
     })
   }, [
     name,
