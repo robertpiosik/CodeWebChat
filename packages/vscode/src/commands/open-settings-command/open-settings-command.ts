@@ -76,25 +76,29 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
           case LABEL_CODE_COMPLETIONS:
             await setup_api_tool_multi_config({
               context,
-              tool: 'code-completions'
+              tool: 'code-completions',
+              show_back_button: true
             })
             break
           case LABEL_EDIT_CONTEXT:
             await setup_api_tool_multi_config({
               context,
-              tool: 'edit-context'
+              tool: 'edit-context',
+              show_back_button: true
             })
             break
           case LABEL_INTELLIGENT_UPDATE:
             await setup_api_tool_multi_config({
               context,
-              tool: 'intelligent-update'
+              tool: 'intelligent-update',
+              show_back_button: true
             })
             break
           case LABEL_COMMIT_MESSAGES:
             await setup_api_tool_multi_config({
               context,
-              tool: 'commit-messages'
+              tool: 'commit-messages',
+              show_back_button: true
             })
             break
         }
@@ -115,7 +119,11 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
   const edit_context_config_command = vscode.commands.registerCommand(
     'codeWebChat.settings.editContext',
     () =>
-      setup_api_tool_multi_config({ context, tool: 'edit-context', show_back_button: false })
+      setup_api_tool_multi_config({
+        context,
+        tool: 'edit-context',
+        show_back_button: false
+      })
   )
 
   return [
