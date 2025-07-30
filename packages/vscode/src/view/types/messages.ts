@@ -14,6 +14,7 @@ export type ApiToolConfiguration = {
   temperature: number
   reasoning_effort?: string
   max_concurrency?: number
+  is_default?: boolean
 }
 
 // Messages sent to the backend

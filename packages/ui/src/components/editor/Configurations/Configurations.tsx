@@ -10,6 +10,7 @@ export namespace Configurations {
     provider: string
     temperature?: number
     reasoning_effort?: string
+    is_default?: boolean
   }
 
   export type Props = {
@@ -62,23 +63,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             (props.api_mode == 'code-completions' &&
               (!props.has_active_editor || props.has_active_selection))
 
-          const base_title = `${configuration.model} ${description}`
-          const get_title = () => {
-            if (props.api_mode == 'edit-context' && !props.has_context) {
-              return props.translations.add_files_to_context_first
-            }
-            if (props.api_mode == 'code-completions') {
-              if (!props.has_active_editor) {
-                return props.translations.configuration_requires_active_editor
-              }
-              if (props.has_active_selection) {
-                return props.translations
-                  .configuration_cannot_be_used_with_selection
-              }
-            }
-            return base_title
-          }
-
           return (
             <div
               key={i}
@@ -97,9 +81,12 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
                 }
               }}
               role="button"
-              title={get_title()}
+              title={configuration.is_default ? 'Default configuration' : ''}
             >
               <div className={styles.configurations__item__left}>
+                {configuration.is_default && (
+                  <span className="codicon codicon-check" />
+                )}
                 <div className={styles.configurations__item__left__text}>
                   <span>{configuration.model}</span>
                   <span>{description}</span>

@@ -50,14 +50,13 @@
       align-items: center;
       gap: 5px;
       overflow: hidden;
-      text-overflow: ellipsis;
       white-space: nowrap;
 
       &__text {
         overflow: hidden;
         text-overflow: ellipsis;
 
-        > span:nth-child(2) {
+        > span:last-child {
           margin-left: 0.5em;
           opacity: 0.7;
           font-size: 0.9em;

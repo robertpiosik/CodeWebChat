@@ -432,7 +432,8 @@ export const HomeView: React.FC<Props> = (props) => {
                   model: c.model,
                   provider: c.provider_name,
                   reasoning_effort: c.reasoning_effort,
-                  temperature: c.temperature
+                  temperature: c.temperature,
+                  is_default: c.is_default
                 }))}
                 on_configuration_click={props.on_configuration_click}
                 on_manage_configurations={props.on_manage_configurations_click}

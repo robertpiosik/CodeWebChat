@@ -153,8 +153,11 @@ export const setup_api_tool_multi_config = async (params: {
       index?: number
     })[] = []
 
-    if (params.show_back_button === false) {
-      items.push({ label: API_PROVIDERS_LABEL })
+    if (!params.show_back_button) {
+      items.push({
+        label: API_PROVIDERS_LABEL,
+        detail: 'API keys are stored encrypted and never leave your device.'
+      })
     } else {
       items.push({ label: BACK_LABEL })
     }
