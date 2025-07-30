@@ -44,7 +44,7 @@
       cursor: default !important;
 
       .presets__item__left {
-        opacity: var(--disabled-opacity);
+        opacity: 0.7;
       }
     }
 
@@ -74,10 +74,6 @@
       &__text {
         overflow: hidden;
         text-overflow: ellipsis;
-
-        &--disabled {
-          opacity: var(--disabled-opacity);
-        }
 
         > span:nth-child(2) {
           margin-left: 0.5em;
