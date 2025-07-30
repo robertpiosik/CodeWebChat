@@ -50,7 +50,7 @@ type Props = {
   on_preset_edit: (preset_name: string) => void
   on_preset_duplicate: (preset_name: string) => void
   on_preset_delete: (preset_name: string) => void
-  on_set_default_presets: () => void
+  on_toggle_default_preset: (name: string) => void
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
@@ -391,12 +391,11 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_presets_reorder={props.on_presets_reorder}
                 on_preset_duplicate={props.on_preset_duplicate}
                 on_preset_delete={props.on_preset_delete}
-                on_set_default_presets={props.on_set_default_presets}
+                on_toggle_default_preset={props.on_toggle_default_preset}
                 translations={{
                   my_chat_presets: 'MY CHAT PRESETS',
                   set_presets_opening_by_default:
                     'Set presets opening by default',
-                  select_default: 'Select default',
                   not_connected:
                     'Not connected. Ensure the browser extension is active',
                   preset_requires_active_editor:
@@ -413,7 +412,9 @@ export const HomeView: React.FC<Props> = (props) => {
                   duplicate: 'Duplicate',
                   edit: 'Edit',
                   delete: 'Delete',
-                  create_preset: 'Create Preset'
+                  create_preset: 'Create Preset',
+                  set_as_default: 'Set as default',
+                  unset_as_default: 'Unset as default'
                 }}
               />
             </>

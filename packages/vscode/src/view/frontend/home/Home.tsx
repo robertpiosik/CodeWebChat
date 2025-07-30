@@ -172,6 +172,35 @@ export const Home: React.FC<Props> = (props) => {
     }
   }
 
+  const handle_toggle_default_preset = (name: string) => {
+    if (all_presets) {
+      const presets_for_current_mode = all_presets[props.web_mode]
+      const updated_presets = presets_for_current_mode.map((p) =>
+        p.name == name ? { ...p, is_default: !p.is_default } : p
+      )
+
+      set_all_presets({ ...all_presets, [props.web_mode]: updated_presets })
+
+      post_message(props.vscode, {
+        command: 'SAVE_PRESETS_ORDER',
+        presets: updated_presets.map((preset) => ({
+          name: preset.name,
+          chatbot: preset.chatbot,
+          prompt_prefix: preset.prompt_prefix,
+          prompt_suffix: preset.prompt_suffix,
+          model: preset.model,
+          temperature: preset.temperature,
+          top_p: preset.top_p,
+          thinking_budget: preset.thinking_budget,
+          system_instructions: preset.system_instructions,
+          options: preset.options,
+          port: preset.port,
+          is_default: preset.is_default
+        }))
+      })
+    }
+  }
+
   const handle_initialize_chats = async (params: {
     prompt: string
     preset_names: string[]
@@ -198,11 +227,9 @@ export const Home: React.FC<Props> = (props) => {
 
   const handle_presets_reorder = (reordered_presets: Preset[]) => {
     if (all_presets) {
-      // Update local state
       set_all_presets({ ...all_presets, [current_mode]: reordered_presets })
     }
 
-    // Send message to extension to save the new order
     post_message(props.vscode, {
       command: 'SAVE_PRESETS_ORDER',
       presets: reordered_presets.map((preset) => ({
@@ -245,12 +272,6 @@ export const Home: React.FC<Props> = (props) => {
     post_message(props.vscode, {
       command: 'DELETE_PRESET',
       name
-    })
-  }
-
-  const handle_set_default_presets = () => {
-    post_message(props.vscode, {
-      command: 'SHOW_PRESET_PICKER'
     })
   }
 
@@ -480,7 +501,7 @@ export const Home: React.FC<Props> = (props) => {
       on_preset_edit={handle_preset_edit}
       on_preset_duplicate={handle_preset_duplicate}
       on_preset_delete={handle_preset_delete}
-      on_set_default_presets={handle_set_default_presets}
+      on_toggle_default_preset={handle_toggle_default_preset}
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}

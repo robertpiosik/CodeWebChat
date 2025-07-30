@@ -62,10 +62,6 @@ export interface CopyPromptMessage extends BaseMessage {
   preset_name?: string
 }
 
-export interface ShowPresetPickerMessage extends BaseMessage {
-  command: 'SHOW_PRESET_PICKER'
-}
-
 export interface RequestEditorStateMessage extends BaseMessage {
   command: 'REQUEST_EDITOR_STATE'
 }
@@ -202,7 +198,6 @@ export type FrontendMessage =
   | SavePresetsOrderMessage
   | SendPromptMessage
   | CopyPromptMessage
-  | ShowPresetPickerMessage
   | RequestEditorStateMessage
   | RequestEditorSelectionStateMessage
   | GetHistoryMessage

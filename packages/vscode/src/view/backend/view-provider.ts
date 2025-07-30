@@ -9,7 +9,6 @@ import { token_count_emitter } from '@/context/context-initialization'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import {
-  handle_show_preset_picker,
   handle_copy_prompt,
   handle_send_prompt,
   handle_update_preset,
@@ -281,8 +280,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               message.instructions,
               message.preset_name
             )
-          } else if (message.command == 'SHOW_PRESET_PICKER') {
-            await handle_show_preset_picker(this)
           } else if (message.command == 'REQUEST_EDITOR_STATE') {
             handle_request_editor_state(this)
           } else if (message.command == 'REQUEST_EDITOR_SELECTION_STATE') {

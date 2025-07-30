@@ -53,11 +53,10 @@ export namespace Presets {
     on_preset_edit: (name: string) => void
     on_preset_duplicate: (name: string) => void
     on_preset_delete: (name: string) => void
-    on_set_default_presets: () => void
+    on_toggle_default_preset: (name: string) => void
     translations: {
       my_chat_presets: string
       set_presets_opening_by_default: string
-      select_default: string
       not_connected: string
       preset_requires_active_editor: string
       preset_cannot_be_used_with_selection: string
@@ -69,6 +68,8 @@ export namespace Presets {
       edit: string
       delete: string
       create_preset: string
+      set_as_default: string
+      unset_as_default: string
     }
   }
 }
@@ -109,12 +110,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           {props.translations.my_chat_presets}
         </div>
 
-        <TextButton
-          on_click={props.on_set_default_presets}
-          title={props.translations.set_presets_opening_by_default}
-        >
-          {props.translations.select_default}
-        </TextButton>
+        <span></span>
       </div>
 
       <div className={styles.presets}>
@@ -211,14 +207,13 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 role="button"
                 title={get_item_title()}
               >
-                {preset.is_default && (
-                  <div className={styles['presets__item__left__selected']} />
-                )}
-
                 <div className={styles.presets__item__left}>
                   <div className={styles.presets__item__left__icon}>
                     <Icon variant={chatbot_to_icon[preset.chatbot]} />
                   </div>
+                  {preset.is_default && (
+                    <span className="codicon codicon-check" />
+                  )}
                   <div className={styles.presets__item__left__text}>
                     <span>{display_name}</span>
                     <span>{get_subtitle()}</span>
@@ -241,6 +236,18 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       }}
                     />
                   )}
+                  <IconButton
+                    codicon_icon={preset.is_default ? 'pass-filled' : 'pass'}
+                    title={
+                      preset.is_default
+                        ? props.translations.unset_as_default
+                        : props.translations.set_as_default
+                    }
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_toggle_default_preset(preset.name)
+                    }}
+                  />
                   <IconButton
                     codicon_icon="files"
                     title={props.translations.duplicate}
