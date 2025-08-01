@@ -253,6 +253,8 @@ async function resolve_presets(params: {
   preset_names?: string[]
   context: vscode.ExtensionContext
 }): Promise<string[]> {
+  const GROUPS = 'Groups'
+  const PRESETS = 'Presets'
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.provider.get_presets_config_key()
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
@@ -262,7 +264,7 @@ async function resolve_presets(params: {
     const last_choice = params.context.workspaceState.get<string>(
       LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
     )
-    if (last_choice == 'Groups') {
+    if (last_choice == GROUPS) {
       const last_selected_group = params.context.workspaceState.get<string>(
         LAST_SELECTED_GROUP_STATE_KEY
       )
@@ -284,7 +286,7 @@ async function resolve_presets(params: {
         }
         if (preset_names.length > 0) return preset_names
       }
-    } else if (last_choice == 'Presets') {
+    } else if (last_choice == PRESETS) {
       const last_selected_item = params.context.workspaceState.get<string>(
         LAST_SELECTED_PRESET_KEY
       )
@@ -308,9 +310,9 @@ async function resolve_presets(params: {
   if (has_groups) {
     const choice = await new Promise<string | undefined>((resolve) => {
       const quick_pick = vscode.window.createQuickPick()
-      const items: vscode.QuickPickItem[] = ['Groups', 'Presets'].map(
-        (label) => ({ label })
-      )
+      const items: vscode.QuickPickItem[] = [GROUPS, PRESETS].map((label) => ({
+        label
+      }))
       quick_pick.items = items
       quick_pick.placeholder = 'Select from Groups or individual Presets'
       const last_choice = params.context.workspaceState.get<string>(
@@ -343,7 +345,7 @@ async function resolve_presets(params: {
       choice
     )
 
-    if (choice == 'Groups') {
+    if (choice == GROUPS) {
       const group_items = all_presets
         .filter((p) => !p.chatbot)
         .map((group) => {
@@ -431,7 +433,7 @@ async function resolve_presets(params: {
       })
     }
 
-    // choice == 'Presets'
+    // choice == PRESETS
     return show_preset_quick_pick(all_presets, params.context)
   }
 
