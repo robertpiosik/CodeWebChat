@@ -34,13 +34,13 @@ export const handle_send_prompt = async (params: {
     }
   }
 
-  const valid_preset_names = await validate_presets({
+  const resolved_preset_names = await resolve_presets({
     provider: params.provider,
     preset_names: params.preset_names,
     context: params.provider.context
   })
 
-  if (valid_preset_names.length == 0) return
+  if (resolved_preset_names.length == 0) return
 
   await vscode.workspace.saveAll()
 
@@ -85,7 +85,7 @@ export const handle_send_prompt = async (params: {
 
     const text = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
 
-    const chats = valid_preset_names.map((preset_name) => {
+    const chats = resolved_preset_names.map((preset_name) => {
       return {
         text,
         preset_name
@@ -105,7 +105,7 @@ export const handle_send_prompt = async (params: {
         : ''
 
     const chats = await Promise.all(
-      valid_preset_names.map(async (preset_name) => {
+      resolved_preset_names.map(async (preset_name) => {
         let instructions = apply_preset_affixes_to_instruction(
           current_instructions,
           preset_name,
@@ -168,7 +168,7 @@ export const handle_send_prompt = async (params: {
   }
 
   vscode.window.showInformationMessage(
-    valid_preset_names.length > 1
+    resolved_preset_names.length > 1
       ? 'Chats have been initialized in the connected browser.'
       : 'Chat has been initialized in the connected browser.'
   )
@@ -212,7 +212,7 @@ async function show_preset_quick_pick(
   quick_pick.placeholder = 'Select preset'
   quick_pick.matchOnDescription = true
 
-  if (last_selected_item) {
+  if (last_selected_item !== undefined) {
     const last_item = quick_pick.items.find(
       (item) => item.name == last_selected_item
     )
@@ -228,7 +228,7 @@ async function show_preset_quick_pick(
       const selected = quick_pick.selectedItems[0] as any
       quick_pick.hide()
 
-      if (selected && selected.name) {
+      if (selected && selected.name !== undefined) {
         const selected_name = selected.name
         context.workspaceState.update(LAST_SELECTED_PRESET_KEY, selected_name)
         resolve([selected_name])
@@ -248,7 +248,7 @@ async function show_preset_quick_pick(
   })
 }
 
-async function validate_presets(params: {
+async function resolve_presets(params: {
   provider: ViewProvider
   preset_names?: string[]
   context: vscode.ExtensionContext
@@ -259,19 +259,19 @@ async function validate_presets(params: {
   const available_preset_names = all_presets.map((preset) => preset.name)
 
   if (params.preset_names === undefined) {
-    const lastChoice = params.context.workspaceState.get<string>(
+    const last_choice = params.context.workspaceState.get<string>(
       LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
     )
-    if (lastChoice === 'Groups') {
+    if (last_choice == 'Groups') {
       const last_selected_group = params.context.workspaceState.get<string>(
         LAST_SELECTED_GROUP_STATE_KEY
       )
       if (last_selected_group) {
         const group_index = all_presets.findIndex(
-          (p) => p.name === last_selected_group && !p.chatbot
+          (p) => p.name == last_selected_group && !p.chatbot
         )
         const preset_names: string[] = []
-        if (group_index !== -1) {
+        if (group_index != -1) {
           for (let i = group_index + 1; i < all_presets.length; i++) {
             const preset = all_presets[i]
             if (!preset.chatbot) {
@@ -284,11 +284,11 @@ async function validate_presets(params: {
         }
         if (preset_names.length > 0) return preset_names
       }
-    } else if (lastChoice === 'Presets') {
+    } else if (last_choice == 'Presets') {
       const last_selected_item = params.context.workspaceState.get<string>(
         LAST_SELECTED_PRESET_KEY
       )
-      const preset = all_presets.find((p) => p.name === last_selected_item)
+      const preset = all_presets.find((p) => p.name == last_selected_item)
       if (preset && preset.chatbot) {
         return [preset.name]
       }
@@ -303,35 +303,35 @@ async function validate_presets(params: {
     return valid_presets
   }
 
-  const hasGroups = all_presets.some((p) => !p.chatbot)
+  const has_groups = all_presets.some((p) => !p.chatbot)
 
-  if (hasGroups) {
+  if (has_groups) {
     const choice = await new Promise<string | undefined>((resolve) => {
-      const quickPick = vscode.window.createQuickPick()
+      const quick_pick = vscode.window.createQuickPick()
       const items: vscode.QuickPickItem[] = ['Groups', 'Presets'].map(
         (label) => ({ label })
       )
-      quickPick.items = items
-      quickPick.placeholder = 'Select from Groups or individual Presets'
-      const lastChoice = params.context.workspaceState.get<string>(
+      quick_pick.items = items
+      quick_pick.placeholder = 'Select from Groups or individual Presets'
+      const last_choice = params.context.workspaceState.get<string>(
         LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
       )
-      if (lastChoice) {
-        const lastItem = items.find((item) => item.label === lastChoice)
-        if (lastItem) {
-          quickPick.activeItems = [lastItem]
+      if (last_choice) {
+        const last_item = items.find((item) => item.label == last_choice)
+        if (last_item) {
+          quick_pick.activeItems = [last_item]
         }
       }
-      quickPick.onDidAccept(() => {
-        const selection = quickPick.selectedItems[0]
+      quick_pick.onDidAccept(() => {
+        const selection = quick_pick.selectedItems[0]
         resolve(selection ? selection.label : undefined)
-        quickPick.hide()
+        quick_pick.hide()
       })
-      quickPick.onDidHide(() => {
+      quick_pick.onDidHide(() => {
         resolve(undefined)
-        quickPick.dispose()
+        quick_pick.dispose()
       })
-      quickPick.show()
+      quick_pick.show()
     })
 
     if (!choice) {
@@ -344,7 +344,7 @@ async function validate_presets(params: {
     )
 
     if (choice == 'Groups') {
-      const groupItems = all_presets
+      const group_items = all_presets
         .filter((p) => !p.chatbot)
         .map((group) => {
           const group_index = all_presets.indexOf(group)
@@ -361,14 +361,16 @@ async function validate_presets(params: {
           return {
             label: group.name,
             name: group.name,
-            description: `${default_presets_count} selected presets`
+            description: `${default_presets_count} selected preset${
+              default_presets_count > 1 ? 's' : ''
+            }`
           }
         })
 
       const quick_pick = vscode.window.createQuickPick<
         vscode.QuickPickItem & { name: string }
       >()
-      quick_pick.items = groupItems
+      quick_pick.items = group_items
       quick_pick.placeholder = 'Select a group'
 
       const last_selected_group = params.context.workspaceState.get<string>(
@@ -376,7 +378,7 @@ async function validate_presets(params: {
         ''
       )
       if (last_selected_group) {
-        const last_item = groupItems.find(
+        const last_item = group_items.find(
           (item) => item.name === last_selected_group
         )
         if (last_item) {
