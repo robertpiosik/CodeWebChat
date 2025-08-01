@@ -85,25 +85,57 @@ const with_ids = (
   }))
 }
 
-const ChatbotIcon: React.FC<{
-  chatbot: keyof typeof CHATBOTS
-  is_disabled: boolean
-}> = (params) => {
-  const icon_variant = chatbot_to_icon[params.chatbot]
-
-  if (!icon_variant) return null
-
-  return (
-    <div className={styles.presets__item__left__icon}>
-      <Icon variant={icon_variant} />
-    </div>
-  )
-}
-
 export const Presets: React.FC<Presets.Props> = (props) => {
   const [highlighted_preset_name, set_highlighted_preset_name] = useState<
     Record<Presets.Props['web_mode'], string>
   >({} as any)
+
+  const get_is_preset_disabled = (preset: Presets.Preset) =>
+    preset.chatbot &&
+    (!props.is_connected ||
+      (props.is_in_code_completions_mode &&
+        (!props.has_active_editor || props.has_active_selection)) ||
+      (props.is_in_context_dependent_mode && !props.has_context) ||
+      (!props.is_in_code_completions_mode &&
+        !(
+          props.has_instructions ||
+          preset.prompt_prefix ||
+          preset.prompt_suffix
+        )))
+
+  const get_is_ungrouped_disabled = () => {
+    for (const p of props.presets) {
+      if (!p.chatbot) {
+        break
+      }
+      if (p.is_default && !get_is_preset_disabled(p)) {
+        return false
+      }
+    }
+    return true
+  }
+
+  const get_ungrouped_title = () => {
+    if (!props.is_connected) {
+      return props.translations.not_connected
+    } else if (get_is_ungrouped_disabled()) {
+      return props.translations.no_preset_enabled_or_selected_in_this_group
+    } else if (props.is_in_code_completions_mode) {
+      return !props.has_active_editor
+        ? props.translations.preset_requires_active_editor
+        : props.has_active_selection
+        ? props.translations.preset_cannot_be_used_with_selection
+        : props.translations.initialize_chat_with_preset
+    } else if (props.is_in_context_dependent_mode && !props.has_context) {
+      return props.translations.add_files_to_context_first
+    } else if (
+      !props.is_in_code_completions_mode &&
+      !props.has_instructions
+    ) {
+      return props.translations.type_or_add_prompt_to_use_preset
+    }
+    return props.translations.initialize_chat_with_preset
+  }
 
   return (
     <div className={styles.container}>
@@ -116,6 +148,36 @@ export const Presets: React.FC<Presets.Props> = (props) => {
       </div>
 
       <div className={styles.presets}>
+        {props.presets[0]?.chatbot !== undefined && (
+          <div
+            className={cn(styles.presets__item, {
+              [styles['presets__item--ungrouped']]: true,
+              [styles['presets__item--disabled']]: get_is_ungrouped_disabled()
+            })}
+            onClick={() => {
+              if (get_is_ungrouped_disabled()) return
+
+              const preset_names: string[] = []
+              for (const preset of props.presets) {
+                if (!preset.chatbot) break
+                if (
+                  preset.is_default &&
+                  !get_is_preset_disabled(preset)
+                ) {
+                  preset_names.push(preset.name)
+                }
+              }
+              props.on_group_click(preset_names)
+            }}
+            role="button"
+            title={get_ungrouped_title()}
+          >
+            <div className={styles.presets__item__left}>
+              <div className={styles.presets__item__left__text}>Ungrouped</div>
+            </div>
+          </div>
+        )}
+
         <ReactSortable
           list={with_ids(props.presets)}
           setList={(new_state) => {
@@ -155,19 +217,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               return chatbot
             }
 
-            const get_is_preset_disabled = (preset: Presets.Preset) =>
-              preset.chatbot &&
-              ((false && !props.is_connected) ||
-                (props.is_in_code_completions_mode &&
-                  (!props.has_active_editor || props.has_active_selection)) ||
-                (props.is_in_context_dependent_mode && !props.has_context) ||
-                (!props.is_in_code_completions_mode &&
-                  !(
-                    props.has_instructions ||
-                    preset.prompt_prefix ||
-                    preset.prompt_suffix
-                  )))
-
             const get_is_group_disabled = () => {
               for (let j = i + 1; j < props.presets.length; j++) {
                 const p = props.presets[j]
@@ -185,7 +234,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               if (!props.is_connected) {
                 return props.translations.not_connected
               } else if (!preset.chatbot && get_is_group_disabled()) {
-                return props.translations.no_preset_enabled_or_selected_in_this_group
+                return props.translations
+                  .no_preset_enabled_or_selected_in_this_group
               } else if (props.is_in_code_completions_mode) {
                 return !props.has_active_editor
                   ? props.translations.preset_requires_active_editor
