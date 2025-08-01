@@ -1,5 +1,5 @@
 import { ViewProvider } from '@/view/backend/view-provider'
-import { BackendMessage, SaveHomeViewTypeMessage } from '@/view/types/messages'
+import { SaveHomeViewTypeMessage } from '@/view/types/messages'
 
 export const handle_save_home_view_type = async (
   provider: ViewProvider,

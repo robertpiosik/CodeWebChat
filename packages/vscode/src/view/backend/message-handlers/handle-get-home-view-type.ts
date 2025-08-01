@@ -1,5 +1,4 @@
 import { ViewProvider } from '@/view/backend/view-provider'
-import { BackendMessage } from '@/view/types/messages'
 
 export const handle_get_home_view_type = (
   provider: ViewProvider

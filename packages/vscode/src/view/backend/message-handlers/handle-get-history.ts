@@ -5,7 +5,6 @@ import {
   HISTORY_NO_CONTEXT_STATE_KEY
 } from '@/constants/state-keys'
 import { ViewProvider } from '@/view/backend/view-provider'
-import { BackendMessage } from '@/view/types/messages'
 
 export const handle_get_history = (provider: ViewProvider): void => {
   const ask_history = provider.context.workspaceState.get<string[]>(

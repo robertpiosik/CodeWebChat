@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/view/backend/view-provider'
-import { BackendMessage } from '@/view/types/messages'
 import axios from 'axios'
 
 export const handle_pick_open_router_model = async (
