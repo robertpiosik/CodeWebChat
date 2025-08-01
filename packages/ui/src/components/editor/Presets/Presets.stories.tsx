@@ -59,7 +59,7 @@ export const Multiple = () => {
         edit: 'Edit',
         delete: 'Delete',
         create: 'Create Preset',
-        no_preset_enabled_or_checked_in_this_group:
+        no_preset_enabled_or_selected_in_this_group:
           'No preset is enabled or set as default in this group'
       }}
     />
@@ -109,7 +109,7 @@ export const CodeCompletionsMode = () => {
         edit: 'Edit',
         delete: 'Delete',
         create: 'Create Preset',
-        no_preset_enabled_or_checked_in_this_group:
+        no_preset_enabled_or_selected_in_this_group:
           'No preset is enabled or set as default in this group'
       }}
     />

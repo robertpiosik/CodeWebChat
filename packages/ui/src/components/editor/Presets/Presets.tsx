@@ -71,7 +71,7 @@ export namespace Presets {
       create: string
       set_as_default: string
       unset_as_default: string
-      no_preset_enabled_or_checked_in_this_group: string
+      no_preset_enabled_or_selected_in_this_group: string
     }
   }
 }
@@ -185,7 +185,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               if (!props.is_connected) {
                 return props.translations.not_connected
               } else if (!preset.chatbot && get_is_group_disabled()) {
-                return props.translations.no_preset_enabled_or_checked_in_this_group
+                return props.translations.no_preset_enabled_or_selected_in_this_group
               } else if (props.is_in_code_completions_mode) {
                 return !props.has_active_editor
                   ? props.translations.preset_requires_active_editor

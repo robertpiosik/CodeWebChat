@@ -409,8 +409,8 @@ export const HomeView: React.FC<Props> = (props) => {
                   create: 'Create...',
                   set_as_default: 'Set as default',
                   unset_as_default: 'Unset as default',
-                  no_preset_enabled_or_checked_in_this_group:
-                    'No preset is enabled or checked in this group'
+                  no_preset_enabled_or_selected_in_this_group:
+                    'No preset is enabled or selected in this group'
                 }}
               />
             </>

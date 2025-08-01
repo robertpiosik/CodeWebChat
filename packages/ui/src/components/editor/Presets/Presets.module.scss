@@ -1,7 +1,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-4px);
 }
 
 .my-presets {
@@ -9,7 +8,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--padding-12px);
-  margin-bottom: var(--padding-2px);
+  margin-bottom: var(--padding-4px);
 
   &__left {
     opacity: 0.7;
