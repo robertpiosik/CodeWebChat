@@ -1,4 +1,6 @@
 import * as vscode from 'vscode'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import {
   HISTORY_ASK_STATE_KEY,
   HISTORY_CODE_COMPLETIONS_STATE_KEY,
@@ -7,12 +9,15 @@ import {
   PINNED_HISTORY_ASK_STATE_KEY,
   PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY,
   PINNED_HISTORY_EDIT_STATE_KEY,
-  PINNED_HISTORY_NO_CONTEXT_STATE_KEY
+  PINNED_HISTORY_NO_CONTEXT_STATE_KEY,
+  HistoryEntry
 } from '@/constants/state-keys'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { HOME_VIEW_TYPES } from '@/view/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { handle_get_history } from './handle-get-history'
+
+dayjs.extend(relativeTime)
 
 export const handle_show_history_quick_pick = async (
   provider: ViewProvider
@@ -49,9 +54,12 @@ export const handle_show_history_quick_pick = async (
   if (!history_key || !pinned_history_key) return
 
   const history =
-    provider.context.workspaceState.get<string[]>(history_key, []) || []
+    provider.context.workspaceState.get<HistoryEntry[]>(history_key, []) || []
   const pinned_history =
-    provider.context.workspaceState.get<string[]>(pinned_history_key, []) || []
+    provider.context.workspaceState.get<HistoryEntry[]>(
+      pinned_history_key,
+      []
+    ) || []
 
   if (!history.length && !pinned_history.length) {
     vscode.window.showInformationMessage(
@@ -62,16 +70,18 @@ export const handle_show_history_quick_pick = async (
 
   const quick_pick = vscode.window.createQuickPick()
   quick_pick.placeholder = 'Search prompt history'
+  quick_pick.matchOnDetail = true
 
   const to_quick_pick_item = (
-    text: string,
+    entry: HistoryEntry,
     list: 'recents' | 'pinned',
     is_pinned: boolean,
     pinned_index?: number,
     total_pinned?: number,
     is_searching?: boolean
   ): vscode.QuickPickItem => ({
-    label: text,
+    label: dayjs(entry.createdAt).fromNow(),
+    detail: entry.text,
     buttons: [
       ...(list == 'pinned' &&
       pinned_index !== undefined &&
@@ -126,7 +136,14 @@ export const handle_show_history_quick_pick = async (
     })
     items.push(
       ...pinned_history.map((item, index) =>
-        to_quick_pick_item(item, 'pinned', true, index, pinned_history.length)
+        to_quick_pick_item(
+          item,
+          'pinned',
+          true,
+          index,
+          pinned_history.length,
+          !!quick_pick.value
+        )
       )
     )
   }
@@ -141,7 +158,7 @@ export const handle_show_history_quick_pick = async (
         to_quick_pick_item(
           item,
           'recents',
-          !!pinned_history.find((i) => i == item)
+          !!pinned_history.find((p) => p.text == item.text)
         )
       )
     )
@@ -205,66 +222,99 @@ export const handle_show_history_quick_pick = async (
   disposables.push(
     quick_pick.onDidAccept(async () => {
       const [selected_item] = quick_pick.selectedItems
-      if (selected_item) {
-        await set_instructions(selected_item.label)
+      if (selected_item && selected_item.detail) {
+        await set_instructions(selected_item.detail)
       }
       quick_pick.hide()
     }),
     quick_pick.onDidTriggerItemButton(async (e) => {
       const item_to_handle = e.item
       const button_tooltip = e.button.tooltip
-      const item_text = item_to_handle.label
+      const item_text = item_to_handle.detail
 
+      if (!item_text) return
+
+      const get_sorted_pinned_history = () =>
+        provider.context.workspaceState.get<HistoryEntry[]>(
+          pinned_history_key,
+          []
+        ) || []
+
+      const current_pinned_history = get_sorted_pinned_history()
       if (button_tooltip == 'Move up') {
-        const current_index = pinned_history.indexOf(item_text)
+        const current_index = current_pinned_history.findIndex(
+          (p) => p.text === item_text
+        )
         if (current_index > 0) {
-          const temp = pinned_history[current_index - 1]
-          pinned_history[current_index - 1] = pinned_history[current_index]
-          pinned_history[current_index] = temp
-
+          ;[
+            current_pinned_history[current_index - 1],
+            current_pinned_history[current_index]
+          ] = [
+            current_pinned_history[current_index],
+            current_pinned_history[current_index - 1]
+          ]
           await provider.context.workspaceState.update(
             pinned_history_key,
-            pinned_history
+            current_pinned_history
           )
         }
       } else if (button_tooltip == 'Move down') {
-        const current_index = pinned_history.indexOf(item_text)
-        if (current_index < pinned_history.length - 1) {
-          const temp = pinned_history[current_index + 1]
-          pinned_history[current_index + 1] = pinned_history[current_index]
-          pinned_history[current_index] = temp
-
+        const current_index = current_pinned_history.findIndex(
+          (p) => p.text === item_text
+        )
+        if (current_index < current_pinned_history.length - 1) {
+          ;[
+            current_pinned_history[current_index + 1],
+            current_pinned_history[current_index]
+          ] = [
+            current_pinned_history[current_index],
+            current_pinned_history[current_index + 1]
+          ]
           await provider.context.workspaceState.update(
             pinned_history_key,
-            pinned_history
+            current_pinned_history
           )
         }
       } else if (button_tooltip == 'Add to Pinned Prompts') {
-        if (!pinned_history.includes(item_text)) {
-          pinned_history.push(item_text)
-          await provider.context.workspaceState.update(
-            pinned_history_key,
-            pinned_history
-          )
+        if (!current_pinned_history.some((p) => p.text === item_text)) {
+          const entry_to_pin = history.find((h) => h.text === item_text)
+          if (entry_to_pin) {
+            current_pinned_history.push(entry_to_pin)
+            await provider.context.workspaceState.update(
+              pinned_history_key,
+              current_pinned_history
+            )
+          }
         }
       } else if (button_tooltip == 'Remove from Pinned Prompts') {
-        const index = pinned_history.indexOf(item_text)
+        const index = current_pinned_history.findIndex(
+          (p) => p.text === item_text
+        )
         if (index != -1) {
-          pinned_history.splice(index, 1)
+          current_pinned_history.splice(index, 1)
           await provider.context.workspaceState.update(
             pinned_history_key,
-            pinned_history
+            current_pinned_history
           )
         }
       } else if (button_tooltip == 'Remove from Recent Prompts') {
-        const index = history.indexOf(item_text)
+        const index = history.findIndex((h) => h.text === item_text)
         if (index != -1) {
           history.splice(index, 1)
           await provider.context.workspaceState.update(history_key, history)
         }
       }
 
-      if (history.length == 0 && pinned_history.length == 0) {
+      const updated_pinned_history =
+        provider.context.workspaceState.get<HistoryEntry[]>(
+          pinned_history_key,
+          []
+        ) || []
+      const updated_history =
+        provider.context.workspaceState.get<HistoryEntry[]>(history_key, []) ||
+        []
+
+      if (updated_history.length == 0 && updated_pinned_history.length == 0) {
         quick_pick.hide()
         vscode.window.showInformationMessage(
           'No history to show for the current mode.'
@@ -274,36 +324,36 @@ export const handle_show_history_quick_pick = async (
 
       const updated_items: vscode.QuickPickItem[] = []
 
-      if (pinned_history.length > 0) {
+      if (updated_pinned_history.length > 0) {
         updated_items.push({
           label: 'pinned',
           kind: vscode.QuickPickItemKind.Separator
         })
         updated_items.push(
-          ...pinned_history.map((item, index) =>
+          ...updated_pinned_history.map((item, index) =>
             to_quick_pick_item(
               item,
               'pinned',
               true,
               index,
-              pinned_history.length,
+              updated_pinned_history.length,
               !!current_search_value
             )
           )
         )
       }
 
-      if (history.length > 0) {
+      if (updated_history.length > 0) {
         updated_items.push({
           label: 'recent',
           kind: vscode.QuickPickItemKind.Separator
         })
         updated_items.push(
-          ...history.map((item) =>
+          ...updated_history.map((item) =>
             to_quick_pick_item(
               item,
               'recents',
-              pinned_history.includes(item),
+              updated_pinned_history.some((p) => p.text === item.text),
               undefined
             )
           )
@@ -321,6 +371,7 @@ export const handle_show_history_quick_pick = async (
       const updated_items: vscode.QuickPickItem[] = []
 
       if (pinned_history.length > 0) {
+        // No need to re-fetch, just use in-memory
         updated_items.push({
           label: 'pinned',
           kind: vscode.QuickPickItemKind.Separator
@@ -340,13 +391,17 @@ export const handle_show_history_quick_pick = async (
       }
 
       if (history.length > 0) {
+        // No need to re-fetch, just use in-memory
         updated_items.push({
           label: 'recent',
           kind: vscode.QuickPickItemKind.Separator
         })
         updated_items.push(
-          ...history.map((item) =>
-            to_quick_pick_item(item, 'recents', pinned_history.includes(item))
+          ...history.map(
+            (
+              item // No need to re-fetch, just use in-memory
+            ) =>
+              to_quick_pick_item(item, 'recents', pinned_history.includes(item))
           )
         )
       }

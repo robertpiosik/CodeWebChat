@@ -45,3 +45,8 @@ export const PINNED_HISTORY_EDIT_STATE_KEY = 'pinned-history-edit'
 export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY =
   'pinned-history-code-completions'
 export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'
+
+export interface HistoryEntry {
+  text: string
+  createdAt: number
+}

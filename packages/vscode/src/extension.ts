@@ -10,7 +10,8 @@ import {
   migrate_chat_code_completion_instructions,
   migrate_refactoring_to_intelligent_update,
   migrate_presets_to_chat_presets_for_edit_context,
-  migrate_edit_to_edit_context
+  migrate_edit_to_edit_context,
+  migrate_clear_history
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -76,6 +77,8 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_commit_messages_config_to_array(context)
     // 21 July 2025
     await migrate_edit_to_edit_context(context)
+    // 25 July 2025
+    await migrate_clear_history(context)
   }
 
   await migrations()

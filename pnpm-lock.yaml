@@ -237,6 +237,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.13
       glob:
         specifier: ^11.0.3
         version: 11.0.3
