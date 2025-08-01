@@ -205,6 +205,7 @@
     display: flex;
     align-items: center;
     gap: var(--padding-4px);
+    pointer-events: none;
 
     &__count {
       font-size: 0.9em;
@@ -223,6 +224,7 @@
       color: var(--vscode-editor-foreground);
       border: 1px solid var(--vscode-commandCenter-inactiveBorder);
       font-size: 12px;
+      pointer-events: all;
 
       > svg {
         width: 10px;
@@ -249,7 +251,7 @@
       }
 
       &--secondary {
-        @media (max-width: 355px) {
+        @media (max-width: 345px) {
           > span {
             display: none;
           }

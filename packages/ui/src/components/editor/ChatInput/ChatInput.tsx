@@ -27,8 +27,8 @@ type Props = {
     type_something: string
     completion_instructions: string
     send_request: string
-    initialize_chat: string
-    select_preset: string
+    last_selection: string
+    select: string
     select_config: string
     code_completions_mode_unavailable_with_text_selection: string
     code_completions_mode_unavailable_without_active_editor: string
@@ -443,7 +443,7 @@ export const ChatInput: React.FC<Props> = (props) => {
                 is_submit_disabled
                   ? get_disabled_title()
                   : props.is_web_mode
-                  ? props.translations.select_preset
+                  ? props.translations.select
                   : props.translations.select_config
               }
             >
@@ -455,7 +455,7 @@ export const ChatInput: React.FC<Props> = (props) => {
               <Icon variant="ENTER" />
               <span>
                 {props.is_web_mode
-                  ? props.translations.select_preset
+                  ? props.translations.select
                   : props.translations.select_config}
               </span>
             </button>
@@ -468,14 +468,14 @@ export const ChatInput: React.FC<Props> = (props) => {
                 is_submit_disabled
                   ? get_disabled_title()
                   : props.is_web_mode
-                  ? props.translations.initialize_chat
+                  ? props.translations.last_selection
                   : props.translations.send_request
               }
             >
               <Icon variant="ENTER" />
               <span>
                 {props.is_web_mode
-                  ? props.translations.initialize_chat
+                  ? props.translations.last_selection
                   : props.translations.send_request}
               </span>
             </button>

@@ -21,12 +21,14 @@ export const handle_update_preset = async (
     (p) => p.name == message.updating_preset.name
   )
 
+  const item_type = message.updating_preset.chatbot ? 'preset' : 'group'
+
   if (preset_index == -1) {
     console.error(
-      `Preset with original name "${message.updating_preset.name}" not found.`
+      `${item_type} with original name "${message.updating_preset.name}" not found.`
     )
     vscode.window.showErrorMessage(
-      `Could not update preset: Original preset "${message.updating_preset.name}" not found.`
+      `Could not update ${item_type}: Original ${item_type} "${message.updating_preset.name}" not found.`
     )
     return
   }
@@ -64,10 +66,10 @@ export const handle_update_preset = async (
     const save_changes_button = 'Save'
     const discard_changes = 'Discard Changes'
     const result = await vscode.window.showInformationMessage(
-      'Save changes to the preset?',
+      `Save changes to the ${item_type}?`,
       {
         modal: true,
-        detail: "If you don't save, updates to the preset will be lost."
+        detail: `If you don't save, updates to the ${item_type} will be lost.`
       },
       save_changes_button,
       discard_changes
@@ -97,7 +99,6 @@ export const handle_update_preset = async (
     const name_to_check =
       copy_number == 0 ? base_name : `${base_name} (${copy_number})`.trim()
 
-    // Check if this name exists in *other* presets
     const conflict = current_presets.some(
       (p, index) => index != preset_index && p.name == name_to_check
     )
@@ -111,13 +112,11 @@ export const handle_update_preset = async (
   }
   // --- End uniqueness check ---
 
-  // If the name had to be changed, update the preset object
   if (final_name != updated_ui_preset.name) {
     updated_ui_preset.name = final_name
   }
 
   const updated_presets = [...current_presets]
-  // Convert the updated preset (with potentially modified name) from UI format to config format
   updated_presets[preset_index] = ui_preset_to_config_format(updated_ui_preset)
 
   await config.update(

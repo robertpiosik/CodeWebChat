@@ -203,27 +203,29 @@ export const View = () => {
     overlay = (
       <UiPage
         on_back_click={edit_preset_back_click_handler}
-        title="Edit Preset"
+        title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
         header_slot={
-          <UiTextButton
-            on_click={handle_preview_preset}
-            disabled={is_preview_disabled}
-            title={
-              !is_connected
-                ? 'Unable to preview when not connected'
-                : web_mode == 'code-completions' && !has_active_editor
-                ? 'Cannot preview in code completion mode without an active editor'
-                : web_mode == 'code-completions' && has_active_selection
-                ? 'Unable to work with text selection'
-                : !has_affixes &&
-                  !has_instructions &&
-                  web_mode != 'code-completions'
-                ? 'Enter instructions or affixes to preview'
-                : ''
-            }
-          >
-            Preview
-          </UiTextButton>
+          updated_preset?.chatbot && (
+            <UiTextButton
+              on_click={handle_preview_preset}
+              disabled={is_preview_disabled}
+              title={
+                !is_connected
+                  ? 'Unable to preview when not connected'
+                  : web_mode == 'code-completions' && !has_active_editor
+                  ? 'Cannot preview in code completion mode without an active editor'
+                  : web_mode == 'code-completions' && has_active_selection
+                  ? 'Unable to work with text selection'
+                  : !has_affixes &&
+                    !has_instructions &&
+                    web_mode != 'code-completions'
+                  ? 'Enter instructions or affixes to preview'
+                  : ''
+              }
+            >
+              Preview
+            </UiTextButton>
+          )
         }
       >
         <EditPresetForm

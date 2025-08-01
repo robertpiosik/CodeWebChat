@@ -10,6 +10,27 @@ export const handle_create_preset = async (
   provider: ViewProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
+  const create_option = await vscode.window.showQuickPick(
+    [
+      {
+        label: 'Preset',
+        description: 'Create a web chat configuration tailored to your needs'
+      },
+      {
+        label: 'Group',
+        description:
+          'Open selected presets simultaneously, apply shared prefix and suffix'
+      }
+    ],
+    {
+      placeHolder: 'What would you like to create?'
+    }
+  )
+
+  if (!create_option) {
+    return
+  }
+
   const presets_config_key = provider.get_presets_config_key()
   const current_presets =
     config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
@@ -20,12 +41,19 @@ export const handle_create_preset = async (
     new_name = `(${copy_number++})`
   }
 
-  const new_preset: ConfigPresetFormat = {
-    name: new_name,
-    chatbot: 'AI Studio',
-    model: Object.keys(CHATBOTS['AI Studio'].models)[0],
-    temperature: 0.5,
-    systemInstructions: CHATBOTS['AI Studio'].default_system_instructions
+  let new_preset: ConfigPresetFormat
+  if (create_option.label == 'Preset') {
+    new_preset = {
+      name: new_name,
+      chatbot: 'AI Studio',
+      model: Object.keys(CHATBOTS['AI Studio'].models)[0],
+      temperature: 0.5,
+      systemInstructions: CHATBOTS['AI Studio'].default_system_instructions
+    }
+  } else {
+    new_preset = {
+      name: new_name
+    } as ConfigPresetFormat
   }
 
   const updated_presets = [...current_presets, new_preset]
@@ -37,6 +65,8 @@ export const handle_create_preset = async (
     })
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
-    vscode.window.showErrorMessage(`Failed to create preset: ${error}`)
+    vscode.window.showErrorMessage(
+      `Failed to create ${create_option.label.toLowerCase()}: ${error}`
+    )
   }
 }

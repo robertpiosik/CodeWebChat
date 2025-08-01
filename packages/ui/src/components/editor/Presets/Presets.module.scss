@@ -43,7 +43,7 @@
     &--disabled {
       cursor: default !important;
 
-      .presets__item__left {
+      .presets__item__left__text {
         opacity: 0.7;
       }
     }
@@ -64,6 +64,17 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       position: relative;
+
+      &__drag_handle {
+        display: flex;
+        align-items: center;
+        cursor: grab;
+        opacity: 0.5;
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
 
       &__icon > svg {
         fill: var(--vscode-icon-foreground);
@@ -89,17 +100,6 @@
       gap: var(--padding-4px);
       cursor: default;
       padding-right: var(--padding-4px);
-
-      &__drag_handle {
-        display: flex;
-        align-items: center;
-        cursor: grab;
-        opacity: 0.5;
-
-        &:active {
-          cursor: grabbing;
-        }
-      }
     }
   }
 

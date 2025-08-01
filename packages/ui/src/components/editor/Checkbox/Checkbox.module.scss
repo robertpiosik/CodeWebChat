@@ -1,0 +1,34 @@
+.checkbox {
+  appearance: none;
+
+  height: 16px;
+  width: 16px;
+  background-color: var(--vscode-checkbox-background);
+  border: 1px solid var(--vscode-checkbox-border);
+  border-radius: var(--border-radius-3px);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+
+  &:focus {
+    background-color: var(--vscode-checkbox-selectBackground);
+    outline: none;
+  }
+
+  &:checked {
+    border-color: var(--vscode-inputOption-activeBorder);
+    color: var(--vscode-inputOption-activeForeground);
+    background-color: var(--vscode-inputOption-activeBackground);
+
+    &::before {
+      font-family: 'codicon';
+      content: '\eab2';
+      font-size: 13px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}

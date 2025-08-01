@@ -6,6 +6,7 @@ import { replace_selection_placeholder } from '@/utils/replace-selection-placeho
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_changes_placeholder } from '@/utils/replace-changes-placeholder'
 import { Preset } from '@shared/types/preset'
+import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 
 export const handle_preview_preset = async (
   provider: ViewProvider,
@@ -70,14 +71,15 @@ export const handle_preview_preset = async (
         ? await files_collector.collect_files()
         : ''
 
-    let instructions = current_instructions
-
-    if (message.preset.prompt_prefix) {
-      instructions = `${message.preset.prompt_prefix} ${instructions}`
-    }
-    if (message.preset.prompt_suffix) {
-      instructions = `${instructions} ${message.preset.prompt_suffix}`
-    }
+    let instructions = apply_preset_affixes_to_instruction(
+      current_instructions,
+      message.preset.name,
+      provider.get_presets_config_key(),
+      {
+        promptPrefix: message.preset.prompt_prefix,
+        promptSuffix: message.preset.prompt_suffix
+      }
+    )
 
     if (active_editor && !active_editor.selection.isEmpty) {
       if (instructions.includes('@Selection')) {

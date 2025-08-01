@@ -1,12 +1,12 @@
 import styles from './Presets.module.scss'
 import { IconButton } from '../IconButton/IconButton'
 import { Button } from '../Button/Button'
+import { Checkbox } from '../Checkbox'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
 import { useState } from 'react'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { TextButton } from '../TextButton'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -30,7 +30,7 @@ export namespace Presets {
   export type Preset = {
     name: string
     model?: string
-    chatbot: keyof typeof CHATBOTS
+    chatbot?: keyof typeof CHATBOTS
     prompt_prefix?: string
     prompt_suffix?: string
     is_default?: boolean
@@ -46,7 +46,8 @@ export namespace Presets {
     is_in_context_dependent_mode: boolean
     has_context: boolean
     presets: Preset[]
-    on_preset_click: (preset: Preset) => void
+    on_preset_click: (preset_name: string) => void
+    on_group_click: (presets: string[]) => void
     on_create_preset: () => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
@@ -67,9 +68,10 @@ export namespace Presets {
       duplicate: string
       edit: string
       delete: string
-      create_preset: string
+      create: string
       set_as_default: string
       unset_as_default: string
+      no_preset_enabled_or_checked_in_this_group: string
     }
   }
 }
@@ -123,15 +125,20 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             }
           }}
           animation={150}
-          handle={`.${styles.presets__item__right__drag_handle}`}
+          handle={`.${styles.presets__item__left__drag_handle}`}
         >
           {props.presets.map((preset, i) => {
             const is_unnamed =
               !preset.name || /^\(\d+\)$/.test(preset.name.trim())
-            const display_name = is_unnamed ? preset.chatbot : preset.name
+            const display_name =
+              preset.chatbot && is_unnamed ? preset.chatbot : preset.name
 
             const get_subtitle = (): string => {
               const { chatbot, model } = preset
+
+              if (!chatbot) {
+                return model || ''
+              }
 
               const model_display_name = model
                 ? (CHATBOTS[chatbot].models as any)[model]?.label || model
@@ -148,21 +155,37 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               return chatbot
             }
 
-            const is_item_disabled =
-              (false && !props.is_connected) ||
-              (props.is_in_code_completions_mode &&
-                (!props.has_active_editor || props.has_active_selection)) ||
-              (props.is_in_context_dependent_mode && !props.has_context) ||
-              (!props.is_in_code_completions_mode &&
-                !(
-                  props.has_instructions ||
-                  preset.prompt_prefix ||
-                  preset.prompt_suffix
-                ))
+            const get_is_preset_disabled = (preset: Presets.Preset) =>
+              preset.chatbot &&
+              ((false && !props.is_connected) ||
+                (props.is_in_code_completions_mode &&
+                  (!props.has_active_editor || props.has_active_selection)) ||
+                (props.is_in_context_dependent_mode && !props.has_context) ||
+                (!props.is_in_code_completions_mode &&
+                  !(
+                    props.has_instructions ||
+                    preset.prompt_prefix ||
+                    preset.prompt_suffix
+                  )))
+
+            const get_is_group_disabled = () => {
+              for (let j = i + 1; j < props.presets.length; j++) {
+                const p = props.presets[j]
+                if (!p.chatbot) {
+                  break
+                }
+                if (p.is_default && !get_is_preset_disabled(p)) {
+                  return false
+                }
+              }
+              return true
+            }
 
             const get_item_title = () => {
               if (!props.is_connected) {
                 return props.translations.not_connected
+              } else if (!preset.chatbot && get_is_group_disabled()) {
+                return props.translations.no_preset_enabled_or_checked_in_this_group
               } else if (props.is_in_code_completions_mode) {
                 return !props.has_active_editor
                   ? props.translations.preset_requires_active_editor
@@ -192,27 +215,62 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 key={i}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
-                    highlighted_preset_name[props.web_mode] === preset.name,
-                  [styles['presets__item--disabled']]: is_item_disabled
+                    highlighted_preset_name[props.web_mode] == preset.name,
+                  [styles['presets__item--disabled']]: preset.chatbot
+                    ? get_is_preset_disabled(preset)
+                    : get_is_group_disabled()
                 })}
                 onClick={() => {
-                  if (!is_item_disabled) {
-                    props.on_preset_click(preset)
-                    set_highlighted_preset_name({
-                      ...highlighted_preset_name,
-                      [props.web_mode]: preset.name
-                    })
+                  if (preset.chatbot) {
+                    if (get_is_preset_disabled(preset)) return
+                    props.on_preset_click(preset.name)
+                  } else {
+                    if (get_is_group_disabled()) return
+                    const preset_names: string[] = []
+                    for (let j = i + 1; j < props.presets.length; j++) {
+                      const preset = props.presets[j]
+                      if (!preset.chatbot) {
+                        break
+                      } else if (
+                        preset.is_default &&
+                        !get_is_preset_disabled(preset)
+                      ) {
+                        preset_names.push(preset.name)
+                      }
+                    }
+                    props.on_group_click(preset_names)
                   }
+
+                  set_highlighted_preset_name({
+                    ...highlighted_preset_name,
+                    [props.web_mode]: preset.name
+                  })
                 }}
                 role="button"
                 title={get_item_title()}
               >
                 <div className={styles.presets__item__left}>
-                  <div className={styles.presets__item__left__icon}>
-                    <Icon variant={chatbot_to_icon[preset.chatbot]} />
+                  <div className={styles.presets__item__left__drag_handle}>
+                    <span className="codicon codicon-gripper" />
                   </div>
-                  {preset.is_default && (
-                    <span className="codicon codicon-check" />
+                  {preset.chatbot && (
+                    <Checkbox
+                      checked={!!preset.is_default}
+                      on_change={() =>
+                        props.on_toggle_default_preset(preset.name)
+                      }
+                      on_click={(e) => e.stopPropagation()}
+                      title={
+                        preset.is_default
+                          ? props.translations.unset_as_default
+                          : props.translations.set_as_default
+                      }
+                    />
+                  )}
+                  {preset.chatbot && (
+                    <div className={styles.presets__item__left__icon}>
+                      <Icon variant={chatbot_to_icon[preset.chatbot]} />
+                    </div>
                   )}
                   <div className={styles.presets__item__left__text}>
                     <span>{display_name}</span>
@@ -226,28 +284,17 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     e.stopPropagation()
                   }}
                 >
-                  {(preset.prompt_prefix || preset.prompt_suffix) && (
-                    <IconButton
-                      codicon_icon="copy"
-                      title={props.translations.copy_to_clipboard}
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_preset_copy(preset.name)
-                      }}
-                    />
-                  )}
-                  <IconButton
-                    codicon_icon={preset.is_default ? 'pass-filled' : 'pass'}
-                    title={
-                      preset.is_default
-                        ? props.translations.unset_as_default
-                        : props.translations.set_as_default
-                    }
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      props.on_toggle_default_preset(preset.name)
-                    }}
-                  />
+                  {preset.chatbot &&
+                    (preset.prompt_prefix || preset.prompt_suffix) && (
+                      <IconButton
+                        codicon_icon="copy"
+                        title={props.translations.copy_to_clipboard}
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_preset_copy(preset.name)
+                        }}
+                      />
+                    )}
                   <IconButton
                     codicon_icon="files"
                     title={props.translations.duplicate}
@@ -276,9 +323,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       props.on_preset_delete(preset.name)
                     }}
                   />
-                  <div className={styles.presets__item__right__drag_handle}>
-                    <span className="codicon codicon-gripper" />
-                  </div>
                 </div>
               </div>
             )
@@ -288,7 +332,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
       <div className={styles.presets__create}>
         <Button on_click={props.on_create_preset}>
-          {props.translations.create_preset}
+          {props.translations.create}
         </Button>
       </div>
     </div>

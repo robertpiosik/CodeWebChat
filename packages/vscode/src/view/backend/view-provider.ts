@@ -18,7 +18,7 @@ import {
   handle_preview_preset,
   handle_save_edit_format,
   handle_show_history_quick_pick,
-  handle_save_presets_order,
+  handle_replace_presets,
   handle_get_connection_status,
   handle_get_history,
   handle_save_history,
@@ -286,8 +286,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             handle_request_editor_selection_state(this)
           } else if (message.command == 'GET_CURRENT_TOKEN_COUNT') {
             this.calculate_token_count()
-          } else if (message.command == 'SAVE_PRESETS_ORDER') {
-            await handle_save_presets_order(this, message)
+          } else if (message.command == 'REPLACE_PRESETS') {
+            await handle_replace_presets(this, message)
           } else if (message.command == 'UPDATE_PRESET') {
             await handle_update_preset(this, message, webview_view)
           } else if (message.command == 'DELETE_PRESET') {
@@ -435,7 +435,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         const presets_config =
           config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
         const presets_ui = presets_config
-          .filter((preset_config) => CHATBOTS[preset_config.chatbot])
+          .filter(
+            (preset_config) =>
+              !preset_config.chatbot || CHATBOTS[preset_config.chatbot]
+          )
           .map((preset_config) => config_preset_to_ui_format(preset_config))
         return [mode, presets_ui]
       })

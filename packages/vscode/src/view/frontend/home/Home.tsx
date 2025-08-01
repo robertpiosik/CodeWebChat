@@ -182,7 +182,7 @@ export const Home: React.FC<Props> = (props) => {
       set_all_presets({ ...all_presets, [props.web_mode]: updated_presets })
 
       post_message(props.vscode, {
-        command: 'SAVE_PRESETS_ORDER',
+        command: 'REPLACE_PRESETS',
         presets: updated_presets.map((preset) => ({
           name: preset.name,
           chatbot: preset.chatbot,
@@ -195,7 +195,7 @@ export const Home: React.FC<Props> = (props) => {
           system_instructions: preset.system_instructions,
           options: preset.options,
           port: preset.port,
-          is_default: preset.is_default
+          is_default: preset.is_default || undefined
         }))
       })
     }
@@ -231,7 +231,7 @@ export const Home: React.FC<Props> = (props) => {
     }
 
     post_message(props.vscode, {
-      command: 'SAVE_PRESETS_ORDER',
+      command: 'REPLACE_PRESETS',
       presets: reordered_presets.map((preset) => ({
         name: preset.name,
         chatbot: preset.chatbot,

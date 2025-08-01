@@ -3,7 +3,7 @@ import { Preset } from '@shared/types/preset'
 
 export type ConfigPresetFormat = {
   name: string
-  chatbot: keyof typeof CHATBOTS
+  chatbot?: keyof typeof CHATBOTS
   promptPrefix?: string
   promptSuffix?: string
   model?: string

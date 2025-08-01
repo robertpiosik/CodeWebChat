@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC)",
-  "description": "Free AI coding for the rest of us",
+  "description": "Free AI coding for everyone",
   "version": "1.216.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
@@ -787,8 +787,7 @@
               }
             },
             "required": [
-              "name",
-              "chatbot"
+              "name"
             ]
           }
         },
@@ -944,8 +943,7 @@
               }
             },
             "required": [
-              "name",
-              "chatbot"
+              "name"
             ]
           }
         },
@@ -1071,8 +1069,7 @@
               }
             },
             "required": [
-              "name",
-              "chatbot"
+              "name"
             ]
           }
         },
@@ -1228,8 +1225,7 @@
               }
             },
             "required": [
-              "name",
-              "chatbot"
+              "name"
             ]
           }
         },

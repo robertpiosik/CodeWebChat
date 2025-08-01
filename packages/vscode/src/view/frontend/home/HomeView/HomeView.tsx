@@ -286,8 +286,8 @@ export const HomeView: React.FC<Props> = (props) => {
                 type_something: 'Type something',
                 completion_instructions: 'Completion instructions',
                 send_request: 'Send request',
-                initialize_chat: 'Initialize chat',
-                select_preset: 'Select preset',
+                last_selection: 'Use last choice',
+                select: 'Select...',
                 select_config: 'Select config',
                 code_completions_mode_unavailable_with_text_selection:
                   'Remove text selection',
@@ -380,10 +380,16 @@ export const HomeView: React.FC<Props> = (props) => {
                 }
                 presets={props.presets}
                 on_create_preset={props.on_create_preset}
-                on_preset_click={(preset) => {
+                on_preset_click={(preset_name) => {
                   props.initialize_chats({
                     prompt: current_prompt,
-                    preset_names: [preset.name]
+                    preset_names: [preset_name]
+                  })
+                }}
+                on_group_click={(preset_names) => {
+                  props.initialize_chats({
+                    prompt: current_prompt,
+                    preset_names
                   })
                 }}
                 on_preset_copy={handle_preset_copy}
@@ -412,9 +418,11 @@ export const HomeView: React.FC<Props> = (props) => {
                   duplicate: 'Duplicate',
                   edit: 'Edit',
                   delete: 'Delete',
-                  create_preset: 'Create Preset',
+                  create: 'Create...',
                   set_as_default: 'Set as default',
-                  unset_as_default: 'Unset as default'
+                  unset_as_default: 'Unset as default',
+                  no_preset_enabled_or_checked_in_this_group:
+                    'No preset is enabled or checked in this group'
                 }}
               />
             </>

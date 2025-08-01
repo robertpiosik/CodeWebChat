@@ -16,6 +16,11 @@ type Props = {
   on_at_sign_in_affix: () => void
 }
 
+/**
+ * Preset can have a "group" variant. It is used to:
+ * - initialize all default presets below it,
+ * - add additional prefix and suffix to each preset below it.
+ */
 export const EditPresetForm: React.FC<Props> = (props) => {
   const prefix_ref = useRef<HTMLTextAreaElement>(null)
   const suffix_ref = useRef<HTMLTextAreaElement>(null)
@@ -44,6 +49,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   >(null)
 
   useEffect(() => {
+    if (!chatbot) return
+
     const model_info = model
       ? (CHATBOTS[chatbot].models as any)[model]
       : undefined
@@ -53,32 +60,42 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     }
   }, [model, chatbot])
 
-  const supports_temperature = CHATBOTS[chatbot].supports_custom_temperature
-  const supports_top_p = CHATBOTS[chatbot].supports_custom_top_p
-  const supports_thinking_budget = CHATBOTS[chatbot].supports_thinking_budget
+  const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
+
+  const supports_temperature = chatbot_config?.supports_custom_temperature
+  const supports_top_p = chatbot_config?.supports_custom_top_p
+  const supports_thinking_budget = chatbot_config?.supports_thinking_budget
   const supports_system_instructions =
-    CHATBOTS[chatbot].supports_system_instructions
-  const supports_port = CHATBOTS[chatbot].supports_user_provided_port
+    chatbot_config?.supports_system_instructions
+  const supports_port = chatbot_config?.supports_user_provided_port
   const supports_user_provided_model =
-    CHATBOTS[chatbot].supports_user_provided_model
-  const models = CHATBOTS[chatbot].models
-  const supported_options = CHATBOTS[chatbot].supported_options
+    chatbot_config?.supports_user_provided_model
+  const models = chatbot_config?.models || {}
+  const supported_options = chatbot_config?.supported_options || {}
 
   useEffect(() => {
-    props.on_update({
-      name,
-      chatbot,
-      ...(prompt_prefix ? { prompt_prefix } : {}),
-      ...(prompt_suffix ? { prompt_suffix } : {}),
-      ...(temperature !== undefined ? { temperature } : {}),
-      ...(top_p !== CHATBOTS[chatbot].default_top_p ? { top_p } : {}),
-      ...(thinking_budget !== undefined ? { thinking_budget } : {}),
-      ...(model ? { model } : {}),
-      ...(system_instructions ? { system_instructions } : {}),
-      ...(port !== undefined ? { port } : {}),
-      ...(options.length ? { options } : {}),
-      is_default: props.preset.is_default
-    })
+    if (chatbot) {
+      props.on_update({
+        name,
+        chatbot,
+        ...(prompt_prefix ? { prompt_prefix } : {}),
+        ...(prompt_suffix ? { prompt_suffix } : {}),
+        ...(temperature !== undefined ? { temperature } : {}),
+        ...(top_p !== CHATBOTS[chatbot].default_top_p ? { top_p } : {}),
+        ...(thinking_budget !== undefined ? { thinking_budget } : {}),
+        ...(model ? { model } : {}),
+        ...(system_instructions ? { system_instructions } : {}),
+        ...(port !== undefined ? { port } : {}),
+        ...(options.length ? { options } : {}),
+        is_default: props.preset.is_default
+      })
+    } else {
+      props.on_update({
+        name,
+        ...(prompt_prefix ? { prompt_prefix } : {}),
+        ...(prompt_suffix ? { prompt_suffix } : {})
+      })
+    }
   }, [
     name,
     temperature,
@@ -180,15 +197,17 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
   return (
     <div className={styles.form}>
-      <Field label="Chatbot" html_for="chatbot">
-        <select id="chatbot" value={chatbot} onChange={handle_chatbot_change}>
-          {Object.keys(CHATBOTS).map((key) => (
-            <option key={key} value={key}>
-              {key}
-            </option>
-          ))}
-        </select>
-      </Field>
+      {chatbot && (
+        <Field label="Chatbot" html_for="chatbot">
+          <select id="chatbot" value={chatbot} onChange={handle_chatbot_change}>
+            {Object.keys(CHATBOTS).map((key) => (
+              <option key={key} value={key}>
+                {key}
+              </option>
+            ))}
+          </select>
+        </Field>
+      )}
 
       {Object.keys(models).length > 0 && (
         <Field label="Model" html_for="model">
@@ -199,7 +218,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           >
             {Object.entries(models).map(([value, model_data]) => (
               <option key={value} value={value}>
-                {model_data.label}
+                {(model_data as any).label}
               </option>
             ))}
           </select>
@@ -292,7 +311,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                     checked={options.includes(key)}
                     onChange={() => handle_option_toggle(key)}
                   />
-                  {label}
+                  {label as any}
                 </label>
               )
             })}
@@ -315,7 +334,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           title="This setting limits the model's choices to a percentage of likely tokens: only the top tokens whose probabilities add up to P. A lower value makes the model's responses more predictable, while the default setting allows for a full range of token choices. Think of it like a dynamic Top-K."
         >
           <Slider
-            value={top_p || CHATBOTS[chatbot].default_top_p}
+            value={top_p || (chatbot && CHATBOTS[chatbot].default_top_p)!}
             onChange={set_top_p}
           />
         </Field>
@@ -356,9 +375,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
       <>
         <Field
-          label="Prompt Prefix"
+          label={chatbot ? 'Prompt Prefix' : 'Group Prefix'}
           html_for="prefix"
-          info="Text prepended to prompts used with this preset"
+          info={
+            chatbot
+              ? 'Text prepended to prompts used with this preset'
+              : 'Text prepended to prompts used with presets in this group'
+          }
         >
           <TextareaAutosize
             id="prefix"
@@ -371,9 +394,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         </Field>
 
         <Field
-          label="Prompt Suffix"
+          label={chatbot ? 'Prompt Suffix' : 'Group Suffix'}
           html_for="suffix"
-          info="Text appended to prompts used with this preset"
+          info={
+            chatbot
+              ? 'Text appended to prompts used with this preset'
+              : 'Text appended to prompts used with presets in this group'
+          }
         >
           <TextareaAutosize
             id="suffix"

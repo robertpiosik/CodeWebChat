@@ -46,8 +46,8 @@ export interface GetPresetsMessage extends BaseMessage {
   command: 'GET_PRESETS'
 }
 
-export interface SavePresetsOrderMessage extends BaseMessage {
-  command: 'SAVE_PRESETS_ORDER'
+export interface ReplacePresetsMessage extends BaseMessage {
+  command: 'REPLACE_PRESETS'
   presets: Preset[]
 }
 
@@ -195,7 +195,7 @@ export type FrontendMessage =
   | SaveEditFormatMessage
   | GetConnectionStatusMessage
   | GetPresetsMessage
-  | SavePresetsOrderMessage
+  | ReplacePresetsMessage
   | SendPromptMessage
   | CopyPromptMessage
   | RequestEditorStateMessage
