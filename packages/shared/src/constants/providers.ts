@@ -26,6 +26,9 @@ export const PROVIDERS = {
   Gemini: {
     base_url: 'https://generativelanguage.googleapis.com/v1beta/openai'
   },
+  Groq: {
+    base_url: 'https://api.groq.com/openai/v1'
+  },
   Hyperbolic: {
     base_url: 'https://api.hyperbolic.xyz/v1'
   },
