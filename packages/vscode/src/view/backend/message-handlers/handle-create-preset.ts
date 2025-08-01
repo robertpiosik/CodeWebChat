@@ -14,12 +14,11 @@ export const handle_create_preset = async (
     [
       {
         label: 'Preset',
-        description: 'Create a web chat configuration tailored to your needs'
+        description: 'A web chat tailored to your needs'
       },
       {
         label: 'Group',
-        description:
-          'Open selected presets simultaneously, apply shared prefix and suffix'
+        description: 'Keep related presets together'
       }
     ],
     {

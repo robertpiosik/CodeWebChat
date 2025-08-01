@@ -253,8 +253,8 @@ async function resolve_presets(params: {
   preset_names?: string[]
   context: vscode.ExtensionContext
 }): Promise<string[]> {
-  const PRESETS = 'Presets'
-  const GROUPS = 'Groups'
+  const PRESET = 'Preset'
+  const GROUP = 'Group'
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.provider.get_presets_config_key()
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
@@ -274,14 +274,14 @@ async function resolve_presets(params: {
       LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
     )
 
-    if (last_choice == PRESETS) {
+    if (last_choice == PRESET) {
       const last_preset = params.context.workspaceState.get<string>(
         LAST_SELECTED_PRESET_KEY
       )
       if (last_preset && available_preset_names.includes(last_preset)) {
         return [last_preset]
       }
-    } else if (last_choice == GROUPS) {
+    } else if (last_choice == GROUP) {
       const last_group = params.context.workspaceState.get<string>(
         LAST_SELECTED_GROUP_STATE_KEY
       )
@@ -318,11 +318,18 @@ async function resolve_presets(params: {
 
   const choice = await new Promise<string | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()
-    const items: vscode.QuickPickItem[] = [PRESETS, GROUPS].map((label) => ({
-      label
-    }))
+    const items: vscode.QuickPickItem[] = [
+      {
+        label: PRESET,
+        description: 'Initialize a single chat'
+      },
+      {
+        label: GROUP,
+        description: 'Initialize all selected presets of a group'
+      }
+    ]
     quick_pick.items = items
-    quick_pick.placeholder = 'Select from Groups or individual Presets'
+    quick_pick.placeholder = 'Select what to initialize'
     const last_choice = params.context.workspaceState.get<string>(
       LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
     )
@@ -353,7 +360,7 @@ async function resolve_presets(params: {
     choice
   )
 
-  if (choice == GROUPS) {
+  if (choice == GROUP) {
     const group_items = all_presets
       .filter((p) => !p.chatbot)
       .map((group) => {
