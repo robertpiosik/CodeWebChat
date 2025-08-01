@@ -361,7 +361,7 @@ async function validate_presets(params: {
           return {
             label: group.name,
             name: group.name,
-            description: `${default_presets_count} default presets`
+            description: `${default_presets_count} selected presets`
           }
         })
 

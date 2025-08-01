@@ -18,7 +18,7 @@ type Props = {
 
 /**
  * Preset can have a "group" variant. It is used to:
- * - initialize all default presets below it,
+ * - initialize all selected presets below it,
  * - add additional prefix and suffix to each preset below it.
  */
 export const EditPresetForm: React.FC<Props> = (props) => {
