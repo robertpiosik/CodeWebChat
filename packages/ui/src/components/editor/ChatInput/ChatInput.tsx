@@ -26,7 +26,7 @@ type Props = {
   translations: {
     type_something: string
     completion_instructions: string
-    send_request: string
+    use_default: string
     last_selection: string
     select: string
     select_config: string
@@ -469,14 +469,14 @@ export const ChatInput: React.FC<Props> = (props) => {
                   ? get_disabled_title()
                   : props.is_web_mode
                   ? props.translations.last_selection
-                  : props.translations.send_request
+                  : props.translations.use_default
               }
             >
               <Icon variant="ENTER" />
               <span>
                 {props.is_web_mode
                   ? props.translations.last_selection
-                  : props.translations.send_request}
+                  : props.translations.use_default}
               </span>
             </button>
           </div>
