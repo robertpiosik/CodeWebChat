@@ -274,19 +274,19 @@ async function resolve_presets(params: {
       LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
     )
 
-    if (last_choice === PRESETS) {
+    if (last_choice == PRESETS) {
       const last_preset = params.context.workspaceState.get<string>(
         LAST_SELECTED_PRESET_KEY
       )
       if (last_preset && available_preset_names.includes(last_preset)) {
         return [last_preset]
       }
-    } else if (last_choice === GROUPS) {
+    } else if (last_choice == GROUPS) {
       const last_group = params.context.workspaceState.get<string>(
         LAST_SELECTED_GROUP_STATE_KEY
       )
       if (last_group) {
-        if (last_group === 'Ungrouped') {
+        if (last_group == 'Ungrouped') {
           const first_group_index = all_presets.findIndex((p) => !p.chatbot)
           const relevant_presets =
             first_group_index === -1
@@ -429,43 +429,48 @@ async function resolve_presets(params: {
         const selected = quick_pick.selectedItems[0]
         quick_pick.hide()
 
-        if (selected) {
-          const groupName = selected.name
-          params.context.workspaceState.update(
-            LAST_SELECTED_GROUP_STATE_KEY,
-            groupName
-          )
-          if (groupName === 'Ungrouped') {
-            const first_group_index = all_presets.findIndex((p) => !p.chatbot)
-            const relevant_presets =
-              first_group_index === -1
-                ? all_presets
-                : all_presets.slice(0, first_group_index)
-            const preset_names = relevant_presets
-              .filter((p) => p.isDefault)
-              .map((p) => p.name)
-            resolve(preset_names)
-          } else {
-            const group_index = all_presets.findIndex(
-              (p) => p.name == groupName
-            )
-            const preset_names: string[] = []
-            if (group_index != -1) {
-              for (let i = group_index + 1; i < all_presets.length; i++) {
-                const preset = all_presets[i]
-                if (!preset.chatbot) {
-                  break // next group
-                }
-                if (preset.isDefault) {
-                  preset_names.push(preset.name)
-                }
+        if (!selected) {
+          resolve([])
+          return
+        }
+
+        const group_name = selected.name
+        params.context.workspaceState.update(
+          LAST_SELECTED_GROUP_STATE_KEY,
+          group_name
+        )
+
+        let preset_names: string[] = []
+        if (group_name == 'Ungrouped') {
+          const first_group_index = all_presets.findIndex((p) => !p.chatbot)
+          const relevant_presets =
+            first_group_index === -1
+              ? all_presets
+              : all_presets.slice(0, first_group_index)
+          preset_names = relevant_presets
+            .filter((p) => p.isDefault)
+            .map((p) => p.name)
+        } else {
+          const group_index = all_presets.findIndex((p) => p.name == group_name)
+          if (group_index != -1) {
+            for (let i = group_index + 1; i < all_presets.length; i++) {
+              const preset = all_presets[i]
+              if (!preset.chatbot) {
+                break // next group
+              }
+              if (preset.isDefault) {
+                preset_names.push(preset.name)
               }
             }
-            resolve(preset_names)
           }
-        } else {
-          resolve([])
         }
+
+        if (preset_names.length == 0) {
+          vscode.window.showWarningMessage(
+            'The chosen group has no selected presets.'
+          )
+        }
+        resolve(preset_names)
       })
 
       quick_pick.onDidHide(() => {
