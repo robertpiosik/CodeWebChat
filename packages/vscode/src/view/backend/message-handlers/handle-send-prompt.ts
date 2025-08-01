@@ -253,8 +253,8 @@ async function resolve_presets(params: {
   preset_names?: string[]
   context: vscode.ExtensionContext
 }): Promise<string[]> {
-  const GROUPS = 'Groups'
   const PRESETS = 'Presets'
+  const GROUPS = 'Groups'
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.provider.get_presets_config_key()
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
@@ -289,7 +289,7 @@ async function resolve_presets(params: {
         if (last_group == 'Ungrouped') {
           const first_group_index = all_presets.findIndex((p) => !p.chatbot)
           const relevant_presets =
-            first_group_index === -1
+            first_group_index == -1
               ? all_presets
               : all_presets.slice(0, first_group_index)
           const preset_names = relevant_presets
@@ -318,7 +318,7 @@ async function resolve_presets(params: {
 
   const choice = await new Promise<string | undefined>((resolve) => {
     const quick_pick = vscode.window.createQuickPick()
-    const items: vscode.QuickPickItem[] = [GROUPS, PRESETS].map((label) => ({
+    const items: vscode.QuickPickItem[] = [PRESETS, GROUPS].map((label) => ({
       label
     }))
     quick_pick.items = items
@@ -372,7 +372,7 @@ async function resolve_presets(params: {
           label: group.name,
           name: group.name,
           description: `${default_presets_count} selected preset${
-            default_presets_count !== 1 ? 's' : ''
+            default_presets_count != 1 ? 's' : ''
           }`
         }
       })
@@ -387,10 +387,10 @@ async function resolve_presets(params: {
         label: 'Ungrouped',
         name: 'Ungrouped',
         description: `${default_presets_count} selected preset${
-          default_presets_count !== 1 ? 's' : ''
+          default_presets_count != 1 ? 's' : ''
         }`
       })
-    } else if (first_group_index === -1 && all_presets.length > 0) {
+    } else if (first_group_index == -1 && all_presets.length > 0) {
       const default_presets_count = all_presets.filter(
         (p) => p.isDefault
       ).length
@@ -398,7 +398,7 @@ async function resolve_presets(params: {
         label: 'Ungrouped',
         name: 'Ungrouped',
         description: `${default_presets_count} selected preset${
-          default_presets_count !== 1 ? 's' : ''
+          default_presets_count != 1 ? 's' : ''
         }`
       })
     }
@@ -415,7 +415,7 @@ async function resolve_presets(params: {
     )
     if (last_selected_group) {
       const last_item = group_items.find(
-        (item) => item.name === last_selected_group
+        (item) => item.name == last_selected_group
       )
       if (last_item) {
         quick_pick.activeItems = [last_item]
@@ -444,7 +444,7 @@ async function resolve_presets(params: {
         if (group_name == 'Ungrouped') {
           const first_group_index = all_presets.findIndex((p) => !p.chatbot)
           const relevant_presets =
-            first_group_index === -1
+            first_group_index == -1
               ? all_presets
               : all_presets.slice(0, first_group_index)
           preset_names = relevant_presets
