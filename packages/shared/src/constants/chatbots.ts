@@ -185,12 +185,12 @@ export const CHATBOTS = {
     },
     default_top_p: 0,
     models: {
-      'qwen3-coder': { label: 'Qwen3-Coder' },
       'qwen3-235b-a22b-2507': {
         label: 'Qwen3-235B-A22B-2507'
       },
-      'qwen3-30b-a3b': { label: 'Qwen3-30B-A3B' },
-      'qwen3-32b': { label: 'Qwen3-32B' }
+      'qwen3-coder': { label: 'Qwen3-Coder' },
+      'qwen3-30b-a3b-2507': { label: 'Qwen3-30B-A3B-2507' },
+      'qwen3-coder-flash': { label: 'Qwen3-Coder-Flash' }
     }
   },
   Yuanbao: {
