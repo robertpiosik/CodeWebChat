@@ -280,13 +280,11 @@ export async function collect_affected_files_with_metadata(
     let is_large_file = false
     try {
       const stats = await fs.promises.stat(file_path)
-      if (stats.size > 1024 * 1024) {
-        // 1MB limit for direct content inclusion
+      if (stats.size > 100 * 1024) {
         is_large_file = true
         content = `File content omitted due to large size (${(
-          stats.size /
-          (1024 * 1024)
-        ).toFixed(2)} MB).`
+          stats.size / 1024
+        ).toFixed(2)} KB).`
       } else {
         content = await fs.promises.readFile(file_path, 'utf8')
       }
@@ -411,10 +409,8 @@ export function build_files_content(files_data: FileData[]): string {
 }
 
 export function strip_wrapping_quotes(text: string): string {
-  // Remove leading/trailing whitespace
   text = text.trim()
 
-  // Check for single quotes
   if (
     (text.startsWith("'") && text.endsWith("'")) ||
     (text.startsWith('"') && text.endsWith('"')) ||
@@ -520,7 +516,6 @@ export async function generate_commit_message_from_diff(
   progress_title: string,
   diff: string,
   api_config?: {
-    // Make api_config optional parameter
     config: CommitMessageConfig
     provider: any
     endpoint_url: string
