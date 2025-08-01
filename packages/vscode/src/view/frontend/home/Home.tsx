@@ -202,15 +202,14 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   const handle_initialize_chats = async (params: {
-    prompt: string
-    preset_names: string[]
+    preset_names?: string[]
   }) => {
     post_message(props.vscode, {
       command: 'SEND_PROMPT',
       preset_names: params.preset_names
     })
 
-    update_chat_history(params.prompt)
+    update_chat_history(instructions)
   }
 
   const handle_copy_to_clipboard = (preset_name?: string) => {

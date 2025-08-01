@@ -14,29 +14,30 @@ import { chat_code_completion_instructions } from '@/constants/instructions'
 import { ConfigPresetFormat } from '../helpers/preset-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
-export const handle_send_prompt = async (
-  provider: ViewProvider,
-  preset_names: string[]
-): Promise<void> => {
+export const handle_send_prompt = async (params: {
+  provider: ViewProvider
+  preset_names?: string[]
+}): Promise<void> => {
   let current_instructions = ''
-  const is_in_code_completions_mode = provider.web_mode == 'code-completions'
+  const is_in_code_completions_mode =
+    params.provider.web_mode == 'code-completions'
 
   if (is_in_code_completions_mode) {
-    current_instructions = provider.code_completion_instructions
+    current_instructions = params.provider.code_completion_instructions
   } else {
-    if (provider.web_mode == 'ask') {
-      current_instructions = provider.ask_instructions
-    } else if (provider.web_mode == 'edit-context') {
-      current_instructions = provider.edit_instructions
-    } else if (provider.web_mode == 'no-context') {
-      current_instructions = provider.no_context_instructions
+    if (params.provider.web_mode == 'ask') {
+      current_instructions = params.provider.ask_instructions
+    } else if (params.provider.web_mode == 'edit-context') {
+      current_instructions = params.provider.edit_instructions
+    } else if (params.provider.web_mode == 'no-context') {
+      current_instructions = params.provider.no_context_instructions
     }
   }
 
   const valid_preset_names = await validate_presets({
-    provider,
-    preset_names: preset_names,
-    context: provider.context
+    provider: params.provider,
+    preset_names: params.preset_names,
+    context: params.provider.context
   })
 
   if (valid_preset_names.length == 0) return
@@ -44,15 +45,15 @@ export const handle_send_prompt = async (
   await vscode.workspace.saveAll()
 
   const files_collector = new FilesCollector(
-    provider.workspace_provider,
-    provider.open_editors_provider,
-    provider.websites_provider
+    params.provider.workspace_provider,
+    params.provider.open_editors_provider,
+    params.provider.websites_provider
   )
 
   const active_editor = vscode.window.activeTextEditor
   const active_path = active_editor?.document.uri.fsPath
 
-  if (provider.web_mode == 'code-completions') {
+  if (params.provider.web_mode == 'code-completions') {
     if (!active_editor) return
 
     const document = active_editor.document
@@ -77,8 +78,8 @@ export const handle_send_prompt = async (
       position.line,
       position.character
     )}${
-      provider.code_completion_instructions
-        ? ` Follow instructions: ${provider.code_completion_instructions}`
+      params.provider.code_completion_instructions
+        ? ` Follow instructions: ${params.provider.code_completion_instructions}`
         : ''
     }`
 
@@ -91,15 +92,15 @@ export const handle_send_prompt = async (
       }
     })
 
-    provider.websocket_server_instance.initialize_chats(
+    params.provider.websocket_server_instance.initialize_chats(
       chats,
-      provider.get_presets_config_key()
+      params.provider.get_presets_config_key()
     )
   } else {
     const editor = vscode.window.activeTextEditor
 
     const context_text =
-      provider.web_mode != 'no-context'
+      params.provider.web_mode != 'no-context'
         ? await files_collector.collect_files()
         : ''
 
@@ -108,7 +109,7 @@ export const handle_send_prompt = async (
         let instructions = apply_preset_affixes_to_instruction(
           current_instructions,
           preset_name,
-          provider.get_presets_config_key()
+          params.provider.get_presets_config_key()
         )
 
         if (editor && !editor.selection.isEmpty) {
@@ -128,23 +129,23 @@ export const handle_send_prompt = async (
         if (pre_context_instructions.includes('@SavedContext:')) {
           pre_context_instructions = await replace_saved_context_placeholder(
             pre_context_instructions,
-            provider.context,
-            provider.workspace_provider
+            params.provider.context,
+            params.provider.workspace_provider
           )
           post_context_instructions = await replace_saved_context_placeholder(
             post_context_instructions,
-            provider.context,
-            provider.workspace_provider,
+            params.provider.context,
+            params.provider.workspace_provider,
             true
           )
         }
 
-        if (provider.web_mode == 'edit-context') {
+        if (params.provider.web_mode == 'edit-context') {
           const all_instructions = vscode.workspace
             .getConfiguration('codeWebChat')
             .get<{ [key: string]: string }>('editFormatInstructions')
           const edit_format_instructions =
-            all_instructions?.[provider.chat_edit_format]
+            all_instructions?.[params.provider.chat_edit_format]
           if (edit_format_instructions) {
             pre_context_instructions += `\n${edit_format_instructions}`
             post_context_instructions += `\n${edit_format_instructions}`
@@ -160,9 +161,9 @@ export const handle_send_prompt = async (
       })
     )
 
-    provider.websocket_server_instance.initialize_chats(
+    params.provider.websocket_server_instance.initialize_chats(
       chats,
-      provider.get_presets_config_key()
+      params.provider.get_presets_config_key()
     )
   }
 
@@ -249,7 +250,7 @@ async function show_preset_quick_pick(
 
 async function validate_presets(params: {
   provider: ViewProvider
-  preset_names: string[]
+  preset_names?: string[]
   context: vscode.ExtensionContext
 }): Promise<string[]> {
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -257,7 +258,44 @@ async function validate_presets(params: {
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
   const available_preset_names = all_presets.map((preset) => preset.name)
 
-  const valid_presets = params.preset_names.filter((name) =>
+  if (params.preset_names === undefined) {
+    const lastChoice = params.context.workspaceState.get<string>(
+      LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
+    )
+    if (lastChoice === 'Groups') {
+      const last_selected_group = params.context.workspaceState.get<string>(
+        LAST_SELECTED_GROUP_STATE_KEY
+      )
+      if (last_selected_group) {
+        const group_index = all_presets.findIndex(
+          (p) => p.name === last_selected_group && !p.chatbot
+        )
+        const preset_names: string[] = []
+        if (group_index !== -1) {
+          for (let i = group_index + 1; i < all_presets.length; i++) {
+            const preset = all_presets[i]
+            if (!preset.chatbot) {
+              break // next group
+            }
+            if (preset.isDefault) {
+              preset_names.push(preset.name)
+            }
+          }
+        }
+        if (preset_names.length > 0) return preset_names
+      }
+    } else if (lastChoice === 'Presets') {
+      const last_selected_item = params.context.workspaceState.get<string>(
+        LAST_SELECTED_PRESET_KEY
+      )
+      const preset = all_presets.find((p) => p.name === last_selected_item)
+      if (preset && preset.chatbot) {
+        return [preset.name]
+      }
+    }
+  }
+
+  const valid_presets = (params.preset_names || []).filter((name) =>
     available_preset_names.includes(name)
   )
 

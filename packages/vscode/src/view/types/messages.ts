@@ -53,7 +53,7 @@ export interface ReplacePresetsMessage extends BaseMessage {
 
 export interface SendPromptMessage extends BaseMessage {
   command: 'SEND_PROMPT'
-  preset_names: string[]
+  preset_names?: string[]
 }
 
 export interface CopyPromptMessage extends BaseMessage {

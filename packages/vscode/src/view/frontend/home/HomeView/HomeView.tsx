@@ -20,7 +20,7 @@ import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/compon
 import { ApiToolConfiguration } from '@/view/types/messages'
 
 type Props = {
-  initialize_chats: (params: { prompt: string; preset_names: string[] }) => void
+  initialize_chats: (params: { preset_names?: string[] }) => void
   copy_to_clipboard: (preset_name?: string) => void
   on_show_intro: () => void
   on_search_click: () => void
@@ -124,11 +124,9 @@ export const HomeView: React.FC<Props> = (props) => {
     (props.home_view_type == HOME_VIEW_TYPES.API &&
       props.api_mode == 'code-completions')
 
-  const current_prompt = props.instructions
-
   useEffect(() => {
     let estimated_tokens = 0
-    let text = current_prompt
+    let text = props.instructions
 
     if (
       text.includes('@Selection') &&
@@ -148,7 +146,7 @@ export const HomeView: React.FC<Props> = (props) => {
       set_estimated_input_tokens(props.token_count + estimated_tokens)
     }
   }, [
-    current_prompt,
+    props.instructions,
     props.home_view_type,
     props.has_active_selection,
     props.selection_text,
@@ -161,12 +159,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
   const handle_submit = async () => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
-      props.initialize_chats({
-        prompt: current_prompt,
-        preset_names: props.presets
-          .filter((p) => p.is_default)
-          .map((p) => p.name)
-      })
+      props.initialize_chats({})
     } else {
       if (is_in_code_completions_mode) {
         props.on_code_completion_click()
@@ -178,10 +171,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
   const handle_submit_with_control = async () => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
-      props.initialize_chats({
-        prompt: current_prompt,
-        preset_names: []
-      })
+      props.initialize_chats({ preset_names: [] })
     } else {
       if (is_in_code_completions_mode) {
         props.on_code_completion_with_quick_pick_click()
@@ -192,7 +182,7 @@ export const HomeView: React.FC<Props> = (props) => {
   }
 
   const handle_copy = () => {
-    props.copy_to_clipboard(current_prompt)
+    props.copy_to_clipboard(props.instructions)
   }
 
   const handle_preset_copy = (preset_name: string) => {
@@ -256,7 +246,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
           <div className={styles['chat-input']}>
             <UiChatInput
-              value={current_prompt}
+              value={props.instructions}
               chat_history={props.chat_history}
               on_change={handle_input_change}
               on_submit={handle_submit}
@@ -382,13 +372,11 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_create_preset={props.on_create_preset}
                 on_preset_click={(preset_name) => {
                   props.initialize_chats({
-                    prompt: current_prompt,
                     preset_names: [preset_name]
                   })
                 }}
                 on_group_click={(preset_names) => {
                   props.initialize_chats({
-                    prompt: current_prompt,
                     preset_names
                   })
                 }}
