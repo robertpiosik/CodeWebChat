@@ -16,7 +16,7 @@ export const natural_sort = (a: string, b: string): number => {
     const a_chunk = a_x[i] || ''
     const b_chunk = b_x[i] || ''
 
-    if (a_chunk !== b_chunk) {
+    if (a_chunk != b_chunk) {
       const a_num = parseInt(a_chunk, 10)
       const b_num = parseInt(b_chunk, 10)
 

@@ -28,22 +28,23 @@ export class FilesCollector {
     additional_paths?: string[]
     no_context?: boolean
   }): Promise<string> {
+    const additional_paths = (params?.additional_paths ?? []).map(p => {
+      if (this.workspace_roots.length > 0) {
+        return path.join(this.workspace_roots[0], p)
+      }
+      return p
+    })
+
     let context_files: string[] = []
 
     if (params?.no_context) {
-      context_files = params?.additional_paths ?? []
+      context_files = additional_paths
     } else {
       const workspace_files = this.workspace_provider.get_checked_files()
       const open_editor_files =
         this.open_editors_provider?.get_checked_files() || []
 
-      context_files = Array.from(
-        new Set([
-          ...workspace_files,
-          ...open_editor_files,
-          ...(params?.additional_paths ?? [])
-        ])
-      )
+      context_files = Array.from(new Set([...workspace_files, ...open_editor_files, ...additional_paths]))
     }
 
     context_files.sort((a, b) => natural_sort(a, b))
@@ -69,7 +70,7 @@ export class FilesCollector {
 
         const content = fs.readFileSync(file_path, 'utf8')
 
-        const workspace_root = this.get_workspace_root_for_file(file_path)
+        const workspace_root = this._get_workspace_root_for_file(file_path)
 
         if (!workspace_root) {
           collected_text += `<file path="${file_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
@@ -95,7 +96,7 @@ export class FilesCollector {
     return collected_text
   }
 
-  private get_workspace_root_for_file(file_path: string): string | undefined {
+  private _get_workspace_root_for_file(file_path: string): string | undefined {
     return this.workspace_provider.get_workspace_root_for_file(file_path)
   }
 }
