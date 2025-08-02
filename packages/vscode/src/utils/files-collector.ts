@@ -23,18 +23,35 @@ export class FilesCollector {
     this.workspace_roots = workspace_provider.getWorkspaceRoots()
   }
 
-  async collect_files(params?: { exclude_path?: string }): Promise<string> {
-    const workspace_files = this.workspace_provider.get_checked_files()
-    const open_editor_files =
-      this.open_editors_provider?.get_checked_files() || []
+  async collect_files(params?: {
+    exclude_path?: string
+    additional_paths?: string[]
+    no_context?: boolean
+  }): Promise<string> {
+    let context_files: string[] = []
 
-    const context_files = Array.from(
-      new Set([...workspace_files, ...open_editor_files])
-    ).sort((a, b) => natural_sort(a, b))
+    if (params?.no_context) {
+      context_files = params?.additional_paths ?? []
+    } else {
+      const workspace_files = this.workspace_provider.get_checked_files()
+      const open_editor_files =
+        this.open_editors_provider?.get_checked_files() || []
+
+      context_files = Array.from(
+        new Set([
+          ...workspace_files,
+          ...open_editor_files,
+          ...(params?.additional_paths ?? [])
+        ])
+      )
+    }
+
+    context_files.sort((a, b) => natural_sort(a, b))
 
     let collected_text = ''
 
-    if (this.websites_provider) {
+    // Only include websites when not in no_context mode
+    if (!params?.no_context && this.websites_provider) {
       const checked_websites = this.websites_provider.get_checked_websites()
 
       for (const website of checked_websites) {

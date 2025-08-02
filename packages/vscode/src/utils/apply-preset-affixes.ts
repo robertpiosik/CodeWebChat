@@ -1,4 +1,4 @@
-import { ConfigPresetFormat } from '@/view/backend/helpers/preset-format-converters'
+import { ConfigPresetFormat } from '@/view/backend/utils/preset-format-converters'
 import * as vscode from 'vscode'
 
 export function apply_preset_affixes_to_instruction(

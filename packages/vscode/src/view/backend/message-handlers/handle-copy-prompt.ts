@@ -65,12 +65,14 @@ export const handle_copy_prompt = async (
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_mode) {
-    const mode =
-      provider.home_view_type == HOME_VIEW_TYPES.WEB
-        ? provider.web_mode
-        : provider.api_mode
-    const context_text =
-      mode != 'no-context' ? await files_collector.collect_files() : ''
+    const additional_paths = await extract_file_paths_from_instruction(
+      final_instruction
+    )
+
+    const context_text = await files_collector.collect_files({
+      additional_paths,
+      no_context: provider.web_mode == 'no-context'
+    })
 
     const instructions = replace_selection_placeholder(final_instruction)
 
@@ -95,7 +97,7 @@ export const handle_copy_prompt = async (
       )
     }
 
-    if (mode == 'edit-context') {
+    if (provider.web_mode == 'edit-context') {
       const edit_format =
         provider.home_view_type == HOME_VIEW_TYPES.WEB
           ? provider.chat_edit_format
@@ -127,4 +129,13 @@ export const handle_copy_prompt = async (
       preset_name ? ` with preset "${preset_name}"` : ''
     } copied to clipboard!`
   )
+}
+
+async function extract_file_paths_from_instruction(
+  instruction: string
+): Promise<string[]> {
+  const matches = instruction.match(/`([^`]+)`/g)
+  if (!matches) return []
+
+  return matches.map((match) => match.slice(1, -1)) // Remove backticks
 }

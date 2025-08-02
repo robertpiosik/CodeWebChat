@@ -11,7 +11,7 @@ import {
 } from '@/constants/state-keys'
 import { replace_changes_placeholder } from '@/utils/replace-changes-placeholder'
 import { chat_code_completion_instructions } from '@/constants/instructions'
-import { ConfigPresetFormat } from '../helpers/preset-format-converters'
+import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
 /**
@@ -103,10 +103,14 @@ export const handle_send_prompt = async (params: {
   } else {
     const editor = vscode.window.activeTextEditor
 
-    const context_text =
-      params.provider.web_mode != 'no-context'
-        ? await files_collector.collect_files()
-        : ''
+    const additional_paths = await extract_file_paths_from_instruction(
+      current_instructions
+    )
+
+    const context_text = await files_collector.collect_files({
+      additional_paths,
+      no_context: params.provider.web_mode == 'no-context'
+    })
 
     const chats = await Promise.all(
       resolved_preset_names.map(async (preset_name) => {
@@ -500,4 +504,13 @@ async function resolve_presets(params: {
 
   // choice == PRESETS
   return show_preset_quick_pick(all_presets, params.context)
+}
+
+async function extract_file_paths_from_instruction(
+  instruction: string
+): Promise<string[]> {
+  const matches = instruction.match(/`([^`]+)`/g)
+  if (!matches) return []
+
+  return matches.map((match) => match.slice(1, -1)) // Remove backticks
 }

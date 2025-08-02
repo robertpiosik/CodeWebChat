@@ -259,11 +259,6 @@ export const HomeView: React.FC<Props> = (props) => {
               on_search_click={props.on_search_click}
               on_at_sign_click={props.on_at_sign_click}
               on_curly_braces_click={props.on_curly_braces_click}
-              is_in_context_dependent_mode={
-                props.home_view_type == HOME_VIEW_TYPES.WEB
-                  ? props.web_mode == 'edit-context' || props.web_mode == 'ask'
-                  : props.api_mode == 'edit-context'
-              }
               has_context={props.token_count > 0}
               is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
               is_connected={props.is_connected}
@@ -283,7 +278,6 @@ export const HomeView: React.FC<Props> = (props) => {
                   'Remove text selection',
                 code_completions_mode_unavailable_without_active_editor:
                   'Place cursor for completion',
-                mode_unavailable_without_context: 'Select files for context',
                 search: 'Search history',
                 websocket_not_connected:
                   'Install or reload the browser extension',

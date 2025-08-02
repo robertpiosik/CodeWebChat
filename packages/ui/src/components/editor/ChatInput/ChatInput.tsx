@@ -14,7 +14,6 @@ type Props = {
   token_count?: number
   is_connected: boolean
   is_in_code_completions_mode: boolean
-  is_in_context_dependent_mode: boolean
   has_active_selection: boolean
   has_active_editor: boolean
   on_caret_position_change: (caret_position: number) => void
@@ -32,7 +31,6 @@ type Props = {
     select_config: string
     code_completions_mode_unavailable_with_text_selection: string
     code_completions_mode_unavailable_without_active_editor: string
-    mode_unavailable_without_context: string
     search: string
     websocket_not_connected: string
     for_history_hint: string
@@ -295,20 +293,11 @@ export const ChatInput: React.FC<Props> = (props) => {
         </div>
       )}
 
-      {!props.has_context && props.is_in_context_dependent_mode && (
-        <div className={styles.error}>
-          <div className={styles.error__inner}>
-            {props.translations.mode_unavailable_without_context}
-          </div>
-        </div>
-      )}
-
       <div
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]:
-            (props.is_in_code_completions_mode &&
-              (props.has_active_selection || !props.has_active_editor)) ||
-            (!props.has_context && props.is_in_context_dependent_mode)
+            props.is_in_code_completions_mode &&
+            (props.has_active_selection || !props.has_active_editor)
         })}
         onKeyDown={(e) => {
           if (e.key == 'f' && (e.ctrlKey || e.metaKey)) {

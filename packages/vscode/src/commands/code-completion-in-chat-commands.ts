@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { FilesCollector } from '../utils/files-collector'
 import { WebSocketManager } from '../services/websocket-manager'
-import { ConfigPresetFormat } from '@/view/backend/helpers/preset-format-converters'
+import { ConfigPresetFormat } from '@/view/backend/utils/preset-format-converters'
 import { chat_code_completion_instructions } from '../constants/instructions'
 import { CHATBOTS } from '@shared/constants/chatbots'
 

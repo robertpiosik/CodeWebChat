@@ -15,14 +15,16 @@ const translations = {
     'Code completions mode unavailable with text selection',
   code_completions_mode_unavailable_without_active_editor:
     'Code completions mode unavailable without active editor',
-  mode_unavailable_without_context: 'This mode requires context',
   search: 'Search',
   websocket_not_connected: 'Websocket not connected',
   for_history_hint: 'for history hint',
   copy_to_clipboard: 'Copy to clipboard',
   insert_symbol: 'Insert symbol',
   prompt_templates: 'Prompt templates',
-  approximate_token_count: 'Approximate token count'
+  approximate_token_count: 'Approximate token count',
+  last_selection: 'Last selection',
+  use_default: 'Use default',
+  select: 'Select'
 }
 
 export const Empty = () => (
@@ -44,7 +46,6 @@ export const Empty = () => (
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -67,7 +68,6 @@ export const WithText = () => (
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -90,7 +90,6 @@ export const DisabledSubmit = () => (
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -113,7 +112,6 @@ export const MultilineText = () => (
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -136,7 +134,6 @@ export const LongText = () => (
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -160,7 +157,6 @@ export const WithTokenCount = () => (
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -184,7 +180,6 @@ export const WithLargeTokenCount = () => (
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -207,7 +202,6 @@ export const CodeCompletionsMode = () => (
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -230,7 +224,6 @@ export const WithActiveSelection = () => (
     translations={translations}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -253,7 +246,6 @@ export const WithSavedContextPlaceholder = () => (
     translations={translations}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -276,7 +268,6 @@ export const WithActiveSelectionAndPlaceholder = () => (
     translations={translations}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )
 
@@ -299,6 +290,5 @@ export const WithPlaceholderNoSelection = () => (
     translations={translations}
     on_curly_braces_click={() => {}}
     has_context={true}
-    is_in_context_dependent_mode={true}
   />
 )

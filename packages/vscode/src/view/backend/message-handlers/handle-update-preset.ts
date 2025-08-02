@@ -5,7 +5,7 @@ import { Preset } from '@shared/types/preset'
 import {
   ConfigPresetFormat,
   ui_preset_to_config_format
-} from '@/view/backend/helpers/preset-format-converters'
+} from '@/view/backend/utils/preset-format-converters'
 
 export const handle_update_preset = async (
   provider: ViewProvider,

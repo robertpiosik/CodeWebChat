@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { DuplicatePresetMessage } from '@/view/types/messages'
-import { ConfigPresetFormat } from '@/view/backend/helpers/preset-format-converters'
+import { ConfigPresetFormat } from '@/view/backend/utils/preset-format-converters'
 
 export const handle_duplicate_preset = async (
   provider: ViewProvider,
