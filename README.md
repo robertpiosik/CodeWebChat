@@ -84,12 +84,12 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 ### Context
 
 - `Code Web Chat: Copy Context` - Copy selected files and websites to clipboard.
-- `Code Web Chat: Apply Context from Clipboard` - Sets the context by parsing file paths from clipboard text.
+- `Code Web Chat: Apply Context from Clipboard` - Find file paths in the clipboard text.
 
 ### Code completions
 
 - `Code Web Chat: Code Completion` - Get code at cursor using API tool.
-- `Code Web Chat: Code Completion to Clipboard` - Copy above prompt to clipboard.
+- `Code Web Chat: Code Completion to Clipboard` - Copy the code completion prompt to clipboard.
 
 ### Version Control
 
