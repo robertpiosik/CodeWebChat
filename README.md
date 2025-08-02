@@ -76,19 +76,6 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Commands</span>
 
-### Code completions
-
-- `Code Web Chat: Code Completion` - Get inline autocompletion at the cursor position.
-- `Code Web Chat: Code Completion with Instructions` - Get inline autocompletion at the cursor position that follows given instructions.
-- `Code Web Chat: Code Completion to Clipboard` - Copy inline autocompletion prompt to clipboard.
-- `Code Web Chat: Code Completion with Instructions to Clipboard` - Copy inline autocompletion with instructions prompt to clipboard.
-- `Code Web Chat: Code Completion in Chat` - Use chatbot for code completion.
-- `Code Web Chat: Code Completion in Chat with...` - Use chatbot for code completion with selected preset.
-
-### Editing context
-
-- `Code Web Chat: Edit Context` - Create and modify files in context based on natural language instructions.
-
 ### Handling AI responses
 
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied overall chat response or a single code block.
@@ -98,6 +85,11 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 - `Code Web Chat: Copy Context` - Copy selected files and websites to clipboard.
 - `Code Web Chat: Apply Context from Clipboard` - Sets the context by parsing file paths from clipboard text.
+
+### Code completions
+
+- `Code Web Chat: Code Completion` - Get code at cursor using API tool.
+- `Code Web Chat: Code Completion to Clipboard` - Copy above prompt to clipboard.
 
 ### Version Control
 

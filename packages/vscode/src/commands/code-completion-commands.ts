@@ -563,18 +563,6 @@ export function code_completion_commands(
         })
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithInstructions',
-      async () =>
-        perform_code_completion({
-          file_tree_provider,
-          open_editors_provider,
-          context,
-          with_completion_instructions: true,
-          auto_accept: false,
-          show_quick_pick: false
-        })
-    ),
-    vscode.commands.registerCommand(
       'codeWebChat.codeCompletionWithInstructionsAutoAccept',
       async (args?: { completion_instructions?: string }) =>
         perform_code_completion({
@@ -625,17 +613,5 @@ export function code_completion_commands(
           completion_instructions: args?.completion_instructions
         })
     ),
-    vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithInstructionsUsing',
-      async () =>
-        perform_code_completion({
-          file_tree_provider,
-          open_editors_provider,
-          context,
-          with_completion_instructions: true,
-          auto_accept: false,
-          show_quick_pick: true
-        })
-    )
   ]
 }

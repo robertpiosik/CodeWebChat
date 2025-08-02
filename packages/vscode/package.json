@@ -215,11 +215,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithInstructionsUsing",
-        "title": "Code Completion with Instructions using...",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.codeCompletionWithInstructionsUsingAutoAccept",
         "title": "Code Completion with Instructions using...",
         "category": "Code Web Chat"
