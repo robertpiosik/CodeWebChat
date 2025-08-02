@@ -1,7 +1,7 @@
 import { ViewProvider } from '@/view/backend/view-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
-import { replace_selection_placeholder } from '@/utils/replace-selection-placeholder'
+import { replace_selection_placeholder } from '@/view/backend/utils/replace-selection-placeholder'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import {
@@ -9,7 +9,7 @@ import {
   LAST_SELECTED_GROUP_STATE_KEY,
   LAST_SELECTED_PRESET_KEY
 } from '@/constants/state-keys'
-import { replace_changes_placeholder } from '@/utils/replace-changes-placeholder'
+import { replace_changes_placeholder } from '@/view/backend/utils/replace-changes-placeholder'
 import { chat_code_completion_instructions } from '@/constants/instructions'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'

@@ -10,9 +10,9 @@ import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY } from '@/constants/s
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/api-providers-manager'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
-import { replace_changes_placeholder } from '@/utils/replace-changes-placeholder'
+import { replace_changes_placeholder } from '@/view/backend/utils/replace-changes-placeholder'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
-import { replace_selection_placeholder } from '@/utils/replace-selection-placeholder'
+import { replace_selection_placeholder } from '@/view/backend/utils/replace-selection-placeholder'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { EditContextMessage } from '@/view/types/messages'
 
