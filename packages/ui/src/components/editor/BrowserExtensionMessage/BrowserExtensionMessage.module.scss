@@ -21,13 +21,19 @@
 
 .links {
   display: flex;
-  gap: var(--padding-10px);
+  flex-wrap: wrap;
+  gap: var(--padding-4px);
 
   > a {
     color: var(--vscode-inputOption-activeForeground);
     display: flex;
     gap: var(--padding-4px);
     align-items: center;
+    white-space: nowrap;
+    
+    &:first-child {
+      padding-right: var(--padding-6px);
+    }
 
     > span:first-child {
       font-size: var(--font-size-15px);

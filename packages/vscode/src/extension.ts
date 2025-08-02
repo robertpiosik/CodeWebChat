@@ -105,7 +105,6 @@ export async function activate(context: vscode.ExtensionContext) {
       context
     ),
     code_completion_to_clipboard_command(
-      context,
       workspace_provider,
       open_editors_provider
     ),

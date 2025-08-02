@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import { FilesCollector } from '../utils/files-collector'
 
 async function perform_code_completion_to_clipboard(
-  context: vscode.ExtensionContext,
   file_tree_provider: any,
   open_editors_provider: any
 ) {
@@ -52,7 +51,6 @@ async function perform_code_completion_to_clipboard(
 }
 
 export function code_completion_to_clipboard_command(
-  context: vscode.ExtensionContext,
   file_tree_provider: any,
   open_editors_provider?: any
 ) {
@@ -60,7 +58,6 @@ export function code_completion_to_clipboard_command(
     'codeWebChat.codeCompletionToClipboard',
     async () => {
       await perform_code_completion_to_clipboard(
-        context,
         file_tree_provider,
         open_editors_provider
       )
