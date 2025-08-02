@@ -14,6 +14,10 @@ import { chat_code_completion_instructions } from '@/constants/instructions'
 import { ConfigPresetFormat } from '../helpers/preset-format-converters'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
+/**
+ * When preset_names is an emtpy stirng - show quick pick,
+ * if undefiend - use recently used preset/group.
+ */
 export const handle_send_prompt = async (params: {
   provider: ViewProvider
   preset_names?: string[]
@@ -278,7 +282,10 @@ async function resolve_presets(params: {
       const last_preset = params.context.workspaceState.get<string>(
         LAST_SELECTED_PRESET_KEY
       )
-      if (last_preset && available_preset_names.includes(last_preset)) {
+      if (
+        last_preset !== undefined &&
+        available_preset_names.includes(last_preset)
+      ) {
         return [last_preset]
       }
     } else if (last_choice == GROUP) {

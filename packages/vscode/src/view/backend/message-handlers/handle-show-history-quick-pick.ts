@@ -80,7 +80,8 @@ export const handle_show_history_quick_pick = async (
     total_pinned?: number,
     is_searching?: boolean
   ): vscode.QuickPickItem => ({
-    label: dayjs(entry.createdAt).fromNow(),
+    label: '$(history)',
+    description: dayjs(entry.createdAt).fromNow(),
     detail: entry.text,
     buttons: [
       ...(list == 'pinned' &&
@@ -112,16 +113,13 @@ export const handle_show_history_quick_pick = async (
         ? [
             {
               iconPath: new vscode.ThemeIcon('pinned'),
-              tooltip: 'Add to Pinned Prompts'
+              tooltip: 'Add to pinned'
             }
           ]
         : []),
       {
         iconPath: new vscode.ThemeIcon('close'),
-        tooltip:
-          list == 'pinned'
-            ? 'Remove from Pinned Prompts'
-            : 'Remove from Recent Prompts'
+        tooltip: list == 'pinned' ? 'Remove from pinned' : 'Remove from recent'
       }
     ]
   })
