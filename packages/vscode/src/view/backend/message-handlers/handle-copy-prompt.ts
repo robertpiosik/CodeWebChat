@@ -8,33 +8,33 @@ import { chat_code_completion_instructions } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { HOME_VIEW_TYPES } from '@/view/types/home-view-type'
 
-export const handle_copy_prompt = async (
-  provider: ViewProvider,
-  instructions: string,
+export const handle_copy_prompt = async (params: {
+  provider: ViewProvider
+  instructions: string
   preset_name?: string
-): Promise<void> => {
+}): Promise<void> => {
   const files_collector = new FilesCollector(
-    provider.workspace_provider,
-    provider.open_editors_provider,
-    provider.websites_provider
+    params.provider.workspace_provider,
+    params.provider.open_editors_provider,
+    params.provider.websites_provider
   )
 
   const active_editor = vscode.window.activeTextEditor
 
-  let final_instruction = instructions
-  if (preset_name !== undefined) {
+  let final_instruction = params.instructions
+  if (params.preset_name !== undefined) {
     final_instruction = apply_preset_affixes_to_instruction(
-      instructions,
-      preset_name,
-      provider.get_presets_config_key()
+      params.instructions,
+      params.preset_name,
+      params.provider.get_presets_config_key()
     )
   }
 
   const is_in_code_completions_mode =
-    (provider.home_view_type == HOME_VIEW_TYPES.WEB &&
-      provider.web_mode == 'code-completions') ||
-    (provider.home_view_type == HOME_VIEW_TYPES.API &&
-      provider.api_mode == 'code-completions')
+    (params.provider.home_view_type == HOME_VIEW_TYPES.WEB &&
+      params.provider.web_mode == 'code-completions') ||
+    (params.provider.home_view_type == HOME_VIEW_TYPES.API &&
+      params.provider.api_mode == 'code-completions')
 
   if (is_in_code_completions_mode && active_editor) {
     const document = active_editor.document
@@ -71,7 +71,7 @@ export const handle_copy_prompt = async (
 
     const context_text = await files_collector.collect_files({
       additional_paths,
-      no_context: provider.web_mode == 'no-context'
+      no_context: params.provider.web_mode == 'no-context'
     })
 
     const instructions = replace_selection_placeholder(final_instruction)
@@ -86,22 +86,22 @@ export const handle_copy_prompt = async (
     if (instructions.includes('@SavedContext:')) {
       pre_context_instructions = await replace_saved_context_placeholder(
         pre_context_instructions,
-        provider.context,
-        provider.workspace_provider
+        params.provider.context,
+        params.provider.workspace_provider
       )
       post_context_instructions = await replace_saved_context_placeholder(
         post_context_instructions,
-        provider.context,
-        provider.workspace_provider,
+        params.provider.context,
+        params.provider.workspace_provider,
         true
       )
     }
 
-    if (provider.web_mode == 'edit-context') {
+    if (params.provider.web_mode == 'edit-context') {
       const edit_format =
-        provider.home_view_type == HOME_VIEW_TYPES.WEB
-          ? provider.chat_edit_format
-          : provider.api_edit_format
+        params.provider.home_view_type == HOME_VIEW_TYPES.WEB
+          ? params.provider.chat_edit_format
+          : params.provider.api_edit_format
       const all_instructions = vscode.workspace
         .getConfiguration('codeWebChat')
         .get<{ [key: string]: string }>('editFormatInstructions')
@@ -126,7 +126,7 @@ export const handle_copy_prompt = async (
 
   vscode.window.showInformationMessage(
     `Prompt${
-      preset_name ? ` with preset "${preset_name}"` : ''
+      params.preset_name ? ` with preset "${params.preset_name}"` : ''
     } copied to clipboard!`
   )
 }

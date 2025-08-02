@@ -273,16 +273,16 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SEND_PROMPT') {
             await handle_send_prompt({
               provider: this,
-              preset_names: message.preset_names,
+              preset_names: message.preset_names
             })
           } else if (message.command == 'PREVIEW_PRESET') {
             await handle_preview_preset(this, message)
           } else if (message.command == 'COPY_PROMPT') {
-            await handle_copy_prompt(
-              this,
-              message.instructions,
-              message.preset_name
-            )
+            await handle_copy_prompt({
+              provider: this,
+              instructions: message.instructions,
+              preset_name: message.preset_name
+            })
           } else if (message.command == 'REQUEST_EDITOR_STATE') {
             handle_request_editor_state(this)
           } else if (message.command == 'REQUEST_EDITOR_SELECTION_STATE') {
