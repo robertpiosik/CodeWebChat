@@ -11,54 +11,7 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '../constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/api-providers-manager'
-
-async function build_completion_payload(params: {
-  document: vscode.TextDocument
-  position: vscode.Position
-  file_tree_provider: any
-  open_editors_provider?: any
-  completion_instructions?: string
-}): Promise<string> {
-  const document_path = params.document.uri.fsPath
-  const text_before_cursor = params.document.getText(
-    new vscode.Range(new vscode.Position(0, 0), params.position)
-  )
-  const text_after_cursor = params.document.getText(
-    new vscode.Range(
-      params.position,
-      params.document.positionAt(params.document.getText().length)
-    )
-  )
-
-  const files_collector = new FilesCollector(
-    params.file_tree_provider,
-    params.open_editors_provider
-  )
-
-  const additional_paths = params.completion_instructions
-    ? extract_file_paths_from_instruction(params.completion_instructions)
-    : []
-
-  const context_text = await files_collector.collect_files({
-    exclude_path: document_path,
-    additional_paths
-  })
-
-  const payload = {
-    before: `<files>\n${context_text}<file path="${vscode.workspace.asRelativePath(
-      params.document.uri
-    )}">\n<![CDATA[\n${text_before_cursor}`,
-    after: `${text_after_cursor}\n]]>\n</file>\n</files>`
-  }
-
-  const instructions = `${code_completion_instructions}${
-    params.completion_instructions
-      ? ` Follow instructions: ${params.completion_instructions}`
-      : ''
-  }`
-
-  return `${instructions}\n${payload.before}<missing text>${payload.after}\n${instructions}`
-}
+import { replace_saved_context_placeholder } from '../utils/replace-saved-context-placeholder'
 
 /**
  * Show inline completion using Inline Completions API
@@ -365,6 +318,25 @@ async function perform_code_completion(params: {
     )
   }
 
+  let pre_completion_instructions = completion_instructions
+  let post_completion_instructions = completion_instructions
+  if (
+    completion_instructions &&
+    completion_instructions.includes('@SavedContext:')
+  ) {
+    pre_completion_instructions = await replace_saved_context_placeholder(
+      completion_instructions,
+      params.context,
+      params.file_tree_provider
+    )
+    post_completion_instructions = await replace_saved_context_placeholder(
+      completion_instructions,
+      params.context,
+      params.file_tree_provider,
+      true
+    )
+  }
+
   const config_result = await get_code_completion_config(
     api_providers_manager,
     params.show_quick_pick,
@@ -429,13 +401,48 @@ async function perform_code_completion(params: {
     const document = editor.document
     const position = editor.selection.active
 
-    const content = await build_completion_payload({
-      document,
-      position,
-      file_tree_provider: params.file_tree_provider,
-      open_editors_provider: params.open_editors_provider,
-      completion_instructions
+    const document_path = document.uri.fsPath
+    const text_before_cursor = document.getText(
+      new vscode.Range(new vscode.Position(0, 0), position)
+    )
+    const text_after_cursor = document.getText(
+      new vscode.Range(position, document.positionAt(document.getText().length))
+    )
+
+    const files_collector = new FilesCollector(
+      params.file_tree_provider,
+      params.open_editors_provider
+    )
+
+    const additional_paths = completion_instructions
+      ? extract_file_paths_from_instruction(completion_instructions)
+      : []
+
+    const context_text = await files_collector.collect_files({
+      exclude_path: document_path,
+      additional_paths
     })
+
+    const payload = {
+      before: `<files>\n${context_text}<file path="${vscode.workspace.asRelativePath(
+        document.uri
+      )}">\n<![CDATA[\n${text_before_cursor}`,
+      after: `${text_after_cursor}\n]]>\n</file>\n</files>`
+    }
+
+    const pre_instructions = `${code_completion_instructions}${
+      pre_completion_instructions
+        ? ` Follow instructions: ${pre_completion_instructions}`
+        : ''
+    }`
+
+    const post_instructions = `${code_completion_instructions}${
+      post_completion_instructions
+        ? ` Follow instructions: ${post_completion_instructions}`
+        : ''
+    }`
+
+    const content = `${pre_instructions}\n${payload.before}<missing text>${payload.after}\n${post_instructions}`
 
     const messages = [
       {

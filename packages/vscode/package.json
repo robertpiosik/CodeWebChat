@@ -245,16 +245,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.editContext",
-        "title": "Edit Context",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.editContextUsing",
-        "title": "Edit Context using...",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.newFolder",
         "title": "New Folder...",
         "icon": "$(new-folder)"
