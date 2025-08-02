@@ -16,12 +16,6 @@ import {
 import {
   apply_chat_response_command,
   code_completion_commands,
-  edit_context_in_chat_command,
-  ask_about_context_command,
-  ask_about_context_using_command,
-  no_context_chat_command,
-  no_context_chat_using_command,
-  edit_context_in_chat_using_command,
   edit_context_to_clipboard_command,
   close_editor_command,
   close_all_editors_command,
@@ -135,42 +129,6 @@ export async function activate(context: vscode.ExtensionContext) {
       websocket_server_instance
     ),
     code_completion_in_chat_with_command(
-      context,
-      workspace_provider,
-      open_editors_provider,
-      websocket_server_instance
-    ),
-    edit_context_in_chat_command(
-      context,
-      workspace_provider,
-      open_editors_provider,
-      websocket_server_instance
-    ),
-    edit_context_in_chat_using_command(
-      context,
-      workspace_provider,
-      open_editors_provider,
-      websocket_server_instance
-    ),
-    ask_about_context_command(
-      context,
-      workspace_provider,
-      open_editors_provider,
-      websocket_server_instance
-    ),
-    ask_about_context_using_command(
-      context,
-      workspace_provider,
-      open_editors_provider,
-      websocket_server_instance
-    ),
-    no_context_chat_command(
-      context,
-      workspace_provider,
-      open_editors_provider,
-      websocket_server_instance
-    ),
-    no_context_chat_using_command(
       context,
       workspace_provider,
       open_editors_provider,

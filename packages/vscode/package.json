@@ -275,16 +275,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.noContextChat",
-        "title": "No context chat",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.noContextChatUsing",
-        "title": "No context chat using...",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.editContextToClipboard",
         "title": "Edit Context to Clipboard",
         "category": "Code Web Chat"

@@ -94,16 +94,6 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied overall chat response or a single code block.
 - `Code Web Chat: Revert Last Changes` - Revert above command.
 
-### Chat
-
-- `Code Web Chat: Edit Context in Chat` - Type instructions and open chatbot with default preset.
-- `Code Web Chat: Edit Context in Chat using...` - Same as above, but with preset selection.
-- `Code Web Chat: Edit Context to Clipboard` - Enter instructions and copy prompt to clipboard.
-- `Code Web Chat: Ask about Context` - Type instructions and open chatbot with context but without edit format instructions.
-- `Code Web Chat: Ask about Context using...` - Same as above, but with preset selection.
-- `Code Web Chat: No context chat` - Open chatbot without any context.
-- `Code Web Chat: No context chat using...` - Same as above, but with preset selection.
-
 ### Context
 
 - `Code Web Chat: Copy Context` - Copy selected files and websites to clipboard.
