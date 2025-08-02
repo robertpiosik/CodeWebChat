@@ -1,31 +1,15 @@
 import * as vscode from 'vscode'
 import { FilesCollector } from '../utils/files-collector'
-import { chat_code_completion_instructions } from '../constants/instructions'
-import { replace_saved_context_placeholder } from '../utils/replace-saved-context-placeholder'
 
 async function perform_code_completion_to_clipboard(
   context: vscode.ExtensionContext,
   file_tree_provider: any,
-  open_editors_provider: any,
-  with_instructions: boolean = false
+  open_editors_provider: any
 ) {
   const editor = vscode.window.activeTextEditor
   if (!editor) {
     vscode.window.showErrorMessage('No active editor found.')
     return
-  }
-
-  let completion_instructions: string | undefined
-  if (with_instructions) {
-    completion_instructions = await vscode.window.showInputBox({
-      placeHolder: 'Completion instructions',
-      prompt: 'E.g. "Include explanatory comments".'
-    })
-
-    // If user cancels the input box (not the same as empty input), return
-    if (completion_instructions === undefined) {
-      return
-    }
   }
 
   const document = editor.document
@@ -56,38 +40,7 @@ async function perform_code_completion_to_clipboard(
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const base_instructions = chat_code_completion_instructions(
-      relative_path,
-      position.line,
-      position.character
-    )
-
-    let pre_instructions = base_instructions
-    let post_instructions = base_instructions
-
-    if (with_instructions && completion_instructions) {
-      if (completion_instructions.includes('@SavedContext:')) {
-        const pre_user_instructions = await replace_saved_context_placeholder(
-          completion_instructions,
-          context,
-          file_tree_provider
-        )
-        const post_user_instructions = await replace_saved_context_placeholder(
-          completion_instructions,
-          context,
-          file_tree_provider,
-          true
-        )
-        pre_instructions += ` Follow instructions: ${pre_user_instructions}`
-        post_instructions += ` Follow instructions: ${post_user_instructions}`
-      } else {
-        const user_instructions_part = ` Follow instructions: ${completion_instructions}`
-        pre_instructions += user_instructions_part
-        post_instructions += user_instructions_part
-      }
-    }
-
-    const content = `${pre_instructions}\n${payload.before}<missing text>${payload.after}\n${post_instructions}`
+    const content = `${payload.before}<missing text>${payload.after}`
 
     await vscode.env.clipboard.writeText(content)
     vscode.window.showInformationMessage(
@@ -109,26 +62,7 @@ export function code_completion_to_clipboard_command(
       await perform_code_completion_to_clipboard(
         context,
         file_tree_provider,
-        open_editors_provider,
-        false
-      )
-    }
-  )
-}
-
-export function code_completion_with_instructions_to_clipboard_command(
-  context: vscode.ExtensionContext,
-  file_tree_provider: any,
-  open_editors_provider?: any
-) {
-  return vscode.commands.registerCommand(
-    'codeWebChat.codeCompletionWithInstructionsToClipboard',
-    async () => {
-      await perform_code_completion_to_clipboard(
-        context,
-        file_tree_provider,
-        open_editors_provider,
-        true
+        open_editors_provider
       )
     }
   )

@@ -29,7 +29,6 @@ import {
   generate_commit_message_command,
   commit_changes_command,
   code_completion_to_clipboard_command,
-  code_completion_with_instructions_to_clipboard_command,
   reference_in_chat_command,
   open_settings_command,
   open_url_command,
@@ -106,11 +105,6 @@ export async function activate(context: vscode.ExtensionContext) {
       context
     ),
     code_completion_to_clipboard_command(
-      context,
-      workspace_provider,
-      open_editors_provider
-    ),
-    code_completion_with_instructions_to_clipboard_command(
       context,
       workspace_provider,
       open_editors_provider

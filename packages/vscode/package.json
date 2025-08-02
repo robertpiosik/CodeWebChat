@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC)",
   "description": "Free AI coding for everyone",
-  "version": "1.224.0",
+  "version": "1.225.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -222,11 +222,6 @@
       {
         "command": "codeWebChat.codeCompletionToClipboard",
         "title": "Code Completion to Clipboard",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.codeCompletionWithInstructionsToClipboard",
-        "title": "Code Completion with Instructions to Clipboard",
         "category": "Code Web Chat"
       },
       {
