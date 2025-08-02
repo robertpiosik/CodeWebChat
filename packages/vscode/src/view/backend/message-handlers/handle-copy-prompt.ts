@@ -7,6 +7,7 @@ import { replace_saved_context_placeholder } from '@/utils/replace-saved-context
 import { chat_code_completion_instructions } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { HOME_VIEW_TYPES } from '@/view/types/home-view-type'
+import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 
 export const handle_copy_prompt = async (params: {
   provider: ViewProvider
@@ -65,7 +66,7 @@ export const handle_copy_prompt = async (params: {
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_mode) {
-    const additional_paths = await extract_file_paths_from_instruction(
+    const additional_paths = extract_file_paths_from_instruction(
       final_instruction
     )
 
@@ -129,13 +130,4 @@ export const handle_copy_prompt = async (params: {
       params.preset_name ? ` with preset "${params.preset_name}"` : ''
     } copied to clipboard!`
   )
-}
-
-async function extract_file_paths_from_instruction(
-  instruction: string
-): Promise<string[]> {
-  const matches = instruction.match(/`([^`]+)`/g)
-  if (!matches) return []
-
-  return matches.map((match) => match.slice(1, -1)) // Remove backticks
 }

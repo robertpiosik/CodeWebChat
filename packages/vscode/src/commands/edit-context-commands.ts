@@ -9,6 +9,7 @@ import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/api-providers-manager'
+import { extract_file_paths_from_instruction } from '../utils/extract-file-paths-from-instruction'
 
 const get_edit_context_config = async (
   api_providers_manager: ApiProvidersManager,
@@ -258,18 +259,6 @@ const perform_context_editing = async (params: {
     selected_text = editor.document.getText(selection)
   }
 
-  const files_collector = new FilesCollector(
-    params.file_tree_provider,
-    params.open_editors_provider
-  )
-
-  const collected_files = await files_collector.collect_files()
-
-  if (!collected_files) {
-    vscode.window.showErrorMessage('Unable to work with empty context.')
-    return
-  }
-
   let instructions: string | undefined
 
   if (params.instructions) {
@@ -302,6 +291,22 @@ const perform_context_editing = async (params: {
   }
 
   if (!instructions) {
+    return
+  }
+
+  const files_collector = new FilesCollector(
+    params.file_tree_provider,
+    params.open_editors_provider
+  )
+
+  const additional_paths = extract_file_paths_from_instruction(instructions)
+
+  const collected_files = await files_collector.collect_files({
+    additional_paths
+  })
+
+  if (!collected_files) {
+    vscode.window.showErrorMessage('Unable to work with empty context.')
     return
   }
 

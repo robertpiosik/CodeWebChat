@@ -3,6 +3,7 @@ import axios from 'axios'
 import { make_api_request } from '../utils/make-api-request'
 import { code_completion_instructions } from '../constants/instructions'
 import { FilesCollector } from '../utils/files-collector'
+import { extract_file_paths_from_instruction } from '../utils/extract-file-paths-from-instruction'
 import { ApiProvidersManager } from '../services/api-providers-manager'
 import { Logger } from '../utils/logger'
 import he from 'he'
@@ -34,8 +35,13 @@ async function build_completion_payload(params: {
     params.open_editors_provider
   )
 
+  const additional_paths = params.completion_instructions
+    ? extract_file_paths_from_instruction(params.completion_instructions)
+    : []
+
   const context_text = await files_collector.collect_files({
-    exclude_path: document_path
+    exclude_path: document_path,
+    additional_paths
   })
 
   const payload = {
@@ -257,7 +263,9 @@ async function get_code_completion_config(
             )
             quick_pick.items = await create_items()
           } else if (event.button === unset_default_button) {
-            await api_providers_manager.set_default_code_completions_config(null)
+            await api_providers_manager.set_default_code_completions_config(
+              null
+            )
             quick_pick.items = await create_items()
           }
         })

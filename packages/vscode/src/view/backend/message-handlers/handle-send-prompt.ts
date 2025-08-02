@@ -12,6 +12,7 @@ import {
 import { replace_changes_placeholder } from '@/utils/replace-changes-placeholder'
 import { chat_code_completion_instructions } from '@/constants/instructions'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
+import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
 /**
@@ -103,7 +104,7 @@ export const handle_send_prompt = async (params: {
   } else {
     const editor = vscode.window.activeTextEditor
 
-    const additional_paths = await extract_file_paths_from_instruction(
+    const additional_paths = extract_file_paths_from_instruction(
       current_instructions
     )
 
@@ -504,13 +505,4 @@ async function resolve_presets(params: {
 
   // choice == PRESETS
   return show_preset_quick_pick(all_presets, params.context)
-}
-
-async function extract_file_paths_from_instruction(
-  instruction: string
-): Promise<string[]> {
-  const matches = instruction.match(/`([^`]+)`/g)
-  if (!matches) return []
-
-  return matches.map((match) => match.slice(1, -1)) // Remove backticks
 }
