@@ -54,10 +54,6 @@
       }
     }
 
-    &--ungrouped {
-      padding: 0 var(--padding-12px) 0 33px;
-    }
-
     &__left {
       display: flex;
       align-items: center;
@@ -68,13 +64,16 @@
       position: relative;
 
       &__drag_handle {
-        display: flex;
-        align-items: center;
         cursor: grab;
         opacity: 0.5;
 
         &:active {
           cursor: grabbing;
+        }
+
+        &--disabled {
+          opacity: 0.3;
+          cursor: auto
         }
       }
 

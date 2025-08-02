@@ -128,10 +128,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
         : props.translations.initialize_chat_with_preset
     } else if (props.is_in_context_dependent_mode && !props.has_context) {
       return props.translations.add_files_to_context_first
-    } else if (
-      !props.is_in_code_completions_mode &&
-      !props.has_instructions
-    ) {
+    } else if (!props.is_in_code_completions_mode && !props.has_instructions) {
       return props.translations.type_or_add_prompt_to_use_preset
     }
     return props.translations.initialize_chat_with_preset
@@ -160,10 +157,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               const preset_names: string[] = []
               for (const preset of props.presets) {
                 if (!preset.chatbot) break
-                if (
-                  preset.is_default &&
-                  !get_is_preset_disabled(preset)
-                ) {
+                if (preset.is_default && !get_is_preset_disabled(preset)) {
                   preset_names.push(preset.name)
                 }
               }
@@ -173,6 +167,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             title={get_ungrouped_title()}
           >
             <div className={styles.presets__item__left}>
+              <div
+                className={cn(
+                  styles.presets__item__left__drag_handle,
+                  styles['presets__item__left__drag_handle--disabled']
+                )}
+              >
+                <span className="codicon codicon-gripper" />
+              </div>
               <div className={styles.presets__item__left__text}>Ungrouped</div>
             </div>
           </div>

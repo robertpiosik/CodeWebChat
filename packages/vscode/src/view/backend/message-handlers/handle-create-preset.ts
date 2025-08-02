@@ -14,11 +14,11 @@ export const handle_create_preset = async (
     [
       {
         label: 'Preset',
-        description: 'A web chat tailored to your needs'
+        description: 'Your favorite chatbot, preconfigured'
       },
       {
         label: 'Group',
-        description: 'Keep related presets together'
+        description: 'Simultaneous initializatoins of selected presets'
       }
     ],
     {
