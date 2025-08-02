@@ -16,7 +16,7 @@ export async function at_sign_quick_pick(
     },
     {
       label: '@Changes',
-      description: 'Changes between the current branch and the selected branch'
+      description: 'Diff between the current branch and the selected branch'
     },
     {
       label: '@SavedContext',
