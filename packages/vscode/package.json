@@ -240,43 +240,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionInChat",
-        "title": "Code Completion in Chat",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.codeCompletionInChatUsing",
-        "title": "Code Completion in Chat using...",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.applyChatResponse",
         "title": "Apply Chat Response",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.editContextInChat",
-        "title": "Edit Context in Chat",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.editContextInChatUsing",
-        "title": "Edit Context in Chat using...",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.askAboutContext",
-        "title": "Ask about Context",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.askAboutContextUsing",
-        "title": "Ask about Context using...",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.editContextToClipboard",
-        "title": "Edit Context to Clipboard",
         "category": "Code Web Chat"
       },
       {
