@@ -39,7 +39,6 @@ export const Multiple = () => {
       has_instructions={true}
       is_in_code_completions_mode={false}
       has_context={true}
-      is_in_context_dependent_mode={true}
       web_mode="edit-context"
       translations={{
         my_chat_presets: 'My Chat Presets',
@@ -51,7 +50,6 @@ export const Multiple = () => {
         preset_cannot_be_used_with_selection:
           'Preset cannot be used with an active selection',
         initialize_chat_with_preset: 'Initialize chat with this preset',
-        add_files_to_context_first: 'Add files to context first',
         type_or_add_prompt_to_use_preset:
           'Type or add a prompt to use this preset',
         copy_to_clipboard: 'Copy to clipboard',
@@ -89,7 +87,6 @@ export const CodeCompletionsMode = () => {
       has_instructions={true}
       is_in_code_completions_mode={false}
       has_context={true}
-      is_in_context_dependent_mode={true}
       web_mode="edit-context"
       translations={{
         my_chat_presets: 'My Chat Presets',
@@ -101,7 +98,6 @@ export const CodeCompletionsMode = () => {
         preset_cannot_be_used_with_selection:
           'Preset cannot be used with an active selection',
         initialize_chat_with_preset: 'Initialize chat with this preset',
-        add_files_to_context_first: 'Add files to context first',
         type_or_add_prompt_to_use_preset:
           'Type or add a prompt to use this preset',
         copy_to_clipboard: 'Copy to clipboard',

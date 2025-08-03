@@ -355,9 +355,6 @@ export const HomeView: React.FC<Props> = (props) => {
                 has_active_editor={props.has_active_editor}
                 has_active_selection={props.has_active_selection}
                 has_instructions={!!props.instructions}
-                is_in_context_dependent_mode={
-                  props.web_mode == 'edit-context' || props.web_mode == 'ask'
-                }
                 has_context={props.token_count > 0}
                 is_in_code_completions_mode={
                   props.web_mode == 'code-completions'
@@ -392,8 +389,6 @@ export const HomeView: React.FC<Props> = (props) => {
                     'Preset in this mode cannot be used with a text selection',
                   initialize_chat_with_preset:
                     'Initialize chat with this preset',
-                  add_files_to_context_first:
-                    'Add some files to the context first',
                   type_or_add_prompt_to_use_preset:
                     'Type something or add a prefix/suffix to this preset to use it',
                   copy_to_clipboard: 'Copy to clipboard',
