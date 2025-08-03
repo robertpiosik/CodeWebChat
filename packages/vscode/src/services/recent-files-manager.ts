@@ -4,7 +4,42 @@ import * as path from 'path'
 import { RECENT_FILES_STORAGE_KEY } from '@/constants/state-keys'
 
 const MAX_RECENT_FILES = 50
+const DEBOUNCE_DELAY = 300
 const REMOVE_BUTTON_TOOLTIP = 'Remove from Recent Files'
+
+type QuickPickItemFile = vscode.QuickPickItem & {
+  path: string
+  uri: vscode.Uri
+}
+
+// Helper function to create a QuickPickItem for a file
+function createFileQuickPickItem(
+  fileUri: vscode.Uri,
+  workspaceRoot: string,
+  withRemoveButton: boolean = true
+): QuickPickItemFile {
+  const relativePath = path.relative(workspaceRoot, fileUri.fsPath)
+  const buttons: vscode.QuickInputButton[] = []
+
+  if (withRemoveButton) {
+    buttons.push({
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: REMOVE_BUTTON_TOOLTIP
+    })
+  }
+
+  return {
+    label: path.basename(fileUri.fsPath),
+    description: path.dirname(relativePath),
+    path: relativePath,
+    uri: fileUri,
+    buttons
+  }
+}
+
+function isSearching(value: string): boolean {
+  return value.length > 0
+}
 
 export class RecentFileManager {
   private context: vscode.ExtensionContext
@@ -46,56 +81,16 @@ export class RecentFileManager {
     this.context.workspaceState.update(RECENT_FILES_STORAGE_KEY, recentFiles)
   }
 
-  public getRecentFileUris(): vscode.Uri[] {
-    const paths = this.context.workspaceState.get<string[]>(
-      RECENT_FILES_STORAGE_KEY,
-      []
-    )
-    return paths
-      .map((p) => vscode.Uri.file(p))
-      .filter((uri) => fs.existsSync(uri.fsPath))
-  }
-
   public async showFilePicker(workspace_root: string) {
     return new Promise<string | undefined>((resolve) => {
-      const quickPick = vscode.window.createQuickPick<{
-        label: string
-        description?: string
-        path: string
-        uri: vscode.Uri
-      }>()
+      const quickPick = vscode.window.createQuickPick<QuickPickItemFile>()
       quickPick.placeholder = 'Search for a file by name'
 
       let debounceTimeout: NodeJS.Timeout
 
-      // Helper function to create a QuickPickItem for a file
-      function createFileQuickPickItem(
-        fileUri: vscode.Uri,
-        withRemoveButton: boolean = true
-      ): vscode.QuickPickItem & { path: string; uri: vscode.Uri } {
-        const relativePath = path.relative(workspace_root, fileUri.fsPath)
-        const removeButton: vscode.QuickInputButton = {
-          iconPath: new vscode.ThemeIcon('close'),
-          tooltip: REMOVE_BUTTON_TOOLTIP
-        }
-        const buttons = []
-
-        if (withRemoveButton) {
-          buttons.push(removeButton)
-        }
-
-        return {
-          label: path.basename(fileUri.fsPath),
-          description: path.dirname(relativePath),
-          path: relativePath,
-          uri: fileUri,
-          buttons
-        }
-      }
-
-      const recentFiles = this.getRecentFileUris().map((uri) =>
-        createFileQuickPickItem(uri)
-      )
+      const recentFiles = this.getRecentFiles()
+        .map((p) => createFileQuickPickItem(vscode.Uri.file(p), workspace_root))
+        .filter((item) => fs.existsSync(item.uri.fsPath))
 
       // Initially, show only recent files
       quickPick.items = recentFiles
@@ -104,7 +99,7 @@ export class RecentFileManager {
         clearTimeout(debounceTimeout)
 
         // When user clears the input, show recent files again
-        if (!value || value.length < 1) {
+        if (!isSearching(value)) {
           quickPick.busy = false
           quickPick.items = recentFiles
           return
@@ -125,30 +120,31 @@ export class RecentFileManager {
             quickPick.items = searchResults.map((uri) =>
               createFileQuickPickItem(
                 uri,
+                workspace_root,
                 this.getRecentFiles().includes(uri.fsPath)
               )
             )
           }
           quickPick.busy = false
-        }, 300) // 300ms debounce delay
+        }, DEBOUNCE_DELAY)
       })
 
       quickPick.onDidTriggerItemButton((e) => {
-        const fileUriToRemove = e.item.uri
-        const currentListItems = quickPick.items.filter(
-          (item) => item.uri.fsPath !== fileUriToRemove.fsPath
-        )
+        this.removeFile(e.item.uri)
 
-        this.removeFile(fileUriToRemove)
+        if (isSearching(quickPick.value)) {
+          quickPick.items = quickPick.items.map((item) => {
+            if (item.path === e.item.path) {
+              item.buttons = []
+            }
 
-        const recentListItems = this.getRecentFiles()
-
-        quickPick.items = currentListItems.map((item) =>
-          createFileQuickPickItem(
-            item.uri,
-            recentListItems.includes(item.uri.fsPath)
+            return item
+          })
+        } else {
+          quickPick.items = quickPick.items.filter(
+            (item) => item.path !== e.item.path
           )
-        )
+        }
       })
 
       quickPick.onDidAccept(() => {
