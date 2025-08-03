@@ -219,28 +219,43 @@ async function show_preset_quick_pick(
     vscode.QuickPickItem & { name?: string }
   >()
 
-  quick_pick.items = presets.map((preset) => {
-    if (!preset.chatbot) {
-      return {
-        label: preset.name,
-        kind: vscode.QuickPickItemKind.Separator
-      }
-    }
-    const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
-    const chatbot_models = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
-      .models as any
-    const model = preset.model
-      ? chatbot_models[preset.model]?.label || preset.model
-      : ''
+  const items: (vscode.QuickPickItem & { name?: string })[] = []
 
-    return {
-      label: is_unnamed ? preset.chatbot! : preset.name,
-      name: preset.name,
-      description: is_unnamed
-        ? model
-        : `${preset.chatbot}${model ? ` · ${model}` : ''}`
-    }
-  })
+  // Add "Ungrouped" separator at the top if there's no leading group
+  if (presets[0]?.chatbot !== undefined) {
+    items.push({
+      label: 'Ungrouped',
+      kind: vscode.QuickPickItemKind.Separator
+    })
+  }
+
+  // Add all presets
+  items.push(
+    ...presets.map((preset) => {
+      if (!preset.chatbot) {
+        return {
+          label: preset.name,
+          kind: vscode.QuickPickItemKind.Separator
+        }
+      }
+      const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+      const chatbot_models = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
+        .models as any
+      const model = preset.model
+        ? chatbot_models[preset.model]?.label || preset.model
+        : ''
+
+      return {
+        label: is_unnamed ? preset.chatbot! : preset.name,
+        name: preset.name,
+        description: is_unnamed
+          ? model
+          : `${preset.chatbot}${model ? ` · ${model}` : ''}`
+      }
+    })
+  )
+
+  quick_pick.items = items
   quick_pick.placeholder = 'Select preset'
   quick_pick.matchOnDescription = true
 
@@ -391,7 +406,9 @@ async function resolve_presets(params: {
               .map((p) => p.name)
             if (preset_names.length > 0) return preset_names
           } else {
-            const group_index = all_presets.findIndex((p) => p.name == last_group)
+            const group_index = all_presets.findIndex(
+              (p) => p.name == last_group
+            )
             const preset_names: string[] = []
             if (group_index != -1) {
               for (let i = group_index + 1; i < all_presets.length; i++) {
@@ -439,7 +456,9 @@ async function resolve_presets(params: {
               .map((p) => p.name)
             if (preset_names.length > 0) return preset_names
           } else {
-            const group_index = all_presets.findIndex((p) => p.name == last_group)
+            const group_index = all_presets.findIndex(
+              (p) => p.name == last_group
+            )
             const preset_names: string[] = []
             if (group_index != -1) {
               for (let i = group_index + 1; i < all_presets.length; i++) {
