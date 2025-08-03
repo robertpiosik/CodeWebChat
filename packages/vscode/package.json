@@ -220,11 +220,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionToClipboard",
-        "title": "Code Completion to Clipboard",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.applyChatResponse",
         "title": "Apply Chat Response",
         "category": "Code Web Chat"

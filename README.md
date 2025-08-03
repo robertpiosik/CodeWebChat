@@ -88,8 +88,7 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 ### Code completions
 
 - `Code Web Chat: Code Completion` - Get code at cursor using API tool.
-- `Code Web Chat: Code Completion using...` - ...above with configuration selection.
-- `Code Web Chat: Code Completion to Clipboard` - Copy the code completion prompt to clipboard.
+- `Code Web Chat: Code Completion using...` - show list of configurations.
 
 ### Version Control
 
