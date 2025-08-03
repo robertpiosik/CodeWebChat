@@ -39,12 +39,19 @@ export const ai_studio: Chatbot = {
       document.querySelector(
         'ms-model-selector-collapsible mat-form-field > div'
       )) as HTMLElement
+    if (
+      model_selector.textContent?.trim() ==
+      (CHATBOTS['AI Studio'].models as any)[model]?.label
+    ) {
+      return
+    }
     model_selector.click()
     await new Promise((r) => requestAnimationFrame(r))
     const model_options = Array.from(document.querySelectorAll('mat-option'))
+    console.log(model_options)
     for (const option of model_options) {
       const model_name_element = option.querySelector(
-        'ms-model-option > div:last-child'
+        'ms-model-option span.model-name'
       ) as HTMLElement
       if (
         model_name_element?.textContent?.trim() ==

@@ -23,6 +23,7 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   Kimi: 'KIMI',
   Doubao: 'DOUBAO',
   Perplexity: 'PERPLEXITY',
+  Together: 'TOGETHER',
   'Z.AI': 'Z_AI'
 }
 

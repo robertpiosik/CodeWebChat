@@ -12,6 +12,7 @@ import Kimi from '../../../assets/icons/kimi.svg'
 import Qwen from '../../../assets/icons/qwen.svg'
 import Yuanbao from '../../../assets/icons/yuanbao.svg'
 import Doubao from '../../../assets/icons/doubao.svg'
+import Together from '../../../assets/icons/together.svg'
 import Command from '../../../assets/icons/command.svg'
 import Enter from '../../../assets/icons/enter.svg'
 import Perplexity from '../../../assets/icons/perplexity.svg'
@@ -36,6 +37,7 @@ export namespace Icon {
     | 'QWEN'
     | 'YUANBAO'
     | 'DOUBAO'
+    | 'TOGETHER'
     | 'COMMAND'
     | 'ENTER'
     | 'PERPLEXITY'
@@ -94,6 +96,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'DOUBAO':
       icon = <Doubao />
+      break
+    case 'TOGETHER':
+      icon = <Together />
       break
     case 'COMMAND':
       icon = <Command />

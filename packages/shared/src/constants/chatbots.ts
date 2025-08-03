@@ -51,48 +51,6 @@ export const CHATBOTS = {
       }
     }
   },
-  Gemini: {
-    url: 'https://gemini.google.com/app',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_thinking_budget: false,
-    supported_options: { canvas: 'Canvas' },
-    default_system_instructions: '',
-    default_top_p: 0,
-    models: {
-      '2.5-flash': { label: '2.5 Flash' },
-      '2.5-pro': { label: '2.5 Pro' }
-    }
-  },
-  'Open WebUI': {
-    url: 'http://openwebui/',
-    supports_custom_temperature: true,
-    supports_custom_top_p: true,
-    supports_system_instructions: true,
-    supports_user_provided_model: true,
-    supports_user_provided_port: true,
-    supports_thinking_budget: false,
-    default_system_instructions: "You're a helpful coding assistant.",
-    supported_options: {},
-    default_top_p: 0.9,
-    models: {}
-  },
-  OpenRouter: {
-    url: 'https://openrouter.ai/chat',
-    supports_custom_temperature: true,
-    supports_custom_top_p: true,
-    supports_system_instructions: true,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_thinking_budget: false,
-    default_system_instructions: "You're a helpful coding assistant.",
-    supported_options: {},
-    default_top_p: 1,
-    models: {}
-  },
   ChatGPT: {
     url: 'https://chatgpt.com/',
     supports_custom_temperature: false,
@@ -137,8 +95,8 @@ export const CHATBOTS = {
     default_top_p: 0,
     models: {}
   },
-  Mistral: {
-    url: 'https://chat.mistral.ai/chat',
+  Doubao: {
+    url: 'https://www.doubao.com/chat/',
     supports_custom_temperature: false,
     supports_custom_top_p: false,
     supports_system_instructions: false,
@@ -146,11 +104,25 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_thinking_budget: false,
     default_system_instructions: '',
-    supported_options: {
-      think: 'Think'
-    },
+    supported_options: { 'deep-thinking': 'Deep Thinking' },
     default_top_p: 0,
     models: {}
+  },
+  Gemini: {
+    url: 'https://gemini.google.com/app',
+    supports_custom_temperature: false,
+    supports_custom_top_p: false,
+    supports_system_instructions: false,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    supports_thinking_budget: false,
+    supported_options: { canvas: 'Canvas' },
+    default_system_instructions: '',
+    default_top_p: 0,
+    models: {
+      '2.5-flash': { label: '2.5 Flash' },
+      '2.5-pro': { label: '2.5 Pro' }
+    }
   },
   Grok: {
     url: 'https://grok.com/',
@@ -168,6 +140,73 @@ export const CHATBOTS = {
       'grok-4': { label: 'Grok 4' },
       'grok-4-heavy': { label: 'Grok 4 Heavy' }
     }
+  },
+  Kimi: {
+    url: 'https://www.kimi.com/',
+    supports_custom_temperature: false,
+    supports_custom_top_p: false,
+    supports_system_instructions: false,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    supports_thinking_budget: false,
+    default_system_instructions: '',
+    supported_options: {},
+    default_top_p: 0,
+    models: {}
+  },
+  Mistral: {
+    url: 'https://chat.mistral.ai/chat',
+    supports_custom_temperature: false,
+    supports_custom_top_p: false,
+    supports_system_instructions: false,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    supports_thinking_budget: false,
+    default_system_instructions: '',
+    supported_options: {
+      think: 'Think'
+    },
+    default_top_p: 0,
+    models: {}
+  },
+  'Open WebUI': {
+    url: 'http://openwebui/',
+    supports_custom_temperature: true,
+    supports_custom_top_p: true,
+    supports_system_instructions: true,
+    supports_user_provided_model: true,
+    supports_user_provided_port: true,
+    supports_thinking_budget: false,
+    default_system_instructions: "You're a helpful coding assistant.",
+    supported_options: {},
+    default_top_p: 0.9,
+    models: {}
+  },
+  OpenRouter: {
+    url: 'https://openrouter.ai/chat',
+    supports_custom_temperature: true,
+    supports_custom_top_p: true,
+    supports_system_instructions: true,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    supports_thinking_budget: false,
+    default_system_instructions: "You're a helpful coding assistant.",
+    supported_options: {},
+    default_top_p: 1,
+    models: {}
+  },
+  Perplexity: {
+    url: 'https://www.perplexity.ai/',
+    supports_custom_temperature: false,
+    supports_custom_top_p: false,
+    supports_system_instructions: false,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    supports_thinking_budget: false,
+    default_system_instructions: '',
+    supported_options: {},
+    default_top_p: 0,
+    models: {}
   },
   Qwen: {
     url: 'https://chat.qwen.ai/',
@@ -193,6 +232,25 @@ export const CHATBOTS = {
       'qwen3-coder-flash': { label: 'Qwen3-Coder-Flash' }
     }
   },
+  Together: {
+    url: 'https://chat.together.ai/',
+    supports_custom_temperature: false,
+    supports_custom_top_p: false,
+    supports_system_instructions: false,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    supports_thinking_budget: false,
+    default_system_instructions: '',
+    supported_options: {},
+    default_top_p: 0,
+    models: {
+      'qwen3-235b-a22b-2507': { label: 'Qwen3 235B (2507)' },
+      'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
+      'deepseek-v3-0324': { label: 'DeepSeek V3 (0324)' },
+      'kimi-k2': { label: 'Kimi K2' },
+      'llama-4-maverick': { label: 'Llama 4 Maverick' }
+    }
+  },
   Yuanbao: {
     url: 'https://yuanbao.tencent.com/chat',
     supports_custom_temperature: false,
@@ -209,47 +267,8 @@ export const CHATBOTS = {
       hunyuan: { label: 'Hunyuan' }
     }
   },
-  Doubao: {
-    url: 'https://www.doubao.com/chat/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_thinking_budget: false,
-    default_system_instructions: '',
-    supported_options: { 'deep-thinking': 'Deep Thinking' },
-    default_top_p: 0,
-    models: {}
-  },
-  Kimi: {
-    url: 'https://www.kimi.com/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_thinking_budget: false,
-    default_system_instructions: '',
-    supported_options: {},
-    default_top_p: 0,
-    models: {}
-  },
-  Perplexity: {
-    url: 'https://www.perplexity.ai/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_thinking_budget: false,
-    default_system_instructions: '',
-    supported_options: {},
-    default_top_p: 0,
-    models: {}
-  },
   'Z.AI': {
-    url: 'https://z.ai/',
+    url: 'https://chat.z.ai/',
     supports_custom_temperature: false,
     supports_custom_top_p: false,
     supports_system_instructions: false,
@@ -262,3 +281,4 @@ export const CHATBOTS = {
     models: {}
   }
 } satisfies Chatbots
+

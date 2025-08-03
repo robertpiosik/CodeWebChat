@@ -38,6 +38,7 @@
         "https://www.perplexity.ai/",
         "https://www.kimi.com/",
         "https://chat.z.ai/",
+        "https://chat.together.ai/",
         "http://localhost/",
         "http://openwebui/"
       ],
@@ -45,3 +46,4 @@
     }
   ]
 }
+

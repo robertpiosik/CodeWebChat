@@ -609,18 +609,22 @@
             },
             {
               "name": "(9)",
-              "chatbot": "Yuanbao"
+              "chatbot": "Together"
             },
             {
               "name": "(10)",
-              "chatbot": "Doubao"
+              "chatbot": "Yuanbao"
             },
             {
               "name": "(11)",
-              "chatbot": "Kimi"
+              "chatbot": "Doubao"
             },
             {
               "name": "(12)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(13)",
               "chatbot": "Z.AI"
             }
           ],
@@ -646,6 +650,7 @@
                   "Mistral",
                   "DeepSeek",
                   "Qwen",
+                  "Together",
                   "Yuanbao",
                   "Doubao",
                   "Kimi",
@@ -765,18 +770,22 @@
             },
             {
               "name": "(9)",
-              "chatbot": "Yuanbao"
+              "chatbot": "Together"
             },
             {
               "name": "(10)",
-              "chatbot": "Doubao"
+              "chatbot": "Yuanbao"
             },
             {
               "name": "(11)",
-              "chatbot": "Kimi"
+              "chatbot": "Doubao"
             },
             {
               "name": "(12)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(13)",
               "chatbot": "Z.AI"
             }
           ],
@@ -802,6 +811,7 @@
                   "Mistral",
                   "DeepSeek",
                   "Qwen",
+                  "Together",
                   "Yuanbao",
                   "Doubao",
                   "Kimi",
@@ -921,18 +931,22 @@
             },
             {
               "name": "(9)",
-              "chatbot": "Yuanbao"
+              "chatbot": "Together"
             },
             {
               "name": "(10)",
-              "chatbot": "Doubao"
+              "chatbot": "Yuanbao"
             },
             {
               "name": "(11)",
-              "chatbot": "Kimi"
+              "chatbot": "Doubao"
             },
             {
               "name": "(12)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(13)",
               "chatbot": "Z.AI"
             }
           ],
@@ -958,6 +972,7 @@
                   "Mistral",
                   "DeepSeek",
                   "Qwen",
+                  "Together",
                   "Yuanbao",
                   "Doubao",
                   "Kimi",
@@ -1047,18 +1062,22 @@
             },
             {
               "name": "(9)",
-              "chatbot": "Yuanbao"
+              "chatbot": "Together"
             },
             {
               "name": "(10)",
-              "chatbot": "Doubao"
+              "chatbot": "Yuanbao"
             },
             {
               "name": "(11)",
-              "chatbot": "Kimi"
+              "chatbot": "Doubao"
             },
             {
               "name": "(12)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(13)",
               "chatbot": "Z.AI"
             }
           ],
@@ -1084,6 +1103,7 @@
                   "Mistral",
                   "DeepSeek",
                   "Qwen",
+                  "Together",
                   "Yuanbao",
                   "Doubao",
                   "Kimi",
