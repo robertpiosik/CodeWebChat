@@ -6,8 +6,7 @@
 
 ✅ **Initializes 15+ chatbots hands-free** \
 ✅ **Integrates chat responses with the codebase** \
-✅ **Includes all the essential API tools** \
-🙋 Built by an independent developer
+✅ **Includes all the essential API tools**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
