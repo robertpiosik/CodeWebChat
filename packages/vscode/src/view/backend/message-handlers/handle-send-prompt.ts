@@ -14,6 +14,7 @@ import { chat_code_completion_instructions } from '@/constants/instructions'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { replace_file_placeholder } from '../utils/replace-file-placeholder'
 
 /**
  * When preset_names is an emtpy stirng - show quick pick,
@@ -120,6 +121,10 @@ export const handle_send_prompt = async (params: {
           preset_name,
           params.provider.get_presets_config_key()
         )
+
+        if (instructions.includes('@File:')) {
+          instructions = replace_file_placeholder(instructions)
+        }
 
         if (editor && !editor.selection.isEmpty) {
           if (instructions.includes('@Selection')) {
