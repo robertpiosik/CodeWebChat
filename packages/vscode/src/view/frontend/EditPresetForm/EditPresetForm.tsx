@@ -13,6 +13,7 @@ type Props = {
   on_update: (updated_preset: Preset) => void
   on_save: () => void
   pick_open_router_model: () => void
+  pick_chatbot: (chatbot_id?: keyof typeof CHATBOTS) => void
   on_at_sign_in_affix: () => void
 }
 
@@ -110,8 +111,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     options
   ])
 
-  const handle_chatbot_change = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const new_chatbot = e.target.value as keyof typeof CHATBOTS
+  const handle_chatbot_change = (new_chatbot: keyof typeof CHATBOTS) => {
     set_chatbot(new_chatbot)
     set_model(Object.keys(CHATBOTS[new_chatbot].models)[0] || undefined)
     set_port(undefined)
@@ -141,6 +141,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
       const message = event.data as BackendMessage
       if (message.command == 'NEWLY_PICKED_OPEN_ROUTER_MODEL') {
         set_model(message.model_id)
+      } else if (message.command == 'NEWLY_PICKED_CHATBOT') {
+        handle_chatbot_change(message.chatbot_id as keyof typeof CHATBOTS)
       } else if (
         message.command == 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
       ) {
@@ -199,13 +201,20 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     <div className={styles.form}>
       {chatbot && (
         <Field label="Chatbot" html_for="chatbot">
-          <select id="chatbot" value={chatbot} onChange={handle_chatbot_change}>
-            {Object.keys(CHATBOTS).map((key) => (
-              <option key={key} value={key}>
-                {key}
-              </option>
-            ))}
-          </select>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              props.pick_chatbot(chatbot);
+            }}
+          >
+            <div style={{ cursor: 'pointer' }}>
+              <div style={{ pointerEvents: 'none' }}>
+                <select id="chatbot" value={chatbot}>
+                  <option value={chatbot}>{chatbot}</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </Field>
       )}
 

@@ -132,6 +132,11 @@ export interface PickOpenRouterModel extends BaseMessage {
   command: 'PICK_OPEN_ROUTER_MODEL'
 }
 
+export interface PickChatbotMessage extends BaseMessage {
+  command: 'PICK_CHATBOT'
+  chatbot_id?: string
+}
+
 export interface SaveHomeViewTypeMessage extends BaseMessage {
   command: 'SAVE_HOME_VIEW_TYPE'
   view_type: HomeViewType
@@ -213,6 +218,7 @@ export type FrontendMessage =
   | PreviewPresetMessage
   | CaretPositionChangedWebviewMessage
   | PickOpenRouterModel
+  | PickChatbotMessage
   | SaveHomeViewTypeMessage
   | GetHomeViewTypeMessage
   | EditContextMessage
@@ -304,6 +310,11 @@ export interface NewlyPickedOpenRouterModelMessage extends BaseMessage {
   model_id: string
 }
 
+export interface NewlyPickedChatbotMessage extends BaseMessage {
+  command: 'NEWLY_PICKED_CHATBOT'
+  chatbot_id: string
+}
+
 export interface HomeViewTypeMessage extends BaseMessage {
   command: 'HOME_VIEW_TYPE'
   view_type: HomeViewType
@@ -345,6 +356,7 @@ export type BackendMessage =
   | PresetCreatedMessage
   | PresetUpdatedMessage
   | NewlyPickedOpenRouterModelMessage
+  | NewlyPickedChatbotMessage
   | HomeViewTypeMessage
   | WebModeMessage
   | ApiModeMessage

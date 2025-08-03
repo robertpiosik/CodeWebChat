@@ -235,6 +235,9 @@ export const View = () => {
           pick_open_router_model={() => {
             post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
           }}
+          pick_chatbot={(chatbot_id) => {
+            post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
+          }}
           on_at_sign_in_affix={() => {
             post_message(vscode, {
               command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX',

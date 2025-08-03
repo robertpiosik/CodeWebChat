@@ -40,7 +40,8 @@ import {
   handle_show_prompt_template_quick_pick,
   handle_at_sign_quick_pick_for_preset_affix,
   handle_get_api_tool_configurations,
-  handle_pick_open_router_model
+  handle_pick_open_router_model,
+  handle_pick_chatbot
 } from './message-handlers'
 import {
   config_preset_to_ui_format,
@@ -343,6 +344,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
+          } else if (message.command == 'PICK_CHATBOT') {
+            await handle_pick_chatbot(this, message)
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)
