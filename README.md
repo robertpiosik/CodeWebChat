@@ -47,12 +47,13 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 - Doubao
 - Gemini
 - Grok
+- Kimi
 - Mistral
 - Open WebUI
 - OpenRouter Chat
 - Perplexity
-- Kimi
 - Qwen
+- Together
 - Yuanbao
 - Z.AI
 
