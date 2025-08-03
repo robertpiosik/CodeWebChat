@@ -50,11 +50,79 @@ export async function at_sign_quick_pick(
       return
     }
     const workspace_root = workspace_folders[0].uri.fsPath
-    const recentFileManager = new RecentFileManager(context)
-    const selectedFile = await recentFileManager.showFilePicker(workspace_root)
+    const recentFileManager = new RecentFileManager(context);
+
+    async function showFilePicker() {
+      return new Promise<string| undefined>((resolve) => {
+      const quickPick = vscode.window.createQuickPick<{ label: string; description?: string; path: string; uri: vscode.Uri }>();
+      quickPick.placeholder = 'Search for a file by name';
+
+      let debounceTimeout: NodeJS.Timeout;
+
+      // Helper function to create a QuickPickItem for a file
+      function createFileQuickPickItem(fileUri: vscode.Uri, workspaceRoot: string): vscode.QuickPickItem & { path: string; uri: vscode.Uri } {
+        const relativePath = path.relative(workspaceRoot, fileUri.fsPath);
+        return {
+          label: path.basename(fileUri.fsPath),
+          description: path.dirname(relativePath),
+          path: relativePath,
+          uri: fileUri
+        };
+      }
+
+      const recentFiles = recentFileManager.getRecentFileUris().map(uri => createFileQuickPickItem(uri, workspace_root));
+
+      // Initially, show only recent files
+      quickPick.items = recentFiles;
+
+      quickPick.onDidChangeValue(value => {
+        clearTimeout(debounceTimeout);
+        
+        // When user clears the input, show recent files again
+        if (!value || value.length < 1) {
+          quickPick.busy = false;
+          quickPick.items = recentFiles;
+          return;
+        }
+
+        quickPick.busy = true; // Show loading indicator
+
+        // Debounce the search to avoid excessive API calls
+        debounceTimeout = setTimeout(async () => {
+          const query = `**/*${value}*`;
+          const searchResults = await vscode.workspace.findFiles(query, undefined, 100);
+
+          if (searchResults) {
+            quickPick.items = searchResults.map(uri => createFileQuickPickItem(uri, workspace_root));
+          }
+          quickPick.busy = false;
+        }, 300); // 300ms debounce delay
+      });
+
+      quickPick.onDidAccept(() => {
+        const selectedFile = quickPick.selectedItems[0];
+        if (selectedFile) {
+          resolve(`File:${selectedFile.path} `);
+          recentFileManager.addFile(selectedFile.uri)
+        }
+
+        quickPick.hide();
+      });
+      
+      quickPick.onDidHide(() => {
+        clearTimeout(debounceTimeout);
+        quickPick.dispose();
+        resolve(undefined); // Resolve with undefined if the user dismisses the picker
+      });
+
+      quickPick.show();
+    });
+    }
+
+    const selectedFile = await showFilePicker()
 
     if (selectedFile) {
-      return `File:${selectedFile} `
+      return selectedFile
     } else {
       return await at_sign_quick_pick(context)
     }
