@@ -55,6 +55,7 @@ export const Home: React.FC<Props> = (props) => {
   const [caret_position_to_set, set_caret_position_to_set] = useState<
     number | undefined
   >()
+  const [is_focused, set_is_focused] = useState<Date | undefined>(undefined)
 
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
@@ -107,6 +108,9 @@ export const Home: React.FC<Props> = (props) => {
         case 'EDIT_FORMAT':
           set_chat_edit_format(message.chat_edit_format)
           set_api_edit_format(message.api_edit_format)
+          break
+        case 'FOCUS_CHAT_INPUT':
+          set_is_focused(new Date())
           break
       }
     }
@@ -516,6 +520,7 @@ export const Home: React.FC<Props> = (props) => {
       }
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
+      is_focused={is_focused}
     />
   )
 }

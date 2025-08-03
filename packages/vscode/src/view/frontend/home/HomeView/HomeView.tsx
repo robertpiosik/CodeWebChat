@@ -62,6 +62,7 @@ type Props = {
   on_code_completion_with_quick_pick_click: () => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
+  is_focused?: Date
 }
 
 const web_mode_labels: Record<WebMode, string> = {
@@ -289,6 +290,7 @@ export const HomeView: React.FC<Props> = (props) => {
               }}
               caret_position_to_set={props.caret_position_to_set}
               on_caret_position_set={props.on_caret_position_set}
+              is_focused={props.is_focused}
             />
           </div>
 
