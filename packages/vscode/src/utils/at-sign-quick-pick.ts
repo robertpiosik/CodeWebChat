@@ -75,7 +75,7 @@ export async function at_sign_quick_pick(
     })
 
     if (selected_file) {
-      return `\`${selected_file.path}\` `
+      return `File:${selected_file.path} `
     }
   }
 
