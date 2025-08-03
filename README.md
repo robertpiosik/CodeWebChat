@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-100% free and open source VS Code extension for AI-assisted pair programming using free chatbots and built-in API tools. CWC saves you money and time.
+100% free and open source VS Code extension for AI-assisted pair programming with free chatbots. CWC saves you money and time.
 
 ✅ **Initializes 15+ chatbots hands-free** \
 ✅ **Integrates chat responses with the codebase** \
