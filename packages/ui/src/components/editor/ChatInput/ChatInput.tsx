@@ -16,7 +16,10 @@ type Props = {
   is_in_code_completions_mode: boolean
   has_active_selection: boolean
   has_active_editor: boolean
-  on_caret_position_change: (caret_position: number) => void
+  on_caret_position_change: (
+    caret_position: number,
+    from_selection: boolean
+  ) => void
   is_web_mode: boolean
   on_search_click: () => void
   on_at_sign_click: () => void
@@ -147,7 +150,7 @@ export const ChatInput: React.FC<Props> = (props) => {
   const handle_select = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget
     const caret_position = textarea.selectionStart
-    props.on_caret_position_change(caret_position)
+    props.on_caret_position_change(caret_position, true)
   }
 
   const handle_input_change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -281,7 +284,7 @@ export const ChatInput: React.FC<Props> = (props) => {
         props.on_change(
           textBeforeCursor.slice(0, startOfSymbol) + textAfterCursor
         )
-        props.on_caret_position_change(startOfSymbol)
+        props.on_caret_position_change(startOfSymbol, false)
       }
     } else if (props.value) {
       set_is_history_enabled(false)

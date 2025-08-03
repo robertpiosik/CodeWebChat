@@ -296,7 +296,14 @@ export const Home: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_caret_position_change = (caret_position: number) => {
+  const handle_caret_position_change = (
+    caret_position: number,
+    from_selection: boolean
+  ) => {
+    if (!from_selection) {
+      set_caret_position_to_set(caret_position)
+    }
+
     post_message(props.vscode, {
       command: 'CARET_POSITION_CHANGED',
       caret_position

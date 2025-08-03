@@ -53,7 +53,10 @@ type Props = {
   on_toggle_default_preset: (name: string) => void
   instructions: string
   set_instructions: (value: string) => void
-  on_caret_position_change: (caret_position: number) => void
+  on_caret_position_change: (
+    caret_position: number,
+    from_selection: boolean
+  ) => void
   home_view_type: HomeViewType
   on_home_view_type_change: (value: HomeViewType) => void
   on_edit_context_click: () => void
