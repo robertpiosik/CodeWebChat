@@ -43,7 +43,6 @@ export namespace Presets {
     has_active_editor: boolean
     has_active_selection: boolean
     is_in_code_completions_mode: boolean
-    is_in_context_dependent_mode: boolean
     has_context: boolean
     presets: Preset[]
     on_preset_click: (preset_name: string) => void
@@ -62,7 +61,6 @@ export namespace Presets {
       preset_requires_active_editor: string
       preset_cannot_be_used_with_selection: string
       initialize_chat_with_preset: string
-      add_files_to_context_first: string
       type_or_add_prompt_to_use_preset: string
       copy_to_clipboard: string
       duplicate: string
@@ -95,7 +93,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     (!props.is_connected ||
       (props.is_in_code_completions_mode &&
         (!props.has_active_editor || props.has_active_selection)) ||
-      (props.is_in_context_dependent_mode && !props.has_context) ||
       (!props.is_in_code_completions_mode &&
         !(
           props.has_instructions ||
@@ -126,8 +123,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
         : props.has_active_selection
         ? props.translations.preset_cannot_be_used_with_selection
         : props.translations.initialize_chat_with_preset
-    } else if (props.is_in_context_dependent_mode && !props.has_context) {
-      return props.translations.add_files_to_context_first
     } else if (!props.is_in_code_completions_mode && !props.has_instructions) {
       return props.translations.type_or_add_prompt_to_use_preset
     }
@@ -244,11 +239,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   : props.has_active_selection
                   ? props.translations.preset_cannot_be_used_with_selection
                   : props.translations.initialize_chat_with_preset
-              } else if (
-                props.is_in_context_dependent_mode &&
-                !props.has_context
-              ) {
-                return props.translations.add_files_to_context_first
               } else if (
                 !props.is_in_code_completions_mode &&
                 !(
