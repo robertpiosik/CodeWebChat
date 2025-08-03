@@ -18,7 +18,7 @@ export const handle_create_preset = async (
       },
       {
         label: 'Group',
-        description: 'Simultaneous initializatoins of selected presets'
+        description: 'Simultaneous initializations of selected presets'
       }
     ],
     {
