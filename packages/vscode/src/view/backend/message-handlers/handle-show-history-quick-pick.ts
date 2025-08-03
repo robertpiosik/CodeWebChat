@@ -164,26 +164,26 @@ export const handle_show_history_quick_pick = async (
   quick_pick.items = items
 
   if (history.length > 0) {
-    const firstRecentItemIndex = items.findIndex((item, index) => {
-      const recentSeparatorIndex = items.findIndex(
+    const first_recent_item_index = items.findIndex((item, index) => {
+      const recent_separator_index = items.findIndex(
         (i) =>
-          i.label === 'recent' && i.kind == vscode.QuickPickItemKind.Separator
+          i.label == 'recent' && i.kind == vscode.QuickPickItemKind.Separator
       )
       return (
-        recentSeparatorIndex != -1 &&
-        index > recentSeparatorIndex &&
+        recent_separator_index != -1 &&
+        index > recent_separator_index &&
         item.kind != vscode.QuickPickItemKind.Separator
       )
     })
-    if (firstRecentItemIndex != -1) {
-      quick_pick.activeItems = [items[firstRecentItemIndex]]
+    if (first_recent_item_index != -1) {
+      quick_pick.activeItems = [items[first_recent_item_index]]
     }
   } else if (pinned_history.length > 0) {
-    const firstPinnedItemIndex = items.findIndex(
+    const first_pinned_item_index = items.findIndex(
       (item) => item.kind !== vscode.QuickPickItemKind.Separator
     )
-    if (firstPinnedItemIndex !== -1) {
-      quick_pick.activeItems = [items[firstPinnedItemIndex]]
+    if (first_pinned_item_index != -1) {
+      quick_pick.activeItems = [items[first_pinned_item_index]]
     }
   }
 
@@ -240,7 +240,7 @@ export const handle_show_history_quick_pick = async (
       const current_pinned_history = get_sorted_pinned_history()
       if (button_tooltip == 'Move up') {
         const current_index = current_pinned_history.findIndex(
-          (p) => p.text === item_text
+          (p) => p.text == item_text
         )
         if (current_index > 0) {
           ;[
@@ -257,7 +257,7 @@ export const handle_show_history_quick_pick = async (
         }
       } else if (button_tooltip == 'Move down') {
         const current_index = current_pinned_history.findIndex(
-          (p) => p.text === item_text
+          (p) => p.text == item_text
         )
         if (current_index < current_pinned_history.length - 1) {
           ;[
@@ -272,9 +272,9 @@ export const handle_show_history_quick_pick = async (
             current_pinned_history
           )
         }
-      } else if (button_tooltip == 'Add to Pinned Prompts') {
-        if (!current_pinned_history.some((p) => p.text === item_text)) {
-          const entry_to_pin = history.find((h) => h.text === item_text)
+      } else if (button_tooltip == 'Add to pinned') {
+        if (!current_pinned_history.some((p) => p.text == item_text)) {
+          const entry_to_pin = history.find((h) => h.text == item_text)
           if (entry_to_pin) {
             current_pinned_history.push(entry_to_pin)
             await provider.context.workspaceState.update(
@@ -283,9 +283,9 @@ export const handle_show_history_quick_pick = async (
             )
           }
         }
-      } else if (button_tooltip == 'Remove from Pinned Prompts') {
+      } else if (button_tooltip == 'Remove from pinned') {
         const index = current_pinned_history.findIndex(
-          (p) => p.text === item_text
+          (p) => p.text == item_text
         )
         if (index != -1) {
           current_pinned_history.splice(index, 1)
@@ -294,8 +294,8 @@ export const handle_show_history_quick_pick = async (
             current_pinned_history
           )
         }
-      } else if (button_tooltip == 'Remove from Recent Prompts') {
-        const index = history.findIndex((h) => h.text === item_text)
+      } else if (button_tooltip == 'Remove from recent') {
+        const index = history.findIndex((h) => h.text == item_text)
         if (index != -1) {
           history.splice(index, 1)
           await provider.context.workspaceState.update(history_key, history)
@@ -350,7 +350,7 @@ export const handle_show_history_quick_pick = async (
             to_quick_pick_item(
               item,
               'recents',
-              updated_pinned_history.some((p) => p.text === item.text),
+              updated_pinned_history.some((p) => p.text == item.text),
               undefined
             )
           )
