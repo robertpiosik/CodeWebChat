@@ -379,6 +379,18 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.applyContextFromClipboard",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.copyContext",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.settings",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.settings.codeCompletions",
           "when": "false"
         },

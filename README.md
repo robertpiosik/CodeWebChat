@@ -77,26 +77,17 @@ Generate meaningful commit messages precisely adhering to your preferred style.
 
 ### Handling AI responses
 
-- `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied overall chat response or a single code block.
+- `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied to clipboard overall chat response or a single code block.
 - `Code Web Chat: Revert Last Changes` - Revert above command.
-
-### Context
-
-- `Code Web Chat: Copy Context` - Copy selected files and websites to clipboard.
-- `Code Web Chat: Apply Context from Clipboard` - Find file paths in the clipboard text.
 
 ### Code completions
 
 - `Code Web Chat: Code Completion` - Get code at cursor using API tool.
-- `Code Web Chat: Code Completion using...` - show list of configurations.
+- `Code Web Chat: Code Completion using...` - ...with configuration selection.
 
 ### Version Control
 
 - `Code Web Chat: Commit Changes` - Generate a commit message for staged changes and commit.
-
-### Misc
-
-- `Code Web Chat: Settings` - Open settings wizard
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
