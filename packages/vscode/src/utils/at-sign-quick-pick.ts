@@ -11,6 +11,10 @@ export async function at_sign_quick_pick(
 ): Promise<string | undefined> {
   let items = [
     {
+      label: '@File',
+      description: 'Reference a file'
+    },
+    {
       label: '@Selection',
       description: 'Text selection of the active editor'
     },
@@ -37,6 +41,42 @@ export async function at_sign_quick_pick(
 
   if (!selected) {
     return
+  }
+
+  if (selected.label == '@File') {
+    const workspace_folders = vscode.workspace.workspaceFolders
+    if (!workspace_folders || workspace_folders.length == 0) {
+      vscode.window.showErrorMessage('No workspace folders found')
+      return
+    }
+    const workspace_root = workspace_folders[0].uri.fsPath
+
+    // Find all files in the workspace, respecting .gitignore and other exclude settings
+    const files = await vscode.workspace.findFiles('**/*')
+
+    if (files.length == 0) {
+      vscode.window.showInformationMessage('No files found in the workspace.')
+      return
+    }
+
+    const file_items = files.map((file_uri) => {
+      const relative_path = path.relative(workspace_root, file_uri.fsPath)
+      return {
+        label: path.basename(file_uri.fsPath),
+        description: path.dirname(relative_path),
+        // Store the relative path for easy access upon selection
+        path: relative_path 
+      }
+    })
+
+    const selected_file = await vscode.window.showQuickPick(file_items, {
+      placeHolder: 'Search for a file to reference',
+      matchOnDescription: true
+    })
+
+    if (selected_file) {
+      return `\`${selected_file.path}\` `
+    }
   }
 
   if (selected.label == '@Selection') {
