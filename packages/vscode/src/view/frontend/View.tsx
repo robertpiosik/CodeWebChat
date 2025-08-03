@@ -265,6 +265,7 @@ export const View = () => {
           vscode={vscode}
           on_preset_edit={(preset) => {
             set_updating_preset(preset)
+            set_updated_preset(preset)
           }}
           is_connected={is_connected}
           on_show_intro={() => set_active_view('intro')}

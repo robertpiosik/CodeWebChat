@@ -274,7 +274,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'SEND_PROMPT') {
             await handle_send_prompt({
               provider: this,
-              preset_names: message.preset_names
+              preset_name: message.preset_name,
+              group_name: message.group_name,
+              show_quick_pick: message.show_quick_pick
             })
           } else if (message.command == 'PREVIEW_PRESET') {
             await handle_preview_preset(this, message)

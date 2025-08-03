@@ -201,12 +201,16 @@ export const Home: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_initialize_chats = async (params: {
-    preset_names?: string[]
+  const handle_initialize_chats = (params: {
+    preset_name?: string
+    group_name?: string
+    show_quick_pick?: boolean
   }) => {
     post_message(props.vscode, {
       command: 'SEND_PROMPT',
-      preset_names: params.preset_names
+      preset_name: params.preset_name,
+      group_name: params.group_name,
+      show_quick_pick: params.show_quick_pick
     })
 
     update_chat_history(instructions)

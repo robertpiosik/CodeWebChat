@@ -20,7 +20,11 @@ import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/compon
 import { ApiToolConfiguration } from '@/view/types/messages'
 
 type Props = {
-  initialize_chats: (params: { preset_names?: string[] }) => void
+  initialize_chats: (params: {
+    preset_name?: string
+    group_name?: string,
+    show_quick_pick?: boolean
+  }) => void
   copy_to_clipboard: (preset_name?: string) => void
   on_show_intro: () => void
   on_search_click: () => void
@@ -171,7 +175,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
   const handle_submit_with_control = async () => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
-      props.initialize_chats({ preset_names: [] })
+      props.initialize_chats({ show_quick_pick: true })
     } else {
       if (is_in_code_completions_mode) {
         props.on_code_completion_with_quick_pick_click()
@@ -361,16 +365,12 @@ export const HomeView: React.FC<Props> = (props) => {
                 }
                 presets={props.presets}
                 on_create_preset={props.on_create_preset}
-                on_preset_click={(preset_name) => {
-                  props.initialize_chats({
-                    preset_names: [preset_name]
-                  })
-                }}
-                on_group_click={(preset_names) => {
-                  props.initialize_chats({
-                    preset_names
-                  })
-                }}
+                on_preset_click={(preset_name) =>
+                  props.initialize_chats({ preset_name, show_quick_pick: false })
+                }
+                on_group_click={(group_name) =>
+                  props.initialize_chats({ group_name })
+                }
                 on_preset_copy={handle_preset_copy}
                 on_preset_edit={props.on_preset_edit}
                 on_presets_reorder={props.on_presets_reorder}

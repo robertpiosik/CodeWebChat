@@ -47,7 +47,7 @@ export namespace Presets {
     has_context: boolean
     presets: Preset[]
     on_preset_click: (preset_name: string) => void
-    on_group_click: (presets: string[]) => void
+    on_group_click: (group_name: string) => void
     on_create_preset: () => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
@@ -149,15 +149,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             })}
             onClick={() => {
               if (get_is_ungrouped_disabled()) return
-
-              const preset_names: string[] = []
-              for (const preset of props.presets) {
-                if (!preset.chatbot) break
-                if (preset.is_default && !get_is_preset_disabled(preset)) {
-                  preset_names.push(preset.name)
-                }
-              }
-              props.on_group_click(preset_names)
+              props.on_group_click('Ungrouped')
             }}
             role="button"
             title={get_ungrouped_title()}
@@ -269,19 +261,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     props.on_preset_click(preset.name)
                   } else {
                     if (get_is_group_disabled()) return
-                    const preset_names: string[] = []
-                    for (let j = i + 1; j < props.presets.length; j++) {
-                      const preset = props.presets[j]
-                      if (!preset.chatbot) {
-                        break
-                      } else if (
-                        preset.is_default &&
-                        !get_is_preset_disabled(preset)
-                      ) {
-                        preset_names.push(preset.name)
-                      }
-                    }
-                    props.on_group_click(preset_names)
+                    props.on_group_click(preset.name)
                   }
 
                   set_highlighted_preset_name({

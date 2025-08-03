@@ -53,7 +53,9 @@ export interface ReplacePresetsMessage extends BaseMessage {
 
 export interface SendPromptMessage extends BaseMessage {
   command: 'SEND_PROMPT'
-  preset_names?: string[]
+  preset_name?: string
+  group_name?: string
+  show_quick_pick?: boolean
 }
 
 export interface CopyPromptMessage extends BaseMessage {
