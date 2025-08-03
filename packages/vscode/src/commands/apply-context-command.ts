@@ -155,31 +155,38 @@ async function apply_saved_context(
 
   const currently_checked_files = workspace_provider.get_checked_files()
   if (currently_checked_files.length > 0) {
-    const choice = await vscode.window.showQuickPick(
-      [
-        {
-          label: 'Replace',
-          description: 'Replace the current context with the selected one'
-        },
-        {
-          label: 'Merge',
-          description: 'Merge the selected context with the current one'
-        }
-      ],
-      {
-        placeHolder: `How would you like to apply "${context.name}"?`
-      }
+    const existing_paths_set = new Set(existing_paths)
+    const all_current_files_in_new_context = currently_checked_files.every(
+      (file) => existing_paths_set.has(file)
     )
 
-    if (!choice) {
-      return // User cancelled
-    }
+    if (!all_current_files_in_new_context) {
+      const choice = await vscode.window.showQuickPick(
+        [
+          {
+            label: 'Replace',
+            description: 'Replace the current context with the selected one'
+          },
+          {
+            label: 'Merge',
+            description: 'Merge the selected context with the current one'
+          }
+        ],
+        {
+          placeHolder: `How would you like to apply "${context.name}"?`
+        }
+      )
 
-    if (choice.label == 'Merge') {
-      paths_to_apply = [
-        ...new Set([...currently_checked_files, ...existing_paths])
-      ]
-      message = `Merged context "${context.name}".`
+      if (!choice) {
+        return // User cancelled
+      }
+
+      if (choice.label == 'Merge') {
+        paths_to_apply = [
+          ...new Set([...currently_checked_files, ...existing_paths])
+        ]
+        message = `Merged context "${context.name}".`
+      }
     }
   }
 
