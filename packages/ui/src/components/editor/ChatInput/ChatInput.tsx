@@ -257,6 +257,32 @@ export const ChatInput: React.FC<Props> = (props) => {
           props.on_change('')
         }
       }
+    } else if (e.key == 'Backspace') {
+      const textarea = e.currentTarget
+      const start = textarea.selectionStart
+      const end = textarea.selectionEnd
+
+      // a text is highlighted
+      if (start != end) {
+        return
+      }
+
+      const textBeforeCursor = textarea.value.slice(0, start)
+      const fileSymbolRegex = /(@File:[^\s]+)/
+      const fileSymbolMatch = textBeforeCursor.match(fileSymbolRegex)
+
+      if (fileSymbolMatch) {
+        e.preventDefault()
+
+        const symbolToRemove = fileSymbolMatch[0]
+        const startOfSymbol = start - symbolToRemove.length - 1
+        const textAfterCursor = textarea.value.slice(start)
+
+        props.on_change(
+          textBeforeCursor.slice(0, startOfSymbol) + textAfterCursor
+        )
+        props.on_caret_position_change(startOfSymbol)
+      }
     } else if (props.value) {
       set_is_history_enabled(false)
     }
