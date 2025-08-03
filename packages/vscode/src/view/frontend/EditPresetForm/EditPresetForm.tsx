@@ -379,8 +379,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           html_for="prefix"
           info={
             chatbot
-              ? 'Default text prepended to all prompts used with this preset'
-              : "Default text prepended to all prompts used with this group's presets"
+              ? 'Text prepended to all prompts used with this preset'
+              : "Text prepended to all prompts used with this group's presets"
           }
         >
           <TextareaAutosize
@@ -398,8 +398,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           html_for="suffix"
           info={
             chatbot
-              ? 'Default text appended to all prompts used with this preset'
-              : "Default text appended to all prompts used with this group's presets"
+              ? 'Text appended to all prompts used with this preset'
+              : "Text appended to all prompts used with this group's presets"
           }
         >
           <TextareaAutosize

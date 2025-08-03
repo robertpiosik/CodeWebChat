@@ -161,7 +161,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_thinking_budget: false,
     default_system_instructions: '',
-    supported_options: { think: 'Think' },
+    supported_options: { think: 'Think', private: 'Private' },
     default_top_p: 0,
     models: {
       'grok-3': { label: 'Grok 3' },

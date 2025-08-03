@@ -30,7 +30,12 @@ export const grok: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['Grok'].supported_options
     for (const option of options) {
-      if (option == 'think' && supported_options['think']) {
+      if (option == 'private' && supported_options['private']) {
+        const private_link = document.querySelector(
+          'a[href="/chat#private"]'
+        ) as HTMLAnchorElement
+        private_link.click()
+      } else if (option == 'think' && supported_options['think']) {
         const think_button = document.querySelector(
           'button[aria-label="Think"]'
         ) as HTMLButtonElement
