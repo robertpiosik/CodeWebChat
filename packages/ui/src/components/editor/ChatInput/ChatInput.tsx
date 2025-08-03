@@ -268,14 +268,14 @@ export const ChatInput: React.FC<Props> = (props) => {
       }
 
       const textBeforeCursor = textarea.value.slice(0, start)
-      const fileSymbolRegex = /(@File:[^\s]+)/
+      const fileSymbolRegex = /@File:[^\s]+\s$/g
       const fileSymbolMatch = textBeforeCursor.match(fileSymbolRegex)
 
       if (fileSymbolMatch) {
         e.preventDefault()
 
         const symbolToRemove = fileSymbolMatch[0]
-        const startOfSymbol = start - symbolToRemove.length - 1
+        const startOfSymbol = start - symbolToRemove.length
         const textAfterCursor = textarea.value.slice(start)
 
         props.on_change(
