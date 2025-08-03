@@ -4,6 +4,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 import { SavedContext } from '../types/context'
+import { RecentFileManager } from '@/services/recent-files-manager'
 
 export async function at_sign_quick_pick(
   context: vscode.ExtensionContext,
@@ -51,26 +52,24 @@ export async function at_sign_quick_pick(
     const workspace_root = workspace_folders[0].uri.fsPath
 
     return new Promise((resolve) => {
-      const quickPick = vscode.window.createQuickPick<{ label: string; description?: string; path: string }>();
+      const quickPick = vscode.window.createQuickPick<{ label: string; description?: string; path: string; uri: vscode.Uri }>();
       quickPick.placeholder = 'Search for a file by name';
 
       let debounceTimeout: NodeJS.Timeout;
 
       // Helper function to create a QuickPickItem for a file
-      function createFileQuickPickItem(fileUri: vscode.Uri, workspaceRoot: string): vscode.QuickPickItem & { path: string } {
+      function createFileQuickPickItem(fileUri: vscode.Uri, workspaceRoot: string): vscode.QuickPickItem & { path: string; uri: vscode.Uri } {
         const relativePath = path.relative(workspaceRoot, fileUri.fsPath);
         return {
           label: path.basename(fileUri.fsPath),
           description: path.dirname(relativePath),
           path: relativePath,
+          uri: fileUri
         };
       }
 
-      // Get recently opened files from active tabs
-      const recentFiles = vscode.window.tabGroups.all
-        .flatMap(group => group.tabs)
-        .filter(tab => tab.input instanceof vscode.TabInputText)
-        .map(tab => createFileQuickPickItem((tab.input as vscode.TabInputText).uri, workspace_root));
+      const recentFileManager = new RecentFileManager(context);
+      const recentFiles = recentFileManager.getRecentFileUris().map(uri => createFileQuickPickItem(uri, workspace_root));
 
       // Initially, show only recent files
       quickPick.items = recentFiles;
@@ -103,7 +102,9 @@ export async function at_sign_quick_pick(
         const selectedFile = quickPick.selectedItems[0];
         if (selectedFile) {
           resolve(`File:${selectedFile.path} `);
+          recentFileManager.addFile(selectedFile.uri)
         }
+
         quickPick.hide();
       });
       

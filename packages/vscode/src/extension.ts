@@ -35,6 +35,7 @@ import {
   feedback_command,
   apply_context_from_clipboard_command,
 } from './commands'
+import { RecentFileManager } from './services/recent-files-manager'
 
 // Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
@@ -96,7 +97,10 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   }
 
+  const recentFileManager = new RecentFileManager(context);
+
   context.subscriptions.push(
+    recentFileManager.setupListener(),
     open_file_from_workspace_command(open_editors_provider),
     apply_chat_response_command(context),
     ...code_completion_commands(
