@@ -221,7 +221,6 @@ async function show_preset_quick_pick(
 
   const items: (vscode.QuickPickItem & { name?: string })[] = []
 
-  // Add "Ungrouped" separator at the top if there's no leading group
   if (presets[0]?.chatbot !== undefined) {
     items.push({
       label: 'Ungrouped',
@@ -229,7 +228,6 @@ async function show_preset_quick_pick(
     })
   }
 
-  // Add all presets
   items.push(
     ...presets.map((preset) => {
       if (!preset.chatbot) {
