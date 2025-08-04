@@ -2,10 +2,10 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-100% free and open source VS Code extension for **AI pair programming with free chatbots**.
+AI pair programming in your browser. CWC is a 100% free and open source tool that connects your editor with 15+ free chatbots. One-shot any task, save money and time.
 
-✅ **Initializes 15+ chatbots hands-free** \
-✅ **Integrates chat responses with the codebase** \
+✅ **Initializes chats in a web browser hands-free** \
+✅ **Automatically applies chat responses** \
 ✅ **Includes all the essential API tools**
 
 <p>
@@ -15,9 +15,9 @@
 **With CWC you can:**
 
 - Step into the new era of free AI-assisted programming:
-  - Granularly select folders and files.
-  - Type your task and pick edit format instructions to attach (whole/truncated/diff).
-  - Initialize new chat or send an API request and automatically integrate the response with the codebase.
+  - granularly select folders and files,
+  - type your task and pick "edit format" instructions to attach (whole/truncated/diff),
+  - initialize new chat or send an API request and automatically integrate suggested changes with the codebase.
 - Get accurate code completions using the selected context with SOTA reasoning models.
 - Generate meaningful commit messages by referencing the original state of the modified files.
 - Include in context any website in a markdown format.
