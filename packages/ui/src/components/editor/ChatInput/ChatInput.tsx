@@ -3,6 +3,7 @@ import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import { Icon } from '../Icon'
+import { captureParts, SYMBOLS } from '@shared/constants/symbols'
 
 type Props = {
   value: string
@@ -96,11 +97,16 @@ export const ChatInput: React.FC<Props> = (props) => {
       return <span>{text}</span>
     }
 
-    const regex =
-      /(@File:[^\s]+|@Selection|@Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?|@SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"|`[^`]+`)/g
+    const regex = captureParts(
+      SYMBOLS.File.regexp,
+      /@Selection/,
+      /@Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?/,
+      /@SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"/,
+      /`[^`]+`/
+    )
     const parts = text.split(regex)
     return parts.map((part, index) => {
-      if (part && /^@File:[^\s]+$/.test(part)) {
+      if (SYMBOLS.File.exactMatch(part)) {
         return (
           <span key={index} className={styles['selection-keyword']}>
             {part}
@@ -271,7 +277,10 @@ export const ChatInput: React.FC<Props> = (props) => {
       }
 
       const textBeforeCursor = textarea.value.slice(0, start)
-      const fileSymbolRegex = /@File:[^\s]+\s$/g
+      const fileSymbolRegex = new RegExp(
+        `${SYMBOLS.File.regexp.source}\\s$`,
+        'g'
+      )
       const fileSymbolMatch = textBeforeCursor.match(fileSymbolRegex)
 
       if (fileSymbolMatch) {

@@ -15,6 +15,7 @@ import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { replace_file_placeholder } from '../utils/replace-file-placeholder'
+import { SYMBOLS } from '@shared/constants/symbols'
 
 /**
  * When preset_names is an emtpy stirng - show quick pick,
@@ -122,7 +123,7 @@ export const handle_send_prompt = async (params: {
           params.provider.get_presets_config_key()
         )
 
-        if (instructions.includes('@File:')) {
+        if (instructions.includes(SYMBOLS.File.mark)) {
           instructions = replace_file_placeholder(instructions)
         }
 
