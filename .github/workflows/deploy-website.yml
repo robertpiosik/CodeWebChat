@@ -75,7 +75,7 @@ jobs:
       - name: Deploy to S3 Bucket
         if: env.S3_BUCKET
         run: |
-          aws s3 sync ./packages/website/out s3://${{ env.S3_BUCKET }} --delete
+          aws s3 sync out s3://${{ env.S3_BUCKET }} --delete
 
       # - name: Invalidate CloudFront
       #   if: env.CLOUDFRONT_ID
