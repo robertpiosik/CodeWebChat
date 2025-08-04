@@ -10,6 +10,7 @@ import { handle_intelligent_update } from './handlers/intelligent-update-handler
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
+import { format_document } from './utils/format-document'
 import { apply_git_patch } from './utils/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
@@ -346,6 +347,8 @@ async function handle_code_completion(completion: {
     await editor.edit((editBuilder) => {
       editBuilder.insert(position, completion.content)
     })
+    await format_document(document)
+    await document.save()
   } catch (error: any) {
     vscode.window.showErrorMessage(error.message)
   }
