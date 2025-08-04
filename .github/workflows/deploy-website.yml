@@ -1,0 +1,83 @@
+name: Deploy Website to S3
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+    paths:
+      - 'packages/website/**'
+      - 'docs/**'
+      - '.github/workflows/deploy-website.yml'
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+        default: 'dev'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.6.0
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Build Docusaurus Website
+        run: |
+          cd packages/website
+          pnpm build
+
+      - name: Set environment variables
+        id: set-env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" || "${{ github.event.inputs.environment }}" == "prod" ]]; then
+            echo "S3_BUCKET=${{ secrets.PROD_S3_BUCKET }}" >> $GITHUB_ENV
+            echo "CLOUDFRONT_ID=${{ secrets.PROD_CLOUDFRONT_ID }}" >> $GITHUB_ENV
+            echo "Deploying to PRODUCTION"
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" || "${{ github.event.inputs.environment }}" == "dev" ]]; then
+            echo "S3_BUCKET=${{ secrets.DEV_S3_BUCKET }}" >> $GITHUB_ENV
+            echo "CLOUDFRONT_ID=${{ secrets.DEV_CLOUDFRONT_ID }}" >> $GITHUB_ENV
+            echo "Deploying to DEVELOPMENT"
+          else
+            echo "Branch is not configured for deployment. Skipping."
+            exit 1
+          fi
+
+      - name: Configure AWS Credentials
+        if: env.S3_BUCKET
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }} # e.g., us-east-1
+
+      - name: Deploy to S3 Bucket
+        if: env.S3_BUCKET
+        run: |
+          aws s3 sync ./packages/website/out s3://${{ env.S3_BUCKET }} --delete
+
+      # - name: Invalidate CloudFront
+      #   if: env.CLOUDFRONT_ID
+      #   run: |
+      #     aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_ID }} --paths "/*"

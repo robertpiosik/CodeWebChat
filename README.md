@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-AI pair programming in your browser. CWC is a 100% free and open source tool that connects your editor with 15+ free chatbots. One-shot any task, save money and time.
+AI pair programming in your browser. CWC is an open source tool that connects your editor with 15+ free chatbots. One-shot any task, save money and time.
 
 ✅ **Initializes chats in a web browser hands-free** \
 ✅ **Automatically applies chat responses** \
@@ -14,7 +14,7 @@ AI pair programming in your browser. CWC is a 100% free and open source tool tha
 
 **With CWC you can:**
 
-- Step into the new era of free AI-assisted programming:
+- Step into the new era of AI-assisted programming:
   - granularly select folders and files,
   - type your task and pick "edit format" instructions to attach (whole/truncated/diff),
   - initialize new chat or send an API request and automatically integrate suggested changes with the codebase.

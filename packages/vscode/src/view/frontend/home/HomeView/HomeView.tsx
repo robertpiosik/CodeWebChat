@@ -93,7 +93,8 @@ export const HomeView: React.FC<Props> = (props) => {
   const switch_container_ref = useRef<HTMLDivElement>(null)
   const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
     useState(false)
-  const [is_showing_commands, set_is_showing_commands] = useState(false)
+  const [is_showing_pinned_commands, set_is_showing_pinned_commands] =
+    useState(true)
 
   const calculate_dropdown_max_width = () => {
     if (!container_ref.current || !switch_container_ref.current) return
@@ -442,7 +443,7 @@ export const HomeView: React.FC<Props> = (props) => {
       </Scrollable>
       <div
         className={cn(styles.commands, {
-          [styles['commands--visible']]: is_showing_commands
+          [styles['commands--visible']]: is_showing_pinned_commands
         })}
       >
         <UiQuickAction
@@ -510,16 +511,16 @@ export const HomeView: React.FC<Props> = (props) => {
             className={cn(
               styles.footer__button,
               styles['footer__button--outlined'],
-              is_showing_commands
+              is_showing_pinned_commands
                 ? styles['footer__button--outlined-active']
                 : '',
               styles['footer__button--quick-actions'],
-              is_showing_commands
+              is_showing_pinned_commands
                 ? styles['footer__button--quick-actions-after-visible']
                 : ''
             )}
             onClick={() => {
-              set_is_showing_commands(!is_showing_commands)
+              set_is_showing_pinned_commands(!is_showing_pinned_commands)
             }}
             title="Handy access to selected features"
           >

@@ -3,7 +3,7 @@ import cn from 'classnames'
 
 export namespace Separator {
   export type Props = {
-    height: 8 | 10 | 12 | 16 | 24
+    height: 8 | 10 | 12 | 14 | 16 | 24
   }
 }
 
