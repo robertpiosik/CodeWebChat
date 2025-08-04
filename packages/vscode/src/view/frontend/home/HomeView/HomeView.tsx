@@ -351,7 +351,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
           {props.home_view_type == HOME_VIEW_TYPES.WEB && (
             <>
-              <UiSeparator height={16} />
+              <UiSeparator height={14} />
               <UiPresets
                 web_mode={props.web_mode}
                 is_connected={props.is_connected}
@@ -409,7 +409,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
           {props.home_view_type == HOME_VIEW_TYPES.API && (
             <>
-              <UiSeparator height={16} />
+              <UiSeparator height={14} />
               <UiConfigurations
                 has_active_editor={props.has_active_editor}
                 has_active_selection={props.has_active_selection}
