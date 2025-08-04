@@ -14,12 +14,12 @@ export const handle_create_preset = async (
     [
       {
         label: 'Preset',
-        description: 'Added at the top',
+        description: '(will be created at the top)',
         detail: 'Your favorite chatbot, preconfigured.'
       },
       {
         label: 'Group',
-        description: 'Added at the bottom',
+        description: '(will be created at the bottom)',
         detail: 'Simultaneous initializations of selected presets.'
       }
     ],
