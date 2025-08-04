@@ -14,11 +14,13 @@
 
 **With CWC you can:**
 
-- Granularly select folders and files to copy them as XML-formatted text.
-- Type your task, pick edit format (whole/truncated/diff), initialize a chatbot hands-free (or send an API request) and automatically integrate the response with the codebase.
+- Step into the new era of free AI-assisted programming:
+  - Granularly select folders and files.
+  - Type your task and pick edit format instructions to attach (whole/truncated/diff).
+  - Initialize new chat or send an API request and automatically integrate the response with the codebase.
 - Get accurate code completions using the selected context with SOTA reasoning models.
 - Generate meaningful commit messages by referencing the original state of the modified files.
-- Include websites parsed to markdown in context.
+- Include in context any website in a markdown format.
 
 **Guiding principles:**
 
