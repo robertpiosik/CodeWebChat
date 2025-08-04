@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-CWC is a 100% free and open source tool that connects your editor with 15+ free chatbots. One-shot any task, save money and time.
+CWC is a 100% free and open source tool that connects VS Code with 15+ free chatbots. Save money and time.
 
 ✅ **Initializes chats in a web browser hands-free** \
 ✅ **Automatically applies chat responses** \
