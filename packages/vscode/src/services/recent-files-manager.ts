@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { RECENT_FILES_STORAGE_KEY } from '@/constants/state-keys'
+import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 
 const MAX_RECENT_FILES = 50
 const DEBOUNCE_DELAY = 300
@@ -48,9 +49,22 @@ export class RecentFileManager {
     this.context = context
   }
 
-  public setupListener(): vscode.Disposable {
+  public setupListener(
+    workspace_provider: WorkspaceProvider
+  ): vscode.Disposable {
+    function isIgnored(file_path: string): boolean {
+      const workspace_root =
+        workspace_provider.get_workspace_root_for_file(file_path)
+
+      return workspace_root
+        ? workspace_provider.is_excluded(
+            path.relative(workspace_root, file_path)
+          )
+        : true
+    }
+
     return vscode.workspace.onDidOpenTextDocument((document) => {
-      if (document.uri.scheme === 'file') {
+      if (document.uri.scheme === 'file' && !isIgnored(document.uri.path)) {
         this.addFile(document.uri)
       }
     })

@@ -97,10 +97,10 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   }
 
-  const recentFileManager = new RecentFileManager(context);
+  const recentFileManager = new RecentFileManager(context)
 
   context.subscriptions.push(
-    recentFileManager.setupListener(),
+    recentFileManager.setupListener(workspace_provider),
     open_file_from_workspace_command(open_editors_provider),
     apply_chat_response_command(context),
     ...code_completion_commands(
