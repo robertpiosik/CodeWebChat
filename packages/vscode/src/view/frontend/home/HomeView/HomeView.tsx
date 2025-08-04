@@ -381,7 +381,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_preset_delete={props.on_preset_delete}
                 on_toggle_default_preset={props.on_toggle_default_preset}
                 translations={{
-                  my_presets: 'MY PRESETS',
+                  my_chat_presets: 'MY CHAT PRESETS',
                   set_presets_opening_by_default:
                     'Set presets opening by default',
                   not_connected:

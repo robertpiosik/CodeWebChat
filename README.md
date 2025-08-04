@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-An open source community effort enabling truly free AI pair programming.
+An open-source community effort enabling 100% free AI pair programming.
 
 ✅ Works with **VS Code** and its derivatives \
 ✅ **Initializes 15+ chatbots** hands-free \
