@@ -6,7 +6,7 @@ An open-source community effort enabling 100% free AI pair programming.
 
 ✅ Works with **VS Code** and its derivatives \
 ✅ **Initializes 15+ chatbots** hands-free \
-✅ Automatically **applies chat responses** \
+✅ Intelligently **applies chat responses** \
 ✅ Includes **all essential API tools**
 
 <p>
