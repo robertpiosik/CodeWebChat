@@ -6,13 +6,12 @@
 .my-presets {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 var(--padding-12px);
   margin-bottom: var(--padding-4px);
+  gap: var(--padding-8px);
 
   &__left {
     opacity: 0.7;
-    color: var(--vscode-foreground);
   }
 }
 
@@ -57,7 +56,7 @@
     &__left {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: var(--padding-5px);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -73,7 +72,7 @@
 
         &--disabled {
           opacity: 0.3;
-          cursor: auto
+          cursor: auto;
         }
       }
 
@@ -102,9 +101,5 @@
       cursor: default;
       padding-right: var(--padding-4px);
     }
-  }
-
-  &__create {
-    margin: var(--padding-8px) var(--padding-12px) 0 var(--padding-12px);
   }
 }

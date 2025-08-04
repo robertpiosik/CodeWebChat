@@ -3,6 +3,8 @@ import { Button } from '../Button/Button'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
 import { useState } from 'react'
+import { TextButton } from '../TextButton'
+import { IconButton } from '../IconButton/IconButton'
 
 export namespace Configurations {
   export type Configuration = {
@@ -39,7 +41,13 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles['my-configurations']}>
-        {props.translations.my_configurations}
+        <div className={styles['my-configurations__left']}>
+          {props.translations.my_configurations}
+        </div>
+        <IconButton
+          codicon_icon="settings"
+          on_click={props.on_manage_configurations}
+        />
       </div>
 
       <div className={styles.configurations}>
@@ -95,12 +103,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             </div>
           )
         })}
-      </div>
-
-      <div className={styles.configurations__create}>
-        <Button on_click={props.on_manage_configurations}>
-          {props.translations.manage_configurations}
-        </Button>
       </div>
     </div>
   )

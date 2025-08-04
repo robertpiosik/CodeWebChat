@@ -1,12 +1,12 @@
 import styles from './Presets.module.scss'
 import { IconButton } from '../IconButton/IconButton'
-import { Button } from '../Button/Button'
 import { Checkbox } from '../Checkbox'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
 import { useState } from 'react'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { TextButton } from '../TextButton'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -56,7 +56,7 @@ export namespace Presets {
     on_preset_delete: (name: string) => void
     on_toggle_default_preset: (name: string) => void
     translations: {
-      my_chat_presets: string
+      my_presets: string
       set_presets_opening_by_default: string
       not_connected: string
       preset_requires_active_editor: string
@@ -134,10 +134,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     <div className={styles.container}>
       <div className={styles['my-presets']}>
         <div className={styles['my-presets__left']}>
-          {props.translations.my_chat_presets}
+          {props.translations.my_presets}
         </div>
-
-        <span></span>
+        <IconButton codicon_icon="add" on_click={props.on_create_preset} />
       </div>
 
       <div className={styles.presets}>
@@ -351,12 +350,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             )
           })}
         </ReactSortable>
-      </div>
-
-      <div className={styles.presets__create}>
-        <Button on_click={props.on_create_preset}>
-          {props.translations.create}
-        </Button>
       </div>
     </div>
   )

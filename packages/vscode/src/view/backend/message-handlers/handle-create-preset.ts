@@ -14,11 +14,13 @@ export const handle_create_preset = async (
     [
       {
         label: 'Preset',
-        description: 'Your favorite chatbot, preconfigured'
+        description: 'Added at the top',
+        detail: 'Your favorite chatbot, preconfigured.'
       },
       {
         label: 'Group',
-        description: 'Simultaneous initializations of selected presets'
+        description: 'Added at the bottom',
+        detail: 'Simultaneous initializations of selected presets.'
       }
     ],
     {
@@ -55,7 +57,10 @@ export const handle_create_preset = async (
     } as ConfigPresetFormat
   }
 
-  const updated_presets = [...current_presets, new_preset]
+  const updated_presets =
+    create_option.label == 'Preset'
+      ? [new_preset, ...current_presets]
+      : [...current_presets, new_preset]
 
   try {
     provider.send_message({

@@ -13,7 +13,7 @@
   &__item {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: var(--padding-5px);
     cursor: pointer;
 
     input {

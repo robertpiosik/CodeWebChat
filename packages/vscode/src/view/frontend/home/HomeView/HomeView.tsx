@@ -22,7 +22,7 @@ import { ApiToolConfiguration } from '@/view/types/messages'
 type Props = {
   initialize_chats: (params: {
     preset_name?: string
-    group_name?: string,
+    group_name?: string
     show_quick_pick?: boolean
   }) => void
   copy_to_clipboard: (preset_name?: string) => void
@@ -276,8 +276,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 completion_instructions: 'Completion instructions',
                 use_default: 'Use default',
                 last_selection: 'Use last choice',
-                select: 'Select...',
-                select_config: 'Select',
+                select: 'Select',
                 code_completions_mode_unavailable_with_text_selection:
                   'Remove text selection',
                 code_completions_mode_unavailable_without_active_editor:
@@ -366,7 +365,10 @@ export const HomeView: React.FC<Props> = (props) => {
                 presets={props.presets}
                 on_create_preset={props.on_create_preset}
                 on_preset_click={(preset_name) =>
-                  props.initialize_chats({ preset_name, show_quick_pick: false })
+                  props.initialize_chats({
+                    preset_name,
+                    show_quick_pick: false
+                  })
                 }
                 on_group_click={(group_name) =>
                   props.initialize_chats({ group_name })
@@ -378,7 +380,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_preset_delete={props.on_preset_delete}
                 on_toggle_default_preset={props.on_toggle_default_preset}
                 translations={{
-                  my_chat_presets: 'MY CHAT PRESETS',
+                  my_presets: 'MY PRESETS',
                   set_presets_opening_by_default:
                     'Set presets opening by default',
                   not_connected:

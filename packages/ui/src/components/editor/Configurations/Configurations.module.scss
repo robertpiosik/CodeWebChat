@@ -6,8 +6,13 @@
 .my-configurations {
   padding: 0 var(--padding-12px);
   margin-bottom: var(--padding-4px);
-  opacity: 0.7;
-  color: var(--vscode-foreground);
+  display: flex;
+  align-items: center;
+  gap: var(--padding-8px);
+
+  &__left {
+    opacity: 0.7;
+  }
 }
 
 .configurations {
@@ -47,7 +52,7 @@
     &__left {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: var(--padding-5px);
       overflow: hidden;
       white-space: nowrap;
 
@@ -62,9 +67,5 @@
         }
       }
     }
-  }
-
-  &__create {
-    margin: var(--padding-8px) var(--padding-12px) 0 var(--padding-12px);
   }
 }

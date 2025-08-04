@@ -28,7 +28,6 @@ type Props = {
     use_default: string
     last_selection: string
     select: string
-    select_config: string
     code_completions_mode_unavailable_with_text_selection: string
     code_completions_mode_unavailable_without_active_editor: string
     search: string
@@ -428,13 +427,6 @@ export const ChatInput: React.FC<Props> = (props) => {
               ])}
               onClick={(e) => handle_submit(e, true)}
               disabled={is_submit_disabled}
-              title={
-                is_submit_disabled
-                  ? get_disabled_title()
-                  : props.is_web_mode
-                  ? props.translations.select
-                  : props.translations.select_config
-              }
             >
               {navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? (
                 <Icon variant="COMMAND" />
@@ -442,24 +434,13 @@ export const ChatInput: React.FC<Props> = (props) => {
                 <div className={styles.footer__right__button__ctrl}>Ctrl</div>
               )}
               <Icon variant="ENTER" />
-              <span>
-                {props.is_web_mode
-                  ? props.translations.select
-                  : props.translations.select_config}
-              </span>
+              <span>{props.translations.select}</span>
             </button>
 
             <button
               className={styles.footer__right__button}
               onClick={handle_submit}
               disabled={is_submit_disabled}
-              title={
-                is_submit_disabled
-                  ? get_disabled_title()
-                  : props.is_web_mode
-                  ? props.translations.last_selection
-                  : props.translations.use_default
-              }
             >
               <Icon variant="ENTER" />
               <span>
