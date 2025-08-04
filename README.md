@@ -15,10 +15,10 @@ An open-source community effort enabling 100% free AI pair programming.
 
 **With CWC you can:**
 
-- Step into the new era of AI-assisted programming:
+- Step into the new era of AI-assisted coding:
   - granularly select folders and files,
   - type your task and pick "edit format" instructions to attach (whole/truncated/diff),
-  - initialize new chat or send an API request and automatically integrate suggested changes with the codebase.
+  - initialize new chat or send an API request and automatically integrate multi-file changes.
 - Get accurate code completions using the selected context with SOTA reasoning models.
 - Generate meaningful commit messages by referencing the original state of the modified files.
 - Include in context any website in a markdown format.
