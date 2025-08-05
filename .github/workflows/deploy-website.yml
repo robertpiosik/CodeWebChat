@@ -77,7 +77,7 @@ jobs:
         run: |
           aws s3 sync ./packages/website/build s3://${{ env.S3_BUCKET }} --delete
 
-      # - name: Invalidate CloudFront
-      #   if: env.CLOUDFRONT_ID
-      #   run: |
-      #     aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_ID }} --paths "/*"
+      - name: Invalidate CloudFront
+        if: env.CLOUDFRONT_ID
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_ID }} --paths "/*"
