@@ -246,6 +246,7 @@ export const CHATBOTS = {
     models: {
       'qwen3-235b-a22b-2507': { label: 'Qwen3 235B (2507)' },
       'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
+      'gpt-oss-120b': { label: 'GPT OSS 120B' },
       'deepseek-v3-0324': { label: 'DeepSeek V3 (0324)' },
       'kimi-k2': { label: 'Kimi K2' },
       'llama-4-maverick': { label: 'Llama 4 Maverick' }
