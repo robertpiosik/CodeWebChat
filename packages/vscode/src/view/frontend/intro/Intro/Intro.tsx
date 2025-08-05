@@ -37,8 +37,8 @@ export const Intro: React.FC<Props> = (props) => {
               className={styles.top__button}
               href="https://buymeacoffee.com/robertpiosik"
             >
-              <span className="codicon codicon-coffee" />
-              <span>Buy me a coffee</span>
+              <span className="codicon codicon-heart" />
+              <span>Support author</span>
             </a>
           </div>
           <div className={styles.bottom}>
