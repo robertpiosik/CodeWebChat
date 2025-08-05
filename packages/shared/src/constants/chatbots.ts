@@ -79,7 +79,7 @@ export const CHATBOTS = {
     default_top_p: 0,
     models: {
       'sonnet-4': { label: 'Sonnet 4' },
-      'opus-4': { label: 'Opus 4' }
+      'opus-4-1': { label: 'Opus 4.1' }
     }
   },
   DeepSeek: {
@@ -281,4 +281,3 @@ export const CHATBOTS = {
     models: {}
   }
 } satisfies Chatbots
-
