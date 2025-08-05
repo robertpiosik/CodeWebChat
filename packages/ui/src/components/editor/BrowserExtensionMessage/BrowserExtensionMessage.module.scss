@@ -6,13 +6,14 @@
   padding: var(--padding-6px) var(--padding-8px) var(--padding-10px)
     var(--padding-8px);
   background: linear-gradient(
-    90deg,
+    160deg,
     var(--vscode-inputOption-activeBackground),
     var(--vscode-sideBar-background)
   );
   color: var(--vscode-inputOption-activeForeground);
   --border-radius: var(--border-radius-8px);
   border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
 
   > span {
     font-weight: 500;
@@ -30,7 +31,7 @@
     gap: var(--padding-4px);
     align-items: center;
     white-space: nowrap;
-    
+
     &:first-child {
       padding-right: var(--padding-6px);
     }
