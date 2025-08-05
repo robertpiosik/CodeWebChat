@@ -529,7 +529,7 @@ export const HomeView: React.FC<Props> = (props) => {
           </button>
         </div>
         {is_buy_me_coffee_hovered &&
-          Array.from({ length: 20 }).map((_, i) => (
+          Array.from({ length: 4 }).map((_, i) => (
             <span
               key={i}
               className={styles.footer__heart}
