@@ -19,7 +19,7 @@ export const Intro: React.FC<Props> = (props) => {
             >
               <div className={styles.top__heading__title}>Code Web Chat</div>
               <div className={styles.top__heading__subtitle}>
-                The 100% free AI pair programming
+                AI pair programming
               </div>
             </div>
             <button
