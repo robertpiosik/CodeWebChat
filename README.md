@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-A versatile AI pair programming tool connecting **VS Code** with free chatbots.
+A versatile AI pair programming tool connecting VS Code with free chatbots.
 
 ✅ **Initializes 15+ chatbots hands-free** \
 ✅ **Intelligently applies chat responses** \
