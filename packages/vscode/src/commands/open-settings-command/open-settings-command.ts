@@ -39,7 +39,7 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             {
               label: LABEL_EDIT_CONTEXT,
               detail:
-                'Create and modify files based on natural language instructions.'
+                'Modify files based on natural language instructions.'
             },
             {
               label: LABEL_INTELLIGENT_UPDATE,

@@ -67,7 +67,7 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 Get code at cursor from state-of-the-art reasoning models.
 
 **Edit Context** \
-Create and modify files in context based on natural language instructions.
+Modify files in context based on natural language instructions.
 
 **Intelligent Update** \
 Integrate chat/API responses in "truncated" edit format. Fix malformed diffs.
