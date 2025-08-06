@@ -4,7 +4,6 @@
 
 A versatile AI pair programming tool connecting **VS Code** with free chatbots.
 
-✅ **Works with Cursor, Windsurf, VSCodium, etc.** \
 ✅ **Initializes 15+ chatbots hands-free** \
 ✅ **Intelligently applies chat responses** \
 ✅ **Includes all essential API tools**
