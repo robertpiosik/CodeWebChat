@@ -2,12 +2,12 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
 
-A versatile AI pair programming tool connecting VS Code with free chatbots. Designed for top accuracy at unmatched speed and cost effectivenes.
+A versatile AI pair programming tool connecting VS Code with free chatbots. An alternative to agentic coding tools, designed for top accuracy at unmatched speed and cost effectivenes.
 
-✅ Works with **VS Code** and its derivatives \
-✅ **Initializes 15+ chatbots** hands-free \
-✅ Intelligently **applies chat responses** \
-✅ Includes **all essential API tools**
+✅ **Works with VS Code and its derivatives** \
+✅ **Initializes 15+ chatbots hands-free** \
+✅ **Intelligently applies chat responses** \
+✅ **Includes all essential API tools**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -17,8 +17,8 @@ A versatile AI pair programming tool connecting VS Code with free chatbots. Desi
 
 - Step into the new era of AI-assisted coding:
   - granularly select folders and files,
-  - type your task and pick "edit format" instructions to attach (whole/truncated/diff),
-  - initialize new chat or send an API request and automatically integrate multi-file changes.
+  - type something and pick "edit format" instructions (whole/truncated/diff),
+  - initialize new chat or send an API request and integrate multi-file changes.
 - Get accurate code completions using the selected context with SOTA reasoning models.
 - Generate meaningful commit messages by referencing the original state of the modified files.
 - Include in context any website in a markdown format.
