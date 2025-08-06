@@ -15,9 +15,6 @@ import { show_response_ready_notification } from '../utils/show-response-ready-n
 
 export const chatgpt: Chatbot = {
   wait_until_ready: async () => {
-    const max_wait_time = 2000
-    const start_time = Date.now()
-
     await new Promise((resolve) => {
       const check_for_element = () => {
         if (
@@ -25,8 +22,6 @@ export const chatgpt: Chatbot = {
             'span[data-testid="blocking-initial-modals-done"]'
           )
         ) {
-          resolve(null)
-        } else if (Date.now() - start_time >= max_wait_time) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -105,7 +100,7 @@ export const chatgpt: Chatbot = {
 
         params.footer.insertBefore(
           apply_response_button,
-          params.footer.children[params.footer.children.length - 1]
+          params.footer.children[params.footer.children.length]
         )
 
         apply_response_button.focus()
@@ -123,7 +118,7 @@ export const chatgpt: Chatbot = {
         show_response_ready_notification({ chatbot_name: 'ChatGPT' })
 
         const all_footers = document.querySelectorAll(
-          '.agent-turn > div:nth-of-type(2) > div > div'
+          '.agent-turn > div:nth-of-type(2) > div'
         )
         all_footers.forEach((footer) => {
           add_buttons({
