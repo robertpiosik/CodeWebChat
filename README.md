@@ -19,7 +19,7 @@ A versatile AI pair programming tool connecting VS Code with free chatbots.
   - type something and pick "edit format" instructions (whole/truncated/diff),
   - initialize new chat or send an API request and integrate multi-file changes.
 - Get accurate code completions using the selected context with SOTA reasoning models.
-- Generate meaningful commit messages by referencing the original state of the modified files.
+- Generate meaningful summaries of changes by referencing the original state of the modified files.
 - Include in context any website in a markdown format.
 
 **Guiding principles:**
@@ -64,16 +64,16 @@ Code with your favorite chatbot without tedious copy-pasting. The Connector exte
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
 **Code Completions** \
-Get code at cursor from state-of-the-art reasoning models.
+Get accurate code at cursor from state-of-the-art reasoning models.
 
 **Edit Context** \
 Modify files in context based on natural language instructions.
 
 **Intelligent Update** \
-Integrate chat/API responses in "truncated" edit format. Fix malformed diffs.
+Integrate AI responses in "truncated" edit format. Fix malformed diffs.
 
 **Commit Messages** \
-Generate meaningful commit messages precisely adhering to your preferred style.
+Generate meaningful summaries of changes precisely adhering to your preferred style.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Commands</span>
 

@@ -34,7 +34,7 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             {
               label: LABEL_CODE_COMPLETIONS,
               detail:
-                'Get code at cursor from state-of-the-art reasoning models.'
+                'Get accurate code at cursor from state-of-the-art reasoning models.'
             },
             {
               label: LABEL_EDIT_CONTEXT,
@@ -48,7 +48,7 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             {
               label: LABEL_COMMIT_MESSAGES,
               detail:
-                'Generate meaningful commit messages adhering to your style.'
+                'Generate meaningful summaries of changes adhering to your style.'
             }
           ],
           {
