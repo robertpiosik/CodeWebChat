@@ -48,7 +48,6 @@ export const ai_studio: Chatbot = {
     model_selector.click()
     await new Promise((r) => requestAnimationFrame(r))
     const model_options = Array.from(document.querySelectorAll('mat-option'))
-    console.log(model_options)
     for (const option of model_options) {
       const model_name_element = option.querySelector(
         'ms-model-option span.model-name'
@@ -336,9 +335,7 @@ export const ai_studio: Chatbot = {
           'ms-chat-turn .turn-footer'
         )
         all_footers.forEach((footer) => {
-          if (
-            footer.querySelector('mat-icon')?.textContent?.trim() == 'thumb_up'
-          ) {
+          if (footer.querySelector('button[iconname="thumb_up"]')) {
             show_response_ready_notification({ chatbot_name: 'AI Studio' })
             add_buttons({
               footer
