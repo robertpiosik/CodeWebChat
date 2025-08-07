@@ -3,6 +3,7 @@ import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import { Icon } from '../Icon'
+import { captureParts, SYMBOLS } from '@shared/constants/symbols'
 
 type Props = {
   value: string
@@ -16,7 +17,10 @@ type Props = {
   is_in_code_completions_mode: boolean
   has_active_selection: boolean
   has_active_editor: boolean
-  on_caret_position_change: (caret_position: number) => void
+  on_caret_position_change: (
+    caret_position: number,
+    from_selection: boolean
+  ) => void
   is_web_mode: boolean
   on_search_click: () => void
   on_at_sign_click: () => void
@@ -40,6 +44,7 @@ type Props = {
   }
   caret_position_to_set?: number
   on_caret_position_set?: () => void
+  is_focused?: Date
 }
 
 const format_token_count = (count?: number) => {
@@ -80,15 +85,33 @@ export const ChatInput: React.FC<Props> = (props) => {
     }
   }, [props.value])
 
+  useEffect(() => {
+    if (props.is_focused) {
+      textarea_ref.current?.focus()
+    }
+  }, [props.is_focused])
+
   const get_highlighted_text = (text: string) => {
     if (props.is_in_code_completions_mode) {
       return <span>{text}</span>
     }
 
-    const regex =
-      /(@Selection|@Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?|@SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"|`[^`]+`)/g
+    const regex = captureParts(
+      SYMBOLS.File.regexp,
+      /@Selection/,
+      /@Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?/,
+      /@SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"/,
+      /`[^`]+`/
+    )
     const parts = text.split(regex)
     return parts.map((part, index) => {
+      if (SYMBOLS.File.exactMatch(part)) {
+        return (
+          <span key={index} className={styles['selection-keyword']}>
+            {part}
+          </span>
+        )
+      }
       if (part == '@Selection') {
         return (
           <span
@@ -132,7 +155,7 @@ export const ChatInput: React.FC<Props> = (props) => {
   const handle_select = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget
     const caret_position = textarea.selectionStart
-    props.on_caret_position_change(caret_position)
+    props.on_caret_position_change(caret_position, true)
   }
 
   const handle_input_change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -241,6 +264,35 @@ export const ChatInput: React.FC<Props> = (props) => {
           set_history_index(-1)
           props.on_change('')
         }
+      }
+    } else if (e.key == 'Backspace') {
+      const textarea = e.currentTarget
+      const start = textarea.selectionStart
+      const end = textarea.selectionEnd
+
+      // a text is highlighted
+      if (start != end) {
+        return
+      }
+
+      const textBeforeCursor = textarea.value.slice(0, start)
+      const fileSymbolRegex = new RegExp(
+        `${SYMBOLS.File.regexp.source}\\s$`,
+        'g'
+      )
+      const fileSymbolMatch = textBeforeCursor.match(fileSymbolRegex)
+
+      if (fileSymbolMatch) {
+        e.preventDefault()
+
+        const symbolToRemove = fileSymbolMatch[0]
+        const startOfSymbol = start - symbolToRemove.length
+        const textAfterCursor = textarea.value.slice(start)
+
+        props.on_change(
+          textBeforeCursor.slice(0, startOfSymbol) + textAfterCursor
+        )
+        props.on_caret_position_change(startOfSymbol, false)
       }
     } else if (props.value) {
       set_is_history_enabled(false)

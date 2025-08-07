@@ -343,6 +343,10 @@ export interface AtSignQuickPickForPresetAffixResultMessage
   text_to_insert: string
 }
 
+export interface FocusChatInputMessage extends BaseMessage {
+  command: 'FOCUS_CHAT_INPUT'
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
@@ -364,3 +368,4 @@ export type BackendMessage =
   | ApiModeMessage
   | VersionMessage
   | AtSignQuickPickForPresetAffixResultMessage
+  | FocusChatInputMessage

@@ -4,12 +4,18 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 import { SavedContext } from '../types/context'
+import { RecentFileManager } from '@/services/recent-files-manager'
+import { SYMBOLS } from '@shared/constants/symbols'
 
 export async function at_sign_quick_pick(
   context: vscode.ExtensionContext,
   is_code_completions_mode = false
 ): Promise<string | undefined> {
   let items = [
+    {
+      label: SYMBOLS.File.label,
+      description: SYMBOLS.File.description
+    },
     {
       label: '@Selection',
       description: 'Text selection of the active editor'
@@ -37,6 +43,22 @@ export async function at_sign_quick_pick(
 
   if (!selected) {
     return
+  }
+  if (selected.label == SYMBOLS.File.label) {
+    const workspace_folders = vscode.workspace.workspaceFolders
+    if (!workspace_folders || workspace_folders.length == 0) {
+      vscode.window.showErrorMessage('No workspace folders found')
+      return
+    }
+    const workspace_root = workspace_folders[0].uri.fsPath
+    const recentFileManager = new RecentFileManager(context)
+    const selectedFile = await recentFileManager.showFilePicker(workspace_root)
+
+    if (selectedFile) {
+      return SYMBOLS.File.markedValue(selectedFile)
+    } else {
+      return await at_sign_quick_pick(context)
+    }
   }
 
   if (selected.label == '@Selection') {
