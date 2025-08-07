@@ -56,6 +56,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public has_active_editor: boolean = false
+  public has_changes_to_commit: boolean = false
   public has_active_selection: boolean = false
   public caret_position: number = 0
   public ask_instructions: string = ''
@@ -124,6 +125,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       'edit-context'
     )
     this.home_view_type = HOME_VIEW_TYPES.WEB
+
+    this._watch_git_state()
 
     this._config_listener = vscode.workspace.onDidChangeConfiguration(
       (event) => {
@@ -455,6 +458,52 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       command: 'PRESETS',
       presets: all_presets
     })
+  }
+
+  // Control disabled state of the "COMMIT" button
+  private _watch_git_state() {
+    try {
+      const git_extension =
+        vscode.extensions.getExtension('vscode.git')?.exports
+      if (!git_extension) {
+        throw new Error('Git extension not found or not yet active.')
+      }
+
+      const git = git_extension.getAPI(1)
+      if (!git) {
+        throw new Error('Git API not available yet.')
+      }
+
+      const update_git_state = () => {
+        const has_changes = git.repositories.some(
+          (repo: any) =>
+            repo.state.workingTreeChanges.length > 0 ||
+            repo.state.indexChanges.length > 0
+        )
+
+        if (this.has_changes_to_commit != has_changes) {
+          this.has_changes_to_commit = has_changes
+          this.send_message({
+            command: 'GIT_STATE_CHANGED',
+            has_changes_to_commit: this.has_changes_to_commit
+          })
+        }
+      }
+
+      for (const repo of git.repositories) {
+        repo.state.onDidChange(
+          update_git_state,
+          this,
+          this.context.subscriptions
+        )
+      }
+      update_git_state()
+    } catch (error) {
+      console.warn(
+        `Failed to initialize git watcher, will retry in 1s. Error: ${error}`
+      )
+      setTimeout(() => this._watch_git_state(), 1000)
+    }
   }
 
   private _get_html_for_webview(webview: vscode.Webview) {

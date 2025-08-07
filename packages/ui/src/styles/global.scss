@@ -18,12 +18,15 @@ button {
   border: none;
   background: none;
   padding: 0;
-  cursor: pointer;
   font-size: 13px;
   font-family: inherit;
 }
 
-div[role='button'] {
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+div[role='button']:not(:disabled) {
   cursor: pointer;
 }
 

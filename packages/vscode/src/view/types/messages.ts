@@ -280,6 +280,11 @@ export interface EditorSelectionChangedMessage extends BaseMessage {
   has_selection: boolean
 }
 
+export interface GitStateChangedMessage extends BaseMessage {
+  command: 'GIT_STATE_CHANGED'
+  has_changes_to_commit: boolean
+}
+
 export interface ChatHistoryMessage extends BaseMessage {
   command: 'CHAT_HISTORY'
   ask: string[]
@@ -351,6 +356,7 @@ export type BackendMessage =
   | PresetsMessage
   | SelectedPresetsMessage
   | EditorStateChangedMessage
+  | GitStateChangedMessage
   | EditorSelectionChangedMessage
   | ChatHistoryMessage
   | TokenCountMessage

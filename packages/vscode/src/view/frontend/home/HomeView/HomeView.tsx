@@ -38,6 +38,7 @@ type Props = {
   on_configuration_click: (index: number) => void
   has_active_editor: boolean
   has_active_selection: boolean
+  has_changes_to_commit: boolean
   chat_history: string[]
   token_count: number
   selection_text?: string
@@ -506,9 +507,15 @@ export const HomeView: React.FC<Props> = (props) => {
               styles['footer__button--outlined']
             )}
             onClick={() => {
+              if (!props.has_changes_to_commit) return
               props.on_quick_action_click('codeWebChat.commitChanges')
             }}
-            title="Generate a commit message and commit"
+            title={
+              props.has_changes_to_commit
+                ? 'Generate a commit message and commit'
+                : 'No changes to commit'
+            }
+            disabled={!props.has_changes_to_commit}
           >
             COMMIT
           </button>

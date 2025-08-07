@@ -41,8 +41,8 @@
     color: var(--vscode-foreground);
     white-space: nowrap;
 
-    &:hover {
-      color: var(--vscode-foreground);
+    &:disabled {
+      opacity: var(--disabled-opacity);
     }
 
     > svg {
@@ -75,7 +75,7 @@
 
     &--outlined {
       border: 1px solid var(--vscode-commandCenter-inactiveBorder);
-      &:hover {
+      &:hover:not(:disabled) {
         border-color: var(--vscode-commandCenter-activeBorder);
       }
     }
