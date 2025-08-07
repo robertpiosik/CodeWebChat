@@ -11,31 +11,6 @@
   padding: var(--padding-3px) 0 var(--padding-10px) 0;
 }
 
-.commands {
-  position: absolute;
-  z-index: 1;
-  bottom: calc(24px + 16px + 1px + 4px);
-  right: var(--padding-4px);
-  padding: var(--padding-4px) 0;
-  width: 65vw;
-  border-radius: var(--border-radius-4px);
-  transform: translateY(10px);
-  transition: transform 0.15s var(--transition-timing-function),
-    opacity 0.15s var(--transition-timing-function);
-  opacity: 0;
-  background-color: var(--vscode-quickInput-background);
-  color: var(--vscode-quickInput-foreground);
-  border: 1px solid var(--vscode-focusBorder);
-  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
-  pointer-events: none;
-
-  &--visible {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: all;
-  }
-}
-
 .footer {
   position: relative;
   display: flex;
@@ -48,6 +23,11 @@
     display: flex;
     gap: var(--padding-8px);
     overflow: hidden;
+  }
+
+  &__right {
+    display: flex;
+    gap: var(--padding-8px);
   }
 
   &__button {
@@ -98,39 +78,6 @@
       &:hover {
         border-color: var(--vscode-commandCenter-activeBorder);
       }
-    }
-
-    &--outlined-active {
-      border-color: var(--vscode-focusBorder);
-      &:hover {
-        border-color: var(--vscode-focusBorder);
-      }
-    }
-
-    &--quick-actions {
-      position: relative;
-      &::after {
-        content: '';
-        position: absolute;
-        z-index: 2;
-        top: -19px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 10px;
-        height: 10px;
-        border-bottom: 1px solid var(--vscode-focusBorder);
-        border-right: 1px solid var(--vscode-focusBorder);
-        transform: translateY(10px) rotate(45deg);
-        background-color: var(--vscode-quickInput-background);
-        transition: all 0.15s var(--transition-timing-function);
-        opacity: 0;
-        pointer-events: none;
-      }
-    }
-
-    &--quick-actions-after-visible::after {
-      transform: rotate(45deg) translateY(0);
-      opacity: 1;
     }
   }
 

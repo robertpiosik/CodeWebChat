@@ -14,13 +14,15 @@ export const handle_create_preset = async (
     [
       {
         label: 'Preset',
-        description: '(will appear at the top of the list)',
-        detail: 'Your favorite chatbot, preconfigured.'
+        description: 'Placed at the top of the list',
+        detail:
+          'Custom chat configuration with model, prompt prefix/suffix and more.'
       },
       {
         label: 'Group',
-        description: '(will appear at the bottom of the list)',
-        detail: 'Simultaneous initializations of selected presets.'
+        description: 'Placed at the bottom of the list',
+        detail:
+          'Simultaneous initializations of selected presets, shared preffix/suffix.'
       }
     ],
     {

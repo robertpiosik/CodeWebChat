@@ -13,7 +13,6 @@ import { ApiMode, WebMode } from '@shared/types/modes'
 import { Dropdown as UiDropdown } from '@ui/components/editor/Dropdown'
 import { Icon } from '@ui/components/editor/Icon'
 import cn from 'classnames'
-import { QuickAction as UiQuickAction } from '@ui/components/editor/QuickAction'
 import { IconButton } from '@ui/components/editor/IconButton/IconButton'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/BrowserExtensionMessage'
@@ -92,8 +91,6 @@ export const HomeView: React.FC<Props> = (props) => {
   const container_ref = useRef<HTMLDivElement>(null)
   const switch_container_ref = useRef<HTMLDivElement>(null)
   const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
-    useState(false)
-  const [is_showing_pinned_commands, set_is_showing_pinned_commands] =
     useState(false)
 
   const calculate_dropdown_max_width = () => {
@@ -441,31 +438,6 @@ export const HomeView: React.FC<Props> = (props) => {
           )}
         </div>
       </Scrollable>
-      <div
-        className={cn(styles.commands, {
-          [styles['commands--visible']]: is_showing_pinned_commands
-        })}
-      >
-        <UiQuickAction
-          title="Apply Chat Response"
-          description="Integrate copied message or a code block"
-          on_click={() =>
-            props.on_quick_action_click('codeWebChat.applyChatResponse')
-          }
-        />
-        <UiQuickAction
-          title="Revert Last Changes"
-          description="Restore saved state of the codebase"
-          on_click={() => props.on_quick_action_click('codeWebChat.revert')}
-        />
-        <UiQuickAction
-          title="Commit Changes"
-          description="Generate a commit message and commit"
-          on_click={() =>
-            props.on_quick_action_click('codeWebChat.commitChanges')
-          }
-        />
-      </div>
 
       <div className={styles.footer}>
         <div className={styles.footer__left}>
@@ -501,31 +473,44 @@ export const HomeView: React.FC<Props> = (props) => {
             title="Join subreddit"
           >
             <Icon variant="REDDIT" />
-            <span style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
-              COMMUNITY
-            </span>
           </a>
         </div>
-        <div>
+        <div className={styles.footer__right}>
           <button
             className={cn(
               styles.footer__button,
-              styles['footer__button--outlined'],
-              is_showing_pinned_commands
-                ? styles['footer__button--outlined-active']
-                : '',
-              styles['footer__button--quick-actions'],
-              is_showing_pinned_commands
-                ? styles['footer__button--quick-actions-after-visible']
-                : ''
+              styles['footer__button--outlined']
             )}
             onClick={() => {
-              set_is_showing_pinned_commands(!is_showing_pinned_commands)
+              props.on_quick_action_click('codeWebChat.applyChatResponse')
             }}
-            title="Handy access to selected features"
+            title="Integrate copied message or a code block"
           >
-            <span className="codicon codicon-pinned" />
-            PINNED COMMANDS
+            APPLY
+          </button>
+          <button
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--outlined']
+            )}
+            onClick={() => {
+              props.on_quick_action_click('codeWebChat.revert')
+            }}
+            title="Restore saved state of the codebase"
+          >
+            REVERT
+          </button>
+          <button
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--outlined']
+            )}
+            onClick={() => {
+              props.on_quick_action_click('codeWebChat.commitChanges')
+            }}
+            title="Generate a commit message and commit"
+          >
+            COMMIT
           </button>
         </div>
         {is_buy_me_coffee_hovered &&
