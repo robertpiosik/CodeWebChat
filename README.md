@@ -1,12 +1,12 @@
 # Code Web Chat
 
-<a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a>
+<a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
 A versatile AI pair programming tool connecting VS Code with free chatbots. With emphasis put on context management, it delivers accuracy, predictability, speed and cost effectiveness unmatched by IDE or terminal based coding agents. CWC is designed for real-world programming, saving you sanity, money and time.
 
 ✅ **Initializes 15+ chatbots hands-free** \
 ✅ **Intelligently applies chat responses** \
-✅ **Includes all essential API tools**
+✅ **Includes all the essential API tools**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
