@@ -30,15 +30,15 @@ export const Intro: React.FC<Props> = (props) => {
               <span>Launch CWC</span>
             </button>
             <a className={styles.top__button} href="https://codeweb.chat/">
-              <span className="codicon codicon-link-external" />
-              <span>Visit codeweb.chat</span>
+              <span className="codicon codicon-book" />
+              <span>Documentation</span>
             </a>
             <a
               className={styles.top__button}
               href="https://buymeacoffee.com/robertpiosik"
             >
-              <span className="codicon codicon-heart" />
-              <span>Sponsor</span>
+              <span className="codicon codicon-coffee" />
+              <span>Buy $3 coffee</span>
             </a>
           </div>
           <div className={styles.bottom}>
