@@ -195,6 +195,10 @@ export interface GetVersionMessage extends BaseMessage {
   command: 'GET_VERSION'
 }
 
+export interface CheckClipboardForApplyMessage extends BaseMessage {
+  command: 'CHECK_CLIPBOARD_FOR_APPLY'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -233,6 +237,7 @@ export type FrontendMessage =
   | SaveApiModeMessage
   | GetApiToolConfigurationsMessage
   | GetVersionMessage
+  | CheckClipboardForApplyMessage
 
 // Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {

@@ -486,7 +486,11 @@ export const HomeView: React.FC<Props> = (props) => {
             onClick={() => {
               props.on_quick_action_click('codeWebChat.applyChatResponse')
             }}
-            title="Integrate copied message or a code block"
+            title={
+              props.can_apply_clipboard
+                ? 'Integrate copied message or a code block'
+                : 'Nothing applicable found in clipboard'
+            }
             disabled={!props.can_apply_clipboard}
           >
             APPLY

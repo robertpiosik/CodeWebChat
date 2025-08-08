@@ -379,6 +379,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               this.context,
               message
             )
+          } else if (message.command == 'CHECK_CLIPBOARD_FOR_APPLY') {
+            await this._check_clipboard_for_apply()
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
           } else if (message.command == 'PICK_CHATBOT') {

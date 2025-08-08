@@ -41,6 +41,12 @@ export const View = () => {
   const [web_mode, set_web_mode] = useState<WebMode>()
   const [api_mode, set_api_mode] = useState<ApiMode>()
 
+  const handle_mouse_enter = () => {
+    post_message(vscode, {
+      command: 'CHECK_CLIPBOARD_FOR_APPLY'
+    })
+  }
+
   const handle_instructions_change = (
     value: string,
     mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
@@ -250,7 +256,7 @@ export const View = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onMouseEnter={handle_mouse_enter}>
       {overlay && (
         <div className={cn(styles.slot, styles['slot--overlay'])}>
           {overlay}
