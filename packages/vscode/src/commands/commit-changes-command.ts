@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { Logger } from '@/utils/logger'
+import { LAST_APPLIED_CHANGES_STATE_KEY } from '../constants/state-keys'
 import {
   get_git_repository,
   prepare_staged_changes
@@ -43,6 +44,8 @@ export function commit_changes_command(context: vscode.ExtensionContext) {
           vscode.window.showInformationMessage(
             `New commit: "${commit_message}".`
           )
+
+          context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
 
           await repository.status()
         } catch (commit_error) {
