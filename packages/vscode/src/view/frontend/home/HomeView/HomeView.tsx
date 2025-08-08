@@ -95,6 +95,8 @@ export const HomeView: React.FC<Props> = (props) => {
   const switch_container_ref = useRef<HTMLDivElement>(null)
   const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
     useState(false)
+  const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
+    useState(false)
 
   const calculate_dropdown_max_width = () => {
     if (!container_ref.current || !switch_container_ref.current) return
@@ -192,6 +194,15 @@ export const HomeView: React.FC<Props> = (props) => {
 
   const handle_preset_copy = (preset_name: string) => {
     props.copy_to_clipboard(preset_name)
+  }
+
+  const handle_commit_click = () => {
+    if (!props.has_changes_to_commit) return
+
+    set_is_commit_disabled_temporarily(true)
+    props.on_quick_action_click('codeWebChat.commitChanges')
+
+    setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
   }
 
   return (
@@ -518,16 +529,15 @@ export const HomeView: React.FC<Props> = (props) => {
               styles.footer__button,
               styles['footer__button--outlined']
             )}
-            onClick={() => {
-              if (!props.has_changes_to_commit) return
-              props.on_quick_action_click('codeWebChat.commitChanges')
-            }}
+            onClick={handle_commit_click}
             title={
-              props.has_changes_to_commit
+              props.has_changes_to_commit && !is_commit_disabled_temporarily
                 ? 'Generate a commit message and commit'
                 : 'No changes to commit'
             }
-            disabled={!props.has_changes_to_commit}
+            disabled={
+              !props.has_changes_to_commit || is_commit_disabled_temporarily
+            }
           >
             COMMIT
           </button>
