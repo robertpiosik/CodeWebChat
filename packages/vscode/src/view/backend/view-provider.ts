@@ -44,6 +44,9 @@ import {
   handle_pick_open_router_model,
   handle_pick_chatbot
 } from './message-handlers'
+import {
+  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
+} from '@/constants/state-keys'
 import { can_revert } from '@/commands/revert-command'
 import {
   config_preset_to_ui_format,
@@ -251,6 +254,19 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     if (!this._webview_view) return
 
     const clipboard_text = await vscode.env.clipboard.readText()
+
+    const last_applied_content = this.context.workspaceState.get<string>(
+      LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
+    )
+
+    if (
+      clipboard_text.trim() &&
+      last_applied_content &&
+      clipboard_text === last_applied_content
+    ) {
+      this.send_message({ command: 'CAN_APPLY_CLIPBOARD_CHANGED', can_apply: false })
+      return
+    }
 
     if (!clipboard_text.trim()) {
       this.send_message({
@@ -542,6 +558,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       )
       setTimeout(() => this._watch_git_state(), 1000)
     }
+  }
+
+  public set_apply_button_state = (can_apply: boolean) => {
+    this.send_message({
+      command: 'CAN_APPLY_CLIPBOARD_CHANGED',
+      can_apply: can_apply
+    })
   }
 
   public set_revert_button_state = (can_revert: boolean) => {

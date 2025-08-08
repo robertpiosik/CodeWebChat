@@ -1,7 +1,11 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
-import { LAST_APPLIED_CHANGES_STATE_KEY } from '../constants/state-keys'
+import {
+  LAST_APPLIED_CHANGES_STATE_KEY,
+  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
+} from '../constants/state-keys'
 import { create_safe_path } from '../utils/path-sanitizer'
+import { parse_response } from './apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
 
 interface OriginalFileState {
   file_path: string
@@ -12,7 +16,8 @@ interface OriginalFileState {
 
 export function revert_command(
   context: vscode.ExtensionContext,
-  on_can_revert: (can_revert: boolean) => void
+  on_can_revert: (can_revert: boolean) => void,
+  set_apply_button_state: (can_apply: boolean) => void
 ) {
   return vscode.commands.registerCommand('codeWebChat.revert', async () => {
     const original_states = context.workspaceState.get<OriginalFileState[]>(
@@ -100,7 +105,24 @@ export function revert_command(
       }
 
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
+      context.workspaceState.update(
+        LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+        null
+      )
       on_can_revert(false)
+
+      const clipboard_text = await vscode.env.clipboard.readText()
+      if (!clipboard_text.trim()) {
+        set_apply_button_state(false)
+      } else {
+        const content = parse_response(clipboard_text)
+        const can_apply =
+          content.code_completion != null ||
+          (content.patches && content.patches.length > 0) ||
+          (content.files && content.files.length > 0) ||
+          false
+        set_apply_button_state(can_apply)
+      }
 
       vscode.window.showInformationMessage('Changes successfully reverted.')
       return true

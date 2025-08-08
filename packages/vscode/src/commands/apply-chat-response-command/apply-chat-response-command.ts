@@ -1,7 +1,10 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import { parse_response, ClipboardFile } from './utils/clipboard-parser'
-import { LAST_APPLIED_CHANGES_STATE_KEY } from '../../constants/state-keys'
+import {
+  LAST_APPLIED_CHANGES_STATE_KEY,
+  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
+} from '../../constants/state-keys'
 import { Logger } from '../../utils/logger'
 import { OriginalFileState } from '../../types/common'
 import { revert_files } from './utils/file-operations'
@@ -15,20 +18,6 @@ import { apply_git_patch } from './utils/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
-
-function update_revert_state(
-  context: vscode.ExtensionContext,
-  on_can_revert: (can_revert: boolean) => void,
-  states: OriginalFileState[] | null
-) {
-  if (states && states.length > 0) {
-    context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, states)
-    on_can_revert(true)
-  } else {
-    context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
-    on_can_revert(false)
-  }
-}
 
 async function check_if_all_files_new(
   files: ClipboardFile[]
@@ -369,8 +358,32 @@ async function handle_code_completion(completion: {
 }
 export function apply_chat_response_command(
   context: vscode.ExtensionContext,
-  on_can_revert: (can_revert: boolean) => void
+  on_can_revert: (can_revert: boolean) => void,
+  set_apply_button_state: (can_apply: boolean) => void
 ) {
+  function update_revert_and_apply_button_state(
+    states: OriginalFileState[] | null,
+    applied_content?: string | null
+  ) {
+    if (states && states.length > 0) {
+      context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, states)
+      context.workspaceState.update(
+        LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+        applied_content
+      )
+      on_can_revert(true)
+      set_apply_button_state(false)
+    } else {
+      context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
+      context.workspaceState.update(
+        LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+        null
+      )
+      on_can_revert(false)
+      set_apply_button_state(true)
+    }
+  }
+
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
     async (args?: { response?: string }) => {
@@ -471,7 +484,10 @@ export function apply_chat_response_command(
 
         // Store all original states for potential reversion
         if (all_original_states.length > 0) {
-          update_revert_state(context, on_can_revert, all_original_states)
+          update_revert_and_apply_button_state(
+            all_original_states,
+            chat_response
+          )
         }
 
         // Handle results
@@ -487,7 +503,7 @@ export function apply_chat_response_command(
             // If we can't get the config, revert successful patches to maintain consistency
             if (success_count > 0 && all_original_states.length > 0) {
               await revert_files(all_original_states)
-              update_revert_state(context, on_can_revert, null)
+              update_revert_and_apply_button_state(null)
             }
             return
           }
@@ -525,7 +541,10 @@ export function apply_chat_response_command(
                 ...all_original_states,
                 ...intelligent_update_states
               ]
-              update_revert_state(context, on_can_revert, combined_states)
+              update_revert_and_apply_button_state(
+                combined_states,
+                chat_response
+              )
               const response = await vscode.window.showInformationMessage(
                 `Successfully applied ${failed_patches.length} failed patch${
                   failed_patches.length != 1 ? 'es' : ''
@@ -535,13 +554,13 @@ export function apply_chat_response_command(
 
               if (response == 'Revert') {
                 await revert_files(combined_states)
-                update_revert_state(context, on_can_revert, null)
+                update_revert_and_apply_button_state(null)
               }
             } else {
               // Intelligent update failed or was canceled - revert successful patches
               if (success_count > 0 && all_original_states.length > 0) {
                 await revert_files(all_original_states)
-                update_revert_state(context, on_can_revert, null)
+                update_revert_and_apply_button_state(null)
               }
             }
           } catch (error) {
@@ -559,7 +578,7 @@ export function apply_chat_response_command(
 
             if (response == 'Revert' && all_original_states.length > 0) {
               await revert_files(all_original_states)
-              update_revert_state(context, on_can_revert, null)
+              update_revert_and_apply_button_state(null)
             }
           }
         } else if (success_count > 0) {
@@ -578,7 +597,7 @@ export function apply_chat_response_command(
 
           if (response == 'Revert' && all_original_states.length > 0) {
             await revert_files(all_original_states)
-            update_revert_state(context, on_can_revert, null)
+            update_revert_and_apply_button_state(null)
           } else if (response == 'Looks off, use intelligent update') {
             const fallback_patches_info = applied_patches.filter(
               (p) => p.used_fallback
@@ -609,7 +628,7 @@ export function apply_chat_response_command(
             if (!config_result) {
               // Config was cancelled. The fallback patches are reverted.
               // The state should now be just the good patches.
-              update_revert_state(context, on_can_revert, good_states)
+              update_revert_and_apply_button_state(good_states, chat_response)
               return
             }
 
@@ -650,7 +669,10 @@ export function apply_chat_response_command(
                   ...good_states,
                   ...intelligent_update_states
                 ]
-                update_revert_state(context, on_can_revert, combined_states)
+                update_revert_and_apply_button_state(
+                  combined_states,
+                  chat_response
+                )
                 const response = await vscode.window.showInformationMessage(
                   `Successfully applied patches using intelligent update.`,
                   'Revert'
@@ -658,11 +680,11 @@ export function apply_chat_response_command(
 
                 if (response == 'Revert') {
                   await revert_files(combined_states)
-                  update_revert_state(context, on_can_revert, null)
+                  update_revert_and_apply_button_state(null)
                 }
               } else {
                 // Intelligent update was canceled.
-                update_revert_state(context, on_can_revert, good_states)
+                update_revert_and_apply_button_state(good_states, chat_response)
                 vscode.window.showInformationMessage(
                   'Intelligent update was canceled. Fallback changes reverted; clean changes kept.'
                 )
@@ -672,7 +694,7 @@ export function apply_chat_response_command(
                 function_name: 'apply_chat_response_command',
                 message: 'Error during intelligent update of fallback patches'
               })
-              update_revert_state(context, on_can_revert, good_states)
+              update_revert_and_apply_button_state(good_states, chat_response)
               vscode.window.showErrorMessage(
                 'Error during intelligent update. Fallback changes reverted; clean changes kept.'
               )
@@ -793,7 +815,10 @@ export function apply_chat_response_command(
 
         // --- Handle Results ---
         if (operation_success && final_original_states) {
-          update_revert_state(context, on_can_revert, final_original_states)
+          update_revert_and_apply_button_state(
+            final_original_states,
+            chat_response
+          )
 
           // Check how many files were actually new and how many were replaced
           const new_files_count = final_original_states.filter(
@@ -838,11 +863,11 @@ export function apply_chat_response_command(
 
             if (response == 'Revert') {
               await revert_files(final_original_states)
-              update_revert_state(context, on_can_revert, null)
+              update_revert_and_apply_button_state(null)
             } else if (response == 'Looks off, use intelligent update') {
               // First revert the fast replace changes
               await revert_files(final_original_states)
-              update_revert_state(context, on_can_revert, null)
+              update_revert_and_apply_button_state(null)
               // Then trigger intelligent update
               const api_providers_manager = new ApiProvidersManager(context)
               const config_result = await get_intelligent_update_config(
@@ -878,10 +903,9 @@ export function apply_chat_response_command(
                 })
 
                 if (final_original_states) {
-                  update_revert_state(
-                    context,
-                    on_can_revert,
-                    final_original_states
+                  update_revert_and_apply_button_state(
+                    final_original_states,
+                    chat_response
                   )
                   // Recalculate counts for the intelligent update result
                   const intelligent_new_files_count =
@@ -916,7 +940,7 @@ export function apply_chat_response_command(
                     .then((response) => {
                       if (response == 'Revert') {
                         revert_files(final_original_states!)
-                        update_revert_state(context, on_can_revert, null)
+                        update_revert_and_apply_button_state(null)
                       }
                     })
                 } else {
@@ -947,13 +971,13 @@ export function apply_chat_response_command(
 
             if (response == 'Revert') {
               await revert_files(final_original_states)
-              update_revert_state(context, on_can_revert, null)
+              update_revert_and_apply_button_state(null)
             }
           }
         } else {
           // Handler already showed specific error messages or handled cancellation silently.
           // Clear any potentially partially stored state from a failed operation.
-          update_revert_state(context, on_can_revert, null)
+          update_revert_and_apply_button_state(null)
           Logger.log({
             function_name: 'apply_chat_response_command',
             message: 'Operation concluded without success.'

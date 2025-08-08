@@ -1,4 +1,7 @@
-export const LAST_APPLIED_CHANGES_STATE_KEY = 'lastAppliedChangesState'
+// Use kebab-case for new keys
+export const LAST_APPLIED_CHANGES_STATE_KEY = 'last-applied-changes-state'
+export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
+  'last-applied-clipboard-content'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
 export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'lastSaveLocation'
 export const LAST_CONTEXT_READ_LOCATION_STATE_KEY = 'lastReadLocation'

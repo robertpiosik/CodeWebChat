@@ -94,9 +94,14 @@ export async function activate(context: vscode.ExtensionContext) {
       reference_in_chat_command(view_provider, workspace_provider),
       apply_chat_response_command(
         context,
-        view_provider.set_revert_button_state
+        view_provider.set_revert_button_state,
+        view_provider.set_apply_button_state
       ),
-      revert_command(context, view_provider.set_revert_button_state)
+      revert_command(
+        context,
+        view_provider.set_revert_button_state,
+        view_provider.set_apply_button_state
+      )
     )
   }
 
