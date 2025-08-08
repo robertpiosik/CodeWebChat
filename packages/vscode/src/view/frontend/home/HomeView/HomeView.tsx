@@ -40,6 +40,7 @@ type Props = {
   has_active_selection: boolean
   has_changes_to_commit: boolean
   can_apply_clipboard: boolean
+  can_revert: boolean
   chat_history: string[]
   token_count: number
   selection_text?: string
@@ -503,7 +504,12 @@ export const HomeView: React.FC<Props> = (props) => {
             onClick={() => {
               props.on_quick_action_click('codeWebChat.revert')
             }}
-            title="Restore saved state of the codebase"
+            title={
+              props.can_revert
+                ? 'Restore saved state of the codebase after chat/API response integration'
+                : 'Nothing to revert'
+            }
+            disabled={!props.can_revert}
           >
             REVERT
           </button>

@@ -44,6 +44,7 @@ import {
   handle_pick_open_router_model,
   handle_pick_chatbot
 } from './message-handlers'
+import { can_revert } from '@/commands/revert-command'
 import {
   config_preset_to_ui_format,
   ConfigPresetFormat
@@ -57,7 +58,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public has_active_editor: boolean = false
-  public has_changes_to_commit: boolean = false
   public has_active_selection: boolean = false
   public caret_position: number = 0
   public ask_instructions: string = ''
@@ -338,7 +338,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'CREATE_PRESET') {
             await handle_create_preset(this)
           } else if (message.command == 'EXECUTE_COMMAND') {
-            vscode.commands.executeCommand(message.command_id)
+            await vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'EDIT_CONTEXT') {
             await handle_edit_context(this, message)
           } else if (message.command == 'CODE_COMPLETION') {
@@ -396,6 +396,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     )
 
     this.send_presets_to_webview(webview_view.webview)
+    // We need to wait until the webview fully initialized
+    setTimeout(() => {
+      this.send_message({
+        command: 'CAN_REVERT_CHANGED',
+        can_revert: can_revert(this.context)
+      })
+    }, 1000)
   }
 
   public calculate_token_count() {
@@ -515,13 +522,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             repo.state.indexChanges.length > 0
         )
 
-        if (this.has_changes_to_commit != has_changes) {
-          this.has_changes_to_commit = has_changes
-          this.send_message({
-            command: 'GIT_STATE_CHANGED',
-            has_changes_to_commit: this.has_changes_to_commit
-          })
-        }
+        this.send_message({
+          command: 'GIT_STATE_CHANGED',
+          has_changes_to_commit: has_changes
+        })
       }
 
       for (const repo of git.repositories) {
@@ -538,6 +542,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       )
       setTimeout(() => this._watch_git_state(), 1000)
     }
+  }
+
+  public set_revert_button_state = (can_revert: boolean) => {
+    this.send_message({
+      command: 'CAN_REVERT_CHANGED',
+      can_revert: can_revert
+    })
   }
 
   private _get_html_for_webview(webview: vscode.Webview) {

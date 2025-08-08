@@ -32,7 +32,7 @@ import {
   open_settings_command,
   open_url_command,
   feedback_command,
-  apply_context_from_clipboard_command,
+  apply_context_from_clipboard_command
 } from './commands'
 
 // Store WebSocketServer instance at module level
@@ -91,13 +91,17 @@ export async function activate(context: vscode.ExtensionContext) {
           }
         }
       ),
-      reference_in_chat_command(view_provider, workspace_provider)
+      reference_in_chat_command(view_provider, workspace_provider),
+      apply_chat_response_command(
+        context,
+        view_provider.set_revert_button_state
+      ),
+      revert_command(context, view_provider.set_revert_button_state)
     )
   }
 
   context.subscriptions.push(
     open_file_from_workspace_command(open_editors_provider),
-    apply_chat_response_command(context),
     ...code_completion_commands(
       workspace_provider,
       open_editors_provider,
@@ -111,7 +115,7 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
-    revert_command(context),
+
     generate_commit_message_command(context),
     commit_changes_command(context),
     open_url_command({

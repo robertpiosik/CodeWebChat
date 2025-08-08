@@ -353,7 +353,10 @@ async function handle_code_completion(completion: {
     vscode.window.showErrorMessage(error.message)
   }
 }
-export function apply_chat_response_command(context: vscode.ExtensionContext) {
+export function apply_chat_response_command(
+  context: vscode.ExtensionContext,
+  on_can_revert: (can_revert: boolean) => void
+) {
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
     async (args?: { response?: string }) => {
@@ -458,6 +461,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             LAST_APPLIED_CHANGES_STATE_KEY,
             all_original_states
           )
+          on_can_revert(true)
         }
 
         // Handle results
@@ -477,6 +481,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 LAST_APPLIED_CHANGES_STATE_KEY,
                 null
               )
+              on_can_revert(false)
             }
             return
           }
@@ -518,6 +523,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 LAST_APPLIED_CHANGES_STATE_KEY,
                 combined_states
               )
+              on_can_revert(true)
               const response = await vscode.window.showInformationMessage(
                 `Successfully applied ${failed_patches.length} failed patch${
                   failed_patches.length != 1 ? 'es' : ''
@@ -531,6 +537,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                   LAST_APPLIED_CHANGES_STATE_KEY,
                   null
                 )
+                on_can_revert(false)
               }
             } else {
               // Intelligent update failed or was canceled - revert successful patches
@@ -540,6 +547,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                   LAST_APPLIED_CHANGES_STATE_KEY,
                   null
                 )
+                on_can_revert(false)
               }
             }
           } catch (error) {
@@ -561,6 +569,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 LAST_APPLIED_CHANGES_STATE_KEY,
                 null
               )
+              on_can_revert(false)
             }
           }
         } else if (success_count > 0) {
@@ -580,6 +589,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
           if (response == 'Revert' && all_original_states.length > 0) {
             await revert_files(all_original_states)
             context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
+            on_can_revert(false)
           } else if (response == 'Looks off, use intelligent update') {
             const fallback_patches_info = applied_patches.filter(
               (p) => p.used_fallback
@@ -614,6 +624,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 LAST_APPLIED_CHANGES_STATE_KEY,
                 good_states.length > 0 ? good_states : null
               )
+              on_can_revert(good_states.length > 0)
               return
             }
 
@@ -658,6 +669,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                   LAST_APPLIED_CHANGES_STATE_KEY,
                   combined_states
                 )
+                on_can_revert(true)
                 const response = await vscode.window.showInformationMessage(
                   `Successfully applied patches using intelligent update.`,
                   'Revert'
@@ -669,6 +681,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                     LAST_APPLIED_CHANGES_STATE_KEY,
                     null
                   )
+                  on_can_revert(false)
                 }
               } else {
                 // Intelligent update was canceled.
@@ -676,6 +689,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                   LAST_APPLIED_CHANGES_STATE_KEY,
                   good_states.length > 0 ? good_states : null
                 )
+                on_can_revert(good_states.length > 0)
                 vscode.window.showInformationMessage(
                   'Intelligent update was canceled. Fallback changes reverted; clean changes kept.'
                 )
@@ -689,6 +703,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 LAST_APPLIED_CHANGES_STATE_KEY,
                 good_states.length > 0 ? good_states : null
               )
+              on_can_revert(good_states.length > 0)
               vscode.window.showErrorMessage(
                 'Error during intelligent update. Fallback changes reverted; clean changes kept.'
               )
@@ -813,6 +828,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
             LAST_APPLIED_CHANGES_STATE_KEY,
             final_original_states
           )
+          on_can_revert(true)
 
           // Check how many files were actually new and how many were replaced
           const new_files_count = final_original_states.filter(
@@ -861,10 +877,15 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 LAST_APPLIED_CHANGES_STATE_KEY,
                 null
               )
+              on_can_revert(false)
             } else if (response == 'Looks off, use intelligent update') {
               // First revert the fast replace changes
               await revert_files(final_original_states)
-
+              context.workspaceState.update(
+                LAST_APPLIED_CHANGES_STATE_KEY,
+                null
+              )
+              on_can_revert(false)
               // Then trigger intelligent update
               const api_providers_manager = new ApiProvidersManager(context)
               const config_result = await get_intelligent_update_config(
@@ -904,6 +925,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                     LAST_APPLIED_CHANGES_STATE_KEY,
                     final_original_states
                   )
+                  on_can_revert(true)
                   // Recalculate counts for the intelligent update result
                   const intelligent_new_files_count =
                     final_original_states.filter((state) => state.is_new).length
@@ -941,6 +963,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                           LAST_APPLIED_CHANGES_STATE_KEY,
                           null
                         )
+                        on_can_revert(false)
                       }
                     })
                 } else {
@@ -948,7 +971,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                   vscode.window.showInformationMessage(
                     'Intelligent update was canceled. Fast replace changes have been reverted.'
                   )
-                  // State is already cleared by the revert_files call above
+                  // State has been cleared before attempting intelligent update.
                 }
               } catch (error) {
                 // Handle errors during the second intelligent update attempt
@@ -959,7 +982,7 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 vscode.window.showErrorMessage(
                   'Error during intelligent update. Fast replace changes have been reverted.'
                 )
-                // State is already cleared by the revert_files call above
+                // State has been cleared before attempting intelligent update.
               }
             }
           } else {
@@ -975,12 +998,14 @@ export function apply_chat_response_command(context: vscode.ExtensionContext) {
                 LAST_APPLIED_CHANGES_STATE_KEY,
                 null
               )
+              on_can_revert(false)
             }
           }
         } else {
           // Handler already showed specific error messages or handled cancellation silently.
           // Clear any potentially partially stored state from a failed operation.
           context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
+          on_can_revert(false)
           Logger.log({
             function_name: 'apply_chat_response_command',
             message: 'Operation concluded without success.'

@@ -358,6 +358,11 @@ export interface CanApplyClipboardChangedMessage extends BaseMessage {
   can_apply: boolean
 }
 
+export interface CanRevertChangedMessage extends BaseMessage {
+  command: 'CAN_REVERT_CHANGED'
+  can_revert: boolean
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
@@ -381,3 +386,4 @@ export type BackendMessage =
   | VersionMessage
   | AtSignQuickPickForPresetAffixResultMessage
   | CanApplyClipboardChangedMessage
+  | CanRevertChangedMessage
