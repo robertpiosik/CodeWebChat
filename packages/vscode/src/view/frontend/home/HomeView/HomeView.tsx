@@ -450,7 +450,7 @@ export const HomeView: React.FC<Props> = (props) => {
               styles['footer__button--buy-me-a-coffee']
             )}
             href="https://buymeacoffee.com/robertpiosik"
-            title="Support author"
+            title="Buy my a coffee"
             onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
             onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
           >
