@@ -99,7 +99,7 @@ Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Donations</span>
 
-If you use CWC daily, [buying a coffee](https://buymeacoffee.com/robertpiosik) is a great way to show your support for the project.
+If you use CWC daily, [buying a $3 coffee](https://buymeacoffee.com/robertpiosik) is a great way to show your support for the project.
 
 **BTC:** bc1qfzajl0fc4347knr6n5hhuk52ufr4sau04su5te
 
