@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
+import { parse_response } from '@/commands/apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
 import { WebsitesProvider } from '../../context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
@@ -124,6 +125,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       'api-mode',
       'edit-context'
     )
+
+    vscode.window.onDidChangeWindowState(async (e) => {
+      if (e.focused) {
+        await this._check_clipboard_for_apply()
+      }
+    })
+
     this.home_view_type = HOME_VIEW_TYPES.WEB
 
     this._watch_git_state()
@@ -237,6 +245,30 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         }
       }
     })
+  }
+
+  private async _check_clipboard_for_apply() {
+    if (!this._webview_view) return
+
+    const clipboard_text = await vscode.env.clipboard.readText()
+
+    if (!clipboard_text.trim()) {
+      this.send_message({
+        command: 'CAN_APPLY_CLIPBOARD_CHANGED',
+        can_apply: false
+      })
+      return
+    }
+
+    const content = parse_response(clipboard_text)
+
+    const can_apply =
+      content.code_completion != null ||
+      (content.patches && content.patches.length > 0) ||
+      (content.files && content.files.length > 0) ||
+      false
+
+    this.send_message({ command: 'CAN_APPLY_CLIPBOARD_CHANGED', can_apply })
   }
 
   public send_message(message: BackendMessage) {

@@ -57,6 +57,8 @@ export const Home: React.FC<Props> = (props) => {
   >()
   const [has_changes_to_commit, set_has_changes_to_commit] =
     useState<boolean>(false)
+  const [can_apply_clipboard, set_can_apply_clipboard] =
+    useState<boolean>(false)
 
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
@@ -112,6 +114,9 @@ export const Home: React.FC<Props> = (props) => {
           break
         case 'GIT_STATE_CHANGED':
           set_has_changes_to_commit(message.has_changes_to_commit)
+          break
+        case 'CAN_APPLY_CLIPBOARD_CHANGED':
+          set_can_apply_clipboard(message.can_apply)
           break
       }
     }
@@ -495,6 +500,7 @@ export const Home: React.FC<Props> = (props) => {
       has_active_editor={props.has_active_editor}
       has_active_selection={props.has_active_selection}
       has_changes_to_commit={has_changes_to_commit}
+      can_apply_clipboard={can_apply_clipboard}
       chat_history={current_history || []}
       token_count={token_count}
       selection_text={selection_text}

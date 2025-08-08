@@ -39,6 +39,7 @@ type Props = {
   has_active_editor: boolean
   has_active_selection: boolean
   has_changes_to_commit: boolean
+  can_apply_clipboard: boolean
   chat_history: string[]
   token_count: number
   selection_text?: string
@@ -486,6 +487,7 @@ export const HomeView: React.FC<Props> = (props) => {
               props.on_quick_action_click('codeWebChat.applyChatResponse')
             }}
             title="Integrate copied message or a code block"
+            disabled={!props.can_apply_clipboard}
           >
             APPLY
           </button>
@@ -521,7 +523,7 @@ export const HomeView: React.FC<Props> = (props) => {
           </button>
         </div>
         {is_buy_me_coffee_hovered &&
-          Array.from({ length: 4 }).map((_, i) => (
+          Array.from({ length: 3 }).map((_, i) => (
             <span
               key={i}
               className={styles.footer__heart}

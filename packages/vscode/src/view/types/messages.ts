@@ -348,6 +348,11 @@ export interface AtSignQuickPickForPresetAffixResultMessage
   text_to_insert: string
 }
 
+export interface CanApplyClipboardChangedMessage extends BaseMessage {
+  command: 'CAN_APPLY_CLIPBOARD_CHANGED'
+  can_apply: boolean
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
@@ -370,3 +375,4 @@ export type BackendMessage =
   | ApiModeMessage
   | VersionMessage
   | AtSignQuickPickForPresetAffixResultMessage
+  | CanApplyClipboardChangedMessage

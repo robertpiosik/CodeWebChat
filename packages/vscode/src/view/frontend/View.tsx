@@ -35,8 +35,6 @@ export const View = () => {
   const [has_active_selection, set_has_active_selection] = useState<
     boolean | undefined
   >()
-  const [has_changes_to_commit, set_has_changes_to_commit] =
-    useState<boolean>(false)
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
   const [home_view_type, set_home_view_type] = useState<HomeViewType>()
@@ -85,8 +83,6 @@ export const View = () => {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
-      } else if (message.command == 'GIT_STATE_CHANGED') {
-        set_has_changes_to_commit(message.has_changes_to_commit)
       }
     }
     window.addEventListener('message', handle_message)

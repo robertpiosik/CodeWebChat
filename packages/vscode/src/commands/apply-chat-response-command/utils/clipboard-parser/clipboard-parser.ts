@@ -367,7 +367,7 @@ export const parse_file_content_only = (params: {
 
 export const parse_response = (
   response: string,
-  is_single_root_folder_workspace: boolean
+  is_single_root_folder_workspace: boolean = true
 ): ClipboardContent => {
   const code_completion = parse_code_completion({
     response,
