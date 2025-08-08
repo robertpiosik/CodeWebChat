@@ -16,6 +16,20 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
 
+function update_revert_state(
+  context: vscode.ExtensionContext,
+  on_can_revert: (can_revert: boolean) => void,
+  states: OriginalFileState[] | null
+) {
+  if (states && states.length > 0) {
+    context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, states)
+    on_can_revert(true)
+  } else {
+    context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
+    on_can_revert(false)
+  }
+}
+
 async function check_if_all_files_new(
   files: ClipboardFile[]
 ): Promise<boolean> {
@@ -457,11 +471,7 @@ export function apply_chat_response_command(
 
         // Store all original states for potential reversion
         if (all_original_states.length > 0) {
-          context.workspaceState.update(
-            LAST_APPLIED_CHANGES_STATE_KEY,
-            all_original_states
-          )
-          on_can_revert(true)
+          update_revert_state(context, on_can_revert, all_original_states)
         }
 
         // Handle results
@@ -477,11 +487,7 @@ export function apply_chat_response_command(
             // If we can't get the config, revert successful patches to maintain consistency
             if (success_count > 0 && all_original_states.length > 0) {
               await revert_files(all_original_states)
-              context.workspaceState.update(
-                LAST_APPLIED_CHANGES_STATE_KEY,
-                null
-              )
-              on_can_revert(false)
+              update_revert_state(context, on_can_revert, null)
             }
             return
           }
@@ -519,11 +525,7 @@ export function apply_chat_response_command(
                 ...all_original_states,
                 ...intelligent_update_states
               ]
-              context.workspaceState.update(
-                LAST_APPLIED_CHANGES_STATE_KEY,
-                combined_states
-              )
-              on_can_revert(true)
+              update_revert_state(context, on_can_revert, combined_states)
               const response = await vscode.window.showInformationMessage(
                 `Successfully applied ${failed_patches.length} failed patch${
                   failed_patches.length != 1 ? 'es' : ''
@@ -533,21 +535,13 @@ export function apply_chat_response_command(
 
               if (response == 'Revert') {
                 await revert_files(combined_states)
-                context.workspaceState.update(
-                  LAST_APPLIED_CHANGES_STATE_KEY,
-                  null
-                )
-                on_can_revert(false)
+                update_revert_state(context, on_can_revert, null)
               }
             } else {
               // Intelligent update failed or was canceled - revert successful patches
               if (success_count > 0 && all_original_states.length > 0) {
                 await revert_files(all_original_states)
-                context.workspaceState.update(
-                  LAST_APPLIED_CHANGES_STATE_KEY,
-                  null
-                )
-                on_can_revert(false)
+                update_revert_state(context, on_can_revert, null)
               }
             }
           } catch (error) {
@@ -565,11 +559,7 @@ export function apply_chat_response_command(
 
             if (response == 'Revert' && all_original_states.length > 0) {
               await revert_files(all_original_states)
-              context.workspaceState.update(
-                LAST_APPLIED_CHANGES_STATE_KEY,
-                null
-              )
-              on_can_revert(false)
+              update_revert_state(context, on_can_revert, null)
             }
           }
         } else if (success_count > 0) {
@@ -588,8 +578,7 @@ export function apply_chat_response_command(
 
           if (response == 'Revert' && all_original_states.length > 0) {
             await revert_files(all_original_states)
-            context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
-            on_can_revert(false)
+            update_revert_state(context, on_can_revert, null)
           } else if (response == 'Looks off, use intelligent update') {
             const fallback_patches_info = applied_patches.filter(
               (p) => p.used_fallback
@@ -620,11 +609,7 @@ export function apply_chat_response_command(
             if (!config_result) {
               // Config was cancelled. The fallback patches are reverted.
               // The state should now be just the good patches.
-              context.workspaceState.update(
-                LAST_APPLIED_CHANGES_STATE_KEY,
-                good_states.length > 0 ? good_states : null
-              )
-              on_can_revert(good_states.length > 0)
+              update_revert_state(context, on_can_revert, good_states)
               return
             }
 
@@ -665,11 +650,7 @@ export function apply_chat_response_command(
                   ...good_states,
                   ...intelligent_update_states
                 ]
-                context.workspaceState.update(
-                  LAST_APPLIED_CHANGES_STATE_KEY,
-                  combined_states
-                )
-                on_can_revert(true)
+                update_revert_state(context, on_can_revert, combined_states)
                 const response = await vscode.window.showInformationMessage(
                   `Successfully applied patches using intelligent update.`,
                   'Revert'
@@ -677,19 +658,11 @@ export function apply_chat_response_command(
 
                 if (response == 'Revert') {
                   await revert_files(combined_states)
-                  context.workspaceState.update(
-                    LAST_APPLIED_CHANGES_STATE_KEY,
-                    null
-                  )
-                  on_can_revert(false)
+                  update_revert_state(context, on_can_revert, null)
                 }
               } else {
                 // Intelligent update was canceled.
-                context.workspaceState.update(
-                  LAST_APPLIED_CHANGES_STATE_KEY,
-                  good_states.length > 0 ? good_states : null
-                )
-                on_can_revert(good_states.length > 0)
+                update_revert_state(context, on_can_revert, good_states)
                 vscode.window.showInformationMessage(
                   'Intelligent update was canceled. Fallback changes reverted; clean changes kept.'
                 )
@@ -699,11 +672,7 @@ export function apply_chat_response_command(
                 function_name: 'apply_chat_response_command',
                 message: 'Error during intelligent update of fallback patches'
               })
-              context.workspaceState.update(
-                LAST_APPLIED_CHANGES_STATE_KEY,
-                good_states.length > 0 ? good_states : null
-              )
-              on_can_revert(good_states.length > 0)
+              update_revert_state(context, on_can_revert, good_states)
               vscode.window.showErrorMessage(
                 'Error during intelligent update. Fallback changes reverted; clean changes kept.'
               )
@@ -824,11 +793,7 @@ export function apply_chat_response_command(
 
         // --- Handle Results ---
         if (operation_success && final_original_states) {
-          context.workspaceState.update(
-            LAST_APPLIED_CHANGES_STATE_KEY,
-            final_original_states
-          )
-          on_can_revert(true)
+          update_revert_state(context, on_can_revert, final_original_states)
 
           // Check how many files were actually new and how many were replaced
           const new_files_count = final_original_states.filter(
@@ -873,19 +838,11 @@ export function apply_chat_response_command(
 
             if (response == 'Revert') {
               await revert_files(final_original_states)
-              context.workspaceState.update(
-                LAST_APPLIED_CHANGES_STATE_KEY,
-                null
-              )
-              on_can_revert(false)
+              update_revert_state(context, on_can_revert, null)
             } else if (response == 'Looks off, use intelligent update') {
               // First revert the fast replace changes
               await revert_files(final_original_states)
-              context.workspaceState.update(
-                LAST_APPLIED_CHANGES_STATE_KEY,
-                null
-              )
-              on_can_revert(false)
+              update_revert_state(context, on_can_revert, null)
               // Then trigger intelligent update
               const api_providers_manager = new ApiProvidersManager(context)
               const config_result = await get_intelligent_update_config(
@@ -921,11 +878,11 @@ export function apply_chat_response_command(
                 })
 
                 if (final_original_states) {
-                  context.workspaceState.update(
-                    LAST_APPLIED_CHANGES_STATE_KEY,
+                  update_revert_state(
+                    context,
+                    on_can_revert,
                     final_original_states
                   )
-                  on_can_revert(true)
                   // Recalculate counts for the intelligent update result
                   const intelligent_new_files_count =
                     final_original_states.filter((state) => state.is_new).length
@@ -959,11 +916,7 @@ export function apply_chat_response_command(
                     .then((response) => {
                       if (response == 'Revert') {
                         revert_files(final_original_states!)
-                        context.workspaceState.update(
-                          LAST_APPLIED_CHANGES_STATE_KEY,
-                          null
-                        )
-                        on_can_revert(false)
+                        update_revert_state(context, on_can_revert, null)
                       }
                     })
                 } else {
@@ -994,18 +947,13 @@ export function apply_chat_response_command(
 
             if (response == 'Revert') {
               await revert_files(final_original_states)
-              context.workspaceState.update(
-                LAST_APPLIED_CHANGES_STATE_KEY,
-                null
-              )
-              on_can_revert(false)
+              update_revert_state(context, on_can_revert, null)
             }
           }
         } else {
           // Handler already showed specific error messages or handled cancellation silently.
           // Clear any potentially partially stored state from a failed operation.
-          context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
-          on_can_revert(false)
+          update_revert_state(context, on_can_revert, null)
           Logger.log({
             function_name: 'apply_chat_response_command',
             message: 'Operation concluded without success.'
