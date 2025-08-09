@@ -97,6 +97,10 @@ export const HomeView: React.FC<Props> = (props) => {
     useState(false)
   const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
     useState(false)
+  const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
+    useState(false)
+  const [is_revert_disabled_temporarily, set_is_revert_disabled_temporarily] =
+    useState(false)
 
   const calculate_dropdown_max_width = () => {
     if (!container_ref.current || !switch_container_ref.current) return
@@ -195,6 +199,36 @@ export const HomeView: React.FC<Props> = (props) => {
   const handle_preset_copy = (preset_name: string) => {
     props.copy_to_clipboard(preset_name)
   }
+
+  const handle_apply_click = () => {
+    if (!props.can_apply_clipboard) return
+
+    set_is_apply_disabled_temporarily(true)
+    props.on_quick_action_click('codeWebChat.applyChatResponse')
+
+    setTimeout(() => set_is_apply_disabled_temporarily(false), 10000)
+  }
+
+  useEffect(() => {
+    // Timeout prevents jitter of non disabled state caused by order of updates,
+    // effect below reacting to props.can_apply_clipboard is fine.
+    setTimeout(() => {
+      set_is_apply_disabled_temporarily(false)
+    }, 100)
+  }, [props.can_revert])
+
+  const handle_revert_click = () => {
+    if (!props.can_revert) return
+
+    set_is_revert_disabled_temporarily(true)
+    props.on_quick_action_click('codeWebChat.revert')
+
+    setTimeout(() => set_is_revert_disabled_temporarily(false), 10000)
+  }
+
+  useEffect(() => {
+    set_is_revert_disabled_temporarily(false)
+  }, [props.can_apply_clipboard])
 
   const handle_commit_click = () => {
     if (!props.has_changes_to_commit) return
@@ -495,15 +529,15 @@ export const HomeView: React.FC<Props> = (props) => {
               styles.footer__button,
               styles['footer__button--outlined']
             )}
-            onClick={() => {
-              props.on_quick_action_click('codeWebChat.applyChatResponse')
-            }}
+            onClick={handle_apply_click}
             title={
               props.can_apply_clipboard
                 ? 'Integrate copied message or a code block'
                 : 'Nothing applicable found in clipboard'
             }
-            disabled={!props.can_apply_clipboard}
+            disabled={
+              !props.can_apply_clipboard || is_apply_disabled_temporarily
+            }
           >
             APPLY
           </button>
@@ -512,15 +546,13 @@ export const HomeView: React.FC<Props> = (props) => {
               styles.footer__button,
               styles['footer__button--outlined']
             )}
-            onClick={() => {
-              props.on_quick_action_click('codeWebChat.revert')
-            }}
+            onClick={handle_revert_click}
             title={
               props.can_revert
                 ? 'Restore saved state of the codebase after chat/API response integration'
                 : 'Nothing to revert'
             }
-            disabled={!props.can_revert}
+            disabled={!props.can_revert || is_revert_disabled_temporarily}
           >
             REVERT
           </button>
