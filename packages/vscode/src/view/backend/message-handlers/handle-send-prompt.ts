@@ -276,7 +276,10 @@ async function show_preset_quick_pick(
 
       if (selected && selected.name !== undefined) {
         const selected_name = selected.name
-        context.workspaceState.update(get_last_selected_preset_key(mode), selected_name)
+        context.workspaceState.update(
+          get_last_selected_preset_key(mode),
+          selected_name
+        )
         resolve([selected_name])
       } else {
         resolve([])
@@ -495,7 +498,7 @@ async function resolve_presets(params: {
       },
       {
         label: GROUP,
-        description: 'Initialize all selected presets in a group'
+        description: "Simultaneous group's selected presets initialization"
       }
     ]
     quick_pick.items = items
