@@ -101,7 +101,8 @@ export async function activate(context: vscode.ExtensionContext) {
         context,
         view_provider.set_revert_button_state,
         view_provider.set_apply_button_state
-      )
+      ),
+      commit_changes_command(context, view_provider.set_revert_button_state)
     )
   }
 
@@ -120,9 +121,7 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
-
     generate_commit_message_command(context),
-    commit_changes_command(context),
     open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'

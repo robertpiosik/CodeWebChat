@@ -11,7 +11,10 @@ import {
   get_commit_message_config
 } from '../utils/commit-message-generator'
 
-export function commit_changes_command(context: vscode.ExtensionContext) {
+export function commit_changes_command(
+  context: vscode.ExtensionContext,
+  set_revert_button_state: (can_revert: boolean) => void
+) {
   return vscode.commands.registerCommand(
     'codeWebChat.commitChanges',
     async (source_control?: vscode.SourceControl) => {
@@ -35,6 +38,8 @@ export function commit_changes_command(context: vscode.ExtensionContext) {
         )
 
         if (!commit_message) return
+
+        set_revert_button_state(false)
 
         try {
           execSync(`git commit -m "${commit_message.replace(/"/g, '\\"')}"`, {
