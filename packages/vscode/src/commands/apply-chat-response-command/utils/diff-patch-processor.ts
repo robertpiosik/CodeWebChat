@@ -1,5 +1,4 @@
 import * as vscode from 'vscode'
-import * as path from 'path'
 import * as fs from 'fs'
 import { Logger } from '@/utils/logger'
 
@@ -30,39 +29,10 @@ export const process_diff_patch = async (
   file_path: string,
   diff_path_patch: string
 ): Promise<void> => {
-  if (!fs.existsSync(file_path)) {
-    try {
-      const dir_path = path.dirname(file_path)
-      await fs.promises.mkdir(dir_path, { recursive: true })
-
-      await fs.promises.writeFile(file_path, '', { flag: 'w' })
-
-      // Delay to prevent file system issues when creating a lot of files quickly
-      await new Promise((f) => setTimeout(f, 500))
-
-      Logger.log({
-        function_name: 'process_diff_patch',
-        message: `File created successfully at: ${file_path}`
-      })
-    } catch (error: any) {
-      Logger.error({
-        function_name: 'process_diff_patch',
-        message: `Error creating file: ${error.message}`
-      })
-      throw new Error(`Failed to create file: ${error.message}`)
-    }
-  }
-
   const file_content = fs.readFileSync(file_path, 'utf8')
   const diff_patch_content = fs.readFileSync(diff_path_patch, 'utf8')
 
-  let result = ''
-
-  if (diff_patch_content.includes('--- /dev/null')) {
-    result = create_new_file_from_patch(diff_patch_content)
-  } else {
-    result = apply_diff_patch(file_content, diff_patch_content)
-  }
+  const result = apply_diff_patch(file_content, diff_patch_content)
 
   try {
     await vscode.workspace.fs.writeFile(
@@ -81,32 +51,6 @@ export const process_diff_patch = async (
     })
     throw new Error('Failed to save file after applying diff patch')
   }
-}
-
-const create_new_file_from_patch = (diff_patch: string): string => {
-  let new_file_content = ''
-
-  const patch_normalized = diff_patch.replace(/\r\n/g, '\n')
-  const patch_lines = patch_normalized.split('\n')
-
-  for (let i = 0; i < patch_lines.length; i++) {
-    const line = patch_lines[i]
-
-    if (
-      line.startsWith('diff --git') ||
-      line.startsWith('index') ||
-      line.startsWith('new file mode') ||
-      line.startsWith('---') ||
-      line.startsWith('+++') ||
-      line.startsWith('@@')
-    ) {
-      continue
-    }
-
-    new_file_content += line.replace(/^\+/, '') + '\n'
-  }
-
-  return new_file_content
 }
 
 const apply_diff_patch = (

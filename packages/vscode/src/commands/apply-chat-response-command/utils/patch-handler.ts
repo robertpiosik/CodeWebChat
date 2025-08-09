@@ -11,7 +11,9 @@ import { process_diff_patch } from './diff-patch-processor'
 
 const execAsync = promisify(exec)
 
-export function extract_file_paths_from_patch(patch_content: string): string[] {
+export const extract_file_paths_from_patch = (
+  patch_content: string
+): string[] => {
   const file_paths: string[] = []
   const lines = patch_content.split('\n')
   let from_path: string | undefined
@@ -37,10 +39,10 @@ export function extract_file_paths_from_patch(patch_content: string): string[] {
   return [...new Set(file_paths)]
 }
 
-export async function store_original_file_states(
+export const store_original_file_states = async (
   patch_content: string,
   workspace_path: string
-): Promise<OriginalFileState[]> {
+): Promise<OriginalFileState[]> => {
   const file_paths = extract_file_paths_from_patch(patch_content)
   const original_states: OriginalFileState[] = []
 
@@ -211,14 +213,91 @@ async function process_modified_files(
   }
 }
 
-export async function apply_git_patch(
+const handle_new_file_patch = async (
   patch_content: string,
   workspace_path: string
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
   used_fallback?: boolean
-}> {
+}> => {
+  const file_paths = extract_file_paths_from_patch(patch_content)
+  if (file_paths.length != 1) {
+    Logger.error({
+      function_name: 'handle_new_file_patch',
+      message: 'New file patch is expected to contain exactly one file path.',
+      data: { file_paths, patch_content }
+    })
+    return { success: false }
+  }
+
+  const file_path = file_paths[0]
+  const safe_path = create_safe_path(workspace_path, file_path)
+
+  if (!safe_path) {
+    Logger.error({
+      function_name: 'handle_new_file_patch',
+      message: 'Invalid file path for new file.',
+      data: { file_path }
+    })
+    return { success: false }
+  }
+
+  // `store_original_file_states` will correctly identify this as a new file.
+  const original_states = await store_original_file_states(
+    patch_content,
+    workspace_path
+  )
+
+  try {
+    const lines = patch_content.split('\n')
+    const content_lines: string[] = []
+    let in_hunk = false
+
+    for (const line of lines) {
+      if (line.startsWith('@@')) {
+        in_hunk = true
+        continue
+      }
+      if (in_hunk && line.startsWith('+')) {
+        content_lines.push(line.substring(1))
+      }
+    }
+    const new_content = content_lines.join('\n')
+
+    const dir = path.dirname(safe_path)
+    if (!fs.existsSync(dir)) {
+      await fs.promises.mkdir(dir, { recursive: true })
+    }
+
+    await fs.promises.writeFile(safe_path, new_content, 'utf8')
+    await process_modified_files(file_paths, workspace_path)
+
+    return { success: true, original_states, used_fallback: false }
+  } catch (error: any) {
+    Logger.error({
+      function_name: 'handle_new_file_patch',
+      message: 'Failed to create new file from patch.',
+      data: { error: error.message, file_path }
+    })
+    // Attempt cleanup if file was created but something went wrong.
+    if (fs.existsSync(safe_path)) await fs.promises.unlink(safe_path)
+    return { success: false }
+  }
+}
+
+export const apply_git_patch = async (
+  patch_content: string,
+  workspace_path: string
+): Promise<{
+  success: boolean
+  original_states?: OriginalFileState[]
+  used_fallback?: boolean
+}> => {
+  if (patch_content.includes('--- /dev/null')) {
+    return handle_new_file_patch(patch_content, workspace_path)
+  }
+
   let closed_files: vscode.Uri[] = []
   const temp_file = path.join(workspace_path, '.tmp_patch')
 

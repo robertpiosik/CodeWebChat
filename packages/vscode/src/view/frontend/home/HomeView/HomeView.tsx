@@ -214,7 +214,7 @@ export const HomeView: React.FC<Props> = (props) => {
     // effect below reacting to props.can_apply_clipboard is fine.
     setTimeout(() => {
       set_is_apply_disabled_temporarily(false)
-    }, 100)
+    }, 500)
   }, [props.can_revert])
 
   const handle_revert_click = () => {
