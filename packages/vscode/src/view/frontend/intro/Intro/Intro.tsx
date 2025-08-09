@@ -33,13 +33,6 @@ export const Intro: React.FC<Props> = (props) => {
               <span className="codicon codicon-book" />
               <span>Documentation</span>
             </a>
-            <a
-              className={styles.top__button}
-              href="https://buymeacoffee.com/robertpiosik"
-            >
-              <span className="codicon codicon-heart" />
-              <span>Donate</span>
-            </a>
           </div>
           <div className={styles.bottom}>
             <div className={styles.bottom__version}>{props.version}</div>
