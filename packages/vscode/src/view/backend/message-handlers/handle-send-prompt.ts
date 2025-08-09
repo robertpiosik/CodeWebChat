@@ -4,11 +4,6 @@ import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/view/backend/utils/replace-selection-placeholder'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
-import {
-  LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY,
-  LAST_SELECTED_GROUP_STATE_KEY,
-  LAST_SELECTED_PRESET_KEY
-} from '@/constants/state-keys'
 import { replace_changes_placeholder } from '@/view/backend/utils/replace-changes-placeholder'
 import { chat_code_completion_instructions } from '@/constants/instructions'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
@@ -25,7 +20,11 @@ export const handle_send_prompt = async (params: {
   group_name?: string
   show_quick_pick?: boolean
 }): Promise<void> => {
-  if (params.preset_name) {
+  const LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY = `last-group-or-preset-choice-${params.provider.web_mode}`
+  const LAST_SELECTED_PRESET_KEY = `last-selected-preset-${params.provider.web_mode}`
+  const LAST_SELECTED_GROUP_STATE_KEY = `last-selected-group-${params.provider.web_mode}`
+
+  if (params.preset_name !== undefined) {
     params.provider.context.workspaceState.update(
       LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY,
       'Preset'
@@ -208,8 +207,11 @@ export const handle_send_prompt = async (params: {
 
 async function show_preset_quick_pick(
   presets: ConfigPresetFormat[],
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  mode: string
 ): Promise<string[]> {
+  const LAST_SELECTED_PRESET_KEY = `last-selected-preset-${mode}`
+
   const last_selected_item = context.workspaceState.get<string | undefined>(
     LAST_SELECTED_PRESET_KEY,
     undefined
@@ -300,6 +302,10 @@ async function resolve_presets(params: {
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
 }): Promise<string[]> {
+  const LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY = `last-group-or-preset-choice-${params.provider.web_mode}`
+  const LAST_SELECTED_PRESET_KEY = `last-selected-preset-${params.provider.web_mode}`
+  const LAST_SELECTED_GROUP_STATE_KEY = `last-selected-group-${params.provider.web_mode}`
+
   const PRESET = 'Preset'
   const GROUP = 'Group'
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -331,7 +337,7 @@ async function resolve_presets(params: {
         !(current_instructions || preset.promptPrefix || preset.promptSuffix)))
   const available_preset_names = all_presets.map((preset) => preset.name)
 
-  if (params.preset_name) {
+  if (params.preset_name !== undefined) {
     if (available_preset_names.includes(params.preset_name)) {
       return [params.preset_name]
     }
@@ -372,7 +378,7 @@ async function resolve_presets(params: {
   }
 
   if (!params.show_quick_pick) {
-    if (!params.preset_name && !params.group_name) {
+    if (params.preset_name === undefined && params.group_name === undefined) {
       // Try to use last selection if "Send" button is clicked without specific preset/group
       const last_choice = params.context.workspaceState.get<string>(
         LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
@@ -652,5 +658,9 @@ async function resolve_presets(params: {
   }
 
   // choice == PRESETS
-  return show_preset_quick_pick(all_presets, params.context)
+  return show_preset_quick_pick(
+    all_presets,
+    params.context,
+    params.provider.web_mode
+  )
 }

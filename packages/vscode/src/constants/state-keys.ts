@@ -31,10 +31,6 @@ export const LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY =
   'lastSelectedCommitMessagesConfigIndex'
 export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY =
   'lastSelectedIntelligentUpdateConfigIndex'
-export const LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY =
-  'last-group-or-preset-choice'
-export const LAST_SELECTED_GROUP_STATE_KEY = 'last-selected-group'
-export const LAST_SELECTED_PRESET_KEY = 'last-selected-preset'
 export const LAST_CHOSEN_COMMAND_BY_VIEW_TYPE_STATE_KEY =
   'lastChosenCommandByViewType'
 
