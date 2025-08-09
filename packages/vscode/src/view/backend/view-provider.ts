@@ -44,9 +44,7 @@ import {
   handle_pick_open_router_model,
   handle_pick_chatbot
 } from './message-handlers'
-import {
-  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
-} from '@/constants/state-keys'
+import { LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY } from '@/constants/state-keys'
 import { can_revert } from '@/commands/revert-command'
 import {
   config_preset_to_ui_format,
@@ -264,7 +262,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       last_applied_content &&
       clipboard_text === last_applied_content
     ) {
-      this.send_message({ command: 'CAN_APPLY_CLIPBOARD_CHANGED', can_apply: false })
+      this.send_message({
+        command: 'CAN_APPLY_CLIPBOARD_CHANGED',
+        can_apply: false
+      })
       return
     }
 
