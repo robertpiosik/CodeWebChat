@@ -1,4 +1,4 @@
-// Use kebab-case for new keys
+// Note: Use kebab-case for new keys
 export const LAST_APPLIED_CHANGES_STATE_KEY = 'last-applied-changes-state'
 export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
@@ -44,6 +44,15 @@ export const PINNED_HISTORY_EDIT_STATE_KEY = 'pinned-history-edit'
 export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY =
   'pinned-history-code-completions'
 export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'
+
+export const get_last_group_or_preset_choice_state_key = (web_mode: string) =>
+  `last-group-or-preset-choice-${web_mode}`
+
+export const get_last_selected_preset_key = (web_mode: string) =>
+  `last-selected-preset-${web_mode}`
+
+export const get_last_selected_group_state_key = (web_mode: string) =>
+  `last-selected-group-${web_mode}`
 
 export interface HistoryEntry {
   text: string

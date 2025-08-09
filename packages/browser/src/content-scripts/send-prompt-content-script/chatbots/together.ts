@@ -117,8 +117,10 @@ export const together: Chatbot = {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach(() => {
         if (
-          document.querySelector('button[data-testid="stop-button"]') &&
-          document.querySelector('div[data-testid="assistant-message-toolbar"]')
+          document.querySelector('button[data-testid="stop-button"]') ||
+          !document.querySelector(
+            'div[data-testid="assistant-message-toolbar"]'
+          )
         ) {
           return
         }

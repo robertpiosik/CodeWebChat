@@ -6,6 +6,11 @@ import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixe
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_changes_placeholder } from '@/view/backend/utils/replace-changes-placeholder'
 import { chat_code_completion_instructions } from '@/constants/instructions'
+import {
+  get_last_group_or_preset_choice_state_key,
+  get_last_selected_group_state_key,
+  get_last_selected_preset_key
+} from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import { CHATBOTS } from '@shared/constants/chatbots'
@@ -20,26 +25,22 @@ export const handle_send_prompt = async (params: {
   group_name?: string
   show_quick_pick?: boolean
 }): Promise<void> => {
-  const LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY = `last-group-or-preset-choice-${params.provider.web_mode}`
-  const LAST_SELECTED_PRESET_KEY = `last-selected-preset-${params.provider.web_mode}`
-  const LAST_SELECTED_GROUP_STATE_KEY = `last-selected-group-${params.provider.web_mode}`
-
   if (params.preset_name !== undefined) {
     params.provider.context.workspaceState.update(
-      LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY,
+      get_last_group_or_preset_choice_state_key(params.provider.web_mode),
       'Preset'
     )
     params.provider.context.workspaceState.update(
-      LAST_SELECTED_PRESET_KEY,
+      get_last_selected_preset_key(params.provider.web_mode),
       params.preset_name
     )
   } else if (params.group_name) {
     params.provider.context.workspaceState.update(
-      LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY,
+      get_last_group_or_preset_choice_state_key(params.provider.web_mode),
       'Group'
     )
     params.provider.context.workspaceState.update(
-      LAST_SELECTED_GROUP_STATE_KEY,
+      get_last_selected_group_state_key(params.provider.web_mode),
       params.group_name
     )
   }
@@ -210,10 +211,8 @@ async function show_preset_quick_pick(
   context: vscode.ExtensionContext,
   mode: string
 ): Promise<string[]> {
-  const LAST_SELECTED_PRESET_KEY = `last-selected-preset-${mode}`
-
   const last_selected_item = context.workspaceState.get<string | undefined>(
-    LAST_SELECTED_PRESET_KEY,
+    get_last_selected_preset_key(mode),
     undefined
   )
 
@@ -277,7 +276,7 @@ async function show_preset_quick_pick(
 
       if (selected && selected.name !== undefined) {
         const selected_name = selected.name
-        context.workspaceState.update(LAST_SELECTED_PRESET_KEY, selected_name)
+        context.workspaceState.update(get_last_selected_preset_key(mode), selected_name)
         resolve([selected_name])
       } else {
         resolve([])
@@ -302,9 +301,14 @@ async function resolve_presets(params: {
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
 }): Promise<string[]> {
-  const LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY = `last-group-or-preset-choice-${params.provider.web_mode}`
-  const LAST_SELECTED_PRESET_KEY = `last-selected-preset-${params.provider.web_mode}`
-  const LAST_SELECTED_GROUP_STATE_KEY = `last-selected-group-${params.provider.web_mode}`
+  const last_group_or_preset_choice_state_key =
+    get_last_group_or_preset_choice_state_key(params.provider.web_mode)
+  const last_selected_preset_key = get_last_selected_preset_key(
+    params.provider.web_mode
+  )
+  const last_selected_group_state_key = get_last_selected_group_state_key(
+    params.provider.web_mode
+  )
 
   const PRESET = 'Preset'
   const GROUP = 'Group'
@@ -381,12 +385,12 @@ async function resolve_presets(params: {
     if (params.preset_name === undefined && params.group_name === undefined) {
       // Try to use last selection if "Send" button is clicked without specific preset/group
       const last_choice = params.context.workspaceState.get<string>(
-        LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
+        last_group_or_preset_choice_state_key
       )
 
       if (last_choice == PRESET) {
         const last_preset = params.context.workspaceState.get<string>(
-          LAST_SELECTED_PRESET_KEY
+          last_selected_preset_key
         )
         if (
           last_preset !== undefined &&
@@ -396,7 +400,7 @@ async function resolve_presets(params: {
         }
       } else if (last_choice == GROUP) {
         const last_group = params.context.workspaceState.get<string>(
-          LAST_SELECTED_GROUP_STATE_KEY
+          last_selected_group_state_key
         )
         if (last_group) {
           if (last_group == 'Ungrouped') {
@@ -431,12 +435,12 @@ async function resolve_presets(params: {
       }
     } else {
       const last_choice = params.context.workspaceState.get<string>(
-        LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
+        last_group_or_preset_choice_state_key
       )
 
       if (last_choice == PRESET) {
         const last_preset = params.context.workspaceState.get<string>(
-          LAST_SELECTED_PRESET_KEY
+          last_selected_preset_key
         )
         if (
           last_preset !== undefined &&
@@ -446,7 +450,7 @@ async function resolve_presets(params: {
         }
       } else if (last_choice == GROUP) {
         const last_group = params.context.workspaceState.get<string>(
-          LAST_SELECTED_GROUP_STATE_KEY
+          last_selected_group_state_key
         )
         if (last_group) {
           if (last_group == 'Ungrouped') {
@@ -497,7 +501,7 @@ async function resolve_presets(params: {
     quick_pick.items = items
     quick_pick.placeholder = 'Select what to initialize'
     const last_choice = params.context.workspaceState.get<string>(
-      LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY
+      last_group_or_preset_choice_state_key
     )
     if (last_choice) {
       const last_item = items.find((item) => item.label == last_choice)
@@ -522,7 +526,7 @@ async function resolve_presets(params: {
   }
 
   params.context.workspaceState.update(
-    LAST_GROUP_OR_PRESET_CHOICE_STATE_KEY,
+    last_group_or_preset_choice_state_key,
     choice
   )
 
@@ -583,7 +587,7 @@ async function resolve_presets(params: {
     quick_pick.placeholder = 'Select a group'
 
     const last_selected_group = params.context.workspaceState.get<string>(
-      LAST_SELECTED_GROUP_STATE_KEY,
+      last_selected_group_state_key,
       ''
     )
     if (last_selected_group) {
@@ -609,7 +613,7 @@ async function resolve_presets(params: {
 
         const group_name = selected.name
         params.context.workspaceState.update(
-          LAST_SELECTED_GROUP_STATE_KEY,
+          last_selected_group_state_key,
           group_name
         )
 
