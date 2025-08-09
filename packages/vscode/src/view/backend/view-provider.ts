@@ -552,7 +552,19 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           this.context.subscriptions
         )
       }
-      update_git_state()
+
+      git.onDidOpenRepository(
+        (repo: any) => {
+          repo.state.onDidChange(
+            update_git_state,
+            this,
+            this.context.subscriptions
+          )
+          update_git_state()
+        },
+        this,
+        this.context.subscriptions
+      )
     } catch (error) {
       console.warn(
         `Failed to initialize git watcher, will retry in 1s. Error: ${error}`
