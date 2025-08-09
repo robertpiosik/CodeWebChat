@@ -38,7 +38,7 @@ export const Intro: React.FC<Props> = (props) => {
               href="https://buymeacoffee.com/robertpiosik"
             >
               <span className="codicon codicon-coffee" />
-              <span>Support with a $3 coffee</span>
+              <span>Donate</span>
             </a>
           </div>
           <div className={styles.bottom}>
