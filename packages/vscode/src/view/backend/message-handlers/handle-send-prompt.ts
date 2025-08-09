@@ -498,7 +498,7 @@ async function resolve_presets(params: {
       },
       {
         label: GROUP,
-        description: "Simultaneous group's selected presets initialization"
+        description: 'Simultaneous initialization of all selected presets'
       }
     ]
     quick_pick.items = items
