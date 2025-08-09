@@ -8,6 +8,8 @@ type PromptTemplate = {
   template: string
 }
 
+const ADD_NEW_TEMPLATE_LABEL = '$(add) Add a new prompt template'
+
 export const handle_show_prompt_template_quick_pick = async (
   provider: ViewProvider
 ): Promise<void> => {
@@ -43,23 +45,18 @@ export const handle_show_prompt_template_quick_pick = async (
     config.get<PromptTemplate[]>(prompt_templates_key, []) || []
 
   const set_instructions = async (text: string) => {
-    let instruction_key: string
     switch (mode) {
       case 'ask':
         provider.ask_instructions = text
-        instruction_key = 'ask-instructions'
         break
       case 'edit-context':
         provider.edit_instructions = text
-        instruction_key = 'edit-instructions'
         break
       case 'no-context':
         provider.no_context_instructions = text
-        instruction_key = 'no-context-instructions'
         break
       case 'code-completions':
         provider.code_completion_instructions = text
-        instruction_key = 'code-completions-instructions'
         break
       default:
         return
@@ -105,7 +102,7 @@ export const handle_show_prompt_template_quick_pick = async (
       index?: number
     })[] = [
       {
-        label: '$(add) Add new template'
+        label: ADD_NEW_TEMPLATE_LABEL
       }
     ]
     if (templates.length > 0) {
@@ -270,7 +267,7 @@ export const handle_show_prompt_template_quick_pick = async (
         return
       }
 
-      if (selected_template.label == '$(add) Add new template') {
+      if (selected_template.label == ADD_NEW_TEMPLATE_LABEL) {
         is_editing_template = true
         const name = await vscode.window.showInputBox({
           prompt: 'Enter an optional name for the template'
@@ -334,14 +331,14 @@ export const handle_show_prompt_template_quick_pick = async (
             if (value) {
               const double_regex = new RegExp(
                 `\\{\\{\\s*${variable.replace(
-                  /[.*+?^${}()|[\]\\]/g,
+                  /[.*+?^${}()|[\\]\\\\]/g,
                   '\\$&'
                 )}\\s*\\}\\}`,
                 'g'
               )
               const single_regex = new RegExp(
                 `\\{\\s*${variable.replace(
-                  /[.*+?^${}()|[\]\\]/g,
+                  /[.*+?^${}()|[\\]\\\\]/g,
                   '\\$&'
                 )}\\s*\\}`,
                 'g'
