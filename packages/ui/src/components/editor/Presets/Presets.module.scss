@@ -76,10 +76,14 @@
         }
       }
 
-      &__icon > svg {
-        fill: var(--vscode-icon-foreground);
-        width: 16px;
-        height: 16px;
+      &__icon {
+        display: flex;
+
+        > svg {
+          fill: var(--vscode-icon-foreground);
+          width: 16px;
+          height: 16px;
+        }
       }
 
       &__text {

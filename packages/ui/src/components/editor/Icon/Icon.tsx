@@ -7,6 +7,7 @@ import ChatGPT from '../../../assets/icons/openai.svg'
 import Claude from '../../../assets/icons/claude.svg'
 import DeepSeek from '../../../assets/icons/deepseek.svg'
 import Mistral from '../../../assets/icons/mistral.svg'
+import Meta from '../../../assets/icons/meta.svg'
 import Grok from '../../../assets/icons/grok.svg'
 import Kimi from '../../../assets/icons/kimi.svg'
 import Qwen from '../../../assets/icons/qwen.svg'
@@ -32,6 +33,7 @@ export namespace Icon {
     | 'CLAUDE'
     | 'DEEPSEEK'
     | 'MISTRAL'
+    | 'META'
     | 'GROK'
     | 'KIMI'
     | 'QWEN'
@@ -81,6 +83,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'MISTRAL':
       icon = <Mistral />
+      break
+    case 'META':
+      icon = <Meta />
       break
     case 'GROK':
       icon = <Grok />

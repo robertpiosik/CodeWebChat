@@ -3,7 +3,7 @@
   "author": "Robert Piosik",
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
-  "description": "Initialize 15+ chatbots and manage websites for context.",
+  "description": "Initialize 15+ chatbots with your code and instructions. Manage websites for context.",
   "version": "1.23.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
@@ -32,6 +32,7 @@
         "https://grok.com/",
         "https://chat.deepseek.com/",
         "https://chat.mistral.ai/chat",
+        "https://www.meta.ai/",
         "https://chat.qwen.ai/",
         "https://yuanbao.tencent.com/chat*",
         "https://www.doubao.com/chat/",

@@ -38,17 +38,16 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             },
             {
               label: LABEL_EDIT_CONTEXT,
-              detail:
-                'Modify files based on natural language instructions.'
+              detail: 'Modify files based on natural language instructions.'
             },
             {
               label: LABEL_INTELLIGENT_UPDATE,
-              detail: 'Handle "truncated" edit format and fix malformed diffs.'
+              detail: 'Integrate truncated code blocks and fix malformed diffs.'
             },
             {
               label: LABEL_COMMIT_MESSAGES,
               detail:
-                'Generate meaningful summaries of changes adhering to your style.'
+                'Generate meaningful summaries of changes adhering to your preferred style.'
             }
           ],
           {

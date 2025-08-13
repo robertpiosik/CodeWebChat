@@ -72,10 +72,10 @@ Get accurate code at cursor from state-of-the-art reasoning models.
 Modify files based on natural language instructions.
 
 **Intelligent Update** \
-Integrate AI responses in "truncated" edit format and fix malformed diffs.
+Integrate truncated code blocks and fix malformed diffs.
 
 **Commit Messages** \
-Generate meaningful summaries of changes precisely adhering to your preferred style.
+Generate meaningful summaries of changes adhering to your preferred style.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Commands</span>
 

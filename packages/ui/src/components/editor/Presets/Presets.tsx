@@ -6,7 +6,6 @@ import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
 import { useState } from 'react'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { TextButton } from '../TextButton'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -17,6 +16,7 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   Claude: 'CLAUDE',
   DeepSeek: 'DEEPSEEK',
   Mistral: 'MISTRAL',
+  Meta: 'META',
   Grok: 'GROK',
   Qwen: 'QWEN',
   Yuanbao: 'YUANBAO',

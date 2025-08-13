@@ -7,6 +7,7 @@ import {
   gemini,
   chatgpt,
   claude,
+  meta,
   mistral,
   open_webui,
   deepseek,
@@ -57,6 +58,9 @@ const is_qwen = current_url.startsWith(qwen_url)
 const yuanbao_url = 'https://yuanbao.tencent.com/chat'
 const is_yuanbao = current_url.startsWith(yuanbao_url)
 
+const meta_url = 'https://www.meta.ai/'
+const is_meta = current_url.startsWith(meta_url)
+
 const grok_url = 'https://grok.com/'
 const is_grok = current_url.startsWith(grok_url)
 
@@ -87,6 +91,8 @@ if (is_ai_studio) {
   chatbot = chatgpt
 } else if (is_claude) {
   chatbot = claude
+} else if (is_meta) {
+  chatbot = meta
 } else if (is_mistral) {
   chatbot = mistral
 } else if (is_open_webui) {
@@ -118,6 +124,7 @@ export const get_textarea_element = () => {
     [ai_studio_url]: 'textarea',
     [gemini_url]: 'div[contenteditable="true"]',
     [openrouter_url]: 'textarea',
+    [meta_url]: 'div[contenteditable="true"]',
     [chatgpt_url]: 'div#prompt-textarea',
     [deepseek_url]: 'textarea',
     [mistral_url]: 'div[contenteditable="true"]',
