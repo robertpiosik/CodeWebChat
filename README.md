@@ -8,7 +8,7 @@ A versatile AI pair programming tool connecting VS Code with free chatbots. With
 
 ✅ **Initializes 15+ chatbots** \
 ✅ **Applies chat responses** \
-✅ **Built-in API tools** \
+✅ **Built-in API tools**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
