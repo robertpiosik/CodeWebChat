@@ -14,7 +14,7 @@ A versatile AI pair programming tool connecting VS Code with free chatbots. With
 **With CWC you can:**
 
 - Step into the new era of AI-assisted coding:
-  - granularly select folders and files,
+  - granularly select folders and files for context,
   - type something,
   - initialize new chat or send an API request,
   - automatically apply response of multi-file changes.
