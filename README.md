@@ -6,7 +6,7 @@ A versatile AI pair programming tool connecting VS Code with free chatbots. With
 
 🫡 100% free and open source
 
-✅ **Initializes 15+ chatbots** \
+✅ **Initializes ChatGPT, Claude, Gemini and 10+ other chatbots** \
 ✅ **Applies chat responses** \
 ✅ **Built-in API tools**
 
