@@ -17,7 +17,7 @@ A versatile AI pair programming tool connecting VS Code with free chatbots. With
   - granularly select folders and files for context,
   - type something,
   - initialize new chat or send an API request,
-  - automatically apply response of multi-file changes.
+  - apply response, hands-free!
 - Get accurate code completions.
 - Generate commit messages.
 - Include any website in context.
