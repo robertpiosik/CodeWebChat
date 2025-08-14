@@ -6,9 +6,10 @@ A versatile AI pair programming tool connecting VS Code with free chatbots. With
 
 🫡 100% free and open source
 
-✅ **Initializes ChatGPT, Gemini, Claude and more** \
-✅ **Applies chat responses** \
-✅ **Built-in API tools**
+✅ **Hands-free web chat initializations** \
+✅ **Apply chat responses** \
+✅ **Built-in API tools** \
+✅ **Compatible with Cursor**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
