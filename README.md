@@ -4,8 +4,6 @@
 
 A versatile AI pair programming tool connecting VS Code with free chatbots. With emphasis put on context management, it delivers accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents. CWC is designed for real-world programming, saving you sanity, money and time.
 
-🫡 100% free and open source
-
 ✅ **Free coding with ChatGPT, Gemini, Claude and 10+ more** \
 ✅ **Built-in API tools: code completions, commit messages and more**
 
