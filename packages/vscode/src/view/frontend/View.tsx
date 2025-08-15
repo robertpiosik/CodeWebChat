@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm } from '@/view/frontend/EditPresetForm'
 import { Preset } from '@shared/types/preset'
-import { BackendMessage, FrontendMessage } from '../types/messages'
+import {
+  BackendMessage,
+  FileToReview,
+  FrontendMessage
+} from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { Intro } from './intro'
@@ -11,6 +15,7 @@ import styles from './View.module.scss'
 import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
+import { Button } from '@ui/components/editor/Button'
 
 const vscode = acquireVsCodeApi()
 
@@ -18,6 +23,8 @@ export const View = () => {
   const [active_view, set_active_view] = useState<'intro' | 'home'>('intro')
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
+  const [is_reviewing_changes, set_is_reviewing_changes] = useState(false)
+  const [files_to_review, set_files_to_review] = useState<FileToReview[]>([])
   const [is_connected, set_is_connected] = useState<boolean>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [ask_instructions, set_ask_instructions] = useState<
@@ -40,6 +47,7 @@ export const View = () => {
   const [home_view_type, set_home_view_type] = useState<HomeViewType>()
   const [web_mode, set_web_mode] = useState<WebMode>()
   const [api_mode, set_api_mode] = useState<ApiMode>()
+  const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
 
   const handle_mouse_enter = () => {
     post_message(vscode, {
@@ -89,6 +97,14 @@ export const View = () => {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
+      } else if (message.command == 'REVIEW_CHANGES_STARTED') {
+        set_is_reviewing_changes(true)
+        set_files_to_review(message.files)
+        set_last_clicked_file_index(0)
+      } else if (message.command == 'REVIEW_CHANGES_FINISHED') {
+        set_is_reviewing_changes(false)
+        set_files_to_review([])
+        set_last_clicked_file_index(0)
       }
     }
     window.addEventListener('message', handle_message)
@@ -251,6 +267,62 @@ export const View = () => {
             })
           }}
         />
+      </UiPage>
+    )
+  }
+
+  if (is_reviewing_changes) {
+    overlay = (
+      <UiPage
+        title={`Reviewing ${files_to_review.length} change${
+          files_to_review.length == 1 ? '' : 's'
+        }`}
+        on_back_click={() => {
+          post_message(vscode, { command: 'REJECT_ALL_IN_REVIEW' })
+        }}
+      >
+        <div className={styles['review-changes-container']}>
+          <ul>
+            {files_to_review.map((file, index) => (
+              <li
+                key={`${file.workspace_name ?? ''}:${file.file_path}:${index}`}
+                className={cn(styles['review-changes-item'], {
+                  [styles['review-changes-item--selected']]:
+                    index === last_clicked_file_index
+                })}
+                onClick={() => {
+                  set_last_clicked_file_index(index)
+                  post_message(vscode, {
+                    command: 'FOCUS_ON_FILE_IN_REVIEW',
+                    file_path: file.file_path,
+                    workspace_name: file.workspace_name
+                  })
+                }}
+                title="Click to view this change"
+              >
+                {file.workspace_name ? `${file.workspace_name}/` : ''}
+                {file.file_path}
+                {file.is_new ? ' (new)' : ''}
+              </li>
+            ))}
+          </ul>
+          <div className={styles['review-changes-footer']}>
+            <Button
+              on_click={() => {
+                post_message(vscode, { command: 'REJECT_ALL_IN_REVIEW' })
+              }}
+            >
+              Reject
+            </Button>
+            <Button
+              on_click={() => {
+                post_message(vscode, { command: 'ACCEPT_ALL_IN_REVIEW' })
+              }}
+            >
+              Accept
+            </Button>
+          </div>
+        </div>
       </UiPage>
     )
   }

@@ -199,6 +199,20 @@ export interface CheckClipboardForApplyMessage extends BaseMessage {
   command: 'CHECK_CLIPBOARD_FOR_APPLY'
 }
 
+export interface FocusOnFileInReviewMessage extends BaseMessage {
+  command: 'FOCUS_ON_FILE_IN_REVIEW'
+  file_path: string
+  workspace_name?: string
+}
+
+export interface RejectAllInReviewMessage extends BaseMessage {
+  command: 'REJECT_ALL_IN_REVIEW'
+}
+
+export interface AcceptAllInReviewMessage extends BaseMessage {
+  command: 'ACCEPT_ALL_IN_REVIEW'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -238,6 +252,9 @@ export type FrontendMessage =
   | GetApiToolConfigurationsMessage
   | GetVersionMessage
   | CheckClipboardForApplyMessage
+  | FocusOnFileInReviewMessage
+  | RejectAllInReviewMessage
+  | AcceptAllInReviewMessage
 
 // Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {
@@ -363,6 +380,21 @@ export interface CanRevertChangedMessage extends BaseMessage {
   can_revert: boolean
 }
 
+export type FileToReview = {
+  file_path: string
+  workspace_name?: string
+  is_new?: boolean
+}
+
+export interface ReviewChangesStartedMessage extends BaseMessage {
+  command: 'REVIEW_CHANGES_STARTED'
+  files: FileToReview[]
+}
+
+export interface ReviewChangesFinishedMessage extends BaseMessage {
+  command: 'REVIEW_CHANGES_FINISHED'
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
@@ -387,3 +419,5 @@ export type BackendMessage =
   | AtSignQuickPickForPresetAffixResultMessage
   | CanApplyClipboardChangedMessage
   | CanRevertChangedMessage
+  | ReviewChangesStartedMessage
+  | ReviewChangesFinishedMessage

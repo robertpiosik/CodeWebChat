@@ -9,11 +9,13 @@ import {
 import { format_document } from '../utils/format-document'
 import { ClipboardFile } from '../utils/clipboard-parser'
 import { OriginalFileState } from '../../../types/common'
+import { ViewProvider } from '../../../view/backend/view-provider'
 import { review_changes_in_diff_view } from '../utils/review-changes'
 
-export async function handle_fast_replace(
-  files: ClipboardFile[]
-): Promise<{ success: boolean; original_states?: OriginalFileState[] }> {
+export const handle_fast_replace = async (
+  files: ClipboardFile[],
+  view_provider?: ViewProvider
+): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
   Logger.log({
     function_name: 'handle_fast_replace',
     message: 'start',
@@ -86,7 +88,10 @@ export async function handle_fast_replace(
       }
     }
 
-    const accepted_files = await review_changes_in_diff_view(safe_files)
+    const accepted_files = await review_changes_in_diff_view(
+      safe_files,
+      view_provider
+    )
     if (accepted_files === null) {
       // User cancelled
       return { success: false }

@@ -16,8 +16,9 @@ import { OriginalFileState } from '../../../types/common'
 import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
 import { review_changes_in_diff_view } from '../utils/review-changes'
+import { ViewProvider } from '../../../view/backend/view-provider'
 
-async function process_file(params: {
+const process_file = async (params: {
   endpoint_url: string
   api_key: string
   model: string
@@ -28,7 +29,7 @@ async function process_file(params: {
   instruction: string
   cancel_token?: CancelToken
   on_progress?: (chunk_length: number, total_length: number) => void
-}): Promise<string | null> {
+}): Promise<string | null> => {
   Logger.log({
     function_name: 'process_file',
     message: 'start',
@@ -61,7 +62,7 @@ async function process_file(params: {
   })
 
   try {
-    const total_length = params.file_content.length // Use original file content length for progress
+    const total_length = params.file_content.length
     let received_length = 0
 
     const refactored_content = await make_api_request(
@@ -70,10 +71,8 @@ async function process_file(params: {
       body,
       params.cancel_token,
       (chunk: string) => {
-        // Use chunk length for progress reporting as it represents received data
         received_length += chunk.length
         if (params.on_progress) {
-          // Cap received length at total length for display
           params.on_progress(
             Math.min(received_length, total_length),
             total_length
@@ -88,7 +87,7 @@ async function process_file(params: {
         message: 'Request cancelled during API call',
         data: params.file_path
       })
-      return null // Silent cancellation
+      return null
     }
 
     if (!refactored_content) {
@@ -122,7 +121,7 @@ async function process_file(params: {
         message: 'Request cancelled',
         data: params.file_path
       })
-      return null // Silent cancellation
+      return null
     }
 
     Logger.error({
@@ -138,14 +137,15 @@ async function process_file(params: {
   }
 }
 
-export async function handle_intelligent_update(params: {
+export const handle_intelligent_update = async (params: {
   endpoint_url: string
   api_key: string
   config: ToolConfig
   chat_response: string
   context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
-}): Promise<OriginalFileState[] | null> {
+  view_provider?: ViewProvider
+}): Promise<OriginalFileState[] | null> => {
   const workspace_map = new Map<string, string>()
   if (vscode.workspace.workspaceFolders) {
     vscode.workspace.workspaceFolders.forEach((folder) => {
@@ -175,13 +175,11 @@ export async function handle_intelligent_update(params: {
     is_single_root_folder_workspace: params.is_single_root_folder_workspace
   })
 
-  // Sanitize file paths and check safety
   const files: ClipboardFile[] = []
   const skipped_files: string[] = []
 
   for (const file of raw_files) {
-    // Determine the correct workspace root for validation
-    let workspace_root = default_workspace_path! // Should exist due to earlier check
+    let workspace_root = default_workspace_path!
     if (file.workspace_name && workspace_map.has(file.workspace_name)) {
       workspace_root = workspace_map.get(file.workspace_name)!
     } else if (file.workspace_name) {
@@ -196,7 +194,7 @@ export async function handle_intelligent_update(params: {
     if (create_safe_path(workspace_root, sanitized_path)) {
       files.push({
         ...file,
-        file_path: sanitized_path // Use sanitized path
+        file_path: sanitized_path
       })
     } else {
       skipped_files.push(file.file_path)
@@ -208,7 +206,6 @@ export async function handle_intelligent_update(params: {
     }
   }
 
-  // Show warning if unsafe paths were detected
   if (skipped_files.length > 0) {
     const skipped_list = skipped_files.join('\n')
     vscode.window.showErrorMessage(
@@ -237,7 +234,6 @@ export async function handle_intelligent_update(params: {
     return null
   }
 
-  // First, identify which files are new (don't exist in workspace)
   const new_files: ClipboardFile[] = []
   const existing_files: ClipboardFile[] = []
 
@@ -258,7 +254,6 @@ export async function handle_intelligent_update(params: {
     }
   }
 
-  // Update the message to accurately reflect what's happening
   let progress_title = ''
   if (existing_files.length > 0 && new_files.length > 0) {
     progress_title = `Updating ${existing_files.length} file${
@@ -276,7 +271,6 @@ export async function handle_intelligent_update(params: {
     }.`
   }
 
-  // Store original file states for reversion
   const original_states: OriginalFileState[] = []
   const document_changes: {
     document: vscode.TextDocument | null // Null for new files
@@ -286,7 +280,7 @@ export async function handle_intelligent_update(params: {
     workspaceName?: string
   }[] = []
   let api_calls_succeeded = false
-  const max_concurrency = params.config.max_concurrency ?? 10 // Use configured value or default
+  const max_concurrency = params.config.max_concurrency ?? 10
 
   await vscode.window.withProgress(
     {
@@ -324,7 +318,7 @@ export async function handle_intelligent_update(params: {
               message: 'Path validation failed pre-scan',
               data: file.file_path
             })
-            continue // Skip this file if path is invalid
+            continue
           }
 
           try {
@@ -353,15 +347,13 @@ export async function handle_intelligent_update(params: {
               message: 'Error opening/reading existing file pre-scan',
               data: { error, file_path: file.file_path }
             })
-            // Continue with other files, but this one might cause issues later
           }
         }
 
-        // Mark new files for reversion tracking
         for (const file of new_files) {
           original_states.push({
             file_path: file.file_path,
-            content: '', // Original content is empty
+            content: '',
             is_new: true,
             workspace_name: file.workspace_name
           })
@@ -400,7 +392,7 @@ export async function handle_intelligent_update(params: {
             if (!file_exists) {
               return {
                 document: null,
-                content: file.content, // Use clipboard content directly
+                content: file.content,
                 isNew: true,
                 filePath: file.file_path,
                 workspaceName: file.workspace_name
@@ -410,9 +402,8 @@ export async function handle_intelligent_update(params: {
             try {
               const file_uri = vscode.Uri.file(safe_path)
               const document = await vscode.workspace.openTextDocument(file_uri)
-              const document_text = document.getText() // Get current text
+              const document_text = document.getText()
 
-              // Find original state for this file (should exist)
               const original_state = original_states.find(
                 (s) =>
                   s.file_path == file.file_path &&
@@ -421,7 +412,7 @@ export async function handle_intelligent_update(params: {
               )
               const original_content_for_api = original_state
                 ? original_state.content
-                : document_text // Use stored original if available
+                : document_text
 
               const updated_content_result = await process_file({
                 endpoint_url: params.endpoint_url,
@@ -430,8 +421,8 @@ export async function handle_intelligent_update(params: {
                 temperature: params.config.temperature,
                 reasoning_effort: params.config.reasoning_effort,
                 file_path: file.file_path,
-                file_content: original_content_for_api, // Send original content to AI
-                instruction: file.content, // Clipboard content is the instruction
+                file_content: original_content_for_api,
+                instruction: file.content,
                 cancel_token: cancel_token_source.token,
                 on_progress: (receivedLength, totalLength) => {
                   if (
@@ -460,7 +451,6 @@ export async function handle_intelligent_update(params: {
                 throw new Error(`Failed to apply changes to ${file.file_path}`)
               }
 
-              // No rate limit fallback needed, just use the result
               const final_content = updated_content_result // Already cleaned in process_file
 
               // Update progress for the largest file if processing finished
@@ -511,7 +501,7 @@ export async function handle_intelligent_update(params: {
         }
         api_calls_succeeded = true
       } catch (error: any) {
-        cancel_token_source.cancel('Operation failed due to error.') // Cancel any pending requests
+        cancel_token_source.cancel('Operation failed due to error.')
         Logger.error({
           function_name: 'handle_intelligent_update',
           message: 'Multi-file processing failed',
@@ -541,11 +531,11 @@ export async function handle_intelligent_update(params: {
     }))
 
     const accepted_changes_from_review = await review_changes_in_diff_view(
-      changes_to_review
+      changes_to_review,
+      params.view_provider
     )
 
     if (accepted_changes_from_review === null) {
-      // User cancelled review
       Logger.log({
         function_name: 'handle_intelligent_update',
         message: 'Review cancelled by user.'
@@ -577,7 +567,7 @@ export async function handle_intelligent_update(params: {
         vscode.window.showWarningMessage(
           `Skipping applying change to invalid path: ${change.filePath}`
         )
-        continue // Skip applying this change
+        continue
       }
 
       if (change.isNew) {
@@ -613,9 +603,9 @@ export async function handle_intelligent_update(params: {
             edit.replace(
               new vscode.Range(
                 document.positionAt(0),
-                document.positionAt(document.getText().length) // Use current length for replacement range
+                document.positionAt(document.getText().length)
               ),
-              change.content // Apply the AI-generated content
+              change.content
             )
           })
           await format_document(document)
@@ -629,7 +619,6 @@ export async function handle_intelligent_update(params: {
           vscode.window.showWarningMessage(
             `Failed to apply changes to file: ${change.filePath}`
           )
-          // Continue applying other changes
         }
       }
     }

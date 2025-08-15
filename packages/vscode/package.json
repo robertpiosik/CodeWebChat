@@ -220,36 +220,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.diff.accept",
-        "title": "Accept Change",
-        "category": "Code Web Chat",
-        "icon": "$(check)"
-      },
-      {
-        "command": "codeWebChat.diff.reject",
-        "title": "Reject Change",
-        "category": "Code Web Chat",
-        "icon": "$(close)"
-      },
-      {
-        "command": "codeWebChat.diff.previous",
-        "title": "Previous Change",
-        "category": "Code Web Chat",
-        "icon": "$(arrow-left)"
-      },
-      {
-        "command": "codeWebChat.diff.next",
-        "title": "Next Change",
-        "category": "Code Web Chat",
-        "icon": "$(arrow-right)"
-      },
-      {
-        "command": "codeWebChat.diff.acceptAll",
-        "title": "Accept All Changes",
-        "category": "Code Web Chat",
-        "icon": "$(check-all)"
-      },
-      {
         "command": "codeWebChat.applyChatResponse",
         "title": "Apply Chat Response",
         "category": "Code Web Chat"
@@ -427,53 +397,6 @@
         {
           "command": "codeWebChat.settings.editContext",
           "when": "false"
-        },
-        {
-          "command": "codeWebChat.diff.accept",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.diff.reject",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.diff.previous",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.diff.next",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.diff.acceptAll",
-          "when": "false"
-        }
-      ],
-      "editor/title": [
-        {
-          "command": "codeWebChat.diff.acceptAll",
-          "when": "codeWebChat.diff.isVisible",
-          "group": "navigation@1"
-        },
-        {
-          "command": "codeWebChat.diff.accept",
-          "when": "codeWebChat.diff.isVisible",
-          "group": "navigation@2"
-        },
-        {
-          "command": "codeWebChat.diff.reject",
-          "when": "codeWebChat.diff.isVisible",
-          "group": "navigation@3"
-        },
-        {
-          "command": "codeWebChat.diff.previous",
-          "when": "codeWebChat.diff.isVisible",
-          "group": "navigation@4"
-        },
-        {
-          "command": "codeWebChat.diff.next",
-          "when": "codeWebChat.diff.isVisible",
-          "group": "navigation@5"
         }
       ],
       "view/title": [

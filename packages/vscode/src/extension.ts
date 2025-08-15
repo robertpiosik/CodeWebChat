@@ -34,7 +34,6 @@ import {
   feedback_command,
   apply_context_from_clipboard_command
 } from './commands'
-import { review_promise_resolve } from './commands/apply-chat-response-command/utils/review-changes'
 
 // Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
@@ -93,11 +92,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }
       ),
       reference_in_chat_command(view_provider, workspace_provider),
-      apply_chat_response_command(
-        context,
-        view_provider.set_revert_button_state,
-        view_provider.set_apply_button_state
-      ),
+      apply_chat_response_command(context, view_provider),
       revert_command(
         context,
         view_provider.set_revert_button_state,
@@ -129,21 +124,6 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
     feedback_command(),
     ...open_settings_command(context),
-    apply_context_from_clipboard_command(workspace_provider),
-    vscode.commands.registerCommand('codeWebChat.diff.accept', () => {
-      if (review_promise_resolve) review_promise_resolve('Yes')
-    }),
-    vscode.commands.registerCommand('codeWebChat.diff.acceptAll', () => {
-      if (review_promise_resolve) review_promise_resolve('Yes to All')
-    }),
-    vscode.commands.registerCommand('codeWebChat.diff.reject', () => {
-      if (review_promise_resolve) review_promise_resolve('No')
-    }),
-    vscode.commands.registerCommand('codeWebChat.diff.previous', () => {
-      if (review_promise_resolve) review_promise_resolve('Previous')
-    }),
-    vscode.commands.registerCommand('codeWebChat.diff.next', () => {
-      if (review_promise_resolve) review_promise_resolve('Next')
-    })
+    apply_context_from_clipboard_command(workspace_provider)
   )
 }
