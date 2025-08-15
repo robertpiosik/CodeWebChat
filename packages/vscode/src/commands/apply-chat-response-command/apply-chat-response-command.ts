@@ -14,7 +14,7 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
 import { format_document } from './utils/format-document'
-import { apply_git_patch } from './utils/patch-handler'
+import { apply_git_patch } from './handlers/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
@@ -922,15 +922,15 @@ export function apply_chat_response_command(
                       intelligent_new_files_count == 1 ? 'file' : 'files'
                     } and updated ${intelligent_replaced_files_count} ${
                       intelligent_replaced_files_count == 1 ? 'file' : 'files'
-                    } using Intelligent Update.`
+                    } using intelligent update.`
                   } else if (intelligent_new_files_count > 0) {
                     intelligent_message = `Successfully created ${intelligent_new_files_count} new ${
                       intelligent_new_files_count == 1 ? 'file' : 'files'
-                    } using Intelligent Update.`
+                    } using intelligent update.`
                   } else if (intelligent_replaced_files_count > 0) {
                     intelligent_message = `Successfully updated ${intelligent_replaced_files_count} ${
                       intelligent_replaced_files_count == 1 ? 'file' : 'files'
-                    } using Intelligent Update.`
+                    } using intelligent update.`
                   } else {
                     intelligent_message = `Intelligent Update completed successfully.`
                   }

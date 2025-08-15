@@ -5,9 +5,9 @@ import { exec } from 'child_process'
 import { Logger } from '../../../utils/logger'
 import { promisify } from 'util'
 import { OriginalFileState } from '../../../types/common'
-import { format_document } from './format-document'
+import { format_document } from '../utils/format-document'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { process_diff_patch } from './diff-patch-processor'
+import { process_diff_patch } from '../utils/diff-patch-processor'
 
 const execAsync = promisify(exec)
 

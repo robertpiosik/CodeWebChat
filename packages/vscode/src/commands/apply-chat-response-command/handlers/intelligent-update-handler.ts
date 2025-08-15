@@ -15,6 +15,7 @@ import { format_document } from '../utils/format-document'
 import { OriginalFileState } from '../../../types/common'
 import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
+import { review_changes_in_diff_view } from '../utils/review-changes'
 
 async function process_file(params: {
   endpoint_url: string
@@ -277,7 +278,14 @@ export async function handle_intelligent_update(params: {
 
   // Store original file states for reversion
   const original_states: OriginalFileState[] = []
-  let operation_successful = false
+  const document_changes: {
+    document: vscode.TextDocument | null // Null for new files
+    content: string // New content from AI or clipboard
+    isNew: boolean
+    filePath: string
+    workspaceName?: string
+  }[] = []
+  let api_calls_succeeded = false
   const max_concurrency = params.config.max_concurrency ?? 10 // Use configured value or default
 
   await vscode.window.withProgress(
@@ -291,15 +299,6 @@ export async function handle_intelligent_update(params: {
       token.onCancellationRequested(() => {
         cancel_token_source.cancel('Cancelled by user.')
       })
-
-      type DocumentChange = {
-        document: vscode.TextDocument | null // Null for new files
-        content: string // New content from AI or clipboard
-        isNew: boolean
-        filePath: string
-        workspaceName?: string
-      }
-      const document_changes: DocumentChange[] = []
 
       // Focus on the largest file for progress tracking
       let largest_file: {
@@ -507,83 +506,10 @@ export async function handle_intelligent_update(params: {
           document_changes.push(...results)
         }
 
-        for (const change of document_changes) {
-          if (token.isCancellationRequested)
-            throw new Error('Operation cancelled')
-
-          let workspace_root = default_workspace_path!
-          if (change.workspaceName && workspace_map.has(change.workspaceName)) {
-            workspace_root = workspace_map.get(change.workspaceName)!
-          }
-
-          const safe_path = create_safe_path(workspace_root, change.filePath)
-          if (!safe_path) {
-            Logger.error({
-              function_name: 'handle_intelligent_update',
-              message: 'Path validation failed during apply phase',
-              data: change.filePath
-            })
-            vscode.window.showWarningMessage(
-              `Skipping applying change to invalid path: ${change.filePath}`
-            )
-            continue // Skip applying this change
-          }
-
-          if (change.isNew) {
-            const created = await create_file_if_needed(
-              change.filePath,
-              change.content,
-              change.workspaceName
-            )
-            if (!created) {
-              // Log error, inform user, but continue applying other changes
-              Logger.error({
-                function_name: 'handle_intelligent_update',
-                message: 'Failed to create new file during apply phase',
-                data: change.filePath
-              })
-              vscode.window.showWarningMessage(
-                `Failed to create file: ${change.filePath}`
-              )
-            }
-          } else {
-            const document = change.document
-            if (!document) {
-              Logger.warn({
-                function_name: 'handle_intelligent_update',
-                message: 'Document missing for existing file change',
-                data: change.filePath
-              })
-              continue
-            }
-            try {
-              const editor = await vscode.window.showTextDocument(document)
-              await editor.edit((edit) => {
-                edit.replace(
-                  new vscode.Range(
-                    document.positionAt(0),
-                    document.positionAt(document.getText().length) // Use current length for replacement range
-                  ),
-                  change.content // Apply the AI-generated content
-                )
-              })
-              await format_document(document)
-              await document.save()
-            } catch (error) {
-              Logger.error({
-                function_name: 'handle_intelligent_update',
-                message: 'Failed to apply changes to existing file',
-                data: { error, file_path: change.filePath }
-              })
-              vscode.window.showWarningMessage(
-                `Failed to apply changes to file: ${change.filePath}`
-              )
-              // Continue applying other changes
-            }
-          }
+        if (token.isCancellationRequested) {
+          throw new Error('Operation cancelled')
         }
-
-        operation_successful = true
+        api_calls_succeeded = true
       } catch (error: any) {
         cancel_token_source.cancel('Operation failed due to error.') // Cancel any pending requests
         Logger.error({
@@ -601,5 +527,135 @@ export async function handle_intelligent_update(params: {
     }
   )
 
-  return operation_successful ? original_states : null
+  if (!api_calls_succeeded) {
+    return null
+  }
+
+  // API calls are finished, now review and apply changes
+  try {
+    const changes_to_review = document_changes.map((c) => ({
+      file_path: c.filePath,
+      content: c.content,
+      workspace_name: c.workspaceName,
+      is_new: c.isNew
+    }))
+
+    const accepted_changes_from_review = await review_changes_in_diff_view(
+      changes_to_review
+    )
+
+    if (accepted_changes_from_review === null) {
+      // User cancelled review
+      Logger.log({
+        function_name: 'handle_intelligent_update',
+        message: 'Review cancelled by user.'
+      })
+      return null
+    }
+
+    const accepted_document_changes = document_changes.filter((dc) =>
+      accepted_changes_from_review.some(
+        (ac) =>
+          ac.file_path === dc.filePath &&
+          (ac.workspace_name || undefined) === (dc.workspaceName || undefined)
+      )
+    )
+
+    for (const change of accepted_document_changes) {
+      let workspace_root = default_workspace_path!
+      if (change.workspaceName && workspace_map.has(change.workspaceName)) {
+        workspace_root = workspace_map.get(change.workspaceName)!
+      }
+
+      const safe_path = create_safe_path(workspace_root, change.filePath)
+      if (!safe_path) {
+        Logger.error({
+          function_name: 'handle_intelligent_update',
+          message: 'Path validation failed during apply phase',
+          data: change.filePath
+        })
+        vscode.window.showWarningMessage(
+          `Skipping applying change to invalid path: ${change.filePath}`
+        )
+        continue // Skip applying this change
+      }
+
+      if (change.isNew) {
+        const created = await create_file_if_needed(
+          change.filePath,
+          change.content,
+          change.workspaceName
+        )
+        if (!created) {
+          // Log error, inform user, but continue applying other changes
+          Logger.error({
+            function_name: 'handle_intelligent_update',
+            message: 'Failed to create new file during apply phase',
+            data: change.filePath
+          })
+          vscode.window.showWarningMessage(
+            `Failed to create file: ${change.filePath}`
+          )
+        }
+      } else {
+        const document = change.document
+        if (!document) {
+          Logger.warn({
+            function_name: 'handle_intelligent_update',
+            message: 'Document missing for existing file change',
+            data: change.filePath
+          })
+          continue
+        }
+        try {
+          const editor = await vscode.window.showTextDocument(document)
+          await editor.edit((edit) => {
+            edit.replace(
+              new vscode.Range(
+                document.positionAt(0),
+                document.positionAt(document.getText().length) // Use current length for replacement range
+              ),
+              change.content // Apply the AI-generated content
+            )
+          })
+          await format_document(document)
+          await document.save()
+        } catch (error) {
+          Logger.error({
+            function_name: 'handle_intelligent_update',
+            message: 'Failed to apply changes to existing file',
+            data: { error, file_path: change.filePath }
+          })
+          vscode.window.showWarningMessage(
+            `Failed to apply changes to file: ${change.filePath}`
+          )
+          // Continue applying other changes
+        }
+      }
+    }
+
+    // Filter original_states to only include those that were accepted and applied.
+    const accepted_paths = new Set(
+      accepted_document_changes.map(
+        (c) => `${c.workspaceName || ''}:${c.filePath}`
+      )
+    )
+    const final_original_states = original_states.filter((s) =>
+      accepted_paths.has(`${s.workspace_name || ''}:${s.file_path}`)
+    )
+    if (final_original_states.length > 0) {
+      return final_original_states
+    }
+  } catch (error: any) {
+    Logger.error({
+      function_name: 'handle_intelligent_update',
+      message: 'Multi-file processing failed during review/apply phase',
+      data: error
+    })
+    vscode.window.showErrorMessage(
+      `An error occurred while applying changes: ${error.message}`
+    )
+  }
+
+  return null
 }

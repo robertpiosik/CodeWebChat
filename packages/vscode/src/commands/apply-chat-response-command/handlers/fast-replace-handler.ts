@@ -9,6 +9,7 @@ import {
 import { format_document } from '../utils/format-document'
 import { ClipboardFile } from '../utils/clipboard-parser'
 import { OriginalFileState } from '../../../types/common'
+import { review_changes_in_diff_view } from '../utils/review-changes'
 
 export async function handle_fast_replace(
   files: ClipboardFile[]
@@ -85,11 +86,19 @@ export async function handle_fast_replace(
       }
     }
 
-    // Store original file states for reversion
-    const original_states: OriginalFileState[] = []
+    const accepted_files = await review_changes_in_diff_view(safe_files)
+    if (accepted_files === null) {
+      // User cancelled
+      return { success: false }
+    }
+    if (accepted_files.length === 0) {
+      return { success: false }
+    }
 
-    // Process all files without progress reporting
-    for (const file of safe_files) {
+    // --- Application Phase ---
+    // Process all files that were accepted by the user.
+    const original_states: OriginalFileState[] = []
+    for (const file of accepted_files) {
       let workspace_root = default_workspace
       if (file.workspace_name && workspace_map.has(file.workspace_name)) {
         workspace_root = workspace_map.get(file.workspace_name)!
@@ -97,15 +106,7 @@ export async function handle_fast_replace(
 
       const safe_path = create_safe_path(workspace_root, file.file_path)
 
-      if (!safe_path) {
-        Logger.error({
-          function_name: 'handle_fast_replace',
-          message: 'Path validation failed',
-          data: file.file_path
-        })
-        console.error(`Path validation failed for: ${file.file_path}`)
-        continue
-      }
+      if (!safe_path) continue
 
       const file_exists = fs.existsSync(safe_path)
 
@@ -119,7 +120,6 @@ export async function handle_fast_replace(
             is_new: false,
             workspace_name: file.workspace_name
           })
-
           const editor = await vscode.window.showTextDocument(document)
           await editor.edit((edit) => {
             edit.replace(
@@ -145,7 +145,6 @@ export async function handle_fast_replace(
             is_new: true,
             workspace_name: file.workspace_name
           })
-
           const directory = path.dirname(safe_path)
           if (!fs.existsSync(directory)) {
             try {
@@ -225,8 +224,8 @@ export async function handle_fast_replace(
 
     Logger.log({
       function_name: 'handle_fast_replace',
-      message: 'Files replaced successfully',
-      data: { file_count: safe_files.length }
+      message: 'Accepted files replaced successfully',
+      data: { file_count: accepted_files.length }
     })
     return { success: true, original_states }
   } catch (error: any) {
