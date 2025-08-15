@@ -14,10 +14,15 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
 import { format_document } from './utils/format-document'
-import { apply_git_patch } from './handlers/patch-handler'
+import {
+  apply_git_patch,
+  extract_content_from_patch,
+  extract_file_paths_from_patch
+} from './handlers/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
+import { ChangeItem, review_changes_in_diff_view } from './utils/review-changes'
 
 async function check_if_all_files_new(
   files: ClipboardFile[]
@@ -437,6 +442,67 @@ export function apply_chat_response_command(
 
         const default_workspace =
           vscode.workspace.workspaceFolders[0].uri.fsPath
+
+        // 1. Prepare items for review
+        const review_items: (ChangeItem & { patch: DiffPatch })[] = []
+        for (const patch of clipboard_content.patches) {
+          let workspace_path = default_workspace
+          if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
+            workspace_path = workspace_map.get(patch.workspace_name)!
+          }
+
+          const file_paths = extract_file_paths_from_patch(patch.content)
+          for (const file_path of file_paths) {
+            const safe_path = create_safe_path(workspace_path, file_path)
+            if (!safe_path) continue
+
+            const file_exists = fs.existsSync(safe_path)
+            const original_content = file_exists
+              ? fs.readFileSync(safe_path, 'utf8')
+              : ''
+            const predicted_content = extract_content_from_patch(
+              patch.content,
+              original_content
+            )
+
+            const folder = vscode.workspace.getWorkspaceFolder(
+              vscode.Uri.file(workspace_path)
+            )
+            review_items.push({
+              file_path,
+              content: predicted_content,
+              workspace_name: patch.workspace_name || folder?.name,
+              is_new: !file_exists,
+              patch: patch
+            })
+          }
+        }
+
+        if (review_items.length === 0) {
+          vscode.window.showInformationMessage(
+            'No valid changes found in patches to apply.'
+          )
+          return
+        }
+
+        // 2. Show review dialog
+        const accepted_items = await review_changes_in_diff_view(review_items)
+
+        if (accepted_items === null || accepted_items.length === 0) {
+          Logger.log({
+            function_name: 'apply_chat_response_command',
+            message: 'Patch review cancelled or rejected by user'
+          })
+          return // User cancelled or rejected all
+        }
+
+        // 3. Group accepted items by patch to avoid applying a patch multiple times
+        const patches_to_apply = new Map<DiffPatch, boolean>()
+        for (const item of accepted_items) {
+          patches_to_apply.set(item.patch, true)
+        }
+        const unique_patches_to_apply = Array.from(patches_to_apply.keys())
+
         let success_count = 0
         let failure_count = 0
         let all_original_states: OriginalFileState[] = []
@@ -448,11 +514,11 @@ export function apply_chat_response_command(
           used_fallback: boolean
         }[] = []
 
-        // Process patches
-        const total_patches = clipboard_content.patches.length
+        // Process accepted patches
+        const total_patches = unique_patches_to_apply.length
 
         for (let i = 0; i < total_patches; i++) {
-          const patch = clipboard_content.patches[i]
+          const patch = unique_patches_to_apply[i]
           let workspace_path = default_workspace
 
           if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {

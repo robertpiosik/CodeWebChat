@@ -8,7 +8,6 @@ import { OriginalFileState } from '../../../types/common'
 import { format_document } from '../utils/format-document'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { process_diff_patch } from '../utils/diff-patch-processor'
-import { review_changes_in_diff_view } from '../utils/review-changes'
 
 const execAsync = promisify(exec)
 
@@ -88,7 +87,7 @@ export const store_original_file_states = async (
 }
 
 // Helper function to extract content from patch for preview
-const extract_content_from_patch = (
+export const extract_content_from_patch = (
   patch_content: string,
   original_content: string
 ): string => {
@@ -309,26 +308,6 @@ const handle_new_file_patch = async (
     }
     const new_content = content_lines.join('\n')
 
-    // Create preview item for review
-    const preview_items = [
-      {
-        file_path,
-        content: new_content,
-        workspace_name: path.basename(workspace_path),
-        is_new: true
-      }
-    ]
-
-    // Show review dialog
-    const accepted_items = await review_changes_in_diff_view(preview_items)
-    if (accepted_items === null || accepted_items.length === 0) {
-      Logger.log({
-        function_name: 'handle_new_file_patch',
-        message: 'New file patch review cancelled or rejected by user'
-      })
-      return { success: false }
-    }
-
     const dir = path.dirname(safe_path)
     if (!fs.existsSync(dir)) {
       await fs.promises.mkdir(dir, { recursive: true })
@@ -372,64 +351,8 @@ export const apply_git_patch = async (
       workspace_path
     )
 
-    // Create preview items for review
-    const preview_items = []
-    for (const file_path of file_paths) {
-      const safe_path = create_safe_path(workspace_path, file_path)
-      if (!safe_path) {
-        Logger.error({
-          function_name: 'apply_git_patch',
-          message: 'Skipping file with unsafe path in review',
-          data: { file_path }
-        })
-        continue
-      }
-
-      const file_exists = fs.existsSync(safe_path)
-      const original_content = file_exists
-        ? fs.readFileSync(safe_path, 'utf8')
-        : ''
-      const predicted_content = extract_content_from_patch(
-        patch_content,
-        original_content
-      )
-
-      preview_items.push({
-        file_path,
-        content: predicted_content,
-        workspace_name: path.basename(workspace_path),
-        is_new: !file_exists
-      })
-    }
-
-    // Show review dialog
-    const accepted_items = await review_changes_in_diff_view(preview_items)
-    if (accepted_items === null || accepted_items.length === 0) {
-      Logger.log({
-        function_name: 'apply_git_patch',
-        message: 'Patch review cancelled or rejected by user'
-      })
-      return { success: false }
-    }
-
-    // Filter original states to only include accepted files
-    const accepted_file_paths = new Set(
-      accepted_items.map((item) => item.file_path)
-    )
-    const filtered_original_states = original_states.filter((state) =>
-      accepted_file_paths.has(state.file_path)
-    )
-
-    // If no files were accepted, return early
-    if (accepted_file_paths.size === 0) {
-      return { success: false }
-    }
-
-    // Filter file_paths to only include accepted ones
-    const accepted_file_paths_array = Array.from(accepted_file_paths)
-
     closed_files = await close_files_in_all_editor_groups(
-      accepted_file_paths_array,
+      file_paths,
       workspace_path
     )
 
@@ -489,10 +412,7 @@ export const apply_git_patch = async (
         data: { error: last_error }
       })
       try {
-        const file_path_safe = create_safe_path(
-          workspace_path,
-          accepted_file_paths_array[0]
-        )
+        const file_path_safe = create_safe_path(workspace_path, file_paths[0])
         if (file_path_safe == null) throw new Error('File path is null')
         await process_diff_patch(file_path_safe, temp_file)
         success = true
@@ -508,11 +428,11 @@ export const apply_git_patch = async (
 
     // Cleanup and return
     if (success) {
-      await process_modified_files(accepted_file_paths_array, workspace_path)
+      await process_modified_files(file_paths, workspace_path)
       await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
       return {
         success: true,
-        original_states: filtered_original_states,
+        original_states: original_states,
         used_fallback
       }
     } else {
