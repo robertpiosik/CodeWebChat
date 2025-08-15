@@ -14,7 +14,7 @@ export let review_promise_resolve:
   | ((decision: ReviewDecision) => void)
   | undefined
 
-async function showDiffWithActions(
+async function show_diff_with_actions(
   left_uri: vscode.Uri,
   right_content: string,
   title: string
@@ -121,7 +121,7 @@ export async function review_changes_in_diff_view<T extends ChangeItem>(
       pending_index + 1
     } of ${pending_files.length})`
 
-    const choice = await showDiffWithActions(left_uri, change.content, title)
+    const choice = await show_diff_with_actions(left_uri, change.content, title)
     await vscode.commands.executeCommand(
       'workbench.action.revertAndCloseActiveEditor'
     )
