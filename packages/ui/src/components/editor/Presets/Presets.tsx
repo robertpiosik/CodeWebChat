@@ -16,7 +16,7 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   Claude: 'CLAUDE',
   DeepSeek: 'DEEPSEEK',
   Mistral: 'MISTRAL',
-  Meta: 'META',
+  // Meta: 'META',
   Grok: 'GROK',
   Qwen: 'QWEN',
   Yuanbao: 'YUANBAO',

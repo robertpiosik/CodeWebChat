@@ -203,8 +203,10 @@ export const ai_studio: Chatbot = {
       const manual_budget_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
       ) as HTMLElement
-      manual_budget_toggle?.click()
-      await new Promise((r) => requestAnimationFrame(r))
+      if (manual_budget_toggle?.getAttribute('aria-checked') == 'false') {
+        manual_budget_toggle.click()
+        await new Promise((r) => requestAnimationFrame(r))
+      }
       const budget_input = document.querySelector(
         'div[data-test-id="user-setting-budget-animation-wrapper"] input'
       ) as HTMLInputElement
