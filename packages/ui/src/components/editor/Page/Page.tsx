@@ -1,6 +1,6 @@
 import styles from './Page.module.scss'
-import { IconButton } from '../IconButton/IconButton'
 import { Scrollable } from '../Scrollable'
+import { IconButton } from '../IconButton'
 
 type Props = {
   title?: string
@@ -37,9 +37,7 @@ export const Page: React.FC<Props> = (props) => {
           )}
         </div>
       </div>
-      <Scrollable>
-        <div className={styles.content__inner}>{props.children}</div>
-      </Scrollable>
+      <Scrollable>{props.children}</Scrollable>
     </div>
   )
 }

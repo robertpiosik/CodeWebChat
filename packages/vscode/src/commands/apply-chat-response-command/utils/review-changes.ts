@@ -137,7 +137,7 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
             item.status = 'rejected'
           }
         })
-        break // Exit loop
+        break
       }
 
       if (typeof choice == 'object' && choice && 'jump_to' in choice) {
@@ -151,7 +151,6 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
         )
 
         if (new_index != -1) {
-          // If we jump to a file, we should allow re-reviewing it.
           if (review_items[new_index].status != 'pending') {
             review_items[new_index].status = 'pending'
           }
@@ -160,7 +159,6 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
         continue
       }
 
-      // If we reach here, it means the user cancelled or dismissed the review.
       return null
     }
 
