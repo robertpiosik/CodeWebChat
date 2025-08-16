@@ -28,12 +28,18 @@
 }
 
 .review-changes-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-s);
   cursor: pointer;
   padding: var(--spacing-xs) var(--spacing-s);
   margin: 0 calc(-1 * var(--spacing-s));
   &:hover {
     background-color: var(--vscode-list-hoverBackground);
   }
+}
+.review-changes-item-label {
+  flex-grow: 1;
 }
 
 .review-changes-item--selected {

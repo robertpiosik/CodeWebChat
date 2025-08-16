@@ -205,12 +205,13 @@ export interface FocusOnFileInReviewMessage extends BaseMessage {
   workspace_name?: string
 }
 
-export interface RejectAllInReviewMessage extends BaseMessage {
-  command: 'REJECT_ALL_IN_REVIEW'
+export interface RejectInReviewMessage extends BaseMessage {
+  command: 'REJECT_IN_REVIEW'
 }
 
-export interface AcceptAllInReviewMessage extends BaseMessage {
-  command: 'ACCEPT_ALL_IN_REVIEW'
+export interface AcceptInReviewMessage extends BaseMessage {
+  command: 'ACCEPT_IN_REVIEW'
+  files: FileToReview[]
 }
 
 export type FrontendMessage =
@@ -253,8 +254,8 @@ export type FrontendMessage =
   | GetVersionMessage
   | CheckClipboardForApplyMessage
   | FocusOnFileInReviewMessage
-  | RejectAllInReviewMessage
-  | AcceptAllInReviewMessage
+  | RejectInReviewMessage
+  | AcceptInReviewMessage
 
 // Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {

@@ -11,6 +11,7 @@ export type ReviewDecision =
   | 'No to All'
   | 'Cancel'
   | { jump_to: { file_path: string; workspace_name?: string } }
+  | { accepted_files: Omit<ChangeItem, 'content'>[] }
 export let review_promise_resolve:
   | ((decision: ReviewDecision) => void)
   | undefined
@@ -134,6 +135,25 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
       await vscode.commands.executeCommand(
         'workbench.action.revertAndCloseActiveEditor'
       )
+
+      if (typeof choice === 'object' && choice && 'accepted_files' in choice) {
+        const accepted_files_info = (
+          choice as { accepted_files: Omit<ChangeItem, 'content'>[] }
+        ).accepted_files
+        const accepted_keys = new Set(
+          accepted_files_info.map((f) => `${f.workspace_name || ''}:${f.file_path}`)
+        )
+
+        review_items.forEach((item) => {
+          const key = `${item.change.workspace_name || ''}:${item.change.file_path}`
+          if (accepted_keys.has(key)) {
+            item.status = 'accepted'
+          } else {
+            item.status = 'rejected'
+          }
+        })
+        break // Exit loop
+      }
 
       if (typeof choice === 'object' && choice && 'jump_to' in choice) {
         const jump_target = (

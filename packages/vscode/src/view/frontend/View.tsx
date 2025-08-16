@@ -24,7 +24,9 @@ export const View = () => {
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [is_reviewing_changes, set_is_reviewing_changes] = useState(false)
-  const [files_to_review, set_files_to_review] = useState<FileToReview[]>([])
+  const [files_to_review, set_files_to_review] = useState<
+    (FileToReview & { isChecked: boolean })[]
+  >([])
   const [is_connected, set_is_connected] = useState<boolean>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [ask_instructions, set_ask_instructions] = useState<
@@ -99,7 +101,9 @@ export const View = () => {
         set_has_active_selection(message.has_selection)
       } else if (message.command == 'REVIEW_CHANGES_STARTED') {
         set_is_reviewing_changes(true)
-        set_files_to_review(message.files)
+        set_files_to_review(
+          message.files.map((f) => ({ ...f, isChecked: true }))
+        )
         set_last_clicked_file_index(0)
       } else if (message.command == 'REVIEW_CHANGES_FINISHED') {
         set_is_reviewing_changes(false)
@@ -274,49 +278,72 @@ export const View = () => {
   if (is_reviewing_changes) {
     overlay = (
       <UiPage
-        title={`Reviewing ${files_to_review.length} change${
-          files_to_review.length == 1 ? '' : 's'
-        }`}
+        title={`Edit${files_to_review.length > 1 ? 's' : ''} Review`}
         on_back_click={() => {
-          post_message(vscode, { command: 'REJECT_ALL_IN_REVIEW' })
+          post_message(vscode, { command: 'REJECT_IN_REVIEW' })
         }}
       >
         <div className={styles['review-changes-container']}>
           <ul>
-            {files_to_review.map((file, index) => (
-              <li
-                key={`${file.workspace_name ?? ''}:${file.file_path}:${index}`}
-                className={cn(styles['review-changes-item'], {
-                  [styles['review-changes-item--selected']]:
-                    index === last_clicked_file_index
-                })}
-                onClick={() => {
-                  set_last_clicked_file_index(index)
-                  post_message(vscode, {
-                    command: 'FOCUS_ON_FILE_IN_REVIEW',
-                    file_path: file.file_path,
-                    workspace_name: file.workspace_name
-                  })
-                }}
-                title="Click to view this change"
-              >
-                {file.workspace_name ? `${file.workspace_name}/` : ''}
-                {file.file_path}
-                {file.is_new ? ' (new)' : ''}
-              </li>
-            ))}
+            {files_to_review.map((file, index) => {
+              return (
+                <li
+                  key={`${file.workspace_name ?? ''}:${
+                    file.file_path
+                  }:${index}`}
+                  className={cn(styles['review-changes-item'], {
+                    [styles['review-changes-item--selected']]:
+                      index == last_clicked_file_index
+                  })}
+                >
+                  <input
+                    type="checkbox"
+                    checked={file.isChecked}
+                    onChange={(e) => {
+                      set_files_to_review((prev) =>
+                        prev.map((f, i) =>
+                          i == index
+                            ? { ...f, isChecked: e.target.checked }
+                            : f
+                        )
+                      )
+                    }}
+                  />
+                  <span
+                    className={styles['review-changes-item-label']}
+                    onClick={() => {
+                      set_last_clicked_file_index(index)
+                      post_message(vscode, {
+                        command: 'FOCUS_ON_FILE_IN_REVIEW',
+                        file_path: file.file_path,
+                        workspace_name: file.workspace_name
+                      })
+                    }}
+                    title="Click to view this change"
+                  >
+                    {file.workspace_name ? `${file.workspace_name}/` : ''}
+                    {file.file_path} {file.is_new ? ' (new)' : ''}
+                  </span>
+                </li>
+              )
+            })}
           </ul>
           <div className={styles['review-changes-footer']}>
             <Button
               on_click={() => {
-                post_message(vscode, { command: 'REJECT_ALL_IN_REVIEW' })
+                post_message(vscode, { command: 'REJECT_IN_REVIEW' })
               }}
             >
               Reject
             </Button>
             <Button
               on_click={() => {
-                post_message(vscode, { command: 'ACCEPT_ALL_IN_REVIEW' })
+                post_message(vscode, {
+                  command: 'ACCEPT_IN_REVIEW',
+                  files: files_to_review
+                    .filter((f) => f.isChecked)
+                    .map(({ ...rest }) => rest)
+                })
               }}
             >
               Accept

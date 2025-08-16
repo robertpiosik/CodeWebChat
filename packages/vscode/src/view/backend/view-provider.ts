@@ -408,13 +408,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                 }
               })
             }
-          } else if (message.command == 'REJECT_ALL_IN_REVIEW') {
+          } else if (message.command == 'REJECT_IN_REVIEW') {
             if (review_promise_resolve) {
               review_promise_resolve('No to All')
             }
-          } else if (message.command == 'ACCEPT_ALL_IN_REVIEW') {
+          } else if (message.command == 'ACCEPT_IN_REVIEW') {
             if (review_promise_resolve) {
-              review_promise_resolve('Yes to All')
+              review_promise_resolve({ accepted_files: message.files })
             }
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
