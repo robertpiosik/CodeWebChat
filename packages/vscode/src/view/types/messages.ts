@@ -199,19 +199,15 @@ export interface CheckClipboardForApplyMessage extends BaseMessage {
   command: 'CHECK_CLIPBOARD_FOR_APPLY'
 }
 
+export interface EditsReviewMessage extends BaseMessage {
+  command: 'EDITS_REVIEW'
+  files: FileInReview[]
+}
+
 export interface FocusOnFileInReviewMessage extends BaseMessage {
   command: 'FOCUS_ON_FILE_IN_REVIEW'
   file_path: string
   workspace_name?: string
-}
-
-export interface RejectInReviewMessage extends BaseMessage {
-  command: 'REJECT_IN_REVIEW'
-}
-
-export interface AcceptInReviewMessage extends BaseMessage {
-  command: 'ACCEPT_IN_REVIEW'
-  files: FileToReview[]
 }
 
 export type FrontendMessage =
@@ -253,9 +249,8 @@ export type FrontendMessage =
   | GetApiToolConfigurationsMessage
   | GetVersionMessage
   | CheckClipboardForApplyMessage
+  | EditsReviewMessage
   | FocusOnFileInReviewMessage
-  | RejectInReviewMessage
-  | AcceptInReviewMessage
 
 // Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {
@@ -381,7 +376,7 @@ export interface CanRevertChangedMessage extends BaseMessage {
   can_revert: boolean
 }
 
-export type FileToReview = {
+export type FileInReview = {
   file_path: string
   workspace_name?: string
   is_new?: boolean
@@ -389,7 +384,7 @@ export type FileToReview = {
 
 export interface ReviewChangesStartedMessage extends BaseMessage {
   command: 'REVIEW_CHANGES_STARTED'
-  files: FileToReview[]
+  files: FileInReview[]
 }
 
 export interface ReviewChangesFinishedMessage extends BaseMessage {

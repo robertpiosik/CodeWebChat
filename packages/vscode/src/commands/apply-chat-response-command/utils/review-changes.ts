@@ -1,17 +1,13 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
-import { create_safe_path } from '../../../utils/path-sanitizer'
-import { ViewProvider } from '../../../view/backend/view-provider'
+import { create_safe_path } from '@/utils/path-sanitizer'
+import { ViewProvider } from '@/view/backend/view-provider'
 
 export type ReviewDecision =
-  | 'Yes'
-  | 'No'
-  | 'Yes to All'
-  | 'No to All'
-  | 'Cancel'
   | { jump_to: { file_path: string; workspace_name?: string } }
   | { accepted_files: Omit<ChangeItem, 'content'>[] }
+
 export let review_promise_resolve:
   | ((decision: ReviewDecision) => void)
   | undefined
@@ -38,7 +34,7 @@ const show_diff_with_actions = async (
   return new Promise<ReviewDecision>((resolve) => {
     review_promise_resolve = resolve
   }).finally(() => {
-    review_promise_resolve = undefined // Clean up resolver
+    review_promise_resolve = undefined
   })
 }
 
@@ -83,24 +79,9 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
       status: 'pending' as 'pending' | 'accepted' | 'rejected'
     }))
 
-    let yes_to_all = false
-    let no_to_all = false
     let current_index = 0
 
     while (current_index >= 0 && current_index < review_items.length) {
-      if (yes_to_all) {
-        review_items.forEach((item) => {
-          if (item.status == 'pending') item.status = 'accepted'
-        })
-        break
-      }
-      if (no_to_all) {
-        review_items.forEach((item) => {
-          if (item.status == 'pending') item.status = 'rejected'
-        })
-        break
-      }
-
       const review_item = review_items[current_index]
       if (review_item.status != 'pending') {
         current_index++
@@ -136,16 +117,20 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
         'workbench.action.revertAndCloseActiveEditor'
       )
 
-      if (typeof choice === 'object' && choice && 'accepted_files' in choice) {
+      if (typeof choice == 'object' && choice && 'accepted_files' in choice) {
         const accepted_files_info = (
           choice as { accepted_files: Omit<ChangeItem, 'content'>[] }
         ).accepted_files
         const accepted_keys = new Set(
-          accepted_files_info.map((f) => `${f.workspace_name || ''}:${f.file_path}`)
+          accepted_files_info.map(
+            (f) => `${f.workspace_name || ''}:${f.file_path}`
+          )
         )
 
         review_items.forEach((item) => {
-          const key = `${item.change.workspace_name || ''}:${item.change.file_path}`
+          const key = `${item.change.workspace_name || ''}:${
+            item.change.file_path
+          }`
           if (accepted_keys.has(key)) {
             item.status = 'accepted'
           } else {
@@ -155,19 +140,19 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
         break // Exit loop
       }
 
-      if (typeof choice === 'object' && choice && 'jump_to' in choice) {
+      if (typeof choice == 'object' && choice && 'jump_to' in choice) {
         const jump_target = (
           choice as { jump_to: { file_path: string; workspace_name?: string } }
         ).jump_to
         const new_index = review_items.findIndex(
           (item) =>
-            item.change.file_path === jump_target.file_path &&
-            item.change.workspace_name === jump_target.workspace_name
+            item.change.file_path == jump_target.file_path &&
+            item.change.workspace_name == jump_target.workspace_name
         )
 
-        if (new_index !== -1) {
+        if (new_index != -1) {
           // If we jump to a file, we should allow re-reviewing it.
-          if (review_items[new_index].status !== 'pending') {
+          if (review_items[new_index].status != 'pending') {
             review_items[new_index].status = 'pending'
           }
           current_index = new_index
@@ -175,24 +160,8 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
         continue
       }
 
-      switch (choice) {
-        case 'Yes':
-          review_item.status = 'accepted'
-          current_index++
-          break
-        case 'No':
-          review_item.status = 'rejected'
-          current_index++
-          break
-        case 'Yes to All':
-          yes_to_all = true
-          break
-        case 'No to All':
-          no_to_all = true
-          break
-        default: // Cancel or dismissed
-          return null
-      }
+      // If we reach here, it means the user cancelled or dismissed the review.
+      return null
     }
 
     return review_items

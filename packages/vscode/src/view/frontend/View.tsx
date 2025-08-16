@@ -5,8 +5,8 @@ import { EditPresetForm } from '@/view/frontend/EditPresetForm'
 import { Preset } from '@shared/types/preset'
 import {
   BackendMessage,
-  FileToReview,
-  FrontendMessage
+  FileInReview,
+  FrontendMessage,
 } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
@@ -23,7 +23,7 @@ export const View = () => {
   const [active_view, set_active_view] = useState<'intro' | 'home'>('intro')
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
-  const [files_to_review, set_files_to_review] = useState<FileToReview[]>([])
+  const [files_to_review, set_files_to_review] = useState<FileInReview[]>([])
   const [is_connected, set_is_connected] = useState<boolean>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [ask_instructions, set_ask_instructions] = useState<
@@ -270,17 +270,17 @@ export const View = () => {
       <UiPage
         title={`Edit${files_to_review.length > 1 ? 's' : ''} Review`}
         on_back_click={() => {
-          post_message(vscode, { command: 'REJECT_IN_REVIEW' })
+          post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
         }}
       >
         <ReviewChanges
           files={files_to_review}
           on_reject={() => {
-            post_message(vscode, { command: 'REJECT_IN_REVIEW' })
+            post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
           }}
           on_accept={(accepted_files) => {
             post_message(vscode, {
-              command: 'ACCEPT_IN_REVIEW',
+              command: 'EDITS_REVIEW',
               files: accepted_files
             })
           }}
