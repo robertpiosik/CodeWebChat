@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-A 100% free and open source AI pair programming tool. CWC lets you effectively manage context—delivering accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents. 
+A 100% free and open source AI pair programming tool. With its effective context management, CWC delivers accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents.
 
 Designed for real-world programming, saving you sanity, money and time.
 
