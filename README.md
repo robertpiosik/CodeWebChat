@@ -15,7 +15,7 @@ A 100% free and open source AI pair programming tool. By focusing on context man
 **With CWC you can:**
 
 - Enhance your coding workflow with AI:
-  - granularly select folders and files for context,
+  - select folders and files for context,
   - enter instructions,
   - initialize new chat or send an API request,
   - apply response, hands-free!
