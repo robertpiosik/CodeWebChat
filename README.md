@@ -4,7 +4,7 @@
 
 A 100% free and open source AI pair programming tool. With its effective context management, CWC delivers accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents.
 
-Designed for real-world programming, saving you sanity, money and time.
+Code Web Chat is designed for real-world programming, saving you sanity, money and time.
 
 ✅ **Free coding with 15+ chatbots** \
 ✅ **All the necessary API tools** \
