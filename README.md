@@ -4,8 +4,8 @@
 
 A 100% free and open source AI pair programming tool. Thanks to its focus on context management, it delivers accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents. CWC is designed for real-world programming, saving you sanity, money and time.
 
-✅ **Free coding with ChatGPT, Gemini, Claude and more** \
-✅ **Built-in API tools: code completions, commit messages and more** \
+✅ **Free coding with 15+ chatbots** \
+✅ **All the necessary API tools** \
 🙋 Built by an independent developer
 
 <p>
