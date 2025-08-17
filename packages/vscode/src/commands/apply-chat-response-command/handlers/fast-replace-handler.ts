@@ -10,7 +10,7 @@ import { format_document } from '../utils/format-document'
 import { ClipboardFile } from '../utils/clipboard-parser'
 import { OriginalFileState } from '../../../types/common'
 import { ViewProvider } from '../../../view/backend/view-provider'
-import { review_changes_in_diff_view } from '../utils/review-changes'
+import { code_review_in_diff_view } from '../utils/review-changes'
 
 export const handle_fast_replace = async (
   files: ClipboardFile[],
@@ -88,7 +88,7 @@ export const handle_fast_replace = async (
       }
     }
 
-    const accepted_files = await review_changes_in_diff_view(
+    const accepted_files = await code_review_in_diff_view(
       safe_files,
       view_provider
     )

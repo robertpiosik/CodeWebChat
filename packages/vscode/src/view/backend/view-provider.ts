@@ -45,7 +45,6 @@ import {
   handle_pick_chatbot
 } from './message-handlers'
 import { LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY } from '@/constants/state-keys'
-import { review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-changes'
 import { can_revert } from '@/commands/revert-command'
 import {
   config_preset_to_ui_format,
@@ -55,6 +54,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { api_tool_config_emitter } from '@/services/api-providers-manager'
+import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-changes'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -400,8 +400,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'CHECK_CLIPBOARD_FOR_APPLY') {
             await this._check_clipboard_for_apply()
           } else if (message.command == 'FOCUS_ON_FILE_IN_REVIEW') {
-            if (review_promise_resolve) {
-              review_promise_resolve({
+            if (code_review_promise_resolve) {
+              code_review_promise_resolve({
                 jump_to: {
                   file_path: message.file_path,
                   workspace_name: message.workspace_name
@@ -409,8 +409,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               })
             }
           } else if (message.command == 'EDITS_REVIEW') {
-            if (review_promise_resolve) {
-              review_promise_resolve({ accepted_files: message.files })
+            if (code_review_promise_resolve) {
+              code_review_promise_resolve({ accepted_files: message.files })
             }
           } else if (message.command == 'GET_HAS_MULTIPLE_WORKSPACES') {
             this.send_message({

@@ -382,13 +382,13 @@ export interface CanRevertChangedMessage extends BaseMessage {
   can_revert: boolean
 }
 
-export interface ReviewChangesStartedMessage extends BaseMessage {
-  command: 'REVIEW_CHANGES_STARTED'
+export interface CodeReviewStartedMessage extends BaseMessage {
+  command: 'CODE_REVIEW_STARTED'
   files: FileInReview[]
 }
 
-export interface ReviewChangesFinishedMessage extends BaseMessage {
-  command: 'REVIEW_CHANGES_FINISHED'
+export interface CodeReviewFinishedMessage extends BaseMessage {
+  command: 'CODE_REVIEW_FINISHED'
 }
 
 export interface HasMultipleWorkspacesMessage extends BaseMessage {
@@ -420,6 +420,6 @@ export type BackendMessage =
   | AtSignQuickPickForPresetAffixResultMessage
   | CanApplyClipboardChangedMessage
   | CanRevertChangedMessage
-  | ReviewChangesStartedMessage
-  | ReviewChangesFinishedMessage
+  | CodeReviewStartedMessage
+  | CodeReviewFinishedMessage
   | HasMultipleWorkspacesMessage

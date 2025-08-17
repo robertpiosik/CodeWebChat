@@ -93,9 +93,9 @@ export const View = () => {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
-      } else if (message.command == 'REVIEW_CHANGES_STARTED') {
+      } else if (message.command == 'CODE_REVIEW_STARTED') {
         set_files_to_review(message.files)
-      } else if (message.command == 'REVIEW_CHANGES_FINISHED') {
+      } else if (message.command == 'CODE_REVIEW_FINISHED') {
         set_files_to_review([])
       } else if (message.command == 'HAS_MULTIPLE_WORKSPACES') {
         set_has_multiple_workspaces(message.value)

@@ -4,19 +4,19 @@ import * as fs from 'fs'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { ViewProvider } from '@/view/backend/view-provider'
 
-export type ReviewDecision =
+export type CodeReviewDecision =
   | { jump_to: { file_path: string; workspace_name?: string } }
   | { accepted_files: Omit<ChangeItem, 'content'>[] }
 
-export let review_promise_resolve:
-  | ((decision: ReviewDecision) => void)
+export let code_review_promise_resolve:
+  | ((decision: CodeReviewDecision) => void)
   | undefined
 
 const show_diff_with_actions = async (
   left_uri: vscode.Uri,
   right_content: string,
   title: string
-): Promise<ReviewDecision> => {
+): Promise<{ decision: CodeReviewDecision; new_content: string }> => {
   const left_doc = await vscode.workspace.openTextDocument(left_uri)
   const right_doc = await vscode.workspace.openTextDocument({
     content: right_content,
@@ -33,10 +33,14 @@ const show_diff_with_actions = async (
     }
   )
 
-  return new Promise<ReviewDecision>((resolve) => {
-    review_promise_resolve = resolve
-  }).finally(() => {
-    review_promise_resolve = undefined
+  return new Promise<{ decision: CodeReviewDecision; new_content: string }>(
+    (resolve) => {
+      code_review_promise_resolve = (decision) => {
+        resolve({ decision, new_content: right_doc.getText() })
+      }
+    }
+  ).finally(() => {
+    code_review_promise_resolve = undefined
   })
 }
 
@@ -47,7 +51,7 @@ export type ChangeItem = {
   is_new?: boolean
 }
 
-export const review_changes_in_diff_view = async <T extends ChangeItem>(
+export const code_review_in_diff_view = async <T extends ChangeItem>(
   changes: T[],
   view_provider?: ViewProvider
 ): Promise<T[] | null> => {
@@ -66,7 +70,7 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
 
   if (view_provider) {
     view_provider.send_message({
-      command: 'REVIEW_CHANGES_STARTED',
+      command: 'CODE_REVIEW_STARTED',
       files: changes.map((c) => ({
         file_path: c.file_path,
         workspace_name: c.workspace_name,
@@ -117,11 +121,12 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
 
       const title = `${path.basename(change.file_path)}`
 
-      const choice = await show_diff_with_actions(
+      const { decision: choice, new_content } = await show_diff_with_actions(
         left_uri,
         change.content,
         title
       )
+      change.content = new_content
       await vscode.commands.executeCommand(
         'workbench.action.revertAndCloseActiveEditor'
       )
@@ -176,7 +181,7 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
       .map((item) => item.change)
   } finally {
     if (view_provider) {
-      view_provider.send_message({ command: 'REVIEW_CHANGES_FINISHED' })
+      view_provider.send_message({ command: 'CODE_REVIEW_FINISHED' })
     }
   }
 }

@@ -15,7 +15,7 @@ import { format_document } from '../utils/format-document'
 import { OriginalFileState } from '../../../types/common'
 import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
-import { review_changes_in_diff_view } from '../utils/review-changes'
+import { code_review_in_diff_view } from '../utils/review-changes'
 import { ViewProvider } from '../../../view/backend/view-provider'
 
 const process_file = async (params: {
@@ -530,7 +530,7 @@ export const handle_intelligent_update = async (params: {
       is_new: c.isNew
     }))
 
-    const accepted_changes_from_review = await review_changes_in_diff_view(
+    const accepted_changes_from_review = await code_review_in_diff_view(
       changes_to_review,
       params.view_provider
     )

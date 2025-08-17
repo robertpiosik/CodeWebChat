@@ -22,8 +22,8 @@ import {
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
-import { ChangeItem, review_changes_in_diff_view } from './utils/review-changes'
 import { ViewProvider } from '../../view/backend/view-provider'
+import { ChangeItem, code_review_in_diff_view } from './utils/review-changes'
 
 const check_if_all_files_new = async (
   files: ClipboardFile[]
@@ -477,7 +477,7 @@ export const apply_chat_response_command = (
           return
         }
 
-        const accepted_items = await review_changes_in_diff_view(
+        const accepted_items = await code_review_in_diff_view(
           review_items,
           view_provider
         )
