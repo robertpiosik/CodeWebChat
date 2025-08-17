@@ -2,9 +2,9 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-A 100% free and open-source VS Code extension for AI-assisted pair programming. Manage context like a PRO and get accuracy, predictability, speed and cost efficiency of AI assistance that is unmatched by any other IDE or terminal based coding agent!
+A 100% free and open-source VS Code extension for AI-assisted pair programming. Make coordinated changes across multiple files from a single web chat or API call, save money and time.
 
-✅ **Connects VS Code with 15+ free chatbots** \
+✅ **Initializes 15+ free chatbots** \
 ✅ **Includes all the necessary API tools** \
 🫡 Built by [an independent developer](https://x.com/robertpiosik)
 
