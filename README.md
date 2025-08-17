@@ -15,11 +15,11 @@ Vibe code your next feature with Code Web Chat! With its effective context manag
 
 **With CWC you can:**
 
-- Enhance your coding workflow with AI:
+- Create multi-file edits across your codebase in a single chat or API request:
   - select folders and files for context,
   - enter instructions,
   - initialize new chat or send an API request,
-  - apply response, hands-free!
+  - apply response in any edit format (whole/truncated/diff), hands-free!
 - Get accurate code completions.
 - Generate meaningful commit messages.
 
