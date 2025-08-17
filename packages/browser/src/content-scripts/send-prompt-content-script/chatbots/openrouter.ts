@@ -40,21 +40,15 @@ export const openrouter: Chatbot = {
     options_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const textarea = document.querySelector(
-      'div[data-headlessui-portal] textarea'
+      'div[role="dialog"] textarea'
     ) as HTMLTextAreaElement
     textarea.focus()
     textarea.value = system_instructions
     textarea.dispatchEvent(new Event('change', { bubbles: true }))
     textarea.blur()
-    const close_button = Array.from(
-      document.querySelectorAll('div[data-headlessui-portal] button')
-    ).find((button) => {
-      const path = button.querySelector('path')
-      return (
-        path?.getAttribute('d') ==
-        'm9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
-      )
-    }) as HTMLButtonElement
+    const close_button = document.querySelector(
+      'div[role="dialog"] button[data-slot="dialog-close"]'
+    ) as HTMLButtonElement
     close_button.click()
   },
   set_temperature: async (temperature?: number) => {
@@ -71,7 +65,7 @@ export const openrouter: Chatbot = {
     options_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const sampling_parameters_button = Array.from(
-      document.querySelectorAll('div[data-headlessui-portal] button')
+      document.querySelectorAll('div[role="dialog"] button')
     ).find(
       (button) => button.textContent?.trim() == 'Sampling Parameters'
     ) as HTMLButtonElement
@@ -79,7 +73,7 @@ export const openrouter: Chatbot = {
     await new Promise((r) => requestAnimationFrame(r))
     const temperature_div = Array.from(
       document.querySelectorAll(
-        'div[data-headlessui-portal] div.flex.justify-between.text-sm'
+        'div[role="dialog"] div.flex.justify-between.text-sm'
       )
     ).find((div) => div.textContent?.trim() == 'Temperature') as HTMLElement
     const temperature_input = temperature_div.querySelector(
@@ -89,15 +83,9 @@ export const openrouter: Chatbot = {
     temperature_input.value = temperature.toString()
     temperature_input.dispatchEvent(new Event('change', { bubbles: true }))
     temperature_input.blur()
-    const close_button = Array.from(
-      document.querySelectorAll('div[data-headlessui-portal] button')
-    ).find((button) => {
-      const path = button.querySelector('path')
-      return (
-        path?.getAttribute('d') ==
-        'm9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
-      )
-    }) as HTMLButtonElement
+    const close_button = document.querySelector(
+      'div[role="dialog"] button[data-slot="dialog-close"]'
+    ) as HTMLButtonElement
     close_button.click()
   },
   set_top_p: async (top_p?: number) => {
@@ -114,7 +102,7 @@ export const openrouter: Chatbot = {
     options_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const sampling_parameters_button = Array.from(
-      document.querySelectorAll('div[data-headlessui-portal] button')
+      document.querySelectorAll('div[role="dialog"] button')
     ).find(
       (button) => button.textContent?.trim() == 'Sampling Parameters'
     ) as HTMLButtonElement
@@ -122,7 +110,7 @@ export const openrouter: Chatbot = {
     await new Promise((r) => requestAnimationFrame(r))
     const top_p_div = Array.from(
       document.querySelectorAll(
-        'div[data-headlessui-portal] div.flex.justify-between.text-sm'
+        'div[role="dialog"] div.flex.justify-between.text-sm'
       )
     ).find((div) => div.textContent?.trim() == 'Top P') as HTMLElement
     const top_p_input = top_p_div.querySelector('input') as HTMLInputElement
@@ -130,15 +118,9 @@ export const openrouter: Chatbot = {
     top_p_input.value = top_p.toString()
     top_p_input.dispatchEvent(new Event('change', { bubbles: true }))
     top_p_input.blur()
-    const close_button = Array.from(
-      document.querySelectorAll('div[data-headlessui-portal] button')
-    ).find((button) => {
-      const path = button.querySelector('path')
-      return (
-        path?.getAttribute('d') ==
-        'm9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z'
-      )
-    }) as HTMLButtonElement
+    const close_button = document.querySelector(
+      'div[role="dialog"] button[data-slot="dialog-close"]'
+    ) as HTMLButtonElement
     close_button.click()
   },
   inject_apply_response_button: (client_id: number) => {

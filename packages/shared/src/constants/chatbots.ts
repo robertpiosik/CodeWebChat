@@ -133,12 +133,13 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_thinking_budget: false,
     default_system_instructions: '',
-    supported_options: { think: 'Think', private: 'Private' },
+    supported_options: { private: 'Private' },
     default_top_p: 0,
     models: {
-      'grok-3': { label: 'Grok 3' },
-      'grok-4': { label: 'Grok 4' },
-      'grok-4-heavy': { label: 'Grok 4 Heavy' }
+      auto: { label: 'Auto' },
+      fast: { label: 'Fast' },
+      expert: { label: 'Expert' },
+      heavy: { label: 'Heavy' }
     }
   },
   Kimi: {

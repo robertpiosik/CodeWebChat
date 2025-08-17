@@ -17,7 +17,7 @@ export const grok: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('button[aria-label="Think"]')) {
+        if (document.querySelector('textarea')) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -35,41 +35,34 @@ export const grok: Chatbot = {
           'a[href="/chat#private"]'
         ) as HTMLAnchorElement
         private_link.click()
-      } else if (option == 'think' && supported_options['think']) {
-        const think_button = document.querySelector(
-          'button[aria-label="Think"]'
-        ) as HTMLButtonElement
-        if (think_button) {
-          think_button.click()
-        }
       }
     }
   },
   set_model: async (model?: string) => {
     if (!model) return
+
     const model_selector_button = document.querySelector(
-      'form > div > div > div:last-child > div > div:last-child > button'
+      'button[id="model-select-trigger"]'
     ) as HTMLButtonElement
-    if (!model_selector_button) return
 
-    const model_name_to_find = (CHATBOTS['Grok'].models as any)[model]?.label
-    if (!model_name_to_find) return
+    const model_label_to_find = (CHATBOTS['Grok'].models as any)[model]?.label
+    if (!model_label_to_find) return
 
-    if (model_selector_button.textContent == model_name_to_find) return
+    if (model_selector_button.textContent?.includes(model_label_to_find)) {
+      return
+    }
 
     model_selector_button.click()
     await new Promise((r) => requestAnimationFrame(r))
 
     const dropdown = document.querySelector(
       'div[data-radix-popper-content-wrapper]'
-    )
-    if (!dropdown) return
+    ) as HTMLDivElement
 
-    const menu_items = dropdown.querySelectorAll('div[role="menuitem"]')
-
-    for (const item of Array.from(menu_items)) {
-      if (item.textContent?.includes(model_name_to_find)) {
-        ;(item as HTMLElement).click()
+    const options = dropdown.querySelectorAll('div[role="option"]')
+    for (const option of Array.from(options)) {
+      if (option.textContent?.startsWith(model_label_to_find)) {
+        ;(option as HTMLElement).click()
         break
       }
     }

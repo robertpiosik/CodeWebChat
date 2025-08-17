@@ -126,6 +126,7 @@ export const get_textarea_element = () => {
     [openrouter_url]: 'textarea',
     [meta_url]: 'div[contenteditable="true"]',
     [chatgpt_url]: 'div#prompt-textarea',
+    [grok_url]: 'textarea',
     [deepseek_url]: 'textarea',
     [mistral_url]: 'div[contenteditable="true"]',
     [yuanbao_url]: 'div[contenteditable="true"]',
