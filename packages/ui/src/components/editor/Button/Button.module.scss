@@ -26,4 +26,19 @@
       background-color: var(--vscode-button-background);
     }
   }
+
+  &--secondary {
+    color: var(--vscode-button-secondaryForeground);
+    background-color: var(--vscode-button-secondaryBackground);
+
+    &:hover {
+      background-color: var(--vscode-button-secondaryHoverBackground);
+    }
+
+    &:disabled {
+      &:hover {
+        background-color: var(--vscode-button-secondaryBackground);
+      }
+    }
+  }
 }

@@ -12,7 +12,7 @@ import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
-import { ReviewChanges as UiReviewChanges } from '@ui/components/editor/ReviewChanges'
+import { CodeReview as UiCodeReview } from '@ui/components/editor/CodeReview'
 
 const vscode = acquireVsCodeApi()
 
@@ -21,6 +21,7 @@ export const View = () => {
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [files_to_review, set_files_to_review] = useState<FileInReview[]>([])
+  const [has_multiple_workspaces, set_has_multiple_workspaces] = useState(false)
   const [is_connected, set_is_connected] = useState<boolean>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [ask_instructions, set_ask_instructions] = useState<
@@ -96,6 +97,8 @@ export const View = () => {
         set_files_to_review(message.files)
       } else if (message.command == 'REVIEW_CHANGES_FINISHED') {
         set_files_to_review([])
+      } else if (message.command == 'HAS_MULTIPLE_WORKSPACES') {
+        set_has_multiple_workspaces(message.value)
       }
     }
     window.addEventListener('message', handle_message)
@@ -108,7 +111,8 @@ export const View = () => {
       { command: 'GET_API_MODE' },
       { command: 'GET_CONNECTION_STATUS' },
       { command: 'REQUEST_EDITOR_STATE' },
-      { command: 'REQUEST_EDITOR_SELECTION_STATE' }
+      { command: 'REQUEST_EDITOR_SELECTION_STATE' },
+      { command: 'GET_HAS_MULTIPLE_WORKSPACES' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -265,13 +269,14 @@ export const View = () => {
   if (files_to_review.length > 0) {
     overlay = (
       <UiPage
-        title={`Edit${files_to_review.length > 1 ? 's' : ''} Review`}
+        title="Code Review"
         on_back_click={() => {
           post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
         }}
       >
-        <UiReviewChanges
+        <UiCodeReview
           files={files_to_review}
+          has_multiple_workspaces={has_multiple_workspaces}
           on_reject={() => {
             post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
           }}

@@ -412,6 +412,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             if (review_promise_resolve) {
               review_promise_resolve({ accepted_files: message.files })
             }
+          } else if (message.command == 'GET_HAS_MULTIPLE_WORKSPACES') {
+            this.send_message({
+              command: 'HAS_MULTIPLE_WORKSPACES',
+              value: this.workspace_provider.getWorkspaceRoots().length > 1
+            })
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
           } else if (message.command == 'PICK_CHATBOT') {

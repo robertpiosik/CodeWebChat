@@ -211,6 +211,10 @@ export interface FocusOnFileInReviewMessage extends BaseMessage {
   workspace_name?: string
 }
 
+export interface GetHasMultipleWorkspacesMessage extends BaseMessage {
+  command: 'GET_HAS_MULTIPLE_WORKSPACES'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -252,6 +256,7 @@ export type FrontendMessage =
   | CheckClipboardForApplyMessage
   | EditsReviewMessage
   | FocusOnFileInReviewMessage
+  | GetHasMultipleWorkspacesMessage
 
 // Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {
@@ -386,6 +391,11 @@ export interface ReviewChangesFinishedMessage extends BaseMessage {
   command: 'REVIEW_CHANGES_FINISHED'
 }
 
+export interface HasMultipleWorkspacesMessage extends BaseMessage {
+  command: 'HAS_MULTIPLE_WORKSPACES'
+  value: boolean
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
@@ -412,3 +422,4 @@ export type BackendMessage =
   | CanRevertChangedMessage
   | ReviewChangesStartedMessage
   | ReviewChangesFinishedMessage
+  | HasMultipleWorkspacesMessage

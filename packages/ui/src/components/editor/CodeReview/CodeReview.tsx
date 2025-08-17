@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react'
 import { FileInReview } from '@shared/types/file-in-review'
 import cn from 'classnames'
-import styles from './ReviewChanges.module.scss'
+import styles from './CodeReview.module.scss'
 import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
 
@@ -9,13 +9,15 @@ type CheckedFileToReview = FileInReview & { is_checked: boolean }
 
 type Props = {
   files: FileInReview[]
+  has_multiple_workspaces: boolean
   on_reject: () => void
   on_accept: (files: FileInReview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
 }
 
-export const ReviewChanges: FC<Props> = ({
+export const CodeReview: FC<Props> = ({
   files,
+  has_multiple_workspaces,
   on_reject,
   on_accept,
   on_focus_file
@@ -51,7 +53,15 @@ export const ReviewChanges: FC<Props> = ({
               className={cn(styles.item, {
                 [styles['item--selected']]: index == last_clicked_file_index
               })}
+              onClick={() => {
+                set_last_clicked_file_index(index)
+                on_focus_file({
+                  file_path: file.file_path,
+                  workspace_name: file.workspace_name
+                })
+              }}
               role="button"
+              title={file.file_path}
             >
               <Checkbox
                 checked={file.is_checked}
@@ -64,22 +74,14 @@ export const ReviewChanges: FC<Props> = ({
                 }}
                 disabled={files_to_review.length == 1}
               />
-              <div
-                className={styles['item__label']}
-                onClick={() => {
-                  set_last_clicked_file_index(index)
-                  on_focus_file({
-                    file_path: file.file_path,
-                    workspace_name: file.workspace_name
-                  })
-                }}
-                title={file.file_path}
-              >
+              <div className={styles['item__label']}>
                 <span>
                   {file.is_new ? 'New: ' : ''} {file_name}
                 </span>
                 <span>
-                  {file.workspace_name ? `${file.workspace_name}/` : ''}
+                  {has_multiple_workspaces && file.workspace_name
+                    ? `${file.workspace_name}/`
+                    : ''}
                   {dir_path}
                 </span>
               </div>
@@ -88,12 +90,15 @@ export const ReviewChanges: FC<Props> = ({
         })}
       </div>
       <div className={styles.footer}>
+        <Button on_click={on_reject} is_secondary>
+          Reject
+        </Button>
         <Button
           on_click={handle_accept}
           disabled={files_to_review.filter((f) => f.is_checked).length == 0}
-        >{`Accept ${
-          files_to_review.length > 1 ? 'Selected Edits' : 'Edit'
-        }`}</Button>
+        >
+          Accept
+        </Button>
       </div>
     </div>
   )

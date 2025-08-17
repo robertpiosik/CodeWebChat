@@ -8,12 +8,15 @@ type Props = {
   children?: React.ReactNode
   codicon?: string
   title?: string
+  is_secondary?: boolean
 }
 
 export const Button: FC<Props> = (props) => {
   return (
     <button
-      className={styles.button}
+      className={cn(styles.button, {
+        [styles['button--secondary']]: props.is_secondary
+      })}
       onClick={props.on_click}
       disabled={props.disabled}
       title={props.title}

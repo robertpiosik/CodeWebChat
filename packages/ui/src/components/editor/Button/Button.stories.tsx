@@ -19,3 +19,21 @@ export const Disabled = () => (
     Disabled Button
   </Button>
 )
+
+export const Secondary = () => (
+  <Button on_click={() => console.log('Clicked')} is_secondary>
+    Secondary Button
+  </Button>
+)
+
+export const SecondaryWithIcon = () => (
+  <Button on_click={() => console.log('Clicked')} is_secondary codicon="send">
+    Secondary Button with Icon
+  </Button>
+)
+
+export const SecondaryDisabled = () => (
+  <Button on_click={() => console.log('Clicked')} is_secondary disabled>
+    Secondary Disabled Button
+  </Button>
+)

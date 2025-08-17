@@ -1,7 +1,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-8px);
 }
 
 .list {
@@ -42,6 +41,6 @@
 .footer {
   display: flex;
   gap: var(--padding-8px);
-  padding: var(--padding-4px) var(--padding-12px) var(--padding-12px)
+  padding: var(--padding-8px) var(--padding-12px) var(--padding-12px)
     var(--padding-12px);
 }

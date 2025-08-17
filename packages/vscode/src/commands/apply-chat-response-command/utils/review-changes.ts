@@ -106,6 +106,13 @@ export const review_changes_in_diff_view = async <T extends ChangeItem>(
         ? vscode.Uri.file(safe_path)
         : vscode.Uri.from({ scheme: 'untitled', path: safe_path })
 
+      if (file_exists) {
+        const left_content = fs.readFileSync(safe_path, 'utf8')
+        if (left_content.endsWith('\n') && !change.content.endsWith('\n')) {
+          change.content += '\n'
+        }
+      }
+
       const title = `${path.basename(change.file_path)}`
 
       const choice = await show_diff_with_actions(
