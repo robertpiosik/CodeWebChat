@@ -269,14 +269,14 @@ export const handle_show_prompt_template_quick_pick = async (
 
       if (selected_template.label == ADD_NEW_TEMPLATE_LABEL) {
         is_editing_template = true
-        const templateText = await vscode.window.showInputBox({
+        const template_text = await vscode.window.showInputBox({
           prompt: 'Enter the prompt template',
           placeHolder:
             'E.g., Rewrite {function name} without redundant comments'
         })
-        if (templateText !== undefined && templateText.trim()) {
+        if (template_text !== undefined && template_text.trim()) {
           const new_template: PromptTemplate = {
-            template: templateText.trim()
+            template: template_text.trim()
           }
           prompt_templates = [...prompt_templates, new_template]
 
