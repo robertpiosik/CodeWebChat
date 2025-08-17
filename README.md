@@ -2,37 +2,27 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-A 100% free and open-source VS Code extension for AI-assisted pair programming. Make coordinated changes across multiple files from a single web chat or API call. Save money and time.
+A 100% free and open-source VS Code extension for AI-assisted pair programming. Make coordinated changes across multiple files from a single chat response or API call. Save money and time.
 
 ✅ **Initializes 15+ free chatbots** \
 ✅ **Includes all the necessary API tools** \
-🫡 Built by [an independent developer](https://x.com/robertpiosik)
+🫡 Created by [an independent developer](https://x.com/robertpiosik)
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-**With CWC you can:**
-
-- Make multi-file edits across your codebase in a single chat or API request:
-  - select folders and files for context,
-  - enter instructions,
-  - initialize new chat or send an API request,
-  - apply response in any edit format (whole/truncated/diff), hands-free!
-- Get accurate code completions.
-- Generate meaningful commit messages.
-
-**Guiding principles:**
+**Guiding principles**
 
 - initialize chatbots—don't scrape responses
 - free—open source community effort
-- complete privacy—works 100% locally
+- privacy first—operates locally
 - lightweight—about 1MB of code
 
-**CWC is for you if:**
+**CWC is for you if you're**
 
-- you're an experienced developer working on a large codebase
-- you're a student or hobbyist on a budget
+- an experienced developer working on a large codebase
+- a student or hobbyist on a budget
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
