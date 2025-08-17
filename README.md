@@ -14,7 +14,7 @@ A 100% free and open-source VS Code extension for AI-assisted pair programming. 
 
 **With CWC you can:**
 
-- Create multi-file edits across your codebase in a single chat or API request:
+- Make multi-file edits across your codebase in a single chat or API request:
   - select folders and files for context,
   - enter instructions,
   - initialize new chat or send an API request,
