@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC)",
-  "description": "Free AI vibe coding",
-  "version": "1.258.0",
+  "description": "Free vibe coding",
+  "version": "1.259.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
