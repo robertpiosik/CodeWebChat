@@ -269,31 +269,22 @@ export const handle_show_prompt_template_quick_pick = async (
 
       if (selected_template.label == ADD_NEW_TEMPLATE_LABEL) {
         is_editing_template = true
-        const name = await vscode.window.showInputBox({
-          prompt: 'Enter an optional name for the template'
+        const templateText = await vscode.window.showInputBox({
+          prompt: 'Enter the prompt template',
+          placeHolder:
+            'E.g., Rewrite {function name} without redundant comments'
         })
-        if (name !== undefined) {
-          const templateText = await vscode.window.showInputBox({
-            prompt: 'Enter the prompt template',
-            placeHolder:
-              'E.g., Rewrite {function name} without redundant comments'
-          })
-          if (templateText !== undefined && templateText.trim()) {
-            const newTemplate: PromptTemplate = {
-              template: templateText.trim()
-            }
-            if (name.trim()) {
-              newTemplate.name = name.trim()
-            }
-
-            prompt_templates = [...prompt_templates, newTemplate]
-
-            await config.update(
-              prompt_templates_key,
-              prompt_templates,
-              vscode.ConfigurationTarget.Global
-            )
+        if (templateText !== undefined && templateText.trim()) {
+          const new_template: PromptTemplate = {
+            template: templateText.trim()
           }
+          prompt_templates = [...prompt_templates, new_template]
+
+          await config.update(
+            prompt_templates_key,
+            prompt_templates,
+            vscode.ConfigurationTarget.Global
+          )
         }
         templates_quick_pick.items = create_template_items(prompt_templates)
         is_editing_template = false
