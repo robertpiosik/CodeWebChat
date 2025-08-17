@@ -4,7 +4,7 @@
 
 Vibe code your next feature with Code Web Chat! With its effective context management, the tool delivers accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents.
 
-100% free and open source. Built by an independent developer.
+🫡 100% free and open source. Built by an independent developer.
 
 ✅ **Free coding with 15+ chatbots** \
 ✅ **All the necessary API tools**
