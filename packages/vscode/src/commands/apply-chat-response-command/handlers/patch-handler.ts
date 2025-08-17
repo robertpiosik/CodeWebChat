@@ -5,9 +5,9 @@ import { exec } from 'child_process'
 import { Logger } from '../../../utils/logger'
 import { promisify } from 'util'
 import { OriginalFileState } from '../../../types/common'
-import { format_document } from './format-document'
+import { format_document } from '../utils/format-document'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { process_diff_patch } from './diff-patch-processor'
+import { process_diff_patch } from '../utils/diff-patch-processor'
 
 const execAsync = promisify(exec)
 
@@ -84,6 +84,49 @@ export const store_original_file_states = async (
   }
 
   return original_states
+}
+
+// Helper function to extract content from patch for preview
+export const extract_content_from_patch = (
+  patch_content: string,
+  original_content: string
+): string => {
+  try {
+    const lines = patch_content.split('\n')
+    const result_lines = original_content.split('\n')
+    let current_line = 0
+
+    for (const line of lines) {
+      if (line.startsWith('@@')) {
+        const match = line.match(/@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/)
+        if (match) {
+          current_line = parseInt(match[2]) - 1
+        }
+        continue
+      }
+
+      if (line.startsWith('+') && !line.startsWith('+++')) {
+        const new_line = line.substring(1)
+        result_lines.splice(current_line, 0, new_line)
+        current_line++
+      } else if (line.startsWith('-') && !line.startsWith('---')) {
+        if (current_line < result_lines.length) {
+          result_lines.splice(current_line, 1)
+        }
+      } else if (line.startsWith(' ')) {
+        current_line++
+      }
+    }
+
+    return result_lines.join('\n')
+  } catch (error) {
+    Logger.warn({
+      function_name: 'extract_content_from_patch',
+      message: 'Failed to extract patch content, returning original',
+      data: { error }
+    })
+    return original_content
+  }
 }
 
 // Ensures all target files are closed before applying patches
@@ -387,7 +430,11 @@ export const apply_git_patch = async (
     if (success) {
       await process_modified_files(file_paths, workspace_path)
       await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
-      return { success: true, original_states, used_fallback }
+      return {
+        success: true,
+        original_states: original_states,
+        used_fallback
+      }
     } else {
       // All methods failed, throw the last logged error to be handled by the outer catch
       throw last_error

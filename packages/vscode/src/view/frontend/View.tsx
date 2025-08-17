@@ -11,6 +11,8 @@ import styles from './View.module.scss'
 import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
+import { FileInReview } from '@shared/types/file-in-review'
+import { ReviewChanges as UiReviewChanges } from '@ui/components/editor/ReviewChanges'
 
 const vscode = acquireVsCodeApi()
 
@@ -18,6 +20,7 @@ export const View = () => {
   const [active_view, set_active_view] = useState<'intro' | 'home'>('intro')
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
+  const [files_to_review, set_files_to_review] = useState<FileInReview[]>([])
   const [is_connected, set_is_connected] = useState<boolean>()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [ask_instructions, set_ask_instructions] = useState<
@@ -89,6 +92,10 @@ export const View = () => {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
+      } else if (message.command == 'REVIEW_CHANGES_STARTED') {
+        set_files_to_review(message.files)
+      } else if (message.command == 'REVIEW_CHANGES_FINISHED') {
+        set_files_to_review([])
       }
     }
     window.addEventListener('message', handle_message)
@@ -248,6 +255,37 @@ export const View = () => {
             post_message(vscode, {
               command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX',
               is_for_code_completions: is_for_code_completions
+            })
+          }}
+        />
+      </UiPage>
+    )
+  }
+
+  if (files_to_review.length > 0) {
+    overlay = (
+      <UiPage
+        title={`Edit${files_to_review.length > 1 ? 's' : ''} Review`}
+        on_back_click={() => {
+          post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
+        }}
+      >
+        <UiReviewChanges
+          files={files_to_review}
+          on_reject={() => {
+            post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
+          }}
+          on_accept={(accepted_files) => {
+            post_message(vscode, {
+              command: 'EDITS_REVIEW',
+              files: accepted_files
+            })
+          }}
+          on_focus_file={(file) => {
+            post_message(vscode, {
+              command: 'FOCUS_ON_FILE_IN_REVIEW',
+              file_path: file.file_path,
+              workspace_name: file.workspace_name
             })
           }}
         />

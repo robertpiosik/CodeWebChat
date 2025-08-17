@@ -1,9 +1,7 @@
 import styles from './Configurations.module.scss'
-import { Button } from '../Button/Button'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
 import { useState } from 'react'
-import { TextButton } from '../TextButton'
 import { IconButton } from '../IconButton/IconButton'
 
 export namespace Configurations {

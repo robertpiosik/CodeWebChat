@@ -1,4 +1,5 @@
 import { EditFormat } from '@shared/types/edit-format'
+import { FileInReview } from '@shared/types/file-in-review'
 import { Preset } from '@shared/types/preset'
 import { HomeViewType } from './home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
@@ -199,6 +200,17 @@ export interface CheckClipboardForApplyMessage extends BaseMessage {
   command: 'CHECK_CLIPBOARD_FOR_APPLY'
 }
 
+export interface EditsReviewMessage extends BaseMessage {
+  command: 'EDITS_REVIEW'
+  files: FileInReview[]
+}
+
+export interface FocusOnFileInReviewMessage extends BaseMessage {
+  command: 'FOCUS_ON_FILE_IN_REVIEW'
+  file_path: string
+  workspace_name?: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -238,6 +250,8 @@ export type FrontendMessage =
   | GetApiToolConfigurationsMessage
   | GetVersionMessage
   | CheckClipboardForApplyMessage
+  | EditsReviewMessage
+  | FocusOnFileInReviewMessage
 
 // Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {
@@ -363,6 +377,15 @@ export interface CanRevertChangedMessage extends BaseMessage {
   can_revert: boolean
 }
 
+export interface ReviewChangesStartedMessage extends BaseMessage {
+  command: 'REVIEW_CHANGES_STARTED'
+  files: FileInReview[]
+}
+
+export interface ReviewChangesFinishedMessage extends BaseMessage {
+  command: 'REVIEW_CHANGES_FINISHED'
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
@@ -387,3 +410,5 @@ export type BackendMessage =
   | AtSignQuickPickForPresetAffixResultMessage
   | CanApplyClipboardChangedMessage
   | CanRevertChangedMessage
+  | ReviewChangesStartedMessage
+  | ReviewChangesFinishedMessage

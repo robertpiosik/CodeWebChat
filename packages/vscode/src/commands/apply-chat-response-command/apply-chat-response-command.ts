@@ -14,14 +14,20 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
 import { format_document } from './utils/format-document'
-import { apply_git_patch } from './utils/patch-handler'
+import {
+  apply_git_patch,
+  extract_content_from_patch,
+  extract_file_paths_from_patch
+} from './handlers/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
+import { ChangeItem, review_changes_in_diff_view } from './utils/review-changes'
+import { ViewProvider } from '../../view/backend/view-provider'
 
-async function check_if_all_files_new(
+const check_if_all_files_new = async (
   files: ClipboardFile[]
-): Promise<boolean> {
+): Promise<boolean> => {
   if (
     !vscode.workspace.workspaceFolders ||
     vscode.workspace.workspaceFolders.length == 0
@@ -29,38 +35,34 @@ async function check_if_all_files_new(
     return false
   }
 
-  // Create a map of workspace names to their root paths
   const workspace_map = new Map<string, string>()
   vscode.workspace.workspaceFolders.forEach((folder) => {
     workspace_map.set(folder.name, folder.uri.fsPath)
   })
 
-  // Default workspace is the first one
   const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
 
   for (const file of files) {
-    // Determine the correct workspace root for this file
     let workspace_root = default_workspace
     if (file.workspace_name && workspace_map.has(file.workspace_name)) {
       workspace_root = workspace_map.get(file.workspace_name)!
     }
 
-    // Create safe path using the correct workspace root
     const safe_path = create_safe_path(workspace_root, file.file_path)
 
     if (safe_path && fs.existsSync(safe_path)) {
-      return false // At least one file exists
+      return false
     }
   }
 
-  return true // All files are new
+  return true
 }
 
-async function get_intelligent_update_config(
+const get_intelligent_update_config = async (
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext
-): Promise<{ provider: any; config: any } | undefined> {
+): Promise<{ provider: any; config: any } | undefined> => {
   const intelligent_update_configs =
     await api_providers_manager.get_intelligent_update_tool_configs()
 
@@ -272,13 +274,13 @@ async function get_intelligent_update_config(
   }
 }
 
-async function handle_code_completion(completion: {
+const handle_code_completion = async (completion: {
   file_path: string
   content: string
   line: number
   character: number
   workspace_name?: string
-}): Promise<void> {
+}): Promise<void> => {
   if (
     !vscode.workspace.workspaceFolders ||
     vscode.workspace.workspaceFolders.length == 0
@@ -356,31 +358,31 @@ async function handle_code_completion(completion: {
     vscode.window.showErrorMessage(error.message)
   }
 }
-export function apply_chat_response_command(
+
+export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
-  on_can_revert: (can_revert: boolean) => void,
-  set_apply_button_state: (can_apply: boolean) => void
-) {
-  function update_revert_and_apply_button_state(
+  view_provider: ViewProvider
+) => {
+  const update_revert_and_apply_button_state = (
     states: OriginalFileState[] | null,
     applied_content?: string | null
-  ) {
+  ) => {
     if (states && states.length > 0) {
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, states)
       context.workspaceState.update(
         LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
         applied_content
       )
-      on_can_revert(true)
-      set_apply_button_state(false)
+      view_provider.set_revert_button_state(true)
+      view_provider.set_apply_button_state(false)
     } else {
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
       context.workspaceState.update(
         LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
         null
       )
-      on_can_revert(false)
-      set_apply_button_state(true)
+      view_provider.set_revert_button_state(false)
+      view_provider.set_apply_button_state(true)
     }
   }
 
@@ -404,11 +406,9 @@ export function apply_chat_response_command(
         return
       }
 
-      // Check if workspace has only one root folder
       const is_single_root_folder_workspace =
         vscode.workspace.workspaceFolders?.length == 1
 
-      // Parse clipboard content which can now contain either files or patches
       const clipboard_content = parse_response(
         chat_response,
         is_single_root_folder_workspace
@@ -422,14 +422,12 @@ export function apply_chat_response_command(
         return
       }
 
-      // Handle patches if found
       if (clipboard_content.type == 'patches' && clipboard_content.patches) {
         if (!vscode.workspace.workspaceFolders?.length) {
           vscode.window.showErrorMessage('No workspace folder open.')
           return
         }
 
-        // Create a map of workspace names to their root paths
         const workspace_map = new Map<string, string>()
         vscode.workspace.workspaceFolders.forEach((folder) => {
           workspace_map.set(folder.name, folder.uri.fsPath)
@@ -437,6 +435,68 @@ export function apply_chat_response_command(
 
         const default_workspace =
           vscode.workspace.workspaceFolders[0].uri.fsPath
+
+        const review_items: (ChangeItem & { patch: DiffPatch })[] = []
+        for (const patch of clipboard_content.patches) {
+          let workspace_path = default_workspace
+          if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
+            workspace_path = workspace_map.get(patch.workspace_name)!
+          }
+
+          const file_paths = extract_file_paths_from_patch(patch.content)
+          for (const file_path of file_paths) {
+            const safe_path = create_safe_path(workspace_path, file_path)
+            if (!safe_path) continue
+
+            const file_exists = fs.existsSync(safe_path)
+            const original_content = file_exists
+              ? fs.readFileSync(safe_path, 'utf8')
+              : ''
+            const predicted_content = extract_content_from_patch(
+              patch.content,
+              original_content
+            )
+
+            const folder = vscode.workspace.getWorkspaceFolder(
+              vscode.Uri.file(workspace_path)
+            )
+            review_items.push({
+              file_path,
+              content: predicted_content,
+              workspace_name: patch.workspace_name || folder?.name,
+              is_new: !file_exists,
+              patch: patch
+            })
+          }
+        }
+
+        if (review_items.length === 0) {
+          vscode.window.showInformationMessage(
+            'No valid changes found in patches to apply.'
+          )
+          return
+        }
+
+        const accepted_items = await review_changes_in_diff_view(
+          review_items,
+          view_provider
+        )
+
+        if (accepted_items === null || accepted_items.length === 0) {
+          Logger.log({
+            function_name: 'apply_chat_response_command',
+            message: 'Patch review cancelled or rejected by user'
+          })
+          return
+        }
+
+        // Group accepted items by patch to avoid applying a patch multiple times
+        const patches_to_apply = new Map<DiffPatch, boolean>()
+        for (const item of accepted_items) {
+          patches_to_apply.set(item.patch, true)
+        }
+        const unique_patches_to_apply = Array.from(patches_to_apply.keys())
+
         let success_count = 0
         let failure_count = 0
         let all_original_states: OriginalFileState[] = []
@@ -448,11 +508,10 @@ export function apply_chat_response_command(
           used_fallback: boolean
         }[] = []
 
-        // Process patches
-        const total_patches = clipboard_content.patches.length
+        const total_patches = unique_patches_to_apply.length
 
         for (let i = 0; i < total_patches; i++) {
-          const patch = clipboard_content.patches[i]
+          const patch = unique_patches_to_apply[i]
           let workspace_path = default_workspace
 
           if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
@@ -482,7 +541,6 @@ export function apply_chat_response_command(
           }
         }
 
-        // Store all original states for potential reversion
         if (all_original_states.length > 0) {
           update_revert_and_apply_button_state(
             all_original_states,
@@ -490,7 +548,6 @@ export function apply_chat_response_command(
           )
         }
 
-        // Handle results
         if (failure_count > 0) {
           const api_providers_manager = new ApiProvidersManager(context)
           const config_result = await get_intelligent_update_config(
@@ -533,7 +590,8 @@ export function apply_chat_response_command(
               config: intelligent_update_config,
               chat_response: failed_patches_as_code_blocks,
               context: context,
-              is_single_root_folder_workspace
+              is_single_root_folder_workspace,
+              view_provider
             })
 
             if (intelligent_update_states) {
@@ -564,7 +622,6 @@ export function apply_chat_response_command(
               }
             }
           } catch (error) {
-            // Handle any errors during intelligent update
             Logger.error({
               function_name: 'apply_chat_response_command',
               message: 'Error during intelligent update of failed patches'
@@ -660,7 +717,8 @@ export function apply_chat_response_command(
                   config: intelligent_update_config,
                   chat_response: fallback_patches_text,
                   context: context,
-                  is_single_root_folder_workspace
+                  is_single_root_folder_workspace,
+                  view_provider
                 }
               )
 
@@ -754,7 +812,10 @@ export function apply_chat_response_command(
         let operation_success = false
 
         if (selected_mode_label == 'Fast replace') {
-          const result = await handle_fast_replace(clipboard_content.files)
+          const result = await handle_fast_replace(
+            clipboard_content.files,
+            view_provider
+          )
           if (result.success && result.original_states) {
             final_original_states = result.original_states
             operation_success = true
@@ -794,7 +855,8 @@ export function apply_chat_response_command(
             config: intelligent_update_config,
             chat_response,
             context: context,
-            is_single_root_folder_workspace
+            is_single_root_folder_workspace,
+            view_provider
           })
 
           if (final_original_states) {
@@ -899,7 +961,8 @@ export function apply_chat_response_command(
                   config: intelligent_update_config,
                   chat_response,
                   context: context,
-                  is_single_root_folder_workspace
+                  is_single_root_folder_workspace,
+                  view_provider
                 })
 
                 if (final_original_states) {
@@ -922,15 +985,15 @@ export function apply_chat_response_command(
                       intelligent_new_files_count == 1 ? 'file' : 'files'
                     } and updated ${intelligent_replaced_files_count} ${
                       intelligent_replaced_files_count == 1 ? 'file' : 'files'
-                    } using Intelligent Update.`
+                    } using intelligent update.`
                   } else if (intelligent_new_files_count > 0) {
                     intelligent_message = `Successfully created ${intelligent_new_files_count} new ${
                       intelligent_new_files_count == 1 ? 'file' : 'files'
-                    } using Intelligent Update.`
+                    } using intelligent update.`
                   } else if (intelligent_replaced_files_count > 0) {
                     intelligent_message = `Successfully updated ${intelligent_replaced_files_count} ${
                       intelligent_replaced_files_count == 1 ? 'file' : 'files'
-                    } using Intelligent Update.`
+                    } using intelligent update.`
                   } else {
                     intelligent_message = `Intelligent Update completed successfully.`
                   }
@@ -951,7 +1014,6 @@ export function apply_chat_response_command(
                   // State has been cleared before attempting intelligent update.
                 }
               } catch (error) {
-                // Handle errors during the second intelligent update attempt
                 Logger.error({
                   function_name: 'apply_chat_response_command',
                   message: 'Error during second intelligent update attempt'
@@ -959,7 +1021,6 @@ export function apply_chat_response_command(
                 vscode.window.showErrorMessage(
                   'Error during intelligent update. Fast replace changes have been reverted.'
                 )
-                // State has been cleared before attempting intelligent update.
               }
             }
           } else {

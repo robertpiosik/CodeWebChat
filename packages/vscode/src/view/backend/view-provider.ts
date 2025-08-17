@@ -45,6 +45,7 @@ import {
   handle_pick_chatbot
 } from './message-handlers'
 import { LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY } from '@/constants/state-keys'
+import { review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-changes'
 import { can_revert } from '@/commands/revert-command'
 import {
   config_preset_to_ui_format,
@@ -398,6 +399,19 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'CHECK_CLIPBOARD_FOR_APPLY') {
             await this._check_clipboard_for_apply()
+          } else if (message.command == 'FOCUS_ON_FILE_IN_REVIEW') {
+            if (review_promise_resolve) {
+              review_promise_resolve({
+                jump_to: {
+                  file_path: message.file_path,
+                  workspace_name: message.workspace_name
+                }
+              })
+            }
+          } else if (message.command == 'EDITS_REVIEW') {
+            if (review_promise_resolve) {
+              review_promise_resolve({ accepted_files: message.files })
+            }
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
           } else if (message.command == 'PICK_CHATBOT') {

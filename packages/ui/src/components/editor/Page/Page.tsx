@@ -1,6 +1,6 @@
 import styles from './Page.module.scss'
-import { IconButton } from '../IconButton/IconButton'
 import { Scrollable } from '../Scrollable'
+import { IconButton } from '../IconButton'
 
 type Props = {
   title?: string
@@ -17,13 +17,15 @@ export const Page: React.FC<Props> = (props) => {
         {props.title && (
           <div className={styles.header__title}>{props.title}</div>
         )}
-        {props.on_back_click && (
-          <IconButton
-            codicon_icon="chevron-left"
-            on_click={props.on_back_click}
-            title="Return to previous screen"
-          />
-        )}
+        <div>
+          {props.on_back_click && (
+            <IconButton
+              codicon_icon="chevron-left"
+              on_click={props.on_back_click}
+              title="Return to previous screen"
+            />
+          )}
+        </div>
         <div className={styles.header__right}>
           <div className={styles.header__right__slot}>{props.header_slot}</div>
           {props.on_close_click && (
@@ -35,9 +37,7 @@ export const Page: React.FC<Props> = (props) => {
           )}
         </div>
       </div>
-      <Scrollable>
-        <div className={styles.content__inner}>{props.children}</div>
-      </Scrollable>
+      <Scrollable>{props.children}</Scrollable>
     </div>
   )
 }

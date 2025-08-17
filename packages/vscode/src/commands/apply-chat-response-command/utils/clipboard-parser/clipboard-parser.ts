@@ -72,9 +72,9 @@ const extract_file_path_from_xml = (line: string): string | null => {
   return match ? match[1] : null
 }
 
-function extract_path_and_position(
+const extract_path_and_position = (
   line: string
-): { path: string; line: number; character: number } | null {
+): { path: string; line: number; character: number } | null => {
   const path_pos_regex =
     /(?:\/\/|#|--|<!--)\s*"?([^"<>\s?*|:]+)"?\s+(\d+):(\d+)|(?:\/\*)\s*"?([^"<>\s?*|:]+)"?\s+(\d+):(\d+)|\*\s*"?([^"<>\s?*|:]+)"?\s+(\d+):(\d+)/
 
