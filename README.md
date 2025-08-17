@@ -2,10 +2,11 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-A versatile AI pair programming tool connecting VS Code with free chatbots. With emphasis put on context management, it delivers accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents. CWC is designed for real-world programming, saving you sanity, money and time.
+A 100% free and open source AI pair programming tool. By focusing on context management, it delivers accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents. CWC is designed for real-world programming, saving you sanity, money and time.
 
-✅ **Free coding with ChatGPT, Gemini, Claude and 10+ more** \
-✅ **All the API tools you need: code completions, commit messages and more**
+✅ **Free coding with 15+ chatbots** \
+✅ **All the necessary API tools** \
+🙋 Built by an independent developer
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -13,20 +14,18 @@ A versatile AI pair programming tool connecting VS Code with free chatbots. With
 
 **With CWC you can:**
 
-- Step into the new era of AI-assisted coding:
+- Enhance your coding workflow with AI:
   - granularly select folders and files for context,
-  - type something,
+  - enter instructions,
   - initialize new chat or send an API request,
   - apply response, hands-free!
 - Get accurate code completions.
-- Generate commit messages.
-- Include any website in context.
+- Generate meaningful commit messages.
 
 **Guiding principles:**
 
 - initialize chatbots—don't scrape responses
-- complete privacy—local processing
-- free—open source community effort
+- complete privacy—works 100% locally
 - lightweight—about 1MB of code
 
 **CWC is for you if:**
