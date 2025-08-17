@@ -6,8 +6,8 @@ Vibe code your next feature with Code Web Chat! With its effective context manag
 
 🫡 100% free and open source. Built by an independent developer.
 
-✅ **Free coding with 15+ chatbots** \
-✅ **All the necessary API tools**
+✅ **Connects VS Code with 15+ chatbots** \
+✅ **Includes all the necessary API tools**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
