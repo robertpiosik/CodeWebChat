@@ -12,7 +12,7 @@ const show_rating_options = async (): Promise<void> => {
     },
     {
       label: 'Firefox Add-ons',
-      url: 'https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/'
+      url: 'https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/reviews/'
     }
   ]
 

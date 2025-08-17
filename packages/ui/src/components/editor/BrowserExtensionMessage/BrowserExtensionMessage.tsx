@@ -10,7 +10,7 @@ export const BrowserExtensionMessage: FC = () => {
           <span className="codicon codicon-link-external" />
           <span>Chrome Web Store</span>
         </a>
-        <a href="https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/">
+        <a href="https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/">
           <span className="codicon codicon-link-external" />
           <span>Firefox Add-ons</span>
         </a>

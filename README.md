@@ -25,10 +25,10 @@ A 100% free and open-source VS Code extension for AI-assisted pair programming. 
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
-Code with your favorite chatbot without tedious copy-pasting. The Connector extension bridges your editor and the browser through a locally run WebSockets server.
+Install the Connector browser extension and naver copy&paste again.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
-- [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/gemini-coder-connector/)
+- [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
 **Supported chatbots:**
 
