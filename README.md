@@ -5,8 +5,7 @@
 A 100% free and open-source VS Code extension for AI-assisted pair programming. Make coordinated changes across multiple files from a single chat response or API call. Save money and time.
 
 ✅ **Initializes 15+ free chatbots** \
-✅ **Includes all the necessary API tools** \
-🫡 Created by [an independent developer](https://x.com/robertpiosik)
+✅ **Includes all the necessary API tools**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
