@@ -2,12 +2,11 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-Vibe code your next feature with Code Web Chat! With its effective context management, CWC delivers accuracy, predictability, speed and cost efficiency unmatched by IDE or terminal based coding agents.
-
-🫡 100% free and open source. Built by an independent developer.
+Vibe code your next feature with Code Web Chat! Manage your context like a PRO and get accuracy, predictability, speed and cost efficiency that is unmatched by any other IDE or terminal based coding agent.
 
 ✅ **Connects VS Code with 15+ free chatbots** \
-✅ **Includes all the necessary API tools**
+✅ **Includes all the necessary API tools** \
+🫡 100% free and open source. Built by an independent developer.
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
