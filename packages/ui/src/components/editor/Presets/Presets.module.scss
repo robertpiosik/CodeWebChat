@@ -26,8 +26,7 @@
     align-items: center;
     gap: var(--padding-4px);
     padding: 0 var(--padding-12px);
-    cursor: pointer;
-    height: 22px;
+    height: var(--list-item-height);
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
@@ -56,6 +55,7 @@
     &__left {
       display: flex;
       align-items: center;
+      height: 100%;
       gap: var(--padding-5px);
       overflow: hidden;
       text-overflow: ellipsis;
@@ -63,6 +63,9 @@
       position: relative;
 
       &__drag_handle {
+        display: flex;
+        align-items: center;
+        height: 100%;
         cursor: grab;
         opacity: 0.5;
 

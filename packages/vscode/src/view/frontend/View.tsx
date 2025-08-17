@@ -3,11 +3,7 @@ import { useEffect, useState } from 'react'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm } from '@/view/frontend/EditPresetForm'
 import { Preset } from '@shared/types/preset'
-import {
-  BackendMessage,
-  FileInReview,
-  FrontendMessage,
-} from '../types/messages'
+import { BackendMessage, FrontendMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { Intro } from './intro'
@@ -15,7 +11,8 @@ import styles from './View.module.scss'
 import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
-import { ReviewChanges } from './ReviewChanges'
+import { FileInReview } from '@shared/types/file-in-review'
+import { ReviewChanges as UiReviewChanges } from '@ui/components/editor/ReviewChanges'
 
 const vscode = acquireVsCodeApi()
 
@@ -273,7 +270,7 @@ export const View = () => {
           post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
         }}
       >
-        <ReviewChanges
+        <UiReviewChanges
           files={files_to_review}
           on_reject={() => {
             post_message(vscode, { command: 'EDITS_REVIEW', files: [] })

@@ -25,9 +25,8 @@
     justify-content: space-between;
     align-items: center;
     gap: var(--padding-4px);
-    height: 22px;
+    height: var(--list-item-height);
     padding: 0 var(--padding-12px);
-    cursor: pointer;
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);

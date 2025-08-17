@@ -1,4 +1,5 @@
 import { EditFormat } from '@shared/types/edit-format'
+import { FileInReview } from '@shared/types/file-in-review'
 import { Preset } from '@shared/types/preset'
 import { HomeViewType } from './home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
@@ -374,12 +375,6 @@ export interface CanApplyClipboardChangedMessage extends BaseMessage {
 export interface CanRevertChangedMessage extends BaseMessage {
   command: 'CAN_REVERT_CHANGED'
   can_revert: boolean
-}
-
-export type FileInReview = {
-  file_path: string
-  workspace_name?: string
-  is_new?: boolean
 }
 
 export interface ReviewChangesStartedMessage extends BaseMessage {

@@ -16,6 +16,11 @@
     outline: none;
   }
 
+  &:disabled {
+    opacity: var(--disabled-opacity);
+    cursor: default;
+  }
+
   &:checked {
     border-color: var(--vscode-inputOption-activeBorder);
     color: var(--vscode-inputOption-activeForeground);
