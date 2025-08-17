@@ -17,8 +17,10 @@ const show_diff_with_actions = async (
   right_content: string,
   title: string
 ): Promise<ReviewDecision> => {
+  const left_doc = await vscode.workspace.openTextDocument(left_uri)
   const right_doc = await vscode.workspace.openTextDocument({
-    content: right_content
+    content: right_content,
+    language: left_doc.languageId
   })
 
   await vscode.commands.executeCommand(
