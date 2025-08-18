@@ -4,7 +4,7 @@
 
 A 100% free and open-source VS Code extension for AI-assisted pair programming. Its non-agentic, simple design offers unmatched control, accuracy, speed and cost efficiency.
 
-👉️ **Initialize 15+ free chatbots, hands-free!** \
+👉️ **Initialize ChatGPT, Gemini, Claude and 10+ more, hands-free!** \
 👉️ **Apply web chat/API responses in any edit format** \
 👉️ **Code completions with reasoning models** \
 👉️ **Perfect commit messages in your style**
