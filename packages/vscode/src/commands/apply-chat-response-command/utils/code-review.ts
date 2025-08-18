@@ -17,10 +17,8 @@ const show_diff_with_actions = async (
   right_content: string,
   title: string
 ): Promise<{ decision: CodeReviewDecision; new_content: string }> => {
-  const left_doc = await vscode.workspace.openTextDocument(left_uri)
   const right_doc = await vscode.workspace.openTextDocument({
-    content: right_content,
-    language: left_doc.languageId
+    content: right_content
   })
 
   await vscode.commands.executeCommand(
@@ -114,8 +112,12 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
 
       if (file_exists) {
         const left_content = fs.readFileSync(safe_path, 'utf8')
-        if (left_content.endsWith('\n') && !change.content.endsWith('\n')) {
-          change.content += '\n'
+        if (left_content.endsWith('\n')) {
+          if (!change.content.endsWith('\n')) {
+            change.content += '\n'
+          } else if (change.content.endsWith('\n\n')) {
+            change.content = change.content.slice(0, -1)
+          }
         }
       }
 

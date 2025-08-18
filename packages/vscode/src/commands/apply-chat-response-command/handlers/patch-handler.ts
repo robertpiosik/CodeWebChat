@@ -7,7 +7,10 @@ import { promisify } from 'util'
 import { OriginalFileState } from '../../../types/common'
 import { format_document } from '../utils/format-document'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { process_diff_patch } from '../utils/diff-patch-processor'
+import {
+  apply_diff_patch,
+  process_diff_patch
+} from '../utils/diff-patch-processor'
 
 const execAsync = promisify(exec)
 
@@ -92,33 +95,7 @@ export const extract_content_from_patch = (
   original_content: string
 ): string => {
   try {
-    const lines = patch_content.split('\n')
-    const result_lines = original_content.split('\n')
-    let current_line = 0
-
-    for (const line of lines) {
-      if (line.startsWith('@@')) {
-        const match = line.match(/@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/)
-        if (match) {
-          current_line = parseInt(match[2]) - 1
-        }
-        continue
-      }
-
-      if (line.startsWith('+') && !line.startsWith('+++')) {
-        const new_line = line.substring(1)
-        result_lines.splice(current_line, 0, new_line)
-        current_line++
-      } else if (line.startsWith('-') && !line.startsWith('---')) {
-        if (current_line < result_lines.length) {
-          result_lines.splice(current_line, 1)
-        }
-      } else if (line.startsWith(' ')) {
-        current_line++
-      }
-    }
-
-    return result_lines.join('\n')
+    return apply_diff_patch(original_content, patch_content)
   } catch (error) {
     Logger.warn({
       function_name: 'extract_content_from_patch',

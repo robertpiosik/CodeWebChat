@@ -53,7 +53,7 @@ export const process_diff_patch = async (
   }
 }
 
-const apply_diff_patch = (
+export const apply_diff_patch = (
   original_code: string,
   diff_patch: string
 ): string => {
