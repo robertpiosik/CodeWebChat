@@ -848,7 +848,11 @@ export const setup_api_tool_multi_config = async (params: {
         provider: p
       }))
 
-    const items = [{ label: BACK_LABEL }, ...provider_items]
+    const items = [
+      { label: BACK_LABEL },
+      { label: '', kind: vscode.QuickPickItemKind.Separator },
+      ...provider_items
+    ]
 
     const selected = await vscode.window.showQuickPick(items, {
       title: 'Configured API Providers',
@@ -911,6 +915,7 @@ export const setup_api_tool_multi_config = async (params: {
 
       const items: vscode.QuickPickItem[] = [
         { label: BACK_LABEL },
+        { label: '', kind: vscode.QuickPickItemKind.Separator },
         ...model_items
       ]
 
@@ -1018,7 +1023,11 @@ export const setup_api_tool_multi_config = async (params: {
       }
     })
 
-    const items = [{ label: BACK_LABEL }, ...effort_items]
+    const items = [
+      { label: BACK_LABEL },
+      { label: '', kind: vscode.QuickPickItemKind.Separator },
+      ...effort_items
+    ]
 
     const selected = await vscode.window.showQuickPick(items, {
       title: 'Select Reasoning Effort',
