@@ -205,11 +205,11 @@ export const get_commit_message_config = async (
 
   if (!commit_message_config) {
     vscode.window.showErrorMessage(
-      'Commit Messages API tool is not configured.'
+      '"Commit Messages" API tool is not configured. Click "gear" icon to open extension settings.'
     )
     Logger.warn({
       function_name: 'get_commit_message_config',
-      message: 'Commit Messages API tool is not configured.'
+      message: '"Commit Messages" API tool is not configured. Click "gear" icon to open extension settings.'
     })
     return null
   }

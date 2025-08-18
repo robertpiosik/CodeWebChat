@@ -14,7 +14,7 @@ A 100% free and open-source VS Code extension for AI-assisted pair programming. 
 **Guiding principles**
 
 - initialize chatbots—don't scrape responses
-- free—open source community effort
+- free forever—community effort
 - privacy first—operates locally
 - lightweight—about 1MB of code
 

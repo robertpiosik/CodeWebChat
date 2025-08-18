@@ -26,10 +26,10 @@ const get_edit_context_config = async (
     await api_providers_manager.get_edit_context_tool_configs()
 
   if (edit_context_configs.length == 0) {
-    vscode.window.showErrorMessage('Edit Context API tool is not configured.')
+    vscode.window.showErrorMessage('"Edit Context" API tool is not configured. Click "gear" icon to open extension settings.')
     Logger.warn({
       function_name: 'get_edit_context_config',
-      message: 'Edit Context API tool is not configured.'
+      message: '"Edit Context" API tool is not configured. Click "gear" icon to open extension settings.'
     })
     return
   }
