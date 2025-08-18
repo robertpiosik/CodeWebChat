@@ -34,6 +34,12 @@ export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY =
 export const LAST_CHOSEN_COMMAND_BY_VIEW_TYPE_STATE_KEY =
   'lastChosenCommandByViewType'
 
+export const CHAT_EDIT_FORMAT_STATE_KEY = 'chat-edit-format'
+export const API_EDIT_FORMAT_STATE_KEY = 'api-edit-format'
+export const WEB_MODE_STATE_KEY = 'web-mode'
+export const API_MODE_STATE_KEY = 'api-mode'
+export const HOME_VIEW_TYPE_STATE_KEY = 'home-view-type'
+
 export const HISTORY_ASK_STATE_KEY = 'history-ask'
 export const HISTORY_EDIT_STATE_KEY = 'history-edit'
 export const HISTORY_CODE_COMPLETIONS_STATE_KEY = 'history-code-completions'

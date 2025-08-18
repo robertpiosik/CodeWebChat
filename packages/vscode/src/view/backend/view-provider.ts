@@ -35,7 +35,6 @@ import {
   handle_save_mode_web,
   handle_get_mode_api,
   handle_save_mode_api,
-  handle_save_home_view_type,
   handle_get_home_view_type,
   handle_get_version,
   handle_show_prompt_template_quick_pick,
@@ -44,7 +43,14 @@ import {
   handle_pick_open_router_model,
   handle_pick_chatbot
 } from './message-handlers'
-import { LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY } from '@/constants/state-keys'
+import {
+  API_EDIT_FORMAT_STATE_KEY,
+  API_MODE_STATE_KEY,
+  CHAT_EDIT_FORMAT_STATE_KEY,
+  HOME_VIEW_TYPE_STATE_KEY,
+  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+  WEB_MODE_STATE_KEY
+} from '@/constants/state-keys'
 import { can_revert } from '@/commands/revert-command'
 import {
   config_preset_to_ui_format,
@@ -70,7 +76,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public chat_edit_format: EditFormat
   public api_edit_format: EditFormat
   public api_mode: ApiMode
-  public home_view_type: HomeViewType = HOME_VIEW_TYPES.WEB
+  public home_view_type: HomeViewType
 
   public get_presets_config_key(): string {
     const mode =
@@ -111,21 +117,26 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
 
     this.chat_edit_format = this.context.workspaceState.get<EditFormat>(
-      'chat-edit-format',
+      CHAT_EDIT_FORMAT_STATE_KEY,
       'whole'
     )
     this.api_edit_format = this.context.workspaceState.get<EditFormat>(
-      'api-edit-format',
+      API_EDIT_FORMAT_STATE_KEY,
       'diff'
     )
 
     this.web_mode = this.context.workspaceState.get<WebMode>(
-      'web-mode',
+      WEB_MODE_STATE_KEY,
       'edit-context'
     )
     this.api_mode = this.context.workspaceState.get<ApiMode>(
-      'api-mode',
+      API_MODE_STATE_KEY,
       'edit-context'
+    )
+
+    this.home_view_type = this.context.workspaceState.get<HomeViewType>(
+      HOME_VIEW_TYPE_STATE_KEY,
+      HOME_VIEW_TYPES.WEB
     )
 
     vscode.window.onDidChangeWindowState(async (e) => {
@@ -133,8 +144,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         await this._check_clipboard_for_apply()
       }
     })
-
-    this.home_view_type = HOME_VIEW_TYPES.WEB
 
     this._watch_git_state()
 
@@ -382,7 +391,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
           } else if (message.command == 'SAVE_HOME_VIEW_TYPE') {
-            await handle_save_home_view_type(this, message)
+            this.home_view_type = message.view_type
+            await this.context.workspaceState.update(
+              HOME_VIEW_TYPE_STATE_KEY,
+              message.view_type
+            )
+            this.calculate_token_count()
           } else if (message.command == 'GET_HOME_VIEW_TYPE') {
             handle_get_home_view_type(this)
           } else if (message.command == 'GET_VERSION') {
