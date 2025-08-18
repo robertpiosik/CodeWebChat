@@ -155,6 +155,13 @@ export const apply_diff_patch = (
       const line_original = patch_lines_original[i]
 
       if (line.startsWith('@@')) {
+        if (search_chunks.length > 0 || replace_chunks.length > 0) {
+          // A new hunk is starting, so save the previous one.
+          search_replace_blocks.push(
+            new SearchBlock(search_chunks, replace_chunks, -1)
+          )
+        }
+
         search_chunks = []
         replace_chunks = []
         inside_replace_block = false
