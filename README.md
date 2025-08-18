@@ -4,10 +4,10 @@
 
 A 100% free and open-source VS Code extension for AI-assisted pair programming. Its non-agentic, simple design offers unmatched control, accuracy, speed and cost efficiency.
 
-✅ **Initializes 15+ free chatbots** \
-✅ **Applies chat responses** \
-✅ **Code completions** \
-✅ **Commit messages**
+👉️ **Initialize 15+ free chatbots, hands-free!** \
+👉️ **Apply chat responses** \
+👉️ **Code completions** \
+👉️ **Commit messages**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
