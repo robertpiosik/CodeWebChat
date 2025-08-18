@@ -15,7 +15,7 @@ import { format_document } from '../utils/format-document'
 import { OriginalFileState } from '../../../types/common'
 import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
-import { code_review_in_diff_view } from '../utils/review-changes'
+import { code_review_in_diff_view } from '../utils/code-review'
 import { ViewProvider } from '../../../view/backend/view-provider'
 
 const process_file = async (params: {

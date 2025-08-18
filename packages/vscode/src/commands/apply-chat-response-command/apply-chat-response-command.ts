@@ -23,7 +23,7 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '../../view/backend/view-provider'
-import { ChangeItem, code_review_in_diff_view } from './utils/review-changes'
+import { ChangeItem, code_review_in_diff_view } from './utils/code-review'
 
 const check_if_all_files_new = async (
   files: ClipboardFile[]

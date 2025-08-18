@@ -10,7 +10,7 @@ import { format_document } from '../utils/format-document'
 import { ClipboardFile } from '../utils/clipboard-parser'
 import { OriginalFileState } from '../../../types/common'
 import { ViewProvider } from '../../../view/backend/view-provider'
-import { code_review_in_diff_view } from '../utils/review-changes'
+import { code_review_in_diff_view } from '../utils/code-review'
 
 export const handle_fast_replace = async (
   files: ClipboardFile[],
