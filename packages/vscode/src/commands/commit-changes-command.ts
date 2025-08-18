@@ -32,7 +32,6 @@ export function commit_changes_command(
         const commit_message = await generate_commit_message_from_diff(
           context,
           repository,
-          'Generating commit message and committing...',
           diff,
           api_config // Pass the already resolved config
         )

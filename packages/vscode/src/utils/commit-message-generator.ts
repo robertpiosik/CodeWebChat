@@ -426,7 +426,6 @@ export async function generate_commit_message_with_api(
   provider: any,
   config: CommitMessageConfig,
   message: string,
-  progress_title: string
 ): Promise<string | null> {
   const token_count = Math.ceil(message.length / 4)
   const formatted_token_count =
@@ -441,7 +440,7 @@ export async function generate_commit_message_with_api(
   return await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `${progress_title} Sent about ${formatted_token_count} tokens.`,
+      title: `Generating commit message... Sent about ${formatted_token_count} tokens.`,
       cancellable: true
     },
     async (_, token) => {
@@ -513,7 +512,6 @@ export function build_commit_message_prompt(
 export async function generate_commit_message_from_diff(
   context: vscode.ExtensionContext,
   repository: GitRepository,
-  progress_title: string,
   diff: string,
   api_config?: {
     config: CommitMessageConfig
@@ -552,7 +550,6 @@ export async function generate_commit_message_from_diff(
     resolved_api_config.endpoint_url,
     resolved_api_config.provider,
     resolved_api_config.config,
-    message,
-    progress_title
+    message
   )
 }
