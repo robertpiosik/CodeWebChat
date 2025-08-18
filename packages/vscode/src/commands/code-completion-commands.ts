@@ -65,13 +65,10 @@ async function get_code_completion_config(
     await api_providers_manager.get_code_completions_tool_configs()
 
   if (code_completions_configs.length == 0) {
-    vscode.window.showErrorMessage(
-      '"Code Completions" API tool is not configured. Click "gear" icon to open extension settings.'
+    vscode.commands.executeCommand('codeWebChat.settings.codeCompletions')
+    vscode.window.showInformationMessage(
+      'No "Code Completions" configurations found. Please add one in the settings.'
     )
-    Logger.warn({
-      function_name: 'get_code_completion_config',
-      message: '"Code Completions" API tool is not configured. Click "gear" icon to open extension settings.'
-    })
     return
   }
 
