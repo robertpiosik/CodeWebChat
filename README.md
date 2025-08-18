@@ -2,12 +2,14 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-A 100% free and open-source VS Code extension for AI-assisted pair programming. Its non-agentic, simple design offers unmatched control, accuracy, speed and cost efficiency.
+A 100% free and open-source VS Code extension for AI-assisted pair programming. Its non-agentic, simple design delivers unmatched control, accuracy, speed and cost efficiency.
 
-👉️ **Initialize ChatGPT, Gemini, Claude and 10+ more, hands-free!** \
-👉️ **Apply web chat/API responses in any edit format** \
-👉️ **Code completions with reasoning models** \
-👉️ **Perfect commit messages in your style**
+**Key features:**
+
+👉️ Initialize ChatGPT, Gemini, Claude and 10+ more, hands-free! \
+👉️ Apply responses in any edit format \
+👉️ Code completions with reasoning models \
+👉️ Commit messages in your preffered style
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
