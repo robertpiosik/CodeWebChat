@@ -3,16 +3,22 @@
   flex-direction: column;
 }
 
-.my-configurations {
+.heading {
   padding: 0 var(--padding-12px);
   margin-bottom: var(--padding-2px);
   display: flex;
   align-items: center;
   gap: var(--padding-8px);
 
-  &__left {
-    opacity: 0.7;
+  &__title {
+    opacity: var(--dimmed-opacity);
   }
+}
+
+.missing-config {
+  padding: var(--padding-2px) var(--padding-12px) 0 var(--padding-12px);
+  font-weight: 500;
+  font-style: italic;
 }
 
 .configurations {
@@ -66,5 +72,22 @@
         }
       }
     }
+  }
+}
+
+.arrow-animate {
+  animation: arrow-left-move 2s infinite;
+  font-weight: 600 !important;
+}
+
+@keyframes arrow-left-move {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-8px);
+  }
+  100% {
+    transform: translateX(0);
   }
 }

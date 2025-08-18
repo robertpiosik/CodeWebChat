@@ -34,7 +34,7 @@ export const setup_api_tool_multi_config = async (params: {
   tool: SupportedTool
   show_back_button?: boolean
 }): Promise<boolean> => {
-  const providers_manager = new ApiProvidersManager(params.context)
+  let providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
   // NEW: shared “stack cancelled” flag. When true, unwind and close everything.
@@ -288,6 +288,7 @@ export const setup_api_tool_multi_config = async (params: {
         if (selected.label === API_PROVIDERS_LABEL) {
           quick_pick.hide()
           await api_providers(params.context)
+          providers_manager = new ApiProvidersManager(params.context)
           if (stack_cancelled) {
             resolve(false)
             return
@@ -833,13 +834,15 @@ export const setup_api_tool_multi_config = async (params: {
     cancelled: boolean
     back: boolean
   }> => {
-    const providers = await providers_manager.get_providers()
+    let providers = await providers_manager.get_providers()
 
     if (providers.length == 0) {
-      vscode.window.showErrorMessage(
-        'No API providers found. Please add an API provider first.'
-      )
-      return { value: undefined as any, cancelled: true, back: false }
+      await api_providers(params.context)
+      providers_manager = new ApiProvidersManager(params.context)
+      providers = await providers_manager.get_providers()
+      if (providers.length == 0) {
+        return { value: undefined as any, cancelled: false, back: true }
+      }
     }
 
     const provider_items: (vscode.QuickPickItem & { provider?: Provider })[] =
@@ -979,7 +982,7 @@ export const setup_api_tool_multi_config = async (params: {
       value: temperature.toString(),
       placeHolder: 'Leave empty to restore default',
       validateInput: (value) => {
-        if (value === '') return null
+        if (value == '') return null
         const num = Number(value)
         if (isNaN(num)) return 'Please enter a valid number'
         if (num < 0 || num > 1) return 'Temperature must be between 0 and 1'

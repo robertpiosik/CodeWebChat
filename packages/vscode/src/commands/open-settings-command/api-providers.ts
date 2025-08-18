@@ -236,7 +236,7 @@ export const api_providers = async (
     const custom_label = '$(edit) Custom endpoint...'
 
     const items: vscode.QuickPickItem[] = [
-      ...(saved_providers.length > 0 ? [{ label: back_label }] : []),
+      { label: back_label },
       {
         label: custom_label,
         description: 'You can use any OpenAI-API compatible provider'
@@ -268,8 +268,10 @@ export const api_providers = async (
     }
 
     if (selected.label == back_label) {
-      await show_providers_quick_pick()
-      return
+      if (saved_providers.length > 0) {
+        await show_providers_quick_pick()
+      }
+      return // Go back to main settings menu if no providers
     } else if (selected.label == custom_label) {
       await create_custom_provider()
     } else {

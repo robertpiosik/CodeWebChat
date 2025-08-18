@@ -2,7 +2,7 @@ import styles from './Configurations.module.scss'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
 import { useState } from 'react'
-import { IconButton } from '../IconButton/IconButton'
+import { IconButton } from '../IconButton'
 
 export namespace Configurations {
   export type Configuration = {
@@ -28,6 +28,7 @@ export namespace Configurations {
       configuration_requires_active_editor: string
       configuration_cannot_be_used_with_selection: string
       manage_configurations: string
+      missing_configuration_message: string
     }
   }
 }
@@ -38,15 +39,26 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles['my-configurations']}>
-        <div className={styles['my-configurations__left']}>
+      <div className={styles.heading}>
+        <div className={styles['heading__title']}>
           {props.translations.my_configurations}
         </div>
         <IconButton
           codicon_icon="settings"
           on_click={props.on_manage_configurations}
         />
+        {props.configurations.length == 0 && (
+          <span
+            className={`codicon codicon-arrow-left ${styles['arrow-animate']}`}
+          />
+        )}
       </div>
+
+      {props.configurations.length == 0 && (
+        <div className={styles['missing-config']}>
+          {props.translations.missing_configuration_message}
+        </div>
+      )}
 
       <div className={styles.configurations}>
         {props.configurations.map((configuration, i) => {

@@ -479,7 +479,9 @@ export const HomeView: React.FC<Props> = (props) => {
                     'Configuration in this mode requires an active editor',
                   configuration_cannot_be_used_with_selection:
                     'Configuration in this mode cannot be used with a text selection',
-                  manage_configurations: 'Manage Configurations'
+                  manage_configurations: 'Manage Configurations',
+                  missing_configuration_message:
+                    'Add a configuration to make your first API call'
                 }}
               />
             </>
