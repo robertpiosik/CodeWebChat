@@ -35,13 +35,13 @@ export interface CommitMessageConfig {
   reasoning_effort?: ReasoningEffort
 }
 
-export async function get_commit_message_config(
+export const get_commit_message_config = async (
   context: vscode.ExtensionContext
 ): Promise<{
   config: CommitMessageConfig
   provider: any
   endpoint_url: string
-} | null> {
+} | null> => {
   const api_providers_manager = new ApiProvidersManager(context)
   let commit_message_config: CommitMessageConfig | null | undefined =
     await api_providers_manager.get_default_commit_messages_config()
@@ -49,7 +49,7 @@ export async function get_commit_message_config(
   if (!commit_message_config) {
     const configs =
       await api_providers_manager.get_commit_messages_tool_configs()
-    if (configs.length === 1) {
+    if (configs.length == 1) {
       commit_message_config = configs[0]
     } else if (configs.length > 1) {
       const move_up_button = {
@@ -251,7 +251,7 @@ export async function get_commit_message_config(
   }
 }
 
-export function get_ignored_extensions(): Set<string> {
+export const get_ignored_extensions = (): Set<string> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const config_ignored_extensions = new Set(
     config
@@ -261,10 +261,10 @@ export function get_ignored_extensions(): Set<string> {
   return new Set([...ignored_extensions, ...config_ignored_extensions])
 }
 
-export async function collect_affected_files_with_metadata(
+export const collect_affected_files_with_metadata = async (
   repository: GitRepository,
   ignored_extensions: Set<string>
-): Promise<FileData[]> {
+): Promise<FileData[]> => {
   const staged_files = repository.state.indexChanges || []
   const files_data: FileData[] = []
 
@@ -312,10 +312,10 @@ export async function collect_affected_files_with_metadata(
   return files_data
 }
 
-export async function handle_file_selection_if_needed(
+export const handle_file_selection_if_needed = async (
   context: vscode.ExtensionContext,
   files_data: FileData[]
-): Promise<FileData[] | null> {
+): Promise<FileData[] | null> => {
   const threshold = context.globalState.get<number>(
     COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
     20000
@@ -345,11 +345,11 @@ export async function handle_file_selection_if_needed(
   return selected_files
 }
 
-async function show_file_selection_dialog(
+const show_file_selection_dialog = async (
   files_data: FileData[],
   threshold: number,
   total_tokens: number
-): Promise<FileData[] | undefined> {
+): Promise<FileData[] | undefined> => {
   const items = files_data.map((file) => {
     const token_count = file.estimated_tokens
     const formatted_token_count =
@@ -396,7 +396,7 @@ async function show_file_selection_dialog(
   return result.map((item) => item.file_data)
 }
 
-export function build_files_content(files_data: FileData[]): string {
+export const build_files_content = (files_data: FileData[]): string => {
   if (!files_data || files_data.length == 0) {
     return 'No relevant files to include.'
   }
@@ -408,25 +408,25 @@ export function build_files_content(files_data: FileData[]): string {
     .join('\n---\n')
 }
 
-export function strip_wrapping_quotes(text: string): string {
-  text = text.trim()
+export const strip_wrapping_quotes = (text: string): string => {
+  const trimmed = text.trim()
 
   if (
-    (text.startsWith("'") && text.endsWith("'")) ||
-    (text.startsWith('"') && text.endsWith('"')) ||
-    (text.startsWith('`') && text.endsWith('`'))
+    (trimmed.startsWith("'") && trimmed.endsWith("'")) ||
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith('`') && trimmed.endsWith('`'))
   ) {
-    return text.substring(1, text.length - 1).trim()
+    return trimmed.substring(1, trimmed.length - 1).trim()
   }
-  return text
+  return trimmed
 }
 
-export async function generate_commit_message_with_api(
+export const generate_commit_message_with_api = async (
   endpoint_url: string,
   provider: any,
   config: CommitMessageConfig,
-  message: string,
-): Promise<string | null> {
+  message: string
+): Promise<string | null> => {
   const token_count = Math.ceil(message.length / 4)
   const formatted_token_count =
     token_count > 1000 ? Math.ceil(token_count / 1000) + 'k' : token_count
@@ -501,15 +501,15 @@ export async function generate_commit_message_with_api(
   )
 }
 
-export function build_commit_message_prompt(
+export const build_commit_message_prompt = (
   commit_message_prompt: string,
   affected_files: string,
   diff: string
-): string {
+): string => {
   return `${commit_message_prompt}\n${affected_files}\n${diff}\n${commit_message_prompt}`
 }
 
-export async function generate_commit_message_from_diff(
+export const generate_commit_message_from_diff = async (
   context: vscode.ExtensionContext,
   repository: GitRepository,
   diff: string,
@@ -518,7 +518,7 @@ export async function generate_commit_message_from_diff(
     provider: any
     endpoint_url: string
   }
-): Promise<string | null> {
+): Promise<string | null> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const commit_message_prompt = config.get<string>('commitMessageInstructions')
   const all_ignored_extensions = get_ignored_extensions()
