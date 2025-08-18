@@ -140,6 +140,8 @@ const get_edit_context_config = async (
 
     return new Promise<{ provider: any; config: any } | undefined>(
       (resolve) => {
+        let accepted = false
+
         quick_pick.onDidTriggerItemButton(async (event) => {
           const item = event.item as any
 
@@ -181,12 +183,21 @@ const get_edit_context_config = async (
         })
 
         quick_pick.onDidAccept(async () => {
+          accepted = true
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
 
           if (!selected) {
             resolve(undefined)
             return
+          }
+
+          const default_config =
+            await api_providers_manager.get_default_edit_context_config()
+          if (!default_config) {
+            await api_providers_manager.set_default_edit_context_config(
+              selected.config
+            )
           }
 
           context.globalState.update(
@@ -213,7 +224,9 @@ const get_edit_context_config = async (
 
         quick_pick.onDidHide(() => {
           quick_pick.dispose()
-          resolve(undefined)
+          if (!accepted) {
+            resolve(undefined)
+          }
         })
 
         quick_pick.show()
