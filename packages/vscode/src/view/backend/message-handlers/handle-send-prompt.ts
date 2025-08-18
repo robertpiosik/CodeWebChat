@@ -494,11 +494,11 @@ async function resolve_presets(params: {
     const items: vscode.QuickPickItem[] = [
       {
         label: PRESET,
-        description: 'Initialize a single chat'
+        description: 'Initialize only a selected preset'
       },
       {
         label: GROUP,
-        description: 'Simultaneous initialization of all selected presets'
+        description: 'Simultaneously run all selected presets within a group'
       }
     ]
     quick_pick.items = items
