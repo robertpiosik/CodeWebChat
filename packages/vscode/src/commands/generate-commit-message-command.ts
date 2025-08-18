@@ -22,7 +22,6 @@ export function generate_commit_message_command(
         const commit_message = await generate_commit_message_from_diff(
           context,
           repository,
-          'Waiting for a commit message...',
           diff
         )
 
