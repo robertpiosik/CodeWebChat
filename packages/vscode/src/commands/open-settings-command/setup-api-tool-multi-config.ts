@@ -437,7 +437,7 @@ export const setup_api_tool_multi_config = async (params: {
     })
   }
 
-  async function add_configuration(): Promise<boolean> {
+  const add_configuration = async (): Promise<boolean> => {
     const provider_result = await select_provider()
     if (provider_result.cancelled) {
       stack_cancelled = true
@@ -468,7 +468,7 @@ export const setup_api_tool_multi_config = async (params: {
     return await edit_configuration(new_config)
   }
 
-  async function edit_configuration(config: ToolConfig): Promise<boolean> {
+  const edit_configuration = async (config: ToolConfig): Promise<boolean> => {
     const create_edit_options = () => {
       const options: (vscode.QuickPickItem & {
         config?: ToolConfig
@@ -806,7 +806,7 @@ export const setup_api_tool_multi_config = async (params: {
     })
   }
 
-  async function handle_confirmation_threshold_update() {
+  const handle_confirmation_threshold_update = async () => {
     const current_threshold = params.context.globalState.get<number>(
       COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
       DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK
@@ -828,11 +828,11 @@ export const setup_api_tool_multi_config = async (params: {
     }
   }
 
-  async function select_provider(): Promise<{
+  const select_provider = async (): Promise<{
     value: Pick<Provider, 'type' | 'name'>
     cancelled: boolean
     back: boolean
-  }> {
+  }> => {
     const providers = await providers_manager.get_providers()
 
     if (providers.length == 0) {
@@ -877,9 +877,9 @@ export const setup_api_tool_multi_config = async (params: {
     }
   }
 
-  async function select_model(
+  const select_model = async (
     provider_info: Pick<Provider, 'type' | 'name'>
-  ): Promise<{ value: string; cancelled: boolean; back: boolean }> {
+  ): Promise<{ value: string; cancelled: boolean; back: boolean }> => {
     try {
       const provider = await providers_manager.get_provider(provider_info.name)
       if (!provider) {
@@ -970,9 +970,9 @@ export const setup_api_tool_multi_config = async (params: {
     }
   }
 
-  async function set_temperature(
+  const set_temperature = async (
     temperature: number
-  ): Promise<{ value: number; back: boolean }> {
+  ): Promise<{ value: number; back: boolean }> => {
     const temperature_input = await vscode.window.showInputBox({
       title: 'Set Temperature',
       prompt: 'Enter a value between 0 and 1',
@@ -996,13 +996,13 @@ export const setup_api_tool_multi_config = async (params: {
     return { value: Number(temperature_input), back: false }
   }
 
-  async function select_reasoning_effort(
+  const select_reasoning_effort = async (
     current_effort: ReasoningEffort | undefined
   ): Promise<{
     value: ReasoningEffort | undefined
     cancelled: boolean
     back: boolean
-  }> {
+  }> => {
     const effort_levels: (ReasoningEffort | undefined)[] = [
       undefined,
       'none',
@@ -1045,9 +1045,9 @@ export const setup_api_tool_multi_config = async (params: {
     return { value: (selected as any).effort, cancelled: false, back: false }
   }
 
-  async function set_max_concurrency(
+  const set_max_concurrency = async (
     current_concurrency: number | undefined
-  ): Promise<{ value: number | undefined; cancelled: boolean }> {
+  ): Promise<{ value: number | undefined; cancelled: boolean }> => {
     const DEFAULT_MAX_CONCURRENCY = 10
     const concurrency_input = await vscode.window.showInputBox({
       title: 'Set Max Concurrency',
@@ -1076,9 +1076,9 @@ export const setup_api_tool_multi_config = async (params: {
     return { value: Number(concurrency_input), cancelled: false }
   }
 
-  async function set_confirmation_threshold(
+  const set_confirmation_threshold = async (
     current_threshold: number
-  ): Promise<number | undefined> {
+  ): Promise<number | undefined> => {
     const threshold_input = await vscode.window.showInputBox({
       title: 'Set Confirmation Threshold',
       prompt: 'Enter token count above which to show affected files picker',
