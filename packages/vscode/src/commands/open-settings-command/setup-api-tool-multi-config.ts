@@ -29,6 +29,11 @@ interface ToolMethods {
   get_display_name: () => string
 }
 
+interface ConfigQuickPickItem extends vscode.QuickPickItem {
+  config?: ToolConfig
+  index?: number
+}
+
 export const setup_api_tool_multi_config = async (params: {
   context: vscode.ExtensionContext
   tool: SupportedTool
@@ -37,8 +42,9 @@ export const setup_api_tool_multi_config = async (params: {
   let providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
-  // NEW: shared “stack cancelled” flag. When true, unwind and close everything.
   let stack_cancelled = false
+  let last_selected_config_index: number | undefined
+  let last_selected_edit_option_label: string | undefined
 
   const EDIT_INSTRUCTIONS_LABEL = 'Instructions'
   const CONFIRMATION_THRESHOLD_LABEL = 'Show file picker threshold'
@@ -151,10 +157,7 @@ export const setup_api_tool_multi_config = async (params: {
   }
 
   const create_config_items = () => {
-    const items: (vscode.QuickPickItem & {
-      config?: ToolConfig
-      index?: number
-    })[] = []
+    const items: ConfigQuickPickItem[] = []
 
     if (!params.show_back_button) {
       items.push({
@@ -254,14 +257,27 @@ export const setup_api_tool_multi_config = async (params: {
   }
 
   const show_configs_quick_pick = async (): Promise<boolean> => {
-    const quick_pick = vscode.window.createQuickPick()
-    quick_pick.items = create_config_items()
+    const quick_pick = vscode.window.createQuickPick<ConfigQuickPickItem>()
+    const items = create_config_items()
+    quick_pick.items = items
     quick_pick.title = `"${tool_methods.get_display_name()}" API Tool Configurations`
     quick_pick.matchOnDescription = true
     quick_pick.placeholder =
       current_configs.length > 0
         ? 'Select a configuration to edit or add another one'
         : 'No configurations found, add one to use this API tool'
+
+    if (
+      last_selected_config_index !== undefined &&
+      last_selected_config_index < current_configs.length
+    ) {
+      const active_item = items.find(
+        (item) => 'index' in item && item.index == last_selected_config_index
+      )
+      if (active_item) {
+        quick_pick.activeItems = [active_item]
+      }
+    }
 
     let is_accepted = false
     let is_showing_dialog = false
@@ -306,9 +322,12 @@ export const setup_api_tool_multi_config = async (params: {
           }
           // Whether added or went "Back", reopen configs unless the stack was cancelled
           resolve(await show_configs_quick_pick())
-        } else if ('config' in selected && selected.config) {
+        } else if (selected.config) {
+          if (selected.index !== undefined) {
+            last_selected_config_index = selected.index
+          }
           quick_pick.hide()
-          await edit_configuration(selected.config as ToolConfig)
+          await edit_configuration(selected.config)
           if (stack_cancelled) {
             resolve(false)
             return
@@ -323,6 +342,8 @@ export const setup_api_tool_multi_config = async (params: {
           index: number
         }
 
+        last_selected_config_index = item.index
+
         if (event.button === edit_button) {
           is_accepted = true
           quick_pick.hide()
@@ -336,7 +357,15 @@ export const setup_api_tool_multi_config = async (params: {
           const new_config = { ...item.config }
           current_configs.splice(item.index + 1, 0, new_config)
           await tool_methods.save_configs(current_configs)
-          quick_pick.items = create_config_items()
+          const items = create_config_items()
+          quick_pick.items = items
+          const active_item = items.find(
+            (item) =>
+              'index' in item && item.index == last_selected_config_index
+          )
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          }
           quick_pick.show()
         } else if (event.button === delete_button) {
           const config_to_delete = item.config
@@ -408,15 +437,40 @@ export const setup_api_tool_multi_config = async (params: {
           current_configs = reordered_configs
           await tool_methods.save_configs(current_configs)
 
-          quick_pick.items = create_config_items()
+          last_selected_config_index = new_index
+          const items = create_config_items()
+          quick_pick.items = items
+          const active_item = items.find(
+            (item) =>
+              'index' in item && item.index == last_selected_config_index
+          )
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          }
         } else if (event.button === set_default_button) {
           default_config = { ...item.config }
           await tool_methods.set_default_config(default_config)
-          quick_pick.items = create_config_items()
+          const items = create_config_items()
+          quick_pick.items = items
+          const active_item = items.find(
+            (item) =>
+              'index' in item && item.index == last_selected_config_index
+          )
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          }
         } else if (event.button === unset_default_button) {
           default_config = undefined
           await tool_methods.set_default_config(null)
-          quick_pick.items = create_config_items()
+          const items = create_config_items()
+          quick_pick.items = items
+          const active_item = items.find(
+            (item) =>
+              'index' in item && item.index == last_selected_config_index
+          )
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          }
         }
       })
 
@@ -471,10 +525,7 @@ export const setup_api_tool_multi_config = async (params: {
 
   const edit_configuration = async (config: ToolConfig): Promise<boolean> => {
     const create_edit_options = () => {
-      const options: (vscode.QuickPickItem & {
-        config?: ToolConfig
-        index?: number
-      })[] = [
+      const options: ConfigQuickPickItem[] = [
         { label: BACK_LABEL },
         { label: '', kind: vscode.QuickPickItemKind.Separator },
         {
@@ -557,10 +608,19 @@ export const setup_api_tool_multi_config = async (params: {
       return options
     }
 
-    const quick_pick = vscode.window.createQuickPick()
+    const quick_pick = vscode.window.createQuickPick<ConfigQuickPickItem>()
     quick_pick.items = create_edit_options()
     quick_pick.title = 'Edit Configuration'
     quick_pick.placeholder = 'Select what to update'
+
+    if (last_selected_edit_option_label) {
+      const active_item = quick_pick.items.find(
+        (item) => item.label === last_selected_edit_option_label
+      )
+      if (active_item) {
+        quick_pick.activeItems = [active_item]
+      }
+    }
 
     let is_accepted = false
 
@@ -574,6 +634,9 @@ export const setup_api_tool_multi_config = async (params: {
           resolve(false)
           return
         }
+
+        last_selected_edit_option_label = selected_option.label
+
         if (selected_option.label == BACK_LABEL) {
           quick_pick.hide()
           resolve(false) // back only (previous screen will reopen)

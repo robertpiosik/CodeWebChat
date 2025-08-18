@@ -14,45 +14,73 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
     'codeWebChat.settings',
     async () => {
       let show_menu = true
+      let last_selected_label: string | undefined
+
       while (show_menu) {
-        const selected = await vscode.window.showQuickPick(
-          [
-            {
-              label: LABEL_EDIT_SETTINGS,
-              detail:
-                'Modify "edit format" instructions, edit chat presets in JSON and more.'
-            },
-            {
-              label: LABEL_PROVIDERS,
-              detail:
-                'API keys are stored encrypted and never leave your device.'
-            },
-            {
-              label: 'API tools',
-              kind: vscode.QuickPickItemKind.Separator
-            },
-            {
-              label: LABEL_CODE_COMPLETIONS,
-              detail:
-                'Get accurate code at cursor from state-of-the-art reasoning models.'
-            },
-            {
-              label: LABEL_EDIT_CONTEXT,
-              detail: 'Modify files based on natural language instructions.'
-            },
-            {
-              label: LABEL_INTELLIGENT_UPDATE,
-              detail: 'Integrate truncated code blocks and fix malformed diffs.'
-            },
-            {
-              label: LABEL_COMMIT_MESSAGES,
-              detail:
-                'Generate meaningful summaries of changes adhering to your preferred style.'
-            }
-          ],
+        const items: vscode.QuickPickItem[] = [
           {
-            title: 'Settings',
-            placeHolder: 'Select option'
+            label: LABEL_EDIT_SETTINGS,
+            detail:
+              'Modify "edit format" instructions, edit chat presets in JSON and more.'
+          },
+          {
+            label: LABEL_PROVIDERS,
+            detail:
+              'API keys are stored encrypted and never leave your device.'
+          },
+          {
+            label: 'API tools',
+            kind: vscode.QuickPickItemKind.Separator
+          },
+          {
+            label: LABEL_CODE_COMPLETIONS,
+            detail:
+              'Get accurate code at cursor from state-of-the-art reasoning models.'
+          },
+          {
+            label: LABEL_EDIT_CONTEXT,
+            detail: 'Modify files based on natural language instructions.'
+          },
+          {
+            label: LABEL_INTELLIGENT_UPDATE,
+            detail: 'Integrate truncated code blocks and fix malformed diffs.'
+          },
+          {
+            label: LABEL_COMMIT_MESSAGES,
+            detail:
+              'Generate meaningful summaries of changes adhering to your preferred style.'
+          }
+        ]
+
+        const quick_pick = vscode.window.createQuickPick()
+        quick_pick.items = items
+        quick_pick.title = 'Settings'
+        quick_pick.placeholder = 'Select option'
+
+        if (last_selected_label) {
+          const active_item = items.find(
+            (item) => item.label === last_selected_label
+          )
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          }
+        }
+
+        const selected = await new Promise<vscode.QuickPickItem | undefined>(
+          (resolve) => {
+            let is_accepted = false
+            quick_pick.onDidAccept(() => {
+              is_accepted = true
+              resolve(quick_pick.selectedItems[0])
+              quick_pick.hide()
+            })
+            quick_pick.onDidHide(() => {
+              if (!is_accepted) {
+                resolve(undefined)
+              }
+              quick_pick.dispose()
+            })
+            quick_pick.show()
           }
         )
 
@@ -60,6 +88,8 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
           show_menu = false
           continue
         }
+
+        last_selected_label = selected.label
 
         switch (selected.label) {
           case LABEL_EDIT_SETTINGS:
