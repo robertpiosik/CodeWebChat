@@ -11,10 +11,17 @@ const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
 }
 
+interface ProviderQuickPickItem extends vscode.QuickPickItem {
+  provider?: Provider
+  index?: number
+}
+
 export const api_providers = async (
   context: vscode.ExtensionContext
 ): Promise<void> => {
   const providers_manager = new ApiProvidersManager(context)
+
+  let last_selected_provider_index: number | undefined
 
   const back_label = '$(arrow-left) Back'
 
@@ -43,7 +50,7 @@ export const api_providers = async (
     tooltip: 'Change API key'
   }
 
-  const create_provider_items = async (): Promise<vscode.QuickPickItem[]> => {
+  const create_provider_items = async (): Promise<ProviderQuickPickItem[]> => {
     const saved_providers = await providers_manager.get_providers()
 
     return [
@@ -104,10 +111,22 @@ export const api_providers = async (
       return
     }
 
-    const quick_pick = vscode.window.createQuickPick()
+    const quick_pick = vscode.window.createQuickPick<ProviderQuickPickItem>()
     quick_pick.items = await create_provider_items()
     quick_pick.title = 'API Providers'
     quick_pick.placeholder = 'Select an API provider to edit or add a new one'
+
+    if (
+      last_selected_provider_index !== undefined &&
+      last_selected_provider_index < saved_providers.length
+    ) {
+      const active_item = quick_pick.items.find(
+        (item) => item.index === last_selected_provider_index
+      )
+      if (active_item) {
+        quick_pick.activeItems = [active_item]
+      }
+    }
 
     return new Promise<void>((resolve) => {
       let is_accepted = false
@@ -120,17 +139,18 @@ export const api_providers = async (
 
         if (selected.label == '$(add) Add API provider...') {
           await show_create_provider_quick_pick()
-        } else if ('provider' in selected) {
-          await edit_provider(selected.provider as Provider)
+        } else if (selected.provider) {
+          if (selected.index !== undefined) {
+            last_selected_provider_index = selected.index
+          }
+          await edit_provider(selected.provider)
         }
         resolve()
       })
 
       quick_pick.onDidTriggerItemButton(async (event) => {
-        const item = event.item as vscode.QuickPickItem & {
-          provider: Provider
-          index: number
-        }
+        const item = event.item
+        last_selected_provider_index = item.index
 
         if (
           event.button === edit_button ||
@@ -139,9 +159,9 @@ export const api_providers = async (
           is_accepted = true
           quick_pick.hide()
           if (event.button === edit_button) {
-            await edit_provider(item.provider)
+            await edit_provider(item.provider!)
           } else if (event.button === change_api_key_button) {
-            await edit_built_in_provider(item.provider as BuiltInProvider)
+            await edit_built_in_provider(item.provider! as BuiltInProvider)
           }
           resolve()
         } else if (event.button === delete_button) {
@@ -150,7 +170,7 @@ export const api_providers = async (
           quick_pick.hide()
 
           const result = await vscode.window.showWarningMessage(
-            `Are you sure you want to delete the API provider "${item.provider.name}"?`,
+            `Are you sure you want to delete the API provider "${item.provider!.name}"?`,
             { modal: true },
             delete_button_text
           )
@@ -165,7 +185,7 @@ export const api_providers = async (
 
           const providers = await providers_manager.get_providers()
           const updated_providers = providers.filter(
-            (p) => p.name != item.provider.name
+            (p) => p.name != item.provider!.name
           )
           await providers_manager.save_providers(updated_providers)
 
@@ -186,7 +206,7 @@ export const api_providers = async (
           event.button === move_down_button
         ) {
           const providers = await providers_manager.get_providers()
-          const current_index = item.index
+          const current_index = item.index!
 
           const is_moving_up = event.button === move_up_button
           const min_index = 0
@@ -199,11 +219,20 @@ export const api_providers = async (
             return
           }
 
+          last_selected_provider_index = new_index
+
           const reordered_providers = [...providers]
           const [moved_provider] = reordered_providers.splice(current_index, 1)
           reordered_providers.splice(new_index, 0, moved_provider)
           await providers_manager.save_providers(reordered_providers)
           quick_pick.items = await create_provider_items()
+
+          const active_item = quick_pick.items.find(
+            (item) => item.index === last_selected_provider_index
+          )
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          }
         }
       })
 
