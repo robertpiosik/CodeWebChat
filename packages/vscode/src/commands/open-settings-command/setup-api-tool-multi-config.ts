@@ -298,7 +298,7 @@ export const setup_api_tool_multi_config = async (params: {
 
         if (selected.label == ADD_CONFIGURATION_LABEL) {
           quick_pick.hide()
-          const added = await add_configuration()
+          await add_configuration()
           if (stack_cancelled) {
             resolve(false)
             return
@@ -307,7 +307,7 @@ export const setup_api_tool_multi_config = async (params: {
           resolve(await show_configs_quick_pick())
         } else if ('config' in selected && selected.config) {
           quick_pick.hide()
-          const edited = await edit_configuration(selected.config as ToolConfig)
+          await edit_configuration(selected.config as ToolConfig)
           if (stack_cancelled) {
             resolve(false)
             return
