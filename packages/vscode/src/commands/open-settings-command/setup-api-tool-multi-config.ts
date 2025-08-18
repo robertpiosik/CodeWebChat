@@ -37,6 +37,9 @@ export const setup_api_tool_multi_config = async (params: {
   const providers_manager = new ApiProvidersManager(params.context)
   const model_fetcher = new ModelFetcher()
 
+  // NEW: shared “stack cancelled” flag. When true, unwind and close everything.
+  let stack_cancelled = false
+
   const EDIT_INSTRUCTIONS_LABEL = 'Instructions'
   const CONFIRMATION_THRESHOLD_LABEL = 'Show file picker threshold'
 
@@ -269,11 +272,14 @@ export const setup_api_tool_multi_config = async (params: {
         const selected = quick_pick.selectedItems[0]
         if (!selected) {
           quick_pick.hide()
+          // Escape/Outside click in this list should close all
+          stack_cancelled = true
           resolve(false)
           return
         }
 
         if (selected.label === BACK_LABEL) {
+          // Back: let the previous screen (outside of this function) reopen
           quick_pick.hide()
           resolve(false)
           return
@@ -282,17 +288,30 @@ export const setup_api_tool_multi_config = async (params: {
         if (selected.label === API_PROVIDERS_LABEL) {
           quick_pick.hide()
           await api_providers(params.context)
+          if (stack_cancelled) {
+            resolve(false)
+            return
+          }
           resolve(await show_configs_quick_pick())
           return
         }
 
         if (selected.label == ADD_CONFIGURATION_LABEL) {
           quick_pick.hide()
-          await add_configuration()
+          const added = await add_configuration()
+          if (stack_cancelled) {
+            resolve(false)
+            return
+          }
+          // Whether added or went "Back", reopen configs unless the stack was cancelled
           resolve(await show_configs_quick_pick())
         } else if ('config' in selected && selected.config) {
           quick_pick.hide()
-          await edit_configuration(selected.config as ToolConfig)
+          const edited = await edit_configuration(selected.config as ToolConfig)
+          if (stack_cancelled) {
+            resolve(false)
+            return
+          }
           resolve(await show_configs_quick_pick())
         }
       })
@@ -307,6 +326,10 @@ export const setup_api_tool_multi_config = async (params: {
           is_accepted = true
           quick_pick.hide()
           await edit_configuration(item.config)
+          if (stack_cancelled) {
+            resolve(false)
+            return
+          }
           resolve(await show_configs_quick_pick())
         } else if (event.button === duplicate_button) {
           const new_config = { ...item.config }
@@ -318,7 +341,6 @@ export const setup_api_tool_multi_config = async (params: {
           const config_to_delete = item.config
           const delete_button_text = 'Delete'
 
-          // Set flag before hiding to prevent disposal
           is_showing_dialog = true
           quick_pick.hide()
 
@@ -330,10 +352,14 @@ export const setup_api_tool_multi_config = async (params: {
             delete_button_text
           )
 
-          is_showing_dialog = false // Reset flag after dialog closes
+          is_showing_dialog = false
 
           if (result != delete_button_text) {
-            // User cancelled, show the quick pick again
+            // User cancelled the dialog (not the whole stack)
+            if (stack_cancelled) {
+              resolve(false)
+              return
+            }
             resolve(await show_configs_quick_pick())
             return
           }
@@ -352,18 +378,12 @@ export const setup_api_tool_multi_config = async (params: {
           current_configs.splice(item.index, 1)
           await tool_methods.save_configs(current_configs)
 
-          // Clear default if the deleted config was the default
           if (was_default) {
             default_config = undefined
             await tool_methods.set_default_config(null)
           }
 
-          if (current_configs.length == 0) {
-            is_accepted = true
-            resolve(await show_configs_quick_pick())
-          } else {
-            resolve(await show_configs_quick_pick())
-          }
+          resolve(await show_configs_quick_pick())
         } else if (
           event.button === move_up_button ||
           event.button === move_down_button
@@ -407,6 +427,8 @@ export const setup_api_tool_multi_config = async (params: {
         }
 
         if (!is_accepted) {
+          // Hide due to Escape/outside click => cancel whole stack
+          stack_cancelled = true
           resolve(false)
         }
       })
@@ -416,20 +438,28 @@ export const setup_api_tool_multi_config = async (params: {
   }
 
   async function add_configuration(): Promise<boolean> {
-    const provider_info = await select_provider()
-    if (!provider_info) {
+    const provider_result = await select_provider()
+    if (provider_result.cancelled) {
+      stack_cancelled = true
       return false
     }
+    if (provider_result.back) {
+      return true
+    }
 
-    const model = await select_model(provider_info)
-    if (!model) {
+    const model_result = await select_model(provider_result.value)
+    if (model_result.cancelled) {
+      stack_cancelled = true
       return false
+    }
+    if (model_result.back) {
+      return add_configuration()
     }
 
     const new_config: ToolConfig = {
-      provider_type: provider_info.type,
-      provider_name: provider_info.name,
-      model,
+      provider_type: provider_result.value.type,
+      provider_name: provider_result.value.name,
+      model: model_result.value,
       temperature: DEFAULT_TEMPERATURE[params.tool]
     }
 
@@ -537,9 +567,15 @@ export const setup_api_tool_multi_config = async (params: {
       quick_pick.onDidAccept(async () => {
         is_accepted = true
         const selected_option = quick_pick.selectedItems[0]
-        if (!selected_option || selected_option.label == BACK_LABEL) {
+        if (!selected_option) {
           quick_pick.hide()
+          stack_cancelled = true
           resolve(false)
+          return
+        }
+        if (selected_option.label == BACK_LABEL) {
+          quick_pick.hide()
+          resolve(false) // back only (previous screen will reopen)
           return
         }
 
@@ -551,6 +587,10 @@ export const setup_api_tool_multi_config = async (params: {
             'workbench.action.openSettings',
             'codeWebChat.commitMessageInstructions'
           )
+          if (stack_cancelled) {
+            resolve(false)
+            return
+          }
           resolve(await edit_configuration(config))
           return
         }
@@ -561,6 +601,10 @@ export const setup_api_tool_multi_config = async (params: {
         ) {
           quick_pick.hide()
           await handle_confirmation_threshold_update()
+          if (stack_cancelled) {
+            resolve(false)
+            return
+          }
           resolve(await edit_configuration(config))
           return
         }
@@ -586,30 +630,43 @@ export const setup_api_tool_multi_config = async (params: {
         let config_changed_in_this_step = false
 
         if (selected_option.label == PROVIDER_LABEL) {
-          const new_provider = await select_provider()
-          if (!new_provider) {
-            resolve(await edit_configuration(config))
-            return
-          }
+          // eslint-disable-next-line no-constant-condition
+          while (true) {
+            const new_provider = await select_provider()
+            if (new_provider.cancelled) {
+              stack_cancelled = true
+              resolve(false)
+              return
+            }
+            if (new_provider.back) {
+              resolve(await edit_configuration(config))
+              return
+            }
 
-          const new_model = await select_model(new_provider)
-          if (!new_model) {
-            resolve(await edit_configuration(config))
-            return
-          }
+            const new_model = await select_model(new_provider.value)
+            if (new_model.cancelled) {
+              stack_cancelled = true
+              resolve(false)
+              return
+            }
+            if (new_model.back) {
+              continue
+            }
 
-          if (
-            new_provider.type != config.provider_type ||
-            new_provider.name != config.provider_name ||
-            new_model != config.model
-          ) {
-            updated_config_state.provider_type = new_provider.type
-            updated_config_state.provider_name = new_provider.name
-            updated_config_state.model = new_model
-            config_changed_in_this_step = true
-          } else {
-            resolve(await edit_configuration(config))
-            return
+            if (
+              new_provider.value.type != config.provider_type ||
+              new_provider.value.name != config.provider_name ||
+              new_model.value != config.model
+            ) {
+              updated_config_state.provider_type = new_provider.value.type
+              updated_config_state.provider_name = new_provider.value.name
+              updated_config_state.model = new_model.value
+              config_changed_in_this_step = true
+            } else {
+              resolve(await edit_configuration(config))
+              return
+            }
+            break
           }
         } else if (selected_option.label == MODEL_LABEL) {
           const provider_info = {
@@ -620,27 +677,33 @@ export const setup_api_tool_multi_config = async (params: {
           const new_model = await select_model(
             provider_info as Pick<Provider, 'type' | 'name'>
           )
-          if (!new_model) {
+          if (new_model.cancelled) {
+            stack_cancelled = true
+            resolve(false)
+            return
+          }
+
+          if (new_model.back) {
             resolve(await edit_configuration(config))
             return
           }
 
-          if (new_model != config.model) {
-            updated_config_state.model = new_model
+          if (new_model.value != config.model) {
+            updated_config_state.model = new_model.value
             config_changed_in_this_step = true
           } else {
             resolve(await edit_configuration(config))
             return
           }
         } else if (selected_option.label == TEMPERATURE_LABEL) {
-          const new_temperature = await set_temperature(config.temperature)
-          if (new_temperature === undefined) {
+          const temp_result = await set_temperature(config.temperature)
+          if (temp_result.back) {
             resolve(await edit_configuration(config))
             return
           }
 
-          if (new_temperature != config.temperature) {
-            updated_config_state.temperature = new_temperature
+          if (temp_result.value != config.temperature) {
+            updated_config_state.temperature = temp_result.value
             config_changed_in_this_step = true
           } else {
             resolve(await edit_configuration(config))
@@ -651,6 +714,12 @@ export const setup_api_tool_multi_config = async (params: {
             config.reasoning_effort
           )
           if (new_reasoning_effort.cancelled) {
+            stack_cancelled = true
+            resolve(false)
+            return
+          }
+
+          if (new_reasoning_effort.back) {
             resolve(await edit_configuration(config))
             return
           }
@@ -673,7 +742,8 @@ export const setup_api_tool_multi_config = async (params: {
             config.max_concurrency
           )
           if (new_max_concurrency.cancelled) {
-            resolve(await edit_configuration(config))
+            stack_cancelled = true
+            resolve(false)
             return
           }
 
@@ -726,6 +796,8 @@ export const setup_api_tool_multi_config = async (params: {
 
       quick_pick.onDidHide(() => {
         if (!is_accepted) {
+          // Esc/outside => cancel full stack
+          stack_cancelled = true
           resolve(false)
         }
       })
@@ -740,30 +812,34 @@ export const setup_api_tool_multi_config = async (params: {
       DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK
     )
     const new_threshold = await set_confirmation_threshold(current_threshold)
-    if (new_threshold !== undefined) {
-      await params.context.globalState.update(
-        COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
-        new_threshold
+    if (new_threshold === undefined) {
+      // Cancelled the input => cancel full stack
+      stack_cancelled = true
+      return
+    }
+    await params.context.globalState.update(
+      COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
+      new_threshold
+    )
+    if (current_threshold != new_threshold) {
+      vscode.window.showInformationMessage(
+        `Confirmation threshold updated to ${new_threshold} tokens.`
       )
-
-      if (current_threshold != new_threshold) {
-        vscode.window.showInformationMessage(
-          `Confirmation threshold updated to ${new_threshold} tokens.`
-        )
-      }
     }
   }
 
-  async function select_provider(): Promise<
-    Pick<Provider, 'type' | 'name'> | undefined
-  > {
+  async function select_provider(): Promise<{
+    value: Pick<Provider, 'type' | 'name'>
+    cancelled: boolean
+    back: boolean
+  }> {
     const providers = await providers_manager.get_providers()
 
     if (providers.length == 0) {
       vscode.window.showErrorMessage(
         'No API providers found. Please add an API provider first.'
       )
-      return undefined
+      return { value: undefined as any, cancelled: true, back: false }
     }
 
     const provider_items: (vscode.QuickPickItem & { provider?: Provider })[] =
@@ -779,18 +855,27 @@ export const setup_api_tool_multi_config = async (params: {
       placeHolder: 'Choose an API provider'
     })
 
-    if (!selected || selected.label === BACK_LABEL) return undefined
+    if (!selected) {
+      return { value: undefined as any, cancelled: true, back: false }
+    }
+    if (selected.label === BACK_LABEL) {
+      return { value: undefined as any, cancelled: false, back: true }
+    }
 
     const selected_provider = selected as { provider: Provider }
     return {
-      type: selected_provider.provider.type,
-      name: selected_provider.provider.name
+      value: {
+        type: selected_provider.provider.type,
+        name: selected_provider.provider.name
+      },
+      cancelled: false,
+      back: false
     }
   }
 
   async function select_model(
     provider_info: Pick<Provider, 'type' | 'name'>
-  ): Promise<string | undefined> {
+  ): Promise<{ value: string; cancelled: boolean; back: boolean }> {
     try {
       const provider = await providers_manager.get_provider(provider_info.name)
       if (!provider) {
@@ -815,7 +900,7 @@ export const setup_api_tool_multi_config = async (params: {
         vscode.window.showWarningMessage(
           `No models found for ${provider_info.name}.`
         )
-        return undefined
+        return { value: undefined as any, cancelled: true, back: false }
       }
 
       const model_items = models.map((model) => ({
@@ -824,12 +909,29 @@ export const setup_api_tool_multi_config = async (params: {
         detail: model.description
       }))
 
-      const selected = await vscode.window.showQuickPick(model_items, {
+      const items: vscode.QuickPickItem[] = [
+        { label: BACK_LABEL },
+        ...model_items
+      ]
+
+      const selected = await vscode.window.showQuickPick(items, {
         title: 'Select Model',
         placeHolder: 'Choose an AI model'
       })
 
-      return selected?.description || selected?.label
+      if (!selected) {
+        return { value: undefined as any, cancelled: true, back: false }
+      }
+
+      if (selected.label === BACK_LABEL) {
+        return { value: undefined as any, cancelled: false, back: true }
+      }
+
+      return {
+        value: (selected as any).description || selected.label,
+        cancelled: false,
+        back: false
+      }
     } catch (error) {
       Logger.error({
         function_name: 'select_model',
@@ -843,11 +945,15 @@ export const setup_api_tool_multi_config = async (params: {
         vscode.window.showInformationMessage(
           `The '/models' route was not found for ${provider_info.name}. This might mean the provider does not support listing models.`
         )
-        return await vscode.window.showInputBox({
+        const input = await vscode.window.showInputBox({
           title: 'Enter Model Name',
           placeHolder: 'e.g., gpt-4o, claude-4-opus',
           prompt: `Enter a model name (ID)`
         })
+        if (input === undefined) {
+          return { value: undefined as any, cancelled: true, back: false }
+        }
+        return { value: input, cancelled: false, back: false }
       }
 
       vscode.window.showErrorMessage(
@@ -855,20 +961,20 @@ export const setup_api_tool_multi_config = async (params: {
           error instanceof Error ? error.message : String(error)
         }`
       )
-      return undefined
+      return { value: undefined as any, cancelled: true, back: false }
     }
   }
 
   async function set_temperature(
     temperature: number
-  ): Promise<number | undefined> {
+  ): Promise<{ value: number; back: boolean }> {
     const temperature_input = await vscode.window.showInputBox({
       title: 'Set Temperature',
       prompt: 'Enter a value between 0 and 1',
       value: temperature.toString(),
       placeHolder: 'Leave empty to restore default',
       validateInput: (value) => {
-        if (value === '') return null // Allow empty to restore default
+        if (value === '') return null
         const num = Number(value)
         if (isNaN(num)) return 'Please enter a valid number'
         if (num < 0 || num > 1) return 'Temperature must be between 0 and 1'
@@ -877,19 +983,21 @@ export const setup_api_tool_multi_config = async (params: {
     })
 
     if (temperature_input === undefined) {
-      return undefined
+      return { value: temperature, back: true }
     }
-
     if (temperature_input == '') {
-      return DEFAULT_TEMPERATURE[params.tool]
+      return { value: DEFAULT_TEMPERATURE[params.tool], back: false }
     }
-
-    return Number(temperature_input)
+    return { value: Number(temperature_input), back: false }
   }
 
   async function select_reasoning_effort(
     current_effort: ReasoningEffort | undefined
-  ): Promise<{ value: ReasoningEffort | undefined; cancelled: boolean }> {
+  ): Promise<{
+    value: ReasoningEffort | undefined
+    cancelled: boolean
+    back: boolean
+  }> {
     const effort_levels: (ReasoningEffort | undefined)[] = [
       undefined,
       'none',
@@ -897,8 +1005,8 @@ export const setup_api_tool_multi_config = async (params: {
       'medium',
       'high'
     ]
-    const items = effort_levels.map((level) => {
-      const is_current = current_effort !== undefined && level == current_effort
+    const effort_items = effort_levels.map((level) => {
+      const is_current = current_effort === level
 
       return {
         label:
@@ -910,16 +1018,22 @@ export const setup_api_tool_multi_config = async (params: {
       }
     })
 
+    const items = [{ label: BACK_LABEL }, ...effort_items]
+
     const selected = await vscode.window.showQuickPick(items, {
       title: 'Select Reasoning Effort',
       placeHolder: 'Choose a reasoning effort level'
     })
 
     if (!selected) {
-      return { value: undefined, cancelled: true }
+      return { value: undefined, cancelled: true, back: false }
     }
 
-    return { value: selected.effort, cancelled: false }
+    if (selected.label === BACK_LABEL) {
+      return { value: undefined, cancelled: false, back: true }
+    }
+
+    return { value: (selected as any).effort, cancelled: false, back: false }
   }
 
   async function set_max_concurrency(
@@ -975,13 +1089,12 @@ export const setup_api_tool_multi_config = async (params: {
     if (threshold_input === undefined) {
       return undefined
     }
-
     if (threshold_input == '') {
       return DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK
     }
-
     return Number(threshold_input)
   }
 
-  return await show_configs_quick_pick()
+  await show_configs_quick_pick()
+  return !stack_cancelled
 }

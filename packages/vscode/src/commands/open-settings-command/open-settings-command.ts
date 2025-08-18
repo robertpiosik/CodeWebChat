@@ -73,28 +73,28 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             await api_providers(context)
             break
           case LABEL_CODE_COMPLETIONS:
-            await setup_api_tool_multi_config({
+            show_menu = await setup_api_tool_multi_config({
               context,
               tool: 'code-completions',
               show_back_button: true
             })
             break
           case LABEL_EDIT_CONTEXT:
-            await setup_api_tool_multi_config({
+            show_menu = await setup_api_tool_multi_config({
               context,
               tool: 'edit-context',
               show_back_button: true
             })
             break
           case LABEL_INTELLIGENT_UPDATE:
-            await setup_api_tool_multi_config({
+            show_menu = await setup_api_tool_multi_config({
               context,
               tool: 'intelligent-update',
               show_back_button: true
             })
             break
           case LABEL_COMMIT_MESSAGES:
-            await setup_api_tool_multi_config({
+            show_menu = await setup_api_tool_multi_config({
               context,
               tool: 'commit-messages',
               show_back_button: true
