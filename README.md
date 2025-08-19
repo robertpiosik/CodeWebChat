@@ -6,7 +6,7 @@ A 100% free and open-source VS Code extension for AI-assisted pair programming. 
 
 **Key features**
 
-👉️ Initialize free chatbots: AI Studio, ChatGPT, Claude and 10+ more \
+👉️ Initialize free chatbots: AI Studio, ChatGPT, DeepSeek, Qwen and 10+ more \
 👉️ Apply chat responses in any edit format \
 👉️ Code completions with reasoning models \
 👉️ Commit messages in your preffered style
