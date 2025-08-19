@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-**Designed for software engineers, a 100% free and open-source tool for AI-assisted pair programming.** With its simple, non-agentic approach, CWC delivers unmatched accuracy, speed and cost efficiency. Built for VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.)
+**Designed for software engineers, a 100% free and open-source tool for AI-assisted pair programming.** With its simple, non-agentic approach, CWC provides unmatched accuracy, speed and cost efficiency. Built for VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.)
 
 > LLMs are proven insufficient technology to reliably power the idea of agentic coding. Bring yourself back to your workflow and create a programming duo that deliver.
 
