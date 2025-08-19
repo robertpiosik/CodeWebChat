@@ -6,7 +6,7 @@ A 100% free and open-source VS Code extension for AI-assisted pair programming. 
 
 **Key features:**
 
-👉️ Initialize ChatGPT, Gemini, Claude and 10+ more, hands-free! \
+👉️ Auto-initialize AI Studio, ChatGPT, Claude and 10+ more free chatbots \
 👉️ Apply chat responses in any edit format \
 👉️ Code completions with reasoning models \
 👉️ Commit messages in your preffered style
