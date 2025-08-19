@@ -130,24 +130,21 @@ export const claude: Chatbot = {
 
     const observer = new MutationObserver((mutations) => {
       mutations.forEach(() => {
+        const stop_button_selector =
+          'path[d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm40-112v56a12,12,0,0,1-12,12H100a12,12,0,0,1-12-12V100a12,12,0,0,1,12-12h56A12,12,0,0,1,168,100Z"]'
+        const footer_selector =
+          'div[data-is-streaming="false"] > div:nth-child(2) > div > div'
+
         if (
-          // Stop button
-          document.querySelector(
-            'path[d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm40-112v56a12,12,0,0,1-12,12H100a12,12,0,0,1-12-12V100a12,12,0,0,1,12-12h56A12,12,0,0,1,168,100Z"]'
-          ) ||
-          // Share button
-          !document.querySelector(
-            'path[d="M12.1279 2.66477C12.3126 2.45986 12.6298 2.44322 12.835 2.62766L17.835 7.12773L17.9053 7.20585C17.9666 7.29039 17.9999 7.39362 18 7.4998C18 7.64143 17.9402 7.77707 17.835 7.87188L12.835 12.3719L12.7529 12.4315C12.5524 12.5493 12.2896 12.5144 12.1279 12.3348C11.9664 12.1552 11.9594 11.89 12.0977 11.703L12.165 11.6278L16.1963 7.99981H11.5C7.91029 7.99981 5.00023 10.9102 5 14.4999V16.4999L4.99023 16.6005C4.94371 16.8285 4.74171 16.9999 4.5 16.9999C4.25829 16.9999 4.05629 16.8285 4.00977 16.6005L4 16.4999V14.4999C4.00023 10.3579 7.35801 6.99979 11.5 6.99979H16.1963L12.165 3.37181C11.96 3.18704 11.9433 2.86994 12.1279 2.66477Z"]'
-          )
+          document.querySelector(stop_button_selector) ||
+          !document.querySelector(footer_selector)
         ) {
           return
         }
 
         show_response_ready_notification({ chatbot_name: 'Claude' })
 
-        const all_footers = document.querySelectorAll(
-          'div[data-is-streaming="false"] > div:nth-child(2) > div > div'
-        )
+        const all_footers = document.querySelectorAll(footer_selector)
         all_footers.forEach((footer) => {
           add_buttons({
             footer
