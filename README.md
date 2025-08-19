@@ -2,16 +2,14 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-Designed for software engineers, a 100% free and open-source tool for AI-assisted pair programming. With its simple, non-agentic approach, it delivers unmatched accuracy, speed and cost efficiency.
+**Designed for software engineers, a 100% free and open-source tool for AI-assisted pair programming.** With its simple, non-agentic approach, it delivers unmatched accuracy, speed and cost efficiency.
 
-CWC is compatible with VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.)
+> Built for VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.)
 
-**Key features**
-
-👉️ Initialize free chatbots: AI Studio, ChatGPT, DeepSeek, Qwen and 10+ more \
-👉️ Apply chat responses in any edit format \
-👉️ Code completions with reasoning models \
-👉️ Commit messages in your preferred style
+👉️ **Initialize free chatbots** (AI Studio, ChatGPT, DeepSeek, Qwen and 10+ more) \
+👉️ **Apply chat responses** in any edit format \
+👉️ **Code completions** with reasoning models \
+👉️ **Commit messages** in your preferred style
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -19,10 +17,10 @@ CWC is compatible with VS Code and its derivatives (Cursor, Windsurf, VSCodium, 
 
 **Guiding principles**
 
-- initialize chatbots—don't scrape responses
-- free forever—community effort
-- privacy first—operates locally
-- lightweight—about 1MB of code
+- Initialize chatbots—don't scrape responses
+- Free forever—community effort
+- Privacy first—operates locally
+- Lightweight—about 1MB of code
 
 **CWC is for you if you're**
 
