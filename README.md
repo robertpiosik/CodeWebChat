@@ -9,10 +9,10 @@
 👉️ **Code completions** with reasoning models \
 👉️ **Commit messages** in your preferred style
 
-> LLMs have been shown to be an insufficient technology to reliably power the idea of agentic coding. Bring _yourself_ back to your workflow, grow your abilities and create a programming duo that delivers truly exceptional value.
+> LLMs have been shown to be an insufficient technology to reliably power the idea of agentic coding, especially in large, real-world projects. Bring _yourself_ back to your workflow, grow your abilities and create a programming duo that delivers truly exceptional value.
 >
 > Happy coding with CWC! \
-> [Robert Piosik](https://x.com/robertpiosik)
+> [Robert](https://x.com/robertpiosik)
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
