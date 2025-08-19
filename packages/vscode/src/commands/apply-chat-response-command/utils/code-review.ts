@@ -167,10 +167,8 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
       } catch (e) {
         // ignore, it's a temp file
       }
-      if (typeof choice == 'object' && choice && 'accepted_files' in choice) {
-        const accepted_files_info = (
-          choice as { accepted_files: Omit<ChangeItem, 'content'>[] }
-        ).accepted_files
+      if ('accepted_files' in choice) {
+        const accepted_files_info = choice.accepted_files
         const accepted_keys = new Set(
           accepted_files_info.map(
             (f) => `${f.workspace_name || ''}:${f.file_path}`
@@ -190,10 +188,8 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
         break
       }
 
-      if (typeof choice == 'object' && choice && 'jump_to' in choice) {
-        const jump_target = (
-          choice as { jump_to: { file_path: string; workspace_name?: string } }
-        ).jump_to
+      if ('jump_to' in choice) {
+        const jump_target = choice.jump_to
         const new_index = review_items.findIndex(
           (item) =>
             item.change.file_path == jump_target.file_path &&
