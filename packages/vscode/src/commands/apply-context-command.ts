@@ -5,7 +5,10 @@ import * as glob from 'glob'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import {
   SAVED_CONTEXTS_STATE_KEY,
-  LAST_CONTEXT_READ_LOCATION_STATE_KEY
+  LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
+  LAST_APPLY_CONTEXT_OPTION_STATE_KEY,
+  LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
+  LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '../utils/logger'
@@ -99,7 +102,8 @@ export async function resolve_glob_patterns(
 async function apply_saved_context(
   context: SavedContext,
   workspace_root: string,
-  workspace_provider: WorkspaceProvider
+  workspace_provider: WorkspaceProvider,
+  extension_context: vscode.ExtensionContext
 ): Promise<void> {
   const workspace_folders = vscode.workspace.workspaceFolders || []
   const workspace_map = new Map<string, string>()
@@ -161,19 +165,48 @@ async function apply_saved_context(
     )
 
     if (!all_current_files_in_new_context) {
-      const choice = await vscode.window.showQuickPick(
-        [
-          {
-            label: 'Replace',
-            description: 'Replace the current context with the selected one'
-          },
-          {
-            label: 'Merge',
-            description: 'Merge the selected context with the current one'
-          }
-        ],
+      const quick_pick_options = [
         {
-          placeHolder: `How would you like to apply "${context.name}"?`
+          label: 'Replace',
+          description: 'Replace the current context with the selected one'
+        },
+        {
+          label: 'Merge',
+          description: 'Merge the selected context with the current one'
+        }
+      ]
+
+      const last_choice_label = extension_context.workspaceState.get<string>(
+        LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY
+      )
+
+      const quick_pick = vscode.window.createQuickPick()
+      quick_pick.items = quick_pick_options
+      quick_pick.placeholder = `How would you like to apply "${context.name}"?`
+      if (last_choice_label) {
+        const active_item = quick_pick_options.find(
+          (opt) => opt.label === last_choice_label
+        )
+        if (active_item) {
+          quick_pick.activeItems = [active_item]
+        }
+      }
+
+      const choice = await new Promise<vscode.QuickPickItem | undefined>(
+        (resolve) => {
+          let is_accepted = false
+          quick_pick.onDidAccept(() => {
+            is_accepted = true
+            resolve(quick_pick.selectedItems[0])
+            quick_pick.hide()
+          })
+          quick_pick.onDidHide(() => {
+            if (!is_accepted) {
+              resolve(undefined)
+            }
+            quick_pick.dispose()
+          })
+          quick_pick.show()
         }
       )
 
@@ -181,6 +214,10 @@ async function apply_saved_context(
         return // User cancelled
       }
 
+      await extension_context.workspaceState.update(
+        LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
+        choice.label
+      )
       if (choice.label == 'Merge') {
         paths_to_apply = [
           ...new Set([...currently_checked_files, ...existing_paths])
@@ -228,6 +265,9 @@ export function apply_context_command(
     'codeWebChat.applyContext',
     async () => {
       let show_main_menu = true
+      let last_main_selection_value = extension_context.workspaceState.get<
+        'clipboard' | 'internal' | 'file' | undefined
+      >(LAST_APPLY_CONTEXT_OPTION_STATE_KEY)
       while (show_main_menu) {
         show_main_menu = false
 
@@ -241,10 +281,6 @@ export function apply_context_command(
           vscode.window.showErrorMessage('No workspace root found.')
           return
         }
-
-        const last_read_location = extension_context.workspaceState.get<
-          'internal' | 'file'
-        >(LAST_CONTEXT_READ_LOCATION_STATE_KEY, 'internal')
 
         let internal_contexts: SavedContext[] =
           extension_context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, [])
@@ -328,43 +364,50 @@ export function apply_context_command(
           return
         }
 
-        const storage_options = main_quick_pick_options.slice(1) // Get all except clipboard
-        if (storage_options.length > 1) {
-          if (last_read_location == 'file') {
-            const file_option_index = storage_options.findIndex(
-              (opt) => opt.value == 'file'
-            )
-            if (file_option_index > -1) {
-              const [file_option] = storage_options.splice(file_option_index, 1)
-              storage_options.unshift(file_option)
-            }
-          } else {
-            const internal_option_index = storage_options.findIndex(
-              (opt) => opt.value == 'internal'
-            )
-            if (internal_option_index > -1) {
-              const [internal_option] = storage_options.splice(
-                internal_option_index,
-                1
-              )
-              storage_options.unshift(internal_option)
-            }
+        const final_quick_pick_options = main_quick_pick_options
+
+        const main_quick_pick = vscode.window.createQuickPick<
+          vscode.QuickPickItem & { value: 'clipboard' | 'internal' | 'file' }
+        >()
+        main_quick_pick.items = final_quick_pick_options
+        main_quick_pick.placeholder = 'Select option'
+        if (last_main_selection_value) {
+          const active_item = final_quick_pick_options.find(
+            (opt) => opt.value === last_main_selection_value
+          )
+          if (active_item) {
+            main_quick_pick.activeItems = [active_item]
           }
         }
 
-        const final_quick_pick_options = [
-          main_quick_pick_options[0],
-          ...storage_options
-        ]
-
-        const main_selection = await vscode.window.showQuickPick(
-          final_quick_pick_options,
-          {
-            placeHolder: 'Select option'
-          }
-        )
+        const main_selection = await new Promise<
+          | (vscode.QuickPickItem & {
+              value: 'clipboard' | 'internal' | 'file'
+            })
+          | undefined
+        >((resolve) => {
+          let is_accepted = false
+          main_quick_pick.onDidAccept(() => {
+            is_accepted = true
+            resolve(main_quick_pick.selectedItems[0])
+            main_quick_pick.hide()
+          })
+          main_quick_pick.onDidHide(() => {
+            if (!is_accepted) {
+              resolve(undefined)
+            }
+            main_quick_pick.dispose()
+          })
+          main_quick_pick.show()
+        })
 
         if (!main_selection) return
+
+        last_main_selection_value = main_selection.value
+        await extension_context.workspaceState.update(
+          LAST_APPLY_CONTEXT_OPTION_STATE_KEY,
+          last_main_selection_value
+        )
 
         if (main_selection.value == 'clipboard') {
           await vscode.commands.executeCommand(
@@ -377,11 +420,6 @@ export function apply_context_command(
         const contexts_to_use =
           context_source == 'internal' ? internal_contexts : file_contexts
 
-        await extension_context.workspaceState.update(
-          LAST_CONTEXT_READ_LOCATION_STATE_KEY,
-          context_source
-        )
-
         try {
           const edit_button = {
             iconPath: new vscode.ThemeIcon('edit'),
@@ -391,18 +429,40 @@ export function apply_context_command(
             iconPath: new vscode.ThemeIcon('trash'),
             tooltip: 'Delete'
           }
+          const move_up_button = {
+            iconPath: new vscode.ThemeIcon('chevron-up'),
+            tooltip: 'Move up'
+          }
+          const move_down_button = {
+            iconPath: new vscode.ThemeIcon('chevron-down'),
+            tooltip: 'Move down'
+          }
 
           const BACK_LABEL = '$(arrow-left) Back'
 
           const create_quick_pick_items = (contexts: SavedContext[]) => {
-            const context_items = contexts.map((context) => ({
-              label: context.name,
-              description: `${context.paths.length} ${
-                context.paths.length == 1 ? 'path' : 'paths'
-              }`,
-              context,
-              buttons: [edit_button, delete_button]
-            }))
+            const context_items = contexts.map((context, index) => {
+              const buttons = []
+              if (contexts.length > 1) {
+                if (index > 0) {
+                  buttons.push(move_up_button)
+                }
+                if (index < contexts.length - 1) {
+                  buttons.push(move_down_button)
+                }
+              }
+              buttons.push(edit_button, delete_button)
+
+              return {
+                label: context.name,
+                description: `${context.paths.length} ${
+                  context.paths.length == 1 ? 'path' : 'paths'
+                }`,
+                context,
+                buttons,
+                index
+              }
+            })
 
             return [
               { label: BACK_LABEL },
@@ -419,6 +479,25 @@ export function apply_context_command(
               : '.vscode/contexts.json'
           })`
 
+          const last_selected_context_name_key =
+            context_source == 'internal'
+              ? LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY
+              : LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY
+
+          const last_selected_context_name =
+            extension_context.workspaceState.get<string>(
+              last_selected_context_name_key
+            )
+
+          if (last_selected_context_name) {
+            const active_item = quick_pick.items.find(
+              (item) => item.label === last_selected_context_name
+            )
+            if (active_item) {
+              quick_pick.activeItems = [active_item]
+            }
+          }
+
           let is_showing_dialog = false
           const quick_pick_promise = new Promise<
             | (vscode.QuickPickItem & {
@@ -432,6 +511,12 @@ export function apply_context_command(
               const selectedItem = quick_pick
                 .selectedItems[0] as vscode.QuickPickItem & {
                 context?: SavedContext
+              }
+              if (selectedItem?.context) {
+                extension_context.workspaceState.update(
+                  last_selected_context_name_key,
+                  selectedItem.context.name
+                )
               }
               quick_pick.hide()
               resolve(selectedItem)
@@ -449,6 +534,74 @@ export function apply_context_command(
             quick_pick.onDidTriggerItemButton(async (event) => {
               const item = event.item as vscode.QuickPickItem & {
                 context: SavedContext
+                index: number
+              }
+
+              await extension_context.workspaceState.update(
+                last_selected_context_name_key,
+                item.context.name
+              )
+
+              if (
+                event.button === move_up_button ||
+                event.button === move_down_button
+              ) {
+                const is_moving_up = event.button === move_up_button
+                const contexts_to_reorder =
+                  context_source == 'internal'
+                    ? internal_contexts
+                    : file_contexts
+                const current_index = item.index
+
+                const new_index = is_moving_up
+                  ? Math.max(0, current_index - 1)
+                  : Math.min(contexts_to_reorder.length - 1, current_index + 1)
+
+                if (new_index === current_index) {
+                  return
+                }
+
+                const reordered_contexts = [...contexts_to_reorder]
+                const [moved_context] = reordered_contexts.splice(
+                  current_index,
+                  1
+                )
+                reordered_contexts.splice(new_index, 0, moved_context)
+
+                if (context_source == 'internal') {
+                  await extension_context.workspaceState.update(
+                    SAVED_CONTEXTS_STATE_KEY,
+                    reordered_contexts
+                  )
+                  internal_contexts = reordered_contexts
+                } else if (context_source == 'file') {
+                  try {
+                    await save_contexts_to_file(
+                      reordered_contexts,
+                      contexts_file_path
+                    )
+                    file_contexts = reordered_contexts
+                  } catch (error: any) {
+                    vscode.window.showErrorMessage(
+                      `Error saving reordered contexts to file: ${error.message}`
+                    )
+                    console.error(
+                      'Error saving reordered contexts to file:',
+                      error
+                    )
+                    return
+                  }
+                }
+
+                quick_pick.items = create_quick_pick_items(reordered_contexts)
+
+                const active_item = quick_pick.items.find(
+                  (i) => i.label === item.context.name
+                )
+                if (active_item) {
+                  quick_pick.activeItems = [active_item]
+                }
+                return
               }
 
               if (event.button === edit_button) {
@@ -479,6 +632,8 @@ export function apply_context_command(
                 })
                 is_showing_dialog = false
 
+                let name_to_highlight = item.context.name
+
                 if (new_name?.trim()) {
                   const trimmed_name = new_name.trim()
                   let updated_contexts: SavedContext[] = []
@@ -498,6 +653,7 @@ export function apply_context_command(
                       )
                       internal_contexts = updated_contexts
                       context_updated = true
+                      name_to_highlight = trimmed_name
                     }
                   } else if (context_source == 'file') {
                     if (trimmed_name != item.context.name) {
@@ -516,6 +672,7 @@ export function apply_context_command(
                           contexts_file_path
                         )
                         file_contexts = updated_contexts
+                        name_to_highlight = trimmed_name
                       } catch (error: any) {
                         vscode.window.showErrorMessage(
                           `Error updating context name in file: ${error.message}`
@@ -533,6 +690,10 @@ export function apply_context_command(
                     vscode.window.showInformationMessage(
                       `Renamed context to "${trimmed_name}".`
                     )
+                    await extension_context.workspaceState.update(
+                      last_selected_context_name_key,
+                      trimmed_name
+                    )
                   }
                 }
 
@@ -542,6 +703,12 @@ export function apply_context_command(
                     ? internal_contexts
                     : file_contexts
                 quick_pick.items = create_quick_pick_items(contexts_to_refresh)
+                const active_item = quick_pick.items.find(
+                  (i) => i.label == name_to_highlight
+                )
+                if (active_item) {
+                  quick_pick.activeItems = [active_item]
+                }
                 quick_pick.show()
                 return
               }
@@ -656,20 +823,9 @@ export function apply_context_command(
           await apply_saved_context(
             context_to_apply,
             workspace_root,
-            workspace_provider
+            workspace_provider,
+            extension_context
           )
-
-          if (context_source == 'internal') {
-            const updated_contexts = internal_contexts.filter(
-              (c) => c.name != context_to_apply!.name
-            )
-            updated_contexts.unshift(context_to_apply!)
-            await extension_context.workspaceState.update(
-              SAVED_CONTEXTS_STATE_KEY,
-              updated_contexts
-            )
-            internal_contexts = updated_contexts
-          }
 
           on_context_selected()
         } catch (error: any) {

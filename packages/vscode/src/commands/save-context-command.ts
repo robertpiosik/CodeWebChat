@@ -291,9 +291,11 @@ export function save_context_command(
 
       const last_save_location = extContext.workspaceState.get<
         'internal' | 'file'
-      >(LAST_CONTEXT_SAVE_LOCATION_STATE_KEY, 'internal')
+      >(LAST_CONTEXT_SAVE_LOCATION_STATE_KEY)
 
-      let quick_pick_storage_options = [
+      const quick_pick_storage_options: (vscode.QuickPickItem & {
+        value: 'internal' | 'file'
+      })[] = [
         {
           label: 'Workspace State',
           description: "Save in the editor's internal storage",
@@ -306,16 +308,38 @@ export function save_context_command(
         }
       ]
 
-      if (last_save_location == 'file') {
-        quick_pick_storage_options = quick_pick_storage_options.reverse()
+      const quick_pick = vscode.window.createQuickPick<
+        vscode.QuickPickItem & { value: 'internal' | 'file' }
+      >()
+      quick_pick.items = quick_pick_storage_options
+      quick_pick.placeholder = 'Where do you want to save this context?'
+
+      if (last_save_location) {
+        const active_item = quick_pick_storage_options.find(
+          (opt) => opt.value === last_save_location
+        )
+        if (active_item) {
+          quick_pick.activeItems = [active_item]
+        }
       }
 
-      const selection = await vscode.window.showQuickPick(
-        quick_pick_storage_options,
-        {
-          placeHolder: 'Where do you want to save this context?'
-        }
-      )
+      const selection = await new Promise<
+        (vscode.QuickPickItem & { value: 'internal' | 'file' }) | undefined
+      >((resolve) => {
+        let is_accepted = false
+        quick_pick.onDidAccept(() => {
+          is_accepted = true
+          resolve(quick_pick.selectedItems[0])
+          quick_pick.hide()
+        })
+        quick_pick.onDidHide(() => {
+          if (!is_accepted) {
+            resolve(undefined)
+          }
+          quick_pick.dispose()
+        })
+        quick_pick.show()
+      })
 
       if (!selection) {
         return

@@ -4,7 +4,12 @@ export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
 export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'lastSaveLocation'
-export const LAST_CONTEXT_READ_LOCATION_STATE_KEY = 'lastReadLocation'
+export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY =
+  'last-apply-context-option'
+export const LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY =
+  'last-selected-workspace-context-name'
+export const LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY =
+  'last-selected-file-context-name'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
 export const TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY =
@@ -33,6 +38,8 @@ export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY =
   'lastSelectedIntelligentUpdateConfigIndex'
 export const LAST_CHOSEN_COMMAND_BY_VIEW_TYPE_STATE_KEY =
   'lastChosenCommandByViewType'
+export const LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
+  'last-context-merge-replace-option'
 
 export const CHAT_EDIT_FORMAT_STATE_KEY = 'chat-edit-format'
 export const API_EDIT_FORMAT_STATE_KEY = 'api-edit-format'

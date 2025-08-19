@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
 
-A 100% free and open-source VS Code extension for AI-assisted pair programming. Its simple non-agentic design delivers unmatched control, accuracy, speed and cost efficiency.
+A 100% free and open-source VS Code extension for AI-assisted pair programming in real-world projects. With its non-agentic, simple design, CWC delivers unmatched accuracy, speed and cost efficiency.
 
 **Key features**
 
@@ -29,7 +29,7 @@ A 100% free and open-source VS Code extension for AI-assisted pair programming. 
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
-Install the Connector browser extension and never copy&paste again.
+Install the Connector browser extension and never copy & paste again.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
