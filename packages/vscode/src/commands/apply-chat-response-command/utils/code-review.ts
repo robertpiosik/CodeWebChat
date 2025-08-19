@@ -8,51 +8,54 @@ export type CodeReviewDecision =
   | { jump_to: { file_path: string; workspace_name?: string } }
   | { accepted_files: Omit<ChangeItem, 'content'>[] }
 
+export type CodeReviewResult = {
+  decision: CodeReviewDecision
+  new_content: string
+  temp_file_path: string
+}
+
 export let code_review_promise_resolve:
   | ((decision: CodeReviewDecision) => void)
   | undefined
 
-const show_diff_with_actions = async (
-  left_uri: vscode.Uri,
-  right_content: string,
-  title: string,
+const show_diff_with_actions = async (params: {
+  left_uri: vscode.Uri
+  right_content: string
+  title: string
   file_path_for_right_doc: string
-): Promise<{
-  decision: CodeReviewDecision
-  new_content: string
-  temp_file_path: string
-}> => {
-  const dir = path.dirname(file_path_for_right_doc)
+}): Promise<CodeReviewResult> => {
+  const dir = path.dirname(params.file_path_for_right_doc)
   fs.mkdirSync(dir, { recursive: true })
-  const ext = path.extname(file_path_for_right_doc)
-  const base = path.basename(file_path_for_right_doc, ext)
+  const ext = path.extname(params.file_path_for_right_doc)
+  const base = path.basename(params.file_path_for_right_doc, ext)
   const temp_filename = `${base}.tmp-${Date.now()}${ext}`
   const temp_file_path = path.join(dir, temp_filename)
 
-  fs.writeFileSync(temp_file_path, right_content)
+  fs.writeFileSync(temp_file_path, params.right_content)
   const right_doc_uri = vscode.Uri.file(temp_file_path)
   const right_doc = await vscode.workspace.openTextDocument(right_doc_uri)
 
   await vscode.commands.executeCommand(
     'vscode.diff',
-    left_uri,
+    params.left_uri,
     right_doc.uri,
-    title,
+    params.title,
     {
       preview: false
     }
   )
-  return new Promise<{
-    decision: CodeReviewDecision
-    new_content: string
-    temp_file_path: string
-  }>((resolve) => {
+
+  return new Promise<CodeReviewResult>((resolve) => {
     code_review_promise_resolve = async (decision) => {
       if ('accepted_files' in decision) {
         if (right_doc.isDirty) {
           await right_doc.save()
         }
-        resolve({ decision, new_content: fs.readFileSync(temp_file_path, 'utf-8'), temp_file_path })
+        resolve({
+          decision,
+          new_content: fs.readFileSync(temp_file_path, 'utf-8'),
+          temp_file_path
+        })
       } else {
         resolve({ decision, new_content: right_doc.getText(), temp_file_path })
       }
@@ -145,16 +148,16 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
 
       const title = `${path.basename(change.file_path)}`
 
-      const {
-        decision: choice,
-        new_content,
-        temp_file_path
-      } = await show_diff_with_actions(
-        left_doc.uri,
-        change.content,
+      const result = await show_diff_with_actions({
+        left_uri: left_doc.uri,
+        right_content: change.content,
         title,
-        safe_path
-      )
+        file_path_for_right_doc: safe_path
+      })
+      const choice = result.decision
+      const new_content = result.new_content
+      const temp_file_path = result.temp_file_path
+
       change.content = new_content
       await vscode.commands.executeCommand(
         'workbench.action.revertAndCloseActiveEditor'
