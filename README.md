@@ -9,12 +9,10 @@
 > Happy coding with CWC! \
 > [Robert](https://x.com/robertpiosik)
 
-**Key features**
-
-👉️ **Initialize 15+ free chatbots** (ChatGPT, Gemini, Claude and more) \
-👉️ **Apply chat responses** in any edit format \
-👉️ **Code completions** with reasoning models \
-👉️ **Commit messages** in your preferred style
+✅ **Initialize 15+ free chatbots** (ChatGPT, Gemini, Claude and more) \
+✅ **Apply chat responses** in any edit format \
+✅ **Code completions** with reasoning models \
+✅ **Commit messages** in your preferred style
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
