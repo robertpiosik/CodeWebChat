@@ -289,103 +289,244 @@ export function save_context_command(
         'contexts.json'
       )
 
-      const last_save_location = extContext.workspaceState.get<
-        'internal' | 'file'
-      >(LAST_CONTEXT_SAVE_LOCATION_STATE_KEY)
+      const BACK_LABEL = '$(arrow-left) Back'
+      let show_storage_selection = true
+      while (show_storage_selection) {
+        show_storage_selection = false
 
-      const quick_pick_storage_options: (vscode.QuickPickItem & {
-        value: 'internal' | 'file'
-      })[] = [
-        {
-          label: 'Workspace State',
-          description: "Save in the editor's internal storage",
-          value: 'internal'
-        },
-        {
-          label: 'JSON File',
-          description: 'Save in .vscode/contexts.json',
-          value: 'file'
+        const last_save_location = extContext.workspaceState.get<
+          'internal' | 'file'
+        >(LAST_CONTEXT_SAVE_LOCATION_STATE_KEY)
+
+        const quick_pick_storage_options: (vscode.QuickPickItem & {
+          value: 'internal' | 'file'
+        })[] = [
+          {
+            label: 'Workspace State',
+            description: "Save in the editor's internal storage",
+            value: 'internal'
+          },
+          {
+            label: 'JSON File',
+            description: 'Save in .vscode/contexts.json',
+            value: 'file'
+          }
+        ]
+
+        const quick_pick = vscode.window.createQuickPick<
+          vscode.QuickPickItem & { value: 'internal' | 'file' }
+        >()
+        quick_pick.items = quick_pick_storage_options
+        quick_pick.placeholder = 'Where do you want to save this context?'
+
+        if (last_save_location) {
+          const active_item = quick_pick_storage_options.find(
+            (opt) => opt.value === last_save_location
+          )
+          if (active_item) {
+            quick_pick.activeItems = [active_item]
+          }
         }
-      ]
 
-      const quick_pick = vscode.window.createQuickPick<
-        vscode.QuickPickItem & { value: 'internal' | 'file' }
-      >()
-      quick_pick.items = quick_pick_storage_options
-      quick_pick.placeholder = 'Where do you want to save this context?'
+        const selection = await new Promise<
+          (vscode.QuickPickItem & { value: 'internal' | 'file' }) | undefined
+        >((resolve) => {
+          let is_accepted = false
+          quick_pick.onDidAccept(() => {
+            is_accepted = true
+            resolve(quick_pick.selectedItems[0])
+            quick_pick.hide()
+          })
+          quick_pick.onDidHide(() => {
+            if (!is_accepted) {
+              resolve(undefined)
+            }
+            quick_pick.dispose()
+          })
+          quick_pick.show()
+        })
 
-      if (last_save_location) {
-        const active_item = quick_pick_storage_options.find(
-          (opt) => opt.value === last_save_location
+        if (!selection) {
+          return
+        }
+
+        const save_location = selection.value as 'internal' | 'file'
+
+        await extContext.workspaceState.update(
+          LAST_CONTEXT_SAVE_LOCATION_STATE_KEY,
+          save_location
         )
-        if (active_item) {
-          quick_pick.activeItems = [active_item]
-        }
-      }
 
-      const selection = await new Promise<
-        (vscode.QuickPickItem & { value: 'internal' | 'file' }) | undefined
-      >((resolve) => {
-        let is_accepted = false
-        quick_pick.onDidAccept(() => {
-          is_accepted = true
-          resolve(quick_pick.selectedItems[0])
-          quick_pick.hide()
-        })
-        quick_pick.onDidHide(() => {
-          if (!is_accepted) {
-            resolve(undefined)
-          }
-          quick_pick.dispose()
-        })
-        quick_pick.show()
-      })
+        if (save_location == 'file') {
+          try {
+            const vscode_dir = path.join(workspace_root, '.vscode')
+            if (!fs.existsSync(vscode_dir)) {
+              fs.mkdirSync(vscode_dir, { recursive: true })
+            }
 
-      if (!selection) {
-        return
-      }
+            let file_contexts: SavedContext[] = []
+            if (fs.existsSync(contexts_file_path)) {
+              try {
+                const content = fs.readFileSync(contexts_file_path, 'utf8')
+                if (content.trim().length > 0) {
+                  file_contexts = JSON.parse(content)
+                  if (!Array.isArray(file_contexts)) {
+                    vscode.window.showWarningMessage(
+                      `Contexts file is not a valid array. Starting with empty contexts list.`
+                    )
+                    file_contexts = []
+                  }
+                }
+              } catch (error) {
+                vscode.window.showWarningMessage(
+                  `Error reading contexts file. Starting with empty contexts list.` +
+                    `Details: ${error}`
+                )
+                file_contexts = []
+              }
+            }
 
-      const save_location = selection.value as 'internal' | 'file'
-
-      await extContext.workspaceState.update(
-        LAST_CONTEXT_SAVE_LOCATION_STATE_KEY,
-        save_location
-      )
-
-      if (save_location == 'file') {
-        try {
-          const vscode_dir = path.join(workspace_root, '.vscode')
-          if (!fs.existsSync(vscode_dir)) {
-            fs.mkdirSync(vscode_dir, { recursive: true })
-          }
-
-          let file_contexts: SavedContext[] = []
-          if (fs.existsSync(contexts_file_path)) {
-            try {
-              const content = fs.readFileSync(contexts_file_path, 'utf8')
-              if (content.trim().length > 0) {
-                file_contexts = JSON.parse(content)
-                if (!Array.isArray(file_contexts)) {
-                  vscode.window.showWarningMessage(
-                    `Contexts file is not a valid array. Starting with empty contexts list.`
+            if (file_contexts.length > 0) {
+              for (const existingContext of file_contexts) {
+                if (
+                  are_paths_equal(existingContext.paths, all_prefixed_paths)
+                ) {
+                  vscode.window.showInformationMessage(
+                    `A context with identical paths already exists in the file: "${existingContext.name}"`
                   )
-                  file_contexts = []
+                  return
                 }
               }
-            } catch (error) {
-              vscode.window.showWarningMessage(
-                `Error reading contexts file. Starting with empty contexts list.` +
-                  `Details: ${error}`
-              )
-              file_contexts = []
             }
-          }
 
-          if (file_contexts.length > 0) {
-            for (const existingContext of file_contexts) {
+            let context_name: string | undefined
+
+            if (file_contexts.length == 0) {
+              context_name = await vscode.window.showInputBox({
+                prompt: 'Enter a name for this context',
+                placeHolder: 'e.g., Backend API Context',
+                validateInput: (value) =>
+                  value.trim().length > 0
+                    ? null
+                    : 'Context name cannot be empty.'
+              })
+
+              if (!context_name) {
+                return
+              }
+            } else {
+              const quick_pick_items = [
+                { label: BACK_LABEL },
+                {
+                  label: '$(add) Create new...'
+                },
+                { label: '', kind: vscode.QuickPickItemKind.Separator },
+                ...file_contexts.map((context) => ({
+                  label: context.name,
+                  description: `${context.paths.length} ${
+                    context.paths.length > 1 ? 'paths' : 'path'
+                  }`
+                }))
+              ]
+
+              const selected_item = await vscode.window.showQuickPick(
+                quick_pick_items,
+                {
+                  placeHolder:
+                    'Select existing context to overwrite or create a new one'
+                }
+              )
+
+              if (!selected_item) {
+                return
+              }
+
+              if (selected_item.label === BACK_LABEL) {
+                show_storage_selection = true
+                continue
+              }
+
+              if (selected_item.label == '$(add) Create new...') {
+                context_name = await vscode.window.showInputBox({
+                  prompt: 'Enter a name for this context',
+                  placeHolder: 'e.g., Backend API Context',
+                  validateInput: (value) =>
+                    value.trim().length > 0
+                      ? null
+                      : 'Context name cannot be empty.'
+                })
+
+                if (!context_name) {
+                  return
+                }
+
+                const existing_names = file_contexts.map((ctx) => ctx.name)
+                if (existing_names.includes(context_name)) {
+                  const overwrite = await vscode.window.showWarningMessage(
+                    `A context named "${context_name}" already exists in the file. Overwrite?`,
+                    { modal: true },
+                    'Overwrite'
+                  )
+
+                  if (overwrite != 'Overwrite') {
+                    return
+                  }
+                }
+              } else {
+                context_name = selected_item.label
+              }
+            }
+
+            if (!context_name) {
+              // This case should ideally not be reached if user didn't cancel,
+              // but added for safety.
+              vscode.window.showErrorMessage('Context name was not provided.')
+              return
+            }
+
+            const new_context: SavedContext = {
+              name: context_name,
+              paths: all_prefixed_paths
+            }
+
+            const existing_index = file_contexts.findIndex(
+              (ctx) => ctx.name == context_name
+            )
+
+            if (existing_index != -1) {
+              file_contexts[existing_index] = new_context
+            } else {
+              file_contexts.push(new_context)
+            }
+
+            file_contexts.sort((a, b) => a.name.localeCompare(b.name))
+
+            fs.writeFileSync(
+              contexts_file_path,
+              JSON.stringify(file_contexts, null, 2),
+              'utf8'
+            )
+
+            vscode.window.showInformationMessage(
+              `Context "${context_name}" saved to .vscode/contexts.json successfully.`
+            )
+          } catch (error: any) {
+            vscode.window.showErrorMessage(
+              `Error saving context to file: ${error.message}`
+            )
+          }
+        } else {
+          // If we reach here, we're saving to Workspace State
+          const saved_contexts: SavedContext[] = extContext.workspaceState.get(
+            SAVED_CONTEXTS_STATE_KEY,
+            []
+          )
+
+          if (saved_contexts.length > 0) {
+            for (const existingContext of saved_contexts) {
               if (are_paths_equal(existingContext.paths, all_prefixed_paths)) {
                 vscode.window.showInformationMessage(
-                  `A context with identical paths already exists in the file: "${existingContext.name}"`
+                  `A context with identical paths already exists in workspace state: "${existingContext.name}"`
                 )
                 return
               }
@@ -394,7 +535,7 @@ export function save_context_command(
 
           let context_name: string | undefined
 
-          if (file_contexts.length == 0) {
+          if (saved_contexts.length == 0) {
             context_name = await vscode.window.showInputBox({
               prompt: 'Enter a name for this context',
               placeHolder: 'e.g., Backend API Context',
@@ -406,11 +547,17 @@ export function save_context_command(
               return
             }
           } else {
+            const existing_context_names = saved_contexts.map(
+              (context) => context.name
+            )
+
             const quick_pick_items = [
+              { label: BACK_LABEL },
               {
                 label: '$(add) Create new...'
               },
-              ...file_contexts.map((context) => ({
+              { label: '', kind: vscode.QuickPickItemKind.Separator },
+              ...saved_contexts.map((context) => ({
                 label: context.name,
                 description: `${context.paths.length} ${
                   context.paths.length > 1 ? 'paths' : 'path'
@@ -430,6 +577,11 @@ export function save_context_command(
               return
             }
 
+            if (selected_item.label === BACK_LABEL) {
+              show_storage_selection = true
+              continue
+            }
+
             if (selected_item.label == '$(add) Create new...') {
               context_name = await vscode.window.showInputBox({
                 prompt: 'Enter a name for this context',
@@ -444,14 +596,12 @@ export function save_context_command(
                 return
               }
 
-              const existing_names = file_contexts.map((ctx) => ctx.name)
-              if (existing_names.includes(context_name)) {
+              if (existing_context_names.includes(context_name)) {
                 const overwrite = await vscode.window.showWarningMessage(
-                  `A context named "${context_name}" already exists in the file. Overwrite?`,
+                  `A context named "${context_name}" already exists in Workspace State. Overwrite?`,
                   { modal: true },
                   'Overwrite'
                 )
-
                 if (overwrite != 'Overwrite') {
                   return
                 }
@@ -473,161 +623,34 @@ export function save_context_command(
             paths: all_prefixed_paths
           }
 
-          const existing_index = file_contexts.findIndex(
+          const existing_index = saved_contexts.findIndex(
             (ctx) => ctx.name == context_name
           )
 
+          const updated_contexts = [...saved_contexts]
+
           if (existing_index != -1) {
-            file_contexts[existing_index] = new_context
+            updated_contexts[existing_index] = new_context
           } else {
-            file_contexts.push(new_context)
+            updated_contexts.push(new_context)
           }
 
-          file_contexts.sort((a, b) => a.name.localeCompare(b.name))
+          updated_contexts.sort((a, b) => a.name.localeCompare(b.name))
 
-          fs.writeFileSync(
-            contexts_file_path,
-            JSON.stringify(file_contexts, null, 2),
-            'utf8'
-          )
-
-          vscode.window.showInformationMessage(
-            `Context "${context_name}" saved to .vscode/contexts.json successfully.`
-          )
-        } catch (error: any) {
-          vscode.window.showErrorMessage(
-            `Error saving context to file: ${error.message}`
-          )
-        }
-
-        // Exit command after saving to file
-        return
-      }
-
-      // If we reach here, we're saving to Workspace State (original behavior)
-      const saved_contexts: SavedContext[] = extContext.workspaceState.get(
-        SAVED_CONTEXTS_STATE_KEY,
-        []
-      )
-
-      if (saved_contexts.length > 0) {
-        for (const existingContext of saved_contexts) {
-          if (are_paths_equal(existingContext.paths, all_prefixed_paths)) {
+          try {
+            await extContext.workspaceState.update(
+              SAVED_CONTEXTS_STATE_KEY,
+              updated_contexts
+            )
             vscode.window.showInformationMessage(
-              `A context with identical paths already exists in workspace state: "${existingContext.name}"`
+              `Context "${context_name}" saved to Workspace State successfully.`
             )
-            return
-          }
-        }
-      }
-
-      let context_name: string | undefined
-
-      if (saved_contexts.length == 0) {
-        context_name = await vscode.window.showInputBox({
-          prompt: 'Enter a name for this context',
-          placeHolder: 'e.g., Backend API Context',
-          validateInput: (value) =>
-            value.trim().length > 0 ? null : 'Context name cannot be empty.'
-        })
-
-        if (!context_name) {
-          return
-        }
-      } else {
-        const existing_context_names = saved_contexts.map(
-          (context) => context.name
-        )
-
-        const quick_pick_items = [
-          {
-            label: '$(add) Create new...'
-          },
-          ...saved_contexts.map((context) => ({
-            label: context.name,
-            description: `${context.paths.length} ${
-              context.paths.length > 1 ? 'paths' : 'path'
-            }`
-          }))
-        ]
-
-        const selected_item = await vscode.window.showQuickPick(
-          quick_pick_items,
-          {
-            placeHolder:
-              'Select existing context to overwrite or create a new one'
-          }
-        )
-
-        if (!selected_item) {
-          return
-        }
-
-        if (selected_item.label == '$(add) Create new...') {
-          context_name = await vscode.window.showInputBox({
-            prompt: 'Enter a name for this context',
-            placeHolder: 'e.g., Backend API Context',
-            validateInput: (value) =>
-              value.trim().length > 0 ? null : 'Context name cannot be empty.'
-          })
-
-          if (!context_name) {
-            return
-          }
-
-          if (existing_context_names.includes(context_name)) {
-            const overwrite = await vscode.window.showWarningMessage(
-              `A context named "${context_name}" already exists in Workspace State. Overwrite?`,
-              { modal: true },
-              'Overwrite'
+          } catch (error: any) {
+            vscode.window.showErrorMessage(
+              `Error saving context to Workspace State: ${error.message}`
             )
-            if (overwrite != 'Overwrite') {
-              return
-            }
           }
-        } else {
-          context_name = selected_item.label
         }
-      }
-
-      if (!context_name) {
-        // This case should ideally not be reached if user didn't cancel,
-        // but added for safety.
-        vscode.window.showErrorMessage('Context name was not provided.')
-        return
-      }
-
-      const new_context: SavedContext = {
-        name: context_name,
-        paths: all_prefixed_paths
-      }
-
-      const existing_index = saved_contexts.findIndex(
-        (ctx) => ctx.name == context_name
-      )
-
-      const updated_contexts = [...saved_contexts]
-
-      if (existing_index != -1) {
-        updated_contexts[existing_index] = new_context
-      } else {
-        updated_contexts.push(new_context)
-      }
-
-      updated_contexts.sort((a, b) => a.name.localeCompare(b.name))
-
-      try {
-        await extContext.workspaceState.update(
-          SAVED_CONTEXTS_STATE_KEY,
-          updated_contexts
-        )
-        vscode.window.showInformationMessage(
-          `Context "${context_name}" saved to Workspace State successfully.`
-        )
-      } catch (error: any) {
-        vscode.window.showErrorMessage(
-          `Error saving context to Workspace State: ${error.message}`
-        )
       }
     }
   )
