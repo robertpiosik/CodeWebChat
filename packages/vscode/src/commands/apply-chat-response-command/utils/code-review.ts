@@ -22,13 +22,13 @@ const show_diff_with_actions = async (params: {
   left_uri: vscode.Uri
   right_content: string
   title: string
-  file_path_for_right_doc: string
+  original_file_path: string
 }): Promise<CodeReviewResult> => {
-  const dir = path.dirname(params.file_path_for_right_doc)
+  const dir = path.dirname(params.original_file_path)
   fs.mkdirSync(dir, { recursive: true })
-  const ext = path.extname(params.file_path_for_right_doc)
-  const base = path.basename(params.file_path_for_right_doc, ext)
-  const temp_filename = `${base}.tmp-${Date.now()}${ext}`
+  const ext = path.extname(params.original_file_path)
+  const base = path.basename(params.original_file_path, ext)
+  const temp_filename = `${base}.${Date.now()}.tmp${ext}`
   const temp_file_path = path.join(dir, temp_filename)
 
   fs.writeFileSync(temp_file_path, params.right_content)
@@ -72,14 +72,76 @@ export type ChangeItem = {
   is_new?: boolean
 }
 
+type ProcessedChangeResult =
+  | {
+      decision: CodeReviewDecision
+      updated_content: string
+    }
+  | {
+      error: 'invalid_path'
+    }
+
+async function process_single_change(
+  change: ChangeItem,
+  default_workspace: string,
+  workspace_map: Map<string, string>
+): Promise<ProcessedChangeResult> {
+  let workspace_root = default_workspace
+  if (change.workspace_name && workspace_map.has(change.workspace_name)) {
+    workspace_root = workspace_map.get(change.workspace_name)!
+  }
+  const sanitized_file_path = create_safe_path(workspace_root, change.file_path)
+  if (!sanitized_file_path) {
+    return { error: 'invalid_path' }
+  }
+
+  const file_exists = fs.existsSync(sanitized_file_path)
+  const left_uri = file_exists
+    ? vscode.Uri.file(sanitized_file_path)
+    : vscode.Uri.from({ scheme: 'untitled', path: sanitized_file_path })
+
+  const left_doc = await vscode.workspace.openTextDocument(left_uri)
+  const left_content = left_doc.getText()
+
+  // Adjust newline characters to match existing file, preventing phantom changes.
+  let right_content = change.content
+  if (file_exists && left_content.endsWith('\n')) {
+    if (!right_content.endsWith('\n')) {
+      right_content += '\n'
+    } else if (right_content.endsWith('\n\n')) {
+      right_content = right_content.slice(0, -1)
+    }
+  }
+
+  const title = `${path.basename(change.file_path)}`
+
+  const result = await show_diff_with_actions({
+    left_uri: left_doc.uri,
+    right_content,
+    title,
+    original_file_path: sanitized_file_path
+  })
+
+  await vscode.commands.executeCommand(
+    'workbench.action.revertAndCloseActiveEditor'
+  )
+  try {
+    fs.unlinkSync(result.temp_file_path)
+  } catch (e) {
+    // Suppress error, as it's just a temp file.
+  }
+
+  return {
+    decision: result.decision,
+    updated_content: result.new_content
+  }
+}
+
 export const code_review_in_diff_view = async <T extends ChangeItem>(
   changes: T[],
   view_provider?: ViewProvider
 ): Promise<T[] | null> => {
-  if (
-    !vscode.workspace.workspaceFolders ||
-    vscode.workspace.workspaceFolders.length == 0
-  ) {
+  if (!vscode.workspace.workspaceFolders?.length) {
     vscode.window.showErrorMessage('No workspace folder open.')
     return null
   }
@@ -92,10 +154,10 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
   if (view_provider) {
     view_provider.send_message({
       command: 'CODE_REVIEW_STARTED',
-      files: changes.map((c) => ({
-        file_path: c.file_path,
-        workspace_name: c.workspace_name,
-        is_new: c.is_new
+      files: changes.map((change) => ({
+        file_path: change.file_path,
+        workspace_name: change.workspace_name,
+        is_new: change.is_new
       }))
     })
   }
@@ -107,109 +169,75 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
     }))
 
     let current_index = 0
-
     while (current_index >= 0 && current_index < review_items.length) {
       const review_item = review_items[current_index]
-      if (review_item.status != 'pending') {
+
+      if (review_item.status !== 'pending') {
         current_index++
         continue
       }
-      const { change } = review_item
 
-      let workspace_root = default_workspace
-      if (change.workspace_name && workspace_map.has(change.workspace_name)) {
-        workspace_root = workspace_map.get(change.workspace_name)!
-      }
-      const safe_path = create_safe_path(workspace_root, change.file_path)
-      if (!safe_path) {
+      const result = await process_single_change(
+        review_item.change,
+        default_workspace,
+        workspace_map
+      )
+
+      if ('error' in result) {
         review_item.status = 'rejected'
         current_index++
         continue
       }
 
-      const file_exists = fs.existsSync(safe_path)
+      review_item.change.content = result.updated_content
+      const { decision } = result
 
-      const left_uri = file_exists
-        ? vscode.Uri.file(safe_path)
-        : vscode.Uri.from({ scheme: 'untitled', path: safe_path })
-
-      const left_doc = await vscode.workspace.openTextDocument(left_uri)
-      const left_content = left_doc.getText()
-
-      if (file_exists) {
-        if (left_content.endsWith('\n')) {
-          if (!change.content.endsWith('\n')) {
-            change.content += '\n'
-          } else if (change.content.endsWith('\n\n')) {
-            change.content = change.content.slice(0, -1)
-          }
-        }
-      }
-
-      const title = `${path.basename(change.file_path)}`
-
-      const result = await show_diff_with_actions({
-        left_uri: left_doc.uri,
-        right_content: change.content,
-        title,
-        file_path_for_right_doc: safe_path
-      })
-      const choice = result.decision
-      const new_content = result.new_content
-      const temp_file_path = result.temp_file_path
-
-      change.content = new_content
-      await vscode.commands.executeCommand(
-        'workbench.action.revertAndCloseActiveEditor'
-      )
-      try {
-        fs.unlinkSync(temp_file_path)
-      } catch (e) {
-        // ignore, it's a temp file
-      }
-      if ('accepted_files' in choice) {
-        const accepted_files_info = choice.accepted_files
-        const accepted_keys = new Set(
+      if ('accepted_files' in decision) {
+        const accepted_files_info = decision.accepted_files
+        const accepted_file_identifiers = new Set(
           accepted_files_info.map(
-            (f) => `${f.workspace_name || ''}:${f.file_path}`
+            (file) => `${file.workspace_name || ''}:${file.file_path}`
           )
         )
 
         review_items.forEach((item) => {
-          const key = `${item.change.workspace_name || ''}:${
+          const file_identifier = `${item.change.workspace_name || ''}:${
             item.change.file_path
           }`
-          if (accepted_keys.has(key)) {
-            item.status = 'accepted'
-          } else {
-            item.status = 'rejected'
-          }
+          item.status = accepted_file_identifiers.has(file_identifier)
+            ? 'accepted'
+            : 'rejected'
         })
         break
       }
 
-      if ('jump_to' in choice) {
-        const jump_target = choice.jump_to
+      if ('jump_to' in decision) {
+        const jump_target = decision.jump_to
         const new_index = review_items.findIndex(
           (item) =>
-            item.change.file_path == jump_target.file_path &&
-            item.change.workspace_name == jump_target.workspace_name
+            item.change.file_path === jump_target.file_path &&
+            item.change.workspace_name === jump_target.workspace_name
         )
 
-        if (new_index != -1) {
-          if (review_items[new_index].status != 'pending') {
+        if (new_index !== -1) {
+          // Ensure the target is reviewable again if it was already processed.
+          if (review_items[new_index].status !== 'pending') {
             review_items[new_index].status = 'pending'
           }
           current_index = new_index
+        } else {
+          current_index++
         }
         continue
       }
 
+      // If the decision is not one of the handled cases, terminate the review.
+      // This can happen if the user closes the diff view without making a choice.
       return null
     }
 
     return review_items
-      .filter((item) => item.status == 'accepted')
+      .filter((item) => item.status === 'accepted')
       .map((item) => item.change)
   } finally {
     if (view_provider) {
