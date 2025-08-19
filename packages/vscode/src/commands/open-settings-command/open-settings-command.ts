@@ -155,9 +155,31 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
       })
   )
 
+  const intelligent_update_config_command = vscode.commands.registerCommand(
+    'codeWebChat.settings.intelligentUpdate',
+    () =>
+      setup_api_tool_multi_config({
+        context,
+        tool: 'intelligent-update',
+        show_back_button: false
+      })
+  )
+
+  const commit_messages_config_command = vscode.commands.registerCommand(
+    'codeWebChat.settings.commitMessages',
+    () =>
+      setup_api_tool_multi_config({
+        context,
+        tool: 'commit-messages',
+        show_back_button: false
+      })
+  )
+
   return [
     settings_command,
     code_completions_config_command,
-    edit_context_config_command
+    edit_context_config_command,
+    intelligent_update_config_command,
+    commit_messages_config_command
   ]
 }

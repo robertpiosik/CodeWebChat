@@ -193,7 +193,7 @@ export const get_commit_message_config = async (
 
         quick_pick.onDidHide(() => {
           quick_pick.dispose()
-          if (quick_pick.selectedItems.length === 0) {
+          if (quick_pick.selectedItems.length == 0) {
             resolve(undefined)
           }
         })
@@ -204,13 +204,10 @@ export const get_commit_message_config = async (
   }
 
   if (!commit_message_config) {
-    vscode.window.showErrorMessage(
-      '"Commit Messages" API tool is not configured. Click "gear" icon to open extension settings.'
+    vscode.commands.executeCommand('codeWebChat.settings.commitMessages')
+    vscode.window.showInformationMessage(
+      'No "Commit Messages" configurations found. Please add one in the settings.'
     )
-    Logger.warn({
-      function_name: 'get_commit_message_config',
-      message: '"Commit Messages" API tool is not configured. Click "gear" icon to open extension settings.'
-    })
     return null
   }
 

@@ -282,6 +282,16 @@
         "command": "codeWebChat.settings.editContext",
         "title": "Settings: Edit Context",
         "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.settings.intelligentUpdate",
+        "title": "Settings: Intelligent Update",
+        "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.settings.commitMessages",
+        "title": "Settings: Commit Messages",
+        "category": "Code Web Chat"
       }
     ],
     "menus": {
@@ -396,6 +406,14 @@
         },
         {
           "command": "codeWebChat.settings.editContext",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.settings.intelligentUpdate",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.settings.commitMessages",
           "when": "false"
         }
       ],

@@ -67,13 +67,10 @@ const get_intelligent_update_config = async (
     await api_providers_manager.get_intelligent_update_tool_configs()
 
   if (intelligent_update_configs.length == 0) {
-    vscode.window.showErrorMessage(
-      '"Intelligent Update" API tool is not configured. Click "gear" icon to open extension settings.'
+    vscode.commands.executeCommand('codeWebChat.settings.intelligentUpdate')
+    vscode.window.showInformationMessage(
+      'No "Intelligent Update" configurations found. Please add one in the settings.'
     )
-    Logger.warn({
-      function_name: 'get_intelligent_update_config',
-      message: '"Intelligent Update" API tool is not configured. Click "gear" icon to open extension settings.'
-    })
     return
   }
 
