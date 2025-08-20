@@ -100,23 +100,23 @@ async function process_single_change(
     ? vscode.Uri.file(sanitized_file_path)
     : vscode.Uri.from({ scheme: 'untitled', path: sanitized_file_path })
 
-  const left_doc = await vscode.workspace.openTextDocument(left_uri)
-  const left_content = left_doc.getText()
-
-  // Adjust newline characters to match existing file, preventing phantom changes.
   let right_content = change.content
-  if (file_exists && left_content.endsWith('\n')) {
-    if (!right_content.endsWith('\n')) {
-      right_content += '\n'
-    } else if (right_content.endsWith('\n\n')) {
-      right_content = right_content.slice(0, -1)
+  if (file_exists) {
+    const left_doc = await vscode.workspace.openTextDocument(left_uri)
+    const left_content = left_doc.getText()
+    if (left_content.endsWith('\n')) {
+      if (!right_content.endsWith('\n')) {
+        right_content += '\n'
+      } else if (right_content.endsWith('\n\n')) {
+        right_content = right_content.slice(0, -1)
+      }
     }
   }
 
   const title = `${path.basename(change.file_path)}`
 
   const result = await show_diff_with_actions({
-    left_uri: left_doc.uri,
+    left_uri,
     right_content,
     title,
     original_file_path: sanitized_file_path
