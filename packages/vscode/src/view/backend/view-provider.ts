@@ -435,6 +435,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_pick_open_router_model(this)
           } else if (message.command == 'PICK_CHATBOT') {
             await handle_pick_chatbot(this, message)
+          } else if (message.command == 'REQUEST_GIT_STATE') {
+            this._send_git_state()
           }
         } catch (error: any) {
           console.error('Error handling message:', message, error)
@@ -551,7 +553,26 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  // Control disabled state of the "COMMIT" button
+  private _send_git_state() {
+    const git_extension = vscode.extensions.getExtension('vscode.git')?.exports
+    if (!git_extension) {
+      return
+    }
+    const git = git_extension.getAPI(1)
+    if (!git) {
+      return
+    }
+    const has_changes = git.repositories.some(
+      (repo: any) =>
+        repo.state.workingTreeChanges.length > 0 ||
+        repo.state.indexChanges.length > 0
+    )
+    this.send_message({
+      command: 'GIT_STATE_CHANGED',
+      has_changes_to_commit: has_changes
+    })
+  }
+
   private _watch_git_state() {
     try {
       const git_extension =
@@ -559,28 +580,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       if (!git_extension) {
         throw new Error('Git extension not found or not yet active.')
       }
-
       const git = git_extension.getAPI(1)
       if (!git) {
         throw new Error('Git API not available yet.')
       }
 
-      const update_git_state = () => {
-        const has_changes = git.repositories.some(
-          (repo: any) =>
-            repo.state.workingTreeChanges.length > 0 ||
-            repo.state.indexChanges.length > 0
-        )
-
-        this.send_message({
-          command: 'GIT_STATE_CHANGED',
-          has_changes_to_commit: has_changes
-        })
-      }
-
       for (const repo of git.repositories) {
         repo.state.onDidChange(
-          update_git_state,
+          this._send_git_state,
           this,
           this.context.subscriptions
         )
@@ -589,11 +596,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       git.onDidOpenRepository(
         (repo: any) => {
           repo.state.onDidChange(
-            update_git_state,
+            this._send_git_state,
             this,
             this.context.subscriptions
           )
-          update_git_state()
+          this._send_git_state()
         },
         this,
         this.context.subscriptions

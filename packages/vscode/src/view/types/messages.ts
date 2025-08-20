@@ -215,6 +215,10 @@ export interface GetHasMultipleWorkspacesMessage extends BaseMessage {
   command: 'GET_HAS_MULTIPLE_WORKSPACES'
 }
 
+export interface RequestGitStateMessage extends BaseMessage {
+  command: 'REQUEST_GIT_STATE'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -257,6 +261,7 @@ export type FrontendMessage =
   | EditsReviewMessage
   | FocusOnFileInReviewMessage
   | GetHasMultipleWorkspacesMessage
+  | RequestGitStateMessage
 
 // Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {

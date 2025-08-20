@@ -134,7 +134,8 @@ export const Home: React.FC<Props> = (props) => {
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_EDIT_FORMAT' },
       { command: 'GET_API_TOOL_CONFIGURATIONS' },
-      { command: 'CHECK_CLIPBOARD_FOR_APPLY' }
+      { command: 'CHECK_CLIPBOARD_FOR_APPLY' },
+      { command: 'REQUEST_GIT_STATE' }
     ]
     initial_messages.forEach((message) => post_message(props.vscode, message))
 
