@@ -25,6 +25,7 @@ export const deepseek: Chatbot = {
       }
       check_for_element()
     })
+    await new Promise((resolve) => setTimeout(resolve, 500))
   },
   set_options: async (options?: string[]) => {
     if (!options) return
@@ -33,11 +34,9 @@ export const deepseek: Chatbot = {
       document.querySelectorAll('div[role="button"]')
     ).find(
       (button) =>
-        button.textContent == 'DeepThink (R1)' ||
-        button.textContent == '深度思考 (R1)'
+        button.textContent == 'DeepThink' || button.textContent == '深度思考'
     ) as HTMLElement
     const deep_think_button_style = window.getComputedStyle(deep_think_button)
-    console.log(deep_think_button_style.getPropertyValue('--ds-button-color'))
     if (
       deep_think_button_style.getPropertyValue('--ds-button-color') !=
         'transparent' &&
@@ -71,8 +70,8 @@ export const deepseek: Chatbot = {
           document.querySelectorAll('div[role="button"]')
         ).find(
           (button) =>
-            button.textContent == 'DeepThink (R1)' ||
-            button.textContent == '深度思考 (R1)'
+            button.textContent == 'DeepThink' ||
+            button.textContent == '深度思考'
         ) as HTMLElement
         const button_style = window.getComputedStyle(deep_think_button)
         if (
