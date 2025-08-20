@@ -9,7 +9,7 @@
 > Happy coding with CWC! \
 > [Robert](https://x.com/robertpiosik)
 
-✅ **Initialize 15+ free chatbots** (ChatGPT, Gemini, Claude and more) \
+✅ **Initialize 15+ free chatbots** (ChatGPT, Gemini, Claude, DeepSeek and more) \
 ✅ **Apply chat responses** in any edit format \
 ✅ **Code completions** with reasoning models \
 ✅ **Commit messages** in your preferred style
