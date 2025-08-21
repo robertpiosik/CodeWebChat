@@ -7,7 +7,8 @@ import {
   CommitMessagesConfigs,
   EditContextConfigs,
   IntelligentUpdateConfigs,
-  ReasoningEffort
+  ReasoningEffort,
+  InstructionsPlacement
 } from '@/services/api-providers-manager'
 import {
   ModelFetcher,
@@ -48,6 +49,7 @@ export const setup_api_tool_multi_config = async (params: {
 
   const EDIT_INSTRUCTIONS_LABEL = 'Instructions'
   const CONFIRMATION_THRESHOLD_LABEL = 'Show file picker threshold'
+  const INSTRUCTIONS_PLACEMENT_LABEL = 'Instructions placement'
 
   const BACK_LABEL = '$(arrow-left) Back'
   const API_PROVIDERS_LABEL = '$(key) API Providers'
@@ -184,7 +186,9 @@ export const setup_api_tool_multi_config = async (params: {
             default_config.model == config.model &&
             default_config.temperature == config.temperature &&
             default_config.reasoning_effort == config.reasoning_effort &&
-            default_config.max_concurrency == config.max_concurrency
+            default_config.max_concurrency == config.max_concurrency &&
+            default_config.instructions_placement ==
+              config.instructions_placement
 
           let buttons = []
           if (current_configs.length > 1) {
@@ -403,7 +407,9 @@ export const setup_api_tool_multi_config = async (params: {
             default_config.temperature == deleted_config.temperature &&
             default_config.reasoning_effort ==
               deleted_config.reasoning_effort &&
-            default_config.max_concurrency == deleted_config.max_concurrency
+            default_config.max_concurrency == deleted_config.max_concurrency &&
+            default_config.instructions_placement ==
+              deleted_config.instructions_placement
 
           current_configs.splice(item.index, 1)
           await tool_methods.save_configs(current_configs)
@@ -550,6 +556,16 @@ export const setup_api_tool_multi_config = async (params: {
         }
       ]
 
+      if (params.tool == 'edit-context') {
+        options.push({
+          label: INSTRUCTIONS_PLACEMENT_LABEL,
+          description:
+            config.instructions_placement == 'below-only'
+              ? 'Below context only (better caching)'
+              : 'Above and below context (better adherence)'
+        })
+      }
+
       if (params.tool == 'intelligent-update') {
         const DEFAULT_MAX_CONCURRENCY = 10
         options.push({
@@ -593,7 +609,8 @@ export const setup_api_tool_multi_config = async (params: {
         default_config.model == config.model &&
         default_config.temperature == config.temperature &&
         default_config.reasoning_effort == config.reasoning_effort &&
-        default_config.max_concurrency == config.max_concurrency
+        default_config.max_concurrency == config.max_concurrency &&
+        default_config.instructions_placement == config.instructions_placement
 
       if (current_is_default) {
         options.push({
@@ -798,6 +815,30 @@ export const setup_api_tool_multi_config = async (params: {
             resolve(await edit_configuration(config))
             return
           }
+        } else if (selected_option.label == INSTRUCTIONS_PLACEMENT_LABEL) {
+          const new_placement = await select_instructions_placement(
+            config.instructions_placement
+          )
+          if (new_placement.cancelled) {
+            stack_cancelled = true
+            resolve(false)
+            return
+          }
+
+          if (new_placement.back) {
+            resolve(await edit_configuration(config))
+            return
+          }
+
+          const current_effective_placement =
+            config.instructions_placement || 'above-and-below'
+          if (new_placement.value != current_effective_placement) {
+            updated_config_state.instructions_placement = new_placement.value
+            config_changed_in_this_step = true
+          } else {
+            resolve(await edit_configuration(config))
+            return
+          }
         } else if (
           params.tool == 'intelligent-update' &&
           selected_option.label == MAX_CONCURRENCY_LABEL
@@ -843,7 +884,9 @@ export const setup_api_tool_multi_config = async (params: {
               default_config.reasoning_effort ==
                 original_config_state.reasoning_effort &&
               default_config.max_concurrency ==
-                original_config_state.max_concurrency
+                original_config_state.max_concurrency &&
+              default_config.instructions_placement ==
+                original_config_state.instructions_placement
             ) {
               default_config = updated_config_state
               await tool_methods.set_default_config(updated_config_state)
@@ -1109,6 +1152,53 @@ export const setup_api_tool_multi_config = async (params: {
     }
 
     return { value: (selected as any).effort, cancelled: false, back: false }
+  }
+
+  const select_instructions_placement = async (
+    current_placement: InstructionsPlacement | undefined
+  ): Promise<{
+    value: InstructionsPlacement
+    cancelled: boolean
+    back: boolean
+  }> => {
+    const placement_options: InstructionsPlacement[] = [
+      'above-and-below',
+      'below-only'
+    ]
+
+    const placement_items = placement_options.map((placement) => {
+      const is_current = (current_placement || 'above-and-below') == placement
+
+      return {
+        label:
+          placement == 'above-and-below'
+            ? 'Above and below context (better adherence)'
+            : 'Below context only (better caching)',
+        description: is_current ? 'Current' : '',
+        placement
+      }
+    })
+
+    const items = [
+      { label: BACK_LABEL },
+      { label: '', kind: vscode.QuickPickItemKind.Separator },
+      ...placement_items
+    ]
+
+    const selected = await vscode.window.showQuickPick(items, {
+      title: 'Select Instructions Placement',
+      placeHolder: 'Choose how to place instructions relative to context'
+    })
+
+    if (!selected) {
+      return { value: 'above-and-below', cancelled: true, back: false }
+    }
+
+    if (selected.label === BACK_LABEL) {
+      return { value: 'above-and-below', cancelled: false, back: true }
+    }
+
+    return { value: (selected as any).placement, cancelled: false, back: false }
   }
 
   const set_max_concurrency = async (

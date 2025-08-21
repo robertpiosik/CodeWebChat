@@ -400,7 +400,18 @@ export const perform_context_editing = async (params: {
     post_context_instructions += `\n${edit_format_instructions}`
   }
 
-  const content = `${pre_context_instructions}\n${files}\n${post_context_instructions}`
+  // Use instructions placement setting to determine message structure
+  const instructions_placement =
+    edit_context_config.instructions_placement || 'above-and-below'
+
+  let content: string
+  if (instructions_placement === 'below-only') {
+    // Place instructions only below context for better caching
+    content = `${files}\n${post_context_instructions}`
+  } else {
+    // Default: place instructions above and below context for better adherence
+    content = `${pre_context_instructions}\n${files}\n${post_context_instructions}`
+  }
 
   const messages = [
     {

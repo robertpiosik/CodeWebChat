@@ -32,6 +32,8 @@ export type Provider = BuiltInProvider | CustomProvider
 
 export type ReasoningEffort = 'none' | 'low' | 'medium' | 'high'
 
+export type InstructionsPlacement = 'above-and-below' | 'below-only'
+
 export type ToolConfig = {
   provider_type: string
   provider_name: string
@@ -39,6 +41,7 @@ export type ToolConfig = {
   temperature: number
   reasoning_effort?: ReasoningEffort
   max_concurrency?: number
+  instructions_placement?: InstructionsPlacement
 }
 
 export type CodeCompletionsConfigs = ToolConfig[]
