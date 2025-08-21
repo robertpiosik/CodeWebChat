@@ -520,7 +520,6 @@ export const HomeView: React.FC<Props> = (props) => {
               styles['footer__button--filled']
             )}
             href="https://www.reddit.com/r/CodeWebChat/"
-            style={{ overflow: 'hidden' }}
             title="Join subreddit"
           >
             <Icon variant="REDDIT" />
@@ -530,11 +529,10 @@ export const HomeView: React.FC<Props> = (props) => {
               styles.footer__button,
               styles['footer__button--filled']
             )}
-            href="https://join.slack.com/t/codewebchat/shared_invite/zt-3bsa61wfm-8mjgQDCin4RD7PI~E9NIYA"
-            style={{ overflow: 'hidden' }}
-            title="Chat with the community"
+            href="https://discord.gg/KJySXsrSX5"
+            title="Join Discord server"
           >
-            <Icon variant="SLACK" />
+            <Icon variant="DISCORD" />
           </a>
         </div>
         <div className={styles.footer__right}>

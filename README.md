@@ -90,7 +90,11 @@ Generate meaningful summaries of changes adhering to your preferred style.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
-Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/discussions), [/r/CodeWebChat](https://www.reddit.com/r/CodeWebChat) and [slack](https://join.slack.com/t/codewebchat/shared_invite/zt-3bsa61wfm-8mjgQDCin4RD7PI~E9NIYA).
+If you have a question about CWC, or want to help others, you're always welcome to join the conversation:
+
+- [GitHub Discussions ↗](https://github.com/robertpiosik/CodeWebChat/discussions)
+- [Discord ↗](https://discord.gg/KJySXsrSX5)
+- [Reddit ↗](https://www.reddit.com/r/CodeWebChat)
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Donations</span>
 
