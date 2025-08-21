@@ -27,6 +27,10 @@ export function should_ignore_file(
   file_path: string,
   ignored_extensions: Set<string>
 ): boolean {
+  if (file_path.includes('.cwc-code-review-')) {
+    return true
+  }
+
   const extensions = extract_extension_variations(file_path)
   return extensions.some((ext) => ignored_extensions.has(ext))
 }

@@ -62,7 +62,7 @@ const prepare_all_files = async (
     fs.mkdirSync(dir, { recursive: true })
     const ext = path.extname(sanitized_file_path)
     const base = path.basename(sanitized_file_path, ext)
-    const temp_filename = `${base}.${Date.now()}.tmp${ext}`
+    const temp_filename = `${base}.cwc-code-review-${Date.now()}${ext}`
     const temp_file_path = path.join(dir, temp_filename)
 
     prepared_files.push({

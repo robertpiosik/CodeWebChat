@@ -111,4 +111,9 @@ describe('should_ignore_file', () => {
     const ignored = new Set(['env.local'])
     expect(should_ignore_file('.env.local', ignored)).toBe(true)
   })
+
+  it('should return true for temporary code review files', () => {
+    const ignored = new Set<string>()
+    expect(should_ignore_file('file.cwc-code-review-12345.ts', ignored)).toBe(true)
+  })
 })
