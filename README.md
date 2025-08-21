@@ -4,13 +4,13 @@
 
 **Designed for software engineers, a 100% free and open-source tool for AI pair programming.** With its simple, non-agentic approach, CWC provides unmatched accuracy, speed and cost efficiency. Built by an independent developer for VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.).
 
-> LLMs have been shown to be an insufficient technology to reliably power the idea of agentic coding, especially in large, real-world projects. By using CWC you're close to the codebase—shaping it like a sculptor with a wonderous chisel. Keep your abilities sharp and create a programming duo that delivers truly exceptional value.
+> LLMs have been shown to be an insufficient technology to reliably power the idea of agentic coding, especially in real-world projects. By using CWC you're close to the codebase—shaping it like a sculptor with a wonderous chisel. Keep your abilities sharp and create a programming duo that delivers truly exceptional value.
 >
 > Happy coding with CWC! \
 > [Robert](https://x.com/robertpiosik)
 
-✅ **Initialize 15+ free chatbots** (ChatGPT, Gemini, Claude, DeepSeek and more) \
-✅ **Integrate multi-file changes** from responses of any edit format \
+✅ **Edit context** through 15+ free chatbots or by calling API directly \
+✅ **Integrate multi-file changes** from messages in any edit format \
 ✅ **Code completions** with reasoning models \
 ✅ **Commit messages** in your preferred style
 
