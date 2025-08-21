@@ -421,12 +421,6 @@ export const perform_context_editing = async (params: {
     reasoning_effort: edit_context_config.reasoning_effort
   }
 
-  Logger.log({
-    function_name: 'perform_context_editing',
-    message: 'refactor Prompt:',
-    data: content
-  })
-
   const cancel_token_source = axios.CancelToken.source()
 
   try {

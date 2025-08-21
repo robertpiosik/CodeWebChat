@@ -157,6 +157,12 @@ export async function make_api_request(
     on_chunk?: StreamCallback
   }
 ): Promise<string | null> {
+  Logger.log({
+    function_name: 'make_api_request',
+    message: 'API Request Body',
+    data: params.body
+  })
+
   try {
     const request_body = { ...params.body, stream: true }
 

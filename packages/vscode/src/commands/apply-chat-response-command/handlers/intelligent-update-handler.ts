@@ -55,12 +55,6 @@ const process_file = async (params: {
     reasoning_effort: params.reasoning_effort
   }
 
-  Logger.log({
-    function_name: 'process_file',
-    message: 'API Request Body',
-    data: body
-  })
-
   try {
     const total_length = params.file_content.length
     let received_length = 0

@@ -455,12 +455,6 @@ async function perform_code_completion(params: {
       reasoning_effort: code_completions_config.reasoning_effort
     }
 
-    Logger.log({
-      function_name: 'perform_fim_completion',
-      message: 'Request body',
-      data: body
-    })
-
     const cursor_listener = vscode.workspace.onDidChangeTextDocument(() => {
       cancel_token_source.cancel('User moved the cursor, cancelling request.')
     })
