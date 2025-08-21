@@ -209,7 +209,8 @@ export const handle_send_prompt = async (params: {
 async function show_preset_quick_pick(
   presets: ConfigPresetFormat[],
   context: vscode.ExtensionContext,
-  mode: string
+  mode: string,
+  provider: ViewProvider
 ): Promise<string[]> {
   const last_selected_item = context.workspaceState.get<string | undefined>(
     get_last_selected_preset_key(mode),
@@ -280,6 +281,10 @@ async function show_preset_quick_pick(
           get_last_selected_preset_key(mode),
           selected_name
         )
+        provider.send_message({
+          command: 'SELECTED_PRESETS',
+          names: [selected_name]
+        })
         resolve([selected_name])
       } else {
         resolve([])
@@ -615,6 +620,10 @@ async function resolve_presets(params: {
         }
 
         const group_name = selected.name
+        params.provider.send_message({
+          command: 'SELECTED_PRESETS',
+          names: [group_name]
+        })
         params.context.workspaceState.update(
           last_selected_group_state_key,
           group_name
@@ -668,6 +677,7 @@ async function resolve_presets(params: {
   return show_preset_quick_pick(
     all_presets,
     params.context,
-    params.provider.web_mode
+    params.provider.web_mode,
+    params.provider
   )
 }

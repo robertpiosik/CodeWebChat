@@ -4,7 +4,7 @@ import { Checkbox } from '../Checkbox'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -55,6 +55,7 @@ export namespace Presets {
     on_preset_duplicate: (name: string) => void
     on_preset_delete: (name: string) => void
     on_toggle_default_preset: (name: string) => void
+    selected_preset_or_group_name?: string
     translations: {
       my_chat_presets: string
       set_presets_opening_by_default: string
@@ -88,6 +89,15 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   const [highlighted_preset_name, set_highlighted_preset_name] = useState<
     Record<Presets.Props['web_mode'], string>
   >({} as any)
+
+  useEffect(() => {
+    if (props.selected_preset_or_group_name) {
+      set_highlighted_preset_name((prev) => ({
+        ...prev,
+        [props.web_mode]: props.selected_preset_or_group_name
+      }))
+    }
+  }, [props.selected_preset_or_group_name])
 
   const get_is_preset_disabled = (preset: Presets.Preset) =>
     preset.chatbot &&

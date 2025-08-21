@@ -68,6 +68,7 @@ type Props = {
   on_code_completion_with_quick_pick_click: () => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
+  selected_preset_or_group_name?: string
 }
 
 const web_mode_labels: Record<WebMode, string> = {
@@ -449,6 +450,9 @@ export const HomeView: React.FC<Props> = (props) => {
                   no_preset_enabled_or_selected_in_this_group:
                     'No preset is enabled or selected in this group'
                 }}
+                selected_preset_or_group_name={
+                  props.selected_preset_or_group_name
+                }
               />
             </>
           )}

@@ -59,6 +59,8 @@ export const Home: React.FC<Props> = (props) => {
     useState<boolean>(false)
   const [can_apply_clipboard, set_can_apply_clipboard] =
     useState<boolean>(false)
+  const [selected_preset_or_group_name, set_selected_preset_or_group_name] =
+    useState<string>()
   const [can_revert, set_can_revert] = useState<boolean>(false)
 
   const is_in_code_completions_mode =
@@ -121,6 +123,11 @@ export const Home: React.FC<Props> = (props) => {
           break
         case 'CAN_REVERT_CHANGED':
           set_can_revert(message.can_revert)
+          break
+        case 'SELECTED_PRESETS':
+          if (message.names.length > 0) {
+            set_selected_preset_or_group_name(message.names[0])
+          }
           break
       }
     }
@@ -536,6 +543,9 @@ export const Home: React.FC<Props> = (props) => {
       on_code_completion_click={handle_code_completion_click}
       on_code_completion_with_quick_pick_click={
         handle_code_completion_with_quick_pick_click
+      }
+      selected_preset_or_group_name={
+        selected_preset_or_group_name
       }
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
