@@ -524,6 +524,17 @@ export const HomeView: React.FC<Props> = (props) => {
           >
             <Icon variant="REDDIT" />
           </a>
+          <a
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--filled']
+            )}
+            href="https://join.slack.com/t/codewebchat/shared_invite/zt-3bsa61wfm-8mjgQDCin4RD7PI~E9NIYA"
+            style={{ overflow: 'hidden' }}
+            title="Chat with the community"
+          >
+            <Icon variant="SLACK" />
+          </a>
         </div>
         <div className={styles.footer__right}>
           <button

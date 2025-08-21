@@ -21,6 +21,7 @@ import Reddit from '../../../assets/icons/reddit.svg'
 import X from '../../../assets/icons/x.svg'
 import CodeWebChat from '../../../assets/icons/code-web-chat.svg'
 import ZAI from '../../../assets/icons/z-ai.svg'
+import Slack from '../../../assets/icons/slack.svg'
 
 export namespace Icon {
   export type Variant =
@@ -47,6 +48,7 @@ export namespace Icon {
     | 'X'
     | 'CODE_WEB_CHAT'
     | 'Z_AI'
+    | 'SLACK'
 
   export type Props = {
     variant: Variant
@@ -125,6 +127,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'Z_AI':
       icon = <ZAI />
+      break
+    case 'SLACK':
+      icon = <Slack />
       break
     default:
       icon = <></>

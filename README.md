@@ -90,7 +90,7 @@ Generate meaningful summaries of changes adhering to your preferred style.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
-Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/discussions) and [/r/CodeWebChat](https://www.reddit.com/r/CodeWebChat).
+Please be welcomed in [discussions](https://github.com/robertpiosik/CodeWebChat/discussions), [/r/CodeWebChat](https://www.reddit.com/r/CodeWebChat) and [slack](https://join.slack.com/t/codewebchat/shared_invite/zt-3bsa61wfm-8mjgQDCin4RD7PI~E9NIYA).
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Donations</span>
 

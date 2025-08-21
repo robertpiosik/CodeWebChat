@@ -21,7 +21,7 @@
 
   &__left {
     display: flex;
-    gap: var(--padding-8px);
+    gap: var(--padding-4px);
     overflow: hidden;
   }
 
@@ -33,6 +33,7 @@
   &__button {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
     gap: var(--padding-4px);
     height: 24px;
     padding: 0 var(--padding-5px);
