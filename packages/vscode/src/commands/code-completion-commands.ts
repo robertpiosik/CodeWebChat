@@ -477,12 +477,12 @@ async function perform_code_completion(params: {
         })
 
         try {
-          const completion = await make_api_request(
+          const completion = await make_api_request({
             endpoint_url,
-            provider.api_key,
+            api_key: provider.api_key,
             body,
-            cancel_token_source.token
-          )
+            cancellation_token: cancel_token_source.token
+          })
 
           if (completion) {
             const match = completion.match(

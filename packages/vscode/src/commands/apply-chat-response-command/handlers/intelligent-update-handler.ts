@@ -65,12 +65,12 @@ const process_file = async (params: {
     const total_length = params.file_content.length
     let received_length = 0
 
-    const refactored_content = await make_api_request(
-      params.endpoint_url,
-      params.api_key,
+    const refactored_content = await make_api_request({
+      endpoint_url: params.endpoint_url,
+      api_key: params.api_key,
       body,
-      params.cancel_token,
-      (chunk: string) => {
+      cancellation_token: params.cancel_token,
+      on_chunk: (chunk: string) => {
         received_length += chunk.length
         if (params.on_progress) {
           params.on_progress(
@@ -78,8 +78,8 @@ const process_file = async (params: {
             total_length
           )
         }
-      }
-    )
+      },
+    })
 
     if (axios.isCancel(params.cancel_token?.reason)) {
       Logger.log({

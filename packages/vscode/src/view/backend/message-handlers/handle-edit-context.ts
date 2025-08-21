@@ -443,18 +443,18 @@ export const perform_context_editing = async (params: {
 
         let total_tokens = 0
 
-        return make_api_request(
+        return make_api_request({
           endpoint_url,
-          provider.api_key,
+          api_key: provider.api_key,
           body,
-          cancel_token_source.token,
-          (chunk: string) => {
+          cancellation_token: cancel_token_source.token,
+          on_chunk: (chunk: string) => {
             total_tokens += Math.ceil(chunk.length / 4)
             progress.report({
               message: `received ${total_tokens} tokens...`
             })
           }
-        )
+        })
       }
     )
 

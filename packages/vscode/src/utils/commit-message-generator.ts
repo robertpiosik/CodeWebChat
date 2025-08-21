@@ -465,12 +465,12 @@ export const generate_commit_message_with_api = async (
       })
 
       try {
-        const response = await make_api_request(
+        const response = await make_api_request({
           endpoint_url,
-          provider.api_key,
+          api_key: provider.api_key,
           body,
-          cancel_token_source.token
-        )
+          cancellation_token: cancel_token_source.token
+        })
 
         if (!response) {
           vscode.window.showErrorMessage('Failed to generate commit message.')

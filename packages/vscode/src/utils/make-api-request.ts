@@ -149,14 +149,16 @@ async function process_stream_chunk(
 }
 
 export async function make_api_request(
-  endpoint_url: string,
-  api_key: string,
-  body: any,
-  cancellation_token: any,
-  on_chunk?: StreamCallback
+  params: {
+    endpoint_url: string
+    api_key: string
+    body: any
+    cancellation_token: any
+    on_chunk?: StreamCallback
+  }
 ): Promise<string | null> {
   try {
-    const request_body = { ...body, stream: true }
+    const request_body = { ...params.body, stream: true }
 
     let accumulated_content = ''
     let last_log_time = Date.now()
@@ -166,20 +168,20 @@ export async function make_api_request(
     let think_block_ended = false
 
     const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
-      endpoint_url + '/chat/completions',
+      params.endpoint_url + '/chat/completions',
       request_body,
       {
         headers: {
-          ['Authorization']: `Bearer ${api_key}`,
+          ['Authorization']: `Bearer ${params.api_key}`,
           ['Content-Type']: 'application/json',
-          ...(endpoint_url == 'https://openrouter.ai/api/v1'
+          ...(params.endpoint_url == 'https://openrouter.ai/api/v1'
             ? {
                 'HTTP-Referer': 'https://codeweb.chat/',
                 'X-Title': 'Code Web Chat (CWC)'
               }
             : {})
         },
-        cancelToken: cancellation_token,
+        cancelToken: params.cancellation_token,
         responseType: 'stream'
       }
     )
@@ -196,7 +198,7 @@ export async function make_api_request(
           think_buffer,
           in_think_block,
           think_block_ended,
-          on_chunk
+          params.on_chunk
         )
         buffer = processing_result.updated_buffer
         accumulated_content = processing_result.updated_accumulated_content
