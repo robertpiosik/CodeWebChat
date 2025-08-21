@@ -18,28 +18,132 @@ export let code_review_promise_resolve:
   | ((decision: CodeReviewDecision) => void)
   | undefined
 
-const show_diff_with_actions = async (params: {
-  left_uri: vscode.Uri
-  right_content: string
-  title: string
-  original_file_path: string
-}): Promise<CodeReviewResult> => {
-  const dir = path.dirname(params.original_file_path)
-  fs.mkdirSync(dir, { recursive: true })
-  const ext = path.extname(params.original_file_path)
-  const base = path.basename(params.original_file_path, ext)
-  const temp_filename = `${base}.${Date.now()}.tmp${ext}`
-  const temp_file_path = path.join(dir, temp_filename)
+type PreparedFile = {
+  change: ChangeItem
+  sanitized_path: string
+  original_content: string
+  temp_file_path: string
+  file_exists: boolean
+}
 
-  fs.writeFileSync(temp_file_path, params.right_content)
-  const right_doc_uri = vscode.Uri.file(temp_file_path)
+const prepare_all_files = async (
+  changes: ChangeItem[],
+  default_workspace: string,
+  workspace_map: Map<string, string>
+): Promise<PreparedFile[]> => {
+  const prepared_files: PreparedFile[] = []
+
+  for (const change of changes) {
+    let workspace_root = default_workspace
+    if (change.workspace_name && workspace_map.has(change.workspace_name)) {
+      workspace_root = workspace_map.get(change.workspace_name)!
+    }
+
+    const sanitized_file_path = create_safe_path(
+      workspace_root,
+      change.file_path
+    )
+    if (!sanitized_file_path) {
+      // Skip invalid paths
+      continue
+    }
+
+    const file_exists = fs.existsSync(sanitized_file_path)
+    let original_content = ''
+
+    if (file_exists) {
+      const doc = await vscode.workspace.openTextDocument(
+        vscode.Uri.file(sanitized_file_path)
+      )
+      original_content = doc.getText()
+    }
+
+    const dir = path.dirname(sanitized_file_path)
+    fs.mkdirSync(dir, { recursive: true })
+    const ext = path.extname(sanitized_file_path)
+    const base = path.basename(sanitized_file_path, ext)
+    const temp_filename = `${base}.${Date.now()}.tmp${ext}`
+    const temp_file_path = path.join(dir, temp_filename)
+
+    prepared_files.push({
+      change,
+      sanitized_path: sanitized_file_path,
+      original_content,
+      temp_file_path,
+      file_exists
+    })
+  }
+
+  return prepared_files
+}
+
+const create_all_temp_files = (prepared_files: PreparedFile[]): void => {
+  prepared_files.forEach((file) => {
+    fs.writeFileSync(file.temp_file_path, file.original_content)
+  })
+}
+
+const modify_all_originals = (prepared_files: PreparedFile[]): void => {
+  prepared_files.forEach((file) => {
+    let right_content = file.change.content
+
+    // Handle newline consistency
+    if (file.file_exists) {
+      if (file.original_content.endsWith('\n')) {
+        if (!right_content.endsWith('\n')) {
+          right_content += '\n'
+        } else if (right_content.endsWith('\n\n')) {
+          right_content = right_content.slice(0, -1)
+        }
+      }
+    }
+
+    fs.writeFileSync(file.sanitized_path, right_content)
+  })
+}
+
+const restore_all_originals = async (
+  prepared_files: PreparedFile[]
+): Promise<void> => {
+  prepared_files.forEach((file) => {
+    if (file.file_exists) {
+      fs.writeFileSync(file.sanitized_path, file.original_content)
+    } else {
+      try {
+        fs.unlinkSync(file.sanitized_path)
+      } catch (e) {
+        /* ignore */
+      }
+    }
+  })
+  // Wait for filesystem operations to finish
+  await new Promise((res) => setTimeout(res, 500))
+}
+
+const cleanup_all_temp_files = (prepared_files: PreparedFile[]): void => {
+  prepared_files.forEach((file) => {
+    try {
+      fs.unlinkSync(file.temp_file_path)
+    } catch (e) {
+      // Suppress error, as it's just a temp file
+    }
+  })
+}
+
+const show_diff_with_actions = async (
+  prepared_file: PreparedFile
+): Promise<CodeReviewResult> => {
+  const left_doc_uri = vscode.Uri.file(prepared_file.temp_file_path)
+  const right_doc_uri = vscode.Uri.file(prepared_file.sanitized_path)
   const right_doc = await vscode.workspace.openTextDocument(right_doc_uri)
+
+  const title = `${path.basename(prepared_file.change.file_path)}`
 
   await vscode.commands.executeCommand(
     'vscode.diff',
-    params.left_uri,
-    right_doc.uri,
-    params.title,
+    left_doc_uri, // Original content (read-only from temp file)
+    right_doc.uri, // Proposed content (editable in actual file)
+    title,
     {
       preview: false
     }
@@ -47,17 +151,24 @@ const show_diff_with_actions = async (params: {
 
   return new Promise<CodeReviewResult>((resolve) => {
     code_review_promise_resolve = async (decision) => {
+      let final_content = right_doc.getText()
+      if (right_doc.isDirty) {
+        await right_doc.save()
+        final_content = fs.readFileSync(prepared_file.sanitized_path, 'utf-8')
+      }
+
       if ('accepted_files' in decision) {
-        if (right_doc.isDirty) {
-          await right_doc.save()
-        }
         resolve({
           decision,
-          new_content: fs.readFileSync(temp_file_path, 'utf-8'),
-          temp_file_path
+          new_content: final_content,
+          temp_file_path: prepared_file.temp_file_path
         })
       } else {
-        resolve({ decision, new_content: right_doc.getText(), temp_file_path })
+        resolve({
+          decision,
+          new_content: final_content,
+          temp_file_path: prepared_file.temp_file_path
+        })
       }
     }
   }).finally(() => {
@@ -72,71 +183,6 @@ export type ChangeItem = {
   is_new?: boolean
 }
 
-type ProcessedChangeResult =
-  | {
-      decision: CodeReviewDecision
-      updated_content: string
-    }
-  | {
-      error: 'invalid_path'
-    }
-
-async function process_single_change(
-  change: ChangeItem,
-  default_workspace: string,
-  workspace_map: Map<string, string>
-): Promise<ProcessedChangeResult> {
-  let workspace_root = default_workspace
-  if (change.workspace_name && workspace_map.has(change.workspace_name)) {
-    workspace_root = workspace_map.get(change.workspace_name)!
-  }
-  const sanitized_file_path = create_safe_path(workspace_root, change.file_path)
-  if (!sanitized_file_path) {
-    return { error: 'invalid_path' }
-  }
-
-  const file_exists = fs.existsSync(sanitized_file_path)
-  const left_uri = file_exists
-    ? vscode.Uri.file(sanitized_file_path)
-    : vscode.Uri.from({ scheme: 'untitled', path: sanitized_file_path })
-
-  let right_content = change.content
-  if (file_exists) {
-    const left_doc = await vscode.workspace.openTextDocument(left_uri)
-    const left_content = left_doc.getText()
-    if (left_content.endsWith('\n')) {
-      if (!right_content.endsWith('\n')) {
-        right_content += '\n'
-      } else if (right_content.endsWith('\n\n')) {
-        right_content = right_content.slice(0, -1)
-      }
-    }
-  }
-
-  const title = `${path.basename(change.file_path)}`
-
-  const result = await show_diff_with_actions({
-    left_uri,
-    right_content,
-    title,
-    original_file_path: sanitized_file_path
-  })
-
-  await vscode.commands.executeCommand(
-    'workbench.action.revertAndCloseActiveEditor'
-  )
-  try {
-    fs.unlinkSync(result.temp_file_path)
-  } catch (e) {
-    // Suppress error, as it's just a temp file.
-  }
-
-  return {
-    decision: result.decision,
-    updated_content: result.new_content
-  }
-}
-
 export const code_review_in_diff_view = async <T extends ChangeItem>(
   changes: T[],
   view_provider?: ViewProvider
@@ -145,6 +191,7 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
     vscode.window.showErrorMessage('No workspace folder open.')
     return null
   }
+
   const workspace_map = new Map<string, string>()
   vscode.workspace.workspaceFolders.forEach((folder) => {
     workspace_map.set(folder.name, folder.uri.fsPath)
@@ -162,9 +209,20 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
     })
   }
 
+  let prepared_files: PreparedFile[] = []
+
   try {
-    const review_items = changes.map((change) => ({
-      change,
+    prepared_files = await prepare_all_files(
+      changes,
+      default_workspace,
+      workspace_map
+    )
+
+    create_all_temp_files(prepared_files)
+    modify_all_originals(prepared_files)
+
+    const review_items = prepared_files.map((file) => ({
+      file,
       status: 'pending' as 'pending' | 'accepted' | 'rejected'
     }))
 
@@ -177,19 +235,10 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
         continue
       }
 
-      const result = await process_single_change(
-        review_item.change,
-        default_workspace,
-        workspace_map
-      )
+      const result = await show_diff_with_actions(review_item.file)
 
-      if ('error' in result) {
-        review_item.status = 'rejected'
-        current_index++
-        continue
-      }
-
-      review_item.change.content = result.updated_content
+      // Update content after diff review
+      review_item.file.change.content = result.new_content
       const { decision } = result
 
       if ('accepted_files' in decision) {
@@ -201,8 +250,8 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
         )
 
         review_items.forEach((item) => {
-          const file_identifier = `${item.change.workspace_name || ''}:${
-            item.change.file_path
+          const file_identifier = `${item.file.change.workspace_name || ''}:${
+            item.file.change.file_path
           }`
           item.status = accepted_file_identifiers.has(file_identifier)
             ? 'accepted'
@@ -215,13 +264,13 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
         const jump_target = decision.jump_to
         const new_index = review_items.findIndex(
           (item) =>
-            item.change.file_path === jump_target.file_path &&
-            item.change.workspace_name === jump_target.workspace_name
+            item.file.change.file_path === jump_target.file_path &&
+            item.file.change.workspace_name === jump_target.workspace_name
         )
 
         if (new_index !== -1) {
           // Ensure the target is reviewable again if it was already processed.
-          if (review_items[new_index].status !== 'pending') {
+          if (review_items[new_index].status != 'pending') {
             review_items[new_index].status = 'pending'
           }
           current_index = new_index
@@ -233,13 +282,26 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
 
       // If the decision is not one of the handled cases, terminate the review.
       // This can happen if the user closes the diff view without making a choice.
+      // Close the current diff editor before returning null.
+      await vscode.commands.executeCommand(
+        'workbench.action.revertAndCloseActiveEditor'
+      )
       return null
     }
 
+    // Close any remaining diff editor after the loop finishes
+    await vscode.commands.executeCommand(
+      'workbench.action.revertAndCloseActiveEditor'
+    )
+
     return review_items
-      .filter((item) => item.status === 'accepted')
-      .map((item) => item.change)
+      .filter((item) => item.status == 'accepted')
+      .map((item) => item.file.change as T)
   } finally {
+    await restore_all_originals(prepared_files)
+
+    cleanup_all_temp_files(prepared_files)
+
     if (view_provider) {
       view_provider.send_message({ command: 'CODE_REVIEW_FINISHED' })
     }
