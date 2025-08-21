@@ -83,6 +83,9 @@ const get_edit_context_config = async (
         if (config.reasoning_effort) {
           description_parts.push(`${config.reasoning_effort}`)
         }
+        if (config.instructions_placement == 'below-only') {
+          description_parts.push('cache-enabled')
+        }
 
         let buttons = []
         if (edit_context_configs.length > 1) {

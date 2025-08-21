@@ -467,6 +467,7 @@ export const HomeView: React.FC<Props> = (props) => {
                   provider: c.provider_name,
                   reasoning_effort: c.reasoning_effort,
                   temperature: c.temperature,
+                  cache_enabled: c.instructions_placement == 'below-only',
                   is_default: c.is_default
                 }))}
                 on_configuration_click={props.on_configuration_click}

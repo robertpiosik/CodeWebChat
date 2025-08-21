@@ -10,6 +10,7 @@ export namespace Configurations {
     provider: string
     temperature?: number
     reasoning_effort?: string
+    cache_enabled?: boolean
     is_default?: boolean
   }
 
@@ -71,6 +72,9 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             configuration.temperature != DEFAULT_TEMPERATURE[props.api_mode]
           ) {
             description_parts.push(`${configuration.temperature}`)
+          }
+          if (configuration.cache_enabled) {
+            description_parts.push('cache-enabled')
           }
 
           const description = description_parts.join(' · ')

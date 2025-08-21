@@ -3,6 +3,7 @@ import { FileInReview } from '@shared/types/file-in-review'
 import { Preset } from '@shared/types/preset'
 import { HomeViewType } from './home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
+import { InstructionsPlacement } from '@/services/api-providers-manager'
 
 export interface BaseMessage {
   command: string
@@ -15,6 +16,7 @@ export type ApiToolConfiguration = {
   temperature: number
   reasoning_effort?: string
   max_concurrency?: number
+  instructions_placement?: InstructionsPlacement
   is_default?: boolean
 }
 
