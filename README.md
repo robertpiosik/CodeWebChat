@@ -10,7 +10,7 @@
 > [Robert](https://x.com/robertpiosik)
 
 ✅ **Initialize 15+ free chatbots** (ChatGPT, Gemini, Claude, DeepSeek and more) \
-✅ **Apply chat responses** in any edit format \
+✅ **Integrate multi-file changes** from responses of any edit format \
 ✅ **Code completions** with reasoning models \
 ✅ **Commit messages** in your preferred style
 
