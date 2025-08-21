@@ -245,6 +245,12 @@ export const setup_api_tool_multi_config = async (params: {
           if (config.reasoning_effort) {
             description_parts.push(`${config.reasoning_effort}`)
           }
+          if (
+            params.tool == 'edit-context' &&
+            config.instructions_placement == 'below-only'
+          ) {
+            description_parts.push('cache-enabled')
+          }
 
           return {
             label: is_default ? `$(check) ${config.model}` : config.model,
