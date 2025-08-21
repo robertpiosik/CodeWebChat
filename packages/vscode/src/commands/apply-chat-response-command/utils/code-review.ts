@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
+import * as os from 'os'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { ViewProvider } from '@/view/backend/view-provider'
 
@@ -44,7 +45,6 @@ const prepare_all_files = async (
       change.file_path
     )
     if (!sanitized_file_path) {
-      // Skip invalid paths
       continue
     }
 
@@ -62,8 +62,8 @@ const prepare_all_files = async (
     fs.mkdirSync(dir, { recursive: true })
     const ext = path.extname(sanitized_file_path)
     const base = path.basename(sanitized_file_path, ext)
-    const temp_filename = `${base}.cwc-code-review-${Date.now()}${ext}`
-    const temp_file_path = path.join(dir, temp_filename)
+    const temp_filename = `${base}.${Date.now()}`
+    const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
     prepared_files.push({
       change,
@@ -103,7 +103,8 @@ const modify_all_originals = (prepared_files: PreparedFile[]): void => {
 }
 
 const restore_all_originals = async (
-  prepared_files: PreparedFile[]
+  prepared_files: PreparedFile[],
+  should_wait: boolean
 ): Promise<void> => {
   prepared_files.forEach((file) => {
     if (file.file_exists) {
@@ -116,8 +117,10 @@ const restore_all_originals = async (
       }
     }
   })
-  // Wait for filesystem operations to finish
-  await new Promise((res) => setTimeout(res, 500))
+  if (should_wait) {
+    // Wait for filesystem operations to finish
+    await new Promise((res) => setTimeout(res, 500))
+  }
 }
 
 const cleanup_all_temp_files = (prepared_files: PreparedFile[]): void => {
@@ -152,10 +155,7 @@ const show_diff_with_actions = async (
   return new Promise<CodeReviewResult>((resolve) => {
     code_review_promise_resolve = async (decision) => {
       let final_content = right_doc.getText()
-      if (right_doc.isDirty) {
-        await right_doc.save()
-        final_content = fs.readFileSync(prepared_file.sanitized_path, 'utf-8')
-      }
+      final_content = right_doc.getText()
 
       if ('accepted_files' in decision) {
         resolve({
@@ -210,6 +210,7 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
   }
 
   let prepared_files: PreparedFile[] = []
+  let review_result: T[] | null = null
 
   try {
     prepared_files = await prepare_all_files(
@@ -237,7 +238,6 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
 
       const result = await show_diff_with_actions(review_item.file)
 
-      // Update content after diff review
       review_item.file.change.content = result.new_content
       const { decision } = result
 
@@ -286,7 +286,8 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
       await vscode.commands.executeCommand(
         'workbench.action.revertAndCloseActiveEditor'
       )
-      return null
+      review_result = null
+      return review_result
     }
 
     // Close any remaining diff editor after the loop finishes
@@ -294,11 +295,13 @@ export const code_review_in_diff_view = async <T extends ChangeItem>(
       'workbench.action.revertAndCloseActiveEditor'
     )
 
-    return review_items
+    review_result = review_items
       .filter((item) => item.status == 'accepted')
       .map((item) => item.file.change as T)
+    return review_result
   } finally {
-    await restore_all_originals(prepared_files)
+    const user_rejected = review_result === null || review_result.length === 0
+    await restore_all_originals(prepared_files, !user_rejected)
 
     cleanup_all_temp_files(prepared_files)
 
