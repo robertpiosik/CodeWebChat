@@ -14,23 +14,6 @@ import {
 } from '../constants/copy'
 
 export const ai_studio: Chatbot = {
-  wait_until_ready: async () => {
-    await new Promise((resolve) => {
-      const check_for_element = () => {
-        if (document.querySelector('.title-container')) {
-          resolve(null)
-        } else {
-          setTimeout(check_for_element, 100)
-        }
-      }
-      check_for_element()
-    })
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true)
-      }, 500)
-    })
-  },
   set_model: async (model?: string) => {
     if (!model) return
     const model_selector = (document.querySelector(
@@ -254,6 +237,33 @@ export const ai_studio: Chatbot = {
       ) as HTMLButtonElement
       close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
     }
+  },
+  enter_message_and_send: async (message: string) => {
+    const input_element = document.querySelector(
+      'textarea'
+    ) as HTMLTextAreaElement
+    if (!input_element) return
+
+    input_element.value = message
+    input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.dispatchEvent(new Event('change', { bubbles: true }))
+
+    await new Promise((r) => requestAnimationFrame(r))
+
+    await new Promise((resolve) => {
+      const check = () => {
+        const tokenSpan = document.querySelector('span.token-count-value')
+        const text = tokenSpan?.textContent?.trim()
+        if (text && text.startsWith('0')) {
+          setTimeout(check, 100)
+        } else {
+          resolve(null)
+        }
+      }
+      check()
+    })
+
+    ;(document.querySelector('run-button > button') as HTMLElement)?.click()
   },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (params: { footer: Element }) => {
