@@ -21,6 +21,9 @@
     font-weight: 600;
     transform: translateX(-50%);
     font-size: var(--font-size-14px);
+    display: flex;
+    align-items: center;
+    height: 20px; // Set min height if no left/right buttons are enabled
   }
 
   &__right {
