@@ -352,6 +352,58 @@ const handle_code_completion = async (completion: {
   }
 }
 
+const handle_code_review_and_cleanup = async (params: {
+  original_states: OriginalFileState[]
+  chat_response: string
+  view_provider: ViewProvider
+  update_revert_and_apply_button_state: (
+    states: OriginalFileState[] | null,
+    content?: string | null
+  ) => void
+}): Promise<boolean> => {
+  const review_result = await review_applied_changes(
+    params.original_states,
+    params.view_provider
+  )
+
+  if (review_result === null || review_result.accepted_files.length === 0) {
+    // User rejected all changes or cancelled review
+    await revert_files(params.original_states)
+    params.update_revert_and_apply_button_state(null)
+    return false
+  }
+
+  // Revert rejected files
+  if (review_result.rejected_states.length > 0) {
+    await revert_files(review_result.rejected_states)
+  }
+
+  // Update state to only include accepted files' original states
+  const accepted_states = params.original_states.filter((state) =>
+    review_result.accepted_files.some(
+      (accepted) =>
+        accepted.file_path === state.file_path &&
+        accepted.workspace_name === state.workspace_name
+    )
+  )
+
+  if (accepted_states.length > 0) {
+    params.update_revert_and_apply_button_state(
+      accepted_states,
+      params.chat_response
+    )
+    vscode.window.showInformationMessage(
+      `Code review completed. ${review_result.accepted_files.length} file${
+        review_result.accepted_files.length === 1 ? '' : 's'
+      } accepted.`
+    )
+    return true
+  } else {
+    params.update_revert_and_apply_button_state(null)
+    return false
+  }
+}
+
 export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
   view_provider: ViewProvider
@@ -536,22 +588,13 @@ export const apply_chat_response_command = (
                 combined_states,
                 chat_response
               )
-              // Immediately open review for combined changes
-              const review_result = await review_applied_changes(
-                combined_states,
-                view_provider
-              )
-
-              if (review_result === null || review_result.length === 0) {
-                await revert_files(combined_states)
-                update_revert_and_apply_button_state(null)
-              } else {
-                vscode.window.showInformationMessage(
-                  `Code review completed. ${review_result.length} file${
-                    review_result.length === 1 ? '' : 's'
-                  } accepted.`
-                )
-              }
+              // Use the extracted function
+              await handle_code_review_and_cleanup({
+                original_states: combined_states,
+                chat_response,
+                view_provider,
+                update_revert_and_apply_button_state
+              })
             } else {
               // Intelligent update failed or was canceled - revert successful patches
               if (success_count > 0 && all_original_states.length > 0) {
@@ -638,42 +681,24 @@ export const apply_chat_response_command = (
                   intelligent_update_states,
                   chat_response
                 )
-                const iu_review_result = await review_applied_changes(
-                  intelligent_update_states,
-                  view_provider
-                )
-                if (
-                  iu_review_result === null ||
-                  iu_review_result.length == 0
-                ) {
-                  await revert_files(intelligent_update_states)
-                  update_revert_and_apply_button_state(null)
-                } else {
-                  vscode.window.showInformationMessage(
-                    `Code review completed. ${iu_review_result.length} file${
-                      iu_review_result.length === 1 ? '' : 's'
-                    } accepted.`
-                  )
-                }
+                // Use the extracted function
+                await handle_code_review_and_cleanup({
+                  original_states: intelligent_update_states,
+                  chat_response,
+                  view_provider,
+                  update_revert_and_apply_button_state
+                })
               }
               return // End execution here
             }
           }
-          const review_result = await review_applied_changes(
-            all_original_states,
-            view_provider
-          )
-
-          if (review_result === null || review_result.length === 0) {
-            await revert_files(all_original_states)
-            update_revert_and_apply_button_state(null)
-          } else {
-            vscode.window.showInformationMessage(
-              `Code review completed. ${review_result.length} file${
-                review_result.length === 1 ? '' : 's'
-              } accepted.`
-            )
-          }
+          // Use the extracted function for regular patch review
+          await handle_code_review_and_cleanup({
+            original_states: all_original_states,
+            chat_response,
+            view_provider,
+            update_revert_and_apply_button_state
+          })
         }
 
         return
@@ -795,23 +820,13 @@ export const apply_chat_response_command = (
             chat_response
           )
 
-          // Immediately open review for changes
-          const review_result = await review_applied_changes(
-            final_original_states,
-            view_provider
-          )
-
-          if (review_result === null || review_result.length === 0) {
-            // User rejected all changes or cancelled review
-            await revert_files(final_original_states)
-            update_revert_and_apply_button_state(null)
-          } else {
-            vscode.window.showInformationMessage(
-              `Code review completed. ${review_result.length} file${
-                review_result.length === 1 ? '' : 's'
-              } accepted.`
-            )
-          }
+          // Use the extracted function
+          await handle_code_review_and_cleanup({
+            original_states: final_original_states,
+            chat_response,
+            view_provider,
+            update_revert_and_apply_button_state
+          })
         } else {
           // Handler already showed specific error messages or handled cancellation silently.
           // Clear any potentially partially stored state from a failed operation.

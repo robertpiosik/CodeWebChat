@@ -153,7 +153,10 @@ const show_diff_with_actions = async (
 export const review_applied_changes = async (
   original_states: OriginalFileState[],
   view_provider?: ViewProvider
-): Promise<ReviewableFile[] | null> => {
+): Promise<{
+  accepted_files: ReviewableFile[]
+  rejected_states: OriginalFileState[]
+} | null> => {
   if (!vscode.workspace.workspaceFolders?.length) {
     vscode.window.showErrorMessage('No workspace folder open.')
     return null
@@ -181,7 +184,6 @@ export const review_applied_changes = async (
   }
 
   let prepared_files: PreparedFile[] = []
-  let review_result: ReviewableFile[] | null = null
 
   try {
     prepared_files = await prepare_files_from_original_states(
@@ -258,8 +260,7 @@ export const review_applied_changes = async (
       await vscode.commands.executeCommand(
         'workbench.action.revertAndCloseActiveEditor'
       )
-      review_result = null
-      return review_result
+      return null
     }
 
     // Close any remaining diff editor
@@ -267,11 +268,26 @@ export const review_applied_changes = async (
       'workbench.action.revertAndCloseActiveEditor'
     )
 
-    review_result = review_items
+    const accepted_files = review_items
       .filter((item) => item.status === 'accepted')
       .map((item) => item.file.reviewable_file)
 
-    return review_result
+    // Get rejected states for reverting
+    const rejected_items = review_items.filter(
+      (item) => item.status === 'rejected'
+    )
+    const rejected_states = rejected_items
+      .map((item) => {
+        // Find the corresponding original state
+        return original_states.find(
+          (state) =>
+            state.file_path === item.file.reviewable_file.file_path &&
+            state.workspace_name === item.file.reviewable_file.workspace_name
+        )
+      })
+      .filter((state): state is OriginalFileState => state !== undefined)
+
+    return { accepted_files, rejected_states }
   } finally {
     cleanup_temp_files(prepared_files)
 
