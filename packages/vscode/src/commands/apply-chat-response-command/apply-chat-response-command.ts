@@ -577,7 +577,88 @@ export const apply_chat_response_command = (
             }
           }
         } else if (success_count > 0) {
-          // All patches applied successfully - immediately open review
+          if (any_patch_used_fallback) {
+            const response = await vscode.window.showInformationMessage(
+              'Some patches required a fallback method, which may lead to inaccuracies.',
+              'Looks off? Use intelligent update',
+              'Keep'
+            )
+
+            if (response == 'Looks off? Use intelligent update') {
+              // Revert the fallback changes
+              await revert_files(all_original_states, false)
+              update_revert_and_apply_button_state(null)
+
+              // Now, call intelligent update with the original chat response
+              const api_providers_manager = new ApiProvidersManager(context)
+              const config_result = await get_intelligent_update_config(
+                api_providers_manager,
+                false,
+                context
+              )
+
+              if (!config_result) {
+                // If we reverted but can't proceed, the user is left with original state.
+                return
+              }
+
+              const all_patches_as_code_blocks = clipboard_content
+                .patches!.map(
+                  (patch) =>
+                    `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
+                )
+                .join('\n')
+
+              const { provider, config: intelligent_update_config } =
+                config_result
+
+              let endpoint_url = ''
+              if (provider.type == 'built-in') {
+                const provider_info =
+                  PROVIDERS[provider.name as keyof typeof PROVIDERS]
+                endpoint_url = provider_info.base_url
+              } else {
+                endpoint_url = provider.base_url
+              }
+
+              const intelligent_update_states = await handle_intelligent_update(
+                {
+                  endpoint_url,
+                  api_key: provider.api_key,
+                  config: intelligent_update_config,
+                  chat_response: all_patches_as_code_blocks, // Use the patches as instructions
+                  context: context,
+                  is_single_root_folder_workspace,
+                  view_provider
+                }
+              )
+
+              if (intelligent_update_states) {
+                update_revert_and_apply_button_state(
+                  intelligent_update_states,
+                  chat_response
+                )
+                const iu_review_result = await review_applied_changes(
+                  intelligent_update_states,
+                  view_provider
+                )
+                if (
+                  iu_review_result === null ||
+                  iu_review_result.length == 0
+                ) {
+                  await revert_files(intelligent_update_states)
+                  update_revert_and_apply_button_state(null)
+                } else {
+                  vscode.window.showInformationMessage(
+                    `Code review completed. ${iu_review_result.length} file${
+                      iu_review_result.length === 1 ? '' : 's'
+                    } accepted.`
+                  )
+                }
+              }
+              return // End execution here
+            }
+          }
           const review_result = await review_applied_changes(
             all_original_states,
             view_provider
