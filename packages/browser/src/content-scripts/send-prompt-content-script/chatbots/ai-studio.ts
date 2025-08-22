@@ -14,6 +14,18 @@ import {
 } from '../constants/copy'
 
 export const ai_studio: Chatbot = {
+  wait_until_ready: async () => {
+    await new Promise((resolve) => {
+      const check_for_element = () => {
+        if (document.querySelector('.promo-cards')) {
+          resolve(null)
+        } else {
+          setTimeout(check_for_element, 100)
+        }
+      }
+      check_for_element()
+    })
+  },
   set_model: async (model?: string) => {
     if (!model) return
     const model_selector = (document.querySelector(
