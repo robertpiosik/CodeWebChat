@@ -11,9 +11,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--padding-8px) var(--padding-12px) var(--padding-6px)
+  margin: var(--padding-8px) var(--padding-12px) var(--padding-6px)
     var(--padding-12px);
   position: relative;
+  height: 20px;
 
   &__title {
     position: absolute;
@@ -21,9 +22,6 @@
     font-weight: 600;
     transform: translateX(-50%);
     font-size: var(--font-size-14px);
-    display: flex;
-    align-items: center;
-    height: 20px; // Set min height if no left/right buttons are enabled
   }
 
   &__right {

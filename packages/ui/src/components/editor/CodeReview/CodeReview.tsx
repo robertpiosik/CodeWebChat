@@ -10,7 +10,7 @@ type CheckedFileToReview = FileInReview & { is_checked: boolean }
 type Props = {
   files: FileInReview[]
   has_multiple_workspaces: boolean
-  on_reject: () => void
+  on_reject_all: () => void
   on_accept: (files: FileInReview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
 }
@@ -18,7 +18,7 @@ type Props = {
 export const CodeReview: FC<Props> = ({
   files,
   has_multiple_workspaces,
-  on_reject,
+  on_reject_all,
   on_accept,
   on_focus_file
 }) => {
@@ -32,7 +32,7 @@ export const CodeReview: FC<Props> = ({
     set_last_clicked_file_index(0)
   }, [files])
 
-  const handle_accept = () => {
+  const handle_keep = () => {
     const accepted_files = files_to_review.filter((f) => f.is_checked)
     on_accept(accepted_files)
   }
@@ -90,14 +90,14 @@ export const CodeReview: FC<Props> = ({
         })}
       </div>
       <div className={styles.footer}>
-        <Button on_click={on_reject} is_secondary>
-          Reject
+        <Button on_click={on_reject_all} is_secondary>
+          Reject All
         </Button>
         <Button
-          on_click={handle_accept}
+          on_click={handle_keep}
           disabled={files_to_review.filter((f) => f.is_checked).length == 0}
         >
-          Accept
+          {files_to_review.length == 0 ? 'Accept' : `Accept Selected`}
         </Button>
       </div>
     </div>

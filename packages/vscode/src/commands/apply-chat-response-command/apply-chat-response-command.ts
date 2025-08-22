@@ -14,16 +14,12 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
 import { format_document } from './utils/format-document'
-import {
-  apply_git_patch,
-  extract_content_from_patch,
-  extract_file_paths_from_patch
-} from './handlers/patch-handler'
+import { apply_git_patch } from './handlers/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '../../view/backend/view-provider'
-import { ChangeItem, code_review_in_diff_view } from './utils/code-review'
+import { review_applied_changes } from './utils/review-applied-changes'
 
 const check_if_all_files_new = async (
   files: ClipboardFile[]
@@ -433,67 +429,7 @@ export const apply_chat_response_command = (
         const default_workspace =
           vscode.workspace.workspaceFolders[0].uri.fsPath
 
-        const review_items: (ChangeItem & { patch: DiffPatch })[] = []
-        for (const patch of clipboard_content.patches) {
-          let workspace_path = default_workspace
-          if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
-            workspace_path = workspace_map.get(patch.workspace_name)!
-          }
-
-          const file_paths = extract_file_paths_from_patch(patch.content)
-          for (const file_path of file_paths) {
-            const safe_path = create_safe_path(workspace_path, file_path)
-            if (!safe_path) continue
-
-            const file_exists = fs.existsSync(safe_path)
-            const original_content = file_exists
-              ? fs.readFileSync(safe_path, 'utf8')
-              : ''
-            const predicted_content = extract_content_from_patch(
-              patch.content,
-              original_content
-            )
-
-            const folder = vscode.workspace.getWorkspaceFolder(
-              vscode.Uri.file(workspace_path)
-            )
-            review_items.push({
-              file_path,
-              content: predicted_content,
-              workspace_name: patch.workspace_name || folder?.name,
-              is_new: !file_exists,
-              patch: patch
-            })
-          }
-        }
-
-        if (review_items.length === 0) {
-          vscode.window.showInformationMessage(
-            'No valid changes found in patches to apply.'
-          )
-          return
-        }
-
-        const accepted_items = await code_review_in_diff_view(
-          review_items,
-          view_provider
-        )
-
-        if (accepted_items === null || accepted_items.length === 0) {
-          Logger.log({
-            function_name: 'apply_chat_response_command',
-            message: 'Patch review cancelled or rejected by user'
-          })
-          return
-        }
-
-        // Group accepted items by patch to avoid applying a patch multiple times
-        const patches_to_apply = new Map<DiffPatch, boolean>()
-        for (const item of accepted_items) {
-          patches_to_apply.set(item.patch, true)
-        }
-        const unique_patches_to_apply = Array.from(patches_to_apply.keys())
-
+        // Apply patches directly without review
         let success_count = 0
         let failure_count = 0
         let all_original_states: OriginalFileState[] = []
@@ -505,10 +441,10 @@ export const apply_chat_response_command = (
           used_fallback: boolean
         }[] = []
 
-        const total_patches = unique_patches_to_apply.length
+        const total_patches = clipboard_content.patches.length
 
         for (let i = 0; i < total_patches; i++) {
-          const patch = unique_patches_to_apply[i]
+          const patch = clipboard_content.patches[i]
           let workspace_path = default_workspace
 
           if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
@@ -600,16 +536,21 @@ export const apply_chat_response_command = (
                 combined_states,
                 chat_response
               )
-              const response = await vscode.window.showInformationMessage(
-                `Successfully applied ${failed_patches.length} failed patch${
-                  failed_patches.length != 1 ? 'es' : ''
-                } using intelligent update.`,
-                'Revert'
+              // Immediately open review for combined changes
+              const review_result = await review_applied_changes(
+                combined_states,
+                view_provider
               )
 
-              if (response == 'Revert') {
+              if (review_result === null || review_result.length === 0) {
                 await revert_files(combined_states)
                 update_revert_and_apply_button_state(null)
+              } else {
+                vscode.window.showInformationMessage(
+                  `Code review completed. ${review_result.length} file${
+                    review_result.length === 1 ? '' : 's'
+                  } accepted.`
+                )
               }
             } else {
               // Intelligent update failed or was canceled - revert successful patches
@@ -636,124 +577,21 @@ export const apply_chat_response_command = (
             }
           }
         } else if (success_count > 0) {
-          // All patches applied successfully - show "Looks off" only if any used fallback
-          const buttons = ['Revert']
-          if (any_patch_used_fallback) {
-            buttons.push('Looks off, use intelligent update')
-          }
-
-          const response = await vscode.window.showInformationMessage(
-            `Successfully applied ${success_count} patch${
-              success_count != 1 ? 'es' : ''
-            }.`,
-            ...buttons
+          // All patches applied successfully - immediately open review
+          const review_result = await review_applied_changes(
+            all_original_states,
+            view_provider
           )
 
-          if (response == 'Revert' && all_original_states.length > 0) {
+          if (review_result === null || review_result.length === 0) {
             await revert_files(all_original_states)
             update_revert_and_apply_button_state(null)
-          } else if (response == 'Looks off, use intelligent update') {
-            const fallback_patches_info = applied_patches.filter(
-              (p) => p.used_fallback
+          } else {
+            vscode.window.showInformationMessage(
+              `Code review completed. ${review_result.length} file${
+                review_result.length === 1 ? '' : 's'
+              } accepted.`
             )
-            const good_patches_info = applied_patches.filter(
-              (p) => !p.used_fallback
-            )
-
-            const fallback_patches = fallback_patches_info.map((p) => p.patch)
-            const fallback_states = fallback_patches_info.flatMap(
-              (p) => p.original_states
-            )
-            const good_states = good_patches_info.flatMap(
-              (p) => p.original_states
-            )
-
-            // Revert only the patches that used fallback, without showing a message
-            await revert_files(fallback_states, false)
-
-            // Then try with intelligent update
-            const api_providers_manager = new ApiProvidersManager(context)
-            const config_result = await get_intelligent_update_config(
-              api_providers_manager,
-              false,
-              context
-            )
-
-            if (!config_result) {
-              // Config was cancelled. The fallback patches are reverted.
-              // The state should now be just the good patches.
-              update_revert_and_apply_button_state(good_states, chat_response)
-              return
-            }
-
-            const { provider, config: intelligent_update_config } =
-              config_result
-
-            // Convert only fallback patches to clipboard format
-            const fallback_patches_text = fallback_patches
-              .map(
-                (patch) =>
-                  `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
-              )
-              .join('\n')
-
-            let endpoint_url = ''
-            if (provider.type === 'built-in') {
-              const provider_info =
-                PROVIDERS[provider.name as keyof typeof PROVIDERS]
-              endpoint_url = provider_info.base_url
-            } else {
-              endpoint_url = provider.base_url
-            }
-
-            try {
-              const intelligent_update_states = await handle_intelligent_update(
-                {
-                  endpoint_url,
-                  api_key: provider.api_key,
-                  config: intelligent_update_config,
-                  chat_response: fallback_patches_text,
-                  context: context,
-                  is_single_root_folder_workspace,
-                  view_provider
-                }
-              )
-
-              if (intelligent_update_states) {
-                const combined_states = [
-                  ...good_states,
-                  ...intelligent_update_states
-                ]
-                update_revert_and_apply_button_state(
-                  combined_states,
-                  chat_response
-                )
-                const response = await vscode.window.showInformationMessage(
-                  `Successfully applied patches using intelligent update.`,
-                  'Revert'
-                )
-
-                if (response == 'Revert') {
-                  await revert_files(combined_states)
-                  update_revert_and_apply_button_state(null)
-                }
-              } else {
-                // Intelligent update was canceled.
-                update_revert_and_apply_button_state(good_states, chat_response)
-                vscode.window.showInformationMessage(
-                  'Intelligent update was canceled. Fallback changes reverted; clean changes kept.'
-                )
-              }
-            } catch (error) {
-              Logger.error({
-                function_name: 'apply_chat_response_command',
-                message: 'Error during intelligent update of fallback patches'
-              })
-              update_revert_and_apply_button_state(good_states, chat_response)
-              vscode.window.showErrorMessage(
-                'Error during intelligent update. Fallback changes reverted; clean changes kept.'
-              )
-            }
           }
         }
 
@@ -809,10 +647,7 @@ export const apply_chat_response_command = (
         let operation_success = false
 
         if (selected_mode_label == 'Fast replace') {
-          const result = await handle_fast_replace(
-            clipboard_content.files,
-            view_provider
-          )
+          const result = await handle_fast_replace(clipboard_content.files)
           if (result.success && result.original_states) {
             final_original_states = result.original_states
             operation_success = true
@@ -879,158 +714,22 @@ export const apply_chat_response_command = (
             chat_response
           )
 
-          // Check how many files were actually new and how many were replaced
-          const new_files_count = final_original_states.filter(
-            (state) => state.is_new
-          ).length
-          const replaced_files_count =
-            final_original_states.length - new_files_count
+          // Immediately open review for changes
+          const review_result = await review_applied_changes(
+            final_original_states,
+            view_provider
+          )
 
-          const replaced_or_updated =
-            selected_mode_label == 'Intelligent update' ? 'updated' : 'replaced'
-
-          let message = ''
-          if (new_files_count > 0 && replaced_files_count > 0) {
-            message = `Successfully created ${new_files_count} new ${
-              new_files_count == 1 ? 'file' : 'files'
-            } and ${replaced_or_updated} ${replaced_files_count} ${
-              replaced_files_count == 1 ? 'file' : 'files'
-            }.`
-          } else if (new_files_count > 0) {
-            message = `Successfully created ${new_files_count} new ${
-              new_files_count == 1 ? 'file' : 'files'
-            }.`
-          } else if (replaced_files_count > 0) {
-            message = `Successfully ${replaced_or_updated} ${replaced_files_count} ${
-              replaced_files_count == 1 ? 'file' : 'files'
-            }.`
+          if (review_result === null || review_result.length === 0) {
+            // User rejected all changes or cancelled review
+            await revert_files(final_original_states)
+            update_revert_and_apply_button_state(null)
           } else {
-            // Should not happen if operation_success is true and final_original_states is not empty
-            message = `Operation completed successfully.`
-          }
-
-          if (selected_mode_label == 'Fast replace') {
-            const buttons = ['Revert']
-            if (replaced_files_count > 0) {
-              buttons.push('Looks off, use intelligent update')
-            }
-
-            const response = await vscode.window.showInformationMessage(
-              message,
-              ...buttons
+            vscode.window.showInformationMessage(
+              `Code review completed. ${review_result.length} file${
+                review_result.length === 1 ? '' : 's'
+              } accepted.`
             )
-
-            if (response == 'Revert') {
-              await revert_files(final_original_states)
-              update_revert_and_apply_button_state(null)
-            } else if (response == 'Looks off, use intelligent update') {
-              // First revert the fast replace changes
-              await revert_files(final_original_states)
-              update_revert_and_apply_button_state(null)
-              // Then trigger intelligent update
-              const api_providers_manager = new ApiProvidersManager(context)
-              const config_result = await get_intelligent_update_config(
-                api_providers_manager,
-                false,
-                context
-              )
-
-              if (!config_result) {
-                return
-              }
-
-              const { provider, config: intelligent_update_config } =
-                config_result
-
-              let endpoint_url = ''
-              if (provider.type == 'built-in') {
-                const provider_info =
-                  PROVIDERS[provider.name as keyof typeof PROVIDERS]
-                endpoint_url = provider_info.base_url
-              } else {
-                endpoint_url = provider.base_url
-              }
-
-              try {
-                final_original_states = await handle_intelligent_update({
-                  endpoint_url,
-                  api_key: provider.api_key,
-                  config: intelligent_update_config,
-                  chat_response,
-                  context: context,
-                  is_single_root_folder_workspace,
-                  view_provider
-                })
-
-                if (final_original_states) {
-                  update_revert_and_apply_button_state(
-                    final_original_states,
-                    chat_response
-                  )
-                  // Recalculate counts for the intelligent update result
-                  const intelligent_new_files_count =
-                    final_original_states.filter((state) => state.is_new).length
-                  const intelligent_replaced_files_count =
-                    final_original_states.length - intelligent_new_files_count
-
-                  let intelligent_message = ''
-                  if (
-                    intelligent_new_files_count > 0 &&
-                    intelligent_replaced_files_count > 0
-                  ) {
-                    intelligent_message = `Successfully created ${intelligent_new_files_count} new ${
-                      intelligent_new_files_count == 1 ? 'file' : 'files'
-                    } and updated ${intelligent_replaced_files_count} ${
-                      intelligent_replaced_files_count == 1 ? 'file' : 'files'
-                    } using intelligent update.`
-                  } else if (intelligent_new_files_count > 0) {
-                    intelligent_message = `Successfully created ${intelligent_new_files_count} new ${
-                      intelligent_new_files_count == 1 ? 'file' : 'files'
-                    } using intelligent update.`
-                  } else if (intelligent_replaced_files_count > 0) {
-                    intelligent_message = `Successfully updated ${intelligent_replaced_files_count} ${
-                      intelligent_replaced_files_count == 1 ? 'file' : 'files'
-                    } using intelligent update.`
-                  } else {
-                    intelligent_message = `Intelligent Update completed successfully.`
-                  }
-
-                  vscode.window
-                    .showInformationMessage(intelligent_message, 'Revert')
-                    .then((response) => {
-                      if (response == 'Revert') {
-                        revert_files(final_original_states!)
-                        update_revert_and_apply_button_state(null)
-                      }
-                    })
-                } else {
-                  // Intelligent update was canceled after reverting fast replace
-                  vscode.window.showInformationMessage(
-                    'Intelligent update was canceled. Fast replace changes have been reverted.'
-                  )
-                  // State has been cleared before attempting intelligent update.
-                }
-              } catch (error) {
-                Logger.error({
-                  function_name: 'apply_chat_response_command',
-                  message: 'Error during second intelligent update attempt'
-                })
-                vscode.window.showErrorMessage(
-                  'Error during intelligent update. Fast replace changes have been reverted.'
-                )
-              }
-            }
-          } else {
-            // For intelligent update, show only Revert button
-            const response = await vscode.window.showInformationMessage(
-              message,
-              'Revert'
-            )
-
-            if (response == 'Revert') {
-              await revert_files(final_original_states)
-              update_revert_and_apply_button_state(null)
-            }
           }
         } else {
           // Handler already showed specific error messages or handled cancellation silently.

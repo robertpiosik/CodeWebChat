@@ -277,7 +277,7 @@ export const View = () => {
         <UiCodeReview
           files={files_to_review}
           has_multiple_workspaces={has_multiple_workspaces}
-          on_reject={() => {
+          on_reject_all={() => {
             post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
           }}
           on_accept={(accepted_files) => {

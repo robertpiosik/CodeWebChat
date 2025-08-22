@@ -1,20 +1,17 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
-import { Logger } from '../../../utils/logger'
+import { Logger } from '@/utils/logger'
 import {
   create_safe_path,
   sanitize_file_name
-} from '../../../utils/path-sanitizer'
+} from '@/utils/path-sanitizer'
 import { format_document } from '../utils/format-document'
 import { ClipboardFile } from '../utils/clipboard-parser'
-import { OriginalFileState } from '../../../types/common'
-import { ViewProvider } from '../../../view/backend/view-provider'
-import { code_review_in_diff_view } from '../utils/code-review'
+import { OriginalFileState } from '@/types/common'
 
 export const handle_fast_replace = async (
-  files: ClipboardFile[],
-  view_provider?: ViewProvider
+  files: ClipboardFile[]
 ): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
   Logger.log({
     function_name: 'handle_fast_replace',
@@ -88,22 +85,11 @@ export const handle_fast_replace = async (
       }
     }
 
-    const accepted_files = await code_review_in_diff_view(
-      safe_files,
-      view_provider
-    )
-    if (accepted_files === null) {
-      // User cancelled
-      return { success: false }
-    }
-    if (accepted_files.length === 0) {
-      return { success: false }
-    }
-
     // --- Application Phase ---
-    // Process all files that were accepted by the user.
+    // Process all files that were deemed safe.
     const original_states: OriginalFileState[] = []
-    for (const file of accepted_files) {
+    for (const file of safe_files) {
+      // Changed from accepted_files to safe_files
       let workspace_root = default_workspace
       if (file.workspace_name && workspace_map.has(file.workspace_name)) {
         workspace_root = workspace_map.get(file.workspace_name)!
@@ -229,8 +215,8 @@ export const handle_fast_replace = async (
 
     Logger.log({
       function_name: 'handle_fast_replace',
-      message: 'Accepted files replaced successfully',
-      data: { file_count: accepted_files.length }
+      message: 'Files replaced successfully', // Updated log message
+      data: { file_count: safe_files.length } // Changed from accepted_files to safe_files
     })
     return { success: true, original_states }
   } catch (error: any) {

@@ -15,7 +15,6 @@ import { format_document } from '../utils/format-document'
 import { OriginalFileState } from '../../../types/common'
 import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
-import { code_review_in_diff_view } from '../utils/code-review'
 import { ViewProvider } from '../../../view/backend/view-provider'
 
 const process_file = async (params: {
@@ -72,7 +71,7 @@ const process_file = async (params: {
             total_length
           )
         }
-      },
+      }
     })
 
     if (axios.isCancel(params.cancel_token?.reason)) {
@@ -515,37 +514,9 @@ export const handle_intelligent_update = async (params: {
     return null
   }
 
-  // API calls are finished, now review and apply changes
+  // Apply changes directly without review
   try {
-    const changes_to_review = document_changes.map((c) => ({
-      file_path: c.filePath,
-      content: c.content,
-      workspace_name: c.workspaceName,
-      is_new: c.isNew
-    }))
-
-    const accepted_changes_from_review = await code_review_in_diff_view(
-      changes_to_review,
-      params.view_provider
-    )
-
-    if (accepted_changes_from_review === null) {
-      Logger.log({
-        function_name: 'handle_intelligent_update',
-        message: 'Review cancelled by user.'
-      })
-      return null
-    }
-
-    const accepted_document_changes = document_changes.filter((dc) =>
-      accepted_changes_from_review.some(
-        (ac) =>
-          ac.file_path === dc.filePath &&
-          (ac.workspace_name || undefined) === (dc.workspaceName || undefined)
-      )
-    )
-
-    for (const change of accepted_document_changes) {
+    for (const change of document_changes) {
       let workspace_root = default_workspace_path!
       if (change.workspaceName && workspace_map.has(change.workspaceName)) {
         workspace_root = workspace_map.get(change.workspaceName)!
@@ -617,22 +588,14 @@ export const handle_intelligent_update = async (params: {
       }
     }
 
-    // Filter original_states to only include those that were accepted and applied.
-    const accepted_paths = new Set(
-      accepted_document_changes.map(
-        (c) => `${c.workspaceName || ''}:${c.filePath}`
-      )
-    )
-    const final_original_states = original_states.filter((s) =>
-      accepted_paths.has(`${s.workspace_name || ''}:${s.file_path}`)
-    )
-    if (final_original_states.length > 0) {
-      return final_original_states
+    // Since there's no review, all original_states are considered for return if API calls succeeded.
+    if (original_states.length > 0) {
+      return original_states
     }
   } catch (error: any) {
     Logger.error({
       function_name: 'handle_intelligent_update',
-      message: 'Multi-file processing failed during review/apply phase',
+      message: 'Multi-file processing failed during apply phase',
       data: error
     })
     vscode.window.showErrorMessage(

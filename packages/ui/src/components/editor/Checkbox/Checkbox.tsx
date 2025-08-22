@@ -24,7 +24,10 @@ export const Checkbox: FC<Props> = (props) => {
       onChange={handle_change}
       disabled={props.disabled}
       title={props.title}
-      onClick={props.on_click}
+      onClick={(e) => {
+        e.stopPropagation()
+        props.on_click?.(e)
+      }}
     />
   )
 }
