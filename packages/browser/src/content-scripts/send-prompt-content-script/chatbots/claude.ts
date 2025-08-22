@@ -107,7 +107,7 @@ export const claude: Chatbot = {
         apply_response_button.addEventListener('click', async () => {
           set_button_disabled_state(apply_response_button)
           const copy_button = params.footer.querySelector(
-            'button:nth-child(2)'
+            'div:first-child > button'
           ) as HTMLElement
           copy_button.click()
           await new Promise((resolve) => setTimeout(resolve, 500))
