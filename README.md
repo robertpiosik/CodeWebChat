@@ -9,8 +9,8 @@
 > Happy coding with CWC! \
 > [Robert](https://x.com/robertpiosik)
 
-✅ **Edit context** through 15+ free chatbots or by calling API directly \
-✅ **Integrate multi-file changes** from outputs in any edit format \
+✅ **Edit context** with 15+ free chatbots or direct API calls \
+✅ **Integrate multi-file changes** with confidence \
 ✅ **Code completions** with reasoning models \
 ✅ **Commit messages** in your style
 
