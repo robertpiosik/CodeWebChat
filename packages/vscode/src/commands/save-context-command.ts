@@ -211,7 +211,9 @@ export function save_context_command(
 
       const checked_files = workspace_provider.get_checked_files()
       if (checked_files.length == 0) {
-        vscode.window.showWarningMessage('There is nothing to save.')
+        vscode.window.showWarningMessage(
+          'There is nothing in your context to save.'
+        )
         return
       }
 
