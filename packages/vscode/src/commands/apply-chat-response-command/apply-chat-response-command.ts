@@ -389,6 +389,17 @@ const handle_code_review_and_cleanup = async (params: {
       accepted_states,
       params.chat_response
     )
+    const response = await vscode.window.showInformationMessage(
+      accepted_states.length > 1
+        ? 'Selected files have been accepted.'
+        : 'Selected file has been accepted.',
+      'Revert'
+    )
+    if (response == 'Revert') {
+      await revert_files(accepted_states)
+      params.update_revert_and_apply_button_state(null)
+      return false
+    }
     return true
   } else {
     params.update_revert_and_apply_button_state(null)
