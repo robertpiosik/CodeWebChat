@@ -40,6 +40,10 @@ export const Home: React.FC<Props> = (props) => {
   const [all_presets, set_all_presets] = useState<{
     [T in WebMode]: Preset[]
   }>()
+  const [
+    selected_preset_or_group_name_by_mode,
+    set_selected_preset_or_group_name_by_mode
+  ] = useState<{ [T in WebMode]?: string }>()
   const [all_configurations, set_all_configurations] = useState<{
     [T in ApiMode]?: ApiToolConfiguration[]
   }>()
@@ -59,8 +63,6 @@ export const Home: React.FC<Props> = (props) => {
     useState<boolean>(false)
   const [can_apply_clipboard, set_can_apply_clipboard] =
     useState<boolean>(false)
-  const [selected_preset_or_group_name, set_selected_preset_or_group_name] =
-    useState<string>()
   const [can_revert, set_can_revert] = useState<boolean>(false)
 
   const is_in_code_completions_mode =
@@ -75,6 +77,9 @@ export const Home: React.FC<Props> = (props) => {
       switch (message.command) {
         case 'PRESETS':
           set_all_presets((message as PresetsMessage).presets)
+          set_selected_preset_or_group_name_by_mode(
+            (message as PresetsMessage).selected_preset_or_group_name_by_mode
+          )
           break
         case 'API_TOOL_CONFIGURATIONS':
           set_all_configurations(
@@ -124,10 +129,11 @@ export const Home: React.FC<Props> = (props) => {
         case 'CAN_REVERT_CHANGED':
           set_can_revert(message.can_revert)
           break
-        case 'SELECTED_PRESETS':
-          if (message.names.length > 0) {
-            set_selected_preset_or_group_name(message.names[0])
-          }
+        case 'SELECTED_PRESET_OR_GROUP_CHANGED':
+          set_selected_preset_or_group_name_by_mode((prev) => ({
+            ...prev,
+            [message.mode]: message.name
+          }))
           break
       }
     }
@@ -490,6 +496,9 @@ export const Home: React.FC<Props> = (props) => {
 
   const presets_for_current_mode = all_presets[props.web_mode]
 
+  const selected_preset_or_group_name =
+    selected_preset_or_group_name_by_mode?.[props.web_mode]
+
   const configurations_for_current_mode =
     all_configurations && props.home_view_type == HOME_VIEW_TYPES.API
       ? all_configurations[props.api_mode]
@@ -531,6 +540,7 @@ export const Home: React.FC<Props> = (props) => {
       on_preset_duplicate={handle_preset_duplicate}
       on_preset_delete={handle_preset_delete}
       on_toggle_default_preset={handle_toggle_default_preset}
+      selected_preset_or_group_name={selected_preset_or_group_name}
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}
@@ -543,9 +553,6 @@ export const Home: React.FC<Props> = (props) => {
       on_code_completion_click={handle_code_completion_click}
       on_code_completion_with_quick_pick_click={
         handle_code_completion_with_quick_pick_click
-      }
-      selected_preset_or_group_name={
-        selected_preset_or_group_name
       }
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}

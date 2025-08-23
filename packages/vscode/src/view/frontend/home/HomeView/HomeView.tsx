@@ -57,6 +57,7 @@ type Props = {
   on_preset_duplicate: (preset_name: string) => void
   on_preset_delete: (preset_name: string) => void
   on_toggle_default_preset: (name: string) => void
+  selected_preset_or_group_name?: string
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
@@ -68,7 +69,6 @@ type Props = {
   on_code_completion_with_quick_pick_click: () => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
-  selected_preset_or_group_name?: string
 }
 
 const web_mode_labels: Record<WebMode, string> = {
@@ -426,6 +426,9 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_preset_duplicate={props.on_preset_duplicate}
                 on_preset_delete={props.on_preset_delete}
                 on_toggle_default_preset={props.on_toggle_default_preset}
+                selected_preset_or_group_name={
+                  props.selected_preset_or_group_name
+                }
                 translations={{
                   my_chat_presets: 'MY CHAT PRESETS',
                   set_presets_opening_by_default:
@@ -450,9 +453,6 @@ export const HomeView: React.FC<Props> = (props) => {
                   no_preset_enabled_or_selected_in_this_group:
                     'No preset is enabled or selected in this group'
                 }}
-                selected_preset_or_group_name={
-                  props.selected_preset_or_group_name
-                }
               />
             </>
           )}

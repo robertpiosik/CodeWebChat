@@ -13,6 +13,7 @@ import {
 } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
+import { WebMode } from '@shared/types/modes'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
 /**
@@ -209,7 +210,7 @@ export const handle_send_prompt = async (params: {
 async function show_preset_quick_pick(
   presets: ConfigPresetFormat[],
   context: vscode.ExtensionContext,
-  mode: string,
+  mode: WebMode,
   provider: ViewProvider
 ): Promise<string[]> {
   const last_selected_item = context.workspaceState.get<string | undefined>(
@@ -282,8 +283,9 @@ async function show_preset_quick_pick(
           selected_name
         )
         provider.send_message({
-          command: 'SELECTED_PRESETS',
-          names: [selected_name]
+          command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
+          mode: mode,
+          name: selected_name
         })
         resolve([selected_name])
       } else {
@@ -620,14 +622,15 @@ async function resolve_presets(params: {
         }
 
         const group_name = selected.name
-        params.provider.send_message({
-          command: 'SELECTED_PRESETS',
-          names: [group_name]
-        })
         params.context.workspaceState.update(
           last_selected_group_state_key,
           group_name
         )
+        params.provider.send_message({
+          command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
+          mode: params.provider.web_mode,
+          name: group_name
+        })
 
         let preset_names: string[] = []
         if (group_name == 'Ungrouped') {

@@ -47,6 +47,9 @@ import {
   API_EDIT_FORMAT_STATE_KEY,
   API_MODE_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY,
+  get_last_group_or_preset_choice_state_key,
+  get_last_selected_group_state_key,
+  get_last_selected_preset_key,
   HOME_VIEW_TYPE_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   WEB_MODE_STATE_KEY
@@ -549,7 +552,49 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     ) as { [T in WebMode]: Preset[] }
     this.send_message({
       command: 'PRESETS',
-      presets: all_presets
+      presets: all_presets,
+      selected_preset_or_group_name_by_mode: Object.fromEntries(
+        web_modes.map((mode) => {
+          const presets_for_mode = all_presets[mode]
+          let selected_name: string | undefined = undefined
+          const last_choice = this.context.workspaceState.get<string>(
+            get_last_group_or_preset_choice_state_key(mode)
+          )
+          if (last_choice === 'Preset') {
+            const last_preset = this.context.workspaceState.get<string>(
+              get_last_selected_preset_key(mode)
+            )
+            if (
+              last_preset &&
+              presets_for_mode.some((p) => p.chatbot && p.name === last_preset)
+            ) {
+              selected_name = last_preset
+            }
+          } else if (last_choice === 'Group') {
+            const last_group = this.context.workspaceState.get<string>(
+              get_last_selected_group_state_key(mode)
+            )
+            if (last_group) {
+              if (last_group === 'Ungrouped') {
+                const first_group_index = presets_for_mode.findIndex(
+                  (p) => !p.chatbot
+                )
+                if (
+                  first_group_index > 0 ||
+                  (first_group_index === -1 && presets_for_mode.length > 0)
+                ) {
+                  selected_name = last_group
+                }
+              } else if (
+                presets_for_mode.some((p) => !p.chatbot && p.name === last_group)
+              ) {
+                selected_name = last_group
+              }
+            }
+          }
+          return [mode, selected_name]
+        })
+      )
     })
   }
 
@@ -676,7 +721,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     let new_instructions = ''
     const mode: WebMode | ApiMode = is_in_code_completions_mode
       ? 'code-completions'
-      : this.home_view_type === HOME_VIEW_TYPES.WEB
+      : this.home_view_type == HOME_VIEW_TYPES.WEB
       ? this.web_mode
       : this.api_mode
 

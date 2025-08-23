@@ -289,16 +289,12 @@ export interface EditFormatMessage extends BaseMessage {
 export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
   presets: { [T in WebMode]: Preset[] }
+  selected_preset_or_group_name_by_mode?: { [T in WebMode]?: string }
 }
 
 export interface ApiToolConfigurationsMessage extends BaseMessage {
   command: 'API_TOOL_CONFIGURATIONS'
   configurations: { [T in ApiMode]?: ApiToolConfiguration[] }
-}
-
-export interface SelectedPresetsMessage extends BaseMessage {
-  command: 'SELECTED_PRESETS'
-  names: string[]
 }
 
 export interface EditorStateChangedMessage extends BaseMessage {
@@ -403,13 +399,18 @@ export interface HasMultipleWorkspacesMessage extends BaseMessage {
   value: boolean
 }
 
+export interface SelectedPresetOrGroupChangedMessage extends BaseMessage {
+  command: 'SELECTED_PRESET_OR_GROUP_CHANGED'
+  mode: WebMode
+  name?: string
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
   | EditFormatMessage
   | ApiToolConfigurationsMessage
   | PresetsMessage
-  | SelectedPresetsMessage
   | EditorStateChangedMessage
   | GitStateChangedMessage
   | EditorSelectionChangedMessage
@@ -430,3 +431,4 @@ export type BackendMessage =
   | CodeReviewStartedMessage
   | CodeReviewFinishedMessage
   | HasMultipleWorkspacesMessage
+  | SelectedPresetOrGroupChangedMessage
