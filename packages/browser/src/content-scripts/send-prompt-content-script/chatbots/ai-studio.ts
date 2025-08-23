@@ -83,6 +83,17 @@ export const ai_studio: Chatbot = {
   },
   set_options: async (options?: string[]) => {
     if (!options) return
+    const settings_items = Array.from(
+      document.querySelectorAll('div.settings-item')
+    )
+    const tools = settings_items.find((item) => {
+      const title_element = item.querySelector('p.group-title')
+      return title_element && title_element.textContent?.trim() == 'Tools'
+    })
+    if (tools && !tools.classList.contains('expanded')) {
+      ;(tools as HTMLElement).click()
+      await new Promise((r) => requestAnimationFrame(r))
+    }
     const supported_options = CHATBOTS['AI Studio'].supported_options
     const thinking_toggle = document.querySelector(
       'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
@@ -236,6 +247,23 @@ export const ai_studio: Chatbot = {
       tune_button.click()
       await new Promise((r) => requestAnimationFrame(r))
     }
+    const settings_items = Array.from(
+      document.querySelectorAll('div.settings-item')
+    )
+    const advanced_settings = settings_items.find((item) => {
+      const title_element = item.querySelector('p.group-title')
+      return (
+        title_element &&
+        title_element.textContent?.trim() == 'Advanced settings'
+      )
+    })
+    if (
+      advanced_settings &&
+      !advanced_settings.classList.contains('expanded')
+    ) {
+      ;(advanced_settings as HTMLElement).click()
+      await new Promise((r) => requestAnimationFrame(r))
+    }
     const top_p_element = document.querySelector(
       'ms-prompt-run-settings div[mattooltip="Probability threshold for top-p sampling"] input[type=number]'
     ) as HTMLInputElement
@@ -274,7 +302,6 @@ export const ai_studio: Chatbot = {
       }
       check()
     })
-
     ;(document.querySelector('run-button > button') as HTMLElement)?.click()
   },
   inject_apply_response_button: (client_id: number) => {
