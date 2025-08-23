@@ -7,7 +7,7 @@
 > LLMs have been shown to be an insufficient technology to reliably power the idea of agentic coding, especially in real-world, complex projects. When AI pair programming with CWC, you're close to the codebase—shaping it like a sculptor with a wonderous chisel. Keep your abilities sharp and create a programming duo that delivers truly exceptional value.
 >
 > Happy coding with CWC! \
-> [Robert](https://x.com/robertpiosik)
+> [Robert](https://x.com/robertpiosik) 🤓
 
 ✅ **Edit context** with 15+ free chatbots or direct API calls \
 ✅ **Integrate multi-file changes** with confidence \
