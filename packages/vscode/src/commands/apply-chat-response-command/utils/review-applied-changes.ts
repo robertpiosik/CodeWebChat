@@ -138,12 +138,7 @@ const show_diff_with_actions = async (
   const right_doc_uri = vscode.Uri.file(prepared_file.sanitized_path)
   const right_doc = await vscode.workspace.openTextDocument(right_doc_uri)
 
-  const file_status = prepared_file.reviewable_file.is_new
-    ? ' (New)'
-    : ' (Modified)'
-  const title = `${path.basename(
-    prepared_file.reviewable_file.file_path
-  )}${file_status}`
+  const title = path.basename(prepared_file.reviewable_file.file_path)
 
   await vscode.commands.executeCommand(
     'vscode.diff',
