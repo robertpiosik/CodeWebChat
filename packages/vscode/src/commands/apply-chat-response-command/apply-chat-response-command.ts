@@ -391,8 +391,8 @@ const handle_code_review_and_cleanup = async (params: {
     )
     const response = await vscode.window.showInformationMessage(
       accepted_states.length > 1
-        ? 'Selected files have been accepted.'
-        : 'Selected file has been accepted.',
+        ? 'Accepted changes have been applied.'
+        : 'Change has been applied.',
       'Revert'
     )
     if (response == 'Revert') {
@@ -442,503 +442,484 @@ export const apply_chat_response_command = (
         chat_response: string
       }
 
-      const review_data = await vscode.window.withProgress<ReviewData | null>(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: 'Preparing code review...',
-          cancellable: false
-        },
-        async () => {
-          let chat_response = args?.response
+      const review_data = await (async (): Promise<ReviewData | null> => {
+        let chat_response = args?.response
 
-          if (!chat_response) {
-            chat_response = await vscode.env.clipboard.readText()
-          }
+        if (!chat_response) {
+          chat_response = await vscode.env.clipboard.readText()
+        }
 
-          if (!chat_response) {
-            vscode.window.showErrorMessage(
-              'No response text provided and clipboard is empty.'
-            )
-            Logger.warn({
-              function_name: 'apply_chat_response_command',
-              message: 'Clipboard is empty.'
-            })
-            return null
-          }
-
-          const is_single_root_folder_workspace =
-            vscode.workspace.workspaceFolders?.length == 1
-
-          const clipboard_content = parse_response(
-            chat_response,
-            is_single_root_folder_workspace
+        if (!chat_response) {
+          vscode.window.showErrorMessage(
+            'No response text provided and clipboard is empty.'
           )
+          Logger.warn({
+            function_name: 'apply_chat_response_command',
+            message: 'Clipboard is empty.'
+          })
+          return null
+        }
 
-          if (
-            clipboard_content.type == 'code-completion' &&
-            clipboard_content.code_completion
-          ) {
-            await handle_code_completion(clipboard_content.code_completion)
+        const is_single_root_folder_workspace =
+          vscode.workspace.workspaceFolders?.length == 1
+
+        const clipboard_content = parse_response(
+          chat_response,
+          is_single_root_folder_workspace
+        )
+
+        if (
+          clipboard_content.type == 'code-completion' &&
+          clipboard_content.code_completion
+        ) {
+          await handle_code_completion(clipboard_content.code_completion)
+          return null
+        }
+
+        if (clipboard_content.type == 'patches' && clipboard_content.patches) {
+          if (!vscode.workspace.workspaceFolders?.length) {
+            vscode.window.showErrorMessage('No workspace folder open.')
             return null
           }
 
-          if (
-            clipboard_content.type == 'patches' &&
-            clipboard_content.patches
-          ) {
-            if (!vscode.workspace.workspaceFolders?.length) {
-              vscode.window.showErrorMessage('No workspace folder open.')
+          const workspace_map = new Map<string, string>()
+          vscode.workspace.workspaceFolders.forEach((folder) => {
+            workspace_map.set(folder.name, folder.uri.fsPath)
+          })
+
+          const default_workspace =
+            vscode.workspace.workspaceFolders[0].uri.fsPath
+
+          let success_count = 0
+          let failure_count = 0
+          let all_original_states: OriginalFileState[] = []
+          const failed_patches: DiffPatch[] = []
+          let any_patch_used_fallback = false
+          const applied_patches: {
+            patch: DiffPatch
+            original_states: OriginalFileState[]
+            used_fallback: boolean
+          }[] = []
+
+          const total_patches = clipboard_content.patches.length
+
+          for (let i = 0; i < total_patches; i++) {
+            const patch = clipboard_content.patches[i]
+            let workspace_path = default_workspace
+
+            if (
+              patch.workspace_name &&
+              workspace_map.has(patch.workspace_name)
+            ) {
+              workspace_path = workspace_map.get(patch.workspace_name)!
+            }
+
+            const result = await apply_git_patch(patch.content, workspace_path)
+
+            if (result.success) {
+              success_count++
+              if (result.original_states) {
+                all_original_states = all_original_states.concat(
+                  result.original_states
+                )
+                applied_patches.push({
+                  patch,
+                  original_states: result.original_states,
+                  used_fallback: !!result.used_fallback
+                })
+              }
+              if (result.used_fallback) {
+                any_patch_used_fallback = true
+              }
+            } else {
+              failure_count++
+              failed_patches.push(patch)
+            }
+          }
+
+          if (all_original_states.length > 0) {
+            update_revert_and_apply_button_state(
+              all_original_states,
+              chat_response
+            )
+          }
+
+          if (failure_count > 0) {
+            const api_providers_manager = new ApiProvidersManager(context)
+            const config_result = await get_intelligent_update_config(
+              api_providers_manager,
+              false,
+              context
+            )
+
+            if (!config_result) {
+              if (success_count > 0 && all_original_states.length > 0) {
+                await revert_files(all_original_states)
+                update_revert_and_apply_button_state(null)
+              }
               return null
             }
 
-            const workspace_map = new Map<string, string>()
-            vscode.workspace.workspaceFolders.forEach((folder) => {
-              workspace_map.set(folder.name, folder.uri.fsPath)
-            })
+            const { provider, config: intelligent_update_config } =
+              config_result
 
-            const default_workspace =
-              vscode.workspace.workspaceFolders[0].uri.fsPath
+            let endpoint_url = ''
+            if (provider.type == 'built-in') {
+              const provider_info =
+                PROVIDERS[provider.name as keyof typeof PROVIDERS]
+              endpoint_url = provider_info.base_url
+            } else {
+              endpoint_url = provider.base_url
+            }
 
-            let success_count = 0
-            let failure_count = 0
-            let all_original_states: OriginalFileState[] = []
-            const failed_patches: DiffPatch[] = []
-            let any_patch_used_fallback = false
-            const applied_patches: {
-              patch: DiffPatch
-              original_states: OriginalFileState[]
-              used_fallback: boolean
-            }[] = []
+            const failed_patches_as_code_blocks = failed_patches
+              .map(
+                (patch) =>
+                  `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
+              )
+              .join('\n')
 
-            const total_patches = clipboard_content.patches.length
-
-            for (let i = 0; i < total_patches; i++) {
-              const patch = clipboard_content.patches[i]
-              let workspace_path = default_workspace
-
-              if (
-                patch.workspace_name &&
-                workspace_map.has(patch.workspace_name)
-              ) {
-                workspace_path = workspace_map.get(patch.workspace_name)!
-              }
-
-              const result = await apply_git_patch(
-                patch.content,
-                workspace_path
+            try {
+              const intelligent_update_states = await handle_intelligent_update(
+                {
+                  endpoint_url,
+                  api_key: provider.api_key,
+                  config: intelligent_update_config,
+                  chat_response: failed_patches_as_code_blocks,
+                  context: context,
+                  is_single_root_folder_workspace,
+                  view_provider
+                }
               )
 
-              if (result.success) {
-                success_count++
-                if (result.original_states) {
-                  all_original_states = all_original_states.concat(
-                    result.original_states
-                  )
-                  applied_patches.push({
-                    patch,
-                    original_states: result.original_states,
-                    used_fallback: !!result.used_fallback
-                  })
-                }
-                if (result.used_fallback) {
-                  any_patch_used_fallback = true
+              if (intelligent_update_states) {
+                const combined_states = [
+                  ...all_original_states,
+                  ...intelligent_update_states
+                ]
+                update_revert_and_apply_button_state(
+                  combined_states,
+                  chat_response
+                )
+                return {
+                  original_states: combined_states,
+                  chat_response
                 }
               } else {
-                failure_count++
-                failed_patches.push(patch)
-              }
-            }
-
-            if (all_original_states.length > 0) {
-              update_revert_and_apply_button_state(
-                all_original_states,
-                chat_response
-              )
-            }
-
-            if (failure_count > 0) {
-              const api_providers_manager = new ApiProvidersManager(context)
-              const config_result = await get_intelligent_update_config(
-                api_providers_manager,
-                false,
-                context
-              )
-
-              if (!config_result) {
                 if (success_count > 0 && all_original_states.length > 0) {
                   await revert_files(all_original_states)
                   update_revert_and_apply_button_state(null)
                 }
-                return null
               }
+            } catch (error) {
+              Logger.error({
+                function_name: 'apply_chat_response_command',
+                message: 'Error during intelligent update of failed patches'
+              })
 
-              const { provider, config: intelligent_update_config } =
-                config_result
+              const response = await vscode.window.showErrorMessage(
+                'Error during fix attempt with the intelligent update tool. Would you like to revert the successfully applied patches?',
+                'Keep changes',
+                'Revert'
+              )
 
-              let endpoint_url = ''
-              if (provider.type == 'built-in') {
-                const provider_info =
-                  PROVIDERS[provider.name as keyof typeof PROVIDERS]
-                endpoint_url = provider_info.base_url
-              } else {
-                endpoint_url = provider.base_url
+              if (response == 'Revert' && all_original_states.length > 0) {
+                await revert_files(all_original_states)
+                update_revert_and_apply_button_state(null)
               }
-
-              const failed_patches_as_code_blocks = failed_patches
-                .map(
-                  (patch) =>
-                    `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
+            }
+          } else if (success_count > 0) {
+            if (any_patch_used_fallback) {
+              ;(async () => {
+                const response = await vscode.window.showInformationMessage(
+                  'Some patches required a fallback method, which may lead to inaccuracies.',
+                  'Hide',
+                  'Looks off? Use intelligent update'
                 )
-                .join('\n')
 
-              try {
-                const intelligent_update_states =
-                  await handle_intelligent_update({
-                    endpoint_url,
-                    api_key: provider.api_key,
-                    config: intelligent_update_config,
-                    chat_response: failed_patches_as_code_blocks,
-                    context: context,
-                    is_single_root_folder_workspace,
-                    view_provider
-                  })
+                if (response == 'Looks off? Use intelligent update') {
+                  const fallback_applied_patches = applied_patches.filter(
+                    (p) => p.used_fallback
+                  )
+                  const fallback_states = fallback_applied_patches.flatMap(
+                    (p) => p.original_states
+                  )
+                  await revert_files(fallback_states, false)
 
-                if (intelligent_update_states) {
-                  const combined_states = [
-                    ...all_original_states,
-                    ...intelligent_update_states
-                  ]
+                  const non_fallback_states = applied_patches
+                    .filter((p) => !p.used_fallback)
+                    .flatMap((p) => p.original_states)
                   update_revert_and_apply_button_state(
-                    combined_states,
+                    non_fallback_states,
                     chat_response
                   )
-                  return {
-                    original_states: combined_states,
-                    chat_response
-                  }
-                } else {
-                  if (success_count > 0 && all_original_states.length > 0) {
-                    await revert_files(all_original_states)
-                    update_revert_and_apply_button_state(null)
-                  }
-                }
-              } catch (error) {
-                Logger.error({
-                  function_name: 'apply_chat_response_command',
-                  message: 'Error during intelligent update of failed patches'
-                })
 
-                const response = await vscode.window.showErrorMessage(
-                  'Error during fix attempt with the intelligent update tool. Would you like to revert the successfully applied patches?',
-                  'Keep changes',
-                  'Revert'
-                )
-
-                if (response == 'Revert' && all_original_states.length > 0) {
-                  await revert_files(all_original_states)
-                  update_revert_and_apply_button_state(null)
-                }
-              }
-            } else if (success_count > 0) {
-              if (any_patch_used_fallback) {
-                ;(async () => {
-                  const response = await vscode.window.showInformationMessage(
-                    'Some patches required a fallback method, which may lead to inaccuracies.',
-                    'Hide',
-                    'Looks off? Use intelligent update'
+                  const api_providers_manager = new ApiProvidersManager(context)
+                  const config_result = await get_intelligent_update_config(
+                    api_providers_manager,
+                    false,
+                    context
                   )
 
-                  if (response == 'Looks off? Use intelligent update') {
-                    const fallback_applied_patches = applied_patches.filter(
-                      (p) => p.used_fallback
-                    )
-                    const fallback_states = fallback_applied_patches.flatMap(
-                      (p) => p.original_states
-                    )
-                    await revert_files(fallback_states, false)
-
-                    const non_fallback_states = applied_patches
-                      .filter((p) => !p.used_fallback)
-                      .flatMap((p) => p.original_states)
-                    update_revert_and_apply_button_state(
-                      non_fallback_states,
-                      chat_response
-                    )
-
-                    const api_providers_manager = new ApiProvidersManager(
-                      context
-                    )
-                    const config_result = await get_intelligent_update_config(
-                      api_providers_manager,
-                      false,
-                      context
-                    )
-
-                    if (!config_result) {
-                      return null
-                    }
-
-                    const fallback_patches = fallback_applied_patches.map(
-                      (p) => p.patch
-                    )
-                    const fallback_patches_as_code_blocks = fallback_patches
-                      .map(
-                        (patch) =>
-                          `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
-                      )
-                      .join('\n')
-
-                    const { provider, config: intelligent_update_config } =
-                      config_result
-
-                    let endpoint_url = ''
-                    if (provider.type == 'built-in') {
-                      const provider_info =
-                        PROVIDERS[provider.name as keyof typeof PROVIDERS]
-                      endpoint_url = provider_info.base_url
-                    } else {
-                      endpoint_url = provider.base_url
-                    }
-
-                    const intelligent_update_states =
-                      await handle_intelligent_update({
-                        endpoint_url,
-                        api_key: provider.api_key,
-                        config: intelligent_update_config,
-                        chat_response: fallback_patches_as_code_blocks, // Use the patches as instructions
-                        context: context,
-                        is_single_root_folder_workspace,
-                        view_provider
-                      })
-
-                    if (intelligent_update_states) {
-                      update_revert_and_apply_button_state(
-                        [...non_fallback_states, ...intelligent_update_states],
-                        chat_response
-                      )
-                      return {
-                        original_states: [
-                          ...non_fallback_states,
-                          ...intelligent_update_states
-                        ],
-                        chat_response
-                      }
-                    }
+                  if (!config_result) {
                     return null
                   }
-                })()
-              }
-              return {
-                original_states: all_original_states,
-                chat_response
-              }
-            }
 
+                  const fallback_patches = fallback_applied_patches.map(
+                    (p) => p.patch
+                  )
+                  const fallback_patches_as_code_blocks = fallback_patches
+                    .map(
+                      (patch) =>
+                        `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
+                    )
+                    .join('\n')
+
+                  const { provider, config: intelligent_update_config } =
+                    config_result
+
+                  let endpoint_url = ''
+                  if (provider.type == 'built-in') {
+                    const provider_info =
+                      PROVIDERS[provider.name as keyof typeof PROVIDERS]
+                    endpoint_url = provider_info.base_url
+                  } else {
+                    endpoint_url = provider.base_url
+                  }
+
+                  const intelligent_update_states =
+                    await handle_intelligent_update({
+                      endpoint_url,
+                      api_key: provider.api_key,
+                      config: intelligent_update_config,
+                      chat_response: fallback_patches_as_code_blocks, // Use the patches as instructions
+                      context: context,
+                      is_single_root_folder_workspace,
+                      view_provider
+                    })
+
+                  if (intelligent_update_states) {
+                    update_revert_and_apply_button_state(
+                      [...non_fallback_states, ...intelligent_update_states],
+                      chat_response
+                    )
+                    return {
+                      original_states: [
+                        ...non_fallback_states,
+                        ...intelligent_update_states
+                      ],
+                      chat_response
+                    }
+                  }
+                  return null
+                }
+              })()
+            }
+            return {
+              original_states: all_original_states,
+              chat_response
+            }
+          }
+
+          return null
+        } else {
+          if (!clipboard_content.files || clipboard_content.files.length == 0) {
+            vscode.window.showErrorMessage(
+              'Unable to find valid code blocks in the clipboard.'
+            )
             return null
+          }
+
+          let selected_mode_label:
+            | 'Fast replace'
+            | 'Intelligent update'
+            | undefined = undefined
+
+          const all_files_new = await check_if_all_files_new(
+            clipboard_content.files
+          )
+
+          if (all_files_new) {
+            selected_mode_label = 'Fast replace'
+            Logger.log({
+              function_name: 'apply_chat_response_command',
+              message:
+                'All files are new - automatically selecting fast replace mode'
+            })
           } else {
-            if (
-              !clipboard_content.files ||
-              clipboard_content.files.length == 0
-            ) {
-              vscode.window.showErrorMessage(
-                'Unable to find valid code blocks in the clipboard.'
-              )
-              return null
-            }
-
-            let selected_mode_label:
-              | 'Fast replace'
-              | 'Intelligent update'
-              | undefined = undefined
-
-            const all_files_new = await check_if_all_files_new(
+            const has_truncated_fragments = check_for_truncated_fragments(
               clipboard_content.files
             )
 
-            if (all_files_new) {
-              selected_mode_label = 'Fast replace'
+            if (has_truncated_fragments) {
+              selected_mode_label = 'Intelligent update'
               Logger.log({
                 function_name: 'apply_chat_response_command',
                 message:
-                  'All files are new - automatically selecting fast replace mode'
+                  'Auto-selecting intelligent update mode due to detected truncated fragments'
               })
             } else {
-              const has_truncated_fragments = check_for_truncated_fragments(
-                clipboard_content.files
-              )
-
-              if (has_truncated_fragments) {
-                selected_mode_label = 'Intelligent update'
-                Logger.log({
-                  function_name: 'apply_chat_response_command',
-                  message:
-                    'Auto-selecting intelligent update mode due to detected truncated fragments'
-                })
-              } else {
-                selected_mode_label = 'Fast replace'
-                Logger.log({
-                  function_name: 'apply_chat_response_command',
-                  message: 'Defaulting to Fast replace mode'
-                })
-              }
+              selected_mode_label = 'Fast replace'
+              Logger.log({
+                function_name: 'apply_chat_response_command',
+                message: 'Defaulting to Fast replace mode'
+              })
             }
+          }
 
-            let final_original_states: OriginalFileState[] | null = null
-            let operation_success = false
+          let final_original_states: OriginalFileState[] | null = null
+          let operation_success = false
 
-            if (selected_mode_label == 'Fast replace') {
-              const result = await handle_fast_replace(clipboard_content.files)
-              if (result.success && result.original_states) {
-                final_original_states = result.original_states
-                operation_success = true
-              }
-              Logger.log({
-                function_name: 'apply_chat_response_command',
-                message: 'Fast replace handler finished.',
-                data: { success: result.success }
-              })
-            } else if (selected_mode_label == 'Intelligent update') {
-              const api_providers_manager = new ApiProvidersManager(context)
+          if (selected_mode_label == 'Fast replace') {
+            const result = await handle_fast_replace(clipboard_content.files)
+            if (result.success && result.original_states) {
+              final_original_states = result.original_states
+              operation_success = true
+            }
+            Logger.log({
+              function_name: 'apply_chat_response_command',
+              message: 'Fast replace handler finished.',
+              data: { success: result.success }
+            })
+          } else if (selected_mode_label == 'Intelligent update') {
+            const api_providers_manager = new ApiProvidersManager(context)
 
-              const config_result = await get_intelligent_update_config(
-                api_providers_manager,
-                false,
-                context
-              )
+            const config_result = await get_intelligent_update_config(
+              api_providers_manager,
+              false,
+              context
+            )
 
-              if (!config_result) {
-                return null
-              }
-
-              const { provider, config: intelligent_update_config } =
-                config_result
-
-              let endpoint_url = ''
-              if (provider.type == 'built-in') {
-                const provider_info =
-                  PROVIDERS[provider.name as keyof typeof PROVIDERS]
-                endpoint_url = provider_info.base_url
-              } else {
-                endpoint_url = provider.base_url
-              }
-
-              final_original_states = await handle_intelligent_update({
-                endpoint_url,
-                api_key: provider.api_key,
-                config: intelligent_update_config,
-                chat_response,
-                context: context,
-                is_single_root_folder_workspace,
-                view_provider
-              })
-
-              if (final_original_states) {
-                operation_success = true
-              }
-              Logger.log({
-                function_name: 'apply_chat_response_command',
-                message: 'Intelligent update handler finished.',
-                data: { success: operation_success }
-              })
-            } else {
-              Logger.error({
-                function_name: 'apply_chat_response_command',
-                message: 'No valid mode selected or determined.'
-              })
+            if (!config_result) {
               return null
             }
 
-            if (operation_success && final_original_states) {
-              if (selected_mode_label == 'Fast replace' && !all_files_new) {
-                ;(async () => {
-                  const response = await vscode.window.showInformationMessage(
-                    'Files have been replaced. This may cause inaccuracies if the response had unmarked truncations.',
-                    'Hide',
-                    'Looks off? Use intelligent update'
-                  )
+            const { provider, config: intelligent_update_config } =
+              config_result
 
-                  if (response == 'Looks off? Use intelligent update') {
-                    const original_states_for_revert = final_original_states!
-                    await revert_files(original_states_for_revert, false)
-
-                    // Clear state while intelligent update runs
-                    update_revert_and_apply_button_state(null)
-
-                    const api_providers_manager = new ApiProvidersManager(
-                      context
-                    )
-                    const config_result = await get_intelligent_update_config(
-                      api_providers_manager,
-                      false,
-                      context
-                    )
-
-                    if (!config_result) {
-                      return // Reverted, no config for intelligent update.
-                    }
-
-                    const { provider, config: intelligent_update_config } =
-                      config_result
-
-                    let endpoint_url = ''
-                    if (provider.type == 'built-in') {
-                      const provider_info =
-                        PROVIDERS[provider.name as keyof typeof PROVIDERS]
-                      endpoint_url = provider_info.base_url
-                    } else {
-                      endpoint_url = provider.base_url
-                    }
-
-                    const intelligent_update_states =
-                      await handle_intelligent_update({
-                        endpoint_url,
-                        api_key: provider.api_key,
-                        config: intelligent_update_config,
-                        chat_response,
-                        context: context,
-                        is_single_root_folder_workspace,
-                        view_provider
-                      })
-
-                    if (intelligent_update_states) {
-                      update_revert_and_apply_button_state(
-                        intelligent_update_states,
-                        chat_response
-                      )
-                    }
-                  }
-                })()
-              }
-
-              update_revert_and_apply_button_state(
-                final_original_states,
-                chat_response
-              )
-
-              return {
-                original_states: final_original_states,
-                chat_response
-              }
+            let endpoint_url = ''
+            if (provider.type == 'built-in') {
+              const provider_info =
+                PROVIDERS[provider.name as keyof typeof PROVIDERS]
+              endpoint_url = provider_info.base_url
             } else {
-              update_revert_and_apply_button_state(null)
-              Logger.log({
-                function_name: 'apply_chat_response_command',
-                message: 'Operation concluded without success.'
-              })
+              endpoint_url = provider.base_url
             }
 
+            final_original_states = await handle_intelligent_update({
+              endpoint_url,
+              api_key: provider.api_key,
+              config: intelligent_update_config,
+              chat_response,
+              context: context,
+              is_single_root_folder_workspace,
+              view_provider
+            })
+
+            if (final_original_states) {
+              operation_success = true
+            }
             Logger.log({
               function_name: 'apply_chat_response_command',
-              message: 'end',
-              data: {
-                mode: selected_mode_label,
-                success: operation_success
-              }
+              message: 'Intelligent update handler finished.',
+              data: { success: operation_success }
+            })
+          } else {
+            Logger.error({
+              function_name: 'apply_chat_response_command',
+              message: 'No valid mode selected or determined.'
             })
             return null
           }
+
+          if (operation_success && final_original_states) {
+            if (selected_mode_label == 'Fast replace' && !all_files_new) {
+              ;(async () => {
+                const response = await vscode.window.showInformationMessage(
+                  'Files have been replaced. This may cause inaccuracies if the response had unmarked truncations.',
+                  'Hide',
+                  'Looks off? Use intelligent update'
+                )
+
+                if (response == 'Looks off? Use intelligent update') {
+                  const original_states_for_revert = final_original_states!
+                  await revert_files(original_states_for_revert, false)
+
+                  // Clear state while intelligent update runs
+                  update_revert_and_apply_button_state(null)
+
+                  const api_providers_manager = new ApiProvidersManager(context)
+                  const config_result = await get_intelligent_update_config(
+                    api_providers_manager,
+                    false,
+                    context
+                  )
+
+                  if (!config_result) {
+                    return // Reverted, no config for intelligent update.
+                  }
+
+                  const { provider, config: intelligent_update_config } =
+                    config_result
+
+                  let endpoint_url = ''
+                  if (provider.type == 'built-in') {
+                    const provider_info =
+                      PROVIDERS[provider.name as keyof typeof PROVIDERS]
+                    endpoint_url = provider_info.base_url
+                  } else {
+                    endpoint_url = provider.base_url
+                  }
+
+                  const intelligent_update_states =
+                    await handle_intelligent_update({
+                      endpoint_url,
+                      api_key: provider.api_key,
+                      config: intelligent_update_config,
+                      chat_response,
+                      context: context,
+                      is_single_root_folder_workspace,
+                      view_provider
+                    })
+
+                  if (intelligent_update_states) {
+                    update_revert_and_apply_button_state(
+                      intelligent_update_states,
+                      chat_response
+                    )
+                  }
+                }
+              })()
+            }
+
+            update_revert_and_apply_button_state(
+              final_original_states,
+              chat_response
+            )
+
+            return {
+              original_states: final_original_states,
+              chat_response
+            }
+          } else {
+            update_revert_and_apply_button_state(null)
+            Logger.log({
+              function_name: 'apply_chat_response_command',
+              message: 'Operation concluded without success.'
+            })
+          }
+
+          Logger.log({
+            function_name: 'apply_chat_response_command',
+            message: 'end',
+            data: {
+              mode: selected_mode_label,
+              success: operation_success
+            }
+          })
+          return null
         }
-      )
+      })()
 
       if (review_data) {
         await handle_code_review_and_cleanup({
