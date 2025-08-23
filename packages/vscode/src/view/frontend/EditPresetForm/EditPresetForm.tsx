@@ -6,6 +6,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { Field } from '@ui/components/editor/Field'
 import { Slider } from '@ui/components/editor/Slider'
 import { Button } from '@ui/components/editor/Button'
+import { Checkbox } from '@ui/components/editor/Checkbox/Checkbox'
 import { BackendMessage } from '@/view/types/messages'
 
 type Props = {
@@ -203,8 +204,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         <Field label="Chatbot" html_for="chatbot">
           <div
             onClick={(e) => {
-              e.stopPropagation();
-              props.pick_chatbot(chatbot);
+              e.stopPropagation()
+              props.pick_chatbot(chatbot)
             }}
           >
             <div style={{ cursor: 'pointer' }}>
@@ -315,10 +316,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               if (model_info?.disabled_options?.includes(key)) return null
               return (
                 <label key={key} className={styles.options__item}>
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={options.includes(key)}
-                    onChange={() => handle_option_toggle(key)}
+                    on_change={() => handle_option_toggle(key)}
                   />
                   {label as any}
                 </label>

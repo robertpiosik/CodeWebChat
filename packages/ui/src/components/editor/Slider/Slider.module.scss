@@ -15,13 +15,13 @@
     }
 
     &::-webkit-slider-runnable-track {
-      background: var(--vscode-descriptionForeground);
-      height: 2px;
+      background: var(--vscode-input-foreground);
+      height: 1px;
     }
 
     &::-webkit-slider-thumb {
       appearance: none;
-      margin-top: -5px;
+      margin-top: -5.5px;
       background-color: var(--vscode-button-background);
       height: 12px;
       width: 12px;

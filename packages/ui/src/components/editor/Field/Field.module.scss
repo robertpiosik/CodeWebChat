@@ -15,7 +15,7 @@
     color: var(--vscode-descriptionForeground);
   }
 
-  input,
+  input:not([type='checkbox']),
   select {
     background-color: var(--vscode-input-background);
     color: var(--vscode-input-foreground);
