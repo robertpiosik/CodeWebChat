@@ -218,6 +218,8 @@ export const review_applied_changes = async (
       const { decision } = result
 
       if ('accepted_files' in decision) {
+        await vscode.workspace.saveAll()
+
         const accepted_files_info = decision.accepted_files
         const accepted_file_identifiers = new Set(
           accepted_files_info.map(
