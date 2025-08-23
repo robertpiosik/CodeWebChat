@@ -12,7 +12,7 @@
 ✅ **Edit context** with 15+ free chatbots or direct API calls \
 ✅ **Integrate multi-file changes** with confidence \
 ✅ **Code completions** with reasoning models \
-✅ **Commit messages** in your style
+✅ **Commit messages** in your team's style
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
