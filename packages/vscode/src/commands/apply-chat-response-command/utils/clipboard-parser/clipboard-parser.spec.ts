@@ -134,6 +134,22 @@ describe('clipboard-parser', () => {
       expect(result[1].file_path).toBe('src/utils.py')
       expect(result[1].content).toBe(`print("hello")`)
     })
+
+    it('should parse with curly brace on same line as closing backticks', () => {
+      const text = load_clipboard_text(
+        'curly-on-same-line-as-closing-backticks.txt'
+      )
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0].file_path).toBe('src/index.ts')
+      expect(result[0].content).toBe('{\n  console.log("hello")\n}')
+      expect(result[1].file_path).toBe('src/utils.py')
+      expect(result[1].content).toBe('print("world")')
+    })
   })
 
   describe('parse_file_content_only', () => {

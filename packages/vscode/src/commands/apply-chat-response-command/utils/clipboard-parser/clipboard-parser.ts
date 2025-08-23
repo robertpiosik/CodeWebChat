@@ -193,7 +193,21 @@ export const parse_multiple_files = (params: {
       in_cdata = false
       continue
     } else if (state == 'CONTENT') {
-      if (line.trim() == '```') {
+      if (line.trim().endsWith('```')) {
+        let content_on_closing_line = ''
+        if (line.trim() != '```') {
+          const last_backticks_index = line.lastIndexOf('```')
+          content_on_closing_line = line.substring(0, last_backticks_index)
+        }
+
+        if (content_on_closing_line.trim() != '') {
+          if (current_content) {
+            current_content += '\n' + content_on_closing_line
+          } else {
+            current_content = content_on_closing_line
+          }
+        }
+
         state = 'TEXT'
 
         const cleaned_content = cleanup_api_response({

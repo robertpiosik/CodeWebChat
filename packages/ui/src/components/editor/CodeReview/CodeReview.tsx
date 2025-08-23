@@ -75,9 +75,7 @@ export const CodeReview: FC<Props> = ({
                 disabled={files_to_review.length == 1}
               />
               <div className={styles['item__label']}>
-                <span>
-                  {file.is_new ? 'New: ' : ''} {file_name}
-                </span>
+                <span>{file_name}</span>
                 <span>
                   {has_multiple_workspaces && file.workspace_name
                     ? `${file.workspace_name}/`

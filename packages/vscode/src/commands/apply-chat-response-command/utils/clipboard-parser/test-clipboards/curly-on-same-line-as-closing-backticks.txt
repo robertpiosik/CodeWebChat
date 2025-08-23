@@ -1,0 +1,10 @@
+```javascript
+// src/index.ts
+{
+  console.log("hello")
+}```
+
+```python
+# src/utils.py
+print("world")
+```
