@@ -111,6 +111,26 @@ const cleanup_temp_files = (prepared_files: PreparedFile[]): void => {
   })
 }
 
+const close_review_diff_editors = async (
+  prepared_files: PreparedFile[]
+): Promise<void> => {
+  const temp_file_paths = new Set(prepared_files.map((f) => f.temp_file_path))
+  const promises: Thenable<boolean>[] = []
+
+  for (const tabGroup of vscode.window.tabGroups.all) {
+    for (const tab of tabGroup.tabs) {
+      if (
+        tab.input instanceof vscode.TabInputTextDiff &&
+        temp_file_paths.has(tab.input.original.fsPath)
+      ) {
+        promises.push(vscode.window.tabGroups.close(tab, true))
+      }
+    }
+  }
+
+  await Promise.all(promises)
+}
+
 const show_diff_with_actions = async (
   prepared_file: PreparedFile
 ): Promise<CodeReviewResult> => {
@@ -257,18 +277,7 @@ export const review_applied_changes = async (
         }
         continue
       }
-
-      // User closed diff without making a decision
-      await vscode.commands.executeCommand(
-        'workbench.action.revertAndCloseActiveEditor'
-      )
-      return null
     }
-
-    // Close any remaining diff editor
-    await vscode.commands.executeCommand(
-      'workbench.action.revertAndCloseActiveEditor'
-    )
 
     const accepted_files = review_items
       .filter((item) => item.status === 'accepted')
@@ -291,6 +300,7 @@ export const review_applied_changes = async (
 
     return { accepted_files, rejected_states }
   } finally {
+    await close_review_diff_editors(prepared_files)
     cleanup_temp_files(prepared_files)
 
     if (view_provider) {
