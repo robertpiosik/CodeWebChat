@@ -62,9 +62,9 @@ export const handle_update_preset = async (
     return
   }
 
-  if (message.origin === 'back_button') {
+  if (message.origin == 'back_button') {
     const save_changes_button = 'Save'
-    const discard_changes = 'Discard Changes'
+    const discard_changes = 'Discard changes'
     const result = await vscode.window.showInformationMessage(
       `Save changes to the ${item_type}?`,
       {
