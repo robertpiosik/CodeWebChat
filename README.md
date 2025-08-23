@@ -1,13 +1,8 @@
 # Code Web Chat
 
-<a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a>
+<a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a> <a href="https://discord.com/invite/KJySXsrSX5" target="_blank"><img src="https://img.shields.io/badge/Chat-Discord-7289da" alt="Join Discord server" /></a>
 
-**Built for software engineers, a 100% free and open-source tool for AI pair programming.** With its simple, non-agentic approach, CWC provides unmatched accuracy, speed and cost efficiency. Saves you sanity, time and money. Created by an independent developer for VS Code (also Cursor, Windsurf, VSCodium, etc.).
-
-> LLMs have been shown to be an insufficient technology to reliably power the idea of agentic coding, especially in real-world, complex projects. When AI pair programming with CWC, you're close to the codebase—shaping it like a sculptor with a wonderous chisel. Keep your abilities sharp and create a programming duo that delivers truly exceptional value.
->
-> Happy coding with CWC! \
-> [Robert](https://x.com/robertpiosik) 🤓
+**Built for software engineers, a 100% free and open-source tool for AI pair programming.** With its simple, non-agentic approach, CWC provides unmatched accuracy, speed and cost efficiency. Saves you sanity, time and money. [Created by an independent developer](https://x.com/robertpiosik) for VS Code (also Cursor, Windsurf, VSCodium, etc.).
 
 ✅ **Edit context** with 15+ free chatbots or direct API calls \
 ✅ **Integrate multi-file changes** with confidence \
