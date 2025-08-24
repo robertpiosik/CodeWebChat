@@ -268,12 +268,7 @@ export const View = () => {
 
   if (files_to_review.length > 0) {
     overlay = (
-      <UiPage
-        title="Code Review"
-        on_back_click={() => {
-          post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
-        }}
-      >
+      <UiPage title="Code Review">
         <UiCodeReview
           files={files_to_review}
           has_multiple_workspaces={has_multiple_workspaces}
