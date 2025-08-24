@@ -64,6 +64,7 @@ import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { api_tool_config_emitter } from '@/services/api-providers-manager'
 import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-applied-changes'
+import { Logger } from '@/utils/logger'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -442,7 +443,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             this._send_git_state()
           }
         } catch (error: any) {
-          console.error('Error handling message:', message, error)
+          Logger.error({
+            function_name: 'resolveWebviewView',
+            message: 'Error handling message',
+            data: { message, error }
+          })
           vscode.window.showErrorMessage(
             `Error handling message: ${error.message}`
           )
@@ -511,7 +516,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         })
       })
       .catch((error) => {
-        console.error('Error calculating token count:', error)
+        Logger.error({
+          function_name: 'calculate_token_count',
+          message: 'Error calculating token count',
+          data: error
+        })
         vscode.window.showErrorMessage(
           `Error calculating token count: ${error.message}`
         )
@@ -586,7 +595,9 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                   selected_name = last_group
                 }
               } else if (
-                presets_for_mode.some((p) => !p.chatbot && p.name === last_group)
+                presets_for_mode.some(
+                  (p) => !p.chatbot && p.name === last_group
+                )
               ) {
                 selected_name = last_group
               }
@@ -599,23 +610,32 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   }
 
   private _send_git_state() {
-    const git_extension = vscode.extensions.getExtension('vscode.git')?.exports
-    if (!git_extension) {
-      return
+    try {
+      const git_extension =
+        vscode.extensions.getExtension('vscode.git')?.exports
+      if (!git_extension) {
+        return
+      }
+      const git = git_extension.getAPI(1)
+      if (!git) {
+        return
+      }
+      const has_changes = git.repositories.some(
+        (repo: any) =>
+          repo.state.workingTreeChanges.length > 0 ||
+          repo.state.indexChanges.length > 0
+      )
+      this.send_message({
+        command: 'GIT_STATE_CHANGED',
+        has_changes_to_commit: has_changes
+      })
+    } catch (error) {
+      Logger.warn({
+        function_name: '_send_git_state',
+        message: 'Failed to get git state',
+        data: error
+      })
     }
-    const git = git_extension.getAPI(1)
-    if (!git) {
-      return
-    }
-    const has_changes = git.repositories.some(
-      (repo: any) =>
-        repo.state.workingTreeChanges.length > 0 ||
-        repo.state.indexChanges.length > 0
-    )
-    this.send_message({
-      command: 'GIT_STATE_CHANGED',
-      has_changes_to_commit: has_changes
-    })
   }
 
   private _watch_git_state() {
@@ -651,9 +671,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         this.context.subscriptions
       )
     } catch (error) {
-      console.warn(
-        `Failed to initialize git watcher, will retry in 1s. Error: ${error}`
-      )
+      Logger.warn({
+        function_name: '_watch_git_state',
+        message: 'Failed to initialize git watcher, will retry in 1s',
+        data: error
+      })
       setTimeout(() => this._watch_git_state(), 1000)
     }
   }
@@ -710,10 +732,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     `
   }
 
-  public add_text_at_cursor_position(
-    text: string,
-    chars_to_remove_before = 0
-  ) {
+  public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const is_in_code_completions_mode =
       (this.home_view_type == HOME_VIEW_TYPES.WEB &&
         this.web_mode == 'code-completions') ||

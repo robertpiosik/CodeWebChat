@@ -366,7 +366,7 @@ const handle_code_review_and_cleanup = async (params: {
     params.view_provider
   )
 
-  if (review_result === null || review_result.accepted_files.length === 0) {
+  if (review_result === null || review_result.accepted_files.length == 0) {
     await revert_files(params.original_states)
     params.update_revert_and_apply_button_state(null)
     return false
@@ -379,8 +379,8 @@ const handle_code_review_and_cleanup = async (params: {
   const accepted_states = params.original_states.filter((state) =>
     review_result.accepted_files.some(
       (accepted) =>
-        accepted.file_path === state.file_path &&
-        accepted.workspace_name === state.workspace_name
+        accepted.file_path == state.file_path &&
+        accepted.workspace_name == state.workspace_name
     )
   )
 
@@ -391,8 +391,8 @@ const handle_code_review_and_cleanup = async (params: {
     )
     const response = await vscode.window.showInformationMessage(
       accepted_states.length > 1
-        ? 'Accepted changes have been applied.'
-        : 'Change has been applied.',
+        ? `Changes applied to ${accepted_states.length} files.`
+        : 'Changes applied to 1 file.',
       'Revert'
     )
     if (response == 'Revert') {
