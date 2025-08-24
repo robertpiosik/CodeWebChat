@@ -86,10 +86,10 @@ export const ChatInput: React.FC<Props> = (props) => {
     }
 
     const regex =
-      /(@Selection|@Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?|@SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"|`[^`]+`)/g
+      /(#Selection|#Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?|#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"|`[^`]+`)/g
     const parts = text.split(regex)
     return parts.map((part, index) => {
-      if (part == '@Selection') {
+      if (part == '#Selection') {
         return (
           <span
             key={index}
@@ -101,7 +101,7 @@ export const ChatInput: React.FC<Props> = (props) => {
           </span>
         )
       }
-      if (part && /^@Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?$/.test(part)) {
+      if (part && /^#Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?$/.test(part)) {
         return (
           <span key={index} className={styles['selection-keyword']}>
             {part}
@@ -110,7 +110,7 @@ export const ChatInput: React.FC<Props> = (props) => {
       }
       if (
         part &&
-        /^@SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
+        /^#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
       ) {
         return (
           <span key={index} className={styles['selection-keyword']}>
@@ -318,7 +318,7 @@ export const ChatInput: React.FC<Props> = (props) => {
           className={styles['highlight-container']}
           ref={highlight_ref}
           onClick={() => {
-            if (props.value.includes('@Selection') && props.on_at_sign_click)
+            if (props.value.includes('#Selection') && props.on_at_sign_click)
               props.on_at_sign_click()
           }}
         >

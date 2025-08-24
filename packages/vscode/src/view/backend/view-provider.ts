@@ -710,7 +710,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     `
   }
 
-  public add_text_at_cursor_position(text: string) {
+  public add_text_at_cursor_position(
+    text: string,
+    chars_to_remove_before = 0
+  ) {
     const is_in_code_completions_mode =
       (this.home_view_type == HOME_VIEW_TYPES.WEB &&
         this.web_mode == 'code-completions') ||
@@ -742,7 +745,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         return
     }
 
-    const before_caret = current_instructions.slice(0, this.caret_position)
+    const before_caret = current_instructions.slice(
+      0,
+      this.caret_position - chars_to_remove_before
+    )
     const after_caret = current_instructions.slice(this.caret_position)
 
     new_instructions = (before_caret + text + after_caret).replace(/  +/g, ' ')

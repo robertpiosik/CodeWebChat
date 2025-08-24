@@ -305,7 +305,7 @@ export const perform_context_editing = async (params: {
   }
 
   if (editor && !editor.selection.isEmpty) {
-    if (instructions.includes('@Selection')) {
+    if (instructions.includes('#Selection')) {
       instructions = replace_selection_placeholder(instructions)
     }
   }
@@ -313,13 +313,13 @@ export const perform_context_editing = async (params: {
   let pre_context_instructions = instructions
   let post_context_instructions = instructions
 
-  if (pre_context_instructions.includes('@Changes:')) {
+  if (pre_context_instructions.includes('#Changes:')) {
     pre_context_instructions = await replace_changes_placeholder(
       pre_context_instructions
     )
   }
 
-  if (pre_context_instructions.includes('@SavedContext:')) {
+  if (pre_context_instructions.includes('#SavedContext:')) {
     pre_context_instructions = await replace_saved_context_placeholder(
       pre_context_instructions,
       params.context,

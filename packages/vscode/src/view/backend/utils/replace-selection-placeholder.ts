@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 
 export const replace_selection_placeholder = (instruction: string): string => {
-  if (!instruction.includes('@Selection')) {
+  if (!instruction.includes('#Selection')) {
     return instruction
   }
 
@@ -9,9 +9,9 @@ export const replace_selection_placeholder = (instruction: string): string => {
   if (!active_editor || active_editor.selection.isEmpty) {
     // If no selection, just return the original instruction
     vscode.window.showInformationMessage(
-      'No text selected for @Selection placeholder.'
+      'No text selected for #Selection placeholder.'
     )
-    return instruction.replace(/@Selection/g, '')
+    return instruction.replace(/#Selection/g, '')
   }
 
   const selected_text = active_editor.document.getText(active_editor.selection)
@@ -20,5 +20,5 @@ export const replace_selection_placeholder = (instruction: string): string => {
 
   const replacement_text = `\n<fragment path="${current_file_path}">\n<![CDATA[\n${selected_text}\n]]>\n</fragment>\n`
 
-  return instruction.replace(/\s*@Selection\s*/g, replacement_text)
+  return instruction.replace(/\s*#Selection\s*/g, replacement_text)
 }

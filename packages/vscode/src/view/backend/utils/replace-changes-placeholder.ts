@@ -7,7 +7,7 @@ export const replace_changes_placeholder = async (
   instruction: string
 ): Promise<string> => {
   const matches = instruction.match(
-    /@Changes:([^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?)/
+    /#Changes:([^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?)/
   )
   if (!matches) {
     return instruction
@@ -23,7 +23,7 @@ export const replace_changes_placeholder = async (
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders) {
       vscode.window.showErrorMessage('No workspace folders found.')
-      return instruction.replace(new RegExp(`@Changes:${branch_spec}`, 'g'), '')
+      return instruction.replace(new RegExp(`#Changes:${branch_spec}`, 'g'), '')
     }
 
     const target_folder = workspace_folders.find(
@@ -33,7 +33,7 @@ export const replace_changes_placeholder = async (
       vscode.window.showErrorMessage(
         `Workspace folder "${folder_name}" not found.`
       )
-      return instruction.replace(new RegExp(`@Changes:${branch_spec}`, 'g'), '')
+      return instruction.replace(new RegExp(`#Changes:${branch_spec}`, 'g'), '')
     }
 
     try {
@@ -58,14 +58,14 @@ export const replace_changes_placeholder = async (
           `No changes found between current branch and ${branch_name} in ${folder_name}.`
         )
         return instruction.replace(
-          new RegExp(`@Changes:${branch_spec}`, 'g'),
+          new RegExp(`#Changes:${branch_spec}`, 'g'),
           ''
         )
       }
 
       const replacement_text = `\n\`\`\`diff\n${diff}\n\`\`\`\n`
       return instruction.replace(
-        new RegExp(`@Changes:${branch_spec}`, 'g'),
+        new RegExp(`#Changes:${branch_spec}`, 'g'),
         replacement_text
       )
     } catch (error) {
@@ -77,14 +77,14 @@ export const replace_changes_placeholder = async (
         message: `Error getting diff from branch ${branch_name} in folder ${folder_name}`,
         data: error
       })
-      return instruction.replace(new RegExp(`@Changes:${branch_spec}`, 'g'), '')
+      return instruction.replace(new RegExp(`#Changes:${branch_spec}`, 'g'), '')
     }
   } else {
     const branch_name = branch_spec
     const repository = get_git_repository()
     if (!repository) {
       vscode.window.showErrorMessage('No Git repository found.')
-      return instruction.replace(new RegExp(`@Changes:${branch_name}`, 'g'), '')
+      return instruction.replace(new RegExp(`#Changes:${branch_name}`, 'g'), '')
     }
 
     try {
@@ -109,14 +109,14 @@ export const replace_changes_placeholder = async (
           `No changes found between current branch and ${branch_name}.`
         )
         return instruction.replace(
-          new RegExp(`@Changes:${branch_name}`, 'g'),
+          new RegExp(`#Changes:${branch_name}`, 'g'),
           ''
         )
       }
 
       const replacement_text = `\n\`\`\`diff\n${diff}\n\`\`\`\n`
       return instruction.replace(
-        new RegExp(`@Changes:${branch_name}`, 'g'),
+        new RegExp(`#Changes:${branch_name}`, 'g'),
         replacement_text
       )
     } catch (error) {
@@ -128,7 +128,7 @@ export const replace_changes_placeholder = async (
         message: `Error getting diff from branch ${branch_name}`,
         data: error
       })
-      return instruction.replace(new RegExp(`@Changes:${branch_name}`, 'g'), '')
+      return instruction.replace(new RegExp(`#Changes:${branch_name}`, 'g'), '')
     }
   }
 }

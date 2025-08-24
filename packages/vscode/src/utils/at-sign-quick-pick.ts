@@ -11,22 +11,22 @@ export async function at_sign_quick_pick(
 ): Promise<string | undefined> {
   let items = [
     {
-      label: '@Selection',
+      label: '#Selection',
       description: 'Text selection of the active editor'
     },
     {
-      label: '@Changes',
+      label: '#Changes',
       description: 'Diff between the current branch and the selected branch'
     },
     {
-      label: '@SavedContext',
+      label: '#SavedContext',
       description: 'Files from a saved context'
     }
   ]
 
   if (is_code_completions_mode) {
     items = items.filter(
-      (item) => item.label != '@Selection' && item.label != '@Changes'
+      (item) => item.label != '#Selection' && item.label != '#Changes'
     )
   }
 
@@ -39,11 +39,11 @@ export async function at_sign_quick_pick(
     return
   }
 
-  if (selected.label == '@Selection') {
-    return 'Selection '
+  if (selected.label == '#Selection') {
+    return '#Selection '
   }
 
-  if (selected.label == '@Changes') {
+  if (selected.label == '#Changes') {
     try {
       const workspace_folders = vscode.workspace.workspaceFolders
       if (!workspace_folders || workspace_folders.length == 0) {
@@ -111,10 +111,10 @@ export async function at_sign_quick_pick(
       if (selected_branch) {
         // For single root workspace, keep existing format
         if (workspace_with_branches.length === 1) {
-          return `Changes:${selected_branch.label} `
+          return `#Changes:${selected_branch.label} `
         } else {
           // For multi-root workspace, return format: changes:[folder name]/[branch name]
-          return `Changes:${selected_branch.label} `
+          return `#Changes:${selected_branch.label} `
         }
       }
     } catch (error) {
@@ -124,7 +124,7 @@ export async function at_sign_quick_pick(
     }
   }
 
-  if (selected.label == '@SavedContext') {
+  if (selected.label == '#SavedContext') {
     const workspace_root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
     if (!workspace_root) {
       vscode.window.showErrorMessage('No workspace root found.')
@@ -198,12 +198,12 @@ export async function at_sign_quick_pick(
     if (!source) return
 
     const contexts_to_use =
-      source === 'WorkspaceState' ? internal_contexts : file_contexts
+      source == 'WorkspaceState' ? internal_contexts : file_contexts
 
     const context_items = contexts_to_use.map((ctx) => ({
       label: ctx.name,
       description: `${ctx.paths.length} path${
-        ctx.paths.length === 1 ? '' : 's'
+        ctx.paths.length == 1 ? '' : 's'
       }`
     }))
 
@@ -212,7 +212,7 @@ export async function at_sign_quick_pick(
     })
 
     if (selected_context) {
-      return `SavedContext:${source} "${selected_context.label}" `
+      return `#SavedContext:${source} "${selected_context.label}" `
     }
   }
 
