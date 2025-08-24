@@ -91,13 +91,13 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   >({} as any)
 
   useEffect(() => {
-    if (props.selected_preset_or_group_name) {
+    if (props.selected_preset_or_group_name !== undefined) {
       set_highlighted_preset_name((prev) => ({
         ...prev,
         [props.web_mode]: props.selected_preset_or_group_name
       }))
     }
-  }, [props.selected_preset_or_group_name])
+  }, [props.selected_preset_or_group_name, props.web_mode])
 
   const get_is_preset_disabled = (preset: Presets.Preset) =>
     preset.chatbot &&
@@ -154,6 +154,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           <div
             className={cn(styles.presets__item, {
               [styles['presets__item--ungrouped']]: true,
+              [styles['presets__item--highlighted']]:
+                highlighted_preset_name[props.web_mode] == 'Ungrouped',
               [styles['presets__item--disabled']]: get_is_ungrouped_disabled()
             })}
             onClick={() => {

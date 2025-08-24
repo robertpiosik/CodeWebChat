@@ -212,7 +212,7 @@ async function show_preset_quick_pick(
   context: vscode.ExtensionContext,
   mode: WebMode,
   provider: ViewProvider
-): Promise<string[]> {
+): Promise<string[] | null> {
   const last_selected_item = context.workspaceState.get<string | undefined>(
     get_last_selected_preset_key(mode),
     undefined
@@ -222,7 +222,11 @@ async function show_preset_quick_pick(
     vscode.QuickPickItem & { name?: string }
   >()
 
-  const items: (vscode.QuickPickItem & { name?: string })[] = []
+  const BACK_LABEL = '$(arrow-left) Back'
+  const items: (vscode.QuickPickItem & { name?: string })[] = [
+    { label: BACK_LABEL },
+    { label: '', kind: vscode.QuickPickItemKind.Separator }
+  ]
 
   if (presets[0]?.chatbot !== undefined) {
     items.push({
@@ -269,11 +273,18 @@ async function show_preset_quick_pick(
     }
   }
 
-  return new Promise<string[]>((resolve) => {
+  return new Promise<string[] | null>((resolve) => {
     const disposables: vscode.Disposable[] = []
 
     quick_pick.onDidAccept(async () => {
       const selected = quick_pick.selectedItems[0] as any
+
+      if (selected?.label === BACK_LABEL) {
+        quick_pick.hide()
+        resolve(null)
+        return
+      }
+
       quick_pick.hide()
 
       if (selected && selected.name !== undefined) {
@@ -496,191 +507,216 @@ async function resolve_presets(params: {
     }
   }
 
-  const choice = await new Promise<string | undefined>((resolve) => {
-    const quick_pick = vscode.window.createQuickPick()
-    const items: vscode.QuickPickItem[] = [
-      {
-        label: PRESET,
-        description: 'Initialize only a selected preset'
-      },
-      {
-        label: GROUP,
-        description: 'Simultaneously run all selected presets within a group'
-      }
-    ]
-    quick_pick.items = items
-    quick_pick.placeholder = 'Select what to initialize'
-    const last_choice = params.context.workspaceState.get<string>(
-      last_group_or_preset_choice_state_key
-    )
-    if (last_choice) {
-      const last_item = items.find((item) => item.label == last_choice)
-      if (last_item) {
-        quick_pick.activeItems = [last_item]
-      }
-    }
-    quick_pick.onDidAccept(() => {
-      const selection = quick_pick.selectedItems[0]
-      resolve(selection ? selection.label : undefined)
-      quick_pick.hide()
-    })
-    quick_pick.onDidHide(() => {
-      resolve(undefined)
-      quick_pick.dispose()
-    })
-    quick_pick.show()
-  })
-
-  if (!choice) {
-    return []
-  }
-
-  params.context.workspaceState.update(
-    last_group_or_preset_choice_state_key,
-    choice
-  )
-
-  if (choice == GROUP) {
-    const group_items = all_presets
-      .filter((p) => !p.chatbot)
-      .map((group) => {
-        const group_index = all_presets.indexOf(group)
-        let default_presets_count = 0
-        for (let i = group_index + 1; i < all_presets.length; i++) {
-          const preset = all_presets[i]
-          if (!preset.chatbot) {
-            break // next group
-          }
-          if (preset.isDefault) {
-            default_presets_count++
-          }
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const choice = await new Promise<string | undefined>((resolve) => {
+      const quick_pick = vscode.window.createQuickPick()
+      const items: vscode.QuickPickItem[] = [
+        {
+          label: PRESET,
+          description: 'Initialize only a selected preset'
+        },
+        {
+          label: GROUP,
+          description: 'Simultaneously run all selected presets within a group'
         }
-        return {
-          label: group.name,
-          name: group.name,
+      ]
+      quick_pick.items = items
+      quick_pick.placeholder = 'Select what to initialize'
+      const last_choice = params.context.workspaceState.get<string>(
+        last_group_or_preset_choice_state_key
+      )
+      if (last_choice) {
+        const last_item = items.find((item) => item.label == last_choice)
+        if (last_item) {
+          quick_pick.activeItems = [last_item]
+        }
+      }
+      quick_pick.onDidAccept(() => {
+        const selection = quick_pick.selectedItems[0]
+        resolve(selection ? selection.label : undefined)
+        quick_pick.hide()
+      })
+      quick_pick.onDidHide(() => {
+        resolve(undefined)
+        quick_pick.dispose()
+      })
+      quick_pick.show()
+    })
+
+    if (!choice) {
+      return []
+    }
+
+    params.context.workspaceState.update(
+      last_group_or_preset_choice_state_key,
+      choice
+    )
+
+    if (choice == GROUP) {
+      const group_items_from_config = all_presets
+        .filter((p) => !p.chatbot)
+        .map((group) => {
+          const group_index = all_presets.indexOf(group)
+          let default_presets_count = 0
+          for (let i = group_index + 1; i < all_presets.length; i++) {
+            const preset = all_presets[i]
+            if (!preset.chatbot) {
+              break // next group
+            }
+            if (preset.isDefault) {
+              default_presets_count++
+            }
+          }
+          return {
+            label: group.name,
+            name: group.name,
+            description: `${default_presets_count} selected preset${
+              default_presets_count != 1 ? 's' : ''
+            }`
+          }
+        })
+
+      const first_group_index = all_presets.findIndex((p) => !p.chatbot)
+      if (first_group_index > 0) {
+        const ungrouped_presets = all_presets.slice(0, first_group_index)
+        const default_presets_count = ungrouped_presets.filter(
+          (p) => p.isDefault
+        ).length
+        group_items_from_config.unshift({
+          label: 'Ungrouped',
+          name: 'Ungrouped',
           description: `${default_presets_count} selected preset${
             default_presets_count != 1 ? 's' : ''
           }`
-        }
-      })
-
-    const first_group_index = all_presets.findIndex((p) => !p.chatbot)
-    if (first_group_index > 0) {
-      const ungrouped_presets = all_presets.slice(0, first_group_index)
-      const default_presets_count = ungrouped_presets.filter(
-        (p) => p.isDefault
-      ).length
-      group_items.unshift({
-        label: 'Ungrouped',
-        name: 'Ungrouped',
-        description: `${default_presets_count} selected preset${
-          default_presets_count != 1 ? 's' : ''
-        }`
-      })
-    } else if (first_group_index == -1 && all_presets.length > 0) {
-      const default_presets_count = all_presets.filter(
-        (p) => p.isDefault
-      ).length
-      group_items.unshift({
-        label: 'Ungrouped',
-        name: 'Ungrouped',
-        description: `${default_presets_count} selected preset${
-          default_presets_count != 1 ? 's' : ''
-        }`
-      })
-    }
-
-    const quick_pick = vscode.window.createQuickPick<
-      vscode.QuickPickItem & { name: string }
-    >()
-    quick_pick.items = group_items
-    quick_pick.placeholder = 'Select a group'
-
-    const last_selected_group = params.context.workspaceState.get<string>(
-      last_selected_group_state_key,
-      ''
-    )
-    if (last_selected_group) {
-      const last_item = group_items.find(
-        (item) => item.name == last_selected_group
-      )
-      if (last_item) {
-        quick_pick.activeItems = [last_item]
-      }
-    }
-
-    return new Promise<string[]>((resolve) => {
-      const disposables: vscode.Disposable[] = []
-
-      quick_pick.onDidAccept(async () => {
-        const selected = quick_pick.selectedItems[0]
-        quick_pick.hide()
-
-        if (!selected) {
-          resolve([])
-          return
-        }
-
-        const group_name = selected.name
-        params.context.workspaceState.update(
-          last_selected_group_state_key,
-          group_name
-        )
-        params.provider.send_message({
-          command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
-          mode: params.provider.web_mode,
-          name: group_name
         })
+      } else if (first_group_index == -1 && all_presets.length > 0) {
+        const default_presets_count = all_presets.filter(
+          (p) => p.isDefault
+        ).length
+        group_items_from_config.unshift({
+          label: 'Ungrouped',
+          name: 'Ungrouped',
+          description: `${default_presets_count} selected preset${
+            default_presets_count != 1 ? 's' : ''
+          }`
+        })
+      }
 
-        let preset_names: string[] = []
-        if (group_name == 'Ungrouped') {
-          const first_group_index = all_presets.findIndex((p) => !p.chatbot)
-          const relevant_presets =
-            first_group_index == -1
-              ? all_presets
-              : all_presets.slice(0, first_group_index)
-          preset_names = relevant_presets
-            .filter((p) => p.isDefault && !get_is_preset_disabled(p))
-            .map((p) => p.name)
-        } else {
-          const group_index = all_presets.findIndex((p) => p.name == group_name)
-          if (group_index != -1) {
-            for (let i = group_index + 1; i < all_presets.length; i++) {
-              const preset = all_presets[i]
-              if (!preset.chatbot) {
-                break // next group
-              }
-              if (preset.isDefault && !get_is_preset_disabled(preset)) {
-                preset_names.push(preset.name)
+      const BACK_LABEL = '$(arrow-left) Back'
+      const group_items = [
+        { label: BACK_LABEL, name: '__BACK__' },
+        { label: '', name: '', kind: vscode.QuickPickItemKind.Separator },
+        ...group_items_from_config
+      ]
+
+      const quick_pick = vscode.window.createQuickPick<
+        vscode.QuickPickItem & { name: string }
+      >()
+      quick_pick.items = group_items
+      quick_pick.placeholder = 'Select a group'
+
+      const last_selected_group = params.context.workspaceState.get<string>(
+        last_selected_group_state_key,
+        ''
+      )
+      if (last_selected_group) {
+        const last_item = group_items.find(
+          (item) => item.name == last_selected_group
+        )
+        if (last_item) {
+          quick_pick.activeItems = [last_item]
+        }
+      }
+
+      const result = await new Promise<string[] | null>((resolve) => {
+        const disposables: vscode.Disposable[] = []
+
+        quick_pick.onDidAccept(async () => {
+          const selected = quick_pick.selectedItems[0]
+          quick_pick.hide()
+
+          if (!selected) {
+            resolve([])
+            return
+          }
+
+          if (selected.name === '__BACK__') {
+            resolve(null)
+            return
+          }
+
+          const group_name = selected.name
+          params.context.workspaceState.update(
+            last_selected_group_state_key,
+            group_name
+          )
+          params.provider.send_message({
+            command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
+            mode: params.provider.web_mode,
+            name: group_name
+          })
+
+          let preset_names: string[] = []
+          if (group_name == 'Ungrouped') {
+            const first_group_index = all_presets.findIndex((p) => !p.chatbot)
+            const relevant_presets =
+              first_group_index == -1
+                ? all_presets
+                : all_presets.slice(0, first_group_index)
+            preset_names = relevant_presets
+              .filter((p) => p.isDefault && !get_is_preset_disabled(p))
+              .map((p) => p.name)
+          } else {
+            const group_index = all_presets.findIndex(
+              (p) => p.name == group_name
+            )
+            if (group_index != -1) {
+              for (let i = group_index + 1; i < all_presets.length; i++) {
+                const preset = all_presets[i]
+                if (!preset.chatbot) {
+                  break // next group
+                }
+                if (preset.isDefault && !get_is_preset_disabled(preset)) {
+                  preset_names.push(preset.name)
+                }
               }
             }
           }
-        }
 
-        if (preset_names.length == 0) {
-          vscode.window.showWarningMessage(
-            'The chosen group has no selected presets.'
-          )
-        }
-        resolve(preset_names)
+          if (preset_names.length == 0) {
+            vscode.window.showWarningMessage(
+              'The chosen group has no selected presets.'
+            )
+          }
+          resolve(preset_names)
+        })
+
+        quick_pick.onDidHide(() => {
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+          resolve([])
+        })
+
+        disposables.push(quick_pick)
+        quick_pick.show()
       })
+      if (result === null) {
+        continue
+      }
+      return result
+    }
 
-      quick_pick.onDidHide(() => {
-        disposables.forEach((d) => d.dispose())
-        quick_pick.dispose()
-        resolve([])
-      })
-
-      disposables.push(quick_pick)
-      quick_pick.show()
-    })
+    // choice == PRESET
+    const preset_result = await show_preset_quick_pick(
+      all_presets,
+      params.context,
+      params.provider.web_mode,
+      params.provider
+    )
+    if (preset_result === null) {
+      continue
+    }
+    return preset_result
   }
-
-  // choice == PRESETS
-  return show_preset_quick_pick(
-    all_presets,
-    params.context,
-    params.provider.web_mode,
-    params.provider
-  )
 }
