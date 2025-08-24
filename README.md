@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a> <a href="https://discord.com/invite/KJySXsrSX5" target="_blank"><img src="https://img.shields.io/badge/Chat-Discord-7289da" alt="Join Discord server" /></a>
 
-**A 100% free and open-source tool for AI pair programming.** By its non-agentic, context-first design, it offers unmatched accuracy, speed and cost efficiency. Designed from the ground up for software engineers.
+**A 100% free and open-source tool for AI pair programming.** By its non-agentic, context-first design, it offers unmatched accuracy, speed and cost efficiency.
 
 Works with VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.).
 
