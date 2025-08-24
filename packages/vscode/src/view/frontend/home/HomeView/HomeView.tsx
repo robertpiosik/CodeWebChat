@@ -604,7 +604,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 } as React.CSSProperties
               }
             >
-              {i % 2 == 0 ? '❤️' : '☕️'}
+              {i % 2 == 0 ? '❤️' : '🙏'}
             </span>
           ))}
       </div>

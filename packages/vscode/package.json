@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC)",
-  "description": "The free vibe coding",
+  "description": "Free AI pair programming for everyone",
   "version": "1.291.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
