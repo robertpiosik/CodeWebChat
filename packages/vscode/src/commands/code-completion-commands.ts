@@ -8,10 +8,11 @@ import { ApiProvidersManager } from '../services/api-providers-manager'
 import { Logger } from '../utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '../constants/state-keys'
+import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/api-providers-manager'
 import { replace_saved_context_placeholder } from '../utils/replace-saved-context-placeholder'
+import { ViewProvider } from '../view/backend/view-provider'
 
 /**
  * Show inline completion using Inline Completions API
@@ -59,7 +60,8 @@ async function get_code_completion_config(
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
-  config_index?: number
+  config_index?: number,
+  view_provider?: ViewProvider
 ): Promise<{ provider: any; config: any } | undefined> {
   let code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
@@ -234,6 +236,14 @@ async function get_code_completion_config(
             selected.index
           )
 
+          if (view_provider) {
+            view_provider.send_message({
+              command: 'SELECTED_CONFIGURATION_CHANGED',
+              mode: 'code-completions',
+              index: selected.index
+            })
+          }
+
           const provider = await api_providers_manager.get_provider(
             selected.config.provider_name
           )
@@ -290,7 +300,8 @@ async function perform_code_completion(params: {
   auto_accept: boolean
   show_quick_pick?: boolean
   completion_instructions?: string
-  config_index?: number
+  config_index?: number,
+  view_provider?: ViewProvider
 }) {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
@@ -338,7 +349,8 @@ async function perform_code_completion(params: {
     api_providers_manager,
     params.show_quick_pick,
     params.context,
-    params.config_index
+    params.config_index,
+    params.view_provider
   )
 
   if (!config_result) {

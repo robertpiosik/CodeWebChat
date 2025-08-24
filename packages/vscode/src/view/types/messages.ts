@@ -290,6 +290,7 @@ export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
   presets: { [T in WebMode]: Preset[] }
   selected_preset_or_group_name_by_mode?: { [T in WebMode]?: string }
+  selected_configuration_index_by_mode?: { [T in ApiMode]?: number }
 }
 
 export interface ApiToolConfigurationsMessage extends BaseMessage {
@@ -405,6 +406,12 @@ export interface SelectedPresetOrGroupChangedMessage extends BaseMessage {
   name?: string
 }
 
+export interface SelectedConfigurationChangedMessage extends BaseMessage {
+  command: 'SELECTED_CONFIGURATION_CHANGED'
+  mode: ApiMode
+  index: number
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | ConnectionStatusMessage
@@ -432,3 +439,4 @@ export type BackendMessage =
   | CodeReviewFinishedMessage
   | HasMultipleWorkspacesMessage
   | SelectedPresetOrGroupChangedMessage
+  | SelectedConfigurationChangedMessage

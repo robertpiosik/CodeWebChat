@@ -58,6 +58,7 @@ type Props = {
   on_preset_delete: (preset_name: string) => void
   on_toggle_default_preset: (name: string) => void
   selected_preset_or_group_name?: string
+  selected_configuration_index?: number
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
@@ -475,6 +476,9 @@ export const HomeView: React.FC<Props> = (props) => {
                   is_default: c.is_default
                 }))}
                 on_configuration_click={props.on_configuration_click}
+                selected_configuration_index={
+                  props.selected_configuration_index
+                }
                 on_manage_configurations={props.on_manage_configurations_click}
                 translations={{
                   my_configurations: 'MY CONFIGURATIONS',

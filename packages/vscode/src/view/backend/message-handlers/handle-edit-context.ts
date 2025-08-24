@@ -20,7 +20,8 @@ const get_edit_context_config = async (
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
-  config_index?: number
+  config_index?: number,
+  view_provider?: ViewProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
   let edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
@@ -207,6 +208,14 @@ const get_edit_context_config = async (
             selected.index
           )
 
+          if (view_provider) {
+            view_provider.send_message({
+              command: 'SELECTED_CONFIGURATION_CHANGED',
+              mode: 'edit-context',
+              index: selected.index
+            })
+          }
+
           const provider = await api_providers_manager.get_provider(
             selected.config.provider_name
           )
@@ -264,6 +273,7 @@ export const perform_context_editing = async (params: {
   show_quick_pick?: boolean
   instructions?: string
   config_index?: number
+  view_provider?: ViewProvider
 }) => {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
@@ -353,7 +363,8 @@ export const perform_context_editing = async (params: {
     api_providers_manager,
     params.show_quick_pick,
     params.context,
-    params.config_index
+    params.config_index,
+    params.view_provider
   )
 
   if (!config_result) {
@@ -494,6 +505,7 @@ export const handle_edit_context = async (
     open_editors_provider: provider.open_editors_provider,
     show_quick_pick: message.use_quick_pick,
     instructions: provider.edit_instructions,
-    config_index: message.config_index
+    config_index: message.config_index,
+    view_provider: provider
   })
 }

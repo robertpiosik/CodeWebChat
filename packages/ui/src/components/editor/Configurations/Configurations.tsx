@@ -1,7 +1,7 @@
 import styles from './Configurations.module.scss'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { IconButton } from '../IconButton'
 
 export namespace Configurations {
@@ -20,6 +20,7 @@ export namespace Configurations {
     on_configuration_click: (i: number) => void
     on_manage_configurations: () => void
     has_instructions: boolean
+    selected_configuration_index?: number
     has_active_editor: boolean
     has_active_selection: boolean
     has_context: boolean
@@ -37,6 +38,15 @@ export namespace Configurations {
 export const Configurations: React.FC<Configurations.Props> = (props) => {
   const [highlighted_configuration_index, set_highlighted_configuration_index] =
     useState<Record<Configurations.Props['api_mode'], number>>({} as any)
+
+  useEffect(() => {
+    if (props.selected_configuration_index !== undefined) {
+      set_highlighted_configuration_index((prev) => ({
+        ...prev,
+        [props.api_mode]: props.selected_configuration_index
+      }))
+    }
+  }, [props.selected_configuration_index])
 
   return (
     <div className={styles.container}>

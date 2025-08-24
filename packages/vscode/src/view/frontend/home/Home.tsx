@@ -47,6 +47,10 @@ export const Home: React.FC<Props> = (props) => {
   const [all_configurations, set_all_configurations] = useState<{
     [T in ApiMode]?: ApiToolConfiguration[]
   }>()
+  const [
+    selected_configuration_index_by_mode,
+    set_selected_configuration_index_by_mode
+  ] = useState<{ [T in ApiMode]?: number }>()
   const [ask_history, set_ask_history] = useState<string[]>()
   const [edit_history, set_edit_history] = useState<string[]>()
   const [no_context_history, set_no_context_history] = useState<string[]>()
@@ -79,6 +83,9 @@ export const Home: React.FC<Props> = (props) => {
           set_all_presets((message as PresetsMessage).presets)
           set_selected_preset_or_group_name_by_mode(
             (message as PresetsMessage).selected_preset_or_group_name_by_mode
+          )
+          set_selected_configuration_index_by_mode(
+            (message as PresetsMessage).selected_configuration_index_by_mode
           )
           break
         case 'API_TOOL_CONFIGURATIONS':
@@ -133,6 +140,12 @@ export const Home: React.FC<Props> = (props) => {
           set_selected_preset_or_group_name_by_mode((prev) => ({
             ...prev,
             [message.mode]: message.name
+          }))
+          break
+        case 'SELECTED_CONFIGURATION_CHANGED':
+          set_selected_configuration_index_by_mode((prev) => ({
+            ...prev,
+            [message.mode]: message.index
           }))
           break
       }
@@ -499,6 +512,9 @@ export const Home: React.FC<Props> = (props) => {
   const selected_preset_or_group_name =
     selected_preset_or_group_name_by_mode?.[props.web_mode]
 
+  const selected_configuration_index =
+    selected_configuration_index_by_mode?.[props.api_mode]
+
   const configurations_for_current_mode =
     all_configurations && props.home_view_type == HOME_VIEW_TYPES.API
       ? all_configurations[props.api_mode]
@@ -541,6 +557,7 @@ export const Home: React.FC<Props> = (props) => {
       on_preset_delete={handle_preset_delete}
       on_toggle_default_preset={handle_toggle_default_preset}
       selected_preset_or_group_name={selected_preset_or_group_name}
+      selected_configuration_index={selected_configuration_index}
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}

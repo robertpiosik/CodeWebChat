@@ -284,7 +284,7 @@ async function show_preset_quick_pick(
         )
         provider.send_message({
           command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
-          mode: mode,
+          mode,
           name: selected_name
         })
         resolve([selected_name])
