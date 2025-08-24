@@ -4,7 +4,7 @@
 
 **A 100% free and open-source tool for AI pair programming.** With its non-agentic, context-first design, it favors concise instructions over mundane specifications. Makes AI predictable, fast and cost efficient.
 
-CWC works with VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.).
+Works with VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.).
 
 ✅ **Edit context** with 15+ free chatbots or direct API calls \
 ✅ **Integrate multi-file changes** with confidence \
