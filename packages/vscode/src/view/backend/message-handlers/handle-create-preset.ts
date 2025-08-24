@@ -13,13 +13,12 @@ export const handle_create_preset = async (
   const create_option = await vscode.window.showQuickPick(
     [
       {
-        label: 'Preset',
+        label: '$(add) Preset',
         description: 'Placed at the top of the list',
-        detail:
-          'Custom chat configuration with model, prompt prefix/suffix and more.'
+        detail: 'Custom chatbot configuration with prompt prefix/suffix.'
       },
       {
-        label: 'Group',
+        label: '$(add) Group',
         description: 'Placed at the bottom of the list',
         detail:
           'Simultaneous initializations of selected presets, shared preffix/suffix.'
