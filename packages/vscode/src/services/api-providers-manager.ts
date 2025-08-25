@@ -7,7 +7,6 @@ import {
   TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
   DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
   DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
-  DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY,
   TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
   DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
 } from '@/constants/state-keys'
@@ -162,24 +161,6 @@ export class ApiProvidersManager {
     return configs.filter((c) => this._validate_tool_config(c) !== undefined)
   }
 
-  public async get_default_edit_context_config(): Promise<
-    ToolConfig | undefined
-  > {
-    await this._load_promise
-    const config = this._vscode.globalState.get<ToolConfig>(
-      DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY
-    )
-    return this._validate_tool_config(config)
-  }
-
-  public async set_default_edit_context_config(config: ToolConfig | null) {
-    await this._vscode.globalState.update(
-      DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY,
-      config
-    )
-    api_tool_config_emitter.emit('api-tools-updated')
-  }
-
   public async save_edit_context_tool_configs(configs: EditContextConfigs) {
     await this._vscode.globalState.update(
       TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
@@ -329,22 +310,6 @@ export class ApiProvidersManager {
       TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
       updated_edit_context_configs
     )
-
-    const default_edit_context_config =
-      this._vscode.globalState.get<ToolConfig>(
-        DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY
-      )
-
-    if (
-      default_edit_context_config &&
-      default_edit_context_config.provider_type == 'custom' &&
-      default_edit_context_config.provider_name == old_name
-    ) {
-      await this._vscode.globalState.update(
-        DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY,
-        { ...default_edit_context_config, provider_name: new_name }
-      )
-    }
 
     const intelligent_update_configs =
       this._vscode.globalState.get<IntelligentUpdateConfigs>(

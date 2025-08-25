@@ -22,8 +22,6 @@ export const COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY =
   'commitMessagesConfirmationThreshold'
 export const DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY =
   'defaultCodeCompletionsConfiguration'
-export const DEFAULT_EDIT_CONTEXT_CONFIGURATION_STATE_KEY =
-  'defaultFileRefactoringConfiguration'
 export const DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY =
   'defaultCommitMessagesConfiguration'
 export const DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY =

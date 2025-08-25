@@ -14,12 +14,10 @@ export const handle_get_api_tool_configurations = async (
   const [
     edit_context_configs,
     code_completions_configs,
-    default_edit_context_config,
     default_code_completions_config
   ] = await Promise.all([
     providers_manager.get_edit_context_tool_configs(),
     providers_manager.get_code_completions_tool_configs(),
-    providers_manager.get_default_edit_context_config(),
     providers_manager.get_default_code_completions_config()
   ])
 
@@ -40,10 +38,7 @@ export const handle_get_api_tool_configurations = async (
   }
 
   const configurations: { [T in ApiMode]?: ApiToolConfiguration[] } = {
-    'edit-context': edit_context_configs.map((config) => ({
-      ...config,
-      is_default: is_config_default(config, default_edit_context_config)
-    })),
+    'edit-context': edit_context_configs,
     'code-completions': code_completions_configs.map((config) => ({
       ...config,
       is_default: is_config_default(config, default_code_completions_config)

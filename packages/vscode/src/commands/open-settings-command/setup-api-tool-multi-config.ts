@@ -25,8 +25,8 @@ const DEFAULT_COMMIT_MESSAGE_MAX_TOKENS_BEFORE_ASK = 20000
 interface ToolMethods {
   get_configs: () => Promise<ToolConfig[]>
   save_configs: (configs: ToolConfig[]) => Promise<void>
-  get_default_config: () => Promise<ToolConfig | undefined>
-  set_default_config: (config: ToolConfig | null) => Promise<void>
+  get_default_config?: () => Promise<ToolConfig | undefined>
+  set_default_config?: (config: ToolConfig | null) => Promise<void>
   get_display_name: () => string
 }
 
@@ -83,10 +83,6 @@ export const setup_api_tool_multi_config = async (params: {
           get_configs: () => providers_manager.get_edit_context_tool_configs(),
           save_configs: (configs: EditContextConfigs) =>
             providers_manager.save_edit_context_tool_configs(configs),
-          get_default_config: () =>
-            providers_manager.get_default_edit_context_config(),
-          set_default_config: (config: ToolConfig | null) =>
-            providers_manager.set_default_edit_context_config(config as any),
           get_display_name: () => 'Edit Context'
         }
       case 'intelligent-update':
@@ -121,7 +117,9 @@ export const setup_api_tool_multi_config = async (params: {
   const tool_methods = get_tool_methods(params.tool)
 
   let current_configs = await tool_methods.get_configs()
-  let default_config = await tool_methods.get_default_config()
+  let default_config = tool_methods.get_default_config
+    ? await tool_methods.get_default_config()
+    : undefined
 
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
@@ -179,7 +177,9 @@ export const setup_api_tool_multi_config = async (params: {
       })
       items.push(
         ...current_configs.map((config, index) => {
+          // For edit-context tool, is_default is always false
           const is_default =
+            params.tool !== 'edit-context' &&
             default_config &&
             default_config.provider_type == config.provider_type &&
             default_config.provider_name == config.provider_name &&
@@ -203,38 +203,53 @@ export const setup_api_tool_multi_config = async (params: {
               navigation_buttons.push(move_down_button)
             }
 
-            if (!is_default) {
-              buttons = [
-                ...navigation_buttons,
-                set_default_button,
-                duplicate_button,
-                edit_button,
-                delete_button
-              ]
+            // Hide default buttons for edit-context tool
+            if (params.tool !== 'edit-context') {
+              if (!is_default) {
+                buttons = [
+                  ...navigation_buttons,
+                  set_default_button,
+                  duplicate_button,
+                  edit_button,
+                  delete_button
+                ]
+              } else {
+                buttons = [
+                  ...navigation_buttons,
+                  unset_default_button,
+                  duplicate_button,
+                  edit_button,
+                  delete_button
+                ]
+              }
             } else {
               buttons = [
                 ...navigation_buttons,
-                unset_default_button,
                 duplicate_button,
                 edit_button,
                 delete_button
               ]
             }
           } else {
-            if (!is_default) {
-              buttons = [
-                set_default_button,
-                duplicate_button,
-                edit_button,
-                delete_button
-              ]
+            // Hide default buttons for edit-context tool
+            if (params.tool !== 'edit-context') {
+              if (!is_default) {
+                buttons = [
+                  set_default_button,
+                  duplicate_button,
+                  edit_button,
+                  delete_button
+                ]
+              } else {
+                buttons = [
+                  unset_default_button,
+                  duplicate_button,
+                  edit_button,
+                  delete_button
+                ]
+              }
             } else {
-              buttons = [
-                unset_default_button,
-                duplicate_button,
-                edit_button,
-                delete_button
-              ]
+              buttons = [duplicate_button, edit_button, delete_button]
             }
           }
 
@@ -253,7 +268,10 @@ export const setup_api_tool_multi_config = async (params: {
           }
 
           return {
-            label: is_default ? `$(check) ${config.model}` : config.model,
+            label:
+              params.tool !== 'edit-context' && is_default
+                ? `$(check) ${config.model}`
+                : config.model,
             description: description_parts.join(' · '),
             buttons,
             config,
@@ -420,7 +438,7 @@ export const setup_api_tool_multi_config = async (params: {
           current_configs.splice(item.index, 1)
           await tool_methods.save_configs(current_configs)
 
-          if (was_default) {
+          if (tool_methods.set_default_config && was_default) {
             default_config = undefined
             await tool_methods.set_default_config(null)
           }
@@ -459,29 +477,35 @@ export const setup_api_tool_multi_config = async (params: {
           if (active_item) {
             quick_pick.activeItems = [active_item]
           }
-        } else if (event.button === set_default_button) {
-          default_config = { ...item.config }
-          await tool_methods.set_default_config(default_config)
-          const items = create_config_items()
-          quick_pick.items = items
-          const active_item = items.find(
-            (item) =>
-              'index' in item && item.index == last_selected_config_index
-          )
-          if (active_item) {
-            quick_pick.activeItems = [active_item]
-          }
-        } else if (event.button === unset_default_button) {
-          default_config = undefined
-          await tool_methods.set_default_config(null)
-          const items = create_config_items()
-          quick_pick.items = items
-          const active_item = items.find(
-            (item) =>
-              'index' in item && item.index == last_selected_config_index
-          )
-          if (active_item) {
-            quick_pick.activeItems = [active_item]
+        } else if (
+          tool_methods.set_default_config &&
+          (event.button === set_default_button ||
+            event.button === unset_default_button)
+        ) {
+          if (event.button === set_default_button) {
+            default_config = { ...item.config }
+            await tool_methods.set_default_config(default_config)
+            const items = create_config_items()
+            quick_pick.items = items
+            const active_item = items.find(
+              (item) =>
+                'index' in item && item.index == last_selected_config_index
+            )
+            if (active_item) {
+              quick_pick.activeItems = [active_item]
+            }
+          } else if (event.button === unset_default_button) {
+            default_config = undefined
+            await tool_methods.set_default_config(null)
+            const items = create_config_items()
+            quick_pick.items = items
+            const active_item = items.find(
+              (item) =>
+                'index' in item && item.index == last_selected_config_index
+            )
+            if (active_item) {
+              quick_pick.activeItems = [active_item]
+            }
           }
         }
       })
@@ -608,24 +632,27 @@ export const setup_api_tool_multi_config = async (params: {
         )
       }
 
-      const current_is_default =
-        default_config &&
-        default_config.provider_type == config.provider_type &&
-        default_config.provider_name == config.provider_name &&
-        default_config.model == config.model &&
-        default_config.temperature == config.temperature &&
-        default_config.reasoning_effort == config.reasoning_effort &&
-        default_config.max_concurrency == config.max_concurrency &&
-        default_config.instructions_placement == config.instructions_placement
+      // Remove default configuration options for edit-context tool
+      if (params.tool !== 'edit-context') {
+        const current_is_default =
+          default_config &&
+          default_config.provider_type == config.provider_type &&
+          default_config.provider_name == config.provider_name &&
+          default_config.model == config.model &&
+          default_config.temperature == config.temperature &&
+          default_config.reasoning_effort == config.reasoning_effort &&
+          default_config.max_concurrency == config.max_concurrency &&
+          default_config.instructions_placement == config.instructions_placement
 
-      if (current_is_default) {
-        options.push({
-          label: UNSET_DEFAULT_LABEL
-        })
-      } else {
-        options.push({
-          label: SET_AS_DEFAULT_LABEL
-        })
+        if (current_is_default) {
+          options.push({
+            label: UNSET_DEFAULT_LABEL
+          })
+        } else {
+          options.push({
+            label: SET_AS_DEFAULT_LABEL
+          })
+        }
       }
 
       return options
@@ -696,18 +723,20 @@ export const setup_api_tool_multi_config = async (params: {
           return
         }
 
-        if (selected_option.label == SET_AS_DEFAULT_LABEL) {
-          default_config = { ...config }
-          await tool_methods.set_default_config(default_config)
-          quick_pick.items = create_edit_options()
-          return
-        }
+        if (tool_methods.set_default_config) {
+          if (selected_option.label == SET_AS_DEFAULT_LABEL) {
+            default_config = { ...config }
+            await tool_methods.set_default_config(default_config)
+            quick_pick.items = create_edit_options()
+            return
+          }
 
-        if (selected_option.label == UNSET_DEFAULT_LABEL) {
-          default_config = undefined
-          await tool_methods.set_default_config(null)
-          quick_pick.items = create_edit_options()
-          return
+          if (selected_option.label == UNSET_DEFAULT_LABEL) {
+            default_config = undefined
+            await tool_methods.set_default_config(null)
+            quick_pick.items = create_edit_options()
+            return
+          }
         }
 
         quick_pick.hide()
@@ -879,23 +908,26 @@ export const setup_api_tool_multi_config = async (params: {
             current_configs[index] = updated_config_state
             await tool_methods.save_configs(current_configs)
 
-            if (
-              default_config &&
-              default_config.provider_type ==
-                original_config_state.provider_type &&
-              default_config.provider_name ==
-                original_config_state.provider_name &&
-              default_config.model == original_config_state.model &&
-              default_config.temperature == original_config_state.temperature &&
-              default_config.reasoning_effort ==
-                original_config_state.reasoning_effort &&
-              default_config.max_concurrency ==
-                original_config_state.max_concurrency &&
-              default_config.instructions_placement ==
-                original_config_state.instructions_placement
-            ) {
-              default_config = updated_config_state
-              await tool_methods.set_default_config(updated_config_state)
+            if (tool_methods.set_default_config) {
+              if (
+                default_config &&
+                default_config.provider_type ==
+                  original_config_state.provider_type &&
+                default_config.provider_name ==
+                  original_config_state.provider_name &&
+                default_config.model == original_config_state.model &&
+                default_config.temperature ==
+                  original_config_state.temperature &&
+                default_config.reasoning_effort ==
+                  original_config_state.reasoning_effort &&
+                default_config.max_concurrency ==
+                  original_config_state.max_concurrency &&
+                default_config.instructions_placement ==
+                  original_config_state.instructions_placement
+              ) {
+                default_config = updated_config_state
+                await tool_methods.set_default_config(updated_config_state)
+              }
             }
           } else {
             console.error('Could not find original config in array to update.')

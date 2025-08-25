@@ -61,29 +61,8 @@ const get_edit_context_config = async (
       tooltip: 'Move down'
     }
 
-    const set_default_button = {
-      iconPath: new vscode.ThemeIcon('pass'),
-      tooltip: 'Set as default'
-    }
-
-    const unset_default_button = {
-      iconPath: new vscode.ThemeIcon('pass-filled'),
-      tooltip: 'Unset default'
-    }
-
     const create_items = async () => {
-      const default_config =
-        await api_providers_manager.get_default_edit_context_config()
       return edit_context_configs.map((config: ToolConfig, index) => {
-        const is_default =
-          default_config &&
-          default_config.provider_type == config.provider_type &&
-          default_config.provider_name == config.provider_name &&
-          default_config.model == config.model &&
-          default_config.temperature == config.temperature &&
-          default_config.reasoning_effort == config.reasoning_effort &&
-          default_config.max_concurrency == config.max_concurrency
-
         const description_parts = [config.provider_name]
         if (config.temperature != DEFAULT_TEMPERATURE['edit-context']) {
           description_parts.push(`${config.temperature}`)
@@ -95,7 +74,7 @@ const get_edit_context_config = async (
           description_parts.push('cache-enabled')
         }
 
-        let buttons = []
+        let buttons: any = []
         if (edit_context_configs.length > 1) {
           const is_first_item = index == 0
           const is_last_item = index == edit_context_configs.length - 1
@@ -108,21 +87,11 @@ const get_edit_context_config = async (
             navigation_buttons.push(move_down_button)
           }
 
-          if (!is_default) {
-            buttons = [...navigation_buttons, set_default_button]
-          } else {
-            buttons = [...navigation_buttons, unset_default_button]
-          }
-        } else {
-          if (!is_default) {
-            buttons = [set_default_button]
-          } else {
-            buttons = [unset_default_button]
-          }
+          buttons = navigation_buttons
         }
 
         return {
-          label: is_default ? `$(check) ${config.model}` : config.model,
+          label: config.model,
           description: description_parts.join(' · '),
           buttons,
           config,
@@ -181,14 +150,6 @@ const get_edit_context_config = async (
             )
 
             quick_pick.items = await create_items()
-          } else if (event.button === set_default_button) {
-            await api_providers_manager.set_default_edit_context_config(
-              item.config
-            )
-            quick_pick.items = await create_items()
-          } else if (event.button === unset_default_button) {
-            await api_providers_manager.set_default_edit_context_config(null)
-            quick_pick.items = await create_items()
           }
         })
 
@@ -200,14 +161,6 @@ const get_edit_context_config = async (
           if (!selected) {
             resolve(undefined)
             return
-          }
-
-          const default_config =
-            await api_providers_manager.get_default_edit_context_config()
-          if (!default_config) {
-            await api_providers_manager.set_default_edit_context_config(
-              selected.config
-            )
           }
 
           context.globalState.update(
