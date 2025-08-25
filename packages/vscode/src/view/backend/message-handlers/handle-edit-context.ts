@@ -39,8 +39,15 @@ const get_edit_context_config = async (
   if (config_index !== undefined && edit_context_configs[config_index]) {
     selected_config = edit_context_configs[config_index]
   } else if (!show_quick_pick) {
-    selected_config =
-      await api_providers_manager.get_default_edit_context_config()
+    const last_selected_index = context.globalState.get<number>(
+      LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY
+    )
+    if (
+      last_selected_index !== undefined &&
+      edit_context_configs[last_selected_index]
+    ) {
+      selected_config = edit_context_configs[last_selected_index]
+    }
   }
 
   if (!selected_config || show_quick_pick) {
