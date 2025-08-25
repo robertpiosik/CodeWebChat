@@ -193,8 +193,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           {props.presets.map((preset, i) => {
             const is_unnamed =
               !preset.name || /^\(\d+\)$/.test(preset.name.trim())
-            const display_name =
-              preset.chatbot && is_unnamed ? preset.chatbot : preset.name
+            let display_name: string
+            if (preset.chatbot) {
+              // Preset (has chatbot)
+              display_name = is_unnamed ? preset.chatbot : preset.name
+            } else {
+              // Group (no chatbot)
+              display_name = is_unnamed ? 'Unnamed group' : preset.name
+            }
 
             const get_subtitle = (): string => {
               const { chatbot, model } = preset

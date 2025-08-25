@@ -238,8 +238,10 @@ async function show_preset_quick_pick(
   items.push(
     ...presets.map((preset) => {
       if (!preset.chatbot) {
+        const is_unnamed_group =
+          !preset.name || /^\(\d+\)$/.test(preset.name.trim())
         return {
-          label: preset.name,
+          label: is_unnamed_group ? 'Unnamed group' : preset.name,
           kind: vscode.QuickPickItemKind.Separator
         }
       }
@@ -568,10 +570,14 @@ async function resolve_presets(params: {
               default_presets_count++
             }
           }
+          const is_unnamed_group =
+            !group.name || /^\(\d+\)$/.test(group.name.trim())
           return {
-            label: group.name,
+            label: is_unnamed_group ? 'Unnamed group' : group.name,
             name: group.name,
-            description: `${default_presets_count} selected preset${
+            description: `${
+              default_presets_count == 0 ? '⚠ ' : ''
+            }${default_presets_count} selected preset${
               default_presets_count != 1 ? 's' : ''
             }`
           }
@@ -586,7 +592,9 @@ async function resolve_presets(params: {
         group_items_from_config.unshift({
           label: 'Ungrouped',
           name: 'Ungrouped',
-          description: `${default_presets_count} selected preset${
+          description: `${
+            default_presets_count == 0 ? '⚠ ' : ''
+          }${default_presets_count} selected preset${
             default_presets_count != 1 ? 's' : ''
           }`
         })
@@ -597,7 +605,9 @@ async function resolve_presets(params: {
         group_items_from_config.unshift({
           label: 'Ungrouped',
           name: 'Ungrouped',
-          description: `${default_presets_count} selected preset${
+          description: `${
+            default_presets_count == 0 ? '⚠ ' : ''
+          }${default_presets_count} selected preset${
             default_presets_count != 1 ? 's' : ''
           }`
         })
@@ -686,7 +696,7 @@ async function resolve_presets(params: {
 
           if (preset_names.length == 0) {
             vscode.window.showWarningMessage(
-              'The chosen group has no selected presets.'
+              'The chosen group has no selected presets to run.'
             )
           }
           resolve(preset_names)
