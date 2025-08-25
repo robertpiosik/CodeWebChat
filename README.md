@@ -20,7 +20,7 @@ Works with VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.).
 - Initialize chatbots—don't scrape responses
 - Free forever—community effort
 - Privacy first—operates locally
-- Lightweight—about 1MB of code
+- Lightweight—1MB of code
 
 **CWC is for you if you're**
 
