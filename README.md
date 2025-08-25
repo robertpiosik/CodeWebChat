@@ -59,16 +59,16 @@ Install the Connector browser extension and never copy & paste again.
 
 CWC ships with useful utilities supporting your coding via direct API calls.
 
-**Code Completions** \
+**🛠️ Code Completions** \
 Get accurate code at cursor from state-of-the-art reasoning models.
 
-**Edit Context** \
+**🛠️ Edit Context** \
 Modify files based on natural language instructions.
 
-**Intelligent Update** \
+**🛠️ Intelligent Update** \
 Integrate truncated code blocks and fix malformed diffs.
 
-**Commit Messages** \
+**🛠️ Commit Messages** \
 Generate meaningful summaries of changes adhering to your preferred style.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Commands</span>
