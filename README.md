@@ -2,12 +2,12 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a> <a href="https://discord.com/invite/KJySXsrSX5" target="_blank"><img src="https://img.shields.io/badge/Chat-Discord-7289da" alt="Join Discord server" /></a>
 
-**A 100% free and open-source tool for AI pair programming.** It initializes web based chatbots like ChatGPT, Claude, AI Studio or DeepSeek with your code and instructions, hands-free!
+**A 100% free and open-source tool for AI pair programming.** CWC initializes popular web based chatbots like ChatGPT, Claude, AI Studio or DeepSeek with your code and instructions, hands-free!
 
 Works with VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.).
 
-✅ **Edit context** with 15+ free chatbots or direct API calls \
-✅ **Integrate multi-file changes** with confidence \
+✅ **Edit context** with your favorite chatbot or a direct API call \
+✅ **Apply multi-file changes** from a single model response \
 ✅ **Code completions** with reasoning models \
 ✅ **Commit messages** in your team's style
 
