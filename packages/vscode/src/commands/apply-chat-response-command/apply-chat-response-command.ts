@@ -835,8 +835,11 @@ export const apply_chat_response_command = (
           if (operation_success && final_original_states) {
             if (selected_mode_label == 'Fast replace' && !all_files_new) {
               ;(async () => {
+                const file_count = final_original_states!.length
                 const response = await vscode.window.showInformationMessage(
-                  'Files have been replaced. This may cause inaccuracies if the response had unmarked truncations.',
+                  `File${
+                    file_count > 1 ? 's have' : ' has'
+                  } been replaced. This may cause inaccuracies if the response had unmarked truncations.`,
                   'Hide',
                   'Looks off? Use intelligent update'
                 )
