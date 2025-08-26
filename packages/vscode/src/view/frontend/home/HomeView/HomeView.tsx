@@ -543,23 +543,25 @@ export const HomeView: React.FC<Props> = (props) => {
           </a>
         </div>
         <div className={styles.footer__right}>
-          <button
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--outlined']
-            )}
-            onClick={handle_apply_click}
-            title={
-              props.can_apply_clipboard
-                ? 'Integrate copied message or a code block'
-                : 'Nothing applicable found in clipboard'
-            }
-            disabled={
-              !props.can_apply_clipboard || is_apply_disabled_temporarily
-            }
-          >
-            APPLY
-          </button>
+          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+            <button
+              className={cn(
+                styles.footer__button,
+                styles['footer__button--outlined']
+              )}
+              onClick={handle_apply_click}
+              title={
+                props.can_apply_clipboard
+                  ? 'Integrate copied message or a code block'
+                  : 'Nothing applicable found in clipboard'
+              }
+              disabled={
+                !props.can_apply_clipboard || is_apply_disabled_temporarily
+              }
+            >
+              APPLY
+            </button>
+          )}
           <button
             className={cn(
               styles.footer__button,

@@ -2,10 +2,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--padding-10px) var(--padding-16px);
+  padding: var(--padding-8px) var(--padding-12px);
   background-color: var(--vscode-button-background);
   color: var(--vscode-button-foreground);
-  border-radius: var(--border-radius-10px);
+  border-radius: var(--border-radius-6px);
 
   &:hover {
     background-color: var(--vscode-button-hoverBackground);
