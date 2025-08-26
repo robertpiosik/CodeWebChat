@@ -13,6 +13,7 @@ import { Dropdown as UiDropdown } from '@ui/components/editor/Dropdown'
 import { Icon } from '@ui/components/editor/Icon'
 import cn from 'classnames'
 import { IconButton } from '@ui/components/editor/IconButton/IconButton'
+import { HomeViewTypeToggler } from '@ui/components/editor/HomeViewTypeToggler/HomeViewTypeToggler'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/view/types/messages'
@@ -240,6 +241,14 @@ export const HomeView: React.FC<Props> = (props) => {
     setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
   }
 
+  const handle_heading_click = () => {
+    if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
+      props.on_home_view_type_change(HOME_VIEW_TYPES.API)
+    } else {
+      props.on_home_view_type_change(HOME_VIEW_TYPES.WEB)
+    }
+  }
+
   return (
     <div ref={container_ref} className={styles.container}>
       <Scrollable>
@@ -251,14 +260,14 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_click={props.on_show_intro}
                 title="Return to getting started"
               />
-              <div
-                className={styles.top__left__heading}
-                ref={heading_container_ref}
-              >
-                {props.home_view_type == HOME_VIEW_TYPES.WEB
-                  ? 'New chat'
-                  : 'API call'}
-              </div>
+              <HomeViewTypeToggler
+                label={
+                  props.home_view_type == HOME_VIEW_TYPES.WEB
+                    ? 'New chat'
+                    : 'API call'
+                }
+                on_click={handle_heading_click}
+              />
             </div>
 
             <div className={styles.top__right} ref={dropdown_container_ref}>

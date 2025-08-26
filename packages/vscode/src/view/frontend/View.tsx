@@ -168,6 +168,8 @@ export const View = () => {
 
   const handle_home_view_type_change = (view_type: HomeViewType) => {
     set_home_view_type(view_type)
+    handle_web_mode_change('edit-context')
+    handle_api_mode_change('edit-context')
     post_message(vscode, {
       command: 'SAVE_HOME_VIEW_TYPE',
       view_type

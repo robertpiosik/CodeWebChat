@@ -1,21 +1,20 @@
-.icon-button {
+.home-view-type-toggler {
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--border-radius-5px);
-  --size: 20px;
-  width: var(--size);
-  height: var(--size);
+  --padding: var(--padding-6px);
+  padding: 0 var(--padding);
+  margin: 0 calc(var(--padding) * -1);
+  height: 20px;
   color: var(--vscode-icon-foreground);
-  cursor: pointer;
-  text-decoration: none;
 
   &:focus {
     outline: none;
   }
 
   &:hover {
-    color: inherit;
     background-color: var(--vscode-toolbar-hoverBackground);
   }
 }

@@ -50,7 +50,6 @@ import {
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,
   get_last_selected_preset_key,
-  HOME_VIEW_TYPE_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   WEB_MODE_STATE_KEY
 } from '@/constants/state-keys'
@@ -80,7 +79,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public chat_edit_format: EditFormat
   public api_edit_format: EditFormat
   public api_mode: ApiMode
-  public home_view_type: HomeViewType
+  public home_view_type: HomeViewType = HOME_VIEW_TYPES.WEB
 
   public get_presets_config_key(): string {
     const mode =
@@ -136,11 +135,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this.api_mode = this.context.workspaceState.get<ApiMode>(
       API_MODE_STATE_KEY,
       'edit-context'
-    )
-
-    this.home_view_type = this.context.workspaceState.get<HomeViewType>(
-      HOME_VIEW_TYPE_STATE_KEY,
-      HOME_VIEW_TYPES.WEB
     )
 
     vscode.window.onDidChangeWindowState(async (e) => {
@@ -396,10 +390,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             this.caret_position = message.caret_position
           } else if (message.command == 'SAVE_HOME_VIEW_TYPE') {
             this.home_view_type = message.view_type
-            await this.context.workspaceState.update(
-              HOME_VIEW_TYPE_STATE_KEY,
-              message.view_type
-            )
             this.calculate_token_count()
           } else if (message.command == 'GET_HOME_VIEW_TYPE') {
             handle_get_home_view_type(this)
