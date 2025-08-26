@@ -132,11 +132,7 @@ export const ai_studio: Chatbot = {
     }
 
     if (options.includes('hide-panel') && supported_options['hide-panel']) {
-      const panel = document.querySelector('ms-right-side-panel') as HTMLElement
-      const button = Array.from(panel.querySelectorAll('button')).find(
-        (button) => button.textContent?.trim() == 'tune'
-      ) as HTMLButtonElement
-      button.click()
+      sessionStorage.setItem('should-hide-panel', 'true')
     }
 
     if (
@@ -385,6 +381,13 @@ const close_side_panel = async () => {
       'ms-run-settings button[iconname="close"]'
     ) as HTMLButtonElement
     close_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
+  } else {
+    if (sessionStorage.getItem('should-hide-panel') == 'true') {
+      const close_button = document.querySelector(
+        'ms-run-settings button[iconname="close"]'
+      ) as HTMLButtonElement
+      close_button.click()
+    }
   }
+  await new Promise((r) => requestAnimationFrame(r))
 }
