@@ -17,12 +17,12 @@ export const Intro: React.FC<Props> = (props) => {
             <div className={styles['top__enter-buttons']}>
               <Enter
                 label="New chat"
-                description="Initialize your favorite chatbot"
+                description="Send prompt to a chatbot"
                 on_click={props.on_new_chat}
               />
               <Enter
                 label="API call"
-                description="Send a request from editor"
+                description="Send prompt to a provider"
                 on_click={props.on_api_call}
               />
             </div>
