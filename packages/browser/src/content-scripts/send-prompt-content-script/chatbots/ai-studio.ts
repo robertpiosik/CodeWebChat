@@ -33,7 +33,7 @@ export const ai_studio: Chatbot = {
       }
       check_for_element()
     })
-    await open_side_panel()
+    await open_panel()
   },
   set_model: async (model?: string) => {
     if (!model) return
@@ -262,7 +262,7 @@ export const ai_studio: Chatbot = {
       }
       check()
     })
-    await close_side_panel()
+    await close_panel()
     ;(document.querySelector('ms-run-button > button') as HTMLElement)?.click()
   },
   inject_apply_response_button: (client_id: number) => {
@@ -365,7 +365,7 @@ export const ai_studio: Chatbot = {
   }
 }
 
-const open_side_panel = async () => {
+const open_panel = async () => {
   if (window.innerWidth <= 960) {
     const tune_button = document.querySelector(
       'button.runsettings-toggle-button'
@@ -375,7 +375,7 @@ const open_side_panel = async () => {
   }
 }
 
-const close_side_panel = async () => {
+const close_panel = async () => {
   if (window.innerWidth <= 960) {
     const close_button = document.querySelector(
       'ms-run-settings button[iconname="close"]'
