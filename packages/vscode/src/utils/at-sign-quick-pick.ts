@@ -6,10 +6,9 @@ import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 import { SavedContext } from '../types/context'
 
 export async function at_sign_quick_pick(
-  context: vscode.ExtensionContext,
-  is_code_completions_mode = false
+  context: vscode.ExtensionContext
 ): Promise<string | undefined> {
-  let items = [
+  const items = [
     {
       label: '#Selection',
       description: 'Text selection of the active editor'
@@ -23,12 +22,6 @@ export async function at_sign_quick_pick(
       description: 'Files from a saved context'
     }
   ]
-
-  if (is_code_completions_mode) {
-    items = items.filter(
-      (item) => item.label != '#Selection' && item.label != '#Changes'
-    )
-  }
 
   const selected = await vscode.window.showQuickPick(items, {
     placeHolder: 'Select symbol to insert',
@@ -202,9 +195,7 @@ export async function at_sign_quick_pick(
 
     const context_items = contexts_to_use.map((ctx) => ({
       label: ctx.name,
-      description: `${ctx.paths.length} path${
-        ctx.paths.length == 1 ? '' : 's'
-      }`
+      description: `${ctx.paths.length} path${ctx.paths.length == 1 ? '' : 's'}`
     }))
 
     const selected_context = await vscode.window.showQuickPick(context_items, {

@@ -334,7 +334,16 @@ export const View = () => {
         })}
       >
         <Intro
-          on_open_home_view={() => set_active_view('home')}
+          on_new_chat={() => {
+            set_active_view('home')
+            handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
+            handle_web_mode_change('edit-context')
+          }}
+          on_api_call={() => {
+            set_active_view('home')
+            handle_home_view_type_change(HOME_VIEW_TYPES.API)
+            handle_api_mode_change('edit-context')
+          }}
           version={version}
         />
       </div>

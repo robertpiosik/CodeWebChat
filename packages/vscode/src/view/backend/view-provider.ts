@@ -50,8 +50,6 @@ import {
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,
   get_last_selected_preset_key,
-  LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
-  LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY,
   HOME_VIEW_TYPE_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   WEB_MODE_STATE_KEY
@@ -606,16 +604,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             }
           }
           return [mode, selected_name]
-        })
-      ),
-      selected_configuration_index_by_mode: Object.fromEntries(
-        (['edit-context', 'code-completions'] as ApiMode[]).map((mode) => {
-          const key =
-            mode == 'edit-context'
-              ? LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY
-              : LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY
-          const index = this.context.globalState.get<number>(key)
-          return [mode, index]
         })
       )
     })

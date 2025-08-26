@@ -11,12 +11,9 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/api-providers-manager'
-import { replace_saved_context_placeholder } from '../utils/replace-saved-context-placeholder'
 import { ViewProvider } from '../view/backend/view-provider'
 
-/**
- * Show inline completion using Inline Completions API
- */
+// Show inline completion using Inline Completions API
 async function show_inline_completion(params: {
   editor: vscode.TextEditor
   position: vscode.Position
@@ -300,7 +297,7 @@ async function perform_code_completion(params: {
   auto_accept: boolean
   show_quick_pick?: boolean
   completion_instructions?: string
-  config_index?: number,
+  config_index?: number
   view_provider?: ViewProvider
 }) {
   const api_providers_manager = new ApiProvidersManager(params.context)
@@ -323,25 +320,6 @@ async function perform_code_completion(params: {
     await params.context.workspaceState.update(
       'last-completion-instructions',
       completion_instructions || ''
-    )
-  }
-
-  let pre_completion_instructions = completion_instructions
-  let post_completion_instructions = completion_instructions
-  if (
-    completion_instructions &&
-    completion_instructions.includes('@SavedContext:')
-  ) {
-    pre_completion_instructions = await replace_saved_context_placeholder(
-      completion_instructions,
-      params.context,
-      params.file_tree_provider
-    )
-    post_completion_instructions = await replace_saved_context_placeholder(
-      completion_instructions,
-      params.context,
-      params.file_tree_provider,
-      true
     )
   }
 
@@ -439,19 +417,11 @@ async function perform_code_completion(params: {
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const pre_instructions = `${code_completion_instructions}${
-      pre_completion_instructions
-        ? ` Follow instructions: ${pre_completion_instructions}`
-        : ''
-    }`
-
-    const post_instructions = `${code_completion_instructions}${
-      post_completion_instructions
-        ? ` Follow instructions: ${post_completion_instructions}`
-        : ''
-    }`
-
-    const content = `${pre_instructions}\n${payload.before}<missing text>${payload.after}\n${post_instructions}`
+    const content = `${code_completion_instructions}\n${payload.before}${
+      completion_instructions
+        ? `<missing text>${completion_instructions}</missing text>`
+        : '<missing text>'
+    }${payload.after}\n${code_completion_instructions}`
 
     const messages = [
       {
@@ -566,6 +536,18 @@ export function code_completion_commands(
         })
     ),
     vscode.commands.registerCommand(
+      'codeWebChat.codeCompletionWithInstructions',
+      async () =>
+        perform_code_completion({
+          file_tree_provider,
+          open_editors_provider,
+          context,
+          with_completion_instructions: true,
+          auto_accept: false,
+          show_quick_pick: false
+        })
+    ),
+    vscode.commands.registerCommand(
       'codeWebChat.codeCompletionWithInstructionsAutoAccept',
       async (args?: { completion_instructions?: string }) =>
         perform_code_completion({
@@ -615,6 +597,6 @@ export function code_completion_commands(
           show_quick_pick: true,
           completion_instructions: args?.completion_instructions
         })
-    ),
+    )
   ]
 }

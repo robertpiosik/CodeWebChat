@@ -82,6 +82,7 @@ Generate meaningful summaries of changes adhering to your preferred style.
 
 - `Code Web Chat: Code Completion` - Get code at cursor using API tool.
 - `Code Web Chat: Code Completion using...` - ...with configuration selection.
+- `Code Web Chat: Code Completion with Instructions` - Get code at cursor with instructions.
 
 ### Version Control
 

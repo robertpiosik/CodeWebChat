@@ -2,7 +2,8 @@ import styles from './Intro.module.scss'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 
 type Props = {
-  on_open_home_view: () => void
+  on_new_chat: () => void
+  on_api_call: () => void
   version: string
 }
 
@@ -12,22 +13,13 @@ export const Intro: React.FC<Props> = (props) => {
       <Scrollable>
         <div className={styles.inner}>
           <div className={styles.top}>
-            <div
-              className={styles.top__heading}
-              onClick={props.on_open_home_view}
-              role="button"
-            >
-              <div className={styles.top__heading__title}>Code Web Chat</div>
-              <div className={styles.top__heading__subtitle}>
-                Free AI pair programming
-              </div>
-            </div>
-            <button
-              className={styles.top__button}
-              onClick={props.on_open_home_view}
-            >
+            <button className={styles.top__button} onClick={props.on_new_chat}>
               <span className="codicon codicon-arrow-right" />
-              <span>Launch CWC</span>
+              <span>New chat</span>
+            </button>
+            <button className={styles.top__button} onClick={props.on_api_call}>
+              <span className="codicon codicon-arrow-right" />
+              <span>API call</span>
             </button>
             <a className={styles.top__button} href="https://codeweb.chat/">
               <span className="codicon codicon-book" />

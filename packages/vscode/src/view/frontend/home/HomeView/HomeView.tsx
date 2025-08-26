@@ -7,7 +7,6 @@ import { Separator as UiSeparator } from '@ui/components/editor/Separator'
 import { HorizontalSelector as UiHorizontalSelector } from '@ui/components/editor/HorizontalSelector'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
-import { Switch as UiSwitch } from '@ui/components/editor/Switch'
 import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { Dropdown as UiDropdown } from '@ui/components/editor/Dropdown'
@@ -73,10 +72,10 @@ type Props = {
 }
 
 const web_mode_labels: Record<WebMode, string> = {
-  ask: 'Ask about context',
   'edit-context': 'Edit context',
-  'code-completions': 'Code at cursor',
-  'no-context': 'No context'
+  ask: 'Ask about context',
+  'no-context': 'No context',
+  'code-completions': 'Code at cursor'
 }
 
 const api_mode_labels: Record<ApiMode, string> = {
@@ -94,7 +93,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
   const dropdown_container_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
-  const switch_container_ref = useRef<HTMLDivElement>(null)
+  const heading_container_ref = useRef<HTMLDivElement>(null)
   const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
     useState(false)
   const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
@@ -105,24 +104,24 @@ export const HomeView: React.FC<Props> = (props) => {
     useState(false)
 
   const calculate_dropdown_max_width = () => {
-    if (!container_ref.current || !switch_container_ref.current) return
+    if (!container_ref.current || !heading_container_ref.current) return
 
     const container_width = container_ref.current.offsetWidth
-    const switch_width = switch_container_ref.current.offsetWidth
+    const switch_width = heading_container_ref.current.offsetWidth
     const calculated_width = container_width - switch_width - 56
 
     set_dropdown_max_width(calculated_width)
   }
 
   useEffect(() => {
-    if (!container_ref.current || !switch_container_ref.current) return
+    if (!container_ref.current || !heading_container_ref.current) return
 
     const resize_observer = new ResizeObserver(() => {
       calculate_dropdown_max_width()
     })
 
     resize_observer.observe(container_ref.current)
-    resize_observer.observe(switch_container_ref.current)
+    resize_observer.observe(heading_container_ref.current)
 
     calculate_dropdown_max_width()
 
@@ -252,12 +251,10 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_click={props.on_show_intro}
                 title="Return to getting started"
               />
-              <div ref={switch_container_ref}>
-                <UiSwitch
-                  value={props.home_view_type}
-                  on_change={props.on_home_view_type_change}
-                  options={Object.values(HOME_VIEW_TYPES)}
-                />
+              <div ref={heading_container_ref}>
+                {props.home_view_type == HOME_VIEW_TYPES.WEB
+                  ? 'New chat'
+                  : 'API call'}
               </div>
             </div>
 

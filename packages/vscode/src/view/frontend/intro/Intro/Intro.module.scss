@@ -22,27 +22,6 @@
   gap: var(--padding-8px);
   width: 100%;
 
-  &__heading {
-    display: flex;
-    flex-direction: column;
-    gap: var(--padding-2px);
-
-    &:hover {
-      opacity: 0.8;
-    }
-
-    &__title {
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--vscode-foreground);
-    }
-
-    &__subtitle {
-      font-size: 16px;
-      color: var(--vscode-descriptionForeground);
-    }
-  }
-
   &__button {
     display: flex;
     align-items: center;
