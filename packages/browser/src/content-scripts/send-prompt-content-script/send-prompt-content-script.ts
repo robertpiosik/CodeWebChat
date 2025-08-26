@@ -215,7 +215,6 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
   if (chatbot?.set_options) {
     await chatbot.set_options(params.chat.options || [])
   }
-
   if (chatbot?.enter_message_and_send) {
     await chatbot.enter_message_and_send(params.message)
   } else {

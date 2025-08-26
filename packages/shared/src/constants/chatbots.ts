@@ -33,6 +33,7 @@ export const CHATBOTS = {
     default_system_instructions: "You're a helpful coding assistant.",
     default_top_p: 0.95,
     supported_options: {
+      'temporary-chat': 'Temporary chat',
       'hide-panel': 'Hide panel',
       'disable-thinking': 'Disable thinking',
       'grounding-with-google-search': 'Grounding with Google Search',

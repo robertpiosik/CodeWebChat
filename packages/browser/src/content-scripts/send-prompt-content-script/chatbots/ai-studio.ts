@@ -17,35 +17,53 @@ export const ai_studio: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('.promo-cards')) {
-          resolve(null)
+        if (window.innerWidth <= 960) {
+          if (document.querySelector('button.runsettings-toggle-button')) {
+            resolve(null)
+          } else {
+            setTimeout(check_for_element, 100)
+          }
         } else {
-          setTimeout(check_for_element, 100)
+          if (document.querySelector('button.model-selector-card')) {
+            resolve(null)
+          } else {
+            setTimeout(check_for_element, 100)
+          }
         }
       }
       check_for_element()
     })
+    await open_side_panel()
   },
   set_model: async (model?: string) => {
     if (!model) return
-    const model_selector = (document.querySelector(
-      'ms-model-selector-two-column mat-form-field > div'
-    ) ||
-      document.querySelector(
-        'ms-model-selector-collapsible mat-form-field > div'
-      )) as HTMLElement
+    const model_selector = document.querySelector(
+      'button.model-selector-card'
+    ) as HTMLButtonElement
+    const model_name = model_selector.querySelector(
+      'span.title'
+    ) as HTMLSpanElement
     if (
-      model_selector.textContent?.trim() ==
+      model_name.textContent ==
       (CHATBOTS['AI Studio'].models as any)[model]?.label
     ) {
       return
     }
     model_selector.click()
     await new Promise((r) => requestAnimationFrame(r))
-    const model_options = Array.from(document.querySelectorAll('mat-option'))
+    // Click "All" filter option
+    ;(
+      document.querySelector(
+        'div.model-categories-container button'
+      ) as HTMLButtonElement
+    )?.click()
+    await new Promise((r) => requestAnimationFrame(r))
+    const model_options = Array.from(
+      document.querySelectorAll('ms-model-carousel-row button.content-button')
+    )
     for (const option of model_options) {
       const model_name_element = option.querySelector(
-        'ms-model-option span.model-name'
+        'span.model-title-text'
       ) as HTMLElement
       if (
         model_name_element?.textContent?.trim() ==
@@ -90,6 +108,7 @@ export const ai_studio: Chatbot = {
       const title_element = item.querySelector('p.group-title')
       return title_element && title_element.textContent?.trim() == 'Tools'
     })
+
     if (tools && !tools.classList.contains('expanded')) {
       ;(tools as HTMLElement).click()
       await new Promise((r) => requestAnimationFrame(r))
@@ -98,6 +117,7 @@ export const ai_studio: Chatbot = {
     const thinking_toggle = document.querySelector(
       'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
     ) as HTMLElement
+
     if (
       options.includes('disable-thinking') &&
       supported_options['disable-thinking']
@@ -110,6 +130,7 @@ export const ai_studio: Chatbot = {
         thinking_toggle.click()
       }
     }
+
     if (options.includes('hide-panel') && supported_options['hide-panel']) {
       const panel = document.querySelector('ms-right-side-panel') as HTMLElement
       const button = Array.from(panel.querySelectorAll('button')).find(
@@ -117,6 +138,17 @@ export const ai_studio: Chatbot = {
       ) as HTMLButtonElement
       button.click()
     }
+
+    if (
+      options.includes('temporary-chat') &&
+      supported_options['temporary-chat']
+    ) {
+      const temp_toggle = document.querySelector(
+        'ms-incognito-mode-toggle > button'
+      ) as HTMLElement
+      temp_toggle.click()
+    }
+
     if (supported_options['grounding-with-google-search']) {
       const grounding_button = document.querySelector(
         'div[data-test-id="searchAsAToolTooltip"] button'
@@ -127,6 +159,7 @@ export const ai_studio: Chatbot = {
         grounding_button.click()
       }
     }
+
     if (options.includes('url-context') && supported_options['url-context']) {
       const url_context_button = document.querySelector(
         'div[data-test-id="browseAsAToolTooltip"] button'
@@ -137,41 +170,16 @@ export const ai_studio: Chatbot = {
   },
   set_temperature: async (temperature?: number) => {
     if (temperature === undefined) return
-    if (window.innerWidth <= 768) {
-      const tune_button = Array.from(
-        document.querySelectorAll('prompt-header button')
-      ).find(
-        (button) => button.textContent?.trim() == 'tune'
-      ) as HTMLButtonElement
-      tune_button.click()
-      await new Promise((r) => requestAnimationFrame(r))
-    }
     const temperature_element = document.querySelector(
       'ms-prompt-run-settings div[data-test-id="temperatureSliderContainer"] input[type=number]'
     ) as HTMLInputElement
+    console.log(temperature_element)
     temperature_element.value = temperature.toString()
     temperature_element.dispatchEvent(new Event('change', { bubbles: true }))
-    if (window.innerWidth <= 768) {
-      const close_button = Array.from(
-        document.querySelectorAll('ms-run-settings button')
-      ).find(
-        (button) => button.textContent?.trim() == 'close'
-      ) as HTMLButtonElement
-      close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
-    }
   },
   set_thinking_budget: async (thinking_budget?: number) => {
     if (thinking_budget === undefined) {
       // uncheck "set thinking budget" when it has attribute aria-checked="true"
-      if (window.innerWidth <= 768) {
-        const tune_button = Array.from(
-          document.querySelectorAll('prompt-header button')
-        ).find(
-          (button) => button.textContent?.trim() == 'tune'
-        ) as HTMLButtonElement
-        tune_button.click()
-        await new Promise((r) => requestAnimationFrame(r))
-      }
       const manual_budget_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
       ) as HTMLElement
@@ -181,24 +189,7 @@ export const ai_studio: Chatbot = {
       } else {
         console.warn('Manual budget toggle not found.')
       }
-      if (window.innerWidth <= 768) {
-        const close_button = Array.from(
-          document.querySelectorAll('ms-run-settings button')
-        ).find(
-          (button) => button.textContent?.trim() == 'close'
-        ) as HTMLButtonElement
-        close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
-      }
     } else {
-      if (window.innerWidth <= 768) {
-        const tune_button = Array.from(
-          document.querySelectorAll('prompt-header button')
-        ).find(
-          (button) => button.textContent?.trim() == 'tune'
-        ) as HTMLButtonElement
-        tune_button.click()
-        await new Promise((r) => requestAnimationFrame(r))
-      }
       const thinking_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
       ) as HTMLElement
@@ -226,27 +217,10 @@ export const ai_studio: Chatbot = {
           thinking_budget
         )
       }
-      if (window.innerWidth <= 768) {
-        const close_button = Array.from(
-          document.querySelectorAll('ms-run-settings button')
-        ).find(
-          (button) => button.textContent?.trim() == 'close'
-        ) as HTMLButtonElement
-        close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
-      }
     }
   },
   set_top_p: async (top_p?: number) => {
     if (top_p === undefined) return
-    if (window.innerWidth <= 768) {
-      const tune_button = Array.from(
-        document.querySelectorAll('prompt-header button')
-      ).find(
-        (button) => button.textContent?.trim() == 'tune'
-      ) as HTMLButtonElement
-      tune_button.click()
-      await new Promise((r) => requestAnimationFrame(r))
-    }
     const settings_items = Array.from(
       document.querySelectorAll('div.settings-item')
     )
@@ -269,31 +243,21 @@ export const ai_studio: Chatbot = {
     ) as HTMLInputElement
     top_p_element.value = top_p.toString()
     top_p_element.dispatchEvent(new Event('change', { bubbles: true }))
-    if (window.innerWidth <= 768) {
-      const close_button = Array.from(
-        document.querySelectorAll('ms-run-settings button')
-      ).find(
-        (button) => button.textContent?.trim() == 'close'
-      ) as HTMLButtonElement
-      close_button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
-    }
   },
   enter_message_and_send: async (message: string) => {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
-    if (!input_element) return
-
     input_element.value = message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
-
     await new Promise((r) => requestAnimationFrame(r))
-
     await new Promise((resolve) => {
       const check = () => {
-        const tokenSpan = document.querySelector('span.token-count-value')
-        const text = tokenSpan?.textContent?.trim()
+        const token_count_value = document.querySelector(
+          'span.token-count-value'
+        )
+        const text = token_count_value?.textContent?.trim()
         if (text && text.startsWith('0')) {
           setTimeout(check, 100)
         } else {
@@ -302,7 +266,8 @@ export const ai_studio: Chatbot = {
       }
       check()
     })
-    ;(document.querySelector('run-button > button') as HTMLElement)?.click()
+    await close_side_panel()
+    ;(document.querySelector('ms-run-button > button') as HTMLElement)?.click()
   },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (params: { footer: Element }) => {
@@ -401,5 +366,25 @@ export const ai_studio: Chatbot = {
       subtree: true,
       characterData: true
     })
+  }
+}
+
+const open_side_panel = async () => {
+  if (window.innerWidth <= 960) {
+    const tune_button = document.querySelector(
+      'button.runsettings-toggle-button'
+    ) as HTMLButtonElement
+    tune_button.click()
+    await new Promise((resolve) => setTimeout(resolve, 250))
+  }
+}
+
+const close_side_panel = async () => {
+  if (window.innerWidth <= 960) {
+    const close_button = document.querySelector(
+      'ms-run-settings button[iconname="close"]'
+    ) as HTMLButtonElement
+    close_button.click()
+    await new Promise((r) => requestAnimationFrame(r))
   }
 }
