@@ -251,7 +251,10 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_click={props.on_show_intro}
                 title="Return to getting started"
               />
-              <div ref={heading_container_ref}>
+              <div
+                className={styles.top__left__heading}
+                ref={heading_container_ref}
+              >
                 {props.home_view_type == HOME_VIEW_TYPES.WEB
                   ? 'New chat'
                   : 'API call'}

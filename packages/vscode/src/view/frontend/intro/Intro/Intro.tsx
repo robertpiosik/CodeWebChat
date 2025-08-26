@@ -1,5 +1,6 @@
 import styles from './Intro.module.scss'
 import { Scrollable } from '@ui/components/editor/Scrollable'
+import { Enter } from '@ui/components/editor/Enter'
 
 type Props = {
   on_new_chat: () => void
@@ -13,25 +14,34 @@ export const Intro: React.FC<Props> = (props) => {
       <Scrollable>
         <div className={styles.inner}>
           <div className={styles.top}>
-            <button className={styles.top__button} onClick={props.on_new_chat}>
-              <span className="codicon codicon-arrow-right" />
-              <span>New chat</span>
-            </button>
-            <button className={styles.top__button} onClick={props.on_api_call}>
-              <span className="codicon codicon-arrow-right" />
-              <span>API call</span>
-            </button>
-            <a className={styles.top__button} href="https://codeweb.chat/">
-              <span className="codicon codicon-book" />
-              <span>Documentation</span>
-            </a>
-            <a
-              className={styles.top__button}
-              href="https://buymeacoffee.com/robertpiosik"
-            >
-              <span className="codicon codicon-coffee" />
-              <span>Support author</span>
-            </a>
+            <div className={styles['top__enter-buttons']}>
+              <Enter
+                label="New chat"
+                description="Initialize your favorite chatbot"
+                on_click={props.on_new_chat}
+              />
+              <Enter
+                label="API call"
+                description="Send request from editor"
+                on_click={props.on_api_call}
+              />
+            </div>
+            <div className={styles.top__links}>
+              <a
+                className={styles.top__links__link}
+                href="https://codeweb.chat/"
+              >
+                <span className="codicon codicon-book" />
+                <span>Documentation</span>
+              </a>
+              <a
+                className={styles.top__links__link}
+                href="https://buymeacoffee.com/robertpiosik"
+              >
+                <span className="codicon codicon-coffee" />
+                <span>Support author</span>
+              </a>
+            </div>
           </div>
           <div className={styles.bottom}>
             <div className={styles.bottom__version}>{props.version}</div>

@@ -121,6 +121,10 @@
     display: flex;
     align-items: center;
     gap: var(--padding-4px);
+
+    &__heading {
+      font-weight: 600;
+    }
   }
 
   &__right {

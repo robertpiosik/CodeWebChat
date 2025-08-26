@@ -1,0 +1,29 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--padding-10px) var(--padding-16px);
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border-radius: var(--border-radius-10px);
+
+  &:hover {
+    background-color: var(--vscode-button-hoverBackground);
+  }
+
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--padding-2px);
+  }
+
+  &__label {
+    font-size: var(--font-size-14px);
+    font-weight: 600;
+  }
+
+  &__description {
+    opacity: var(--dimmed-opacity);
+  }
+}
