@@ -25,7 +25,8 @@ type Props = {
   translations: {
     type_something: string
     completion_instructions: string
-    last_selection: string
+    use_last_choice: string
+    use_default: string
     select: string
     code_completions_mode_unavailable_with_text_selection: string
     code_completions_mode_unavailable_without_active_editor: string
@@ -444,7 +445,11 @@ export const ChatInput: React.FC<Props> = (props) => {
               disabled={is_submit_disabled}
             >
               <Icon variant="ENTER" />
-              <span>{props.translations.last_selection}</span>
+              <span>
+                {props.is_in_code_completions_mode && !props.is_web_mode
+                  ? props.translations.use_default
+                  : props.translations.use_last_choice}
+              </span>
             </button>
           </div>
         </div>

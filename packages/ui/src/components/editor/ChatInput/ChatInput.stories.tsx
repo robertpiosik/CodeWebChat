@@ -22,7 +22,7 @@ const translations = {
   insert_symbol: 'Insert symbol',
   prompt_templates: 'Prompt templates',
   approximate_token_count: 'Approximate token count',
-  last_selection: 'Last selection',
+  use_last_choice: 'Last selection',
   use_default: 'Use default',
   select: 'Select'
 }

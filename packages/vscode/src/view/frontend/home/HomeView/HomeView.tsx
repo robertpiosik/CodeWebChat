@@ -331,7 +331,8 @@ export const HomeView: React.FC<Props> = (props) => {
               translations={{
                 type_something: 'Type something',
                 completion_instructions: 'Completion instructions',
-                last_selection: 'Use last choice',
+                use_last_choice: 'Use last choice',
+                use_default: 'Use default',
                 select: 'Select',
                 code_completions_mode_unavailable_with_text_selection:
                   'Remove text selection',
