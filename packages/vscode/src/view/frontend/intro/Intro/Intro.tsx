@@ -22,7 +22,7 @@ export const Intro: React.FC<Props> = (props) => {
               />
               <Enter
                 label="API call"
-                description="Send request from editor"
+                description="Send a request from editor"
                 on_click={props.on_api_call}
               />
             </div>
