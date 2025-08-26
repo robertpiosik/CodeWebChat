@@ -13,11 +13,8 @@ export type ApiToolConfiguration = {
   provider_type: string
   provider_name: string
   model: string
-  temperature: number
   reasoning_effort?: string
-  max_concurrency?: number
   instructions_placement?: InstructionsPlacement
-  is_default?: boolean
 }
 
 // Messages sent to the backend

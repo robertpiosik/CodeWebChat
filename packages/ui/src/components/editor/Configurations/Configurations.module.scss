@@ -55,21 +55,15 @@
     }
 
     &__left {
-      display: flex;
-      align-items: center;
-      gap: var(--padding-5px);
       overflow: hidden;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
-      &__text {
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        > span:last-child {
-          margin-left: 0.5em;
-          opacity: 0.7;
-          font-size: 0.9em;
-        }
+      > span:last-child {
+        margin-left: 0.5em;
+        opacity: 0.7;
+        font-size: 0.9em;
       }
     }
   }

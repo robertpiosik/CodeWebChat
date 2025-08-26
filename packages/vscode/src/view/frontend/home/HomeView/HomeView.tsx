@@ -332,7 +332,6 @@ export const HomeView: React.FC<Props> = (props) => {
                 type_something: 'Type something',
                 completion_instructions: 'Completion instructions',
                 use_last_choice: 'Use last choice',
-                use_default: 'Use default',
                 select: 'Select',
                 code_completions_mode_unavailable_with_text_selection:
                   'Remove text selection',
@@ -480,9 +479,7 @@ export const HomeView: React.FC<Props> = (props) => {
                   model: c.model,
                   provider: c.provider_name,
                   reasoning_effort: c.reasoning_effort,
-                  temperature: c.temperature,
-                  cache_enabled: c.instructions_placement == 'below-only',
-                  is_default: c.is_default
+                  cache_enabled: c.instructions_placement == 'below-only'
                 }))}
                 on_configuration_click={props.on_configuration_click}
                 selected_configuration_index={
@@ -572,21 +569,25 @@ export const HomeView: React.FC<Props> = (props) => {
               APPLY
             </button>
           )}
-          <button
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--outlined']
-            )}
-            onClick={handle_revert_click}
-            title={
-              props.can_revert
-                ? 'Restore saved state of the codebase after chat/API response integration'
-                : 'Nothing to revert'
-            }
-            disabled={!props.can_revert || is_revert_disabled_temporarily}
-          >
-            REVERT
-          </button>
+          {(props.home_view_type == HOME_VIEW_TYPES.WEB ||
+            (props.home_view_type == HOME_VIEW_TYPES.API &&
+              !is_in_code_completions_mode)) && (
+            <button
+              className={cn(
+                styles.footer__button,
+                styles['footer__button--outlined']
+              )}
+              onClick={handle_revert_click}
+              title={
+                props.can_revert
+                  ? 'Restore saved state of the codebase after chat/API response integration'
+                  : 'Nothing to revert'
+              }
+              disabled={!props.can_revert || is_revert_disabled_temporarily}
+            >
+              REVERT
+            </button>
+          )}
           <button
             className={cn(
               styles.footer__button,

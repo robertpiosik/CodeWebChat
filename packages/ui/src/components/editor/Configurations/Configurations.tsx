@@ -11,7 +11,6 @@ export namespace Configurations {
     temperature?: number
     reasoning_effort?: string
     cache_enabled?: boolean
-    is_default?: boolean
   }
 
   export type Props = {
@@ -113,16 +112,10 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
                 }
               }}
               role="button"
-              title={configuration.is_default ? 'Default configuration' : ''}
             >
               <div className={styles.configurations__item__left}>
-                {configuration.is_default && (
-                  <span className="codicon codicon-check" />
-                )}
-                <div className={styles.configurations__item__left__text}>
-                  <span>{configuration.model}</span>
-                  <span>{description}</span>
-                </div>
+                <span>{configuration.model}</span>
+                <span>{description}</span>
               </div>
             </div>
           )

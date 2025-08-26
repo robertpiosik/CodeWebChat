@@ -3,7 +3,6 @@ import axios from 'axios'
 import { make_api_request } from '../utils/make-api-request'
 import { code_completion_instructions } from '../constants/instructions'
 import { FilesCollector } from '../utils/files-collector'
-import { extract_file_paths_from_instruction } from '../utils/extract-file-paths-from-instruction'
 import { ApiProvidersManager } from '../services/api-providers-manager'
 import { Logger } from '../utils/logger'
 import he from 'he'
@@ -14,11 +13,11 @@ import { ToolConfig } from '@/services/api-providers-manager'
 import { ViewProvider } from '../view/backend/view-provider'
 
 // Show inline completion using Inline Completions API
-async function show_inline_completion(params: {
+const show_inline_completion = async (params: {
   editor: vscode.TextEditor
   position: vscode.Position
   completion_text: string
-}) {
+}) => {
   const document = params.editor.document
   const controller = vscode.languages.registerInlineCompletionItemProvider(
     { pattern: '**' },
@@ -53,13 +52,13 @@ async function show_inline_completion(params: {
   }, 10000)
 }
 
-async function get_code_completion_config(
+const get_code_completion_config = async (
   api_providers_manager: ApiProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   config_index?: number,
   view_provider?: ViewProvider
-): Promise<{ provider: any; config: any } | undefined> {
+): Promise<{ provider: any; config: any } | undefined> => {
   let code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
 
@@ -163,7 +162,7 @@ async function get_code_completion_config(
     quick_pick.placeholder = 'Select code completions configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_index = context.globalState.get<number>(
+    const last_selected_index = context.workspaceState.get<number>(
       LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
       0
     )
@@ -228,7 +227,7 @@ async function get_code_completion_config(
             return
           }
 
-          context.globalState.update(
+          context.workspaceState.update(
             LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
             selected.index
           )
@@ -289,7 +288,7 @@ async function get_code_completion_config(
   }
 }
 
-async function perform_code_completion(params: {
+const perform_code_completion = async (params: {
   file_tree_provider: any
   open_editors_provider: any
   context: vscode.ExtensionContext
@@ -299,7 +298,7 @@ async function perform_code_completion(params: {
   completion_instructions?: string
   config_index?: number
   view_provider?: ViewProvider
-}) {
+}) => {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
   let completion_instructions: string | undefined =
@@ -401,13 +400,8 @@ async function perform_code_completion(params: {
       params.open_editors_provider
     )
 
-    const additional_paths = completion_instructions
-      ? extract_file_paths_from_instruction(completion_instructions)
-      : []
-
     const context_text = await files_collector.collect_files({
-      exclude_path: document_path,
-      additional_paths
+      exclude_path: document_path
     })
 
     const payload = {
@@ -502,11 +496,11 @@ async function perform_code_completion(params: {
   }
 }
 
-export function code_completion_commands(
+export const code_completion_commands = (
   file_tree_provider: any,
   open_editors_provider: any,
   context: vscode.ExtensionContext
-) {
+) => {
   return [
     vscode.commands.registerCommand('codeWebChat.codeCompletion', async () =>
       perform_code_completion({
