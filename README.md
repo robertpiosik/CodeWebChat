@@ -6,8 +6,8 @@
 
 Works with VS Code and its derivatives (Cursor, Windsurf, VSCodium, etc.).
 
-✅ **Edit context** with 15+ free chatbots or a direct API call \
-✅ **Apply multi-file changes** from a single model response \
+✅ **Edit context** with 15+ free chatbots or an API request \
+✅ **Apply multi-file changes** from a single response \
 ✅ **Code completions** with reasoning models \
 ✅ **Commit messages** in your team's style
 
