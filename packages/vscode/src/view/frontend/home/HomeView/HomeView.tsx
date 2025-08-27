@@ -174,6 +174,7 @@ export const HomeView: React.FC<Props> = (props) => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({})
     } else {
+      set_is_revert_disabled_temporarily(false)
       if (is_in_code_completions_mode) {
         props.on_code_completion_click()
       } else {
@@ -186,6 +187,7 @@ export const HomeView: React.FC<Props> = (props) => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({ show_quick_pick: true })
     } else {
+      set_is_revert_disabled_temporarily(false)
       if (is_in_code_completions_mode) {
         props.on_code_completion_with_quick_pick_click()
       } else {
@@ -569,25 +571,21 @@ export const HomeView: React.FC<Props> = (props) => {
               APPLY
             </button>
           )}
-          {(props.home_view_type == HOME_VIEW_TYPES.WEB ||
-            (props.home_view_type == HOME_VIEW_TYPES.API &&
-              !is_in_code_completions_mode)) && (
-            <button
-              className={cn(
-                styles.footer__button,
-                styles['footer__button--outlined']
-              )}
-              onClick={handle_revert_click}
-              title={
-                props.can_revert
-                  ? 'Restore saved state of the codebase after chat/API response integration'
-                  : 'Nothing to revert'
-              }
-              disabled={!props.can_revert || is_revert_disabled_temporarily}
-            >
-              REVERT
-            </button>
-          )}
+          <button
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--outlined']
+            )}
+            onClick={handle_revert_click}
+            title={
+              props.can_revert
+                ? 'Restore saved state of the codebase after chat/API response integration'
+                : 'Nothing to revert'
+            }
+            disabled={!props.can_revert || is_revert_disabled_temporarily}
+          >
+            REVERT
+          </button>
           <button
             className={cn(
               styles.footer__button,

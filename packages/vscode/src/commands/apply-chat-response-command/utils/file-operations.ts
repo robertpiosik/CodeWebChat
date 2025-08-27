@@ -229,8 +229,14 @@ export async function revert_files(
               data: { file_path: state.file_path }
             })
             const doc = await vscode.workspace.openTextDocument(safe_path)
-            await vscode.window.showTextDocument(doc)
+            const editor = await vscode.window.showTextDocument(doc)
             await format_document(doc)
+
+            if (state.cursor_offset !== undefined) {
+              const position = doc.positionAt(state.cursor_offset)
+              editor.selection = new vscode.Selection(position, position)
+            }
+
             await doc.save()
           } catch (err) {
             Logger.warn({
@@ -257,6 +263,12 @@ export async function revert_files(
                 state.content
               )
             })
+
+            if (state.cursor_offset !== undefined) {
+              const position = document.positionAt(state.cursor_offset)
+              editor.selection = new vscode.Selection(position, position)
+            }
+
             await document.save()
             Logger.log({
               function_name: 'revert_files',
