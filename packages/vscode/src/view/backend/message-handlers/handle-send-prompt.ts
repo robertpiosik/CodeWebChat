@@ -35,6 +35,11 @@ export const handle_send_prompt = async (params: {
       get_last_selected_preset_key(params.provider.web_mode),
       params.preset_name
     )
+    params.provider.send_message({
+      command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
+      mode: params.provider.web_mode,
+      name: params.preset_name
+    })
   } else if (params.group_name) {
     params.provider.context.workspaceState.update(
       get_last_group_or_preset_choice_state_key(params.provider.web_mode),
@@ -44,6 +49,11 @@ export const handle_send_prompt = async (params: {
       get_last_selected_group_state_key(params.provider.web_mode),
       params.group_name
     )
+    params.provider.send_message({
+      command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
+      mode: params.provider.web_mode,
+      name: params.group_name
+    })
   }
 
   let current_instructions = ''

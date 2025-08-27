@@ -4,7 +4,6 @@ import { Checkbox } from '../Checkbox'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
-import { useState, useEffect } from 'react'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -86,19 +85,6 @@ const with_ids = (
 }
 
 export const Presets: React.FC<Presets.Props> = (props) => {
-  const [highlighted_preset_name, set_highlighted_preset_name] = useState<
-    Record<Presets.Props['web_mode'], string>
-  >({} as any)
-
-  useEffect(() => {
-    if (props.selected_preset_or_group_name !== undefined) {
-      set_highlighted_preset_name((prev) => ({
-        ...prev,
-        [props.web_mode]: props.selected_preset_or_group_name
-      }))
-    }
-  }, [props.selected_preset_or_group_name, props.web_mode])
-
   const get_is_preset_disabled = (preset: Presets.Preset) =>
     preset.chatbot &&
     (!props.is_connected ||
@@ -155,7 +141,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             className={cn(styles.presets__item, {
               [styles['presets__item--ungrouped']]: true,
               [styles['presets__item--highlighted']]:
-                highlighted_preset_name[props.web_mode] == 'Ungrouped',
+                props.selected_preset_or_group_name == 'Ungrouped',
               [styles['presets__item--disabled']]: get_is_ungrouped_disabled()
             })}
             onClick={() => {
@@ -267,7 +253,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 key={i}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
-                    highlighted_preset_name[props.web_mode] == preset.name,
+                    props.selected_preset_or_group_name == preset.name,
                   [styles['presets__item--disabled']]: preset.chatbot
                     ? get_is_preset_disabled(preset)
                     : get_is_group_disabled()
@@ -280,11 +266,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     if (get_is_group_disabled()) return
                     props.on_group_click(preset.name)
                   }
-
-                  set_highlighted_preset_name({
-                    ...highlighted_preset_name,
-                    [props.web_mode]: preset.name
-                  })
                 }}
                 role="button"
                 title={get_item_title()}
@@ -348,10 +329,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     title={props.translations.edit}
                     on_click={(e) => {
                       e.stopPropagation()
-                      set_highlighted_preset_name({
-                        ...highlighted_preset_name,
-                        [props.web_mode]: preset.name
-                      })
                       props.on_preset_edit(preset.name)
                     }}
                   />
