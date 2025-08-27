@@ -63,7 +63,10 @@ type Props = {
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
   home_view_type: HomeViewType
-  on_home_view_type_change: (value: HomeViewType) => void
+  on_home_view_type_change: (
+    value: HomeViewType,
+    keep_code_completions?: boolean
+  ) => void
   on_edit_context_click: () => void
   on_edit_context_with_quick_pick_click: () => void
   on_code_completion_click: () => void
@@ -245,9 +248,15 @@ export const HomeView: React.FC<Props> = (props) => {
 
   const handle_heading_click = () => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
-      props.on_home_view_type_change(HOME_VIEW_TYPES.API)
+      props.on_home_view_type_change(
+        HOME_VIEW_TYPES.API,
+        is_in_code_completions_mode
+      )
     } else {
-      props.on_home_view_type_change(HOME_VIEW_TYPES.WEB)
+      props.on_home_view_type_change(
+        HOME_VIEW_TYPES.WEB,
+        is_in_code_completions_mode
+      )
     }
   }
 

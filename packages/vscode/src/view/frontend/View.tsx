@@ -166,10 +166,18 @@ export const View = () => {
     })
   }
 
-  const handle_home_view_type_change = (view_type: HomeViewType) => {
+  const handle_home_view_type_change = (
+    view_type: HomeViewType,
+    keep_code_completions?: boolean
+  ) => {
     set_home_view_type(view_type)
-    handle_web_mode_change('edit-context')
-    handle_api_mode_change('edit-context')
+    if (keep_code_completions) {
+      handle_web_mode_change('code-completions')
+      handle_api_mode_change('code-completions')
+    } else {
+      handle_web_mode_change('edit-context')
+      handle_api_mode_change('edit-context')
+    }
     post_message(vscode, {
       command: 'SAVE_HOME_VIEW_TYPE',
       view_type

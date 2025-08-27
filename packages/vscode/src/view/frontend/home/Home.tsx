@@ -29,7 +29,10 @@ type Props = {
   home_view_type: HomeViewType
   web_mode: WebMode
   api_mode: ApiMode
-  on_home_view_type_change: (view_type: HomeViewType) => void
+  on_home_view_type_change: (
+    view_type: HomeViewType,
+    keep_code_completions?: boolean
+  ) => void
   on_web_mode_change: (mode: WebMode) => void
   on_api_mode_change: (mode: ApiMode) => void
   has_active_editor: boolean
@@ -513,7 +516,6 @@ export const Home: React.FC<Props> = (props) => {
   const selected_preset_or_group_name =
     selected_preset_or_group_name_by_mode?.[props.web_mode]
 
-
   const configurations_for_current_mode =
     all_configurations && props.home_view_type == HOME_VIEW_TYPES.API
       ? all_configurations[props.api_mode]
@@ -556,7 +558,9 @@ export const Home: React.FC<Props> = (props) => {
       on_preset_delete={handle_preset_delete}
       on_toggle_default_preset={handle_toggle_default_preset}
       selected_preset_or_group_name={selected_preset_or_group_name}
-      selected_configuration_index={selected_configuration_index_by_mode?.[props.api_mode]}
+      selected_configuration_index={
+        selected_configuration_index_by_mode?.[props.api_mode]
+      }
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}
