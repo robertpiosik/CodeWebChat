@@ -39,7 +39,7 @@ const get_edit_context_config = async (
   if (config_index !== undefined && edit_context_configs[config_index]) {
     selected_config = edit_context_configs[config_index]
   } else if (!show_quick_pick) {
-    const last_selected_index = context.globalState.get<number>(
+    const last_selected_index = context.workspaceState.get<number>(
       LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY
     )
     if (
@@ -105,7 +105,7 @@ const get_edit_context_config = async (
     quick_pick.placeholder = 'Select configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_index = context.globalState.get<number>(
+    const last_selected_index = context.workspaceState.get<number>(
       LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY,
       0
     )
@@ -163,7 +163,7 @@ const get_edit_context_config = async (
             return
           }
 
-          context.globalState.update(
+          context.workspaceState.update(
             LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY,
             selected.index
           )
