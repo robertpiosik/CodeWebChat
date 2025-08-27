@@ -44,11 +44,18 @@ const get_code_completion_config = async (
 
   if (config_index !== undefined && code_completions_configs[config_index]) {
     selected_config = code_completions_configs[config_index]
-
     context.workspaceState.update(
       LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
       config_index
     )
+
+    if (view_provider) {
+      view_provider.send_message({
+        command: 'SELECTED_CONFIGURATION_CHANGED',
+        mode: 'code-completions',
+        index: config_index
+      })
+    }
   } else if (!show_quick_pick) {
     const last_selected_index = context.workspaceState.get<number>(
       LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,

@@ -1,7 +1,6 @@
 import styles from './Configurations.module.scss'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
-import { useState, useEffect } from 'react'
 import { IconButton } from '../IconButton'
 
 export namespace Configurations {
@@ -35,18 +34,6 @@ export namespace Configurations {
 }
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
-  const [highlighted_configuration_index, set_highlighted_configuration_index] =
-    useState<Record<Configurations.Props['api_mode'], number>>({} as any)
-
-  useEffect(() => {
-    if (props.selected_configuration_index !== undefined) {
-      set_highlighted_configuration_index((prev) => ({
-        ...prev,
-        [props.api_mode]: props.selected_configuration_index
-      }))
-    }
-  }, [props.selected_configuration_index, props.api_mode])
-
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
@@ -99,16 +86,12 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               key={i}
               className={cn(styles.configurations__item, {
                 [styles['configurations__item--highlighted']]:
-                  highlighted_configuration_index[props.api_mode] == i,
+                  props.selected_configuration_index == i,
                 [styles['configurations__item--disabled']]: is_item_disabled
               })}
               onClick={() => {
                 if (!is_item_disabled) {
                   props.on_configuration_click(i)
-                  set_highlighted_configuration_index({
-                    ...highlighted_configuration_index,
-                    [props.api_mode]: i
-                  })
                 }
               }}
               role="button"

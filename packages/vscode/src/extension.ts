@@ -98,17 +98,18 @@ export async function activate(context: vscode.ExtensionContext) {
         view_provider.set_revert_button_state,
         view_provider.set_apply_button_state
       ),
-      commit_changes_command(context, view_provider.set_revert_button_state)
+      commit_changes_command(context, view_provider.set_revert_button_state),
+      ...code_completion_commands(
+        workspace_provider,
+        open_editors_provider,
+        context,
+        view_provider
+      )
     )
   }
 
   context.subscriptions.push(
     open_file_from_workspace_command(open_editors_provider),
-    ...code_completion_commands(
-      workspace_provider,
-      open_editors_provider,
-      context
-    ),
     close_editor_command(),
     close_all_editors_command(),
     save_all_command(),

@@ -293,7 +293,6 @@ const perform_code_completion = async (params: {
   open_editors_provider: any
   context: vscode.ExtensionContext
   with_completion_instructions: boolean
-  auto_accept: boolean
   show_quick_pick?: boolean
   completion_instructions?: string
   config_index?: number
@@ -464,22 +463,11 @@ const perform_code_completion = async (params: {
                 .replace(/<!\[CDATA\[/g, '')
                 .replace(/\]\]>/g, '')
                 .trim()
-
-              if (params.auto_accept) {
-                await editor.edit((editBuilder) => {
-                  editBuilder.insert(position, decoded_completion)
-                })
-                await vscode.commands.executeCommand(
-                  'editor.action.formatDocument',
-                  document.uri
-                )
-              } else {
-                await show_inline_completion({
-                  editor,
-                  position,
-                  completion_text: decoded_completion
-                })
-              }
+              await show_inline_completion({
+                editor,
+                position,
+                completion_text: decoded_completion
+              })
             }
           }
         } catch (err: any) {
@@ -499,7 +487,8 @@ const perform_code_completion = async (params: {
 export const code_completion_commands = (
   file_tree_provider: any,
   open_editors_provider: any,
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  view_provider: ViewProvider
 ) => {
   return [
     vscode.commands.registerCommand('codeWebChat.codeCompletion', async () =>
@@ -508,26 +497,8 @@ export const code_completion_commands = (
         open_editors_provider,
         context,
         with_completion_instructions: false,
-        auto_accept: false,
         show_quick_pick: false
       })
-    ),
-    vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionAutoAccept',
-      async (args?: {
-        completion_instructions?: string
-        config_index?: number
-      }) =>
-        perform_code_completion({
-          file_tree_provider,
-          open_editors_provider,
-          context,
-          with_completion_instructions: false,
-          auto_accept: true,
-          show_quick_pick: false,
-          completion_instructions: args?.completion_instructions,
-          config_index: args?.config_index
-        })
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionWithInstructions',
@@ -537,21 +508,7 @@ export const code_completion_commands = (
           open_editors_provider,
           context,
           with_completion_instructions: true,
-          auto_accept: false,
           show_quick_pick: false
-        })
-    ),
-    vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithInstructionsAutoAccept',
-      async (args?: { completion_instructions?: string }) =>
-        perform_code_completion({
-          file_tree_provider,
-          open_editors_provider,
-          context,
-          with_completion_instructions: true,
-          auto_accept: true,
-          show_quick_pick: false,
-          completion_instructions: args?.completion_instructions
         })
     ),
     vscode.commands.registerCommand(
@@ -562,34 +519,20 @@ export const code_completion_commands = (
           open_editors_provider,
           context,
           with_completion_instructions: false,
-          auto_accept: false,
-          show_quick_pick: true
-        })
-    ),
-    vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionUsingAutoAccept',
-      async (args?: { completion_instructions?: string }) =>
-        perform_code_completion({
-          file_tree_provider,
-          open_editors_provider,
-          context,
-          with_completion_instructions: false,
-          auto_accept: true,
           show_quick_pick: true,
-          completion_instructions: args?.completion_instructions
+          view_provider
         })
     ),
     vscode.commands.registerCommand(
-      'codeWebChat.codeCompletionWithInstructionsUsingAutoAccept',
-      async (args?: { completion_instructions?: string }) =>
+      'codeWebChat.codeCompletionWithInstructionsUsing',
+      async () =>
         perform_code_completion({
           file_tree_provider,
           open_editors_provider,
           context,
           with_completion_instructions: true,
-          auto_accept: true,
           show_quick_pick: true,
-          completion_instructions: args?.completion_instructions
+          view_provider
         })
     )
   ]

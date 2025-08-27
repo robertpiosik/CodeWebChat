@@ -179,17 +179,7 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionAutoAccept",
-        "title": "Code Completion",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.codeCompletionUsing",
-        "title": "Code Completion using...",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.codeCompletionUsingAutoAccept",
         "title": "Code Completion using...",
         "category": "Code Web Chat"
       },
@@ -199,13 +189,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.codeCompletionWithInstructionsUsingAutoAccept",
+        "command": "codeWebChat.codeCompletionWithInstructionsUsing",
         "title": "Code Completion with Instructions using...",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.codeCompletionWithInstructionsAutoAccept",
-        "title": "Code Completion with Instructions",
         "category": "Code Web Chat"
       },
       {
@@ -351,22 +336,6 @@
         },
         {
           "command": "codeWebChat.generateCommitMessage",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.codeCompletionAutoAccept",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.codeCompletionUsingAutoAccept",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.codeCompletionWithInstructionsAutoAccept",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.codeCompletionWithInstructionsUsingAutoAccept",
           "when": "false"
         },
         {
@@ -564,9 +533,9 @@
           "scope": "resource",
           "description": "Style of generated code blocks in \"Edit context\" mode.",
           "default": {
-            "whole": "Whenever proposing a file use the markdown code block syntax and always add a file path in a comment on the top of the code block. Please show me the full code of the changed files, I have a disability which means I can't type and need to be able to copy and paste the full code. Don't use XML for files.",
-            "truncated": "Whenever proposing a file use the markdown code block syntax and always add a file path in a comment on the top of the code block. Use ellipsis comments, e.g. \"// ...\", when appropriate. Don't use XML for files.",
-            "diff": "Whenever proposing a file use the markdown code block syntax. Each code block should be a diff patch. Don't use XML for files."
+            "whole": "Whenever proposing a new or updated file use the markdown code block syntax and always add a file path in a comment on the top of the code block. Please show me the full code of the changed files, I have a disability which means I can't type and need to be able to copy and paste the full code. Don't use XML for files.",
+            "truncated": "Whenever proposing a new or updated file use the markdown code block syntax and always add a file path in a comment on the top of the code block. Use ellipsis comments, e.g. \"// ...\", when appropriate. Don't use XML for files.",
+            "diff": "Whenever proposing a new or updated file use the markdown code block syntax. Each code block should be a diff patch. Don't use XML for files."
           },
           "properties": {
             "whole": {
