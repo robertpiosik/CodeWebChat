@@ -20,6 +20,14 @@ export let code_review_promise_resolve:
   | ((decision: CodeReviewDecision) => void)
   | undefined
 
+export let toggle_file_review_state:
+  | ((file: {
+      file_path: string
+      workspace_name?: string
+      is_checked: boolean
+    }) => Promise<void>)
+  | undefined
+
 type ReviewableFile = {
   file_path: string
   content: string
@@ -211,6 +219,29 @@ export const review_applied_changes = async (
       return null
     }
 
+    toggle_file_review_state = async ({
+      file_path,
+      workspace_name,
+      is_checked
+    }) => {
+      const file_to_toggle = prepared_files.find(
+        (f) =>
+          f.reviewable_file.file_path == file_path &&
+          f.reviewable_file.workspace_name == workspace_name
+      )
+
+      if (!file_to_toggle) return
+
+      const content_to_write = is_checked
+        ? file_to_toggle.reviewable_file.content
+        : file_to_toggle.original_content
+
+      await vscode.workspace.fs.writeFile(
+        vscode.Uri.file(file_to_toggle.sanitized_path),
+        Buffer.from(content_to_write, 'utf8')
+      )
+    }
+
     create_temp_files_with_original_content(prepared_files)
 
     const review_items = prepared_files.map((file) => ({
@@ -297,6 +328,7 @@ export const review_applied_changes = async (
   } finally {
     await close_review_diff_editors(prepared_files)
     cleanup_temp_files(prepared_files)
+    toggle_file_review_state = undefined
 
     if (view_provider) {
       view_provider.send_message({ command: 'CODE_REVIEW_FINISHED' })

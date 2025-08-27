@@ -13,6 +13,11 @@ type Props = {
   on_reject_all: () => void
   on_accept: (files: FileInReview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
+  on_toggle_file: (file: {
+    file_path: string
+    workspace_name?: string
+    is_checked: boolean
+  }) => void
 }
 
 export const CodeReview: FC<Props> = ({
@@ -20,7 +25,8 @@ export const CodeReview: FC<Props> = ({
   has_multiple_workspaces,
   on_reject_all,
   on_accept,
-  on_focus_file
+  on_focus_file,
+  on_toggle_file
 }) => {
   const [files_to_review, set_files_to_review] = useState<
     CheckedFileToReview[]
@@ -71,6 +77,11 @@ export const CodeReview: FC<Props> = ({
                       i == index ? { ...f, is_checked: checked } : f
                     )
                   )
+                  on_toggle_file({
+                    file_path: file.file_path,
+                    workspace_name: file.workspace_name,
+                    is_checked: checked
+                  })
                 }}
                 disabled={files_to_review.length == 1}
               />

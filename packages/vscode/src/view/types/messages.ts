@@ -204,6 +204,13 @@ export interface EditsReviewMessage extends BaseMessage {
   files: FileInReview[]
 }
 
+export interface ToggleFileInReviewMessage extends BaseMessage {
+  command: 'TOGGLE_FILE_IN_REVIEW'
+  file_path: string
+  workspace_name?: string
+  is_checked: boolean
+}
+
 export interface FocusOnFileInReviewMessage extends BaseMessage {
   command: 'FOCUS_ON_FILE_IN_REVIEW'
   file_path: string
@@ -258,6 +265,7 @@ export type FrontendMessage =
   | GetVersionMessage
   | CheckClipboardForApplyMessage
   | EditsReviewMessage
+  | ToggleFileInReviewMessage
   | FocusOnFileInReviewMessage
   | GetHasMultipleWorkspacesMessage
   | RequestGitStateMessage

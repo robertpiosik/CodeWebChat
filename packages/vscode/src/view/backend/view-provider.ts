@@ -64,7 +64,10 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { api_tool_config_emitter } from '@/services/api-providers-manager'
-import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-applied-changes'
+import {
+  code_review_promise_resolve,
+  toggle_file_review_state
+} from '@/commands/apply-chat-response-command/utils/review-applied-changes'
 import { Logger } from '@/utils/logger'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
@@ -416,6 +419,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
                   file_path: message.file_path,
                   workspace_name: message.workspace_name
                 }
+              })
+            }
+          } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
+            if (toggle_file_review_state) {
+              await toggle_file_review_state({
+                file_path: message.file_path,
+                workspace_name: message.workspace_name,
+                is_checked: message.is_checked
               })
             }
           } else if (message.command == 'EDITS_REVIEW') {
