@@ -45,7 +45,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         [props.api_mode]: props.selected_configuration_index
       }))
     }
-  }, [props.selected_configuration_index])
+  }, [props.selected_configuration_index, props.api_mode])
 
   return (
     <div className={styles.container}>
