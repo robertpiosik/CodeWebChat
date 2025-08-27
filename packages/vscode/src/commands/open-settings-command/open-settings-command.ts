@@ -25,8 +25,7 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
           },
           {
             label: LABEL_PROVIDERS,
-            detail:
-              'API keys are stored encrypted and never leave your device.'
+            detail: 'API keys are stored encrypted and never leave your device.'
           },
           {
             label: 'API tools',
@@ -100,7 +99,7 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             show_menu = false
             break
           case LABEL_PROVIDERS:
-            await api_providers(context)
+            show_menu = await api_providers(context)
             break
           case LABEL_CODE_COMPLETIONS:
             show_menu = await setup_api_tool_multi_config({

@@ -45,6 +45,7 @@ export const setup_api_tool_multi_config = async (params: {
 
   let stack_cancelled = false
   let last_selected_config_index: number | undefined
+  let last_selected_label: string | undefined
   let last_selected_edit_option_label: string | undefined
 
   const EDIT_INSTRUCTIONS_LABEL = 'Instructions'
@@ -305,6 +306,13 @@ export const setup_api_tool_multi_config = async (params: {
       if (active_item) {
         quick_pick.activeItems = [active_item]
       }
+    } else if (last_selected_label) {
+      const active_item = items.find(
+        (item) => item.label === last_selected_label
+      )
+      if (active_item) {
+        quick_pick.activeItems = [active_item]
+      }
     }
 
     let is_accepted = false
@@ -330,10 +338,13 @@ export const setup_api_tool_multi_config = async (params: {
         }
 
         if (selected.label === API_PROVIDERS_LABEL) {
+          last_selected_label = selected.label
+          last_selected_config_index = undefined
           quick_pick.hide()
-          await api_providers(params.context)
+          const keep_open = await api_providers(params.context)
           providers_manager = new ApiProvidersManager(params.context)
-          if (stack_cancelled) {
+          if (!keep_open) {
+            stack_cancelled = true
             resolve(false)
             return
           }
@@ -342,6 +353,8 @@ export const setup_api_tool_multi_config = async (params: {
         }
 
         if (selected.label == ADD_CONFIGURATION_LABEL) {
+          last_selected_label = selected.label
+          last_selected_config_index = undefined
           quick_pick.hide()
           await add_configuration()
           if (stack_cancelled) {
@@ -353,6 +366,7 @@ export const setup_api_tool_multi_config = async (params: {
         } else if (selected.config) {
           if (selected.index !== undefined) {
             last_selected_config_index = selected.index
+            last_selected_label = undefined
           }
           quick_pick.hide()
           await edit_configuration(selected.config)
@@ -371,6 +385,7 @@ export const setup_api_tool_multi_config = async (params: {
         }
 
         last_selected_config_index = item.index
+        last_selected_label = undefined
 
         if (event.button === edit_button) {
           is_accepted = true
