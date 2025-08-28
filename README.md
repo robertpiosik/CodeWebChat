@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a> <a href="https://discord.com/invite/KJySXsrSX5" target="_blank"><img src="https://img.shields.io/badge/Chat-Discord-7289da" alt="Join Discord server" /></a>
 
-**A 100% free and open-source, community-driven tool for AI pair programming.** Meet, designed for unmatched accuracy, speed and cost-efficiency, a non-agentic workflow—select context, type instructions and send prompt with a free chatbot or an API provider. When the model finishes, its response is ready for one-click, intelligent integration with a transparent code review and an easy rollback.
+**A 100% free and open-source, community-driven tool for AI pair programming.** Meet a non-agentic workflow designed for unmatched accuracy, speed and cost-efficiency—select context, type instructions and send prompt with a free chatbot or an API provider. When the model finishes, its response is ready for one-click, intelligent integration with a transparent code review and an easy rollback.
 
 **Works with VS Code** and its forks (Cursor, Windsurf, VSCodium, etc.).
 
@@ -15,9 +15,12 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-**Why non-agentic AI-assisted coding?**
+**Four points why go non-agentic**
 
-Great software is a chain of carefully considered decisions. Because LLMs can't truly reason and don't know their own limitations, delegating decision-making may create hard-to-debug weak links; furthermore a lack of practice may impair our own abilities in creating strong ones.
+- **Great software is a chain of carefully considered decisions.** Because LLMs can't truly reason and don't know their own limitations, delegating decision-making may create hard-to-debug weak links; furthermore a lack of practice may impair our own abilities in creating strong ones.
+- **Context, once polluted, won't recover.** When the model gets your intent wrong, adjust included files, instructions and start afresh. Telling the model it is wrong only yields meaningless trained-in apologies.
+- **Programming is about building mental models.** Being right about what to show to the model leads to predictability of outputs. Getting the job done in a single turn is an ultimate goal.
+- **Agents are expensive and can fail you.** Pattern-matching technology backinig them is sufficient and encouraging when you start, but with ever-increasing complexity of a real-world projects you may get stuck in unseen in training datasets territories. Your bills can skyrocket when you happen to run in circles.
 
 **Guiding principles**
 
