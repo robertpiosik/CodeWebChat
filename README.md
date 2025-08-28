@@ -4,7 +4,7 @@
 
 **100% free and open-source, a community-driven tool for AI pair programming.** Meet a non-agentic workflow designed for unmatched accuracy, speed and cost-efficiency—select context, type instructions and send prompt with a free chatbot or an API provider. When the model finishes, its response is ready for a one-click integration with a transparent code review step and an easy rollback.
 
-**Works with VS Code** and its forks (Cursor, Windsurf, VSCodium, etc.).
+Available in VS Code, Cursor, and other forks.
 
 ✅ **Edit context** with 15+ free chatbots or API providers \
 ✅ **Apply multi-file changes** from a single response \
