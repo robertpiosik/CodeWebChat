@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a> <a href="https://discord.com/invite/KJySXsrSX5" target="_blank"><img src="https://img.shields.io/badge/Chat-Discord-7289da" alt="Join Discord server" /></a>
 
-**100% free and open-source, a community-driven tool for AI pair programming.** Meet a non-agentic workflow designed for unmatched accuracy, speed and cost-efficiency—select context, type instructions and send prompt with a free chatbot or an API provider. When the model finishes, its response is ready for one-click integration with a transparent code review step and an easy rollback.
+**100% free and open-source, a community-driven tool for AI pair programming.** Meet a non-agentic workflow designed for unmatched accuracy, speed and cost-efficiency—select context, type instructions and send prompt with a free chatbot or an API provider. When the model finishes, its response is ready for a one-click integration with a transparent code review step and an easy rollback.
 
 **Works with VS Code** and its forks (Cursor, Windsurf, VSCodium, etc.).
 
@@ -20,7 +20,7 @@
 - **Great software is a chain of carefully considered decisions.** Because LLMs can't truly reason and don't know their own limitations, delegating decision-making may create hard-to-debug weak links and impair our own abilities in creating strong ones.
 - **Programming is about building mental models.** Being right about what to show to the model leads to predictability of its outputs—you acquire a skill of the AI era, move fast and save money.
 - **Context once polluted, won't recover.** When the model isn't getting your intent on first try, a conversation only makes it more confused and erroneous. Non-agentic means context/instructions adjustment and starting afresh, without an unproductive back-and-forth.
-- **Coding agents can get lost and expensive.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they may enter unseen in training datasets territories. Your bills can skyrocket, or usage limits be quickly exhausted when you happen to arrive at a dead end.
+- **Coding agents can get lost.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they may struggle to find the right context and arrive at a dead end.
 
 **Guiding principles**
 
