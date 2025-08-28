@@ -44,6 +44,7 @@ export const View = () => {
   const [home_view_type, set_home_view_type] = useState<HomeViewType>()
   const [web_mode, set_web_mode] = useState<WebMode>()
   const [api_mode, set_api_mode] = useState<ApiMode>()
+  const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
 
   const handle_mouse_enter = () => {
     post_message(vscode, {
@@ -146,6 +147,7 @@ export const View = () => {
 
   const handle_web_mode_change = (new_mode: WebMode) => {
     set_web_mode(new_mode)
+    set_chat_input_focus_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_WEB_MODE',
       mode: new_mode
@@ -157,6 +159,7 @@ export const View = () => {
 
   const handle_api_mode_change = (new_mode: ApiMode) => {
     set_api_mode(new_mode)
+    set_chat_input_focus_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_API_MODE',
       mode: new_mode
@@ -344,6 +347,7 @@ export const View = () => {
           has_active_selection={has_active_selection}
           on_web_mode_change={handle_web_mode_change}
           on_api_mode_change={handle_api_mode_change}
+          chat_input_focus_key={chat_input_focus_key}
         />
       </div>
       <div
@@ -356,11 +360,13 @@ export const View = () => {
             set_active_view('home')
             handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
             handle_web_mode_change('edit-context')
+            set_chat_input_focus_key((k) => k + 1)
           }}
           on_api_call={() => {
             set_active_view('home')
             handle_home_view_type_change(HOME_VIEW_TYPES.API)
             handle_api_mode_change('edit-context')
+            set_chat_input_focus_key((k) => k + 1)
           }}
           version={version}
         />

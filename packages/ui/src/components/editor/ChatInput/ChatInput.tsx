@@ -39,6 +39,7 @@ type Props = {
   }
   caret_position_to_set?: number
   on_caret_position_set?: () => void
+  focus_key?: number
 }
 
 const format_token_count = (count?: number) => {
@@ -76,8 +77,9 @@ export const ChatInput: React.FC<Props> = (props) => {
   useEffect(() => {
     if (textarea_ref.current) {
       textarea_ref.current.focus()
+      textarea_ref.current.select()
     }
-  }, [props.value])
+  }, [props.focus_key])
 
   const get_highlighted_text = (text: string) => {
     if (props.is_in_code_completions_mode) {
