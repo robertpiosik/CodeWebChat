@@ -19,7 +19,7 @@
 
 - **Great software is a chain of carefully considered decisions.** Because LLMs can't truly reason and don't know their own limitations, delegating decision-making may create hard-to-debug weak links; furthermore a lack of practice may impair our own abilities in creating strong ones.
 - **Programming is about building mental models.** Being right about what to show to the model leads to predictability of outputs. Getting the job done in a single turn is an ultimate goal.
-- **Context, once polluted, won't recover.** When the model gets your intent wrong, adjust included files, instructions and start afresh. Telling the model it is wrong only yields meaningless trained-in apologies.
+- **Context, once polluted, won't recover.** Whenever the model is not getting  your intent—adjust included files, instructions and start afresh. Telling the model it is wrong only yields meaningless trained-in apologies.
 - **Agents are expensive and can fail you.** Pattern-matching technology backinig them is sufficient and encouraging when you start, but with ever-increasing complexity of real-world projects you may get stuck in unseen in training datasets territories. Your bills can skyrocket when you happen to run in circles.
 
 **Guiding principles**
