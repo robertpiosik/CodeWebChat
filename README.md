@@ -18,9 +18,9 @@
 **Four points why go non-agentic**
 
 - **Great software is a chain of carefully considered decisions.** Because LLMs can't truly reason and don't know their own limitations, delegating decision-making may create hard-to-debug weak links and impair our own abilities in creating strong ones.
-- **Programming is about building mental models.** Being right about what to show to the model leads to predictability of its outputs—you acquire a skill of the AI era, move fast and save money.
-- **Context once polluted, won't recover.** When the model isn't getting your intent on first try, a conversation only makes it more confused and erroneous. Non-agentic means context/instructions adjustment and starting afresh, without an unproductive back-and-forth.
-- **Coding agents can get lost.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they may struggle to find the right context and arrive at a dead end.
+- **Programming is about building mental models.** Being right about what to show to the model leads to predictability of its outputs—acquire a skill of the AI era, move fast and save money.
+- **Context once polluted, won't recover.** When the model isn't getting your intent on first try, a conversation only makes it more confused and erroneous. You're always better off adjusting context, instructions and starting afresh—without an unproductive back-and-forth.
+- **Agents get lost and become expensive.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they start requiring excessive context lengths for the most capable models and may still arrive at a dead end.
 
 **Guiding principles**
 
