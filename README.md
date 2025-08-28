@@ -17,7 +17,7 @@
 
 **Why non-agentic AI-assisted coding?**
 
-Great software is a chain of carefully considered decisions. Because LLMs can't reason and don't know their own limitations, delegating decision making may create hard to debug weak links and a lack of practice may impair our own abilities in creating strong ones.
+Great software is a chain of carefully considered decisions. Because LLMs can't truly reason and don't know their own limitations, delegating decision-making may create hard-to-debug weak links; furthermore a lack of practice may impair our own abilities in creating strong ones.
 
 **Guiding principles**
 
