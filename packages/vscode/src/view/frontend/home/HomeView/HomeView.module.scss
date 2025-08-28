@@ -125,6 +125,28 @@
     &__home-view-type {
       font-weight: 600;
     }
+
+    &__toggler {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--border-radius-5px);
+      --padding: var(--padding-6px);
+      padding: 0 var(--padding);
+      margin: 0 calc(var(--padding) * -1);
+      height: 20px;
+      color: var(--vscode-icon-foreground);
+      white-space: nowrap;
+
+      &:focus {
+        outline: none;
+      }
+
+      &:hover {
+        background-color: var(--vscode-toolbar-hoverBackground);
+      }
+    }
   }
 
   &__right {

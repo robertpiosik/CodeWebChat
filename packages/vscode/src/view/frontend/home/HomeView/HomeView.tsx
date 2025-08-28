@@ -13,7 +13,6 @@ import { Dropdown as UiDropdown } from '@ui/components/editor/Dropdown'
 import { Icon } from '@ui/components/editor/Icon'
 import cn from 'classnames'
 import { IconButton } from '@ui/components/editor/IconButton/IconButton'
-import { HomeViewTypeToggler } from '@ui/components/editor/HomeViewTypeToggler/HomeViewTypeToggler'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/view/types/messages'
@@ -95,7 +94,7 @@ export const HomeView: React.FC<Props> = (props) => {
 
   const dropdown_container_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
-  const heading_container_ref = useRef<HTMLDivElement>(null)
+  const top_left_ref = useRef<HTMLDivElement>(null)
   const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
     useState(false)
   const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
@@ -106,24 +105,24 @@ export const HomeView: React.FC<Props> = (props) => {
     useState(false)
 
   const calculate_dropdown_max_width = () => {
-    if (!container_ref.current || !heading_container_ref.current) return
+    if (!container_ref.current || !top_left_ref.current) return
 
     const container_width = container_ref.current.offsetWidth
-    const switch_width = heading_container_ref.current.offsetWidth
-    const calculated_width = container_width - switch_width - 56
+    const top_left_width = top_left_ref.current.offsetWidth
+    const calculated_width = container_width - top_left_width - 36
 
     set_dropdown_max_width(calculated_width)
   }
 
   useEffect(() => {
-    if (!container_ref.current || !heading_container_ref.current) return
+    if (!container_ref.current || !top_left_ref.current) return
 
     const resize_observer = new ResizeObserver(() => {
       calculate_dropdown_max_width()
     })
 
     resize_observer.observe(container_ref.current)
-    resize_observer.observe(heading_container_ref.current)
+    resize_observer.observe(top_left_ref.current)
 
     calculate_dropdown_max_width()
 
@@ -257,20 +256,21 @@ export const HomeView: React.FC<Props> = (props) => {
       <Scrollable>
         <div className={styles.inner}>
           <div className={styles.top}>
-            <div className={styles.top__left}>
+            <div className={styles.top__left} ref={top_left_ref}>
               <IconButton
                 codicon_icon="chevron-left"
                 on_click={props.on_show_intro}
                 title="Return to getting started"
               />
-              <HomeViewTypeToggler
-                label={
-                  props.home_view_type == HOME_VIEW_TYPES.WEB
-                    ? 'New chat'
-                    : 'API call'
-                }
-                on_click={handle_heading_click}
-              />
+              <button
+                className={styles['top__left__toggler']}
+                onClick={handle_heading_click}
+                title="Toggle view type"
+              >
+                {props.home_view_type == HOME_VIEW_TYPES.WEB
+                  ? 'New chat'
+                  : 'API call'}
+              </button>
             </div>
 
             <div className={styles.top__right} ref={dropdown_container_ref}>

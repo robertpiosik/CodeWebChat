@@ -18,6 +18,7 @@
     align-items: flex-start;
     flex-direction: column;
     gap: var(--padding-2px);
+    text-align: left;
   }
 
   &__label {
@@ -27,6 +28,5 @@
   &__description {
     opacity: var(--dimmed-opacity);
     font-size: var(--font-size-12px);
-    text-align: left;
   }
 }
