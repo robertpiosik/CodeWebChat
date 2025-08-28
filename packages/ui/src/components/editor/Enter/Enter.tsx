@@ -20,7 +20,7 @@ export const Enter: React.FC<Props> = (props) => {
           <div className={styles['button__description']}>{props.description}</div>
         )}
       </div>
-      <span className="codicon codicon-arrow-right" />
+      <span className="codicon codicon-chevron-right" />
     </button>
   )
 }
