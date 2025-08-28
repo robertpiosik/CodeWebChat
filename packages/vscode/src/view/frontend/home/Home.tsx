@@ -29,10 +29,7 @@ type Props = {
   home_view_type: HomeViewType
   web_mode: WebMode
   api_mode: ApiMode
-  on_home_view_type_change: (
-    view_type: HomeViewType,
-    keep_code_completions?: boolean
-  ) => void
+  on_home_view_type_change: (view_type: HomeViewType) => void
   on_web_mode_change: (mode: WebMode) => void
   on_api_mode_change: (mode: ApiMode) => void
   has_active_editor: boolean
