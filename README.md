@@ -15,7 +15,7 @@ Available in VS Code, Cursor, and other forks.
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-### Why go non-agentic?
+### Why go non-agentic with CWC?
 
 - **Single-turn interactions with the model save time.** There is no orchiestrated planning or file lookups for automated context collection—a single response from the model contains all the changes for the task.
 - **Programming is about building mental models.** Knowing ins and outs of the codebase makes context selection efortless and AI outputs predictable.
