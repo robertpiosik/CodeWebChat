@@ -21,7 +21,7 @@ Available in VS Code, Cursor, and other forks.
 - **Programming is about building mental models.** Knowing ins and outs of the codebase makes context selection efortless and AI outputs predictable.
 - **Great software is a chain of carefully considered decisions.** Because LLMs can't truly reason and don't know their own limitations, over-delegating decision-making may create hard-to-debug weak links and impair our own abilities in creating strong ones.
 - **Context once polluted, won't recover.** When the model isn't getting your intent on a first try, a conversation only makes it more confused and erroneous. You're always better off adjusting context, instructions and starting afresh.
-- **Coding agents become expensive and get lost.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they start requiring excessive context lengths, the most capable models and may still arrive at dead ends.
+- **Coding agents become expensive and get lost.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they start requiring excessive context lengths, the most capable models and may still arrive at dead ends while billing you a small fortune.
 
 ### Guiding principles
 
