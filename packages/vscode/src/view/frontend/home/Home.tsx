@@ -34,6 +34,7 @@ type Props = {
   on_api_mode_change: (mode: ApiMode) => void
   has_active_editor: boolean
   has_active_selection: boolean
+  chat_input_focus_and_select_key: number
   chat_input_focus_key: number
 }
 
@@ -149,6 +150,9 @@ export const Home: React.FC<Props> = (props) => {
             ...prev,
             [message.mode]: message.index
           }))
+          break
+        case 'FOCUS_CHAT_INPUT':
+          // This is handled in View.tsx, which will trigger a re-render.
           break
       }
     }
@@ -574,6 +578,7 @@ export const Home: React.FC<Props> = (props) => {
       }
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
+      chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}
       chat_input_focus_key={props.chat_input_focus_key}
     />
   )

@@ -10,6 +10,9 @@ export const handle_at_sign_quick_pick = async (
   const replacement = await at_sign_quick_pick(context)
 
   if (!replacement) {
+    provider.send_message({
+      command: 'FOCUS_CHAT_INPUT'
+    })
     return
   }
 

@@ -405,6 +405,9 @@ export const handle_show_history_quick_pick = async (
       quick_pick.items = updated_items
     }),
     quick_pick.onDidHide(() => {
+      provider.send_message({
+        command: 'FOCUS_CHAT_INPUT'
+      })
       disposables.forEach((d) => d.dispose())
     })
   )

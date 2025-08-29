@@ -485,6 +485,9 @@ export const handle_show_prompt_template_quick_pick = async (
       }
 
       is_disposed = true
+      provider.send_message({
+        command: 'FOCUS_CHAT_INPUT'
+      })
       disposables.forEach((d) => d.dispose())
     })
   )

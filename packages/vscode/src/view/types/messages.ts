@@ -423,8 +423,13 @@ export interface SelectedConfigurationChangedMessage extends BaseMessage {
   index: number
 }
 
+export interface FocusChatInputMessage extends BaseMessage {
+  command: 'FOCUS_CHAT_INPUT'
+}
+
 export type BackendMessage =
   | InstructionsMessage
+  | FocusChatInputMessage
   | ConnectionStatusMessage
   | EditFormatMessage
   | ApiToolConfigurationsMessage

@@ -63,7 +63,12 @@ export const handle_send_prompt = async (params: {
     show_quick_pick: params.show_quick_pick
   })
 
-  if (resolved_preset_names.length == 0) return
+  if (resolved_preset_names.length == 0) {
+    params.provider.send_message({
+      command: 'FOCUS_CHAT_INPUT'
+    })
+    return
+  }
 
   await vscode.workspace.saveAll()
 

@@ -69,6 +69,7 @@ type Props = {
   on_code_completion_with_quick_pick_click: () => void
   caret_position_to_set?: number
   on_caret_position_set?: () => void
+  chat_input_focus_and_select_key: number
   chat_input_focus_key: number
 }
 
@@ -351,6 +352,7 @@ export const HomeView: React.FC<Props> = (props) => {
               }}
               caret_position_to_set={props.caret_position_to_set}
               on_caret_position_set={props.on_caret_position_set}
+              focus_and_select_key={props.chat_input_focus_and_select_key}
               focus_key={props.chat_input_focus_key}
             />
           </div>
