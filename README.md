@@ -17,11 +17,13 @@ Available in VS Code, Cursor, and other forks.
 
 ### Why go non-agentic with CWC?
 
-- **Single-turn interactions with the model save time.** There is no orchiestrated planning or file lookups for automated context collection—a single response from the model contains all the changes for the task.
-- **Programming is about building mental models.** Knowing ins and outs of the codebase makes context selection efortless and AI outputs predictable.
+While coding agents are an impressive addition to the sphere of programming tools, they're backed by a powerful, yet limited technology that only creates the illusion of producing informed decisions—a characteristic fundamental to software engineering.
+
 - **Great software is a chain of carefully considered decisions.** Because LLMs can't truly reason and don't know their own limitations, over-delegating decision-making may create hard-to-debug weak links and impair our own abilities in creating strong ones.
+- **Programming is about building mental models.** Knowing ins and outs of the codebase makes context selection efortless and AI outputs predictable.
+- **Single-turn interactions with the model save time.** With CWC, there is no orchiestrated planning or file lookups for automated context collection—a single response from the model contains all the changes to complete the task.
 - **Context once polluted, won't recover.** When the model isn't getting your intent on a first try, a conversation only makes it more confused and erroneous. You're always better off adjusting context, instructions and starting afresh.
-- **Coding agents become expensive and get lost.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they start requiring excessive context lengths, the most capable models and may still arrive at dead ends while billing you a small fortune.
+- **Coding agents become expensive and get lost.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they start requiring excessive context lengths, the biggest, pricey models and may still arrive at dead ends.
 
 ### Guiding principles
 
