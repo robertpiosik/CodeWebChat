@@ -17,13 +17,10 @@ Available in VS Code, Cursor, and other forks.
 
 ### Why go non-agentic with CWC?
 
-While coding agents are an impressive addition to the sphere of programming tools, they're backed by a powerful, yet limited technology that only creates the illusion of producing informed decisions—a characteristic fundamental to software engineering.
-
-- **Great software is a chain of carefully considered decisions.** Because LLMs can't truly reason and don't know their own limitations, over-delegating decision-making may create hard-to-debug weak links and impair our own abilities in creating strong ones.
-- **Programming is about building mental models.** Knowing ins and outs of the codebase makes context selection efortless and AI outputs predictable.
-- **Single-turn interactions with the model save time.** With CWC, there is no orchiestrated planning or file lookups for automated context collection—a single response from the model contains all the changes to complete the task.
-- **Context once polluted, won't recover.** When the model isn't getting your intent on a first try, a conversation only makes it more confused and erroneous. You're always better off adjusting context, instructions and starting afresh.
-- **Coding agents become expensive and get lost.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they start requiring excessive context lengths, the biggest, pricey models and may still arrive at dead ends.
+- **Non-agentic is predictable.** Granular control over context let you scope the model appropriately to the task and build intuition for its outputs.
+- **Non-agentic is blazing fast.** Eliminate the need for long-running planning and file lookups. A single prompt generates a complete set of changes across all necessary files in a single response.
+- **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, you just adjust the prompt and resend without distracting the model with previous attempts.
+- **Non-agentic is cost-efficient.** Choose the model type according to the complexity of the task, not the overall codebase.
 
 ### Guiding principles
 
