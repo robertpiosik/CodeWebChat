@@ -631,8 +631,16 @@ export const apply_chat_response_command = (
           } else if (success_count > 0) {
             if (any_patch_used_fallback) {
               ;(async () => {
+                const fallback_patches_count = applied_patches.filter(
+                  (p) => p.used_fallback
+                ).length
+                const message =
+                  total_patches > 1
+                    ? `${fallback_patches_count} of ${total_patches} patches required a fallback method, which may lead to inaccuracies.`
+                    : 'The patch required a fallback method, which may lead to inaccuracies.'
+
                 const response = await vscode.window.showInformationMessage(
-                  'Some patches required a fallback method, which may lead to inaccuracies.',
+                  message,
                   'Hide',
                   'Looks off? Use intelligent update'
                 )
