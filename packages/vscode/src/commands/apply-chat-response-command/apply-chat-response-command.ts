@@ -676,6 +676,11 @@ export const apply_chat_response_command = (
                   const fallback_patches = fallback_applied_patches.map(
                     (p) => p.patch
                   )
+                  const num_files = fallback_patches.length
+                  const progress_title_override = `Please wait, updating ${num_files} file${
+                    num_files > 1 ? 's' : ''
+                  } using the fallback method...`
+
                   const fallback_patches_as_code_blocks = fallback_patches
                     .map(
                       (patch) =>
@@ -703,7 +708,8 @@ export const apply_chat_response_command = (
                       chat_response: fallback_patches_as_code_blocks, // Use the patches as instructions
                       context: context,
                       is_single_root_folder_workspace,
-                      view_provider
+                      view_provider,
+                      progress_title_override
                     })
 
                   if (intelligent_update_states) {
@@ -855,6 +861,10 @@ export const apply_chat_response_command = (
                 if (response == 'Looks off? Use intelligent update') {
                   const original_states_for_revert = final_original_states!
                   await revert_files(original_states_for_revert, false)
+                  const num_files = original_states_for_revert.length
+                  const progress_title_override = `Please wait, updating ${num_files} file${
+                    num_files > 1 ? 's' : ''
+                  } with the Intelligent Update fallback method...`
 
                   // Clear state while intelligent update runs
                   update_revert_and_apply_button_state(null)
@@ -890,7 +900,8 @@ export const apply_chat_response_command = (
                       chat_response,
                       context: context,
                       is_single_root_folder_workspace,
-                      view_provider
+                      view_provider,
+                      progress_title_override
                     })
 
                   if (intelligent_update_states) {
