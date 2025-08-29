@@ -13,11 +13,13 @@ export const handle_create_preset = async (
   const create_option = await vscode.window.showQuickPick(
     [
       {
+        id: 'preset',
         label: '$(add) Preset',
         description: 'Placed at the top of the list',
         detail: 'Custom chatbot configuration with prompt prefix/suffix.'
       },
       {
+        id: 'group',
         label: '$(add) Group',
         description: 'Placed at the bottom of the list',
         detail:
@@ -44,7 +46,7 @@ export const handle_create_preset = async (
   }
 
   let new_preset: ConfigPresetFormat
-  if (create_option.label == 'Preset') {
+  if (create_option.id == 'preset') {
     new_preset = {
       name: new_name,
       chatbot: 'AI Studio',
@@ -59,7 +61,7 @@ export const handle_create_preset = async (
   }
 
   const updated_presets =
-    create_option.label == 'Preset'
+    create_option.id == 'preset'
       ? [new_preset, ...current_presets]
       : [...current_presets, new_preset]
 
@@ -71,7 +73,7 @@ export const handle_create_preset = async (
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(
-      `Failed to create ${create_option.label.toLowerCase()}: ${error}`
+      `Failed to create ${create_option.id}: ${error}`
     )
   }
 }
