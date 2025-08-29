@@ -1,6 +1,9 @@
 import styles from './Intro.module.scss'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 import { Enter } from '@ui/components/editor/Enter'
+import { BuyMeACoffee } from '@ui/components/editor/BuyMeACoffee'
+import { Icon } from '@ui/components/editor/Icon'
+import cn from 'classnames'
 
 type Props = {
   on_new_chat: () => void
@@ -25,35 +28,55 @@ export const Intro: React.FC<Props> = (props) => {
                 description="Send prompt with an API provider"
                 on_click={props.on_api_call}
               />
-            </div>
-            <div className={styles.top__links}>
-              <a
-                className={styles.top__links__link}
-                href="https://codeweb.chat/"
-              >
-                <span className="codicon codicon-book" />
-                <span>Documentation</span>
-              </a>
-              <a
-                className={styles.top__links__link}
-                href="https://buymeacoffee.com/robertpiosik"
-              >
-                <span className="codicon codicon-coffee" />
-                <span>Support author</span>
-              </a>
+              <BuyMeACoffee username="robertpiosik" />
             </div>
           </div>
           <div className={styles.bottom}>
             <div className={styles.bottom__version}>{props.version}</div>
-            <div>
-              Released under the{' '}
-              <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                GPL-3.0 license
+            <div className={styles.bottom__social}>
+              <a
+                href="https://x.com/CodeWebChat"
+                title="Follow on X"
+                className={cn(
+                  styles.bottom__social__icon,
+                  styles['bottom__social__icon--x']
+                )}
+              >
+                <Icon variant="X" />
+              </a>
+              <a
+                href="https://www.reddit.com/r/CodeWebChat/"
+                title="Join subreddit"
+                className={cn(
+                  styles.bottom__social__icon,
+                  styles['bottom__social__icon--reddit']
+                )}
+              >
+                <Icon variant="REDDIT" />
+              </a>
+              <a
+                href="https://discord.gg/KJySXsrSX5"
+                title="Join Discord server"
+                className={cn(
+                  styles.bottom__social__icon,
+                  styles['bottom__social__icon--discord']
+                )}
+              >
+                <Icon variant="DISCORD" />
               </a>
             </div>
-            <div className={styles.bottom__author}>
+            <div className={styles.bottom__links}>
+              <a href="https://codeweb.chat/">https://codeweb.chat ↗</a>
+              <div>
+                Released under the{' '}
+                <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
+                  GPL-3.0 license ↗
+                </a>
+              </div>
+            </div>
+            <div>
               Copyright © {new Date().getFullYear()}{' '}
-              <a href="https://x.com/robertpiosik">Robert Piosik</a>
+              <a href="https://x.com/robertpiosik">Robert Piosik ↗</a>
             </div>
           </div>
         </div>

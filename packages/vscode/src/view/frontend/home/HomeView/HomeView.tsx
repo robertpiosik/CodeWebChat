@@ -524,36 +524,6 @@ export const HomeView: React.FC<Props> = (props) => {
           >
             <Icon variant="BUY_ME_A_COFFEE" />
           </a>
-          <a
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--filled']
-            )}
-            href="https://x.com/CodeWebChat"
-            title="Follow on X"
-          >
-            <Icon variant="X" />
-          </a>
-          <a
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--filled']
-            )}
-            href="https://www.reddit.com/r/CodeWebChat/"
-            title="Join subreddit"
-          >
-            <Icon variant="REDDIT" />
-          </a>
-          <a
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--filled']
-            )}
-            href="https://discord.gg/KJySXsrSX5"
-            title="Join Discord server"
-          >
-            <Icon variant="DISCORD" />
-          </a>
         </div>
         <div className={styles.footer__right}>
           {props.home_view_type == HOME_VIEW_TYPES.WEB && (

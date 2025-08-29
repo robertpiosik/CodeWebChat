@@ -13,7 +13,8 @@ export const BuyMeACoffee: React.FC<Props> = (props) => {
       className={styles.button}
       title="Buy me a coffee"
     >
-      <Icon variant="BUY_ME_A_COFFEE" />
+      <Icon variant="BUY_ME_A_COFFEE_WITH_TEXT" />
+      <span className="codicon codicon-chevron-right" />
     </a>
   )
 }

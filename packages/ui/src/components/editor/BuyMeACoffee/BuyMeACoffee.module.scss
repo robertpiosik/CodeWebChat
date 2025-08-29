@@ -1,18 +1,21 @@
 .button {
   display: flex;
-  justify-content: center;
-  padding: var(--padding-6px) var(--padding-12px);
+  align-items: center;
+  gap: var(--padding-8px);
+  padding: 0 var(--padding-12px);
+  height: 36px;
   border-radius: 999px;
   background-color: #ffdd00;
-  transition: all 0.15s ease-out;
-  width: 100%;
-
-  > svg {
-    height: 21px;
-  }
+  color: black;
 
   &:hover {
-    transform: scale(0.98);
+    color: black;
+    background-color: #ffe331;
+  }
+
+  > svg {
+    height: 24px;
+    fill: black;
   }
 
   &:focus {

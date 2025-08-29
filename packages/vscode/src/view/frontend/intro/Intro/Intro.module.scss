@@ -9,7 +9,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  gap: var(--padding-16px);
+  gap: var(--padding-24px);
   min-height: 100vh;
   width: 100%;
   padding: var(--padding-8px) var(--padding-12px) var(--padding-12px);
@@ -25,30 +25,9 @@
   &__enter-buttons {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: var(--padding-8px);
     width: 100%;
-  }
-
-  &__links {
-    display: flex;
-    flex-direction: column;
-    gap: var(--padding-8px);
-
-    &__link {
-      display: flex;
-      align-items: center;
-      gap: var(--padding-6px);
-      color: var(--vscode-textLink-foreground);
-      text-decoration: none;
-
-      > span:first-child {
-        font-size: 20px;
-      }
-
-      > span:last-child:hover {
-        text-decoration: underline;
-      }
-    }
   }
 }
 
@@ -57,13 +36,50 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: var(--padding-4px);
+  gap: var(--padding-8px);
   font-size: var(--font-size-12px);
   user-select: text;
   width: 100%; // For easier text selection
 
   &__version {
     color: var(--vscode-descriptionForeground);
+  }
+
+  &__social {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-8px);
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: var(--border-radius-999px);
+
+      > svg {
+        fill: white;
+        width: 16px;
+      }
+
+      &--x {
+        background-color: black;
+      }
+      &--reddit {
+        background-color: #ff6314;
+      }
+      &--discord {
+        background-color: #7289da;
+      }
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--padding-4px);
   }
 
   a:hover {

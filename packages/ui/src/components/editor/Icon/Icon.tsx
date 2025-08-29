@@ -1,4 +1,5 @@
 import BuyMeACoffee from '../../../assets/icons/buy-me-a-coffee.svg'
+import BuyMeACoffeeWithText from '../../../assets/icons/buy-me-a-coffee-with-text.svg'
 import AIStudio from '../../../assets/icons/ai-studio.svg'
 import Gemini from '../../../assets/icons/gemini.svg'
 import OpenWebUI from '../../../assets/icons/open-webui.svg'
@@ -26,6 +27,7 @@ import Discord from '../../../assets/icons/discord.svg'
 export namespace Icon {
   export type Variant =
     | 'BUY_ME_A_COFFEE'
+    | 'BUY_ME_A_COFFEE_WITH_TEXT'
     | 'AI_STUDIO'
     | 'GEMINI'
     | 'OPEN_WEBUI'
@@ -61,6 +63,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
   switch (variant) {
     case 'BUY_ME_A_COFFEE':
       icon = <BuyMeACoffee />
+      break
+    case 'BUY_ME_A_COFFEE_WITH_TEXT':
+      icon = <BuyMeACoffeeWithText />
       break
     case 'AI_STUDIO':
       icon = <AIStudio />
