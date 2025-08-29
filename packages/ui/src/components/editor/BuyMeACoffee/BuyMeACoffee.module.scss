@@ -1,10 +1,11 @@
 .button {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--padding-8px);
-  padding: 0 var(--padding-12px);
-  height: 36px;
-  border-radius: 999px;
+  padding: 0 var(--padding-12px) 0 var(--padding-8px);
+  height: 32px;
+  border-radius: var(--padding-6px);
   background-color: #ffdd00;
   color: black;
 
@@ -14,7 +15,7 @@
   }
 
   > svg {
-    height: 24px;
+    height: 22px;
     fill: black;
   }
 

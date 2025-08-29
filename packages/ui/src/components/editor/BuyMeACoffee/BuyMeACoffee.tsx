@@ -14,7 +14,7 @@ export const BuyMeACoffee: React.FC<Props> = (props) => {
       title="Buy me a coffee"
     >
       <Icon variant="BUY_ME_A_COFFEE_WITH_TEXT" />
-      <span className="codicon codicon-chevron-right" />
+      <span className="codicon codicon-link-external"/>
     </a>
   )
 }

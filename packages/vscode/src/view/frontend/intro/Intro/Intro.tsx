@@ -66,17 +66,17 @@ export const Intro: React.FC<Props> = (props) => {
               </a>
             </div>
             <div className={styles.bottom__links}>
-              <a href="https://codeweb.chat/">https://codeweb.chat ↗</a>
+              <a href="https://codeweb.chat/">https://codeweb.chat</a>
               <div>
                 Released under the{' '}
                 <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                  GPL-3.0 license ↗
+                  GPL-3.0 license
                 </a>
               </div>
-            </div>
-            <div>
-              Copyright © {new Date().getFullYear()}{' '}
-              <a href="https://x.com/robertpiosik">Robert Piosik ↗</a>
+              <div>
+                Copyright © {new Date().getFullYear()}{' '}
+                <a href="https://x.com/robertpiosik">Robert Piosik</a>
+              </div>
             </div>
           </div>
         </div>
