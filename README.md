@@ -33,7 +33,8 @@ Available in VS Code, Cursor, and other forks.
 ### CWC is for you if you're
 
 - an experienced developer working on a large codebase
-- a student or hobbyist on a budget
+- a student or hobbyist on a budget \
+...or anyone in-between
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
