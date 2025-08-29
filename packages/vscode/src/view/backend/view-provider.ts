@@ -69,6 +69,7 @@ import {
   toggle_file_review_state
 } from '@/commands/apply-chat-response-command/utils/review-applied-changes'
 import { Logger } from '@/utils/logger'
+import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -442,6 +443,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_pick_open_router_model(this)
           } else if (message.command == 'PICK_CHATBOT') {
             await handle_pick_chatbot(this, message)
+          } else if (message.command == 'UPDATE_LAST_USED_PRESET') {
+            update_last_used_preset_or_group(this, message.preset_name)
           } else if (message.command == 'REQUEST_GIT_STATE') {
             this._send_git_state()
           }

@@ -54,7 +54,7 @@ export namespace Presets {
     on_preset_duplicate: (name: string) => void
     on_preset_delete: (name: string) => void
     on_toggle_default_preset: (name: string) => void
-    selected_preset_or_group_name?: string
+    selected_preset_name?: string
     translations: {
       my_chat_presets: string
       set_presets_opening_by_default: string
@@ -141,7 +141,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             className={cn(styles.presets__item, {
               [styles['presets__item--ungrouped']]: true,
               [styles['presets__item--highlighted']]:
-                props.selected_preset_or_group_name == 'Ungrouped',
+                props.selected_preset_name == 'Ungrouped',
               [styles['presets__item--disabled']]: get_is_ungrouped_disabled()
             })}
             onClick={() => {
@@ -253,7 +253,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 key={i}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
-                    props.selected_preset_or_group_name == preset.name,
+                    props.selected_preset_name == preset.name,
                   [styles['presets__item--disabled']]: preset.chatbot
                     ? get_is_preset_disabled(preset)
                     : get_is_group_disabled()

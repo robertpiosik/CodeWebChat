@@ -169,9 +169,7 @@ export const View = () => {
     })
   }
 
-  const handle_home_view_type_change = (
-    view_type: HomeViewType,
-  ) => {
+  const handle_home_view_type_change = (view_type: HomeViewType) => {
     set_home_view_type(view_type)
     post_message(vscode, {
       command: 'SAVE_HOME_VIEW_TYPE',
@@ -321,6 +319,10 @@ export const View = () => {
         <Home
           vscode={vscode}
           on_preset_edit={(preset) => {
+            post_message(vscode, {
+              command: 'UPDATE_LAST_USED_PRESET',
+              preset_name: preset.name
+            })
             set_updating_preset(preset)
             set_updated_preset(preset)
           }}

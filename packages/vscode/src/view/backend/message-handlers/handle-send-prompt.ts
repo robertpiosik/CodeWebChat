@@ -15,6 +15,7 @@ import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import { WebMode } from '@shared/types/modes'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
 
 /**
  * When preset_names is an emtpy stirng - show quick pick,
@@ -27,33 +28,13 @@ export const handle_send_prompt = async (params: {
   show_quick_pick?: boolean
 }): Promise<void> => {
   if (params.preset_name !== undefined) {
-    params.provider.context.workspaceState.update(
-      get_last_group_or_preset_choice_state_key(params.provider.web_mode),
-      'Preset'
-    )
-    params.provider.context.workspaceState.update(
-      get_last_selected_preset_key(params.provider.web_mode),
-      params.preset_name
-    )
-    params.provider.send_message({
-      command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
-      mode: params.provider.web_mode,
-      name: params.preset_name
-    })
+    update_last_used_preset_or_group(params.provider, params.preset_name)
   } else if (params.group_name) {
-    params.provider.context.workspaceState.update(
-      get_last_group_or_preset_choice_state_key(params.provider.web_mode),
-      'Group'
-    )
-    params.provider.context.workspaceState.update(
-      get_last_selected_group_state_key(params.provider.web_mode),
+    update_last_used_preset_or_group(
+      params.provider,
+      undefined,
       params.group_name
     )
-    params.provider.send_message({
-      command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
-      mode: params.provider.web_mode,
-      name: params.group_name
-    })
   }
 
   let current_instructions = ''

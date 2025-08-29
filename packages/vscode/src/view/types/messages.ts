@@ -225,6 +225,11 @@ export interface RequestGitStateMessage extends BaseMessage {
   command: 'REQUEST_GIT_STATE'
 }
 
+export interface UpdateLastUsedPresetMessage extends BaseMessage {
+  command: 'UPDATE_LAST_USED_PRESET'
+  preset_name: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -269,6 +274,7 @@ export type FrontendMessage =
   | FocusOnFileInReviewMessage
   | GetHasMultipleWorkspacesMessage
   | RequestGitStateMessage
+  | UpdateLastUsedPresetMessage
 
 // Messages sent to the frontend
 export interface InstructionsMessage extends BaseMessage {

@@ -439,7 +439,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_preset_duplicate={props.on_preset_duplicate}
                 on_preset_delete={props.on_preset_delete}
                 on_toggle_default_preset={props.on_toggle_default_preset}
-                selected_preset_or_group_name={
+                selected_preset_name={
                   props.selected_preset_or_group_name
                 }
                 translations={{
