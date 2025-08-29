@@ -100,13 +100,13 @@ export const CodeReview: FC<Props> = ({
       </div>
       <div className={styles.footer}>
         <Button on_click={on_reject_all} is_secondary>
-          Reject All
+          {files_to_review.length > 1 ? 'Reject All' : 'Reject'}
         </Button>
         <Button
           on_click={handle_keep}
           disabled={files_to_review.filter((f) => f.is_checked).length == 0}
         >
-          {files_to_review.length == 0 ? 'Accept' : `Accept Selected`}
+          {files_to_review.length > 1 ? 'Accept Selected' : 'Accept'}
         </Button>
       </div>
     </div>
