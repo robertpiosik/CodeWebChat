@@ -19,7 +19,7 @@ Available in VS Code, Cursor, and other forks.
 
 - **Time and money saving.** There is no orchiestrated planning or file lookups. No more idle waiting long minutes—get the job done in a single-turn.
 - **Great software is a chain of carefully considered decisions.** Because LLMs can't truly reason and don't know their own limitations, over-delegating decision-making may create hard-to-debug weak links and impair our own abilities in creating strong ones.
-- **Programming is about building mental models.** Being close to the code makes you confident about what to send to the model—resulting in predictability of its outputs.
+- **Programming is about building mental models.** Being close to the code makes you confident about what to send to the model. Results become predictable and you can move faster.
 - **Context once polluted, won't recover.** When the model isn't getting your intent on first try, a conversation only makes it more confused and erroneous. You're always better off adjusting context, instructions and starting afresh.
 - **Coding agents become expensive and get lost.** Although they seem a joy to work with in smaller projects; with ever-increasing complexity of real-world codebases, they start requiring excessive context lengths, the most capable models and may still arrive at dead ends.
 
