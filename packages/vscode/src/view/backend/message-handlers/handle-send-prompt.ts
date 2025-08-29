@@ -28,13 +28,15 @@ export const handle_send_prompt = async (params: {
   show_quick_pick?: boolean
 }): Promise<void> => {
   if (params.preset_name !== undefined) {
-    update_last_used_preset_or_group(params.provider, params.preset_name)
+    update_last_used_preset_or_group({
+      provider: params.provider,
+      preset_name: params.preset_name
+    })
   } else if (params.group_name) {
-    update_last_used_preset_or_group(
-      params.provider,
-      undefined,
-      params.group_name
-    )
+    update_last_used_preset_or_group({
+      provider: params.provider,
+      group_name: params.group_name
+    })
   }
 
   let current_instructions = ''

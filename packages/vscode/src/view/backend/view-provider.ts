@@ -444,7 +444,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'PICK_CHATBOT') {
             await handle_pick_chatbot(this, message)
           } else if (message.command == 'UPDATE_LAST_USED_PRESET') {
-            update_last_used_preset_or_group(this, message.preset_name)
+            update_last_used_preset_or_group({
+              provider: this,
+              preset_name: message.preset_name
+            })
           } else if (message.command == 'REQUEST_GIT_STATE') {
             this._send_git_state()
           }
