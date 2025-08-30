@@ -147,7 +147,8 @@ export const handle_show_prompt_template_quick_pick = async (
   const edit_template = async (
     template: PromptTemplate,
     index: number
-  ): Promise<void> => {
+  ): Promise<boolean> => {
+    // Changed return type to boolean
     const BACK_LABEL = '$(arrow-left) Back'
     const NAME_LABEL = 'Name'
     const TEMPLATE_LABEL = 'Template'
@@ -175,7 +176,7 @@ export const handle_show_prompt_template_quick_pick = async (
     edit_quick_pick.title = 'Edit Template'
     edit_quick_pick.placeholder = 'Select what to edit'
 
-    return new Promise<void>((resolve) => {
+    return new Promise<boolean>((resolve) => {
       let is_accepted = false
       const edit_disposables: vscode.Disposable[] = []
 
@@ -185,7 +186,7 @@ export const handle_show_prompt_template_quick_pick = async (
           const selected = edit_quick_pick.selectedItems[0]
           if (!selected || selected.label === BACK_LABEL) {
             edit_quick_pick.hide()
-            resolve()
+            resolve(false) // User clicked 'Back', do not cancel the main quick pick
             return
           }
 
@@ -200,6 +201,7 @@ export const handle_show_prompt_template_quick_pick = async (
 
             let next_template_state = template
             if (new_name !== undefined) {
+              // User entered a value or cleared it
               const updated_template: PromptTemplate = { ...template }
               if (new_name.trim()) {
                 updated_template.name = new_name.trim()
@@ -214,9 +216,17 @@ export const handle_show_prompt_template_quick_pick = async (
                 vscode.ConfigurationTarget.Global
               )
               next_template_state = updated_template
+            } else {
+              // User cancelled the input box (pressed Escape)
+              resolve(true) // Indicate full cancellation
+              return
             }
-            await edit_template(next_template_state, index)
-            resolve()
+
+            const should_cancel_entirely = await edit_template(
+              next_template_state,
+              index
+            )
+            resolve(should_cancel_entirely) // Pass through the result of the recursive call
           } else if (selected.label == TEMPLATE_LABEL) {
             const new_template_text = await vscode.window.showInputBox({
               prompt: 'Enter the prompt template',
@@ -224,8 +234,10 @@ export const handle_show_prompt_template_quick_pick = async (
               placeHolder:
                 'E.g., Rewrite {function name} without redundant comments'
             })
+
             let next_template_state = template
             if (new_template_text !== undefined && new_template_text.trim()) {
+              // User entered a value
               const updated_template: PromptTemplate = {
                 ...template,
                 template: new_template_text.trim()
@@ -237,14 +249,22 @@ export const handle_show_prompt_template_quick_pick = async (
                 vscode.ConfigurationTarget.Global
               )
               next_template_state = updated_template
+            } else if (new_template_text === undefined) {
+              // User cancelled the input box
+              resolve(true) // Indicate full cancellation
+              return
             }
-            await edit_template(next_template_state, index)
-            resolve()
+
+            const should_cancel_entirely = await edit_template(
+              next_template_state,
+              index
+            )
+            resolve(should_cancel_entirely) // Pass through the result of the recursive call
           }
         }),
         edit_quick_pick.onDidHide(() => {
           if (!is_accepted) {
-            resolve()
+            resolve(true) // If quick pick is hidden without accepting, it means user cancelled entirely
           }
           edit_disposables.forEach((d) => d.dispose())
         })
@@ -259,6 +279,7 @@ export const handle_show_prompt_template_quick_pick = async (
   const disposables: vscode.Disposable[] = []
   let is_disposed = false
   let is_showing_dialog = false
+  let is_template_accepted = false
 
   disposables.push(
     templates_quick_pick.onDidAccept(async () => {
@@ -295,6 +316,7 @@ export const handle_show_prompt_template_quick_pick = async (
         'template' in selected_template &&
         selected_template.template
       ) {
+        is_template_accepted = true
         templates_quick_pick.hide()
         is_disposed = true
         let prompt_text = selected_template.template.template
@@ -341,6 +363,9 @@ export const handle_show_prompt_template_quick_pick = async (
         }
 
         await set_instructions(prompt_text)
+        provider.send_message({
+          command: 'FOCUS_CHAT_INPUT'
+        })
       }
     }),
     templates_quick_pick.onDidChangeValue(() => {
@@ -383,10 +408,22 @@ export const handle_show_prompt_template_quick_pick = async (
         templates_quick_pick.items = create_template_items(prompt_templates)
       } else if (event.button === edit_button) {
         is_editing_template = true
-        await edit_template(item.template, item.index)
-        templates_quick_pick.items = create_template_items(prompt_templates)
-        if (!is_disposed) {
-          templates_quick_pick.show()
+        const user_cancelled_entirely = await edit_template(
+          item.template,
+          item.index
+        )
+
+        if (user_cancelled_entirely) {
+          // User cancelled editing completely (e.g., pressed Escape on the edit quick pick or an input box)
+          templates_quick_pick.hide()
+          is_disposed = true
+        } else {
+          // User clicked 'Back' from the edit quick pick, or successfully edited and returned to it.
+          // We need to re-show the main templates_quick_pick.
+          templates_quick_pick.items = create_template_items(prompt_templates)
+          if (!is_disposed) {
+            templates_quick_pick.show()
+          }
         }
         is_editing_template = false
       } else if (event.button === delete_button) {
@@ -485,9 +522,11 @@ export const handle_show_prompt_template_quick_pick = async (
       }
 
       is_disposed = true
-      provider.send_message({
-        command: 'FOCUS_CHAT_INPUT'
-      })
+      if (!is_template_accepted) {
+        provider.send_message({
+          command: 'FOCUS_CHAT_INPUT'
+        })
+      }
       disposables.forEach((d) => d.dispose())
     })
   )
