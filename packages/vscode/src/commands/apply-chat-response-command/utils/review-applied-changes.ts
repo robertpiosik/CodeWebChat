@@ -33,6 +33,7 @@ type ReviewableFile = {
   content: string
   workspace_name?: string
   is_new?: boolean
+  is_deleted?: boolean
   lines_added: number
   lines_removed: number
 }
@@ -108,8 +109,14 @@ const prepare_files_from_original_states = async (
       )
       current_content = doc.getText()
     } catch (error) {
-      // File might not exist anymore or be inaccessible
-      continue
+      if (!fs.existsSync(sanitized_file_path)) {
+        // File might not exist anymore, e.g., deleted by the patch.
+        // We will treat its content as empty and still include it for review.
+        current_content = ''
+      } else {
+        // For other errors (e.g., permissions), we skip the file.
+        continue
+      }
     }
 
     // Create temp file with original content
@@ -119,12 +126,14 @@ const prepare_files_from_original_states = async (
     const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
     const diff_stats = get_diff_stats(state.content, current_content)
+    const is_deleted = !state.is_new && current_content === '' && state.content !== ''
 
     const reviewable_file: ReviewableFile = {
       file_path: state.file_path,
       content: current_content,
       workspace_name: state.workspace_name,
       is_new: state.is_new,
+      is_deleted,
       lines_added: diff_stats.lines_added,
       lines_removed: diff_stats.lines_removed
     }
@@ -184,14 +193,13 @@ const show_diff_with_actions = async (
 ): Promise<CodeReviewResult> => {
   const left_doc_uri = vscode.Uri.file(prepared_file.temp_file_path)
   const right_doc_uri = vscode.Uri.file(prepared_file.sanitized_path)
-  const right_doc = await vscode.workspace.openTextDocument(right_doc_uri)
 
   const title = path.basename(prepared_file.reviewable_file.file_path)
 
   await vscode.commands.executeCommand(
     'vscode.diff',
     left_doc_uri, // Original content (read-only from temp file)
-    right_doc.uri, // Current content (editable in actual file)
+    right_doc_uri, // Current content (editable in actual file)
     title,
     {
       preview: false
@@ -200,7 +208,13 @@ const show_diff_with_actions = async (
 
   return new Promise<CodeReviewResult>((resolve) => {
     code_review_promise_resolve = async (decision) => {
-      const final_content = right_doc.getText()
+      let final_content = ''
+      try {
+        const right_doc = await vscode.workspace.openTextDocument(right_doc_uri)
+        final_content = right_doc.getText()
+      } catch (error) {
+        // File might not exist if it was deleted and not restored. Content is empty.
+      }
 
       resolve({
         decision,
@@ -268,14 +282,30 @@ export const review_applied_changes = async (
 
       if (!file_to_toggle) return
 
-      const content_to_write = is_checked
-        ? file_to_toggle.reviewable_file.content
-        : file_to_toggle.original_content
+      const was_deleted_or_emptied =
+        file_to_toggle.reviewable_file.content === '' &&
+        file_to_toggle.original_content !== '' &&
+        !file_to_toggle.reviewable_file.is_new
 
-      await vscode.workspace.fs.writeFile(
-        vscode.Uri.file(file_to_toggle.sanitized_path),
-        Buffer.from(content_to_write, 'utf8')
-      )
+      if (is_checked && was_deleted_or_emptied) {
+        try {
+          if (fs.existsSync(file_to_toggle.sanitized_path)) {
+            await vscode.workspace.fs.delete(
+              vscode.Uri.file(file_to_toggle.sanitized_path)
+            )
+          }
+        } catch (e) {
+          /* ignore */
+        }
+      } else {
+        const content_to_write = is_checked
+          ? file_to_toggle.reviewable_file.content
+          : file_to_toggle.original_content
+        await vscode.workspace.fs.writeFile(
+          vscode.Uri.file(file_to_toggle.sanitized_path),
+          Buffer.from(content_to_write, 'utf8')
+        )
+      }
     }
 
     create_temp_files_with_original_content(prepared_files)

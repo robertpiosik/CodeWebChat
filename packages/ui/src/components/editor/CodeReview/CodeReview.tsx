@@ -86,14 +86,22 @@ export const CodeReview: FC<Props> = ({
                   }}
                 />
               )}
-              <div className={styles['item__label']}>
+              <div
+                className={cn(styles['item__label'], {
+                  [styles['item__label--deleted']]: file.is_deleted
+                })}
+              >
                 <span>{file_name}</span>
-                <span className={styles['item__label__added']}>
-                  +{file.lines_added}
-                </span>
-                <span className={styles['item__label__removed']}>
-                  -{file.lines_removed}
-                </span>
+                {!file.is_deleted && (
+                  <>
+                    <span className={styles['item__label__added']}>
+                      +{file.lines_added}
+                    </span>
+                    <span className={styles['item__label__removed']}>
+                      -{file.lines_removed}
+                    </span>
+                  </>
+                )}
                 <span>
                   {has_multiple_workspaces && file.workspace_name
                     ? `${file.workspace_name}/`

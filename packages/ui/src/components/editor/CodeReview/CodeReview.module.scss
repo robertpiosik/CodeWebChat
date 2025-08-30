@@ -31,6 +31,10 @@
     overflow: hidden;
     white-space: nowrap;
 
+    &--deleted {
+      text-decoration: line-through;
+    }
+
     &__added {
       color: var(--vscode-gitDecoration-addedResourceForeground);
       margin-left: 0.3em;
