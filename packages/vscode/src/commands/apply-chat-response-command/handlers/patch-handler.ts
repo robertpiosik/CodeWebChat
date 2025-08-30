@@ -306,6 +306,71 @@ const handle_new_file_patch = async (
   }
 }
 
+const handle_deleted_file_patch = async (
+  patch_content: string,
+  workspace_path: string
+): Promise<{
+  success: boolean
+  original_states?: OriginalFileState[]
+  used_fallback?: boolean
+}> => {
+  const file_paths = extract_file_paths_from_patch(patch_content)
+  if (file_paths.length != 1) {
+    Logger.error({
+      function_name: 'handle_deleted_file_patch',
+      message:
+        'Deleted file patch is expected to contain exactly one file path.',
+      data: { file_paths, patch_content }
+    })
+    return { success: false }
+  }
+
+  const file_path = file_paths[0]
+  const safe_path = create_safe_path(workspace_path, file_path)
+
+  if (!safe_path) {
+    Logger.error({
+      function_name: 'handle_deleted_file_patch',
+      message: 'Invalid file path for deleted file.',
+      data: { file_path }
+    })
+    return { success: false }
+  }
+
+  const original_states = await store_original_file_states(
+    patch_content,
+    workspace_path
+  )
+
+  try {
+    await close_files_in_all_editor_groups(file_paths, workspace_path)
+
+    if (fs.existsSync(safe_path)) {
+      await fs.promises.unlink(safe_path)
+      Logger.log({
+        function_name: 'handle_deleted_file_patch',
+        message: 'File deleted successfully.',
+        data: { file_path }
+      })
+    } else {
+      Logger.warn({
+        function_name: 'handle_deleted_file_patch',
+        message: 'File to be deleted does not exist.',
+        data: { file_path }
+      })
+    }
+
+    return { success: true, original_states, used_fallback: false }
+  } catch (error: any) {
+    Logger.error({
+      function_name: 'handle_deleted_file_patch',
+      message: 'Failed to delete file from patch.',
+      data: { error: error.message, file_path }
+    })
+    return { success: false }
+  }
+}
+
 export const apply_git_patch = async (
   patch_content: string,
   workspace_path: string
@@ -314,8 +379,13 @@ export const apply_git_patch = async (
   original_states?: OriginalFileState[]
   used_fallback?: boolean
 }> => {
-  if (patch_content.includes('--- /dev/null')) {
+  if (patch_content.startsWith('--- /dev/null')) {
     return handle_new_file_patch(patch_content, workspace_path)
+  }
+
+  const lines = patch_content.split('\n')
+  if (lines.length > 1 && lines[1].startsWith('+++ /dev/null')) {
+    return handle_deleted_file_patch(patch_content, workspace_path)
   }
 
   let closed_files: vscode.Uri[] = []

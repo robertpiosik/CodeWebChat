@@ -22,7 +22,7 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 - Privacy first—operates locally
 - Lightweight—1MB of code
 
-### How is this different than coding agents?
+### How is non-agentic different than coding agents?
 
 - **Non-agentic is predictable.** Granular control over context let you scope the model precisely to the task and develop intuition for its outputs.
 - **Non-agentic is cost-efficient.** With the intuition for model capabilities, you can choose the right one for the complexity of the task, not the overall codebase.

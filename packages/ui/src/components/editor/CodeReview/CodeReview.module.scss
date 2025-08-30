@@ -10,7 +10,8 @@
 .item {
   display: flex;
   align-items: center;
-  gap: var(--padding-6px);
+  justify-content: space-between;
+  gap: var(--padding-8px);
   padding: 0 var(--padding-12px);
   height: var(--list-item-height);
   &:hover {
@@ -25,30 +26,44 @@
     }
   }
 
-  &__label {
-    flex: 1;
-    text-overflow: ellipsis;
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-8px);
     overflow: hidden;
-    white-space: nowrap;
 
-    &--deleted {
-      text-decoration: line-through;
+    &__label {
+      flex: 1;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+
+      > span:last-child {
+        opacity: 0.7;
+        margin-left: 0.5em;
+        font-size: 0.9em;
+      }
+
+      &--new {
+        color: var(--vscode-gitDecoration-untrackedResourceForeground);
+      }
+
+      &--deleted {
+        text-decoration: line-through;
+        color: var(--vscode-gitDecoration-deletedResourceForeground);
+      }
     }
+  }
+
+  &__line-numbers {
+    display: flex;
+    gap: 0.3em;
 
     &__added {
       color: var(--vscode-gitDecoration-addedResourceForeground);
-      margin-left: 0.3em;
     }
-
     &__removed {
       color: var(--vscode-gitDecoration-deletedResourceForeground);
-      margin-left: 0.3em;
-    }
-
-    > span:last-child {
-      opacity: 0.7;
-      margin-left: 0.5em;
-      font-size: 0.9em;
     }
   }
 }

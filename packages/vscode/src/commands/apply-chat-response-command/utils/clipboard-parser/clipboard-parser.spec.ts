@@ -308,6 +308,21 @@ describe('clipboard-parser', () => {
 `)
     })
 
+    it('should parse direct diff format for file deletion', () => {
+      const text = load_clipboard_text('diff-direct-variant-deletion.txt')
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+      expect(result.patches![0].file_path).toBe('src/index.ts')
+      expect(result.patches![0].content).toBe(`--- a/src/index.ts
++++ /dev/null
+@@ -1,2 +0,0 @@
+-console.log("hello")
+-console.log("old message")
+`)
+    })
+
     it('should parse multiple diff files format in variant a', () => {
       const text = load_clipboard_text('diff-multiple-files-variant-a.txt')
       const result = parse_response(text, true)

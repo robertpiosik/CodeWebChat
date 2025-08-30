@@ -104,19 +104,16 @@ const prepare_files_from_original_states = async (
     // Get current content (after apply operation)
     let current_content = ''
     try {
-      const doc = await vscode.workspace.openTextDocument(
-        vscode.Uri.file(sanitized_file_path)
-      )
-      current_content = doc.getText()
-    } catch (error) {
-      if (!fs.existsSync(sanitized_file_path)) {
-        // File might not exist anymore, e.g., deleted by the patch.
-        // We will treat its content as empty and still include it for review.
-        current_content = ''
-      } else {
-        // For other errors (e.g., permissions), we skip the file.
-        continue
+      if (fs.existsSync(sanitized_file_path)) {
+        const doc = await vscode.workspace.openTextDocument(
+          vscode.Uri.file(sanitized_file_path)
+        )
+        current_content = doc.getText()
       }
+      // If file doesn't exist, current_content remains '', which is correct for a deleted file
+    } catch (error) {
+      // For other errors (e.g., permissions), we skip the file.
+      continue
     }
 
     // Create temp file with original content
@@ -126,7 +123,8 @@ const prepare_files_from_original_states = async (
     const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
     const diff_stats = get_diff_stats(state.content, current_content)
-    const is_deleted = !state.is_new && current_content === '' && state.content !== ''
+    const is_deleted =
+      !state.is_new && current_content === '' && state.content !== ''
 
     const reviewable_file: ReviewableFile = {
       file_path: state.file_path,
@@ -287,7 +285,10 @@ export const review_applied_changes = async (
         file_to_toggle.original_content !== '' &&
         !file_to_toggle.reviewable_file.is_new
 
-      if (is_checked && was_deleted_or_emptied) {
+      if (
+        (!is_checked && file_to_toggle.reviewable_file.is_new) ||
+        (is_checked && was_deleted_or_emptied)
+      ) {
         try {
           if (fs.existsSync(file_to_toggle.sanitized_path)) {
             await vscode.workspace.fs.delete(

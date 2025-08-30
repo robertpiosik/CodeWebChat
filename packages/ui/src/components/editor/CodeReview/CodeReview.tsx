@@ -69,46 +69,50 @@ export const CodeReview: FC<Props> = ({
               role="button"
               title={file.file_path}
             >
-              {files_to_review.length > 1 && (
-                <Checkbox
-                  checked={file.is_checked}
-                  on_change={(checked) => {
-                    set_files_to_review((prev) =>
-                      prev.map((f, i) =>
-                        i == index ? { ...f, is_checked: checked } : f
+              <div className={styles['item__left']}>
+                {files_to_review.length > 1 && (
+                  <Checkbox
+                    checked={file.is_checked}
+                    on_change={(checked) => {
+                      set_files_to_review((prev) =>
+                        prev.map((f, i) =>
+                          i == index ? { ...f, is_checked: checked } : f
+                        )
                       )
-                    )
-                    on_toggle_file({
-                      file_path: file.file_path,
-                      workspace_name: file.workspace_name,
-                      is_checked: checked
-                    })
-                  }}
-                />
-              )}
-              <div
-                className={cn(styles['item__label'], {
-                  [styles['item__label--deleted']]: file.is_deleted
-                })}
-              >
-                <span>{file_name}</span>
-                {!file.is_deleted && (
-                  <>
-                    <span className={styles['item__label__added']}>
-                      +{file.lines_added}
-                    </span>
-                    <span className={styles['item__label__removed']}>
-                      -{file.lines_removed}
-                    </span>
-                  </>
+                      on_toggle_file({
+                        file_path: file.file_path,
+                        workspace_name: file.workspace_name,
+                        is_checked: checked
+                      })
+                    }}
+                  />
                 )}
-                <span>
-                  {has_multiple_workspaces && file.workspace_name
-                    ? `${file.workspace_name}/`
-                    : ''}
-                  {dir_path}
-                </span>
+                <div
+                  className={cn(styles['item__left__label'], {
+                    [styles['item__left__label--new']]: file.is_new,
+                    [styles['item__left__label--deleted']]: file.is_deleted
+                  })}
+                >
+                  <span>{file_name}</span>
+
+                  <span>
+                    {has_multiple_workspaces && file.workspace_name
+                      ? `${file.workspace_name}/`
+                      : ''}
+                    {dir_path}
+                  </span>
+                </div>
               </div>
+              {!file.is_deleted && (
+                <div className={styles['item__line-numbers']}>
+                  <span className={styles['item__line-numbers__added']}>
+                    +{file.lines_added}
+                  </span>
+                  <span className={styles['item__line-numbers__removed']}>
+                    -{file.lines_removed}
+                  </span>
+                </div>
+              )}
             </div>
           )
         })}

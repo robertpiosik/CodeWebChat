@@ -218,7 +218,7 @@ const extract_file_path_from_lines = (lines: string[]): string | undefined => {
 
 const find_patch_start_index = (lines: string[]): number => {
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].match(/^\+\+\+ (?:b\/|"b\/)/)) {
+    if (lines[i].startsWith('+++ ')) {
       for (let j = i - 1; j >= 0; j--) {
         if (lines[j].startsWith('--- ')) {
           if (j > 0 && lines[j - 1].startsWith('diff --git')) {

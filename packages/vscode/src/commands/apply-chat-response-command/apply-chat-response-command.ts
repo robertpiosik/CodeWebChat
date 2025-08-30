@@ -634,6 +634,19 @@ export const apply_chat_response_command = (
                 const fallback_patches_count = applied_patches.filter(
                   (p) => p.used_fallback
                 ).length
+                const fallback_files = applied_patches
+                  .filter((p) => p.used_fallback)
+                  .map((p) => p.patch.file_path)
+
+                Logger.log({
+                  function_name: 'apply_chat_response_command',
+                  message: 'Patches applied with fallback method',
+                  data: {
+                    count: fallback_patches_count,
+                    total: total_patches,
+                    files: fallback_files
+                  }
+                })
                 const message =
                   total_patches > 1
                     ? `${fallback_patches_count} of ${total_patches} patches required a fallback method, which may lead to inaccuracies.`
