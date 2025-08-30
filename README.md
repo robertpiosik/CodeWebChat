@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a> <a href="https://discord.com/invite/KJySXsrSX5" target="_blank"><img src="https://img.shields.io/badge/Chat-Discord-7289da" alt="Join Discord server" /></a>
 
-**Meet a non-agentic AI coding workflow for software engineers, designed for unmatched accuracy, speed and cost-efficiency**—select context, type instructions and send prompt with a free chatbot or an API provider. When the model finishes, its response is ready for a one-click integration with a transparent code review step and an easy rollback.
+**A non-agentic AI coding tool for software engineers. Its simple workflow is designed for accuracy, speed and cost-efficiency**—select context, type instructions and send prompt with a free chatbot or an API provider. When the model finishes, its response is ready for a one-click integration back with the codebase.
 
 Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 
@@ -15,13 +15,6 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-### Why go non-agentic with CWC?
-
-- **Non-agentic is predictable.** Granular control over context let you scope the model precisely to the task and develop intuition for its outputs.
-- **Non-agentic is blazing fast.** Eliminate the need for long-running planning and file lookups. A single prompt generates a complete set of changes across all necessary files in a single response.
-- **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, you just adjust the prompt and resend without distracting it with previous attempts.
-- **Non-agentic is cost-efficient.** Choose the model type according to the complexity of the task, not the overall codebase.
-
 ### Guiding principles
 
 - Initialize chatbots—don't scrape responses
@@ -29,17 +22,19 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 - Privacy first—operates locally
 - Lightweight—1MB of code
 
-### CWC is for you if you're
+### Go non-agentic with CWC
 
-- an experienced developer working on a large codebase
-- a student or hobbyist on a budget
+- **Non-agentic is predictable.** Granular control over context let you scope the model precisely to the task and develop intuition for its outputs.
+- **Non-agentic is blazing fast.** Eliminate the need for long-running planning and file lookups. A single prompt generates a complete set of changes across all necessary files in a single response.
+- **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, you just adjust the prompt and resend without distracting it with previous attempts.
+- **Non-agentic is cost-efficient.** Choose the model type according to the complexity of the task, not the overall codebase.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
 Install the Connector browser extension and never copy & paste again.
 
-- [Chrome Web Store  ↗](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
-- [Firefox Add-ons  ↗](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
+- [Chrome Web Store ↗](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
+- [Firefox Add-ons ↗](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
 **Supported chatbots:**
 
