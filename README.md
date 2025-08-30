@@ -25,9 +25,9 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 ### Go non-agentic with CWC
 
 - **Non-agentic is predictable.** Granular control over context let you scope the model precisely to the task and develop intuition for its outputs.
-- **Non-agentic is blazing fast.** Eliminate the need for long-running planning and file lookups. A single prompt generates a complete set of changes across all necessary files in a single response.
-- **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, you just adjust the prompt and resend without distracting it with previous attempts.
-- **Non-agentic is cost-efficient.** Choose the model type according to the complexity of the task, not the overall codebase.
+- **Non-agentic is cost-efficient.** With the intuition for model capabilities, you can choose the right one for the complexity of the task, not the overall codebase.
+- **Non-agentic is blazing fast.** Eliminate the need for long-running planning and file lookups. A single prompt generates a complete set of changes across all necessary files.
+- **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, just adjust the prompt and resend without distracting it with previous attempts.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
