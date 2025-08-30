@@ -33,6 +33,8 @@ type ReviewableFile = {
   content: string
   workspace_name?: string
   is_new?: boolean
+  lines_added: number
+  lines_removed: number
 }
 
 type PreparedFile = {
@@ -41,6 +43,40 @@ type PreparedFile = {
   original_content: string
   temp_file_path: string
   file_exists: boolean
+}
+
+const get_diff_stats = (
+  original_content: string,
+  new_content: string
+): { lines_added: number; lines_removed: number } => {
+  if (original_content == new_content) {
+    return { lines_added: 0, lines_removed: 0 }
+  }
+
+  const original_lines = original_content ? original_content.split('\n') : []
+  const new_lines = new_content ? new_content.split('\n') : []
+
+  const m = original_lines.length
+  const n = new_lines.length
+  const dp = Array(m + 1)
+    .fill(0)
+    .map(() => Array(n + 1).fill(0))
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (original_lines[i - 1] == new_lines[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1])
+      }
+    }
+  }
+
+  const lcs_length = dp[m][n]
+  return {
+    lines_added: new_lines.length - lcs_length,
+    lines_removed: original_lines.length - lcs_length
+  }
 }
 
 const prepare_files_from_original_states = async (
@@ -82,11 +118,15 @@ const prepare_files_from_original_states = async (
     const temp_filename = `${base}.${Date.now()}`
     const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
+    const diff_stats = get_diff_stats(state.content, current_content)
+
     const reviewable_file: ReviewableFile = {
       file_path: state.file_path,
       content: current_content,
       workspace_name: state.workspace_name,
-      is_new: state.is_new
+      is_new: state.is_new,
+      lines_added: diff_stats.lines_added,
+      lines_removed: diff_stats.lines_removed
     }
 
     prepared_files.push({
@@ -195,17 +235,6 @@ export const review_applied_changes = async (
   })
   const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
 
-  if (view_provider) {
-    view_provider.send_message({
-      command: 'CODE_REVIEW_STARTED',
-      files: original_states.map((state) => ({
-        file_path: state.file_path,
-        workspace_name: state.workspace_name,
-        is_new: state.is_new
-      }))
-    })
-  }
-
   let prepared_files: PreparedFile[] = []
 
   try {
@@ -214,6 +243,13 @@ export const review_applied_changes = async (
       default_workspace,
       workspace_map
     )
+
+    if (view_provider) {
+      view_provider.send_message({
+        command: 'CODE_REVIEW_STARTED',
+        files: prepared_files.map((p) => p.reviewable_file)
+      })
+    }
 
     if (prepared_files.length === 0) {
       return null
