@@ -253,15 +253,15 @@ export const handle_intelligent_update = async (params: {
     progress_title = params.progress_title_override
   } else {
     if (existing_files.length > 0 && new_files.length > 0) {
-      progress_title = `Please wait, updating ${existing_files.length} file${
-        existing_files.length > 1 ? 's' : ''
-      } and creating ${new_files.length} new file${
-        new_files.length > 1 ? 's' : ''
-      }...`
+      progress_title = `Calling Intelligent Update tool for ${
+        existing_files.length
+      } file${existing_files.length > 1 ? 's' : ''} and creating ${
+        new_files.length
+      } new file${new_files.length > 1 ? 's' : ''}...`
     } else if (existing_files.length > 0) {
-      progress_title = `Please wait, updating ${existing_files.length} file${
-        existing_files.length > 1 ? 's' : ''
-      }...`
+      progress_title = `Calling Intelligent Update tool for ${
+        existing_files.length
+      } file${existing_files.length > 1 ? 's' : ''}...`
     } else {
       progress_title = `Creating ${new_files.length} new file${
         new_files.length > 1 ? 's' : ''
