@@ -690,9 +690,9 @@ export const apply_chat_response_command = (
                     (p) => p.patch
                   )
                   const num_files = fallback_patches.length
-                  const progress_title_override = `Please wait, updating ${num_files} file${
+                  const progress_title_override = `Calling Intelligent Update tool for ${num_files} file${
                     num_files > 1 ? 's' : ''
-                  } using the fallback method...`
+                  } as a fallback method...`
 
                   const fallback_patches_as_code_blocks = fallback_patches
                     .map(
@@ -875,9 +875,9 @@ export const apply_chat_response_command = (
                   const original_states_for_revert = final_original_states!
                   await revert_files(original_states_for_revert, false)
                   const num_files = original_states_for_revert.length
-                  const progress_title_override = `Please wait, updating ${num_files} file${
+                  const progress_title_override = `Calling Intelligent Update tool for ${num_files} file${
                     num_files > 1 ? 's' : ''
-                  } with the Intelligent Update fallback method...`
+                  } as a fallback method...`
 
                   // Clear state while intelligent update runs
                   update_revert_and_apply_button_state(null)
