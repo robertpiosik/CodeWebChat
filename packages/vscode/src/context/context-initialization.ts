@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
 import { WorkspaceProvider } from './providers/workspace-provider'
 import { FileItem } from './providers/workspace-provider'
 import { FilesCollector } from '../utils/files-collector'
@@ -151,6 +152,51 @@ export function context_initialization(context: vscode.ExtensionContext): {
       await vscode.env.clipboard.writeText(context_text)
       vscode.window.showInformationMessage(`Context copied to clipboard.`)
     }),
+    vscode.commands.registerCommand(
+      'codeWebChat.copyContextOpenEditors',
+      async () => {
+        if (!open_editors_provider) return
+        const checked_files = open_editors_provider.get_checked_files()
+
+        if (checked_files.length === 0) {
+          vscode.window.showWarningMessage('No open editors selected.')
+          return
+        }
+
+        let context_text = ''
+        const workspace_folders = vscode.workspace.workspaceFolders
+        const is_multi_root = !!workspace_folders && workspace_folders.length > 1
+
+        for (const file_path of checked_files) {
+          try {
+            const file_uri = vscode.Uri.file(file_path)
+            const content_uint8_array =
+              await vscode.workspace.fs.readFile(file_uri)
+            const content = new TextDecoder().decode(content_uint8_array)
+
+            let display_path: string
+            const workspace_folder = vscode.workspace.getWorkspaceFolder(file_uri)
+
+            if (is_multi_root && workspace_folder) {
+              const relative_path = path.relative(workspace_folder.uri.fsPath, file_path)
+              display_path = `${workspace_folder.name}:${relative_path}`
+            } else {
+              display_path = vscode.workspace.asRelativePath(file_path)
+            }
+
+            context_text += `<file path="${display_path.replace(/\\/g, '/')}">\n${content}\n</file>\n`
+          } catch (error: any) {
+            vscode.window.showErrorMessage(`Error reading file ${file_path}: ${error.message}`)
+          }
+        }
+
+        if (context_text === '') return
+
+        context_text = `<files>\n${context_text}</files>\n`
+        await vscode.env.clipboard.writeText(context_text)
+        vscode.window.showInformationMessage('Context from open editors copied to clipboard.')
+      }
+    ),
     vscode.commands.registerCommand('codeWebChat.collapseFolders', async () => {
       workspace_view.dispose()
       await new Promise((resolve) => setTimeout(resolve, 0))

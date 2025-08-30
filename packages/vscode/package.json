@@ -97,6 +97,12 @@
         "icon": "$(copy)"
       },
       {
+        "command": "codeWebChat.copyContextOpenEditors",
+        "title": "Copy Context of Open Editors",
+        "category": "Code Web Chat",
+        "icon": "$(copy)"
+      },
+      {
         "command": "codeWebChat.applyContextFromClipboard",
         "title": "Apply Context from Clipboard",
         "category": "Code Web Chat"
@@ -351,6 +357,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.copyContextOpenEditors",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.copyContext",
           "when": "false"
         },
@@ -417,24 +427,29 @@
           "group": "navigation@8"
         },
         {
-          "command": "codeWebChat.checkAllOpenEditors",
+          "command": "codeWebChat.copyContextOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@1"
         },
         {
-          "command": "codeWebChat.clearChecksOpenEditors",
+          "command": "codeWebChat.checkAllOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.saveAll",
+          "command": "codeWebChat.clearChecksOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.closeAllEditors",
+          "command": "codeWebChat.saveAll",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@4"
+        },
+        {
+          "command": "codeWebChat.closeAllEditors",
+          "when": "view == codeWebChatViewOpenEditors",
+          "group": "navigation@5"
         },
         {
           "command": "codeWebChat.openRepository",
