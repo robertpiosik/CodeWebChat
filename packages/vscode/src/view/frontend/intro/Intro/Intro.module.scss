@@ -8,19 +8,41 @@
 .inner {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   gap: var(--padding-24px);
   height: 100%;
   width: 100%;
-  padding: var(--padding-10px) var(--padding-12px) var(--padding-12px);
+  padding: var(--padding-5px) var(--padding-12px) var(--padding-12px);
 }
 
 .top {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-12px);
+  gap: var(--padding-10px);
   width: 100%;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-4px);
+    width: 100%;
+
+    &__home {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--border-radius-5px);
+      --size: 20px;
+      width: var(--size);
+      height: var(--size);
+      color: var(--vscode-icon-foreground);
+    }
+
+    &__text {
+      font-weight: 600;
+      color: var(--vscode-icon-foreground);
+    }
+  }
 
   &__enter-buttons {
     display: flex;
@@ -37,6 +59,7 @@
   text-align: center;
   gap: var(--padding-8px);
   font-size: var(--font-size-12px);
+  margin-top: auto;
   user-select: text;
   width: 100%; // For easier text selection
 

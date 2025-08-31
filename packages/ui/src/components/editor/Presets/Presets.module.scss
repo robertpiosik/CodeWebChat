@@ -11,7 +11,7 @@
   gap: var(--padding-8px);
 
   &__left {
-    opacity: var(--dimmed-opacity);
+    color: var(--vscode-descriptionForeground);
   }
 }
 

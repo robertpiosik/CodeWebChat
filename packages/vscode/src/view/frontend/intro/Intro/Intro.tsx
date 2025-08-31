@@ -26,6 +26,12 @@ export const Intro: React.FC<Props> = (props) => {
       <Scrollable>
         <div className={styles.inner}>
           <div className={styles.top}>
+            <div className={styles['top__header']}>
+              <div className={styles['top__header__home']}>
+                <span className="codicon codicon-home" />
+              </div>
+              <span className={styles['top__header__text']}>Home</span>
+            </div>
             <div className={styles['top__enter-buttons']}>
               <Enter
                 label="Open View: New chat"
@@ -42,10 +48,13 @@ export const Intro: React.FC<Props> = (props) => {
                 donations={donations}
                 is_fetching={is_fetching}
                 are_donations_visible={props.are_donations_visible}
-                on_toggle_donations_visibility={props.on_toggle_donations_visibility}
+                on_toggle_donations_visibility={
+                  props.on_toggle_donations_visibility
+                }
               />
             </div>
           </div>
+
           <div className={styles.bottom}>
             <div className={styles.bottom__links}>
               <div>
@@ -62,6 +71,7 @@ export const Intro: React.FC<Props> = (props) => {
           </div>
         </div>
       </Scrollable>
+
       <div className={styles.footer}>
         <div className={styles.footer__left}>
           <a href="https://codeweb.chat/">Docs ↗</a>

@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-16px);
+  gap: var(--padding-14px);
 }
 
 .donations {
@@ -10,7 +10,7 @@
   gap: var(--padding-10px);
 
   &__heading {
-    opacity: var(--dimmed-opacity);
+    color: var(--vscode-descriptionForeground);
   }
 
   &__heading_container {
