@@ -1,6 +1,7 @@
 .container {
   position: relative;
   display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
@@ -10,7 +11,7 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--padding-24px);
-  min-height: 100vh;
+  height: 100%;
   width: 100%;
   padding: var(--padding-10px) var(--padding-12px) var(--padding-12px);
 }
@@ -39,40 +40,6 @@
   user-select: text;
   width: 100%; // For easier text selection
 
-  &__version {
-    color: var(--vscode-descriptionForeground);
-  }
-
-  &__social {
-    display: flex;
-    align-items: center;
-    gap: var(--padding-8px);
-
-    &__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: var(--border-radius-999px);
-
-      > svg {
-        fill: white;
-        width: 15px;
-      }
-
-      &--x {
-        background-color: black;
-      }
-      &--reddit {
-        background-color: #ff6314;
-      }
-      &--discord {
-        background-color: #7289da;
-      }
-    }
-  }
-
   &__links {
     display: flex;
     flex-direction: column;
@@ -82,5 +49,67 @@
 
   a:hover {
     text-decoration: underline;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--padding-4px);
+  padding: var(--padding-8px) var(--padding-12px);
+  border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
+
+  &__left,
+  &__right {
+    flex: 1;
+  }
+
+  &__left {
+    > a {
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--padding-8px);
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      --size: 24px;
+      width: var(--size);
+      height: var(--size);
+      border-radius: var(--border-radius-4px);
+
+      > svg {
+        fill: white;
+        width: 15px;
+      }
+
+      &--x {
+        background-color: black;
+      }
+
+      &--reddit {
+        background-color: #ff6314;
+      }
+
+      &--discord {
+        background-color: #7289da;
+      }
+    }
+  }
+
+  &__right {
+    text-align: right;
+    color: var(--vscode-descriptionForeground);
   }
 }

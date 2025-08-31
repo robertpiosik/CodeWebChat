@@ -230,12 +230,22 @@ export interface UpdateLastUsedPresetMessage extends BaseMessage {
   preset_name: string
 }
 
+export interface GetDonationsVisibilityMessage extends BaseMessage {
+  command: 'GET_DONATIONS_VISIBILITY'
+}
+
+export interface SaveDonationsVisibilityMessage extends BaseMessage {
+  command: 'SAVE_DONATIONS_VISIBILITY'
+  is_visible: boolean
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
   | GetEditFormat
   | SaveEditFormatMessage
   | GetConnectionStatusMessage
+  | GetDonationsVisibilityMessage
   | GetPresetsMessage
   | ReplacePresetsMessage
   | SendPromptMessage
@@ -267,6 +277,7 @@ export type FrontendMessage =
   | GetApiModeMessage
   | SaveApiModeMessage
   | GetApiToolConfigurationsMessage
+  | SaveDonationsVisibilityMessage
   | GetVersionMessage
   | CheckClipboardForApplyMessage
   | EditsReviewMessage
@@ -427,12 +438,18 @@ export interface FocusChatInputMessage extends BaseMessage {
   command: 'FOCUS_CHAT_INPUT'
 }
 
+export interface DonationsVisibilityMessage extends BaseMessage {
+  command: 'DONATIONS_VISIBILITY'
+  is_visible: boolean
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusChatInputMessage
   | ConnectionStatusMessage
   | EditFormatMessage
   | ApiToolConfigurationsMessage
+  | DonationsVisibilityMessage
   | PresetsMessage
   | EditorStateChangedMessage
   | GitStateChangedMessage

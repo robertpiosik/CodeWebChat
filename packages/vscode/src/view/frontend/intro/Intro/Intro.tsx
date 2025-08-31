@@ -3,22 +3,24 @@ import { Scrollable } from '@ui/components/editor/Scrollable'
 import { Enter } from '@ui/components/editor/Enter'
 import { BuyMeACoffee } from '@ui/components/editor/BuyMeACoffee'
 import { Icon } from '@ui/components/editor/Icon'
+import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
 
-type Donation = {
-  supporter_name: string
-  support_coffees: number
-  support_note: string
-}
-
 type Props = {
+  is_active: boolean
   on_new_chat: () => void
   on_api_call: () => void
   version: string
-  latest_donation: Donation | null
+  are_donations_visible: boolean
+  on_toggle_donations_visibility: () => void
 }
 
 export const Intro: React.FC<Props> = (props) => {
+  const { donations, is_fetching } = use_latest_donations(
+    props.is_active,
+    props.are_donations_visible
+  )
+
   return (
     <div className={styles.container}>
       <Scrollable>
@@ -37,62 +39,67 @@ export const Intro: React.FC<Props> = (props) => {
               />
               <BuyMeACoffee
                 username="robertpiosik"
-                supporter_name={props.latest_donation?.supporter_name}
-                support_coffees={props.latest_donation?.support_coffees}
-                support_note={props.latest_donation?.support_note}
+                donations={donations}
+                is_fetching={is_fetching}
+                are_donations_visible={props.are_donations_visible}
+                on_toggle_donations_visibility={props.on_toggle_donations_visibility}
               />
             </div>
           </div>
           <div className={styles.bottom}>
-            <div className={styles.bottom__version}>{props.version}</div>
-            <div className={styles.bottom__social}>
-              <a
-                href="https://x.com/CodeWebChat"
-                title="Follow on X"
-                className={cn(
-                  styles.bottom__social__icon,
-                  styles['bottom__social__icon--x']
-                )}
-              >
-                <Icon variant="X" />
-              </a>
-              <a
-                href="https://www.reddit.com/r/CodeWebChat/"
-                title="Join subreddit"
-                className={cn(
-                  styles.bottom__social__icon,
-                  styles['bottom__social__icon--reddit']
-                )}
-              >
-                <Icon variant="REDDIT" />
-              </a>
-              <a
-                href="https://discord.gg/KJySXsrSX5"
-                title="Join Discord server"
-                className={cn(
-                  styles.bottom__social__icon,
-                  styles['bottom__social__icon--discord']
-                )}
-              >
-                <Icon variant="DISCORD" />
-              </a>
-            </div>
             <div className={styles.bottom__links}>
-              <a href="https://codeweb.chat/">https://codeweb.chat</a>
               <div>
                 Released under the{' '}
                 <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                  GPL-3.0 license
+                  GPL-3.0 license ↗
                 </a>
               </div>
               <div>
                 Copyright © {new Date().getFullYear()}{' '}
-                <a href="https://x.com/robertpiosik">Robert Piosik</a>
+                <a href="https://x.com/robertpiosik">Robert Piosik ↗</a>
               </div>
             </div>
           </div>
         </div>
       </Scrollable>
+      <div className={styles.footer}>
+        <div className={styles.footer__left}>
+          <a href="https://codeweb.chat/">Docs ↗</a>
+        </div>
+        <div className={styles.footer__social}>
+          <a
+            href="https://x.com/CodeWebChat"
+            title="Follow on X"
+            className={cn(
+              styles.footer__social__icon,
+              styles['footer__social__icon--x']
+            )}
+          >
+            <Icon variant="X" />
+          </a>
+          <a
+            href="https://www.reddit.com/r/CodeWebChat/"
+            title="Join subreddit"
+            className={cn(
+              styles.footer__social__icon,
+              styles['footer__social__icon--reddit']
+            )}
+          >
+            <Icon variant="REDDIT" />
+          </a>
+          <a
+            href="https://discord.gg/KJySXsrSX5"
+            title="Join Discord server"
+            className={cn(
+              styles.footer__social__icon,
+              styles['footer__social__icon--discord']
+            )}
+          >
+            <Icon variant="DISCORD" />
+          </a>
+        </div>
+        <div className={styles.footer__right}>{props.version}</div>
+      </div>
     </div>
   )
 }

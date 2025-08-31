@@ -4,8 +4,7 @@ export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
 export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'lastSaveLocation'
-export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY =
-  'last-apply-context-option'
+export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
 export const LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY =
   'last-selected-workspace-context-name'
 export const LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY =
@@ -54,6 +53,8 @@ export const PINNED_HISTORY_EDIT_STATE_KEY = 'pinned-history-edit'
 export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY =
   'pinned-history-code-completions'
 export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'
+
+export const RECENT_DONATIONS_VISIBLE_STATE_KEY = 'recent-donations-visible'
 
 export const get_last_group_or_preset_choice_state_key = (web_mode: string) =>
   `last-group-or-preset-choice-${web_mode}`

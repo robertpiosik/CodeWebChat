@@ -41,7 +41,11 @@ import {
   handle_at_sign_quick_pick_for_preset_affix,
   handle_get_api_tool_configurations,
   handle_pick_open_router_model,
-  handle_pick_chatbot
+  handle_pick_chatbot,
+  handle_get_donations_visibility,
+  handle_save_donations_visibility,
+  handle_focus_on_file_in_review,
+  handle_toggle_file_in_review
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -53,6 +57,7 @@ import {
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY,
+  RECENT_DONATIONS_VISIBLE_STATE_KEY,
   WEB_MODE_STATE_KEY
 } from '@/constants/state-keys'
 import { can_revert } from '@/commands/revert-command'
@@ -64,10 +69,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { api_tool_config_emitter } from '@/services/api-providers-manager'
-import {
-  code_review_promise_resolve,
-  toggle_file_review_state
-} from '@/commands/apply-chat-response-command/utils/review-applied-changes'
+import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-applied-changes'
 import { Logger } from '@/utils/logger'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 
@@ -146,6 +148,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
         await this._check_clipboard_for_apply()
+        const are_donations_visible = this.context.workspaceState.get<boolean>(
+          RECENT_DONATIONS_VISIBLE_STATE_KEY,
+          false
+        )
+        this.send_message({
+          command: 'DONATIONS_VISIBILITY',
+          is_visible: are_donations_visible
+        })
       }
     })
 
@@ -413,23 +423,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             )
           } else if (message.command == 'CHECK_CLIPBOARD_FOR_APPLY') {
             await this._check_clipboard_for_apply()
+          } else if (message.command == 'GET_DONATIONS_VISIBILITY') {
+            handle_get_donations_visibility(this)
+          } else if (message.command == 'SAVE_DONATIONS_VISIBILITY') {
+            await handle_save_donations_visibility(this, message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_REVIEW') {
-            if (code_review_promise_resolve) {
-              code_review_promise_resolve({
-                jump_to: {
-                  file_path: message.file_path,
-                  workspace_name: message.workspace_name
-                }
-              })
-            }
+            handle_focus_on_file_in_review(this, message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
-            if (toggle_file_review_state) {
-              await toggle_file_review_state({
-                file_path: message.file_path,
-                workspace_name: message.workspace_name,
-                is_checked: message.is_checked
-              })
-            }
+            await handle_toggle_file_in_review(this, message)
           } else if (message.command == 'EDITS_REVIEW') {
             if (code_review_promise_resolve) {
               code_review_promise_resolve({ accepted_files: message.files })

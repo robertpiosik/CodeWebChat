@@ -13,7 +13,6 @@ import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
 import { CodeReview as UiCodeReview } from '@ui/components/editor/CodeReview'
-import { use_latest_donation } from './hooks/lastest-donation-hook'
 
 const vscode = acquireVsCodeApi()
 
@@ -24,6 +23,9 @@ export const View = () => {
   const [files_to_review, set_files_to_review] = useState<FileInReview[]>([])
   const [has_multiple_workspaces, set_has_multiple_workspaces] = useState(false)
   const [is_connected, set_is_connected] = useState<boolean>()
+  const [are_donations_visible, set_are_donations_visible] = useState<
+    boolean | undefined
+  >()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [ask_instructions, set_ask_instructions] = useState<
     string | undefined
@@ -48,8 +50,6 @@ export const View = () => {
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
   const [chat_input_focus_and_select_key, set_chat_input_focus_and_select_key] =
     useState(0)
-
-  const latest_donation = use_latest_donation(active_view == 'intro')
 
   const handle_mouse_enter = () => {
     post_message(vscode, {
@@ -89,6 +89,8 @@ export const View = () => {
         set_is_connected(message.connected)
       } else if (message.command == 'VERSION') {
         set_version(message.version)
+      } else if (message.command == 'DONATIONS_VISIBILITY') {
+        set_are_donations_visible(message.is_visible)
       } else if (message.command == 'HOME_VIEW_TYPE') {
         set_home_view_type(message.view_type)
       } else if (message.command == 'WEB_MODE') {
@@ -114,6 +116,7 @@ export const View = () => {
     const initial_messages: FrontendMessage[] = [
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_VERSION' },
+      { command: 'GET_DONATIONS_VISIBILITY' },
       { command: 'GET_HOME_VIEW_TYPE' },
       { command: 'GET_WEB_MODE' },
       { command: 'GET_API_MODE' },
@@ -184,11 +187,20 @@ export const View = () => {
     })
   }
 
+  const handle_donations_visibility_change = () => {
+    const is_visible = !are_donations_visible
+    set_are_donations_visible(is_visible)
+    post_message(vscode, {
+      command: 'SAVE_DONATIONS_VISIBILITY',
+      is_visible
+    })
+  }
+
   if (
     ask_instructions === undefined ||
     edit_instructions === undefined ||
     no_context_instructions === undefined ||
-    !version ||
+    !version || are_donations_visible === undefined ||
     code_completions_instructions === undefined ||
     home_view_type === undefined ||
     web_mode === undefined ||
@@ -358,6 +370,7 @@ export const View = () => {
         })}
       >
         <Intro
+          is_active={active_view == 'intro'}
           on_new_chat={() => {
             set_active_view('home')
             handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
@@ -370,8 +383,9 @@ export const View = () => {
             handle_api_mode_change('edit-context')
             set_chat_input_focus_and_select_key((k) => k + 1)
           }}
+          are_donations_visible={are_donations_visible}
+          on_toggle_donations_visibility={handle_donations_visibility_change}
           version={version}
-          latest_donation={latest_donation}
         />
       </div>
     </div>
