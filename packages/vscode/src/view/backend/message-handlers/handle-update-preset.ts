@@ -50,9 +50,14 @@ export const handle_update_preset = async (
     )
   }
 
+  const final_updated_preset = {
+    ...message.updated_preset,
+    is_collapsed: message.updating_preset.is_collapsed
+  }
+
   const has_changes = !are_presets_equal(
     message.updating_preset,
-    message.updated_preset
+    final_updated_preset
   )
 
   if (!has_changes) {
@@ -87,7 +92,7 @@ export const handle_update_preset = async (
     }
   }
 
-  const updated_ui_preset = { ...message.updated_preset }
+  const updated_ui_preset = { ...final_updated_preset }
   let final_name = updated_ui_preset.name.trim()
 
   // --- Start uniqueness check ---

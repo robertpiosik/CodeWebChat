@@ -14,6 +14,7 @@ export type ConfigPresetFormat = {
   options?: string[]
   port?: number
   isDefault?: boolean
+  isCollapsed?: boolean
 }
 
 export function config_preset_to_ui_format(
@@ -31,7 +32,8 @@ export function config_preset_to_ui_format(
     system_instructions: config_preset.systemInstructions,
     options: config_preset.options,
     port: config_preset.port,
-    is_default: config_preset.isDefault
+    is_default: config_preset.isDefault,
+    is_collapsed: config_preset.isCollapsed
   }
 }
 
@@ -48,6 +50,7 @@ export function ui_preset_to_config_format(preset: Preset): ConfigPresetFormat {
     systemInstructions: preset.system_instructions,
     options: preset.options,
     port: preset.port,
-    isDefault: preset.is_default
+    isDefault: preset.is_default,
+    isCollapsed: preset.is_collapsed
   }
 }

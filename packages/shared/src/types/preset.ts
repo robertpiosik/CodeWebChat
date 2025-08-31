@@ -13,4 +13,5 @@ export type Preset = {
   options?: string[]
   port?: number
   is_default?: boolean
+  is_collapsed?: boolean
 }

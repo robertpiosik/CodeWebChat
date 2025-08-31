@@ -718,6 +718,10 @@
               "isDefault": {
                 "type": "boolean",
                 "description": "Whether this preset is used when initializing a new chat."
+              },
+              "isCollapsed": {
+                "type": "boolean",
+                "description": "Whether this group is collapsed by default."
               }
             },
             "required": [
@@ -880,6 +884,10 @@
               "isDefault": {
                 "type": "boolean",
                 "description": "Whether this preset is used when initializing a new chat."
+              },
+              "isCollapsed": {
+                "type": "boolean",
+                "description": "Whether this group is collapsed by default."
               }
             },
             "required": [
@@ -1012,6 +1020,10 @@
               "isDefault": {
                 "type": "boolean",
                 "description": "Whether this preset is used when initializing a new chat."
+              },
+              "isCollapsed": {
+                "type": "boolean",
+                "description": "Whether this group is collapsed by default."
               }
             },
             "required": [
@@ -1174,6 +1186,10 @@
               "isDefault": {
                 "type": "boolean",
                 "description": "Whether this preset is used when initializing a new chat."
+              },
+              "isCollapsed": {
+                "type": "boolean",
+                "description": "Whether this group is collapsed by default."
               }
             },
             "required": [
@@ -1308,6 +1324,7 @@
     "bufferutil": "^4.0.9",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.10",
+    "diff": "^8.0.2",
     "glob": "^11.0.3",
     "he": "^1.2.0",
     "ignore": "^6.0.2",

@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as os from 'os'
+import { createTwoFilesPatch } from 'diff'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { OriginalFileState } from '@/types/common'
@@ -54,30 +55,30 @@ const get_diff_stats = (
     return { lines_added: 0, lines_removed: 0 }
   }
 
-  const original_lines = original_content ? original_content.split('\n') : []
-  const new_lines = new_content ? new_content.split('\n') : []
+  // Create a unified diff patch
+  const patch = createTwoFilesPatch(
+    'original',
+    'modified',
+    original_content,
+    new_content,
+    undefined,
+    undefined,
+    { context: 0 }
+  )
 
-  const m = original_lines.length
-  const n = new_lines.length
-  const dp = Array(m + 1)
-    .fill(0)
-    .map(() => Array(n + 1).fill(0))
+  let lines_added = 0
+  let lines_removed = 0
 
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (original_lines[i - 1] == new_lines[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1
-      } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1])
-      }
+  const lines = patch.split('\n')
+  for (const line of lines) {
+    if (line.startsWith('+') && !line.startsWith('+++')) {
+      lines_added++
+    } else if (line.startsWith('-') && !line.startsWith('---')) {
+      lines_removed++
     }
   }
 
-  const lcs_length = dp[m][n]
-  return {
-    lines_added: new_lines.length - lcs_length,
-    lines_removed: original_lines.length - lcs_length
-  }
+  return { lines_added, lines_removed }
 }
 
 const prepare_files_from_original_states = async (

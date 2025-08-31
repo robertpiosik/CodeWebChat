@@ -34,6 +34,7 @@ export namespace Presets {
     prompt_prefix?: string
     prompt_suffix?: string
     is_default?: boolean
+    is_collapsed?: boolean
   }
 
   export type Props = {
@@ -54,6 +55,7 @@ export namespace Presets {
     on_preset_duplicate: (name: string) => void
     on_preset_delete: (name: string) => void
     on_toggle_default_preset: (name: string) => void
+    on_toggle_group_collapsed: (name: string) => void
     selected_preset_name?: string
     translations: {
       my_chat_presets: string
@@ -71,6 +73,8 @@ export namespace Presets {
       set_as_default: string
       unset_as_default: string
       no_preset_enabled_or_selected_in_this_group: string
+      collapse_group: string
+      expand_group: string
     }
   }
 }
@@ -85,6 +89,23 @@ const with_ids = (
 }
 
 export const Presets: React.FC<Presets.Props> = (props) => {
+  const get_visible_presets = (presets: Presets.Preset[]): Presets.Preset[] => {
+    const visible_presets: Presets.Preset[] = []
+    let is_in_collapsed_group = false
+    for (const preset of presets) {
+      if (is_in_collapsed_group && preset.chatbot) {
+        continue
+      }
+      if (!preset.chatbot) {
+        is_in_collapsed_group = !!preset.is_collapsed
+      }
+      visible_presets.push(preset)
+    }
+    return visible_presets
+  }
+
+  const name_to_index_map = new Map(props.presets.map((p, i) => [p.name, i]))
+
   const get_is_preset_disabled = (preset: Presets.Preset) =>
     preset.chatbot &&
     (!props.is_connected ||
@@ -166,17 +187,50 @@ export const Presets: React.FC<Presets.Props> = (props) => {
         )}
 
         <ReactSortable
-          list={with_ids(props.presets)}
+          list={with_ids(get_visible_presets(props.presets))}
           setList={(new_state) => {
             if (props.on_presets_reorder) {
-              const clean_presets = new_state.map(({ id, ...preset }) => preset)
-              props.on_presets_reorder(clean_presets)
+              const new_visible_presets = new_state.map(
+                ({ id, ...preset }) => preset
+              ) as Presets.Preset[]
+
+              const reordered_presets: Presets.Preset[] = []
+
+              for (const preset of new_visible_presets) {
+                reordered_presets.push(preset)
+
+                if (!preset.chatbot && preset.is_collapsed) {
+                  // It's a collapsed group. Find its children in original list and add them.
+                  const original_index = props.presets.findIndex(
+                    (p) => p.name === preset.name
+                  )
+
+                  if (original_index !== -1) {
+                    for (
+                      let i = original_index + 1;
+                      i < props.presets.length;
+                      i++
+                    ) {
+                      const child_candidate = props.presets[i]
+                      if (child_candidate.chatbot) {
+                        reordered_presets.push(child_candidate)
+                      } else {
+                        // next group found
+                        break
+                      }
+                    }
+                  }
+                }
+              }
+              props.on_presets_reorder(reordered_presets)
             }
           }}
           animation={150}
           handle={`.${styles.presets__item__left__drag_handle}`}
         >
-          {props.presets.map((preset, i) => {
+          {get_visible_presets(props.presets).map((preset) => {
+            const i = name_to_index_map.get(preset.name)!
+
             const is_unnamed =
               !preset.name || /^\(\d+\)$/.test(preset.name.trim())
             let display_name: string
@@ -250,7 +304,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
             return (
               <div
-                key={i}
+                key={preset.name}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
                     props.selected_preset_name == preset.name,
@@ -305,6 +359,22 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     e.stopPropagation()
                   }}
                 >
+                  {!preset.chatbot && (
+                    <IconButton
+                      codicon_icon={
+                        preset.is_collapsed ? 'chevron-down' : 'chevron-up'
+                      }
+                      title={
+                        preset.is_collapsed
+                          ? props.translations.expand_group
+                          : props.translations.collapse_group
+                      }
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_toggle_group_collapsed(preset.name)
+                      }}
+                    />
+                  )}
                   {preset.chatbot &&
                     (preset.prompt_prefix || preset.prompt_suffix) && (
                       <IconButton

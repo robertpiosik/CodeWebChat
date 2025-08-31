@@ -690,7 +690,7 @@ export const apply_chat_response_command = (
                     (p) => p.patch
                   )
                   const num_files = fallback_patches.length
-                  const progress_title_override = `Calling Intelligent Update tool for ${num_files} file${
+                  const progress_title_override = `Called Intelligent Update tool for ${num_files} file${
                     num_files > 1 ? 's' : ''
                   } as a fallback method...`
 
@@ -875,7 +875,7 @@ export const apply_chat_response_command = (
                   const original_states_for_revert = final_original_states!
                   await revert_files(original_states_for_revert, false)
                   const num_files = original_states_for_revert.length
-                  const progress_title_override = `Calling Intelligent Update tool for ${num_files} file${
+                  const progress_title_override = `Called Intelligent Update tool for ${num_files} file${
                     num_files > 1 ? 's' : ''
                   } as a fallback method...`
 

@@ -56,6 +56,7 @@ type Props = {
   on_preset_duplicate: (preset_name: string) => void
   on_preset_delete: (preset_name: string) => void
   on_toggle_default_preset: (name: string) => void
+  on_toggle_group_collapsed: (name: string) => void
   selected_preset_or_group_name?: string
   selected_configuration_index?: number
   instructions: string
@@ -441,6 +442,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_preset_duplicate={props.on_preset_duplicate}
                 on_preset_delete={props.on_preset_delete}
                 on_toggle_default_preset={props.on_toggle_default_preset}
+                on_toggle_group_collapsed={props.on_toggle_group_collapsed}
                 selected_preset_name={
                   props.selected_preset_or_group_name
                 }
@@ -466,7 +468,9 @@ export const HomeView: React.FC<Props> = (props) => {
                   set_as_default: 'Set as default',
                   unset_as_default: 'Unset as default',
                   no_preset_enabled_or_selected_in_this_group:
-                    'No preset is enabled or selected in this group'
+                    'No preset is enabled or selected in this group',
+                  collapse_group: 'Collapse',
+                  expand_group: 'Expand'
                 }}
               />
             </>
