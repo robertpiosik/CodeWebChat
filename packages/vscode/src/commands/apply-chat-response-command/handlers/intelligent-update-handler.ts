@@ -255,13 +255,13 @@ export const handle_intelligent_update = async (params: {
     if (existing_files.length > 0 && new_files.length > 0) {
       progress_title = `Calling Intelligent Update tool for ${
         existing_files.length
-      } file${existing_files.length > 1 ? 's' : ''} and creating ${
+      } file${existing_files.length > 1 ? 's' : ''} as a fallback method and creating ${
         new_files.length
       } new file${new_files.length > 1 ? 's' : ''}...`
     } else if (existing_files.length > 0) {
       progress_title = `Calling Intelligent Update tool for ${
         existing_files.length
-      } file${existing_files.length > 1 ? 's' : ''}...`
+      } file${existing_files.length > 1 ? 's' : ''} as a fallback method...`
     } else {
       progress_title = `Creating ${new_files.length} new file${
         new_files.length > 1 ? 's' : ''
