@@ -22,6 +22,12 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 - **Non-agentic is blazing fast.** A single prompt yields a complete set of changes across all necessary files. Make anyting in a single-turn!
 - **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, just adjust context, instructions and resend without distracting it with previous attempts.
 
+|                       |                Non-agentic                | Coding agents |
+| :-------------------- | :---------------------------------------: | :-----------: |
+| **Messages per task** |    <span style="color: green">1</span>    |     1-30      |
+| **Task completes in** | <span style="color: green">seconds</span> |    minutes    |
+| **Token usage**       | <span style="color: green">Minimal</span> |     High      |
+
 ### Guiding principles
 
 - Initialize chatbots—don't scrape responses
