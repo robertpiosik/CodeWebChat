@@ -19,8 +19,8 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 
 - **Non-agentic is predictable.** Granular control over context let you scope the model precisely to the task and develop intuition for its outputs.
 - **Non-agentic is cost-efficient.** With the understanding for model capabilities, you can choose the right one for the complexity of the task, not the overall codebase.
-- **Non-agentic is blazing fast.** Eliminate the need for long-running planning and file lookups—a single prompt generates a complete set of changes across all necessary files.
-- **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, just adjust the prompt and resend without distracting it with previous attempts.
+- **Non-agentic is blazing fast.** A single prompt yields a complete set of changes across all necessary files. Make anyting in a single-turn!
+- **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, just adjust context, instructions and resend without distracting it with previous attempts.
 
 ### Guiding principles
 

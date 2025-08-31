@@ -34,7 +34,7 @@ export const BuyMeACoffee: React.FC<BuyMeACoffeeProps> = (props) => {
           </div>
           {props.support_note && (
             <div className={styles.donations__donation__note}>
-              "{props.support_note}"
+              {props.support_note}
             </div>
           )}
         </div>
