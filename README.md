@@ -25,7 +25,7 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 |                       | Non-agentic | Coding agents |
 | :-------------------- | :---------: | :-----------: |
 | **Messages per task** |      1      |     1-30      |
-| **Task completes in** |   seconds   |    minutes    |
+| **Completes in**      |   seconds   |    minutes    |
 | **Token usage**       |   Minimal   |     High      |
 
 ### Guiding principles
