@@ -5,10 +5,17 @@ import { BuyMeACoffee } from '@ui/components/editor/BuyMeACoffee'
 import { Icon } from '@ui/components/editor/Icon'
 import cn from 'classnames'
 
+type Donation = {
+  supporter_name: string
+  support_coffees: number
+  support_note: string
+}
+
 type Props = {
   on_new_chat: () => void
   on_api_call: () => void
   version: string
+  latest_donation: Donation | null
 }
 
 export const Intro: React.FC<Props> = (props) => {
@@ -28,7 +35,12 @@ export const Intro: React.FC<Props> = (props) => {
                 description="Send prompt with an API provider"
                 on_click={props.on_api_call}
               />
-              <BuyMeACoffee username="robertpiosik" />
+              <BuyMeACoffee
+                username="robertpiosik"
+                supporter_name={props.latest_donation?.supporter_name}
+                support_coffees={props.latest_donation?.support_coffees}
+                support_note={props.latest_donation?.support_note}
+              />
             </div>
           </div>
           <div className={styles.bottom}>

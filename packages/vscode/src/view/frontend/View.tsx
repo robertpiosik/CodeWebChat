@@ -13,6 +13,7 @@ import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
 import { CodeReview as UiCodeReview } from '@ui/components/editor/CodeReview'
+import { use_latest_donation } from './hooks/lastest-donation-hook'
 
 const vscode = acquireVsCodeApi()
 
@@ -47,6 +48,8 @@ export const View = () => {
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
   const [chat_input_focus_and_select_key, set_chat_input_focus_and_select_key] =
     useState(0)
+
+  const latest_donation = use_latest_donation(active_view == 'intro')
 
   const handle_mouse_enter = () => {
     post_message(vscode, {
@@ -368,6 +371,7 @@ export const View = () => {
             set_chat_input_focus_and_select_key((k) => k + 1)
           }}
           version={version}
+          latest_donation={latest_donation}
         />
       </div>
     </div>
