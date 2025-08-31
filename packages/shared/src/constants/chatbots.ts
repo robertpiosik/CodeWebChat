@@ -260,11 +260,11 @@ export const CHATBOTS = {
     supported_options: {},
     default_top_p: 0,
     models: {
-      'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
-      'deepseek-v3-0324': { label: 'DeepSeek V3 (0324)' },
+      'deepseek-v3-1': { label: 'DeepSeek V3.1' },
       'gpt-oss-120b': { label: 'GPT OSS 120B' },
-      'kimi-k2': { label: 'Kimi K2' },
       'qwen3-235b-a22b-2507': { label: 'Qwen3 235B (2507)' },
+      'qwen3-coder-480b': { label: 'Qwen3 Coder 480B' },
+      'glm-4.5-air': { label: 'GLM-4.5 Air' },
       'llama-4-maverick': { label: 'Llama 4 Maverick' }
     }
   },
