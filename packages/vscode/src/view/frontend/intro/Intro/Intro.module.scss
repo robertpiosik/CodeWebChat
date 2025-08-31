@@ -134,5 +134,6 @@
   &__right {
     text-align: right;
     color: var(--vscode-descriptionForeground);
+    user-select: text;
   }
 }
