@@ -75,7 +75,7 @@ export const ChatInput: React.FC<Props> = (props) => {
     }
   }, [props.caret_position_to_set])
 
- useEffect(() => {
+  useEffect(() => {
     if (textarea_ref.current) {
       textarea_ref.current.focus()
     }
@@ -168,7 +168,6 @@ export const ChatInput: React.FC<Props> = (props) => {
     with_control?: boolean
   ) => {
     e.stopPropagation()
-    if (is_submit_disabled) return
     if (with_control || e.ctrlKey || e.metaKey) {
       props.on_submit_with_control()
     } else {
@@ -176,12 +175,6 @@ export const ChatInput: React.FC<Props> = (props) => {
     }
     set_history_index(-1)
   }
-
-  const is_submit_disabled =
-    (!props.is_connected && props.is_web_mode) ||
-    (!props.is_in_code_completions_mode && !props.value.trim()) ||
-    (props.is_in_code_completions_mode &&
-      (props.has_active_selection || !props.has_active_editor))
 
   const get_disabled_title = () => {
     if (props.is_in_code_completions_mode) {
@@ -436,7 +429,6 @@ export const ChatInput: React.FC<Props> = (props) => {
                 styles['footer__right__button--secondary']
               ])}
               onClick={(e) => handle_submit(e, true)}
-              disabled={is_submit_disabled}
             >
               {navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? (
                 <Icon variant="COMMAND" />
@@ -450,7 +442,6 @@ export const ChatInput: React.FC<Props> = (props) => {
             <button
               className={styles.footer__right__button}
               onClick={handle_submit}
-              disabled={is_submit_disabled}
             >
               <Icon variant="ENTER" />
               <span>{props.translations.use_last_choice}</span>

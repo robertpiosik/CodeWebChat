@@ -64,9 +64,6 @@ export const handle_send_prompt = async (params: {
   })
 
   if (resolved_preset_names.length == 0) {
-    params.provider.send_message({
-      command: 'FOCUS_CHAT_INPUT'
-    })
     return
   }
 
@@ -360,41 +357,96 @@ async function resolve_presets(params: {
           params.provider.has_active_selection)) ||
       (!is_in_code_completions_mode &&
         !(current_instructions || preset.promptPrefix || preset.promptSuffix)))
-  const available_preset_names = all_presets.map((preset) => preset.name)
 
   if (params.preset_name !== undefined) {
-    if (available_preset_names.includes(params.preset_name)) {
+    const preset = all_presets.find((p) => p.name == params.preset_name)
+    if (preset) {
+      if (get_is_preset_disabled(preset)) {
+        if (
+          !is_in_code_completions_mode &&
+          !current_instructions &&
+          !preset.promptPrefix &&
+          !preset.promptSuffix
+        ) {
+          vscode.window.showWarningMessage(
+            'Enter instructions to use this preset.'
+          )
+        }
+        return []
+      }
       return [params.preset_name]
     }
   } else if (params.group_name) {
-    const preset_names: string[] = []
+    const default_presets_in_group: ConfigPresetFormat[] = []
 
     if (params.group_name == 'Ungrouped') {
       for (const preset of all_presets) {
         if (!preset.chatbot) break
-        if (preset.isDefault && !get_is_preset_disabled(preset)) {
-          preset_names.push(preset.name)
+        if (preset.isDefault) {
+          default_presets_in_group.push(preset)
         }
       }
     } else {
       const group_index = all_presets.findIndex(
         (p) => p.name == params.group_name
       )
-
       if (group_index != -1) {
         for (let i = group_index + 1; i < all_presets.length; i++) {
           const preset = all_presets[i]
           if (!preset.chatbot) {
             break
-          } else if (preset.isDefault && !get_is_preset_disabled(preset)) {
-            preset_names.push(preset.name)
+          } else if (preset.isDefault) {
+            default_presets_in_group.push(preset)
           }
         }
       }
     }
+
+    const runnable_presets = default_presets_in_group.filter(
+      (preset) => !get_is_preset_disabled(preset)
+    )
+    const preset_names = runnable_presets.map((preset) => preset.name)
+
     if (preset_names.length > 0) {
+      if (preset_names.length < default_presets_in_group.length) {
+        const disabled_presets = default_presets_in_group.filter(
+          (p) => !preset_names.includes(p.name)
+        )
+        const any_disabled_due_to_instructions = disabled_presets.some(
+          (p) =>
+            !is_in_code_completions_mode &&
+            !current_instructions &&
+            !p.promptPrefix &&
+            !p.promptSuffix
+        )
+        if (any_disabled_due_to_instructions) {
+          vscode.window.showWarningMessage(
+            'Some presets were not run due to missing instructions.'
+          )
+        }
+      }
       return preset_names
     }
+
+    if (default_presets_in_group.length > 0) {
+      const any_disabled_due_to_instructions = default_presets_in_group.some(
+        (p) =>
+          !is_in_code_completions_mode &&
+          !current_instructions &&
+          !p.promptPrefix &&
+          !p.promptSuffix
+      )
+      if (any_disabled_due_to_instructions) {
+        vscode.window.showWarningMessage(
+          'Enter instructions to use this group.'
+        )
+        return []
+      }
+    }
+    vscode.window.showWarningMessage(
+      'The chosen group has no selected presets to run.'
+    )
+    return []
   } else {
     // Both preset_name and group_name are undefined.
     // This indicates a generic "send" action, where we should
@@ -410,14 +462,27 @@ async function resolve_presets(params: {
       )
 
       if (last_choice == PRESET) {
-        const last_preset = params.context.workspaceState.get<string>(
+        const last_preset_name = params.context.workspaceState.get<string>(
           last_selected_preset_key
         )
-        if (
-          last_preset !== undefined &&
-          available_preset_names.includes(last_preset)
-        ) {
-          return [last_preset]
+        if (last_preset_name !== undefined) {
+          const preset = all_presets.find((p) => p.name === last_preset_name)
+          if (preset) {
+            if (get_is_preset_disabled(preset)) {
+              if (
+                !is_in_code_completions_mode &&
+                !current_instructions &&
+                !preset.promptPrefix &&
+                !preset.promptSuffix
+              ) {
+                vscode.window.showWarningMessage(
+                  'Enter instructions to use this preset.'
+                )
+              }
+            } else {
+              return [last_preset_name]
+            }
+          }
         }
       } else if (last_choice == GROUP) {
         const last_group = params.context.workspaceState.get<string>(
@@ -460,14 +525,27 @@ async function resolve_presets(params: {
       )
 
       if (last_choice == PRESET) {
-        const last_preset = params.context.workspaceState.get<string>(
+        const last_preset_name = params.context.workspaceState.get<string>(
           last_selected_preset_key
         )
-        if (
-          last_preset !== undefined &&
-          available_preset_names.includes(last_preset)
-        ) {
-          return [last_preset]
+        if (last_preset_name !== undefined) {
+          const preset = all_presets.find((p) => p.name == last_preset_name)
+          if (preset) {
+            if (get_is_preset_disabled(preset)) {
+              if (
+                !is_in_code_completions_mode &&
+                !current_instructions &&
+                !preset.promptPrefix &&
+                !preset.promptSuffix
+              ) {
+                vscode.window.showWarningMessage(
+                  'Enter instructions to use this preset.'
+                )
+              }
+            } else {
+              return [last_preset_name]
+            }
+          }
         }
       } else if (last_choice == GROUP) {
         const last_group = params.context.workspaceState.get<string>(
@@ -665,16 +743,16 @@ async function resolve_presets(params: {
             name: group_name
           })
 
-          let preset_names: string[] = []
+          const default_presets_in_group: ConfigPresetFormat[] = []
           if (group_name == 'Ungrouped') {
             const first_group_index = all_presets.findIndex((p) => !p.chatbot)
             const relevant_presets =
               first_group_index == -1
                 ? all_presets
                 : all_presets.slice(0, first_group_index)
-            preset_names = relevant_presets
-              .filter((p) => p.isDefault && !get_is_preset_disabled(p))
-              .map((p) => p.name)
+            default_presets_in_group.push(
+              ...relevant_presets.filter((p) => p.isDefault)
+            )
           } else {
             const group_index = all_presets.findIndex(
               (p) => p.name == group_name
@@ -685,17 +763,60 @@ async function resolve_presets(params: {
                 if (!preset.chatbot) {
                   break // next group
                 }
-                if (preset.isDefault && !get_is_preset_disabled(preset)) {
-                  preset_names.push(preset.name)
+                if (preset.isDefault) {
+                  default_presets_in_group.push(preset)
                 }
               }
             }
           }
 
-          if (preset_names.length == 0) {
-            vscode.window.showWarningMessage(
-              'The chosen group has no selected presets to run.'
-            )
+          const runnable_presets = default_presets_in_group.filter(
+            (p) => !get_is_preset_disabled(p)
+          )
+          const preset_names = runnable_presets.map((p) => p.name)
+
+          if (preset_names.length > 0) {
+            if (runnable_presets.length < default_presets_in_group.length) {
+              const disabled_presets = default_presets_in_group.filter(
+                (p) => !preset_names.includes(p.name)
+              )
+              const any_disabled_due_to_instructions = disabled_presets.some(
+                (p) =>
+                  !is_in_code_completions_mode &&
+                  !current_instructions &&
+                  !p.promptPrefix &&
+                  !p.promptSuffix
+              )
+              if (any_disabled_due_to_instructions) {
+                vscode.window.showWarningMessage(
+                  'Some presets were not run due to missing instructions.'
+                )
+              }
+            }
+          } else {
+            if (default_presets_in_group.length > 0) {
+              const any_disabled_due_to_instructions =
+                default_presets_in_group.some(
+                  (p) =>
+                    !is_in_code_completions_mode &&
+                    !current_instructions &&
+                    !p.promptPrefix &&
+                    !p.promptSuffix
+                )
+              if (any_disabled_due_to_instructions) {
+                vscode.window.showWarningMessage(
+                  'Enter instructions to use this group.'
+                )
+              } else {
+                vscode.window.showWarningMessage(
+                  'The chosen group has no selected presets to run.'
+                )
+              }
+            } else {
+              vscode.window.showWarningMessage(
+                'The chosen group has no selected presets to run.'
+              )
+            }
           }
           resolve(preset_names)
         })
@@ -724,6 +845,23 @@ async function resolve_presets(params: {
     )
     if (preset_result === null) {
       continue
+    }
+    if (preset_result.length == 1) {
+      const preset_name = preset_result[0]
+      const preset = all_presets.find((p) => p.name == preset_name)
+      if (preset && get_is_preset_disabled(preset)) {
+        if (
+          !is_in_code_completions_mode &&
+          !current_instructions &&
+          !preset.promptPrefix &&
+          !preset.promptSuffix
+        ) {
+          vscode.window.showWarningMessage(
+            'Enter instructions to use this preset.'
+          )
+        }
+        return []
+      }
     }
     return preset_result
   }

@@ -161,13 +161,10 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           <div
             className={cn(styles.presets__item, {
               [styles['presets__item--ungrouped']]: true,
-              [styles['presets__item--highlighted']]:
-                props.selected_preset_name == 'Ungrouped',
-              [styles['presets__item--disabled']]: get_is_ungrouped_disabled()
+              [styles['presets__item--highlighted']]: props.selected_preset_name == 'Ungrouped'
             })}
             onClick={() => {
-              if (get_is_ungrouped_disabled()) return
-              props.on_group_click('Ungrouped')
+              props.on_group_click('Ungrouped') // disabled check will be handled by the consumer
             }}
             role="button"
             title={get_ungrouped_title()}
@@ -180,6 +177,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 )}
               >
                 <span className="codicon codicon-gripper" />
+              </div>
+              <div className={styles['presets__item__left__collapse-icon']}>
+                <span className={'codicon codicon-dash'} />
               </div>
               <div className={styles.presets__item__left__text}>Ungrouped</div>
             </div>
@@ -307,17 +307,12 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 key={preset.name}
                 className={cn(styles.presets__item, {
                   [styles['presets__item--highlighted']]:
-                    props.selected_preset_name == preset.name,
-                  [styles['presets__item--disabled']]: preset.chatbot
-                    ? get_is_preset_disabled(preset)
-                    : get_is_group_disabled()
+                    props.selected_preset_name == preset.name
                 })}
                 onClick={() => {
                   if (preset.chatbot) {
-                    if (get_is_preset_disabled(preset)) return
                     props.on_preset_click(preset.name)
                   } else {
-                    if (get_is_group_disabled()) return
                     props.on_group_click(preset.name)
                   }
                 }}
@@ -347,6 +342,28 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       <Icon variant={chatbot_to_icon[preset.chatbot]} />
                     </div>
                   )}
+                  {!preset.chatbot && (
+                    <div
+                      className={styles['presets__item__left__collapse-icon']}
+                      style={{ cursor: 'pointer' }}
+                      title={
+                        preset.is_collapsed
+                          ? props.translations.expand_group
+                          : props.translations.collapse_group
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        props.on_toggle_group_collapsed(preset.name)
+                      }}
+                    >
+                      <span
+                        className={cn('codicon', {
+                          'codicon-chevron-down': preset.is_collapsed,
+                          'codicon-chevron-up': !preset.is_collapsed
+                        })}
+                      />
+                    </div>
+                  )}
                   <div className={styles.presets__item__left__text}>
                     <span>{display_name}</span>
                     <span>{get_subtitle()}</span>
@@ -359,22 +376,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     e.stopPropagation()
                   }}
                 >
-                  {!preset.chatbot && (
-                    <IconButton
-                      codicon_icon={
-                        preset.is_collapsed ? 'chevron-down' : 'chevron-up'
-                      }
-                      title={
-                        preset.is_collapsed
-                          ? props.translations.expand_group
-                          : props.translations.collapse_group
-                      }
-                      on_click={(e) => {
-                        e.stopPropagation()
-                        props.on_toggle_group_collapsed(preset.name)
-                      }}
-                    />
-                  )}
                   {preset.chatbot &&
                     (preset.prompt_prefix || preset.prompt_suffix) && (
                       <IconButton
