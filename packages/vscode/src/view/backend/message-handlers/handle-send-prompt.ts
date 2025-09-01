@@ -651,9 +651,7 @@ async function resolve_presets(params: {
           return {
             label: is_unnamed_group ? 'Unnamed group' : group.name,
             name: group.name,
-            description: `${
-              default_presets_count == 0 ? '⚠ ' : ''
-            }${default_presets_count} selected preset${
+            description: `${default_presets_count} selected preset${
               default_presets_count != 1 ? 's' : ''
             }`
           }
@@ -668,9 +666,7 @@ async function resolve_presets(params: {
         group_items_from_config.unshift({
           label: 'Ungrouped',
           name: 'Ungrouped',
-          description: `${
-            default_presets_count == 0 ? '⚠ ' : ''
-          }${default_presets_count} selected preset${
+          description: `${default_presets_count} selected preset${
             default_presets_count != 1 ? 's' : ''
           }`
         })
@@ -681,9 +677,7 @@ async function resolve_presets(params: {
         group_items_from_config.unshift({
           label: 'Ungrouped',
           name: 'Ungrouped',
-          description: `${
-            default_presets_count == 0 ? '⚠ ' : ''
-          }${default_presets_count} selected preset${
+          description: `${default_presets_count} selected preset${
             default_presets_count != 1 ? 's' : ''
           }`
         })
