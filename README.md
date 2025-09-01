@@ -33,7 +33,7 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 - Initialize chatbots—don't scrape responses
 - Free forever—community effort
 - Privacy first—operates locally
-- Lightweight—1MB of code
+- Lightweight—2MB of code
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
