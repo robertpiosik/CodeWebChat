@@ -17,16 +17,16 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 
 ### Why non-agentic?
 
-**Non-agentic is predictable.** \
+**Non-agentic is predictable** \
 Granular control over context let you scope the model precisely to the task and develop intuition for its outputs.
 
-**Non-agentic is cost-efficient.** \
+**Non-agentic is cost-efficient** \
 Match the model to the task's complexity, not the entire codebase's. This lets you use lighter, faster, and cheaper models, saving time and money.
 
-**Non-agentic is blazing fast.** \
+**Non-agentic is blazing fast** \
 A single prompt yields a complete set of changes across all necessary files—no need to wait for a multi-step agent to finish.
 
-**Non-agentic avoids context pollution.** \
+**Non-agentic avoids context pollution** \
 When the model isn't getting your intent on the first try, just adjust context, instructions and resend without distracting it with previous attempts.
 
 |                       | Non-agentic |  Coding agents   |
