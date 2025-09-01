@@ -22,11 +22,11 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 - **Non-agentic is blazing fast.** A single prompt yields a complete set of changes across all necessary files—no need to wait for a multi-step agent to finish.
 - **Non-agentic avoids context pollution.** When the model isn't getting your intent on the first try, just adjust context, instructions and resend without distracting it with previous attempts.
 
-|                       | Non-agentic | Coding agents |
-| :-------------------- | :---------: | :-----------: |
-| **Messages per task** |      1      |     1-30      |
-| **Completes in**      |   seconds   |    minutes    |
-| **Token usage**       |   Minimal   |     High      |
+|                       | Non-agentic |  Coding agents   |
+| :-------------------- | :---------: | :--------------: |
+| **Messages per task** |      1      |       1-30       |
+| **Completes in**      |   seconds   |     minutes      |
+| **Token usage**       |   Minimal   | Sky is the limit |
 
 ### Guiding principles
 

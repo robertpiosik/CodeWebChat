@@ -58,81 +58,104 @@ export const refactor_active_editor_command = (
       const original_content = document.getText()
       const file_path = document.uri.fsPath
 
-      await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: `Refactoring ${vscode.workspace.asRelativePath(file_path)}...`,
-          cancellable: true
-        },
-        async (progress, token) => {
-          const cancel_token_source = axios.CancelToken.source()
-          token.onCancellationRequested(() => {
-            cancel_token_source.cancel('Cancelled by user.')
-          })
-
-          let previous_progress = 0
-
-          const updated_content = await process_file({
-            endpoint_url,
-            api_key: provider.api_key,
-            model: intelligent_update_config.model,
-            temperature: intelligent_update_config.temperature,
-            reasoning_effort: intelligent_update_config.reasoning_effort,
-            file_path: file_path,
-            file_content: original_content,
-            instruction: instructions,
-            cancel_token: cancel_token_source.token,
-            on_progress: (receivedLength, totalLength) => {
-              const current_progress = Math.min(
-                Math.round((receivedLength / totalLength) * 100),
-                100
-              )
-              const increment = current_progress - previous_progress
-              if (increment > 0) {
-                progress.report({
-                  increment
-                })
-                previous_progress = current_progress
-              }
-            }
-          })
-
-          if (token.isCancellationRequested) {
-            return
-          }
-
-          if (updated_content) {
-            const original_state: OriginalFileState = {
-              file_path: vscode.workspace.asRelativePath(document.uri),
-              content: original_content,
-              is_new: false,
-              workspace_name: vscode.workspace.getWorkspaceFolder(document.uri)
-                ?.name
-            }
-
-            await editor.edit((editBuilder) => {
-              const fullRange = new vscode.Range(
-                document.positionAt(0),
-                document.positionAt(original_content.length)
-              )
-              editBuilder.replace(fullRange, updated_content)
+      let result: any
+      try {
+        result = await vscode.window.withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: `Called Intelligent Update tool for file refactoring...`,
+            cancellable: true
+          },
+          async (progress, token) => {
+            const cancel_token_source = axios.CancelToken.source()
+            token.onCancellationRequested(() => {
+              cancel_token_source.cancel('Cancelled by user.')
             })
 
-            await vscode.commands.executeCommand('editor.action.formatDocument')
-            await document.save()
+            let previous_progress = 0
 
-            context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, [
-              original_state
-            ])
-            view_provider.set_revert_button_state(true)
-            view_provider.set_apply_button_state(false)
-          } else {
-            vscode.window.showErrorMessage(
-              'Refactoring failed to produce any content.'
-            )
+            const content = await process_file({
+              endpoint_url,
+              api_key: provider.api_key,
+              model: intelligent_update_config.model,
+              temperature: intelligent_update_config.temperature,
+              reasoning_effort: intelligent_update_config.reasoning_effort,
+              file_path: file_path,
+              file_content: original_content,
+              instruction: instructions,
+              cancel_token: cancel_token_source.token,
+              on_progress: (receivedLength, totalLength) => {
+                const current_progress = Math.min(
+                  Math.round((receivedLength / totalLength) * 100),
+                  100
+                )
+                const increment = current_progress - previous_progress
+                if (increment > 0) {
+                  progress.report({
+                    increment
+                  })
+                  previous_progress = current_progress
+                }
+              }
+            })
+
+            return {
+              content,
+              cancelled: token.isCancellationRequested
+            }
           }
+        )
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          return
         }
-      )
+        throw error
+      }
+
+      if (result.cancelled) {
+        return
+      }
+
+      const updated_content = result.content
+
+      if (updated_content) {
+        const original_state: OriginalFileState = {
+          file_path: vscode.workspace.asRelativePath(document.uri),
+          content: original_content,
+          is_new: false,
+          workspace_name: vscode.workspace.getWorkspaceFolder(document.uri)
+            ?.name
+        }
+
+        await editor.edit((editBuilder) => {
+          const fullRange = new vscode.Range(
+            document.positionAt(0),
+            document.positionAt(original_content.length)
+          )
+          editBuilder.replace(fullRange, updated_content)
+        })
+
+        await vscode.commands.executeCommand('editor.action.formatDocument')
+        await document.save()
+
+        context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, [
+          original_state
+        ])
+        view_provider.set_revert_button_state(true)
+        view_provider.set_apply_button_state(false)
+
+        const response = await vscode.window.showInformationMessage(
+          'File refactored successfully.',
+          'Revert'
+        )
+        if (response == 'Revert') {
+          await vscode.commands.executeCommand('codeWebChat.revert')
+        }
+      } else {
+        vscode.window.showErrorMessage(
+          'Refactoring failed to produce any content.'
+        )
+      }
     }
   )
 }
