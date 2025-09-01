@@ -1,134 +1,19 @@
 import * as vscode from 'vscode'
-import axios, { CancelToken } from 'axios'
+import axios from 'axios'
 import * as path from 'path'
 import * as fs from 'fs'
-import { make_api_request } from '../../../utils/make-api-request'
-import { cleanup_api_response } from '../../../utils/cleanup-api-response'
-import { get_refactoring_instruction } from '../../../constants/instructions'
 import { ClipboardFile, parse_multiple_files } from '../utils/clipboard-parser'
 import {
   sanitize_file_name,
   create_safe_path
-} from '../../../utils/path-sanitizer'
+} from '@/utils/path-sanitizer'
 import { Logger } from '../../../utils/logger'
 import { format_document } from '../utils/format-document'
-import { OriginalFileState } from '../../../types/common'
-import { ToolConfig, ReasoningEffort } from '@/services/api-providers-manager'
+import { OriginalFileState } from '@/types/common'
+import { ToolConfig } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
-import { ViewProvider } from '../../../view/backend/view-provider'
-
-const process_file = async (params: {
-  endpoint_url: string
-  api_key: string
-  model: string
-  temperature: number
-  reasoning_effort?: ReasoningEffort
-  file_path: string
-  file_content: string
-  instruction: string
-  cancel_token?: CancelToken
-  on_progress?: (chunk_length: number, total_length: number) => void
-}): Promise<string | null> => {
-  Logger.log({
-    function_name: 'process_file',
-    message: 'start',
-    data: { file_path: params.file_path }
-  })
-  const apply_changes_prompt = `${get_refactoring_instruction()} ${
-    params.instruction
-  }`
-  const file_content_block = `<file path="${params.file_path}">\n<![CDATA[\n${params.file_content}\n]]>\n</file>\n`
-  const content = `${file_content_block}\n${apply_changes_prompt}`
-
-  const messages = [
-    {
-      role: 'user',
-      content
-    }
-  ]
-
-  const body = {
-    messages,
-    model: params.model,
-    temperature: params.temperature,
-    reasoning_effort: params.reasoning_effort
-  }
-
-  try {
-    const total_length = params.file_content.length
-    let received_length = 0
-
-    const refactored_content = await make_api_request({
-      endpoint_url: params.endpoint_url,
-      api_key: params.api_key,
-      body,
-      cancellation_token: params.cancel_token,
-      on_chunk: (chunk: string) => {
-        received_length += chunk.length
-        if (params.on_progress) {
-          params.on_progress(
-            Math.min(received_length, total_length),
-            total_length
-          )
-        }
-      }
-    })
-
-    if (axios.isCancel(params.cancel_token?.reason)) {
-      Logger.log({
-        function_name: 'process_file',
-        message: 'Request cancelled during API call',
-        data: params.file_path
-      })
-      return null
-    }
-
-    if (!refactored_content) {
-      vscode.window.showErrorMessage(
-        `Applying changes to ${params.file_path} failed. Empty response from API.`
-      )
-      Logger.error({
-        function_name: 'process_file',
-        message: 'API request returned empty response',
-        data: params.file_path
-      })
-      return null
-    }
-
-    const cleaned_content = cleanup_api_response({
-      content: refactored_content
-    })
-    Logger.log({
-      function_name: 'process_file',
-      message: 'API response received and cleaned',
-      data: {
-        file_path: params.file_path,
-        response_length: cleaned_content?.length
-      }
-    })
-    return cleaned_content
-  } catch (error: any) {
-    if (axios.isCancel(error)) {
-      Logger.log({
-        function_name: 'process_file',
-        message: 'Request cancelled',
-        data: params.file_path
-      })
-      return null
-    }
-
-    Logger.error({
-      function_name: 'process_file',
-      message: 'Refactoring error',
-      data: { error, file_path: params.file_path }
-    })
-    console.error(`Refactoring error for ${params.file_path}:`, error)
-    vscode.window.showErrorMessage(
-      `An error occurred during refactoring ${params.file_path}. See console for details.`
-    )
-    return null
-  }
-}
+import { ViewProvider } from '@/view/backend/view-provider'
+import { process_file } from '@/utils/intelligent-update-utils'
 
 export const handle_intelligent_update = async (params: {
   endpoint_url: string
@@ -255,9 +140,11 @@ export const handle_intelligent_update = async (params: {
     if (existing_files.length > 0 && new_files.length > 0) {
       progress_title = `Called Intelligent Update tool for ${
         existing_files.length
-      } file${existing_files.length > 1 ? 's' : ''} as a fallback method and creating ${
-        new_files.length
-      } new file${new_files.length > 1 ? 's' : ''}...`
+      } file${
+        existing_files.length > 1 ? 's' : ''
+      } as a fallback method and creating ${new_files.length} new file${
+        new_files.length > 1 ? 's' : ''
+      }...`
     } else if (existing_files.length > 0) {
       progress_title = `Called Intelligent Update tool for ${
         existing_files.length

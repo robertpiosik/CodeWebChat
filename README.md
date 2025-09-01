@@ -92,6 +92,10 @@ Generate meaningful summaries of changes adhering to your preferred style.
 - `Code Web Chat: Code Completion using...` - ...with configuration selection.
 - `Code Web Chat: Code Completion with Instructions` - Get code at cursor with instructions.
 
+### Refactoring
+
+- `Code Web Chat: Refactor Active Editor` - Refactor currently active editor based on natural language instructions.
+
 ### Version Control
 
 - `Code Web Chat: Commit Changes` - Generate a commit message for staged changes and commit.

@@ -205,6 +205,11 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.refactorActiveEditor",
+        "title": "Refactor Active Editor",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.newFolder",
         "title": "New Folder...",
         "icon": "$(new-folder)"

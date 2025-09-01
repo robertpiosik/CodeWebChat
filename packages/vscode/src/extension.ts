@@ -29,6 +29,7 @@ import {
   generate_commit_message_command,
   commit_changes_command,
   reference_in_chat_command,
+  refactor_active_editor_command,
   open_settings_command,
   open_url_command,
   feedback_command,
@@ -93,6 +94,7 @@ export async function activate(context: vscode.ExtensionContext) {
       ),
       reference_in_chat_command(view_provider, workspace_provider),
       apply_chat_response_command(context, view_provider),
+      refactor_active_editor_command(context, view_provider),
       revert_command(
         context,
         view_provider.set_revert_button_state,
