@@ -94,7 +94,7 @@ Generate meaningful summaries of changes adhering to your preferred style.
 
 ### Refactoring
 
-- `Code Web Chat: Refactor Active Editor` - Refactor currently active editor based on natural language instructions.
+- `Code Web Chat: Refactor Active Editor` - Refactor currently active editor without attaching context.
 
 ### Version Control
 

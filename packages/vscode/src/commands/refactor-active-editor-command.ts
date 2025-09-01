@@ -103,7 +103,7 @@ export const refactor_active_editor_command = (
 
           if (updated_content) {
             const original_state: OriginalFileState = {
-              file_path,
+              file_path: vscode.workspace.asRelativePath(document.uri),
               content: original_content,
               is_new: false,
               workspace_name: vscode.workspace.getWorkspaceFolder(document.uri)
