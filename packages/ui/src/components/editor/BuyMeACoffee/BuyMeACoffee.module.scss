@@ -7,7 +7,7 @@
 .donations {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-10px);
+  gap: var(--padding-8px);
 
   &__heading {
     color: var(--vscode-descriptionForeground);
