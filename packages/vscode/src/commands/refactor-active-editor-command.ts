@@ -1,6 +1,9 @@
 import * as vscode from 'vscode'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
-import { LAST_APPLIED_CHANGES_STATE_KEY } from '../constants/state-keys'
+import {
+  LAST_APPLIED_CHANGES_STATE_KEY,
+  LAST_REFACTOR_INSTRUCTIONS_STATE_KEY
+} from '../constants/state-keys'
 import { PROVIDERS } from '@shared/constants/providers'
 import axios from 'axios'
 import { OriginalFileState } from '@/types/common'
@@ -23,15 +26,24 @@ export const refactor_active_editor_command = (
         return
       }
 
+      const last_instructions = context.workspaceState.get<string>(
+        LAST_REFACTOR_INSTRUCTIONS_STATE_KEY
+      )
+
       const instructions = await vscode.window.showInputBox({
         prompt: 'Enter refactoring instructions',
-        placeHolder:
-          'e.g., "rename variable x to y", "extract this logic into a function"'
+        placeHolder: 'e.g., Refactor this code to use async/await',
+        value: last_instructions
       })
 
       if (!instructions) {
         return
       }
+
+      await context.workspaceState.update(
+        LAST_REFACTOR_INSTRUCTIONS_STATE_KEY,
+        instructions
+      )
 
       const api_providers_manager = new ApiProvidersManager(context)
       const config_result = await get_intelligent_update_config(
@@ -63,7 +75,7 @@ export const refactor_active_editor_command = (
         result = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: `Called Intelligent Update tool for file refactoring...`,
+            title: `Called Intelligent Update API tool for refactoring`,
             cancellable: true
           },
           async (progress, token) => {
@@ -73,6 +85,9 @@ export const refactor_active_editor_command = (
             })
 
             let previous_progress = 0
+            const estimated_total_tokens = Math.ceil(
+              original_content.length / 4
+            )
 
             const content = await process_file({
               endpoint_url,
@@ -84,17 +99,20 @@ export const refactor_active_editor_command = (
               file_content: original_content,
               instruction: instructions,
               cancel_token: cancel_token_source.token,
-              on_progress: (receivedLength, totalLength) => {
-                const current_progress = Math.min(
-                  Math.round((receivedLength / totalLength) * 100),
-                  100
-                )
-                const increment = current_progress - previous_progress
-                if (increment > 0) {
-                  progress.report({
-                    increment
-                  })
-                  previous_progress = current_progress
+              on_chunk: (formatted_tokens, tokens_per_second, total_tokens) => {
+                if (estimated_total_tokens > 0) {
+                  const current_progress = Math.min(
+                    Math.round((total_tokens / estimated_total_tokens) * 100),
+                    100
+                  )
+                  const increment = current_progress - previous_progress
+                  if (increment > 0) {
+                    progress.report({
+                      increment,
+                      message: `~${tokens_per_second} tokens/s`
+                    })
+                    previous_progress = current_progress
+                  }
                 }
               }
             })

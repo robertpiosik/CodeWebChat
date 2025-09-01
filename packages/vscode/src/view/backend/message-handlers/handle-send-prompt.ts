@@ -369,7 +369,7 @@ async function resolve_presets(params: {
           !preset.promptSuffix
         ) {
           vscode.window.showWarningMessage(
-            'Enter instructions to use this preset.'
+            'Type something to use this preset.'
           )
         }
         return []
@@ -438,7 +438,7 @@ async function resolve_presets(params: {
       )
       if (any_disabled_due_to_instructions) {
         vscode.window.showWarningMessage(
-          'Enter instructions to use this group.'
+          'Type something to use this group.'
         )
         return []
       }
@@ -476,7 +476,7 @@ async function resolve_presets(params: {
                 !preset.promptSuffix
               ) {
                 vscode.window.showWarningMessage(
-                  'Enter instructions to use this preset.'
+                  'Type something to use this preset.'
                 )
               }
             } else {
@@ -539,7 +539,7 @@ async function resolve_presets(params: {
                 !preset.promptSuffix
               ) {
                 vscode.window.showWarningMessage(
-                  'Enter instructions to use this preset.'
+                  'Type something to use this preset.'
                 )
               }
             } else {
@@ -799,7 +799,7 @@ async function resolve_presets(params: {
                 )
               if (any_disabled_due_to_instructions) {
                 vscode.window.showWarningMessage(
-                  'Enter instructions to use this group.'
+                  'Type something to use this group.'
                 )
               } else {
                 vscode.window.showWarningMessage(
@@ -851,7 +851,7 @@ async function resolve_presets(params: {
           !preset.promptSuffix
         ) {
           vscode.window.showWarningMessage(
-            'Enter instructions to use this preset.'
+            'Type something to use this preset.'
           )
         }
         return []

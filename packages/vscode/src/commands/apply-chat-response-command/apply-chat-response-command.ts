@@ -256,7 +256,7 @@ const get_intelligent_update_config = async (
     )
     Logger.warn({
       function_name: 'get_intelligent_update_config',
-      message: 'API provider not found for Intelligent Update tool.'
+      message: 'API provider not found for Intelligent Update API tool.'
     })
     return
   }
@@ -391,8 +391,8 @@ const handle_code_review_and_cleanup = async (params: {
     )
     const response = await vscode.window.showInformationMessage(
       accepted_states.length > 1
-        ? `Changes applied to ${accepted_states.length} files.`
-        : 'Changes applied to 1 file.',
+        ? `Changes have been applied to ${accepted_states.length} files.`
+        : 'Changes have been applied.',
       'Revert'
     )
     if (response == 'Revert') {
@@ -411,6 +411,9 @@ export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
   view_provider: ViewProvider
 ) => {
+  const intelligent_update_button_label =
+    'Looks off? Call Intelligent Update API tool'
+
   const update_revert_and_apply_button_state = (
     states: OriginalFileState[] | null,
     applied_content?: string | null
@@ -655,10 +658,10 @@ export const apply_chat_response_command = (
                 const response = await vscode.window.showInformationMessage(
                   message,
                   'Hide',
-                  'Looks off? Use intelligent update'
+                  intelligent_update_button_label
                 )
 
-                if (response == 'Looks off? Use intelligent update') {
+                if (response == intelligent_update_button_label) {
                   const fallback_applied_patches = applied_patches.filter(
                     (p) => p.used_fallback
                   )
@@ -690,9 +693,9 @@ export const apply_chat_response_command = (
                     (p) => p.patch
                   )
                   const num_files = fallback_patches.length
-                  const progress_title_override = `Called Intelligent Update tool for ${num_files} file${
+                  const progress_title_override = `Called Intelligent Update API tool for ${num_files} file${
                     num_files > 1 ? 's' : ''
-                  } as a fallback method...`
+                  }`
 
                   const fallback_patches_as_code_blocks = fallback_patches
                     .map(
@@ -868,16 +871,16 @@ export const apply_chat_response_command = (
                     file_count > 1 ? 's have' : ' has'
                   } been replaced. This may cause inaccuracies if the response had unmarked truncations.`,
                   'Hide',
-                  'Looks off? Use intelligent update'
+                  intelligent_update_button_label
                 )
 
-                if (response == 'Looks off? Use intelligent update') {
+                if (response == intelligent_update_button_label) {
                   const original_states_for_revert = final_original_states!
                   await revert_files(original_states_for_revert, false)
                   const num_files = original_states_for_revert.length
-                  const progress_title_override = `Called Intelligent Update tool for ${num_files} file${
+                  const progress_title_override = `Called Intelligent Update API tool for ${num_files} file${
                     num_files > 1 ? 's' : ''
-                  } as a fallback method...`
+                  }`
 
                   // Clear state while intelligent update runs
                   update_revert_and_apply_button_state(null)

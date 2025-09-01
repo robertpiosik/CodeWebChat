@@ -213,7 +213,7 @@ export const get_intelligent_update_config = async (
     )
     Logger.warn({
       function_name: 'get_intelligent_update_config',
-      message: 'API provider not found for Intelligent Update tool.'
+      message: 'API provider not found for Intelligent Update API tool.'
     })
     return
   }
@@ -234,7 +234,11 @@ export const process_file = async (params: {
   file_content: string
   instruction: string
   cancel_token?: CancelToken
-  on_progress?: (chunk_length: number, total_length: number) => void
+  on_chunk?: (
+    formatted_tokens: string,
+    tokens_per_second: number,
+    total_tokens: number
+  ) => void
 }): Promise<string | null> => {
   Logger.log({
     function_name: 'process_file',
@@ -262,23 +266,12 @@ export const process_file = async (params: {
   }
 
   try {
-    const total_length = params.file_content.length
-    let received_length = 0
-
     const refactored_content = await make_api_request({
       endpoint_url: params.endpoint_url,
       api_key: params.api_key,
       body,
       cancellation_token: params.cancel_token,
-      on_chunk: (chunk: string) => {
-        received_length += chunk.length
-        if (params.on_progress) {
-          params.on_progress(
-            Math.min(received_length, total_length),
-            total_length
-          )
-        }
-      }
+      on_chunk: params.on_chunk
     })
 
     if (axios.isCancel(params.cancel_token?.reason)) {

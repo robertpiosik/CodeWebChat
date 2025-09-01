@@ -415,7 +415,7 @@ export const perform_context_editing = async (params: {
     messages,
     model: edit_context_config.model,
     temperature: edit_context_config.temperature,
-    reasoning_effort: edit_context_config.reasoning_effort
+    reasoning_effort: edit_context_config.reasoning_effort,
   }
 
   const cancel_token_source = axios.CancelToken.source()
@@ -432,17 +432,16 @@ export const perform_context_editing = async (params: {
           cancel_token_source.cancel('Cancelled by user.')
         })
 
-        let total_tokens = 0
-
         return make_api_request({
           endpoint_url,
           api_key: provider.api_key,
           body,
           cancellation_token: cancel_token_source.token,
-          on_chunk: (chunk: string) => {
-            total_tokens += Math.ceil(chunk.length / 4)
+          on_chunk: (formatted_tokens, tokens_per_second) => {
             progress.report({
-              message: `received ${total_tokens} tokens...`
+              message: `received ${formatted_tokens} tokens at ~${tokens_per_second.toFixed(
+                0
+              )} tokens/s`
             })
           }
         })

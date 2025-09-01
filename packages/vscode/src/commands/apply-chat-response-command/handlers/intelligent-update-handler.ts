@@ -3,10 +3,7 @@ import axios from 'axios'
 import * as path from 'path'
 import * as fs from 'fs'
 import { ClipboardFile, parse_multiple_files } from '../utils/clipboard-parser'
-import {
-  sanitize_file_name,
-  create_safe_path
-} from '@/utils/path-sanitizer'
+import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '../../../utils/logger'
 import { format_document } from '../utils/format-document'
 import { OriginalFileState } from '@/types/common'
@@ -138,17 +135,15 @@ export const handle_intelligent_update = async (params: {
     progress_title = params.progress_title_override
   } else {
     if (existing_files.length > 0 && new_files.length > 0) {
-      progress_title = `Called Intelligent Update tool for ${
+      progress_title = `Called Intelligent Update API tool for ${
         existing_files.length
-      } file${
-        existing_files.length > 1 ? 's' : ''
-      } as a fallback method and creating ${new_files.length} new file${
-        new_files.length > 1 ? 's' : ''
-      }...`
+      } file${existing_files.length > 1 ? 's' : ''} and creating ${
+        new_files.length
+      } new file${new_files.length > 1 ? 's' : ''}`
     } else if (existing_files.length > 0) {
-      progress_title = `Called Intelligent Update tool for ${
+      progress_title = `Called Intelligent Update API tool for ${
         existing_files.length
-      } file${existing_files.length > 1 ? 's' : ''} as a fallback method...`
+      } file${existing_files.length > 1 ? 's' : ''}`
     } else {
       progress_title = `Creating ${new_files.length} new file${
         new_files.length > 1 ? 's' : ''
@@ -309,22 +304,34 @@ export const handle_intelligent_update = async (params: {
                 file_content: original_content_for_api,
                 instruction: file.content,
                 cancel_token: cancel_token_source.token,
-                on_progress: (receivedLength, totalLength) => {
+                on_chunk: (
+                  formatted_tokens,
+                  tokens_per_second,
+                  total_tokens
+                ) => {
                   if (
                     largest_file &&
                     file.file_path == largest_file.path &&
                     file.workspace_name == largest_file.workspaceName
                   ) {
-                    previous_largest_file_progress = largest_file_progress
-                    largest_file_progress = Math.min(
-                      Math.round((receivedLength / totalLength) * 100),
-                      100
+                    const estimated_total_tokens = Math.ceil(
+                      largest_file.size / 4
                     )
-                    const increment =
-                      largest_file_progress - previous_largest_file_progress
-                    progress.report({
-                      increment: increment > 0 ? increment : 0
-                    })
+                    if (estimated_total_tokens > 0) {
+                      previous_largest_file_progress = largest_file_progress
+                      largest_file_progress = Math.min(
+                        Math.round(
+                          (total_tokens / estimated_total_tokens) * 100
+                        ),
+                        100
+                      )
+                      const increment =
+                        largest_file_progress - previous_largest_file_progress
+                      progress.report({
+                        increment: increment > 0 ? increment : 0,
+                        message: `~${tokens_per_second} tokens/s`
+                      })
+                    }
                   }
                 }
               })

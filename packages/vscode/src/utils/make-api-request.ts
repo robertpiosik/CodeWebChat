@@ -2,7 +2,13 @@ import * as vscode from 'vscode'
 import axios, { AxiosResponse } from 'axios'
 import { Logger } from './logger'
 
-type StreamCallback = (chunk: string) => void
+type StreamCallback = (
+  formatted_total_tokens: string,
+  tokens_per_second: number,
+  total_tokens: number
+) => void
+
+type InternalStreamCallback = (chunk: string) => void
 
 const DATA_PREFIX = 'data: '
 const DONE_TOKEN = '[DONE]'
@@ -14,14 +20,16 @@ async function process_stream_chunk(
   buffer: string,
   accumulated_content: string,
   last_log_time: number,
+  logged_content_length: number,
   think_buffer: string,
   in_think_block: boolean,
   think_block_ended: boolean,
-  on_chunk?: StreamCallback
+  on_chunk?: InternalStreamCallback
 ): Promise<{
   updated_buffer: string
   updated_accumulated_content: string
   updated_last_log_time: number
+  updated_logged_content_length: number
   updated_think_buffer: string
   updated_in_think_block: boolean
   updated_think_block_ended: boolean
@@ -29,6 +37,7 @@ async function process_stream_chunk(
   let updated_buffer = buffer
   let updated_accumulated_content = accumulated_content
   let updated_last_log_time = last_log_time
+  let updated_logged_content_length = logged_content_length
   let updated_think_buffer = think_buffer
   let updated_in_think_block = in_think_block
   let updated_think_block_ended = think_block_ended
@@ -116,9 +125,12 @@ async function process_stream_chunk(
               Logger.log({
                 function_name: 'process_stream_chunk',
                 message: `Streaming tokens:`,
-                data: updated_accumulated_content
+                data: updated_accumulated_content.substring(
+                  updated_logged_content_length
+                )
               })
               updated_last_log_time = current_time
+              updated_logged_content_length = updated_accumulated_content.length
             }
           }
         } catch (parse_error) {
@@ -142,32 +154,62 @@ async function process_stream_chunk(
     updated_buffer,
     updated_accumulated_content,
     updated_last_log_time,
+    updated_logged_content_length,
     updated_think_buffer,
     updated_in_think_block,
     updated_think_block_ended
   }
 }
 
-export async function make_api_request(
-  params: {
-    endpoint_url: string
-    api_key: string
-    body: any
-    cancellation_token: any
-    on_chunk?: StreamCallback
-  }
-): Promise<string | null> {
+export async function make_api_request(params: {
+  endpoint_url: string
+  api_key: string
+  body: any
+  cancellation_token: any
+  on_chunk?: StreamCallback
+}): Promise<string | null> {
   Logger.log({
     function_name: 'make_api_request',
     message: 'API Request Body',
     data: params.body
   })
 
+  let stream_start_time = 0
+  let last_on_chunk_time = 0
+  let total_tokens = 0
+  let internal_on_chunk: InternalStreamCallback | undefined
+
+  if (params.on_chunk) {
+    internal_on_chunk = (chunk: string) => {
+      if (stream_start_time == 0) {
+        stream_start_time = Date.now()
+        last_on_chunk_time = stream_start_time
+      }
+      total_tokens += Math.ceil(chunk.length / 4)
+
+      const current_time = Date.now()
+      if (current_time - last_on_chunk_time >= 1000) {
+        last_on_chunk_time = current_time
+
+        const elapsed_seconds = (current_time - stream_start_time) / 1000
+        const tokens_per_second =
+          elapsed_seconds > 0 ? Math.round(total_tokens / elapsed_seconds) : 0
+
+        const formatted_tokens =
+          total_tokens >= 1000
+            ? `${(total_tokens / 1000).toFixed(1).replace(/\.0$/, '')}k`
+            : `${total_tokens}`
+        params.on_chunk!(formatted_tokens, tokens_per_second, total_tokens)
+      }
+    }
+  }
+
   try {
     const request_body = { ...params.body, stream: true }
 
     let accumulated_content = ''
     let last_log_time = Date.now()
+    let logged_content_length = 0
     let buffer = ''
     let think_buffer = ''
     let in_think_block = false
@@ -192,7 +234,7 @@ export async function make_api_request(
       }
     )
 
-    response.data.setEncoding('utf8');
+    response.data.setEncoding('utf8')
 
     return new Promise((resolve, reject) => {
       response.data.on('data', async (chunk: string) => {
@@ -201,14 +243,16 @@ export async function make_api_request(
           buffer,
           accumulated_content,
           last_log_time,
+          logged_content_length,
           think_buffer,
           in_think_block,
           think_block_ended,
-          params.on_chunk
+          internal_on_chunk
         )
         buffer = processing_result.updated_buffer
         accumulated_content = processing_result.updated_accumulated_content
         last_log_time = processing_result.updated_last_log_time
+        logged_content_length = processing_result.updated_logged_content_length
         think_buffer = processing_result.updated_think_buffer
         in_think_block = processing_result.updated_in_think_block
         think_block_ended = processing_result.updated_think_block_ended
