@@ -33,7 +33,7 @@ export const BuyMeACoffee: React.FC<BuyMeACoffeeProps> = (props) => {
           <div className={styles.donations__heading}>RECENT DONATIONS</div>
           <IconButton
             codicon_icon={
-              props.are_donations_visible ? 'chevron-down' : 'chevron-up'
+              props.are_donations_visible ? 'eye' : 'eye-closed'
             }
             on_click={props.on_toggle_donations_visibility}
             title={props.are_donations_visible ? 'Hide donations' : 'Show donations'}
