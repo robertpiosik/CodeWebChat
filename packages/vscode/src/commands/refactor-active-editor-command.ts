@@ -45,6 +45,14 @@ export const refactor_active_editor_command = (
         instructions
       )
 
+      let final_instructions = instructions
+      const selection = editor.selection
+      if (selection && !selection.isEmpty) {
+        const selected_text = editor.document.getText(selection)
+        const fragment = `<fragment>\n<![CDATA[\n${selected_text}\n]]>\n</fragment>`
+        final_instructions = `${fragment}\n${instructions}`
+      }
+
       const api_providers_manager = new ApiProvidersManager(context)
       const config_result = await get_intelligent_update_config(
         api_providers_manager,
@@ -97,7 +105,7 @@ export const refactor_active_editor_command = (
               reasoning_effort: intelligent_update_config.reasoning_effort,
               file_path: file_path,
               file_content: original_content,
-              instruction: instructions,
+              instruction: final_instructions,
               cancel_token: cancel_token_source.token,
               on_chunk: (formatted_tokens, tokens_per_second, total_tokens) => {
                 if (estimated_total_tokens > 0) {

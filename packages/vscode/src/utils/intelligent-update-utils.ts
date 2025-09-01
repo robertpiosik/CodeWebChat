@@ -9,7 +9,7 @@ import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../cons
 import { Logger } from './logger'
 import { make_api_request } from './make-api-request'
 import { cleanup_api_response } from './cleanup-api-response'
-import { get_refactoring_instruction } from '../constants/instructions'
+import { refactoring_instruction } from '../constants/instructions'
 
 export const get_intelligent_update_config = async (
   api_providers_manager: ApiProvidersManager,
@@ -245,11 +245,9 @@ export const process_file = async (params: {
     message: 'start',
     data: { file_path: params.file_path }
   })
-  const apply_changes_prompt = `${get_refactoring_instruction()} ${
-    params.instruction
-  }`
+  const apply_changes_prompt = `${refactoring_instruction} ${params.instruction}`
   const file_content_block = `<file path="${params.file_path}">\n<![CDATA[\n${params.file_content}\n]]>\n</file>\n`
-  const content = `${file_content_block}\n${apply_changes_prompt}`
+  const content = `${apply_changes_prompt}\n${file_content_block}\n${apply_changes_prompt}`
 
   const messages = [
     {
