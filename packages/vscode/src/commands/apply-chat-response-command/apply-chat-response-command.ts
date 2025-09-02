@@ -393,9 +393,7 @@ const handle_code_review_and_cleanup = async (params: {
       params.chat_response
     )
     const response = await vscode.window.showInformationMessage(
-      accepted_states.length > 1
-        ? `Changes have been applied to ${accepted_states.length} files.`
-        : 'Changes have been applied.',
+      'Changes have been applied.',
       'Revert'
     )
     if (response == 'Revert') {
@@ -442,7 +440,10 @@ export const apply_chat_response_command = (
 
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
-    async (args?: { response?: string; suppress_fast_replace_notification?: boolean }) => {
+    async (args?: {
+      response?: string
+      suppress_fast_replace_notification?: boolean
+    }) => {
       if (code_review_promise_resolve) {
         vscode.window.showWarningMessage(
           'A code review is already in progress. Please complete it before applying new changes.'
