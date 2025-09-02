@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import { parse_response, ClipboardFile } from './utils/clipboard-parser'
 import {
+  LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
   LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
 } from '../../constants/state-keys'
@@ -361,8 +362,16 @@ const handle_code_review_and_cleanup = async (params: {
   view_provider: ViewProvider
   update_revert_and_apply_button_state: (
     states: OriginalFileState[] | null,
-    content?: string | null
+    content?: string | null,
+    original_editor_state?: {
+      file_path: string
+      position: { line: number; character: number }
+    } | null
   ) => void
+  original_editor_state?: {
+    file_path: string
+    position: { line: number; character: number }
+  }
 }): Promise<boolean> => {
   const review_result = await review_applied_changes(
     params.original_states,
@@ -390,15 +399,15 @@ const handle_code_review_and_cleanup = async (params: {
   if (accepted_states.length > 0) {
     params.update_revert_and_apply_button_state(
       accepted_states,
-      params.chat_response
+      params.chat_response,
+      params.original_editor_state
     )
     const response = await vscode.window.showInformationMessage(
-      'Changes have been applied.',
+      'Code review completed.',
       'Revert'
     )
     if (response == 'Revert') {
-      await revert_files(accepted_states)
-      params.update_revert_and_apply_button_state(null)
+      await vscode.commands.executeCommand('codeWebChat.revert')
       return false
     }
     return true
@@ -417,7 +426,11 @@ export const apply_chat_response_command = (
 
   const update_revert_and_apply_button_state = (
     states: OriginalFileState[] | null,
-    applied_content?: string | null
+    applied_content?: string | null,
+    original_editor_state?: {
+      file_path: string
+      position: { line: number; character: number }
+    } | null
   ) => {
     if (states && states.length > 0) {
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, states)
@@ -425,12 +438,20 @@ export const apply_chat_response_command = (
         LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
         applied_content
       )
+      context.workspaceState.update(
+        LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
+        original_editor_state
+      )
       view_provider.set_revert_button_state(true)
       view_provider.set_apply_button_state(false)
     } else {
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
       context.workspaceState.update(
         LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+        null
+      )
+      context.workspaceState.update(
+        LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
         null
       )
       view_provider.set_revert_button_state(false)
@@ -443,6 +464,10 @@ export const apply_chat_response_command = (
     async (args?: {
       response?: string
       suppress_fast_replace_notification?: boolean
+      original_editor_state?: {
+        file_path: string
+        position: { line: number; character: number }
+      }
     }) => {
       if (code_review_promise_resolve) {
         vscode.window.showWarningMessage(
@@ -554,7 +579,8 @@ export const apply_chat_response_command = (
           if (all_original_states.length > 0) {
             update_revert_and_apply_button_state(
               all_original_states,
-              chat_response
+              chat_response,
+              args?.original_editor_state
             )
           }
 
@@ -613,7 +639,8 @@ export const apply_chat_response_command = (
                 ]
                 update_revert_and_apply_button_state(
                   combined_states,
-                  chat_response
+                  chat_response,
+                  args?.original_editor_state
                 )
                 return {
                   original_states: combined_states,
@@ -686,7 +713,8 @@ export const apply_chat_response_command = (
                     .flatMap((p) => p.original_states)
                   update_revert_and_apply_button_state(
                     non_fallback_states,
-                    chat_response
+                    chat_response,
+                    args?.original_editor_state
                   )
 
                   const api_providers_manager = new ApiProvidersManager(context)
@@ -742,7 +770,8 @@ export const apply_chat_response_command = (
                   if (intelligent_update_states) {
                     update_revert_and_apply_button_state(
                       [...non_fallback_states, ...intelligent_update_states],
-                      chat_response
+                      chat_response,
+                      args?.original_editor_state
                     )
                     return {
                       original_states: [
@@ -938,7 +967,8 @@ export const apply_chat_response_command = (
                   if (intelligent_update_states) {
                     update_revert_and_apply_button_state(
                       intelligent_update_states,
-                      chat_response
+                      chat_response,
+                      args?.original_editor_state
                     )
                   }
                 }
@@ -947,7 +977,8 @@ export const apply_chat_response_command = (
 
             update_revert_and_apply_button_state(
               final_original_states,
-              chat_response
+              chat_response,
+              args?.original_editor_state
             )
 
             return {
@@ -979,7 +1010,8 @@ export const apply_chat_response_command = (
           original_states: review_data.original_states,
           chat_response: review_data.chat_response,
           view_provider,
-          update_revert_and_apply_button_state
+          update_revert_and_apply_button_state,
+          original_editor_state: args?.original_editor_state
         })
       }
     }

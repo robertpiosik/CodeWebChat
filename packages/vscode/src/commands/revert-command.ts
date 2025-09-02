@@ -2,7 +2,8 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import {
   LAST_APPLIED_CHANGES_STATE_KEY,
-  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
+  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+  LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY
 } from '../constants/state-keys'
 import { create_safe_path } from '../utils/path-sanitizer'
 import { parse_response } from './apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
@@ -23,6 +24,13 @@ export function revert_command(
     const original_states = context.workspaceState.get<OriginalFileState[]>(
       LAST_APPLIED_CHANGES_STATE_KEY
     )
+    const editor_state = context.workspaceState.get<
+      | {
+          file_path: string
+          position: { line: number; character: number }
+        }
+      | undefined
+    >(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY)
 
     if (!original_states || original_states.length == 0) {
       vscode.window.showInformationMessage(
@@ -104,7 +112,29 @@ export function revert_command(
         }
       }
 
+      if (editor_state) {
+        try {
+          const uri = vscode.Uri.file(editor_state.file_path)
+          const document = await vscode.workspace.openTextDocument(uri)
+          const editor = await vscode.window.showTextDocument(document, {
+            preview: false
+          })
+          const position = new vscode.Position(
+            editor_state.position.line,
+            editor_state.position.character
+          )
+          editor.selection = new vscode.Selection(position, position)
+          editor.revealRange(
+            new vscode.Range(position, position),
+            vscode.TextEditorRevealType.InCenter
+          )
+        } catch (error) {
+          console.error('Error restoring editor state:', error)
+        }
+      }
+
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
+      context.workspaceState.update(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY, null)
       context.workspaceState.update(
         LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
         null

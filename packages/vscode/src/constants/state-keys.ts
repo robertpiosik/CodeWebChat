@@ -1,7 +1,8 @@
 // Note: Use kebab-case for new keys
 export const LAST_APPLIED_CHANGES_STATE_KEY = 'last-applied-changes-state'
-export const LAST_REFACTOR_INSTRUCTIONS_STATE_KEY =
-  'last-refactor-instructions'
+export const LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY =
+  'last-applied-changes-editor-state'
+export const LAST_REFACTOR_INSTRUCTIONS_STATE_KEY = 'last-refactor-instructions'
 export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
