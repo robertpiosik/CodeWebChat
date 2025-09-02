@@ -382,6 +382,12 @@ const perform_code_completion = async (params: {
 
   const editor = vscode.window.activeTextEditor
   if (editor) {
+    if (!editor.selection.isEmpty) {
+      vscode.window.showWarningMessage(
+        'Code completions are not supported with active text selection.'
+      )
+      return
+    }
     const cancel_token_source = axios.CancelToken.source()
     const document = editor.document
     const position = editor.selection.active

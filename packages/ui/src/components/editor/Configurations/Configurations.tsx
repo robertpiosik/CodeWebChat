@@ -17,17 +17,9 @@ export namespace Configurations {
     configurations: Configuration[]
     on_configuration_click: (i: number) => void
     on_manage_configurations: () => void
-    has_instructions: boolean
     selected_configuration_index?: number
-    has_active_editor: boolean
-    has_active_selection: boolean
-    has_context: boolean
     translations: {
       my_configurations: string
-      add_files_to_context_first: string
-      configuration_requires_active_editor: string
-      configuration_cannot_be_used_with_selection: string
-      manage_configurations: string
       missing_configuration_message: string
     }
   }
@@ -75,24 +67,15 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
           const description = description_parts.join(' · ')
 
-          const is_item_disabled =
-            (props.api_mode == 'edit-context' &&
-              (!props.has_context || !props.has_instructions)) ||
-            (props.api_mode == 'code-completions' &&
-              (!props.has_active_editor || props.has_active_selection))
-
           return (
             <div
               key={i}
               className={cn(styles.configurations__item, {
                 [styles['configurations__item--highlighted']]:
-                  props.selected_configuration_index == i,
-                [styles['configurations__item--disabled']]: is_item_disabled
+                  props.selected_configuration_index == i
               })}
               onClick={() => {
-                if (!is_item_disabled) {
-                  props.on_configuration_click(i)
-                }
+                props.on_configuration_click(i)
               }}
               role="button"
             >

@@ -59,7 +59,6 @@ export const Home: React.FC<Props> = (props) => {
   const [code_completions_history, set_code_completions_history] =
     useState<string[]>()
   const [token_count, set_token_count] = useState<number>(0)
-  const [selection_text, set_selection_text] = useState<string>('')
   const [chat_edit_format, set_chat_edit_format] = useState<EditFormat>()
   const [api_edit_format, set_api_edit_format] = useState<EditFormat>()
   const [caret_position_to_set, set_caret_position_to_set] = useState<
@@ -103,9 +102,6 @@ export const Home: React.FC<Props> = (props) => {
           break
         case 'TOKEN_COUNT_UPDATED':
           set_token_count(message.token_count)
-          break
-        case 'SELECTION_TEXT_UPDATED':
-          set_selection_text(message.text)
           break
         case 'PRESET_CREATED':
           props.on_preset_edit(message.preset)
@@ -577,7 +573,6 @@ export const Home: React.FC<Props> = (props) => {
       can_revert={can_revert}
       chat_history={current_history || []}
       token_count={token_count}
-      selection_text={selection_text}
       web_mode={props.web_mode}
       api_mode={props.api_mode}
       on_web_mode_change={props.on_web_mode_change}

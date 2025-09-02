@@ -42,7 +42,6 @@ type Props = {
   can_revert: boolean
   chat_history: string[]
   token_count: number
-  selection_text?: string
   web_mode: WebMode
   api_mode: ApiMode
   on_web_mode_change: (mode: WebMode) => void
@@ -87,7 +86,6 @@ const api_mode_labels: Record<ApiMode, string> = {
 }
 
 export const HomeView: React.FC<Props> = (props) => {
-  const [estimated_input_tokens, set_estimated_input_tokens] = useState(0)
   // We need this because we can't use overflow: hidden
   // due to absolutely positioned dropdown menu.
   const [dropdown_max_width, set_dropdown_max_width] = useState<
@@ -138,35 +136,6 @@ export const HomeView: React.FC<Props> = (props) => {
       props.web_mode == 'code-completions') ||
     (props.home_view_type == HOME_VIEW_TYPES.API &&
       props.api_mode == 'code-completions')
-
-  useEffect(() => {
-    let estimated_tokens = 0
-    let text = props.instructions
-
-    if (
-      text.includes('#Selection') &&
-      props.has_active_selection &&
-      props.selection_text
-    ) {
-      text = text.replace(/#Selection/g, props.selection_text)
-    }
-
-    estimated_tokens = Math.ceil(text.length / 4)
-    if (
-      props.home_view_type == HOME_VIEW_TYPES.WEB &&
-      props.web_mode == 'no-context'
-    ) {
-      set_estimated_input_tokens(estimated_tokens)
-    } else {
-      set_estimated_input_tokens(props.token_count + estimated_tokens)
-    }
-  }, [
-    props.instructions,
-    props.home_view_type,
-    props.has_active_selection,
-    props.selection_text,
-    props.token_count
-  ])
 
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
@@ -328,7 +297,7 @@ export const HomeView: React.FC<Props> = (props) => {
               has_context={props.token_count > 0}
               is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
               is_connected={props.is_connected}
-              token_count={estimated_input_tokens}
+              token_count={props.token_count}
               is_in_code_completions_mode={is_in_code_completions_mode}
               has_active_selection={props.has_active_selection}
               has_active_editor={props.has_active_editor}
@@ -418,8 +387,6 @@ export const HomeView: React.FC<Props> = (props) => {
               <UiPresets
                 web_mode={props.web_mode}
                 is_connected={props.is_connected}
-                has_active_editor={props.has_active_editor}
-                has_active_selection={props.has_active_selection}
                 has_instructions={!!props.instructions}
                 has_context={props.token_count > 0}
                 is_in_code_completions_mode={
@@ -443,32 +410,15 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_preset_delete={props.on_preset_delete}
                 on_toggle_default_preset={props.on_toggle_default_preset}
                 on_toggle_group_collapsed={props.on_toggle_group_collapsed}
-                selected_preset_name={
-                  props.selected_preset_or_group_name
-                }
+                selected_preset_name={props.selected_preset_or_group_name}
                 translations={{
                   my_chat_presets: 'MY CHAT PRESETS',
-                  set_presets_opening_by_default:
-                    'Set presets opening by default',
-                  not_connected:
-                    'Not connected. Ensure the browser extension is active',
-                  preset_requires_active_editor:
-                    'Preset in this mode requires an active editor',
-                  preset_cannot_be_used_with_selection:
-                    'Preset in this mode cannot be used with a text selection',
-                  initialize_chat_with_preset:
-                    'Initialize chat with this preset',
-                  type_or_add_prompt_to_use_preset:
-                    'Type something or add a prefix/suffix to this preset to use it',
                   copy_to_clipboard: 'Copy to clipboard',
                   duplicate: 'Duplicate',
                   edit: 'Edit',
                   delete: 'Delete',
-                  create: 'Create...',
                   set_as_default: 'Set as default',
                   unset_as_default: 'Unset as default',
-                  no_preset_enabled_or_selected_in_this_group:
-                    'No preset is enabled or selected in this group',
                   collapse_group: 'Collapse',
                   expand_group: 'Expand'
                 }}
@@ -480,10 +430,6 @@ export const HomeView: React.FC<Props> = (props) => {
             <>
               <UiSeparator height={14} />
               <UiConfigurations
-                has_active_editor={props.has_active_editor}
-                has_active_selection={props.has_active_selection}
-                has_instructions={!!props.instructions}
-                has_context={props.token_count > 0}
                 api_mode={props.api_mode}
                 configurations={props.configurations.map((c) => ({
                   model: c.model,
@@ -498,13 +444,6 @@ export const HomeView: React.FC<Props> = (props) => {
                 on_manage_configurations={props.on_manage_configurations_click}
                 translations={{
                   my_configurations: 'MY CONFIGURATIONS',
-                  add_files_to_context_first:
-                    'Add some files to the context first',
-                  configuration_requires_active_editor:
-                    'Configuration in this mode requires an active editor',
-                  configuration_cannot_be_used_with_selection:
-                    'Configuration in this mode cannot be used with a text selection',
-                  manage_configurations: 'Manage Configurations',
                   missing_configuration_message:
                     'Add a configuration to make your first API call'
                 }}

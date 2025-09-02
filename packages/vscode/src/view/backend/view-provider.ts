@@ -229,31 +229,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       }
     }
 
-    const update_selection_text = () => {
-      const active_text_editor = vscode.window.activeTextEditor
-      if (active_text_editor && !active_text_editor.selection.isEmpty) {
-        const selected_text = active_text_editor.document.getText(
-          active_text_editor.selection
-        )
-
-        if (this._webview_view) {
-          this.send_message({
-            command: 'SELECTION_TEXT_UPDATED',
-            text: selected_text
-          })
-        }
-      }
-    }
-
     vscode.window.onDidChangeActiveTextEditor(() =>
       setTimeout(update_selection_state, 100)
     )
     update_selection_state()
-
-    vscode.window.onDidChangeTextEditorSelection(() =>
-      setTimeout(update_selection_text, 100)
-    )
-    update_selection_text()
 
     vscode.workspace.onDidChangeTextDocument((event) => {
       if (

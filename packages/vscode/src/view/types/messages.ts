@@ -348,11 +348,6 @@ export interface TokenCountMessage extends BaseMessage {
   token_count: number
 }
 
-export interface SelectionTextMessage extends BaseMessage {
-  command: 'SELECTION_TEXT_UPDATED'
-  text: string
-}
-
 export interface PresetCreatedMessage extends BaseMessage {
   command: 'PRESET_CREATED'
   preset: Preset
@@ -456,7 +451,6 @@ export type BackendMessage =
   | EditorSelectionChangedMessage
   | ChatHistoryMessage
   | TokenCountMessage
-  | SelectionTextMessage
   | PresetCreatedMessage
   | PresetUpdatedMessage
   | NewlyPickedOpenRouterModelMessage
