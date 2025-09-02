@@ -12,6 +12,6 @@ export type Preset = {
   system_instructions?: string
   options?: string[]
   port?: number
-  is_default?: boolean
+  is_selected?: boolean
   is_collapsed?: boolean
 }

@@ -720,9 +720,9 @@
                 "type": "number",
                 "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
               },
-              "isDefault": {
+              "isSelected": {
                 "type": "boolean",
-                "description": "Whether this preset is used when initializing a new chat."
+                "description": "Whether this preset is selected when initializing a new chat."
               },
               "isCollapsed": {
                 "type": "boolean",
@@ -885,9 +885,9 @@
                 "type": "number",
                 "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
               },
-              "isDefault": {
+              "isSelected": {
                 "type": "boolean",
-                "description": "Whether this preset is used when initializing a new chat."
+                "description": "Whether this preset is selected when initializing a new chat."
               },
               "isCollapsed": {
                 "type": "boolean",
@@ -1020,9 +1020,9 @@
                 "type": "number",
                 "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
               },
-              "isDefault": {
+              "isSelected": {
                 "type": "boolean",
-                "description": "Whether this preset is used when initializing a new chat."
+                "description": "Whether this preset is selected when initializing a new chat."
               },
               "isCollapsed": {
                 "type": "boolean",
@@ -1185,9 +1185,9 @@
                 "type": "number",
                 "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
               },
-              "isDefault": {
+              "isSelected": {
                 "type": "boolean",
-                "description": "Whether this preset is used when initializing a new chat."
+                "description": "Whether this preset is selected when initializing a new chat."
               },
               "isCollapsed": {
                 "type": "boolean",

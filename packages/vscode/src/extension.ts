@@ -11,7 +11,8 @@ import {
   migrate_refactoring_to_intelligent_update,
   migrate_presets_to_chat_presets_for_edit_context,
   migrate_edit_to_edit_context,
-  migrate_clear_history
+  migrate_clear_history,
+  migrate_preset_is_default_to_is_selected
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -68,6 +69,8 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_edit_to_edit_context(context)
     // 25 July 2025
     await migrate_clear_history(context)
+    // 1 August 2025
+    await migrate_preset_is_default_to_is_selected(context)
   }
 
   await migrations()

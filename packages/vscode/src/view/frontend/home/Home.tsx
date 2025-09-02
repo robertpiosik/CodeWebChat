@@ -216,11 +216,11 @@ export const Home: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_toggle_default_preset = (name: string) => {
+  const handle_toggle_selected_preset = (name: string) => {
     if (all_presets) {
       const presets_for_current_mode = all_presets[props.web_mode]
       const updated_presets = presets_for_current_mode.map((p) =>
-        p.name == name ? { ...p, is_default: !p.is_default } : p
+        p.name == name ? { ...p, is_selected: !p.is_selected } : p
       )
 
       set_all_presets({ ...all_presets, [props.web_mode]: updated_presets })
@@ -239,7 +239,7 @@ export const Home: React.FC<Props> = (props) => {
           system_instructions: preset.system_instructions,
           options: preset.options,
           port: preset.port,
-          is_default: preset.is_default || undefined,
+          is_selected: preset.is_selected || undefined,
           is_collapsed: preset.is_collapsed || undefined
         }))
       })
@@ -269,7 +269,7 @@ export const Home: React.FC<Props> = (props) => {
           system_instructions: preset.system_instructions,
           options: preset.options,
           port: preset.port,
-          is_default: preset.is_default || undefined,
+          is_selected: preset.is_selected || undefined,
           is_collapsed: preset.is_collapsed || undefined
         }))
       })
@@ -322,7 +322,7 @@ export const Home: React.FC<Props> = (props) => {
         system_instructions: preset.system_instructions,
         options: preset.options,
         port: preset.port,
-        is_default: preset.is_default,
+        is_selected: preset.is_selected,
         is_collapsed: preset.is_collapsed
       }))
     })
@@ -585,7 +585,7 @@ export const Home: React.FC<Props> = (props) => {
       on_preset_edit={handle_preset_edit}
       on_preset_duplicate={handle_preset_duplicate}
       on_preset_delete={handle_preset_delete}
-      on_toggle_default_preset={handle_toggle_default_preset}
+      on_toggle_selected_preset={handle_toggle_selected_preset}
       on_toggle_group_collapsed={handle_toggle_group_collapsed}
       selected_preset_or_group_name={selected_preset_or_group_name}
       selected_configuration_index={

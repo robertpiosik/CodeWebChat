@@ -33,7 +33,7 @@ export namespace Presets {
     chatbot?: keyof typeof CHATBOTS
     prompt_prefix?: string
     prompt_suffix?: string
-    is_default?: boolean
+    is_selected?: boolean
     is_collapsed?: boolean
   }
 
@@ -52,7 +52,7 @@ export namespace Presets {
     on_preset_edit: (name: string) => void
     on_preset_duplicate: (name: string) => void
     on_preset_delete: (name: string) => void
-    on_toggle_default_preset: (name: string) => void
+    on_toggle_selected_preset: (name: string) => void
     on_toggle_group_collapsed: (name: string) => void
     selected_preset_name?: string
     translations: {
@@ -61,8 +61,8 @@ export namespace Presets {
       duplicate: string
       edit: string
       delete: string
-      set_as_default: string
-      unset_as_default: string
+      set_as_selected: string
+      unset_as_selected: string
       collapse_group: string
       expand_group: string
     }
@@ -235,15 +235,15 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   </div>
                   {preset.chatbot && (
                     <Checkbox
-                      checked={!!preset.is_default}
+                      checked={!!preset.is_selected}
                       on_change={() =>
-                        props.on_toggle_default_preset(preset.name)
+                        props.on_toggle_selected_preset(preset.name)
                       }
                       on_click={(e) => e.stopPropagation()}
                       title={
-                        preset.is_default
-                          ? props.translations.unset_as_default
-                          : props.translations.set_as_default
+                        preset.is_selected
+                          ? props.translations.unset_as_selected
+                          : props.translations.set_as_selected
                       }
                     />
                   )}
