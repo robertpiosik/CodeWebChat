@@ -185,7 +185,7 @@ export class WebSocketManager {
               this.should_reconnect = false
               this.client?.close()
               vscode.window.showErrorMessage(
-                'CWC has been updated. Open the command palette and type "Reload Window" to load the latest version in this workspace.'
+                'CWC has been updated. To continue using it in this workspace, open the command palette and run "Reload Window".'
               )
             }
           }
