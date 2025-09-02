@@ -55,7 +55,6 @@ const get_diff_stats = (
     return { lines_added: 0, lines_removed: 0 }
   }
 
-  // Create a unified diff patch
   const patch = createTwoFilesPatch(
     'original',
     'modified',
@@ -102,7 +101,6 @@ const prepare_files_from_original_states = async (
       continue
     }
 
-    // Get current content (after apply operation)
     let current_content = ''
     try {
       if (fs.existsSync(sanitized_file_path)) {
@@ -111,13 +109,10 @@ const prepare_files_from_original_states = async (
         )
         current_content = doc.getText()
       }
-      // If file doesn't exist, current_content remains '', which is correct for a deleted file
     } catch (error) {
-      // For other errors (e.g., permissions), we skip the file.
       continue
     }
 
-    // Create temp file with original content
     const ext = path.extname(sanitized_file_path)
     const base = path.basename(sanitized_file_path, ext)
     const temp_filename = `${base}.${Date.now()}`
@@ -161,9 +156,7 @@ const cleanup_temp_files = (prepared_files: PreparedFile[]): void => {
   prepared_files.forEach((file) => {
     try {
       fs.unlinkSync(file.temp_file_path)
-    } catch (e) {
-      // Suppress error, as it's just a temp file
-    }
+    } catch (e) {}
   })
 }
 
@@ -197,8 +190,8 @@ const show_diff_with_actions = async (
 
   await vscode.commands.executeCommand(
     'vscode.diff',
-    left_doc_uri, // Original content (read-only from temp file)
-    right_doc_uri, // Current content (editable in actual file)
+    left_doc_uri,
+    right_doc_uri,
     title,
     {
       preview: false
@@ -211,9 +204,7 @@ const show_diff_with_actions = async (
       try {
         const right_doc = await vscode.workspace.openTextDocument(right_doc_uri)
         final_content = right_doc.getText()
-      } catch (error) {
-        // File might not exist if it was deleted and not restored. Content is empty.
-      }
+      } catch (error) {}
 
       resolve({
         decision,
@@ -281,32 +272,36 @@ export const review_applied_changes = async (
 
       if (!file_to_toggle) return
 
-      const was_deleted_or_emptied =
-        file_to_toggle.reviewable_file.content === '' &&
-        file_to_toggle.original_content !== '' &&
-        !file_to_toggle.reviewable_file.is_new
-
-      if (
-        (!is_checked && file_to_toggle.reviewable_file.is_new) ||
-        (is_checked && was_deleted_or_emptied)
-      ) {
-        try {
-          if (fs.existsSync(file_to_toggle.sanitized_path)) {
-            await vscode.workspace.fs.delete(
-              vscode.Uri.file(file_to_toggle.sanitized_path)
-            )
-          }
-        } catch (e) {
-          /* ignore */
+      if (!is_checked) {
+        if (file_to_toggle.reviewable_file.is_new) {
+          try {
+            if (fs.existsSync(file_to_toggle.sanitized_path)) {
+              await vscode.workspace.fs.delete(
+                vscode.Uri.file(file_to_toggle.sanitized_path)
+              )
+            }
+          } catch (e) {}
+        } else {
+          await vscode.workspace.fs.writeFile(
+            vscode.Uri.file(file_to_toggle.sanitized_path),
+            Buffer.from(file_to_toggle.original_content, 'utf8')
+          )
         }
       } else {
-        const content_to_write = is_checked
-          ? file_to_toggle.reviewable_file.content
-          : file_to_toggle.original_content
-        await vscode.workspace.fs.writeFile(
-          vscode.Uri.file(file_to_toggle.sanitized_path),
-          Buffer.from(content_to_write, 'utf8')
-        )
+        if (file_to_toggle.reviewable_file.is_deleted) {
+          try {
+            if (fs.existsSync(file_to_toggle.sanitized_path)) {
+              await vscode.workspace.fs.delete(
+                vscode.Uri.file(file_to_toggle.sanitized_path)
+              )
+            }
+          } catch (e) {}
+        } else {
+          await vscode.workspace.fs.writeFile(
+            vscode.Uri.file(file_to_toggle.sanitized_path),
+            Buffer.from(file_to_toggle.reviewable_file.content, 'utf8')
+          )
+        }
       }
     }
 
@@ -377,13 +372,11 @@ export const review_applied_changes = async (
       .filter((item) => item.status === 'accepted')
       .map((item) => item.file.reviewable_file)
 
-    // Get rejected states for reverting
     const rejected_items = review_items.filter(
       (item) => item.status === 'rejected'
     )
     const rejected_states = rejected_items
       .map((item) => {
-        // Find the corresponding original state
         return original_states.find(
           (state) =>
             state.file_path === item.file.reviewable_file.file_path &&
