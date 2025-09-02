@@ -251,11 +251,22 @@ export const perform_context_editing = async (params: {
 
   const editor = vscode.window.activeTextEditor
 
+  const files_collector = new FilesCollector(
+    params.file_tree_provider,
+    params.open_editors_provider
+  )
+
   let instructions: string | undefined
 
   if (params.instructions) {
     instructions = params.instructions
   } else {
+    const initial_context = await files_collector.collect_files({})
+    if (!initial_context) {
+      vscode.window.showWarningMessage('Unable to work without context.')
+      return
+    }
+
     const last_chat_prompt =
       params.context.workspaceState.get<string>('last-chat-prompt') || ''
 
@@ -315,11 +326,6 @@ export const perform_context_editing = async (params: {
     )
   }
 
-  const files_collector = new FilesCollector(
-    params.file_tree_provider,
-    params.open_editors_provider
-  )
-
   const additional_paths = extract_file_paths_from_instruction(instructions)
 
   const collected_files = await files_collector.collect_files({
@@ -327,7 +333,7 @@ export const perform_context_editing = async (params: {
   })
 
   if (!collected_files) {
-    vscode.window.showErrorMessage('Unable to work with empty context.')
+    vscode.window.showWarningMessage('Unable to work with empty context.')
     return
   }
 
@@ -415,7 +421,7 @@ export const perform_context_editing = async (params: {
     messages,
     model: edit_context_config.model,
     temperature: edit_context_config.temperature,
-    reasoning_effort: edit_context_config.reasoning_effort,
+    reasoning_effort: edit_context_config.reasoning_effort
   }
 
   const cancel_token_source = axios.CancelToken.source()

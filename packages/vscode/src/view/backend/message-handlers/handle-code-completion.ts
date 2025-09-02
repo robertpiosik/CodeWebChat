@@ -462,6 +462,8 @@ const perform_code_completion = async (params: {
         }
       })
     }
+  } else {
+    vscode.window.showWarningMessage('No editor is open.')
   }
 }
 
