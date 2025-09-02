@@ -455,6 +455,17 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   }
 
   public calculate_token_count() {
+    if (
+      this.home_view_type == HOME_VIEW_TYPES.WEB &&
+      this.web_mode == 'no-context'
+    ) {
+      this.send_message({
+        command: 'TOKEN_COUNT_UPDATED',
+        token_count: 0
+      })
+      return
+    }
+
     const active_editor = vscode.window.activeTextEditor
 
     const is_code_completions_mode =
