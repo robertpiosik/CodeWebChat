@@ -7,12 +7,10 @@ export const BrowserExtensionMessage: FC = () => {
       <span>Install Connector for chat initializations</span>
       <div className={styles.links}>
         <a href="https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp">
-          <span className="codicon codicon-link-external" />
-          <span>Chrome Web Store</span>
+          <span>Chrome Web Store ↗</span>
         </a>
         <a href="https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/">
-          <span className="codicon codicon-link-external" />
-          <span>Firefox Add-ons</span>
+          <span>Firefox Add-ons ↗</span>
         </a>
       </div>
     </div>

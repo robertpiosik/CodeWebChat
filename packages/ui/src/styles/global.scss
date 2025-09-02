@@ -32,6 +32,10 @@ div[role='button']:not(:disabled) {
 
 a {
   text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 a:focus {
