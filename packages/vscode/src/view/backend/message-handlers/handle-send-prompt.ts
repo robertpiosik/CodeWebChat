@@ -27,18 +27,6 @@ export const handle_send_prompt = async (params: {
   group_name?: string
   show_quick_pick?: boolean
 }): Promise<void> => {
-  if (params.preset_name !== undefined) {
-    update_last_used_preset_or_group({
-      provider: params.provider,
-      preset_name: params.preset_name
-    })
-  } else if (params.group_name) {
-    update_last_used_preset_or_group({
-      provider: params.provider,
-      group_name: params.group_name
-    })
-  }
-
   let current_instructions = ''
   const is_in_code_completions_mode =
     params.provider.web_mode == 'code-completions'
@@ -73,6 +61,14 @@ export const handle_send_prompt = async (params: {
 
   if (resolved_preset_names.length == 0) {
     return
+  }
+
+  if (params.preset_name !== undefined || params.group_name) {
+    update_last_used_preset_or_group({
+      provider: params.provider,
+      preset_name: params.preset_name,
+      group_name: params.group_name
+    })
   }
 
   await vscode.workspace.saveAll()
