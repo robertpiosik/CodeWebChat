@@ -437,7 +437,7 @@ export const generate_commit_message_with_api = async (
   return await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `Generating commit message with ~${formatted_token_count} tokens in the request...`,
+      title: `Generating commit message with ~${formatted_token_count} tokens in request...`,
       cancellable: true
     },
     async (_, token) => {
