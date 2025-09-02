@@ -1,24 +1,17 @@
 import * as vscode from 'vscode'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
-import {
-  LAST_APPLIED_CHANGES_STATE_KEY,
-  LAST_REFACTOR_INSTRUCTIONS_STATE_KEY
-} from '../constants/state-keys'
 import { PROVIDERS } from '@shared/constants/providers'
 import axios from 'axios'
-import { OriginalFileState } from '@/types/common'
-import { ViewProvider } from '../view/backend/view-provider'
 import {
   get_intelligent_update_config,
   process_file
 } from '../utils/intelligent-update-utils'
 
-export const refactor_active_editor_command = (
-  context: vscode.ExtensionContext,
-  view_provider: ViewProvider
+export const apply_clipboard_content_to_active_editor_command = (
+  context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.refactorActiveEditor',
+    'codeWebChat.applyClipboardContentToActiveEditor',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -26,31 +19,10 @@ export const refactor_active_editor_command = (
         return
       }
 
-      const last_instructions = context.workspaceState.get<string>(
-        LAST_REFACTOR_INSTRUCTIONS_STATE_KEY
-      )
-
-      const instructions = await vscode.window.showInputBox({
-        prompt: 'Enter refactoring instructions',
-        placeHolder: 'e.g., Refactor this code to use async/await',
-        value: last_instructions
-      })
-
-      if (!instructions) {
+      const clipboard_content = await vscode.env.clipboard.readText()
+      if (!clipboard_content) {
+        vscode.window.showInformationMessage('Clipboard is empty.')
         return
-      }
-
-      await context.workspaceState.update(
-        LAST_REFACTOR_INSTRUCTIONS_STATE_KEY,
-        instructions
-      )
-
-      let final_instructions = instructions
-      const selection = editor.selection
-      if (selection && !selection.isEmpty) {
-        const selected_text = editor.document.getText(selection)
-        const fragment = `<fragment>\n<![CDATA[\n${selected_text}\n]]>\n</fragment>`
-        final_instructions = `${fragment}\n${instructions}`
       }
 
       const api_providers_manager = new ApiProvidersManager(context)
@@ -83,7 +55,7 @@ export const refactor_active_editor_command = (
         result = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: `Called Intelligent Update API tool for refactoring`,
+            title: `Applying clipboard content to active editor`,
             cancellable: true
           },
           async (progress, token) => {
@@ -105,7 +77,7 @@ export const refactor_active_editor_command = (
               reasoning_effort: intelligent_update_config.reasoning_effort,
               file_path: file_path,
               file_content: original_content,
-              instruction: final_instructions,
+              instruction: clipboard_content,
               cancel_token: cancel_token_source.token,
               on_chunk: (formatted_tokens, tokens_per_second, total_tokens) => {
                 if (estimated_total_tokens > 0) {
@@ -145,42 +117,18 @@ export const refactor_active_editor_command = (
       const updated_content = result.content
 
       if (updated_content) {
-        const original_state: OriginalFileState = {
-          file_path: vscode.workspace.asRelativePath(document.uri),
-          content: original_content,
-          is_new: false,
-          workspace_name: vscode.workspace.getWorkspaceFolder(document.uri)
-            ?.name
-        }
+        const relative_path = vscode.workspace.asRelativePath(document.uri)
+        const response_for_apply = `\`\`\`\n// ${relative_path}\n${updated_content}\n\`\`\``
 
-        await editor.edit((editBuilder) => {
-          const fullRange = new vscode.Range(
-            document.positionAt(0),
-            document.positionAt(original_content.length)
-          )
-          editBuilder.replace(fullRange, updated_content)
+        await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+          response: response_for_apply
         })
 
-        await vscode.commands.executeCommand('editor.action.formatDocument')
-        await document.save()
-
-        context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, [
-          original_state
-        ])
-        view_provider.set_revert_button_state(true)
-        view_provider.set_apply_button_state(false)
-
-        const response = await vscode.window.showInformationMessage(
-          'File refactored successfully.',
-          'Revert'
+        await vscode.window.showInformationMessage(
+          'Clipboard content applied successfully.'
         )
-        if (response == 'Revert') {
-          await vscode.commands.executeCommand('codeWebChat.revert')
-        }
       } else {
-        vscode.window.showErrorMessage(
-          'Refactoring failed to produce any content.'
-        )
+        vscode.window.showErrorMessage('Failed to apply clipboard content.')
       }
     }
   )

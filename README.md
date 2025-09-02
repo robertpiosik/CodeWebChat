@@ -91,6 +91,7 @@ Generate meaningful summaries of changes adhering to your preferred style.
 ### Handling AI responses
 
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied to clipboard overall chat response or a single code block.
+- `Code Web Chat: Apply Clipboard Content to Active Editor` - Serves as a flexible fallback for applying AI-generated edits, e.g. broken diffs.
 - `Code Web Chat: Revert Last Changes` - Revert above command.
 
 ### Code completions
@@ -98,10 +99,6 @@ Generate meaningful summaries of changes adhering to your preferred style.
 - `Code Web Chat: Code Completion` - Get code at cursor using API tool.
 - `Code Web Chat: Code Completion using...` - ...with configuration selection.
 - `Code Web Chat: Code Completion with Instructions` - Get code at cursor with instructions.
-
-### Refactoring
-
-- `Code Web Chat: Refactor Active Editor` - Refactor currently active editor without attaching context.
 
 ### Version Control
 
