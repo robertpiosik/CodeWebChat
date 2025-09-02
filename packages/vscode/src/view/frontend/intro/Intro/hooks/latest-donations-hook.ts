@@ -48,7 +48,8 @@ export const use_latest_donations = (
 
   return {
     donations,
-    is_fetching
+    is_fetching,
+    donations_fetched_once: fetched_once
   }
 }
 

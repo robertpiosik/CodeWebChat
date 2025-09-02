@@ -14,16 +14,31 @@ export type BuyMeACoffeeProps = {
   donations?: Donation[]
   is_fetching?: boolean
   are_donations_visible: boolean
+  donations_fetched_once: boolean
   on_toggle_donations_visibility: () => void
 }
 
 export const BuyMeACoffee: React.FC<BuyMeACoffeeProps> = (props) => {
+  const get_icon = () => {
+    if (!props.donations_fetched_once && !props.are_donations_visible) {
+      return 'cloud-download'
+    }
+    return props.are_donations_visible ? 'eye-closed' : 'eye'
+  }
+
+  const get_title = () => {
+    if (!props.donations_fetched_once && !props.are_donations_visible) {
+      return 'Fetch donations'
+    }
+    return props.are_donations_visible ? 'Hide donations' : 'Show donations'
+  }
+
   return (
     <div className={styles.container}>
       <a
         href={`https://buymeacoffee.com/${props.username}`}
         className={styles.button}
-        title="Buy me a coffee"
+        title="Support author with a donation"
       >
         <Icon variant="BUY_ME_A_COFFEE_WITH_TEXT" />
         <span className="codicon codicon-link-external" />
@@ -32,11 +47,9 @@ export const BuyMeACoffee: React.FC<BuyMeACoffeeProps> = (props) => {
         <div className={styles.donations__heading_container}>
           <div className={styles.donations__heading}>RECENT DONATIONS</div>
           <IconButton
-            codicon_icon={
-              props.are_donations_visible ? 'eye' : 'eye-closed'
-            }
+            codicon_icon={get_icon()}
             on_click={props.on_toggle_donations_visibility}
-            title={props.are_donations_visible ? 'Hide donations' : 'Show donations'}
+            title={get_title()}
           />
         </div>
         {props.are_donations_visible && (

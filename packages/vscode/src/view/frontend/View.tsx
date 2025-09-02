@@ -200,7 +200,8 @@ export const View = () => {
     ask_instructions === undefined ||
     edit_instructions === undefined ||
     no_context_instructions === undefined ||
-    !version || are_donations_visible === undefined ||
+    !version ||
+    are_donations_visible === undefined ||
     code_completions_instructions === undefined ||
     home_view_type === undefined ||
     web_mode === undefined ||

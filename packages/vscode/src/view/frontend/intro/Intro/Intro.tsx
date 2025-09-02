@@ -16,10 +16,8 @@ type Props = {
 }
 
 export const Intro: React.FC<Props> = (props) => {
-  const { donations, is_fetching } = use_latest_donations(
-    props.is_active,
-    props.are_donations_visible
-  )
+  const { donations, is_fetching, donations_fetched_once } =
+    use_latest_donations(props.is_active, props.are_donations_visible)
 
   return (
     <div className={styles.container}>
@@ -48,6 +46,7 @@ export const Intro: React.FC<Props> = (props) => {
                 donations={donations}
                 is_fetching={is_fetching}
                 are_donations_visible={props.are_donations_visible}
+                donations_fetched_once={donations_fetched_once}
                 on_toggle_donations_visibility={
                   props.on_toggle_donations_visibility
                 }

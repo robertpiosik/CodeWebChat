@@ -148,7 +148,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
         await this._check_clipboard_for_apply()
-        const are_donations_visible = this.context.workspaceState.get<boolean>(
+        const are_donations_visible = this.context.globalState.get<boolean>(
           RECENT_DONATIONS_VISIBLE_STATE_KEY,
           false
         )
