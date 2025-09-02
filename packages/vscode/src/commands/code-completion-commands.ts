@@ -430,7 +430,7 @@ const perform_code_completion = async (params: {
       reasoning_effort: code_completions_config.reasoning_effort
     }
 
-    const cursor_listener = vscode.workspace.onDidChangeTextDocument(() => {
+    const cursor_listener = vscode.window.onDidChangeTextEditorSelection(() => {
       cancel_token_source.cancel('User moved the cursor, cancelling request.')
     })
 
