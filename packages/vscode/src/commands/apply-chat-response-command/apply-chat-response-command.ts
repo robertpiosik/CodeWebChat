@@ -19,7 +19,10 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '../../view/backend/view-provider'
-import { review_applied_changes } from './utils/review-applied-changes'
+import {
+  review_applied_changes,
+  code_review_promise_resolve
+} from './utils/review-applied-changes'
 
 const check_if_all_files_new = async (
   files: ClipboardFile[]
@@ -440,6 +443,13 @@ export const apply_chat_response_command = (
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
     async (args?: { response?: string }) => {
+      if (code_review_promise_resolve) {
+        vscode.window.showWarningMessage(
+          'A code review is already in progress. Please complete it before applying new changes.'
+        )
+        return
+      }
+
       type ReviewData = {
         original_states: OriginalFileState[]
         chat_response: string
