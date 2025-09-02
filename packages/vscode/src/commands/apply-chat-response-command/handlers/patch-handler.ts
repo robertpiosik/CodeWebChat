@@ -23,11 +23,11 @@ export const extract_file_paths_from_patch = (
   let to_path: string | undefined
 
   for (const line of lines) {
-    const match = line.match(/^\+\+\+ b\/(.+)$/)
-    if (match && match[1]) {
-      to_path = match[1]
+    const to_match = line.match(/^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/)
+    if (to_match && to_match[1]) {
+      to_path = to_match[1]
     }
-    const from_match = line.match(/^--- a\/(.+)$/)
+    const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
     if (from_match && from_match[1]) {
       from_path = from_match[1]
     }
