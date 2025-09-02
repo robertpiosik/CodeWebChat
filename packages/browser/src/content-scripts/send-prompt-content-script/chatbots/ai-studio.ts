@@ -251,7 +251,7 @@ export const ai_studio: Chatbot = {
     await new Promise((resolve) => {
       const check = () => {
         const token_count_value = document.querySelector(
-          'span.token-count-value'
+          'span.v3-token-count-value'
         )
         const text = token_count_value?.textContent?.trim()
         if (text && text.startsWith('0')) {
