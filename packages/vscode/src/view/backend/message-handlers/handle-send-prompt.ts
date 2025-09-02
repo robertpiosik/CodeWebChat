@@ -55,6 +55,14 @@ export const handle_send_prompt = async (params: {
     }
   }
 
+  const active_editor = vscode.window.activeTextEditor
+  const active_path = active_editor?.document.uri.fsPath
+
+  if (is_in_code_completions_mode && !active_editor) {
+    vscode.window.showWarningMessage('No editor is open.')
+    return
+  }
+
   const resolved_preset_names = await resolve_presets({
     provider: params.provider,
     preset_name: params.preset_name,
@@ -75,14 +83,9 @@ export const handle_send_prompt = async (params: {
     params.provider.websites_provider
   )
 
-  const active_editor = vscode.window.activeTextEditor
-  const active_path = active_editor?.document.uri.fsPath
-
-  if (params.provider.web_mode == 'code-completions') {
-    if (!active_editor) return
-
-    const document = active_editor.document
-    const position = active_editor.selection.active
+  if (is_in_code_completions_mode) {
+    const document = active_editor!.document
+    const position = active_editor!.selection.active
 
     const text_before_cursor = document.getText(
       new vscode.Range(new vscode.Position(0, 0), position)
@@ -91,24 +94,34 @@ export const handle_send_prompt = async (params: {
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
+    const completion_instructions = params.provider.code_completion_instructions
+    const additional_paths = completion_instructions
+      ? extract_file_paths_from_instruction(completion_instructions)
+      : []
+
     const context_text = await files_collector.collect_files({
-      exclude_path: active_path
+      exclude_path: active_path,
+      additional_paths
     })
 
-    const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
-    const relative_path = active_path!.replace(workspace_folder + '/', '')
+    const relative_path = vscode.workspace.asRelativePath(document.uri)
 
-    const instructions = `${chat_code_completion_instructions(
+    const main_instructions = chat_code_completion_instructions(
       relative_path,
       position.line,
       position.character
-    )}${
-      params.provider.code_completion_instructions
-        ? ` Follow instructions: ${params.provider.code_completion_instructions}`
-        : ''
-    }`
+    )
 
-    const text = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
+    const payload = {
+      before: `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}`,
+      after: `${text_after_cursor}\n]]>\n</file>\n</files>`
+    }
+
+    const text = `${main_instructions}\n${payload.before}${
+      completion_instructions
+        ? `<missing text>${completion_instructions}</missing text>`
+        : '<missing text>'
+    }${payload.after}\n${main_instructions}`
 
     const chats = resolved_preset_names.map((preset_name) => {
       return {
