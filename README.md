@@ -15,6 +15,13 @@ Available in VS Code, Cursor, and other forks. **100% free and open-source.**
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
+### Guiding principles
+
+- Initialize chatbots—don't scrape responses
+- Free forever—community effort
+- Privacy first—operates locally
+- Lightweight—2MB of code
+
 ### Why non-agentic?
 
 **Non-agentic is predictable** \
@@ -34,13 +41,6 @@ When the model isn't getting your intent on the first try, just adjust context, 
 | **Messages per task** |      1      |       1-30       |
 | **Completes in**      |   seconds   |     minutes      |
 | **Token usage**       |   Minimal   | Sky is the limit |
-
-### Guiding principles
-
-- Initialize chatbots—don't scrape responses
-- Free forever—community effort
-- Privacy first—operates locally
-- Lightweight—2MB of code
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
