@@ -14,7 +14,6 @@ import { handle_intelligent_update } from './handlers/intelligent-update-handler
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
-import { format_document } from './utils/format-document'
 import { apply_git_patch } from './handlers/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
@@ -271,91 +270,6 @@ const get_intelligent_update_config = async (
   }
 }
 
-const handle_code_completion = async (completion: {
-  file_path: string
-  content: string
-  line: number
-  character: number
-  workspace_name?: string
-}): Promise<void> => {
-  if (
-    !vscode.workspace.workspaceFolders ||
-    vscode.workspace.workspaceFolders.length == 0
-  ) {
-    vscode.window.showErrorMessage('No workspace folder open.')
-    return
-  }
-
-  const workspace_map = new Map<string, string>()
-  vscode.workspace.workspaceFolders.forEach((folder) => {
-    workspace_map.set(folder.name, folder.uri.fsPath)
-  })
-
-  const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
-  let workspace_root = default_workspace
-  if (
-    completion.workspace_name &&
-    workspace_map.has(completion.workspace_name)
-  ) {
-    workspace_root = workspace_map.get(completion.workspace_name)!
-  }
-
-  const safe_path = create_safe_path(workspace_root, completion.file_path)
-
-  if (!safe_path || !fs.existsSync(safe_path)) {
-    vscode.window.showErrorMessage(`File not found: ${completion.file_path}`)
-    Logger.warn({
-      function_name: 'handle_code_completion',
-      message: 'File not found for code completion.',
-      data: { file_path: completion.file_path, safe_path }
-    })
-    return
-  }
-
-  try {
-    const document = await vscode.workspace.openTextDocument(safe_path)
-    const editor = await vscode.window.showTextDocument(document, {
-      preview: false
-    })
-
-    // VSCode position is 0-based, so we subtract 1
-    const line_index = completion.line - 1
-    const char_index = completion.character - 1
-
-    if (line_index < 0 || char_index < 0) {
-      vscode.window.showErrorMessage(
-        `Invalid position: ${completion.line}:${completion.character}. Position cannot be negative.`
-      )
-      return
-    }
-
-    if (line_index >= document.lineCount) {
-      vscode.window.showErrorMessage(
-        `Invalid line number ${completion.line}. File has only ${document.lineCount} lines.`
-      )
-      return
-    }
-
-    const line_text = document.lineAt(line_index).text
-    if (char_index > line_text.length) {
-      vscode.window.showErrorMessage(
-        `Invalid character position ${completion.character} on line ${completion.line}. Line has only ${line_text.length} characters.`
-      )
-      return
-    }
-
-    const position = new vscode.Position(line_index, char_index)
-
-    await editor.edit((editBuilder) => {
-      editBuilder.insert(position, completion.content)
-    })
-    await format_document(document)
-    await document.save()
-  } catch (error: any) {
-    vscode.window.showErrorMessage(error.message)
-  }
-}
-
 const handle_code_review_and_cleanup = async (params: {
   original_states: OriginalFileState[]
   chat_response: string
@@ -502,7 +416,7 @@ export const apply_chat_response_command = (
         const is_single_root_folder_workspace =
           vscode.workspace.workspaceFolders?.length == 1
 
-        const clipboard_content = parse_response(
+        let clipboard_content = parse_response(
           chat_response,
           is_single_root_folder_workspace
         )
@@ -511,8 +425,84 @@ export const apply_chat_response_command = (
           clipboard_content.type == 'code-completion' &&
           clipboard_content.code_completion
         ) {
-          await handle_code_completion(clipboard_content.code_completion)
-          return null
+          const completion = clipboard_content.code_completion
+          if (
+            !vscode.workspace.workspaceFolders ||
+            vscode.workspace.workspaceFolders.length == 0
+          ) {
+            vscode.window.showErrorMessage('No workspace folder open.')
+            return null
+          }
+          const workspace_map = new Map<string, string>()
+          vscode.workspace.workspaceFolders.forEach((folder) => {
+            workspace_map.set(folder.name, folder.uri.fsPath)
+          })
+          const default_workspace =
+            vscode.workspace.workspaceFolders[0].uri.fsPath
+          let workspace_root = default_workspace
+          if (
+            completion.workspace_name &&
+            workspace_map.has(completion.workspace_name)
+          ) {
+            workspace_root = workspace_map.get(completion.workspace_name)!
+          }
+          const safe_path = create_safe_path(
+            workspace_root,
+            completion.file_path
+          )
+          if (!safe_path || !fs.existsSync(safe_path)) {
+            vscode.window.showErrorMessage(
+              `File not found: ${completion.file_path}`
+            )
+            Logger.warn({
+              function_name: 'apply_chat_response_command',
+              message: 'File not found for code completion.',
+              data: { file_path: completion.file_path, safe_path }
+            })
+            return null
+          }
+
+          const document = await vscode.workspace.openTextDocument(safe_path)
+          const original_content = document.getText()
+          const line_index = completion.line - 1
+          const char_index = completion.character - 1
+
+          if (
+            line_index < 0 ||
+            char_index < 0 ||
+            line_index >= document.lineCount ||
+            char_index > document.lineAt(line_index).text.length
+          ) {
+            vscode.window.showErrorMessage(
+              `Invalid position for code completion in ${completion.file_path}.`
+            )
+            return null
+          }
+
+          const position_offset = document.offsetAt(
+            new vscode.Position(line_index, char_index)
+          )
+          const new_content =
+            original_content.slice(0, position_offset) +
+            completion.content +
+            original_content.slice(position_offset)
+
+          if (!args) args = {}
+          if (!args.original_editor_state) {
+            args.original_editor_state = {
+              file_path: safe_path,
+              position: {
+                line: line_index,
+                character: char_index
+              }
+            }
+          }
+          args.suppress_fast_replace_notification = true
+
+          clipboard_content = {
+            type: 'files',
+            files: [{ ...completion, content: new_content }]
+          } as any
         }
 
         if (clipboard_content.type == 'patches' && clipboard_content.patches) {
