@@ -739,8 +739,7 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT",
-              "isDefault": true
+              "chatbot": "ChatGPT"
             },
             {
               "name": "(1)",
@@ -905,8 +904,7 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT",
-              "isDefault": true
+              "chatbot": "ChatGPT"
             },
             {
               "name": "(1)",
@@ -1041,8 +1039,7 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT",
-              "isDefault": true
+              "chatbot": "ChatGPT"
             },
             {
               "name": "(1)",
