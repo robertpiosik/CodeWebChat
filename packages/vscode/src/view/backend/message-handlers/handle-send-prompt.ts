@@ -402,7 +402,7 @@ async function resolve_presets(params: {
     if (params.group_name == 'Ungrouped') {
       for (const preset of all_presets) {
         if (!preset.chatbot) break
-        if (preset.isDefault) {
+        if (preset.isSelected) {
           default_presets_in_group.push(preset)
         }
       }
@@ -415,7 +415,7 @@ async function resolve_presets(params: {
           const preset = all_presets[i]
           if (!preset.chatbot) {
             break
-          } else if (preset.isDefault) {
+          } else if (preset.isSelected) {
             default_presets_in_group.push(preset)
           }
         }
@@ -514,7 +514,7 @@ async function resolve_presets(params: {
                 ? all_presets
                 : all_presets.slice(0, first_group_index)
             const preset_names = relevant_presets
-              .filter((p) => p.isDefault && !get_is_preset_disabled(p))
+              .filter((p) => p.isSelected && !get_is_preset_disabled(p))
               .map((p) => p.name)
             if (preset_names.length > 0) return preset_names
           } else {
@@ -528,7 +528,7 @@ async function resolve_presets(params: {
                 if (!preset.chatbot) {
                   break // next group
                 }
-                if (preset.isDefault && !get_is_preset_disabled(preset)) {
+                if (preset.isSelected && !get_is_preset_disabled(preset)) {
                   preset_names.push(preset.name)
                 }
               }
@@ -577,7 +577,7 @@ async function resolve_presets(params: {
                 ? all_presets
                 : all_presets.slice(0, first_group_index)
             const preset_names = relevant_presets
-              .filter((p) => p.isDefault && !get_is_preset_disabled(p))
+              .filter((p) => p.isSelected && !get_is_preset_disabled(p))
               .map((p) => p.name)
             if (preset_names.length > 0) return preset_names
           } else {
@@ -591,7 +591,7 @@ async function resolve_presets(params: {
                 if (!preset.chatbot) {
                   break // next group
                 }
-                if (preset.isDefault && !get_is_preset_disabled(preset)) {
+                if (preset.isSelected && !get_is_preset_disabled(preset)) {
                   preset_names.push(preset.name)
                 }
               }
@@ -660,7 +660,7 @@ async function resolve_presets(params: {
             if (!preset.chatbot) {
               break // next group
             }
-            if (preset.isDefault) {
+            if (preset.isSelected) {
               default_presets_count++
             }
           }
@@ -679,7 +679,7 @@ async function resolve_presets(params: {
       if (first_group_index > 0) {
         const ungrouped_presets = all_presets.slice(0, first_group_index)
         const default_presets_count = ungrouped_presets.filter(
-          (p) => p.isDefault
+          (p) => p.isSelected
         ).length
         group_items_from_config.unshift({
           label: 'Ungrouped',
@@ -690,7 +690,7 @@ async function resolve_presets(params: {
         })
       } else if (first_group_index == -1 && all_presets.length > 0) {
         const default_presets_count = all_presets.filter(
-          (p) => p.isDefault
+          (p) => p.isSelected
         ).length
         group_items_from_config.unshift({
           label: 'Ungrouped',
@@ -763,7 +763,7 @@ async function resolve_presets(params: {
                 ? all_presets
                 : all_presets.slice(0, first_group_index)
             default_presets_in_group.push(
-              ...relevant_presets.filter((p) => p.isDefault)
+              ...relevant_presets.filter((p) => p.isSelected)
             )
           } else {
             const group_index = all_presets.findIndex(
@@ -775,7 +775,7 @@ async function resolve_presets(params: {
                 if (!preset.chatbot) {
                   break // next group
                 }
-                if (preset.isDefault) {
+                if (preset.isSelected) {
                   default_presets_in_group.push(preset)
                 }
               }
