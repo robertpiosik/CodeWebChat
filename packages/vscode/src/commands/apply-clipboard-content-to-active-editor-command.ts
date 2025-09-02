@@ -121,7 +121,8 @@ export const apply_clipboard_content_to_active_editor_command = (
         const response_for_apply = `\`\`\`\n// ${relative_path}\n${updated_content}\n\`\`\``
 
         await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-          response: response_for_apply
+          response: response_for_apply,
+          suppress_fast_replace_notification: true
         })
 
         await vscode.window.showInformationMessage(

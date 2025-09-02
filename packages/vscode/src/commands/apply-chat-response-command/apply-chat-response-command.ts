@@ -442,7 +442,7 @@ export const apply_chat_response_command = (
 
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
-    async (args?: { response?: string }) => {
+    async (args?: { response?: string; suppress_fast_replace_notification?: boolean }) => {
       if (code_review_promise_resolve) {
         vscode.window.showWarningMessage(
           'A code review is already in progress. Please complete it before applying new changes.'
@@ -873,7 +873,11 @@ export const apply_chat_response_command = (
           }
 
           if (operation_success && final_original_states) {
-            if (selected_mode_label == 'Fast replace' && !all_files_new) {
+            if (
+              selected_mode_label == 'Fast replace' &&
+              !all_files_new &&
+              !args?.suppress_fast_replace_notification
+            ) {
               ;(async () => {
                 const file_count = final_original_states!.length
                 const response = await vscode.window.showInformationMessage(

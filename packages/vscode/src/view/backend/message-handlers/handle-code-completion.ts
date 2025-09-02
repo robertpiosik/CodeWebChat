@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import * as path from 'path'
 import he from 'he'
 import { make_api_request } from '@/utils/make-api-request'
 import { code_completion_instructions } from '@/constants/instructions'
@@ -12,14 +11,9 @@ import {
 } from '@/services/api-providers-manager'
 import { Logger } from '@/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
-import {
-  LAST_APPLIED_CHANGES_STATE_KEY,
-  LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY
-} from '@/constants/state-keys'
+import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ViewProvider } from '@/view/backend/view-provider'
-import { OriginalFileState } from '@/types/common'
-import { revert_files } from '@/commands/apply-chat-response-command/utils/file-operations'
 import { CodeCompletionMessage } from '@/view/types/messages'
 
 const get_code_completion_config = async (
@@ -384,7 +378,9 @@ const perform_code_completion = async (params: {
       cancel_token_source.cancel('User moved the cursor, cancelling request.')
     })
 
-    vscode.window.withProgress(
+    let response_for_apply: string | undefined
+
+    await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
         title: 'Waiting for code completion...',
@@ -414,80 +410,39 @@ const perform_code_completion = async (params: {
                 .replace(/\]\]>/g, '')
                 .trim()
 
-              const file_uri = document.uri
-              const workspace_folder =
-                vscode.workspace.getWorkspaceFolder(file_uri)
-              if (workspace_folder) {
-                const original_content = document.getText()
-                const original_state: OriginalFileState = {
-                  file_path: path.relative(
-                    workspace_folder.uri.fsPath,
-                    file_uri.fsPath
-                  ),
-                  content: original_content,
-                  is_new: false,
-                  workspace_name: workspace_folder.name,
-                  cursor_offset: document.offsetAt(position)
-                }
-                const states = [original_state]
-                params.context.workspaceState.update(
-                  LAST_APPLIED_CHANGES_STATE_KEY,
-                  states
-                )
-                if (params.view_provider) {
-                  params.view_provider.set_revert_button_state(true)
-                  params.view_provider.set_apply_button_state(false)
-                }
-              } else {
-                Logger.warn({
-                  function_name: 'perform_code_completion',
-                  message: 'File not in workspace, cannot save state for revert.'
-                })
-              }
+              const new_content =
+                text_before_cursor + decoded_completion + text_after_cursor
 
-              await editor.edit((editBuilder) => {
-                editBuilder.insert(position, decoded_completion)
-              })
-              await vscode.commands.executeCommand(
-                'editor.action.formatDocument',
+              const relative_path = vscode.workspace.asRelativePath(
                 document.uri
               )
-
-              ;(async () => {
-                const response = await vscode.window.showInformationMessage(
-                  'Code completion applied.',
-                  'Revert'
-                )
-                if (response === 'Revert') {
-                  const states = params.context.workspaceState.get<
-                    OriginalFileState[]
-                  >(LAST_APPLIED_CHANGES_STATE_KEY)
-                  if (states && states.length > 0) {
-                    await revert_files(states)
-                    await params.context.workspaceState.update(
-                      LAST_APPLIED_CHANGES_STATE_KEY,
-                      null
-                    )
-                    if (params.view_provider) {
-                      params.view_provider.set_revert_button_state(false)
-                      params.view_provider.set_apply_button_state(true)
-                    }
-                  }
-                }
-              })()
+              response_for_apply = `\`\`\`\n// ${relative_path}\n${new_content}\n\`\`\``
             }
           }
         } catch (err: any) {
+          if (axios.isCancel(err)) {
+            return
+          }
           Logger.error({
-            function_name: 'perform_fim_completion',
-            message: 'Completion error',
+            function_name: 'perform_code_completion',
+            message: 'code completion error',
             data: err
           })
+          vscode.window.showErrorMessage(
+            'An error occurred during code completion. See console for details.'
+          )
         } finally {
           cursor_listener.dispose()
         }
       }
     )
+
+    if (response_for_apply) {
+      await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+        response: response_for_apply,
+        suppress_fast_replace_notification: true
+      })
+    }
   }
 }
 
