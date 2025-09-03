@@ -10,7 +10,7 @@ type Props = {
   on_change: (value: string) => void
   on_submit: () => void
   on_submit_with_control: () => void
-  on_copy?: () => void
+  on_copy: () => void
   token_count?: number
   is_connected: boolean
   is_in_code_completions_mode: boolean
@@ -176,28 +176,6 @@ export const ChatInput: React.FC<Props> = (props) => {
     set_history_index(-1)
   }
 
-  const get_disabled_title = () => {
-    if (props.is_in_code_completions_mode) {
-      if (props.has_active_selection) {
-        return props.translations
-          .code_completions_mode_unavailable_with_text_selection
-      } else if (!props.has_active_editor) {
-        return props.translations
-          .code_completions_mode_unavailable_without_active_editor
-      }
-    } else if (!props.is_in_code_completions_mode && !props.value.trim()) {
-      return props.translations.type_something
-    } else if (!props.is_connected && props.is_web_mode) {
-      return props.translations.websocket_not_connected
-    }
-    return ''
-  }
-
-  const is_copy_disabled =
-    (!props.is_in_code_completions_mode && !props.value.trim()) ||
-    (props.is_in_code_completions_mode &&
-      (props.has_active_selection || !props.has_active_editor))
-
   const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key == 'Enter' && e.shiftKey) {
       e.preventDefault()
@@ -308,7 +286,6 @@ export const ChatInput: React.FC<Props> = (props) => {
             if (props.on_copy) {
               e.stopPropagation()
               e.preventDefault()
-              if (is_copy_disabled) return
               props.on_copy()
             }
           }
@@ -354,7 +331,7 @@ export const ChatInput: React.FC<Props> = (props) => {
           })`}
         />
 
-        {props.on_copy && (
+        {props.is_web_mode && props.is_connected && (
           <button
             className={cn(
               styles['container__inner__copy-button'],
@@ -363,19 +340,13 @@ export const ChatInput: React.FC<Props> = (props) => {
             )}
             onClick={(e) => {
               e.stopPropagation()
-              if (is_copy_disabled) return
-              props.on_copy!()
+              props.on_copy()
             }}
-            title={
-              is_copy_disabled
-                ? get_disabled_title()
-                : `${props.translations.copy_to_clipboard} (${
-                    navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
-                      ? '⌥⌘C'
-                      : 'Ctrl+Alt+C'
-                  })`
-            }
-            disabled={is_copy_disabled}
+            title={`${props.translations.copy_to_clipboard} (${
+              navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
+                ? '⌥⌘C'
+                : 'Ctrl+Alt+C'
+            })`}
           />
         )}
 
@@ -423,29 +394,47 @@ export const ChatInput: React.FC<Props> = (props) => {
               </div>
             )}
 
-            <button
-              className={cn([
-                styles.footer__right__button,
-                styles['footer__right__button--secondary']
-              ])}
-              onClick={(e) => handle_submit(e, true)}
-            >
-              {navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? (
-                <Icon variant="COMMAND" />
-              ) : (
-                <div className={styles.footer__right__button__ctrl}>Ctrl</div>
-              )}
-              <Icon variant="ENTER" />
-              <span>{props.translations.select}</span>
-            </button>
+            {(!props.is_web_mode ||
+              (props.is_web_mode && props.is_connected)) && (
+              <>
+                <button
+                  className={cn([
+                    styles.footer__right__button,
+                    styles['footer__right__button--secondary']
+                  ])}
+                  onClick={(e) => handle_submit(e, true)}
+                >
+                  {navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? (
+                    <Icon variant="COMMAND" />
+                  ) : (
+                    <div className={styles.footer__right__button__ctrl}>
+                      Ctrl
+                    </div>
+                  )}
+                  <Icon variant="ENTER" />
+                  <span>{props.translations.select}</span>
+                </button>
 
-            <button
-              className={styles.footer__right__button}
-              onClick={handle_submit}
-            >
-              <Icon variant="ENTER" />
-              <span>{props.translations.use_last_choice}</span>
-            </button>
+                <button
+                  className={styles.footer__right__button}
+                  onClick={handle_submit}
+                >
+                  <Icon variant="ENTER" />
+                  <span>{props.translations.use_last_choice}</span>
+                </button>
+              </>
+            )}
+
+            {props.is_web_mode && !props.is_connected && (
+              <button
+                className={styles.footer__right__button}
+                onClick={props.on_copy}
+                title={props.translations.copy_to_clipboard}
+              >
+                <Icon variant="ENTER" />
+                <span>{props.translations.copy_to_clipboard}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

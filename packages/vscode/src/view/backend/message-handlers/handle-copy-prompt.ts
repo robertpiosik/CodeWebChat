@@ -37,6 +37,22 @@ export const handle_copy_prompt = async (params: {
     (params.provider.home_view_type == HOME_VIEW_TYPES.API &&
       params.provider.api_mode == 'code-completions')
 
+  if (!is_in_code_completions_mode && !params.instructions.trim()) {
+    vscode.window.showWarningMessage('Cannot copy an empty prompt.')
+    return
+  }
+
+  if (
+    is_in_code_completions_mode &&
+    active_editor &&
+    !active_editor.selection.isEmpty
+  ) {
+    vscode.window.showWarningMessage(
+      'Cannot copy prompt in code completion mode with an active selection.'
+    )
+    return
+  }
+
   if (is_in_code_completions_mode && active_editor) {
     const document = active_editor.document
     const position = active_editor.selection.active
@@ -66,14 +82,20 @@ export const handle_copy_prompt = async (params: {
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_mode) {
-    const additional_paths = extract_file_paths_from_instruction(
-      final_instruction
-    )
+    const additional_paths =
+      extract_file_paths_from_instruction(final_instruction)
 
     const context_text = await files_collector.collect_files({
       additional_paths,
       no_context: params.provider.web_mode == 'no-context'
     })
+
+    if (params.provider.web_mode == 'edit-context' && !context_text) {
+      vscode.window.showWarningMessage(
+        'Cannot copy prompt in edit context mode without any context. Please add files to the context.'
+      )
+      return
+    }
 
     const instructions = replace_selection_placeholder(final_instruction)
 
@@ -125,9 +147,5 @@ export const handle_copy_prompt = async (params: {
     return
   }
 
-  vscode.window.showInformationMessage(
-    `Prompt${
-      params.preset_name ? ` with preset "${params.preset_name}"` : ''
-    } copied to clipboard!`
-  )
+  vscode.window.showInformationMessage('Prompt copied to clipboard!')
 }

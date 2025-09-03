@@ -2,18 +2,19 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a> <a href="https://discord.com/invite/KJySXsrSX5" target="_blank"><img src="https://img.shields.io/badge/Chat-Discord-7289da" alt="Join Discord server" /></a>
 
-**A 100% free and open-source tool for AI pair programming.** Its simple, yet highly effecive workflow is designed for an unmatched accuracy, speed and cost-efficiency—select context, type instructions and send prompt with a free chatbot or an API provider. When the model finishes, its response is ready for a one-click integration with the codebase.
+Code Web Chat is an open-source, versatile AI pair programming tool with a flagship workflow—select files, type instructions and initialize 15+ free chatbots, hands-free! As soon as the response is ready, it can be applied effortlessly.
 
 Available in VS Code, Cursor, and other forks.
-
-✅ **Edit context** with 15+ free chatbots or API providers \
-✅ **Apply multi-file changes** from a single response \
-✅ **Code completions** with reasoning models \
-✅ **Commit messages** in your team's style
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
+
+### Why CWC?
+
+- Save money—free tiers and comfortable subscription based billing
+- Save time—multi-file edits from a single prompt
+- Avoid slop—less time wasted on debugging
 
 ### Guiding principles
 
@@ -21,26 +22,6 @@ Available in VS Code, Cursor, and other forks.
 - Free forever—community effort
 - Privacy first—operates locally
 - Lightweight—2MB of code
-
-### CWC is non-agentic
-
-**Non-agentic is predictable** \
-Granular control over context let you scope the model precisely to the task and develop intuition for its outputs.
-
-**Non-agentic is cost-efficient** \
-Match the model to the task's complexity, not the entire codebase's. This lets you use lighter, faster, and cheaper models, saving time and money.
-
-**Non-agentic is blazing fast** \
-A single prompt yields a complete set of changes across all necessary files—no need to wait for a multi-step agent to finish.
-
-**Non-agentic avoids context pollution** \
-When the model isn't getting your intent on the first try, just adjust context, instructions and resend without distracting it with previous attempts.
-
-|                       | Non-agentic |  Coding agents   |
-| :-------------------- | :---------: | :--------------: |
-| **Messages per task** |      1      |       1-30       |
-| **Completes in**      |   seconds   |     minutes      |
-| **Token usage**       |   Minimal   | Sky is the limit |
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 

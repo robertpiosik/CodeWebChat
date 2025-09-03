@@ -12,6 +12,7 @@ import {
   get_last_selected_preset_key
 } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
+import { HOME_VIEW_TYPES } from '@/view/types/home-view-type'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import { WebMode } from '@shared/types/modes'
 import { CHATBOTS } from '@shared/constants/chatbots'
@@ -27,6 +28,16 @@ export const handle_send_prompt = async (params: {
   group_name?: string
   show_quick_pick?: boolean
 }): Promise<void> => {
+  if (
+    params.provider.home_view_type === HOME_VIEW_TYPES.WEB &&
+    !params.provider.websocket_server_instance.is_connected_with_browser()
+  ) {
+    vscode.window.showWarningMessage(
+      'Browser extension is not connected. Please install or reload it.'
+    )
+    return
+  }
+
   let current_instructions = ''
   const is_in_code_completions_mode =
     params.provider.web_mode == 'code-completions'
