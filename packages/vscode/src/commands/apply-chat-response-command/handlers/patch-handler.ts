@@ -11,6 +11,7 @@ import {
   apply_diff_patch,
   process_diff_patch
 } from '../utils/diff-patch-processor'
+import { remove_directory_if_empty } from '../utils/file-operations'
 
 const execAsync = promisify(exec)
 
@@ -219,6 +220,10 @@ async function process_modified_files(
             message: 'File was empty after patch, removed from disk.',
             data: { file_path }
           })
+          await remove_directory_if_empty(
+            path.dirname(safe_path),
+            workspace_path
+          )
         } catch (error) {
           Logger.error({
             function_name: 'process_modified_files',
@@ -376,6 +381,7 @@ const handle_deleted_file_patch = async (
         message: 'File deleted successfully.',
         data: { file_path }
       })
+      await remove_directory_if_empty(path.dirname(safe_path), workspace_path)
     } else {
       Logger.warn({
         function_name: 'handle_deleted_file_patch',
@@ -442,6 +448,10 @@ const handle_rename_patch = async (
       data: { from: safe_from_path, to: safe_to_path }
     })
 
+    await remove_directory_if_empty(
+      path.dirname(safe_from_path),
+      workspace_path
+    )
     await process_modified_files([to_path], workspace_path)
 
     return { success: true, original_states, used_fallback: false }

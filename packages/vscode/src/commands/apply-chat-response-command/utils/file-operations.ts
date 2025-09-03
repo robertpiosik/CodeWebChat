@@ -6,6 +6,49 @@ import { Logger } from '../../../utils/logger'
 import { format_document } from './format-document'
 import { OriginalFileState } from '../../../types/common'
 
+export async function remove_directory_if_empty(
+  dir_path: string,
+  workspace_root: string
+) {
+  const normalized_dir = path.normalize(dir_path)
+  const normalized_root = path.normalize(workspace_root)
+
+  if (
+    !normalized_dir ||
+    !normalized_dir.startsWith(normalized_root) ||
+    normalized_dir == normalized_root
+  ) {
+    return
+  }
+
+  try {
+    if (
+      fs.existsSync(normalized_dir) &&
+      fs.lstatSync(normalized_dir).isDirectory()
+    ) {
+      const files = fs.readdirSync(normalized_dir)
+      if (files.length == 0) {
+        fs.rmdirSync(normalized_dir)
+        Logger.log({
+          function_name: 'remove_directory_if_empty',
+          message: 'Removed empty directory',
+          data: { dir_path: normalized_dir }
+        })
+        await remove_directory_if_empty(
+          path.dirname(normalized_dir),
+          workspace_root
+        )
+      }
+    }
+  } catch (error) {
+    Logger.error({
+      function_name: 'remove_directory_if_empty',
+      message: 'Error removing empty directory',
+      data: { error, dir_path: normalized_dir }
+    })
+  }
+}
+
 export async function create_file_if_needed(
   filePath: string,
   content: string,
@@ -202,6 +245,10 @@ export async function undo_files(
               message: 'New file deleted',
               data: safe_path
             })
+            await remove_directory_if_empty(
+              path.dirname(safe_path),
+              workspace_root
+            )
           } catch (err) {
             Logger.error({
               function_name: 'undo_files',

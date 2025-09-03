@@ -6,6 +6,7 @@ import { createTwoFilesPatch } from 'diff'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { OriginalFileState } from '@/types/common'
+import { remove_directory_if_empty } from './file-operations'
 
 export type CodeReviewDecision =
   | { jump_to: { file_path: string; workspace_name?: string } }
@@ -272,12 +273,26 @@ export const review_applied_changes = async (
 
       if (!file_to_toggle) return
 
+      let workspace_root = default_workspace
+      if (
+        file_to_toggle.reviewable_file.workspace_name &&
+        workspace_map.has(file_to_toggle.reviewable_file.workspace_name)
+      ) {
+        workspace_root = workspace_map.get(
+          file_to_toggle.reviewable_file.workspace_name
+        )!
+      }
+
       if (!is_checked) {
         if (file_to_toggle.reviewable_file.is_new) {
           try {
             if (fs.existsSync(file_to_toggle.sanitized_path)) {
               await vscode.workspace.fs.delete(
                 vscode.Uri.file(file_to_toggle.sanitized_path)
+              )
+              await remove_directory_if_empty(
+                path.dirname(file_to_toggle.sanitized_path),
+                workspace_root
               )
             }
           } catch (e) {}
@@ -293,6 +308,10 @@ export const review_applied_changes = async (
             if (fs.existsSync(file_to_toggle.sanitized_path)) {
               await vscode.workspace.fs.delete(
                 vscode.Uri.file(file_to_toggle.sanitized_path)
+              )
+              await remove_directory_if_empty(
+                path.dirname(file_to_toggle.sanitized_path),
+                workspace_root
               )
             }
           } catch (e) {}
