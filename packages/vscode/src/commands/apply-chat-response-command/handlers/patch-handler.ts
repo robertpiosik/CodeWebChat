@@ -28,31 +28,28 @@ const parse_patch_header = (patch_content: string): PatchFileInfo => {
   let to_path: string | undefined
 
   for (const line of lines) {
-    if (line.startsWith('---')) {
-      const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
-      if (from_match && from_match[1]) {
-        from_path = from_match[1].trim().replace(/\t.*$/, '')
-      }
-    } else if (line.startsWith('+++')) {
-      const to_match = line.match(/^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/)
-      if (to_match && to_match[1]) {
-        to_path = to_match[1].trim().replace(/\t.*$/, '')
-      }
+    const match = line.match(/^\+\+\+ b\/(.+)$/)
+    if (match && match[1]) {
+      to_path = match[1]
+    }
+    const from_match = line.match(/^--- a\/(.+)$/)
+    if (from_match && from_match[1]) {
+      from_path = from_match[1]
     }
   }
 
-  const is_new = from_path === '/dev/null'
-  const is_deleted = to_path === '/dev/null'
+  const is_new = from_path == '/dev/null'
+  const is_deleted = to_path == '/dev/null'
   const is_rename =
     !!from_path &&
     !!to_path &&
-    from_path !== to_path &&
-    from_path !== '/dev/null' &&
-    to_path !== '/dev/null'
+    from_path != to_path &&
+    from_path != '/dev/null' &&
+    to_path != '/dev/null'
 
   return {
-    from_path: from_path === '/dev/null' ? undefined : from_path,
-    to_path: to_path === '/dev/null' ? undefined : to_path,
+    from_path: from_path == '/dev/null' ? undefined : from_path,
+    to_path: to_path == '/dev/null' ? undefined : to_path,
     is_new,
     is_deleted,
     is_rename
@@ -149,7 +146,7 @@ async function close_files_in_all_editor_groups(
     const uri = vscode.Uri.file(safe_path)
 
     for (const editor of vscode.window.visibleTextEditors) {
-      if (editor.document.uri.fsPath === uri.fsPath) {
+      if (editor.document.uri.fsPath == uri.fsPath) {
         if (editor.document.isDirty) {
           await editor.document.save()
         }
@@ -200,11 +197,11 @@ async function process_modified_files(
     }
 
     if (fs.existsSync(safe_path)) {
-      if (fs.readFileSync(safe_path, 'utf8').trim() === '') {
+      if (fs.readFileSync(safe_path, 'utf8').trim() == '') {
         try {
           const uri = vscode.Uri.file(safe_path)
           const text_editors = vscode.window.visibleTextEditors.filter(
-            (editor) => editor.document.uri.toString() === uri.toString()
+            (editor) => editor.document.uri.toString() == uri.toString()
           )
           for (const editor of text_editors) {
             await vscode.window.showTextDocument(editor.document, {

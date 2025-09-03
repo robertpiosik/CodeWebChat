@@ -11,13 +11,33 @@ const normalize_header_line = (line: string): string => {
     .replace(/\s+\d{4}-\d{2}-\d{2}.*$/, '')
     .replace(/\t.*$/, '')
 
-  if (processed_line.startsWith('--- "a/') && processed_line.endsWith('"')) {
-    const path = processed_line.substring(7, processed_line.length - 1)
-    return `--- a/${path}`
+  if (processed_line.startsWith('--- ')) {
+    let path_part = processed_line.substring(4).trim()
+    if (path_part.startsWith('"') && path_part.endsWith('"')) {
+      path_part = path_part.substring(1, path_part.length - 1)
+    }
+    if (path_part.startsWith('a/')) {
+      path_part = path_part.substring(2)
+    }
+
+    if (path_part == '/dev/null') {
+      return '--- /dev/null'
+    }
+    return `--- a/${path_part}`
   }
-  if (processed_line.startsWith('+++ "b/') && processed_line.endsWith('"')) {
-    const path = processed_line.substring(7, processed_line.length - 1)
-    return `+++ b/${path}`
+
+  if (processed_line.startsWith('+++ ')) {
+    let path_part = processed_line.substring(4).trim()
+    if (path_part.startsWith('"') && path_part.endsWith('"')) {
+      path_part = path_part.substring(1, path_part.length - 1)
+    }
+    if (path_part.startsWith('b/')) {
+      path_part = path_part.substring(2)
+    }
+    if (path_part == '/dev/null') {
+      return '+++ /dev/null'
+    }
+    return `+++ b/${path_part}`
   }
 
   return processed_line

@@ -308,6 +308,28 @@ describe('clipboard-parser', () => {
 `)
     })
 
+    it('should parse direct diff format without a/ b/ prefixes', () => {
+      const text = `--- src/index.ts
++++ src/index.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old message")
++console.log("new message")
+`
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+      expect(result.patches![0].file_path).toBe('src/index.ts')
+      expect(result.patches![0].content).toBe(`--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old message")
++console.log("new message")
+`)
+    })
+
     it('should parse direct diff format for file deletion', () => {
       const text = load_clipboard_text('diff-direct-variant-deletion.txt')
       const result = parse_response(text, true)
