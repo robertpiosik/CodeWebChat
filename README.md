@@ -22,7 +22,7 @@ Available in VS Code, Cursor, and other forks.
 - Privacy first—operates locally
 - Lightweight—2MB of code
 
-### Why non-agentic?
+### CWC is non-agentic
 
 **Non-agentic is predictable** \
 Granular control over context let you scope the model precisely to the task and develop intuition for its outputs.
