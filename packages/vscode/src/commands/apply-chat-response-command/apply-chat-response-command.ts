@@ -316,14 +316,6 @@ const handle_code_review_and_cleanup = async (params: {
       params.chat_response,
       params.original_editor_state
     )
-    const response = await vscode.window.showInformationMessage(
-      'Code review completed.',
-      'Undo'
-    )
-    if (response == 'Undo') {
-      await vscode.commands.executeCommand('codeWebChat.undo')
-      return false
-    }
     return true
   } else {
     params.update_undo_and_apply_button_state(null)

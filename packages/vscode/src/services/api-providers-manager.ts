@@ -131,7 +131,13 @@ export class ApiProvidersManager {
     const config = this._vscode.globalState.get<ToolConfig>(
       DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY
     )
-    return this._validate_tool_config(config)
+    const validated_config = this._validate_tool_config(config)
+    if (validated_config) return validated_config
+
+    const configs = await this.get_code_completions_tool_configs()
+    if (configs.length == 1) return configs[0]
+
+    return undefined
   }
 
   public async set_default_code_completions_config(config: ToolConfig | null) {
@@ -185,7 +191,13 @@ export class ApiProvidersManager {
     const config = this._vscode.globalState.get<ToolConfig>(
       DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY
     )
-    return this._validate_tool_config(config)
+    const validated_config = this._validate_tool_config(config)
+    if (validated_config) return validated_config
+
+    const configs = await this.get_commit_messages_tool_configs()
+    if (configs.length == 1) return configs[0]
+
+    return undefined
   }
 
   public async set_default_commit_messages_config(config: ToolConfig | null) {
@@ -222,7 +234,13 @@ export class ApiProvidersManager {
     const config = this._vscode.globalState.get<ToolConfig>(
       DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
     )
-    return this._validate_tool_config(config)
+    const validated_config = this._validate_tool_config(config)
+    if (validated_config) return validated_config
+
+    const configs = await this.get_intelligent_update_tool_configs()
+    if (configs.length == 1) return configs[0]
+
+    return undefined
   }
 
   public async set_default_intelligent_update_config(
