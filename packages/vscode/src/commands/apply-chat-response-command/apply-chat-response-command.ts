@@ -680,8 +680,8 @@ export const apply_chat_response_command = (
                 })
                 const message =
                   total_patches > 1
-                    ? `${fallback_patches_count} of ${total_patches} patches required a fallback method, which may lead to inaccuracies.`
-                    : 'The patch required a fallback method, which may lead to inaccuracies.'
+                    ? `${fallback_patches_count} of ${total_patches} patches required an offline fallback method, which may lead to inaccuracies.`
+                    : 'The patch required an offline fallback method, which may lead to inaccuracies.'
 
                 const response = await vscode.window.showInformationMessage(
                   message,
