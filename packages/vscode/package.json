@@ -232,8 +232,8 @@
         "title": "Delete"
       },
       {
-        "command": "codeWebChat.revert",
-        "title": "Revert Last Changes",
+        "command": "codeWebChat.undo",
+        "title": "Undo Last Changes",
         "category": "Code Web Chat"
       },
       {

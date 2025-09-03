@@ -27,7 +27,7 @@ import {
   rename_command,
   delete_command,
   save_context_command,
-  revert_command,
+  undo_command,
   generate_commit_message_command,
   commit_changes_command,
   reference_in_chat_command,
@@ -101,12 +101,12 @@ export async function activate(context: vscode.ExtensionContext) {
       reference_in_chat_command(view_provider, workspace_provider),
       apply_chat_response_command(context, view_provider),
       apply_clipboard_content_to_active_editor_command(context),
-      revert_command(
+      undo_command(
         context,
-        view_provider.set_revert_button_state,
+        view_provider.set_undo_button_state,
         view_provider.set_apply_button_state
       ),
-      commit_changes_command(context, view_provider.set_revert_button_state),
+      commit_changes_command(context, view_provider.set_undo_button_state),
       ...code_completion_commands(
         workspace_provider,
         open_editors_provider,

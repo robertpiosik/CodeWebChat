@@ -39,7 +39,7 @@ type Props = {
   has_active_selection: boolean
   has_changes_to_commit: boolean
   can_apply_clipboard: boolean
-  can_revert: boolean
+  can_undo: boolean
   chat_history: string[]
   token_count: number
   web_mode: WebMode
@@ -101,7 +101,7 @@ export const HomeView: React.FC<Props> = (props) => {
     useState(false)
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
-  const [is_revert_disabled_temporarily, set_is_revert_disabled_temporarily] =
+  const [is_undo_disabled_temporarily, set_is_undo_disabled_temporarily] =
     useState(false)
 
   const calculate_dropdown_max_width = () => {
@@ -145,7 +145,7 @@ export const HomeView: React.FC<Props> = (props) => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({})
     } else {
-      set_is_revert_disabled_temporarily(false)
+      set_is_undo_disabled_temporarily(false)
       if (is_in_code_completions_mode) {
         props.on_code_completion_click()
       } else {
@@ -158,7 +158,7 @@ export const HomeView: React.FC<Props> = (props) => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({ show_quick_pick: true })
     } else {
-      set_is_revert_disabled_temporarily(false)
+      set_is_undo_disabled_temporarily(false)
       if (is_in_code_completions_mode) {
         props.on_code_completion_with_quick_pick_click()
       } else {
@@ -190,19 +190,19 @@ export const HomeView: React.FC<Props> = (props) => {
     setTimeout(() => {
       set_is_apply_disabled_temporarily(false)
     }, 500)
-  }, [props.can_revert])
+  }, [props.can_undo])
 
-  const handle_revert_click = () => {
-    if (!props.can_revert) return
+  const handle_undo_click = () => {
+    if (!props.can_undo) return
 
-    set_is_revert_disabled_temporarily(true)
-    props.on_quick_action_click('codeWebChat.revert')
+    set_is_undo_disabled_temporarily(true)
+    props.on_quick_action_click('codeWebChat.undo')
 
-    setTimeout(() => set_is_revert_disabled_temporarily(false), 10000)
+    setTimeout(() => set_is_undo_disabled_temporarily(false), 10000)
   }
 
   useEffect(() => {
-    set_is_revert_disabled_temporarily(false)
+    set_is_undo_disabled_temporarily(false)
   }, [props.can_apply_clipboard])
 
   const handle_commit_click = () => {
@@ -494,15 +494,15 @@ export const HomeView: React.FC<Props> = (props) => {
               styles.footer__button,
               styles['footer__button--outlined']
             )}
-            onClick={handle_revert_click}
+            onClick={handle_undo_click}
             title={
-              props.can_revert
+              props.can_undo
                 ? 'Restore saved state of the codebase after chat/API response integration'
-                : 'Nothing to revert'
+                : 'Nothing to undo'
             }
-            disabled={!props.can_revert || is_revert_disabled_temporarily}
+            disabled={!props.can_undo || is_undo_disabled_temporarily}
           >
-            REVERT
+            UNDO
           </button>
           <button
             className={cn(

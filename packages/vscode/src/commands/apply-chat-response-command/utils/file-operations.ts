@@ -125,14 +125,14 @@ export async function create_file_if_needed(
 }
 
 /**
- * Reverts applied changes to files based on their original states.
+ * Undoes applied changes to files based on their original states.
  */
-export async function revert_files(
+export async function undo_files(
   original_states: OriginalFileState[],
   show_message = true
 ): Promise<boolean> {
   Logger.log({
-    function_name: 'revert_files',
+    function_name: 'undo_files',
     message: 'start',
     data: { original_states_count: original_states.length }
   })
@@ -143,7 +143,7 @@ export async function revert_files(
     ) {
       vscode.window.showErrorMessage('No workspace folder open.')
       Logger.warn({
-        function_name: 'revert_files',
+        function_name: 'undo_files',
         message: 'No workspace folder open.'
       })
       return false
@@ -162,7 +162,7 @@ export async function revert_files(
         workspace_root = workspace_map.get(state.workspace_name)!
       } else if (state.workspace_name) {
         Logger.warn({
-          function_name: 'revert_files',
+          function_name: 'undo_files',
           message: `Workspace '${state.workspace_name}' not found for file '${state.file_path}'. Using default.`
         })
       }
@@ -171,11 +171,11 @@ export async function revert_files(
 
       if (!safe_path) {
         Logger.error({
-          function_name: 'revert_files',
-          message: 'Cannot revert file with unsafe path',
+          function_name: 'undo_files',
+          message: 'Cannot undo file with unsafe path',
           data: state.file_path
         })
-        console.error(`Cannot revert file with unsafe path: ${state.file_path}`)
+        console.error(`Cannot undo file with unsafe path: ${state.file_path}`)
         continue // Skip this file
       }
 
@@ -198,13 +198,13 @@ export async function revert_files(
           try {
             fs.unlinkSync(safe_path)
             Logger.log({
-              function_name: 'revert_files',
+              function_name: 'undo_files',
               message: 'New file deleted',
               data: safe_path
             })
           } catch (err) {
             Logger.error({
-              function_name: 'revert_files',
+              function_name: 'undo_files',
               message: 'Error deleting new file',
               data: { error: err, file_path: state.file_path }
             })
@@ -224,7 +224,7 @@ export async function revert_files(
             }
             fs.writeFileSync(safe_path, state.content)
             Logger.log({
-              function_name: 'revert_files',
+              function_name: 'undo_files',
               message: 'Recreated deleted file.',
               data: { file_path: state.file_path }
             })
@@ -240,7 +240,7 @@ export async function revert_files(
             await doc.save()
           } catch (err) {
             Logger.warn({
-              function_name: 'revert_files',
+              function_name: 'undo_files',
               message: 'Error recreating deleted file',
               data: { error: err, file_path: state.file_path }
             })
@@ -271,19 +271,19 @@ export async function revert_files(
 
             await document.save()
             Logger.log({
-              function_name: 'revert_files',
-              message: 'Existing file reverted to original content',
+              function_name: 'undo_files',
+              message: 'Existing file content undone to original content',
               data: safe_path
             })
           } catch (err) {
             Logger.warn({
-              function_name: 'revert_files',
-              message: 'Error reverting file',
+              function_name: 'undo_files',
+              message: 'Error undoing file',
               data: { error: err, file_path: state.file_path }
             })
-            console.error(`Error reverting file ${state.file_path}:`, err)
+            console.error(`Error undoing file ${state.file_path}:`, err)
             vscode.window.showWarningMessage(
-              `Could not revert file: ${state.file_path}. It might have been closed or deleted.`
+              `Could not undo file: ${state.file_path}. It might have been closed or deleted.`
             )
           }
         }
@@ -291,22 +291,22 @@ export async function revert_files(
     }
 
     if (show_message) {
-      vscode.window.showInformationMessage('Changes successfully reverted.')
+      vscode.window.showInformationMessage('Changes successfully undone.')
     }
     Logger.log({
-      function_name: 'revert_files',
-      message: 'Changes successfully reverted.'
+      function_name: 'undo_files',
+      message: 'Changes successfully undone.'
     })
     return true
   } catch (error: any) {
     Logger.error({
-      function_name: 'revert_files',
-      message: 'Error during reversion',
+      function_name: 'undo_files',
+      message: 'Error during undo',
       data: error
     })
-    console.error('Error during reversion:', error)
+    console.error('Error during undo:', error)
     vscode.window.showErrorMessage(
-      `Failed to revert changes: ${error.message || 'Unknown error'}`
+      `Failed to undo changes: ${error.message || 'Unknown error'}`
     )
     return false
   }

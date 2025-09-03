@@ -68,7 +68,7 @@ export const Home: React.FC<Props> = (props) => {
     useState<boolean>(false)
   const [can_apply_clipboard, set_can_apply_clipboard] =
     useState<boolean>(false)
-  const [can_revert, set_can_revert] = useState<boolean>(false)
+  const [can_undo, set_can_undo] = useState<boolean>(false)
 
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
@@ -131,8 +131,8 @@ export const Home: React.FC<Props> = (props) => {
         case 'CAN_APPLY_CLIPBOARD_CHANGED':
           set_can_apply_clipboard(message.can_apply)
           break
-        case 'CAN_REVERT_CHANGED':
-          set_can_revert(message.can_revert)
+        case 'CAN_UNDO_CHANGED':
+          set_can_undo(message.can_undo)
           break
         case 'SELECTED_PRESET_OR_GROUP_CHANGED':
           set_selected_preset_or_group_name_by_mode((prev) => ({
@@ -570,7 +570,7 @@ export const Home: React.FC<Props> = (props) => {
       has_active_selection={props.has_active_selection}
       has_changes_to_commit={has_changes_to_commit}
       can_apply_clipboard={can_apply_clipboard}
-      can_revert={can_revert}
+      can_undo={can_undo}
       chat_history={current_history || []}
       token_count={token_count}
       web_mode={props.web_mode}

@@ -398,9 +398,9 @@ export interface CanApplyClipboardChangedMessage extends BaseMessage {
   can_apply: boolean
 }
 
-export interface CanRevertChangedMessage extends BaseMessage {
-  command: 'CAN_REVERT_CHANGED'
-  can_revert: boolean
+export interface CanUndoChangedMessage extends BaseMessage {
+  command: 'CAN_UNDO_CHANGED'
+  can_undo: boolean
 }
 
 export interface CodeReviewStartedMessage extends BaseMessage {
@@ -461,7 +461,7 @@ export type BackendMessage =
   | VersionMessage
   | AtSignQuickPickForPresetAffixResultMessage
   | CanApplyClipboardChangedMessage
-  | CanRevertChangedMessage
+  | CanUndoChangedMessage
   | CodeReviewStartedMessage
   | CodeReviewFinishedMessage
   | HasMultipleWorkspacesMessage

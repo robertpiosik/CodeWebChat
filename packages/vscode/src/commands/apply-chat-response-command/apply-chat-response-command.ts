@@ -8,7 +8,7 @@ import {
 } from '../../constants/state-keys'
 import { Logger } from '../../utils/logger'
 import { OriginalFileState } from '../../types/common'
-import { revert_files } from './utils/file-operations'
+import { undo_files } from './utils/file-operations'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { handle_intelligent_update } from './handlers/intelligent-update-handler'
 import { create_safe_path } from '@/utils/path-sanitizer'
@@ -274,7 +274,7 @@ const handle_code_review_and_cleanup = async (params: {
   original_states: OriginalFileState[]
   chat_response: string
   view_provider: ViewProvider
-  update_revert_and_apply_button_state: (
+  update_undo_and_apply_button_state: (
     states: OriginalFileState[] | null,
     content?: string | null,
     original_editor_state?: {
@@ -293,13 +293,13 @@ const handle_code_review_and_cleanup = async (params: {
   )
 
   if (review_result === null || review_result.accepted_files.length == 0) {
-    await revert_files(params.original_states)
-    params.update_revert_and_apply_button_state(null)
+    await undo_files(params.original_states)
+    params.update_undo_and_apply_button_state(null)
     return false
   }
 
   if (review_result.rejected_states.length > 0) {
-    await revert_files(review_result.rejected_states)
+    await undo_files(review_result.rejected_states)
   }
 
   const accepted_states = params.original_states.filter((state) =>
@@ -311,22 +311,22 @@ const handle_code_review_and_cleanup = async (params: {
   )
 
   if (accepted_states.length > 0) {
-    params.update_revert_and_apply_button_state(
+    params.update_undo_and_apply_button_state(
       accepted_states,
       params.chat_response,
       params.original_editor_state
     )
     const response = await vscode.window.showInformationMessage(
       'Code review completed.',
-      'Revert'
+      'Undo'
     )
-    if (response == 'Revert') {
-      await vscode.commands.executeCommand('codeWebChat.revert')
+    if (response == 'Undo') {
+      await vscode.commands.executeCommand('codeWebChat.undo')
       return false
     }
     return true
   } else {
-    params.update_revert_and_apply_button_state(null)
+    params.update_undo_and_apply_button_state(null)
     return false
   }
 }
@@ -338,7 +338,7 @@ export const apply_chat_response_command = (
   const intelligent_update_button_label =
     'Looks off? Call Intelligent Update API tool'
 
-  const update_revert_and_apply_button_state = (
+  const update_undo_and_apply_button_state = (
     states: OriginalFileState[] | null,
     applied_content?: string | null,
     original_editor_state?: {
@@ -356,7 +356,7 @@ export const apply_chat_response_command = (
         LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
         original_editor_state
       )
-      view_provider.set_revert_button_state(true)
+      view_provider.set_undo_button_state(true)
       view_provider.set_apply_button_state(false)
     } else {
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
@@ -368,7 +368,7 @@ export const apply_chat_response_command = (
         LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
         null
       )
-      view_provider.set_revert_button_state(false)
+      view_provider.set_undo_button_state(false)
       view_provider.set_apply_button_state(true)
     }
   }
@@ -567,7 +567,7 @@ export const apply_chat_response_command = (
           }
 
           if (all_original_states.length > 0) {
-            update_revert_and_apply_button_state(
+            update_undo_and_apply_button_state(
               all_original_states,
               chat_response,
               args?.original_editor_state
@@ -584,8 +584,8 @@ export const apply_chat_response_command = (
 
             if (!config_result) {
               if (success_count > 0 && all_original_states.length > 0) {
-                await revert_files(all_original_states)
-                update_revert_and_apply_button_state(null)
+                await undo_files(all_original_states)
+                update_undo_and_apply_button_state(null)
               }
               return null
             }
@@ -627,7 +627,7 @@ export const apply_chat_response_command = (
                   ...all_original_states,
                   ...intelligent_update_states
                 ]
-                update_revert_and_apply_button_state(
+                update_undo_and_apply_button_state(
                   combined_states,
                   chat_response,
                   args?.original_editor_state
@@ -638,8 +638,8 @@ export const apply_chat_response_command = (
                 }
               } else {
                 if (success_count > 0 && all_original_states.length > 0) {
-                  await revert_files(all_original_states)
-                  update_revert_and_apply_button_state(null)
+                  await undo_files(all_original_states)
+                  update_undo_and_apply_button_state(null)
                 }
               }
             } catch (error) {
@@ -649,14 +649,14 @@ export const apply_chat_response_command = (
               })
 
               const response = await vscode.window.showErrorMessage(
-                'Error during fix attempt with the intelligent update tool. Would you like to revert the successfully applied patches?',
+                'Error during fix attempt with the intelligent update tool. Would you like to undo the successfully applied patches?',
                 'Keep changes',
-                'Revert'
+                'Undo'
               )
 
-              if (response == 'Revert' && all_original_states.length > 0) {
-                await revert_files(all_original_states)
-                update_revert_and_apply_button_state(null)
+              if (response == 'Undo' && all_original_states.length > 0) {
+                await undo_files(all_original_states)
+                update_undo_and_apply_button_state(null)
               }
             }
           } else if (success_count > 0) {
@@ -696,12 +696,12 @@ export const apply_chat_response_command = (
                   const fallback_states = fallback_applied_patches.flatMap(
                     (p) => p.original_states
                   )
-                  await revert_files(fallback_states, false)
+                  await undo_files(fallback_states, false)
 
                   const non_fallback_states = applied_patches
                     .filter((p) => !p.used_fallback)
                     .flatMap((p) => p.original_states)
-                  update_revert_and_apply_button_state(
+                  update_undo_and_apply_button_state(
                     non_fallback_states,
                     chat_response,
                     args?.original_editor_state
@@ -758,7 +758,7 @@ export const apply_chat_response_command = (
                     })
 
                   if (intelligent_update_states) {
-                    update_revert_and_apply_button_state(
+                    update_undo_and_apply_button_state(
                       [...non_fallback_states, ...intelligent_update_states],
                       chat_response,
                       args?.original_editor_state
@@ -909,15 +909,15 @@ export const apply_chat_response_command = (
                 )
 
                 if (response == intelligent_update_button_label) {
-                  const original_states_for_revert = final_original_states!
-                  await revert_files(original_states_for_revert, false)
-                  const num_files = original_states_for_revert.length
+                  const original_states_for_undo = final_original_states!
+                  await undo_files(original_states_for_undo, false)
+                  const num_files = original_states_for_undo.length
                   const progress_title_override = `Called Intelligent Update API tool for ${num_files} file${
                     num_files > 1 ? 's' : ''
                   }`
 
                   // Clear state while intelligent update runs
-                  update_revert_and_apply_button_state(null)
+                  update_undo_and_apply_button_state(null)
 
                   const api_providers_manager = new ApiProvidersManager(context)
                   const config_result = await get_intelligent_update_config(
@@ -927,7 +927,7 @@ export const apply_chat_response_command = (
                   )
 
                   if (!config_result) {
-                    return // Reverted, no config for intelligent update.
+                    return // Undone, no config for intelligent update.
                   }
 
                   const { provider, config: intelligent_update_config } =
@@ -955,7 +955,7 @@ export const apply_chat_response_command = (
                     })
 
                   if (intelligent_update_states) {
-                    update_revert_and_apply_button_state(
+                    update_undo_and_apply_button_state(
                       intelligent_update_states,
                       chat_response,
                       args?.original_editor_state
@@ -965,7 +965,7 @@ export const apply_chat_response_command = (
               })()
             }
 
-            update_revert_and_apply_button_state(
+            update_undo_and_apply_button_state(
               final_original_states,
               chat_response,
               args?.original_editor_state
@@ -976,7 +976,7 @@ export const apply_chat_response_command = (
               chat_response
             }
           } else {
-            update_revert_and_apply_button_state(null)
+            update_undo_and_apply_button_state(null)
             Logger.log({
               function_name: 'apply_chat_response_command',
               message: 'Operation concluded without success.'
@@ -1000,7 +1000,7 @@ export const apply_chat_response_command = (
           original_states: review_data.original_states,
           chat_response: review_data.chat_response,
           view_provider,
-          update_revert_and_apply_button_state,
+          update_undo_and_apply_button_state,
           original_editor_state: args?.original_editor_state
         })
       }

@@ -60,7 +60,7 @@ import {
   RECENT_DONATIONS_VISIBLE_STATE_KEY,
   WEB_MODE_STATE_KEY
 } from '@/constants/state-keys'
-import { can_revert } from '@/commands/revert-command'
+import { can_undo } from '@/commands/undo-command'
 import {
   config_preset_to_ui_format,
   ConfigPresetFormat
@@ -448,8 +448,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     // We need to wait until the webview fully initialized
     setTimeout(() => {
       this.send_message({
-        command: 'CAN_REVERT_CHANGED',
-        can_revert: can_revert(this.context)
+        command: 'CAN_UNDO_CHANGED',
+        can_undo: can_undo(this.context)
       })
     }, 1000)
   }
@@ -696,10 +696,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public set_revert_button_state = (can_revert: boolean) => {
+  public set_undo_button_state = (can_undo: boolean) => {
     this.send_message({
-      command: 'CAN_REVERT_CHANGED',
-      can_revert: can_revert
+      command: 'CAN_UNDO_CHANGED',
+      can_undo: can_undo
     })
   }
 

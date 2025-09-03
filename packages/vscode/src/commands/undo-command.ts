@@ -15,12 +15,12 @@ interface OriginalFileState {
   workspace_name?: string
 }
 
-export function revert_command(
+export function undo_command(
   context: vscode.ExtensionContext,
-  on_can_revert: (can_revert: boolean) => void,
+  on_can_undo: (can_undo: boolean) => void,
   set_apply_button_state: (can_apply: boolean) => void
 ) {
-  return vscode.commands.registerCommand('codeWebChat.revert', async () => {
+  return vscode.commands.registerCommand('codeWebChat.undo', async () => {
     const original_states = context.workspaceState.get<OriginalFileState[]>(
       LAST_APPLIED_CHANGES_STATE_KEY
     )
@@ -34,7 +34,7 @@ export function revert_command(
 
     if (!original_states || original_states.length == 0) {
       vscode.window.showInformationMessage(
-        'No recent changes found to revert or changes were already reverted.'
+        'No recent changes found to undo or changes were already undone.'
       )
       return false
     }
@@ -62,9 +62,7 @@ export function revert_command(
         const safe_path = create_safe_path(workspace_root, state.file_path)
 
         if (!safe_path) {
-          console.error(
-            `Cannot revert file with unsafe path: ${state.file_path}`
-          )
+          console.error(`Cannot undo file with unsafe path: ${state.file_path}`)
           continue
         }
 
@@ -104,9 +102,9 @@ export function revert_command(
             })
             await document.save()
           } catch (err) {
-            console.error(`Error reverting file ${state.file_path}:`, err)
+            console.error(`Error undoing file ${state.file_path}:`, err)
             vscode.window.showWarningMessage(
-              `Could not revert file: ${state.file_path}. It might have been closed or deleted.`
+              `Could not undo file: ${state.file_path}. It might have been closed or deleted.`
             )
           }
         }
@@ -134,12 +132,15 @@ export function revert_command(
       }
 
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
-      context.workspaceState.update(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY, null)
+      context.workspaceState.update(
+        LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
+        null
+      )
       context.workspaceState.update(
         LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
         null
       )
-      on_can_revert(false)
+      on_can_undo(false)
 
       const clipboard_text = await vscode.env.clipboard.readText()
       if (!clipboard_text.trim()) {
@@ -154,19 +155,19 @@ export function revert_command(
         set_apply_button_state(can_apply)
       }
 
-      vscode.window.showInformationMessage('Changes successfully reverted.')
+      vscode.window.showInformationMessage('Changes successfully undone.')
       return true
     } catch (error: any) {
-      console.error('Error during reversion:', error)
+      console.error('Error during undo:', error)
       vscode.window.showErrorMessage(
-        `Failed to revert changes: ${error.message || 'Unknown error'}`
+        `Failed to undo changes: ${error.message || 'Unknown error'}`
       )
       return false
     }
   })
 }
 
-export function can_revert(context: vscode.ExtensionContext): boolean {
+export function can_undo(context: vscode.ExtensionContext): boolean {
   const original_states = context.workspaceState.get<OriginalFileState[]>(
     LAST_APPLIED_CHANGES_STATE_KEY
   )

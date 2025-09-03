@@ -13,7 +13,7 @@ import {
 
 export const commit_changes_command = (
   context: vscode.ExtensionContext,
-  set_revert_button_state: (can_revert: boolean) => void
+  set_undo_button_state: (can_undo: boolean) => void
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.commitChanges',
@@ -38,7 +38,7 @@ export const commit_changes_command = (
 
         if (!commit_message) return
 
-        set_revert_button_state(false)
+        set_undo_button_state(false)
 
         try {
           execSync(`git commit -m "${commit_message.replace(/"/g, '\\"')}"`, {
