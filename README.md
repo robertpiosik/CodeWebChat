@@ -70,7 +70,7 @@ Generate meaningful summaries of changes adhering to your preferred style.
 
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied to clipboard overall chat response or a single code block.
 - `Code Web Chat: Apply Clipboard Content to Active Editor` - Serves as a flexible fallback for applying AI-generated edits, e.g. broken diffs.
-- `Code Web Chat: Undo Last Changes` - Undo above command.
+- `Code Web Chat: Undo Last Changes` - Revert changes made by Apply commands.
 
 ### Code completions
 
