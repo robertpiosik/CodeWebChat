@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import styles from './Button.module.scss'
 import cn from 'classnames'
 
@@ -9,11 +9,21 @@ type Props = {
   codicon?: string
   title?: string
   is_secondary?: boolean
+  is_focused?: boolean
 }
 
 export const Button: FC<Props> = (props) => {
+  const button_ref = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (props.is_focused) {
+      button_ref.current?.focus()
+    }
+  }, [props.is_focused])
+
   return (
     <button
+      ref={button_ref}
       className={cn(styles.button, {
         [styles['button--secondary']]: props.is_secondary
       })}

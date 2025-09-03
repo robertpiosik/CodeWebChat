@@ -12,7 +12,7 @@ import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
-import { CodeReview as UiCodeReview } from '@ui/components/editor/CodeReview'
+import { Summary as UiSummary } from '@ui/components/editor/Summary'
 
 const vscode = acquireVsCodeApi()
 
@@ -291,14 +291,14 @@ export const View = () => {
 
   if (files_to_review.length > 0) {
     overlay = (
-      <UiPage title="Code Review">
-        <UiCodeReview
+      <UiPage title="Summary">
+        <UiSummary
           files={files_to_review}
           has_multiple_workspaces={has_multiple_workspaces}
-          on_reject_all={() => {
+          on_undo={() => {
             post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
           }}
-          on_accept={(accepted_files) => {
+          on_keep={(accepted_files) => {
             post_message(vscode, {
               command: 'EDITS_REVIEW',
               files: accepted_files

@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--padding-6px);
+  gap: var(--padding-3px);
   min-height: 28px;
   font-size: var(--font-size-13px);
   padding: var(--padding-4px) var(--padding-16px);
@@ -16,6 +16,11 @@
 
   &:hover {
     background-color: var(--vscode-button-hoverBackground);
+  }
+
+  &:focus {
+    outline: 1px solid var(--vscode-focusBorder);
+    outline-offset: 2px;
   }
 
   &:disabled {

@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react'
 import { FileInReview } from '@shared/types/file-in-review'
 import cn from 'classnames'
-import styles from './CodeReview.module.scss'
+import styles from './Summary.module.scss'
 import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
 
@@ -10,8 +10,8 @@ type CheckedFileToReview = FileInReview & { is_checked: boolean }
 type Props = {
   files: FileInReview[]
   has_multiple_workspaces: boolean
-  on_reject_all: () => void
-  on_accept: (files: FileInReview[]) => void
+  on_undo: () => void
+  on_keep: (files: FileInReview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
   on_toggle_file: (file: {
     file_path: string
@@ -20,11 +20,11 @@ type Props = {
   }) => void
 }
 
-export const CodeReview: FC<Props> = ({
+export const Summary: FC<Props> = ({
   files,
   has_multiple_workspaces,
-  on_reject_all,
-  on_accept,
+  on_undo,
+  on_keep,
   on_focus_file,
   on_toggle_file
 }) => {
@@ -32,15 +32,23 @@ export const CodeReview: FC<Props> = ({
     CheckedFileToReview[]
   >([])
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
+  const [is_keep_button_focused, set_is_keep_button_focused] = useState(false)
 
   useEffect(() => {
     set_files_to_review(files.map((f) => ({ ...f, is_checked: true })))
     set_last_clicked_file_index(0)
+    set_is_keep_button_focused(false)
+
+    const timer = setTimeout(() => {
+      set_is_keep_button_focused(true)
+    }, 1000)
+
+    return () => clearTimeout(timer)
   }, [files])
 
   const handle_keep = () => {
     const accepted_files = files_to_review.filter((f) => f.is_checked)
-    on_accept(accepted_files)
+    on_keep(accepted_files)
   }
 
   return (
@@ -118,14 +126,18 @@ export const CodeReview: FC<Props> = ({
         })}
       </div>
       <div className={styles.footer}>
-        <Button on_click={on_reject_all} is_secondary>
-          {files_to_review.length > 1 ? 'Reject All' : 'Reject'}
+        <Button on_click={on_undo} is_secondary>
+          <span className="codicon codicon-redo" />
+
+          {files_to_review.length > 1 ? 'Discard All' : 'Discard'}
         </Button>
         <Button
           on_click={handle_keep}
           disabled={files_to_review.filter((f) => f.is_checked).length == 0}
+          is_focused={is_keep_button_focused}
         >
-          {files_to_review.length > 1 ? 'Accept Selected' : 'Accept'}
+          <span className="codicon codicon-check" />
+          {files_to_review.length > 1 ? 'Keep Selected' : 'Keep'}
         </Button>
       </div>
     </div>
