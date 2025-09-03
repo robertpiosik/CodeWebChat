@@ -14,32 +14,59 @@ import {
 
 const execAsync = promisify(exec)
 
-export const extract_file_paths_from_patch = (
-  patch_content: string
-): string[] => {
-  const file_paths: string[] = []
+interface PatchFileInfo {
+  from_path?: string
+  to_path?: string
+  is_new: boolean
+  is_deleted: boolean
+  is_rename: boolean
+}
+
+const parse_patch_header = (patch_content: string): PatchFileInfo => {
   const lines = patch_content.split('\n')
   let from_path: string | undefined
   let to_path: string | undefined
 
   for (const line of lines) {
-    const to_match = line.match(/^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/)
-    if (to_match && to_match[1]) {
-      to_path = to_match[1]
-    }
-    const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
-    if (from_match && from_match[1]) {
-      from_path = from_match[1]
+    if (line.startsWith('---')) {
+      const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
+      if (from_match && from_match[1]) {
+        from_path = from_match[1].trim().replace(/\t.*$/, '')
+      }
+    } else if (line.startsWith('+++')) {
+      const to_match = line.match(/^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/)
+      if (to_match && to_match[1]) {
+        to_path = to_match[1].trim().replace(/\t.*$/, '')
+      }
     }
   }
 
-  if (to_path && to_path != '/dev/null') {
-    file_paths.push(to_path.trim().replace(/\t.*$/, ''))
-  } else if (from_path && from_path != '/dev/null') {
-    file_paths.push(from_path.trim().replace(/\t.*$/, ''))
-  }
+  const is_new = from_path === '/dev/null'
+  const is_deleted = to_path === '/dev/null'
+  const is_rename =
+    !!from_path &&
+    !!to_path &&
+    from_path !== to_path &&
+    from_path !== '/dev/null' &&
+    to_path !== '/dev/null'
 
-  return [...new Set(file_paths)]
+  return {
+    from_path: from_path === '/dev/null' ? undefined : from_path,
+    to_path: to_path === '/dev/null' ? undefined : to_path,
+    is_new,
+    is_deleted,
+    is_rename
+  }
+}
+
+export const extract_file_paths_from_patch = (
+  patch_content: string
+): string[] => {
+  const { from_path, to_path } = parse_patch_header(patch_content)
+  const paths = new Set<string>()
+  if (from_path) paths.add(from_path)
+  if (to_path) paths.add(to_path)
+  return Array.from(paths)
 }
 
 export const store_original_file_states = async (
@@ -371,6 +398,70 @@ const handle_deleted_file_patch = async (
   }
 }
 
+const handle_rename_patch = async (
+  patch_content: string,
+  workspace_path: string,
+  from_path: string,
+  to_path: string
+): Promise<{
+  success: boolean
+  original_states?: OriginalFileState[]
+  used_fallback?: boolean
+}> => {
+  const safe_from_path = create_safe_path(workspace_path, from_path)
+  const safe_to_path = create_safe_path(workspace_path, to_path)
+
+  if (!safe_from_path || !safe_to_path) {
+    Logger.error({
+      function_name: 'handle_rename_patch',
+      message: 'Invalid file path for rename.',
+      data: { from_path, to_path }
+    })
+    return { success: false }
+  }
+
+  const original_states = await store_original_file_states(
+    patch_content,
+    workspace_path
+  )
+
+  try {
+    const original_content = await fs.promises.readFile(safe_from_path, 'utf8')
+
+    await close_files_in_all_editor_groups([from_path, to_path], workspace_path)
+
+    const new_content = apply_diff_patch(original_content, patch_content)
+
+    const dir = path.dirname(safe_to_path)
+    if (!fs.existsSync(dir)) {
+      await fs.promises.mkdir(dir, { recursive: true })
+    }
+
+    await fs.promises.writeFile(safe_to_path, new_content, 'utf8')
+    await fs.promises.unlink(safe_from_path)
+    Logger.log({
+      function_name: 'handle_rename_patch',
+      message: 'File renamed and patch applied.',
+      data: { from: safe_from_path, to: safe_to_path }
+    })
+
+    await process_modified_files([to_path], workspace_path)
+
+    return { success: true, original_states, used_fallback: false }
+  } catch (error: any) {
+    Logger.error({
+      function_name: 'handle_rename_patch',
+      message: 'Failed to handle file rename from patch.',
+      data: { error: error.message, from_path, to_path }
+    })
+    // Cleanup attempt
+    if (fs.existsSync(safe_to_path)) {
+      await fs.promises.unlink(safe_to_path)
+    }
+    return { success: false }
+  }
+}
+
 export const apply_git_patch = async (
   patch_content: string,
   workspace_path: string
@@ -379,13 +470,23 @@ export const apply_git_patch = async (
   original_states?: OriginalFileState[]
   used_fallback?: boolean
 }> => {
-  if (patch_content.startsWith('--- /dev/null')) {
+  const patch_info = parse_patch_header(patch_content)
+
+  if (patch_info.is_new) {
     return handle_new_file_patch(patch_content, workspace_path)
   }
 
-  const lines = patch_content.split('\n')
-  if (lines.length > 1 && lines[1].startsWith('+++ /dev/null')) {
+  if (patch_info.is_deleted) {
     return handle_deleted_file_patch(patch_content, workspace_path)
+  }
+
+  if (patch_info.is_rename && patch_info.from_path && patch_info.to_path) {
+    return handle_rename_patch(
+      patch_content,
+      workspace_path,
+      patch_info.from_path,
+      patch_info.to_path
+    )
   }
 
   let closed_files: vscode.Uri[] = []
