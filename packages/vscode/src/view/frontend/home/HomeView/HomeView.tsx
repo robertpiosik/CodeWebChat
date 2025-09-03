@@ -231,7 +231,7 @@ export const HomeView: React.FC<Props> = (props) => {
               <IconButton
                 codicon_icon="chevron-left"
                 on_click={props.on_show_intro}
-                title="Return to getting started"
+                title="Return to Home"
               />
               <button
                 className={styles['top__left__toggler']}
