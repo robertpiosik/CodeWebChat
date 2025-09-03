@@ -23,7 +23,7 @@ export const PROVIDERS = {
   Fireworks: {
     base_url: 'https://api.fireworks.ai/inference/v1'
   },
-  Gemini: {
+  Google: {
     base_url: 'https://generativelanguage.googleapis.com/v1beta/openai'
   },
   Groq: {

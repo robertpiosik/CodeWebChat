@@ -46,7 +46,7 @@ export class ModelFetcher {
 
       const models: Model[] = response.data.data
         .map((item) => {
-          if (params.base_url == PROVIDERS['Gemini'].base_url) {
+          if (params.base_url == PROVIDERS['Google'].base_url) {
             return {
               id: item.id.split('/')[1],
               description: item.description

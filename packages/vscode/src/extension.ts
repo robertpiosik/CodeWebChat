@@ -12,7 +12,8 @@ import {
   migrate_presets_to_chat_presets_for_edit_context,
   migrate_edit_to_edit_context,
   migrate_clear_history,
-  migrate_preset_is_default_to_is_selected
+  migrate_preset_is_default_to_is_selected,
+  migrate_gemini_to_google_provider
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -69,8 +70,10 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_edit_to_edit_context(context)
     // 25 July 2025
     await migrate_clear_history(context)
-    // 1 August 2025
+    // 1 September 2025
     await migrate_preset_is_default_to_is_selected(context)
+    // 3 September 2025
+    await migrate_gemini_to_google_provider(context)
   }
 
   await migrations()
