@@ -1,7 +1,8 @@
 import { Chatbot } from '../types/chatbot'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const mistral: Chatbot = {
   wait_until_ready: async () => {
@@ -55,33 +56,16 @@ export const mistral: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (
+    requestAnimationFrame(() => {
+      observe_for_responses({
+        chatbot_name: 'Mistral',
+        is_generating: () =>
           !document.querySelector(
             'path[d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"]'
-          ) || // Share button in top right corner
-          document.querySelector('form rect[rx="2"]') // Stop button
-        )
-          return
-
-        show_response_ready_notification({ chatbot_name: 'Mistral' })
-
-        const all_footers = document.querySelectorAll(
-          'div[data-message-author-role="assistant"] > div:last-child > div:last-child > div:last-child'
-        )
-
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    requestAnimationFrame(() => {
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        characterData: true
+          ) || !!document.querySelector('form rect[rx="2"]'),
+        footer_selector:
+          'div[data-message-author-role="assistant"] > div:last-child > div:last-child > div:last-child',
+        add_buttons
       })
     })
   }

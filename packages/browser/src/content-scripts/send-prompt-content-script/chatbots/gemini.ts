@@ -1,7 +1,9 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const gemini: Chatbot = {
   wait_until_ready: async () => {
@@ -68,27 +70,12 @@ export const gemini: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (document.querySelector('mat-icon[data-mat-icon-name="stop"]')) {
-          return
-        }
-
-        show_response_ready_notification({ chatbot_name: 'Gemini' })
-
-        const all_footers = document.querySelectorAll(
-          'message-actions > div > div'
-        )
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'Gemini',
+      is_generating: () =>
+        !!document.querySelector('mat-icon[data-mat-icon-name="stop"]'),
+      footer_selector: 'message-actions > div > div',
+      add_buttons
     })
   }
 }

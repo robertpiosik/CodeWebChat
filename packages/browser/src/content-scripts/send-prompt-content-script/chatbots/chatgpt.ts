@@ -1,8 +1,9 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const chatgpt: Chatbot = {
   wait_until_ready: async () => {
@@ -67,27 +68,12 @@ export const chatgpt: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (document.querySelector('button[data-testid="stop-button"]')) {
-          return
-        }
-
-        show_response_ready_notification({ chatbot_name: 'ChatGPT' })
-
-        const all_footers = document.querySelectorAll(
-          '.agent-turn > div:nth-of-type(2) > div'
-        )
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'ChatGPT',
+      is_generating: () =>
+        !!document.querySelector('button[data-testid="stop-button"]'),
+      footer_selector: '.agent-turn > div:nth-of-type(2) > div',
+      add_buttons
     })
   }
 }

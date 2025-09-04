@@ -1,9 +1,10 @@
 import { Chatbot } from '../types/chatbot'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Logger } from '@shared/utils/logger'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const claude: Chatbot = {
   wait_until_ready: async () => {
@@ -113,33 +114,16 @@ export const claude: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        const stop_button_selector =
-          'path[d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm40-112v56a12,12,0,0,1-12,12H100a12,12,0,0,1-12-12V100a12,12,0,0,1,12-12h56A12,12,0,0,1,168,100Z"]'
-        const footer_selector =
-          'div[data-is-streaming="false"] > div:nth-child(2) > div > div'
+    const stop_button_selector =
+      'path[d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm40-112v56a12,12,0,0,1-12,12H100a12,12,0,0,1-12-12V100a12,12,0,0,1,12-12h56A12,12,0,0,1,168,100Z"]'
+    const footer_selector =
+      'div[data-is-streaming="false"] > div:nth-child(2) > div > div'
 
-        if (
-          document.querySelector(stop_button_selector) ||
-          !document.querySelector(footer_selector)
-        ) {
-          return
-        }
-
-        show_response_ready_notification({ chatbot_name: 'Claude' })
-
-        const all_footers = document.querySelectorAll(footer_selector)
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'Claude',
+      is_generating: () => !!document.querySelector(stop_button_selector),
+      footer_selector,
+      add_buttons
     })
   }
 }

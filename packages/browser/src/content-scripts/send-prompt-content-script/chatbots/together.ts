@@ -1,8 +1,9 @@
 import { Chatbot } from '../types/chatbot'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const together: Chatbot = {
   wait_until_ready: async () => {
@@ -68,32 +69,12 @@ export const together: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (
-          document.querySelector('button[data-testid="stop-button"]') ||
-          !document.querySelector(
-            'div[data-testid="assistant-message-toolbar"]'
-          )
-        ) {
-          return
-        }
-
-        show_response_ready_notification({ chatbot_name: 'Together' })
-
-        const all_footers = document.querySelectorAll(
-          'div[data-testid="assistant-message-toolbar"]'
-        )
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'Together',
+      is_generating: () =>
+        !!document.querySelector('button[data-testid="stop-button"]'),
+      footer_selector: 'div[data-testid="assistant-message-toolbar"]',
+      add_buttons
     })
   }
 }

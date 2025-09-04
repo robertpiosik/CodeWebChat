@@ -1,7 +1,8 @@
 import { Chatbot } from '../types/chatbot'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const openrouter: Chatbot = {
   wait_until_ready: async () => {
@@ -136,32 +137,14 @@ export const openrouter: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (
-          document.querySelector(
-            'path[d="M4.5 7.5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-9a3 3 0 0 1-3-3v-9Z"]'
-          )
-        ) {
-          return
-        }
-
-        show_response_ready_notification({ chatbot_name: 'OpenRouter' })
-
-        const all_footers = document.querySelectorAll(
-          'div[data-message-id] > div > div:last-child > div'
-        )
-
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'OpenRouter',
+      is_generating: () =>
+        !!document.querySelector(
+          'path[d="M4.5 7.5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v9a3 3 0 0 1-3-3h-9a3 3 0 0 1-3-3v-9Z"]'
+        ),
+      footer_selector: 'div[data-message-id] > div > div:last-child > div',
+      add_buttons
     })
   }
 }

@@ -1,8 +1,9 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const qwen: Chatbot = {
   wait_until_ready: async () => {
@@ -158,27 +159,11 @@ export const qwen: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (
-          document.querySelector('i.icon-StopIcon') ||
-          !document.querySelector('.message-footer-buttons')
-        )
-          return
-
-        show_response_ready_notification({ chatbot_name: 'Qwen' })
-
-        const all_footers = document.querySelectorAll('.message-footer-buttons')
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'Qwen',
+      is_generating: () => !!document.querySelector('i.icon-StopIcon'),
+      footer_selector: '.message-footer-buttons',
+      add_buttons
     })
   }
 }

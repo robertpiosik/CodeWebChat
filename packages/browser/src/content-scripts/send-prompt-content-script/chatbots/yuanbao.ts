@@ -1,8 +1,9 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const yuanbao: Chatbot = {
   wait_until_ready: async () => {
@@ -92,25 +93,11 @@ export const yuanbao: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (document.querySelector('rect[x="7.71448"]')) return
-
-        show_response_ready_notification({ chatbot_name: 'Yuanbao' })
-
-        const all_footers = document.querySelectorAll(
-          '.agent-chat__toolbar__right'
-        )
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'Yuanbao',
+      is_generating: () => !!document.querySelector('rect[x="7.71448"]'),
+      footer_selector: '.agent-chat__toolbar__right',
+      add_buttons
     })
   }
 }

@@ -1,8 +1,9 @@
 import { Chatbot } from '../types/chatbot'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const doubao: Chatbot = {
   wait_until_ready: async () => {
@@ -71,31 +72,15 @@ export const doubao: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (
-          !document
-            .querySelector('div[data-testid="chat_input_local_break_button"]')
-            ?.classList.contains('!hidden')
-        ) {
-          return
-        }
-
-        show_response_ready_notification({ chatbot_name: 'Doubao' })
-
-        const all_footers = document.querySelectorAll(
-          'div[data-testid="message_action_bar"] > div > div > div'
-        )
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'Doubao',
+      is_generating: () =>
+        !document
+          .querySelector('div[data-testid="chat_input_local_break_button"]')
+          ?.classList.contains('!hidden'),
+      footer_selector:
+        'div[data-testid="message_action_bar"] > div > div > div',
+      add_buttons
     })
   }
 }

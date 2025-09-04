@@ -10,6 +10,7 @@ import {
   set_button_disabled_state
 } from './apply-response-styles'
 import { is_eligible_code_block } from './is-eligible-code-block'
+import { show_response_ready_notification } from './show-response-ready-notification'
 
 interface AddApplyResponseButtonParams {
   client_id: number
@@ -84,4 +85,39 @@ export function add_apply_response_button(
 
   insert_button(footer, apply_response_button)
   apply_response_button.focus()
+}
+
+interface ResponseObserverParams {
+  chatbot_name: string
+  /** A function that returns true if the AI is generating a response. */
+  is_generating: () => boolean
+  /** A CSS selector for the footer of each AI response. */
+  footer_selector: string
+  /** A function to add buttons to a footer element. */
+  add_buttons: (footer: Element) => void
+}
+
+export function observe_for_responses(params: ResponseObserverParams) {
+  const observer = new MutationObserver(() => {
+    if (params.is_generating()) {
+      return
+    }
+
+    const all_footers = document.querySelectorAll(params.footer_selector)
+    if (all_footers.length === 0) {
+      return
+    }
+
+    show_response_ready_notification({ chatbot_name: params.chatbot_name })
+
+    all_footers.forEach((footer) => {
+      params.add_buttons(footer)
+    })
+  })
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  })
 }

@@ -1,7 +1,9 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const deepseek: Chatbot = {
   wait_until_ready: async () => {
@@ -84,7 +86,9 @@ export const deepseek: Chatbot = {
           ) as HTMLElement,
         get_code_blocks: (t) => t.querySelectorAll('pre'),
         perform_copy: (f) => {
-          const copy_button = f.querySelector('.ds-icon-button') as HTMLElement
+          const copy_button = f.querySelector(
+            'div[role="button"]'
+          ) as HTMLElement
           copy_button.click()
         },
         insert_button: (f, b) =>
@@ -92,36 +96,15 @@ export const deepseek: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (
-          document.querySelector(
-            'input[type="file"] + div[aria-disabled="false"]'
-          ) &&
-          !(
-            document.querySelector('textarea#chat-input') as HTMLTextAreaElement
-          )?.value
-        ) {
-          return
-        }
-
-        show_response_ready_notification({
-          chatbot_name: 'DeepSeek'
-        })
-
-        const all_footers = document.querySelectorAll(
-          '.ds-flex[style="align-items: center; gap: 16px;"]'
-        )
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'DeepSeek',
+      is_generating: () =>
+        !!document.querySelector(
+          'input[type="file"] + div[aria-disabled="false"]'
+        ) &&
+        !(document.querySelector('textarea') as HTMLTextAreaElement)?.value,
+      footer_selector: 'div.ds-message + div + div > div.ds-flex',
+      add_buttons
     })
   }
 }

@@ -1,7 +1,5 @@
 import { Chatbot } from '../types/chatbot'
-import { Message } from '@/types/messages'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import browser from 'webextension-polyfill'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
 import { add_apply_response_button } from '../utils/add-apply-response-button'
 import { Logger } from '@shared/utils/logger'

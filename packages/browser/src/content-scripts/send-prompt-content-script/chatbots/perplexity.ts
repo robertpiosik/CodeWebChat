@@ -1,7 +1,8 @@
 import { Chatbot } from '../types/chatbot'
-import browser from 'webextension-polyfill'
-import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import { add_apply_response_button } from '../utils/add-apply-response-button'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
 
 export const perplexity: Chatbot = {
   wait_until_ready: async () => {
@@ -83,7 +84,7 @@ export const perplexity: Chatbot = {
             return Array.from(path).some(
               (p) =>
                 p.getAttribute('d') ==
-                  'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'
+                'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'
             )
           }) as HTMLElement
           copy_button.click()
@@ -92,31 +93,15 @@ export const perplexity: Chatbot = {
       })
     }
 
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        if (
-          document.querySelector(
-            'path[d="M17 4h-10a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3z"]'
-          )
-        ) {
-          return
-        }
-
-        show_response_ready_notification({ chatbot_name: 'Perplexity' })
-
-        const all_footers = document.querySelectorAll(
-          '.max-w-threadContentWidth > .relative > div > div > div > div > div + div > div + div'
-        )
-        all_footers.forEach((footer) => {
-          add_buttons(footer)
-        })
-      })
-    })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true
+    observe_for_responses({
+      chatbot_name: 'Perplexity',
+      is_generating: () =>
+        !!document.querySelector(
+          'path[d="M17 4h-10a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3z"]'
+        ),
+      footer_selector:
+        '.max-w-threadContentWidth > .relative > div > div > div > div > div + div > div + div',
+      add_buttons
     })
   }
 }
