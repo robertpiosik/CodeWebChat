@@ -6,7 +6,7 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-Code Web Chat is an open-source, versatile AI pair programming tool with a unique web-based workflow—select files, type instructions and initialize 15+ free chatbots, hands-free! As soon as the response is ready, it can be applied effortlessly.
+Code Web Chat is an open-source, versatile AI pair programming tool with a unique web-based workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and more, hands-free! As soon as the response is ready, it can be applied effortlessly.
 
 ✅ Save money—free tiers and subscription based billing \
 ✅ Save time—multi-file edits from a single prompt
