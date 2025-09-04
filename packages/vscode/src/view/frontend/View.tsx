@@ -213,122 +213,113 @@ export const View = () => {
     return null
   }
 
-  let overlay: React.ReactNode | undefined = undefined
-
   const is_for_code_completions =
     (home_view_type == HOME_VIEW_TYPES.WEB && web_mode == 'code-completions') ||
     (home_view_type == HOME_VIEW_TYPES.API && api_mode == 'code-completions')
 
-  if (updating_preset) {
-    const get_current_instructions = () => {
-      if (is_for_code_completions) {
-        return code_completions_instructions
-      }
-      const mode = home_view_type == HOME_VIEW_TYPES.WEB ? web_mode : api_mode
-      if (mode == 'ask') return ask_instructions
-      if (mode == 'edit-context') return edit_instructions
-      if (mode == 'no-context') return no_context_instructions
-      return ''
+  const get_current_instructions = () => {
+    if (is_for_code_completions) {
+      return code_completions_instructions
     }
-
-    const has_affixes =
-      !!updated_preset?.prompt_prefix || !!updated_preset?.prompt_suffix
-    const has_instructions = !!get_current_instructions().trim()
-    const is_preview_disabled =
-      !is_connected ||
-      (!has_affixes && !has_instructions && web_mode != 'code-completions') ||
-      (web_mode == 'code-completions' &&
-        (!has_active_editor || has_active_selection))
-
-    overlay = (
-      <UiPage
-        on_back_click={edit_preset_back_click_handler}
-        title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
-        header_slot={
-          updated_preset?.chatbot && (
-            <UiTextButton
-              on_click={handle_preview_preset}
-              disabled={is_preview_disabled}
-              title={
-                !is_connected
-                  ? 'Unable to preview when not connected'
-                  : web_mode == 'code-completions' && !has_active_editor
-                  ? 'Cannot preview in code completion mode without an active editor'
-                  : web_mode == 'code-completions' && has_active_selection
-                  ? 'Unable to work with text selection'
-                  : !has_affixes &&
-                    !has_instructions &&
-                    web_mode != 'code-completions'
-                  ? 'Enter instructions or affixes to preview'
-                  : ''
-              }
-            >
-              Preview
-            </UiTextButton>
-          )
-        }
-      >
-        <EditPresetForm
-          preset={updating_preset}
-          on_update={set_updated_preset}
-          on_save={edit_preset_save_handler}
-          pick_open_router_model={() => {
-            post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
-          }}
-          pick_chatbot={(chatbot_id) => {
-            post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
-          }}
-          on_at_sign_in_affix={() => {
-            post_message(vscode, {
-              command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX',
-              is_for_code_completions: is_for_code_completions
-            })
-          }}
-        />
-      </UiPage>
-    )
+    const mode = home_view_type == HOME_VIEW_TYPES.WEB ? web_mode : api_mode
+    if (mode == 'ask') return ask_instructions
+    if (mode == 'edit-context') return edit_instructions
+    if (mode == 'no-context') return no_context_instructions
+    return ''
   }
 
-  if (files_to_review.length > 0) {
-    overlay = (
-      <UiPage title="Summary">
-        <UiSummary
-          files={files_to_review}
-          has_multiple_workspaces={has_multiple_workspaces}
-          on_undo={() => {
-            post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
-          }}
-          on_keep={(accepted_files) => {
-            post_message(vscode, {
-              command: 'EDITS_REVIEW',
-              files: accepted_files
-            })
-          }}
-          on_focus_file={(file) => {
-            post_message(vscode, {
-              command: 'FOCUS_ON_FILE_IN_REVIEW',
-              file_path: file.file_path,
-              workspace_name: file.workspace_name
-            })
-          }}
-          on_toggle_file={(file) => {
-            post_message(vscode, {
-              command: 'TOGGLE_FILE_IN_REVIEW',
-              file_path: file.file_path,
-              workspace_name: file.workspace_name,
-              is_checked: file.is_checked
-            })
-          }}
-        />
-      </UiPage>
-    )
-  }
+  const has_affixes =
+    !!updated_preset?.prompt_prefix || !!updated_preset?.prompt_suffix
+  const has_instructions = !!get_current_instructions().trim()
+  const is_preview_disabled =
+    !is_connected ||
+    (!has_affixes && !has_instructions && web_mode != 'code-completions') ||
+    (web_mode == 'code-completions' &&
+      (!has_active_editor || has_active_selection))
 
   return (
     <div className={styles.container} onMouseEnter={handle_mouse_enter}>
-      {overlay && (
-        <div className={cn(styles.slot, styles['slot--overlay'])}>
-          {overlay}
+      {updating_preset && (
+        <div className={styles.slot}>
+          <UiPage
+            on_back_click={edit_preset_back_click_handler}
+            title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
+            header_slot={
+              updated_preset?.chatbot && (
+                <UiTextButton
+                  on_click={handle_preview_preset}
+                  disabled={is_preview_disabled}
+                  title={
+                    !is_connected
+                      ? 'Unable to preview when not connected'
+                      : web_mode == 'code-completions' && !has_active_editor
+                      ? 'Cannot preview in code completion mode without an active editor'
+                      : web_mode == 'code-completions' && has_active_selection
+                      ? 'Unable to work with text selection'
+                      : !has_affixes &&
+                        !has_instructions &&
+                        web_mode != 'code-completions'
+                      ? 'Enter instructions or affixes to preview'
+                      : ''
+                  }
+                >
+                  Preview
+                </UiTextButton>
+              )
+            }
+          >
+            <EditPresetForm
+              preset={updating_preset}
+              on_update={set_updated_preset}
+              on_save={edit_preset_save_handler}
+              pick_open_router_model={() => {
+                post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
+              }}
+              pick_chatbot={(chatbot_id) => {
+                post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
+              }}
+              on_at_sign_in_affix={() => {
+                post_message(vscode, {
+                  command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX',
+                  is_for_code_completions: is_for_code_completions
+                })
+              }}
+            />
+          </UiPage>
+        </div>
+      )}
+      {files_to_review.length > 0 && (
+        <div className={styles.slot}>
+          <UiPage title="Summary">
+            <UiSummary
+              files={files_to_review}
+              has_multiple_workspaces={has_multiple_workspaces}
+              on_undo={() => {
+                post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
+              }}
+              on_keep={(accepted_files) => {
+                post_message(vscode, {
+                  command: 'EDITS_REVIEW',
+                  files: accepted_files
+                })
+              }}
+              on_focus_file={(file) => {
+                post_message(vscode, {
+                  command: 'FOCUS_ON_FILE_IN_REVIEW',
+                  file_path: file.file_path,
+                  workspace_name: file.workspace_name
+                })
+              }}
+              on_toggle_file={(file) => {
+                post_message(vscode, {
+                  command: 'TOGGLE_FILE_IN_REVIEW',
+                  file_path: file.file_path,
+                  workspace_name: file.workspace_name,
+                  is_checked: file.is_checked
+                })
+              }}
+            />
+          </UiPage>
         </div>
       )}
       <div
