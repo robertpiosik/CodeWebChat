@@ -52,6 +52,53 @@ export const gemini: Chatbot = {
       }
     }
   },
+  set_options: async (options?: string[]) => {
+    if (!options) return
+    const supported_options = CHATBOTS['Gemini'].supported_options
+    if (
+      options.includes('temporary-chat') &&
+      supported_options['temporary-chat']
+    ) {
+      const temp_chat_button_selector =
+        'button[data-test-id="temp-chat-button"]'
+      let temp_chat_button = document.querySelector(
+        temp_chat_button_selector
+      ) as HTMLButtonElement
+
+      const side_nav_menu_button_selector =
+        'button[data-test-id="side-nav-menu-button"]'
+      let side_nav_menu_button_clicked = false
+
+      if (!temp_chat_button) {
+        const side_nav_menu_button = document.querySelector(
+          side_nav_menu_button_selector
+        ) as HTMLButtonElement
+        if (side_nav_menu_button) {
+          side_nav_menu_button.click()
+          side_nav_menu_button_clicked = true
+          await new Promise((resolve) => setTimeout(resolve, 500))
+          temp_chat_button = document.querySelector(
+            temp_chat_button_selector
+          ) as HTMLButtonElement
+        }
+      }
+
+      if (temp_chat_button) {
+        temp_chat_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
+      }
+
+      if (side_nav_menu_button_clicked) {
+        const side_nav_menu_button = document.querySelector(
+          side_nav_menu_button_selector
+        ) as HTMLButtonElement
+        if (side_nav_menu_button) {
+          side_nav_menu_button.click()
+          await new Promise((r) => requestAnimationFrame(r))
+        }
+      }
+    }
+  },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({

@@ -117,7 +117,7 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     supports_thinking_budget: false,
-    supported_options: {},
+    supported_options: { 'temporary-chat': 'Temporary chat' },
     default_system_instructions: '',
     default_top_p: 0,
     models: {
