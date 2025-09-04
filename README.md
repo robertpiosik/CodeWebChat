@@ -8,10 +8,10 @@
 
 Code Web Chat is an open-source, versatile AI pair programming tool with a unique web-based workflow—select files, type instructions and initialize 15+ free chatbots, hands-free! As soon as the response is ready, it can be applied effortlessly.
 
-Available in VS Code, Cursor, and other forks for free.
+✅ Save money—free tiers and subscription based billing \
+✅ Save time—multi-file edits from a single prompt
 
-✅ Saves money—free tiers and comfortable subscription based billing \
-✅ Saves time—multi-file edits from a single prompt
+Available in VS Code, Cursor, and other forks for free.
 
 ### Guiding principles
 
