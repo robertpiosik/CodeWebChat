@@ -12,7 +12,7 @@ import {
 import { is_eligible_code_block } from './is-eligible-code-block'
 import { show_response_ready_notification } from './show-response-ready-notification'
 
-interface AddApplyResponseButtonParams {
+export function add_apply_response_button(params: {
   client_id: number
   footer: Element
   get_chat_turn: (footer: Element) => HTMLElement | null
@@ -21,43 +21,28 @@ interface AddApplyResponseButtonParams {
   perform_copy: (footer: Element) => void | Promise<void>
   insert_button: (footer: Element, button: HTMLButtonElement) => void
   customize_button?: (button: HTMLButtonElement) => void
-}
-
-export function add_apply_response_button(
-  params: AddApplyResponseButtonParams
-) {
-  const {
-    client_id,
-    footer,
-    get_chat_turn,
-    get_code_blocks,
-    get_code_from_block,
-    perform_copy,
-    insert_button,
-    customize_button
-  } = params
-
+}) {
   const existing_apply_response_button = Array.from(
-    footer.querySelectorAll('button')
-  ).find((btn) => btn.textContent === apply_response_button_text)
+    params.footer.querySelectorAll('button')
+  ).find((btn) => btn.textContent == apply_response_button_text)
 
   if (existing_apply_response_button) return
 
-  const chat_turn = get_chat_turn(footer)
+  const chat_turn = params.get_chat_turn(params.footer)
   if (!chat_turn) {
     Logger.error({
       function_name: 'add_apply_response_button',
       message: 'Chat turn container not found for footer',
-      data: footer
+      data: params.footer
     })
     return
   }
 
-  const code_blocks = get_code_blocks(chat_turn)
+  const code_blocks = params.get_code_blocks(chat_turn)
   let has_eligible_block = false
   for (const code_block of Array.from(code_blocks)) {
-    const code = get_code_from_block
-      ? get_code_from_block(code_block)
+    const code = params.get_code_from_block
+      ? params.get_code_from_block(code_block)
       : code_block.textContent
     const first_line_text = code?.split('\n')[0]
     if (first_line_text && is_eligible_code_block(first_line_text)) {
@@ -71,29 +56,26 @@ export function add_apply_response_button(
   apply_response_button.textContent = apply_response_button_text
   apply_response_button.title = apply_response_button_title
   apply_chat_response_button_style(apply_response_button)
-  if (customize_button) customize_button(apply_response_button)
+  if (params.customize_button) params.customize_button(apply_response_button)
 
   apply_response_button.addEventListener('click', async () => {
     set_button_disabled_state(apply_response_button)
-    await perform_copy(footer)
+    await params.perform_copy(params.footer)
     await new Promise((resolve) => setTimeout(resolve, 500))
     browser.runtime.sendMessage<Message>({
       action: 'apply-chat-response',
-      client_id
+      client_id: params.client_id
     })
   })
 
-  insert_button(footer, apply_response_button)
+  params.insert_button(params.footer, apply_response_button)
   apply_response_button.focus()
 }
 
 interface ResponseObserverParams {
   chatbot_name: string
-  /** A function that returns true if the AI is generating a response. */
   is_generating: () => boolean
-  /** A CSS selector for the footer of each AI response. */
   footer_selector: string
-  /** A function to add buttons to a footer element. */
   add_buttons: (footer: Element) => void
 }
 
@@ -104,7 +86,7 @@ export function observe_for_responses(params: ResponseObserverParams) {
     }
 
     const all_footers = document.querySelectorAll(params.footer_selector)
-    if (all_footers.length === 0) {
+    if (all_footers.length == 0) {
       return
     }
 

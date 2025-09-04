@@ -166,6 +166,7 @@ export const CHATBOTS = {
     supports_thinking_budget: false,
     default_system_instructions: '',
     supported_options: {
+      incognito: 'Incognito mode',
       think: 'Think'
     },
     default_top_p: 0,

@@ -1,3 +1,4 @@
+import { Logger } from '@shared/utils/logger'
 import { Chatbot } from '../types/chatbot'
 import {
   add_apply_response_button,
@@ -20,9 +21,30 @@ export const mistral: Chatbot = {
   },
   set_options: async (options?: string[]) => {
     if (!options) return
+
+    if (
+      options.includes('incognito') &&
+      !window.location.pathname.includes('/incognito')
+    ) {
+      const incognito_button = document.querySelector(
+        'a[href="/incognito"]'
+      ) as HTMLAnchorElement
+      if (incognito_button) {
+        incognito_button.click()
+        await new Promise((resolve) => setTimeout(resolve, 500))
+      } else {
+        Logger.error({
+          function_name: 'set_options',
+          message: 'Incognito button not found'
+        })
+      }
+    }
+
     const think_button_icon_path = document.querySelector(
       'path[d="M9 18h6"]'
     ) as SVGPathElement
+
+    if (!think_button_icon_path) return
 
     const think_button = think_button_icon_path.closest(
       'button'
@@ -56,15 +78,16 @@ export const mistral: Chatbot = {
       })
     }
 
+    const footer_selector =
+      'div[data-message-author-role="assistant"] > div:last-child > div:last-child > div:last-child'
+
     requestAnimationFrame(() => {
       observe_for_responses({
         chatbot_name: 'Mistral',
         is_generating: () =>
-          !document.querySelector(
-            'path[d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"]'
-          ) || !!document.querySelector('form rect[rx="2"]'),
-        footer_selector:
-          'div[data-message-author-role="assistant"] > div:last-child > div:last-child > div:last-child',
+          !document.querySelector(footer_selector) ||
+          !!document.querySelector('form rect[rx="2"]'),
+        footer_selector,
         add_buttons
       })
     })
