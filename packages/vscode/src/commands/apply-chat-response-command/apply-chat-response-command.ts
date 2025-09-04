@@ -24,6 +24,8 @@ import {
   code_review_promise_resolve
 } from './utils/review-applied-changes'
 
+let ongoing_review_cleanup_promise: Promise<void> | null = null
+
 const check_if_all_files_new = async (
   files: ClipboardFile[]
 ): Promise<boolean> => {
@@ -287,39 +289,49 @@ const handle_code_review_and_cleanup = async (params: {
     position: { line: number; character: number }
   }
 }): Promise<boolean> => {
-  const review_result = await review_applied_changes(
-    params.original_states,
-    params.view_provider
-  )
+  let resolve_cleanup_promise: () => void
+  ongoing_review_cleanup_promise = new Promise((resolve) => {
+    resolve_cleanup_promise = resolve
+  })
 
-  if (review_result === null || review_result.accepted_files.length == 0) {
-    await undo_files(params.original_states)
-    params.update_undo_and_apply_button_state(null)
-    return false
-  }
-
-  if (review_result.rejected_states.length > 0) {
-    await undo_files(review_result.rejected_states)
-  }
-
-  const accepted_states = params.original_states.filter((state) =>
-    review_result.accepted_files.some(
-      (accepted) =>
-        accepted.file_path == state.file_path &&
-        accepted.workspace_name == state.workspace_name
+  try {
+    const review_result = await review_applied_changes(
+      params.original_states,
+      params.view_provider
     )
-  )
 
-  if (accepted_states.length > 0) {
-    params.update_undo_and_apply_button_state(
-      accepted_states,
-      params.chat_response,
-      params.original_editor_state
+    if (review_result === null || review_result.accepted_files.length == 0) {
+      await undo_files(params.original_states)
+      params.update_undo_and_apply_button_state(null)
+      return false
+    }
+
+    if (review_result.rejected_states.length > 0) {
+      await undo_files(review_result.rejected_states)
+    }
+
+    const accepted_states = params.original_states.filter((state) =>
+      review_result.accepted_files.some(
+        (accepted) =>
+          accepted.file_path == state.file_path &&
+          accepted.workspace_name == state.workspace_name
+      )
     )
-    return true
-  } else {
-    params.update_undo_and_apply_button_state(null)
-    return false
+
+    if (accepted_states.length > 0) {
+      params.update_undo_and_apply_button_state(
+        accepted_states,
+        params.chat_response,
+        params.original_editor_state
+      )
+      return true
+    } else {
+      params.update_undo_and_apply_button_state(null)
+      return false
+    }
+  } finally {
+    resolve_cleanup_promise!()
+    ongoing_review_cleanup_promise = null
   }
 }
 
@@ -376,10 +388,10 @@ export const apply_chat_response_command = (
       }
     }) => {
       if (code_review_promise_resolve) {
-        vscode.window.showWarningMessage(
-          'A code review is already in progress. Please complete it before applying new changes.'
-        )
-        return
+        code_review_promise_resolve({ accepted_files: [] })
+        if (ongoing_review_cleanup_promise) {
+          await ongoing_review_cleanup_promise
+        }
       }
 
       type ReviewData = {
