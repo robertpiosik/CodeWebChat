@@ -18,7 +18,6 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 - Initialize chatbots—don't scrape responses
 - Free forever—a community effort
 - Privacy first—operates locally
-- Lightweight—2MB of code
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
