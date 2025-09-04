@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat (CWC)",
-  "description": "AI pair programming with ChatGPT, Gemini, Claude, and more",
+  "description": "Free AI pair programming with ChatGPT, Gemini, Claude, and more",
   "version": "1.347.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
