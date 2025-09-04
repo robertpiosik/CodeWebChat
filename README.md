@@ -6,17 +6,17 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-Code Web Chat is a free and open-source, versatile AI pair programming tool with a unique web-based workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and more, hands-free! As soon as the response is ready, it can be applied effortlessly.
+Code Web Chat is a free and open-source (FOSS), versatile AI pair programming tool with a unique web-based workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and more, hands-free! Once ready, apply its response with a single click.
 
-✅ Save money—free tiers and subscription based billing \
-✅ Save time—multi-file edits from a single prompt
+👉️ **Save money** _free tiers and subscription-based billing_ \
+👉️ **Save time** _multi-file edits from a single prompt_
 
-Available in VS Code, Cursor, and other forks.
+Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor</a>, and other forks.
 
 ### Guiding principles
 
 - Initialize chatbots—don't scrape responses
-- Free forever—community effort
+- Free forever—a community effort
 - Privacy first—operates locally
 - Lightweight—2MB of code
 
