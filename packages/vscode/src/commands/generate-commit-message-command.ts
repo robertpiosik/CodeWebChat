@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Logger } from '@/utils/logger'
+import { Logger } from '@shared/utils/logger'
 import {
   get_git_repository,
   prepare_staged_changes

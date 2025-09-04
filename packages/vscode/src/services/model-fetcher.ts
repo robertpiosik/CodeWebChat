@@ -1,4 +1,4 @@
-import { Logger } from '@/utils/logger'
+import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
 import axios from 'axios'
 

@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as path from 'path'
 import * as fs from 'fs'
 import { make_api_request } from './make-api-request'
-import { Logger } from './logger'
+import { Logger } from '@shared/utils/logger'
 import { should_ignore_file } from '../context/utils/should-ignore-file'
 import { process_single_trailing_dot } from '@/utils/process-single-trailing-dot/process-single-trailing-dot'
 import {

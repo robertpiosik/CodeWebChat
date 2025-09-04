@@ -12,6 +12,7 @@ import {
 } from '../constants/copy'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { Logger } from '@shared/utils/logger'
 
 export const claude: Chatbot = {
   wait_until_ready: async () => {
@@ -31,19 +32,43 @@ export const claude: Chatbot = {
     const model_selector_button = document.querySelector(
       'button[data-testid="model-selector-dropdown"]'
     ) as HTMLButtonElement
-    if (!model_selector_button) return
+    if (!model_selector_button) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model selector button not found'
+      })
+      return
+    }
 
     const model_name_to_find = (CHATBOTS['Claude'].models as any)[model]?.label
-    if (!model_name_to_find) return
+    if (!model_name_to_find) {
+      Logger.warn({
+        function_name: 'set_model',
+        message: `Model label not found for model: ${model}`
+      })
+      return
+    }
 
     if (model_selector_button.textContent?.includes(model_name_to_find)) {
       return
     }
 
-    model_selector_button.click()
+    model_selector_button.dispatchEvent(
+      new PointerEvent('pointerdown', { bubbles: true })
+    )
     await new Promise((r) => requestAnimationFrame(r))
 
-    const menu_items = document.querySelectorAll('div[role="menuitem"]')
+    const menu_items = document.querySelectorAll(
+      'div[data-radix-popper-content-wrapper] div[role="menuitem"]'
+    )
+
+    if (menu_items.length == 0) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model selector menu items not found'
+      })
+      return
+    }
 
     for (const item of Array.from(menu_items)) {
       if (item.textContent?.includes(model_name_to_find)) {
@@ -72,6 +97,11 @@ export const claude: Chatbot = {
       ) as HTMLButtonElement
       if (submit_button) {
         submit_button.click()
+      } else {
+        Logger.error({
+          function_name: 'enter_message_and_send',
+          message: 'Submit button not found'
+        })
       }
     }
   },

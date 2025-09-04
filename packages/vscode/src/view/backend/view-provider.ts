@@ -70,7 +70,7 @@ import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { api_tool_config_emitter } from '@/services/api-providers-manager'
 import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-applied-changes'
-import { Logger } from '@/utils/logger'
+import { Logger } from '@shared/utils/logger'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 
 export class ViewProvider implements vscode.WebviewViewProvider {

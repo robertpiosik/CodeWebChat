@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
-import { Logger } from '@/utils/logger'
+import { Logger } from '@shared/utils/logger'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
 import { make_api_request } from '@/utils/make-api-request'
 import axios from 'axios'

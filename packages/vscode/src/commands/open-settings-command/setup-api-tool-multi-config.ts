@@ -15,7 +15,7 @@ import {
   MODELS_ROUTE_NOT_FOUND_ERROR
 } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
-import { Logger } from '@/utils/logger'
+import { Logger } from '@shared/utils/logger'
 import { DEFAULT_TEMPERATURE, SupportedTool } from '@shared/constants/api-tools'
 import { COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY } from '@/constants/state-keys'
 import { api_providers } from './api-providers'

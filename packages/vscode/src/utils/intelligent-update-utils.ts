@@ -6,7 +6,7 @@ import {
   ToolConfig
 } from '@/services/api-providers-manager'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../constants/state-keys'
-import { Logger } from './logger'
+import { Logger } from '@shared/utils/logger'
 import { make_api_request } from './make-api-request'
 import { cleanup_api_response } from './cleanup-api-response'
 import { refactoring_instruction } from '../constants/instructions'

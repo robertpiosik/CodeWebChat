@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
-import { create_safe_path } from '../../../utils/path-sanitizer'
-import { Logger } from '../../../utils/logger'
+import { create_safe_path } from '@/utils/path-sanitizer'
+import { Logger } from '@shared/utils/logger'
 import { format_document } from './format-document'
-import { OriginalFileState } from '../../../types/common'
+import { OriginalFileState } from '@/types/common'
 
 export async function remove_directory_if_empty(
   dir_path: string,

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Logger } from '../utils/logger'
+import { Logger } from '@shared/utils/logger'
 
 const MIGRATION_ID = 'api-providers-to-secret-storage-migration-20250525'
 const SECRET_STORAGE_API_PROVIDERS_KEY = 'api-providers'

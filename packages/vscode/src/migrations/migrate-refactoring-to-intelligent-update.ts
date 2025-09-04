@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Logger } from '../utils/logger'
+import { Logger } from '@shared/utils/logger'
 import {
   TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
   TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,

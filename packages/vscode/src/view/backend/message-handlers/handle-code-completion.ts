@@ -9,7 +9,7 @@ import {
   ApiProvidersManager,
   ToolConfig
 } from '@/services/api-providers-manager'
-import { Logger } from '@/utils/logger'
+import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'

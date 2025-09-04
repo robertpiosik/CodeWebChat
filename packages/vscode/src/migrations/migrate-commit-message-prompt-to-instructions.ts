@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Logger } from '../utils/logger'
+import { Logger } from '@shared/utils/logger'
 
 const MIGRATION_ID = 'commit-message-prompt-to-instructions-migration-20250522'
 const OLD_SETTING_KEY = 'codeWebChat.commitMessagePrompt'

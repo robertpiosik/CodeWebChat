@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Logger } from '../../../utils/logger'
+import { Logger } from '@shared/utils/logger'
 
 export async function format_document(
   document: vscode.TextDocument

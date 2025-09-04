@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { get_git_repository } from '../../../utils/git-repository-utils'
-import { Logger } from '../../../utils/logger'
+import { Logger } from '@shared/utils/logger'
 
 export const replace_changes_placeholder = async (
   instruction: string

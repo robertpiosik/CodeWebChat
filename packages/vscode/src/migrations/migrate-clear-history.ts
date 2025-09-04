@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Logger } from '../utils/logger'
+import { Logger } from '@shared/utils/logger'
 import {
   HISTORY_ASK_STATE_KEY,
   HISTORY_CODE_COMPLETIONS_STATE_KEY,

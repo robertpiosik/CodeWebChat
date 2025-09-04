@@ -11,7 +11,7 @@ import {
   LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
-import { Logger } from '../utils/logger'
+import { Logger } from '@shared/utils/logger'
 
 export async function resolve_glob_patterns(
   patterns: string[],

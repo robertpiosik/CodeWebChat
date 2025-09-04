@@ -6,7 +6,7 @@ import {
   LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
 } from '../../constants/state-keys'
-import { Logger } from '../../utils/logger'
+import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../../types/common'
 import { undo_files } from './utils/file-operations'
 import { handle_fast_replace } from './handlers/fast-replace-handler'

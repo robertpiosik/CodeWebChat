@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Logger } from '../utils/logger'
+import { Logger } from '@shared/utils/logger'
 import {
   TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
   DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY

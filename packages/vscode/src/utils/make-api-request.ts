@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import axios, { AxiosResponse } from 'axios'
-import { Logger } from './logger'
+import { Logger } from '@shared/utils/logger'
 
 type StreamCallback = (
   formatted_total_tokens: string,

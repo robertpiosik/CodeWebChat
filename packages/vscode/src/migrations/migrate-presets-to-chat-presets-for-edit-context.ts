@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { Logger } from '../utils/logger'
+import { Logger } from '@shared/utils/logger'
 
 const MIGRATION_ID =
   'presets-to-chat-presets-for-edit-context-migration-20250714'
