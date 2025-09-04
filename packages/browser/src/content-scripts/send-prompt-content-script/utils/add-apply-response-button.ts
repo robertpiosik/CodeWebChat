@@ -1,0 +1,87 @@
+import { Message } from '@/types/messages'
+import { Logger } from '@shared/utils/logger'
+import browser from 'webextension-polyfill'
+import {
+  apply_response_button_text,
+  apply_response_button_title
+} from '../constants/copy'
+import {
+  apply_chat_response_button_style,
+  set_button_disabled_state
+} from './apply-response-styles'
+import { is_eligible_code_block } from './is-eligible-code-block'
+
+interface AddApplyResponseButtonParams {
+  client_id: number
+  footer: Element
+  get_chat_turn: (footer: Element) => HTMLElement | null
+  get_code_blocks: (chat_turn: HTMLElement) => NodeListOf<Element>
+  get_code_from_block?: (code_block: Element) => string | null | undefined
+  perform_copy: (footer: Element) => void | Promise<void>
+  insert_button: (footer: Element, button: HTMLButtonElement) => void
+  customize_button?: (button: HTMLButtonElement) => void
+}
+
+export function add_apply_response_button(
+  params: AddApplyResponseButtonParams
+) {
+  const {
+    client_id,
+    footer,
+    get_chat_turn,
+    get_code_blocks,
+    get_code_from_block,
+    perform_copy,
+    insert_button,
+    customize_button
+  } = params
+
+  const existing_apply_response_button = Array.from(
+    footer.querySelectorAll('button')
+  ).find((btn) => btn.textContent === apply_response_button_text)
+
+  if (existing_apply_response_button) return
+
+  const chat_turn = get_chat_turn(footer)
+  if (!chat_turn) {
+    Logger.error({
+      function_name: 'add_apply_response_button',
+      message: 'Chat turn container not found for footer',
+      data: footer
+    })
+    return
+  }
+
+  const code_blocks = get_code_blocks(chat_turn)
+  let has_eligible_block = false
+  for (const code_block of Array.from(code_blocks)) {
+    const code = get_code_from_block
+      ? get_code_from_block(code_block)
+      : code_block.textContent
+    const first_line_text = code?.split('\n')[0]
+    if (first_line_text && is_eligible_code_block(first_line_text)) {
+      has_eligible_block = true
+      break
+    }
+  }
+  if (!has_eligible_block) return
+
+  const apply_response_button = document.createElement('button')
+  apply_response_button.textContent = apply_response_button_text
+  apply_response_button.title = apply_response_button_title
+  apply_chat_response_button_style(apply_response_button)
+  if (customize_button) customize_button(apply_response_button)
+
+  apply_response_button.addEventListener('click', async () => {
+    set_button_disabled_state(apply_response_button)
+    await perform_copy(footer)
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    browser.runtime.sendMessage<Message>({
+      action: 'apply-chat-response',
+      client_id
+    })
+  })
+
+  insert_button(footer, apply_response_button)
+  apply_response_button.focus()
+}

@@ -2,16 +2,9 @@ import { Chatbot } from '../types/chatbot'
 import { Message } from '@/types/messages'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import browser from 'webextension-polyfill'
-import {
-  apply_chat_response_button_style,
-  set_button_disabled_state
-} from '../utils/apply-response-styles'
-import { is_eligible_code_block } from '../utils/is-eligible-code-block'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
-import {
-  apply_response_button_text,
-  apply_response_button_title
-} from '../constants/copy'
+import { add_apply_response_button } from '../utils/add-apply-response-button'
+import { Logger } from '@shared/utils/logger'
 
 export const ai_studio: Chatbot = {
   wait_until_ready: async () => {
@@ -266,48 +259,21 @@ export const ai_studio: Chatbot = {
     ;(document.querySelector('ms-run-button > button') as HTMLElement)?.click()
   },
   inject_apply_response_button: (client_id: number) => {
-    const add_buttons = (params: { footer: Element }) => {
-      // Check if buttons already exist by text content to avoid duplicates
-      const existing_apply_response_button = Array.from(
-        params.footer.querySelectorAll('button')
-      ).find((btn) => btn.textContent == apply_response_button_text)
-
-      if (existing_apply_response_button) return
-
-      // Find the parent chat-turn-container
-      const chat_turn = params.footer.closest('ms-chat-turn') as HTMLElement
-
-      if (!chat_turn) {
-        console.error(
-          'Chat turn container not found for footer:',
-          params.footer
-        )
-        return
-      }
-
-      const first_line_comments_of_code_blocks =
-        chat_turn.querySelectorAll('ms-code-block code')
-      let has_eligible_block = false
-      for (const code_block of Array.from(first_line_comments_of_code_blocks)) {
-        const first_line_text = code_block?.textContent?.split('\n')[0]
-        if (first_line_text && is_eligible_code_block(first_line_text)) {
-          has_eligible_block = true
-          break
-        }
-      }
-      if (!has_eligible_block) return
-
-      const create_apply_response_button = () => {
-        const apply_response_button = document.createElement('button')
-        apply_response_button.textContent = apply_response_button_text
-        apply_response_button.title = apply_response_button_title
-        apply_chat_response_button_style(apply_response_button)
-
-        apply_response_button.addEventListener('click', async () => {
-          set_button_disabled_state(apply_response_button)
-          const chat_turn_container = apply_response_button.closest(
-            '.chat-turn-container'
-          )!
+    const add_buttons = (footer: Element) => {
+      add_apply_response_button({
+        client_id,
+        footer,
+        get_chat_turn: (f) => f.closest('ms-chat-turn'),
+        get_code_blocks: (t) => t.querySelectorAll('ms-code-block code'),
+        perform_copy: (f) => {
+          const chat_turn_container = f.closest('.chat-turn-container')
+          if (!chat_turn_container) {
+            Logger.error({
+              function_name: 'ai_studio.perform_copy',
+              message: 'Chat turn container not found'
+            })
+            return
+          }
           const options = chat_turn_container.querySelector(
             'ms-chat-turn-options > div > button'
           ) as HTMLElement
@@ -318,22 +284,9 @@ export const ai_studio: Chatbot = {
             button.textContent?.includes('markdown_copy')
           ) as HTMLElement
           markdown_copy_button.click()
-          await new Promise((resolve) => setTimeout(resolve, 500))
-          browser.runtime.sendMessage<Message>({
-            action: 'apply-chat-response',
-            client_id
-          })
-        })
-
-        params.footer.insertBefore(
-          apply_response_button,
-          params.footer.children[2]
-        )
-
-        apply_response_button.focus()
-      }
-
-      create_apply_response_button()
+        },
+        insert_button: (f, b) => f.insertBefore(b, f.children[2])
+      })
     }
 
     // AI Studio is quite sluggish with showing already generated tokens,
@@ -349,9 +302,7 @@ export const ai_studio: Chatbot = {
         all_footers.forEach((footer) => {
           if (footer.querySelector('button[iconname="thumb_up"]')) {
             show_response_ready_notification({ chatbot_name: 'AI Studio' })
-            add_buttons({
-              footer
-            })
+            add_buttons(footer)
           }
         })
       }, 100)

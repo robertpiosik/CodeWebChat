@@ -92,7 +92,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_thinking_budget: false,
     default_system_instructions: '',
-    supported_options: { 'deep-think': 'DeepThink (R1)', search: 'Search' },
+    supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
     default_top_p: 0,
     models: {}
   },
@@ -117,7 +117,7 @@ export const CHATBOTS = {
     supports_user_provided_model: false,
     supports_user_provided_port: false,
     supports_thinking_budget: false,
-    supported_options: { canvas: 'Canvas' },
+    supported_options: {},
     default_system_instructions: '',
     default_top_p: 0,
     models: {
