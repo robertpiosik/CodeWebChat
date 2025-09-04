@@ -4,7 +4,7 @@
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
   "description": "Initialize 15+ free chatbots with your code and instructions. Parse websites into markdown to include in context.",
-  "version": "1.35.0",
+  "version": "1.36.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
