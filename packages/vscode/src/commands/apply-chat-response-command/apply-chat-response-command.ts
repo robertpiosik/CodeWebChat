@@ -301,13 +301,20 @@ const handle_code_review_and_cleanup = async (params: {
     })
 
     if (review_result === null || review_result.accepted_files.length == 0) {
-      await undo_files({ original_states: params.original_states })
+      await undo_files({
+        original_states: params.original_states,
+        show_message: false
+      })
       params.update_undo_and_apply_button_state(null)
+      vscode.window.showInformationMessage('Changes rejected and undone.')
       return false
     }
 
     if (review_result.rejected_states.length > 0) {
-      await undo_files({ original_states: review_result.rejected_states })
+      await undo_files({
+        original_states: review_result.rejected_states,
+        show_message: false
+      })
     }
 
     const accepted_states = params.original_states.filter((state) =>
@@ -324,9 +331,28 @@ const handle_code_review_and_cleanup = async (params: {
         params.chat_response,
         params.original_editor_state
       )
+
+      const accepted_count = accepted_states.length
+      const rejected_count = review_result.rejected_states.length
+
+      let message = `Changes to ${accepted_count} file${
+        accepted_count > 1 ? 's' : ''
+      } accepted.`
+      if (rejected_count > 0) {
+        message = `Changes to ${accepted_count} file${
+          accepted_count > 1 ? 's' : ''
+        } accepted, ${rejected_count} rejected.`
+      }
+
+      vscode.window.showInformationMessage(message, 'Undo').then((response) => {
+        if (response === 'Undo') {
+          vscode.commands.executeCommand('codeWebChat.undo')
+        }
+      })
       return true
     } else {
       params.update_undo_and_apply_button_state(null)
+      vscode.window.showInformationMessage('All changes rejected and undone.')
       return false
     }
   } finally {

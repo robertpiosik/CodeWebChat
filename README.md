@@ -23,8 +23,8 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 Install the Connector browser extension and never copy&paste again.
 
-- [Chrome Web Store ↗](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
-- [Firefox Add-ons ↗](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
+- [Chrome Web Store↗](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
+- [Firefox Add-ons↗](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
 **Supported chatbots:**
 
@@ -85,13 +85,13 @@ Generate meaningful summaries of changes adhering to your preferred style.
 
 If you have a question about CWC, or want to help others, you're always welcome to join the conversation:
 
-- [GitHub Discussions ↗](https://github.com/robertpiosik/CodeWebChat/discussions)
-- [Discord ↗](https://discord.gg/KJySXsrSX5)
-- [Reddit ↗](https://www.reddit.com/r/CodeWebChat)
+- [GitHub Discussions↗](https://github.com/robertpiosik/CodeWebChat/discussions)
+- [Discord↗](https://discord.gg/KJySXsrSX5)
+- [Reddit↗](https://www.reddit.com/r/CodeWebChat)
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Donations</span>
 
-[Buy me a coffee ↗](https://buymeacoffee.com/robertpiosik)
+[Buy me a coffee↗](https://buymeacoffee.com/robertpiosik)
 
 **BTC:** bc1qfzajl0fc4347knr6n5hhuk52ufr4sau04su5te
 
@@ -105,6 +105,6 @@ All contributions are welcome. Feel free to submit pull requests, feature reques
 
 <hr />
 
-Copyright © 2025 [Robert Piosik ↗](https://x.com/robertpiosik) \
+Copyright © 2025 [Robert Piosik↗](https://x.com/robertpiosik) \
 E-mail: robertpiosik@gmail.com \
 Telegram: @robertpiosik

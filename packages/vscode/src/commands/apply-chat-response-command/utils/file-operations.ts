@@ -383,14 +383,6 @@ export const undo_files = async (params: {
               message: 'Recreated deleted file.',
               data: { file_path: state.file_path }
             })
-            const doc = await vscode.workspace.openTextDocument(safe_path)
-            const editor = await vscode.window.showTextDocument(doc)
-            if (state.cursor_offset !== undefined) {
-              const position = doc.positionAt(state.cursor_offset)
-              editor.selection = new vscode.Selection(position, position)
-            }
-
-            await doc.save()
           } catch (err) {
             Logger.warn({
               function_name: 'undo_files',
@@ -402,27 +394,31 @@ export const undo_files = async (params: {
             )
           }
         } else {
-          const file_uri = vscode.Uri.file(safe_path)
-
           try {
-            const document = await vscode.workspace.openTextDocument(file_uri)
-            const editor = await vscode.window.showTextDocument(document)
-            await editor.edit((edit) => {
-              edit.replace(
-                new vscode.Range(
-                  document.positionAt(0),
-                  document.positionAt(document.getText().length)
-                ),
-                state.content
-              )
-            })
+            const editor = vscode.window.visibleTextEditors.find(
+              (e) => e.document.uri.fsPath == safe_path
+            )
+            if (editor) {
+              const document = editor.document
+              await editor.edit((edit) => {
+                edit.replace(
+                  new vscode.Range(
+                    document.positionAt(0),
+                    document.positionAt(document.getText().length)
+                  ),
+                  state.content
+                )
+              })
 
-            if (state.cursor_offset !== undefined) {
-              const position = document.positionAt(state.cursor_offset)
-              editor.selection = new vscode.Selection(position, position)
+              if (state.cursor_offset !== undefined) {
+                const position = document.positionAt(state.cursor_offset)
+                editor.selection = new vscode.Selection(position, position)
+              }
+
+              await document.save()
+            } else {
+              fs.writeFileSync(safe_path, state.content)
             }
-
-            await document.save()
             Logger.log({
               function_name: 'undo_files',
               message: 'Existing file content undone to original content',

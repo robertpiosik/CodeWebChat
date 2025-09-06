@@ -33,7 +33,7 @@ export function undo_command(
     }
 
     try {
-      const success = await undo_files(original_states)
+      const success = await undo_files({ original_states })
 
       if (!success) {
         return false

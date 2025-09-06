@@ -59,12 +59,12 @@ export const Intro: React.FC<Props> = (props) => {
               <div>
                 Released under the{' '}
                 <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                  GPL-3.0 license ↗
+                  GPL-3.0 license↗
                 </a>
               </div>
               <div>
                 Copyright © {new Date().getFullYear()}{' '}
-                <a href="https://x.com/robertpiosik">Robert Piosik ↗</a>
+                <a href="https://x.com/robertpiosik">Robert Piosik↗</a>
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@ export const Intro: React.FC<Props> = (props) => {
 
       <div className={styles.footer}>
         <div className={styles.footer__left}>
-          <a href="https://codeweb.chat/">Docs ↗</a>
+          <a href="https://codeweb.chat/">Docs↗</a>
         </div>
         <div className={styles.footer__social}>
           <a

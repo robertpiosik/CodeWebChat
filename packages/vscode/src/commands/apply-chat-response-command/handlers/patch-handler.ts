@@ -173,8 +173,8 @@ async function close_files_in_all_editor_groups(
 }
 
 // Reopens files that were closed before patch application
-async function reopen_closed_files(closedFiles: vscode.Uri[]): Promise<void> {
-  for (const uri of closedFiles) {
+async function reopen_closed_files(closed_files: vscode.Uri[]): Promise<void> {
+  for (const uri of closed_files) {
     try {
       const document = await vscode.workspace.openTextDocument(uri)
       await vscode.window.showTextDocument(document, { preview: false })
@@ -500,6 +500,7 @@ export const apply_git_patch = async (
     // Cleanup and return
     if (success) {
       await process_modified_files(file_paths, workspace_path)
+      await reopen_closed_files(closed_files)
       await vscode.workspace.fs.delete(vscode.Uri.file(temp_file))
       return {
         success: true,
