@@ -127,7 +127,7 @@ const prepare_files_from_original_states = async (
       file_path: state.file_path,
       content: current_content,
       workspace_name: state.workspace_name,
-      is_new: state.is_new,
+      is_new: state.is_new || !!state.file_path_to_restore,
       is_deleted,
       lines_added: diff_stats.lines_added,
       lines_removed: diff_stats.lines_removed
@@ -140,6 +140,52 @@ const prepare_files_from_original_states = async (
       temp_file_path,
       file_exists: !state.is_new
     })
+
+    if (state.file_path_to_restore) {
+      const restored_sanitized_file_path = create_safe_path(
+        workspace_root,
+        state.file_path_to_restore
+      )
+      if (!restored_sanitized_file_path) {
+        continue
+      }
+
+      const restored_current_content = '' // Deleted
+
+      const restored_ext = path.extname(restored_sanitized_file_path)
+      const restored_base = path.basename(
+        restored_sanitized_file_path,
+        restored_ext
+      )
+      const restored_temp_filename = `${restored_base}.${Date.now()}`
+      const restored_temp_file_path = path.join(
+        os.tmpdir(),
+        restored_temp_filename
+      )
+
+      const restored_diff_stats = get_diff_stats(
+        state.content,
+        restored_current_content
+      )
+
+      const restored_reviewable_file: ReviewableFile = {
+        file_path: state.file_path_to_restore,
+        content: restored_current_content,
+        workspace_name: state.workspace_name,
+        is_new: false,
+        is_deleted: true,
+        lines_added: restored_diff_stats.lines_added,
+        lines_removed: restored_diff_stats.lines_removed
+      }
+
+      prepared_files.push({
+        reviewable_file: restored_reviewable_file,
+        sanitized_path: restored_sanitized_file_path,
+        original_content: state.content,
+        temp_file_path: restored_temp_file_path,
+        file_exists: false
+      })
+    }
   }
 
   return prepared_files
@@ -230,7 +276,7 @@ export const review_applied_changes = async (
     return null
   }
 
-  if (!original_states || original_states.length === 0) {
+  if (!original_states || original_states.length == 0) {
     return null
   }
 

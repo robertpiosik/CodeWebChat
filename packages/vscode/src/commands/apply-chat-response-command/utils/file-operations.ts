@@ -275,6 +275,7 @@ export const apply_file_relocations = async (
         state.file_path_to_restore = state.file_path
         state.file_path = state.new_file_path
         state.new_file_path = undefined
+        // state.is_new = true
       }
     }
   }
