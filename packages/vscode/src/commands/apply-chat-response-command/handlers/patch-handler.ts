@@ -26,27 +26,40 @@ const parse_patch_header = (patch_content: string): PatchFileInfo => {
   const lines = patch_content.split('\n')
   let from_path: string | undefined
   let to_path: string | undefined
+  let is_new = false
+  let is_deleted = false
+  let from_found = false
+  let to_found = false
 
   for (const line of lines) {
-    const match = line.match(/^\+\+\+ b\/(.+)$/)
-    if (match && match[1]) {
-      to_path = match[1]
+    if (line.startsWith('---')) {
+      from_found = true
+      if (line == '--- /dev/null') {
+        is_new = true
+      } else {
+        const from_match = line.match(/^--- a\/(.+)$/)
+        if (from_match && from_match[1]) {
+          from_path = from_match[1]
+        }
+      }
+    } else if (line.startsWith('+++')) {
+      to_found = true
+      if (line == '+++ /dev/null') {
+        is_deleted = true
+      } else {
+        const match = line.match(/^\+\+\+ b\/(.+)$/)
+        if (match && match[1]) {
+          to_path = match[1]
+        }
+      }
     }
-    const from_match = line.match(/^--- a\/(.+)$/)
-    if (from_match && from_match[1]) {
-      from_path = from_match[1]
+
+    if (from_found && to_found) {
+      break
     }
   }
 
-  const is_new = from_path == '/dev/null'
-  const is_deleted = to_path == '/dev/null'
-
-  return {
-    from_path: from_path == '/dev/null' ? undefined : from_path,
-    to_path: to_path == '/dev/null' ? undefined : to_path,
-    is_new,
-    is_deleted
-  }
+  return { from_path, to_path, is_new, is_deleted }
 }
 
 export const extract_file_paths_from_patch = (
@@ -312,7 +325,19 @@ const handle_new_file_patch = async (
     }
 
     await fs.promises.writeFile(safe_path, new_content, 'utf8')
-    await process_modified_files(file_paths, workspace_path)
+    try {
+      const document = await vscode.workspace.openTextDocument(safe_path)
+      await vscode.window.showTextDocument(document, { preview: false })
+      await new Promise((resolve) => setTimeout(resolve, 250))
+      await format_document(document)
+      await document.save()
+    } catch (error) {
+      Logger.error({
+        function_name: 'handle_new_file_patch',
+        message: 'Error formatting new file',
+        data: { file_path, error }
+      })
+    }
 
     return { success: true, original_states, used_fallback: false }
   } catch (error: any) {
