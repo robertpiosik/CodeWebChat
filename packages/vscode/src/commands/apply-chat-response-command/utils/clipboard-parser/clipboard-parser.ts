@@ -24,9 +24,10 @@ export interface ClipboardContent {
 }
 
 const extract_workspace_and_path = (
-  file_path: string,
+  raw_file_path: string,
   is_single_root_folder_workspace = false
 ): { workspace_name?: string; relative_path: string } => {
+  const file_path = raw_file_path.replace(/\\/g, '/')
   // If workspace has only one root folder, don't try to extract workspace name
   if (is_single_root_folder_workspace) {
     return { relative_path: file_path }
@@ -117,7 +118,7 @@ export const parse_code_completion = (params: {
                 params.is_single_root_folder_workspace
               )
             return {
-              file_path: relative_path.replace(/\\/g, '/'),
+              file_path: relative_path,
               content: cleanup_api_response({
                 content: content_lines.join('\n')
               }),

@@ -5,7 +5,6 @@ import { exec } from 'child_process'
 import { Logger } from '@shared/utils/logger'
 import { promisify } from 'util'
 import { OriginalFileState } from '../types/original-file-state'
-import { format_document } from '../utils/format-document'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {
   apply_diff_patch,
@@ -239,26 +238,6 @@ async function process_modified_files(
             data: { file_path, error }
           })
         }
-      } else {
-        try {
-          const uri = vscode.Uri.file(safe_path)
-          const document = await vscode.workspace.openTextDocument(uri)
-          await vscode.window.showTextDocument(document, { preview: false })
-          await new Promise((resolve) => setTimeout(resolve, 250))
-          await format_document(document)
-          await document.save()
-          Logger.log({
-            function_name: 'process_modified_files',
-            message: 'Successfully processed file',
-            data: { file_path }
-          })
-        } catch (error) {
-          Logger.error({
-            function_name: 'process_modified_files',
-            message: 'Error processing file',
-            data: { file_path, error }
-          })
-        }
       }
     } else {
       Logger.log({
@@ -329,19 +308,6 @@ const handle_new_file_patch = async (
     }
 
     await fs.promises.writeFile(safe_path, new_content, 'utf8')
-    try {
-      const document = await vscode.workspace.openTextDocument(safe_path)
-      await vscode.window.showTextDocument(document, { preview: false })
-      await new Promise((resolve) => setTimeout(resolve, 250))
-      await format_document(document)
-      await document.save()
-    } catch (error) {
-      Logger.error({
-        function_name: 'handle_new_file_patch',
-        message: 'Error formatting new file',
-        data: { file_path, error }
-      })
-    }
 
     return { success: true, original_states, used_fallback: false }
   } catch (error: any) {

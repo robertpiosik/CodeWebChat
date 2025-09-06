@@ -2,11 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
-import {
-  create_safe_path,
-  sanitize_file_name
-} from '@/utils/path-sanitizer'
-import { format_document } from '../utils/format-document'
+import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { ClipboardFile } from '../utils/clipboard-parser'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
@@ -122,7 +118,6 @@ export const handle_fast_replace = async (
             )
           })
 
-          await format_document(document)
           await document.save()
           Logger.log({
             function_name: 'handle_fast_replace',
@@ -175,27 +170,6 @@ export const handle_fast_replace = async (
               `Failed to write file: ${file.file_path}`
             )
             continue
-          }
-
-          try {
-            const document = await vscode.workspace.openTextDocument(safe_path)
-            await vscode.window.showTextDocument(document)
-            await format_document(document)
-            await document.save()
-            Logger.log({
-              function_name: 'handle_fast_replace',
-              message: 'New file created, formatted and saved',
-              data: safe_path
-            })
-          } catch (error) {
-            Logger.error({
-              function_name: 'handle_fast_replace',
-              message: 'Failed to open/format/save new file',
-              data: { safe_path, error, file_path: file.file_path }
-            })
-            vscode.window.showErrorMessage(
-              `Failed to open/format/save new file: ${file.file_path}`
-            )
           }
         }
       } catch (error: any) {

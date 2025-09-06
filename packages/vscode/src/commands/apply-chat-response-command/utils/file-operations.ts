@@ -3,7 +3,6 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
-import { format_document } from './format-document'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
 export const remove_directory_if_empty = async (params: {
@@ -132,6 +131,7 @@ export const create_file_if_needed = async (params: {
       message: 'File created',
       data: safe_path
     })
+    return true
   } catch (error) {
     Logger.error({
       function_name: 'create_file_if_needed',
@@ -139,32 +139,9 @@ export const create_file_if_needed = async (params: {
       data: { safe_path, error }
     })
     vscode.window.showErrorMessage(`Failed to write file: ${safe_path}`)
-    return false
+    
   }
-
-  try {
-    const document = await vscode.workspace.openTextDocument(safe_path)
-    await vscode.window.showTextDocument(document)
-
-    await format_document(document)
-    await document.save()
-    Logger.log({
-      function_name: 'create_file_if_needed',
-      message: 'File created, formatted and saved',
-      data: safe_path
-    })
-    return true
-  } catch (error) {
-    Logger.error({
-      function_name: 'create_file_if_needed',
-      message: 'Failed to open, format, or save file',
-      data: { safe_path, error }
-    })
-    vscode.window.showErrorMessage(
-      `Failed to open, format, or save file: ${safe_path}`
-    )
-    return false // Indicate failure but the file might still exist
-  }
+return   false
 }
 
 const relocate_file = async (params: {
@@ -409,8 +386,6 @@ export const undo_files = async (params: {
             })
             const doc = await vscode.workspace.openTextDocument(safe_path)
             const editor = await vscode.window.showTextDocument(doc)
-            await format_document(doc)
-
             if (state.cursor_offset !== undefined) {
               const position = doc.positionAt(state.cursor_offset)
               editor.selection = new vscode.Selection(position, position)

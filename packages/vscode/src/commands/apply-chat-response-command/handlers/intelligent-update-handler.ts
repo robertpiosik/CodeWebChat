@@ -5,7 +5,6 @@ import * as fs from 'fs'
 import { ClipboardFile, parse_multiple_files } from '../utils/clipboard-parser'
 import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
-import { format_document } from '../utils/format-document'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { ToolConfig } from '@/services/api-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
@@ -472,7 +471,6 @@ export const handle_intelligent_update = async (params: {
               change.content
             )
           })
-          await format_document(document)
           await document.save()
         } catch (error) {
           Logger.error({
