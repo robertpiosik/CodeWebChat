@@ -6,12 +6,12 @@ import { Logger } from '@shared/utils/logger'
 import { format_document } from './format-document'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
-export const remove_directory_if_empty = async (
-  dir_path: string,
+export const remove_directory_if_empty = async (params: {
+  dir_path: string
   workspace_root: string
-) => {
-  const normalized_dir = path.normalize(dir_path)
-  const normalized_root = path.normalize(workspace_root)
+}) => {
+  const normalized_dir = path.normalize(params.dir_path)
+  const normalized_root = path.normalize(params.workspace_root)
 
   if (
     !normalized_dir ||
@@ -34,10 +34,10 @@ export const remove_directory_if_empty = async (
           message: 'Removed empty directory',
           data: { dir_path: normalized_dir }
         })
-        await remove_directory_if_empty(
-          path.dirname(normalized_dir),
-          workspace_root
-        )
+        await remove_directory_if_empty({
+          dir_path: path.dirname(normalized_dir),
+          workspace_root: params.workspace_root
+        })
       }
     }
   } catch (error) {
@@ -49,15 +49,15 @@ export const remove_directory_if_empty = async (
   }
 }
 
-export const create_file_if_needed = async (
-  filePath: string,
-  content: string,
+export const create_file_if_needed = async (params: {
+  file_path: string
+  content: string
   workspace_name?: string
-): Promise<boolean> => {
+}): Promise<boolean> => {
   Logger.log({
     function_name: 'create_file_if_needed',
     message: 'start',
-    data: { filePath, workspace_name }
+    data: { filePath: params.file_path, workspace_name: params.workspace_name }
   })
   if (
     !vscode.workspace.workspaceFolders ||
@@ -73,17 +73,17 @@ export const create_file_if_needed = async (
 
   let workspace_folder_path: string | undefined
 
-  if (workspace_name) {
+  if (params.workspace_name) {
     const target_workspace = vscode.workspace.workspaceFolders.find(
-      (folder) => folder.name == workspace_name
+      (folder) => folder.name == params.workspace_name
     )
     if (target_workspace) {
       workspace_folder_path = target_workspace.uri.fsPath
     } else {
       Logger.warn({
         function_name: 'create_file_if_needed',
-        message: `Workspace named "${workspace_name}" not found. Falling back to the first workspace.`,
-        data: filePath
+        message: `Workspace named "${params.workspace_name}" not found. Falling back to the first workspace.`,
+        data: params.file_path
       })
       workspace_folder_path = vscode.workspace.workspaceFolders[0].uri.fsPath
     }
@@ -91,16 +91,16 @@ export const create_file_if_needed = async (
     workspace_folder_path = vscode.workspace.workspaceFolders[0].uri.fsPath
   }
 
-  const safe_path = create_safe_path(workspace_folder_path, filePath)
+  const safe_path = create_safe_path(workspace_folder_path, params.file_path)
 
   if (!safe_path) {
     vscode.window.showErrorMessage(
-      `Invalid file path: ${filePath}. Path may contain traversal attempts.`
+      `Invalid file path: ${params.file_path}. Path may contain traversal attempts.`
     )
     Logger.error({
       function_name: 'create_file_if_needed',
       message: 'Invalid file path',
-      data: filePath
+      data: params.file_path
     })
     return false
   }
@@ -126,7 +126,7 @@ export const create_file_if_needed = async (
   }
 
   try {
-    fs.writeFileSync(safe_path, content)
+    fs.writeFileSync(safe_path, params.content)
     Logger.log({
       function_name: 'create_file_if_needed',
       message: 'File created',
@@ -167,20 +167,26 @@ export const create_file_if_needed = async (
   }
 }
 
-const relocate_file = async (
-  old_path: string,
-  new_path: string,
+const relocate_file = async (params: {
+  old_path: string
+  new_path: string
   workspace_root: string
-): Promise<boolean> => {
+}): Promise<boolean> => {
   try {
-    const old_safe_path = create_safe_path(workspace_root, old_path)
-    const new_safe_path = create_safe_path(workspace_root, new_path)
+    const old_safe_path = create_safe_path(
+      params.workspace_root,
+      params.old_path
+    )
+    const new_safe_path = create_safe_path(
+      params.workspace_root,
+      params.new_path
+    )
 
     if (!old_safe_path || !new_safe_path) {
       Logger.error({
         function_name: 'relocate_file',
         message: 'Invalid file paths for relocation',
-        data: { old_path, new_path }
+        data: { old_path: params.old_path, new_path: params.new_path }
       })
       return false
     }
@@ -217,7 +223,10 @@ const relocate_file = async (
     fs.renameSync(old_safe_path, new_safe_path)
 
     // Clean up empty directory if needed
-    await remove_directory_if_empty(path.dirname(old_safe_path), workspace_root)
+    await remove_directory_if_empty({
+      dir_path: path.dirname(old_safe_path),
+      workspace_root: params.workspace_root
+    })
 
     // Open the file at new location
     const document = await vscode.workspace.openTextDocument(new_safe_path)
@@ -234,7 +243,7 @@ const relocate_file = async (
     Logger.error({
       function_name: 'relocate_file',
       message: 'Error relocating file',
-      data: { error, old_path, new_path }
+      data: { error, old_path: params.old_path, new_path: params.new_path }
     })
     return false
   }
@@ -264,36 +273,34 @@ export const apply_file_relocations = async (
         workspace_root = workspace_map.get(state.workspace_name)!
       }
 
-      const success = await relocate_file(
-        state.file_path,
-        state.new_file_path,
+      const success = await relocate_file({
+        old_path: state.file_path,
+        new_path: state.new_file_path,
         workspace_root
-      )
+      })
 
       if (success) {
-        // Update the state to reflect the new location
         state.file_path_to_restore = state.file_path
         state.file_path = state.new_file_path
         state.new_file_path = undefined
-        // state.is_new = true
       }
     }
   }
 }
 
-export const undo_files = async (
-  original_states: OriginalFileState[],
-  show_message = true
-): Promise<boolean> => {
+export const undo_files = async (params: {
+  original_states: OriginalFileState[]
+  show_message?: boolean
+}): Promise<boolean> => {
   Logger.log({
     function_name: 'undo_files',
     message: 'start',
-    data: { original_states_count: original_states.length }
+    data: { original_states_count: params.original_states.length }
   })
   try {
     if (
       !vscode.workspace.workspaceFolders ||
-      vscode.workspace.workspaceFolders.length === 0
+      vscode.workspace.workspaceFolders.length == 0
     ) {
       vscode.window.showErrorMessage('No workspace folder open.')
       Logger.warn({
@@ -310,7 +317,7 @@ export const undo_files = async (
 
     const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
 
-    for (const state of original_states) {
+    for (const state of params.original_states) {
       let workspace_root = default_workspace
       if (state.workspace_name && workspace_map.has(state.workspace_name)) {
         workspace_root = workspace_map.get(state.workspace_name)!
@@ -356,10 +363,10 @@ export const undo_files = async (
               message: 'New file deleted',
               data: safe_path
             })
-            await remove_directory_if_empty(
-              path.dirname(safe_path),
+            await remove_directory_if_empty({
+              dir_path: path.dirname(safe_path),
               workspace_root
-            )
+            })
           } catch (err) {
             Logger.error({
               function_name: 'undo_files',
@@ -374,11 +381,11 @@ export const undo_files = async (
       } else {
         if (state.file_path_to_restore) {
           if (safe_path && fs.existsSync(safe_path)) {
-            await relocate_file(
-              state.file_path,
-              state.file_path_to_restore,
+            await relocate_file({
+              old_path: state.file_path,
+              new_path: state.file_path_to_restore,
               workspace_root
-            )
+            })
           }
           safe_path = create_safe_path(
             workspace_root,
@@ -462,7 +469,7 @@ export const undo_files = async (
       }
     }
 
-    if (show_message) {
+    if (params.show_message ?? true) {
       vscode.window.showInformationMessage('Changes successfully undone.')
     }
     Logger.log({

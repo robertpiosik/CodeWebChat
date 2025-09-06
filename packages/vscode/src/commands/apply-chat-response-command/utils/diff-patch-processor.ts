@@ -25,18 +25,21 @@ class SearchBlock {
   }
 }
 
-export const process_diff_patch = async (
-  file_path: string,
+export const process_diff_patch = async (params: {
+  file_path: string
   diff_path_patch: string
-): Promise<void> => {
-  const file_content = fs.readFileSync(file_path, 'utf8')
-  const diff_patch_content = fs.readFileSync(diff_path_patch, 'utf8')
+}): Promise<void> => {
+  const file_content = fs.readFileSync(params.file_path, 'utf8')
+  const diff_patch_content = fs.readFileSync(params.diff_path_patch, 'utf8')
 
-  const result = apply_diff_patch(file_content, diff_patch_content)
+  const result = apply_diff_patch({
+    original_code: file_content,
+    diff_patch: diff_patch_content
+  })
 
   try {
     await vscode.workspace.fs.writeFile(
-      vscode.Uri.file(file_path),
+      vscode.Uri.file(params.file_path),
       Buffer.from(result, 'utf8')
     )
     Logger.log({
@@ -53,27 +56,19 @@ export const process_diff_patch = async (
   }
 }
 
-export const apply_diff_patch = (
-  original_code: string,
+export const apply_diff_patch = (params: {
+  original_code: string
   diff_patch: string
-): string => {
+}): string => {
   try {
-    const original_code_normalized = original_code.replace(/\r\n/g, '\n')
+    const original_code_normalized = params.original_code.replace(/\r\n/g, '\n')
     const original_code_lines = original_code_normalized.split(/^/m)
     const original_code_lines_normalized = []
 
-    const patch_normalized = diff_patch.replace(/\r\n/g, '\n')
+    const patch_normalized = params.diff_patch.replace(/\r\n/g, '\n')
     const patch_lines = patch_normalized.split('\n')
     const patch_lines_original = []
     const patch_lines_normalized = []
-
-    // === Count new lines at the end of the original text ===
-    const trailing_new_lines = count_trailing_new_lines(original_code)
-
-    // .split will miss the last new line so we must add it manually if any exist
-    if (trailing_new_lines > 0) {
-      original_code_lines.push('\n')
-    }
 
     // === Normalize the code lines ===
     let line_count = 0
@@ -346,16 +341,4 @@ export const apply_diff_patch = (
     })
     throw error
   }
-}
-
-const count_trailing_new_lines = (text: string): number => {
-  let count = 0
-  for (let i = text.length - 1; i >= 0; i--) {
-    if (text[i] == '\n') {
-      count++
-    } else {
-      break
-    }
-  }
-  return count
 }

@@ -125,7 +125,10 @@ export const extract_content_from_patch = (
   original_content: string
 ): string => {
   try {
-    return apply_diff_patch(original_content, patch_content)
+    return apply_diff_patch({
+      original_code: original_content,
+      diff_patch: patch_content
+    })
   } catch (error) {
     Logger.warn({
       function_name: 'extract_content_from_patch',
@@ -225,10 +228,10 @@ async function process_modified_files(
             message: 'File was empty after patch, removed from disk.',
             data: { file_path }
           })
-          await remove_directory_if_empty(
-            path.dirname(safe_path),
-            workspace_path
-          )
+          await remove_directory_if_empty({
+            dir_path: path.dirname(safe_path),
+            workspace_root: workspace_path
+          })
         } catch (error) {
           Logger.error({
             function_name: 'process_modified_files',
@@ -241,6 +244,7 @@ async function process_modified_files(
           const uri = vscode.Uri.file(safe_path)
           const document = await vscode.workspace.openTextDocument(uri)
           await vscode.window.showTextDocument(document, { preview: false })
+          await new Promise((resolve) => setTimeout(resolve, 250))
           await format_document(document)
           await document.save()
           Logger.log({
@@ -398,7 +402,10 @@ const handle_deleted_file_patch = async (
         message: 'File deleted successfully.',
         data: { file_path }
       })
-      await remove_directory_if_empty(path.dirname(safe_path), workspace_path)
+      await remove_directory_if_empty({
+        dir_path: path.dirname(safe_path),
+        workspace_root: workspace_path
+      })
     } else {
       Logger.warn({
         function_name: 'handle_deleted_file_patch',
@@ -509,7 +516,10 @@ export const apply_git_patch = async (
       try {
         const file_path_safe = create_safe_path(workspace_path, file_paths[0])
         if (file_path_safe == null) throw new Error('File path is null')
-        await process_diff_patch(file_path_safe, temp_file)
+        await process_diff_patch({
+          file_path: file_path_safe,
+          diff_path_patch: temp_file
+        })
         success = true
         used_fallback = true
         Logger.log({

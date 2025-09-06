@@ -295,19 +295,19 @@ const handle_code_review_and_cleanup = async (params: {
   })
 
   try {
-    const review_result = await review_applied_changes(
-      params.original_states,
-      params.view_provider
-    )
+    const review_result = await review_applied_changes({
+      original_states: params.original_states,
+      view_provider: params.view_provider
+    })
 
     if (review_result === null || review_result.accepted_files.length == 0) {
-      await undo_files(params.original_states)
+      await undo_files({ original_states: params.original_states })
       params.update_undo_and_apply_button_state(null)
       return false
     }
 
     if (review_result.rejected_states.length > 0) {
-      await undo_files(review_result.rejected_states)
+      await undo_files({ original_states: review_result.rejected_states })
     }
 
     const accepted_states = params.original_states.filter((state) =>
@@ -608,7 +608,7 @@ export const apply_chat_response_command = (
 
             if (!config_result) {
               if (success_count > 0 && all_original_states.length > 0) {
-                await undo_files(all_original_states)
+                await undo_files({ original_states: all_original_states })
                 update_undo_and_apply_button_state(null)
               }
               return null
@@ -664,7 +664,7 @@ export const apply_chat_response_command = (
                 }
               } else {
                 if (success_count > 0 && all_original_states.length > 0) {
-                  await undo_files(all_original_states)
+                  await undo_files({ original_states: all_original_states })
                   update_undo_and_apply_button_state(null)
                 }
               }
@@ -681,7 +681,7 @@ export const apply_chat_response_command = (
               )
 
               if (response == 'Undo' && all_original_states.length > 0) {
-                await undo_files(all_original_states)
+                await undo_files({ original_states: all_original_states })
                 update_undo_and_apply_button_state(null)
               }
             }
@@ -722,7 +722,10 @@ export const apply_chat_response_command = (
                   const fallback_states = fallback_applied_patches.flatMap(
                     (p) => p.original_states
                   )
-                  await undo_files(fallback_states, false)
+                  await undo_files({
+                    original_states: fallback_states,
+                    show_message: false
+                  })
 
                   const non_fallback_states = applied_patches
                     .filter((p) => !p.used_fallback)
@@ -939,7 +942,10 @@ export const apply_chat_response_command = (
 
                 if (response == intelligent_update_button_label) {
                   const original_states_for_undo = final_original_states!
-                  await undo_files(original_states_for_undo, false)
+                  await undo_files({
+                    original_states: original_states_for_undo,
+                    show_message: false
+                  })
                   const num_files = original_states_for_undo.length
                   const progress_title_override = `Called Intelligent Update API tool for ${num_files} file${
                     num_files > 1 ? 's' : ''

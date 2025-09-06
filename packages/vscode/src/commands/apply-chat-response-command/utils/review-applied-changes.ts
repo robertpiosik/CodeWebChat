@@ -48,19 +48,19 @@ type PreparedFile = {
   file_exists: boolean
 }
 
-const get_diff_stats = (
-  original_content: string,
+const get_diff_stats = (params: {
+  original_content: string
   new_content: string
-): { lines_added: number; lines_removed: number } => {
-  if (original_content == new_content) {
+}): { lines_added: number; lines_removed: number } => {
+  if (params.original_content == params.new_content) {
     return { lines_added: 0, lines_removed: 0 }
   }
 
   const patch = createTwoFilesPatch(
     'original',
     'modified',
-    original_content,
-    new_content,
+    params.original_content,
+    params.new_content,
     undefined,
     undefined,
     { context: 0 }
@@ -81,17 +81,20 @@ const get_diff_stats = (
   return { lines_added, lines_removed }
 }
 
-const prepare_files_from_original_states = async (
-  original_states: OriginalFileState[],
-  default_workspace: string,
+const prepare_files_from_original_states = async (params: {
+  original_states: OriginalFileState[]
+  default_workspace: string
   workspace_map: Map<string, string>
-): Promise<PreparedFile[]> => {
+}): Promise<PreparedFile[]> => {
   const prepared_files: PreparedFile[] = []
 
-  for (const state of original_states) {
-    let workspace_root = default_workspace
-    if (state.workspace_name && workspace_map.has(state.workspace_name)) {
-      workspace_root = workspace_map.get(state.workspace_name)!
+  for (const state of params.original_states) {
+    let workspace_root = params.default_workspace
+    if (
+      state.workspace_name &&
+      params.workspace_map.has(state.workspace_name)
+    ) {
+      workspace_root = params.workspace_map.get(state.workspace_name)!
     }
 
     const sanitized_file_path = create_safe_path(
@@ -119,7 +122,10 @@ const prepare_files_from_original_states = async (
     const temp_filename = `${base}.${Date.now()}`
     const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
-    const diff_stats = get_diff_stats(state.content, current_content)
+    const diff_stats = get_diff_stats({
+      original_content: state.content,
+      new_content: current_content
+    })
     const is_deleted =
       !state.is_new && current_content === '' && state.content !== ''
 
@@ -163,10 +169,10 @@ const prepare_files_from_original_states = async (
         restored_temp_filename
       )
 
-      const restored_diff_stats = get_diff_stats(
-        state.content,
-        restored_current_content
-      )
+      const restored_diff_stats = get_diff_stats({
+        original_content: state.content,
+        new_content: restored_current_content
+      })
 
       const restored_reviewable_file: ReviewableFile = {
         file_path: state.file_path_to_restore,
@@ -264,10 +270,10 @@ const show_diff_with_actions = async (
   })
 }
 
-export const review_applied_changes = async (
-  original_states: OriginalFileState[],
+export const review_applied_changes = async (params: {
+  original_states: OriginalFileState[]
   view_provider?: ViewProvider
-): Promise<{
+}): Promise<{
   accepted_files: ReviewableFile[]
   rejected_states: OriginalFileState[]
 } | null> => {
@@ -276,7 +282,7 @@ export const review_applied_changes = async (
     return null
   }
 
-  if (!original_states || original_states.length == 0) {
+  if (!params.original_states || params.original_states.length == 0) {
     return null
   }
 
@@ -289,14 +295,14 @@ export const review_applied_changes = async (
   let prepared_files: PreparedFile[] = []
 
   try {
-    prepared_files = await prepare_files_from_original_states(
-      original_states,
+    prepared_files = await prepare_files_from_original_states({
+      original_states: params.original_states,
       default_workspace,
       workspace_map
-    )
+    })
 
-    if (view_provider) {
-      view_provider.send_message({
+    if (params.view_provider) {
+      params.view_provider.send_message({
         command: 'CODE_REVIEW_STARTED',
         files: prepared_files.map((p) => p.reviewable_file)
       })
@@ -336,10 +342,10 @@ export const review_applied_changes = async (
               await vscode.workspace.fs.delete(
                 vscode.Uri.file(file_to_toggle.sanitized_path)
               )
-              await remove_directory_if_empty(
-                path.dirname(file_to_toggle.sanitized_path),
+              await remove_directory_if_empty({
+                dir_path: path.dirname(file_to_toggle.sanitized_path),
                 workspace_root
-              )
+              })
             }
           } catch (e) {}
         } else {
@@ -355,10 +361,10 @@ export const review_applied_changes = async (
               await vscode.workspace.fs.delete(
                 vscode.Uri.file(file_to_toggle.sanitized_path)
               )
-              await remove_directory_if_empty(
-                path.dirname(file_to_toggle.sanitized_path),
+              await remove_directory_if_empty({
+                dir_path: path.dirname(file_to_toggle.sanitized_path),
                 workspace_root
-              )
+              })
             }
           } catch (e) {}
         } else {
@@ -442,7 +448,7 @@ export const review_applied_changes = async (
     )
     const rejected_states = rejected_items
       .map((item) => {
-        return original_states.find(
+        return params.original_states.find(
           (state) =>
             state.file_path === item.file.reviewable_file.file_path &&
             state.workspace_name === item.file.reviewable_file.workspace_name
@@ -456,8 +462,8 @@ export const review_applied_changes = async (
     cleanup_temp_files(prepared_files)
     toggle_file_review_state = undefined
 
-    if (view_provider) {
-      view_provider.send_message({ command: 'CODE_REVIEW_FINISHED' })
+    if (params.view_provider) {
+      params.view_provider.send_message({ command: 'CODE_REVIEW_FINISHED' })
     }
   }
 }

@@ -435,11 +435,11 @@ export const handle_intelligent_update = async (params: {
       }
 
       if (change.isNew) {
-        const created = await create_file_if_needed(
-          change.filePath,
-          change.content,
-          change.workspaceName
-        )
+        const created = await create_file_if_needed({
+          file_path: change.filePath,
+          content: change.content,
+          workspace_name: change.workspaceName
+        })
         if (!created) {
           // Log error, inform user, but continue applying other changes
           Logger.error({
