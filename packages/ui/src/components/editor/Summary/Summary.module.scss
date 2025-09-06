@@ -55,6 +55,12 @@
     }
   }
 
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-8px);
+  }
+
   &__line-numbers {
     display: flex;
     gap: 0.3em;

@@ -310,6 +310,13 @@ export const View = () => {
                   workspace_name: file.workspace_name
                 })
               }}
+              on_go_to_file={(file) => {
+                post_message(vscode, {
+                  command: 'GO_TO_FILE_IN_REVIEW',
+                  file_path: file.file_path,
+                  workspace_name: file.workspace_name
+                })
+              }}
               on_toggle_file={(file) => {
                 post_message(vscode, {
                   command: 'TOGGLE_FILE_IN_REVIEW',

@@ -217,6 +217,12 @@ export interface FocusOnFileInReviewMessage extends BaseMessage {
   workspace_name?: string
 }
 
+export interface GoToFileInReviewMessage extends BaseMessage {
+  command: 'GO_TO_FILE_IN_REVIEW'
+  file_path: string
+  workspace_name?: string
+}
+
 export interface GetHasMultipleWorkspacesMessage extends BaseMessage {
   command: 'GET_HAS_MULTIPLE_WORKSPACES'
 }
@@ -283,6 +289,7 @@ export type FrontendMessage =
   | EditsReviewMessage
   | ToggleFileInReviewMessage
   | FocusOnFileInReviewMessage
+  | GoToFileInReviewMessage
   | GetHasMultipleWorkspacesMessage
   | RequestGitStateMessage
   | UpdateLastUsedPresetMessage

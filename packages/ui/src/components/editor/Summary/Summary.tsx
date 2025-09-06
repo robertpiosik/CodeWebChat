@@ -4,6 +4,7 @@ import cn from 'classnames'
 import styles from './Summary.module.scss'
 import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
+import { IconButton } from '../IconButton/IconButton'
 
 type CheckedFileToReview = FileInReview & { is_checked: boolean }
 
@@ -13,6 +14,7 @@ type Props = {
   on_undo: () => void
   on_keep: (files: FileInReview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
+  on_go_to_file: (file: { file_path: string; workspace_name?: string }) => void
   on_toggle_file: (file: {
     file_path: string
     workspace_name?: string
@@ -26,6 +28,7 @@ export const Summary: FC<Props> = ({
   on_undo,
   on_keep,
   on_focus_file,
+  on_go_to_file,
   on_toggle_file
 }) => {
   const [files_to_review, set_files_to_review] = useState<
@@ -111,16 +114,29 @@ export const Summary: FC<Props> = ({
                   </span>
                 </div>
               </div>
-              {!file.is_deleted && (
-                <div className={styles['item__line-numbers']}>
-                  <span className={styles['item__line-numbers__added']}>
-                    +{file.lines_added}
-                  </span>
-                  <span className={styles['item__line-numbers__removed']}>
-                    -{file.lines_removed}
-                  </span>
-                </div>
-              )}
+              <div className={styles.item__right}>
+                {!file.is_deleted && (
+                  <div className={styles['item__line-numbers']}>
+                    <span className={styles['item__line-numbers__added']}>
+                      +{file.lines_added}
+                    </span>
+                    <span className={styles['item__line-numbers__removed']}>
+                      -{file.lines_removed}
+                    </span>
+                  </div>
+                )}
+                <IconButton
+                  codicon_icon="go-to-file"
+                  title="Go to file"
+                  on_click={(e) => {
+                    e.stopPropagation()
+                    on_go_to_file({
+                      file_path: file.file_path,
+                      workspace_name: file.workspace_name
+                    })
+                  }}
+                />
+              </div>
             </div>
           )
         })}

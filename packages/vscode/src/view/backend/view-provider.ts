@@ -45,6 +45,7 @@ import {
   handle_get_donations_visibility,
   handle_save_donations_visibility,
   handle_focus_on_file_in_review,
+  handle_go_to_file_in_review,
   handle_toggle_file_in_review
 } from './message-handlers'
 import {
@@ -408,6 +409,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_save_donations_visibility(this, message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_REVIEW') {
             handle_focus_on_file_in_review(this, message)
+          } else if (message.command == 'GO_TO_FILE_IN_REVIEW') {
+            handle_go_to_file_in_review(this, message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
             await handle_toggle_file_in_review(this, message)
           } else if (message.command == 'EDITS_REVIEW') {
