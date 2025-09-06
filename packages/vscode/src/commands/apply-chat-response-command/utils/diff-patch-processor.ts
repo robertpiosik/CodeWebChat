@@ -70,12 +70,10 @@ export const apply_diff_patch = (params: {
     const patch_lines_original = []
     const patch_lines_normalized = []
 
-    // === Normalize the code lines ===
     let line_count = 0
     for (let i = 0; i < original_code_lines.length; i++) {
       let line = original_code_lines[i]
 
-      // Treat empty new lines as ~nnn
       if (line.trim() == '') {
         line = '~nnn'
       }
@@ -96,11 +94,9 @@ export const apply_diff_patch = (params: {
       line_count++
     }
 
-    // === Normalize the patch lines ===
     for (let i = 0; i < patch_lines.length; i++) {
       let line = patch_lines[i]
 
-      // If line is part of git patch header, skip it
       if (
         line.startsWith('diff --git') ||
         line.startsWith('index') ||
@@ -110,7 +106,6 @@ export const apply_diff_patch = (params: {
         continue
       }
 
-      // Treat empty new lines as ~nnn
       if (line.trim() == '') {
         line = '~nnn'
       } else if (line.trim() == '+') {
@@ -119,7 +114,6 @@ export const apply_diff_patch = (params: {
         line = '-~nnn'
       }
 
-      // Save original patch line for applying later. Remove leading space.
       patch_lines_original.push(
         line.startsWith(' ') ? line.substring(1, line.length) : line
       )
@@ -128,8 +122,6 @@ export const apply_diff_patch = (params: {
         .replace(/\r\n/g, '')
         .replace(/\r/g, '')
         .replace(/\n/g, '')
-
-      // If white space at start convert to ~
       if (line_normalized.startsWith(' ')) {
         line_normalized = line_normalized.replace(/^\s+/, '~')
       }
@@ -143,7 +135,6 @@ export const apply_diff_patch = (params: {
     let search_chunks = []
     let replace_chunks = []
 
-    // === Process the patch lines ===
     let inside_replace_block = false
     for (let i = 0; i < patch_lines_normalized.length; i++) {
       const line = patch_lines_normalized[i]
@@ -151,12 +142,10 @@ export const apply_diff_patch = (params: {
 
       if (line.startsWith('@@')) {
         if (search_chunks.length > 0 || replace_chunks.length > 0) {
-          // A new hunk is starting, so save the previous one.
           search_replace_blocks.push(
             new SearchBlock(search_chunks, replace_chunks, -1)
           )
         }
-
         search_chunks = []
         replace_chunks = []
         inside_replace_block = false
@@ -164,10 +153,8 @@ export const apply_diff_patch = (params: {
 
       if (line.startsWith('-') || line.startsWith('~')) {
         if (inside_replace_block) {
-          // We hit a new search block, store the previous one
           inside_replace_block = false
 
-          // Don't add the block if there is no matching search or replace
           if (search_chunks.length > 0 || replace_chunks.length > 0) {
             search_replace_blocks.push(
               new SearchBlock(search_chunks, replace_chunks, -1)
@@ -212,12 +199,9 @@ export const apply_diff_patch = (params: {
       }
     }
 
-    // Reached end of patch. Add the final search block to the searchReplaceBlocks
     if (search_chunks.length > 0) {
-      // When there are only + lines in the last search block and corresponding no replace lines remove a trailing ~nnn if exists
       // A extra trailing new line is sometimes added by the AI model
       if (search_chunks[search_chunks.length - 1] == '~nnn') {
-        // If the last search chunk ends in a ~nnn (blank new line), remove it and it's corresponding replace chunk new line
         search_chunks.pop()
         replace_chunks.pop()
       }
@@ -230,7 +214,6 @@ export const apply_diff_patch = (params: {
       }
     }
 
-    // === Work through search and replace blocks finding start of search block ===
     let previous_found_index = 0
     for (let i = 0; i < search_replace_blocks.length; i++) {
       const search_replace_block = search_replace_blocks[i]
@@ -243,8 +226,6 @@ export const apply_diff_patch = (params: {
         j < original_code_lines_normalized.length;
         j++
       ) {
-        // If we have no search lines and only replace lines and our previous found index is 0
-        // assume we are at the start of the file and set the search block start index to 0
         // This is a special case when a patch hunk starts with one or more + lines and no context lines
         if (
           search_replace_block.search_lines.length == 0 &&
@@ -294,7 +275,6 @@ export const apply_diff_patch = (params: {
       }
     }
 
-    // === Apply the search and replace blocks ===
     const valid_blocks = search_replace_blocks.filter(
       (block) => block.get_start_index() !== -2
     )
@@ -306,7 +286,7 @@ export const apply_diff_patch = (params: {
       const start_index =
         block.get_start_index() == -1 ? 0 : block.get_start_index() // When -1, insert at the start of the file
       const search_count = block.get_search_count()
-      const replacement_content = block.replace_lines // These are original lines
+      const replacement_content = block.replace_lines
 
       if (start_index < 0 || start_index > result_lines.length) {
         // start_index can be == result_lines.length for appending
