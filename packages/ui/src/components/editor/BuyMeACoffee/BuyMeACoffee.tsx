@@ -23,7 +23,7 @@ export const BuyMeACoffee: React.FC<BuyMeACoffeeProps> = (props) => {
     if (!props.donations_fetched_once && !props.are_donations_visible) {
       return 'cloud-download'
     }
-    return props.are_donations_visible ? 'eye-closed' : 'eye'
+    return props.are_donations_visible ? 'eye' : 'eye-closed'
   }
 
   const get_title = () => {
