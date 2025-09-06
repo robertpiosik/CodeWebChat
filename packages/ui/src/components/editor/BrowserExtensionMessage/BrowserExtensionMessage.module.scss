@@ -23,9 +23,12 @@
 .links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--padding-8px);
 
   > a {
     white-space: nowrap;
+
+    &:first-child {
+      padding-right: var(--padding-8px);
+    }
   }
 }
