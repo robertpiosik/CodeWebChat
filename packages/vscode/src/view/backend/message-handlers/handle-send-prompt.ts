@@ -204,8 +204,9 @@ export const handle_send_prompt = async (params: {
           const edit_format_instructions =
             all_instructions?.[params.provider.chat_edit_format]
           if (edit_format_instructions) {
-            pre_context_instructions += `\n${edit_format_instructions}`
-            post_context_instructions += `\n${edit_format_instructions}`
+            const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
+            pre_context_instructions += `\n${system_instructions}`
+            post_context_instructions += `\n${system_instructions}`
           }
         }
 
