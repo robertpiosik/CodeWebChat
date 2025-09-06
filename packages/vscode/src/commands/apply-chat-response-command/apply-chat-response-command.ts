@@ -539,7 +539,7 @@ export const apply_chat_response_command = (
           })
 
           const default_workspace =
-            vscode.workspace.workspaceFolders[0].uri.fsPath
+              vscode.workspace.workspaceFolders[0].uri.fsPath
 
           let success_count = 0
           let failure_count = 0

@@ -114,6 +114,8 @@ describe('should_ignore_file', () => {
 
   it('should return true for temporary code review files', () => {
     const ignored = new Set<string>()
-    expect(should_ignore_file('file.cwc-code-review-12345.ts', ignored)).toBe(true)
+    expect(should_ignore_file('file.cwc-code-review-12345.ts', ignored)).toBe(
+      true
+    )
   })
 })

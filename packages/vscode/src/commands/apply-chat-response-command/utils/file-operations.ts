@@ -139,9 +139,8 @@ export const create_file_if_needed = async (params: {
       data: { safe_path, error }
     })
     vscode.window.showErrorMessage(`Failed to write file: ${safe_path}`)
-    
   }
-return   false
+  return false
 }
 
 const relocate_file = async (params: {

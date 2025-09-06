@@ -306,7 +306,8 @@ export const api_providers = async (
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
     quick_pick.title = 'Select API Endpoint'
-    quick_pick.placeholder = 'Choose a predefined provider or create a custom one'
+    quick_pick.placeholder =
+      'Choose a predefined provider or create a custom one'
 
     if (last_selected_label) {
       const active_item = items.find(

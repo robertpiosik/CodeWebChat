@@ -165,28 +165,39 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
         let context_text = ''
         const workspace_folders = vscode.workspace.workspaceFolders
-        const is_multi_root = !!workspace_folders && workspace_folders.length > 1
+        const is_multi_root =
+          !!workspace_folders && workspace_folders.length > 1
 
         for (const file_path of checked_files) {
           try {
             const file_uri = vscode.Uri.file(file_path)
-            const content_uint8_array =
-              await vscode.workspace.fs.readFile(file_uri)
+            const content_uint8_array = await vscode.workspace.fs.readFile(
+              file_uri
+            )
             const content = new TextDecoder().decode(content_uint8_array)
 
             let display_path: string
-            const workspace_folder = vscode.workspace.getWorkspaceFolder(file_uri)
+            const workspace_folder =
+              vscode.workspace.getWorkspaceFolder(file_uri)
 
             if (is_multi_root && workspace_folder) {
-              const relative_path = path.relative(workspace_folder.uri.fsPath, file_path)
+              const relative_path = path.relative(
+                workspace_folder.uri.fsPath,
+                file_path
+              )
               display_path = `${workspace_folder.name}:${relative_path}`
             } else {
               display_path = vscode.workspace.asRelativePath(file_path)
             }
 
-            context_text += `<file path="${display_path.replace(/\\/g, '/')}">\n${content}\n</file>\n`
+            context_text += `<file path="${display_path.replace(
+              /\\/g,
+              '/'
+            )}">\n${content}\n</file>\n`
           } catch (error: any) {
-            vscode.window.showErrorMessage(`Error reading file ${file_path}: ${error.message}`)
+            vscode.window.showErrorMessage(
+              `Error reading file ${file_path}: ${error.message}`
+            )
           }
         }
 
@@ -194,7 +205,9 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
         context_text = `<files>\n${context_text}</files>\n`
         await vscode.env.clipboard.writeText(context_text)
-        vscode.window.showInformationMessage('Context from open editors copied to clipboard.')
+        vscode.window.showInformationMessage(
+          'Context from open editors copied to clipboard.'
+        )
       }
     ),
     vscode.commands.registerCommand('codeWebChat.collapseFolders', async () => {

@@ -62,8 +62,7 @@ const process_collected_patch_lines = (
     !is_deleted_file
 
   // For new files, file_path is to_path. For deleted files or renamed files, it's from_path.
-  const file_path =
-    from_path && from_path != '/dev/null' ? from_path : to_path
+  const file_path = from_path && from_path != '/dev/null' ? from_path : to_path
 
   if (!file_path || file_path == '/dev/null') {
     Logger.log({

@@ -28,7 +28,7 @@ export class FilesCollector {
     additional_paths?: string[]
     no_context?: boolean
   }): Promise<string> {
-    const additional_paths = (params?.additional_paths ?? []).map(p => {
+    const additional_paths = (params?.additional_paths ?? []).map((p) => {
       if (this.workspace_roots.length > 0) {
         return path.join(this.workspace_roots[0], p)
       }
@@ -44,7 +44,9 @@ export class FilesCollector {
       const open_editor_files =
         this.open_editors_provider?.get_checked_files() || []
 
-      context_files = Array.from(new Set([...workspace_files, ...open_editor_files, ...additional_paths]))
+      context_files = Array.from(
+        new Set([...workspace_files, ...open_editor_files, ...additional_paths])
+      )
     }
 
     context_files.sort((a, b) => natural_sort(a, b))
