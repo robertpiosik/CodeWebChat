@@ -185,7 +185,7 @@ const relocate_file = async (params: {
     // Close any open editors for the old file
     const old_uri = vscode.Uri.file(old_safe_path)
     const text_editors = vscode.window.visibleTextEditors.filter(
-      (editor) => editor.document.uri.toString() === old_uri.toString()
+      (editor) => editor.document.uri.toString() == old_uri.toString()
     )
     for (const editor of text_editors) {
       await vscode.window.showTextDocument(editor.document, {
