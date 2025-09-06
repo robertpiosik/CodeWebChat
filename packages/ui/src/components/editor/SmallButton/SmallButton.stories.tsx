@@ -42,4 +42,3 @@ export const DisabledSecondary = () => (
     </SmallButton>
   </div>
 )
-

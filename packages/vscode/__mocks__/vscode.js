@@ -20,7 +20,7 @@ module.exports = {
     workspaceFolders: undefined, // Tests can override this if needed: e.g., [{ uri: { fsPath: '/mock/workspace' } }]
     applyEdit: jest.fn(() => Promise.resolve(true)), // Mock function for applying edits
     fs: {
-      readFile: jest.fn(() => Promise.resolve(new Uint8Array())), // Mock file system read
+      readFile: jest.fn(() => Promise.resolve(new Uint8Array())) // Mock file system read
       // Add writeFile, stat, etc., if needed by other tests
     }
     // Add getConfiguration, etc., if needed by other tests

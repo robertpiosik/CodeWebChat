@@ -76,15 +76,15 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
         </span>
         {is_open ? (
           <span
-            className={cn(
-              'codicon',
-              'codicon-chevron-up',
-              styles.button__icon
-            )}
+            className={cn('codicon', 'codicon-chevron-up', styles.button__icon)}
           />
         ) : (
           <span
-            className={cn('codicon', 'codicon-chevron-down', styles.button__icon)}
+            className={cn(
+              'codicon',
+              'codicon-chevron-down',
+              styles.button__icon
+            )}
           />
         )}
       </button>

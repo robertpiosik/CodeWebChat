@@ -11,9 +11,7 @@ export const Default = () => {
     { value: 'option2', label: 'Option 2' },
     { value: 'option3', label: 'Option 3 That Is Very Long' }
   ]
-  const [selected, set_selected] = useState<string>(
-    'option1'
-  )
+  const [selected, set_selected] = useState<string>('option1')
 
   return (
     <div style={{ width: '200px' }}>
@@ -32,9 +30,7 @@ export const WithPlaceholder = () => {
     { value: 'banana', label: 'Banana' },
     { value: 'orange', label: 'Orange' }
   ]
-  const [selected, set_selected] = useState<string>(
-    'apple'
-  )
+  const [selected, set_selected] = useState<string>('apple')
 
   return (
     <div style={{ width: '200px' }}>

@@ -9,15 +9,13 @@ type Props = {
 
 export const Enter: React.FC<Props> = (props) => {
   return (
-    <button
-      type="button"
-      className={styles.button}
-      onClick={props.on_click}
-    >
+    <button type="button" className={styles.button} onClick={props.on_click}>
       <div className={styles['button__content']}>
         <div className={styles['button__label']}>{props.label}</div>
         {props.description && (
-          <div className={styles['button__description']}>{props.description}</div>
+          <div className={styles['button__description']}>
+            {props.description}
+          </div>
         )}
       </div>
       <span className="codicon codicon-chevron-right" />

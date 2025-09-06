@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Formatting files before commit..."
+npx prettier --write .
+# Or if you're using lint-staged (which is often recommended for performance):
+# npx lint-staged

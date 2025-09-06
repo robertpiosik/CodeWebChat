@@ -12,10 +12,10 @@ const config: StorybookConfig = {
     config.plugins?.push(
       svgr({
         exportAsDefault: true,
-        svgrOptions: {},
-      }),
+        svgrOptions: {}
+      })
     )
-    
+
     return {
       ...config,
       css: {
