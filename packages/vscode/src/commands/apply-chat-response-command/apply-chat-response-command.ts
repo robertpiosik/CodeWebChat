@@ -8,7 +8,7 @@ import {
 } from '../../constants/state-keys'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../../types/common'
-import { undo_files } from './utils/file-operations'
+import { undo_files, apply_file_relocations } from './utils/file-operations'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { handle_intelligent_update } from './handlers/intelligent-update-handler'
 import { create_safe_path } from '@/utils/path-sanitizer'
@@ -515,6 +515,24 @@ export const apply_chat_response_command = (
             return null
           }
 
+          const rename_map = new Map<string, string>()
+          clipboard_content.patches.forEach((patch) => {
+            if (patch.new_file_path && patch.file_path) {
+              rename_map.set(patch.file_path, patch.new_file_path)
+            }
+          })
+
+          const set_new_paths_in_original_states = (
+            states: OriginalFileState[]
+          ) => {
+            if (!rename_map.size) return
+            states.forEach((state) => {
+              if (rename_map.has(state.file_path)) {
+                state.new_file_path = rename_map.get(state.file_path)!
+              }
+            })
+          }
+
           const workspace_map = new Map<string, string>()
           vscode.workspace.workspaceFolders.forEach((folder) => {
             workspace_map.set(folder.name, folder.uri.fsPath)
@@ -571,6 +589,8 @@ export const apply_chat_response_command = (
           }
 
           if (all_original_states.length > 0) {
+            set_new_paths_in_original_states(all_original_states)
+            await apply_file_relocations(all_original_states)
             update_undo_and_apply_button_state(
               all_original_states,
               chat_response,
@@ -631,6 +651,8 @@ export const apply_chat_response_command = (
                   ...all_original_states,
                   ...intelligent_update_states
                 ]
+                set_new_paths_in_original_states(combined_states)
+                await apply_file_relocations(combined_states)
                 update_undo_and_apply_button_state(
                   combined_states,
                   chat_response,
@@ -762,16 +784,19 @@ export const apply_chat_response_command = (
                     })
 
                   if (intelligent_update_states) {
+                    const final_states = [
+                      ...non_fallback_states,
+                      ...intelligent_update_states
+                    ]
+                    set_new_paths_in_original_states(final_states)
+                    await apply_file_relocations(final_states)
                     update_undo_and_apply_button_state(
-                      [...non_fallback_states, ...intelligent_update_states],
+                      final_states,
                       chat_response,
                       args?.original_editor_state
                     )
                     return {
-                      original_states: [
-                        ...non_fallback_states,
-                        ...intelligent_update_states
-                      ],
+                      original_states: final_states,
                       chat_response
                     }
                   }

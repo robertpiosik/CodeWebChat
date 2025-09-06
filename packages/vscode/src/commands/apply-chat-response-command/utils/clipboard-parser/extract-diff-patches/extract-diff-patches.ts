@@ -4,6 +4,7 @@ export type DiffPatch = {
   file_path: string
   content: string
   workspace_name?: string
+  new_file_path?: string
 }
 
 const normalize_header_line = (line: string): string => {
@@ -49,9 +50,22 @@ const process_collected_patch_lines = (
   const joined_patch_text_for_checks = patch_lines_array.join('\n')
   if (joined_patch_text_for_checks.trim() == '') return null
 
-  const file_path = extract_file_path_from_lines(patch_lines_array)
+  const { from_path, to_path } = extract_paths_from_lines(patch_lines_array)
 
-  if (!file_path) {
+  const is_new_file = from_path == '/dev/null'
+  const is_deleted_file = to_path == '/dev/null'
+  const is_rename =
+    from_path &&
+    to_path &&
+    from_path != to_path &&
+    !is_new_file &&
+    !is_deleted_file
+
+  // For new files, file_path is to_path. For deleted files or renamed files, it's from_path.
+  const file_path =
+    from_path && from_path != '/dev/null' ? from_path : to_path
+
+  if (!file_path || file_path == '/dev/null') {
     Logger.log({
       function_name: 'process_collected_patch_lines',
       message: 'Could not extract file path from collected patch lines.',
@@ -70,12 +84,28 @@ const process_collected_patch_lines = (
     patch_start_idx
   )
 
+  // If it's a rename, we need to modify the patch content to use the old path in both header lines
+  if (is_rename) {
+    const normalized_to_path_line = normalize_header_line(`+++ ${to_path}`)
+    const normalized_from_path_line = normalize_header_line(`+++ ${from_path}`)
+    content_str = content_str.replace(
+      normalized_to_path_line,
+      normalized_from_path_line
+    )
+  }
+
   content_str = content_str.trim()
 
-  return {
+  const patch: DiffPatch = {
     file_path,
     content: ensure_newline_ending(content_str)
   }
+
+  if (is_rename && to_path) {
+    patch.new_file_path = to_path
+  }
+
+  return patch
 }
 
 const extract_code_block_patches = (normalized_text: string): DiffPatch[] => {
@@ -207,7 +237,9 @@ export const extract_diff_patches = (clipboard_text: string): DiffPatch[] => {
   }
 }
 
-const extract_file_path_from_lines = (lines: string[]): string | undefined => {
+export const extract_paths_from_lines = (
+  lines: string[]
+): { from_path?: string; to_path?: string } => {
   let from_path: string | undefined
   let to_path: string | undefined
 
@@ -218,22 +250,11 @@ const extract_file_path_from_lines = (lines: string[]): string | undefined => {
       if (git_diff_match[1]) from_path = git_diff_match[1]
     }
     const from_match = line.match(/^--- (?:a\/|"a\/)?([^\t"]+)"?(?:\t.*)?$/)
-    if (from_match && from_match[1]) {
-      from_path = from_match[1]
-    }
+    if (from_match && from_match[1]) from_path = from_match[1]
     const to_match = line.match(/^\+\+\+ (?:b\/|"b\/)?([^\t"]+)"?(?:\t.*)?$/)
-    if (to_match && to_match[1]) {
-      to_path = to_match[1]
-    }
+    if (to_match && to_match[1]) to_path = to_match[1]
   }
-
-  if (to_path && to_path != '/dev/null') {
-    return to_path
-  }
-  if (from_path && from_path != '/dev/null') {
-    return from_path
-  }
-  return undefined
+  return { from_path, to_path }
 }
 
 const find_patch_start_index = (lines: string[]): number => {

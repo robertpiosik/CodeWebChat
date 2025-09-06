@@ -345,6 +345,29 @@ describe('clipboard-parser', () => {
 `)
     })
 
+    it('should parse direct diff format for file rename', () => {
+      const text = `--- a/src/old.ts
++++ b/src/new.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old message")
++console.log("new message")
+`
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+      expect(result.patches![0].file_path).toBe('src/old.ts')
+      expect(result.patches![0].new_file_path).toBe('src/new.ts')
+      expect(result.patches![0].content).toBe(`--- a/src/old.ts
++++ b/src/old.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old message")
++console.log("new message")
+`)
+    })
+
     it('should parse multiple diff files format in variant a', () => {
       const text = load_clipboard_text('diff-multiple-files-variant-a.txt')
       const result = parse_response(text, true)

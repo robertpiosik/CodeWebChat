@@ -168,6 +168,125 @@ export async function create_file_if_needed(
 }
 
 /**
+ * Moves/renames a file from old path to new path
+ */
+async function relocate_file(
+  old_path: string,
+  new_path: string,
+  workspace_root: string
+): Promise<boolean> {
+  try {
+    const old_safe_path = create_safe_path(workspace_root, old_path)
+    const new_safe_path = create_safe_path(workspace_root, new_path)
+
+    if (!old_safe_path || !new_safe_path) {
+      Logger.error({
+        function_name: 'relocate_file',
+        message: 'Invalid file paths for relocation',
+        data: { old_path, new_path }
+      })
+      return false
+    }
+
+    if (!fs.existsSync(old_safe_path)) {
+      Logger.warn({
+        function_name: 'relocate_file',
+        message: 'Source file does not exist for relocation',
+        data: { old_path: old_safe_path }
+      })
+      return false
+    }
+
+    // Create directory for new path if needed
+    const new_dir = path.dirname(new_safe_path)
+    if (!fs.existsSync(new_dir)) {
+      fs.mkdirSync(new_dir, { recursive: true })
+    }
+
+    // Close any open editors for the old file
+    const old_uri = vscode.Uri.file(old_safe_path)
+    const text_editors = vscode.window.visibleTextEditors.filter(
+      (editor) => editor.document.uri.toString() === old_uri.toString()
+    )
+    for (const editor of text_editors) {
+      await vscode.window.showTextDocument(editor.document, {
+        preview: false,
+        preserveFocus: false
+      })
+      await vscode.commands.executeCommand('workbench.action.closeActiveEditor')
+    }
+
+    // Move the file
+    fs.renameSync(old_safe_path, new_safe_path)
+
+    // Clean up empty directory if needed
+    await remove_directory_if_empty(path.dirname(old_safe_path), workspace_root)
+
+    // Open the file at new location
+    const document = await vscode.workspace.openTextDocument(new_safe_path)
+    await vscode.window.showTextDocument(document)
+
+    Logger.log({
+      function_name: 'relocate_file',
+      message: 'File successfully relocated',
+      data: { old_path: old_safe_path, new_path: new_safe_path }
+    })
+
+    return true
+  } catch (error) {
+    Logger.error({
+      function_name: 'relocate_file',
+      message: 'Error relocating file',
+      data: { error, old_path, new_path }
+    })
+    return false
+  }
+}
+
+/**
+ * Applies file relocations based on new_file_path in original states
+ */
+export async function apply_file_relocations(
+  original_states: OriginalFileState[]
+): Promise<void> {
+  if (
+    !vscode.workspace.workspaceFolders ||
+    vscode.workspace.workspaceFolders.length === 0
+  ) {
+    return
+  }
+
+  const workspace_map = new Map<string, string>()
+  vscode.workspace.workspaceFolders.forEach((folder) => {
+    workspace_map.set(folder.name, folder.uri.fsPath)
+  })
+
+  const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
+
+  for (const state of original_states) {
+    if (state.new_file_path && state.new_file_path !== state.file_path) {
+      let workspace_root = default_workspace
+      if (state.workspace_name && workspace_map.has(state.workspace_name)) {
+        workspace_root = workspace_map.get(state.workspace_name)!
+      }
+
+      const success = await relocate_file(
+        state.file_path,
+        state.new_file_path,
+        workspace_root
+      )
+
+      if (success) {
+        // Update the state to reflect the new location
+        state.file_path_to_restore = state.file_path
+        state.file_path = state.new_file_path
+        state.new_file_path = undefined
+      }
+    }
+  }
+}
+
+/**
  * Undoes applied changes to files based on their original states.
  */
 export async function undo_files(
@@ -210,7 +329,7 @@ export async function undo_files(
         })
       }
 
-      const safe_path = create_safe_path(workspace_root, state.file_path)
+      let safe_path = create_safe_path(workspace_root, state.file_path)
 
       if (!safe_path) {
         Logger.error({
@@ -261,6 +380,20 @@ export async function undo_files(
           }
         }
       } else {
+        if (state.file_path_to_restore) {
+          if (safe_path && fs.existsSync(safe_path)) {
+            await relocate_file(
+              state.file_path,
+              state.file_path_to_restore,
+              workspace_root
+            )
+          }
+          safe_path = create_safe_path(
+            workspace_root,
+            state.file_path_to_restore
+          )
+        }
+        if (!safe_path) continue
         // For existing files that were modified, restore original content.
         // This also handles files that were deleted (by recreating them).
         if (!fs.existsSync(safe_path)) {
