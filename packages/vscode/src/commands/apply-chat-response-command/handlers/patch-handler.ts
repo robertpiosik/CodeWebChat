@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import { exec } from 'child_process'
 import { Logger } from '@shared/utils/logger'
 import { promisify } from 'util'
-import { OriginalFileState } from '../../../types/common'
+import { OriginalFileState } from '../types/original-file-state'
 import { format_document } from '../utils/format-document'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {

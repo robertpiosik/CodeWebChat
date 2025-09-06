@@ -5,7 +5,7 @@ import * as os from 'os'
 import { createTwoFilesPatch } from 'diff'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { ViewProvider } from '@/view/backend/view-provider'
-import { OriginalFileState } from '@/types/common'
+import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { remove_directory_if_empty } from './file-operations'
 
 export type CodeReviewDecision =

@@ -5,7 +5,7 @@ import {
   LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY
 } from '../constants/state-keys'
 import { parse_response } from './apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
-import { OriginalFileState } from '@/types/common'
+import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { undo_files } from './apply-chat-response-command/utils/file-operations'
 
 export function undo_command(

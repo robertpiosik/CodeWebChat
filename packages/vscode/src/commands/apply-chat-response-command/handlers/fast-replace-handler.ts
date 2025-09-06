@@ -8,7 +8,7 @@ import {
 } from '@/utils/path-sanitizer'
 import { format_document } from '../utils/format-document'
 import { ClipboardFile } from '../utils/clipboard-parser'
-import { OriginalFileState } from '@/types/common'
+import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
 export const handle_fast_replace = async (
   files: ClipboardFile[]

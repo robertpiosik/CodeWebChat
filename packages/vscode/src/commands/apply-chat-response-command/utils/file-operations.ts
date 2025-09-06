@@ -4,12 +4,12 @@ import * as fs from 'fs'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { format_document } from './format-document'
-import { OriginalFileState } from '@/types/common'
+import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
-export async function remove_directory_if_empty(
+export const remove_directory_if_empty = async (
   dir_path: string,
   workspace_root: string
-) {
+) => {
   const normalized_dir = path.normalize(dir_path)
   const normalized_root = path.normalize(workspace_root)
 
@@ -49,11 +49,11 @@ export async function remove_directory_if_empty(
   }
 }
 
-export async function create_file_if_needed(
+export const create_file_if_needed = async (
   filePath: string,
   content: string,
   workspace_name?: string
-): Promise<boolean> {
+): Promise<boolean> => {
   Logger.log({
     function_name: 'create_file_if_needed',
     message: 'start',
@@ -167,14 +167,11 @@ export async function create_file_if_needed(
   }
 }
 
-/**
- * Moves/renames a file from old path to new path
- */
-async function relocate_file(
+const relocate_file = async (
   old_path: string,
   new_path: string,
   workspace_root: string
-): Promise<boolean> {
+): Promise<boolean> => {
   try {
     const old_safe_path = create_safe_path(workspace_root, old_path)
     const new_safe_path = create_safe_path(workspace_root, new_path)
@@ -243,12 +240,9 @@ async function relocate_file(
   }
 }
 
-/**
- * Applies file relocations based on new_file_path in original states
- */
-export async function apply_file_relocations(
+export const apply_file_relocations = async (
   original_states: OriginalFileState[]
-): Promise<void> {
+): Promise<void> => {
   if (
     !vscode.workspace.workspaceFolders ||
     vscode.workspace.workspaceFolders.length === 0
@@ -286,13 +280,10 @@ export async function apply_file_relocations(
   }
 }
 
-/**
- * Undoes applied changes to files based on their original states.
- */
-export async function undo_files(
+export const undo_files = async (
   original_states: OriginalFileState[],
   show_message = true
-): Promise<boolean> {
+): Promise<boolean> => {
   Logger.log({
     function_name: 'undo_files',
     message: 'start',
