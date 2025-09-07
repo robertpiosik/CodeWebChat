@@ -439,19 +439,38 @@ export const perform_context_editing = async (params: {
           cancel_token_source.cancel('Cancelled by user.')
         })
 
-        return make_api_request({
-          endpoint_url,
-          api_key: provider.api_key,
-          body,
-          cancellation_token: cancel_token_source.token,
-          on_chunk: (formatted_tokens, tokens_per_second) => {
+        let wait_time = 1
+        let has_started_receiving = false
+
+        const wait_timer = setInterval(() => {
+          if (!has_started_receiving) {
+            wait_time++
             progress.report({
-              message: `received ${formatted_tokens} tokens at ~${tokens_per_second.toFixed(
-                0
-              )} tokens/s`
+              message: `${wait_time}s`
             })
           }
-        })
+        }, 1000)
+
+        try {
+          return await make_api_request({
+            endpoint_url,
+            api_key: provider.api_key,
+            body,
+            cancellation_token: cancel_token_source.token,
+            on_chunk: (formatted_tokens, formatted_tokens_per_second) => {
+              if (!has_started_receiving) {
+                has_started_receiving = true
+                clearInterval(wait_timer)
+              }
+
+              progress.report({
+                message: `received ${formatted_tokens} tokens at ~${formatted_tokens_per_second} tokens/s`
+              })
+            }
+          })
+        } finally {
+          clearInterval(wait_timer)
+        }
       }
     )
 

@@ -4,7 +4,7 @@ import { Logger } from '@shared/utils/logger'
 
 type StreamCallback = (
   formatted_total_tokens: string,
-  tokens_per_second: number,
+  formatted_tokens_per_second: string,
   total_tokens: number
 ) => void
 
@@ -195,11 +195,19 @@ export async function make_api_request(params: {
         const tokens_per_second =
           elapsed_seconds > 0 ? Math.round(total_tokens / elapsed_seconds) : 0
 
-        const formatted_tokens =
+        const formatted_total_tokens =
           total_tokens >= 1000
             ? `${(total_tokens / 1000).toFixed(1).replace(/\.0$/, '')}k`
             : `${total_tokens}`
-        params.on_chunk!(formatted_tokens, tokens_per_second, total_tokens)
+        const formatted_tokens_per_second =
+          tokens_per_second >= 1000
+            ? `${(tokens_per_second / 1000).toFixed(1).replace(/\.0$/, '')}k`
+            : `${tokens_per_second}`
+        params.on_chunk!(
+          formatted_total_tokens,
+          formatted_tokens_per_second,
+          total_tokens
+        )
       }
     }
   }
