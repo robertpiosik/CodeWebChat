@@ -209,7 +209,6 @@ console.log('outer');`
 
 \`\`\`
 test
-
 \`\`\`
 test`
       expect(result[0].content).toBe(expected_content)
