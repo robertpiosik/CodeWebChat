@@ -342,7 +342,13 @@ export const handle_intelligent_update = async (params: {
                 throw new Error(`Failed to apply changes to ${file.file_path}`)
               }
 
-              const final_content = updated_content_result // Already cleaned in process_file
+              let final_content = updated_content_result // Already cleaned in process_file
+              if (
+                original_content_for_api.endsWith('\n') &&
+                !final_content.endsWith('\n')
+              ) {
+                final_content += '\n'
+              }
 
               // Update progress for the largest file if processing finished
               if (

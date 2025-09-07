@@ -101,20 +101,28 @@ export const handle_fast_replace = async (
         if (file_exists) {
           const file_uri = vscode.Uri.file(safe_path)
           const document = await vscode.workspace.openTextDocument(file_uri)
+          const original_content = document.getText()
           original_states.push({
             file_path: file.file_path,
-            content: document.getText(),
+            content: original_content,
             is_new: false,
             workspace_name: file.workspace_name
           })
           const editor = await vscode.window.showTextDocument(document)
+          let final_content = file.content
+          if (
+            original_content.endsWith('\n') &&
+            !final_content.endsWith('\n')
+          ) {
+            final_content += '\n'
+          }
           await editor.edit((edit) => {
             edit.replace(
               new vscode.Range(
                 document.positionAt(0),
                 document.positionAt(document.getText().length)
               ),
-              file.content
+              final_content
             )
           })
 
