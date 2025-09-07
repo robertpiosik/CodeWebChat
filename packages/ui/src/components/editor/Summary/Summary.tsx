@@ -115,6 +115,31 @@ export const Summary: FC<Props> = ({
                 </div>
               </div>
               <div className={styles.item__right}>
+                <div className={styles['item__actions']}>
+                  <IconButton
+                    codicon_icon="diff-single"
+                    title="Open Changes"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      set_last_clicked_file_index(index)
+                      on_focus_file({
+                        file_path: file.file_path,
+                        workspace_name: file.workspace_name
+                      })
+                    }}
+                  />
+                  <IconButton
+                    codicon_icon="go-to-file"
+                    title="Go To File"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      on_go_to_file({
+                        file_path: file.file_path,
+                        workspace_name: file.workspace_name
+                      })
+                    }}
+                  />
+                </div>
                 {!file.is_deleted && (
                   <div className={styles['item__line-numbers']}>
                     <span className={styles['item__line-numbers__added']}>
@@ -125,17 +150,6 @@ export const Summary: FC<Props> = ({
                     </span>
                   </div>
                 )}
-                <IconButton
-                  codicon_icon="go-to-file"
-                  title="Go to file"
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    on_go_to_file({
-                      file_path: file.file_path,
-                      workspace_name: file.workspace_name
-                    })
-                  }}
-                />
               </div>
             </div>
           )
