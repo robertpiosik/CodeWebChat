@@ -210,6 +210,9 @@ console.log('outer');`
 \`\`\`
 test
 \`\`\`
+\`\`\`
+test
+\`\`\`
 test`
       expect(result[0].content).toBe(expected_content)
     })
