@@ -110,69 +110,40 @@ const process_collected_patch_lines = (
 const extract_code_block_patches = (normalized_text: string): DiffPatch[] => {
   const patches: DiffPatch[] = []
   const lines = normalized_text.split('\n')
-  let in_diff_block = false
-  let current_patch_lines: string[] = []
 
-  for (const line of lines) {
-    const trimmed_line = line.trim()
+  // Parse from end to beginning to find code blocks
+  const code_blocks: { start: number; end: number; type: 'diff' | 'patch' }[] =
+    []
 
-    if (trimmed_line == '```diff' || trimmed_line == '```patch') {
-      if (current_patch_lines.length > 0 && !in_diff_block) {
-        const patch_info = process_collected_patch_lines(current_patch_lines)
-        if (patch_info) {
-          patches.push(patch_info)
-        }
-      }
-      in_diff_block = true
-      current_patch_lines = []
-      continue
-    }
+  // First pass: find all closing ``` and work backwards to find opening ```diff or ```patch
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const trimmed_line = lines[i].trim()
 
     if (trimmed_line == '```') {
-      if (in_diff_block) {
-        if (current_patch_lines.length > 0) {
-          const patch_info = process_collected_patch_lines(current_patch_lines)
-          if (patch_info) patches.push(patch_info)
-        }
-        current_patch_lines = []
-      }
-      in_diff_block = false
-      continue
-    }
-
-    if (in_diff_block) {
-      const is_potential_new_patch_header =
-        line.startsWith('diff --git a/') ||
-        line.startsWith('--- a/') ||
-        line.startsWith('--- "a/')
-
-      if (is_potential_new_patch_header && current_patch_lines.length > 0) {
-        const contains_plus_plus_plus = current_patch_lines.some(
-          (l) => l.startsWith('+++ b/') || l.startsWith('+++ "b/')
-        )
-        const contains_main_header = current_patch_lines.some(
-          (l) =>
-            l.startsWith('--- a/') ||
-            l.startsWith('diff --git a/') ||
-            l.startsWith('--- "a/')
-        )
-
-        if (contains_plus_plus_plus && contains_main_header) {
-          const patch_info = process_collected_patch_lines(current_patch_lines)
-          if (patch_info) patches.push(patch_info)
-          current_patch_lines = [line]
-          continue
+      // Found closing backticks, now look backwards for opening
+      for (let j = i - 1; j >= 0; j--) {
+        const opening_line = lines[j].trim()
+        if (opening_line == '```diff') {
+          code_blocks.unshift({ start: j, end: i, type: 'diff' })
+          i = j // Skip to this position to avoid overlapping blocks
+          break
+        } else if (opening_line == '```patch') {
+          code_blocks.unshift({ start: j, end: i, type: 'patch' })
+          i = j // Skip to this position to avoid overlapping blocks
+          break
+        } else if (opening_line.startsWith('```')) {
+          // Found a different code block, stop searching
+          break
         }
       }
-      current_patch_lines.push(line)
     }
   }
 
-  if (in_diff_block && current_patch_lines.length > 0) {
-    const patch_info = process_collected_patch_lines(current_patch_lines)
-    if (patch_info) {
-      patches.push(patch_info)
-    }
+  // Process each found code block
+  for (const block of code_blocks) {
+    const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
+    const processed_patches = parse_multiple_raw_patches(block_lines)
+    patches.push(...processed_patches)
   }
 
   return patches

@@ -150,6 +150,53 @@ describe('clipboard-parser', () => {
       expect(result[1].file_path).toBe('src/utils.py')
       expect(result[1].content).toBe('print("world")')
     })
+
+    //     it('should handle quoted filenames', () => {
+    //       const text = load_clipboard_text('quoted-filenames.txt')
+    //       const result = parse_multiple_files({
+    //         response: text,
+    //         is_single_root_folder_workspace: true
+    //       })
+
+    //       expect(result).toHaveLength(1)
+    //       expect(result[0].file_path).toBe('src/utils.py')
+    //       expect(result[0].content).toBe(`def add(a, b):
+    //     return a + b`)
+    //     })
+
+    it('should handle inner backticks within a diff block', () => {
+      const text = load_clipboard_text('diff-inner-backticks.txt')
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+      expect(result.patches![0].file_path).toBe('src/index.ts')
+      expect(result.patches![0].content).toBe(`--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,5 +1,7 @@
+ console.log("hello")
+-console.log("old message")
++\`\`\`
++console.log("inner backticks")
++\`\`\`
++console.log("new message")
+`)
+    })
+
+    //   it('should handle inner backticks within a code block', () => {
+    //     const text = load_clipboard_text('inner-backticks.txt')
+    //     const result = parse_multiple_files({
+    //       response: text,
+    //       is_single_root_folder_workspace: true
+    //     })
+
+    //     expect(result).toHaveLength(1)
+    //     expect(result[0].file_path).toBe('src/index.js')
+    //     const expectedContent = `\`\`\`
+    //   Lorem ipsum.
+    //   \`\`\`
+    //   console.log('outer');`
+    //     expect(result[0].content).toBe(expectedContent)
   })
 
   describe('parse_file_content_only', () => {

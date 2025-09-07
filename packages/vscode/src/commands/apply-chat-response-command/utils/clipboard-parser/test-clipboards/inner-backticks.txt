@@ -1,0 +1,7 @@
+```javascript
+// src/index.js
+```text
+Lorem ipsum.
+```
+console.log('outer');
+```
