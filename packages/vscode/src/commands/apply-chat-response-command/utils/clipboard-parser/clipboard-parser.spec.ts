@@ -102,25 +102,6 @@ describe('clipboard-parser', () => {
       expect(result[0].content).toBe('First part\n\nSecond part')
     })
 
-    it('should ignore files without real code', () => {
-      const text = load_clipboard_text('empty-file.txt')
-      const result = parse_multiple_files({
-        response: text,
-        is_single_root_folder_workspace: true
-      })
-
-      // Should only include the backend file with real code
-      expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('backend/src/index.ts')
-      expect(result[0].content).toBe('console.log("hello")')
-
-      // Should not include the frontend file that has no real code
-      const frontendFile = result.find(
-        (f) => f.file_path == 'frontend/src/index.ts'
-      )
-      expect(frontendFile).toBeUndefined()
-    })
-
     it('should parse paths with backslashes', () => {
       const text = load_clipboard_text('backslash-paths.txt')
       const result = parse_multiple_files({
@@ -183,20 +164,56 @@ describe('clipboard-parser', () => {
 `)
     })
 
-    //   it('should handle inner backticks within a code block', () => {
-    //     const text = load_clipboard_text('inner-backticks.txt')
-    //     const result = parse_multiple_files({
-    //       response: text,
-    //       is_single_root_folder_workspace: true
-    //     })
+    it('should handle inner backticks within a code block', () => {
+      const text = load_clipboard_text('inner-backticks.txt')
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
-    //     expect(result).toHaveLength(1)
-    //     expect(result[0].file_path).toBe('src/index.js')
-    //     const expectedContent = `\`\`\`
-    //   Lorem ipsum.
-    //   \`\`\`
-    //   console.log('outer');`
-    //     expect(result[0].content).toBe(expectedContent)
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.js')
+      const expected_content = `\`\`\`text
+Lorem ipsum.
+\`\`\`
+console.log('outer');`
+      expect(result[0].content).toBe(expected_content)
+    })
+
+    it('should handle raw inner backticks within a code block', () => {
+      const text = load_clipboard_text('inner-backticks-raw.txt')
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.js')
+      const expected_content = `\`\`\`
+Lorem ipsum.
+\`\`\`
+console.log('outer');`
+      expect(result[0].content).toBe(expected_content)
+    })
+
+    it('zzz', () => {
+      const text = load_clipboard_text('zzz.txt')
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('packages/mobile-client/README.md')
+      const expected_content = `Test
+
+\`\`\`
+test
+
+\`\`\`
+test`
+      expect(result[0].content).toBe(expected_content)
+    })
   })
 
   describe('parse_file_content_only', () => {

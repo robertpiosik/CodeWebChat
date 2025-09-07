@@ -1,3 +1,4 @@
+// packages/vscode/src/commands/apply-chat-response-command/utils/clipboard-parser/clipboard-parser.ts
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import { DiffPatch, extract_diff_patches } from './extract-diff-patches'
@@ -178,6 +179,7 @@ export const parse_multiple_files = (params: {
   let current_workspace_name: string | undefined = undefined
   let xml_file_mode = false
   let in_cdata = false
+  let backtick_nesting_level = 0
 
   const lines = params.response.split('\n')
 
@@ -186,6 +188,7 @@ export const parse_multiple_files = (params: {
 
     if (state == 'TEXT' && line.trim().startsWith('```')) {
       state = 'CONTENT'
+      backtick_nesting_level = 1
       current_workspace_name = undefined
       current_file_name = ''
       current_content = ''
@@ -194,7 +197,25 @@ export const parse_multiple_files = (params: {
       in_cdata = false
       continue
     } else if (state == 'CONTENT') {
-      if (line.trim().endsWith('```')) {
+      const trimmed_line = line.trim()
+
+      // Handle nested backticks
+      if (trimmed_line.startsWith('```') && trimmed_line !== '```') {
+        backtick_nesting_level++
+      } else if (
+        trimmed_line === '```' &&
+        backtick_nesting_level === 1 &&
+        (current_content.trim() === '' || (i > 0 && lines[i - 1].trim() === ''))
+      ) {
+        // Heuristic: A raw ``` at the start of a block (after the filename comment)
+        // or after an empty line is likely opening a nested block.
+        backtick_nesting_level++
+      } else if (trimmed_line.endsWith('```')) {
+        backtick_nesting_level--
+      }
+
+      if (backtick_nesting_level <= 0) {
+        // End of block
         let content_on_closing_line = ''
         if (line.trim() != '```') {
           const last_backticks_index = line.lastIndexOf('```')
@@ -211,9 +232,7 @@ export const parse_multiple_files = (params: {
 
         state = 'TEXT'
 
-        const cleaned_content = cleanup_api_response({
-          content: current_content
-        })
+        const cleaned_content = current_content
 
         // Add the collected file if we have a valid filename and it has real code
         if (current_file_name && has_real_code(cleaned_content)) {
@@ -240,6 +259,7 @@ export const parse_multiple_files = (params: {
         xml_file_mode = false
         in_cdata = false
       } else {
+        // This is a content line
         if (is_first_content_line && line.trim().startsWith('<file')) {
           const extracted_filename = extract_file_path_from_xml(line)
           if (extracted_filename) {
@@ -314,7 +334,7 @@ export const parse_multiple_files = (params: {
 
   // Handle edge case: last file in clipboard doesn't have closing ```
   if (state == 'CONTENT' && current_file_name) {
-    const cleaned_content = cleanup_api_response({ content: current_content })
+    const cleaned_content = current_content
 
     if (has_real_code(cleaned_content)) {
       const file_key = `${current_workspace_name || ''}:${current_file_name}`
@@ -367,7 +387,7 @@ export const parse_file_content_only = (params: {
   )
 
   const content = lines.slice(1).join('\n')
-  const cleaned_content = cleanup_api_response({ content })
+  const cleaned_content = content
 
   if (has_real_code(cleaned_content)) {
     return {
