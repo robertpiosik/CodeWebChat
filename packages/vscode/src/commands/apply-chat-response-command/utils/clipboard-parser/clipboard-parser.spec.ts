@@ -196,15 +196,15 @@ console.log('outer');`
       expect(result[0].content).toBe(expected_content)
     })
 
-    it('zzz', () => {
-      const text = load_clipboard_text('zzz.txt')
+    it('should handle nested code blocks in markdown', () => {
+      const text = load_clipboard_text('markdown-with-nested-code-block.txt')
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('packages/mobile-client/README.md')
+      expect(result[0].file_path).toBe('src/test.md')
       const expected_content = `Test
 
 \`\`\`
