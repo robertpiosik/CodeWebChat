@@ -205,7 +205,9 @@ export const parse_multiple_files = (params: {
       } else if (
         trimmed_line === '```' &&
         backtick_nesting_level === 1 &&
-        (current_content.trim() === '' || (i > 0 && lines[i - 1].trim() === ''))
+        (current_content.trim() === '' ||
+          (i > 0 &&
+            (lines[i - 1].trim() === '' || lines[i - 1].trim() === '```')))
       ) {
         // Heuristic: A raw ``` at the start of a block (after the filename comment)
         // or after an empty line is likely opening a nested block.
