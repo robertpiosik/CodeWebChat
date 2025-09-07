@@ -126,8 +126,8 @@ export const handle_send_prompt = async (params: {
 
     const text = `${main_instructions}\n${payload.before}${
       completion_instructions
-        ? `<missing text>${completion_instructions}</missing text>`
-        : '<missing text>'
+        ? `<missing_text>${completion_instructions}</missing_text>`
+        : '<missing_text>'
     }${payload.after}\n${main_instructions}`
 
     const chats = resolved_preset_names.map((preset_name) => {

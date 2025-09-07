@@ -78,7 +78,7 @@ export const handle_copy_prompt = async (params: {
       position.character
     )}${final_instruction ? ` Follow instructions: ${final_instruction}` : ''}`
 
-    const text = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
+    const text = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing_text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_mode) {

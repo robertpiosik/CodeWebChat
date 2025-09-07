@@ -418,8 +418,8 @@ const perform_code_completion = async (params: {
 
     const content = `${code_completion_instructions}\n${payload.before}${
       completion_instructions
-        ? `<missing text>${completion_instructions}</missing text>`
-        : '<missing text>'
+        ? `<missing_text>${completion_instructions}</missing_text>`
+        : '<missing_text>'
     }${payload.after}\n${code_completion_instructions}`
 
     const messages = [
