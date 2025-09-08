@@ -464,6 +464,7 @@ export const review_applied_changes = async (params: {
     toggle_file_review_state = undefined
 
     if (params.view_provider) {
+      params.view_provider.cancel_all_intelligent_updates()
       params.view_provider.send_message({ command: 'CODE_REVIEW_FINISHED' })
     }
   }

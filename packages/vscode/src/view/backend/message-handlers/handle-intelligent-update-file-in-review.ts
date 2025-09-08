@@ -156,6 +156,7 @@ export const handle_intelligent_update_file_in_review = async (
     },
     async (progress, token) => {
       const cancel_token_source = axios.CancelToken.source()
+      provider.intelligent_update_cancel_token_sources.push(cancel_token_source)
       token.onCancellationRequested(() => {
         cancel_token_source.cancel('Cancelled by user.')
       })
@@ -204,11 +205,9 @@ export const handle_intelligent_update_file_in_review = async (
             vscode.Uri.file(safe_path),
             Buffer.from(updated_content, 'utf8')
           )
-        } else {
-          throw new Error('No content returned from intelligent update.')
         }
       } catch (error: any) {
-        if (!axios.isCancel(error) && error.message !== 'Operation cancelled') {
+        if (!axios.isCancel(error) && error.message != 'Cancelled by user.') {
           Logger.error({
             function_name: 'handle_intelligent_update_file_in_review',
             message: 'Error during process_file',
@@ -217,6 +216,14 @@ export const handle_intelligent_update_file_in_review = async (
           vscode.window.showErrorMessage(
             `Intelligent update failed for ${file_name}: ${error.message}`
           )
+        }
+      } finally {
+        const index =
+          provider.intelligent_update_cancel_token_sources.indexOf(
+            cancel_token_source
+          )
+        if (index > -1) {
+          provider.intelligent_update_cancel_token_sources.splice(index, 1)
         }
       }
     }

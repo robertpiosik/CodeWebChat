@@ -73,6 +73,7 @@ import { ApiMode, WebMode } from '@shared/types/modes'
 import { api_tool_config_emitter } from '@/services/api-providers-manager'
 import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-applied-changes'
 import { Logger } from '@shared/utils/logger'
+import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
@@ -90,6 +91,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public api_edit_format: EditFormat
   public api_mode: ApiMode
   public home_view_type: HomeViewType = HOME_VIEW_TYPES.WEB
+  public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
 
   public get_presets_config_key(): string {
     const mode =
@@ -104,6 +106,13 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       case 'no-context':
         return 'chatPresetsForNoContext'
     }
+  }
+
+  public cancel_all_intelligent_updates() {
+    this.intelligent_update_cancel_token_sources.forEach((source) =>
+      source.cancel('Review finished.')
+    )
+    this.intelligent_update_cancel_token_sources = []
   }
 
   constructor(

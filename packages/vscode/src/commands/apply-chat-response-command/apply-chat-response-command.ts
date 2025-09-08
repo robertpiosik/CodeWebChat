@@ -306,7 +306,6 @@ const handle_code_review_and_cleanup = async (params: {
         show_message: false
       })
       params.update_undo_and_apply_button_state(null)
-      vscode.window.showInformationMessage('Changes rejected and undone.')
       return false
     }
 
@@ -352,7 +351,6 @@ const handle_code_review_and_cleanup = async (params: {
       return true
     } else {
       params.update_undo_and_apply_button_state(null)
-      vscode.window.showInformationMessage('All changes rejected and undone.')
       return false
     }
   } finally {
