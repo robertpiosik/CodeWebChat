@@ -79,7 +79,7 @@ export const handle_intelligent_update_file_in_review = async (
   }
 
   const file_state = original_states.find(
-    (s) => s.file_path === file_path && s.workspace_name === workspace_name
+    (s) => s.file_path == file_path && s.workspace_name == workspace_name
   )
 
   if (!file_state) {
@@ -97,14 +97,18 @@ export const handle_intelligent_update_file_in_review = async (
   )
 
   let instructions = ''
-  if (parsed_response.type === 'files' && parsed_response.files) {
+  if (parsed_response.type == 'files' && parsed_response.files) {
     const file_data = parsed_response.files.find(
-      (f) => f.file_path === file_path && f.workspace_name === workspace_name
+      (f) =>
+        f.file_path == file_path &&
+        (!f.workspace_name || f.workspace_name == workspace_name)
     )
     if (file_data) instructions = file_data.content
-  } else if (parsed_response.type === 'patches' && parsed_response.patches) {
+  } else if (parsed_response.type == 'patches' && parsed_response.patches) {
     const patch_data = parsed_response.patches.find(
-      (p) => p.file_path === file_path && p.workspace_name === workspace_name
+      (p) =>
+        p.file_path == file_path &&
+        (!p.workspace_name || p.workspace_name == workspace_name)
     )
     if (patch_data) instructions = patch_data.content
   }
@@ -126,7 +130,7 @@ export const handle_intelligent_update_file_in_review = async (
     config_result
 
   let endpoint_url = ''
-  if (api_provider.type === 'built-in') {
+  if (api_provider.type == 'built-in') {
     const provider_info = PROVIDERS[api_provider.name as keyof typeof PROVIDERS]
     endpoint_url = provider_info.base_url
   } else {
@@ -140,7 +144,7 @@ export const handle_intelligent_update_file_in_review = async (
   let workspace_root = default_workspace_path
   if (workspace_name) {
     const folder = vscode.workspace.workspaceFolders?.find(
-      (f) => f.name === workspace_name
+      (f) => f.name == workspace_name
     )
     if (folder) workspace_root = folder.uri.fsPath
   }
@@ -201,9 +205,20 @@ export const handle_intelligent_update_file_in_review = async (
         }
 
         if (updated_content) {
+          // Preserve trailing newline from original file
+          const original_ends_with_newline = file_state.content.endsWith('\n')
+          const updated_ends_with_newline = updated_content.endsWith('\n')
+
+          let final_content = updated_content
+          if (original_ends_with_newline && !updated_ends_with_newline) {
+            final_content = updated_content + '\n'
+          } else if (!original_ends_with_newline && updated_ends_with_newline) {
+            final_content = updated_content.slice(0, -1)
+          }
+
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(safe_path),
-            Buffer.from(updated_content, 'utf8')
+            Buffer.from(final_content, 'utf8')
           )
         }
       } catch (error: any) {
