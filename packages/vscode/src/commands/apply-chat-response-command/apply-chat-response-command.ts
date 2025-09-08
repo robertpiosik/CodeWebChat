@@ -721,7 +721,7 @@ export const apply_chat_response_command = (
                   .filter((p) => p.used_fallback)
                   .map((p) => p.patch.file_path)
 
-                Logger.log({
+                Logger.info({
                   function_name: 'apply_chat_response_command',
                   message: 'Patches applied with fallback method',
                   data: {
@@ -758,7 +758,7 @@ export const apply_chat_response_command = (
 
           if (all_files_new) {
             selected_mode_label = 'Fast replace'
-            Logger.log({
+            Logger.info({
               function_name: 'apply_chat_response_command',
               message:
                 'All files are new - automatically selecting fast replace mode'
@@ -770,14 +770,14 @@ export const apply_chat_response_command = (
 
             if (has_truncated_fragments) {
               selected_mode_label = 'Intelligent update'
-              Logger.log({
+              Logger.info({
                 function_name: 'apply_chat_response_command',
                 message:
                   'Auto-selecting intelligent update mode due to detected truncated fragments'
               })
             } else {
               selected_mode_label = 'Fast replace'
-              Logger.log({
+              Logger.info({
                 function_name: 'apply_chat_response_command',
                 message: 'Defaulting to Fast replace mode'
               })
@@ -796,7 +796,7 @@ export const apply_chat_response_command = (
               final_original_states = result.original_states
               operation_success = true
             }
-            Logger.log({
+            Logger.info({
               function_name: 'apply_chat_response_command',
               message: 'Fast replace handler finished.',
               data: { success: result.success }
@@ -839,7 +839,7 @@ export const apply_chat_response_command = (
             if (final_original_states) {
               operation_success = true
             }
-            Logger.log({
+            Logger.info({
               function_name: 'apply_chat_response_command',
               message: 'Intelligent update handler finished.',
               data: { success: operation_success }
@@ -865,13 +865,13 @@ export const apply_chat_response_command = (
             }
           } else {
             update_undo_and_apply_button_state(null)
-            Logger.log({
+            Logger.info({
               function_name: 'apply_chat_response_command',
               message: 'Operation concluded without success.'
             })
           }
 
-          Logger.log({
+          Logger.info({
             function_name: 'apply_chat_response_command',
             message: 'end',
             data: {

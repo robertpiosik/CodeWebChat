@@ -15,7 +15,7 @@ export async function migrate_chat_code_completion_instructions(
   try {
     // Check if migration has already run
     if (context.globalState.get(MIGRATION_ID)) {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_chat_code_completion_instructions',
         message:
           'Chat code completion instructions migration already completed. Skipping.'
@@ -34,13 +34,13 @@ export async function migrate_chat_code_completion_instructions(
         vscode.ConfigurationTarget.Global
       )
 
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_chat_code_completion_instructions',
         message:
           'Successfully migrated chatCodeCompletionInstructions to chatCodeCompletionsInstructions'
       })
     } else {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_chat_code_completion_instructions',
         message:
           'No existing chatCodeCompletionInstructions setting found to migrate.'

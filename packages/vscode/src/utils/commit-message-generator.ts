@@ -428,7 +428,7 @@ export const generate_commit_message_with_api = async (
   const formatted_token_count =
     token_count > 1000 ? Math.ceil(token_count / 1000) + 'k' : token_count
 
-  Logger.log({
+  Logger.info({
     function_name: 'generate_commit_message_with_api',
     message: 'Getting commit message...',
     data: message

@@ -84,7 +84,7 @@ export async function resolve_glob_patterns(
         resolved_final_paths.add(file)
       )
     }
-    Logger.log({
+    Logger.info({
       message: `Files this pattern ${pattern_string} applies to: ${files_this_rule_applies_to.size}`,
       data: {
         files_this_rule_applies_to
@@ -92,7 +92,7 @@ export async function resolve_glob_patterns(
     })
   }
 
-  Logger.log({
+  Logger.info({
     message: `Resolved final paths: ${resolved_final_paths.size}`
   })
 
@@ -244,7 +244,7 @@ async function save_contexts_to_file(
     if (contexts.length == 0) {
       if (fs.existsSync(file_path)) {
         fs.unlinkSync(file_path)
-        Logger.log({
+        Logger.info({
           message: `Deleted empty contexts file: ${file_path}`
         })
       }

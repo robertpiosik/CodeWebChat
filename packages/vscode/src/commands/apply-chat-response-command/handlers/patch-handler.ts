@@ -222,7 +222,7 @@ async function process_modified_files(
           }
 
           fs.unlinkSync(safe_path)
-          Logger.log({
+          Logger.info({
             function_name: 'process_modified_files',
             message: 'File was empty after patch, removed from disk.',
             data: { file_path }
@@ -240,7 +240,7 @@ async function process_modified_files(
         }
       }
     } else {
-      Logger.log({
+      Logger.info({
         function_name: 'process_modified_files',
         message:
           'Skipping processing for non-existent file (likely deleted by patch)',
@@ -363,7 +363,7 @@ const handle_deleted_file_patch = async (
 
     if (fs.existsSync(safe_path)) {
       await fs.promises.unlink(safe_path)
-      Logger.log({
+      Logger.info({
         function_name: 'handle_deleted_file_patch',
         message: 'File deleted successfully.',
         data: { file_path }
@@ -440,7 +440,7 @@ export const apply_git_patch = async (
         { cwd: workspace_path }
       )
       success = true
-      Logger.log({
+      Logger.info({
         function_name: 'apply_git_patch',
         message: 'Patch applied successfully with standard git apply.'
       })
@@ -462,7 +462,7 @@ export const apply_git_patch = async (
         )
         success = true
         used_fallback = true
-        Logger.log({
+        Logger.info({
           function_name: 'apply_git_patch',
           message: 'Patch applied successfully with --recount fallback.'
         })
@@ -488,7 +488,7 @@ export const apply_git_patch = async (
         })
         success = true
         used_fallback = true
-        Logger.log({
+        Logger.info({
           function_name: 'apply_git_patch',
           message: 'Patch applied successfully with custom processor fallback.'
         })

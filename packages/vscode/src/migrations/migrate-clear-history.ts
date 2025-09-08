@@ -40,7 +40,7 @@ export async function migrate_clear_history(
       await context.workspaceState.update(key, undefined)
     }
 
-    Logger.log({
+    Logger.info({
       function_name: 'migrate_clear_history',
       message: 'Successfully cleared old string-based history.'
     })

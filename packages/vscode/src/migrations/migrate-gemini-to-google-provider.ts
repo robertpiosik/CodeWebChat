@@ -45,7 +45,7 @@ export async function migrate_gemini_to_google_provider(
           SECRET_STORAGE_API_PROVIDERS_KEY,
           JSON.stringify(migrated_providers)
         )
-        Logger.log({
+        Logger.info({
           function_name: 'migrate_gemini_to_google_provider',
           message: 'Successfully migrated Gemini provider to Google.'
         })
@@ -93,7 +93,7 @@ export async function migrate_gemini_to_google_provider(
       }
     }
 
-    Logger.log({
+    Logger.info({
       function_name: 'migrate_gemini_to_google_provider',
       message: 'Successfully migrated tool configs using Gemini provider.'
     })

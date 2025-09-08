@@ -62,7 +62,7 @@ export async function migrate_preset_is_default_to_is_selected(
     }
 
     if (migration_performed) {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_preset_is_default_to_is_selected',
         message: 'Migration for preset isDefault to isSelected completed.'
       })

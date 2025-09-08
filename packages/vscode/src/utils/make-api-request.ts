@@ -75,7 +75,7 @@ async function process_stream_chunk(
                 // We are currently *not* in a think block (haven't seen <think> yet)
                 const think_open_index =
                   updated_think_buffer.indexOf(THINK_OPEN)
-                if (think_open_index !== -1) {
+                if (think_open_index != -1) {
                   // <think> tag found!
                   updated_in_think_block = true
                   // Stream content *before* <think>
@@ -122,7 +122,7 @@ async function process_stream_chunk(
 
             const current_time = Date.now()
             if (current_time - updated_last_log_time >= 1000) {
-              Logger.log({
+              Logger.info({
                 function_name: 'process_stream_chunk',
                 message: `Streaming tokens:`,
                 data: updated_accumulated_content.substring(
@@ -168,7 +168,7 @@ export async function make_api_request(params: {
   cancellation_token: any
   on_chunk?: StreamCallback
 }): Promise<string | null> {
-  Logger.log({
+  Logger.info({
     function_name: 'make_api_request',
     message: 'API Request Body',
     data: params.body
@@ -288,7 +288,7 @@ export async function make_api_request(params: {
           }
         }
 
-        Logger.log({
+        Logger.info({
           function_name: 'make_api_request',
           message: 'Combined code received:',
           data: accumulated_content
@@ -308,7 +308,7 @@ export async function make_api_request(params: {
     })
   } catch (error) {
     if (axios.isCancel(error)) {
-      Logger.log({
+      Logger.info({
         function_name: 'make_api_request',
         message: 'Request canceled',
         data: error.message

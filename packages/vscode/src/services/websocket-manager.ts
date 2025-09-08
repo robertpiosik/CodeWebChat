@@ -101,7 +101,7 @@ export class WebSocketManager {
         process.unref()
       }
 
-      Logger.log({
+      Logger.info({
         function_name: '_start_server_process',
         message: `Started WebSocket server process with PID: ${process.pid}`
       })
@@ -149,7 +149,7 @@ export class WebSocketManager {
     this.client = new WebSocket.WebSocket(ws_url)
 
     this.client.on('open', () => {
-      Logger.log({
+      Logger.info({
         function_name: 'connect_to_server',
         message: 'Connected to WebSocket server'
       })
@@ -158,7 +158,7 @@ export class WebSocketManager {
     this.client.on('message', async (data) => {
       try {
         const message = JSON.parse(data.toString())
-        Logger.log({
+        Logger.info({
           function_name: 'connect_to_server',
           message: 'Incoming WS message',
           data: message
@@ -299,7 +299,7 @@ export class WebSocketManager {
         client_id: this.client_id || 0 // 0 is a temporary fallback and should be removed few weeks from 28.03.25
       }
 
-      Logger.log({
+      Logger.info({
         function_name: 'initialize_chats',
         message: 'Sending initialize chat message',
         data: message
@@ -342,7 +342,7 @@ export class WebSocketManager {
       client_id: this.client_id || 0 // 0 is a temporary fallback and should be removed few weeks from 28.03.25
     }
 
-    Logger.log({
+    Logger.info({
       function_name: 'preview_preset',
       message: 'Sending preview preset message',
       data: message

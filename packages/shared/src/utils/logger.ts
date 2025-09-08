@@ -1,7 +1,7 @@
 export namespace Logger {
   const LOG_PREFIX = '[CWC]'
 
-  export function log(params: {
+  export function info(params: {
     function_name?: string
     message: string
     data?: any

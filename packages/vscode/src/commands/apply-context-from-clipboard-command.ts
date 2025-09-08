@@ -129,7 +129,7 @@ export function apply_context_from_clipboard_command(
 
         const selected_paths = selected_items.map((item) => item.file_path)
 
-        Logger.log({
+        Logger.info({
           message: `Selected ${selected_paths.length} file${
             selected_paths.length == 1 ? '' : 's'
           }.`,

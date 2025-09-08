@@ -65,7 +65,7 @@ const process_collected_patch_lines = (
   const file_path = from_path && from_path != '/dev/null' ? from_path : to_path
 
   if (!file_path || file_path == '/dev/null') {
-    Logger.log({
+    Logger.info({
       function_name: 'process_collected_patch_lines',
       message: 'Could not extract file path from collected patch lines.',
       data: {
@@ -277,7 +277,7 @@ const build_patch_content = (
     const content_start_index = lines.findIndex((line) => line.startsWith('@@'))
 
     if (content_start_index == -1) {
-      Logger.log({
+      Logger.info({
         function_name: 'build_patch_content',
         message:
           'No @@ content found, constructing minimal patch headers based on file_path.',

@@ -22,7 +22,7 @@ export async function migrate_file_refactoring_to_array(
   try {
     // Check if migration has already run
     if (context.globalState.get(MIGRATION_ID)) {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_file_refactoring_to_array',
         message:
           'File refactoring to array migration already completed. Skipping.'
@@ -43,13 +43,13 @@ export async function migrate_file_refactoring_to_array(
         config_array
       )
 
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_file_refactoring_to_array',
         message:
           'Successfully migrated file refactoring config from object to array'
       })
     } else {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_file_refactoring_to_array',
         message: 'No existing file refactoring config found to migrate.'
       })

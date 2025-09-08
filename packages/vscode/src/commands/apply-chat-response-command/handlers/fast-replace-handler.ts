@@ -9,7 +9,7 @@ import { OriginalFileState } from '@/commands/apply-chat-response-command/types/
 export const handle_fast_replace = async (
   files: ClipboardFile[]
 ): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
-  Logger.log({
+  Logger.info({
     function_name: 'handle_fast_replace',
     message: 'start',
     data: { file_count: files.length }
@@ -127,7 +127,7 @@ export const handle_fast_replace = async (
           })
 
           await document.save()
-          Logger.log({
+          Logger.info({
             function_name: 'handle_fast_replace',
             message: 'Existing file replaced and saved',
             data: safe_path
@@ -143,7 +143,7 @@ export const handle_fast_replace = async (
           if (!fs.existsSync(directory)) {
             try {
               fs.mkdirSync(directory, { recursive: true })
-              Logger.log({
+              Logger.info({
                 function_name: 'handle_fast_replace',
                 message: 'Directory created',
                 data: directory
@@ -163,7 +163,7 @@ export const handle_fast_replace = async (
 
           try {
             fs.writeFileSync(safe_path, file.content)
-            Logger.log({
+            Logger.info({
               function_name: 'handle_fast_replace',
               message: 'New file created',
               data: safe_path
@@ -195,7 +195,7 @@ export const handle_fast_replace = async (
       }
     }
 
-    Logger.log({
+    Logger.info({
       function_name: 'handle_fast_replace',
       message: 'Files replaced successfully', // Updated log message
       data: { file_count: safe_files.length } // Changed from accepted_files to safe_files

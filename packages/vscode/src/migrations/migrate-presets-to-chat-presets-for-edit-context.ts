@@ -48,7 +48,7 @@ export async function migrate_presets_to_chat_presets_for_edit_context(
     }
 
     await context.globalState.update(MIGRATION_ID, true)
-    Logger.log({
+    Logger.info({
       function_name: 'migrate_presets_to_chat_presets_for_edit_context',
       message: 'Migration for presets to chatPresetsForEditContext completed.'
     })

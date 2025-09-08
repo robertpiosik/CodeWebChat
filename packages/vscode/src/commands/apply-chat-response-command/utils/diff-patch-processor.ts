@@ -42,7 +42,7 @@ export const process_diff_patch = async (params: {
       vscode.Uri.file(params.file_path),
       Buffer.from(result, 'utf8')
     )
-    Logger.log({
+    Logger.info({
       function_name: 'process_diff_patch',
       message: 'File saved successfully'
     })

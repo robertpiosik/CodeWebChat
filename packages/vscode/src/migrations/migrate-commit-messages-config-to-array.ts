@@ -43,7 +43,7 @@ export async function migrate_commit_messages_config_to_array(
         existing_config
       )
 
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_commit_messages_config_to_array',
         message: 'Successfully migrated commit messages config to array'
       })

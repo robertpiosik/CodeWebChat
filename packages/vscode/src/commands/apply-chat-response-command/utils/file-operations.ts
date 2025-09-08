@@ -28,7 +28,7 @@ export const remove_directory_if_empty = async (params: {
       const files = fs.readdirSync(normalized_dir)
       if (files.length == 0) {
         fs.rmdirSync(normalized_dir)
-        Logger.log({
+        Logger.info({
           function_name: 'remove_directory_if_empty',
           message: 'Removed empty directory',
           data: { dir_path: normalized_dir }
@@ -53,7 +53,7 @@ export const create_file_if_needed = async (params: {
   content: string
   workspace_name?: string
 }): Promise<boolean> => {
-  Logger.log({
+  Logger.info({
     function_name: 'create_file_if_needed',
     message: 'start',
     data: { filePath: params.file_path, workspace_name: params.workspace_name }
@@ -108,7 +108,7 @@ export const create_file_if_needed = async (params: {
   if (!fs.existsSync(directory)) {
     try {
       fs.mkdirSync(directory, { recursive: true })
-      Logger.log({
+      Logger.info({
         function_name: 'create_file_if_needed',
         message: 'Directory created',
         data: directory
@@ -126,7 +126,7 @@ export const create_file_if_needed = async (params: {
 
   try {
     fs.writeFileSync(safe_path, params.content)
-    Logger.log({
+    Logger.info({
       function_name: 'create_file_if_needed',
       message: 'File created',
       data: safe_path
@@ -208,7 +208,7 @@ const relocate_file = async (params: {
     const document = await vscode.workspace.openTextDocument(new_safe_path)
     await vscode.window.showTextDocument(document)
 
-    Logger.log({
+    Logger.info({
       function_name: 'relocate_file',
       message: 'File successfully relocated',
       data: { old_path: old_safe_path, new_path: new_safe_path }
@@ -268,7 +268,7 @@ export const undo_files = async (params: {
   original_states: OriginalFileState[]
   show_message?: boolean
 }): Promise<boolean> => {
-  Logger.log({
+  Logger.info({
     function_name: 'undo_files',
     message: 'start',
     data: { original_states_count: params.original_states.length }
@@ -334,7 +334,7 @@ export const undo_files = async (params: {
 
           try {
             fs.unlinkSync(safe_path)
-            Logger.log({
+            Logger.info({
               function_name: 'undo_files',
               message: 'New file deleted',
               data: safe_path
@@ -378,7 +378,7 @@ export const undo_files = async (params: {
               fs.mkdirSync(dir, { recursive: true })
             }
             fs.writeFileSync(safe_path, state.content)
-            Logger.log({
+            Logger.info({
               function_name: 'undo_files',
               message: 'Recreated deleted file.',
               data: { file_path: state.file_path }
@@ -419,7 +419,7 @@ export const undo_files = async (params: {
             } else {
               fs.writeFileSync(safe_path, state.content)
             }
-            Logger.log({
+            Logger.info({
               function_name: 'undo_files',
               message: 'Existing file content undone to original content',
               data: safe_path
@@ -442,7 +442,7 @@ export const undo_files = async (params: {
     if (params.show_message ?? true) {
       vscode.window.showInformationMessage('Changes successfully undone.')
     }
-    Logger.log({
+    Logger.info({
       function_name: 'undo_files',
       message: 'Changes successfully undone.'
     })

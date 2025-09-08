@@ -240,7 +240,7 @@ export const process_file = async (params: {
     total_tokens: number
   ) => void
 }): Promise<string | null> => {
-  Logger.log({
+  Logger.info({
     function_name: 'process_file',
     message: 'start',
     data: { file_path: params.file_path }
@@ -272,7 +272,7 @@ export const process_file = async (params: {
     })
 
     if (axios.isCancel(params.cancel_token?.reason)) {
-      Logger.log({
+      Logger.info({
         function_name: 'process_file',
         message: 'Request cancelled during API call',
         data: params.file_path
@@ -295,7 +295,7 @@ export const process_file = async (params: {
     const cleaned_content = cleanup_api_response({
       content: refactored_content
     })
-    Logger.log({
+    Logger.info({
       function_name: 'process_file',
       message: 'API response received and cleaned',
       data: {
@@ -306,7 +306,7 @@ export const process_file = async (params: {
     return cleaned_content
   } catch (error: any) {
     if (axios.isCancel(error)) {
-      Logger.log({
+      Logger.info({
         function_name: 'process_file',
         message: 'Request cancelled',
         data: params.file_path

@@ -27,7 +27,7 @@ export async function migrate_refactoring_to_intelligent_update(
   try {
     // Check if migration has already run
     if (context.globalState.get(MIGRATION_ID)) {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_refactoring_to_intelligent_update',
         message:
           'Refactoring to intelligent update migration already completed. Skipping.'
@@ -58,7 +58,7 @@ export async function migrate_refactoring_to_intelligent_update(
         intelligent_update_configs
       )
 
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_refactoring_to_intelligent_update',
         message: `Copied ${refactoring_configs.length} refactoring configs to intelligent update configs with temperature set to 0`
       })
@@ -76,14 +76,14 @@ export async function migrate_refactoring_to_intelligent_update(
           }
         )
 
-        Logger.log({
+        Logger.info({
           function_name: 'migrate_refactoring_to_intelligent_update',
           message:
             'Copied default refactoring config to default intelligent update config with temperature set to 0'
         })
       }
     } else {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_refactoring_to_intelligent_update',
         message:
           existing_intelligent_update_configs.length > 0

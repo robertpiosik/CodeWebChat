@@ -14,7 +14,7 @@ export async function migrate_api_providers_to_secret_storage(
 ): Promise<void> {
   try {
     if (context.globalState.get(MIGRATION_ID)) {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_api_providers_to_secret_storage',
         message:
           'API providers to Secret Storage migration already completed. Skipping.'
@@ -35,12 +35,12 @@ export async function migrate_api_providers_to_secret_storage(
 
       await context.globalState.update(SAVED_API_PROVIDERS_STATE_KEY, undefined)
 
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_api_providers_to_secret_storage',
         message: `Successfully migrated ${providers.length} API providers to Secret Storage`
       })
     } else {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_api_providers_to_secret_storage',
         message: 'No API providers found to migrate.'
       })

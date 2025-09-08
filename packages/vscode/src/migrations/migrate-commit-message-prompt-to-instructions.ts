@@ -15,7 +15,7 @@ export async function migrate_commit_message_prompt_to_instructions(
   try {
     // Check if migration has already run
     if (context.globalState.get(MIGRATION_ID)) {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_commit_message_prompt_to_instructions',
         message:
           'Commit message prompt to instructions migration already completed. Skipping.'
@@ -34,13 +34,13 @@ export async function migrate_commit_message_prompt_to_instructions(
         vscode.ConfigurationTarget.Global
       )
 
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_commit_message_prompt_to_instructions',
         message:
           'Successfully migrated commitMessagePrompt to commitMessageInstructions'
       })
     } else {
-      Logger.log({
+      Logger.info({
         function_name: 'migrate_commit_message_prompt_to_instructions',
         message: 'No existing commitMessagePrompt setting found to migrate.'
       })

@@ -41,7 +41,7 @@ export const handle_intelligent_update = async (params: {
     return null
   }
 
-  Logger.log({
+  Logger.info({
     function_name: 'handle_intelligent_update',
     message: 'Processing multiple files'
   })
@@ -241,7 +241,7 @@ export const handle_intelligent_update = async (params: {
         // Process all files in parallel batches
         for (let i = 0; i < files.length; i += max_concurrency) {
           if (token.isCancellationRequested) {
-            Logger.log({
+            Logger.info({
               function_name: 'handle_intelligent_update',
               message: 'Operation cancelled during batching.',
               data: { batch_start_index: i }
