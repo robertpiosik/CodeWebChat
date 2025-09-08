@@ -402,7 +402,7 @@ export const apply_chat_response_command = (
     'codeWebChat.applyChatResponse',
     async (args?: {
       response?: string
-      suppress_fast_replace_notification?: boolean
+      suppress_fast_replace_inaccuracies_dialog?: boolean
       original_editor_state?: {
         file_path: string
         position: { line: number; character: number }
@@ -522,7 +522,7 @@ export const apply_chat_response_command = (
               }
             }
           }
-          args.suppress_fast_replace_notification = true
+          args.suppress_fast_replace_inaccuracies_dialog = true
 
           clipboard_content = {
             type: 'files',
@@ -790,9 +790,11 @@ export const apply_chat_response_command = (
           if (selected_mode_label == 'Fast replace') {
             const result = await handle_fast_replace(clipboard_content.files)
             if (result.success && result.original_states) {
-              result.original_states.forEach(
-                (s) => ((s as any).is_replaced = true)
-              )
+              if (!args?.suppress_fast_replace_inaccuracies_dialog) {
+                result.original_states.forEach(
+                  (s) => ((s as any).is_replaced = true)
+                )
+              }
               final_original_states = result.original_states
               operation_success = true
             }

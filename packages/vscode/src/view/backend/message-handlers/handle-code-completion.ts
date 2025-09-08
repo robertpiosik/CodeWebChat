@@ -452,7 +452,7 @@ const perform_code_completion = async (params: {
     if (response_for_apply) {
       await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
         response: response_for_apply,
-        suppress_fast_replace_notification: true,
+        suppress_fast_replace_inaccuracies_dialog: true,
         original_editor_state: {
           file_path: document.uri.fsPath,
           position: {

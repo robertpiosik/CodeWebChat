@@ -122,7 +122,7 @@ export const apply_clipboard_content_to_active_editor_command = (
 
         await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
           response: response_for_apply,
-          suppress_fast_replace_notification: true
+          suppress_fast_replace_inaccuracies_dialog: true
         })
 
         await vscode.window.showInformationMessage(

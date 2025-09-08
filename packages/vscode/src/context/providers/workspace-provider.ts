@@ -114,7 +114,7 @@ export class WorkspaceProvider
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: 'Counting tokens...',
+          title: 'Calculating token counts...',
           cancellable: false
         },
         async (_progress) => {
