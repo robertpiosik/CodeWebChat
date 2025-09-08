@@ -439,7 +439,7 @@ export const perform_context_editing = async (params: {
           cancel_token_source.cancel('Cancelled by user.')
         })
 
-        let wait_time = 1
+        let wait_time = 0
         let has_started_receiving = false
 
         const wait_timer = setInterval(() => {

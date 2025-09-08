@@ -68,10 +68,11 @@ export const Summary: FC<Props> = ({
         <div className={styles.info}>
           {files.length > 1
             ? `${fallback_count} of ${files.length} files`
-            : 'File'}{' '}
-          required an offline fallback method, which may lead to inaccuracies.
-          If looks off, use <span className="codicon codicon-sparkle" /> action
-          to call Intelligent Update API tool.
+            : 'The file'}{' '}
+          required a fallback integration method, which may lead to
+          inaccuracies. If looks off, use{' '}
+          <span className="codicon codicon-sparkle" /> action to fix with the
+          Intelligent Update API tool.
         </div>
       )}
       {replaced_files_count > 0 && (
@@ -79,7 +80,7 @@ export const Summary: FC<Props> = ({
           {`File${replaced_files_count > 1 ? 's have' : ' has'}`} been replaced.
           This may cause inaccuracies if the response had unmarked truncations.
           If looks off, use <span className="codicon codicon-sparkle" /> action
-          to call Intelligent Update API tool.
+          to fix with the Intelligent Update API tool.
         </div>
       )}
       <div className={styles.list}>
