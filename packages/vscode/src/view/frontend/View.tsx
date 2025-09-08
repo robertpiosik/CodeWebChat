@@ -325,6 +325,13 @@ export const View = () => {
                   is_checked: file.is_checked
                 })
               }}
+              on_intelligent_update={(file) => {
+                post_message(vscode, {
+                  command: 'INTELLIGENT_UPDATE_FILE_IN_REVIEW',
+                  file_path: file.file_path,
+                  workspace_name: file.workspace_name
+                })
+              }}
             />
           </UiPage>
         </div>

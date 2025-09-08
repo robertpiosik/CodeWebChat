@@ -365,9 +365,6 @@ export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
   view_provider: ViewProvider
 ) => {
-  const intelligent_update_button_label =
-    'Looks off? Call Intelligent Update API tool'
-
   const update_undo_and_apply_button_state = (
     states: OriginalFileState[] | null,
     applied_content?: string | null,
@@ -594,6 +591,11 @@ export const apply_chat_response_command = (
             const result = await apply_git_patch(patch.content, workspace_path)
 
             if (result.success) {
+              if (result.used_fallback && result.original_states) {
+                for (const state of result.original_states) {
+                  ;(state as any).is_fallback = true
+                }
+              }
               success_count++
               if (result.original_states) {
                 all_original_states = all_original_states.concat(
@@ -735,102 +737,7 @@ export const apply_chat_response_command = (
                     ? `${fallback_patches_count} of ${total_patches} patches required an offline fallback method, which may lead to inaccuracies.`
                     : 'The patch required an offline fallback method, which may lead to inaccuracies.'
 
-                const response = await vscode.window.showInformationMessage(
-                  message,
-                  'Hide',
-                  intelligent_update_button_label
-                )
-
-                if (response == intelligent_update_button_label) {
-                  const fallback_applied_patches = applied_patches.filter(
-                    (p) => p.used_fallback
-                  )
-                  const fallback_states = fallback_applied_patches.flatMap(
-                    (p) => p.original_states
-                  )
-                  await undo_files({
-                    original_states: fallback_states,
-                    show_message: false
-                  })
-
-                  const non_fallback_states = applied_patches
-                    .filter((p) => !p.used_fallback)
-                    .flatMap((p) => p.original_states)
-                  update_undo_and_apply_button_state(
-                    non_fallback_states,
-                    chat_response,
-                    args?.original_editor_state
-                  )
-
-                  const api_providers_manager = new ApiProvidersManager(context)
-                  const config_result = await get_intelligent_update_config(
-                    api_providers_manager,
-                    false,
-                    context
-                  )
-
-                  if (!config_result) {
-                    return null
-                  }
-
-                  const fallback_patches = fallback_applied_patches.map(
-                    (p) => p.patch
-                  )
-                  const num_files = fallback_patches.length
-                  const progress_title_override = `Called Intelligent Update API tool for ${num_files} file${
-                    num_files > 1 ? 's' : ''
-                  }`
-
-                  const fallback_patches_as_code_blocks = fallback_patches
-                    .map(
-                      (patch) =>
-                        `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
-                    )
-                    .join('\n')
-
-                  const { provider, config: intelligent_update_config } =
-                    config_result
-
-                  let endpoint_url = ''
-                  if (provider.type == 'built-in') {
-                    const provider_info =
-                      PROVIDERS[provider.name as keyof typeof PROVIDERS]
-                    endpoint_url = provider_info.base_url
-                  } else {
-                    endpoint_url = provider.base_url
-                  }
-
-                  const intelligent_update_states =
-                    await handle_intelligent_update({
-                      endpoint_url,
-                      api_key: provider.api_key,
-                      config: intelligent_update_config,
-                      chat_response: fallback_patches_as_code_blocks, // Use the patches as instructions
-                      context: context,
-                      is_single_root_folder_workspace,
-                      view_provider,
-                      progress_title_override
-                    })
-
-                  if (intelligent_update_states) {
-                    const final_states = [
-                      ...non_fallback_states,
-                      ...intelligent_update_states
-                    ]
-                    set_new_paths_in_original_states(final_states)
-                    await apply_file_relocations(final_states)
-                    update_undo_and_apply_button_state(
-                      final_states,
-                      chat_response,
-                      args?.original_editor_state
-                    )
-                    return {
-                      original_states: final_states,
-                      chat_response
-                    }
-                  }
-                  return null
-                }
+                vscode.window.showInformationMessage(message)
               })()
             }
             return {
@@ -891,6 +798,9 @@ export const apply_chat_response_command = (
           if (selected_mode_label == 'Fast replace') {
             const result = await handle_fast_replace(clipboard_content.files)
             if (result.success && result.original_states) {
+              result.original_states.forEach(
+                (s) => ((s as any).is_replaced = true)
+              )
               final_original_states = result.original_states
               operation_success = true
             }
@@ -956,74 +866,12 @@ export const apply_chat_response_command = (
               !all_files_new &&
               !args?.suppress_fast_replace_notification
             ) {
-              ;(async () => {
-                const file_count = final_original_states!.length
-                const response = await vscode.window.showInformationMessage(
-                  `File${
-                    file_count > 1 ? 's have' : ' has'
-                  } been replaced. This may cause inaccuracies if the response had unmarked truncations.`,
-                  'Hide',
-                  intelligent_update_button_label
-                )
-
-                if (response == intelligent_update_button_label) {
-                  const original_states_for_undo = final_original_states!
-                  await undo_files({
-                    original_states: original_states_for_undo,
-                    show_message: false
-                  })
-                  const num_files = original_states_for_undo.length
-                  const progress_title_override = `Called Intelligent Update API tool for ${num_files} file${
-                    num_files > 1 ? 's' : ''
-                  }`
-
-                  // Clear state while intelligent update runs
-                  update_undo_and_apply_button_state(null)
-
-                  const api_providers_manager = new ApiProvidersManager(context)
-                  const config_result = await get_intelligent_update_config(
-                    api_providers_manager,
-                    false,
-                    context
-                  )
-
-                  if (!config_result) {
-                    return // Undone, no config for intelligent update.
-                  }
-
-                  const { provider, config: intelligent_update_config } =
-                    config_result
-
-                  let endpoint_url = ''
-                  if (provider.type == 'built-in') {
-                    const provider_info =
-                      PROVIDERS[provider.name as keyof typeof PROVIDERS]
-                    endpoint_url = provider_info.base_url
-                  } else {
-                    endpoint_url = provider.base_url
-                  }
-
-                  const intelligent_update_states =
-                    await handle_intelligent_update({
-                      endpoint_url,
-                      api_key: provider.api_key,
-                      config: intelligent_update_config,
-                      chat_response,
-                      context: context,
-                      is_single_root_folder_workspace,
-                      view_provider,
-                      progress_title_override
-                    })
-
-                  if (intelligent_update_states) {
-                    update_undo_and_apply_button_state(
-                      intelligent_update_states,
-                      chat_response,
-                      args?.original_editor_state
-                    )
-                  }
-                }
-              })()
+              const file_count = final_original_states!.length
+              vscode.window.showInformationMessage(
+                `File${
+                  file_count > 1 ? 's have' : ' has'
+                } been replaced. This may cause inaccuracies if the response had unmarked truncations.`
+              )
             }
 
             update_undo_and_apply_button_state(

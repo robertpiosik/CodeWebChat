@@ -236,7 +236,7 @@ export const process_file = async (params: {
   cancel_token?: CancelToken
   on_chunk?: (
     formatted_tokens: string,
-    tokens_per_second: number,
+    tokens_per_second: string,
     total_tokens: number
   ) => void
 }): Promise<string | null> => {
@@ -245,9 +245,8 @@ export const process_file = async (params: {
     message: 'start',
     data: { file_path: params.file_path }
   })
-  const apply_changes_prompt = `${refactoring_instruction} ${params.instruction}`
-  const file_content_block = `<file path="${params.file_path}">\n<![CDATA[\n${params.file_content}\n]]>\n</file>\n`
-  const content = `${apply_changes_prompt}\n${file_content_block}\n${apply_changes_prompt}`
+  const file_content_block = `<file>\n<![CDATA[\n${params.file_content}\n]]>\n</file>\n`
+  const content = `${file_content_block}\n${refactoring_instruction}\n<![CDATA[\n${params.instruction}\n]]>`
 
   const messages = [
     {

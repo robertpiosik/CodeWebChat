@@ -46,7 +46,8 @@ import {
   handle_save_donations_visibility,
   handle_focus_on_file_in_review,
   handle_go_to_file_in_review,
-  handle_toggle_file_in_review
+  handle_toggle_file_in_review,
+  handle_intelligent_update_file_in_review
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -413,6 +414,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             handle_go_to_file_in_review(this, message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
             await handle_toggle_file_in_review(this, message)
+          } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_REVIEW') {
+            await handle_intelligent_update_file_in_review(this, message)
           } else if (message.command == 'EDITS_REVIEW') {
             if (code_review_promise_resolve) {
               code_review_promise_resolve({ accepted_files: message.files })

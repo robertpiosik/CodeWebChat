@@ -38,6 +38,8 @@ type ReviewableFile = {
   is_deleted?: boolean
   lines_added: number
   lines_removed: number
+  is_fallback?: boolean
+  is_replaced?: boolean
 }
 
 type PreparedFile = {
@@ -133,7 +135,9 @@ const prepare_files_from_original_states = async (params: {
       is_new: state.is_new || !!state.file_path_to_restore,
       is_deleted,
       lines_added: diff_stats.lines_added,
-      lines_removed: diff_stats.lines_removed
+      lines_removed: diff_stats.lines_removed,
+      is_fallback: (state as any).is_fallback,
+      is_replaced: (state as any).is_replaced
     }
 
     prepared_files.push({

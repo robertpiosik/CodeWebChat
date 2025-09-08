@@ -15,6 +15,10 @@ type Props = {
   on_keep: (files: FileInReview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
   on_go_to_file: (file: { file_path: string; workspace_name?: string }) => void
+  on_intelligent_update: (file: {
+    file_path: string
+    workspace_name?: string
+  }) => void
   on_toggle_file: (file: {
     file_path: string
     workspace_name?: string
@@ -29,7 +33,8 @@ export const Summary: FC<Props> = ({
   on_keep,
   on_focus_file,
   on_go_to_file,
-  on_toggle_file
+  on_toggle_file,
+  on_intelligent_update
 }) => {
   const [files_to_review, set_files_to_review] = useState<
     CheckedFileToReview[]
@@ -116,6 +121,20 @@ export const Summary: FC<Props> = ({
               </div>
               <div className={styles.item__right}>
                 <div className={styles['item__actions']}>
+                  {(file.is_fallback || file.is_replaced) && (
+                    <IconButton
+                      codicon_icon="wand"
+                      title="Invoke Intelligent Update API tool for this file"
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        set_last_clicked_file_index(index)
+                        on_intelligent_update({
+                          file_path: file.file_path,
+                          workspace_name: file.workspace_name
+                        })
+                      }}
+                    />
+                  )}
                   <IconButton
                     codicon_icon="diff-single"
                     title="Open Changes"

@@ -245,6 +245,12 @@ export interface SaveDonationsVisibilityMessage extends BaseMessage {
   is_visible: boolean
 }
 
+export interface IntelligentUpdateFileInReviewMessage extends BaseMessage {
+  command: 'INTELLIGENT_UPDATE_FILE_IN_REVIEW'
+  file_path: string
+  workspace_name?: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -292,6 +298,7 @@ export type FrontendMessage =
   | GoToFileInReviewMessage
   | GetHasMultipleWorkspacesMessage
   | RequestGitStateMessage
+  | IntelligentUpdateFileInReviewMessage
   | UpdateLastUsedPresetMessage
 
 // Messages sent to the frontend
