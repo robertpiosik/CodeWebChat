@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as path from 'path'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { IntelligentUpdateFileInReviewMessage } from '@/view/types/messages'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
@@ -61,6 +62,7 @@ export const handle_intelligent_update_file_in_review = async (
   message: IntelligentUpdateFileInReviewMessage
 ): Promise<void> => {
   const { file_path, workspace_name } = message
+  const file_name = path.basename(file_path)
 
   const original_states = provider.context.workspaceState.get<
     OriginalFileState[]
@@ -82,7 +84,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!file_state) {
     vscode.window.showErrorMessage(
-      `Could not find original state for file: ${file_path}`
+      `Could not find original state for file: ${file_name}`
     )
     return
   }
@@ -109,7 +111,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!instructions) {
     vscode.window.showErrorMessage(
-      `Could not find update instructions for file: ${file_path}`
+      `Could not find update instructions for file: ${file_name}`
     )
     return
   }
@@ -149,7 +151,7 @@ export const handle_intelligent_update_file_in_review = async (
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `Called Intelligent Update API tool for ${file_path}`,
+      title: `Called Intelligent Update API tool for ${file_name}`,
       cancellable: true
     },
     async (progress, token) => {
@@ -213,7 +215,7 @@ export const handle_intelligent_update_file_in_review = async (
             data: { error, file_path }
           })
           vscode.window.showErrorMessage(
-            `Intelligent update failed for ${file_path}: ${error.message}`
+            `Intelligent update failed for ${file_name}: ${error.message}`
           )
         }
       }
