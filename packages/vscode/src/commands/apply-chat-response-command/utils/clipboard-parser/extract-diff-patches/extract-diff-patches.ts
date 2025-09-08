@@ -131,7 +131,7 @@ const extract_code_block_patches = (normalized_text: string): DiffPatch[] => {
           code_blocks.unshift({ start: j, end: i, type: 'patch' })
           i = j // Skip to this position to avoid overlapping blocks
           break
-        } else if (opening_line.startsWith('```')) {
+        } else if (opening_line.startsWith('```') && opening_line != '```') {
           // Found a different code block, stop searching
           break
         }
