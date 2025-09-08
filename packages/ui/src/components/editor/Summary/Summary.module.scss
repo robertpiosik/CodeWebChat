@@ -3,6 +3,21 @@
   flex-direction: column;
 }
 
+.info {
+  padding: var(--padding-6px) var(--padding-8px);
+  color: var(--vscode-descriptionForeground);
+  font-size: var(--padding-12px);
+  border: 1px solid var(--vscode-sideBarSectionHeader-border);
+  opacity: var(--dimmed-opacity);
+  margin: 0 var(--padding-12px) var(--padding-8px) var(--padding-12px);
+  border-radius: var(--border-radius-8px);
+
+  > span {
+    vertical-align: middle;
+    font-size: var(--font-size-12px);
+  }
+}
+
 .list {
   padding: 0 var(--spacing-s);
 }

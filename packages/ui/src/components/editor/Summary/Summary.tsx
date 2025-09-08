@@ -59,8 +59,27 @@ export const Summary: FC<Props> = ({
     on_keep(accepted_files)
   }
 
+  const fallback_count = files.filter((f) => f.is_fallback).length
+  const replaced_files_count = files.filter((f) => f.is_replaced).length
+
   return (
     <div className={styles.container}>
+      {fallback_count > 0 && (
+        <div className={styles.info}>
+          {fallback_count} of {files.length} files required an offline fallback
+          method, which may lead to inaccuracies. If a file looks off, use{' '}
+          <span className="codicon codicon-sparkle" /> action to invoke
+          Intelligent Update API tool.
+        </div>
+      )}
+      {replaced_files_count > 0 && (
+        <div className={styles.info}>
+          {`File${replaced_files_count > 1 ? 's have' : ' has'}`} been replaced.
+          This may cause inaccuracies if the response had unmarked truncations.
+          If a file looks off, use <span className="codicon codicon-sparkle" />{' '}
+          action to invoke Intelligent Update API tool.
+        </div>
+      )}
       <div className={styles.list}>
         {files_to_review.map((file, index) => {
           const last_slash_index = file.file_path.lastIndexOf('/')
@@ -123,7 +142,7 @@ export const Summary: FC<Props> = ({
                 <div className={styles['item__actions']}>
                   {(file.is_fallback || file.is_replaced) && (
                     <IconButton
-                      codicon_icon="wand"
+                      codicon_icon="sparkle"
                       title="Invoke Intelligent Update API tool for this file"
                       on_click={(e) => {
                         e.stopPropagation()

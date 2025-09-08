@@ -732,12 +732,6 @@ export const apply_chat_response_command = (
                     files: fallback_files
                   }
                 })
-                const message =
-                  total_patches > 1
-                    ? `${fallback_patches_count} of ${total_patches} patches required an offline fallback method, which may lead to inaccuracies.`
-                    : 'The patch required an offline fallback method, which may lead to inaccuracies.'
-
-                vscode.window.showInformationMessage(message)
               })()
             }
             return {
@@ -861,19 +855,6 @@ export const apply_chat_response_command = (
           }
 
           if (operation_success && final_original_states) {
-            if (
-              selected_mode_label == 'Fast replace' &&
-              !all_files_new &&
-              !args?.suppress_fast_replace_notification
-            ) {
-              const file_count = final_original_states!.length
-              vscode.window.showInformationMessage(
-                `File${
-                  file_count > 1 ? 's have' : ' has'
-                } been replaced. This may cause inaccuracies if the response had unmarked truncations.`
-              )
-            }
-
             update_undo_and_apply_button_state(
               final_original_states,
               chat_response,

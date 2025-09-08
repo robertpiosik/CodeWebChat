@@ -149,7 +149,7 @@ export const handle_intelligent_update_file_in_review = async (
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `Intelligently updating ${file_path}...`,
+      title: `Called Intelligent Update API tool for ${file_path}`,
       cancellable: true
     },
     async (progress, token) => {
