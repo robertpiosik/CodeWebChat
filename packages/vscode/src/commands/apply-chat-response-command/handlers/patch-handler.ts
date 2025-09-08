@@ -6,10 +6,7 @@ import { Logger } from '@shared/utils/logger'
 import { promisify } from 'util'
 import { OriginalFileState } from '../types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import {
-  apply_diff_patch,
-  process_diff_patch
-} from '../utils/diff-patch-processor'
+import { apply_diff, process_diff } from '../utils/diff-patch-processor'
 import { remove_directory_if_empty } from '../utils/file-operations'
 
 const execAsync = promisify(exec)
@@ -124,7 +121,7 @@ export const extract_content_from_patch = (
   original_content: string
 ): string => {
   try {
-    return apply_diff_patch({
+    return apply_diff({
       original_code: original_content,
       diff_patch: patch_content
     })
@@ -482,7 +479,7 @@ export const apply_git_patch = async (
       try {
         const file_path_safe = create_safe_path(workspace_path, file_paths[0])
         if (file_path_safe == null) throw new Error('File path is null')
-        await process_diff_patch({
+        await process_diff({
           file_path: file_path_safe,
           diff_path_patch: temp_file
         })

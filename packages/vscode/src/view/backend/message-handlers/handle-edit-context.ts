@@ -444,12 +444,12 @@ export const perform_context_editing = async (params: {
 
         const wait_timer = setInterval(() => {
           if (!has_started_receiving) {
-            wait_time++
             progress.report({
-              message: `${wait_time}s`
+              message: `${(wait_time / 10).toFixed(1)}s`
             })
+            wait_time++
           }
-        }, 1000)
+        }, 100)
 
         try {
           return await make_api_request({

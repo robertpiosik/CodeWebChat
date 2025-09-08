@@ -69,18 +69,19 @@ export const Summary: FC<Props> = ({
           {files.length > 1
             ? `${fallback_count} of ${files.length} files`
             : 'The file'}{' '}
-          required a fallback integration method, which may lead to
-          inaccuracies. If looks off, use{' '}
-          <span className="codicon codicon-sparkle" /> action to fix with the
+          required a fallback diff integration method, which may lead to
+          inaccuracies. Looks off? Click{' '}
+          <span className="codicon codicon-sparkle" /> to fix with the
           Intelligent Update API tool.
         </div>
       )}
       {replaced_files_count > 0 && (
         <div className={styles.info}>
-          {`File${replaced_files_count > 1 ? 's have' : ' has'}`} been replaced.
-          This may cause inaccuracies if the response had unmarked truncations.
-          If looks off, use <span className="codicon codicon-sparkle" /> action
-          to fix with the Intelligent Update API tool.
+          {`${replaced_files_count > 1 ? 'All files have' : 'The file has'}`}{' '}
+          been replaced. This may cause inaccuracies if the response had
+          unmarked truncations. Looks off? Click{' '}
+          <span className="codicon codicon-sparkle" /> to fix with the
+          Intelligent Update API tool.
         </div>
       )}
       <div className={styles.list}>
@@ -146,7 +147,7 @@ export const Summary: FC<Props> = ({
                   {(file.is_fallback || file.is_replaced) && (
                     <IconButton
                       codicon_icon="sparkle"
-                      title="Invoke Intelligent Update API tool for this file"
+                      title="Call Intelligent Update API tool"
                       on_click={(e) => {
                         e.stopPropagation()
                         set_last_clicked_file_index(index)

@@ -25,14 +25,14 @@ class SearchBlock {
   }
 }
 
-export const process_diff_patch = async (params: {
+export const process_diff = async (params: {
   file_path: string
   diff_path_patch: string
 }): Promise<void> => {
   const file_content = fs.readFileSync(params.file_path, 'utf8')
   const diff_patch_content = fs.readFileSync(params.diff_path_patch, 'utf8')
 
-  const result = apply_diff_patch({
+  const result = apply_diff({
     original_code: file_content,
     diff_patch: diff_patch_content
   })
@@ -43,20 +43,20 @@ export const process_diff_patch = async (params: {
       Buffer.from(result, 'utf8')
     )
     Logger.info({
-      function_name: 'process_diff_patch',
+      function_name: 'process_diff',
       message: 'File saved successfully'
     })
   } catch (error) {
-    Logger.error({
-      function_name: 'process_diff_patch',
-      message: 'Error saving file',
-      data: error
-    })
+    // Logger.error({
+    //   function_name: 'process_diff',
+    //   message: 'Error saving file',
+    //   data: error
+    // })
     throw new Error('Failed to save file after applying diff patch')
   }
 }
 
-export const apply_diff_patch = (params: {
+export const apply_diff = (params: {
   original_code: string
   diff_patch: string
 }): string => {
@@ -259,17 +259,16 @@ export const apply_diff_patch = (params: {
       if (!found) {
         search_replace_block.search_block_start_index = -2 // Not found
 
-        const error_message = `Search block not found: ${search_string}`
-        Logger.error({
-          function_name: 'apply_diff_patch',
-          message: error_message
-        })
-        Logger.error({
-          function_name: 'apply_diff_patch',
-          message: `search_replace_block: ${JSON.stringify(
-            search_replace_block
-          )}`
-        })
+        // Logger.error({
+        //   function_name: 'apply_diff',
+        //   message: `Search block not found: ${search_string}`
+        // })
+        // Logger.error({
+        //   function_name: 'apply_diff',
+        //   message: `search_replace_block: ${JSON.stringify(
+        //     search_replace_block
+        //   )}`
+        // })
 
         throw new Error(`Search block not found: ${search_string}`)
       }
@@ -290,12 +289,12 @@ export const apply_diff_patch = (params: {
 
       if (start_index < 0 || start_index > result_lines.length) {
         // start_index can be == result_lines.length for appending
-        Logger.error({
-          function_name: 'apply_diff_patch',
-          message: `Invalid start index ${start_index} for block application. Max index: ${
-            result_lines.length - 1
-          }`
-        })
+        // Logger.error({
+        //   function_name: 'apply_diff',
+        //   message: `Invalid start index ${start_index} for block application. Max index: ${
+        //     result_lines.length - 1
+        //   }`
+        // })
         continue
       }
 
@@ -314,9 +313,9 @@ export const apply_diff_patch = (params: {
 
     return result_lines.join('')
   } catch (error) {
-    Logger.error({
-      function_name: 'apply_diff_patch',
-      message: 'Error during diff processing',
+    Logger.warn({
+      function_name: 'apply_diff',
+      message: 'Diff patch processor failed.',
       data: error
     })
     throw error
