@@ -108,10 +108,7 @@ const prepare_files_from_original_states = async (params: {
     let current_content = ''
     try {
       if (fs.existsSync(sanitized_file_path)) {
-        const doc = await vscode.workspace.openTextDocument(
-          vscode.Uri.file(sanitized_file_path)
-        )
-        current_content = doc.getText()
+        current_content = fs.readFileSync(sanitized_file_path, 'utf8')
       }
     } catch (error) {
       continue
@@ -387,7 +384,7 @@ export const review_applied_changes = async (params: {
     while (current_index >= 0 && current_index < review_items.length) {
       const review_item = review_items[current_index]
 
-      if (review_item.status !== 'pending') {
+      if (review_item.status != 'pending') {
         current_index++
         continue
       }
@@ -427,8 +424,8 @@ export const review_applied_changes = async (params: {
               jump_target.workspace_name
         )
 
-        if (new_index !== -1) {
-          if (review_items[new_index].status !== 'pending') {
+        if (new_index != -1) {
+          if (review_items[new_index].status != 'pending') {
             review_items[new_index].status = 'pending'
           }
           current_index = new_index
@@ -440,18 +437,18 @@ export const review_applied_changes = async (params: {
     }
 
     const accepted_files = review_items
-      .filter((item) => item.status === 'accepted')
+      .filter((item) => item.status == 'accepted')
       .map((item) => item.file.reviewable_file)
 
     const rejected_items = review_items.filter(
-      (item) => item.status === 'rejected'
+      (item) => item.status == 'rejected'
     )
     const rejected_states = rejected_items
       .map((item) => {
         return params.original_states.find(
           (state) =>
-            state.file_path === item.file.reviewable_file.file_path &&
-            state.workspace_name === item.file.reviewable_file.workspace_name
+            state.file_path == item.file.reviewable_file.file_path &&
+            state.workspace_name == item.file.reviewable_file.workspace_name
         )
       })
       .filter((state): state is OriginalFileState => state !== undefined)
