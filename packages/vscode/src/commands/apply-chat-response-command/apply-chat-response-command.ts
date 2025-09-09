@@ -5,7 +5,7 @@ import {
   LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
   LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
-} from '../../constants/state-keys'
+} from '@/constants/state-keys'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from './types/original-file-state'
 import { undo_files, apply_file_relocations } from './utils/file-operations'
@@ -16,9 +16,9 @@ import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragm
 import { ApiProvidersManager } from '@/services/api-providers-manager'
 import { apply_git_patch } from './handlers/patch-handler'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '../../constants/state-keys'
+import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
-import { ViewProvider } from '../../view/backend/view-provider'
+import { ViewProvider } from '@/view/backend/view-provider'
 import {
   review_applied_changes,
   code_review_promise_resolve
@@ -301,9 +301,32 @@ const handle_code_review_and_cleanup = async (params: {
     })
 
     if (review_result === null || review_result.accepted_files.length == 0) {
+      if (params.original_editor_state) {
+        try {
+          const uri = vscode.Uri.file(params.original_editor_state.file_path)
+          const document = await vscode.workspace.openTextDocument(uri)
+          const editor = await vscode.window.showTextDocument(document, {
+            preview: false
+          })
+          const position = new vscode.Position(
+            params.original_editor_state.position.line,
+            params.original_editor_state.position.character
+          )
+          editor.selection = new vscode.Selection(position, position)
+          editor.revealRange(
+            new vscode.Range(position, position),
+            vscode.TextEditorRevealType.InCenter
+          )
+        } catch (error) {
+          Logger.error({
+            function_name: 'handle_code_review_and_cleanup',
+            message: 'Error restoring original editor state',
+            data: error
+          })
+        }
+      }
       await undo_files({
-        original_states: params.original_states,
-        show_message: false
+        original_states: params.original_states
       })
       params.update_undo_and_apply_button_state(null)
       return false
@@ -311,8 +334,7 @@ const handle_code_review_and_cleanup = async (params: {
 
     if (review_result.rejected_states.length > 0) {
       await undo_files({
-        original_states: review_result.rejected_states,
-        show_message: false
+        original_states: review_result.rejected_states
       })
     }
 

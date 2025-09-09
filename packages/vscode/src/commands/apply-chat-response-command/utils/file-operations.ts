@@ -266,7 +266,6 @@ export const apply_file_relocations = async (
 
 export const undo_files = async (params: {
   original_states: OriginalFileState[]
-  show_message?: boolean
 }): Promise<boolean> => {
   Logger.info({
     function_name: 'undo_files',
@@ -439,9 +438,6 @@ export const undo_files = async (params: {
       }
     }
 
-    if (params.show_message ?? true) {
-      vscode.window.showInformationMessage('Changes successfully undone.')
-    }
     Logger.info({
       function_name: 'undo_files',
       message: 'Changes successfully undone.'
