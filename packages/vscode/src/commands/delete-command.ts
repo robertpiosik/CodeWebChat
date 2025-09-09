@@ -11,17 +11,20 @@ export function delete_command() {
       const path = item.resourceUri.fsPath
       const uri = vscode.Uri.file(path)
 
-      const result = await vscode.window.showWarningMessage(
-        'Are you sure you want to delete this item?',
-        { modal: true },
-        'Delete'
-      )
-
-      if (result != 'Delete') {
-        return
-      }
-
       try {
+        const stats = await vscode.workspace.fs.stat(uri)
+        const itemType = stats.type == vscode.FileType.File ? 'file' : 'folder'
+
+        const result = await vscode.window.showWarningMessage(
+          `Are you sure you want to delete this ${itemType}?`,
+          { modal: true },
+          'Delete'
+        )
+
+        if (result != 'Delete') {
+          return
+        }
+
         const open_documents = vscode.workspace.textDocuments
         const document_to_close = open_documents.find(
           (doc) => doc.uri.fsPath == path
