@@ -124,7 +124,7 @@ async function process_stream_chunk(
             if (current_time - updated_last_log_time >= 1000) {
               Logger.info({
                 function_name: 'process_stream_chunk',
-                message: `Streaming tokens:`,
+                message: 'Streaming tokens:',
                 data: updated_accumulated_content.substring(
                   updated_logged_content_length
                 )
@@ -212,122 +212,153 @@ export async function make_api_request(params: {
     }
   }
 
-  try {
-    const request_body = { ...params.body, stream: true }
+  const MAX_RETRIES = 3
+  const RETRY_DELAYS = [2000, 5000, 10000]
 
-    let accumulated_content = ''
-    let last_log_time = Date.now()
-    let logged_content_length = 0
-    let buffer = ''
-    let think_buffer = ''
-    let in_think_block = false
-    let think_block_ended = false
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const request_body = { ...params.body, stream: true }
 
-    const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
-      params.endpoint_url + '/chat/completions',
-      request_body,
-      {
-        headers: {
-          ['Authorization']: `Bearer ${params.api_key}`,
-          ['Content-Type']: 'application/json',
-          ...(params.endpoint_url == 'https://openrouter.ai/api/v1'
-            ? {
-                'HTTP-Referer': 'https://codeweb.chat/',
-                'X-Title': 'Code Web Chat (CWC)'
-              }
-            : {})
-        },
-        cancelToken: params.cancellation_token,
-        responseType: 'stream'
-      }
-    )
+      let accumulated_content = ''
+      let last_log_time = Date.now()
+      let logged_content_length = 0
+      let buffer = ''
+      let think_buffer = ''
+      let in_think_block = false
+      let think_block_ended = false
 
-    response.data.setEncoding('utf8')
+      const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
+        params.endpoint_url + '/chat/completions',
+        request_body,
+        {
+          headers: {
+            ['Authorization']: `Bearer ${params.api_key}`,
+            ['Content-Type']: 'application/json',
+            ...(params.endpoint_url == 'https://openrouter.ai/api/v1'
+              ? {
+                  'HTTP-Referer': 'https://codeweb.chat/',
+                  'X-Title': 'Code Web Chat (CWC)'
+                }
+              : {})
+          },
+          cancelToken: params.cancellation_token,
+          responseType: 'stream'
+        }
+      )
 
-    return new Promise((resolve, reject) => {
-      response.data.on('data', async (chunk: string) => {
-        const processing_result = await process_stream_chunk(
-          chunk,
-          buffer,
-          accumulated_content,
-          last_log_time,
-          logged_content_length,
-          think_buffer,
-          in_think_block,
-          think_block_ended,
-          internal_on_chunk
-        )
-        buffer = processing_result.updated_buffer
-        accumulated_content = processing_result.updated_accumulated_content
-        last_log_time = processing_result.updated_last_log_time
-        logged_content_length = processing_result.updated_logged_content_length
-        think_buffer = processing_result.updated_think_buffer
-        in_think_block = processing_result.updated_in_think_block
-        think_block_ended = processing_result.updated_think_block_ended
-      })
+      response.data.setEncoding('utf8')
 
-      response.data.on('end', () => {
-        if (buffer.trim()) {
-          try {
-            const trimmed_line = buffer.trim()
-            if (trimmed_line.startsWith(DATA_PREFIX)) {
-              const json_string = trimmed_line.slice(DATA_PREFIX.length).trim()
-              if (json_string && json_string !== DONE_TOKEN) {
-                const json_data = JSON.parse(json_string)
-                if (json_data.choices?.[0]?.delta?.content) {
-                  accumulated_content += json_data.choices[0].delta.content
+      return new Promise((resolve, reject) => {
+        response.data.on('data', async (chunk: string) => {
+          const processing_result = await process_stream_chunk(
+            chunk,
+            buffer,
+            accumulated_content,
+            last_log_time,
+            logged_content_length,
+            think_buffer,
+            in_think_block,
+            think_block_ended,
+            internal_on_chunk
+          )
+          buffer = processing_result.updated_buffer
+          accumulated_content = processing_result.updated_accumulated_content
+          last_log_time = processing_result.updated_last_log_time
+          logged_content_length =
+            processing_result.updated_logged_content_length
+          think_buffer = processing_result.updated_think_buffer
+          in_think_block = processing_result.updated_in_think_block
+          think_block_ended = processing_result.updated_think_block_ended
+        })
+
+        response.data.on('end', () => {
+          if (buffer.trim()) {
+            try {
+              const trimmed_line = buffer.trim()
+              if (trimmed_line.startsWith(DATA_PREFIX)) {
+                const json_string = trimmed_line
+                  .slice(DATA_PREFIX.length)
+                  .trim()
+                if (json_string && json_string !== DONE_TOKEN) {
+                  const json_data = JSON.parse(json_string)
+                  if (json_data.choices?.[0]?.delta?.content) {
+                    accumulated_content += json_data.choices[0].delta.content
+                  }
                 }
               }
+            } catch (error) {
+              Logger.warn({
+                function_name: 'make_api_request',
+                message: 'Failed to parse final buffer',
+                data: error
+              })
             }
-          } catch (error) {
-            Logger.warn({
-              function_name: 'make_api_request',
-              message: 'Failed to parse final buffer',
-              data: error
-            })
           }
-        }
 
+          Logger.info({
+            function_name: 'make_api_request',
+            message: 'Combined code received:',
+            data: accumulated_content
+          })
+
+          resolve(accumulated_content)
+        })
+
+        response.data.on('error', (error: Error) => {
+          Logger.error({
+            function_name: 'make_api_request',
+            message: 'Stream error',
+            data: error
+          })
+          reject(error)
+        })
+      })
+    } catch (error) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response?.status == 503 &&
+        attempt < MAX_RETRIES
+      ) {
+        const delay = RETRY_DELAYS[attempt]
+        Logger.warn({
+          function_name: 'make_api_request',
+          message: `API request failed with status 503. Retrying in ${
+            delay / 1000
+          }s... (Attempt ${attempt + 1}/${MAX_RETRIES + 1})`
+        })
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        continue
+      }
+
+      if (axios.isCancel(error)) {
         Logger.info({
           function_name: 'make_api_request',
-          message: 'Combined code received:',
-          data: accumulated_content
+          message: 'Request canceled',
+          data: error.message
         })
-
-        resolve(accumulated_content)
-      })
-
-      response.data.on('error', (error: Error) => {
-        Logger.error({
-          function_name: 'make_api_request',
-          message: 'Stream error',
-          data: error
-        })
-        reject(error)
-      })
-    })
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      Logger.info({
+        return null
+      } else if (axios.isAxiosError(error) && error.response?.status == 429) {
+        vscode.window.showErrorMessage(
+          'API request failed. Rate limit exceeded.'
+        )
+      } else if (axios.isAxiosError(error) && error.response?.status == 503) {
+        vscode.window.showErrorMessage(
+          'Endpoint is currently unable to handle the request. Wait a few moments and retry or use another API provider.'
+        )
+      } else if (axios.isAxiosError(error) && error.response?.status == 401) {
+        vscode.window.showErrorMessage('API request failed. Invalid API key.')
+      } else {
+        vscode.window.showErrorMessage(
+          'API request failed. Check console for details.'
+        )
+      }
+      Logger.error({
         function_name: 'make_api_request',
-        message: 'Request canceled',
-        data: error.message
+        message: 'API request failed',
+        data: error
       })
       return null
-    } else if (axios.isAxiosError(error) && error.response?.status == 429) {
-      vscode.window.showErrorMessage(`API request failed. Rate limit exceeded.`)
-    } else if (axios.isAxiosError(error) && error.response?.status == 401) {
-      vscode.window.showErrorMessage(`API request failed. Invalid API key.`)
-    } else {
-      vscode.window.showErrorMessage(
-        `API request failed. Check console for details.`
-      )
     }
-    Logger.error({
-      function_name: 'make_api_request',
-      message: 'API request failed',
-      data: error
-    })
-    return null
   }
+  return null
 }
