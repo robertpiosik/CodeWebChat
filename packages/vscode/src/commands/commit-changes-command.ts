@@ -45,9 +45,7 @@ export const commit_changes_command = (
             cwd: repository.rootUri.fsPath
           })
 
-          vscode.window.showInformationMessage(
-            `New commit: "${commit_message}".`
-          )
+          vscode.window.showInformationMessage(`New commit: ${commit_message}.`)
 
           context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
 
