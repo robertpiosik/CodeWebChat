@@ -245,7 +245,7 @@ export const ai_studio: Chatbot = {
           'span.v3-token-count-value'
         )
         const text = token_count_value?.textContent?.trim()
-        if (text && text.startsWith('0')) {
+        if (!text || (text && text.startsWith('0'))) {
           setTimeout(check, 100)
         } else {
           resolve(null)
