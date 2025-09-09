@@ -6,7 +6,7 @@
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-Meet Code Web Chat, a versatile, free and open-source (FOSS) AI coding tool with a simple web-based workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and more, hands-free! Once ready, apply the response with a single click.
+Meet Code Web Chat, a versatile, free and open-source (FOSS) AI coding tool with a signature web-based workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and more, hands-free! Once ready, apply the response with a single click.
 
 👉️ **Save money** _free tiers and subscription-based billing_ \
 👉️ **Save time** _multi-file edits from a single prompt_
