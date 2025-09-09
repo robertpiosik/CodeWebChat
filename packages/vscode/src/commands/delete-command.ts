@@ -13,10 +13,10 @@ export function delete_command() {
 
       try {
         const stats = await vscode.workspace.fs.stat(uri)
-        const itemType = stats.type == vscode.FileType.File ? 'file' : 'folder'
+        const item_type = stats.type == vscode.FileType.File ? 'file' : 'folder'
 
         const result = await vscode.window.showWarningMessage(
-          `Are you sure you want to delete this ${itemType}?`,
+          `Are you sure you want to delete this ${item_type}?`,
           { modal: true },
           'Delete'
         )
