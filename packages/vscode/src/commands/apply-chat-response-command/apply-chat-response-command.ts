@@ -331,23 +331,6 @@ const handle_code_review_and_cleanup = async (params: {
         params.original_editor_state
       )
 
-      const accepted_count = accepted_states.length
-      const rejected_count = review_result.rejected_states.length
-
-      let message = `Changes to ${accepted_count} file${
-        accepted_count > 1 ? 's' : ''
-      } accepted.`
-      if (rejected_count > 0) {
-        message = `Changes to ${accepted_count} file${
-          accepted_count > 1 ? 's' : ''
-        } accepted, ${rejected_count} rejected.`
-      }
-
-      vscode.window.showInformationMessage(message, 'Undo').then((response) => {
-        if (response === 'Undo') {
-          vscode.commands.executeCommand('codeWebChat.undo')
-        }
-      })
       return true
     } else {
       params.update_undo_and_apply_button_state(null)
