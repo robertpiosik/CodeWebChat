@@ -14,16 +14,18 @@ const execAsync = promisify(exec)
 interface PatchFileInfo {
   from_path?: string
   to_path?: string
-  is_new: boolean
-  is_deleted: boolean
+  is_new?: boolean
+  is_deleted?: boolean
+  is_renaming?: boolean
 }
 
 const parse_patch_header = (patch_content: string): PatchFileInfo => {
   const lines = patch_content.split('\n')
   let from_path: string | undefined
   let to_path: string | undefined
-  let is_new = false
-  let is_deleted = false
+  let is_new: boolean | undefined
+  let is_deleted: boolean | undefined
+  let is_renaming: boolean | undefined
   let from_found = false
   let to_found = false
 
@@ -55,7 +57,19 @@ const parse_patch_header = (patch_content: string): PatchFileInfo => {
     }
   }
 
-  return { from_path, to_path, is_new, is_deleted }
+  // Check if it's a rename-only diff.
+  // This is indicated by IDENTICAL from/to paths and no content hunks.
+  if (from_path && to_path && from_path == to_path) {
+    const header_end_index = lines.findIndex((line) => line.startsWith('+++'))
+    if (header_end_index != -1) {
+      const remaining_content = lines.slice(header_end_index + 1).join('\n')
+      if (remaining_content.trim() == '') {
+        is_renaming = true
+      }
+    }
+  }
+
+  return { from_path, to_path, is_new, is_deleted, is_renaming }
 }
 
 export const extract_file_paths_from_patch = (
@@ -430,19 +444,27 @@ export const apply_git_patch = async (
     let success = false
     let used_fallback = false
 
-    // Attempt 1: Standard git apply
-    try {
-      await execAsync(
-        `git apply --whitespace=fix --ignore-whitespace "${temp_file}"`,
-        { cwd: workspace_path }
-      )
+    if (patch_info.is_renaming) {
+      // Skip git apply and fallbacks, renaming here is a base case
+      // where no content is changing, just paths. File is already copied.
       success = true
-      Logger.info({
-        function_name: 'apply_git_patch',
-        message: 'Patch applied successfully with standard git apply.'
-      })
-    } catch (error) {
-      last_error = error
+    }
+
+    // Attempt 1: Standard git apply
+    if (!success) {
+      try {
+        await execAsync(
+          `git apply --whitespace=fix --ignore-whitespace "${temp_file}"`,
+          { cwd: workspace_path }
+        )
+        success = true
+        Logger.info({
+          function_name: 'apply_git_patch',
+          message: 'Patch applied successfully with standard git apply.'
+        })
+      } catch (error) {
+        last_error = error
+      }
     }
 
     // Attempt 2: git apply with --recount
