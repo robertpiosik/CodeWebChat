@@ -337,6 +337,17 @@ export const review_applied_changes = async (params: {
       }
 
       if (!is_checked) {
+        // Before reverting, capture current content if file exists
+        let current_content = ''
+        if (fs.existsSync(file_to_toggle.sanitized_path)) {
+          const document = await vscode.workspace.openTextDocument(
+            vscode.Uri.file(file_to_toggle.sanitized_path)
+          )
+          current_content = document.getText()
+          // Update the reviewable file content with current edits
+          file_to_toggle.reviewable_file.content = current_content
+        }
+
         if (file_to_toggle.reviewable_file.is_new) {
           try {
             if (fs.existsSync(file_to_toggle.sanitized_path)) {
