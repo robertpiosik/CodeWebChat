@@ -430,17 +430,16 @@ export const generate_commit_message_with_api = async (
 
   Logger.info({
     function_name: 'generate_commit_message_with_api',
-    message: 'Getting commit message...',
-    data: message
+    message: `Estimated tokens: ${formatted_token_count}`
   })
 
   return await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: `Generating commit message... ~${formatted_token_count} tokens in an API call.`,
+      title: `Generating commit message`,
       cancellable: true
     },
-    async (_, token) => {
+    async (progress, token) => {
       const messages = [
         {
           role: 'user',
@@ -463,6 +462,14 @@ export const generate_commit_message_with_api = async (
       token.onCancellationRequested(() => {
         cancel_token_source.cancel('Operation cancelled by user')
       })
+
+      let wait_time = 0
+      const wait_timer = setInterval(() => {
+        progress.report({
+          message: `${(wait_time / 10).toFixed(1)}s`
+        })
+        wait_time++
+      }, 100)
 
       try {
         const response = await make_api_request({
@@ -493,6 +500,8 @@ export const generate_commit_message_with_api = async (
           data: error
         })
         throw error
+      } finally {
+        clearInterval(wait_timer)
       }
     }
   )
