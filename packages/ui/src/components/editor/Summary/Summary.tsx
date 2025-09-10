@@ -71,8 +71,8 @@ export const Summary: FC<Props> = ({
             : 'The file'}{' '}
           required a fallback diff integration method, which may lead to
           inaccuracies. Looks off? Click{' '}
-          <span className="codicon codicon-sparkle" /> to fix with the
-          Intelligent Update API tool.
+          <span className="codicon codicon-sparkle" /> action to fix a file with
+          the Intelligent Update API tool.
         </div>
       )}
       {replaced_files_count > 0 && (
@@ -80,8 +80,8 @@ export const Summary: FC<Props> = ({
           {`${replaced_files_count > 1 ? 'All files have' : 'The file has'}`}{' '}
           been replaced. This may cause inaccuracies if the response had
           unmarked truncations. Looks off? Click{' '}
-          <span className="codicon codicon-sparkle" /> to fix with the
-          Intelligent Update API tool.
+          <span className="codicon codicon-sparkle" /> action to fix a file with
+          the Intelligent Update API tool.
         </div>
       )}
       <div className={styles.list}>
