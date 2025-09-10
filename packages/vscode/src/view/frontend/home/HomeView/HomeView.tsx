@@ -294,11 +294,11 @@ export const HomeView: React.FC<Props> = (props) => {
                 type_something: 'Type something',
                 completion_instructions: 'Completion instructions',
                 use_last_choice: 'Use last choice',
-                select: 'Select',
+                select: 'Select...',
                 code_completions_mode_unavailable_with_text_selection:
                   'Remove text selection',
                 code_completions_mode_unavailable_without_active_editor:
-                  'Place cursor for completion',
+                  'Place cursor in editor',
                 search: 'Search history',
                 websocket_not_connected:
                   'Install or reload the browser extension',
