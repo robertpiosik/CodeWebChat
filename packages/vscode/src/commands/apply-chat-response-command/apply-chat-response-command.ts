@@ -14,15 +14,12 @@ import { handle_intelligent_update } from './handlers/intelligent-update-handler
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { ApiProvidersManager } from '@/services/api-providers-manager'
-import { apply_git_patch } from './handlers/patch-handler'
+import { apply_git_patch } from './handlers/diff-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
-import { DiffPatch } from './utils/clipboard-parser/extract-diff-patches'
+import { Diff } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '@/view/backend/view-provider'
-import {
-  review_applied_changes,
-  code_review_promise_resolve
-} from './utils/review-applied-changes'
+import { review, code_review_promise_resolve } from './utils/review'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 
@@ -295,7 +292,7 @@ const handle_code_review_and_cleanup = async (params: {
   })
 
   try {
-    const review_result = await review_applied_changes({
+    const review_result = await review({
       original_states: params.original_states,
       view_provider: params.view_provider
     })
@@ -415,7 +412,7 @@ export const apply_chat_response_command = (
     }) => {
       if (code_review_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
-          'You have a review in progress...',
+          'A review is currently unfinished. Would you like to discard it?',
           { modal: true },
           'Apply Another Chat Response'
         )
@@ -580,10 +577,10 @@ export const apply_chat_response_command = (
           let success_count = 0
           let failure_count = 0
           let all_original_states: OriginalFileState[] = []
-          const failed_patches: DiffPatch[] = []
+          const failed_patches: Diff[] = []
           let any_patch_used_fallback = false
           const applied_patches: {
-            patch: DiffPatch
+            patch: Diff
             original_states: OriginalFileState[]
             used_fallback: boolean
           }[] = []

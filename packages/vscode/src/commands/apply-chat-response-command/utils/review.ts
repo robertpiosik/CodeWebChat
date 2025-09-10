@@ -271,7 +271,7 @@ const show_diff_with_actions = async (
   })
 }
 
-export const review_applied_changes = async (params: {
+export const review = async (params: {
   original_states: OriginalFileState[]
   view_provider?: ViewProvider
 }): Promise<{

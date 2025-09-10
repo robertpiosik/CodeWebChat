@@ -1,6 +1,6 @@
 import { Logger } from '@shared/utils/logger'
 
-export type DiffPatch = {
+export type Diff = {
   file_path: string
   content: string
   workspace_name?: string
@@ -46,7 +46,7 @@ const normalize_header_line = (line: string): string => {
 
 const process_collected_patch_lines = (
   patch_lines_array: string[]
-): DiffPatch | null => {
+): Diff | null => {
   const joined_patch_text_for_checks = patch_lines_array.join('\n')
   if (joined_patch_text_for_checks.trim() == '') return null
 
@@ -95,7 +95,7 @@ const process_collected_patch_lines = (
 
   content_str = content_str.trim()
 
-  const patch: DiffPatch = {
+  const patch: Diff = {
     file_path,
     content: ensure_newline_ending(content_str)
   }
@@ -107,8 +107,8 @@ const process_collected_patch_lines = (
   return patch
 }
 
-const extract_code_block_patches = (normalized_text: string): DiffPatch[] => {
-  const patches: DiffPatch[] = []
+const extract_code_block_patches = (normalized_text: string): Diff[] => {
+  const patches: Diff[] = []
   const lines = normalized_text.split('\n')
 
   // Parse from end to beginning to find code blocks
@@ -149,8 +149,8 @@ const extract_code_block_patches = (normalized_text: string): DiffPatch[] => {
   return patches
 }
 
-const parse_multiple_raw_patches = (all_lines: string[]): DiffPatch[] => {
-  const patches: DiffPatch[] = []
+const parse_multiple_raw_patches = (all_lines: string[]): Diff[] => {
+  const patches: Diff[] = []
   let current_patch_lines: string[] = []
 
   for (const line of all_lines) {
@@ -192,7 +192,7 @@ const parse_multiple_raw_patches = (all_lines: string[]): DiffPatch[] => {
   return patches
 }
 
-export const extract_diff_patches = (clipboard_text: string): DiffPatch[] => {
+export const extract_diffs = (clipboard_text: string): Diff[] => {
   const normalized_text = clipboard_text.replace(/\r\n/g, '\n')
   const lines = normalized_text.split('\n')
 

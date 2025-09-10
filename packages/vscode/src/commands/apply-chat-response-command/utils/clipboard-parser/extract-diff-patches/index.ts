@@ -1,1 +1,1 @@
-export * from './extract-diff-patches'
+export * from './extract-diffs'

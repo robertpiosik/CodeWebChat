@@ -1,4 +1,4 @@
-import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review-applied-changes'
+import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { FocusOnFileInReviewMessage } from '@/view/types/messages'
 

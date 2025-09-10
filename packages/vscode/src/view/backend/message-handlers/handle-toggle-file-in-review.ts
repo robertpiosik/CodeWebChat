@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { toggle_file_review_state } from '@/commands/apply-chat-response-command/utils/review-applied-changes'
+import { toggle_file_review_state } from '@/commands/apply-chat-response-command/utils/review'
 import { ViewProvider } from '@/view/backend/view-provider'
 import { ToggleFileInReviewMessage } from '@/view/types/messages'
 

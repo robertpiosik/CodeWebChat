@@ -1,6 +1,6 @@
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
-import { DiffPatch, extract_diff_patches } from './extract-diff-patches'
+import { Diff, extract_diffs } from './extract-diff-patches'
 
 export interface ClipboardFile {
   file_path: string
@@ -19,7 +19,7 @@ export interface ClipboardCodeCompletion {
 export interface ClipboardContent {
   type: 'files' | 'patches' | 'code-completion'
   files?: ClipboardFile[]
-  patches?: DiffPatch[]
+  patches?: Diff[]
   code_completion?: ClipboardCodeCompletion
 }
 
@@ -499,7 +499,7 @@ export const parse_response = (
     response.startsWith('--- ') ||
     response.startsWith('diff --git')
   ) {
-    const patches = extract_diff_patches(response)
+    const patches = extract_diffs(response)
     return {
       type: 'patches',
       patches
