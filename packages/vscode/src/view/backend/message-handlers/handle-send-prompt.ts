@@ -152,15 +152,6 @@ export const handle_send_prompt = async (params: {
       no_context: params.provider.web_mode == 'no-context'
     })
 
-    if (
-      !context_text &&
-      (params.provider.web_mode == 'edit-context' ||
-        params.provider.web_mode == 'ask')
-    ) {
-      vscode.window.showWarningMessage('Unable to work with empty context.')
-      return
-    }
-
     const chats = await Promise.all(
       resolved_preset_names.map(async (preset_name) => {
         let instructions = apply_preset_affixes_to_instruction({

@@ -1,8 +1,74 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
+import * as fs from 'fs'
+import * as path from 'path'
 import { get_git_repository } from '../../../utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
 
+function build_changes_xml(diff: string, cwd: string): string {
+  // Split diff into per-file sections. Each section starts with 'diff --git '.
+  const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
+
+  if (file_diffs.length == 0) {
+    return ''
+  }
+
+  let changes_content = ''
+
+  for (const file_diff_content of file_diffs) {
+    const full_file_diff = 'diff --git ' + file_diff_content
+    const lines = full_file_diff.split('\n')
+    const old_path_line = lines.find((l) => l.startsWith('--- a/'))
+    const new_path_line = lines.find((l) => l.startsWith('+++ b/'))
+
+    const old_path = old_path_line
+      ? old_path_line.substring('--- a/'.length)
+      : undefined
+    const new_path = new_path_line
+      ? new_path_line.substring('+++ b/'.length)
+      : undefined
+
+    let file_path: string | undefined
+    let is_deleted = false
+
+    if (new_path && new_path != '/dev/null') {
+      file_path = new_path
+    } else if (old_path && old_path != '/dev/null') {
+      file_path = old_path
+      if (new_path == '/dev/null') {
+        is_deleted = true
+      }
+    }
+
+    if (file_path) {
+      let file_content = ''
+      if (!is_deleted) {
+        const absolute_path = path.join(cwd, file_path)
+        try {
+          file_content = fs.readFileSync(absolute_path, 'utf-8')
+        } catch (e) {
+          if ((e as NodeJS.ErrnoException).code !== 'ENOENT') {
+            Logger.error({
+              function_name: 'build_changes_xml',
+              message: `Could not read file for diff: ${absolute_path}`,
+              data: e
+            })
+          }
+        }
+      }
+
+      changes_content += `<change path="${file_path}">\n`
+      changes_content += `<diff>\n<![CDATA[\n${full_file_diff}\n]]>\n</diff>\n`
+      changes_content += `<file>\n<![CDATA[\n${file_content}\n]]>\n</file>\n`
+      changes_content += `</change>\n`
+    }
+  }
+
+  if (changes_content) {
+    return `\n<changes>\n${changes_content}</changes>\n`
+  }
+  return ''
+}
 export const replace_changes_placeholder = async (params: {
   instruction: string
   after_context?: boolean
@@ -77,7 +143,7 @@ export const replace_changes_placeholder = async (params: {
         )
       }
 
-      const replacement_text = `\n<changes>\n<![CDATA[\n${diff}\n\n</changes>\n`
+      const replacement_text = build_changes_xml(diff, target_folder.uri.fsPath)
       return params.instruction.replace(
         new RegExp(`#Changes:${branch_spec}`, 'g'),
         replacement_text
@@ -134,7 +200,10 @@ export const replace_changes_placeholder = async (params: {
         )
       }
 
-      const replacement_text = `\n<changes>\n${diff}\n</changes>\n`
+      const replacement_text = build_changes_xml(
+        diff,
+        repository.rootUri.fsPath
+      )
       return params.instruction.replace(
         new RegExp(`#Changes:${branch_name}`, 'g'),
         replacement_text
