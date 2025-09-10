@@ -210,7 +210,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           >
             <div style={{ cursor: 'pointer' }}>
               <div style={{ pointerEvents: 'none' }}>
-                <select id="chatbot" value={chatbot}>
+                <select id="chatbot" value={chatbot} onChange={() => {}}>
                   <option value={chatbot}>{chatbot}</option>
                 </select>
               </div>
@@ -245,7 +245,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           >
             <div style={{ cursor: 'pointer' }}>
               <div style={{ pointerEvents: 'none' }}>
-                <select id="open-router-model" value={model}>
+                <select
+                  id="open-router-model"
+                  value={model || ''}
+                  onChange={() => {}}
+                >
                   {model ? (
                     <option value={model}>{model}</option>
                   ) : (
