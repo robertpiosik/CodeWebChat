@@ -4,7 +4,6 @@
 
 **Code Web Chat** is an easy-to-use, free and open-source (FOSS) AI coding tool that connects the editor with the web browser for its signature workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and 10+ more, hands-free! Once ready, apply the response with a single click.
 
-✅ **Batteries included**—code completions, commit messages, and more \
 ✅ **Save money**—free tiers and subscription-based billing \
 ✅ **Save time**—multi-file edits from a single prompt
 
@@ -19,11 +18,6 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 - Initialize chatbots—don't scrape responses
 - Free forever—a community effort
 - Privacy first—operates locally
-
-**CWC is for you if:**
-
-- you're a software engineer working on a large codebase
-- you're a student or hobbyist on a budget
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
