@@ -37,11 +37,6 @@ export const handle_copy_prompt = async (params: {
     (params.provider.home_view_type == HOME_VIEW_TYPES.API &&
       params.provider.api_mode == 'code-completions')
 
-  if (!is_in_code_completions_mode && !params.instructions.trim()) {
-    vscode.window.showWarningMessage('Cannot copy an empty prompt.')
-    return
-  }
-
   if (
     is_in_code_completions_mode &&
     active_editor &&
