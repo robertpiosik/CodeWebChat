@@ -2,10 +2,10 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://x.com/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Follow_on_X-@CodeWebChat-black" alt="Follow on X" /></a> <a href="https://reddit.com/r/CodeWebChat" target="_blank"><img src="https://img.shields.io/badge/Join_subreddit-r/CodeWebChat-orange" alt="Join subreddit /r/CodeWebChat" /></a> <a href="https://discord.com/invite/KJySXsrSX5" target="_blank"><img src="https://img.shields.io/badge/Chat-Discord-7289da" alt="Join Discord server" /></a>
 
-**Code Web Chat** is an easy to use, free and open-source (FOSS) AI coding tool with a signature web browser workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and more, hands-free! Once ready, apply the response with a single click.
+**Code Web Chat** is an easy-to-use, free and open-source (FOSS) AI coding tool that connects the editor with the web browser for its signature workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and more, hands-free! Once ready, apply the response with a single click.
 
-✅ **Save money** _free tiers and subscription-based billing_ \
-✅ **Save time** _multi-file edits from a single prompt_
+✅ **Save money**—free tiers and subscription-based billing \
+✅ **Save time**—multi-file edits from a single prompt
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor</a>, and other forks.
 
