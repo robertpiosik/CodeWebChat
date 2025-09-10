@@ -49,7 +49,7 @@ Install the Connector browser extension and never copy&paste again.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-For convenience and flexibility, the tool ships with must-have API tools. Use them with any OpenAI-API compatible provider.
+Use included API-based features with any OpenAI-API compatible provider and your own keys (BYOK).
 
 **🛠️ Code Completions** \
 Get accurate code at cursor from state-of-the-art reasoning models.
