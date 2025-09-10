@@ -177,6 +177,7 @@ export const parse_multiple_files = (params: {
   let is_first_content_line = false
   let current_workspace_name: string | undefined = undefined
   let xml_file_mode = false
+  let top_level_xml_file_mode = false
   let in_cdata = false
   let backtick_nesting_level = 0
 
@@ -185,17 +186,77 @@ export const parse_multiple_files = (params: {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
 
-    if (state == 'TEXT' && line.trim().startsWith('```')) {
-      state = 'CONTENT'
-      backtick_nesting_level = 1
-      current_workspace_name = undefined
-      current_file_name = ''
-      current_content = ''
-      is_first_content_line = true
-      xml_file_mode = false
-      in_cdata = false
-      continue
+    if (state == 'TEXT') {
+      if (line.trim().startsWith('```')) {
+        state = 'CONTENT'
+        backtick_nesting_level = 1
+        current_workspace_name = undefined
+        current_file_name = ''
+        current_content = ''
+        is_first_content_line = true
+        xml_file_mode = false
+        top_level_xml_file_mode = false
+        in_cdata = false
+        continue
+      } else if (line.trim().startsWith('<file')) {
+        const extracted_filename = extract_file_path_from_xml(line)
+        if (extracted_filename) {
+          state = 'CONTENT'
+          top_level_xml_file_mode = true
+          const { workspace_name, relative_path } = extract_workspace_and_path(
+            extracted_filename,
+            params.is_single_root_folder_workspace
+          )
+          current_file_name = relative_path
+          if (workspace_name) {
+            current_workspace_name = workspace_name
+          }
+          current_content = ''
+          continue
+        }
+      }
     } else if (state == 'CONTENT') {
+      if (top_level_xml_file_mode) {
+        if (line.trim().startsWith('</file>')) {
+          let final_content = current_content.trim()
+          const content_lines = final_content.split('\n')
+          if (
+            content_lines.length >= 2 &&
+            content_lines[0].trim().startsWith('```') &&
+            content_lines[content_lines.length - 1].trim() == '```'
+          ) {
+            final_content = content_lines.slice(1, -1).join('\n')
+          }
+
+          state = 'TEXT'
+
+          if (current_file_name && has_real_code(final_content)) {
+            const file_key = `${
+              current_workspace_name || ''
+            }:${current_file_name}`
+
+            if (files_map.has(file_key)) {
+              const existing_file = files_map.get(file_key)!
+              existing_file.content += '\n\n' + final_content
+            } else {
+              files_map.set(file_key, {
+                file_path: current_file_name,
+                content: final_content,
+                workspace_name: current_workspace_name
+              })
+            }
+          }
+
+          current_file_name = ''
+          current_content = ''
+          current_workspace_name = undefined
+          top_level_xml_file_mode = false
+        } else {
+          current_content += (current_content ? '\n' : '') + line
+        }
+        continue
+      }
+
       const trimmed_line = line.trim()
 
       // Handle nested backticks
@@ -339,9 +400,24 @@ export const parse_multiple_files = (params: {
 
   // Handle edge case: last file in clipboard doesn't have closing ```
   if (state == 'CONTENT' && current_file_name) {
-    const cleaned_content = current_content
+    let cleaned_content = current_content
 
-    if (has_real_code(cleaned_content)) {
+    if (top_level_xml_file_mode) {
+      const final_content = current_content.trim()
+      const content_lines = final_content.split('\n')
+      if (
+        content_lines.length >= 2 &&
+        content_lines[0].trim().startsWith('```') &&
+        content_lines[content_lines.length - 1].trim() == '```'
+      ) {
+        cleaned_content = content_lines.slice(1, -1).join('\n')
+      } else {
+        cleaned_content = final_content
+      }
+    }
+
+    // Add the collected file if we have a valid filename and it has real code
+    if (current_file_name && has_real_code(cleaned_content)) {
       const file_key = `${current_workspace_name || ''}:${current_file_name}`
 
       if (files_map.has(file_key)) {
