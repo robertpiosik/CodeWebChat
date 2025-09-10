@@ -303,11 +303,7 @@ export const handle_intelligent_update = async (params: {
                 file_content: original_content_for_api,
                 instruction: file.content,
                 cancel_token: cancel_token_source.token,
-                on_chunk: (
-                  formatted_tokens,
-                  tokens_per_second,
-                  total_tokens
-                ) => {
+                on_chunk: (_, tokens_per_second, total_tokens) => {
                   if (
                     largest_file &&
                     file.file_path == largest_file.path &&

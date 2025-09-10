@@ -77,7 +77,7 @@ export const replace_changes_placeholder = async (params: {
         )
       }
 
-      const replacement_text = `\n<changes>\n${diff}\n</changes>\n`
+      const replacement_text = `\n<changes>\n<![CDATA[\n${diff}\n\n</changes>\n`
       return params.instruction.replace(
         new RegExp(`#Changes:${branch_spec}`, 'g'),
         replacement_text

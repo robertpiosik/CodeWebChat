@@ -443,13 +443,21 @@ const perform_code_completion = async (params: {
     vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: 'Waiting for code completion...',
+        title: 'Waiting for code completion',
         cancellable: true
       },
-      async (_, token) => {
+      async (progress, token) => {
         token.onCancellationRequested(() => {
           cancel_token_source.cancel('User cancelled the operation')
         })
+
+        let wait_time = 0
+        const wait_timer = setInterval(() => {
+          progress.report({
+            message: `${(wait_time / 10).toFixed(1)}s`
+          })
+          wait_time++
+        }, 100)
 
         try {
           const completion = await make_api_request({
@@ -484,6 +492,7 @@ const perform_code_completion = async (params: {
           })
         } finally {
           cursor_listener.dispose()
+          clearInterval(wait_timer)
         }
       }
     )

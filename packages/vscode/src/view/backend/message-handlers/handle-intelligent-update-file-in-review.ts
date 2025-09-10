@@ -21,7 +21,7 @@ const get_default_intelligent_update_config = async (
   const intelligent_update_configs =
     await api_providers_manager.get_intelligent_update_tool_configs()
 
-  if (intelligent_update_configs.length === 0) {
+  if (intelligent_update_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings.intelligentUpdate')
     vscode.window.showInformationMessage(
       'No "Intelligent Update" configurations found. Please add one in the settings.'
@@ -169,6 +169,18 @@ export const handle_intelligent_update_file_in_review = async (
       let previous_file_progress = 0
       const content_size = file_state.content.length
 
+      let wait_time = 0
+      let has_started_receiving = false
+
+      const wait_timer = setInterval(() => {
+        if (!has_started_receiving) {
+          progress.report({
+            message: `${(wait_time / 10).toFixed(1)}s`
+          })
+          wait_time++
+        }
+      }, 100)
+
       try {
         const updated_content = await process_file({
           endpoint_url: endpoint_url,
@@ -180,7 +192,12 @@ export const handle_intelligent_update_file_in_review = async (
           file_content: file_state.content,
           instruction: instructions,
           cancel_token: cancel_token_source.token,
-          on_chunk: (_, tokens_per_second, total_tokens) => {
+          on_chunk: (formatted_tokens, tokens_per_second, total_tokens) => {
+            if (!has_started_receiving) {
+              has_started_receiving = true
+              clearInterval(wait_timer)
+            }
+
             const estimated_total_tokens = Math.ceil(content_size / 4)
             if (estimated_total_tokens > 0) {
               previous_file_progress = file_progress
@@ -191,7 +208,7 @@ export const handle_intelligent_update_file_in_review = async (
               const increment = file_progress - previous_file_progress
               progress.report({
                 increment: increment > 0 ? increment : 0,
-                message: `~${tokens_per_second} tokens/s`
+                message: `streamed ${formatted_tokens} tokens at ~${tokens_per_second} tokens/s`
               })
             }
           }
@@ -233,6 +250,7 @@ export const handle_intelligent_update_file_in_review = async (
           )
         }
       } finally {
+        clearInterval(wait_timer)
         const index =
           provider.intelligent_update_cancel_token_sources.indexOf(
             cancel_token_source

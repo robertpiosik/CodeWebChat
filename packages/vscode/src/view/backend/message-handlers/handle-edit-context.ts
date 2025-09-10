@@ -463,7 +463,7 @@ export const perform_context_editing = async (params: {
               }
 
               progress.report({
-                message: `received ${formatted_tokens} tokens at ~${formatted_tokens_per_second} tokens/s`
+                message: `streamed ${formatted_tokens} tokens at ~${formatted_tokens_per_second} tokens/s`
               })
             }
           })
