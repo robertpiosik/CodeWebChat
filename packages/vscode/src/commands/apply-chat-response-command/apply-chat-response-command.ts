@@ -414,9 +414,19 @@ export const apply_chat_response_command = (
       }
     }) => {
       if (code_review_promise_resolve) {
-        code_review_promise_resolve({ accepted_files: [] })
-        if (ongoing_review_cleanup_promise) {
-          await ongoing_review_cleanup_promise
+        const choice = await vscode.window.showWarningMessage(
+          'You have a review in progress...',
+          { modal: true },
+          'Apply Another Chat Response'
+        )
+
+        if (choice == 'Apply Another Chat Response') {
+          code_review_promise_resolve({ accepted_files: [] })
+          if (ongoing_review_cleanup_promise) {
+            await ongoing_review_cleanup_promise
+          }
+        } else {
+          return
         }
       }
 
