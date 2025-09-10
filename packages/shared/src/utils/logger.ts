@@ -9,10 +9,7 @@ export namespace Logger {
     const function_name = params.function_name
       ? `[${params.function_name}] `
       : ''
-    console.log(
-      `${LOG_PREFIX}${function_name}${params.message}`,
-      params.data ? params.data : undefined
-    )
+    console.log(`${LOG_PREFIX}${function_name}${params.message}`, params.data)
   }
 
   export function warn(params: {
