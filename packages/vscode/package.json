@@ -1244,7 +1244,7 @@
         "codeWebChat.promptTemplatesForCodeAtCursor": {
           "type": "array",
           "default": [],
-          "description": "Prompt templates for 'Code at cursor' mode.",
+          "description": "Prompt templates for \"Code at cursor\" mode.",
           "items": {
             "type": "object",
             "properties": {
