@@ -753,7 +753,7 @@ export const apply_chat_response_command = (
           return null
         } else {
           if (!clipboard_content.files || clipboard_content.files.length == 0) {
-            vscode.window.showErrorMessage(
+            vscode.window.showWarningMessage(
               'Unable to find valid code blocks in the clipboard.'
             )
             return null

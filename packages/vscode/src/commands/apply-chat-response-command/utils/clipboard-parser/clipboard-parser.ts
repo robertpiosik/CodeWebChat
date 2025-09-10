@@ -495,15 +495,17 @@ export const parse_response = (
 
   if (
     response.includes('```diff') ||
-    response.includes('```patch') ||
     response.startsWith('--- ') ||
     response.startsWith('diff --git')
   ) {
     const patches = extract_diffs(response)
-    return {
-      type: 'patches',
-      patches
+    if (patches.length) {
+      return {
+        type: 'patches',
+        patches
+      }
     }
+    // Fallback to multiple files...
   }
 
   const files = parse_multiple_files({
