@@ -62,7 +62,8 @@ export const CHATBOTS = {
     supports_thinking_budget: false,
     default_system_instructions: '',
     supported_options: {
-      temporary: 'Temporary'
+      temporary: 'Temporary',
+      'think-longer': 'Think longer (free plans)'
     },
     default_top_p: 0,
     models: {}
