@@ -307,23 +307,23 @@ export const perform_context_editing = async (params: {
   let post_context_instructions = instructions
 
   if (pre_context_instructions.includes('#Changes:')) {
-    pre_context_instructions = await replace_changes_placeholder(
-      pre_context_instructions
-    )
+    pre_context_instructions = await replace_changes_placeholder({
+      instruction: pre_context_instructions
+    })
   }
 
   if (pre_context_instructions.includes('#SavedContext:')) {
-    pre_context_instructions = await replace_saved_context_placeholder(
-      pre_context_instructions,
-      params.context,
-      params.file_tree_provider
-    )
-    post_context_instructions = await replace_saved_context_placeholder(
-      post_context_instructions,
-      params.context,
-      params.file_tree_provider,
-      true
-    )
+    pre_context_instructions = await replace_saved_context_placeholder({
+      instruction: pre_context_instructions,
+      context: params.context,
+      workspace_provider: params.file_tree_provider
+    })
+    post_context_instructions = await replace_saved_context_placeholder({
+      instruction: post_context_instructions,
+      context: params.context,
+      workspace_provider: params.file_tree_provider,
+      just_opening_tag: true
+    })
   }
 
   const additional_paths = extract_file_paths_from_instruction(instructions)
@@ -396,7 +396,6 @@ export const perform_context_editing = async (params: {
   // Use instructions placement setting to determine message structure
   const instructions_placement =
     edit_context_config.instructions_placement || 'above-and-below'
-
   let content: string
   if (instructions_placement === 'below-only') {
     // Place instructions only below context for better caching

@@ -71,15 +71,15 @@ export const handle_preview_preset = async (
         ? await files_collector.collect_files()
         : ''
 
-    let instructions = apply_preset_affixes_to_instruction(
-      current_instructions,
-      message.preset.name,
-      provider.get_presets_config_key(),
-      {
+    let instructions = apply_preset_affixes_to_instruction({
+      instruction: current_instructions,
+      preset_name: message.preset.name,
+      presets_config_key: provider.get_presets_config_key(),
+      override_affixes: {
         promptPrefix: message.preset.prompt_prefix,
         promptSuffix: message.preset.prompt_suffix
       }
-    )
+    })
 
     if (active_editor && !active_editor.selection.isEmpty) {
       if (instructions.includes('#Selection')) {
@@ -91,23 +91,27 @@ export const handle_preview_preset = async (
     let post_context_instructions = instructions
 
     if (pre_context_instructions.includes('#Changes:')) {
-      pre_context_instructions = await replace_changes_placeholder(
-        pre_context_instructions
-      )
+      pre_context_instructions = await replace_changes_placeholder({
+        instruction: pre_context_instructions
+      })
+      post_context_instructions = await replace_changes_placeholder({
+        instruction: post_context_instructions,
+        after_context: true
+      })
     }
 
     if (pre_context_instructions.includes('#SavedContext:')) {
-      pre_context_instructions = await replace_saved_context_placeholder(
-        pre_context_instructions,
-        provider.context,
-        provider.workspace_provider
-      )
-      post_context_instructions = await replace_saved_context_placeholder(
-        post_context_instructions,
-        provider.context,
-        provider.workspace_provider,
-        true
-      )
+      pre_context_instructions = await replace_saved_context_placeholder({
+        instruction: pre_context_instructions,
+        context: provider.context,
+        workspace_provider: provider.workspace_provider
+      })
+      post_context_instructions = await replace_saved_context_placeholder({
+        instruction: post_context_instructions,
+        context: provider.context,
+        workspace_provider: provider.workspace_provider,
+        just_opening_tag: true
+      })
     }
 
     if (provider.web_mode == 'edit-context') {

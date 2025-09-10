@@ -24,11 +24,11 @@ export const handle_copy_prompt = async (params: {
 
   let final_instruction = params.instructions
   if (params.preset_name !== undefined) {
-    final_instruction = apply_preset_affixes_to_instruction(
-      params.instructions,
-      params.preset_name,
-      params.provider.get_presets_config_key()
-    )
+    final_instruction = apply_preset_affixes_to_instruction({
+      instruction: params.instructions,
+      preset_name: params.preset_name,
+      presets_config_key: params.provider.get_presets_config_key()
+    })
   }
 
   const is_in_code_completions_mode =
@@ -102,22 +102,28 @@ export const handle_copy_prompt = async (params: {
     let pre_context_instructions = instructions
     let post_context_instructions = instructions
 
-    if (instructions.includes('@Changes:')) {
-      pre_context_instructions = await replace_changes_placeholder(instructions)
+    if (instructions.includes('#Changes:')) {
+      pre_context_instructions = await replace_changes_placeholder({
+        instruction: pre_context_instructions
+      })
+      post_context_instructions = await replace_changes_placeholder({
+        instruction: post_context_instructions,
+        after_context: true
+      })
     }
 
-    if (instructions.includes('@SavedContext:')) {
-      pre_context_instructions = await replace_saved_context_placeholder(
-        pre_context_instructions,
-        params.provider.context,
-        params.provider.workspace_provider
-      )
-      post_context_instructions = await replace_saved_context_placeholder(
-        post_context_instructions,
-        params.provider.context,
-        params.provider.workspace_provider,
-        true
-      )
+    if (instructions.includes('#SavedContext:')) {
+      pre_context_instructions = await replace_saved_context_placeholder({
+        instruction: pre_context_instructions,
+        context: params.provider.context,
+        workspace_provider: params.provider.workspace_provider
+      })
+      post_context_instructions = await replace_saved_context_placeholder({
+        instruction: post_context_instructions,
+        context: params.provider.context,
+        workspace_provider: params.provider.workspace_provider,
+        just_opening_tag: true
+      })
     }
 
     if (params.provider.web_mode == 'edit-context') {

@@ -3,17 +3,25 @@ import { execSync } from 'child_process'
 import { get_git_repository } from '../../../utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
 
-export const replace_changes_placeholder = async (
+export const replace_changes_placeholder = async (params: {
   instruction: string
-): Promise<string> => {
-  const matches = instruction.match(
+  after_context?: boolean
+}): Promise<string> => {
+  const matches = params.instruction.match(
     /#Changes:([^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?)/
   )
   if (!matches) {
-    return instruction
+    return params.instruction
   }
 
   const branch_spec = matches[1]
+
+  if (params.after_context) {
+    return params.instruction.replace(
+      new RegExp(`#Changes:${branch_spec}`, 'g'),
+      '<changes/>'
+    )
+  }
 
   const multi_root_match = branch_spec.match(/^([^/]+)\/(.+)$/)
 
@@ -23,7 +31,10 @@ export const replace_changes_placeholder = async (
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders) {
       vscode.window.showErrorMessage('No workspace folders found.')
-      return instruction.replace(new RegExp(`#Changes:${branch_spec}`, 'g'), '')
+      return params.instruction.replace(
+        new RegExp(`#Changes:${branch_spec}`, 'g'),
+        ''
+      )
     }
 
     const target_folder = workspace_folders.find(
@@ -33,7 +44,10 @@ export const replace_changes_placeholder = async (
       vscode.window.showErrorMessage(
         `Workspace folder "${folder_name}" not found.`
       )
-      return instruction.replace(new RegExp(`#Changes:${branch_spec}`, 'g'), '')
+      return params.instruction.replace(
+        new RegExp(`#Changes:${branch_spec}`, 'g'),
+        ''
+      )
     }
 
     try {
@@ -57,14 +71,14 @@ export const replace_changes_placeholder = async (
         vscode.window.showInformationMessage(
           `No changes found between current branch and ${branch_name} in ${folder_name}.`
         )
-        return instruction.replace(
+        return params.instruction.replace(
           new RegExp(`#Changes:${branch_spec}`, 'g'),
           ''
         )
       }
 
-      const replacement_text = `\n\`\`\`diff\n${diff}\n\`\`\`\n`
-      return instruction.replace(
+      const replacement_text = `\n<changes>\n${diff}\n</changes>\n`
+      return params.instruction.replace(
         new RegExp(`#Changes:${branch_spec}`, 'g'),
         replacement_text
       )
@@ -77,14 +91,20 @@ export const replace_changes_placeholder = async (
         message: `Error getting diff from branch ${branch_name} in folder ${folder_name}`,
         data: error
       })
-      return instruction.replace(new RegExp(`#Changes:${branch_spec}`, 'g'), '')
+      return params.instruction.replace(
+        new RegExp(`#Changes:${branch_spec}`, 'g'),
+        ''
+      )
     }
   } else {
     const branch_name = branch_spec
     const repository = get_git_repository()
     if (!repository) {
       vscode.window.showErrorMessage('No Git repository found.')
-      return instruction.replace(new RegExp(`#Changes:${branch_name}`, 'g'), '')
+      return params.instruction.replace(
+        new RegExp(`#Changes:${branch_name}`, 'g'),
+        ''
+      )
     }
 
     try {
@@ -108,14 +128,14 @@ export const replace_changes_placeholder = async (
         vscode.window.showInformationMessage(
           `No changes found between current branch and ${branch_name}.`
         )
-        return instruction.replace(
+        return params.instruction.replace(
           new RegExp(`#Changes:${branch_name}`, 'g'),
           ''
         )
       }
 
-      const replacement_text = `\n\`\`\`diff\n${diff}\n\`\`\`\n`
-      return instruction.replace(
+      const replacement_text = `\n<changes>\n${diff}\n</changes>\n`
+      return params.instruction.replace(
         new RegExp(`#Changes:${branch_name}`, 'g'),
         replacement_text
       )
@@ -128,7 +148,10 @@ export const replace_changes_placeholder = async (
         message: `Error getting diff from branch ${branch_name}`,
         data: error
       })
-      return instruction.replace(new RegExp(`#Changes:${branch_name}`, 'g'), '')
+      return params.instruction.replace(
+        new RegExp(`#Changes:${branch_name}`, 'g'),
+        ''
+      )
     }
   }
 }

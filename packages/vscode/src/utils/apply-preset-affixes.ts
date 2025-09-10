@@ -1,17 +1,20 @@
 import { ConfigPresetFormat } from '@/view/backend/utils/preset-format-converters'
 import * as vscode from 'vscode'
 
-export function apply_preset_affixes_to_instruction(
-  instruction: string,
-  preset_name: string,
-  presets_config_key: string,
+export function apply_preset_affixes_to_instruction(params: {
+  instruction: string
+  preset_name: string
+  presets_config_key: string
   override_affixes?: { promptPrefix?: string; promptSuffix?: string }
-): string {
+}): string {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
+  const all_presets = config.get<ConfigPresetFormat[]>(
+    params.presets_config_key,
+    []
+  )
 
   const preset_index = all_presets.findIndex(
-    (preset) => preset.name === preset_name
+    (preset) => preset.name === params.preset_name
   )
 
   const preset = preset_index !== -1 ? all_presets[preset_index] : undefined
@@ -29,9 +32,9 @@ export function apply_preset_affixes_to_instruction(
   }
 
   const current_preset_prefix =
-    override_affixes?.promptPrefix ?? preset?.promptPrefix
+    params.override_affixes?.promptPrefix ?? preset?.promptPrefix
   const current_preset_suffix =
-    override_affixes?.promptSuffix ?? preset?.promptSuffix
+    params.override_affixes?.promptSuffix ?? preset?.promptSuffix
 
   const prefixes: string[] = [
     grouping_preset?.promptPrefix,
@@ -46,7 +49,7 @@ export function apply_preset_affixes_to_instruction(
   const final_prefix = prefixes.join(' ')
   const final_suffix = suffixes.join(' ')
 
-  let result = instruction
+  let result = params.instruction
   if (final_prefix) {
     result = `${final_prefix} ${result}`
   }

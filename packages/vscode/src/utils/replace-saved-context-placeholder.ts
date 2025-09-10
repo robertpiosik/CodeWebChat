@@ -75,15 +75,15 @@ const get_context = (
   return undefined
 }
 
-export const replace_saved_context_placeholder = async (
-  instruction: string,
-  context: vscode.ExtensionContext,
-  workspace_provider: WorkspaceProvider,
-  just_opening_tag: boolean = false
-): Promise<string> => {
+export const replace_saved_context_placeholder = async (params: {
+  instruction: string
+  context: vscode.ExtensionContext
+  workspace_provider: WorkspaceProvider
+  just_opening_tag?: boolean
+}): Promise<string> => {
   const regex = /@SavedContext:(WorkspaceState|JSON)\s*"([^"]+)"/g
-  const matches = [...instruction.matchAll(regex)]
-  let result_instruction = instruction
+  const matches = [...params.instruction.matchAll(regex)]
+  let result_instruction = params.instruction
   const replacements = new Map<string, string>()
 
   for (const match of matches) {
@@ -93,13 +93,18 @@ export const replace_saved_context_placeholder = async (
     const source = match[1] as 'WorkspaceState' | 'JSON'
     const name = match[2]
 
-    const workspace_root = workspace_provider.getWorkspaceRoot()
+    const workspace_root = params.workspace_provider.getWorkspaceRoot()
     if (!workspace_root) {
       vscode.window.showErrorMessage('No workspace root found.')
       continue
     }
 
-    const saved_context = get_context(source, name, context, workspace_root)
+    const saved_context = get_context(
+      source,
+      name,
+      params.context,
+      workspace_root
+    )
 
     if (!saved_context) {
       vscode.window.showWarningMessage(
@@ -138,7 +143,7 @@ export const replace_saved_context_placeholder = async (
 
     const resolved_paths = await resolve_glob_patterns(
       absolute_paths,
-      workspace_provider
+      params.workspace_provider
     )
 
     if (resolved_paths.length == 0) {
@@ -150,14 +155,14 @@ export const replace_saved_context_placeholder = async (
     }
 
     let replacement_text: string
-    if (just_opening_tag) {
+    if (params.just_opening_tag) {
       replacement_text = `<files name="${name}">`
     } else {
       let context_text = ''
       for (const file_path of resolved_paths) {
         context_text += await get_file_content_as_xml(
           file_path,
-          workspace_provider
+          params.workspace_provider
         )
       }
 

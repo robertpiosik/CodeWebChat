@@ -163,11 +163,11 @@ export const handle_send_prompt = async (params: {
 
     const chats = await Promise.all(
       resolved_preset_names.map(async (preset_name) => {
-        let instructions = apply_preset_affixes_to_instruction(
-          current_instructions,
-          preset_name,
-          params.provider.get_presets_config_key()
-        )
+        let instructions = apply_preset_affixes_to_instruction({
+          instruction: current_instructions,
+          preset_name: preset_name,
+          presets_config_key: params.provider.get_presets_config_key()
+        })
 
         if (editor && !editor.selection.isEmpty) {
           if (instructions.includes('#Selection')) {
@@ -178,23 +178,27 @@ export const handle_send_prompt = async (params: {
         let pre_context_instructions = instructions
         let post_context_instructions = instructions
         if (pre_context_instructions.includes('#Changes:')) {
-          pre_context_instructions = await replace_changes_placeholder(
-            pre_context_instructions
-          )
+          pre_context_instructions = await replace_changes_placeholder({
+            instruction: pre_context_instructions
+          })
+          post_context_instructions = await replace_changes_placeholder({
+            instruction: post_context_instructions,
+            after_context: true
+          })
         }
 
         if (pre_context_instructions.includes('#SavedContext:')) {
-          pre_context_instructions = await replace_saved_context_placeholder(
-            pre_context_instructions,
-            params.provider.context,
-            params.provider.workspace_provider
-          )
-          post_context_instructions = await replace_saved_context_placeholder(
-            post_context_instructions,
-            params.provider.context,
-            params.provider.workspace_provider,
-            true
-          )
+          pre_context_instructions = await replace_saved_context_placeholder({
+            instruction: pre_context_instructions,
+            context: params.provider.context,
+            workspace_provider: params.provider.workspace_provider
+          })
+          post_context_instructions = await replace_saved_context_placeholder({
+            instruction: post_context_instructions,
+            context: params.provider.context,
+            workspace_provider: params.provider.workspace_provider,
+            just_opening_tag: true
+          })
         }
 
         if (params.provider.web_mode == 'edit-context') {
@@ -232,16 +236,15 @@ export const handle_send_prompt = async (params: {
   )
 }
 
-async function show_preset_quick_pick(
-  presets: ConfigPresetFormat[],
-  context: vscode.ExtensionContext,
-  mode: WebMode,
+async function show_preset_quick_pick(params: {
+  presets: ConfigPresetFormat[]
+  context: vscode.ExtensionContext
+  mode: WebMode
   provider: ViewProvider
-): Promise<string[] | null> {
-  const last_selected_item = context.workspaceState.get<string | undefined>(
-    get_last_selected_preset_key(mode),
-    undefined
-  )
+}): Promise<string[] | null> {
+  const last_selected_item = params.context.workspaceState.get<
+    string | undefined
+  >(get_last_selected_preset_key(params.mode), undefined)
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { name?: string }
@@ -253,7 +256,7 @@ async function show_preset_quick_pick(
     { label: '', kind: vscode.QuickPickItemKind.Separator }
   ]
 
-  if (presets[0]?.chatbot !== undefined) {
+  if (params.presets[0]?.chatbot !== undefined) {
     items.push({
       label: 'Ungrouped',
       kind: vscode.QuickPickItemKind.Separator
@@ -261,7 +264,7 @@ async function show_preset_quick_pick(
   }
 
   items.push(
-    ...presets.map((preset) => {
+    ...params.presets.map((preset) => {
       if (!preset.chatbot) {
         const is_unnamed_group =
           !preset.name || /^\(\d+\)$/.test(preset.name.trim())
@@ -316,13 +319,13 @@ async function show_preset_quick_pick(
 
       if (selected && selected.name !== undefined) {
         const selected_name = selected.name
-        context.workspaceState.update(
-          get_last_selected_preset_key(mode),
+        params.context.workspaceState.update(
+          get_last_selected_preset_key(params.mode),
           selected_name
         )
-        provider.send_message({
+        params.provider.send_message({
           command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
-          mode,
+          mode: params.mode,
           name: selected_name
         })
         resolve([selected_name])
@@ -857,12 +860,12 @@ async function resolve_presets(params: {
     }
 
     // choice == PRESET
-    const preset_result = await show_preset_quick_pick(
-      all_presets,
-      params.context,
-      params.provider.web_mode,
-      params.provider
-    )
+    const preset_result = await show_preset_quick_pick({
+      presets: all_presets,
+      context: params.context,
+      mode: params.provider.web_mode,
+      provider: params.provider
+    })
     if (preset_result === null) {
       continue
     }
