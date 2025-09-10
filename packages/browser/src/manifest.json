@@ -3,8 +3,8 @@
   "author": "Robert Piosik",
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
-  "description": "Initialize 15+ free chatbots with your code and instructions. Parse websites into markdown to include in context.",
-  "version": "1.37.0",
+  "description": "Connect your editor with free chatbots. Include websites in context.",
+  "version": "1.38.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",

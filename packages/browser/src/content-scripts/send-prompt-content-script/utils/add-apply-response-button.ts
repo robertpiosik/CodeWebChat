@@ -9,7 +9,6 @@ import {
   apply_chat_response_button_style,
   set_button_disabled_state
 } from './apply-response-styles'
-import { is_eligible_code_block } from './is-eligible-code-block'
 import { show_response_ready_notification } from './show-response-ready-notification'
 
 export function add_apply_response_button(params: {
@@ -37,20 +36,6 @@ export function add_apply_response_button(params: {
     })
     return
   }
-
-  const code_blocks = params.get_code_blocks(chat_turn)
-  let has_eligible_block = false
-  for (const code_block of Array.from(code_blocks)) {
-    const code = params.get_code_from_block
-      ? params.get_code_from_block(code_block)
-      : code_block.textContent
-    const first_line_text = code?.split('\n')[0]
-    if (first_line_text && is_eligible_code_block(first_line_text)) {
-      has_eligible_block = true
-      break
-    }
-  }
-  if (!has_eligible_block) return
 
   const apply_response_button = document.createElement('button')
   apply_response_button.textContent = apply_response_button_text

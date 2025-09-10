@@ -412,7 +412,7 @@ export const apply_chat_response_command = (
     }) => {
       if (code_review_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
-          'A review is currently unfinished. Would you like to discard it?',
+          'A review is currently ongoing. Would you like to discard it?',
           { modal: true },
           'Apply Another Chat Response'
         )
@@ -422,6 +422,7 @@ export const apply_chat_response_command = (
           if (ongoing_review_cleanup_promise) {
             await ongoing_review_cleanup_promise
           }
+          await new Promise((r) => setTimeout(r, 500)) // Wait for all fileystem operation to finish
         } else {
           return
         }
