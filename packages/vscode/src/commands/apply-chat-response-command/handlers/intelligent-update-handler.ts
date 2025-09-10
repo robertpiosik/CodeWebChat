@@ -182,6 +182,18 @@ export const handle_intelligent_update = async (params: {
       let largest_file_progress = 0
       let previous_largest_file_progress = 0
 
+      let wait_time = 0
+      let has_started_receiving = false
+
+      const wait_timer = setInterval(() => {
+        if (!has_started_receiving) {
+          progress.report({
+            message: `${(wait_time / 10).toFixed(1)}s`
+          })
+          wait_time++
+        }
+      }, 100)
+
       try {
         // Pre-scan existing files to find largest and store original states
         for (const file of existing_files) {
@@ -303,12 +315,21 @@ export const handle_intelligent_update = async (params: {
                 file_content: original_content_for_api,
                 instruction: file.content,
                 cancel_token: cancel_token_source.token,
-                on_chunk: (_, tokens_per_second, total_tokens) => {
+                on_chunk: (
+                  formatted_tokens,
+                  tokens_per_second,
+                  total_tokens
+                ) => {
                   if (
                     largest_file &&
                     file.file_path == largest_file.path &&
                     file.workspace_name == largest_file.workspaceName
                   ) {
+                    if (!has_started_receiving) {
+                      has_started_receiving = true
+                      clearInterval(wait_timer)
+                    }
+
                     const estimated_total_tokens = Math.ceil(
                       largest_file.size / 4
                     )
@@ -324,7 +345,7 @@ export const handle_intelligent_update = async (params: {
                         largest_file_progress - previous_largest_file_progress
                       progress.report({
                         increment: increment > 0 ? increment : 0,
-                        message: `~${tokens_per_second} tokens/s`
+                        message: `streamed ${formatted_tokens} tokens at ~${tokens_per_second} tokens/s`
                       })
                     }
                   }
@@ -406,6 +427,8 @@ export const handle_intelligent_update = async (params: {
             `An error occurred during processing: ${error.message}`
           )
         }
+      } finally {
+        clearInterval(wait_timer)
       }
     }
   )
