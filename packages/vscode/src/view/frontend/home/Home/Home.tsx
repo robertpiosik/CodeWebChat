@@ -1,7 +1,8 @@
-import styles from './Intro.module.scss'
+import styles from './Home.module.scss'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 import { Enter } from '@ui/components/editor/Enter'
-import { BuyMeACoffee } from '@ui/components/editor/BuyMeACoffee'
+import { BuyMeACoffeeButton } from '@ui/components/editor/BuyMeACoffeeButton'
+import { Donations } from '@ui/components/editor/Donations'
 import { Icon } from '@ui/components/editor/Icon'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
@@ -15,7 +16,7 @@ type Props = {
   on_toggle_donations_visibility: () => void
 }
 
-export const Intro: React.FC<Props> = (props) => {
+export const Home: React.FC<Props> = (props) => {
   const { donations, is_fetching, donations_fetched_once } =
     use_latest_donations(props.is_active, props.are_donations_visible)
 
@@ -41,16 +42,18 @@ export const Intro: React.FC<Props> = (props) => {
                 description="Send prompt with an API provider"
                 on_click={props.on_api_call}
               />
-              <BuyMeACoffee
-                username="robertpiosik"
-                donations={donations}
-                is_fetching={is_fetching}
-                are_donations_visible={props.are_donations_visible}
-                donations_fetched_once={donations_fetched_once}
-                on_toggle_donations_visibility={
-                  props.on_toggle_donations_visibility
-                }
-              />
+              <div className={styles['top__donations']}>
+                <BuyMeACoffeeButton username="robertpiosik" />
+                <Donations
+                  donations={donations}
+                  is_fetching={is_fetching}
+                  are_donations_visible={props.are_donations_visible}
+                  donations_fetched_once={donations_fetched_once}
+                  on_toggle_donations_visibility={
+                    props.on_toggle_donations_visibility
+                  }
+                />
+              </div>
             </div>
           </div>
 

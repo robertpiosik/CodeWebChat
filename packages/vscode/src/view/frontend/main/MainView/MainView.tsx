@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import styles from './HomeView.module.scss'
+import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/Configurations'
 import { Presets as UiPresets } from '@ui/components/editor/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/ChatInput'
@@ -24,7 +24,7 @@ type Props = {
     show_quick_pick?: boolean
   }) => void
   copy_to_clipboard: (preset_name?: string) => void
-  on_show_intro: () => void
+  on_show_home: () => void
   on_search_click: () => void
   on_create_preset: () => void
   on_at_sign_click: () => void
@@ -85,7 +85,7 @@ const api_mode_labels: Record<ApiMode, string> = {
   'code-completions': 'Code at cursor'
 }
 
-export const HomeView: React.FC<Props> = (props) => {
+export const MainView: React.FC<Props> = (props) => {
   // We need this because we can't use overflow: hidden
   // due to absolutely positioned dropdown menu.
   const [dropdown_max_width, set_dropdown_max_width] = useState<
@@ -222,7 +222,7 @@ export const HomeView: React.FC<Props> = (props) => {
             <div className={styles.top__left} ref={top_left_ref}>
               <IconButton
                 codicon_icon="chevron-left"
-                on_click={props.on_show_intro}
+                on_click={props.on_show_home}
                 title="Return to Home"
               />
               <button
@@ -524,7 +524,7 @@ export const HomeView: React.FC<Props> = (props) => {
                 } as React.CSSProperties
               }
             >
-              {i % 2 == 0 ? '❤️' : '🙏'}
+              ❤️
             </span>
           ))}
       </div>

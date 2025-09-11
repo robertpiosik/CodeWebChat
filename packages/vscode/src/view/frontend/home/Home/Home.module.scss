@@ -50,6 +50,12 @@
     gap: var(--padding-8px);
     width: 100%;
   }
+
+  &__donations {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-14px);
+  }
 }
 
 .bottom {

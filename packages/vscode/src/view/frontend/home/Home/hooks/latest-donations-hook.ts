@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-export type Donation = {
+type Donation = {
   supporter_name: string
   support_coffees: number
   support_note: string

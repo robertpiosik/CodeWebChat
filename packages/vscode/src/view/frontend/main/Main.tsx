@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { HomeView } from './HomeView'
+import { MainView } from './MainView'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import { HOME_VIEW_TYPES, HomeViewType } from '@/view/types/home-view-type'
@@ -16,7 +16,7 @@ import { post_message } from '../utils/post_message'
 type Props = {
   vscode: any
   on_preset_edit: (preset: Preset) => void
-  on_show_intro: () => void
+  on_show_home: () => void
   is_connected: boolean
   ask_instructions: string
   edit_instructions: string
@@ -38,7 +38,7 @@ type Props = {
   chat_input_focus_key: number
 }
 
-export const Home: React.FC<Props> = (props) => {
+export const Main: React.FC<Props> = (props) => {
   const [all_presets, set_all_presets] = useState<{
     [T in WebMode]: Preset[]
   }>()
@@ -552,8 +552,8 @@ export const Home: React.FC<Props> = (props) => {
       : []
 
   return (
-    <HomeView
-      on_show_intro={props.on_show_intro}
+    <MainView
+      on_show_home={props.on_show_home}
       initialize_chats={handle_initialize_chats}
       copy_to_clipboard={handle_copy_to_clipboard}
       configurations={configurations_for_current_mode || []}

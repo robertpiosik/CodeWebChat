@@ -1,4 +1,4 @@
-import { Home } from './home'
+import { Main } from './main'
 import { useEffect, useState } from 'react'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm } from '@/view/frontend/EditPresetForm'
@@ -6,7 +6,7 @@ import { Preset } from '@shared/types/preset'
 import { BackendMessage, FrontendMessage } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
-import { Intro } from './intro'
+import { Home } from './home'
 import styles from './View.module.scss'
 import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
@@ -17,7 +17,7 @@ import { Review as UiReview } from '@ui/components/editor/Review'
 const vscode = acquireVsCodeApi()
 
 export const View = () => {
-  const [active_view, set_active_view] = useState<'intro' | 'home'>('intro')
+  const [active_view, set_active_view] = useState<'home' | 'main'>('home')
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [files_to_review, set_files_to_review] = useState<FileInReview[]>([])
@@ -339,10 +339,10 @@ export const View = () => {
       )}
       <div
         className={cn(styles.slot, {
-          [styles['slot--hidden']]: active_view != 'home'
+          [styles['slot--hidden']]: active_view != 'main'
         })}
       >
-        <Home
+        <Main
           vscode={vscode}
           on_preset_edit={(preset) => {
             post_message(vscode, {
@@ -353,12 +353,8 @@ export const View = () => {
             set_updated_preset(preset)
           }}
           is_connected={is_connected}
-          on_show_intro={() => {
-            set_active_view('intro')
-            handle_instructions_change('', 'ask')
-            handle_instructions_change('', 'edit-context')
-            handle_instructions_change('', 'no-context')
-            handle_instructions_change('', 'code-completions')
+          on_show_home={() => {
+            set_active_view('home')
           }}
           ask_instructions={ask_instructions}
           edit_instructions={edit_instructions}
@@ -379,20 +375,22 @@ export const View = () => {
       </div>
       <div
         className={cn(styles.slot, {
-          [styles['slot--hidden']]: active_view != 'intro'
+          [styles['slot--hidden']]: active_view != 'home'
         })}
       >
-        <Intro
-          is_active={active_view == 'intro'}
+        <Home
+          is_active={active_view == 'home'}
           on_new_chat={() => {
-            set_active_view('home')
+            set_active_view('main')
             handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
             handle_web_mode_change('edit-context')
+            set_chat_input_focus_and_select_key((k) => k + 1)
           }}
           on_api_call={() => {
-            set_active_view('home')
+            set_active_view('main')
             handle_home_view_type_change(HOME_VIEW_TYPES.API)
             handle_api_mode_change('edit-context')
+            set_chat_input_focus_and_select_key((k) => k + 1)
           }}
           are_donations_visible={are_donations_visible}
           on_toggle_donations_visibility={handle_donations_visibility_change}

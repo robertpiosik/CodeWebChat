@@ -1,12 +1,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-14px);
-}
-
-.donations {
-  display: flex;
-  flex-direction: column;
   gap: var(--padding-8px);
 
   &__heading {
@@ -39,32 +33,6 @@
       padding: var(--padding-5px) var(--padding-8px);
       border-radius: var(--border-radius-8px);
     }
-  }
-}
-
-.button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--padding-8px);
-  padding: 0 var(--padding-12px) 0 var(--padding-8px);
-  height: 32px;
-  border-radius: var(--padding-6px);
-  background-color: #ffdd00;
-  color: black;
-
-  &:hover {
-    color: black;
-    text-decoration: none;
-  }
-
-  > svg {
-    height: 22px;
-    fill: black;
-  }
-
-  &:focus {
-    outline: none;
   }
 }
 
