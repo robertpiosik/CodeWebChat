@@ -181,6 +181,7 @@ export const View = () => {
 
   const handle_home_view_type_change = (view_type: HomeViewType) => {
     set_home_view_type(view_type)
+    set_chat_input_focus_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_HOME_VIEW_TYPE',
       view_type
