@@ -245,7 +245,7 @@ export const process_file = async (params: {
     message: 'start',
     data: { file_path: params.file_path }
   })
-  const file_content_block = `<file>\n<![CDATA[\n${params.file_content}\n]]>\n</file>\n`
+  const file_content_block = `<file>\n<![CDATA[\n${params.file_content}\n]]>\n</file>`
   const content = `${file_content_block}\n${refactoring_instruction}\n<![CDATA[\n${params.instruction}\n]]>`
 
   const messages = [

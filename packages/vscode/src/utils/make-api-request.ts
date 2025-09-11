@@ -124,10 +124,10 @@ async function process_stream_chunk(
             if (current_time - updated_last_log_time >= 1000) {
               Logger.info({
                 function_name: 'process_stream_chunk',
-                message: 'Streaming tokens:',
-                data: updated_accumulated_content.substring(
+                message: 'Streaming tokens',
+                data: `\n${updated_accumulated_content.substring(
                   updated_logged_content_length
-                )
+                )}`
               })
               updated_last_log_time = current_time
               updated_logged_content_length = updated_accumulated_content.length
