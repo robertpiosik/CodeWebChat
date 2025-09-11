@@ -19,7 +19,10 @@ interface PatchFileInfo {
   is_renaming?: boolean
 }
 
-const parse_patch_header = (patch_content: string): PatchFileInfo => {
+const parse_patch_header = (
+  patch_content: string,
+  workspace_path?: string
+): PatchFileInfo => {
   const lines = patch_content.split('\n')
   let from_path: string | undefined
   let to_path: string | undefined
@@ -54,6 +57,20 @@ const parse_patch_header = (patch_content: string): PatchFileInfo => {
 
     if (from_found && to_found) {
       break
+    }
+  }
+
+  // Sometimes --- and +++ paths are identical (meant to update) but file is not on disk
+  if (
+    !is_new &&
+    from_path &&
+    to_path &&
+    from_path == to_path &&
+    workspace_path
+  ) {
+    const safe_path = create_safe_path(workspace_path, to_path)
+    if (safe_path && !fs.existsSync(safe_path)) {
+      is_new = true
     }
   }
 
@@ -410,7 +427,7 @@ export const apply_git_patch = async (
   original_states?: OriginalFileState[]
   used_fallback?: boolean
 }> => {
-  const patch_info = parse_patch_header(patch_content)
+  const patch_info = parse_patch_header(patch_content, workspace_path)
 
   if (patch_info.is_new) {
     return handle_new_file_patch(patch_content, workspace_path)
