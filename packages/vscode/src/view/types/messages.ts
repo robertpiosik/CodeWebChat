@@ -164,6 +164,10 @@ export interface ShowAtSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_AT_SIGN_QUICK_PICK'
 }
 
+export interface CancelApiRequestMessage extends BaseMessage {
+  command: 'CANCEL_API_REQUEST'
+}
+
 export interface ShowAtSignQuickPickForPresetAffixMessage extends BaseMessage {
   command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX'
   is_for_code_completions: boolean
@@ -281,6 +285,7 @@ export type FrontendMessage =
   | SaveHomeViewTypeMessage
   | GetHomeViewTypeMessage
   | EditContextMessage
+  | CancelApiRequestMessage
   | CodeCompletionMessage
   | ShowAtSignQuickPickMessage
   | ShowAtSignQuickPickForPresetAffixMessage
@@ -452,6 +457,17 @@ export interface DonationsVisibilityMessage extends BaseMessage {
   is_visible: boolean
 }
 
+export interface ShowProgressMessage extends BaseMessage {
+  command: 'SHOW_PROGRESS'
+  title: string
+  progress?: number
+  tokens_per_second?: number
+}
+
+export interface HideProgressMessage extends BaseMessage {
+  command: 'HIDE_PROGRESS'
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusChatInputMessage
@@ -481,3 +497,5 @@ export type BackendMessage =
   | HasMultipleWorkspacesMessage
   | SelectedPresetOrGroupChangedMessage
   | SelectedConfigurationChangedMessage
+  | ShowProgressMessage
+  | HideProgressMessage

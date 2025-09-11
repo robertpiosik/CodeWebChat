@@ -4,9 +4,9 @@
 
 .slot {
   position: absolute;
+  z-index: 1;
   height: 100vh;
   width: 100%;
-  background-color: var(--vscode-sideBar-background);
 
   &--hidden {
     visibility: hidden;

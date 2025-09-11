@@ -238,14 +238,14 @@ const get_edit_context_config = async (
   }
 }
 
-export const perform_context_editing = async (params: {
+const perform_context_editing = async (params: {
   context: vscode.ExtensionContext
   file_tree_provider: any
   open_editors_provider?: any
   show_quick_pick?: boolean
   instructions?: string
   config_index?: number
-  view_provider?: ViewProvider
+  view_provider: ViewProvider
 }) => {
   const api_providers_manager = new ApiProvidersManager(params.context)
 
@@ -426,56 +426,36 @@ export const perform_context_editing = async (params: {
 
   const cancel_token_source = axios.CancelToken.source()
 
+  if (params.view_provider) {
+    params.view_provider.api_call_cancel_token_source = cancel_token_source
+  }
+
   try {
-    const response = await vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: 'Waiting for response',
-        cancellable: true
-      },
-      async (progress, token) => {
-        token.onCancellationRequested(() => {
-          cancel_token_source.cancel('Cancelled by user.')
-        })
-
-        let wait_time = 0
-        let has_started_receiving = false
-
-        const wait_timer = setInterval(() => {
-          if (!has_started_receiving) {
-            progress.report({
-              message: `${(wait_time / 10).toFixed(1)}s`
-            })
-            wait_time++
-          }
-        }, 100)
-
-        try {
-          return await make_api_request({
-            endpoint_url,
-            api_key: provider.api_key,
-            body,
-            cancellation_token: cancel_token_source.token,
-            on_chunk: (formatted_tokens, formatted_tokens_per_second) => {
-              if (!has_started_receiving) {
-                has_started_receiving = true
-                clearInterval(wait_timer)
-              }
-
-              progress.report({
-                message: `streamed ${formatted_tokens} tokens at ~${formatted_tokens_per_second} tokens/s`
-              })
-            }
+    if (params.view_provider) {
+      params.view_provider.send_message({
+        command: 'SHOW_PROGRESS',
+        title: 'Waiting for response...'
+      })
+    }
+    const response = await make_api_request({
+      endpoint_url,
+      api_key: provider.api_key,
+      body,
+      cancellation_token: cancel_token_source.token,
+      on_chunk: (_, tokens_per_second) => {
+        if (params.view_provider) {
+          params.view_provider.send_message({
+            command: 'SHOW_PROGRESS',
+            title: 'Receiving response...',
+            tokens_per_second
           })
-        } finally {
-          clearInterval(wait_timer)
         }
       }
-    )
+    })
 
     if (response) {
-      await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-        response: response
+      vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+        response
       })
     }
   } catch (error) {
@@ -488,20 +468,23 @@ export const perform_context_editing = async (params: {
     vscode.window.showErrorMessage(
       'An error occurred during refactor task. See console for details.'
     )
+  } finally {
+    params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
+    params.view_provider.api_call_cancel_token_source = null
   }
 }
 
 export const handle_edit_context = async (
-  provider: ViewProvider,
+  view_provider: ViewProvider,
   message: EditContextMessage
 ): Promise<void> => {
   perform_context_editing({
-    context: provider.context,
-    file_tree_provider: provider.workspace_provider,
-    open_editors_provider: provider.open_editors_provider,
+    context: view_provider.context,
+    file_tree_provider: view_provider.workspace_provider,
+    open_editors_provider: view_provider.open_editors_provider,
     show_quick_pick: message.use_quick_pick,
-    instructions: provider.edit_instructions,
+    instructions: view_provider.edit_instructions,
     config_index: message.config_index,
-    view_provider: provider
+    view_provider
   })
 }

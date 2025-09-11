@@ -236,7 +236,7 @@ export const process_file = async (params: {
   cancel_token?: CancelToken
   on_chunk?: (
     formatted_tokens: string,
-    tokens_per_second: string,
+    tokens_per_second: number,
     total_tokens: number
   ) => void
 }): Promise<string | null> => {

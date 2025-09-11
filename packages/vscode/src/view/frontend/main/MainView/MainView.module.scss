@@ -55,7 +55,7 @@
 
     &--buy-me-a-coffee {
       background-color: #f7d600;
-      transition: transform var(--transition-duration)
+      transition: transform var(--transition-duration-150)
         var(--transition-timing-function);
 
       &:hover {

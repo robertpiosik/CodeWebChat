@@ -92,6 +92,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public api_mode: ApiMode
   public home_view_type: HomeViewType = HOME_VIEW_TYPES.WEB
   public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
+  public api_call_cancel_token_source: CancelTokenSource | null = null
 
   public get_presets_config_key(): string {
     const mode =
@@ -380,6 +381,11 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_show_prompt_template_quick_pick(this)
           } else if (message.command == 'GET_WEB_MODE') {
             handle_get_mode_web(this)
+          } else if (message.command == 'CANCEL_API_REQUEST') {
+            if (this.api_call_cancel_token_source) {
+              this.api_call_cancel_token_source.cancel('Cancelled by user.')
+              this.api_call_cancel_token_source = null
+            }
           } else if (message.command == 'GET_API_TOOL_CONFIGURATIONS') {
             await handle_get_api_tool_configurations(this)
           } else if (message.command == 'SAVE_WEB_MODE') {
