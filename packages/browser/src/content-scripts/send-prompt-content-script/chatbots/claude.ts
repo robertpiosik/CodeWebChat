@@ -70,6 +70,37 @@ export const claude: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
+  set_options: async (options?: string[]) => {
+    if (!options) return
+    const supported_options = CHATBOTS['Claude'].supported_options
+    if (
+      options.includes('incognito-chat') &&
+      supported_options['incognito-chat']
+    ) {
+      const incognito_button_path = document.querySelector(
+        'path[d="M6.99951 8.66672C7.5518 8.66672 7.99951 9.11443 7.99951 9.66672C7.9993 10.2188 7.55166 10.6667 6.99951 10.6667C6.44736 10.6667 5.99973 10.2188 5.99951 9.66672C5.99951 9.11443 6.44723 8.66672 6.99951 8.66672Z"]'
+      )
+      if (incognito_button_path) {
+        const incognito_button = incognito_button_path.closest(
+          'button'
+        ) as HTMLButtonElement
+        if (incognito_button) {
+          incognito_button.click()
+          await new Promise((r) => requestAnimationFrame(r))
+        } else {
+          Logger.error({
+            function_name: 'set_options',
+            message: 'Incognito chat button not found for Claude'
+          })
+        }
+      } else {
+        Logger.error({
+          function_name: 'set_options',
+          message: 'Incognito chat button path not found for Claude'
+        })
+      }
+    }
+  },
   enter_message_and_send: async (message: string) => {
     const input_element = document.querySelector(
       'div[contenteditable=true]'

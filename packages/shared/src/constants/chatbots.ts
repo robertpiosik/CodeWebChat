@@ -77,7 +77,9 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_thinking_budget: false,
     default_system_instructions: '',
-    supported_options: {},
+    supported_options: {
+      'incognito-chat': 'Incognito chat'
+    },
     default_top_p: 0,
     models: {
       'sonnet-4': { label: 'Sonnet 4' },
