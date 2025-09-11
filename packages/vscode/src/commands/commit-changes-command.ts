@@ -10,10 +10,11 @@ import {
   generate_commit_message_from_diff,
   get_commit_message_config
 } from '../utils/commit-message-generator'
+import { ViewProvider } from '@/view/backend/view-provider'
 
 export const commit_changes_command = (
   context: vscode.ExtensionContext,
-  set_undo_button_state: (can_undo: boolean) => void
+  view_provider: ViewProvider
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.commitChanges',
@@ -33,12 +34,13 @@ export const commit_changes_command = (
           context,
           repository,
           diff,
-          api_config // Pass the already resolved config
+          api_config, // Pass the already resolved config
+          view_provider
         )
 
         if (!commit_message) return
 
-        set_undo_button_state(false)
+        view_provider.set_undo_button_state(false)
 
         try {
           execSync(`git commit -m "${commit_message.replace(/"/g, '\\"')}"`, {

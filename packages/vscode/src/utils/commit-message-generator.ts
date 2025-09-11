@@ -18,6 +18,7 @@ import {
   LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY
 } from '../constants/state-keys'
 import { GitRepository } from './git-repository-utils'
+import { ViewProvider } from '@/view/backend/view-provider'
 
 export interface FileData {
   path: string
@@ -422,89 +423,138 @@ export const generate_commit_message_with_api = async (
   endpoint_url: string,
   provider: any,
   config: CommitMessageConfig,
-  message: string
+  message: string,
+  view_provider?: ViewProvider
 ): Promise<string | null> => {
   const token_count = Math.ceil(message.length / 4)
   const formatted_token_count =
     token_count > 1000 ? Math.ceil(token_count / 1000) + 'k' : token_count
+
+  const messages = [
+    {
+      role: 'user',
+      content: message
+    }
+  ]
+
+  const body = {
+    messages,
+    model: config.model,
+    temperature: config.temperature
+  } as any
+
+  if (config.reasoning_effort) {
+    body.reasoning_effort = config.reasoning_effort
+  }
+
+  const cancel_token_source = axios.CancelToken.source()
 
   Logger.info({
     function_name: 'generate_commit_message_with_api',
     message: `Estimated tokens: ${formatted_token_count}`
   })
 
-  return await vscode.window.withProgress(
-    {
-      location: vscode.ProgressLocation.Notification,
-      title: `Generating commit message`,
-      cancellable: true
-    },
-    async (progress, token) => {
-      const messages = [
-        {
-          role: 'user',
-          content: message
-        }
-      ]
-
-      const body = {
-        messages,
-        model: config.model,
-        temperature: config.temperature
-      } as any
-
-      if (config.reasoning_effort) {
-        body.reasoning_effort = config.reasoning_effort
-      }
-
-      const cancel_token_source = axios.CancelToken.source()
-
-      token.onCancellationRequested(() => {
-        cancel_token_source.cancel('Operation cancelled by user')
+  if (view_provider) {
+    view_provider.api_call_cancel_token_source = cancel_token_source
+    try {
+      view_provider.send_message({
+        command: 'SHOW_PROGRESS',
+        title: 'Waiting for commit message...'
       })
 
-      let wait_time = 0
-      const wait_timer = setInterval(() => {
-        progress.report({
-          message: `${(wait_time / 10).toFixed(1)}s`
-        })
-        wait_time++
-      }, 100)
-
-      try {
-        const response = await make_api_request({
-          endpoint_url,
-          api_key: provider.api_key,
-          body,
-          cancellation_token: cancel_token_source.token
-        })
-
-        if (!response) {
-          vscode.window.showErrorMessage('Failed to generate commit message.')
-          return null
-        } else {
-          let commit_message = process_single_trailing_dot(response)
-          commit_message = strip_wrapping_quotes(commit_message)
-          return commit_message
+      const response = await make_api_request({
+        endpoint_url,
+        api_key: provider.api_key,
+        body,
+        cancellation_token: cancel_token_source.token,
+        on_chunk: (_, tokens_per_second) => {
+          if (view_provider) {
+            view_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: 'Waiting for commit message...',
+              tokens_per_second
+            })
+          }
         }
-      } catch (error) {
-        if (axios.isCancel(error)) {
-          vscode.window.showInformationMessage(
-            'Commit message generation cancelled.'
-          )
-          return null
-        }
-        Logger.error({
-          function_name: 'generate_commit_message_with_api',
-          message: 'Error during API request',
-          data: error
-        })
-        throw error
-      } finally {
-        clearInterval(wait_timer)
+      })
+
+      if (!response) {
+        vscode.window.showErrorMessage('Failed to generate commit message.')
+        return null
+      } else {
+        let commit_message = process_single_trailing_dot(response)
+        commit_message = strip_wrapping_quotes(commit_message)
+        return commit_message
       }
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        return null
+      }
+      Logger.error({
+        function_name: 'generate_commit_message_with_api',
+        message: 'Error during API request',
+        data: error
+      })
+      throw error
+    } finally {
+      view_provider.send_message({ command: 'HIDE_PROGRESS' })
+      view_provider.api_call_cancel_token_source = null
     }
-  )
+  } else {
+    return await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: `Waiting for commit message`,
+        cancellable: true
+      },
+      async (progress, token) => {
+        token.onCancellationRequested(() => {
+          cancel_token_source.cancel('Operation cancelled by user')
+        })
+
+        let wait_time = 0
+        const wait_timer = setInterval(() => {
+          progress.report({
+            message: `${(wait_time / 10).toFixed(1)}s`
+          })
+          wait_time++
+        }, 100)
+
+        try {
+          const response = await make_api_request({
+            endpoint_url,
+            api_key: provider.api_key,
+            body,
+            cancellation_token: cancel_token_source.token
+          })
+
+          if (!response) {
+            vscode.window.showErrorMessage('Failed to generate commit message.')
+            return null
+          } else {
+            let commit_message = process_single_trailing_dot(response)
+            commit_message = strip_wrapping_quotes(commit_message)
+            return commit_message
+          }
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            vscode.window.showInformationMessage(
+              'Commit message generation cancelled.'
+            )
+            return null
+          }
+          Logger.error({
+            function_name: 'generate_commit_message_with_api',
+            message: 'Error during API request',
+            data: error
+          })
+          throw error
+        } finally {
+          clearInterval(wait_timer)
+        }
+      }
+    )
+  }
 }
 
 export const build_commit_message_prompt = (
@@ -523,7 +573,8 @@ export const generate_commit_message_from_diff = async (
     config: CommitMessageConfig
     provider: any
     endpoint_url: string
-  }
+  },
+  view_provider?: ViewProvider
 ): Promise<string | null> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const commit_message_prompt = config.get<string>('commitMessageInstructions')
@@ -556,6 +607,7 @@ export const generate_commit_message_from_diff = async (
     resolved_api_config.endpoint_url,
     resolved_api_config.provider,
     resolved_api_config.config,
-    message
+    message,
+    view_provider
   )
 }

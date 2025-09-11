@@ -106,7 +106,7 @@ export async function activate(context: vscode.ExtensionContext) {
         view_provider.set_undo_button_state,
         view_provider.set_apply_button_state
       ),
-      commit_changes_command(context, view_provider.set_undo_button_state),
+      commit_changes_command(context, view_provider),
       ...code_completion_commands(
         workspace_provider,
         open_editors_provider,

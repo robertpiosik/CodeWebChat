@@ -392,71 +392,68 @@ const perform_code_completion = async (params: {
 
     let response_for_apply: string | undefined
 
-    await vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: 'Waiting for code completion',
-        cancellable: true
-      },
-      async (progress, token) => {
-        token.onCancellationRequested(() => {
-          cancel_token_source.cancel('User cancelled the operation')
-        })
+    if (params.view_provider) {
+      params.view_provider.api_call_cancel_token_source = cancel_token_source
+      params.view_provider.send_message({
+        command: 'SHOW_PROGRESS',
+        title: 'Waiting for code completion...'
+      })
+    }
 
-        let wait_time = 0
-        const wait_timer = setInterval(() => {
-          progress.report({
-            message: `${(wait_time / 10).toFixed(1)}s`
-          })
-          wait_time++
-        }, 100)
-
-        try {
-          const completion = await make_api_request({
-            endpoint_url,
-            api_key: provider.api_key,
-            body,
-            cancellation_token: cancel_token_source.token
-          })
-
-          if (completion) {
-            const match = completion.match(
-              /<replacement>([\s\S]*?)<\/replacement>/i
-            )
-            if (match && match[1]) {
-              let decoded_completion = he.decode(match[1].trim())
-              decoded_completion = decoded_completion
-                .replace(/<!\[CDATA\[/g, '')
-                .replace(/\]\]>/g, '')
-                .trim()
-
-              const new_content =
-                text_before_cursor + decoded_completion + text_after_cursor
-
-              const relative_path = vscode.workspace.asRelativePath(
-                document.uri
-              )
-              response_for_apply = `\`\`\`\n// ${relative_path}\n${new_content}\n\`\`\``
-            }
+    try {
+      const completion = await make_api_request({
+        endpoint_url,
+        api_key: provider.api_key,
+        body,
+        cancellation_token: cancel_token_source.token,
+        on_chunk: (_, tokens_per_second) => {
+          if (params.view_provider) {
+            params.view_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: 'Receiving code completion...',
+              tokens_per_second
+            })
           }
-        } catch (err: any) {
-          if (axios.isCancel(err)) {
-            return
-          }
-          Logger.error({
-            function_name: 'perform_code_completion',
-            message: 'code completion error',
-            data: err
-          })
-          vscode.window.showErrorMessage(
-            'An error occurred during code completion. See console for details.'
-          )
-        } finally {
-          cursor_listener.dispose()
-          clearInterval(wait_timer)
+        }
+      })
+
+      if (completion) {
+        const match = completion.match(
+          /<replacement>([\s\S]*?)<\/replacement>/i
+        )
+        if (match && match[1]) {
+          let decoded_completion = he.decode(match[1].trim())
+          decoded_completion = decoded_completion
+            .replace(/<!\[CDATA\[/g, '')
+            .replace(/\]\]>/g, '')
+            .trim()
+
+          const new_content =
+            text_before_cursor + decoded_completion + text_after_cursor
+
+          const relative_path = vscode.workspace.asRelativePath(document.uri)
+          response_for_apply = `\`\`\`\n// ${relative_path}\n${new_content}\n\`\`\``
         }
       }
-    )
+    } catch (err: any) {
+      if (axios.isCancel(err)) {
+        return
+      }
+      Logger.error({
+        function_name: 'perform_code_completion',
+        message: 'code completion error',
+        data: err
+      })
+      vscode.window.showErrorMessage(
+        'An error occurred during code completion. See console for details.'
+      )
+    } finally {
+      if (params.view_provider) {
+        params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
+        params.view_provider.api_call_cancel_token_source = null
+      }
+      cursor_listener.dispose()
+    }
 
     if (response_for_apply) {
       await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
