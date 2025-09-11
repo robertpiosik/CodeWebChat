@@ -387,13 +387,11 @@ export const View = () => {
             set_active_view('home')
             handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
             handle_web_mode_change('edit-context')
-            set_chat_input_focus_and_select_key((k) => k + 1)
           }}
           on_api_call={() => {
             set_active_view('home')
             handle_home_view_type_change(HOME_VIEW_TYPES.API)
             handle_api_mode_change('edit-context')
-            set_chat_input_focus_and_select_key((k) => k + 1)
           }}
           are_donations_visible={are_donations_visible}
           on_toggle_donations_visibility={handle_donations_visibility_change}
