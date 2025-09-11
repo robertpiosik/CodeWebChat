@@ -352,7 +352,13 @@ export const View = () => {
             set_updated_preset(preset)
           }}
           is_connected={is_connected}
-          on_show_intro={() => set_active_view('intro')}
+          on_show_intro={() => {
+            set_active_view('intro')
+            handle_instructions_change('', 'ask')
+            handle_instructions_change('', 'edit-context')
+            handle_instructions_change('', 'no-context')
+            handle_instructions_change('', 'code-completions')
+          }}
           ask_instructions={ask_instructions}
           edit_instructions={edit_instructions}
           no_context_instructions={no_context_instructions}
