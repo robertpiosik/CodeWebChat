@@ -244,12 +244,12 @@ export const CHATBOTS = {
     },
     default_top_p: 0,
     models: {
+      'qwen3-next-80b-a3b': { label: 'Qwen3-Next-80B-A3B' },
       'qwen3-max-preview': { label: 'Qwen3-Max-Preview' },
       'qwen3-235b-a22b-2507': {
         label: 'Qwen3-235B-A22B-2507'
       },
-      'qwen3-coder': { label: 'Qwen3-Coder' },
-      'qwen3-30b-a3b-2507': { label: 'Qwen3-30B-A3B-2507' }
+      'qwen3-coder': { label: 'Qwen3-Coder' }
     }
   },
   Together: {
@@ -264,11 +264,12 @@ export const CHATBOTS = {
     supported_options: {},
     default_top_p: 0,
     models: {
-      'deepseek-v3-1': { label: 'DeepSeek V3.1' },
+      'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
+      'deepseek-v3-0324': { label: 'DeepSeek V3 (0324)' },
       'gpt-oss-120b': { label: 'GPT OSS 120B' },
       'qwen3-235b-a22b-2507': { label: 'Qwen3 235B (2507)' },
       'qwen3-coder-480b': { label: 'Qwen3 Coder 480B' },
-      'glm-4.5-air': { label: 'GLM-4.5 Air' },
+      'glm-4.5-air': { label: 'GLM-4.5-Air' },
       'llama-4-maverick': { label: 'Llama 4 Maverick' }
     }
   },
