@@ -19,11 +19,11 @@ export const generate_commit_message_command = (
         const diff = await prepare_staged_changes(repository)
         if (!diff) return
 
-        const commit_message = await generate_commit_message_from_diff(
+        const commit_message = await generate_commit_message_from_diff({
           context,
           repository,
           diff
-        )
+        })
 
         if (commit_message) {
           repository.inputBox.value = commit_message

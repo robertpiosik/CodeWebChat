@@ -249,7 +249,7 @@ export const get_commit_message_config = async (
   }
 }
 
-export const get_ignored_extensions = (): Set<string> => {
+const get_ignored_extensions = (): Set<string> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const config_ignored_extensions = new Set(
     config
@@ -259,18 +259,21 @@ export const get_ignored_extensions = (): Set<string> => {
   return new Set([...ignored_extensions, ...config_ignored_extensions])
 }
 
-export const collect_affected_files_with_metadata = async (
-  repository: GitRepository,
+const collect_affected_files_with_metadata = async (params: {
+  repository: GitRepository
   ignored_extensions: Set<string>
-): Promise<FileData[]> => {
-  const staged_files = repository.state.indexChanges || []
+}): Promise<FileData[]> => {
+  const staged_files = params.repository.state.indexChanges || []
   const files_data: FileData[] = []
 
   for (const change of staged_files) {
     const file_path = change.uri.fsPath
-    const relative_path = path.relative(repository.rootUri.fsPath, file_path)
+    const relative_path = path.relative(
+      params.repository.rootUri.fsPath,
+      file_path
+    )
 
-    if (should_ignore_file(relative_path, ignored_extensions)) {
+    if (should_ignore_file(relative_path, params.ignored_extensions)) {
       continue
     }
 
@@ -310,29 +313,29 @@ export const collect_affected_files_with_metadata = async (
   return files_data
 }
 
-export const handle_file_selection_if_needed = async (
-  context: vscode.ExtensionContext,
+export const handle_file_selection_if_needed = async (params: {
+  context: vscode.ExtensionContext
   files_data: FileData[]
-): Promise<FileData[] | null> => {
-  const threshold = context.globalState.get<number>(
+}): Promise<FileData[] | null> => {
+  const threshold = params.context.globalState.get<number>(
     COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY,
     20000
   )
 
-  const total_tokens = files_data.reduce(
+  const total_tokens = params.files_data.reduce(
     (sum, file) => sum + file.estimated_tokens,
     0
   )
 
   if (total_tokens <= threshold) {
-    return files_data
+    return params.files_data
   }
 
-  const selected_files = await show_file_selection_dialog(
-    files_data,
+  const selected_files = await show_file_selection_dialog({
+    files_data: params.files_data,
     threshold,
     total_tokens
-  )
+  })
   if (!selected_files || selected_files.length == 0) {
     vscode.window.showInformationMessage(
       'No files selected for commit message generation.'
@@ -343,12 +346,12 @@ export const handle_file_selection_if_needed = async (
   return selected_files
 }
 
-const show_file_selection_dialog = async (
-  files_data: FileData[],
-  threshold: number,
+const show_file_selection_dialog = async (params: {
+  files_data: FileData[]
+  threshold: number
   total_tokens: number
-): Promise<FileData[] | undefined> => {
-  const items = files_data.map((file) => {
+}): Promise<FileData[] | undefined> => {
+  const items = params.files_data.map((file) => {
     const token_count = file.estimated_tokens
     const formatted_token_count =
       token_count >= 1000
@@ -368,14 +371,14 @@ const show_file_selection_dialog = async (
     }
   })
 
-  const exceeded_by = total_tokens - threshold
+  const exceeded_by = params.total_tokens - params.threshold
   const format_tokens = (tokens: number): string => {
     if (tokens < 1000) {
       return tokens.toString()
     }
     return `${Math.round(tokens / 1000)}k`
   }
-  const formatted_total_tokens = format_tokens(total_tokens)
+  const formatted_total_tokens = format_tokens(params.total_tokens)
   const formatted_exceeded_by = format_tokens(exceeded_by)
 
   vscode.window.showInformationMessage(
@@ -419,32 +422,32 @@ export const strip_wrapping_quotes = (text: string): string => {
   return trimmed
 }
 
-export const generate_commit_message_with_api = async (
-  endpoint_url: string,
-  provider: any,
-  config: CommitMessageConfig,
-  message: string,
+const generate_commit_message_with_api = async (params: {
+  endpoint_url: string
+  provider: any
+  config: CommitMessageConfig
+  message: string
   view_provider?: ViewProvider
-): Promise<string | null> => {
-  const token_count = Math.ceil(message.length / 4)
+}): Promise<string | null> => {
+  const token_count = Math.ceil(params.message.length / 4)
   const formatted_token_count =
     token_count > 1000 ? Math.ceil(token_count / 1000) + 'k' : token_count
 
   const messages = [
     {
       role: 'user',
-      content: message
+      content: params.message
     }
   ]
 
   const body = {
     messages,
-    model: config.model,
-    temperature: config.temperature
+    model: params.config.model,
+    temperature: params.config.temperature
   } as any
 
-  if (config.reasoning_effort) {
-    body.reasoning_effort = config.reasoning_effort
+  if (params.config.reasoning_effort) {
+    body.reasoning_effort = params.config.reasoning_effort
   }
 
   const cancel_token_source = axios.CancelToken.source()
@@ -454,22 +457,22 @@ export const generate_commit_message_with_api = async (
     message: `Estimated tokens: ${formatted_token_count}`
   })
 
-  if (view_provider) {
-    view_provider.api_call_cancel_token_source = cancel_token_source
+  if (params.view_provider) {
+    params.view_provider.api_call_cancel_token_source = cancel_token_source
     try {
-      view_provider.send_message({
+      params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
         title: 'Waiting for commit message...'
       })
 
       const response = await make_api_request({
-        endpoint_url,
-        api_key: provider.api_key,
+        endpoint_url: params.endpoint_url,
+        api_key: params.provider.api_key,
         body,
         cancellation_token: cancel_token_source.token,
         on_chunk: (_, tokens_per_second) => {
-          if (view_provider) {
-            view_provider.send_message({
+          if (params.view_provider) {
+            params.view_provider.send_message({
               command: 'SHOW_PROGRESS',
               title: 'Waiting for commit message...',
               tokens_per_second
@@ -497,8 +500,8 @@ export const generate_commit_message_with_api = async (
       })
       throw error
     } finally {
-      view_provider.send_message({ command: 'HIDE_PROGRESS' })
-      view_provider.api_call_cancel_token_source = null
+      params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
+      params.view_provider.api_call_cancel_token_source = null
     }
   } else {
     return await vscode.window.withProgress(
@@ -522,8 +525,8 @@ export const generate_commit_message_with_api = async (
 
         try {
           const response = await make_api_request({
-            endpoint_url,
-            api_key: provider.api_key,
+            endpoint_url: params.endpoint_url,
+            api_key: params.provider.api_key,
             body,
             cancellation_token: cancel_token_source.token
           })
@@ -565,49 +568,49 @@ export const build_commit_message_prompt = (
   return `${commit_message_prompt}\n${affected_files}\n${diff}\n${commit_message_prompt}`
 }
 
-export const generate_commit_message_from_diff = async (
-  context: vscode.ExtensionContext,
-  repository: GitRepository,
-  diff: string,
+export const generate_commit_message_from_diff = async (params: {
+  context: vscode.ExtensionContext
+  repository: GitRepository
+  diff: string
   api_config?: {
     config: CommitMessageConfig
     provider: any
     endpoint_url: string
-  },
+  }
   view_provider?: ViewProvider
-): Promise<string | null> => {
+}): Promise<string | null> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const commit_message_prompt = config.get<string>('commitMessageInstructions')
   const all_ignored_extensions = get_ignored_extensions()
 
   // Use provided config or get it if not provided (for backward compatibility)
   const resolved_api_config =
-    api_config || (await get_commit_message_config(context))
+    params.api_config || (await get_commit_message_config(params.context))
   if (!resolved_api_config) return null
 
-  const affected_files_data = await collect_affected_files_with_metadata(
-    repository,
-    all_ignored_extensions
-  )
+  const affected_files_data = await collect_affected_files_with_metadata({
+    repository: params.repository,
+    ignored_extensions: all_ignored_extensions
+  })
 
-  const selected_files = await handle_file_selection_if_needed(
-    context,
-    affected_files_data
-  )
+  const selected_files = await handle_file_selection_if_needed({
+    context: params.context,
+    files_data: affected_files_data
+  })
   if (!selected_files) return null
 
   const affected_files = build_files_content(selected_files)
   const message = build_commit_message_prompt(
     commit_message_prompt!,
     affected_files,
-    diff
+    params.diff
   )
 
-  return await generate_commit_message_with_api(
-    resolved_api_config.endpoint_url,
-    resolved_api_config.provider,
-    resolved_api_config.config,
+  return await generate_commit_message_with_api({
+    endpoint_url: resolved_api_config.endpoint_url,
+    provider: resolved_api_config.provider,
+    config: resolved_api_config.config,
     message,
-    view_provider
-  )
+    view_provider: params.view_provider
+  })
 }
