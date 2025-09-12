@@ -462,23 +462,14 @@ const generate_commit_message_with_api = async (params: {
     try {
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: 'Waiting for commit message...'
+        title: 'Waiting for API response...'
       })
 
       const response = await make_api_request({
         endpoint_url: params.endpoint_url,
         api_key: params.provider.api_key,
         body,
-        cancellation_token: cancel_token_source.token,
-        on_chunk: (_, tokens_per_second) => {
-          if (params.view_provider) {
-            params.view_provider.send_message({
-              command: 'SHOW_PROGRESS',
-              title: 'Waiting for commit message...',
-              tokens_per_second
-            })
-          }
-        }
+        cancellation_token: cancel_token_source.token
       })
 
       if (!response) {
