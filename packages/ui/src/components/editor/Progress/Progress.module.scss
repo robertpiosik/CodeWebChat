@@ -6,7 +6,7 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   opacity: 0;
 
@@ -16,7 +16,7 @@
       var(--transition-timing-function);
 
     .container {
-      transform: scale(1);
+      transform: scale(1) translateY(0);
       transition: transform var(--transition-duration-250)
         var(--transition-timing-function);
     }
@@ -33,7 +33,7 @@
   width: 100%;
   margin: var(--padding-24px);
   gap: var(--padding-12px);
-  transform: scale(0.95);
+  transform: scale(0.95) translateY(-20px);
 }
 
 .title {

@@ -434,7 +434,7 @@ const perform_context_editing = async (params: {
     if (params.view_provider) {
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: 'Waiting for response...'
+        title: 'Waiting for API response...'
       })
     }
     const response = await make_api_request({
@@ -446,7 +446,7 @@ const perform_context_editing = async (params: {
         if (params.view_provider) {
           params.view_provider.send_message({
             command: 'SHOW_PROGRESS',
-            title: 'Receiving response...',
+            title: 'Receiving message...',
             tokens_per_second
           })
         }

@@ -396,7 +396,7 @@ const perform_code_completion = async (params: {
       params.view_provider.api_call_cancel_token_source = cancel_token_source
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: 'Waiting for code completion...'
+        title: 'Waiting for API response...'
       })
     }
 
@@ -405,16 +405,7 @@ const perform_code_completion = async (params: {
         endpoint_url,
         api_key: provider.api_key,
         body,
-        cancellation_token: cancel_token_source.token,
-        on_chunk: (_, tokens_per_second) => {
-          if (params.view_provider) {
-            params.view_provider.send_message({
-              command: 'SHOW_PROGRESS',
-              title: 'Receiving code completion...',
-              tokens_per_second
-            })
-          }
-        }
+        cancellation_token: cancel_token_source.token
       })
 
       if (completion) {
