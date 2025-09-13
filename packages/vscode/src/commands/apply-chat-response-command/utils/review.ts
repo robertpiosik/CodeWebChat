@@ -118,7 +118,7 @@ const prepare_files_from_original_states = async (params: {
 
     const ext = path.extname(sanitized_file_path)
     const base = path.basename(sanitized_file_path, ext)
-    const temp_filename = `${base}.${Date.now()}`
+    const temp_filename = `${base}.tmp`
     const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
     const diff_stats = get_diff_stats({
