@@ -90,7 +90,21 @@ export const ChatInput: React.FC<Props> = (props) => {
 
   const get_highlighted_text = (text: string) => {
     if (props.is_in_code_completions_mode) {
-      return <span>{text}</span>
+      const regex = /(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")/g
+      const parts = text.split(regex)
+      return parts.map((part, index) => {
+        if (
+          part &&
+          /^#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
+        ) {
+          return (
+            <span key={index} className={styles['selection-keyword']}>
+              {part}
+            </span>
+          )
+        }
+        return <span key={index}>{part}</span>
+      })
     }
 
     const regex =
@@ -362,6 +376,7 @@ export const ChatInput: React.FC<Props> = (props) => {
               e.stopPropagation()
             }}
           >
+            {/* TODO: Should be always visible but we need to handle including saved contexts first */}
             {!props.is_in_code_completions_mode && (
               <button
                 onClick={props.on_at_sign_click}

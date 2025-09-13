@@ -18,7 +18,7 @@ import {
   LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY
 } from '../constants/state-keys'
 import { GitRepository } from './git-repository-utils'
-import { ViewProvider } from '@/view/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/view-provider'
 
 export interface FileData {
   path: string

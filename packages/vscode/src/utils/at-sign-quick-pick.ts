@@ -5,10 +5,11 @@ import * as fs from 'fs'
 import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 import { SavedContext } from '../types/context'
 
-export async function at_sign_quick_pick(
+export async function at_sign_quick_pick(params: {
   context: vscode.ExtensionContext
-): Promise<string | undefined> {
-  const items = [
+  is_for_code_completions: boolean
+}): Promise<string | undefined> {
+  let items = [
     {
       label: '#Selection',
       description: 'Text selection of the active editor'
@@ -22,6 +23,10 @@ export async function at_sign_quick_pick(
       description: 'Files from a saved context'
     }
   ]
+
+  if (params.is_for_code_completions) {
+    items = items.filter((item) => item.label == '#SavedContext')
+  }
 
   const selected = await vscode.window.showQuickPick(items, {
     placeHolder: 'Select symbol to insert',
@@ -125,7 +130,7 @@ export async function at_sign_quick_pick(
     }
 
     const internal_contexts: SavedContext[] =
-      context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, []) || []
+      params.context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, []) || []
 
     const contexts_file_path = path.join(
       workspace_root,

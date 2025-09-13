@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
-import { ViewProvider } from './view/backend/view-provider'
+import { ViewProvider } from './views/panel/backend/view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
   migrate_file_refactoring_to_array,
@@ -37,6 +37,7 @@ import {
   feedback_command,
   apply_context_from_clipboard_command
 } from './commands'
+import { SettingsProvider } from './views/settings/backend/settings-provider'
 
 // Store WebSocketServer instance at module level
 let websocket_server_instance: WebSocketManager | null = null
@@ -116,6 +117,8 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   }
 
+  const settingsProvider = new SettingsProvider(context.extensionUri)
+
   context.subscriptions.push(
     open_file_from_workspace_command(open_editors_provider),
     close_editor_command(),
@@ -133,6 +136,9 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
     feedback_command(),
     ...open_settings_command(context),
-    apply_context_from_clipboard_command(workspace_provider)
+    apply_context_from_clipboard_command(workspace_provider),
+    vscode.commands.registerCommand('codeWebChat.openSettingsBeta', () => {
+      settingsProvider.createOrShow()
+    })
   )
 }

@@ -10,7 +10,7 @@ import {
   generate_commit_message_from_diff,
   get_commit_message_config
 } from '../utils/commit-message-generator'
-import { ViewProvider } from '@/view/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/view-provider'
 
 export const commit_changes_command = (
   context: vscode.ExtensionContext,

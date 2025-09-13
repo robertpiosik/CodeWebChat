@@ -81,7 +81,7 @@ export const replace_saved_context_placeholder = async (params: {
   workspace_provider: WorkspaceProvider
   just_opening_tag?: boolean
 }): Promise<string> => {
-  const regex = /@SavedContext:(WorkspaceState|JSON)\s*"([^"]+)"/g
+  const regex = /#SavedContext:(WorkspaceState|JSON)\s*"([^"]+)"/g
   const matches = [...params.instruction.matchAll(regex)]
   let result_instruction = params.instruction
   const replacements = new Map<string, string>()

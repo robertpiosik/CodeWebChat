@@ -2,12 +2,12 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a>
 
-**Code Web Chat** is an easy-to-use, free and open-source (FOSS) AI coding tool that connects the editor with the web browser for its signature workflow—select files, type instructions and initialize ChatGPT, Gemini, Claude, and 10+ more, hands-free! Once ready, apply the response with a single click.
+**Code Web Chat** is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, Gemini, Claude, and 10+ more, for its signature workflow—select files, type instructions and initialize your favorite chatbot hands-free! Once ready, apply the response with a single click.
 
 ✅ **Save money**—free tiers and subscription-based billing \
 ✅ **Save time**—multi-file edits from a single prompt
 
-Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor</a>, and other forks.
+Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, Windsurf, VSCodium, and other forks</a>.
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -18,6 +18,11 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 - Initialize chatbots—don't scrape responses
 - Free forever—a community effort
 - Privacy first—operates locally
+
+**CWC is for you if you're**
+
+- an experienced developer working on a large codebase
+- a student or hobbyist on a budget
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 

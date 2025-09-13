@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "CWC connects the editor with any chatbot",
+  "description": "CWC connects VS Code with ChatGPT, Gemini, Claude, and more",
   "version": "1.368.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
@@ -276,6 +276,11 @@
       {
         "command": "codeWebChat.settings.commitMessages",
         "title": "Settings: Commit Messages",
+        "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.openSettingsBeta",
+        "title": "Open Settings Beta",
         "category": "Code Web Chat"
       }
     ],

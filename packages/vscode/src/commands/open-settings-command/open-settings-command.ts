@@ -8,6 +8,7 @@ const LABEL_EDIT_CONTEXT = '$(tools) Edit Context'
 const LABEL_INTELLIGENT_UPDATE = '$(tools) Intelligent Update'
 const LABEL_COMMIT_MESSAGES = '$(tools) Commit Messages'
 const LABEL_EDIT_SETTINGS = '$(settings) Open Settings'
+const LABEL_SETTINGS_BETA = '$(beaker) Settings Beta'
 
 export const open_settings_command = (context: vscode.ExtensionContext) => {
   const settings_command = vscode.commands.registerCommand(
@@ -22,6 +23,10 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
             label: LABEL_EDIT_SETTINGS,
             detail:
               'Modify "edit format" instructions, edit chat presets in JSON and more.'
+          },
+          {
+            label: LABEL_SETTINGS_BETA,
+            detail: 'A new way to manage settings.'
           },
           {
             label: LABEL_PROVIDERS,
@@ -96,6 +101,10 @@ export const open_settings_command = (context: vscode.ExtensionContext) => {
               'workbench.action.openSettings',
               '@ext:robertpiosik.gemini-coder'
             )
+            show_menu = false
+            break
+          case LABEL_SETTINGS_BETA:
+            await vscode.commands.executeCommand('codeWebChat.openSettingsBeta')
             show_menu = false
             break
           case LABEL_PROVIDERS:
