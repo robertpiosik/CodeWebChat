@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-8px);
+  padding: var(--padding-8px);
+  border-radius: var(--border-radius-4px);
+  color: var(--vscode-editor-foreground);
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+  }
+
+  &.active {
+    background-color: var(--vscode-list-activeSelectionBackground);
+    color: var(--vscode-list-activeSelectionForeground);
+  }
+}

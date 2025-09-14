@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  gap: 60px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px;
+}
+
+.sidebar {
+  width: 180px;
+
+  &__title {
+    font-size: 26px;
+    font-weight: 600;
+  }
+
+  &__navigation {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+.content {
+  flex: 1;
+}
