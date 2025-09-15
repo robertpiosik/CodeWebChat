@@ -1,0 +1,89 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  padding-bottom: var(--padding-8px);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--vscode-editorGroup-border);
+  height: 36px;
+
+  .colActions {
+    visibility: hidden;
+  }
+
+  &:hover .colActions {
+    visibility: visible;
+  }
+
+  &__content {
+    flex: 1;
+    padding: 0 var(--padding-12px);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    .defaultIcon {
+      margin-right: 0.5em;
+    }
+
+    > span:last-child {
+      margin-left: 0.5em;
+      opacity: 0.7;
+      font-size: 0.9em;
+    }
+  }
+}
+
+.emptyMessage {
+  flex: 1;
+  text-align: center;
+  font-style: italic;
+  color: var(--vscode-descriptionForeground);
+}
+.dragHandle {
+  cursor: grab;
+  opacity: 0.5;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.colRadio {
+  flex: 0 0 30px;
+  text-align: center;
+}
+
+.colDrag {
+  flex: 0 0 30px;
+  text-align: center;
+}
+
+.colActions {
+  flex: 0 0 60px;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--padding-8px);
+  padding-right: var(--padding-8px);
+
+  > span {
+    cursor: pointer;
+    opacity: 0.7;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

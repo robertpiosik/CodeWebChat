@@ -463,20 +463,6 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_manage_configurations_click = () => {
-    if (props.api_mode == 'edit-context') {
-      post_message(props.vscode, {
-        command: 'EXECUTE_COMMAND',
-        command_id: 'codeWebChat.settings.editContext'
-      })
-    } else if (props.api_mode == 'code-completions') {
-      post_message(props.vscode, {
-        command: 'EXECUTE_COMMAND',
-        command_id: 'codeWebChat.settings.codeCompletions'
-      })
-    }
-  }
-
   const handle_configuration_click = (index: number) => {
     const instruction = get_current_instructions()
 
@@ -562,7 +548,6 @@ export const Main: React.FC<Props> = (props) => {
       copy_to_clipboard={handle_copy_to_clipboard}
       configurations={configurations_for_current_mode || []}
       on_configuration_click={handle_configuration_click}
-      on_manage_configurations_click={handle_manage_configurations_click}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       on_curly_braces_click={handle_curly_braces_click}

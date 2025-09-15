@@ -429,29 +429,12 @@ export function apply_context_command(
             iconPath: new vscode.ThemeIcon('trash'),
             tooltip: 'Delete'
           }
-          const move_up_button = {
-            iconPath: new vscode.ThemeIcon('chevron-up'),
-            tooltip: 'Move up'
-          }
-          const move_down_button = {
-            iconPath: new vscode.ThemeIcon('chevron-down'),
-            tooltip: 'Move down'
-          }
 
           const BACK_LABEL = '$(arrow-left) Back'
 
           const create_quick_pick_items = (contexts: SavedContext[]) => {
             const context_items = contexts.map((context, index) => {
-              const buttons = []
-              if (contexts.length > 1) {
-                if (index > 0) {
-                  buttons.push(move_up_button)
-                }
-                if (index < contexts.length - 1) {
-                  buttons.push(move_down_button)
-                }
-              }
-              buttons.push(edit_button, delete_button)
+              const buttons = [edit_button, delete_button]
 
               return {
                 label: context.name,
@@ -541,68 +524,6 @@ export function apply_context_command(
                 last_selected_context_name_key,
                 item.context.name
               )
-
-              if (
-                event.button === move_up_button ||
-                event.button === move_down_button
-              ) {
-                const is_moving_up = event.button === move_up_button
-                const contexts_to_reorder =
-                  context_source == 'internal'
-                    ? internal_contexts
-                    : file_contexts
-                const current_index = item.index
-
-                const new_index = is_moving_up
-                  ? Math.max(0, current_index - 1)
-                  : Math.min(contexts_to_reorder.length - 1, current_index + 1)
-
-                if (new_index === current_index) {
-                  return
-                }
-
-                const reordered_contexts = [...contexts_to_reorder]
-                const [moved_context] = reordered_contexts.splice(
-                  current_index,
-                  1
-                )
-                reordered_contexts.splice(new_index, 0, moved_context)
-
-                if (context_source == 'internal') {
-                  await extension_context.workspaceState.update(
-                    SAVED_CONTEXTS_STATE_KEY,
-                    reordered_contexts
-                  )
-                  internal_contexts = reordered_contexts
-                } else if (context_source == 'file') {
-                  try {
-                    await save_contexts_to_file(
-                      reordered_contexts,
-                      contexts_file_path
-                    )
-                    file_contexts = reordered_contexts
-                  } catch (error: any) {
-                    vscode.window.showErrorMessage(
-                      `Error saving reordered contexts to file: ${error.message}`
-                    )
-                    console.error(
-                      'Error saving reordered contexts to file:',
-                      error
-                    )
-                    return
-                  }
-                }
-
-                quick_pick.items = create_quick_pick_items(reordered_contexts)
-
-                const active_item = quick_pick.items.find(
-                  (i) => i.label === item.context.name
-                )
-                if (active_item) {
-                  quick_pick.activeItems = [active_item]
-                }
-                return
-              }
 
               if (event.button === edit_button) {
                 const current_contexts =

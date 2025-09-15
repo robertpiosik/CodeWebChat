@@ -22,7 +22,7 @@ const get_default_intelligent_update_config = async (
     await api_providers_manager.get_intelligent_update_tool_configs()
 
   if (intelligent_update_configs.length == 0) {
-    vscode.commands.executeCommand('codeWebChat.settings.intelligentUpdate')
+    vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       'No "Intelligent Update" configurations found. Please add one in the settings.'
     )
@@ -33,7 +33,7 @@ const get_default_intelligent_update_config = async (
     await api_providers_manager.get_default_intelligent_update_config()
 
   if (!selected_config) {
-    vscode.commands.executeCommand('codeWebChat.settings.intelligentUpdate')
+    vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       'No default "Intelligent Update" configuration found. Please set one as default in the settings.'
     )

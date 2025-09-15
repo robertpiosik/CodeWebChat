@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './Donations.module.scss'
 import { IconButton } from '../IconButton/IconButton'
 

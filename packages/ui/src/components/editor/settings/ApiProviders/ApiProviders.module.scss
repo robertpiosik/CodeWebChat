@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  display: flex;
+  padding-bottom: var(--padding-8px);
+}
+
+.list {
+  width: 100%;
+}
+
+.row,
+.header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--vscode-editorGroup-border);
+  height: 36px;
+
+  > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.header {
+  font-weight: bold;
+  background-color: var(--vscode-sideBar-background);
+}
+
+.col-drag {
+  flex: 0 0 30px;
+  text-align: center;
+}
+
+.col-name {
+  flex: 1 1 25%;
+}
+
+.col-api-key {
+  flex: 1 1 25%;
+}
+
+.col-base-url {
+  flex: 1 1 45%;
+  padding-right: var(--padding-8px);
+}
+
+.col-actions {
+  flex: 0 0 100px;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--padding-4px);
+}
+
+.empty-message {
+  flex: 1;
+  text-align: center;
+  font-style: italic;
+  color: var(--vscode-descriptionForeground);
+}
+
+.drag-handle {
+  cursor: grab;
+  opacity: 0.5;
+
+  &:active {
+    cursor: grabbing;
+  }
+}

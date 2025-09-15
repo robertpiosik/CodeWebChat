@@ -16,7 +16,6 @@ export namespace Configurations {
     api_mode: 'edit-context' | 'code-completions'
     configurations: Configuration[]
     on_configuration_click: (i: number) => void
-    on_manage_configurations: () => void
     selected_configuration_index?: number
     translations: {
       my_configurations: string
@@ -32,10 +31,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         <div className={styles['heading__title']}>
           {props.translations.my_configurations}
         </div>
-        <IconButton
-          codicon_icon="settings"
-          on_click={props.on_manage_configurations}
-        />
         {props.configurations.length == 0 && (
           <span
             className={`codicon codicon-arrow-left ${styles['arrow-animate']}`}

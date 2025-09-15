@@ -50,7 +50,7 @@ Install the Connector browser extension and never copy&paste again.
 - Yuanbao
 - Z.AI
 
-> <small>**Legal Disclaimer:** After chat initialization, the extension does not read the incoming message. The injected _Apply response_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.</small>
+> <small>**Legal Disclaimer:** The extension does only basic web interactions to start a new conversation. The injected _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.</small>
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 

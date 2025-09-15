@@ -65,7 +65,7 @@ const get_intelligent_update_config = async (
     await api_providers_manager.get_intelligent_update_tool_configs()
 
   if (intelligent_update_configs.length == 0) {
-    vscode.commands.executeCommand('codeWebChat.settings.intelligentUpdate')
+    vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       'No "Intelligent Update" configurations found. Please add one in the settings.'
     )
@@ -80,16 +80,6 @@ const get_intelligent_update_config = async (
   }
 
   if (!selected_config || show_quick_pick) {
-    const move_up_button = {
-      iconPath: new vscode.ThemeIcon('chevron-up'),
-      tooltip: 'Move up'
-    }
-
-    const move_down_button = {
-      iconPath: new vscode.ThemeIcon('chevron-down'),
-      tooltip: 'Move down'
-    }
-
     const set_default_button = {
       iconPath: new vscode.ThemeIcon('star'),
       tooltip: 'Set as default'
@@ -112,16 +102,6 @@ const get_intelligent_update_config = async (
           default_config.provider_type == config.provider_type &&
           default_config.provider_name == config.provider_name &&
           default_config.model == config.model
-
-        if (intelligent_update_configs.length > 1) {
-          if (index > 0) {
-            buttons.push(move_up_button)
-          }
-
-          if (index < intelligent_update_configs.length - 1) {
-            buttons.push(move_down_button)
-          }
-        }
 
         if (is_default) {
           buttons.push(unset_default_button)
@@ -178,31 +158,6 @@ const get_intelligent_update_config = async (
             await api_providers_manager.set_default_intelligent_update_config(
               null as any
             )
-            quick_pick.items = await create_items()
-          } else if (button.tooltip == 'Move up' && index > 0) {
-            const temp = intelligent_update_configs[index]
-            intelligent_update_configs[index] =
-              intelligent_update_configs[index - 1]
-            intelligent_update_configs[index - 1] = temp
-
-            await api_providers_manager.save_intelligent_update_tool_configs(
-              intelligent_update_configs
-            )
-
-            quick_pick.items = await create_items()
-          } else if (
-            button.tooltip == 'Move down' &&
-            index < intelligent_update_configs.length - 1
-          ) {
-            const temp = intelligent_update_configs[index]
-            intelligent_update_configs[index] =
-              intelligent_update_configs[index + 1]
-            intelligent_update_configs[index + 1] = temp
-
-            await api_providers_manager.save_intelligent_update_tool_configs(
-              intelligent_update_configs
-            )
-
             quick_pick.items = await create_items()
           }
         })

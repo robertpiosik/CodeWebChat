@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './TextButton.module.scss'
 
 type Props = {

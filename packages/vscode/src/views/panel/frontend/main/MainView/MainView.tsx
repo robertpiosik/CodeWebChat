@@ -36,7 +36,6 @@ type Props = {
   is_connected: boolean
   presets: Preset[]
   configurations: ApiToolConfiguration[]
-  on_manage_configurations_click: () => void
   on_configuration_click: (index: number) => void
   has_active_editor: boolean
   has_active_selection: boolean
@@ -433,7 +432,6 @@ export const MainView: React.FC<Props> = (props) => {
                 selected_configuration_index={
                   props.selected_configuration_index
                 }
-                on_manage_configurations={props.on_manage_configurations_click}
                 translations={{
                   my_configurations: 'MY CONFIGURATIONS',
                   missing_configuration_message:

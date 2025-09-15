@@ -32,7 +32,6 @@ import {
   commit_changes_command,
   reference_in_chat_command,
   apply_clipboard_content_to_active_editor_command,
-  open_settings_command,
   open_url_command,
   feedback_command,
   apply_context_from_clipboard_command
@@ -117,7 +116,7 @@ export async function activate(context: vscode.ExtensionContext) {
     )
   }
 
-  const settingsProvider = new SettingsProvider(context.extensionUri)
+  const settings_provider = new SettingsProvider(context.extensionUri, context)
 
   context.subscriptions.push(
     open_file_from_workspace_command(open_editors_provider),
@@ -135,10 +134,9 @@ export async function activate(context: vscode.ExtensionContext) {
       url: 'https://github.com/robertpiosik/CodeWebChat'
     }),
     feedback_command(),
-    ...open_settings_command(context),
     apply_context_from_clipboard_command(workspace_provider),
-    vscode.commands.registerCommand('codeWebChat.openSettingsBeta', () => {
-      settingsProvider.createOrShow()
+    vscode.commands.registerCommand('codeWebChat.settings', () => {
+      settings_provider.createOrShow()
     })
   )
 }

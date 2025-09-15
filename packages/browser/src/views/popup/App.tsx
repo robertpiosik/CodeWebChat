@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client'
-import React from 'react'
 import { Popup } from './Popup'
 
 export const App: React.FC = () => {

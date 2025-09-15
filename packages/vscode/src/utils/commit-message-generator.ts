@@ -53,16 +53,6 @@ export const get_commit_message_config = async (
     if (configs.length == 1) {
       commit_message_config = configs[0]
     } else if (configs.length > 1) {
-      const move_up_button = {
-        iconPath: new vscode.ThemeIcon('chevron-up'),
-        tooltip: 'Move up'
-      }
-
-      const move_down_button = {
-        iconPath: new vscode.ThemeIcon('chevron-down'),
-        tooltip: 'Move down'
-      }
-
       const set_default_button = {
         iconPath: new vscode.ThemeIcon('star'),
         tooltip: 'Set as default'
@@ -86,16 +76,6 @@ export const get_commit_message_config = async (
             default_config.model == config.model &&
             default_config.temperature == config.temperature &&
             default_config.reasoning_effort == config.reasoning_effort
-
-          if (configs.length > 1) {
-            if (index > 0) {
-              buttons.push(move_up_button)
-            }
-
-            if (index < configs.length - 1) {
-              buttons.push(move_down_button)
-            }
-          }
 
           if (is_default) {
             buttons.push(unset_default_button)
@@ -156,23 +136,6 @@ export const get_commit_message_config = async (
             await api_providers_manager.set_default_commit_messages_config(
               null as any
             )
-          } else if (button.tooltip == 'Move up' && index > 0) {
-            const temp = configs[index]
-            configs[index] = configs[index - 1]
-            configs[index - 1] = temp
-            await api_providers_manager.save_commit_messages_tool_configs(
-              configs
-            )
-          } else if (
-            button.tooltip == 'Move down' &&
-            index < configs.length - 1
-          ) {
-            const temp = configs[index]
-            configs[index] = configs[index + 1]
-            configs[index + 1] = temp
-            await api_providers_manager.save_commit_messages_tool_configs(
-              configs
-            )
           }
           quick_pick.items = await create_items()
         })
@@ -205,7 +168,7 @@ export const get_commit_message_config = async (
   }
 
   if (!commit_message_config) {
-    vscode.commands.executeCommand('codeWebChat.settings.commitMessages')
+    vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       'No "Commit Messages" configurations found. Please add one in the settings.'
     )
@@ -235,7 +198,7 @@ export const get_commit_message_config = async (
   }
 
   let endpoint_url = ''
-  if (provider.type === 'built-in') {
+  if (provider.type == 'built-in') {
     const provider_info = PROVIDERS[provider.name]
     endpoint_url = provider_info.base_url
   } else {

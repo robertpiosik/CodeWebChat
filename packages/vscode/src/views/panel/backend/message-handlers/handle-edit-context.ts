@@ -23,11 +23,11 @@ const get_edit_context_config = async (
   config_index?: number,
   view_provider?: ViewProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
-  let edit_context_configs =
+  const edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
 
   if (edit_context_configs.length == 0) {
-    vscode.commands.executeCommand('codeWebChat.settings.editContext')
+    vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       'No "Edit Context" configurations found. Please add one in the settings.'
     )
@@ -63,16 +63,6 @@ const get_edit_context_config = async (
   }
 
   if (!selected_config || show_quick_pick) {
-    const move_up_button = {
-      iconPath: new vscode.ThemeIcon('chevron-up'),
-      tooltip: 'Move up'
-    }
-
-    const move_down_button = {
-      iconPath: new vscode.ThemeIcon('chevron-down'),
-      tooltip: 'Move down'
-    }
-
     const create_items = async () => {
       return edit_context_configs.map((config: ToolConfig, index) => {
         const description_parts = [config.provider_name]
@@ -86,21 +76,7 @@ const get_edit_context_config = async (
           description_parts.push('cache-enabled')
         }
 
-        let buttons: any = []
-        if (edit_context_configs.length > 1) {
-          const is_first_item = index == 0
-          const is_last_item = index == edit_context_configs.length - 1
-
-          const navigation_buttons = []
-          if (!is_first_item) {
-            navigation_buttons.push(move_up_button)
-          }
-          if (!is_last_item) {
-            navigation_buttons.push(move_down_button)
-          }
-
-          buttons = navigation_buttons
-        }
+        const buttons: vscode.QuickInputButton[] = []
 
         return {
           label: config.model,
@@ -132,38 +108,6 @@ const get_edit_context_config = async (
     return new Promise<{ provider: any; config: any } | undefined>(
       (resolve) => {
         let accepted = false
-
-        quick_pick.onDidTriggerItemButton(async (event) => {
-          const item = event.item as any
-
-          if (
-            event.button === move_up_button ||
-            event.button === move_down_button
-          ) {
-            const current_index = item.index
-            const is_moving_up = event.button === move_up_button
-
-            const min_index = 0
-            const max_index = edit_context_configs.length - 1
-            const new_index = is_moving_up
-              ? Math.max(min_index, current_index - 1)
-              : Math.min(max_index, current_index + 1)
-
-            if (new_index == current_index) {
-              return
-            }
-
-            const reordered_configs = [...edit_context_configs]
-            const [moved_config] = reordered_configs.splice(current_index, 1)
-            reordered_configs.splice(new_index, 0, moved_config)
-            edit_context_configs = reordered_configs
-            await api_providers_manager.save_edit_context_tool_configs(
-              edit_context_configs
-            )
-
-            quick_pick.items = await create_items()
-          }
-        })
 
         quick_pick.onDidAccept(async () => {
           accepted = true

@@ -23,11 +23,11 @@ const get_code_completion_config = async (
   config_index?: number,
   view_provider?: ViewProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
-  let code_completions_configs =
+  const code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
 
   if (code_completions_configs.length == 0) {
-    vscode.commands.executeCommand('codeWebChat.settings.codeCompletions')
+    vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       'No "Code Completions" configurations found. Please add one in the settings.'
     )
@@ -63,16 +63,6 @@ const get_code_completion_config = async (
   }
 
   if (!selected_config || show_quick_pick) {
-    const move_up_button = {
-      iconPath: new vscode.ThemeIcon('chevron-up'),
-      tooltip: 'Move up'
-    }
-
-    const move_down_button = {
-      iconPath: new vscode.ThemeIcon('chevron-down'),
-      tooltip: 'Move down'
-    }
-
     const create_items = () => {
       return code_completions_configs.map((config: ToolConfig, index) => {
         const description_parts = [config.provider_name]
@@ -83,18 +73,7 @@ const get_code_completion_config = async (
           description_parts.push(`${config.reasoning_effort}`)
         }
 
-        const buttons = []
-        if (code_completions_configs.length > 1) {
-          const is_first_item = index == 0
-          const is_last_item = index == code_completions_configs.length - 1
-
-          if (!is_first_item) {
-            buttons.push(move_up_button)
-          }
-          if (!is_last_item) {
-            buttons.push(move_down_button)
-          }
-        }
+        const buttons: vscode.QuickInputButton[] = []
 
         return {
           label: config.model,
@@ -125,38 +104,6 @@ const get_code_completion_config = async (
 
     return new Promise<{ provider: any; config: any } | undefined>(
       (resolve) => {
-        quick_pick.onDidTriggerItemButton(async (event) => {
-          const item = event.item as any
-
-          if (
-            event.button === move_up_button ||
-            event.button === move_down_button
-          ) {
-            const current_index = item.index
-            const is_moving_up = event.button === move_up_button
-
-            const min_index = 0
-            const max_index = code_completions_configs.length - 1
-            const new_index = is_moving_up
-              ? Math.max(min_index, current_index - 1)
-              : Math.min(max_index, current_index + 1)
-
-            if (new_index == current_index) {
-              return
-            }
-
-            const reordered_configs = [...code_completions_configs]
-            const [moved_config] = reordered_configs.splice(current_index, 1)
-            reordered_configs.splice(new_index, 0, moved_config)
-            code_completions_configs = reordered_configs
-            await api_providers_manager.save_code_completions_tool_configs(
-              code_completions_configs
-            )
-
-            quick_pick.items = create_items()
-          }
-        })
-
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()

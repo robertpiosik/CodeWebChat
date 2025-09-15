@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './BuyMeACoffeeButton.module.scss'
 import { Icon } from '../Icon'
 

@@ -87,14 +87,6 @@ export const handle_show_prompt_template_quick_pick = async (
     iconPath: new vscode.ThemeIcon('trash'),
     tooltip: 'Delete template'
   }
-  const move_up_button = {
-    iconPath: new vscode.ThemeIcon('chevron-up'),
-    tooltip: 'Move up'
-  }
-  const move_down_button = {
-    iconPath: new vscode.ThemeIcon('chevron-down'),
-    tooltip: 'Move down'
-  }
 
   const create_template_items = (templates: PromptTemplate[]) => {
     const items: (vscode.QuickPickItem & {
@@ -112,24 +104,7 @@ export const handle_show_prompt_template_quick_pick = async (
       })
       items.push(
         ...templates.map((template, index) => {
-          let buttons = []
-
-          if (!templates_quick_pick.value && templates.length > 1) {
-            const is_first_item = index == 0
-            const is_last_item = index == templates.length - 1
-
-            const navigation_buttons = []
-            if (!is_first_item) {
-              navigation_buttons.push(move_up_button)
-            }
-            if (!is_last_item) {
-              navigation_buttons.push(move_down_button)
-            }
-
-            buttons = [...navigation_buttons, edit_button, delete_button]
-          } else {
-            buttons = [edit_button, delete_button]
-          }
+          const buttons = [edit_button, delete_button]
 
           return {
             label: template.name || 'Unnamed',
@@ -377,36 +352,7 @@ export const handle_show_prompt_template_quick_pick = async (
         index: number
       }
 
-      if (
-        event.button === move_up_button ||
-        event.button === move_down_button
-      ) {
-        const current_index = item.index
-        const is_moving_up = event.button === move_up_button
-
-        const min_index = 0
-        const max_index = prompt_templates.length - 1
-        const new_index = is_moving_up
-          ? Math.max(min_index, current_index - 1)
-          : Math.min(max_index, current_index + 1)
-
-        if (new_index == current_index) {
-          return
-        }
-
-        const reordered_templates = [...prompt_templates]
-        const [moved_template] = reordered_templates.splice(current_index, 1)
-        reordered_templates.splice(new_index, 0, moved_template)
-        prompt_templates = reordered_templates
-
-        await config.update(
-          prompt_templates_key,
-          prompt_templates,
-          vscode.ConfigurationTarget.Global
-        )
-
-        templates_quick_pick.items = create_template_items(prompt_templates)
-      } else if (event.button === edit_button) {
+      if (event.button === edit_button) {
         is_editing_template = true
         const user_cancelled_entirely = await edit_template(
           item.template,

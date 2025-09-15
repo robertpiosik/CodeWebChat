@@ -17,7 +17,7 @@ export type ApiToolConfiguration = {
   instructions_placement?: InstructionsPlacement
 }
 
-// Messages sent to the backend
+// === FROM FRONTEND TO BACKEND ===
 export interface GetInstructionsMessage extends BaseMessage {
   command: 'GET_INSTRUCTIONS'
 }
@@ -307,7 +307,7 @@ export type FrontendMessage =
   | IntelligentUpdateFileInReviewMessage
   | UpdateLastUsedPresetMessage
 
-// Messages sent to the frontend
+// === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
   command: 'INSTRUCTIONS'
   ask: string

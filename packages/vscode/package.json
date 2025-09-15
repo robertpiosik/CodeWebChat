@@ -257,31 +257,6 @@
         "title": "Settings",
         "category": "Code Web Chat",
         "icon": "$(settings-gear)"
-      },
-      {
-        "command": "codeWebChat.settings.codeCompletions",
-        "title": "Settings: Code Completions",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.settings.editContext",
-        "title": "Settings: Edit Context",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.settings.intelligentUpdate",
-        "title": "Settings: Intelligent Update",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.settings.commitMessages",
-        "title": "Settings: Commit Messages",
-        "category": "Code Web Chat"
-      },
-      {
-        "command": "codeWebChat.openSettingsBeta",
-        "title": "Open Settings Beta",
-        "category": "Code Web Chat"
       }
     ],
     "menus": {
@@ -376,22 +351,6 @@
         },
         {
           "command": "codeWebChat.settings",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.settings.codeCompletions",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.settings.editContext",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.settings.intelligentUpdate",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.settings.commitMessages",
           "when": "false"
         }
       ],

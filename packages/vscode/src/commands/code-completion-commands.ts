@@ -10,7 +10,7 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/api-providers-manager'
-import { ViewProvider } from '../view/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/view-provider'
 
 // Show inline completion using Inline Completions API
 const show_inline_completion = async (params: {
@@ -63,7 +63,7 @@ const get_code_completion_config = async (
     await api_providers_manager.get_code_completions_tool_configs()
 
   if (code_completions_configs.length == 0) {
-    vscode.commands.executeCommand('codeWebChat.settings.codeCompletions')
+    vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
       'No "Code Completions" configurations found. Please add one in the settings.'
     )
@@ -80,16 +80,6 @@ const get_code_completion_config = async (
   }
 
   if (!selected_config || show_quick_pick) {
-    const move_up_button = {
-      iconPath: new vscode.ThemeIcon('chevron-up'),
-      tooltip: 'Move up'
-    }
-
-    const move_down_button = {
-      iconPath: new vscode.ThemeIcon('chevron-down'),
-      tooltip: 'Move down'
-    }
-
     const set_default_button = {
       iconPath: new vscode.ThemeIcon('pass'),
       tooltip: 'Set as default'
@@ -121,30 +111,11 @@ const get_code_completion_config = async (
           description_parts.push(`${config.reasoning_effort}`)
         }
 
-        let buttons = []
-        if (code_completions_configs.length > 1) {
-          const is_first_item = index == 0
-          const is_last_item = index == code_completions_configs.length - 1
-
-          const navigation_buttons = []
-          if (!is_first_item) {
-            navigation_buttons.push(move_up_button)
-          }
-          if (!is_last_item) {
-            navigation_buttons.push(move_down_button)
-          }
-
-          if (!is_default) {
-            buttons = [...navigation_buttons, set_default_button]
-          } else {
-            buttons = [...navigation_buttons, unset_default_button]
-          }
+        const buttons = []
+        if (is_default) {
+          buttons.push(unset_default_button)
         } else {
-          if (!is_default) {
-            buttons = [set_default_button]
-          } else {
-            buttons = [unset_default_button]
-          }
+          buttons.push(set_default_button)
         }
 
         return {
@@ -178,34 +149,7 @@ const get_code_completion_config = async (
       (resolve) => {
         quick_pick.onDidTriggerItemButton(async (event) => {
           const item = event.item as any
-
-          if (
-            event.button === move_up_button ||
-            event.button === move_down_button
-          ) {
-            const current_index = item.index
-            const is_moving_up = event.button === move_up_button
-
-            const min_index = 0
-            const max_index = code_completions_configs.length - 1
-            const new_index = is_moving_up
-              ? Math.max(min_index, current_index - 1)
-              : Math.min(max_index, current_index + 1)
-
-            if (new_index == current_index) {
-              return
-            }
-
-            const reordered_configs = [...code_completions_configs]
-            const [moved_config] = reordered_configs.splice(current_index, 1)
-            reordered_configs.splice(new_index, 0, moved_config)
-            code_completions_configs = reordered_configs
-            await api_providers_manager.save_code_completions_tool_configs(
-              code_completions_configs
-            )
-
-            quick_pick.items = await create_items()
-          } else if (event.button === set_default_button) {
+          if (event.button === set_default_button) {
             await api_providers_manager.set_default_code_completions_config(
               item.config
             )

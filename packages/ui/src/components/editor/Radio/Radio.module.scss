@@ -1,0 +1,40 @@
+.radio {
+  appearance: none;
+
+  height: 16px;
+  width: 16px;
+  background-color: var(--vscode-checkbox-background);
+  border: 1px solid var(--vscode-checkbox-border);
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: var(--disabled-opacity);
+    cursor: default;
+  }
+
+  &:checked {
+    border-color: var(--vscode-inputOption-activeBorder);
+    background-color: var(--vscode-inputOption-activeBackground);
+
+    &::before {
+      content: '';
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--vscode-inputOption-activeForeground);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
