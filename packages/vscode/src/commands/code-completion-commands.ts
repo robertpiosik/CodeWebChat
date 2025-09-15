@@ -59,7 +59,7 @@ const get_code_completion_config = async (
   config_index?: number,
   view_provider?: ViewProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
-  let code_completions_configs =
+  const code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
 
   if (code_completions_configs.length == 0) {

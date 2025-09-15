@@ -2,100 +2,25 @@ import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ApiProvidersManager,
-  Provider,
   ToolConfig
 } from '@/services/api-providers-manager'
 import { handle_get_edit_context_configurations } from './handle-get-edit-context-configurations'
-import {
-  ModelFetcher,
-  MODELS_ROUTE_NOT_FOUND_ERROR
-} from '@/services/model-fetcher'
-import { PROVIDERS } from '@shared/constants/providers'
-import { Logger } from '@shared/utils/logger'
+import { ModelFetcher } from '@/services/model-fetcher'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
+import {
+  edit_instructions_placement_for_config,
+  edit_model_for_config,
+  edit_provider_for_config,
+  edit_reasoning_effort_for_config,
+  edit_temperature_for_config,
+  initial_select_model,
+  initial_select_provider
+} from './config-editing-helpers'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
     config.reasoning_effort ?? ''
   }:${config.instructions_placement ?? ''}`
-
-const select_provider = async (
-  providers_manager: ApiProvidersManager
-): Promise<Provider | undefined> => {
-  const providers = await providers_manager.get_providers()
-
-  if (providers.length === 0) {
-    vscode.window.showWarningMessage(
-      'No API providers configured. Please add an API provider first on the "API Providers" page.'
-    )
-    return
-  }
-
-  const provider_items = providers.map((p) => ({ label: p.name, provider: p }))
-  const selected = await vscode.window.showQuickPick(provider_items, {
-    title: 'Select a Provider'
-  })
-
-  return selected?.provider
-}
-
-const select_model = async (
-  model_fetcher: ModelFetcher,
-  provider: Provider
-): Promise<string | undefined> => {
-  try {
-    const base_url =
-      provider.type == 'built-in'
-        ? PROVIDERS[provider.name]?.base_url
-        : provider.base_url
-    if (!base_url)
-      throw new Error(`Base URL not found for provider ${provider.name}`)
-
-    const models = await model_fetcher.get_models({
-      base_url,
-      api_key: provider.api_key
-    })
-
-    if (models.length > 0) {
-      const model_items = models.map((model) => ({
-        label: model.name || model.id,
-        description: model.name ? model.id : undefined,
-        detail: model.description
-      }))
-      const selected = await vscode.window.showQuickPick(model_items, {
-        title: 'Select Model',
-        placeHolder: 'Choose an AI model'
-      })
-      if (selected) return selected.description || selected.label
-      return // User cancelled
-    }
-  } catch (error) {
-    Logger.error({
-      function_name: 'select_model',
-      message: 'Failed to fetch models',
-      data: error
-    })
-    if (
-      error instanceof Error &&
-      error.message == MODELS_ROUTE_NOT_FOUND_ERROR
-    ) {
-      vscode.window.showInformationMessage(
-        `The '/models' route was not found for ${provider.name}. This might mean the provider does not support listing models.`
-      )
-    } else {
-      vscode.window.showErrorMessage(
-        `Failed to fetch models: ${
-          error instanceof Error ? error.message : String(error)
-        }`
-      )
-    }
-  }
-
-  return await vscode.window.showInputBox({
-    title: 'Enter Model Name',
-    prompt: 'Could not fetch models. Please enter a model name (ID).'
-  })
-}
 
 export const handle_add_edit_context_configuration = async (
   provider: SettingsProvider
@@ -103,10 +28,13 @@ export const handle_add_edit_context_configuration = async (
   const providers_manager = new ApiProvidersManager(provider.context)
   const model_fetcher = new ModelFetcher()
 
-  const selected_provider = await select_provider(providers_manager)
+  const selected_provider = await initial_select_provider(providers_manager)
   if (!selected_provider) return
 
-  const selected_model = await select_model(model_fetcher, selected_provider)
+  const selected_model = await initial_select_model(
+    model_fetcher,
+    selected_provider
+  )
   if (!selected_model) return
 
   const config_to_add: ToolConfig = {
@@ -135,7 +63,7 @@ export const handle_add_edit_context_configuration = async (
       },
       {
         label: 'Instructions Placement',
-        detail: config_to_add.instructions_placement ?? 'before-all'
+        detail: config_to_add.instructions_placement ?? 'above-and-below'
       }
     ]
 
@@ -152,131 +80,43 @@ export const handle_add_edit_context_configuration = async (
 
     switch (selected_option) {
       case 'Provider': {
-        const providers = await providers_manager.get_providers()
-        const provider_items = providers.map((p) => ({
-          label: p.name,
-          detail: p.type,
-          provider: p
-        }))
-        const selected_provider_item = await vscode.window.showQuickPick(
-          provider_items,
-          { title: 'Select a Provider' }
-        )
-        if (selected_provider_item) {
-          config_to_add.provider_name = selected_provider_item.provider.name
-          config_to_add.provider_type = selected_provider_item.provider.type
+        const new_provider = await edit_provider_for_config(providers_manager)
+        if (new_provider) {
+          config_to_add.provider_name = new_provider.provider_name
+          config_to_add.provider_type = new_provider.provider_type
         }
         break
       }
       case 'Model': {
-        const provider_from_manager = await providers_manager.get_provider(
-          config_to_add.provider_name
+        const new_model = await edit_model_for_config(
+          config_to_add,
+          providers_manager,
+          model_fetcher
         )
-        if (!provider_from_manager) {
-          vscode.window.showErrorMessage(
-            `Provider ${config_to_add.provider_name} not found.`
-          )
-          break
+        if (new_model !== undefined) {
+          config_to_add.model = new_model
         }
-
-        const base_url =
-          provider_from_manager.type == 'built-in'
-            ? PROVIDERS[provider_from_manager.name]?.base_url
-            : provider_from_manager.base_url
-
-        if (!base_url) {
-          vscode.window.showErrorMessage(
-            `Base URL not found for provider ${config_to_add.provider_name}.`
-          )
-          break
-        }
-
-        let new_model_value: string | undefined
-        let model_selected = false
-
-        try {
-          const models = await model_fetcher.get_models({
-            base_url,
-            api_key: provider_from_manager.api_key
-          })
-          if (models.length > 0) {
-            const model_items = models.map((model) => ({
-              label: model.name || model.id,
-              description: model.name ? model.id : undefined,
-              detail: model.description
-            }))
-            const selected_model_item = await vscode.window.showQuickPick(
-              model_items,
-              { title: 'Select Model', placeHolder: 'Choose an AI model' }
-            )
-            if (selected_model_item) {
-              new_model_value =
-                selected_model_item.description || selected_model_item.label
-              model_selected = true
-            }
-          }
-        } catch (error) {
-          Logger.error({
-            function_name: 'add_edit_context_configuration case Model',
-            message: 'Failed to fetch models',
-            data: error
-          })
-        }
-
-        if (!model_selected) {
-          const new_model_input = await vscode.window.showInputBox({
-            title: 'Enter Model Name',
-            value: config_to_add.model,
-            prompt: `Enter a model name (ID)`
-          })
-          if (new_model_input !== undefined) new_model_value = new_model_input
-        }
-
-        if (new_model_value !== undefined)
-          config_to_add.model = new_model_value.trim()
         break
       }
       case 'Temperature': {
-        const new_temp_str = await vscode.window.showInputBox({
-          title: 'Edit Temperature',
-          value: String(config_to_add.temperature),
-          prompt: 'Enter a value between 0 and 2',
-          validateInput: (value) =>
-            !/^[0-2](\.\d+)?$/.test(value) || parseFloat(value) > 2
-              ? 'Please enter a number between 0 and 2.'
-              : null
-        })
-        if (new_temp_str !== undefined)
-          config_to_add.temperature = parseFloat(new_temp_str)
+        const new_temp = await edit_temperature_for_config(config_to_add)
+        if (new_temp !== undefined) {
+          config_to_add.temperature = new_temp
+        }
         break
       }
       case 'Reasoning Effort': {
-        const effort_options: ('auto' | 'low' | 'medium' | 'high')[] = [
-          'auto',
-          'low',
-          'medium',
-          'high'
-        ]
-        const selected_effort = await vscode.window.showQuickPick(
-          effort_options,
-          { title: 'Select Reasoning Effort' }
-        )
-        if (selected_effort !== undefined)
-          config_to_add.reasoning_effort = selected_effort as any
+        const new_effort = await edit_reasoning_effort_for_config()
+        if (new_effort !== undefined) {
+          config_to_add.reasoning_effort = new_effort as any
+        }
         break
       }
       case 'Instructions Placement': {
-        const placement_options: (
-          | 'before-all'
-          | 'before-and-after'
-          | 'below-only'
-        )[] = ['before-all', 'before-and-after', 'below-only']
-        const selected_placement = await vscode.window.showQuickPick(
-          placement_options,
-          { title: 'Select Instructions Placement' }
-        )
-        if (selected_placement !== undefined)
-          config_to_add.instructions_placement = selected_placement as any
+        const new_placement = await edit_instructions_placement_for_config()
+        if (new_placement !== undefined) {
+          config_to_add.instructions_placement = new_placement as any
+        }
         break
       }
     }

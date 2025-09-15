@@ -6,12 +6,13 @@ import {
 } from '@/services/api-providers-manager'
 import { EditCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_commit_messages_configurations } from './handle-get-commit-messages-configurations'
+import { ModelFetcher } from '@/services/model-fetcher'
 import {
-  ModelFetcher,
-  MODELS_ROUTE_NOT_FOUND_ERROR
-} from '@/services/model-fetcher'
-import { PROVIDERS } from '@shared/constants/providers'
-import { Logger } from '@shared/utils/logger'
+  edit_model_for_config,
+  edit_provider_for_config,
+  edit_reasoning_effort_for_config,
+  edit_temperature_for_config
+} from './config-editing-helpers'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
@@ -29,7 +30,7 @@ export const handle_edit_commit_messages_configuration = async (
     (c) => generate_id(c) === message.configuration_id
   )
 
-  if (config_index === -1) {
+  if (config_index == -1) {
     vscode.window.showErrorMessage(`Configuration not found.`)
     return
   }
@@ -64,127 +65,23 @@ export const handle_edit_commit_messages_configuration = async (
 
     switch (selected_option) {
       case 'Provider': {
-        const providers = await providers_manager.get_providers()
-        const provider_items = providers.map((p) => ({
-          label: p.name,
-          detail: p.type,
-          provider: p
-        }))
-        const selected_provider_item = await vscode.window.showQuickPick(
-          provider_items,
-          {
-            title: 'Select a Provider'
-          }
-        )
-        if (selected_provider_item) {
-          updated_config.provider_name = selected_provider_item.provider.name
-          updated_config.provider_type = selected_provider_item.provider.type
+        const new_provider = await edit_provider_for_config(providers_manager)
+        if (new_provider) {
+          updated_config.provider_name = new_provider.provider_name
+          updated_config.provider_type = new_provider.provider_type
         } else {
           return await show_quick_pick()
         }
         break
       }
       case 'Model': {
-        const provider_info = {
-          type: config_to_edit.provider_type,
-          name: config_to_edit.provider_name
-        }
-
-        const provider_from_manager = await providers_manager.get_provider(
-          provider_info.name
+        const new_model = await edit_model_for_config(
+          config_to_edit,
+          providers_manager,
+          model_fetcher
         )
-        if (!provider_from_manager) {
-          vscode.window.showErrorMessage(
-            `Provider ${provider_info.name} not found.`
-          )
-          return await show_quick_pick()
-        }
-
-        const base_url =
-          provider_from_manager.type == 'built-in'
-            ? PROVIDERS[provider_from_manager.name]?.base_url
-            : provider_from_manager.base_url
-
-        if (!base_url) {
-          vscode.window.showErrorMessage(
-            `Base URL not found for provider ${provider_info.name}.`
-          )
-          return await show_quick_pick()
-        }
-
-        let new_model_value: string | undefined
-        let model_selected = false
-
-        try {
-          const models = await model_fetcher.get_models({
-            base_url,
-            api_key: provider_from_manager.api_key
-          })
-
-          if (models.length > 0) {
-            const model_items = models.map((model) => ({
-              label: model.name || model.id,
-              description: model.name ? model.id : undefined,
-              detail: model.description
-            }))
-
-            const selected_model_item = await vscode.window.showQuickPick(
-              model_items,
-              {
-                title: 'Select Model',
-                placeHolder: 'Choose an AI model'
-              }
-            )
-
-            if (selected_model_item) {
-              new_model_value =
-                selected_model_item.description || selected_model_item.label
-              model_selected = true
-            }
-          } else {
-            vscode.window.showWarningMessage(
-              `No models found for ${provider_info.name}. You can enter model name manually.`
-            )
-          }
-        } catch (error) {
-          Logger.error({
-            function_name:
-              'handle_edit_commit_messages_configuration case Model',
-            message: 'Failed to fetch models',
-            data: error
-          })
-          if (
-            error instanceof Error &&
-            error.message == MODELS_ROUTE_NOT_FOUND_ERROR
-          ) {
-            vscode.window.showInformationMessage(
-              `The '/models' route was not found for ${provider_info.name}. This might mean the provider does not support listing models. You can enter model name manually.`
-            )
-          } else {
-            vscode.window.showErrorMessage(
-              `Failed to fetch models: ${
-                error instanceof Error ? error.message : String(error)
-              }`
-            )
-          }
-        }
-
-        if (!model_selected) {
-          const new_model_input = await vscode.window.showInputBox({
-            title: 'Enter Model Name',
-            value: config_to_edit.model,
-            prompt: `Enter a model name (ID)`
-          })
-          if (new_model_input !== undefined) {
-            new_model_value = new_model_input
-          }
-        }
-
-        if (
-          new_model_value !== undefined &&
-          new_model_value.trim() !== config_to_edit.model
-        ) {
-          updated_config.model = new_model_value.trim()
+        if (new_model !== undefined && new_model !== config_to_edit.model) {
+          updated_config.model = new_model
         } else {
           // User cancelled or didn't change the model
           return await show_quick_pick()
@@ -193,40 +90,18 @@ export const handle_edit_commit_messages_configuration = async (
         break
       }
       case 'Temperature': {
-        const new_temp_str = await vscode.window.showInputBox({
-          title: 'Edit Temperature',
-          value: String(config_to_edit.temperature),
-          prompt: 'Enter a value between 0 and 2',
-          validateInput: (value) => {
-            const num = parseFloat(value)
-            if (isNaN(num) || num < 0 || num > 2) {
-              return 'Please enter a number between 0 and 2.'
-            }
-            return null
-          }
-        })
-        if (new_temp_str !== undefined) {
-          updated_config.temperature = parseFloat(new_temp_str)
+        const new_temp = await edit_temperature_for_config(config_to_edit)
+        if (new_temp !== undefined) {
+          updated_config.temperature = new_temp
         } else {
           return await show_quick_pick()
         }
         break
       }
       case 'Reasoning Effort': {
-        const effort_options: ('auto' | 'low' | 'medium' | 'high')[] = [
-          'auto',
-          'low',
-          'medium',
-          'high'
-        ]
-        const selected_effort = await vscode.window.showQuickPick(
-          effort_options,
-          {
-            title: 'Select Reasoning Effort'
-          }
-        )
-        if (selected_effort !== undefined) {
-          updated_config.reasoning_effort = selected_effort as any
+        const new_effort = await edit_reasoning_effort_for_config()
+        if (new_effort !== undefined) {
+          updated_config.reasoning_effort = new_effort as any
         } else {
           return await show_quick_pick()
         }

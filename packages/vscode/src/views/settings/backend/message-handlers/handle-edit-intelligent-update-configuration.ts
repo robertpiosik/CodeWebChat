@@ -29,7 +29,7 @@ export const handle_edit_intelligent_update_configuration = async (
     (c) => generate_id(c) === message.configuration_id
   )
 
-  if (config_index === -1) {
+  if (config_index == -1) {
     vscode.window.showErrorMessage(`Configuration not found.`)
     return
   }
