@@ -1,7 +1,7 @@
 import { FC, useState, useEffect } from 'react'
 import { FileInReview } from '@shared/types/file-in-review'
 import cn from 'classnames'
-import styles from './Review.module.scss'
+import styles from './Changes.module.scss'
 import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
 import { IconButton } from '../IconButton/IconButton'
@@ -26,7 +26,7 @@ type Props = {
   }) => void
 }
 
-export const Review: FC<Props> = ({
+export const Changes: FC<Props> = ({
   files,
   has_multiple_workspaces,
   on_undo,

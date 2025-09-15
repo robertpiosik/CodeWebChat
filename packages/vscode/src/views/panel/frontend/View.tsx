@@ -12,7 +12,7 @@ import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
-import { Review as UiReview } from '@ui/components/editor/Review'
+import { Changes as UiChanges } from '@ui/components/editor/Changes'
 import { Progress as UiProgress } from '@ui/components/editor/Progress'
 
 const vscode = acquireVsCodeApi()
@@ -368,8 +368,8 @@ export const View = () => {
 
       {files_to_review && (
         <div className={styles.slot}>
-          <UiPage title="Review">
-            <UiReview
+          <UiPage title="Changes">
+            <UiChanges
               files={files_to_review}
               has_multiple_workspaces={has_multiple_workspaces}
               on_undo={() => {
