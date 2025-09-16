@@ -2,10 +2,7 @@ import { useState } from 'react'
 import { Layout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ApiProvidersPage } from './pages/ApiProvidersPage'
-import { CodeCompletionsPage } from './pages/CodeCompletionsPage'
-import { CommitMessagesPage } from './pages/CommitMessagesPage'
-import { EditContextPage } from './pages/EditContextPage'
-import { IntelligentUpdatePage } from './pages/IntelligentUpdatePage'
+import { ApiToolConfigurationPage } from './pages/ApiToolConfigurationPage'
 
 type NavItem =
   | 'api-providers'
@@ -24,13 +21,45 @@ export const Settings = () => {
       case 'api-providers':
         return <ApiProvidersPage vscode={vscode} />
       case 'code-completions':
-        return <CodeCompletionsPage vscode={vscode} />
+        return (
+          <ApiToolConfigurationPage
+            vscode={vscode}
+            title="Code Completions"
+            subtitle="Get accurate code-at-cursor from state-of-the-art reasoning models."
+            tool_name="CODE_COMPLETIONS"
+            has_default={true}
+          />
+        )
       case 'edit-context':
-        return <EditContextPage vscode={vscode} />
+        return (
+          <ApiToolConfigurationPage
+            vscode={vscode}
+            title="Edit Context"
+            subtitle="Modify files based on natural language instructions."
+            tool_name="EDIT_CONTEXT"
+            has_default={false}
+          />
+        )
       case 'intelligent-update':
-        return <IntelligentUpdatePage vscode={vscode} />
+        return (
+          <ApiToolConfigurationPage
+            vscode={vscode}
+            title="Intelligent Update"
+            subtitle="Integrate truncated code blocks and fix malformed diffs."
+            tool_name="INTELLIGENT_UPDATE"
+            has_default={true}
+          />
+        )
       case 'commit-messages':
-        return <CommitMessagesPage vscode={vscode} />
+        return (
+          <ApiToolConfigurationPage
+            vscode={vscode}
+            title="Commit Messages"
+            subtitle="Generate meaningful summaries of changes adhering to your preferred style."
+            tool_name="COMMIT_MESSAGES"
+            has_default={true}
+          />
+        )
       default:
         return <div>Select a setting from the sidebar.</div>
     }
