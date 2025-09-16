@@ -3,7 +3,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ApiProvidersManager,
   ToolConfig
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import { EditEditContextConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_edit_context_configurations } from './handle-get-edit-context-configurations'
 import { ModelFetcher } from '@/services/model-fetcher'

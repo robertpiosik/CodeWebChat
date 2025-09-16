@@ -8,7 +8,7 @@ import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-
 import {
   ApiProvidersManager,
   ToolConfig
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'

@@ -3,7 +3,7 @@ import {
   ApiProvidersManager,
   Provider,
   ToolConfig
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import {
   ModelFetcher,
   MODELS_ROUTE_NOT_FOUND_ERROR

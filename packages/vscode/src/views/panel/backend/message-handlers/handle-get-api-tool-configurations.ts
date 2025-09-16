@@ -2,7 +2,7 @@ import { ViewProvider } from '@/views/panel/backend/view-provider'
 import {
   ApiProvidersManager,
   ToolConfig
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { ApiMode } from '@shared/types/modes'
 

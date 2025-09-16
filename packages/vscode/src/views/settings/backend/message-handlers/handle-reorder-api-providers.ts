@@ -1,5 +1,8 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
-import { ApiProvidersManager, Provider } from '@/services/api-providers-manager'
+import {
+  ApiProvidersManager,
+  Provider
+} from '@/services/model-providers-manager'
 import { ReorderApiProvidersMessage } from '@/views/settings/types/messages'
 
 export const handle_reorder_api_providers = async (

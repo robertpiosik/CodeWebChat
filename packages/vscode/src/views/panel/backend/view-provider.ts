@@ -70,7 +70,7 @@ import {
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
-import { api_tool_config_emitter } from '@/services/api-providers-manager'
+import { api_tool_config_emitter } from '@/services/model-providers-manager'
 import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review'
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'

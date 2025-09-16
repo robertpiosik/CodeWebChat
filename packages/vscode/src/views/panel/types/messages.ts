@@ -3,7 +3,7 @@ import { FileInReview } from '@shared/types/file-in-review'
 import { Preset } from '@shared/types/preset'
 import { HomeViewType } from './home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
-import { InstructionsPlacement } from '@/services/api-providers-manager'
+import { InstructionsPlacement } from '@/services/model-providers-manager'
 
 export interface BaseMessage {
   command: string

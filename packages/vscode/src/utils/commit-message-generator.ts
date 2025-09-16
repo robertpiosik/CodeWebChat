@@ -9,7 +9,7 @@ import { process_single_trailing_dot } from '@/utils/process-single-trailing-dot
 import {
   ApiProvidersManager,
   ReasoningEffort
-} from '../services/api-providers-manager'
+} from '../services/model-providers-manager'
 import { ignored_extensions } from '@/context/constants/ignored-extensions'
 import { PROVIDERS } from '@shared/constants/providers'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'

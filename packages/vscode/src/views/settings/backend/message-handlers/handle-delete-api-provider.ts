@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
-import { ApiProvidersManager } from '@/services/api-providers-manager'
+import { ApiProvidersManager } from '@/services/model-providers-manager'
 import { DeleteApiProviderMessage } from '@/views/settings/types/messages'
 import { handle_get_api_providers } from './handle-get-api-providers'
 

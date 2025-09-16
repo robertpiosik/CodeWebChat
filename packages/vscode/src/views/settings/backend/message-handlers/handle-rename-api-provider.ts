@@ -3,7 +3,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ApiProvidersManager,
   CustomProvider
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import { RenameApiProviderMessage } from '@/views/settings/types/messages'
 import { handle_get_api_providers } from './handle-get-api-providers'
 

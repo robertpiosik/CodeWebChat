@@ -1,6 +1,9 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
-import { ApiProvidersManager, Provider } from '@/services/api-providers-manager'
+import {
+  ApiProvidersManager,
+  Provider
+} from '@/services/model-providers-manager'
 import { ChangeApiProviderKeyMessage } from '@/views/settings/types/messages'
 import { handle_get_api_providers } from './handle-get-api-providers'
 

@@ -9,7 +9,7 @@ import {
 } from '@/constants/state-keys'
 import { Logger } from '@shared/utils/logger'
 import { parse_response } from '@/commands/apply-chat-response-command/utils/clipboard-parser'
-import { ApiProvidersManager } from '@/services/api-providers-manager'
+import { ApiProvidersManager } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import { process_file } from '@/utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'

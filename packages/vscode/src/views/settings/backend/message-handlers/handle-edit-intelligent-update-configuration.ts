@@ -3,7 +3,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ApiProvidersManager,
   ToolConfig
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import { EditIntelligentUpdateConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_intelligent_update_configurations } from './handle-get-intelligent-update-configurations'
 import {

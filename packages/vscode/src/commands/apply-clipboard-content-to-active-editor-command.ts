@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ApiProvidersManager } from '@/services/api-providers-manager'
+import { ApiProvidersManager } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import axios from 'axios'
 import {

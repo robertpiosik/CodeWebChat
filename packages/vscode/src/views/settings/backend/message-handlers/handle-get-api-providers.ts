@@ -1,5 +1,5 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
-import { ApiProvidersManager } from '@/services/api-providers-manager'
+import { ApiProvidersManager } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import { ProviderForClient } from '@/views/settings/types/messages'
 

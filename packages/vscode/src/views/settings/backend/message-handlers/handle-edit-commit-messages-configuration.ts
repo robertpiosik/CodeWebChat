@@ -3,7 +3,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ApiProvidersManager,
   ToolConfig
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import { EditCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_commit_messages_configurations } from './handle-get-commit-messages-configurations'
 import { ModelFetcher } from '@/services/model-fetcher'

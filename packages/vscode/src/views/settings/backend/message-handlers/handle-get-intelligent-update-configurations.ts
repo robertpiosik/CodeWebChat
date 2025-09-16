@@ -2,7 +2,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ApiProvidersManager,
   ToolConfig
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import { ConfigurationForClient } from '@/views/settings/types/messages'
 import { SupportedTool, DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 

@@ -2,7 +2,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ApiProvidersManager,
   ToolConfig
-} from '@/services/api-providers-manager'
+} from '@/services/model-providers-manager'
 import { ReorderCommitMessagesConfigurationsMessage } from '@/views/settings/types/messages'
 
 const generate_id = (config: ToolConfig) =>
