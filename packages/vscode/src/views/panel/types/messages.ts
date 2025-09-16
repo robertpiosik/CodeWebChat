@@ -469,6 +469,11 @@ export interface HideProgressMessage extends BaseMessage {
   command: 'HIDE_PROGRESS'
 }
 
+export interface UpdateFileInReviewMessage extends BaseMessage {
+  command: 'UPDATE_FILE_IN_REVIEW'
+  file: FileInReview
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusChatInputMessage
@@ -500,3 +505,4 @@ export type BackendMessage =
   | SelectedConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
+  | UpdateFileInReviewMessage

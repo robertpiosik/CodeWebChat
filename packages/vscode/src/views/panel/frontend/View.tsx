@@ -109,6 +109,15 @@ export const View = () => {
         set_has_active_selection(message.has_selection)
       } else if (message.command == 'CODE_REVIEW_STARTED') {
         set_files_to_review(message.files)
+      } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
+        set_files_to_review((current_files) =>
+          current_files?.map((f) =>
+            f.file_path === message.file.file_path &&
+            f.workspace_name === message.file.workspace_name
+              ? message.file
+              : f
+          )
+        )
       } else if (message.command == 'CODE_REVIEW_FINISHED') {
         set_files_to_review(undefined)
       } else if (message.command == 'HAS_MULTIPLE_WORKSPACES') {

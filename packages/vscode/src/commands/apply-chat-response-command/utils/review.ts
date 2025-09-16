@@ -295,6 +295,36 @@ export const review = async (params: {
 
   let prepared_files: PreparedFile[] = []
 
+  const text_document_change_listener =
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      if (!params.view_provider) return
+
+      const changed_doc_path = event.document.uri.fsPath
+      const changed_file_in_review = prepared_files.find(
+        (pf) => pf.sanitized_path === changed_doc_path
+      )
+
+      if (changed_file_in_review) {
+        const new_content = event.document.getText()
+        const original_content = changed_file_in_review.original_content
+        const diff_stats = get_diff_stats({
+          original_content,
+          new_content
+        })
+
+        changed_file_in_review.reviewable_file.lines_added =
+          diff_stats.lines_added
+        changed_file_in_review.reviewable_file.lines_removed =
+          diff_stats.lines_removed
+        changed_file_in_review.reviewable_file.content = new_content
+
+        params.view_provider.send_message({
+          command: 'UPDATE_FILE_IN_REVIEW',
+          file: changed_file_in_review.reviewable_file
+        })
+      }
+    })
+
   try {
     prepared_files = await prepare_files_from_original_states({
       original_states: params.original_states,
@@ -470,6 +500,7 @@ export const review = async (params: {
 
     return { accepted_files, rejected_states }
   } finally {
+    text_document_change_listener.dispose()
     await close_review_diff_editors(prepared_files)
     cleanup_temp_files(prepared_files)
     toggle_file_review_state = undefined

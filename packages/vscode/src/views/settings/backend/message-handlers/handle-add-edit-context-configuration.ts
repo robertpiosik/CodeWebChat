@@ -63,7 +63,11 @@ export const handle_add_edit_context_configuration = async (
       },
       {
         label: 'Instructions Placement',
-        detail: config_to_add.instructions_placement ?? 'above-and-below'
+        detail:
+          (config_to_add.instructions_placement ?? 'above-and-below') ==
+          'below-only'
+            ? 'Below Only'
+            : 'Above and Below'
       }
     ]
 

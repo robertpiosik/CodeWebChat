@@ -45,14 +45,15 @@ export const Changes: FC<Props> = ({
   useEffect(() => {
     set_files_to_review(files.map((f) => ({ ...f, is_checked: true })))
     set_last_clicked_file_index(0)
-    set_is_keep_button_focused(false)
+  }, [files])
 
+  useEffect(() => {
     const timer = setTimeout(() => {
       set_is_keep_button_focused(true)
     }, 1000)
 
     return () => clearTimeout(timer)
-  }, [files])
+  }, [])
 
   const handle_keep = () => {
     const accepted_files = files_to_review.filter((f) => f.is_checked)
