@@ -69,6 +69,11 @@
   width: 100%; // For easier text selection
   padding-bottom: var(--padding-12px);
 
+  &__version {
+    color: var(--vscode-descriptionForeground);
+    user-select: text;
+  }
+
   &__links {
     display: flex;
     flex-direction: column;
@@ -89,23 +94,9 @@
   padding: var(--padding-8px) var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
 
-  &__left,
-  &__right {
-    flex: 1;
-  }
-
-  &__left {
-    > a {
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
   &__social {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: var(--padding-8px);
 
@@ -137,9 +128,9 @@
     }
   }
 
-  &__right {
+  &__website {
+    flex: 1;
     text-align: right;
-    color: var(--vscode-descriptionForeground);
     user-select: text;
   }
 }

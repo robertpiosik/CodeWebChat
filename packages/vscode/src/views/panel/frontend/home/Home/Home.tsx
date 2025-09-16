@@ -58,6 +58,7 @@ export const Home: React.FC<Props> = (props) => {
           </div>
 
           <div className={styles.bottom}>
+            <div className={styles.bottom__version}>{props.version}</div>
             <div className={styles.bottom__links}>
               <div>
                 Released under the{' '}
@@ -75,9 +76,6 @@ export const Home: React.FC<Props> = (props) => {
       </Scrollable>
 
       <div className={styles.footer}>
-        <div className={styles.footer__left}>
-          <a href="https://codeweb.chat/">Docs</a>
-        </div>
         <div className={styles.footer__social}>
           <a
             href="https://x.com/CodeWebChat"
@@ -110,7 +108,10 @@ export const Home: React.FC<Props> = (props) => {
             <Icon variant="DISCORD" />
           </a>
         </div>
-        <div className={styles.footer__right}>{props.version}</div>
+
+        <div className={styles.footer__website}>
+          <a href="https://codeweb.chat/">Visit codeweb.chat</a>
+        </div>
       </div>
     </div>
   )

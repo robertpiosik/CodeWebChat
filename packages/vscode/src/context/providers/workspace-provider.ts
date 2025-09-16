@@ -17,9 +17,8 @@ const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 1000
 
 export class WebsitesFolderItem extends vscode.TreeItem {
   constructor(public readonly websites: WebsiteItem[]) {
-    super('Websites', vscode.TreeItemCollapsibleState.Collapsed)
+    super('Saved Websites', vscode.TreeItemCollapsibleState.Collapsed)
     this.contextValue = 'websitesFolder'
-    this.iconPath = new vscode.ThemeIcon('globe')
   }
 }
 
