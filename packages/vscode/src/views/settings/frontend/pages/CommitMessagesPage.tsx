@@ -65,6 +65,12 @@ export const CommitMessagesPage = ({ vscode }: { vscode: any }) => {
             configuration_id
           })
         }}
+        on_unset_default={() => {
+          post_message(vscode, {
+            command: 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION',
+            configuration_id: null
+          })
+        }}
       />
     </Page>
   )

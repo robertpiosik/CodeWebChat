@@ -18,6 +18,12 @@ export const handle_set_default_commit_messages_configuration = async (
   const providers_manager = new ApiProvidersManager(provider.context)
   const configuration_id = message.configuration_id
 
+  if (configuration_id === null) {
+    await providers_manager.set_default_commit_messages_config(null)
+    await handle_get_commit_messages_configurations(provider)
+    return
+  }
+
   const configs = await providers_manager.get_commit_messages_tool_configs()
   const config_to_set_as_default = configs.find(
     (c) => generate_id(c) === configuration_id

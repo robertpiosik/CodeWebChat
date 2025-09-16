@@ -8,7 +8,6 @@ type Props = {
   id?: string
   name?: string
   title?: string
-  on_click?: (e: MouseEvent<HTMLInputElement>) => void
 }
 
 export const Radio: FC<Props> = (props) => {
@@ -26,10 +25,6 @@ export const Radio: FC<Props> = (props) => {
       onChange={handle_change}
       disabled={props.disabled}
       title={props.title}
-      onClick={(e) => {
-        e.stopPropagation()
-        props.on_click?.(e)
-      }}
     />
   )
 }

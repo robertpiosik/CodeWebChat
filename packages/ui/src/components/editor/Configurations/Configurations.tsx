@@ -1,7 +1,6 @@
 import styles from './Configurations.module.scss'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
-import { IconButton } from '../IconButton'
 
 export namespace Configurations {
   export type Configuration = {

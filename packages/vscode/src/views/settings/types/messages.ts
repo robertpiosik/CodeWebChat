@@ -68,7 +68,7 @@ export interface AddCodeCompletionsConfigurationMessage {
 
 export interface SetDefaultCodeCompletionsConfigurationMessage {
   command: 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION'
-  configuration_id: string
+  configuration_id: string | null
 }
 
 export interface GetEditContextConfigurationsMessage {
@@ -119,7 +119,7 @@ export interface AddIntelligentUpdateConfigurationMessage {
 
 export interface SetDefaultIntelligentUpdateConfigurationMessage {
   command: 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION'
-  configuration_id: string
+  configuration_id: string | null
 }
 
 export interface GetCommitMessagesConfigurationsMessage {
@@ -147,7 +147,7 @@ export interface AddCommitMessagesConfigurationMessage {
 
 export interface SetDefaultCommitMessagesConfigurationMessage {
   command: 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION'
-  configuration_id: string
+  configuration_id: string | null
 }
 
 export type FrontendMessage =

@@ -65,6 +65,12 @@ export const CodeCompletionsPage = ({ vscode }: { vscode: any }) => {
             configuration_id
           })
         }}
+        on_unset_default={() => {
+          post_message(vscode, {
+            command: 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION',
+            configuration_id: null
+          })
+        }}
       />
     </Page>
   )
