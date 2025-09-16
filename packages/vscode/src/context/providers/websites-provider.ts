@@ -15,7 +15,7 @@ export class WebsiteItem extends vscode.TreeItem {
   ) {
     super(title, vscode.TreeItemCollapsibleState.None)
 
-    const content_xml = `<text title="${title}">\n<![CDATA[\n${content}\n]]>\n</text>\n`
+    const content_xml = `<document title="${title}">\n<![CDATA[\n${content}\n]]>\n</document>\n`
     this.token_count = Math.floor(content_xml.length / 4)
     const formatted_token_count =
       this.token_count >= 1000
@@ -55,15 +55,13 @@ export class EmptyMessageItem extends vscode.TreeItem {
 }
 
 export class WebsitesProvider
-  implements
-    vscode.TreeDataProvider<WebsiteItem | EmptyMessageItem>,
-    vscode.Disposable
+  implements vscode.TreeDataProvider<WebsiteItem>, vscode.Disposable
 {
   private _websites: Website[] = []
   private _checked_websites: Map<string, vscode.TreeItemCheckboxState> =
     new Map()
   private _onDidChangeTreeData = new vscode.EventEmitter<
-    WebsiteItem | EmptyMessageItem | undefined | null | void
+    WebsiteItem | undefined | null | void
   >()
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event
 
@@ -88,11 +86,7 @@ export class WebsitesProvider
     this._onDidChangeCheckedWebsites.fire()
   }
 
-  getTreeItem(element: WebsiteItem | EmptyMessageItem): vscode.TreeItem {
-    if (element instanceof EmptyMessageItem) {
-      return element
-    }
-
+  getTreeItem(element: WebsiteItem): vscode.TreeItem {
     const checkbox_state =
       this._checked_websites.get(element.url) ??
       vscode.TreeItemCheckboxState.Unchecked
@@ -100,9 +94,9 @@ export class WebsitesProvider
     return element
   }
 
-  getChildren(): Thenable<(WebsiteItem | EmptyMessageItem)[]> {
+  getChildren(): Thenable<WebsiteItem[]> {
     if (this._websites.length == 0) {
-      return Promise.resolve([new EmptyMessageItem()])
+      return Promise.resolve([])
     }
 
     return Promise.resolve(
@@ -131,7 +125,7 @@ export class WebsitesProvider
   get_checked_websites_token_count(): number {
     return this.get_checked_websites()
       .map((website) => {
-        const content_xml = `<text title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</text>\n`
+        const content_xml = `<document title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</document>\n`
         return Math.floor(content_xml.length / 4)
       })
       .reduce((sum, count) => sum + count, 0)
@@ -146,6 +140,34 @@ export class WebsitesProvider
     this._onDidChangeTreeData.fire()
   }
 
+  check_all(): void {
+    let changed = false
+    for (const website of this._websites) {
+      if (
+        this._checked_websites.get(website.url) !==
+        vscode.TreeItemCheckboxState.Checked
+      ) {
+        this._checked_websites.set(
+          website.url,
+          vscode.TreeItemCheckboxState.Checked
+        )
+        changed = true
+      }
+    }
+    if (changed) {
+      this._onDidChangeCheckedWebsites.fire()
+      this._onDidChangeTreeData.fire()
+    }
+  }
+
+  clear_checks(): void {
+    if (this._checked_websites.size == 0) {
+      return
+    }
+    this._checked_websites.clear()
+    this._onDidChangeCheckedWebsites.fire()
+    this._onDidChangeTreeData.fire()
+  }
   private async save_checked_websites_state(): Promise<void> {
     const checked_urls = this.get_checked_websites().map((w) => w.url)
     await this.context.workspaceState.update(

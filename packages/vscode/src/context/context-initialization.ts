@@ -1,7 +1,10 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider } from './providers/workspace-provider'
-import { FileItem } from './providers/workspace-provider'
+import {
+  WorkspaceProvider,
+  FileItem,
+  WebsitesFolderItem
+} from './providers/workspace-provider'
 import { FilesCollector } from '../utils/files-collector'
 import { OpenEditorsProvider } from './providers/open-editors-provider'
 import { WebsitesProvider, WebsiteItem } from './providers/websites-provider'
@@ -20,29 +23,27 @@ export function context_initialization(context: vscode.ExtensionContext): {
   const workspace_folders = vscode.workspace.workspaceFolders
 
   let workspace_provider: WorkspaceProvider | undefined
-  let workspace_view: vscode.TreeView<FileItem>
+  let workspace_view: vscode.TreeView<
+    FileItem | WebsiteItem | WebsitesFolderItem
+  >
 
   if (!workspace_folders) {
     vscode.window.showInformationMessage('Please open a folder to use CWC.')
     return {}
   }
 
-  workspace_provider = new WorkspaceProvider(workspace_folders as any, context)
+  const websites_provider = new WebsitesProvider(context)
+  workspace_provider = new WorkspaceProvider(
+    workspace_folders as any,
+    context,
+    websites_provider
+  )
+  context.subscriptions.push(websites_provider)
 
   const open_editors_provider = new OpenEditorsProvider(
     workspace_folders as any,
     workspace_provider
   )
-  const websites_provider = new WebsitesProvider(context)
-
-  const websites_view = vscode.window.createTreeView(
-    'codeWebChatViewWebsites',
-    {
-      treeDataProvider: websites_provider,
-      manageCheckboxStateManually: true
-    }
-  )
-  context.subscriptions.push(websites_provider, websites_view)
 
   const files_collector = new FilesCollector(
     workspace_provider,
@@ -73,13 +74,6 @@ export function context_initialization(context: vscode.ExtensionContext): {
     token_count_emitter.emit('token-count-updated')
   }
 
-  websites_view.onDidChangeCheckboxState(async (e) => {
-    for (const [item, state] of e.items) {
-      await websites_provider!.update_check_state(item as WebsiteItem, state)
-    }
-    update_activity_bar_badge_token_count()
-  })
-
   const shared_state = SharedFileState.get_instance()
   shared_state.set_providers(workspace_provider, open_editors_provider)
 
@@ -91,7 +85,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
   })
 
   const register_workspace_view_handlers = (
-    view: vscode.TreeView<FileItem>
+    view: vscode.TreeView<FileItem | WebsiteItem | WebsitesFolderItem>
   ) => {
     view.onDidChangeCheckboxState(async (e) => {
       for (const [item, state] of e.items) {
@@ -331,7 +325,8 @@ export function context_initialization(context: vscode.ExtensionContext): {
       if (vscode.workspace.workspaceFolders) {
         const new_workspace_provider = new WorkspaceProvider(
           vscode.workspace.workspaceFolders as any,
-          context
+          context,
+          websites_provider
         )
 
         if (workspace_provider) {

@@ -68,17 +68,12 @@
       "codeWebChat": [
         {
           "id": "codeWebChatViewOpenEditors",
-          "name": "Context: Open Editors",
+          "name": "Open Editors",
           "icon": "resources/activity-bar-icon.svg"
         },
         {
           "id": "codeWebChatViewWorkspace",
-          "name": "Context: Workspace",
-          "icon": "resources/activity-bar-icon.svg"
-        },
-        {
-          "id": "codeWebChatViewWebsites",
-          "name": "Context: Websites",
+          "name": "Context",
           "icon": "resources/activity-bar-icon.svg"
         },
         {

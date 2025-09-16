@@ -58,7 +58,7 @@ export class FilesCollector {
       const checked_websites = this.websites_provider.get_checked_websites()
 
       for (const website of checked_websites) {
-        collected_text += `<text title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</text>\n`
+        collected_text += `<document title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</document>\n`
       }
     }
 
