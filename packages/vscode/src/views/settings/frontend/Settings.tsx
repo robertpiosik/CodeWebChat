@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Layout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
-import { ApiProvidersPage } from './pages/ApiProvidersPage'
+import { ModelProvidersPage } from './pages/ModelProvidersPage'
 import { ApiToolConfigurationPage } from './pages/ApiToolConfigurationPage'
 
 type NavItem =
-  | 'api-providers'
+  | 'model-providers'
   | 'code-completions'
   | 'edit-context'
   | 'intelligent-update'
@@ -14,12 +14,12 @@ type NavItem =
 const vscode = acquireVsCodeApi()
 
 export const Settings = () => {
-  const [active_item, set_active_item] = useState<NavItem>('api-providers')
+  const [active_item, set_active_item] = useState<NavItem>('model-providers')
 
   const render_active_page = () => {
     switch (active_item) {
-      case 'api-providers':
-        return <ApiProvidersPage vscode={vscode} />
+      case 'model-providers':
+        return <ModelProvidersPage vscode={vscode} />
       case 'code-completions':
         return (
           <ApiToolConfigurationPage
@@ -71,11 +71,11 @@ export const Settings = () => {
       sidebar={
         <>
           <NavigationItem
-            key="api-providers"
-            label="API Providers"
+            key="model-providers"
+            label="Model Providers"
             codicon="key"
-            is_active={active_item == 'api-providers'}
-            on_click={() => set_active_item('api-providers')}
+            is_active={active_item == 'model-providers'}
+            on_click={() => set_active_item('model-providers')}
           />
           <NavigationItem
             key="code-completions"

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import axios, { CancelToken } from 'axios'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ReasoningEffort,
   ToolConfig
 } from '@/services/model-providers-manager'
@@ -12,7 +12,7 @@ import { cleanup_api_response } from './cleanup-api-response'
 import { refactoring_instruction } from '../constants/instructions'
 
 export const get_intelligent_update_config = async (
-  api_providers_manager: ApiProvidersManager,
+  api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext
 ): Promise<{ provider: any; config: ToolConfig } | undefined> => {

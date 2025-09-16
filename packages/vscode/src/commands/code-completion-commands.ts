@@ -3,7 +3,7 @@ import axios from 'axios'
 import { make_api_request } from '../utils/make-api-request'
 import { code_completion_instructions } from '../constants/instructions'
 import { FilesCollector } from '../utils/files-collector'
-import { ApiProvidersManager } from '../services/model-providers-manager'
+import { ModelProvidersManager } from '../services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
@@ -53,7 +53,7 @@ const show_inline_completion = async (params: {
 }
 
 const get_code_completion_config = async (
-  api_providers_manager: ApiProvidersManager,
+  api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   config_index?: number,
@@ -242,7 +242,7 @@ const perform_code_completion = async (params: {
   config_index?: number
   view_provider?: ViewProvider
 }) => {
-  const api_providers_manager = new ApiProvidersManager(params.context)
+  const api_providers_manager = new ModelProvidersManager(params.context)
 
   let completion_instructions: string | undefined =
     params.completion_instructions

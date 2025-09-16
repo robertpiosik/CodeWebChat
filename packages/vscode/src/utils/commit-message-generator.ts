@@ -7,7 +7,7 @@ import { Logger } from '@shared/utils/logger'
 import { should_ignore_file } from '../context/utils/should-ignore-file'
 import { process_single_trailing_dot } from '@/utils/process-single-trailing-dot/process-single-trailing-dot'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ReasoningEffort
 } from '../services/model-providers-manager'
 import { ignored_extensions } from '@/context/constants/ignored-extensions'
@@ -43,7 +43,7 @@ export const get_commit_message_config = async (
   provider: any
   endpoint_url: string
 } | null> => {
-  const api_providers_manager = new ApiProvidersManager(context)
+  const api_providers_manager = new ModelProvidersManager(context)
   let commit_message_config: CommitMessageConfig | null | undefined =
     await api_providers_manager.get_default_commit_messages_config()
 

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ApiProvidersManager } from '@/services/model-providers-manager'
+import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import axios from 'axios'
 import {
@@ -25,7 +25,7 @@ export const apply_clipboard_content_to_active_editor_command = (
         return
       }
 
-      const api_providers_manager = new ApiProvidersManager(context)
+      const api_providers_manager = new ModelProvidersManager(context)
       const config_result = await get_intelligent_update_config(
         api_providers_manager,
         false,

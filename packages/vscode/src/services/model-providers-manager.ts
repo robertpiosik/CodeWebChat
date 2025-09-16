@@ -10,7 +10,7 @@ import {
   TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
   DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
 } from '@/constants/state-keys'
-import { SECRET_STORAGE_API_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
+import { SECRET_STORAGE_MODEL_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
 
 export const api_tool_config_emitter = new EventEmitter()
 
@@ -48,7 +48,7 @@ export type EditContextConfigs = ToolConfig[]
 export type IntelligentUpdateConfigs = ToolConfig[]
 export type CommitMessagesConfigs = ToolConfig[]
 
-export class ApiProvidersManager {
+export class ModelProvidersManager {
   private _providers: Provider[] = []
   private _load_promise: Promise<void>
 
@@ -59,7 +59,7 @@ export class ApiProvidersManager {
   private async _load_providers() {
     try {
       const providers_json = await this._vscode.secrets.get(
-        SECRET_STORAGE_API_PROVIDERS_KEY
+        SECRET_STORAGE_MODEL_PROVIDERS_KEY
       )
       const saved_providers = providers_json
         ? (JSON.parse(providers_json) as Provider[])
@@ -78,7 +78,7 @@ export class ApiProvidersManager {
   public async save_providers(providers: Provider[]) {
     try {
       await this._vscode.secrets.store(
-        SECRET_STORAGE_API_PROVIDERS_KEY,
+        SECRET_STORAGE_MODEL_PROVIDERS_KEY,
         JSON.stringify(providers)
       )
       this._providers = providers

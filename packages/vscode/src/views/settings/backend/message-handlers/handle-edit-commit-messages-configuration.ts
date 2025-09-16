@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
 import { EditCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
@@ -23,7 +23,7 @@ export const handle_edit_commit_messages_configuration = async (
   provider: SettingsProvider,
   message: EditCommitMessagesConfigurationMessage
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const model_fetcher = new ModelFetcher()
   let configs = await providers_manager.get_commit_messages_tool_configs()
   let config_index = configs.findIndex(

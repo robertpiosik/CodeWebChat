@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
 import { ReorderIntelligentUpdateConfigurationsMessage } from '@/views/settings/types/messages'
@@ -14,7 +14,7 @@ export const handle_reorder_intelligent_update_configurations = async (
   provider: SettingsProvider,
   message: ReorderIntelligentUpdateConfigurationsMessage
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const current_configs =
     await providers_manager.get_intelligent_update_tool_configs()
 

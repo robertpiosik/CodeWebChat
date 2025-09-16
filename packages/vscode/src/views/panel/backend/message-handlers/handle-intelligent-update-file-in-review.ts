@@ -9,14 +9,14 @@ import {
 } from '@/constants/state-keys'
 import { Logger } from '@shared/utils/logger'
 import { parse_response } from '@/commands/apply-chat-response-command/utils/clipboard-parser'
-import { ApiProvidersManager } from '@/services/model-providers-manager'
+import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import { process_file } from '@/utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import axios from 'axios'
 
 const get_default_intelligent_update_config = async (
-  api_providers_manager: ApiProvidersManager
+  api_providers_manager: ModelProvidersManager
 ): Promise<{ provider: any; config: any } | undefined> => {
   const intelligent_update_configs =
     await api_providers_manager.get_intelligent_update_tool_configs()
@@ -120,7 +120,7 @@ export const handle_intelligent_update_file_in_review = async (
     return
   }
 
-  const api_providers_manager = new ApiProvidersManager(provider.context)
+  const api_providers_manager = new ModelProvidersManager(provider.context)
   const config_result = await get_default_intelligent_update_config(
     api_providers_manager
   )

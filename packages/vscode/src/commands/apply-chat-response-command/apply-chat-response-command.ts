@@ -13,7 +13,7 @@ import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { handle_intelligent_update } from './handlers/intelligent-update-handler'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
-import { ApiProvidersManager } from '@/services/model-providers-manager'
+import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { apply_git_patch } from './handlers/diff-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
@@ -57,7 +57,7 @@ const check_if_all_files_new = async (
 }
 
 const get_intelligent_update_config = async (
-  api_providers_manager: ApiProvidersManager,
+  api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext
 ): Promise<{ provider: any; config: any } | undefined> => {
@@ -593,7 +593,7 @@ export const apply_chat_response_command = (
           }
 
           if (failure_count > 0) {
-            const api_providers_manager = new ApiProvidersManager(context)
+            const api_providers_manager = new ModelProvidersManager(context)
             const config_result = await get_intelligent_update_config(
               api_providers_manager,
               false,
@@ -772,7 +772,7 @@ export const apply_chat_response_command = (
               data: { success: result.success }
             })
           } else if (selected_mode_label == 'Intelligent update') {
-            const api_providers_manager = new ApiProvidersManager(context)
+            const api_providers_manager = new ModelProvidersManager(context)
 
             const config_result = await get_intelligent_update_config(
               api_providers_manager,

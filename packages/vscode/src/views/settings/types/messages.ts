@@ -15,31 +15,31 @@ export type ConfigurationForClient = {
 }
 
 // === FROM FRONTEND TO BACKEND ===
-export interface GetApiProvidersMessage {
-  command: 'GET_API_PROVIDERS'
+export interface GetModelProvidersMessage {
+  command: 'GET_MODEL_PROVIDERS'
 }
 
-export interface ReorderApiProvidersMessage {
-  command: 'REORDER_API_PROVIDERS'
+export interface ReorderModelProvidersMessage {
+  command: 'REORDER_MODEL_PROVIDERS'
   providers: ProviderForClient[]
 }
 
-export interface AddApiProviderMessage {
-  command: 'ADD_API_PROVIDER'
+export interface AddModelProviderMessage {
+  command: 'ADD_MODEL_PROVIDER'
 }
 
-export interface DeleteApiProviderMessage {
-  command: 'DELETE_API_PROVIDER'
+export interface DeleteModelProviderMessage {
+  command: 'DELETE_MODEL_PROVIDER'
   provider_name: string
 }
 
-export interface RenameApiProviderMessage {
-  command: 'RENAME_API_PROVIDER'
+export interface RenameModelProviderMessage {
+  command: 'RENAME_MODEL_PROVIDER'
   provider_name: string
 }
 
-export interface ChangeApiProviderKeyMessage {
-  command: 'CHANGE_API_PROVIDER_KEY'
+export interface ChangeModelProviderKeyMessage {
+  command: 'CHANGE_MODEL_PROVIDER_KEY'
   provider_name: string
 }
 
@@ -151,12 +151,12 @@ export interface SetDefaultCommitMessagesConfigurationMessage {
 }
 
 export type FrontendMessage =
-  | GetApiProvidersMessage
-  | ReorderApiProvidersMessage
-  | AddApiProviderMessage
-  | DeleteApiProviderMessage
-  | RenameApiProviderMessage
-  | ChangeApiProviderKeyMessage
+  | GetModelProvidersMessage
+  | ReorderModelProvidersMessage
+  | AddModelProviderMessage
+  | DeleteModelProviderMessage
+  | RenameModelProviderMessage
+  | ChangeModelProviderKeyMessage
   | GetCodeCompletionsConfigurationsMessage
   | ReorderCodeCompletionsConfigurationsMessage
   | EditCodeCompletionsConfigurationMessage
@@ -182,8 +182,8 @@ export type FrontendMessage =
   | SetDefaultCommitMessagesConfigurationMessage
 
 // === FROM BACKEND TO FRONTEND ===
-export interface ApiProvidersMessage {
-  command: 'API_PROVIDERS'
+export interface ModelProvidersMessage {
+  command: 'MODEL_PROVIDERS'
   providers: ProviderForClient[]
 }
 
@@ -205,7 +205,7 @@ export interface CommitMessagesConfigurationsMessage {
 }
 
 export type BackendMessage =
-  | ApiProvidersMessage
+  | ModelProvidersMessage
   | CodeCompletionsConfigurationsMessage
   | EditContextConfigurationsMessage
   | IntelligentUpdateConfigurationsMessage

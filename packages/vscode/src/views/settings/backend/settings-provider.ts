@@ -4,12 +4,12 @@ import {
   FrontendMessage
 } from '@/views/settings/types/messages'
 import {
-  handle_get_api_providers,
-  handle_reorder_api_providers,
-  handle_add_api_provider,
-  handle_delete_api_provider,
-  handle_rename_api_provider,
-  handle_change_api_provider_key,
+  handle_get_model_providers,
+  handle_reorder_model_providers,
+  handle_add_model_provider,
+  handle_delete_model_provider,
+  handle_rename_model_provider,
+  handle_change_model_provider_key,
   handle_get_code_completions_configurations,
   handle_reorder_code_completions_configurations,
   handle_delete_code_completions_configuration,
@@ -78,23 +78,23 @@ export class SettingsProvider {
     this._panel.webview.onDidReceiveMessage(
       (message: FrontendMessage) => {
         switch (message.command) {
-          case 'GET_API_PROVIDERS':
-            void handle_get_api_providers(this)
+          case 'GET_MODEL_PROVIDERS':
+            void handle_get_model_providers(this)
             break
-          case 'REORDER_API_PROVIDERS':
-            void handle_reorder_api_providers(this, message)
+          case 'REORDER_MODEL_PROVIDERS':
+            void handle_reorder_model_providers(this, message)
             break
-          case 'ADD_API_PROVIDER':
-            void handle_add_api_provider(this)
+          case 'ADD_MODEL_PROVIDER':
+            void handle_add_model_provider(this)
             break
-          case 'DELETE_API_PROVIDER':
-            void handle_delete_api_provider(this, message)
+          case 'DELETE_MODEL_PROVIDER':
+            void handle_delete_model_provider(this, message)
             break
-          case 'RENAME_API_PROVIDER':
-            void handle_rename_api_provider(this, message)
+          case 'RENAME_MODEL_PROVIDER':
+            void handle_rename_model_provider(this, message)
             break
-          case 'CHANGE_API_PROVIDER_KEY':
-            void handle_change_api_provider_key(this, message)
+          case 'CHANGE_MODEL_PROVIDER_KEY':
+            void handle_change_model_provider_key(this, message)
             break
           case 'GET_CODE_COMPLETIONS_CONFIGURATIONS':
             void handle_get_code_completions_configurations(this)

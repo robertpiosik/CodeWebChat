@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
 import { ReorderCommitMessagesConfigurationsMessage } from '@/views/settings/types/messages'
@@ -14,7 +14,7 @@ export const handle_reorder_commit_messages_configurations = async (
   provider: SettingsProvider,
   message: ReorderCommitMessagesConfigurationsMessage
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const current_configs =
     await providers_manager.get_commit_messages_tool_configs()
 

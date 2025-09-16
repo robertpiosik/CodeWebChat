@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
 import { DeleteCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
@@ -16,7 +16,7 @@ export const handle_delete_commit_messages_configuration = async (
   provider: SettingsProvider,
   message: DeleteCommitMessagesConfigurationMessage
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const configuration_id_to_delete = message.configuration_id
 
   const original_configs =

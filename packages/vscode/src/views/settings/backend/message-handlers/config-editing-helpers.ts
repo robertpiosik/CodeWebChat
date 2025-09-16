@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   Provider,
   ToolConfig
 } from '@/services/model-providers-manager'
@@ -12,13 +12,13 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@shared/utils/logger'
 
 export const initial_select_provider = async (
-  providers_manager: ApiProvidersManager
+  providers_manager: ModelProvidersManager
 ): Promise<Provider | undefined> => {
   const providers = await providers_manager.get_providers()
 
-  if (providers.length === 0) {
+  if (providers.length == 0) {
     vscode.window.showWarningMessage(
-      'No API providers configured. Please add an API provider first on the "API Providers" page.'
+      'No model providers configured. Please add a model provider first on the "Model Providers" page.'
     )
     return
   }
@@ -90,7 +90,7 @@ export const initial_select_model = async (
 }
 
 export const edit_provider_for_config = async (
-  providers_manager: ApiProvidersManager
+  providers_manager: ModelProvidersManager
 ) => {
   const providers = await providers_manager.get_providers()
   const provider_items = providers.map((p) => ({
@@ -113,7 +113,7 @@ export const edit_provider_for_config = async (
 
 export const edit_model_for_config = async (
   config: ToolConfig,
-  providers_manager: ApiProvidersManager,
+  providers_manager: ModelProvidersManager,
   model_fetcher: ModelFetcher
 ) => {
   const provider_from_manager = await providers_manager.get_provider(
@@ -195,10 +195,14 @@ export const edit_model_for_config = async (
       value: config.model,
       prompt: `Enter a model name (ID)`
     })
-    if (new_model_input !== undefined) new_model_value = new_model_input
+    if (new_model_input !== undefined) {
+      new_model_value = new_model_input
+    }
   }
 
-  if (new_model_value !== undefined) return new_model_value.trim()
+  if (new_model_value !== undefined) {
+    return new_model_value.trim()
+  }
   return undefined
 }
 

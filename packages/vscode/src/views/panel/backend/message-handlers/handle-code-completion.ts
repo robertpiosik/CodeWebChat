@@ -6,7 +6,7 @@ import { code_completion_instructions } from '@/constants/instructions'
 import { FilesCollector } from '@/utils/files-collector'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
@@ -17,7 +17,7 @@ import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { CodeCompletionMessage } from '@/views/panel/types/messages'
 
 const get_code_completion_config = async (
-  api_providers_manager: ApiProvidersManager,
+  api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   config_index?: number,
@@ -184,7 +184,7 @@ const perform_code_completion = async (params: {
   config_index?: number
   view_provider?: ViewProvider
 }): Promise<void> => {
-  const api_providers_manager = new ApiProvidersManager(params.context)
+  const api_providers_manager = new ModelProvidersManager(params.context)
 
   let completion_instructions: string | undefined =
     params.completion_instructions

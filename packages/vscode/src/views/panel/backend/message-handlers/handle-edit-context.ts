@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
 import { Logger } from '@shared/utils/logger'
-import { ApiProvidersManager } from '@/services/model-providers-manager'
+import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { make_api_request } from '@/utils/make-api-request'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
@@ -17,7 +17,7 @@ import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { EditContextMessage } from '@/views/panel/types/messages'
 
 const get_edit_context_config = async (
-  api_providers_manager: ApiProvidersManager,
+  api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   config_index?: number,
@@ -191,7 +191,7 @@ const perform_context_editing = async (params: {
   config_index?: number
   view_provider: ViewProvider
 }) => {
-  const api_providers_manager = new ApiProvidersManager(params.context)
+  const api_providers_manager = new ModelProvidersManager(params.context)
 
   const editor = vscode.window.activeTextEditor
 

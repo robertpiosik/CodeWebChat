@@ -1,17 +1,17 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   Provider
 } from '@/services/model-providers-manager'
-import { ChangeApiProviderKeyMessage } from '@/views/settings/types/messages'
-import { handle_get_api_providers } from './handle-get-api-providers'
+import { ChangeModelProviderKeyMessage } from '@/views/settings/types/messages'
+import { handle_get_model_providers } from './handle-get-model-providers'
 
-export const handle_change_api_provider_key = async (
+export const handle_change_model_provider_key = async (
   provider: SettingsProvider,
-  message: ChangeApiProviderKeyMessage
+  message: ChangeModelProviderKeyMessage
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const provider_name = message.provider_name
 
   const provider_to_update = (await providers_manager.get_providers()).find(
@@ -24,8 +24,8 @@ export const handle_change_api_provider_key = async (
   }
 
   const new_api_key = await vscode.window.showInputBox({
-    title: `API Key for ${provider_name}`,
-    prompt: 'Enter your API key. Press Esc to keep the current one.',
+    title: `Model API Key for ${provider_name}`,
+    prompt: 'Enter your model API key. Press Esc to keep the current one.',
     password: true,
     placeHolder: provider_to_update.api_key
       ? `...${provider_to_update.api_key.slice(-4)}`
@@ -48,5 +48,5 @@ export const handle_change_api_provider_key = async (
   )
   await providers_manager.save_providers(updated_providers)
 
-  await handle_get_api_providers(provider)
+  await handle_get_model_providers(provider)
 }

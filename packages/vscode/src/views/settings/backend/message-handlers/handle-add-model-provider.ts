@@ -1,25 +1,25 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   CustomProvider
 } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
-import { handle_get_api_providers } from './handle-get-api-providers'
+import { handle_get_model_providers } from './handle-get-model-providers'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
 }
 
-export const handle_add_api_provider = async (
+export const handle_add_model_provider = async (
   provider: SettingsProvider
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
 
   const create_custom_provider = async (): Promise<boolean> => {
     const name = await vscode.window.showInputBox({
-      title: 'Provider Name',
-      prompt: 'Enter a name for the custom provider',
+      title: 'Model Provider Name',
+      prompt: 'Enter a name for the custom model provider',
       validateInput: async (value) => {
         if (!value.trim()) return 'Name is required'
         if (
@@ -38,7 +38,7 @@ export const handle_add_api_provider = async (
 
     const base_url = await vscode.window.showInputBox({
       title: 'Base URL',
-      prompt: 'Enter base URL for the API',
+      prompt: 'Enter base URL for the model provider',
       validateInput: (value) => (!value.trim() ? 'Base URL is required' : null)
     })
     if (base_url === undefined) {
@@ -46,8 +46,8 @@ export const handle_add_api_provider = async (
     }
 
     const api_key = await vscode.window.showInputBox({
-      title: 'API Key',
-      prompt: 'Enter your API key'
+      title: 'Model API Key',
+      prompt: 'Enter your model API key'
     })
     if (api_key === undefined) {
       return await show_create_provider_quick_pick()
@@ -69,8 +69,8 @@ export const handle_add_api_provider = async (
     name: keyof typeof PROVIDERS
   ): Promise<boolean> => {
     const api_key = await vscode.window.showInputBox({
-      title: 'API Key',
-      prompt: 'Enter your API key',
+      title: 'Model API Key',
+      prompt: 'Enter your model API key',
       validateInput: (value) => (!value.trim() ? 'API key is required' : null)
     })
     if (api_key === undefined) {
@@ -123,7 +123,7 @@ export const handle_add_api_provider = async (
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
-    quick_pick.title = 'Add New API Provider'
+    quick_pick.title = 'Add New Model Provider'
     quick_pick.placeholder =
       'Choose a predefined provider or create a custom one'
 
@@ -166,5 +166,5 @@ export const handle_add_api_provider = async (
 
   await show_create_provider_quick_pick()
 
-  await handle_get_api_providers(provider)
+  await handle_get_model_providers(provider)
 }

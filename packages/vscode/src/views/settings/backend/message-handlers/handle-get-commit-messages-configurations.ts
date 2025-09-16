@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
 import { ConfigurationForClient } from '@/views/settings/types/messages'
@@ -22,7 +22,7 @@ const create_description = (config: ToolConfig): string => {
 export const handle_get_commit_messages_configurations = async (
   provider: SettingsProvider
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const saved_configs =
     await providers_manager.get_commit_messages_tool_configs()
   const default_config =

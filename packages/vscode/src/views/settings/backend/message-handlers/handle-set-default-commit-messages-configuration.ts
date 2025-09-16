@@ -1,6 +1,6 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
 import { SetDefaultCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
@@ -15,7 +15,7 @@ export const handle_set_default_commit_messages_configuration = async (
   provider: SettingsProvider,
   message: SetDefaultCommitMessagesConfigurationMessage
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const configuration_id = message.configuration_id
 
   if (configuration_id === null) {

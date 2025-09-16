@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
 import { handle_get_intelligent_update_configurations } from './handle-get-intelligent-update-configurations'
@@ -25,7 +25,7 @@ const generate_id = (config: ToolConfig) =>
 export const handle_add_intelligent_update_configuration = async (
   provider: SettingsProvider
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const model_fetcher = new ModelFetcher()
 
   const selected_provider = await initial_select_provider(providers_manager)

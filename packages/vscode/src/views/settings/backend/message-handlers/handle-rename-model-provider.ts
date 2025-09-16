@@ -1,17 +1,17 @@
 import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
-  ApiProvidersManager,
+  ModelProvidersManager,
   CustomProvider
 } from '@/services/model-providers-manager'
-import { RenameApiProviderMessage } from '@/views/settings/types/messages'
-import { handle_get_api_providers } from './handle-get-api-providers'
+import { RenameModelProviderMessage } from '@/views/settings/types/messages'
+import { handle_get_model_providers } from './handle-get-model-providers'
 
-export const handle_rename_api_provider = async (
+export const handle_rename_model_provider = async (
   provider: SettingsProvider,
-  message: RenameApiProviderMessage
+  message: RenameModelProviderMessage
 ): Promise<void> => {
-  const providers_manager = new ApiProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(provider.context)
   const old_name = message.provider_name
 
   const provider_to_rename = (await providers_manager.get_providers()).find(
@@ -19,13 +19,13 @@ export const handle_rename_api_provider = async (
   ) as CustomProvider
 
   if (!provider_to_rename) {
-    vscode.window.showErrorMessage(`Provider "${old_name}" not found.`)
+    vscode.window.showErrorMessage(`Model provider "${old_name}" not found.`)
     return
   }
 
   const new_name = await vscode.window.showInputBox({
-    title: 'Rename Provider',
-    prompt: 'Enter a new name for the custom provider',
+    title: 'Rename Model Provider',
+    prompt: 'Enter a new name for the custom model provider',
     value: old_name,
     validateInput: async (value) => {
       if (!value.trim()) return 'Name is required'
@@ -62,5 +62,5 @@ export const handle_rename_api_provider = async (
     new_name: updated_provider.name
   })
 
-  await handle_get_api_providers(provider)
+  await handle_get_model_providers(provider)
 }
