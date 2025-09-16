@@ -40,14 +40,8 @@ export const Progress: React.FC<Props> = (props) => {
       className={cn(styles.overlay, {
         [styles['overlay--visible']]: is_hydrated
       })}
-      onClick={props.on_cancel}
     >
-      <div
-        className={styles.container}
-        onClick={(e) => {
-          e.stopPropagation()
-        }}
-      >
+      <div className={styles.container}>
         <div className={styles.title}>{props.title}</div>
         <div className={styles['elapsed-time']}>{elapsed_time.toFixed(1)}s</div>
         {props.tokens_per_second !== undefined && (
