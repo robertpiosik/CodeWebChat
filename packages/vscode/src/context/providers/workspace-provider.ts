@@ -386,17 +386,19 @@ export class WorkspaceProvider
 
   private async _handle_file_create(created_file_path?: string): Promise<void> {
     if (created_file_path) {
-      const parent_dir = path.dirname(created_file_path)
-      const parent_state = this.checked_items.get(parent_dir)
-
-      if (parent_state == vscode.TreeItemCheckboxState.Checked) {
-        if (!should_ignore_file(created_file_path, this.ignored_extensions)) {
-          this.checked_items.set(
-            created_file_path,
-            vscode.TreeItemCheckboxState.Checked
-          )
-          this._on_did_change_checked_files.fire()
+      if (!should_ignore_file(created_file_path, this.ignored_extensions)) {
+        this.checked_items.set(
+          created_file_path,
+          vscode.TreeItemCheckboxState.Checked
+        )
+        let dir_path = path.dirname(created_file_path)
+        const workspace_root =
+          this.get_workspace_root_for_file(created_file_path)
+        while (workspace_root && dir_path.startsWith(workspace_root)) {
+          await this._update_parent_state(dir_path)
+          dir_path = path.dirname(dir_path)
         }
+        this._on_did_change_checked_files.fire()
       }
 
       this.file_token_counts.delete(created_file_path)
