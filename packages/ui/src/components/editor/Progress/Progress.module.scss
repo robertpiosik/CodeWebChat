@@ -6,9 +6,10 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   opacity: 0;
+  padding-bottom: 41px;
 
   &--visible {
     opacity: 1;

@@ -110,7 +110,7 @@ export const Home: React.FC<Props> = (props) => {
         </div>
 
         <div className={styles.footer__website}>
-          <a href="https://codeweb.chat/">Visit codeweb.chat</a>
+          <a href="https://codeweb.chat/">Documentation</a>
         </div>
       </div>
     </div>
