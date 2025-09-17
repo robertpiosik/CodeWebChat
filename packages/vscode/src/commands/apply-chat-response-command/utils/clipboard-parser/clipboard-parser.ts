@@ -527,7 +527,6 @@ export const parse_response = (
         patches
       }
     }
-    // Fallback to multiple files...
   }
 
   const files = parse_multiple_files({
