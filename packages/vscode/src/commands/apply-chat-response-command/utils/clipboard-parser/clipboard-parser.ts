@@ -273,10 +273,15 @@ export const parse_multiple_files = (params: {
         (current_content.trim() == '' ||
           (i > 0 &&
             (lines[i - 1].trim() == '' || lines[i - 1].trim() == '```'))) &&
-        lines
-          .slice(i + 1)
-          .join('')
-          .trim() != ''
+        (() => {
+          for (let j = i + 1; j < lines.length; j++) {
+            const next_line = lines[j].trim()
+            if (next_line !== '') {
+              return !next_line.startsWith('```')
+            }
+          }
+          return false
+        })()
       ) {
         // Heuristic: A raw ``` at the start of a block (after the filename comment)
         // or after an empty line is likely opening a nested block.

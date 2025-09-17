@@ -24,7 +24,9 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0].file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe('console.log("hello")')
+      expect(result[0].content).toBe(
+        'console.log("hello")\n\nconsole.log("world")\n'
+      )
       expect(result[1].file_path).toBe('src/utils.py')
       expect(result[1].content).toBe(`print("hello")`)
     })
