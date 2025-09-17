@@ -53,6 +53,20 @@ describe('clipboard-parser', () => {
       expect(result[0].content).toBe('console.log("hello")')
     })
 
+    it('should parse file-xml with CDATA inside a code block', () => {
+      const text = load_clipboard_text(
+        'file-xml-with-cdata-without-code-blocks.txt'
+      )
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.ts')
+      expect(result[0].content).toBe('console.log("hello")')
+    })
+
     it('should parse file-xml with inner code block', () => {
       const text = load_clipboard_text('file-xml-inner-code-block.txt')
       const result = parse_multiple_files({

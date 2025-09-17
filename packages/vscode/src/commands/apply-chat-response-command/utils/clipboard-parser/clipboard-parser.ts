@@ -251,6 +251,11 @@ export const parse_multiple_files = (params: {
           current_content = ''
           current_workspace_name = undefined
           top_level_xml_file_mode = false
+          in_cdata = false
+        } else if (line.trim().startsWith('<![CDATA[')) {
+          in_cdata = true
+        } else if (in_cdata && line.trim().includes(']]>')) {
+          in_cdata = false
         } else {
           current_content += (current_content ? '\n' : '') + line
         }
