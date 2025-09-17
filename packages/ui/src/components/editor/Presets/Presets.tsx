@@ -124,6 +124,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   styles.presets__item__left__drag_handle,
                   styles['presets__item__left__drag_handle--disabled']
                 )}
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
               >
                 <span className="codicon codicon-gripper" />
               </div>
@@ -230,7 +233,12 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 role="button"
               >
                 <div className={styles.presets__item__left}>
-                  <div className={styles.presets__item__left__drag_handle}>
+                  <div
+                    className={styles.presets__item__left__drag_handle}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                  >
                     <span className="codicon codicon-gripper" />
                   </div>
                   {preset.chatbot && (
