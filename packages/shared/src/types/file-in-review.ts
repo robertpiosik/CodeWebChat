@@ -7,4 +7,5 @@ export type FileInReview = {
   lines_removed: number
   is_fallback?: boolean
   is_replaced?: boolean
+  diff_fallback_method?: 'recount' | 'search_and_replace'
 }

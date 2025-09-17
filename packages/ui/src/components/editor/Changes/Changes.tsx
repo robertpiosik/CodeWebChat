@@ -6,10 +6,8 @@ import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
 import { IconButton } from '../IconButton/IconButton'
 
-type CheckedFileToReview = FileInReview & { is_checked: boolean }
-
 type Props = {
-  files: FileInReview[]
+  files: (FileInReview & { is_checked: boolean })[]
   has_multiple_workspaces: boolean
   on_undo: () => void
   on_keep: (files: FileInReview[]) => void
@@ -36,16 +34,8 @@ export const Changes: FC<Props> = ({
   on_toggle_file,
   on_intelligent_update
 }) => {
-  const [files_to_review, set_files_to_review] = useState<
-    CheckedFileToReview[]
-  >([])
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
   const [is_keep_button_focused, set_is_keep_button_focused] = useState(false)
-
-  useEffect(() => {
-    set_files_to_review(files.map((f) => ({ ...f, is_checked: true })))
-    set_last_clicked_file_index(0)
-  }, [files])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,7 +46,7 @@ export const Changes: FC<Props> = ({
   }, [])
 
   const handle_keep = () => {
-    const accepted_files = files_to_review.filter((f) => f.is_checked)
+    const accepted_files = files.filter((f) => f.is_checked)
     on_keep(accepted_files)
   }
 
@@ -86,7 +76,7 @@ export const Changes: FC<Props> = ({
         </div>
       )}
       <div className={styles.list}>
-        {files_to_review.map((file, index) => {
+        {files.map((file, index) => {
           const last_slash_index = file.file_path.lastIndexOf('/')
           const file_name = file.file_path.substring(last_slash_index + 1)
           const dir_path =
@@ -110,15 +100,10 @@ export const Changes: FC<Props> = ({
               title={file.file_path}
             >
               <div className={styles['item__left']}>
-                {files_to_review.length > 1 && (
+                {files.length > 1 && (
                   <Checkbox
                     checked={file.is_checked}
                     on_change={(checked) => {
-                      set_files_to_review((prev) =>
-                        prev.map((f, i) =>
-                          i == index ? { ...f, is_checked: checked } : f
-                        )
-                      )
                       on_toggle_file({
                         file_path: file.file_path,
                         workspace_name: file.workspace_name,
@@ -148,7 +133,13 @@ export const Changes: FC<Props> = ({
                   {(file.is_fallback || file.is_replaced) && (
                     <IconButton
                       codicon_icon="sparkle"
-                      title="Call Intelligent Update API tool"
+                      title={`Call Intelligent Update API tool${
+                        file.diff_fallback_method == 'recount'
+                          ? ' (fallback used: git apply with --recount flag)'
+                          : file.diff_fallback_method == 'search_and_replace'
+                          ? ' (fallback used: Sarch & Replace text processor)'
+                          : ''
+                      }`}
                       on_click={(e) => {
                         e.stopPropagation()
                         set_last_clicked_file_index(index)
@@ -202,15 +193,15 @@ export const Changes: FC<Props> = ({
         <Button on_click={on_undo} is_secondary>
           <span className="codicon codicon-redo" />
 
-          {files_to_review.length > 1 ? 'Discard All' : 'Discard'}
+          {files.length > 1 ? 'Discard All' : 'Discard'}
         </Button>
         <Button
           on_click={handle_keep}
-          disabled={files_to_review.filter((f) => f.is_checked).length == 0}
+          disabled={files.filter((f) => f.is_checked).length == 0}
           is_focused={is_keep_button_focused}
         >
           <span className="codicon codicon-check" />
-          {files_to_review.length > 1 ? 'Keep Selected' : 'Keep'}
+          {files.length > 1 ? 'Keep Selected' : 'Keep'}
         </Button>
       </div>
     </div>

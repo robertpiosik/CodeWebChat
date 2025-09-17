@@ -17,11 +17,14 @@ import { Progress as UiProgress } from '@ui/components/editor/Progress'
 
 const vscode = acquireVsCodeApi()
 
+type CheckedFileInReview = FileInReview & { is_checked: boolean }
+
 export const View = () => {
   const [active_view, set_active_view] = useState<'home' | 'main'>('home')
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
-  const [files_to_review, set_files_to_review] = useState<FileInReview[]>()
+  const [files_to_review, set_files_to_review] =
+    useState<CheckedFileInReview[]>()
   const [progress_state, set_progress_state] = useState<{
     title: string
     progress?: number
@@ -108,13 +111,15 @@ export const View = () => {
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
       } else if (message.command == 'CODE_REVIEW_STARTED') {
-        set_files_to_review(message.files)
+        set_files_to_review(
+          message.files.map((f) => ({ ...f, is_checked: true }))
+        )
       } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
         set_files_to_review((current_files) =>
           current_files?.map((f) =>
-            f.file_path === message.file.file_path &&
-            f.workspace_name === message.file.workspace_name
-              ? message.file
+            f.file_path == message.file.file_path &&
+            f.workspace_name == message.file.workspace_name
+              ? { ...message.file, is_checked: f.is_checked }
               : f
           )
         )
@@ -405,6 +410,14 @@ export const View = () => {
                 })
               }}
               on_toggle_file={(file) => {
+                set_files_to_review((current_files) =>
+                  current_files?.map((f) =>
+                    f.file_path == file.file_path &&
+                    f.workspace_name == file.workspace_name
+                      ? { ...f, is_checked: file.is_checked }
+                      : f
+                  )
+                )
                 post_message(vscode, {
                   command: 'TOGGLE_FILE_IN_REVIEW',
                   file_path: file.file_path,

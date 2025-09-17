@@ -40,6 +40,7 @@ type ReviewableFile = {
   lines_removed: number
   is_fallback?: boolean
   is_replaced?: boolean
+  diff_fallback_method?: 'recount' | 'search_and_replace'
 }
 
 type PreparedFile = {
@@ -48,6 +49,7 @@ type PreparedFile = {
   original_content: string
   temp_file_path: string
   file_exists: boolean
+  content_to_restore?: string
 }
 
 const get_diff_stats = (params: {
@@ -136,8 +138,9 @@ const prepare_files_from_original_states = async (params: {
       is_deleted,
       lines_added: diff_stats.lines_added,
       lines_removed: diff_stats.lines_removed,
-      is_fallback: (state as any).is_fallback,
-      is_replaced: (state as any).is_replaced
+      is_fallback: state.is_fallback,
+      is_replaced: state.is_replaced,
+      diff_fallback_method: state.diff_fallback_method
     }
 
     prepared_files.push({
@@ -367,6 +370,7 @@ export const review = async (params: {
       }
 
       if (!is_checked) {
+        // This is the unchecking logic
         // Before reverting, capture current content if file exists
         let current_content = ''
         if (fs.existsSync(file_to_toggle.sanitized_path)) {
@@ -376,6 +380,7 @@ export const review = async (params: {
           current_content = document.getText()
           // Update the reviewable file content with current edits
           file_to_toggle.reviewable_file.content = current_content
+          file_to_toggle.content_to_restore = current_content
         }
 
         if (file_to_toggle.reviewable_file.is_new) {
@@ -396,6 +401,7 @@ export const review = async (params: {
             Buffer.from(file_to_toggle.original_content, 'utf8')
           )
         }
+        // This is the checking logic
       } else {
         if (file_to_toggle.reviewable_file.is_deleted) {
           try {
@@ -412,7 +418,11 @@ export const review = async (params: {
         } else {
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(file_to_toggle.sanitized_path),
-            Buffer.from(file_to_toggle.reviewable_file.content, 'utf8')
+            Buffer.from(
+              file_to_toggle.content_to_restore ??
+                file_to_toggle.reviewable_file.content,
+              'utf8'
+            )
           )
         }
       }

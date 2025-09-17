@@ -284,7 +284,7 @@ const handle_new_file_patch = async (
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
-  used_fallback?: boolean
+  diff_fallback_method?: 'recount' | 'search_and_replace'
 }> => {
   const file_paths = extract_file_paths_from_patch(patch_content)
   if (file_paths.length != 1) {
@@ -337,7 +337,7 @@ const handle_new_file_patch = async (
 
     await fs.promises.writeFile(safe_path, new_content, 'utf8')
 
-    return { success: true, original_states, used_fallback: false }
+    return { success: true, original_states }
   } catch (error: any) {
     Logger.error({
       function_name: 'handle_new_file_patch',
@@ -356,7 +356,7 @@ const handle_deleted_file_patch = async (
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
-  used_fallback?: boolean
+  diff_fallback_method?: 'recount' | 'search_and_replace'
 }> => {
   const file_paths = extract_file_paths_from_patch(patch_content)
   if (file_paths.length != 1) {
@@ -408,7 +408,7 @@ const handle_deleted_file_patch = async (
       })
     }
 
-    return { success: true, original_states, used_fallback: false }
+    return { success: true, original_states }
   } catch (error: any) {
     Logger.error({
       function_name: 'handle_deleted_file_patch',
@@ -425,7 +425,7 @@ export const apply_git_patch = async (
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
-  used_fallback?: boolean
+  diff_fallback_method?: 'recount' | 'search_and_replace'
 }> => {
   const patch_info = parse_patch_header(patch_content, workspace_path)
 
@@ -459,7 +459,8 @@ export const apply_git_patch = async (
 
     let last_error: any = null
     let success = false
-    let used_fallback = false
+    let diff_fallback_method: 'recount' | 'search_and_replace' | undefined =
+      undefined
 
     if (patch_info.is_renaming) {
       // Skip git apply and fallbacks, renaming here is a base case
@@ -497,7 +498,7 @@ export const apply_git_patch = async (
           { cwd: workspace_path }
         )
         success = true
-        used_fallback = true
+        diff_fallback_method = 'recount'
         Logger.info({
           function_name: 'apply_git_patch',
           message: 'Patch applied successfully with --recount fallback.'
@@ -523,7 +524,7 @@ export const apply_git_patch = async (
           diff_path_patch: temp_file
         })
         success = true
-        used_fallback = true
+        diff_fallback_method = 'search_and_replace'
         Logger.info({
           function_name: 'apply_git_patch',
           message: 'Patch applied successfully with custom processor fallback.'
@@ -541,7 +542,7 @@ export const apply_git_patch = async (
       return {
         success: true,
         original_states: original_states,
-        used_fallback
+        diff_fallback_method
       }
     } else {
       // All methods failed, throw the last logged error to be handled by the outer catch

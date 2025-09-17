@@ -534,12 +534,12 @@ export const apply_chat_response_command = (
           let failure_count = 0
           let all_original_states: OriginalFileState[] = []
           const failed_patches: Diff[] = []
-          let any_patch_used_fallback = false
           const applied_patches: {
             patch: Diff
             original_states: OriginalFileState[]
-            used_fallback: boolean
+            diff_fallback_method?: 'recount' | 'search_and_replace'
           }[] = []
+          let any_patch_used_fallback = false
 
           const total_patches = clipboard_content.patches.length
 
@@ -557,9 +557,10 @@ export const apply_chat_response_command = (
             const result = await apply_git_patch(patch.content, workspace_path)
 
             if (result.success) {
-              if (result.used_fallback && result.original_states) {
+              if (result.diff_fallback_method && result.original_states) {
                 for (const state of result.original_states) {
-                  ;(state as any).is_fallback = true
+                  state.is_fallback = true
+                  state.diff_fallback_method = result.diff_fallback_method
                 }
               }
               success_count++
@@ -570,10 +571,10 @@ export const apply_chat_response_command = (
                 applied_patches.push({
                   patch,
                   original_states: result.original_states,
-                  used_fallback: !!result.used_fallback
+                  diff_fallback_method: result.diff_fallback_method
                 })
               }
-              if (result.used_fallback) {
+              if (result.diff_fallback_method) {
                 any_patch_used_fallback = true
               }
             } else {
@@ -683,10 +684,10 @@ export const apply_chat_response_command = (
             if (any_patch_used_fallback) {
               ;(async () => {
                 const fallback_patches_count = applied_patches.filter(
-                  (p) => p.used_fallback
+                  (p) => p.diff_fallback_method
                 ).length
                 const fallback_files = applied_patches
-                  .filter((p) => p.used_fallback)
+                  .filter((p) => p.diff_fallback_method)
                   .map((p) => p.patch.file_path)
 
                 Logger.info({
@@ -759,9 +760,7 @@ export const apply_chat_response_command = (
             const result = await handle_fast_replace(clipboard_content.files)
             if (result.success && result.original_states) {
               if (!args?.suppress_fast_replace_inaccuracies_dialog) {
-                result.original_states.forEach(
-                  (s) => ((s as any).is_replaced = true)
-                )
+                result.original_states.forEach((s) => (s.is_replaced = true))
               }
               final_original_states = result.original_states
               operation_success = true
