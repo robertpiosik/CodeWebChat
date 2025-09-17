@@ -1,0 +1,4 @@
+```typescript
+// src/index.ts 25:5
+console.log("completion");
+```
