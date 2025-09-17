@@ -171,6 +171,19 @@ describe('clipboard-parser', () => {
     //     return a + b`)
     //     })
 
+    it('should parse uncommented filename format', () => {
+      const text = load_clipboard_text('uncommented-filename.txt')
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/utils.py')
+      expect(result[0].content).toBe(`def add(a, b):
+    return a + b`)
+    })
+
     it('should handle inner backticks within a diff block', () => {
       const text = load_clipboard_text('diff-inner-backticks.txt')
       const result = parse_response(text, true)

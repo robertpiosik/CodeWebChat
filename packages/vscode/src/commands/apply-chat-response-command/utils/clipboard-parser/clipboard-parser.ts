@@ -349,32 +349,49 @@ export const parse_multiple_files = (params: {
           }
         }
 
-        // Check if we're on the first content line and it might contain a filename in a comment
+        // Check if we're on the first content line and it might contain a filename
         if (is_first_content_line && !xml_file_mode) {
-          if (
-            line.trim().startsWith('//') ||
-            line.trim().startsWith('#') ||
-            line.trim().startsWith('/*') ||
-            line.trim().startsWith('*') ||
-            line.trim().startsWith('--') ||
-            line.trim().startsWith('<!--')
-          ) {
-            const extracted_filename = extract_path_from_line_of_code(line)
-            if (extracted_filename) {
-              const { workspace_name, relative_path } =
-                extract_workspace_and_path(
-                  extracted_filename,
-                  params.is_single_root_folder_workspace
-                )
-              current_file_name = relative_path
-              if (workspace_name) {
-                current_workspace_name = workspace_name
-              }
+          const trimmed_line = line.trim()
+          let extracted_filename: string | null = null
 
-              // Don't include the comment line in content
-              is_first_content_line = false
-              continue
+          const is_comment =
+            trimmed_line.startsWith('//') ||
+            trimmed_line.startsWith('#') ||
+            trimmed_line.startsWith('/*') ||
+            trimmed_line.startsWith('*') ||
+            trimmed_line.startsWith('--') ||
+            trimmed_line.startsWith('<!--')
+
+          if (is_comment) {
+            extracted_filename = extract_path_from_line_of_code(line)
+          } else {
+            // Heuristic for uncommented file path
+            const last_segment = trimmed_line
+              .replace(/\\/g, '/')
+              .split('/')
+              .pop()
+            if (
+              last_segment?.includes('.') &&
+              !/[(){};,=[\]]/.test(trimmed_line)
+            ) {
+              extracted_filename = trimmed_line
             }
+          }
+
+          if (extracted_filename) {
+            const { workspace_name, relative_path } =
+              extract_workspace_and_path(
+                extracted_filename,
+                params.is_single_root_folder_workspace
+              )
+            current_file_name = relative_path
+            if (workspace_name) {
+              current_workspace_name = workspace_name
+            }
+
+            // Don't include the filename line in content
+            is_first_content_line = false
+            continue
           }
         }
 
