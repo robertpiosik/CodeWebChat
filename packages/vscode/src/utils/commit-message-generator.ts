@@ -461,7 +461,7 @@ const generate_commit_message_with_api = async (params: {
     return await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: `Waiting for commit message`,
+        title: `Waiting for API response`,
         cancellable: true
       },
       async (progress, token) => {
