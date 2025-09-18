@@ -1,9 +1,9 @@
-import { Logger } from '@shared/utils/logger'
 import { Chatbot } from '../types/chatbot'
 import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const mistral: Chatbot = {
   wait_until_ready: async () => {
@@ -33,11 +33,11 @@ export const mistral: Chatbot = {
         incognito_button.click()
         await new Promise((resolve) => setTimeout(resolve, 500))
       } else {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_options',
-          message: 'Incognito button not found'
+          log_message: 'Incognito button not found',
+          alert_message: 'Unable to set options'
         })
-        alert('Unable to set options. Please open an issue.')
       }
     }
 
@@ -46,11 +46,11 @@ export const mistral: Chatbot = {
     ) as SVGPathElement
 
     if (!think_button_icon_path) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_options',
-        message: 'Think button icon not found'
+        log_message: 'Think button icon not found',
+        alert_message: 'Unable to set options'
       })
-      alert('Unable to set options. Please open an issue.')
       return
     }
 
@@ -59,11 +59,11 @@ export const mistral: Chatbot = {
     ) as HTMLButtonElement
 
     if (!think_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_options',
-        message: 'Think button not found'
+        log_message: 'Think button not found',
+        alert_message: 'Unable to set options'
       })
-      alert('Unable to set options. Please open an issue.')
       return
     }
 
@@ -90,11 +90,19 @@ export const mistral: Chatbot = {
             'button:last-child'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'mistral.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
-            alert('Unable to copy response. Please open an issue.')
+            return
+          }
+          if (!copy_button) {
+            report_initialization_error({
+              function_name: 'mistral.perform_copy',
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
+            })
             return
           }
           copy_button.click()

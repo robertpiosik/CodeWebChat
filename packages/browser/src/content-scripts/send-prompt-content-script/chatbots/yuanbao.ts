@@ -1,10 +1,10 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { Logger } from '@shared/utils/logger'
 import { Chatbot } from '../types/chatbot'
 import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const yuanbao: Chatbot = {
   wait_until_ready: async () => {
@@ -26,11 +26,11 @@ export const yuanbao: Chatbot = {
       'button[dt-button-id="model_switch"]'
     ) as HTMLElement
     if (!model_selector_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector button not found'
+        log_message: 'Model selector button not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
     model_selector_button.click()
@@ -61,11 +61,11 @@ export const yuanbao: Chatbot = {
         'button[dt-button-id="deep_think"]'
       ) as HTMLButtonElement
       if (!deep_think_button) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_options',
-          message: 'Deep think button not found'
+          log_message: 'Deep think button not found',
+          alert_message: 'Unable to set options'
         })
-        alert('Unable to set options. Please open an issue.')
         return
       }
       const is_checked = deep_think_button.classList.contains('checked')
@@ -80,11 +80,11 @@ export const yuanbao: Chatbot = {
         'button[dt-button-id="online_search"]'
       ) as HTMLButtonElement
       if (!search_button) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_options',
-          message: 'Search button not found'
+          log_message: 'Search button not found',
+          alert_message: 'Unable to set options'
         })
-        alert('Unable to set options. Please open an issue.')
         return
       }
       const is_checked = search_button.classList.contains('checked')
@@ -107,9 +107,10 @@ export const yuanbao: Chatbot = {
             '.agent-chat__toolbar__copy'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'yuanbao.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

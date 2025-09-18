@@ -3,7 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const z_ai: Chatbot = {
   wait_until_ready: async () => {
@@ -39,9 +39,10 @@ export const z_ai: Chatbot = {
         perform_copy: (f) => {
           const copy_button = f.querySelector('button.copy-response-button')
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'z_ai.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

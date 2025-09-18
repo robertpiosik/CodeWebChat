@@ -1,10 +1,10 @@
 import { Chatbot } from '../types/chatbot'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { Logger } from '@shared/utils/logger'
 import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const claude: Chatbot = {
   wait_until_ready: async () => {
@@ -25,19 +25,20 @@ export const claude: Chatbot = {
       'button[data-testid="model-selector-dropdown"]'
     ) as HTMLButtonElement
     if (!model_selector_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector button not found'
+        log_message: 'Model selector button not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
 
     const model_name_to_find = (CHATBOTS['Claude'].models as any)[model]?.label
     if (!model_name_to_find) {
-      Logger.warn({
+      report_initialization_error({
         function_name: 'set_model',
-        message: `Model label not found for model: ${model}`
+        log_message: `Model "${model}" not found`,
+        alert_message: 'Unable to set model'
       })
       return
     }
@@ -56,11 +57,11 @@ export const claude: Chatbot = {
     )
 
     if (menu_items.length == 0) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector menu items not found'
+        log_message: 'Model selector menu items not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
 
@@ -90,19 +91,19 @@ export const claude: Chatbot = {
           incognito_button.click()
           await new Promise((r) => requestAnimationFrame(r))
         } else {
-          Logger.error({
+          report_initialization_error({
             function_name: 'set_options',
-            message: 'Incognito chat button not found for Claude'
+            log_message: 'Incognito chat button not found for Claude',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
           return
         }
       } else {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_options',
-          message: 'Incognito chat button path not found for Claude'
+          log_message: 'Incognito chat button path not found for Claude',
+          alert_message: 'Unable to set options'
         })
-        alert('Unable to set options. Please open an issue.')
         return
       }
     }
@@ -113,11 +114,11 @@ export const claude: Chatbot = {
     ) as HTMLElement
 
     if (!input_element) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Message input not found'
+        log_message: 'Message input not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
 
@@ -133,11 +134,11 @@ export const claude: Chatbot = {
       )
     ) as HTMLButtonElement
     if (!submit_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Submit button not found'
+        log_message: 'Submit button not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
     submit_button.click()
@@ -154,9 +155,10 @@ export const claude: Chatbot = {
             'button[data-testid="action-bar-copy"]'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'claude.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

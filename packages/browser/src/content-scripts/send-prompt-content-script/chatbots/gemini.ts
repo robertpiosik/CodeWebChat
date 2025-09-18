@@ -1,10 +1,10 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
-import { Logger } from '@shared/utils/logger'
 import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const gemini: Chatbot = {
   wait_until_ready: async () => {
@@ -26,11 +26,11 @@ export const gemini: Chatbot = {
         'bard-logo + button'
       ) as HTMLButtonElement
       if (!model_selector_trigger) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_model',
-          message: 'Model selector trigger not found'
+          log_message: 'Model selector trigger not found',
+          alert_message: 'Unable to set model'
         })
-        alert('Unable to set model. Please open an issue.')
         return
       }
       model_selector_trigger.click()
@@ -39,11 +39,11 @@ export const gemini: Chatbot = {
         document.querySelector('.mat-mdc-menu-content') ||
         document.querySelector('mat-action-list')
       if (!menu_content) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_model',
-          message: 'Model selector menu not found'
+          log_message: 'Model selector menu not found',
+          alert_message: 'Unable to set model'
         })
-        alert('Unable to set model. Please open an issue.')
         return
       }
       const model_options = Array.from(
@@ -97,11 +97,11 @@ export const gemini: Chatbot = {
       }
 
       if (!temp_chat_button) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_options',
-          message: 'Temporary chat button not found'
+          log_message: 'Temporary chat button not found',
+          alert_message: 'Unable to set options'
         })
-        alert('Unable to set options. Please open an issue.')
         return
       }
 
@@ -113,11 +113,11 @@ export const gemini: Chatbot = {
           side_nav_menu_button_selector
         ) as HTMLButtonElement
         if (!side_nav_menu_button) {
-          Logger.error({
+          report_initialization_error({
             function_name: 'set_options',
-            message: 'Side nav menu button not found to close'
+            log_message: 'Side nav menu button not found to close',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
           return
         }
         side_nav_menu_button.click()
@@ -137,9 +137,10 @@ export const gemini: Chatbot = {
             'copy-button > button'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'gemini.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

@@ -4,7 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const deepseek: Chatbot = {
   wait_until_ready: async () => {
@@ -30,11 +30,11 @@ export const deepseek: Chatbot = {
         button.textContent === 'DeepThink' || button.textContent === '深度思考'
     )
     if (!deep_think_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_options',
-        message: 'DeepThink button not found'
+        log_message: 'DeepThink button not found',
+        alert_message: 'Unable to set options'
       })
-      alert('Unable to set options. Please open an issue.')
       return
     }
 
@@ -43,11 +43,11 @@ export const deepseek: Chatbot = {
         button.textContent === 'Search' || button.textContent === '联网搜索'
     )
     if (!search_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_options',
-        message: 'Search button not found'
+        log_message: 'Search button not found',
+        alert_message: 'Unable to set options'
       })
-      alert('Unable to set options. Please open an issue.')
       return
     }
 
@@ -96,9 +96,18 @@ export const deepseek: Chatbot = {
             'div[role="button"]'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'deepseek.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
+            })
+            return
+          }
+          if (!copy_button) {
+            report_initialization_error({
+              function_name: 'deepseek.perform_copy',
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

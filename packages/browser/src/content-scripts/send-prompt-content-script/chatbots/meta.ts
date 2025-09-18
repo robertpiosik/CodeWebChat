@@ -1,5 +1,5 @@
 import { Chatbot } from '../types/chatbot'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 // import browser from 'webextension-polyfill'
 // import {
 //   apply_chat_response_button_style,
@@ -31,11 +31,11 @@ export const meta: Chatbot = {
     ) as HTMLElement
 
     if (!input_element) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Message input element not found'
+        log_message: 'Message input element not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
 
@@ -80,11 +80,11 @@ export const meta: Chatbot = {
         check_button_state()
       })
     } catch (error) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Failed to send message'
+        log_message: 'Failed to send message',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
     }
   }
   // Disabled for now because code blocks in copied text are not enclosed in markdown blocks (```)

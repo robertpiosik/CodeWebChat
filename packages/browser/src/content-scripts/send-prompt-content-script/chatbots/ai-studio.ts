@@ -3,6 +3,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
 import { add_apply_response_button } from '../utils/add-apply-response-button'
 import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const ai_studio: Chatbot = {
   wait_until_ready: async () => {
@@ -32,22 +33,22 @@ export const ai_studio: Chatbot = {
       'button.model-selector-card'
     ) as HTMLButtonElement
     if (!model_selector) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector button not found'
+        log_message: 'Model selector button not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
     const model_name = model_selector.querySelector(
       'span.title'
     ) as HTMLSpanElement
     if (!model_name) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model name element not found'
+        log_message: 'Model name element not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
     if (
@@ -88,11 +89,11 @@ export const ai_studio: Chatbot = {
       'button[data-test-system-instructions-card]'
     ) as HTMLButtonElement
     if (!system_instructions_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'System instructions button not found'
+        log_message: 'System instructions button not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
 
@@ -103,11 +104,11 @@ export const ai_studio: Chatbot = {
       'mat-dialog-container button[data-test-close-button]'
     ) as HTMLButtonElement
     if (!close_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'Close button for system instructions dialog not found'
+        log_message: 'Close button for system instructions dialog not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
 
@@ -115,21 +116,21 @@ export const ai_studio: Chatbot = {
       'ms-system-instructions'
     ) as HTMLDivElement
     if (!panel) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'System instructions panel not found'
+        log_message: 'System instructions panel not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
 
     const textarea = panel.querySelector('textarea') as HTMLTextAreaElement
     if (!textarea) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'System instructions textarea not found'
+        log_message: 'System instructions textarea not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
 
@@ -159,11 +160,11 @@ export const ai_studio: Chatbot = {
       'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
     ) as HTMLElement
     if (!thinking_toggle) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_options',
-        message: 'Thinking toggle not found'
+        log_message: 'Thinking toggle not found',
+        alert_message: 'Unable to set options'
       })
-      alert('Unable to set options. Please open an issue.')
       return
     }
 
@@ -192,11 +193,11 @@ export const ai_studio: Chatbot = {
         'ms-incognito-mode-toggle > button'
       ) as HTMLElement
       if (!temp_toggle) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_options',
-          message: 'Temporary chat toggle not found'
+          log_message: 'Temporary chat toggle not found',
+          alert_message: 'Unable to set options'
         })
-        alert('Unable to set options. Please open an issue.')
         return
       }
       temp_toggle.click()
@@ -207,11 +208,11 @@ export const ai_studio: Chatbot = {
         'div[data-test-id="searchAsAToolTooltip"] button'
       ) as HTMLElement
       if (!grounding_button) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_options',
-          message: 'Grounding with Google Search button not found'
+          log_message: 'Grounding with Google Search button not found',
+          alert_message: 'Unable to set options'
         })
-        alert('Unable to set options. Please open an issue.')
         return
       }
       const is_checked = grounding_button.getAttribute('aria-checked') == 'true'
@@ -226,11 +227,11 @@ export const ai_studio: Chatbot = {
         'div[data-test-id="browseAsAToolTooltip"] button'
       ) as HTMLElement
       if (!url_context_button) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_options',
-          message: 'URL context button not found'
+          log_message: 'URL context button not found',
+          alert_message: 'Unable to set options'
         })
-        alert('Unable to set options. Please open an issue.')
         return
       }
       url_context_button.click()
@@ -243,11 +244,11 @@ export const ai_studio: Chatbot = {
       'ms-prompt-run-settings div[data-test-id="temperatureSliderContainer"] input[type=number]'
     ) as HTMLInputElement
     if (!temperature_element) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Temperature input not found'
+        log_message: 'Temperature input not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     temperature_element.value = temperature.toString()
@@ -260,11 +261,11 @@ export const ai_studio: Chatbot = {
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
       ) as HTMLElement
       if (!manual_budget_toggle) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_thinking_budget',
-          message: 'Manual budget toggle not found'
+          log_message: 'Manual budget toggle not found',
+          alert_message: 'Unable to set thinking budget'
         })
-        alert('Unable to set thinking budget. Please open an issue.')
         return
       }
       if (manual_budget_toggle.getAttribute('aria-checked') == 'true') {
@@ -276,11 +277,11 @@ export const ai_studio: Chatbot = {
         'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
       ) as HTMLElement
       if (!thinking_toggle) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_thinking_budget',
-          message: 'Thinking toggle not found'
+          log_message: 'Thinking toggle not found',
+          alert_message: 'Unable to set thinking budget'
         })
-        alert('Unable to set thinking budget. Please open an issue.')
         return
       }
       if (thinking_toggle.getAttribute('aria-checked') == 'false') {
@@ -291,11 +292,11 @@ export const ai_studio: Chatbot = {
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
       ) as HTMLElement
       if (!manual_budget_toggle) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_thinking_budget',
-          message: 'Manual budget toggle not found'
+          log_message: 'Manual budget toggle not found',
+          alert_message: 'Unable to set thinking budget'
         })
-        alert('Unable to set thinking budget. Please open an issue.')
         return
       }
       if (manual_budget_toggle.getAttribute('aria-checked') == 'false') {
@@ -306,11 +307,11 @@ export const ai_studio: Chatbot = {
         'div[data-test-id="user-setting-budget-animation-wrapper"] input'
       ) as HTMLInputElement
       if (!budget_input) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'set_thinking_budget',
-          message: 'Budget input not found'
+          log_message: 'Budget input not found',
+          alert_message: 'Unable to set thinking budget'
         })
-        alert('Unable to set thinking budget. Please open an issue.')
         return
       }
       budget_input.value = thinking_budget.toString()
@@ -341,11 +342,11 @@ export const ai_studio: Chatbot = {
       'ms-prompt-run-settings div[mattooltip="Probability threshold for top-p sampling"] input[type=number]'
     ) as HTMLInputElement
     if (!top_p_element) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Top-p input not found'
+        log_message: 'Top-p input not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     top_p_element.value = top_p.toString()
@@ -356,11 +357,11 @@ export const ai_studio: Chatbot = {
       'textarea'
     ) as HTMLTextAreaElement
     if (!input_element) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Message input textarea not found'
+        log_message: 'Message input textarea not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
     input_element.value = message
@@ -386,11 +387,11 @@ export const ai_studio: Chatbot = {
       'ms-run-button > button'
     ) as HTMLElement
     if (!send_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Send button not found'
+        log_message: 'Send button not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
     send_button.click()
@@ -405,21 +406,38 @@ export const ai_studio: Chatbot = {
         perform_copy: (f) => {
           const chat_turn_container = f.closest('.chat-turn-container')
           if (!chat_turn_container) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'ai_studio.perform_copy',
-              message: 'Chat turn container not found'
+              log_message: 'Chat turn container not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }
           const options = chat_turn_container.querySelector(
             'ms-chat-turn-options > div > button'
           ) as HTMLElement
+          if (!options) {
+            report_initialization_error({
+              function_name: 'ai_studio.perform_copy',
+              log_message: 'Options button not found',
+              alert_message: 'Unable to copy response'
+            })
+            return
+          }
           options.click()
           const markdown_copy_button = Array.from(
             document.querySelectorAll('button')
           ).find((button) =>
             button.textContent?.includes('markdown_copy')
           ) as HTMLElement
+          if (!markdown_copy_button) {
+            report_initialization_error({
+              function_name: 'ai_studio.perform_copy',
+              log_message: 'Markdown copy button not found',
+              alert_message: 'Unable to copy response'
+            })
+            return
+          }
           markdown_copy_button.click()
         },
         insert_button: (f, b) => f.insertBefore(b, f.children[2])
@@ -459,11 +477,11 @@ const open_panel = async () => {
       'button.runsettings-toggle-button'
     ) as HTMLButtonElement
     if (!tune_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'open_panel',
-        message: 'Tune button not found'
+        log_message: 'Tune button not found',
+        alert_message: 'Unable to open settings panel'
       })
-      alert('Unable to open settings panel. Please open an issue.')
       return
     }
     tune_button.click()
@@ -477,11 +495,11 @@ const close_panel = async () => {
       'ms-run-settings button[iconname="close"]'
     ) as HTMLButtonElement
     if (!close_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'close_panel',
-        message: 'Close button for settings panel not found'
+        log_message: 'Close button for settings panel not found',
+        alert_message: 'Unable to close settings panel'
       })
-      alert('Unable to close settings panel. Please open an issue.')
       return
     }
     close_button.click()
@@ -491,11 +509,11 @@ const close_panel = async () => {
         'ms-run-settings button[iconname="close"]'
       ) as HTMLButtonElement
       if (!close_button) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'close_panel',
-          message: 'Close button for settings panel not found'
+          log_message: 'Close button for settings panel not found',
+          alert_message: 'Unable to close settings panel'
         })
-        alert('Unable to close settings panel. Please open an issue.')
         return
       }
       close_button.click()

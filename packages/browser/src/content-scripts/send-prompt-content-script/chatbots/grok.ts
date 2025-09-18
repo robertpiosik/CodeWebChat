@@ -4,7 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const grok: Chatbot = {
   wait_until_ready: async () => {
@@ -28,11 +28,11 @@ export const grok: Chatbot = {
           'a[href="/chat#private"]'
         ) as HTMLAnchorElement
         if (!private_link) {
-          Logger.error({
+          report_initialization_error({
             function_name: 'set_options',
-            message: 'Private mode link not found'
+            log_message: 'Private mode link not found',
+            alert_message: 'Unable to set private mode'
           })
-          alert('Unable to set private mode. Please open an issue.')
           return
         }
         private_link.click()
@@ -46,11 +46,11 @@ export const grok: Chatbot = {
       'button[id="model-select-trigger"]'
     ) as HTMLButtonElement
     if (!model_selector_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector button not found'
+        log_message: 'Model selector button not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
 
@@ -68,11 +68,11 @@ export const grok: Chatbot = {
       'div[data-radix-popper-content-wrapper]'
     ) as HTMLDivElement
     if (!dropdown) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model dropdown not found'
+        log_message: 'Model dropdown not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
 
@@ -97,9 +97,10 @@ export const grok: Chatbot = {
             'button:nth-child(2)'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'grok.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

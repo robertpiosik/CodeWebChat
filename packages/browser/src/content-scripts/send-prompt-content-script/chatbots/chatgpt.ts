@@ -4,7 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const chatgpt: Chatbot = {
   wait_until_ready: async () => {
@@ -52,11 +52,11 @@ export const chatgpt: Chatbot = {
             check_for_param()
           })
         } else {
-          Logger.error({
+          report_initialization_error({
             function_name: 'set_options',
-            message: 'Temporary chat button not found'
+            log_message: 'Temporary chat button not found',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
         }
       } else if (
         option == 'think-longer' &&
@@ -89,18 +89,18 @@ export const chatgpt: Chatbot = {
             }
           }
           if (!found) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'set_options',
-              message: 'Think longer button not found'
+              log_message: 'Think longer button not found',
+              alert_message: 'Unable to set options'
             })
-            alert('Unable to set options. Please open an issue.')
           }
         } else {
-          Logger.error({
+          report_initialization_error({
             function_name: 'set_options',
-            message: 'Plus button for "Think longer" not found'
+            log_message: 'Plus button for "Think longer" not found',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
         }
       }
     }
@@ -117,9 +117,10 @@ export const chatgpt: Chatbot = {
             'button[data-testid="copy-turn-action-button"]'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'chatgpt.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

@@ -4,7 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const doubao: Chatbot = {
   wait_until_ready: async () => {
@@ -29,11 +29,11 @@ export const doubao: Chatbot = {
       'div[data-testid="chat_input"] input[data-testid="upload-file-input"] + button'
     ) as HTMLButtonElement
     if (!deep_thinking_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'doubao.set_options',
-        message: 'Thinking mode button not found'
+        log_message: 'Thinking mode button not found',
+        alert_message: 'Unable to set options'
       })
-      alert('Unable to set options. Please open an issue.')
       return
     }
     const mouse_up = new MouseEvent('mouseup', { bubbles: true })
@@ -41,20 +41,20 @@ export const doubao: Chatbot = {
     await new Promise((r) => requestAnimationFrame(r))
     const portal = document.querySelector('.semi-portal')
     if (!portal) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'doubao.set_options',
-        message: 'Options portal not found'
+        log_message: 'Options portal not found',
+        alert_message: 'Unable to set options'
       })
-      alert('Unable to set options. Please open an issue.')
       return
     }
     const menu_items = portal.querySelectorAll('li[role="menuitem"]')
     if (menu_items.length === 0) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'doubao.set_options',
-        message: 'Options menu items not found'
+        log_message: 'Options menu items not found',
+        alert_message: 'Unable to set options'
       })
-      alert('Unable to set options. Please open an issue.')
       return
     }
     const last_menu_item = menu_items[menu_items.length - 1] as HTMLElement
@@ -68,11 +68,11 @@ export const doubao: Chatbot = {
           'div[data-testid="chat_input"] input[data-testid="upload-file-input"] + button'
         ) as HTMLButtonElement
         if (!deep_thinking_button_2) {
-          Logger.error({
+          report_initialization_error({
             function_name: 'doubao.set_options',
-            message: 'Thinking mode button not found (for deep-thinking)'
+            log_message: 'Thinking mode button not found (for deep-thinking)',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
           return
         }
         deep_thinking_button_2.dispatchEvent(
@@ -81,20 +81,20 @@ export const doubao: Chatbot = {
         await new Promise((r) => requestAnimationFrame(r))
         const portal_2 = document.querySelector('.semi-portal')
         if (!portal_2) {
-          Logger.error({
+          report_initialization_error({
             function_name: 'doubao.set_options',
-            message: 'Options portal not found (for deep-thinking)'
+            log_message: 'Options portal not found (for deep-thinking)',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
           return
         }
         const menu_items_2 = portal_2.querySelectorAll('li[role="menuitem"]')
         if (menu_items_2.length < 2) {
-          Logger.error({
+          report_initialization_error({
             function_name: 'doubao.set_options',
-            message: 'Deep thinking menu item not found'
+            log_message: 'Deep thinking menu item not found',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
           return
         }
         const deep_thinking_item = menu_items_2[1] as HTMLElement
@@ -116,6 +116,14 @@ export const doubao: Chatbot = {
           const copy_button = f.querySelector(
             'button[data-testid="message_action_copy"]'
           ) as HTMLElement
+          if (!copy_button) {
+            report_initialization_error({
+              function_name: 'doubao.perform_copy',
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) =>

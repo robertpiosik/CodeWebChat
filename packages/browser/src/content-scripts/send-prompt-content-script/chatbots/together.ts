@@ -4,7 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const together: Chatbot = {
   wait_until_ready: async () => {
@@ -30,11 +30,11 @@ export const together: Chatbot = {
       'button[aria-haspopup="listbox"]'
     ) as HTMLButtonElement
     if (!model_selector_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector button not found'
+        log_message: 'Model selector button not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
 
@@ -51,11 +51,11 @@ export const together: Chatbot = {
       'div[data-floating-ui-focusable]'
     ) as HTMLElement
     if (!models_dropdown) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Models dropdown not found'
+        log_message: 'Models dropdown not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
 
@@ -80,9 +80,10 @@ export const together: Chatbot = {
             'button:first-child'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'together.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

@@ -3,7 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const open_webui: Chatbot = {
   wait_until_ready: async () => {
@@ -28,11 +28,11 @@ export const open_webui: Chatbot = {
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
     if (!controls_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'Controls button not found'
+        log_message: 'Controls button not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
     controls_button.click()
@@ -42,22 +42,22 @@ export const open_webui: Chatbot = {
         ? (document.querySelector('[data-pane]:last-child') as HTMLElement)
         : (document.querySelector('div.modal') as HTMLElement)
     if (!controls_pane) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'Controls pane not found'
+        log_message: 'Controls pane not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
     const system_instructions_textarea = controls_pane.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
     if (!system_instructions_textarea) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'System instructions textarea not found'
+        log_message: 'System instructions textarea not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
     system_instructions_textarea.value = system_instructions
@@ -71,11 +71,11 @@ export const open_webui: Chatbot = {
       'button'
     ) as HTMLButtonElement
     if (!close_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'Close button for controls pane not found'
+        log_message: 'Close button for controls pane not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
     close_button.click()
@@ -86,11 +86,11 @@ export const open_webui: Chatbot = {
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
     if (!controls_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Controls button not found'
+        log_message: 'Controls button not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     controls_button.click()
@@ -100,53 +100,53 @@ export const open_webui: Chatbot = {
         ? (document.querySelector('[data-pane]:last-child') as HTMLElement)
         : (document.querySelector('div.modal') as HTMLElement)
     if (!controls_pane) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Controls pane not found'
+        log_message: 'Controls pane not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     const pb_safe_bottom = controls_pane.querySelector(
       '.pb-safe-bottom'
     ) as HTMLElement
     if (!pb_safe_bottom) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'pb_safe_bottom element not found in controls pane'
+        log_message: 'pb_safe_bottom element not found in controls pane',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     const temperature_div = pb_safe_bottom.querySelector(
       'div:nth-child(5)'
     ) as HTMLElement
     if (!temperature_div) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Temperature container not found'
+        log_message: 'Temperature container not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     const button = temperature_div.querySelector('button') as HTMLElement
     if (!button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Temperature reset button not found'
+        log_message: 'Temperature reset button not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const input = temperature_div.querySelector('input') as HTMLInputElement
     if (!input) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Temperature input not found'
+        log_message: 'Temperature input not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     input.value = temperature.toString()
@@ -155,11 +155,11 @@ export const open_webui: Chatbot = {
       'button'
     ) as HTMLButtonElement
     if (!close_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Close button for controls pane not found'
+        log_message: 'Close button for controls pane not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     close_button.click()
@@ -171,11 +171,11 @@ export const open_webui: Chatbot = {
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
     if (!controls_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Controls button not found'
+        log_message: 'Controls button not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     controls_button.click()
@@ -185,53 +185,53 @@ export const open_webui: Chatbot = {
         ? (document.querySelector('[data-pane]:last-child') as HTMLElement)
         : (document.querySelector('div.modal') as HTMLElement)
     if (!controls_pane) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Controls pane not found'
+        log_message: 'Controls pane not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     const pb_safe_bottom = controls_pane.querySelector(
       '.pb-safe-bottom'
     ) as HTMLElement
     if (!pb_safe_bottom) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'pb_safe_bottom element not found in controls pane'
+        log_message: 'pb_safe_bottom element not found in controls pane',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     const top_p_div = pb_safe_bottom.querySelector(
       'div:nth-child(12)'
     ) as HTMLElement
     if (!top_p_div) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Top-p container not found'
+        log_message: 'Top-p container not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     const button = top_p_div.querySelector('button') as HTMLElement
     if (!button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Top-p reset button not found'
+        log_message: 'Top-p reset button not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const input = top_p_div.querySelector('input') as HTMLInputElement
     if (!input) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Top-p input not found'
+        log_message: 'Top-p input not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     input.value = top_p.toString()
@@ -240,11 +240,11 @@ export const open_webui: Chatbot = {
       'button'
     ) as HTMLButtonElement
     if (!close_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Close button for controls pane not found'
+        log_message: 'Close button for controls pane not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     close_button.click()
@@ -256,11 +256,11 @@ export const open_webui: Chatbot = {
       'button#model-selector-0-button'
     ) as HTMLElement
     if (!model_selector_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector button not found'
+        log_message: 'Model selector button not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
     model_selector_button.click()
@@ -269,11 +269,11 @@ export const open_webui: Chatbot = {
       'div[aria-labelledby="model-selector-0-button"]'
     ) as HTMLElement
     if (!model_selector_menu) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector menu not found'
+        log_message: 'Model selector menu not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
     const model_button = model_selector_menu.querySelector(
@@ -307,9 +307,10 @@ export const open_webui: Chatbot = {
             'button.copy-response-button'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'open_webui.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

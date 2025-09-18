@@ -1,9 +1,9 @@
 import { Chatbot } from '../types/chatbot'
-import { Logger } from '@shared/utils/logger'
 import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const kimi: Chatbot = {
   wait_until_ready: async () => {
@@ -23,11 +23,11 @@ export const kimi: Chatbot = {
       'div[contenteditable=true]'
     ) as HTMLElement
     if (!input_element) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'kimi.enter_message_and_send',
-        message: 'Message input element not found'
+        log_message: 'Message input element not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
 
@@ -69,16 +69,16 @@ export const kimi: Chatbot = {
         footer,
         get_chat_turn: (f) => f.closest('.segment-content'),
         get_code_blocks: (t) => t.querySelectorAll('code'),
-        perform_copy: () => {
-          const copy_button = footer.querySelector(
+        perform_copy: (f) => {
+          const copy_button = f.querySelector(
             '.segment-assistant-actions-content > div:first-child'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'kimi.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
-            alert('Unable to copy response. Please open an issue.')
             return
           }
           copy_button.click()

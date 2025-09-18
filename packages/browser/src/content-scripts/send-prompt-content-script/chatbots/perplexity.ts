@@ -3,7 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const perplexity: Chatbot = {
   wait_until_ready: async () => {
@@ -33,11 +33,11 @@ export const perplexity: Chatbot = {
         'input[type="file"]'
       ) as HTMLInputElement
       if (!file_input) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'enter_message_and_send',
-          message: 'File input not found'
+          log_message: 'File input not found',
+          alert_message: 'Unable to upload file'
         })
-        alert('Unable to upload file. Please open an issue.')
         return
       }
       const blob = new Blob([context], { type: 'text/plain' })
@@ -63,11 +63,11 @@ export const perplexity: Chatbot = {
       'div[contenteditable=true]'
     ) as HTMLElement
     if (!input_element) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Message input not found'
+        log_message: 'Message input not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
 
@@ -86,11 +86,11 @@ export const perplexity: Chatbot = {
       'button[data-testid="submit-button"]'
     ) as HTMLButtonElement
     if (!submit_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Submit button not found'
+        log_message: 'Submit button not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
     submit_button.click()
@@ -113,9 +113,10 @@ export const perplexity: Chatbot = {
             )
           }) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'perplexity.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

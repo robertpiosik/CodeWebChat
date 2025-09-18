@@ -1,10 +1,10 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
-import { Logger } from '@shared/utils/logger'
 import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const qwen: Chatbot = {
   wait_until_ready: async () => {
@@ -35,11 +35,11 @@ export const qwen: Chatbot = {
       'button#model-selector-0-button'
     ) as HTMLElement
     if (!model_selector_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: 'Model selector button not found'
+        log_message: 'Model selector button not found',
+        alert_message: 'Unable to set model'
       })
-      alert('Unable to set model. Please open an issue.')
       return
     }
 
@@ -87,11 +87,11 @@ export const qwen: Chatbot = {
           'button.websearch_button'
         ) as HTMLButtonElement
         if (!search_button) {
-          Logger.error({
+          report_initialization_error({
             function_name: 'set_options',
-            message: 'Search button not found'
+            log_message: 'Search button not found',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
           return
         }
         search_button.click()
@@ -100,11 +100,11 @@ export const qwen: Chatbot = {
           'button#model-selector-0-button'
         ) as HTMLElement
         if (!model_selector_button) {
-          Logger.error({
+          report_initialization_error({
             function_name: 'set_options',
-            message: 'Model selector button for temporary chat not found'
+            log_message: 'Model selector button for temporary chat not found',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
           return
         }
         model_selector_button.click()
@@ -113,11 +113,11 @@ export const qwen: Chatbot = {
           'div[aria-labelledby="model-selector-0-button"] button[role="switch"]'
         ) as HTMLButtonElement
         if (!temporary_switch) {
-          Logger.error({
+          report_initialization_error({
             function_name: 'set_options',
-            message: 'Temporary chat switch not found'
+            log_message: 'Temporary chat switch not found',
+            alert_message: 'Unable to set options'
           })
-          alert('Unable to set options. Please open an issue.')
           return
         }
         temporary_switch.click()
@@ -138,11 +138,11 @@ export const qwen: Chatbot = {
         'input#filesUpload'
       ) as HTMLInputElement
       if (!file_input) {
-        Logger.error({
+        report_initialization_error({
           function_name: 'enter_message_and_send',
-          message: 'File input not found'
+          log_message: 'File input not found',
+          alert_message: 'Unable to send message with file'
         })
-        alert('Unable to send message with file. Please open an issue.')
         return
       }
       const blob = new Blob([context], { type: 'text/plain' })
@@ -169,11 +169,11 @@ export const qwen: Chatbot = {
       'textarea'
     ) as HTMLTextAreaElement
     if (!input_element) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Message input textarea not found'
+        log_message: 'Message input textarea not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
     input_element.value = instructions
@@ -186,11 +186,11 @@ export const qwen: Chatbot = {
       'button#send-message-button'
     ) as HTMLButtonElement
     if (!submit_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_message_and_send',
-        message: 'Send button not found'
+        log_message: 'Send button not found',
+        alert_message: 'Unable to send message'
       })
-      alert('Unable to send message. Please open an issue.')
       return
     }
     submit_button.click()
@@ -211,9 +211,18 @@ export const qwen: Chatbot = {
             'button.copy-response-button'
           ) as HTMLElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'qwen.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
+            })
+            return
+          }
+          if (!copy_button) {
+            report_initialization_error({
+              function_name: 'qwen.perform_copy',
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }

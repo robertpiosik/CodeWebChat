@@ -3,7 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { Logger } from '@shared/utils/logger'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const openrouter: Chatbot = {
   wait_until_ready: async () => {
@@ -31,11 +31,11 @@ export const openrouter: Chatbot = {
       )
     }) as HTMLButtonElement
     if (!options_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'Options button not found'
+        log_message: 'Options button not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
     options_button.click()
@@ -44,11 +44,11 @@ export const openrouter: Chatbot = {
       'div[role="dialog"] textarea'
     ) as HTMLTextAreaElement
     if (!textarea) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'System instructions textarea not found'
+        log_message: 'System instructions textarea not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       ;(
         document.querySelector(
           'div[role="dialog"] button[data-slot="dialog-close"]'
@@ -64,11 +64,11 @@ export const openrouter: Chatbot = {
       'div[role="dialog"] button[data-slot="dialog-close"]'
     ) as HTMLButtonElement
     if (!close_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'enter_system_instructions',
-        message: 'Close button for system instructions dialog not found'
+        log_message: 'Close button for system instructions dialog not found',
+        alert_message: 'Unable to set system instructions'
       })
-      alert('Unable to set system instructions. Please open an issue.')
       return
     }
     close_button.click()
@@ -85,11 +85,11 @@ export const openrouter: Chatbot = {
       )
     }) as HTMLButtonElement
     if (!options_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Options button not found'
+        log_message: 'Options button not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     options_button.click()
@@ -100,11 +100,11 @@ export const openrouter: Chatbot = {
       (button) => button.textContent?.trim() == 'Sampling Parameters'
     ) as HTMLButtonElement
     if (!sampling_parameters_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Sampling parameters button not found'
+        log_message: 'Sampling parameters button not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       ;(
         document.querySelector(
           'div[role="dialog"] button[data-slot="dialog-close"]'
@@ -120,11 +120,11 @@ export const openrouter: Chatbot = {
       )
     ).find((div) => div.textContent?.trim() == 'Temperature') as HTMLElement
     if (!temperature_div) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Temperature div not found'
+        log_message: 'Temperature div not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       ;(
         document.querySelector(
           'div[role="dialog"] button[data-slot="dialog-close"]'
@@ -136,11 +136,11 @@ export const openrouter: Chatbot = {
       'input'
     ) as HTMLInputElement
     if (!temperature_input) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Temperature input not found'
+        log_message: 'Temperature input not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       ;(
         document.querySelector(
           'div[role="dialog"] button[data-slot="dialog-close"]'
@@ -156,11 +156,11 @@ export const openrouter: Chatbot = {
       'div[role="dialog"] button[data-slot="dialog-close"]'
     ) as HTMLButtonElement
     if (!close_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_temperature',
-        message: 'Close button for dialog not found'
+        log_message: 'Close button for dialog not found',
+        alert_message: 'Unable to set temperature'
       })
-      alert('Unable to set temperature. Please open an issue.')
       return
     }
     close_button.click()
@@ -177,11 +177,11 @@ export const openrouter: Chatbot = {
       )
     }) as HTMLButtonElement
     if (!options_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Options button not found'
+        log_message: 'Options button not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     options_button.click()
@@ -192,11 +192,11 @@ export const openrouter: Chatbot = {
       (button) => button.textContent?.trim() == 'Sampling Parameters'
     ) as HTMLButtonElement
     if (!sampling_parameters_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Sampling parameters button not found'
+        log_message: 'Sampling parameters button not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       ;(
         document.querySelector(
           'div[role="dialog"] button[data-slot="dialog-close"]'
@@ -212,11 +212,11 @@ export const openrouter: Chatbot = {
       )
     ).find((div) => div.textContent?.trim() == 'Top P') as HTMLElement
     if (!top_p_div) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Top P div not found'
+        log_message: 'Top P div not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       ;(
         document.querySelector(
           'div[role="dialog"] button[data-slot="dialog-close"]'
@@ -226,11 +226,11 @@ export const openrouter: Chatbot = {
     }
     const top_p_input = top_p_div.querySelector('input') as HTMLInputElement
     if (!top_p_input) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Top P input not found'
+        log_message: 'Top P input not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       ;(
         document.querySelector(
           'div[role="dialog"] button[data-slot="dialog-close"]'
@@ -246,11 +246,11 @@ export const openrouter: Chatbot = {
       'div[role="dialog"] button[data-slot="dialog-close"]'
     ) as HTMLButtonElement
     if (!close_button) {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_top_p',
-        message: 'Close button for dialog not found'
+        log_message: 'Close button for dialog not found',
+        alert_message: 'Unable to set top-p'
       })
-      alert('Unable to set top-p. Please open an issue.')
       return
     }
     close_button.click()
@@ -272,9 +272,10 @@ export const openrouter: Chatbot = {
             )
           }) as HTMLButtonElement
           if (!copy_button) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'openrouter.perform_copy',
-              message: 'Copy button not found'
+              log_message: 'Copy button not found',
+              alert_message: 'Unable to copy response'
             })
             return
           }
