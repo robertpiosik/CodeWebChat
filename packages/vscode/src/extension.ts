@@ -3,15 +3,6 @@ import { context_initialization } from './context/context-initialization'
 import { ViewProvider } from './views/panel/backend/view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
-  migrate_file_refactoring_to_array,
-  migrate_api_providers_to_secret_storage,
-  migrate_commit_message_prompt_to_instructions,
-  migrate_commit_messages_config_to_array,
-  migrate_chat_code_completion_instructions,
-  migrate_refactoring_to_intelligent_update,
-  migrate_presets_to_chat_presets_for_edit_context,
-  migrate_edit_to_edit_context,
-  migrate_clear_history,
   migrate_preset_is_default_to_is_selected,
   migrate_gemini_to_google_provider,
   migrate_api_providers_to_model_providers
@@ -54,23 +45,6 @@ export async function activate(context: vscode.ExtensionContext) {
   websocket_server_instance = new WebSocketManager(context, websites_provider)
 
   const migrations = async () => {
-    // 20 May 2025
-    await migrate_api_providers_to_secret_storage(context)
-    // 22 May 2025
-    await migrate_file_refactoring_to_array(context)
-    // 25 May 2025
-    await migrate_commit_message_prompt_to_instructions(context)
-    await migrate_chat_code_completion_instructions(context)
-    // 31 May 2025
-    await migrate_refactoring_to_intelligent_update(context)
-    // 14 July 2025
-    await migrate_presets_to_chat_presets_for_edit_context(context)
-    // 18 July 2025
-    await migrate_commit_messages_config_to_array(context)
-    // 21 July 2025
-    await migrate_edit_to_edit_context(context)
-    // 25 July 2025
-    await migrate_clear_history(context)
     // 1 September 2025
     await migrate_preset_is_default_to_is_selected(context)
     // 3 September 2025
