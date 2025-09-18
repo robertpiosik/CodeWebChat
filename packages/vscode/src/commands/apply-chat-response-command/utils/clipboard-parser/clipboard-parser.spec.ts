@@ -16,7 +16,10 @@ describe('clipboard-parser', () => {
 
   describe('parse_clipboard_multiple_files', () => {
     it('should parse comment filename format', () => {
-      const text = load_test_case_file('comment-filename', 'response.txt')
+      const text = load_test_case_file(
+        'comment-filename',
+        'comment-filename.txt'
+      )
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -34,7 +37,7 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse file-xml format', () => {
-      const text = load_test_case_file('file-xml', 'response.txt')
+      const text = load_test_case_file('file-xml', 'file-xml.txt')
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -48,7 +51,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse file-xml format with CDATA', () => {
-      const text = load_test_case_file('file-xml-with-cdata', 'response.txt')
+      const text = load_test_case_file(
+        'file-xml-with-cdata',
+        'file-xml-with-cdata.txt'
+      )
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -64,7 +70,7 @@ describe('clipboard-parser', () => {
     it('should parse file-xml with CDATA inside a code block', () => {
       const text = load_test_case_file(
         'file-xml-with-cdata-without-code-blocks',
-        'response.txt'
+        'file-xml-with-cdata-without-code-blocks.txt'
       )
       const result = parse_multiple_files({
         response: text,
@@ -84,7 +90,7 @@ describe('clipboard-parser', () => {
     it('should parse file-xml with inner code block', () => {
       const text = load_test_case_file(
         'file-xml-inner-code-block',
-        'response.txt'
+        'file-xml-inner-code-block.txt'
       )
       const result = parse_multiple_files({
         response: text,
@@ -99,7 +105,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse html comment filename format', () => {
-      const text = load_test_case_file('html-comment-style', 'response.txt')
+      const text = load_test_case_file(
+        'html-comment-style',
+        'html-comment-style.txt'
+      )
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -113,7 +122,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should handle workspace prefixes', () => {
-      const text = load_test_case_file('with-workspace-prefix', 'response.txt')
+      const text = load_test_case_file(
+        'with-workspace-prefix',
+        'with-workspace-prefix.txt'
+      )
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: false
@@ -128,7 +140,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should ignore workspace prefixes when has_single_root=true', () => {
-      const text = load_test_case_file('with-workspace-prefix', 'response.txt')
+      const text = load_test_case_file(
+        'with-workspace-prefix',
+        'with-workspace-prefix.txt'
+      )
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -140,7 +155,7 @@ describe('clipboard-parser', () => {
     })
 
     it('should merge content for duplicate files', () => {
-      const text = load_test_case_file('duplicate-files', 'response.txt')
+      const text = load_test_case_file('duplicate-files', 'duplicate-files.txt')
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -154,7 +169,7 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse paths with backslashes', () => {
-      const text = load_test_case_file('backslash-paths', 'response.txt')
+      const text = load_test_case_file('backslash-paths', 'backslash-paths.txt')
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -174,7 +189,7 @@ describe('clipboard-parser', () => {
     it('should parse with curly brace on same line as closing backticks', () => {
       const text = load_test_case_file(
         'curly-on-same-line-as-closing-backticks',
-        'response.txt'
+        'curly-on-same-line-as-closing-backticks.txt'
       )
       const result = parse_multiple_files({
         response: text,
@@ -212,7 +227,10 @@ describe('clipboard-parser', () => {
     //     })
 
     it('should parse uncommented filename format', () => {
-      const text = load_test_case_file('uncommented-filename', 'response.txt')
+      const text = load_test_case_file(
+        'uncommented-filename',
+        'uncommented-filename.txt'
+      )
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -226,7 +244,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should handle inner backticks within a diff block', () => {
-      const text = load_test_case_file('diff-inner-backticks', 'response.txt')
+      const text = load_test_case_file(
+        'diff-inner-backticks',
+        'diff-inner-backticks.txt'
+      )
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -238,7 +259,7 @@ describe('clipboard-parser', () => {
     })
 
     it('should handle inner backticks within a code block', () => {
-      const text = load_test_case_file('inner-backticks', 'response.txt')
+      const text = load_test_case_file('inner-backticks', 'inner-backticks.txt')
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -252,7 +273,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should handle raw inner backticks within a code block', () => {
-      const text = load_test_case_file('inner-backticks-raw', 'response.txt')
+      const text = load_test_case_file(
+        'inner-backticks-raw',
+        'inner-backticks-raw.txt'
+      )
       const result = parse_multiple_files({
         response: text,
         is_single_root_folder_workspace: true
@@ -268,7 +292,7 @@ describe('clipboard-parser', () => {
     it('should handle nested code blocks in markdown', () => {
       const text = load_test_case_file(
         'markdown-with-nested-code-block',
-        'response.txt'
+        'markdown-with-nested-code-block.txt'
       )
       const result = parse_multiple_files({
         response: text,
@@ -285,7 +309,10 @@ describe('clipboard-parser', () => {
 
   describe('parse_file_content_only', () => {
     it('should parse file content without code blocks', () => {
-      const text = load_test_case_file('file-content-only', 'response.txt')
+      const text = load_test_case_file(
+        'file-content-only',
+        'file-content-only.txt'
+      )
       const result = parse_file_content_only({
         response: text,
         is_single_root_folder_workspace: true
@@ -313,7 +340,10 @@ describe('clipboard-parser', () => {
 
   describe('parse_clipboard_content', () => {
     it('should parse direct diff format in variant a', () => {
-      const text = load_test_case_file('diff-direct-variant-a', 'response.txt')
+      const text = load_test_case_file(
+        'diff-direct-variant-a',
+        'diff-direct-variant-a.txt'
+      )
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -325,7 +355,7 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse code-completion format', () => {
-      const text = load_test_case_file('code-completion', 'response.txt')
+      const text = load_test_case_file('code-completion', 'code-completion.txt')
       const result = parse_response(text, true)
 
       expect(result.type).toBe('code-completion')
@@ -341,7 +371,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse direct diff format in variant b', () => {
-      const text = load_test_case_file('diff-direct-variant-b', 'response.txt')
+      const text = load_test_case_file(
+        'diff-direct-variant-b',
+        'diff-direct-variant-b.txt'
+      )
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -353,7 +386,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse direct diff format in variant c', () => {
-      const text = load_test_case_file('diff-direct-variant-c', 'response.txt')
+      const text = load_test_case_file(
+        'diff-direct-variant-c',
+        'diff-direct-variant-c.txt'
+      )
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -365,7 +401,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse direct diff format in variant d', () => {
-      const text = load_test_case_file('diff-direct-variant-d', 'response.txt')
+      const text = load_test_case_file(
+        'diff-direct-variant-d',
+        'diff-direct-variant-d.txt'
+      )
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -377,7 +416,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse direct diff format in variant e', () => {
-      const text = load_test_case_file('diff-direct-variant-e', 'response.txt')
+      const text = load_test_case_file(
+        'diff-direct-variant-e',
+        'diff-direct-variant-e.txt'
+      )
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -389,7 +431,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse direct diff format in variant f', () => {
-      const text = load_test_case_file('diff-direct-variant-f', 'response.txt')
+      const text = load_test_case_file(
+        'diff-direct-variant-f',
+        'diff-direct-variant-f.txt'
+      )
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -401,7 +446,10 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse direct diff format in variant g', () => {
-      const text = load_test_case_file('diff-direct-variant-g', 'response.txt')
+      const text = load_test_case_file(
+        'diff-direct-variant-g',
+        'diff-direct-variant-g.txt'
+      )
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -413,7 +461,7 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse direct diff format without a/ b/ prefixes', () => {
-      const text = load_test_case_file('diff-no-prefix', 'response.txt')
+      const text = load_test_case_file('diff-no-prefix', 'diff-no-prefix.txt')
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -427,7 +475,7 @@ describe('clipboard-parser', () => {
     it('should parse direct diff format for file deletion', () => {
       const text = load_test_case_file(
         'diff-direct-variant-deletion',
-        'response.txt'
+        'diff-direct-variant-deletion.txt'
       )
       const result = parse_response(text, true)
 
@@ -440,7 +488,7 @@ describe('clipboard-parser', () => {
     })
 
     it('should parse direct diff format for file rename', () => {
-      const text = load_test_case_file('diff-rename', 'response.txt')
+      const text = load_test_case_file('diff-rename', 'diff-rename.txt')
       const result = parse_response(text, true)
 
       expect(result.type).toBe('patches')
@@ -455,7 +503,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant a', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-a',
-        'response.txt'
+        'diff-multiple-files-variant-a.txt'
       )
       const result = parse_response(text, true)
 
@@ -476,7 +524,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant b', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-b',
-        'response.txt'
+        'diff-multiple-files-variant-b.txt'
       )
       const result = parse_response(text, true)
 
@@ -497,7 +545,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant c', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-c',
-        'response.txt'
+        'diff-multiple-files-variant-c.txt'
       )
       const result = parse_response(text, true)
 
@@ -518,7 +566,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant d', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-d',
-        'response.txt'
+        'diff-multiple-files-variant-d.txt'
       )
       const result = parse_response(text, true)
 
@@ -539,7 +587,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant e', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-e',
-        'response.txt'
+        'diff-multiple-files-variant-e.txt'
       )
       const result = parse_response(text, true)
 
@@ -560,7 +608,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant f', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-f',
-        'response.txt'
+        'diff-multiple-files-variant-f.txt'
       )
       const result = parse_response(text, true)
 
@@ -581,7 +629,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant g', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-g',
-        'response.txt'
+        'diff-multiple-files-variant-g.txt'
       )
       const result = parse_response(text, true)
 
@@ -602,7 +650,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant h', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-h',
-        'response.txt'
+        'diff-multiple-files-variant-h.txt'
       )
       const result = parse_response(text, true)
 
@@ -623,7 +671,7 @@ describe('clipboard-parser', () => {
     it('should parse multiple diff files format in variant i', () => {
       const text = load_test_case_file(
         'diff-multiple-files-variant-i',
-        'response.txt'
+        'diff-multiple-files-variant-i.txt'
       )
       const result = parse_response(text, true)
 
@@ -638,6 +686,22 @@ describe('clipboard-parser', () => {
       )
       expect(result.patches![1].content).toBe(
         load_test_case_file('diff-multiple-files-variant-i', 'file-2.txt')
+      )
+    })
+
+    it('should parse multiple diff files format with inner triple backticks', () => {
+      const text = load_test_case_file(
+        'diff-inner-triple-backticks',
+        'diff-inner-triple-backticks.txt'
+      )
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+
+      expect(result.patches![0].file_path).toBe('README.md')
+      expect(result.patches![0].content).toBe(
+        load_test_case_file('diff-inner-triple-backticks', 'file-1.txt')
       )
     })
   })

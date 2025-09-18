@@ -1,0 +1,7 @@
+diff --git a/src/index.ts b/src/index.ts
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old message")
++console.log("new message")

@@ -83,14 +83,14 @@ const extract_path_and_position = (
 
   if (match) {
     const path = match[1] || match[4] || match[7]
-    const lineNumStr = match[2] || match[5] || match[8]
-    const charNumStr = match[3] || match[6] || match[9]
+    const line_num_str = match[2] || match[5] || match[8]
+    const char_num_str = match[3] || match[6] || match[9]
 
-    if (path && lineNumStr && charNumStr) {
+    if (path && line_num_str && char_num_str) {
       return {
         path,
-        line: parseInt(lineNumStr, 10),
-        character: parseInt(charNumStr, 10)
+        line: parseInt(line_num_str, 10),
+        character: parseInt(char_num_str, 10)
       }
     }
   }

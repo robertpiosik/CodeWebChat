@@ -1,0 +1,15 @@
+--- a/README.md
++++ b/README.md
+@@ -21,10 +21,10 @@
+     ```
+ 
+ 2.  **Install Python dependencies:**
+-    This project uses `simple-lama-inpainting` for nadir removal.
++    This project uses Python scripts for nadir removal and other tasks. Install the required dependencies:
+     ```bash
+-    pip install simple-lama-inpainting opencv-python numpy
++    pip install opencv-python numpy pillow "torch>=1.13.1,!=2.0.1" "torchvision>=0.14.1" fire
+     ```
+ 
+ ## Usage
+ 

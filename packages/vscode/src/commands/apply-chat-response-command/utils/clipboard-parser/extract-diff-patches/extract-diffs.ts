@@ -93,11 +93,9 @@ const process_collected_patch_lines = (
     )
   }
 
-  content_str = content_str.trim()
-
   const patch: Diff = {
     file_path,
-    content: ensure_newline_ending(content_str)
+    content: content_str.endsWith('\n') ? content_str : content_str + '\n'
   }
 
   if (is_rename && to_path) {
@@ -130,9 +128,6 @@ const extract_code_block_patches = (normalized_text: string): Diff[] => {
         } else if (opening_line == '```patch') {
           code_blocks.unshift({ start: j, end: i, type: 'patch' })
           i = j // Skip to this position to avoid overlapping blocks
-          break
-        } else if (opening_line.startsWith('```') && opening_line != '```') {
-          // Found a different code block, stop searching
           break
         }
       }
@@ -293,7 +288,7 @@ const build_patch_content = (
     }
   }
 
-  return ensure_newline_ending(patch_content)
+  return patch_content
 }
 
 const format_hunk_headers = (lines: string[]): string[] => {
@@ -310,12 +305,4 @@ const format_hunk_headers = (lines: string[]): string[] => {
     }
   }
   return formatted_lines
-}
-
-const ensure_newline_ending = (content: string): string => {
-  let new_content = content
-  while (new_content.endsWith('\n')) {
-    new_content = new_content.substring(0, new_content.length - 1)
-  }
-  return new_content + '\n'
 }
