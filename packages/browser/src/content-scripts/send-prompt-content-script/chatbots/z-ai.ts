@@ -3,7 +3,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const z_ai: Chatbot = {
   wait_until_ready: async () => {
@@ -26,9 +29,10 @@ export const z_ai: Chatbot = {
         get_chat_turn: (f) => {
           const chat_turn = f.parentElement?.querySelector('.chat-assistant')
           if (!chat_turn) {
-            Logger.error({
+            report_initialization_error({
               function_name: 'z_ai.get_chat_turn',
-              message: 'Chat turn element not found'
+              log_message: 'Chat turn container not found for footer',
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return null
           }
@@ -42,7 +46,7 @@ export const z_ai: Chatbot = {
             report_initialization_error({
               function_name: 'z_ai.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

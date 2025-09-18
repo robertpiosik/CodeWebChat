@@ -4,7 +4,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const yuanbao: Chatbot = {
   wait_until_ready: async () => {
@@ -29,7 +32,7 @@ export const yuanbao: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model selector button not found',
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -64,7 +67,7 @@ export const yuanbao: Chatbot = {
         report_initialization_error({
           function_name: 'set_options',
           log_message: 'Deep think button not found',
-          alert_message: 'Unable to set options'
+          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
         })
         return
       }
@@ -83,7 +86,7 @@ export const yuanbao: Chatbot = {
         report_initialization_error({
           function_name: 'set_options',
           log_message: 'Search button not found',
-          alert_message: 'Unable to set options'
+          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
         })
         return
       }
@@ -110,7 +113,7 @@ export const yuanbao: Chatbot = {
             report_initialization_error({
               function_name: 'yuanbao.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

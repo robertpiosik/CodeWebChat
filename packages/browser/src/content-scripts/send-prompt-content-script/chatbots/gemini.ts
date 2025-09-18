@@ -4,7 +4,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const gemini: Chatbot = {
   wait_until_ready: async () => {
@@ -29,7 +32,7 @@ export const gemini: Chatbot = {
         report_initialization_error({
           function_name: 'set_model',
           log_message: 'Model selector trigger not found',
-          alert_message: 'Unable to set model'
+          alert_message: InitializationError.UNABLE_TO_SET_MODEL
         })
         return
       }
@@ -42,7 +45,7 @@ export const gemini: Chatbot = {
         report_initialization_error({
           function_name: 'set_model',
           log_message: 'Model selector menu not found',
-          alert_message: 'Unable to set model'
+          alert_message: InitializationError.UNABLE_TO_SET_MODEL
         })
         return
       }
@@ -100,7 +103,7 @@ export const gemini: Chatbot = {
         report_initialization_error({
           function_name: 'set_options',
           log_message: 'Temporary chat button not found',
-          alert_message: 'Unable to set options'
+          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
         })
         return
       }
@@ -116,7 +119,7 @@ export const gemini: Chatbot = {
           report_initialization_error({
             function_name: 'set_options',
             log_message: 'Side nav menu button not found to close',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
           return
         }
@@ -140,7 +143,7 @@ export const gemini: Chatbot = {
             report_initialization_error({
               function_name: 'gemini.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

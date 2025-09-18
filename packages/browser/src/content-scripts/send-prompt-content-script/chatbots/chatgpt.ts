@@ -4,7 +4,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const chatgpt: Chatbot = {
   wait_until_ready: async () => {
@@ -55,7 +58,7 @@ export const chatgpt: Chatbot = {
           report_initialization_error({
             function_name: 'set_options',
             log_message: 'Temporary chat button not found',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
         }
       } else if (
@@ -92,14 +95,14 @@ export const chatgpt: Chatbot = {
             report_initialization_error({
               function_name: 'set_options',
               log_message: 'Think longer button not found',
-              alert_message: 'Unable to set options'
+              alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
             })
           }
         } else {
           report_initialization_error({
             function_name: 'set_options',
             log_message: 'Plus button for "Think longer" not found',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
         }
       }
@@ -120,7 +123,7 @@ export const chatgpt: Chatbot = {
             report_initialization_error({
               function_name: 'chatgpt.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

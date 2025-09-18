@@ -4,7 +4,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const doubao: Chatbot = {
   wait_until_ready: async () => {
@@ -32,7 +35,7 @@ export const doubao: Chatbot = {
       report_initialization_error({
         function_name: 'doubao.set_options',
         log_message: 'Thinking mode button not found',
-        alert_message: 'Unable to set options'
+        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
       })
       return
     }
@@ -44,7 +47,7 @@ export const doubao: Chatbot = {
       report_initialization_error({
         function_name: 'doubao.set_options',
         log_message: 'Options portal not found',
-        alert_message: 'Unable to set options'
+        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
       })
       return
     }
@@ -53,7 +56,7 @@ export const doubao: Chatbot = {
       report_initialization_error({
         function_name: 'doubao.set_options',
         log_message: 'Options menu items not found',
-        alert_message: 'Unable to set options'
+        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
       })
       return
     }
@@ -71,7 +74,7 @@ export const doubao: Chatbot = {
           report_initialization_error({
             function_name: 'doubao.set_options',
             log_message: 'Thinking mode button not found (for deep-thinking)',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
           return
         }
@@ -84,7 +87,7 @@ export const doubao: Chatbot = {
           report_initialization_error({
             function_name: 'doubao.set_options',
             log_message: 'Options portal not found (for deep-thinking)',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
           return
         }
@@ -93,7 +96,7 @@ export const doubao: Chatbot = {
           report_initialization_error({
             function_name: 'doubao.set_options',
             log_message: 'Deep thinking menu item not found',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
           return
         }
@@ -120,7 +123,7 @@ export const doubao: Chatbot = {
             report_initialization_error({
               function_name: 'doubao.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

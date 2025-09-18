@@ -3,7 +3,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const open_webui: Chatbot = {
   wait_until_ready: async () => {
@@ -31,7 +34,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'enter_system_instructions',
         log_message: 'Controls button not found',
-        alert_message: 'Unable to set system instructions'
+        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
       return
     }
@@ -45,7 +48,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'enter_system_instructions',
         log_message: 'Controls pane not found',
-        alert_message: 'Unable to set system instructions'
+        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
       return
     }
@@ -56,7 +59,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'enter_system_instructions',
         log_message: 'System instructions textarea not found',
-        alert_message: 'Unable to set system instructions'
+        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
       return
     }
@@ -74,7 +77,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'enter_system_instructions',
         log_message: 'Close button for controls pane not found',
-        alert_message: 'Unable to set system instructions'
+        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
       return
     }
@@ -89,7 +92,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Controls button not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -103,7 +106,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Controls pane not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -114,7 +117,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'pb_safe_bottom element not found in controls pane',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -125,7 +128,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Temperature container not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -134,7 +137,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Temperature reset button not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -145,7 +148,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Temperature input not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -158,7 +161,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Close button for controls pane not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -174,7 +177,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Controls button not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -188,7 +191,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Controls pane not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -199,7 +202,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'pb_safe_bottom element not found in controls pane',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -210,7 +213,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Top-p container not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -219,7 +222,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Top-p reset button not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -230,7 +233,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Top-p input not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -243,7 +246,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Close button for controls pane not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -259,7 +262,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model selector button not found',
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -272,7 +275,7 @@ export const open_webui: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model selector menu not found',
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -282,11 +285,11 @@ export const open_webui: Chatbot = {
     if (model_button) {
       model_button.click()
     } else {
-      Logger.error({
+      report_initialization_error({
         function_name: 'set_model',
-        message: `Model button for "${model}" not found`
+        log_message: `Model button for "${model}" not found`,
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
-      alert(`Unable to set model "${model}". It might not be available.`)
       model_selector_button.click()
     }
     await new Promise((r) => requestAnimationFrame(r))
@@ -310,7 +313,7 @@ export const open_webui: Chatbot = {
             report_initialization_error({
               function_name: 'open_webui.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

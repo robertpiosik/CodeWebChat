@@ -3,7 +3,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const openrouter: Chatbot = {
   wait_until_ready: async () => {
@@ -34,7 +37,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'enter_system_instructions',
         log_message: 'Options button not found',
-        alert_message: 'Unable to set system instructions'
+        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
       return
     }
@@ -47,7 +50,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'enter_system_instructions',
         log_message: 'System instructions textarea not found',
-        alert_message: 'Unable to set system instructions'
+        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
       ;(
         document.querySelector(
@@ -67,7 +70,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'enter_system_instructions',
         log_message: 'Close button for system instructions dialog not found',
-        alert_message: 'Unable to set system instructions'
+        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
       return
     }
@@ -88,7 +91,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Options button not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -103,7 +106,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Sampling parameters button not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       ;(
         document.querySelector(
@@ -123,7 +126,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Temperature div not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       ;(
         document.querySelector(
@@ -139,7 +142,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Temperature input not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       ;(
         document.querySelector(
@@ -159,7 +162,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_temperature',
         log_message: 'Close button for dialog not found',
-        alert_message: 'Unable to set temperature'
+        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
       return
     }
@@ -180,7 +183,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Options button not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -195,7 +198,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Sampling parameters button not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       ;(
         document.querySelector(
@@ -215,7 +218,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Top P div not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       ;(
         document.querySelector(
@@ -229,7 +232,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Top P input not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       ;(
         document.querySelector(
@@ -249,7 +252,7 @@ export const openrouter: Chatbot = {
       report_initialization_error({
         function_name: 'set_top_p',
         log_message: 'Close button for dialog not found',
-        alert_message: 'Unable to set top-p'
+        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
       return
     }
@@ -275,7 +278,7 @@ export const openrouter: Chatbot = {
             report_initialization_error({
               function_name: 'openrouter.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

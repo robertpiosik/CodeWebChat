@@ -4,7 +4,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const claude: Chatbot = {
   wait_until_ready: async () => {
@@ -28,7 +31,7 @@ export const claude: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model selector button not found',
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -38,7 +41,7 @@ export const claude: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: `Model "${model}" not found`,
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -60,7 +63,7 @@ export const claude: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model selector menu items not found',
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -94,7 +97,7 @@ export const claude: Chatbot = {
           report_initialization_error({
             function_name: 'set_options',
             log_message: 'Incognito chat button not found for Claude',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
           return
         }
@@ -102,7 +105,7 @@ export const claude: Chatbot = {
         report_initialization_error({
           function_name: 'set_options',
           log_message: 'Incognito chat button path not found for Claude',
-          alert_message: 'Unable to set options'
+          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
         })
         return
       }
@@ -117,7 +120,7 @@ export const claude: Chatbot = {
       report_initialization_error({
         function_name: 'enter_message_and_send',
         log_message: 'Message input not found',
-        alert_message: 'Unable to send message'
+        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
       })
       return
     }
@@ -137,7 +140,7 @@ export const claude: Chatbot = {
       report_initialization_error({
         function_name: 'enter_message_and_send',
         log_message: 'Submit button not found',
-        alert_message: 'Unable to send message'
+        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
       })
       return
     }
@@ -158,7 +161,7 @@ export const claude: Chatbot = {
             report_initialization_error({
               function_name: 'claude.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

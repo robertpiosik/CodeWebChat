@@ -4,7 +4,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const grok: Chatbot = {
   wait_until_ready: async () => {
@@ -31,7 +34,7 @@ export const grok: Chatbot = {
           report_initialization_error({
             function_name: 'set_options',
             log_message: 'Private mode link not found',
-            alert_message: 'Unable to set private mode'
+            alert_message: InitializationError.UNABLE_TO_SET_PRIVATE_MODE
           })
           return
         }
@@ -49,7 +52,7 @@ export const grok: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model selector button not found',
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -71,7 +74,7 @@ export const grok: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model dropdown not found',
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -100,7 +103,7 @@ export const grok: Chatbot = {
             report_initialization_error({
               function_name: 'grok.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

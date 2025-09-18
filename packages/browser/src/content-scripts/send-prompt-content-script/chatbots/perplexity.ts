@@ -3,7 +3,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const perplexity: Chatbot = {
   wait_until_ready: async () => {
@@ -36,7 +39,7 @@ export const perplexity: Chatbot = {
         report_initialization_error({
           function_name: 'enter_message_and_send',
           log_message: 'File input not found',
-          alert_message: 'Unable to upload file'
+          alert_message: InitializationError.UNABLE_TO_UPLOAD_FILE
         })
         return
       }
@@ -66,7 +69,7 @@ export const perplexity: Chatbot = {
       report_initialization_error({
         function_name: 'enter_message_and_send',
         log_message: 'Message input not found',
-        alert_message: 'Unable to send message'
+        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
       })
       return
     }
@@ -89,7 +92,7 @@ export const perplexity: Chatbot = {
       report_initialization_error({
         function_name: 'enter_message_and_send',
         log_message: 'Submit button not found',
-        alert_message: 'Unable to send message'
+        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
       })
       return
     }
@@ -116,7 +119,7 @@ export const perplexity: Chatbot = {
             report_initialization_error({
               function_name: 'perplexity.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

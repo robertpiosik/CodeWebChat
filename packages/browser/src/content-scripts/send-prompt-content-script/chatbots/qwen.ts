@@ -4,7 +4,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const qwen: Chatbot = {
   wait_until_ready: async () => {
@@ -38,7 +41,7 @@ export const qwen: Chatbot = {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model selector button not found',
-        alert_message: 'Unable to set model'
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
       })
       return
     }
@@ -90,7 +93,7 @@ export const qwen: Chatbot = {
           report_initialization_error({
             function_name: 'set_options',
             log_message: 'Search button not found',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
           return
         }
@@ -103,7 +106,7 @@ export const qwen: Chatbot = {
           report_initialization_error({
             function_name: 'set_options',
             log_message: 'Model selector button for temporary chat not found',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
           return
         }
@@ -116,7 +119,7 @@ export const qwen: Chatbot = {
           report_initialization_error({
             function_name: 'set_options',
             log_message: 'Temporary chat switch not found',
-            alert_message: 'Unable to set options'
+            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
           })
           return
         }
@@ -141,7 +144,7 @@ export const qwen: Chatbot = {
         report_initialization_error({
           function_name: 'enter_message_and_send',
           log_message: 'File input not found',
-          alert_message: 'Unable to send message with file'
+          alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE_WITH_FILE
         })
         return
       }
@@ -172,7 +175,7 @@ export const qwen: Chatbot = {
       report_initialization_error({
         function_name: 'enter_message_and_send',
         log_message: 'Message input textarea not found',
-        alert_message: 'Unable to send message'
+        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
       })
       return
     }
@@ -189,7 +192,7 @@ export const qwen: Chatbot = {
       report_initialization_error({
         function_name: 'enter_message_and_send',
         log_message: 'Send button not found',
-        alert_message: 'Unable to send message'
+        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
       })
       return
     }
@@ -214,7 +217,7 @@ export const qwen: Chatbot = {
             report_initialization_error({
               function_name: 'qwen.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }
@@ -222,7 +225,7 @@ export const qwen: Chatbot = {
             report_initialization_error({
               function_name: 'qwen.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }

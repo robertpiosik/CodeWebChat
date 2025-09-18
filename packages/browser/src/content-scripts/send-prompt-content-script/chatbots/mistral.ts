@@ -3,7 +3,10 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import { report_initialization_error } from '../utils/report-initialization-error'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
 
 export const mistral: Chatbot = {
   wait_until_ready: async () => {
@@ -36,7 +39,7 @@ export const mistral: Chatbot = {
         report_initialization_error({
           function_name: 'set_options',
           log_message: 'Incognito button not found',
-          alert_message: 'Unable to set options'
+          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
         })
       }
     }
@@ -49,7 +52,7 @@ export const mistral: Chatbot = {
       report_initialization_error({
         function_name: 'set_options',
         log_message: 'Think button icon not found',
-        alert_message: 'Unable to set options'
+        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
       })
       return
     }
@@ -62,7 +65,7 @@ export const mistral: Chatbot = {
       report_initialization_error({
         function_name: 'set_options',
         log_message: 'Think button not found',
-        alert_message: 'Unable to set options'
+        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
       })
       return
     }
@@ -93,7 +96,7 @@ export const mistral: Chatbot = {
             report_initialization_error({
               function_name: 'mistral.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }
@@ -101,7 +104,7 @@ export const mistral: Chatbot = {
             report_initialization_error({
               function_name: 'mistral.perform_copy',
               log_message: 'Copy button not found',
-              alert_message: 'Unable to copy response'
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
             return
           }
