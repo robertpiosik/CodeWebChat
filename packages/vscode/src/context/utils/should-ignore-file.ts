@@ -25,7 +25,7 @@ export function extract_extension_variations(file_path: string): string[] {
   return extensions
 }
 
-const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024 // 50MB
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024 // 10MB
 
 export function should_ignore_file(
   file_path: string,
