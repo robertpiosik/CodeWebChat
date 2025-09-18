@@ -31,9 +31,25 @@ export const ai_studio: Chatbot = {
     const model_selector = document.querySelector(
       'button.model-selector-card'
     ) as HTMLButtonElement
+    if (!model_selector) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model selector button not found'
+      })
+      alert('Unable to set model. Please open an issue.')
+      return
+    }
     const model_name = model_selector.querySelector(
       'span.title'
     ) as HTMLSpanElement
+    if (!model_name) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model name element not found'
+      })
+      alert('Unable to set model. Please open an issue.')
+      return
+    }
     if (
       model_name.textContent ==
       (CHATBOTS['AI Studio'].models as any)[model]?.label
@@ -68,26 +84,60 @@ export const ai_studio: Chatbot = {
   },
   enter_system_instructions: async (system_instructions?: string) => {
     if (!system_instructions) return
-    const assignment_button = Array.from(
-      document.querySelectorAll('ms-toolbar button')
-    ).find(
-      (button) => button.textContent?.trim() == 'assignment'
+    const system_instructions_button = document.querySelector(
+      'button[data-test-system-instructions-card]'
     ) as HTMLButtonElement
-    assignment_button.click()
+    if (!system_instructions_button) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'System instructions button not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
+
+    system_instructions_button.click()
     await new Promise((r) => requestAnimationFrame(r))
-    const system_instructions_selector =
-      'textarea[aria-label="System instructions"]'
-    const system_instructions_element = document.querySelector(
-      system_instructions_selector
-    ) as HTMLTextAreaElement
-    system_instructions_element.value = system_instructions
-    system_instructions_element.dispatchEvent(
-      new Event('input', { bubbles: true })
-    )
-    system_instructions_element.dispatchEvent(
-      new Event('change', { bubbles: true })
-    )
-    assignment_button.click()
+
+    const close_button = document.querySelector(
+      'mat-dialog-container button[data-test-close-button]'
+    ) as HTMLButtonElement
+    if (!close_button) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'Close button for system instructions dialog not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
+
+    const panel = document.querySelector(
+      'ms-system-instructions'
+    ) as HTMLDivElement
+    if (!panel) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'System instructions panel not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
+
+    const textarea = panel.querySelector('textarea') as HTMLTextAreaElement
+    if (!textarea) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'System instructions textarea not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
+
+    textarea.value = system_instructions
+    textarea.dispatchEvent(new Event('input', { bubbles: true }))
+    textarea.dispatchEvent(new Event('change', { bubbles: true }))
+
+    close_button.click()
     await new Promise((r) => requestAnimationFrame(r))
   },
   set_options: async (options?: string[]) => {
@@ -108,6 +158,14 @@ export const ai_studio: Chatbot = {
     const thinking_toggle = document.querySelector(
       'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
     ) as HTMLElement
+    if (!thinking_toggle) {
+      Logger.error({
+        function_name: 'set_options',
+        message: 'Thinking toggle not found'
+      })
+      alert('Unable to set options. Please open an issue.')
+      return
+    }
 
     if (
       options.includes('disable-thinking') &&
@@ -117,7 +175,7 @@ export const ai_studio: Chatbot = {
         thinking_toggle.click()
       }
     } else {
-      if (thinking_toggle.getAttribute('aria-checked') == 'false') {
+      if (thinking_toggle?.getAttribute('aria-checked') == 'false') {
         thinking_toggle.click()
       }
     }
@@ -133,6 +191,14 @@ export const ai_studio: Chatbot = {
       const temp_toggle = document.querySelector(
         'ms-incognito-mode-toggle > button'
       ) as HTMLElement
+      if (!temp_toggle) {
+        Logger.error({
+          function_name: 'set_options',
+          message: 'Temporary chat toggle not found'
+        })
+        alert('Unable to set options. Please open an issue.')
+        return
+      }
       temp_toggle.click()
     }
 
@@ -140,6 +206,14 @@ export const ai_studio: Chatbot = {
       const grounding_button = document.querySelector(
         'div[data-test-id="searchAsAToolTooltip"] button'
       ) as HTMLElement
+      if (!grounding_button) {
+        Logger.error({
+          function_name: 'set_options',
+          message: 'Grounding with Google Search button not found'
+        })
+        alert('Unable to set options. Please open an issue.')
+        return
+      }
       const is_checked = grounding_button.getAttribute('aria-checked') == 'true'
       const should_be_checked = options.includes('grounding-with-google-search')
       if (is_checked != should_be_checked) {
@@ -151,6 +225,14 @@ export const ai_studio: Chatbot = {
       const url_context_button = document.querySelector(
         'div[data-test-id="browseAsAToolTooltip"] button'
       ) as HTMLElement
+      if (!url_context_button) {
+        Logger.error({
+          function_name: 'set_options',
+          message: 'URL context button not found'
+        })
+        alert('Unable to set options. Please open an issue.')
+        return
+      }
       url_context_button.click()
     }
     await new Promise((r) => requestAnimationFrame(r))
@@ -160,7 +242,14 @@ export const ai_studio: Chatbot = {
     const temperature_element = document.querySelector(
       'ms-prompt-run-settings div[data-test-id="temperatureSliderContainer"] input[type=number]'
     ) as HTMLInputElement
-    console.log(temperature_element)
+    if (!temperature_element) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Temperature input not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
     temperature_element.value = temperature.toString()
     temperature_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
@@ -170,16 +259,30 @@ export const ai_studio: Chatbot = {
       const manual_budget_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
       ) as HTMLElement
-      if (manual_budget_toggle?.getAttribute('aria-checked') == 'true') {
+      if (!manual_budget_toggle) {
+        Logger.error({
+          function_name: 'set_thinking_budget',
+          message: 'Manual budget toggle not found'
+        })
+        alert('Unable to set thinking budget. Please open an issue.')
+        return
+      }
+      if (manual_budget_toggle.getAttribute('aria-checked') == 'true') {
         manual_budget_toggle.click()
         await new Promise((r) => requestAnimationFrame(r))
-      } else {
-        console.warn('Manual budget toggle not found.')
       }
     } else {
       const thinking_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
       ) as HTMLElement
+      if (!thinking_toggle) {
+        Logger.error({
+          function_name: 'set_thinking_budget',
+          message: 'Thinking toggle not found'
+        })
+        alert('Unable to set thinking budget. Please open an issue.')
+        return
+      }
       if (thinking_toggle.getAttribute('aria-checked') == 'false') {
         thinking_toggle.click()
         await new Promise((r) => requestAnimationFrame(r))
@@ -187,23 +290,32 @@ export const ai_studio: Chatbot = {
       const manual_budget_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
       ) as HTMLElement
-      if (manual_budget_toggle?.getAttribute('aria-checked') == 'false') {
+      if (!manual_budget_toggle) {
+        Logger.error({
+          function_name: 'set_thinking_budget',
+          message: 'Manual budget toggle not found'
+        })
+        alert('Unable to set thinking budget. Please open an issue.')
+        return
+      }
+      if (manual_budget_toggle.getAttribute('aria-checked') == 'false') {
         manual_budget_toggle.click()
         await new Promise((r) => requestAnimationFrame(r))
       }
       const budget_input = document.querySelector(
         'div[data-test-id="user-setting-budget-animation-wrapper"] input'
       ) as HTMLInputElement
-      if (budget_input) {
-        budget_input.value = thinking_budget.toString()
-        budget_input.dispatchEvent(new Event('input', { bubbles: true }))
-        budget_input.dispatchEvent(new Event('change', { bubbles: true }))
-      } else {
-        console.warn(
-          'Budget input not found for setting thinking budget:',
-          thinking_budget
-        )
+      if (!budget_input) {
+        Logger.error({
+          function_name: 'set_thinking_budget',
+          message: 'Budget input not found'
+        })
+        alert('Unable to set thinking budget. Please open an issue.')
+        return
       }
+      budget_input.value = thinking_budget.toString()
+      budget_input.dispatchEvent(new Event('input', { bubbles: true }))
+      budget_input.dispatchEvent(new Event('change', { bubbles: true }))
     }
   },
   set_top_p: async (top_p?: number) => {
@@ -228,6 +340,14 @@ export const ai_studio: Chatbot = {
     const top_p_element = document.querySelector(
       'ms-prompt-run-settings div[mattooltip="Probability threshold for top-p sampling"] input[type=number]'
     ) as HTMLInputElement
+    if (!top_p_element) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Top-p input not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
     top_p_element.value = top_p.toString()
     top_p_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
@@ -235,6 +355,14 @@ export const ai_studio: Chatbot = {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
+    if (!input_element) {
+      Logger.error({
+        function_name: 'enter_message_and_send',
+        message: 'Message input textarea not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
+    }
     input_element.value = message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
@@ -254,7 +382,18 @@ export const ai_studio: Chatbot = {
       check()
     })
     await close_panel()
-    ;(document.querySelector('ms-run-button > button') as HTMLElement)?.click()
+    const send_button = document.querySelector(
+      'ms-run-button > button'
+    ) as HTMLElement
+    if (!send_button) {
+      Logger.error({
+        function_name: 'enter_message_and_send',
+        message: 'Send button not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
+    }
+    send_button.click()
   },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (footer: Element) => {
@@ -319,6 +458,14 @@ const open_panel = async () => {
     const tune_button = document.querySelector(
       'button.runsettings-toggle-button'
     ) as HTMLButtonElement
+    if (!tune_button) {
+      Logger.error({
+        function_name: 'open_panel',
+        message: 'Tune button not found'
+      })
+      alert('Unable to open settings panel. Please open an issue.')
+      return
+    }
     tune_button.click()
     await new Promise((resolve) => setTimeout(resolve, 250))
   }
@@ -329,12 +476,28 @@ const close_panel = async () => {
     const close_button = document.querySelector(
       'ms-run-settings button[iconname="close"]'
     ) as HTMLButtonElement
+    if (!close_button) {
+      Logger.error({
+        function_name: 'close_panel',
+        message: 'Close button for settings panel not found'
+      })
+      alert('Unable to close settings panel. Please open an issue.')
+      return
+    }
     close_button.click()
   } else {
     if (sessionStorage.getItem('should-hide-panel') == 'true') {
       const close_button = document.querySelector(
         'ms-run-settings button[iconname="close"]'
       ) as HTMLButtonElement
+      if (!close_button) {
+        Logger.error({
+          function_name: 'close_panel',
+          message: 'Close button for settings panel not found'
+        })
+        alert('Unable to close settings panel. Please open an issue.')
+        return
+      }
       close_button.click()
     }
   }

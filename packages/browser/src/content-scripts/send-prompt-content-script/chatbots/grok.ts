@@ -4,6 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { Logger } from '@shared/utils/logger'
 
 export const grok: Chatbot = {
   wait_until_ready: async () => {
@@ -26,6 +27,14 @@ export const grok: Chatbot = {
         const private_link = document.querySelector(
           'a[href="/chat#private"]'
         ) as HTMLAnchorElement
+        if (!private_link) {
+          Logger.error({
+            function_name: 'set_options',
+            message: 'Private mode link not found'
+          })
+          alert('Unable to set private mode. Please open an issue.')
+          return
+        }
         private_link.click()
       }
     }
@@ -36,6 +45,14 @@ export const grok: Chatbot = {
     const model_selector_button = document.querySelector(
       'button[id="model-select-trigger"]'
     ) as HTMLButtonElement
+    if (!model_selector_button) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model selector button not found'
+      })
+      alert('Unable to set model. Please open an issue.')
+      return
+    }
 
     const model_label_to_find = (CHATBOTS['Grok'].models as any)[model]?.label
     if (!model_label_to_find) return
@@ -50,6 +67,14 @@ export const grok: Chatbot = {
     const dropdown = document.querySelector(
       'div[data-radix-popper-content-wrapper]'
     ) as HTMLDivElement
+    if (!dropdown) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model dropdown not found'
+      })
+      alert('Unable to set model. Please open an issue.')
+      return
+    }
 
     const options = dropdown.querySelectorAll('div[role="option"]')
     for (const option of Array.from(options)) {
@@ -71,6 +96,13 @@ export const grok: Chatbot = {
           const copy_button = f.querySelector(
             'button:nth-child(2)'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'grok.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) =>

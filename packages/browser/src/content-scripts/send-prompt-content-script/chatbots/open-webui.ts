@@ -3,6 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { Logger } from '@shared/utils/logger'
 
 export const open_webui: Chatbot = {
   wait_until_ready: async () => {
@@ -26,15 +27,39 @@ export const open_webui: Chatbot = {
     const controls_button = document.querySelector(
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
+    if (!controls_button) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'Controls button not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
     controls_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const controls_pane =
       window.innerWidth >= 1024
         ? (document.querySelector('[data-pane]:last-child') as HTMLElement)
         : (document.querySelector('div.modal') as HTMLElement)
+    if (!controls_pane) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'Controls pane not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
     const system_instructions_textarea = controls_pane.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
+    if (!system_instructions_textarea) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'System instructions textarea not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
     system_instructions_textarea.value = system_instructions
     system_instructions_textarea.dispatchEvent(
       new Event('input', { bubbles: true })
@@ -45,63 +70,183 @@ export const open_webui: Chatbot = {
     const close_button = controls_pane.querySelector(
       'button'
     ) as HTMLButtonElement
+    if (!close_button) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'Close button for controls pane not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
     close_button.click()
   },
   set_temperature: async (temperature?: number) => {
-    if (!temperature) return
+    if (temperature === undefined) return
     const controls_button = document.querySelector(
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
+    if (!controls_button) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Controls button not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
     controls_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const controls_pane =
       window.innerWidth >= 1024
         ? (document.querySelector('[data-pane]:last-child') as HTMLElement)
         : (document.querySelector('div.modal') as HTMLElement)
+    if (!controls_pane) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Controls pane not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
     const pb_safe_bottom = controls_pane.querySelector(
       '.pb-safe-bottom'
     ) as HTMLElement
-    const fifth_div = pb_safe_bottom.querySelector(
+    if (!pb_safe_bottom) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'pb_safe_bottom element not found in controls pane'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
+    const temperature_div = pb_safe_bottom.querySelector(
       'div:nth-child(5)'
     ) as HTMLElement
-    const button = fifth_div.querySelector('button') as HTMLElement
+    if (!temperature_div) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Temperature container not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
+    const button = temperature_div.querySelector('button') as HTMLElement
+    if (!button) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Temperature reset button not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
     button.click()
     await new Promise((r) => requestAnimationFrame(r))
-    const input = fifth_div.querySelector('input') as HTMLInputElement
+    const input = temperature_div.querySelector('input') as HTMLInputElement
+    if (!input) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Temperature input not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
     input.value = temperature.toString()
     input.dispatchEvent(new Event('change', { bubbles: true }))
     const close_button = controls_pane.querySelector(
       'button'
     ) as HTMLButtonElement
+    if (!close_button) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Close button for controls pane not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
     close_button.click()
     await new Promise((r) => requestAnimationFrame(r))
   },
   set_top_p: async (top_p?: number) => {
-    if (!top_p) return
+    if (top_p === undefined) return
     const controls_button = document.querySelector(
       'button[aria-label="Controls"]'
     ) as HTMLButtonElement
+    if (!controls_button) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Controls button not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
     controls_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const controls_pane =
       window.innerWidth >= 1024
         ? (document.querySelector('[data-pane]:last-child') as HTMLElement)
         : (document.querySelector('div.modal') as HTMLElement)
+    if (!controls_pane) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Controls pane not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
     const pb_safe_bottom = controls_pane.querySelector(
       '.pb-safe-bottom'
     ) as HTMLElement
-    const fifth_div = pb_safe_bottom.querySelector(
+    if (!pb_safe_bottom) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'pb_safe_bottom element not found in controls pane'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
+    const top_p_div = pb_safe_bottom.querySelector(
       'div:nth-child(12)'
     ) as HTMLElement
-    const button = fifth_div.querySelector('button') as HTMLElement
+    if (!top_p_div) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Top-p container not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
+    const button = top_p_div.querySelector('button') as HTMLElement
+    if (!button) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Top-p reset button not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
     button.click()
     await new Promise((r) => requestAnimationFrame(r))
-    const input = fifth_div.querySelector('input') as HTMLInputElement
+    const input = top_p_div.querySelector('input') as HTMLInputElement
+    if (!input) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Top-p input not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
     input.value = top_p.toString()
     input.dispatchEvent(new Event('change', { bubbles: true }))
     const close_button = controls_pane.querySelector(
       'button'
     ) as HTMLButtonElement
+    if (!close_button) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Close button for controls pane not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
     close_button.click()
     await new Promise((r) => requestAnimationFrame(r))
   },
@@ -110,18 +255,40 @@ export const open_webui: Chatbot = {
     const model_selector_button = document.querySelector(
       'button#model-selector-0-button'
     ) as HTMLElement
+    if (!model_selector_button) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model selector button not found'
+      })
+      alert('Unable to set model. Please open an issue.')
+      return
+    }
     model_selector_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const model_selector_menu = document.querySelector(
       'div[aria-labelledby="model-selector-0-button"]'
     ) as HTMLElement
+    if (!model_selector_menu) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model selector menu not found'
+      })
+      alert('Unable to set model. Please open an issue.')
+      return
+    }
     const model_button = model_selector_menu.querySelector(
       `button[data-value="${model}"]`
     ) as HTMLElement
     if (model_button) {
       model_button.click()
+    } else {
+      Logger.error({
+        function_name: 'set_model',
+        message: `Model button for "${model}" not found`
+      })
+      alert(`Unable to set model "${model}". It might not be available.`)
+      model_selector_button.click()
     }
-    model_selector_button.click()
     await new Promise((r) => requestAnimationFrame(r))
   },
   inject_apply_response_button: (client_id: number) => {
@@ -139,6 +306,13 @@ export const open_webui: Chatbot = {
           const copy_button = f.querySelector(
             'button.copy-response-button'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'open_webui.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) =>

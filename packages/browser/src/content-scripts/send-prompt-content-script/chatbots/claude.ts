@@ -29,6 +29,7 @@ export const claude: Chatbot = {
         function_name: 'set_model',
         message: 'Model selector button not found'
       })
+      alert('Unable to set model. Please open an issue.')
       return
     }
 
@@ -59,6 +60,7 @@ export const claude: Chatbot = {
         function_name: 'set_model',
         message: 'Model selector menu items not found'
       })
+      alert('Unable to set model. Please open an issue.')
       return
     }
 
@@ -92,12 +94,16 @@ export const claude: Chatbot = {
             function_name: 'set_options',
             message: 'Incognito chat button not found for Claude'
           })
+          alert('Unable to set options. Please open an issue.')
+          return
         }
       } else {
         Logger.error({
           function_name: 'set_options',
           message: 'Incognito chat button path not found for Claude'
         })
+        alert('Unable to set options. Please open an issue.')
+        return
       }
     }
   },
@@ -106,27 +112,35 @@ export const claude: Chatbot = {
       'div[contenteditable=true]'
     ) as HTMLElement
 
-    if (input_element) {
-      input_element.innerText = message
-      input_element.dispatchEvent(new Event('input', { bubbles: true }))
-      input_element.dispatchEvent(new Event('change', { bubbles: true }))
-      await new Promise((r) => setTimeout(r, 500))
-      const submit_button = Array.from(
-        document.querySelectorAll('fieldset button')
-      ).find((button) =>
-        button.querySelector(
-          'path[d="M208.49,120.49a12,12,0,0,1-17,0L140,69V216a12,12,0,0,1-24,0V69L64.49,120.49a12,12,0,0,1-17-17l72-72a12,12,0,0,1,17,0l72,72A12,12,0,0,1,208.49,120.49Z"]'
-        )
-      ) as HTMLButtonElement
-      if (submit_button) {
-        submit_button.click()
-      } else {
-        Logger.error({
-          function_name: 'enter_message_and_send',
-          message: 'Submit button not found'
-        })
-      }
+    if (!input_element) {
+      Logger.error({
+        function_name: 'enter_message_and_send',
+        message: 'Message input not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
     }
+
+    input_element.innerText = message
+    input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.dispatchEvent(new Event('change', { bubbles: true }))
+    await new Promise((r) => setTimeout(r, 500))
+    const submit_button = Array.from(
+      document.querySelectorAll('fieldset button')
+    ).find((button) =>
+      button.querySelector(
+        'path[d="M208.49,120.49a12,12,0,0,1-17,0L140,69V216a12,12,0,0,1-24,0V69L64.49,120.49a12,12,0,0,1-17-17l72-72a12,12,0,0,1,17,0l72,72A12,12,0,0,1,208.49,120.49Z"]'
+      )
+    ) as HTMLButtonElement
+    if (!submit_button) {
+      Logger.error({
+        function_name: 'enter_message_and_send',
+        message: 'Submit button not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
+    }
+    submit_button.click()
   },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (footer: Element) => {
@@ -139,6 +153,13 @@ export const claude: Chatbot = {
           const copy_button = f.querySelector(
             'button[data-testid="action-bar-copy"]'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'claude.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) => f.insertBefore(b, f.children[0])

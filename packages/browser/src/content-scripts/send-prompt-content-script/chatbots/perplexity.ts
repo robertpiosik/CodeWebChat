@@ -3,6 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { Logger } from '@shared/utils/logger'
 
 export const perplexity: Chatbot = {
   wait_until_ready: async () => {
@@ -31,6 +32,14 @@ export const perplexity: Chatbot = {
       const file_input = document.querySelector(
         'input[type="file"]'
       ) as HTMLInputElement
+      if (!file_input) {
+        Logger.error({
+          function_name: 'enter_message_and_send',
+          message: 'File input not found'
+        })
+        alert('Unable to upload file. Please open an issue.')
+        return
+      }
       const blob = new Blob([context], { type: 'text/plain' })
       const file = new File([blob], 'context.txt', { type: 'text/plain' })
       const data_transfer = new DataTransfer()
@@ -53,6 +62,14 @@ export const perplexity: Chatbot = {
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
+    if (!input_element) {
+      Logger.error({
+        function_name: 'enter_message_and_send',
+        message: 'Message input not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
+    }
 
     input_element.dispatchEvent(
       new InputEvent('input', {
@@ -68,6 +85,14 @@ export const perplexity: Chatbot = {
     const submit_button = document.querySelector(
       'button[data-testid="submit-button"]'
     ) as HTMLButtonElement
+    if (!submit_button) {
+      Logger.error({
+        function_name: 'enter_message_and_send',
+        message: 'Submit button not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
+    }
     submit_button.click()
   },
   inject_apply_response_button: (client_id: number) => {
@@ -87,6 +112,13 @@ export const perplexity: Chatbot = {
                 'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'
             )
           }) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'perplexity.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) => f.insertBefore(b, f.children[0])

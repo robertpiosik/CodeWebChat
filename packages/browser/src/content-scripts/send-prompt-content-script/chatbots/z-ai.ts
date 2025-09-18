@@ -3,6 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { Logger } from '@shared/utils/logger'
 
 export const z_ai: Chatbot = {
   wait_until_ready: async () => {
@@ -22,15 +23,29 @@ export const z_ai: Chatbot = {
       add_apply_response_button({
         client_id,
         footer,
-        get_chat_turn: (f) =>
-          f.parentElement?.querySelector('.chat-assistant') as HTMLElement,
+        get_chat_turn: (f) => {
+          const chat_turn = f.parentElement?.querySelector('.chat-assistant')
+          if (!chat_turn) {
+            Logger.error({
+              function_name: 'z_ai.get_chat_turn',
+              message: 'Chat turn element not found'
+            })
+            return null
+          }
+          return chat_turn as HTMLElement
+        },
         get_code_blocks: (t) => t.querySelectorAll('.cm-content'),
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,
         perform_copy: (f) => {
-          const copy_button = f.querySelector(
-            'button.copy-response-button'
-          ) as HTMLElement
-          copy_button.click()
+          const copy_button = f.querySelector('button.copy-response-button')
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'z_ai.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
+          ;(copy_button as HTMLElement).click()
         },
         insert_button: (f, b) =>
           f.insertBefore(b, f.children[f.children.length])

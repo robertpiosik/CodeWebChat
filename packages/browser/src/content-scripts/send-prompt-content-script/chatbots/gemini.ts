@@ -1,5 +1,6 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
+import { Logger } from '@shared/utils/logger'
 import {
   add_apply_response_button,
   observe_for_responses
@@ -24,30 +25,42 @@ export const gemini: Chatbot = {
       const model_selector_trigger = document.querySelector(
         'bard-logo + button'
       ) as HTMLButtonElement
-      if (model_selector_trigger) {
-        model_selector_trigger.click()
-        await new Promise((r) => requestAnimationFrame(r))
-        const menu_content =
-          document.querySelector('.mat-mdc-menu-content') ||
-          document.querySelector('mat-action-list')
-        if (menu_content) {
-          const model_options = Array.from(
-            menu_content.querySelectorAll('button[mat-menu-item]')
-          )
-          for (const option of model_options) {
-            const name_element = option.querySelector(
-              '.title-and-description > span:last-child'
-            )
-            if (
-              name_element &&
-              name_element.textContent?.trim() ==
-                (CHATBOTS['Gemini'].models as any)[model].label
-            ) {
-              ;(option as HTMLElement).click()
-              await new Promise((r) => requestAnimationFrame(r))
-              break
-            }
-          }
+      if (!model_selector_trigger) {
+        Logger.error({
+          function_name: 'set_model',
+          message: 'Model selector trigger not found'
+        })
+        alert('Unable to set model. Please open an issue.')
+        return
+      }
+      model_selector_trigger.click()
+      await new Promise((r) => requestAnimationFrame(r))
+      const menu_content =
+        document.querySelector('.mat-mdc-menu-content') ||
+        document.querySelector('mat-action-list')
+      if (!menu_content) {
+        Logger.error({
+          function_name: 'set_model',
+          message: 'Model selector menu not found'
+        })
+        alert('Unable to set model. Please open an issue.')
+        return
+      }
+      const model_options = Array.from(
+        menu_content.querySelectorAll('button[mat-menu-item]')
+      )
+      for (const option of model_options) {
+        const name_element = option.querySelector(
+          '.title-and-description > span:last-child'
+        )
+        if (
+          name_element &&
+          name_element.textContent?.trim() ==
+            (CHATBOTS['Gemini'].models as any)[model].label
+        ) {
+          ;(option as HTMLElement).click()
+          await new Promise((r) => requestAnimationFrame(r))
+          break
         }
       }
     }
@@ -83,19 +96,32 @@ export const gemini: Chatbot = {
         }
       }
 
-      if (temp_chat_button) {
-        temp_chat_button.click()
-        await new Promise((r) => requestAnimationFrame(r))
+      if (!temp_chat_button) {
+        Logger.error({
+          function_name: 'set_options',
+          message: 'Temporary chat button not found'
+        })
+        alert('Unable to set options. Please open an issue.')
+        return
       }
+
+      temp_chat_button.click()
+      await new Promise((r) => requestAnimationFrame(r))
 
       if (side_nav_menu_button_clicked) {
         const side_nav_menu_button = document.querySelector(
           side_nav_menu_button_selector
         ) as HTMLButtonElement
-        if (side_nav_menu_button) {
-          side_nav_menu_button.click()
-          await new Promise((r) => requestAnimationFrame(r))
+        if (!side_nav_menu_button) {
+          Logger.error({
+            function_name: 'set_options',
+            message: 'Side nav menu button not found to close'
+          })
+          alert('Unable to set options. Please open an issue.')
+          return
         }
+        side_nav_menu_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
       }
     }
   },
@@ -110,6 +136,13 @@ export const gemini: Chatbot = {
           const copy_button = f.querySelector(
             'copy-button > button'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'gemini.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) =>

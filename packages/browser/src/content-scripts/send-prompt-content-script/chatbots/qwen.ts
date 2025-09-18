@@ -1,5 +1,6 @@
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
+import { Logger } from '@shared/utils/logger'
 import {
   add_apply_response_button,
   observe_for_responses
@@ -33,6 +34,14 @@ export const qwen: Chatbot = {
     const model_selector_button = document.querySelector(
       'button#model-selector-0-button'
     ) as HTMLElement
+    if (!model_selector_button) {
+      Logger.error({
+        function_name: 'set_model',
+        message: 'Model selector button not found'
+      })
+      alert('Unable to set model. Please open an issue.')
+      return
+    }
 
     if (
       model_selector_button.textContent?.trim() ==
@@ -50,8 +59,9 @@ export const qwen: Chatbot = {
       const model_name_element = (button.querySelector('div.text-sm') ||
         button.querySelector('div.text-15')) as HTMLDivElement
       if (
-        model_name_element.textContent ==
-        (CHATBOTS['Qwen'].models as any)[model]?.label
+        model_name_element &&
+        model_name_element.textContent ===
+          (CHATBOTS['Qwen'].models as any)[model]?.label
       ) {
         button.click()
         break
@@ -76,16 +86,40 @@ export const qwen: Chatbot = {
         const search_button = document.querySelector(
           'button.websearch_button'
         ) as HTMLButtonElement
+        if (!search_button) {
+          Logger.error({
+            function_name: 'set_options',
+            message: 'Search button not found'
+          })
+          alert('Unable to set options. Please open an issue.')
+          return
+        }
         search_button.click()
       } else if (option == 'temporary' && supported_options['temporary']) {
         const model_selector_button = document.querySelector(
           'button#model-selector-0-button'
         ) as HTMLElement
+        if (!model_selector_button) {
+          Logger.error({
+            function_name: 'set_options',
+            message: 'Model selector button for temporary chat not found'
+          })
+          alert('Unable to set options. Please open an issue.')
+          return
+        }
         model_selector_button.click()
         await new Promise((r) => requestAnimationFrame(r))
         const temporary_switch = document.querySelector(
           'div[aria-labelledby="model-selector-0-button"] button[role="switch"]'
         ) as HTMLButtonElement
+        if (!temporary_switch) {
+          Logger.error({
+            function_name: 'set_options',
+            message: 'Temporary chat switch not found'
+          })
+          alert('Unable to set options. Please open an issue.')
+          return
+        }
         temporary_switch.click()
         await new Promise((r) => requestAnimationFrame(r))
         model_selector_button.click()
@@ -103,6 +137,14 @@ export const qwen: Chatbot = {
       const file_input = document.querySelector(
         'input#filesUpload'
       ) as HTMLInputElement
+      if (!file_input) {
+        Logger.error({
+          function_name: 'enter_message_and_send',
+          message: 'File input not found'
+        })
+        alert('Unable to send message with file. Please open an issue.')
+        return
+      }
       const blob = new Blob([context], { type: 'text/plain' })
       const file = new File([blob], 'context.txt', { type: 'text/plain' })
       const data_transfer = new DataTransfer()
@@ -126,6 +168,14 @@ export const qwen: Chatbot = {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
+    if (!input_element) {
+      Logger.error({
+        function_name: 'enter_message_and_send',
+        message: 'Message input textarea not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
+    }
     input_element.value = instructions
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
@@ -135,6 +185,14 @@ export const qwen: Chatbot = {
     const submit_button = document.querySelector(
       'button#send-message-button'
     ) as HTMLButtonElement
+    if (!submit_button) {
+      Logger.error({
+        function_name: 'enter_message_and_send',
+        message: 'Send button not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
+    }
     submit_button.click()
   },
   inject_apply_response_button: (client_id: number) => {
@@ -152,6 +210,13 @@ export const qwen: Chatbot = {
           const copy_button = f.querySelector(
             'button.copy-response-button'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'qwen.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) => f.insertBefore(b, f.children[0]),

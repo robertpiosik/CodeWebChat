@@ -56,6 +56,7 @@ export const chatgpt: Chatbot = {
             function_name: 'set_options',
             message: 'Temporary chat button not found'
           })
+          alert('Unable to set options. Please open an issue.')
         }
       } else if (
         option == 'think-longer' &&
@@ -92,12 +93,14 @@ export const chatgpt: Chatbot = {
               function_name: 'set_options',
               message: 'Think longer button not found'
             })
+            alert('Unable to set options. Please open an issue.')
           }
         } else {
           Logger.error({
             function_name: 'set_options',
             message: 'Plus button for "Think longer" not found'
           })
+          alert('Unable to set options. Please open an issue.')
         }
       }
     }
@@ -113,6 +116,13 @@ export const chatgpt: Chatbot = {
           const copy_button = f.querySelector(
             'button[data-testid="copy-turn-action-button"]'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'chatgpt.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) =>

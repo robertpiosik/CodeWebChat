@@ -37,6 +37,7 @@ export const mistral: Chatbot = {
           function_name: 'set_options',
           message: 'Incognito button not found'
         })
+        alert('Unable to set options. Please open an issue.')
       }
     }
 
@@ -44,11 +45,27 @@ export const mistral: Chatbot = {
       'path[d="M9 18h6"]'
     ) as SVGPathElement
 
-    if (!think_button_icon_path) return
+    if (!think_button_icon_path) {
+      Logger.error({
+        function_name: 'set_options',
+        message: 'Think button icon not found'
+      })
+      alert('Unable to set options. Please open an issue.')
+      return
+    }
 
     const think_button = think_button_icon_path.closest(
       'button'
     ) as HTMLButtonElement
+
+    if (!think_button) {
+      Logger.error({
+        function_name: 'set_options',
+        message: 'Think button not found'
+      })
+      alert('Unable to set options. Please open an issue.')
+      return
+    }
 
     const should_be_on = options.includes('think')
     const is_on = think_button.getAttribute('data-state') == 'on'
@@ -72,6 +89,14 @@ export const mistral: Chatbot = {
           const copy_button = f.querySelector(
             'button:last-child'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'mistral.perform_copy',
+              message: 'Copy button not found'
+            })
+            alert('Unable to copy response. Please open an issue.')
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) => f.insertBefore(b, f.children[0])

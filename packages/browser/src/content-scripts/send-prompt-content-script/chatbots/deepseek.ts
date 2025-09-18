@@ -4,6 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { Logger } from '@shared/utils/logger'
 
 export const deepseek: Chatbot = {
   wait_until_ready: async () => {
@@ -21,58 +22,63 @@ export const deepseek: Chatbot = {
   },
   set_options: async (options?: string[]) => {
     if (!options) return
-    // Uncheck deep think
+
     const deep_think_button = Array.from(
       document.querySelectorAll('button')
     ).find(
       (button) =>
-        button.textContent == 'DeepThink' || button.textContent == '深度思考'
-    ) as HTMLElement
+        button.textContent === 'DeepThink' || button.textContent === '深度思考'
+    )
+    if (!deep_think_button) {
+      Logger.error({
+        function_name: 'set_options',
+        message: 'DeepThink button not found'
+      })
+      alert('Unable to set options. Please open an issue.')
+      return
+    }
+
+    const search_button = Array.from(document.querySelectorAll('button')).find(
+      (button) =>
+        button.textContent === 'Search' || button.textContent === '联网搜索'
+    )
+    if (!search_button) {
+      Logger.error({
+        function_name: 'set_options',
+        message: 'Search button not found'
+      })
+      alert('Unable to set options. Please open an issue.')
+      return
+    }
+
+    // Uncheck deep think
     const deep_think_button_style = window.getComputedStyle(deep_think_button)
     if (
-      deep_think_button_style.getPropertyValue('color') != 'rgb(15, 17, 21)' &&
-      deep_think_button_style.getPropertyValue('color') != 'rgb(249, 250, 251)'
+      deep_think_button_style.getPropertyValue('color') !== 'rgb(15, 17, 21)' &&
+      deep_think_button_style.getPropertyValue('color') !== 'rgb(249, 250, 251)'
     ) {
       deep_think_button.click()
     }
 
     // Uncheck search
-    const search_button = Array.from(document.querySelectorAll('button')).find(
-      (button) =>
-        button.textContent == 'Search' || button.textContent == '联网搜索'
-    ) as HTMLElement
     const search_button_style = window.getComputedStyle(search_button)
     if (
-      search_button_style.getPropertyValue('color') != 'rgb(15, 17, 21)' &&
-      search_button_style.getPropertyValue('color') != 'rgb(249, 250, 251)'
+      search_button_style.getPropertyValue('color') !== 'rgb(15, 17, 21)' &&
+      search_button_style.getPropertyValue('color') !== 'rgb(249, 250, 251)'
     ) {
       search_button.click()
     }
 
     await new Promise((r) => requestAnimationFrame(r))
 
-    const supported_options = CHATBOTS['DeepSeek'].supported_options || {}
+    const supported_options = CHATBOTS.DeepSeek.supported_options || {}
     for (const option of options) {
-      if (option == 'deep-think' && supported_options['deep-think']) {
-        const deep_think_button = Array.from(
-          document.querySelectorAll('button')
-        ).find(
-          (button) =>
-            button.textContent == 'DeepThink' ||
-            button.textContent == '深度思考'
-        ) as HTMLElement
+      if (option === 'deep-think' && supported_options['deep-think']) {
         deep_think_button.click()
-      } else if (option == 'search' && supported_options['search']) {
-        const search_button = Array.from(
-          document.querySelectorAll('button')
-        ).find(
-          (button) =>
-            button.textContent == 'Search' || button.textContent == '联网搜索'
-        ) as HTMLElement
+      } else if (option === 'search' && supported_options.search) {
         search_button.click()
       }
     }
-
     await new Promise((r) => requestAnimationFrame(r))
   },
   inject_apply_response_button: (client_id: number) => {
@@ -89,6 +95,13 @@ export const deepseek: Chatbot = {
           const copy_button = f.querySelector(
             'div[role="button"]'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'deepseek.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) =>
@@ -98,11 +111,17 @@ export const deepseek: Chatbot = {
 
     observe_for_responses({
       chatbot_name: 'DeepSeek',
-      is_generating: () =>
-        !!document.querySelector(
-          'input[type="file"] + div[aria-disabled="false"]'
-        ) &&
-        !(document.querySelector('textarea') as HTMLTextAreaElement)?.value,
+      is_generating: () => {
+        const textarea = document.querySelector('textarea')
+        if (!textarea) {
+          return false
+        }
+        return (
+          !!document.querySelector(
+            'input[type="file"] + div[aria-disabled="false"]'
+          ) && !textarea.value
+        )
+      },
       footer_selector: 'div.ds-message + div + div > div.ds-flex',
       add_buttons
     })

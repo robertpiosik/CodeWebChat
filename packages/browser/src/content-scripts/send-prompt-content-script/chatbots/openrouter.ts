@@ -3,6 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { Logger } from '@shared/utils/logger'
 
 export const openrouter: Chatbot = {
   wait_until_ready: async () => {
@@ -29,11 +30,32 @@ export const openrouter: Chatbot = {
         'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
       )
     }) as HTMLButtonElement
+    if (!options_button) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'Options button not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
     options_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const textarea = document.querySelector(
       'div[role="dialog"] textarea'
     ) as HTMLTextAreaElement
+    if (!textarea) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'System instructions textarea not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
     textarea.focus()
     textarea.value = system_instructions
     textarea.dispatchEvent(new Event('change', { bubbles: true }))
@@ -41,10 +63,18 @@ export const openrouter: Chatbot = {
     const close_button = document.querySelector(
       'div[role="dialog"] button[data-slot="dialog-close"]'
     ) as HTMLButtonElement
+    if (!close_button) {
+      Logger.error({
+        function_name: 'enter_system_instructions',
+        message: 'Close button for system instructions dialog not found'
+      })
+      alert('Unable to set system instructions. Please open an issue.')
+      return
+    }
     close_button.click()
   },
   set_temperature: async (temperature?: number) => {
-    if (!temperature) return
+    if (temperature === undefined) return
     const options_button = Array.from(
       document.querySelectorAll('main > div > div > div.flex-col button')
     ).find((button) => {
@@ -54,6 +84,14 @@ export const openrouter: Chatbot = {
         'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
       )
     }) as HTMLButtonElement
+    if (!options_button) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Options button not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
     options_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const sampling_parameters_button = Array.from(
@@ -61,6 +99,19 @@ export const openrouter: Chatbot = {
     ).find(
       (button) => button.textContent?.trim() == 'Sampling Parameters'
     ) as HTMLButtonElement
+    if (!sampling_parameters_button) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Sampling parameters button not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
     sampling_parameters_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const temperature_div = Array.from(
@@ -68,9 +119,35 @@ export const openrouter: Chatbot = {
         'div[role="dialog"] div.flex.justify-between.text-sm'
       )
     ).find((div) => div.textContent?.trim() == 'Temperature') as HTMLElement
+    if (!temperature_div) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Temperature div not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
     const temperature_input = temperature_div.querySelector(
       'input'
     ) as HTMLInputElement
+    if (!temperature_input) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Temperature input not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
     temperature_input.focus()
     temperature_input.value = temperature.toString()
     temperature_input.dispatchEvent(new Event('change', { bubbles: true }))
@@ -78,10 +155,18 @@ export const openrouter: Chatbot = {
     const close_button = document.querySelector(
       'div[role="dialog"] button[data-slot="dialog-close"]'
     ) as HTMLButtonElement
+    if (!close_button) {
+      Logger.error({
+        function_name: 'set_temperature',
+        message: 'Close button for dialog not found'
+      })
+      alert('Unable to set temperature. Please open an issue.')
+      return
+    }
     close_button.click()
   },
   set_top_p: async (top_p?: number) => {
-    if (!top_p) return
+    if (top_p === undefined) return
     const options_button = Array.from(
       document.querySelectorAll('main > div > div > div.flex-col button')
     ).find((button) => {
@@ -91,6 +176,14 @@ export const openrouter: Chatbot = {
         'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
       )
     }) as HTMLButtonElement
+    if (!options_button) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Options button not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
     options_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const sampling_parameters_button = Array.from(
@@ -98,6 +191,19 @@ export const openrouter: Chatbot = {
     ).find(
       (button) => button.textContent?.trim() == 'Sampling Parameters'
     ) as HTMLButtonElement
+    if (!sampling_parameters_button) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Sampling parameters button not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
     sampling_parameters_button.click()
     await new Promise((r) => requestAnimationFrame(r))
     const top_p_div = Array.from(
@@ -105,7 +211,33 @@ export const openrouter: Chatbot = {
         'div[role="dialog"] div.flex.justify-between.text-sm'
       )
     ).find((div) => div.textContent?.trim() == 'Top P') as HTMLElement
+    if (!top_p_div) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Top P div not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
     const top_p_input = top_p_div.querySelector('input') as HTMLInputElement
+    if (!top_p_input) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Top P input not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
     top_p_input.focus()
     top_p_input.value = top_p.toString()
     top_p_input.dispatchEvent(new Event('change', { bubbles: true }))
@@ -113,6 +245,14 @@ export const openrouter: Chatbot = {
     const close_button = document.querySelector(
       'div[role="dialog"] button[data-slot="dialog-close"]'
     ) as HTMLButtonElement
+    if (!close_button) {
+      Logger.error({
+        function_name: 'set_top_p',
+        message: 'Close button for dialog not found'
+      })
+      alert('Unable to set top-p. Please open an issue.')
+      return
+    }
     close_button.click()
   },
   inject_apply_response_button: (client_id: number) => {
@@ -131,6 +271,13 @@ export const openrouter: Chatbot = {
               'M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184'
             )
           }) as HTMLButtonElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'openrouter.perform_copy',
+              message: 'Copy button not found'
+            })
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) => f.insertBefore(b, f.children[5])

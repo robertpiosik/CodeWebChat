@@ -1,4 +1,5 @@
 import { Chatbot } from '../types/chatbot'
+import { Logger } from '@shared/utils/logger'
 import {
   add_apply_response_button,
   observe_for_responses
@@ -21,6 +22,14 @@ export const kimi: Chatbot = {
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
+    if (!input_element) {
+      Logger.error({
+        function_name: 'kimi.enter_message_and_send',
+        message: 'Message input element not found'
+      })
+      alert('Unable to send message. Please open an issue.')
+      return
+    }
 
     input_element.dispatchEvent(
       new InputEvent('input', {
@@ -31,7 +40,7 @@ export const kimi: Chatbot = {
       })
     )
 
-    new Promise<void>((resolve) => {
+    await new Promise<void>((resolve) => {
       const check_button_state = () => {
         const send_button_container = document.querySelector(
           '.send-button-container'
@@ -64,6 +73,14 @@ export const kimi: Chatbot = {
           const copy_button = footer.querySelector(
             '.segment-assistant-actions-content > div:first-child'
           ) as HTMLElement
+          if (!copy_button) {
+            Logger.error({
+              function_name: 'kimi.perform_copy',
+              message: 'Copy button not found'
+            })
+            alert('Unable to copy response. Please open an issue.')
+            return
+          }
           copy_button.click()
         },
         insert_button: (f, b) => {

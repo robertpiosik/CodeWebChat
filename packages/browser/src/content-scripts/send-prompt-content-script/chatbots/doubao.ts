@@ -4,6 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
+import { Logger } from '@shared/utils/logger'
 
 export const doubao: Chatbot = {
   wait_until_ready: async () => {
@@ -27,11 +28,35 @@ export const doubao: Chatbot = {
     const deep_thinking_button = document.querySelector(
       'div[data-testid="chat_input"] input[data-testid="upload-file-input"] + button'
     ) as HTMLButtonElement
+    if (!deep_thinking_button) {
+      Logger.error({
+        function_name: 'doubao.set_options',
+        message: 'Thinking mode button not found'
+      })
+      alert('Unable to set options. Please open an issue.')
+      return
+    }
     const mouse_up = new MouseEvent('mouseup', { bubbles: true })
     deep_thinking_button.dispatchEvent(mouse_up)
     await new Promise((r) => requestAnimationFrame(r))
     const portal = document.querySelector('.semi-portal')
-    const menu_items = portal!.querySelectorAll('li[role="menuitem"]')
+    if (!portal) {
+      Logger.error({
+        function_name: 'doubao.set_options',
+        message: 'Options portal not found'
+      })
+      alert('Unable to set options. Please open an issue.')
+      return
+    }
+    const menu_items = portal.querySelectorAll('li[role="menuitem"]')
+    if (menu_items.length === 0) {
+      Logger.error({
+        function_name: 'doubao.set_options',
+        message: 'Options menu items not found'
+      })
+      alert('Unable to set options. Please open an issue.')
+      return
+    }
     const last_menu_item = menu_items[menu_items.length - 1] as HTMLElement
     const mouse_down = new MouseEvent('mousedown', { bubbles: true })
     last_menu_item.dispatchEvent(mouse_down)
@@ -39,17 +64,43 @@ export const doubao: Chatbot = {
     const supported_options = CHATBOTS['Doubao'].supported_options
     for (const option of options) {
       if (option == 'deep-thinking' && supported_options['deep-thinking']) {
-        const deep_thinking_button = document.querySelector(
+        const deep_thinking_button_2 = document.querySelector(
           'div[data-testid="chat_input"] input[data-testid="upload-file-input"] + button'
         ) as HTMLButtonElement
-        const mouse_up = new MouseEvent('mouseup', { bubbles: true })
-        deep_thinking_button.dispatchEvent(mouse_up)
+        if (!deep_thinking_button_2) {
+          Logger.error({
+            function_name: 'doubao.set_options',
+            message: 'Thinking mode button not found (for deep-thinking)'
+          })
+          alert('Unable to set options. Please open an issue.')
+          return
+        }
+        deep_thinking_button_2.dispatchEvent(
+          new MouseEvent('mouseup', { bubbles: true })
+        )
         await new Promise((r) => requestAnimationFrame(r))
-        const portal = document.querySelector('.semi-portal')
-        const menu_items = portal!.querySelectorAll('li[role="menuitem"]')
-        const last_menu_item = menu_items[1] as HTMLElement
-        const mouse_down = new MouseEvent('mousedown', { bubbles: true })
-        last_menu_item.dispatchEvent(mouse_down)
+        const portal_2 = document.querySelector('.semi-portal')
+        if (!portal_2) {
+          Logger.error({
+            function_name: 'doubao.set_options',
+            message: 'Options portal not found (for deep-thinking)'
+          })
+          alert('Unable to set options. Please open an issue.')
+          return
+        }
+        const menu_items_2 = portal_2.querySelectorAll('li[role="menuitem"]')
+        if (menu_items_2.length < 2) {
+          Logger.error({
+            function_name: 'doubao.set_options',
+            message: 'Deep thinking menu item not found'
+          })
+          alert('Unable to set options. Please open an issue.')
+          return
+        }
+        const deep_thinking_item = menu_items_2[1] as HTMLElement
+        deep_thinking_item.dispatchEvent(
+          new MouseEvent('mousedown', { bubbles: true })
+        )
         await new Promise((r) => requestAnimationFrame(r))
       }
     }
