@@ -770,7 +770,7 @@ export class WorkspaceProvider
           continue
         }
 
-        if (should_ignore_file(entry.name, this.ignored_extensions)) {
+        if (should_ignore_file(full_path, this.ignored_extensions)) {
           continue
         }
 
@@ -841,7 +841,7 @@ export class WorkspaceProvider
 
         if (
           this.is_excluded(relative_path) ||
-          should_ignore_file(entry.name, this.ignored_extensions)
+          should_ignore_file(full_path, this.ignored_extensions)
         ) {
           continue
         }
@@ -928,12 +928,12 @@ export class WorkspaceProvider
           continue
         }
 
-        const is_ignored_extension = should_ignore_file(
-          entry.name,
+        const is_ignored = should_ignore_file(
+          full_path,
           this.ignored_extensions
         )
 
-        if (is_ignored_extension && !entry.isDirectory()) {
+        if (is_ignored && !entry.isDirectory()) {
           continue
         }
 
@@ -964,7 +964,7 @@ export class WorkspaceProvider
           const parent_checkbox_state = this.checked_items.get(parent_path)
           if (
             parent_checkbox_state == vscode.TreeItemCheckboxState.Checked &&
-            !is_ignored_extension
+            !is_ignored
           ) {
             checkbox_state = vscode.TreeItemCheckboxState.Checked
             this.checked_items.set(full_path, checkbox_state)
@@ -1081,12 +1081,11 @@ export class WorkspaceProvider
       for (const entry of dir_entries) {
         const sibling_path = path.join(dir_path, entry.name)
         const relative_path = path.relative(workspace_root, sibling_path)
-        const is_ignored_extension = should_ignore_file(
-          entry.name,
-          this.ignored_extensions
-        )
 
-        if (this.is_excluded(relative_path) || is_ignored_extension) {
+        if (
+          this.is_excluded(relative_path) ||
+          should_ignore_file(sibling_path, this.ignored_extensions)
+        ) {
           continue
         }
 
@@ -1172,12 +1171,11 @@ export class WorkspaceProvider
       for (const entry of dir_entries) {
         const full_path = path.join(dir_path, entry.name)
         const relative_path = path.relative(workspace_root, full_path)
-        const is_ignored_extension = should_ignore_file(
-          entry.name,
-          this.ignored_extensions
-        )
 
-        if (this.is_excluded(relative_path) || is_ignored_extension) {
+        if (
+          this.is_excluded(relative_path) ||
+          should_ignore_file(full_path, this.ignored_extensions)
+        ) {
           continue
         }
 

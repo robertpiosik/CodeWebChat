@@ -1,3 +1,5 @@
+import * as fs from 'fs'
+
 /**
  * Utility to extract all possible extension variations from a file path
  * For example, "file.scss.d.ts" would return ["ts", "d.ts", "scss.d.ts"]
@@ -23,11 +25,19 @@ export function extract_extension_variations(file_path: string): string[] {
   return extensions
 }
 
+const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024 // 50MB
+
 export function should_ignore_file(
   file_path: string,
   ignored_extensions: Set<string>
 ): boolean {
-  if (file_path.includes('.cwc-code-review-')) {
+  try {
+    const stats = fs.statSync(file_path)
+    if (stats.isFile() && stats.size > MAX_FILE_SIZE_BYTES) {
+      return true
+    }
+  } catch (error) {
+    // File doesn't exist or other error (e.g. broken symlink), treat as ignorable
     return true
   }
 
