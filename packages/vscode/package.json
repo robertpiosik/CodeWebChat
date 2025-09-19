@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "CWC connects VS Code with ChatGPT, Gemini, Claude, and 10+ more",
-  "version": "1.380.0",
+  "description": "CWC connects VS Code with chatbots like ChatGPT, Gemini or Claude. Saves you money and time.",
+  "version": "1.381.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
