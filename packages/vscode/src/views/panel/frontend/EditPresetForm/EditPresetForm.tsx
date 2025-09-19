@@ -34,6 +34,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const [thinking_budget, set_thinking_budget] = useState(
     props.preset.thinking_budget
   )
+  const [reasoning_effort, set_reasoning_effort] = useState(
+    props.preset.reasoning_effort
+  )
   const [model, set_model] = useState(props.preset.model)
   const [system_instructions, set_system_instructions] = useState(
     props.preset.system_instructions
@@ -67,6 +70,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const supports_temperature = chatbot_config?.supports_custom_temperature
   const supports_top_p = chatbot_config?.supports_custom_top_p
   const supports_thinking_budget = chatbot_config?.supports_thinking_budget
+  const supports_reasoning_effort = chatbot_config?.supports_reasoning_effort
   const supports_system_instructions =
     chatbot_config?.supports_system_instructions
   const supports_port = chatbot_config?.supports_user_provided_port
@@ -85,6 +89,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         ...(temperature !== undefined ? { temperature } : {}),
         ...(top_p !== CHATBOTS[chatbot].default_top_p ? { top_p } : {}),
         ...(thinking_budget !== undefined ? { thinking_budget } : {}),
+        ...(reasoning_effort ? { reasoning_effort } : {}),
         ...(model ? { model } : {}),
         ...(system_instructions ? { system_instructions } : {}),
         ...(port !== undefined ? { port } : {}),
@@ -103,6 +108,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     temperature,
     top_p,
     thinking_budget,
+    reasoning_effort,
     chatbot,
     model,
     system_instructions,
@@ -121,6 +127,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     )
     set_top_p(undefined)
     set_thinking_budget(undefined)
+    set_reasoning_effort(undefined)
     if (CHATBOTS[new_chatbot].supports_system_instructions) {
       set_system_instructions(CHATBOTS[new_chatbot].default_system_instructions)
     } else {
@@ -350,6 +357,30 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             value={top_p || (chatbot && CHATBOTS[chatbot].default_top_p)!}
             onChange={set_top_p}
           />
+        </Field>
+      )}
+
+      {supports_reasoning_effort && (
+        <Field
+          label="Reasoning Effort"
+          html_for="reasoning-effort"
+          info="Controls the amount of thought the model puts into its response before answering. Requires supporting model."
+        >
+          <select
+            id="reasoning-effort"
+            value={reasoning_effort || 'Unset'}
+            onChange={(e) =>
+              set_reasoning_effort(
+                e.target.value == 'Unset' ? undefined : e.target.value
+              )
+            }
+          >
+            <option value="Unset">Unset</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+            <option value="Minimal">Minimal</option>
+          </select>
         </Field>
       )}
 

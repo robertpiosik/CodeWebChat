@@ -59,6 +59,23 @@ export const openrouter: Chatbot = {
       )?.click()
       return
     }
+    const custom_system_instructions_button =
+      textarea.parentElement?.querySelector('div > button:last-child')
+    if (!custom_system_instructions_button) {
+      report_initialization_error({
+        function_name: 'enter_system_instructions',
+        log_message: 'Custom system instructions button not found',
+        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+      })
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
+    ;(custom_system_instructions_button as HTMLElement)?.click()
+    await new Promise((r) => requestAnimationFrame(r))
     textarea.focus()
     textarea.value = system_instructions
     textarea.dispatchEvent(new Event('change', { bubbles: true }))
@@ -253,6 +270,111 @@ export const openrouter: Chatbot = {
         function_name: 'set_top_p',
         log_message: 'Close button for dialog not found',
         alert_message: InitializationError.UNABLE_TO_SET_TOP_P
+      })
+      return
+    }
+    close_button.click()
+  },
+  set_reasoning_effort: async (reasoning_effort?: string) => {
+    if (!reasoning_effort) return
+    const options_button = Array.from(
+      document.querySelectorAll('main > div > div > div.flex-col button')
+    ).find((button) => {
+      const path = button.querySelector('path')
+      return (
+        path?.getAttribute('d') ==
+        'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
+      )
+    }) as HTMLButtonElement
+    if (!options_button) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Options button not found',
+        alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+      })
+      return
+    }
+    options_button.click()
+    await new Promise((r) => requestAnimationFrame(r))
+
+    const dialog = document.querySelector('div[role="dialog"]')
+    if (!dialog) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Dialog not found',
+        alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+      })
+      return
+    }
+
+    const reasoning_button = Array.from(dialog.querySelectorAll('button')).find(
+      (button) =>
+        ['Minimal', 'Low', 'Medium', 'High'].includes(
+          button.textContent?.trim() || ''
+        )
+    ) as HTMLButtonElement
+
+    if (!reasoning_button) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Reasoning effort button not found',
+        alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+      })
+      ;(
+        document.querySelector(
+          'div[role="dialog"] button[data-slot="dialog-close"]'
+        ) as HTMLButtonElement
+      )?.click()
+      return
+    }
+
+    if (reasoning_button.textContent != reasoning_effort) {
+      reasoning_button.click()
+      await new Promise((resolve) => setTimeout(resolve, 500)) // Opening animation must finish
+      const dropdown = document.querySelector(
+        'div[data-radix-popper-content-wrapper]'
+      )
+      if (!dropdown) {
+        report_initialization_error({
+          function_name: 'set_reasoning_effort',
+          log_message: 'Reasoning effort dropdown not found',
+          alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+        })
+        ;(
+          document.querySelector(
+            'div[role="dialog"] button[data-slot="dialog-close"]'
+          ) as HTMLButtonElement
+        )?.click()
+        return
+      }
+
+      const options = dropdown.querySelectorAll('div[role="option"]')
+      let found = false
+      for (const option of Array.from(options)) {
+        if (option.textContent == reasoning_effort) {
+          ;(option as HTMLElement).click()
+          found = true
+          break
+        }
+      }
+
+      if (!found) {
+        report_initialization_error({
+          function_name: 'set_reasoning_effort',
+          log_message: `Reasoning effort option "${reasoning_effort}" not found`,
+          alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+        })
+      }
+    }
+
+    const close_button = document.querySelector(
+      'div[role="dialog"] button[data-slot="dialog-close"]'
+    ) as HTMLButtonElement
+    if (!close_button) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Close button for dialog not found',
+        alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
       })
       return
     }

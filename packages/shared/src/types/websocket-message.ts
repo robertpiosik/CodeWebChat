@@ -3,6 +3,7 @@ export type Chat = {
   model?: string
   temperature?: number
   thinking_budget?: number
+  reasoning_effort?: string
   top_p?: number
   system_instructions?: string
   options?: string[]
@@ -24,6 +25,7 @@ export type InitializeChatMessage = {
   model?: string
   temperature?: number
   thinking_budget?: number
+  reasoning_effort?: string
   top_p?: number
   system_instructions?: string
   options?: string[]

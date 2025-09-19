@@ -28,7 +28,7 @@ export const grok: Chatbot = {
     for (const option of options) {
       if (option == 'private' && supported_options['private']) {
         const private_link = document.querySelector(
-          'a[href="/chat#private"]'
+          'a[href="/c#private"]'
         ) as HTMLAnchorElement
         if (!private_link) {
           report_initialization_error({
@@ -64,7 +64,9 @@ export const grok: Chatbot = {
       return
     }
 
-    model_selector_button.click()
+    model_selector_button.dispatchEvent(
+      new PointerEvent('pointerdown', { bubbles: true })
+    )
     await new Promise((r) => requestAnimationFrame(r))
 
     const dropdown = document.querySelector(
@@ -79,7 +81,7 @@ export const grok: Chatbot = {
       return
     }
 
-    const options = dropdown.querySelectorAll('div[role="option"]')
+    const options = dropdown.querySelectorAll('div[role="menuitem"]')
     for (const option of Array.from(options)) {
       if (option.textContent?.startsWith(model_label_to_find)) {
         ;(option as HTMLElement).click()

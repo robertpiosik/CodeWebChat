@@ -10,6 +10,7 @@ export type ConfigPresetFormat = {
   temperature?: number
   topP?: number
   thinkingBudget?: number
+  reasoningEffort?: string
   systemInstructions?: string
   options?: string[]
   port?: number
@@ -29,6 +30,7 @@ export function config_preset_to_ui_format(
     temperature: config_preset.temperature,
     top_p: config_preset.topP,
     thinking_budget: config_preset.thinkingBudget,
+    reasoning_effort: config_preset.reasoningEffort,
     system_instructions: config_preset.systemInstructions,
     options: config_preset.options,
     port: config_preset.port,
@@ -47,6 +49,7 @@ export function ui_preset_to_config_format(preset: Preset): ConfigPresetFormat {
     temperature: preset.temperature,
     topP: preset.top_p,
     thinkingBudget: preset.thinking_budget,
+    reasoningEffort: preset.reasoning_effort,
     systemInstructions: preset.system_instructions,
     options: preset.options,
     port: preset.port,

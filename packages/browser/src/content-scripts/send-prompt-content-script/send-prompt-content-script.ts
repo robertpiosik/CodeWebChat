@@ -212,6 +212,9 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
   if (chatbot?.set_thinking_budget) {
     await chatbot.set_thinking_budget(params.chat.thinking_budget)
   }
+  if (chatbot?.set_reasoning_effort) {
+    await chatbot.set_reasoning_effort(params.chat.reasoning_effort)
+  }
   if (chatbot?.set_options) {
     await chatbot.set_options(params.chat.options || [])
   }

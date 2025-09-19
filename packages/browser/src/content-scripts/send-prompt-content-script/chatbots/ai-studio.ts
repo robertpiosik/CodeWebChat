@@ -27,10 +27,10 @@ export const ai_studio: Chatbot = {
       }
       check_for_element()
     })
-    await open_panel()
   },
   set_model: async (model?: string) => {
     if (!model) return
+    await open_panel()
     const model_selector = document.querySelector(
       'button.model-selector-card'
     ) as HTMLButtonElement
@@ -83,10 +83,11 @@ export const ai_studio: Chatbot = {
         break
       }
     }
-    await new Promise((r) => requestAnimationFrame(r))
+    await new Promise((resolve) => setTimeout(resolve, 500)) // System instructions use the same sliding panel so we need to wait for it complete closure
   },
   enter_system_instructions: async (system_instructions?: string) => {
     if (!system_instructions) return
+    await open_panel()
     const system_instructions_button = document.querySelector(
       'button[data-test-system-instructions-card]'
     ) as HTMLButtonElement
@@ -475,6 +476,8 @@ export const ai_studio: Chatbot = {
 
 const open_panel = async () => {
   if (window.innerWidth <= 960) {
+    if (document.querySelector('ms-right-side-panel > div')) return // Already opened
+
     const tune_button = document.querySelector(
       'button.runsettings-toggle-button'
     ) as HTMLButtonElement
@@ -493,6 +496,7 @@ const open_panel = async () => {
 
 const close_panel = async () => {
   if (window.innerWidth <= 960) {
+    if (!document.querySelector('ms-right-side-panel > div')) return // Already closed
     const close_button = document.querySelector(
       'ms-run-settings button[iconname="close"]'
     ) as HTMLButtonElement

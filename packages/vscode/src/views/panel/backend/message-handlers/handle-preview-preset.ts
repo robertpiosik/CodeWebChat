@@ -146,6 +146,7 @@ export const handle_preview_preset = async (
     temperature: message.preset.temperature,
     top_p: message.preset.top_p,
     thinking_budget: message.preset.thinking_budget,
+    reasoning_effort: message.preset.reasoning_effort,
     system_instructions: message.preset.system_instructions,
     options: message.preset.options,
     port: message.preset.port

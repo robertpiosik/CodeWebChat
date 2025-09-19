@@ -189,6 +189,7 @@ class WebSocketServer {
                 temperature: msg_data.temperature,
                 top_p: msg_data.top_p,
                 thinking_budget: msg_data.thinking_budget,
+                reasoning_effort: msg_data.reasoning_effort,
                 system_instructions: msg_data.system_instructions,
                 options: msg_data.options
               }

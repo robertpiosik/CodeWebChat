@@ -7,6 +7,7 @@ export enum InitializationError {
   UNABLE_TO_SET_TEMPERATURE = 'Unable to set temperature',
   UNABLE_TO_SET_TOP_P = 'Unable to set top-p',
   UNABLE_TO_SET_THINKING_BUDGET = 'Unable to set thinking budget',
+  UNABLE_TO_SET_REASONING_EFFORT = 'Unable to set reasoning effort',
   UNABLE_TO_SEND_MESSAGE = 'Unable to send message',
   UNABLE_TO_COPY_RESPONSE = 'Unable to copy response',
   UNABLE_TO_OPEN_SETTINGS_PANEL = 'Unable to open settings panel',
