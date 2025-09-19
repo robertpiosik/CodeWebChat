@@ -8,6 +8,52 @@ import {
   report_initialization_error
 } from '../utils/report-initialization-error'
 
+const show_options_modal = async (
+  function_name: string,
+  alert_message: InitializationError
+) => {
+  const options_button = Array.from(
+    document.querySelectorAll('main > div > div > div.flex-col button')
+  ).find((button) => {
+    const path = button.querySelector('path')
+    return (
+      path?.getAttribute('d') ==
+      'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
+    )
+  }) as HTMLButtonElement
+  if (!options_button) {
+    report_initialization_error({
+      function_name,
+      log_message: 'Options button not found',
+      alert_message
+    })
+    return false
+  }
+  options_button.click()
+  await new Promise((r) => requestAnimationFrame(r))
+  return true
+}
+
+const close_options_modal = async (
+  function_name: string,
+  alert_message: InitializationError
+) => {
+  const close_button = document.querySelector(
+    'div[role="dialog"] button[data-slot="dialog-close"]'
+  ) as HTMLButtonElement
+  if (!close_button) {
+    report_initialization_error({
+      function_name,
+      log_message: 'Close button for dialog not found',
+      alert_message
+    })
+    return false
+  }
+  close_button.click()
+  await new Promise((r) => requestAnimationFrame(r))
+  return true
+}
+
 export const openrouter: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
@@ -24,25 +70,13 @@ export const openrouter: Chatbot = {
   },
   enter_system_instructions: async (system_instructions?: string) => {
     if (!system_instructions) return
-    const options_button = Array.from(
-      document.querySelectorAll('main > div > div > div.flex-col button')
-    ).find((button) => {
-      const path = button.querySelector('path')
-      return (
-        path?.getAttribute('d') ==
-        'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
-      )
-    }) as HTMLButtonElement
-    if (!options_button) {
-      report_initialization_error({
-        function_name: 'enter_system_instructions',
-        log_message: 'Options button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
-      })
+    if (
+      !(await show_options_modal(
+        'enter_system_instructions',
+        InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+      ))
+    )
       return
-    }
-    options_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
     const textarea = document.querySelector(
       'div[role="dialog"] textarea'
     ) as HTMLTextAreaElement
@@ -52,11 +86,10 @@ export const openrouter: Chatbot = {
         log_message: 'System instructions textarea not found',
         alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'enter_system_instructions',
+        InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+      )
       return
     }
     const custom_system_instructions_button =
@@ -67,11 +100,10 @@ export const openrouter: Chatbot = {
         log_message: 'Custom system instructions button not found',
         alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
       })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'enter_system_instructions',
+        InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+      )
       return
     }
     ;(custom_system_instructions_button as HTMLElement)?.click()
@@ -80,40 +112,47 @@ export const openrouter: Chatbot = {
     textarea.value = system_instructions
     textarea.dispatchEvent(new Event('change', { bubbles: true }))
     textarea.blur()
-    const close_button = document.querySelector(
-      'div[role="dialog"] button[data-slot="dialog-close"]'
-    ) as HTMLButtonElement
-    if (!close_button) {
-      report_initialization_error({
-        function_name: 'enter_system_instructions',
-        log_message: 'Close button for system instructions dialog not found',
-        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
-      })
+    await close_options_modal(
+      'enter_system_instructions',
+      InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+    )
+  },
+  set_options: async (options?: string[]) => {
+    if (!options) return
+    if (
+      !(await show_options_modal(
+        'set_options',
+        InitializationError.UNABLE_TO_SET_OPTIONS
+      ))
+    )
       return
+    const reasoning_toggle = document.querySelector(
+      'button[id^="toggle-reasoning-char-"]'
+    ) as HTMLButtonElement
+
+    // Only some models support this option
+    if (reasoning_toggle) {
+      if (options.includes('disable-reasoning')) {
+        if (reasoning_toggle.getAttribute('data-state') == 'checked') {
+          reasoning_toggle.click()
+        }
+      }
     }
-    close_button.click()
+
+    await close_options_modal(
+      'set_options',
+      InitializationError.UNABLE_TO_SET_OPTIONS
+    )
   },
   set_temperature: async (temperature?: number) => {
     if (temperature === undefined) return
-    const options_button = Array.from(
-      document.querySelectorAll('main > div > div > div.flex-col button')
-    ).find((button) => {
-      const path = button.querySelector('path')
-      return (
-        path?.getAttribute('d') ==
-        'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
-      )
-    }) as HTMLButtonElement
-    if (!options_button) {
-      report_initialization_error({
-        function_name: 'set_temperature',
-        log_message: 'Options button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
-      })
+    if (
+      !(await show_options_modal(
+        'set_temperature',
+        InitializationError.UNABLE_TO_SET_TEMPERATURE
+      ))
+    )
       return
-    }
-    options_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
     const sampling_parameters_button = Array.from(
       document.querySelectorAll('div[role="dialog"] button')
     ).find(
@@ -125,11 +164,10 @@ export const openrouter: Chatbot = {
         log_message: 'Sampling parameters button not found',
         alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'set_temperature',
+        InitializationError.UNABLE_TO_SET_TEMPERATURE
+      )
       return
     }
     sampling_parameters_button.click()
@@ -145,11 +183,10 @@ export const openrouter: Chatbot = {
         log_message: 'Temperature div not found',
         alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'set_temperature',
+        InitializationError.UNABLE_TO_SET_TEMPERATURE
+      )
       return
     }
     const temperature_input = temperature_div.querySelector(
@@ -161,51 +198,30 @@ export const openrouter: Chatbot = {
         log_message: 'Temperature input not found',
         alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
       })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'set_temperature',
+        InitializationError.UNABLE_TO_SET_TEMPERATURE
+      )
       return
     }
     temperature_input.focus()
     temperature_input.value = temperature.toString()
     temperature_input.dispatchEvent(new Event('change', { bubbles: true }))
     temperature_input.blur()
-    const close_button = document.querySelector(
-      'div[role="dialog"] button[data-slot="dialog-close"]'
-    ) as HTMLButtonElement
-    if (!close_button) {
-      report_initialization_error({
-        function_name: 'set_temperature',
-        log_message: 'Close button for dialog not found',
-        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
-      })
-      return
-    }
-    close_button.click()
+    await close_options_modal(
+      'set_temperature',
+      InitializationError.UNABLE_TO_SET_TEMPERATURE
+    )
   },
   set_top_p: async (top_p?: number) => {
     if (top_p === undefined) return
-    const options_button = Array.from(
-      document.querySelectorAll('main > div > div > div.flex-col button')
-    ).find((button) => {
-      const path = button.querySelector('path')
-      return (
-        path?.getAttribute('d') ==
-        'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
-      )
-    }) as HTMLButtonElement
-    if (!options_button) {
-      report_initialization_error({
-        function_name: 'set_top_p',
-        log_message: 'Options button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
-      })
+    if (
+      !(await show_options_modal(
+        'set_top_p',
+        InitializationError.UNABLE_TO_SET_TOP_P
+      ))
+    )
       return
-    }
-    options_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
     const sampling_parameters_button = Array.from(
       document.querySelectorAll('div[role="dialog"] button')
     ).find(
@@ -217,11 +233,10 @@ export const openrouter: Chatbot = {
         log_message: 'Sampling parameters button not found',
         alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'set_top_p',
+        InitializationError.UNABLE_TO_SET_TOP_P
+      )
       return
     }
     sampling_parameters_button.click()
@@ -237,11 +252,10 @@ export const openrouter: Chatbot = {
         log_message: 'Top P div not found',
         alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'set_top_p',
+        InitializationError.UNABLE_TO_SET_TOP_P
+      )
       return
     }
     const top_p_input = top_p_div.querySelector('input') as HTMLInputElement
@@ -251,52 +265,30 @@ export const openrouter: Chatbot = {
         log_message: 'Top P input not found',
         alert_message: InitializationError.UNABLE_TO_SET_TOP_P
       })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'set_top_p',
+        InitializationError.UNABLE_TO_SET_TOP_P
+      )
       return
     }
     top_p_input.focus()
     top_p_input.value = top_p.toString()
     top_p_input.dispatchEvent(new Event('change', { bubbles: true }))
     top_p_input.blur()
-    const close_button = document.querySelector(
-      'div[role="dialog"] button[data-slot="dialog-close"]'
-    ) as HTMLButtonElement
-    if (!close_button) {
-      report_initialization_error({
-        function_name: 'set_top_p',
-        log_message: 'Close button for dialog not found',
-        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
-      })
-      return
-    }
-    close_button.click()
+    await close_options_modal(
+      'set_top_p',
+      InitializationError.UNABLE_TO_SET_TOP_P
+    )
   },
   set_reasoning_effort: async (reasoning_effort?: string) => {
     if (!reasoning_effort) return
-    const options_button = Array.from(
-      document.querySelectorAll('main > div > div > div.flex-col button')
-    ).find((button) => {
-      const path = button.querySelector('path')
-      return (
-        path?.getAttribute('d') ==
-        'M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z'
-      )
-    }) as HTMLButtonElement
-    if (!options_button) {
-      report_initialization_error({
-        function_name: 'set_reasoning_effort',
-        log_message: 'Options button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
-      })
+    if (
+      !(await show_options_modal(
+        'set_reasoning_effort',
+        InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+      ))
+    )
       return
-    }
-    options_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
-
     const dialog = document.querySelector('div[role="dialog"]')
     if (!dialog) {
       report_initialization_error({
@@ -315,16 +307,10 @@ export const openrouter: Chatbot = {
     ) as HTMLButtonElement
 
     if (!reasoning_button) {
-      report_initialization_error({
-        function_name: 'set_reasoning_effort',
-        log_message: 'Reasoning effort button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
-      })
-      ;(
-        document.querySelector(
-          'div[role="dialog"] button[data-slot="dialog-close"]'
-        ) as HTMLButtonElement
-      )?.click()
+      await close_options_modal(
+        'set_reasoning_effort',
+        InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+      )
       return
     }
 
@@ -340,11 +326,10 @@ export const openrouter: Chatbot = {
           log_message: 'Reasoning effort dropdown not found',
           alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
         })
-        ;(
-          document.querySelector(
-            'div[role="dialog"] button[data-slot="dialog-close"]'
-          ) as HTMLButtonElement
-        )?.click()
+        await close_options_modal(
+          'set_reasoning_effort',
+          InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+        )
         return
       }
 
@@ -367,18 +352,10 @@ export const openrouter: Chatbot = {
       }
     }
 
-    const close_button = document.querySelector(
-      'div[role="dialog"] button[data-slot="dialog-close"]'
-    ) as HTMLButtonElement
-    if (!close_button) {
-      report_initialization_error({
-        function_name: 'set_reasoning_effort',
-        log_message: 'Close button for dialog not found',
-        alert_message: InitializationError.UNABLE_TO_SET_REASONING_EFFORT
-      })
-      return
-    }
-    close_button.click()
+    await close_options_modal(
+      'set_reasoning_effort',
+      InitializationError.UNABLE_TO_SET_REASONING_EFFORT
+    )
   },
   inject_apply_response_button: (client_id: number) => {
     const add_buttons = (footer: Element) => {
