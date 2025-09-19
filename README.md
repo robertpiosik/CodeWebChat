@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a>
 
-**Code Web Chat** is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, Gemini, Claude, and 10+ more, for its signature workflow—select files, type instructions and initialize your favorite chatbot hands-free! Once ready, apply the response with a single click.
+**Code Web Chat** is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, Gemini, Claude, and 10+ more popular chatbots, for its signature workflow—select files, type instructions and initialize your favorite chatbot hands-free! Once ready, apply the response with a single click.
 
 ✅ **Save money**—free tiers and subscription-based billing \
 ✅ **Save time**—multi-file edits from a single prompt
