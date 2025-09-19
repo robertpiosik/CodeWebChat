@@ -387,7 +387,7 @@ const perform_code_completion = async (params: {
     vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: 'Waiting for code completion',
+        title: 'Waiting for API response',
         cancellable: true
       },
       async (progress, token) => {
