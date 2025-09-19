@@ -643,7 +643,6 @@ export class WorkspaceProvider
 
     // Root level:
     if (this.workspace_roots.length == 0) {
-      vscode.window.showInformationMessage('No workspace folder found.')
       return []
     }
 

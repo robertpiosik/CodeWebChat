@@ -16,21 +16,16 @@ import { apply_context_command } from '../commands/apply-context-command'
 export const token_count_emitter = new EventEmitter()
 
 export function context_initialization(context: vscode.ExtensionContext): {
-  workspace_provider?: WorkspaceProvider
-  open_editors_provider?: OpenEditorsProvider
-  websites_provider?: WebsitesProvider
+  workspace_provider: WorkspaceProvider
+  open_editors_provider: OpenEditorsProvider
+  websites_provider: WebsitesProvider
 } {
-  const workspace_folders = vscode.workspace.workspaceFolders
+  const workspace_folders = vscode.workspace.workspaceFolders ?? []
 
-  let workspace_provider: WorkspaceProvider | undefined
+  let workspace_provider: WorkspaceProvider
   let workspace_view: vscode.TreeView<
     FileItem | WebsiteItem | WebsitesFolderItem
   >
-
-  if (!workspace_folders) {
-    vscode.window.showInformationMessage('Please open a folder to use CWC.')
-    return {}
-  }
 
   const websites_provider = new WebsitesProvider(context)
   workspace_provider = new WorkspaceProvider(
@@ -380,7 +375,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
   }, 1000) // Wait for 1 second to ensure VS Code has fully loaded
 
   return {
-    workspace_provider,
+    workspace_provider: workspace_provider!,
     open_editors_provider,
     websites_provider
   }

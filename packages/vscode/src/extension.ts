@@ -37,11 +37,6 @@ export async function activate(context: vscode.ExtensionContext) {
   const { workspace_provider, open_editors_provider, websites_provider } =
     context_initialization(context)
 
-  if (!workspace_provider || !open_editors_provider || !websites_provider) {
-    // No workspace opened
-    return
-  }
-
   websocket_server_instance = new WebSocketManager(context, websites_provider)
 
   const migrations = async () => {

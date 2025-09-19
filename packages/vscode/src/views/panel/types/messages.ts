@@ -228,8 +228,8 @@ export interface GoToFileInReviewMessage extends BaseMessage {
   workspace_name?: string
 }
 
-export interface GetHasMultipleWorkspacesMessage extends BaseMessage {
-  command: 'GET_HAS_MULTIPLE_WORKSPACES'
+export interface GetWorkspaceStateMessage extends BaseMessage {
+  command: 'GET_WORKSPACE_STATE'
 }
 
 export interface RequestGitStateMessage extends BaseMessage {
@@ -302,7 +302,7 @@ export type FrontendMessage =
   | ToggleFileInReviewMessage
   | FocusOnFileInReviewMessage
   | GoToFileInReviewMessage
-  | GetHasMultipleWorkspacesMessage
+  | GetWorkspaceStateMessage
   | RequestGitStateMessage
   | IntelligentUpdateFileInReviewMessage
   | UpdateLastUsedPresetMessage
@@ -432,9 +432,9 @@ export interface CodeReviewFinishedMessage extends BaseMessage {
   command: 'CODE_REVIEW_FINISHED'
 }
 
-export interface HasMultipleWorkspacesMessage extends BaseMessage {
-  command: 'HAS_MULTIPLE_WORKSPACES'
-  value: boolean
+export interface WorkspaceStateMessage extends BaseMessage {
+  command: 'WORKSPACE_STATE'
+  folder_count: number
 }
 
 export interface SelectedPresetOrGroupChangedMessage extends BaseMessage {
@@ -500,7 +500,7 @@ export type BackendMessage =
   | CanUndoChangedMessage
   | CodeReviewStartedMessage
   | CodeReviewFinishedMessage
-  | HasMultipleWorkspacesMessage
+  | WorkspaceStateMessage
   | SelectedPresetOrGroupChangedMessage
   | SelectedConfigurationChangedMessage
   | ShowProgressMessage

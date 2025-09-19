@@ -439,10 +439,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             if (code_review_promise_resolve) {
               code_review_promise_resolve({ accepted_files: message.files })
             }
-          } else if (message.command == 'GET_HAS_MULTIPLE_WORKSPACES') {
+          } else if (message.command == 'GET_WORKSPACE_STATE') {
             this.send_message({
-              command: 'HAS_MULTIPLE_WORKSPACES',
-              value: this.workspace_provider.getWorkspaceRoots().length > 1
+              command: 'WORKSPACE_STATE',
+              folder_count: this.workspace_provider.getWorkspaceRoots().length
             })
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)

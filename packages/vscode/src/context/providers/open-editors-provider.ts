@@ -234,7 +234,6 @@ export class OpenEditorsProvider
 
   async getChildren(): Promise<FileItem[]> {
     if (!this._workspace_roots.length) {
-      vscode.window.showInformationMessage('No workspace folder found.')
       return []
     }
 

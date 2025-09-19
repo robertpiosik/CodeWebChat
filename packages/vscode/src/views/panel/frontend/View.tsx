@@ -30,7 +30,8 @@ export const View = () => {
     progress?: number
     tokens_per_second?: number
   }>()
-  const [has_multiple_workspaces, set_has_multiple_workspaces] = useState(false)
+  const [workspace_folder_count, set_workspace_folder_count] =
+    useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()
   const [are_donations_visible, set_are_donations_visible] = useState<
     boolean | undefined
@@ -125,8 +126,8 @@ export const View = () => {
         )
       } else if (message.command == 'CODE_REVIEW_FINISHED') {
         set_files_to_review(undefined)
-      } else if (message.command == 'HAS_MULTIPLE_WORKSPACES') {
-        set_has_multiple_workspaces(message.value)
+      } else if (message.command == 'WORKSPACE_STATE') {
+        set_workspace_folder_count(message.folder_count)
       } else if (message.command == 'SHOW_PROGRESS') {
         set_progress_state((current) => ({
           title: message.title,
@@ -152,7 +153,7 @@ export const View = () => {
       { command: 'GET_CONNECTION_STATUS' },
       { command: 'REQUEST_EDITOR_STATE' },
       { command: 'REQUEST_EDITOR_SELECTION_STATE' },
-      { command: 'GET_HAS_MULTIPLE_WORKSPACES' }
+      { command: 'GET_WORKSPACE_STATE' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -238,9 +239,22 @@ export const View = () => {
     is_connected === undefined ||
     api_mode === undefined ||
     has_active_editor === undefined ||
-    has_active_selection === undefined
+    has_active_selection === undefined ||
+    workspace_folder_count === undefined
   ) {
     return null
+  }
+
+  if (workspace_folder_count == 0) {
+    return (
+      <div
+        style={{
+          padding: '4px 12px 4px 18px'
+        }}
+      >
+        Please open a project to begin.
+      </div>
+    )
   }
 
   const is_for_code_completions =
@@ -385,7 +399,7 @@ export const View = () => {
           <UiPage title="Changes">
             <UiChanges
               files={files_to_review}
-              has_multiple_workspaces={has_multiple_workspaces}
+              has_multiple_workspaces={workspace_folder_count > 1}
               on_undo={() => {
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
               }}
