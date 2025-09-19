@@ -704,5 +704,20 @@ describe('clipboard-parser', () => {
         load_test_case_file('diff-inner-triple-backticks', 'file-1.txt')
       )
     })
+
+    it('should handle diff markdown with missing ending', () => {
+      const text = load_test_case_file(
+        'diff-markdown-missing-ending',
+        'diff-markdown-missing-ending.txt'
+      )
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+      expect(result.patches![0].file_path).toBe('src/index.ts')
+      expect(result.patches![0].content).toBe(
+        load_test_case_file('diff-markdown-missing-ending', 'file-1.txt')
+      )
+    })
   })
 })

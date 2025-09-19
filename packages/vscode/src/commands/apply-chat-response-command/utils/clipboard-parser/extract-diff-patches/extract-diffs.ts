@@ -110,10 +110,9 @@ const extract_code_block_patches = (normalized_text: string): Diff[] => {
   const lines = normalized_text.split('\n')
 
   // Parse from end to beginning to find code blocks
-  const code_blocks: { start: number; end: number; type: 'diff' | 'patch' }[] =
-    []
+  const code_blocks: { start: number; end: number }[] = []
 
-  // First pass: find all closing ``` and work backwards to find opening ```diff or ```patch
+  // First pass: find all closing ``` and work backwards to find opening ```diff
   for (let i = lines.length - 1; i >= 0; i--) {
     const trimmed_line = lines[i].trim()
 
@@ -122,16 +121,33 @@ const extract_code_block_patches = (normalized_text: string): Diff[] => {
       for (let j = i - 1; j >= 0; j--) {
         const opening_line = lines[j].trim()
         if (opening_line == '```diff') {
-          code_blocks.unshift({ start: j, end: i, type: 'diff' })
-          i = j // Skip to this position to avoid overlapping blocks
-          break
-        } else if (opening_line == '```patch') {
-          code_blocks.unshift({ start: j, end: i, type: 'patch' })
+          code_blocks.unshift({ start: j, end: i })
           i = j // Skip to this position to avoid overlapping blocks
           break
         }
       }
     }
+  }
+
+  // Handle unclosed block at the end
+  let last_processed_line = -1
+  if (code_blocks.length > 0) {
+    last_processed_line = code_blocks[code_blocks.length - 1].end
+  }
+
+  let last_opener_index = -1
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed_line = lines[i].trim()
+    if (trimmed_line == '```diff') {
+      last_opener_index = i
+    }
+  }
+
+  if (last_opener_index > last_processed_line) {
+    code_blocks.push({
+      start: last_opener_index,
+      end: lines.length
+    })
   }
 
   // Process each found code block
@@ -191,9 +207,7 @@ export const extract_diffs = (clipboard_text: string): Diff[] => {
   const normalized_text = clipboard_text.replace(/\r\n/g, '\n')
   const lines = normalized_text.split('\n')
 
-  const uses_code_blocks = lines.some(
-    (line) => line.trim() == '```diff' || line.trim() == '```patch'
-  )
+  const uses_code_blocks = lines.some((line) => line.trim() == '```diff')
 
   if (uses_code_blocks) {
     return extract_code_block_patches(normalized_text)
