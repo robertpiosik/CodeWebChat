@@ -79,7 +79,7 @@ export const Settings = () => {
             configurations={settings_data_hook.commit_messages_configs}
             set_configurations={settings_data_hook.set_commit_messages_configs}
             title="Commit Messages"
-            subtitle="Generate meaningful summaries of changes adhering to your preferred style."
+            subtitle="Generate meaningful summaries of changes adhering to your style."
             tool_name="COMMIT_MESSAGES"
             can_have_default={true}
           />

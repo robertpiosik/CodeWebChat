@@ -22,7 +22,7 @@ type Props = {
   on_at_sign_click: () => void
   on_curly_braces_click: () => void
   has_context: boolean
-  translations: {
+  dictionary: {
     type_something: string
     completion_instructions: string
     use_last_choice: string
@@ -245,15 +245,15 @@ export const ChatInput: React.FC<Props> = (props) => {
 
     if (props.is_in_code_completions_mode) {
       if (active_history.length > 0 && is_history_enabled) {
-        return `${props.translations.completion_instructions} ${props.translations.for_history_hint}`
+        return `${props.dictionary.completion_instructions} ${props.dictionary.for_history_hint}`
       } else {
-        return props.translations.completion_instructions
+        return props.dictionary.completion_instructions
       }
     }
 
     return active_history.length > 0 && is_history_enabled
-      ? `${props.translations.type_something} ${props.translations.for_history_hint}`
-      : props.translations.type_something
+      ? `${props.dictionary.type_something} ${props.dictionary.for_history_hint}`
+      : props.dictionary.type_something
   }, [
     props.is_in_code_completions_mode,
     props.chat_history,
@@ -267,7 +267,7 @@ export const ChatInput: React.FC<Props> = (props) => {
         <div className={styles.error}>
           <div className={styles.error__inner}>
             {
-              props.translations
+              props.dictionary
                 .code_completions_mode_unavailable_with_text_selection
             }
           </div>
@@ -278,7 +278,7 @@ export const ChatInput: React.FC<Props> = (props) => {
         <div className={styles.error}>
           <div className={styles.error__inner}>
             {
-              props.translations
+              props.dictionary
                 .code_completions_mode_unavailable_without_active_editor
             }
           </div>
@@ -338,7 +338,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             'codicon-search'
           )}
           onClick={props.on_search_click}
-          title={`${props.translations.search} (${
+          title={`${props.dictionary.search} (${
             navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
               ? '⌘F'
               : 'Ctrl+F'
@@ -356,7 +356,7 @@ export const ChatInput: React.FC<Props> = (props) => {
               e.stopPropagation()
               props.on_copy()
             }}
-            title={`${props.translations.copy_to_clipboard} (${
+            title={`${props.dictionary.copy_to_clipboard} (${
               navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
                 ? '⌥⌘C'
                 : 'Ctrl+Alt+C'
@@ -381,7 +381,7 @@ export const ChatInput: React.FC<Props> = (props) => {
               <button
                 onClick={props.on_at_sign_click}
                 className={cn(styles['footer__left__button'])}
-                title={props.translations.insert_symbol}
+                title={props.dictionary.insert_symbol}
               >
                 <span>@</span>
               </button>
@@ -389,7 +389,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}
-              title={props.translations.prompt_templates}
+              title={props.dictionary.prompt_templates}
             >
               <span className="codicon codicon-json" />
             </button>
@@ -403,7 +403,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             {props.token_count !== undefined && props.token_count > 1 && (
               <div
                 className={styles.footer__right__count}
-                title={props.translations.approximate_token_count}
+                title={props.dictionary.approximate_token_count}
               >
                 {format_token_count(props.token_count)}
               </div>
@@ -427,7 +427,7 @@ export const ChatInput: React.FC<Props> = (props) => {
                     </div>
                   )}
                   <Icon variant="ENTER" />
-                  <span>{props.translations.select}</span>
+                  <span>{props.dictionary.select}</span>
                 </button>
 
                 <button
@@ -435,7 +435,7 @@ export const ChatInput: React.FC<Props> = (props) => {
                   onClick={handle_submit}
                 >
                   <Icon variant="ENTER" />
-                  <span>{props.translations.use_last_choice}</span>
+                  <span>{props.dictionary.use_last_choice}</span>
                 </button>
               </>
             )}
@@ -444,10 +444,10 @@ export const ChatInput: React.FC<Props> = (props) => {
               <button
                 className={styles.footer__right__button}
                 onClick={props.on_copy}
-                title={props.translations.copy_to_clipboard}
+                title={props.dictionary.copy_to_clipboard}
               >
                 <Icon variant="ENTER" />
-                <span>{props.translations.copy_to_clipboard}</span>
+                <span>{props.dictionary.copy_to_clipboard}</span>
               </button>
             )}
           </div>

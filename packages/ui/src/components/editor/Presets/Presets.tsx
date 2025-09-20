@@ -55,7 +55,7 @@ export namespace Presets {
     on_toggle_selected_preset: (name: string) => void
     on_toggle_group_collapsed: (name: string) => void
     selected_preset_name?: string
-    translations: {
+    dictionary: {
       my_chat_presets: string
       copy_to_clipboard: string
       duplicate: string
@@ -100,7 +100,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     <div className={styles.container}>
       <div className={styles['my-presets']}>
         <div className={styles['my-presets__left']}>
-          {props.translations.my_chat_presets}
+          {props.dictionary.my_chat_presets}
         </div>
         <IconButton codicon_icon="add" on_click={props.on_create_preset} />
       </div>
@@ -250,8 +250,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       on_click={(e) => e.stopPropagation()}
                       title={
                         preset.is_selected
-                          ? props.translations.unset_as_selected
-                          : props.translations.set_as_selected
+                          ? props.dictionary.unset_as_selected
+                          : props.dictionary.set_as_selected
                       }
                     />
                   )}
@@ -266,8 +266,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       style={{ cursor: 'pointer' }}
                       title={
                         preset.is_collapsed
-                          ? props.translations.expand_group
-                          : props.translations.collapse_group
+                          ? props.dictionary.expand_group
+                          : props.dictionary.collapse_group
                       }
                       onClick={(e) => {
                         e.stopPropagation()
@@ -298,7 +298,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     (preset.prompt_prefix || preset.prompt_suffix) && (
                       <IconButton
                         codicon_icon="copy"
-                        title={props.translations.copy_to_clipboard}
+                        title={props.dictionary.copy_to_clipboard}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_preset_copy(preset.name)
@@ -307,7 +307,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     )}
                   <IconButton
                     codicon_icon="files"
-                    title={props.translations.duplicate}
+                    title={props.dictionary.duplicate}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_duplicate(preset.name)
@@ -315,7 +315,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="edit"
-                    title={props.translations.edit}
+                    title={props.dictionary.edit}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_edit(preset.name)
@@ -323,7 +323,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="trash"
-                    title={props.translations.delete}
+                    title={props.dictionary.delete}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_delete(preset.name)

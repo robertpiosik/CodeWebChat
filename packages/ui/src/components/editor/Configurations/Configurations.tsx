@@ -16,9 +16,8 @@ export namespace Configurations {
     configurations: Configuration[]
     on_configuration_click: (i: number) => void
     selected_configuration_index?: number
-    translations: {
+    dictionary: {
       my_configurations: string
-      missing_configuration_message: string
     }
   }
 }
@@ -28,20 +27,9 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     <div className={styles.container}>
       <div className={styles.heading}>
         <div className={styles['heading__title']}>
-          {props.translations.my_configurations}
+          {props.dictionary.my_configurations}
         </div>
-        {props.configurations.length == 0 && (
-          <span
-            className={`codicon codicon-arrow-left ${styles['arrow-animate']}`}
-          />
-        )}
       </div>
-
-      {props.configurations.length == 0 && (
-        <div className={styles['missing-config']}>
-          {props.translations.missing_configuration_message}
-        </div>
-      )}
 
       <div className={styles.configurations}>
         {props.configurations.map((configuration, i) => {

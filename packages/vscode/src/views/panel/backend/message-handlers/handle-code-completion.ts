@@ -15,6 +15,7 @@ import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constant
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { CodeCompletionMessage } from '@/views/panel/types/messages'
+import { DICTIONARY } from '@/constants/dictionary'
 
 const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -343,7 +344,7 @@ const perform_code_completion = async (params: {
       params.view_provider.api_call_cancel_token_source = cancel_token_source
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: 'Waiting for API response...'
+        title: `${DICTIONARY.WAITING_FOR_API_RESPONSE}...`
       })
     }
 

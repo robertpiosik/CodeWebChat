@@ -25,11 +25,11 @@ export const Multiple = () => {
       is_in_code_completions_mode={false}
       has_context={true}
       presets={presets}
+      on_create_preset={() => console.log('on_create_preset')}
       on_preset_click={(name) => {
         console.log('on_preset_click', name)
       }}
       on_group_click={() => {}}
-      on_create_preset={() => console.log('on_create_preset')}
       on_preset_copy={(name) => console.log('on_preset_copy', name)}
       on_presets_reorder={(reordered) =>
         console.log('on_presets_reorder', reordered)
@@ -43,7 +43,8 @@ export const Multiple = () => {
       on_toggle_group_collapsed={(name) =>
         console.log('on_toggle_group_collapsed', name)
       }
-      translations={{
+      selected_preset_name={undefined}
+      dictionary={{
         my_chat_presets: 'My Chat Presets',
         copy_to_clipboard: 'Copy to clipboard',
         duplicate: 'Duplicate',
@@ -67,11 +68,11 @@ export const CodeCompletionsMode = () => {
       is_in_code_completions_mode={false}
       has_context={true}
       presets={presets}
+      on_create_preset={() => console.log('on_create_preset')}
       on_preset_click={(name) => {
         console.log('on_preset_click', name)
       }}
       on_group_click={() => {}}
-      on_create_preset={() => console.log('on_create_preset')}
       on_preset_copy={(name) => console.log('on_preset_copy', name)}
       on_presets_reorder={(reordered) =>
         console.log('on_presets_reorder', reordered)
@@ -85,7 +86,8 @@ export const CodeCompletionsMode = () => {
       on_toggle_group_collapsed={(name) =>
         console.log('on_toggle_group_collapsed', name)
       }
-      translations={{
+      selected_preset_name={undefined}
+      dictionary={{
         my_chat_presets: 'My Chat Presets',
         copy_to_clipboard: 'Copy to clipboard',
         duplicate: 'Duplicate',

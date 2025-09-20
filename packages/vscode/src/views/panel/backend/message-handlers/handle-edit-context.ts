@@ -15,6 +15,7 @@ import { replace_saved_context_placeholder } from '@/utils/replace-saved-context
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { EditContextMessage } from '@/views/panel/types/messages'
+import { DICTIONARY } from '@/constants/dictionary'
 
 const get_edit_context_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -378,7 +379,7 @@ const perform_context_editing = async (params: {
     if (params.view_provider) {
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: 'Waiting for API response...'
+        title: `${DICTIONARY.WAITING_FOR_API_RESPONSE}...`
       })
     }
     const response = await make_api_request({

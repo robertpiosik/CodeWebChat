@@ -54,25 +54,25 @@ Install the Connector browser extension and never copy&paste again.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Use included API-based features with any OpenAI-API compatible provider and your own keys (BYOK).
-
-**🛠️ Code Completions** \
-Get accurate code-at-cursor from state-of-the-art reasoning models.
+CWC is not limited to web chat initializations—with its built-in API tools, it has everything you need to support your software development efforts. Bring your own keys (BYOK) for any OpenAI-API compatible model provider for usage-based billing.
 
 **🛠️ Edit Context** \
 Modify files based on natural language instructions.
+
+**🛠️ Code Completions** \
+Get accurate code-at-cursor from state-of-the-art reasoning models.
 
 **🛠️ Intelligent Update** \
 Integrate truncated code blocks and fix malformed diffs.
 
 **🛠️ Commit Messages** \
-Generate meaningful summaries of changes adhering to your preferred style.
+Generate meaningful summaries of changes adhering to your style.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Commands</span>
 
 ### Handling AI responses
 
-- `Code Web Chat: Apply Chat Response` - Integrate with the codebase copied to clipboard overall chat response or a single code block.
+- `Code Web Chat: Apply Chat Response` - Integrate with the codebase a copied to clipboard overall chat response or a single code block.
 - `Code Web Chat: Apply Clipboard Content to Active Editor` - Serves as a flexible fallback for applying AI-generated edits, e.g. broken diffs.
 - `Code Web Chat: Undo Last Changes` - Revert applied AI-suggested edits.
 

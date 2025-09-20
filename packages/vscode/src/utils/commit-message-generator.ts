@@ -19,6 +19,7 @@ import {
 } from '../constants/state-keys'
 import { GitRepository } from './git-repository-utils'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export interface FileData {
   path: string
@@ -425,7 +426,7 @@ const generate_commit_message_with_api = async (params: {
     try {
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: 'Waiting for API response...'
+        title: `${DICTIONARY.WAITING_FOR_API_RESPONSE}...`
       })
 
       const response = await make_api_request({
@@ -461,7 +462,7 @@ const generate_commit_message_with_api = async (params: {
     return await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: `Waiting for API response`,
+        title: DICTIONARY.WAITING_FOR_API_RESPONSE,
         cancellable: true
       },
       async (progress, token) => {

@@ -285,6 +285,7 @@ export const CHATBOTS = {
       'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
       'deepseek-v3-0324': { label: 'DeepSeek V3 (0324)' },
       'gpt-oss-120b': { label: 'GPT OSS 120B' },
+      'kimi-k2-instruct-0905': { label: 'Kimi K2 Instruct (0905)' },
       'qwen3-235b-a22b-2507': { label: 'Qwen3 235B (2507)' },
       'qwen3-coder-480b': { label: 'Qwen3 Coder 480B' },
       'glm-4.5-air': { label: 'GLM-4.5-Air' },
