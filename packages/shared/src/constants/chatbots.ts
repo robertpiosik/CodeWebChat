@@ -260,8 +260,8 @@ export const CHATBOTS = {
     },
     default_top_p: 0,
     models: {
-      'qwen3-next-80b-a3b': { label: 'Qwen3-Next-80B-A3B' },
       'qwen3-max-preview': { label: 'Qwen3-Max-Preview' },
+      'qwen3-next-80b-a3b': { label: 'Qwen3-Next-80B-A3B' },
       'qwen3-235b-a22b-2507': {
         label: 'Qwen3-235B-A22B-2507'
       },

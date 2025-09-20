@@ -78,7 +78,7 @@ export const use_latest_donations = (
       // First time fetch
       fetch_donations(false)
     }
-  }, [is_active, are_donations_visible, fetch_donations, fetched_once])
+  }, [is_active, are_donations_visible, fetch_donations])
 
   const on_fetch_next_page = useCallback(async () => {
     if (is_fetching_next || !has_more) {
