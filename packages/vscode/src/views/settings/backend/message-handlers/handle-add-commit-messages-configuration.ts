@@ -109,7 +109,7 @@ export const handle_add_commit_messages_configuration = async (
   await show_quick_pick()
 
   const configs = await providers_manager.get_commit_messages_tool_configs()
-  if (configs.some((c) => generate_id(c) === generate_id(config_to_add))) {
+  if (configs.some((c) => generate_id(c) == generate_id(config_to_add))) {
     vscode.window.showWarningMessage(
       'A configuration with these properties already exists.'
     )

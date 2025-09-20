@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { ViewProvider } from '../view/backend/view-provider'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { FileItem } from '../context/providers/workspace-provider'
 import { SharedFileState } from '../context/shared-file-state'
+import { ViewProvider } from '@/views/panel/backend/view-provider'
 
 export function reference_in_chat_command(
   view_provider: ViewProvider | undefined,

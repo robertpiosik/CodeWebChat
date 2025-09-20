@@ -208,7 +208,7 @@ const perform_context_editing = async (params: {
   } else {
     const initial_context = await files_collector.collect_files({})
     if (!initial_context) {
-      vscode.window.showWarningMessage('Unable to work without context.')
+      vscode.window.showWarningMessage('Unable to work with empty context.')
       return
     }
 
