@@ -30,7 +30,7 @@ const get_edit_context_config = async (
   if (edit_context_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      'No "Edit Context" configurations found. Please add one in the settings.'
+      DICTIONARY.NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND
     )
     return
   }

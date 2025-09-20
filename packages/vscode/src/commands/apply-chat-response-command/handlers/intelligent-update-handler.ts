@@ -95,7 +95,7 @@ export const handle_intelligent_update = async (params: {
 
     if (files.length == 0) {
       vscode.window.showInformationMessage(
-        'No safe file paths remaining. Operation cancelled.'
+        DICTIONARY.NO_SAFE_FILE_PATHS_REMAINING
       )
       return null
     }

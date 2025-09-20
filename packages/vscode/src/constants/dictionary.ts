@@ -31,7 +31,42 @@ export const DICTIONARY = {
   collapse_group: 'Collapse',
   expand_group: 'Expand',
 
-  // Warning/Error messages
+  // Information messages
+  NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND:
+    'No "Intelligent Update" configurations found. Please add one in the settings.',
+  NO_SAFE_FILE_PATHS_REMAINING:
+    'No safe file paths remaining. Operation cancelled.',
+  NO_ACTIVE_EDITOR_FOUND: 'No active editor found.',
+  CLIPBOARD_IS_EMPTY: 'Clipboard is empty.',
+  CLIPBOARD_CONTENT_APPLIED_SUCCESSFULLY:
+    'Clipboard content applied successfully.',
+  NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE:
+    'No saved contexts remaining in the Workspace State.',
+  NO_SAVED_CONTEXTS_IN_JSON_FILE:
+    'No saved contexts remaining in the JSON file.',
+  NO_FILE_PATHS_FOUND_IN_CLIPBOARD: 'No file paths found in clipboard.',
+  NO_MATCHING_FILES_FOUND_FOR_CLIPBOARD_PATHS:
+    'No matching files found in workspace for the paths in clipboard.',
+  NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND:
+    'No "Code Completions" configurations found. Please add one in the settings.',
+  NO_RECENT_CHANGES_TO_UNDO:
+    'No recent changes found to undo or changes were already undone.',
+  CONTEXT_COPIED_TO_CLIPBOARD: 'Context copied to clipboard.',
+  CONTEXT_FROM_OPEN_EDITORS_COPIED_TO_CLIPBOARD:
+    'Context from open editors copied to clipboard.',
+  NO_SAVED_CONTEXTS_FOUND: 'No saved contexts found.',
+  NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND:
+    'No "Commit Messages" configurations found. Please add one in the settings.',
+  NO_FILES_SELECTED_FOR_COMMIT_MESSAGE_GENERATION:
+    'No files selected for commit message generation.',
+  COMMIT_MESSAGE_GENERATION_CANCELLED: 'Commit message generation cancelled.',
+  NO_CHANGES_TO_COMMIT: 'No changes to commit.',
+  NO_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION:
+    'No default "Intelligent Update" configuration found. Please set one as default in the settings.',
+  NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND:
+    'No "Edit Context" configurations found. Please add one in the settings.',
+
+  // Warning messages
   API_PROVIDER_NOT_FOUND:
     'API provider for the selected API tool configuration was not found.',
   NO_RESPONSE_TEXT: 'No response text provided and clipboard is empty.',
@@ -91,4 +126,7 @@ export const DICTIONARY = {
   CONFIGURATION_ALREADY_EXISTS:
     'A configuration with these properties already exists.',
   CONFIGURATION_NOT_FOUND: 'Configuration not found.'
+
+  // Error messages
+  // ...
 }

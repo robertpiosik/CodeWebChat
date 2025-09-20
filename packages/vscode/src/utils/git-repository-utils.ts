@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export interface GitRepository {
   rootUri: vscode.Uri
@@ -67,7 +68,7 @@ export async function prepare_staged_changes(
   }).toString()
 
   if (!diff || diff.length === 0) {
-    vscode.window.showInformationMessage('No changes to commit.')
+    vscode.window.showInformationMessage(DICTIONARY.NO_CHANGES_TO_COMMIT)
     return null
   }
 

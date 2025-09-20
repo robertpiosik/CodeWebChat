@@ -171,7 +171,7 @@ export const get_commit_message_config = async (
   if (!commit_message_config) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      'No "Commit Messages" configurations found. Please add one in the settings.'
+      DICTIONARY.NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND
     )
     return null
   }
@@ -302,7 +302,7 @@ export const handle_file_selection_if_needed = async (params: {
   })
   if (!selected_files || selected_files.length == 0) {
     vscode.window.showInformationMessage(
-      'No files selected for commit message generation.'
+      DICTIONARY.NO_FILES_SELECTED_FOR_COMMIT_MESSAGE_GENERATION
     )
     return null
   }
@@ -497,7 +497,7 @@ const generate_commit_message_with_api = async (params: {
         } catch (error) {
           if (axios.isCancel(error)) {
             vscode.window.showInformationMessage(
-              'Commit message generation cancelled.'
+              DICTIONARY.COMMIT_MESSAGE_GENERATION_CANCELLED
             )
             return null
           }

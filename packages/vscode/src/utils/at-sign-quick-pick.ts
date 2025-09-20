@@ -4,6 +4,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 import { SavedContext } from '../types/context'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export async function at_sign_quick_pick(params: {
   context: vscode.ExtensionContext
@@ -180,7 +181,7 @@ export async function at_sign_quick_pick(params: {
     }
 
     if (source_options.length === 0) {
-      vscode.window.showInformationMessage('No saved contexts found.')
+      vscode.window.showInformationMessage(DICTIONARY.NO_SAVED_CONTEXTS_FOUND)
       return
     }
 

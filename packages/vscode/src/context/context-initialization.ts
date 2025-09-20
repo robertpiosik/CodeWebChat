@@ -140,7 +140,9 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
       context_text = `<files>\n${context_text}</files>\n`
       await vscode.env.clipboard.writeText(context_text)
-      vscode.window.showInformationMessage(`Context copied to clipboard.`)
+      vscode.window.showInformationMessage(
+        DICTIONARY.CONTEXT_COPIED_TO_CLIPBOARD
+      )
     }),
     vscode.commands.registerCommand(
       'codeWebChat.copyContextOpenEditors',
@@ -196,7 +198,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
         context_text = `<files>\n${context_text}</files>\n`
         await vscode.env.clipboard.writeText(context_text)
         vscode.window.showInformationMessage(
-          'Context from open editors copied to clipboard.'
+          DICTIONARY.CONTEXT_FROM_OPEN_EDITORS_COPIED_TO_CLIPBOARD
         )
       }
     ),

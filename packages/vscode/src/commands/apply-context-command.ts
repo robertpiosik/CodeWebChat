@@ -663,7 +663,7 @@ export function apply_context_command(
                     if (internal_contexts.length == 0) {
                       quick_pick.hide()
                       vscode.window.showInformationMessage(
-                        'No saved contexts remaining in the Workspace State.'
+                        DICTIONARY.NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE
                       )
                     } else {
                       quick_pick.items =
@@ -688,7 +688,7 @@ export function apply_context_command(
                       if (updated_contexts.length == 0) {
                         quick_pick.hide()
                         vscode.window.showInformationMessage(
-                          'No saved contexts remaining in the JSON file.'
+                          DICTIONARY.NO_SAVED_CONTEXTS_IN_JSON_FILE
                         )
                       } else {
                         quick_pick.items =

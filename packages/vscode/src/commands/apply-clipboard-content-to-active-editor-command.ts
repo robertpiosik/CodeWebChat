@@ -6,6 +6,7 @@ import {
   get_intelligent_update_config,
   process_file
 } from '../utils/intelligent-update-utils'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export const apply_clipboard_content_to_active_editor_command = (
   context: vscode.ExtensionContext
@@ -15,13 +16,13 @@ export const apply_clipboard_content_to_active_editor_command = (
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
-        vscode.window.showInformationMessage('No active editor found.')
+        vscode.window.showInformationMessage(DICTIONARY.NO_ACTIVE_EDITOR_FOUND)
         return
       }
 
       const clipboard_content = await vscode.env.clipboard.readText()
       if (!clipboard_content) {
-        vscode.window.showInformationMessage('Clipboard is empty.')
+        vscode.window.showInformationMessage(DICTIONARY.CLIPBOARD_IS_EMPTY)
         return
       }
 
@@ -126,7 +127,7 @@ export const apply_clipboard_content_to_active_editor_command = (
         })
 
         await vscode.window.showInformationMessage(
-          'Clipboard content applied successfully.'
+          DICTIONARY.CLIPBOARD_CONTENT_APPLIED_SUCCESSFULLY
         )
       } else {
         vscode.window.showErrorMessage('Failed to apply clipboard content.')

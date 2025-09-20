@@ -4,6 +4,7 @@ import * as fs from 'fs'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { extract_paths_from_text } from '../utils/path-parser'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export function apply_context_from_clipboard_command(
   workspace_provider: WorkspaceProvider | undefined
@@ -19,7 +20,7 @@ export function apply_context_from_clipboard_command(
         const clipboard_text = await vscode.env.clipboard.readText()
         if (!clipboard_text) {
           vscode.window.showInformationMessage(
-            'No file paths found in clipboard.'
+            DICTIONARY.NO_FILE_PATHS_FOUND_IN_CLIPBOARD
           )
           return
         }
@@ -27,7 +28,7 @@ export function apply_context_from_clipboard_command(
         const paths = extract_paths_from_text(clipboard_text)
         if (paths.length == 0) {
           vscode.window.showInformationMessage(
-            'No file paths found in clipboard.'
+            DICTIONARY.NO_FILE_PATHS_FOUND_IN_CLIPBOARD
           )
           return
         }
@@ -85,7 +86,7 @@ export function apply_context_from_clipboard_command(
 
         if (existing_paths.length == 0) {
           vscode.window.showInformationMessage(
-            'No matching files found in workspace for the paths in clipboard.'
+            DICTIONARY.NO_MATCHING_FILES_FOUND_FOR_CLIPBOARD_PATHS
           )
           return
         }

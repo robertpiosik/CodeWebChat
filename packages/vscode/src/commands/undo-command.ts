@@ -7,6 +7,7 @@ import {
 import { parse_response } from './apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { undo_files } from './apply-chat-response-command/utils/file-operations'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export function undo_command(
   context: vscode.ExtensionContext,
@@ -26,9 +27,7 @@ export function undo_command(
     >(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY)
 
     if (!original_states || original_states.length == 0) {
-      vscode.window.showInformationMessage(
-        'No recent changes found to undo or changes were already undone.'
-      )
+      vscode.window.showInformationMessage(DICTIONARY.NO_RECENT_CHANGES_TO_UNDO)
       return false
     }
 

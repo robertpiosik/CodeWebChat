@@ -68,7 +68,7 @@ const get_intelligent_update_config = async (
   if (intelligent_update_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      'No "Intelligent Update" configurations found. Please add one in the settings.'
+      DICTIONARY.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
     )
     return
   }
