@@ -137,7 +137,7 @@ export const get_intelligent_update_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              'API provider for the selected API tool configuration was not found.'
+              DICTIONARY.API_PROVIDER_FOR_CONFIG_NOT_FOUND
             )
             resolve(undefined)
             return
@@ -164,9 +164,7 @@ export const get_intelligent_update_config = async (
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(
-      'API provider for the selected API tool configuration was not found.'
-    )
+    vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_FOR_CONFIG_NOT_FOUND)
     Logger.warn({
       function_name: 'get_intelligent_update_config',
       message: 'API provider not found for Intelligent Update API tool.'
@@ -238,7 +236,7 @@ export const process_file = async (params: {
 
     if (!refactored_content) {
       vscode.window.showErrorMessage(
-        `Applying changes to ${params.file_path} failed. Empty response from API.`
+        DICTIONARY.APPLYING_CHANGES_FAILED_EMPTY_RESPONSE(params.file_path)
       )
       Logger.error({
         function_name: 'process_file',
@@ -277,7 +275,7 @@ export const process_file = async (params: {
     })
     console.error(`Refactoring error for ${params.file_path}:`, error)
     vscode.window.showErrorMessage(
-      `An error occurred during refactoring ${params.file_path}. See console for details.`
+      DICTIONARY.ERROR_DURING_REFACTORING(params.file_path)
     )
     return null
   }

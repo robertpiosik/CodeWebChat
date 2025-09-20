@@ -46,7 +46,7 @@ export async function at_sign_quick_pick(params: {
     try {
       const workspace_folders = vscode.workspace.workspaceFolders
       if (!workspace_folders || workspace_folders.length == 0) {
-        vscode.window.showErrorMessage('No workspace folders found')
+        vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDERS_FOUND)
         return
       }
 
@@ -77,7 +77,7 @@ export async function at_sign_quick_pick(params: {
 
       if (all_branches.size == 0) {
         vscode.window.showErrorMessage(
-          'No Git branches found in any workspace folder'
+          DICTIONARY.NO_GIT_BRANCHES_FOUND_IN_WORKSPACE
         )
         return
       }
@@ -117,16 +117,14 @@ export async function at_sign_quick_pick(params: {
         }
       }
     } catch (error) {
-      vscode.window.showErrorMessage(
-        'Failed to get Git branches. Make sure you are in a Git repository.'
-      )
+      vscode.window.showErrorMessage(DICTIONARY.FAILED_TO_GET_GIT_BRANCHES)
     }
   }
 
   if (selected.label == '#SavedContext') {
     const workspace_root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
     if (!workspace_root) {
-      vscode.window.showErrorMessage('No workspace root found.')
+      vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_ROOT)
       return
     }
 

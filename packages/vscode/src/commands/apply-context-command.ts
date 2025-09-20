@@ -312,7 +312,7 @@ export function apply_context_command(
           }
         } catch (error: any) {
           vscode.window.showErrorMessage(
-            `Error reading contexts file: ${error.message}`
+            DICTIONARY.ERROR_READING_CONTEXTS_FILE(error.message)
           )
           console.error('Error reading contexts file:', error)
         }
@@ -597,7 +597,9 @@ export function apply_context_command(
                         name_to_highlight = trimmed_name
                       } catch (error: any) {
                         vscode.window.showErrorMessage(
-                          `Error updating context name in file: ${error.message}`
+                          DICTIONARY.ERROR_UPDATING_CONTEXT_NAME_IN_FILE(
+                            error.message
+                          )
                         )
                         console.error(
                           'Error updating context name in file:',
@@ -697,7 +699,9 @@ export function apply_context_command(
                       }
                     } catch (error: any) {
                       vscode.window.showErrorMessage(
-                        `Error deleting context from file: ${error.message}`
+                        DICTIONARY.ERROR_DELETING_CONTEXT_FROM_FILE(
+                          error.message
+                        )
                       )
                       console.error('Error deleting context from file:', error)
                     }
@@ -733,7 +737,7 @@ export function apply_context_command(
 
           if (!context_to_apply) {
             vscode.window.showErrorMessage(
-              `Could not find the selected context "${selected.label}" after potential edits.`
+              DICTIONARY.COULD_NOT_FIND_SELECTED_CONTEXT(selected.label)
             )
             console.error(
               'Could not find selected context after potential edits:',
@@ -752,7 +756,7 @@ export function apply_context_command(
           on_context_selected()
         } catch (error: any) {
           vscode.window.showErrorMessage(
-            `Error selecting saved context: ${error.message}`
+            DICTIONARY.ERROR_SELECTING_SAVED_CONTEXT(error.message)
           )
           console.error('Error selecting saved context:', error)
         }

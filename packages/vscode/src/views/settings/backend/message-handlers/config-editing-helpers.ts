@@ -75,9 +75,9 @@ export const initial_select_model = async (
       )
     } else {
       vscode.window.showErrorMessage(
-        `Failed to fetch models: ${
+        DICTIONARY.FAILED_TO_FETCH_MODELS(
           error instanceof Error ? error.message : String(error)
-        }`
+        )
       )
     }
   }
@@ -120,7 +120,7 @@ export const edit_model_for_config = async (
   )
   if (!provider_from_manager) {
     vscode.window.showErrorMessage(
-      `Provider ${config.provider_name} not found.`
+      DICTIONARY.PROVIDER_NOT_FOUND(config.provider_name)
     )
     return undefined
   }
@@ -132,7 +132,7 @@ export const edit_model_for_config = async (
 
   if (!base_url) {
     vscode.window.showErrorMessage(
-      `Base URL not found for provider ${config.provider_name}.`
+      DICTIONARY.BASE_URL_NOT_FOUND_FOR_PROVIDER(config.provider_name)
     )
     return undefined
   }
@@ -181,9 +181,9 @@ export const edit_model_for_config = async (
       )
     } else {
       vscode.window.showErrorMessage(
-        `Failed to fetch models: ${
+        DICTIONARY.FAILED_TO_FETCH_MODELS(
           error instanceof Error ? error.message : String(error)
-        }`
+        )
       )
     }
   }

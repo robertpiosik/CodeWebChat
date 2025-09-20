@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export function delete_command() {
   return vscode.commands.registerCommand(
@@ -43,7 +44,9 @@ export function delete_command() {
           recursive: true
         })
       } catch (error: any) {
-        vscode.window.showErrorMessage(`Failed to delete: ${error.message}`)
+        vscode.window.showErrorMessage(
+          DICTIONARY.FAILED_TO_DELETE(error.message)
+        )
       }
     }
   )

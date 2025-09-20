@@ -4,6 +4,7 @@ import {
   ModelProvidersManager,
   CustomProvider
 } from '@/services/model-providers-manager'
+import { DICTIONARY } from '@/constants/dictionary'
 import { RenameModelProviderMessage } from '@/views/settings/types/messages'
 import { handle_get_model_providers } from './handle-get-model-providers'
 
@@ -19,7 +20,9 @@ export const handle_rename_model_provider = async (
   ) as CustomProvider
 
   if (!provider_to_rename) {
-    vscode.window.showErrorMessage(`Model provider "${old_name}" not found.`)
+    vscode.window.showErrorMessage(
+      DICTIONARY.MODEL_PROVIDER_NOT_FOUND_BY_NAME(old_name)
+    )
     return
   }
 

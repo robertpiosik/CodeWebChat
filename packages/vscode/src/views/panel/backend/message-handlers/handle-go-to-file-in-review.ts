@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { GoToFileInReviewMessage } from '@/views/panel/types/messages'
 import { Logger } from '@shared/utils/logger'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export const handle_go_to_file_in_review = async (
   provider: ViewProvider,
@@ -39,13 +40,14 @@ export const handle_go_to_file_in_review = async (
   }
 
   if (!target_workspace) {
-    const error_message = `Workspace not found for file: ${file_path}`
     Logger.error({
       function_name: 'handle_go_to_file_in_review',
-      message: error_message,
+      message: `Workspace not found for file: ${file_path}`,
       data: { file_path, workspace_name }
     })
-    vscode.window.showErrorMessage(error_message)
+    vscode.window.showErrorMessage(
+      DICTIONARY.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
+    )
     return
   }
 
@@ -55,12 +57,11 @@ export const handle_go_to_file_in_review = async (
     const document = await vscode.workspace.openTextDocument(file_uri)
     await vscode.window.showTextDocument(document, { preview: false })
   } catch (error) {
-    const error_message = `Could not open file: ${file_path}`
     Logger.error({
       function_name: 'handle_go_to_file_in_review',
-      message: error_message,
+      message: `Could not open file: ${file_path}`,
       data: { error, file_uri: file_uri.toString() }
     })
-    vscode.window.showErrorMessage(error_message)
+    vscode.window.showErrorMessage(DICTIONARY.COULD_NOT_OPEN_FILE(file_path))
   }
 }

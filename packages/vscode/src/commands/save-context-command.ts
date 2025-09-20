@@ -515,7 +515,7 @@ export function save_context_command(
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              `Error saving context to file: ${error.message}`
+              DICTIONARY.ERROR_SAVING_CONTEXT_TO_FILE(error.message)
             )
           }
         } else {
@@ -650,7 +650,7 @@ export function save_context_command(
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              `Error saving context to Workspace State: ${error.message}`
+              DICTIONARY.ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE(error.message)
             )
           }
         }

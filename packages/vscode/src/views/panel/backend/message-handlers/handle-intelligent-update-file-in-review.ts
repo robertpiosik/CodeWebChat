@@ -47,7 +47,7 @@ const get_default_intelligent_update_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      'API provider for the default API tool configuration was not found.'
+      DICTIONARY.API_PROVIDER_FOR_DEFAULT_CONFIG_NOT_FOUND
     )
     return
   }
@@ -74,7 +74,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!original_states || !last_response) {
     vscode.window.showErrorMessage(
-      'Could not find the context for intelligent update. Please apply the changes again.'
+      DICTIONARY.INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND
     )
     return
   }
@@ -85,7 +85,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!file_state) {
     vscode.window.showErrorMessage(
-      `Could not find original state for file: ${file_name}`
+      DICTIONARY.ORIGINAL_STATE_FOR_FILE_NOT_FOUND(file_name)
     )
     return
   }
@@ -116,7 +116,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!instructions) {
     vscode.window.showErrorMessage(
-      `Could not find update instructions for file: ${file_name}`
+      DICTIONARY.UPDATE_INSTRUCTIONS_FOR_FILE_NOT_FOUND(file_name)
     )
     return
   }
@@ -247,7 +247,10 @@ export const handle_intelligent_update_file_in_review = async (
             data: { error, file_path }
           })
           vscode.window.showErrorMessage(
-            `Intelligent update failed for ${file_name}: ${error.message}`
+            DICTIONARY.INTELLIGENT_UPDATE_FAILED_FOR_FILE(
+              file_name,
+              error.message
+            )
           )
         }
       } finally {

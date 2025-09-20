@@ -85,7 +85,7 @@ export const handle_intelligent_update = async (params: {
   if (skipped_files.length > 0) {
     const skipped_list = skipped_files.join('\n')
     vscode.window.showErrorMessage(
-      `Detected ${skipped_files.length} unsafe file path(s) that may attempt directory traversal:\n${skipped_list}\n\nThese files will be skipped.`
+      DICTIONARY.UNSAFE_FILE_PATHS_SKIPPED(skipped_files.length, skipped_list)
     )
     Logger.warn({
       function_name: 'handle_intelligent_update',
@@ -386,7 +386,7 @@ export const handle_intelligent_update = async (params: {
 
     if (error.message !== 'Operation cancelled' && !axios.isCancel(error)) {
       vscode.window.showErrorMessage(
-        `An error occurred during processing: ${error.message}`
+        DICTIONARY.ERROR_DURING_PROCESSING(error.message)
       )
     }
   } finally {
@@ -484,7 +484,7 @@ export const handle_intelligent_update = async (params: {
       data: error
     })
     vscode.window.showErrorMessage(
-      `An error occurred while applying changes: ${error.message}`
+      DICTIONARY.ERROR_APPLYING_CHANGES(error.message)
     )
   }
 

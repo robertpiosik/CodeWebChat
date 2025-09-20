@@ -182,7 +182,7 @@ const get_intelligent_update_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              'API provider for the selected API tool configuration was not found.'
+              DICTIONARY.API_PROVIDER_FOR_CONFIG_NOT_FOUND
             )
             resolve(undefined)
             return
@@ -442,7 +442,7 @@ export const apply_chat_response_command = (
           )
           if (!safe_path || !fs.existsSync(safe_path)) {
             vscode.window.showErrorMessage(
-              `File not found: ${completion.file_path}`
+              DICTIONARY.FILE_NOT_FOUND(completion.file_path)
             )
             Logger.warn({
               function_name: 'apply_chat_response_command',
@@ -464,7 +464,9 @@ export const apply_chat_response_command = (
             char_index > document.lineAt(line_index).text.length
           ) {
             vscode.window.showErrorMessage(
-              `Invalid position for code completion in ${completion.file_path}.`
+              DICTIONARY.INVALID_POSITION_FOR_CODE_COMPLETION(
+                completion.file_path
+              )
             )
             return null
           }
@@ -667,7 +669,7 @@ export const apply_chat_response_command = (
               })
 
               const response = await vscode.window.showErrorMessage(
-                'Error during fix attempt with the intelligent update tool. Would you like to undo the successfully applied patches?',
+                DICTIONARY.ERROR_DURING_INTELLIGENT_UPDATE_FIX_ATTEMPT,
                 'Keep changes',
                 'Undo'
               )

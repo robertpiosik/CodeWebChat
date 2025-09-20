@@ -105,7 +105,7 @@ export const handle_edit_intelligent_update_configuration = async (
         )
         if (!provider_from_manager) {
           vscode.window.showErrorMessage(
-            `Provider ${provider_info.name} not found.`
+            DICTIONARY.PROVIDER_NOT_FOUND(provider_info.name)
           )
           return await show_quick_pick()
         }
@@ -117,7 +117,7 @@ export const handle_edit_intelligent_update_configuration = async (
 
         if (!base_url) {
           vscode.window.showErrorMessage(
-            `Base URL not found for provider ${provider_info.name}.`
+            DICTIONARY.BASE_URL_NOT_FOUND_FOR_PROVIDER(provider_info.name)
           )
           return await show_quick_pick()
         }
@@ -172,9 +172,9 @@ export const handle_edit_intelligent_update_configuration = async (
             )
           } else {
             vscode.window.showErrorMessage(
-              `Failed to fetch models: ${
+              DICTIONARY.FAILED_TO_FETCH_MODELS(
                 error instanceof Error ? error.message : String(error)
-              }`
+              )
             )
           }
         }

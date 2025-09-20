@@ -87,7 +87,7 @@ export function undo_command(
     } catch (error: any) {
       console.error('Error during undo:', error)
       vscode.window.showErrorMessage(
-        `Failed to undo changes: ${error.message || 'Unknown error'}`
+        DICTIONARY.FAILED_TO_UNDO_CHANGES(error.message || 'Unknown error')
       )
       return false
     }

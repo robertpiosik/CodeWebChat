@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { DICTIONARY } from '@/constants/dictionary'
 import { DeletePresetMessage } from '@/views/panel/types/messages'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 
@@ -76,6 +77,8 @@ export const handle_delete_preset = async (
 
     provider.send_presets_to_webview(webview_view.webview)
   } catch (error) {
-    vscode.window.showErrorMessage(`Failed to delete ${item_type}: ${error}`)
+    vscode.window.showErrorMessage(
+      DICTIONARY.FAILED_TO_DELETE_ITEM(item_type, error)
+    )
   }
 }

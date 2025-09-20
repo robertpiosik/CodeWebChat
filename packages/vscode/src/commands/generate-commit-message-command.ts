@@ -4,6 +4,7 @@ import {
   get_git_repository,
   prepare_staged_changes
 } from '../utils/git-repository-utils'
+import { DICTIONARY } from '@/constants/dictionary'
 import { generate_commit_message_from_diff } from '../utils/commit-message-generator'
 
 export const generate_commit_message_command = (
@@ -35,7 +36,7 @@ export const generate_commit_message_command = (
           data: error
         })
         vscode.window.showErrorMessage(
-          'Error generating commit message. See console for details.'
+          DICTIONARY.ERROR_GENERATING_COMMIT_MESSAGE
         )
       }
     }

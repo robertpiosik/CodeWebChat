@@ -10,6 +10,7 @@ import {
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
 import { WebsitesProvider } from '../context/providers/websites-provider'
+import { DICTIONARY } from '@/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { Preset } from '@shared/types/preset'
 
@@ -78,7 +79,7 @@ export class WebSocketManager {
         data: error
       })
       vscode.window.showErrorMessage(
-        `Failed to initialize WebSocket server: ${error}`
+        DICTIONARY.FAILED_TO_INITIALIZE_WEBSOCKET_SERVER(error)
       )
     }
   }
@@ -185,7 +186,7 @@ export class WebSocketManager {
               this.should_reconnect = false
               this.client?.close()
               vscode.window.showErrorMessage(
-                'CWC has been updated. To continue using it in this workspace, open the command palette and run "Reload Window".'
+                DICTIONARY.CWC_UPDATED_RELOAD_WINDOW
               )
             }
           }

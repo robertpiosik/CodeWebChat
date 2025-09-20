@@ -306,7 +306,7 @@ const perform_context_editing = async (params: {
     const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
     if (!provider_info) {
       vscode.window.showErrorMessage(
-        `Built-in provider "${provider.name}" not found.`
+        DICTIONARY.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
       )
       Logger.warn({
         function_name: 'perform_context_editing',

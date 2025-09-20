@@ -95,7 +95,7 @@ export const create_file_if_needed = async (params: {
 
   if (!safe_path) {
     vscode.window.showErrorMessage(
-      `Invalid file path: ${params.file_path}. Path may contain traversal attempts.`
+      DICTIONARY.INVALID_FILE_PATH_TRAVERSAL(params.file_path)
     )
     Logger.error({
       function_name: 'create_file_if_needed',
@@ -120,7 +120,9 @@ export const create_file_if_needed = async (params: {
         message: 'Failed to create directory',
         data: { directory, error }
       })
-      vscode.window.showErrorMessage(`Failed to create directory: ${directory}`)
+      vscode.window.showErrorMessage(
+        DICTIONARY.FAILED_TO_CREATE_DIRECTORY(directory)
+      )
       return false
     }
   }
@@ -139,7 +141,7 @@ export const create_file_if_needed = async (params: {
       message: 'Failed to write file',
       data: { safe_path, error }
     })
-    vscode.window.showErrorMessage(`Failed to write file: ${safe_path}`)
+    vscode.window.showErrorMessage(DICTIONARY.FAILED_TO_WRITE_FILE(safe_path))
   }
   return false
 }
@@ -452,7 +454,7 @@ export const undo_files = async (params: {
     })
     console.error('Error during undo:', error)
     vscode.window.showErrorMessage(
-      `Failed to undo changes: ${error.message || 'Unknown error'}`
+      DICTIONARY.FAILED_TO_UNDO_CHANGES(error.message || 'Unknown error')
     )
     return false
   }
