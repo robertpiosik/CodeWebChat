@@ -48,6 +48,7 @@ export class WorkspaceProvider
   private config_change_handler: vscode.Disposable
   private _on_did_change_checked_files = new vscode.EventEmitter<void>()
   readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
+  private refresh_timeout: NodeJS.Timeout | null = null
   // Track which files were opened from workspace view to prevent auto-checking
   private opened_from_workspace_view: Set<string> = new Set()
   // Track which tabs are currently in preview mode
@@ -268,6 +269,9 @@ export class WorkspaceProvider
     if (this.tab_change_handler) {
       this.tab_change_handler.dispose()
     }
+    if (this.refresh_timeout) {
+      clearTimeout(this.refresh_timeout)
+    }
   }
 
   private _update_preview_tabs_state(): void {
@@ -421,8 +425,14 @@ export class WorkspaceProvider
     this._on_file_system_changed(created_file_path)
   }
 
-  public async refresh(): Promise<void> {
-    this._on_did_change_tree_data.fire()
+  public refresh(): void {
+    if (this.refresh_timeout) {
+      clearTimeout(this.refresh_timeout)
+    }
+    this.refresh_timeout = setTimeout(() => {
+      this._on_did_change_tree_data.fire()
+      this.refresh_timeout = null
+    }, 500) // Debounce refresh to handle bulk file changes like builds
   }
 
   public clear_checks(): void {

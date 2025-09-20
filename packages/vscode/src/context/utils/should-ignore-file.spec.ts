@@ -1,11 +1,7 @@
-import * as fs from 'fs'
 import {
   extract_extension_variations,
   should_ignore_file
 } from './should-ignore-file'
-
-jest.mock('fs')
-const mockedFs = jest.mocked(fs)
 
 describe('extract_extension_variations', () => {
   it('should return an empty array for a file with no extension', () => {
@@ -61,15 +57,6 @@ describe('extract_extension_variations', () => {
 })
 
 describe('should_ignore_file', () => {
-  beforeEach(() => {
-    // Reset mocks before each test
-    jest.clearAllMocks()
-    // Default mock for fs.statSync to succeed for a small file
-    mockedFs.statSync.mockReturnValue({
-      isFile: () => true,
-      size: 1024
-    } as fs.Stats)
-  })
   it('should return true if a simple extension is in the ignored set', () => {
     const ignored = new Set(['log', 'tmp'])
     expect(should_ignore_file('file.log', ignored)).toBe(true)

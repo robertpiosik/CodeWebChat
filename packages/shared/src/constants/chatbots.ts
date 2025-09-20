@@ -151,6 +151,7 @@ export const CHATBOTS = {
       auto: { label: 'Auto' },
       fast: { label: 'Fast' },
       expert: { label: 'Expert' },
+      'grok-4-fast': { label: 'Grok 4 Fast' },
       heavy: { label: 'Heavy' }
     }
   },
