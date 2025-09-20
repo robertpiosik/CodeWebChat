@@ -1,6 +1,7 @@
 import styles from './Donations.module.scss'
 import { IconButton } from '../IconButton/IconButton'
 import { useEffect, useRef } from 'react'
+import cn from 'classnames'
 
 const get_href_from_url_like_string = (text: string): string | null => {
   if (/\s/.test(text)) {
@@ -74,6 +75,7 @@ type Donation = {
 export type DonationsProps = {
   donations?: Donation[]
   is_fetching?: boolean
+  is_revalidating?: boolean
   are_donations_visible: boolean
   donations_fetched_once: boolean
   on_toggle_donations_visibility: () => void
@@ -154,37 +156,43 @@ export const Donations: React.FC<DonationsProps> = (props) => {
             </>
           ) : (
             <>
-              {props.donations?.map((donation, index) => (
-                <div className={styles.container__donation} key={index}>
-                  {(() => {
-                    const { username, href, after_text } =
-                      parse_support_message(donation.support_message)
-                    const title = `${username} ${after_text}`
-                    return (
-                      <div
-                        className={styles.container__donation__header}
-                        title={title}
-                      >
-                        <strong>
-                          {href ? (
-                            <a href={href} target="_blank" rel="nofollow">
-                              {username}
-                            </a>
-                          ) : (
-                            username
-                          )}
-                        </strong>{' '}
-                        {after_text}
+              <div
+                className={cn({
+                  [styles['revalidating']]: props.is_revalidating
+                })}
+              >
+                {props.donations?.map((donation, index) => (
+                  <div className={styles.container__donation} key={index}>
+                    {(() => {
+                      const { username, href, after_text } =
+                        parse_support_message(donation.support_message)
+                      const title = `${username} ${after_text}`
+                      return (
+                        <div
+                          className={styles.container__donation__header}
+                          title={title}
+                        >
+                          <strong>
+                            {href ? (
+                              <a href={href} target="_blank" rel="nofollow">
+                                {username}
+                              </a>
+                            ) : (
+                              username
+                            )}
+                          </strong>{' '}
+                          {after_text}
+                        </div>
+                      )
+                    })()}
+                    {donation.support_note && (
+                      <div className={styles.container__donation__note}>
+                        {donation.support_note}
                       </div>
-                    )
-                  })()}
-                  {donation.support_note && (
-                    <div className={styles.container__donation__note}>
-                      {donation.support_note}
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+              </div>
               {props.has_more && <div ref={observer_target} />}
             </>
           )}

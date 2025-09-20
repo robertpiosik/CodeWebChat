@@ -20,6 +20,7 @@ export const Home: React.FC<Props> = (props) => {
   const {
     donations,
     is_fetching,
+    is_revalidating,
     donations_fetched_once,
     on_fetch_next_page,
     has_more
@@ -52,6 +53,7 @@ export const Home: React.FC<Props> = (props) => {
                 <Donations
                   donations={donations}
                   is_fetching={is_fetching}
+                  is_revalidating={is_revalidating}
                   are_donations_visible={props.are_donations_visible}
                   donations_fetched_once={donations_fetched_once}
                   on_toggle_donations_visibility={
