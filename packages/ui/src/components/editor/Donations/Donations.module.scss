@@ -12,6 +12,16 @@
     align-items: center;
     gap: var(--padding-8px);
   }
+}
+
+.donations {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &--revalidating {
+    opacity: var(--dimmed-opacity);
+  }
 
   &__donation {
     display: flex;
@@ -40,10 +50,6 @@
   background-color: var(--vscode-list-hoverBackground);
   border-radius: var(--border-radius-4px);
   animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.revalidating {
-  opacity: var(--dimmed-opacity);
 }
 
 @keyframes pulse {

@@ -132,21 +132,21 @@ export const Donations: React.FC<DonationsProps> = (props) => {
         <>
           {props.is_fetching ? (
             <>
-              <div className={styles.container__donation}>
+              <div className={styles.donations__donation}>
                 <div
                   className={styles.skeleton}
                   style={{ width: '50%', height: '14px' }}
                 />
                 <div className={styles.skeleton} style={{ height: '30px' }} />
               </div>
-              <div className={styles.container__donation}>
+              <div className={styles.donations__donation}>
                 <div
                   className={styles.skeleton}
                   style={{ width: '70%', height: '14px' }}
                 />
                 <div className={styles.skeleton} style={{ height: '30px' }} />
               </div>
-              <div className={styles.container__donation}>
+              <div className={styles.donations__donation}>
                 <div
                   className={styles.skeleton}
                   style={{ width: '40%', height: '14px' }}
@@ -157,19 +157,19 @@ export const Donations: React.FC<DonationsProps> = (props) => {
           ) : (
             <>
               <div
-                className={cn({
-                  [styles['revalidating']]: props.is_revalidating
+                className={cn(styles.donations, {
+                  [styles['donations--revalidating']]: props.is_revalidating
                 })}
               >
                 {props.donations?.map((donation, index) => (
-                  <div className={styles.container__donation} key={index}>
+                  <div className={styles.donations__donation} key={index}>
                     {(() => {
                       const { username, href, after_text } =
                         parse_support_message(donation.support_message)
                       const title = `${username} ${after_text}`
                       return (
                         <div
-                          className={styles.container__donation__header}
+                          className={styles.donations__donation__header}
                           title={title}
                         >
                           <strong>
@@ -186,7 +186,7 @@ export const Donations: React.FC<DonationsProps> = (props) => {
                       )
                     })()}
                     {donation.support_note && (
-                      <div className={styles.container__donation__note}>
+                      <div className={styles.donations__donation__note}>
                         {donation.support_note}
                       </div>
                     )}
