@@ -7,6 +7,7 @@ import { replace_saved_context_placeholder } from '@/utils/replace-saved-context
 import { chat_code_completion_instructions } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
+import { DICTIONARY } from '@/constants/dictionary'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 
 export const handle_copy_prompt = async (params: {
@@ -43,7 +44,7 @@ export const handle_copy_prompt = async (params: {
     !active_editor.selection.isEmpty
   ) {
     vscode.window.showWarningMessage(
-      'Cannot copy prompt in code completion mode with an active selection.'
+      DICTIONARY.CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION
     )
     return
   }
@@ -87,7 +88,7 @@ export const handle_copy_prompt = async (params: {
 
     if (params.provider.web_mode == 'edit-context' && !context_text) {
       vscode.window.showWarningMessage(
-        'Cannot copy prompt in edit context mode without any context. Please add files to the context.'
+        DICTIONARY.CANNOT_COPY_PROMPT_IN_EDIT_CONTEXT_WITHOUT_CONTEXT
       )
       return
     }
@@ -144,7 +145,7 @@ export const handle_copy_prompt = async (params: {
     vscode.env.clipboard.writeText(text.trim())
   } else {
     vscode.window.showWarningMessage(
-      'Cannot copy prompt in code completion mode without an active editor.'
+      DICTIONARY.CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR
     )
     return
   }

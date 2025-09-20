@@ -131,9 +131,7 @@ const get_code_completion_config = async (
             selected.config.provider_name
           )
           if (!provider) {
-            vscode.window.showErrorMessage(
-              'API provider for the selected API tool configuration was not found.'
-            )
+            vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
             resolve(undefined)
             return
           }
@@ -159,9 +157,7 @@ const get_code_completion_config = async (
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(
-      'API provider for the selected API tool configuration was not found.'
-    )
+    vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
     Logger.warn({
       function_name: 'get_code_completion_config',
       message: 'API provider not found for Code Completions tool.'
@@ -224,7 +220,7 @@ const perform_code_completion = async (params: {
 
   if (!code_completions_config.provider_name) {
     vscode.window.showErrorMessage(
-      'API provider is not specified for Code Completions tool.'
+      DICTIONARY.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
       function_name: 'perform_code_completion',
@@ -233,7 +229,7 @@ const perform_code_completion = async (params: {
     return
   } else if (!code_completions_config.model) {
     vscode.window.showErrorMessage(
-      'Model is not specified for Code Completions tool.'
+      DICTIONARY.MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
       function_name: 'perform_code_completion',
@@ -261,18 +257,14 @@ const perform_code_completion = async (params: {
   }
 
   if (!provider.api_key) {
-    vscode.window.showErrorMessage(
-      'API key is missing. Please add it in the Settings tab.'
-    )
+    vscode.window.showErrorMessage(DICTIONARY.API_KEY_MISSING)
     return
   }
 
   const editor = vscode.window.activeTextEditor
   if (editor) {
     if (!editor.selection.isEmpty) {
-      vscode.window.showWarningMessage(
-        'Code completions are not supported with active text selection.'
-      )
+      vscode.window.showWarningMessage(DICTIONARY.CODE_COMPLETIONS_NO_SELECTION)
       return
     }
     const cancel_token_source = axios.CancelToken.source()
@@ -383,9 +375,7 @@ const perform_code_completion = async (params: {
         message: 'code completion error',
         data: err
       })
-      vscode.window.showErrorMessage(
-        'An error occurred during code completion. See console for details.'
-      )
+      vscode.window.showErrorMessage(DICTIONARY.CODE_COMPLETION_ERROR)
     } finally {
       if (params.view_provider) {
         params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
@@ -408,7 +398,7 @@ const perform_code_completion = async (params: {
       })
     }
   } else {
-    vscode.window.showWarningMessage('No editor is open.')
+    vscode.window.showWarningMessage(DICTIONARY.NO_EDITOR_OPEN)
   }
 }
 

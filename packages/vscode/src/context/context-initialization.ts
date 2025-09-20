@@ -12,6 +12,7 @@ import { SharedFileState } from './shared-file-state'
 import { marked } from 'marked'
 import { EventEmitter } from 'events'
 import { apply_context_command } from '../commands/apply-context-command'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export const token_count_emitter = new EventEmitter()
 
@@ -132,7 +133,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
       if (context_text == '') {
         vscode.window.showWarningMessage(
-          'No files or websites selected or open.'
+          DICTIONARY.NO_FILES_OR_WEBSITES_SELECTED
         )
         return
       }
@@ -148,7 +149,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
         const checked_files = open_editors_provider.get_checked_files()
 
         if (checked_files.length === 0) {
-          vscode.window.showWarningMessage('No open editors selected.')
+          vscode.window.showWarningMessage(DICTIONARY.NO_OPEN_EDITORS_SELECTED)
           return
         }
 

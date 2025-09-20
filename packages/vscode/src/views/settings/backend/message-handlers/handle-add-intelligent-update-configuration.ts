@@ -16,6 +16,7 @@ import {
   initial_select_model,
   initial_select_provider
 } from './config-editing-helpers'
+import { DICTIONARY } from '@/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
@@ -129,9 +130,7 @@ export const handle_add_intelligent_update_configuration = async (
 
   const configs = await providers_manager.get_intelligent_update_tool_configs()
   if (configs.some((c) => generate_id(c) == generate_id(config_to_add))) {
-    vscode.window.showWarningMessage(
-      'A configuration with these properties already exists.'
-    )
+    vscode.window.showWarningMessage(DICTIONARY.CONFIGURATION_ALREADY_EXISTS)
     return
   }
 

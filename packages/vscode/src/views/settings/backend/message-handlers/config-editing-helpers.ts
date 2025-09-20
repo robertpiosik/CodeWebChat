@@ -10,6 +10,7 @@ import {
 } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@shared/utils/logger'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export const initial_select_provider = async (
   providers_manager: ModelProvidersManager
@@ -17,9 +18,7 @@ export const initial_select_provider = async (
   const providers = await providers_manager.get_providers()
 
   if (providers.length == 0) {
-    vscode.window.showWarningMessage(
-      'No model providers configured. Please add a model provider first on the "Model Providers" page.'
-    )
+    vscode.window.showWarningMessage(DICTIONARY.NO_MODEL_PROVIDERS_CONFIGURED)
     return
   }
 

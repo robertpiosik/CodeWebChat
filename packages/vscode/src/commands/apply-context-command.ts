@@ -12,6 +12,7 @@ import {
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export async function resolve_glob_patterns(
   patterns: string[],
@@ -272,13 +273,13 @@ export function apply_context_command(
         show_main_menu = false
 
         if (!workspace_provider) {
-          vscode.window.showErrorMessage('No workspace provider available')
+          vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_PROVIDER)
           return
         }
 
         const workspace_root = workspace_provider.getWorkspaceRoot()
         if (!workspace_root) {
-          vscode.window.showErrorMessage('No workspace root found.')
+          vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_ROOT)
           return
         }
 

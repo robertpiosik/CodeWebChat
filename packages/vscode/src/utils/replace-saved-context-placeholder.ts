@@ -4,6 +4,7 @@ import * as fs from 'fs'
 import { SavedContext } from '@/types/context'
 import { SAVED_CONTEXTS_STATE_KEY } from '@/constants/state-keys'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import { DICTIONARY } from '@/constants/dictionary'
 import { resolve_glob_patterns } from '@/commands/apply-context-command'
 
 async function get_file_content_as_xml(
@@ -95,7 +96,7 @@ export const replace_saved_context_placeholder = async (params: {
 
     const workspace_root = params.workspace_provider.getWorkspaceRoot()
     if (!workspace_root) {
-      vscode.window.showErrorMessage('No workspace root found.')
+      vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_ROOT)
       continue
     }
 

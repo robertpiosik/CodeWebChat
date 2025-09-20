@@ -12,6 +12,7 @@ import {
 } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@shared/utils/logger'
+import { DICTIONARY } from '@/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
@@ -30,7 +31,7 @@ export const handle_edit_intelligent_update_configuration = async (
   )
 
   if (config_index == -1) {
-    vscode.window.showErrorMessage(`Configuration not found.`)
+    vscode.window.showErrorMessage(DICTIONARY.CONFIGURATION_NOT_FOUND)
     return
   }
 
@@ -268,9 +269,7 @@ export const handle_edit_intelligent_update_configuration = async (
       new_id !== message.configuration_id &&
       configs.some((c) => generate_id(c) === new_id)
     ) {
-      vscode.window.showErrorMessage(
-        'A configuration with these properties already exists.'
-      )
+      vscode.window.showErrorMessage(DICTIONARY.CONFIGURATION_ALREADY_EXISTS)
       return await show_quick_pick()
     }
 

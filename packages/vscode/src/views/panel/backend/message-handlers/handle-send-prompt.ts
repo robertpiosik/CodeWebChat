@@ -17,6 +17,7 @@ import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-
 import { WebMode } from '@shared/types/modes'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
+import { DICTIONARY } from '@/constants/dictionary'
 
 /**
  * When preset_names is an emtpy stirng - show quick pick,
@@ -32,9 +33,7 @@ export const handle_send_prompt = async (params: {
     params.provider.home_view_type === HOME_VIEW_TYPES.WEB &&
     !params.provider.websocket_server_instance.is_connected_with_browser()
   ) {
-    vscode.window.showWarningMessage(
-      'Browser extension is not connected. Please install or reload it.'
-    )
+    vscode.window.showWarningMessage(DICTIONARY.BROWSER_EXTENSION_NOT_CONNECTED)
     return
   }
 
@@ -58,7 +57,7 @@ export const handle_send_prompt = async (params: {
   const active_path = active_editor?.document.uri.fsPath
 
   if (is_in_code_completions_mode && !active_editor) {
-    vscode.window.showWarningMessage('No editor is open.')
+    vscode.window.showWarningMessage(DICTIONARY.NO_EDITOR_OPEN)
     return
   }
 
@@ -392,7 +391,9 @@ async function resolve_presets(params: {
           !preset.promptPrefix &&
           !preset.promptSuffix
         ) {
-          vscode.window.showWarningMessage('Type something to use this preset.')
+          vscode.window.showWarningMessage(
+            DICTIONARY.TYPE_SOMETHING_TO_USE_PRESET
+          )
         }
         return []
       }
@@ -443,7 +444,7 @@ async function resolve_presets(params: {
         )
         if (any_disabled_due_to_instructions) {
           vscode.window.showWarningMessage(
-            'Some presets were not run due to missing instructions.'
+            DICTIONARY.PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS
           )
         }
       }
@@ -459,13 +460,11 @@ async function resolve_presets(params: {
           !p.promptSuffix
       )
       if (any_disabled_due_to_instructions) {
-        vscode.window.showWarningMessage('Type something to use this group.')
+        vscode.window.showWarningMessage(DICTIONARY.TYPE_SOMETHING_TO_USE_GROUP)
         return []
       }
     }
-    vscode.window.showWarningMessage(
-      'The chosen group has no selected presets to run.'
-    )
+    vscode.window.showWarningMessage(DICTIONARY.GROUP_HAS_NO_SELECTED_PRESETS)
     return []
   } else {
     // Both preset_name and group_name are undefined.
@@ -496,7 +495,7 @@ async function resolve_presets(params: {
                 !preset.promptSuffix
               ) {
                 vscode.window.showWarningMessage(
-                  'Type something to use this preset.'
+                  DICTIONARY.TYPE_SOMETHING_TO_USE_PRESET
                 )
               }
             } else {
@@ -559,7 +558,7 @@ async function resolve_presets(params: {
                 !preset.promptSuffix
               ) {
                 vscode.window.showWarningMessage(
-                  'Type something to use this preset.'
+                  DICTIONARY.TYPE_SOMETHING_TO_USE_PRESET
                 )
               }
             } else {
@@ -803,7 +802,7 @@ async function resolve_presets(params: {
               )
               if (any_disabled_due_to_instructions) {
                 vscode.window.showWarningMessage(
-                  'Some presets were not run due to missing instructions.'
+                  DICTIONARY.PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS
                 )
               }
             }
@@ -828,7 +827,7 @@ async function resolve_presets(params: {
               }
             } else {
               vscode.window.showWarningMessage(
-                'The chosen group has no selected presets to run.'
+                DICTIONARY.GROUP_HAS_NO_SELECTED_PRESETS
               )
             }
           }
@@ -870,7 +869,9 @@ async function resolve_presets(params: {
           !preset.promptPrefix &&
           !preset.promptSuffix
         ) {
-          vscode.window.showWarningMessage('Type something to use this preset.')
+          vscode.window.showWarningMessage(
+            DICTIONARY.TYPE_SOMETHING_TO_USE_PRESET
+          )
         }
         return []
       }

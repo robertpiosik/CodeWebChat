@@ -20,6 +20,7 @@ import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '@/const
 import { Diff } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { review, code_review_promise_resolve } from './utils/review'
+import { DICTIONARY } from '@/constants/dictionary'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 
@@ -208,9 +209,7 @@ const get_intelligent_update_config = async (
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(
-      'API provider for the selected API tool configuration was not found.'
-    )
+    vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
     Logger.warn({
       function_name: 'get_intelligent_update_config',
       message: 'API provider not found for Intelligent Update API tool.'
@@ -396,9 +395,7 @@ export const apply_chat_response_command = (
         }
 
         if (!chat_response) {
-          vscode.window.showErrorMessage(
-            'No response text provided and clipboard is empty.'
-          )
+          vscode.window.showErrorMessage(DICTIONARY.NO_RESPONSE_TEXT)
           Logger.warn({
             function_name: 'apply_chat_response_command',
             message: 'Clipboard is empty.'
@@ -423,7 +420,7 @@ export const apply_chat_response_command = (
             !vscode.workspace.workspaceFolders ||
             vscode.workspace.workspaceFolders.length == 0
           ) {
-            vscode.window.showErrorMessage('No workspace folder open.')
+            vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
             return null
           }
           const workspace_map = new Map<string, string>()
@@ -500,7 +497,7 @@ export const apply_chat_response_command = (
 
         if (clipboard_content.type == 'patches' && clipboard_content.patches) {
           if (!vscode.workspace.workspaceFolders?.length) {
-            vscode.window.showErrorMessage('No workspace folder open.')
+            vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
             return null
           }
 
@@ -711,7 +708,7 @@ export const apply_chat_response_command = (
         } else {
           if (!clipboard_content.files || clipboard_content.files.length == 0) {
             vscode.window.showWarningMessage(
-              'Unable to find valid code blocks in the clipboard.'
+              DICTIONARY.NO_VALID_CODE_BLOCKS_IN_CLIPBOARD
             )
             return null
           }

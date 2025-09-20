@@ -137,9 +137,7 @@ const get_edit_context_config = async (
             selected.config.provider_name
           )
           if (!provider) {
-            vscode.window.showErrorMessage(
-              'API provider for the selected API tool configuration was not found.'
-            )
+            vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
             resolve(undefined)
             return
           }
@@ -167,9 +165,7 @@ const get_edit_context_config = async (
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(
-      'API provider for the selected API tool configuration was not found.'
-    )
+    vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
     Logger.warn({
       function_name: 'get_edit_context_config',
       message: 'API provider not found for Edit Context tool.'
@@ -208,7 +204,9 @@ const perform_context_editing = async (params: {
   } else {
     const initial_context = await files_collector.collect_files({})
     if (!initial_context) {
-      vscode.window.showWarningMessage('Unable to work with empty context.')
+      vscode.window.showWarningMessage(
+        DICTIONARY.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
+      )
       return
     }
 
@@ -227,7 +225,7 @@ const perform_context_editing = async (params: {
       input_box.onDidAccept(() => {
         const value = input_box.value.trim()
         if (value.length === 0) {
-          vscode.window.showErrorMessage('Instruction cannot be empty')
+          vscode.window.showErrorMessage(DICTIONARY.INSTRUCTION_CANNOT_BE_EMPTY)
           return
         }
         resolve(value)
@@ -278,7 +276,9 @@ const perform_context_editing = async (params: {
   })
 
   if (!collected_files) {
-    vscode.window.showWarningMessage('Unable to work with empty context.')
+    vscode.window.showWarningMessage(
+      DICTIONARY.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
+    )
     return
   }
 
@@ -297,9 +297,7 @@ const perform_context_editing = async (params: {
   const { provider, config: edit_context_config } = config_result
 
   if (!provider.api_key) {
-    vscode.window.showErrorMessage(
-      'API key is missing. Please add it in the Settings tab.'
-    )
+    vscode.window.showErrorMessage(DICTIONARY.API_KEY_MISSING)
     return
   }
 
@@ -410,9 +408,7 @@ const perform_context_editing = async (params: {
       message: 'refactor task error',
       data: error
     })
-    vscode.window.showErrorMessage(
-      'An error occurred during refactor task. See console for details.'
-    )
+    vscode.window.showErrorMessage(DICTIONARY.REFACTOR_ERROR)
   } finally {
     params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
     params.view_provider.api_call_cancel_token_source = null

@@ -9,6 +9,7 @@ import {
   LAST_CONTEXT_SAVE_LOCATION_STATE_KEY
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
+import { DICTIONARY } from '@/constants/dictionary'
 
 function condense_paths(
   paths: string[],
@@ -196,7 +197,7 @@ export function save_context_command(
     async () => {
       if (!workspace_provider) {
         vscode.window.showErrorMessage(
-          'Workspace provider is not available. Cannot save context.'
+          DICTIONARY.WORKSPACE_PROVIDER_NOT_AVAILABLE_CANNOT_SAVE_CONTEXT
         )
         return
       }
@@ -204,16 +205,14 @@ export function save_context_command(
       const workspace_root = workspace_provider.getWorkspaceRoot()
       if (!workspace_root) {
         vscode.window.showErrorMessage(
-          'No workspace folder found. Cannot save context.'
+          DICTIONARY.NO_WORKSPACE_FOLDER_FOUND_CANNOT_SAVE_CONTEXT
         )
         return
       }
 
       const checked_files = workspace_provider.get_checked_files()
       if (checked_files.length == 0) {
-        vscode.window.showWarningMessage(
-          'There is nothing in your context to save.'
-        )
+        vscode.window.showWarningMessage(DICTIONARY.NOTHING_IN_CONTEXT_TO_SAVE)
         return
       }
 
@@ -374,7 +373,7 @@ export function save_context_command(
                   file_contexts = JSON.parse(content)
                   if (!Array.isArray(file_contexts)) {
                     vscode.window.showWarningMessage(
-                      `Contexts file is not a valid array. Starting with empty contexts list.`
+                      DICTIONARY.CONTEXTS_FILE_NOT_VALID_ARRAY
                     )
                     file_contexts = []
                   }
@@ -482,7 +481,9 @@ export function save_context_command(
             if (!context_name) {
               // This case should ideally not be reached if user didn't cancel,
               // but added for safety.
-              vscode.window.showErrorMessage('Context name was not provided.')
+              vscode.window.showErrorMessage(
+                DICTIONARY.CONTEXT_NAME_NOT_PROVIDED
+              )
               return
             }
 
@@ -616,7 +617,7 @@ export function save_context_command(
           if (!context_name) {
             // This case should ideally not be reached if user didn't cancel,
             // but added for safety.
-            vscode.window.showErrorMessage('Context name was not provided.')
+            vscode.window.showErrorMessage(DICTIONARY.CONTEXT_NAME_NOT_PROVIDED)
             return
           }
 

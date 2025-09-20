@@ -7,6 +7,7 @@ import { replace_saved_context_placeholder } from '@/utils/replace-saved-context
 import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
 import { Preset } from '@shared/types/preset'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
+import { DICTIONARY } from '@/constants/dictionary'
 
 export const handle_preview_preset = async (
   provider: ViewProvider,
@@ -132,7 +133,7 @@ export const handle_preview_preset = async (
       : pre_context_instructions
   } else {
     vscode.window.showWarningMessage(
-      'Cannot preview in code completion mode without an active editor.'
+      DICTIONARY.CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR
     )
     return
   }

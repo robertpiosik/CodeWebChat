@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '@/utils/path-sanitizer'
+import { DICTIONARY } from '@/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
@@ -62,7 +63,7 @@ export const create_file_if_needed = async (params: {
     !vscode.workspace.workspaceFolders ||
     vscode.workspace.workspaceFolders.length == 0
   ) {
-    vscode.window.showErrorMessage('No workspace folder open.')
+    vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
     Logger.warn({
       function_name: 'create_file_if_needed',
       message: 'No workspace folder open.'
@@ -277,7 +278,7 @@ export const undo_files = async (params: {
       !vscode.workspace.workspaceFolders ||
       vscode.workspace.workspaceFolders.length == 0
     ) {
-      vscode.window.showErrorMessage('No workspace folder open.')
+      vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
       Logger.warn({
         function_name: 'undo_files',
         message: 'No workspace folder open.'

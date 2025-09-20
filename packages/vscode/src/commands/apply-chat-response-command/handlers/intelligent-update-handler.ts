@@ -9,6 +9,7 @@ import { OriginalFileState } from '@/commands/apply-chat-response-command/types/
 import { ToolConfig } from '@/services/model-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { DICTIONARY } from '@/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
 
 export const handle_intelligent_update = async (params: {
@@ -32,7 +33,7 @@ export const handle_intelligent_update = async (params: {
 
   if (!default_workspace_path) {
     vscode.window.showErrorMessage(
-      'Cannot process multiple files without an open workspace folder.'
+      DICTIONARY.CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE
     )
     Logger.warn({
       function_name: 'handle_intelligent_update',
@@ -101,7 +102,9 @@ export const handle_intelligent_update = async (params: {
   }
 
   if (files.length == 0) {
-    vscode.window.showErrorMessage('No valid file content found in clipboard.')
+    vscode.window.showErrorMessage(
+      DICTIONARY.NO_VALID_FILE_CONTENT_IN_CLIPBOARD
+    )
     Logger.warn({
       function_name: 'handle_intelligent_update',
       message: 'No valid file content found in clipboard for multi-file mode.'
