@@ -4,6 +4,7 @@ import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersPage } from './pages/ModelProvidersPage'
 import { ApiToolConfigurationPage } from './pages/ApiToolConfigurationPage'
 import { use_settings_data } from './hooks/use-settings-data'
+import { DICTIONARY } from '@/constants/dictionary'
 
 type NavItem =
   | 'model-providers'
@@ -40,8 +41,8 @@ export const Settings = () => {
             vscode={vscode}
             configurations={settings_data_hook.code_completions_configs}
             set_configurations={settings_data_hook.set_code_completions_configs}
-            title="Code Completions"
-            subtitle="Get accurate code-at-cursor from state-of-the-art reasoning models."
+            title={DICTIONARY.CODE_COMPLETIONS_LABEL}
+            subtitle={DICTIONARY.CODE_COMPLETIONS_SUBTITLE}
             tool_name="CODE_COMPLETIONS"
             can_have_default={true}
           />
@@ -52,8 +53,8 @@ export const Settings = () => {
             vscode={vscode}
             configurations={settings_data_hook.edit_context_configs}
             set_configurations={settings_data_hook.set_edit_context_configs}
-            title="Edit Context"
-            subtitle="Modify files based on natural language instructions."
+            title={DICTIONARY.EDIT_CONTEXT_LABEL}
+            subtitle={DICTIONARY.EDIT_CONTEXT_SUBTITLE}
             tool_name="EDIT_CONTEXT"
             can_have_default={false}
           />
@@ -66,8 +67,8 @@ export const Settings = () => {
             set_configurations={
               settings_data_hook.set_intelligent_update_configs
             }
-            title="Intelligent Update"
-            subtitle="Integrate truncated code blocks and fix malformed diffs."
+            title={DICTIONARY.INTELLIGENT_UPDATE_LABEL}
+            subtitle={DICTIONARY.INTELLIGENT_UPDATE_SUBTITLE}
             tool_name="INTELLIGENT_UPDATE"
             can_have_default={true}
           />
@@ -78,25 +79,25 @@ export const Settings = () => {
             vscode={vscode}
             configurations={settings_data_hook.commit_messages_configs}
             set_configurations={settings_data_hook.set_commit_messages_configs}
-            title="Commit Messages"
-            subtitle="Generate meaningful summaries of changes adhering to your style."
+            title={DICTIONARY.COMMIT_MESSAGES_LABEL}
+            subtitle={DICTIONARY.COMMIT_MESSAGES_SUBTITLE}
             tool_name="COMMIT_MESSAGES"
             can_have_default={true}
           />
         )
       default:
-        return <div>Select a setting from the sidebar.</div>
+        return <div>{DICTIONARY.SELECT_SETTING_FROM_SIDEBAR}</div>
     }
   }
 
   return (
     <Layout
-      title="Settings"
+      title={DICTIONARY.SETTINGS_TITLE}
       sidebar={
         <>
           <NavigationItem
             key="model-providers"
-            label="Model Providers"
+            label={DICTIONARY.MODEL_PROVIDERS_LABEL}
             codicon="key"
             is_active={active_item == 'model-providers'}
             on_click={() => handle_nav_click('model-providers')}
