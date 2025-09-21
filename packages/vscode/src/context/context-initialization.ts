@@ -135,7 +135,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
       if (context_text == '') {
         vscode.window.showWarningMessage(
-          dictionary.NO_FILES_OR_WEBSITES_SELECTED
+          dictionary.warning_message.NO_FILES_OR_WEBSITES_SELECTED
         )
         return
       }
@@ -153,7 +153,9 @@ export function context_initialization(context: vscode.ExtensionContext): {
         const checked_files = open_editors_provider.get_checked_files()
 
         if (checked_files.length === 0) {
-          vscode.window.showWarningMessage(dictionary.NO_OPEN_EDITORS_SELECTED)
+          vscode.window.showWarningMessage(
+            dictionary.warning_message.NO_OPEN_EDITORS_SELECTED
+          )
           return
         }
 

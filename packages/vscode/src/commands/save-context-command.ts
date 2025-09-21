@@ -197,7 +197,8 @@ export function save_context_command(
     async () => {
       if (!workspace_provider) {
         vscode.window.showErrorMessage(
-          dictionary.WORKSPACE_PROVIDER_NOT_AVAILABLE_CANNOT_SAVE_CONTEXT
+          dictionary.warning_message
+            .WORKSPACE_PROVIDER_NOT_AVAILABLE_CANNOT_SAVE_CONTEXT
         )
         return
       }
@@ -205,14 +206,17 @@ export function save_context_command(
       const workspace_root = workspace_provider.getWorkspaceRoot()
       if (!workspace_root) {
         vscode.window.showErrorMessage(
-          dictionary.NO_WORKSPACE_FOLDER_FOUND_CANNOT_SAVE_CONTEXT
+          dictionary.warning_message
+            .NO_WORKSPACE_FOLDER_FOUND_CANNOT_SAVE_CONTEXT
         )
         return
       }
 
       const checked_files = workspace_provider.get_checked_files()
       if (checked_files.length == 0) {
-        vscode.window.showWarningMessage(dictionary.NOTHING_IN_CONTEXT_TO_SAVE)
+        vscode.window.showWarningMessage(
+          dictionary.warning_message.NOTHING_IN_CONTEXT_TO_SAVE
+        )
         return
       }
 
@@ -373,7 +377,7 @@ export function save_context_command(
                   file_contexts = JSON.parse(content)
                   if (!Array.isArray(file_contexts)) {
                     vscode.window.showWarningMessage(
-                      dictionary.CONTEXTS_FILE_NOT_VALID_ARRAY
+                      dictionary.warning_message.CONTEXTS_FILE_NOT_VALID_ARRAY
                     )
                     file_contexts = []
                   }

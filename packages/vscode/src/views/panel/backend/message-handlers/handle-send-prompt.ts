@@ -33,7 +33,9 @@ export const handle_send_prompt = async (params: {
     params.provider.home_view_type === HOME_VIEW_TYPES.WEB &&
     !params.provider.websocket_server_instance.is_connected_with_browser()
   ) {
-    vscode.window.showWarningMessage(dictionary.BROWSER_EXTENSION_NOT_CONNECTED)
+    vscode.window.showWarningMessage(
+      dictionary.warning_message.BROWSER_EXTENSION_NOT_CONNECTED
+    )
     return
   }
 
@@ -57,7 +59,7 @@ export const handle_send_prompt = async (params: {
   const active_path = active_editor?.document.uri.fsPath
 
   if (is_in_code_completions_mode && !active_editor) {
-    vscode.window.showWarningMessage(dictionary.NO_EDITOR_OPEN)
+    vscode.window.showWarningMessage(dictionary.warning_message.NO_EDITOR_OPEN)
     return
   }
 
@@ -392,7 +394,7 @@ async function resolve_presets(params: {
           !preset.promptSuffix
         ) {
           vscode.window.showWarningMessage(
-            dictionary.TYPE_SOMETHING_TO_USE_PRESET
+            dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
           )
         }
         return []
@@ -444,7 +446,8 @@ async function resolve_presets(params: {
         )
         if (any_disabled_due_to_instructions) {
           vscode.window.showWarningMessage(
-            dictionary.PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS
+            dictionary.warning_message
+              .PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS
           )
         }
       }
@@ -460,11 +463,15 @@ async function resolve_presets(params: {
           !p.promptSuffix
       )
       if (any_disabled_due_to_instructions) {
-        vscode.window.showWarningMessage(dictionary.TYPE_SOMETHING_TO_USE_GROUP)
+        vscode.window.showWarningMessage(
+          dictionary.warning_message.TYPE_SOMETHING_TO_USE_GROUP
+        )
         return []
       }
     }
-    vscode.window.showWarningMessage(dictionary.GROUP_HAS_NO_SELECTED_PRESETS)
+    vscode.window.showWarningMessage(
+      dictionary.warning_message.GROUP_HAS_NO_SELECTED_PRESETS
+    )
     return []
   } else {
     // Both preset_name and group_name are undefined.
@@ -495,7 +502,7 @@ async function resolve_presets(params: {
                 !preset.promptSuffix
               ) {
                 vscode.window.showWarningMessage(
-                  dictionary.TYPE_SOMETHING_TO_USE_PRESET
+                  dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
                 )
               }
             } else {
@@ -558,7 +565,7 @@ async function resolve_presets(params: {
                 !preset.promptSuffix
               ) {
                 vscode.window.showWarningMessage(
-                  dictionary.TYPE_SOMETHING_TO_USE_PRESET
+                  dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
                 )
               }
             } else {
@@ -802,7 +809,8 @@ async function resolve_presets(params: {
               )
               if (any_disabled_due_to_instructions) {
                 vscode.window.showWarningMessage(
-                  dictionary.PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS
+                  dictionary.warning_message
+                    .PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS
                 )
               }
             }
@@ -818,16 +826,16 @@ async function resolve_presets(params: {
                 )
               if (any_disabled_due_to_instructions) {
                 vscode.window.showWarningMessage(
-                  dictionary.TYPE_SOMETHING_TO_USE_GROUP
+                  dictionary.warning_message.TYPE_SOMETHING_TO_USE_GROUP
                 )
               } else {
                 vscode.window.showWarningMessage(
-                  'The chosen group has no selected presets to run.'
+                  dictionary.warning_message.GROUP_HAS_NO_SELECTED_PRESETS
                 )
               }
             } else {
               vscode.window.showWarningMessage(
-                dictionary.GROUP_HAS_NO_SELECTED_PRESETS
+                dictionary.warning_message.GROUP_HAS_NO_SELECTED_PRESETS
               )
             }
           }
@@ -870,7 +878,7 @@ async function resolve_presets(params: {
           !preset.promptSuffix
         ) {
           vscode.window.showWarningMessage(
-            dictionary.TYPE_SOMETHING_TO_USE_PRESET
+            dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
           )
         }
         return []

@@ -358,7 +358,7 @@ export const undo_files = async (params: {
               data: { error: err, file_path: state.file_path }
             })
             vscode.window.showWarningMessage(
-              `Could not delete file: ${state.file_path}.`
+              dictionary.warning_message.COULD_NOT_DELETE_FILE(state.file_path)
             )
           }
         }
@@ -398,7 +398,9 @@ export const undo_files = async (params: {
               data: { error: err, file_path: state.file_path }
             })
             vscode.window.showWarningMessage(
-              `Could not recreate file: ${state.file_path}.`
+              dictionary.warning_message.COULD_NOT_RECREATE_FILE(
+                state.file_path
+              )
             )
           }
         } else {
@@ -440,7 +442,9 @@ export const undo_files = async (params: {
             })
             console.error(`Error undoing file ${state.file_path}:`, err)
             vscode.window.showWarningMessage(
-              `Could not undo file: ${state.file_path}. It might have been closed or deleted.`
+              dictionary.warning_message.COULD_NOT_UNDO_FILE_MAYBE_CLOSED(
+                state.file_path
+              )
             )
           }
         }

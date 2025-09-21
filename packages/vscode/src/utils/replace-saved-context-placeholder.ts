@@ -109,7 +109,7 @@ export const replace_saved_context_placeholder = async (params: {
 
     if (!saved_context) {
       vscode.window.showWarningMessage(
-        `Saved context "${name}" from ${source} not found.`
+        dictionary.warning_message.SAVED_CONTEXT_NOT_FOUND(name, source)
       )
       replacements.set(full_match, '')
       continue
@@ -149,7 +149,7 @@ export const replace_saved_context_placeholder = async (params: {
 
     if (resolved_paths.length == 0) {
       vscode.window.showWarningMessage(
-        `No valid paths found in context "${name}".`
+        dictionary.warning_message.NO_VALID_PATHS_IN_CONTEXT(name)
       )
       replacements.set(full_match, '')
       continue

@@ -44,7 +44,8 @@ export const handle_copy_prompt = async (params: {
     !active_editor.selection.isEmpty
   ) {
     vscode.window.showWarningMessage(
-      dictionary.CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION
+      dictionary.warning_message
+        .CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION
     )
     return
   }
@@ -88,7 +89,8 @@ export const handle_copy_prompt = async (params: {
 
     if (params.provider.web_mode == 'edit-context' && !context_text) {
       vscode.window.showWarningMessage(
-        dictionary.CANNOT_COPY_PROMPT_IN_EDIT_CONTEXT_WITHOUT_CONTEXT
+        dictionary.warning_message
+          .CANNOT_COPY_PROMPT_IN_EDIT_CONTEXT_WITHOUT_CONTEXT
       )
       return
     }
@@ -145,7 +147,8 @@ export const handle_copy_prompt = async (params: {
     vscode.env.clipboard.writeText(text.trim())
   } else {
     vscode.window.showWarningMessage(
-      dictionary.CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR
+      dictionary.warning_message
+        .CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR
     )
     return
   }

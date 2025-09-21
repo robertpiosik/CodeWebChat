@@ -150,7 +150,7 @@ async function apply_saved_context(
 
   if (existing_paths.length == 0) {
     vscode.window.showWarningMessage(
-      `No valid paths found in context "${context.name}".`
+      dictionary.warning_message.NO_VALID_PATHS_IN_CONTEXT(context.name)
     )
     return
   }
@@ -644,7 +644,9 @@ export function apply_context_command(
               if (event.button === delete_button) {
                 is_showing_dialog = true
                 const confirm_delete = await vscode.window.showWarningMessage(
-                  `Are you sure you want to delete context "${item.context.name}"?`,
+                  dictionary.warning_message.CONFIRM_DELETE_CONTEXT(
+                    item.context.name
+                  ),
                   { modal: true },
                   'Delete'
                 )

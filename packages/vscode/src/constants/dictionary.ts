@@ -67,42 +67,71 @@ export const dictionary = {
       'No "Edit Context" configurations found. Please add one in the settings.'
   },
 
-  // Warning messages
-  NO_VALID_CODE_BLOCKS_IN_CLIPBOARD:
-    'Unable to find valid code blocks in the clipboard.',
-  CODE_COMPLETIONS_NO_SELECTION:
-    'Code completions are not supported with active text selection.',
-  CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE:
-    'Cannot reference file outside of the workspace.',
-  WORKSPACE_PROVIDER_NOT_AVAILABLE_CANNOT_SAVE_CONTEXT:
-    'Workspace provider is not available. Cannot save context.',
-  NO_WORKSPACE_FOLDER_FOUND_CANNOT_SAVE_CONTEXT:
-    'No workspace folder found. Cannot save context.',
-  NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
-  CONTEXTS_FILE_NOT_VALID_ARRAY:
-    'Contexts file is not a valid array. Starting with empty contexts list.',
-  NO_FILES_OR_WEBSITES_SELECTED: 'No files or websites selected or open.',
-  NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
-  NO_EDITOR_OPEN: 'No editor is open.',
-  CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION:
-    'Cannot copy prompt in code completion mode with an active selection.',
-  CANNOT_COPY_PROMPT_IN_EDIT_CONTEXT_WITHOUT_CONTEXT:
-    'Cannot copy prompt in edit context mode without any context. Please add files to the context.',
-  CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR:
-    'Cannot copy prompt in code completion mode without an active editor.',
-  UNABLE_TO_WORK_WITH_EMPTY_CONTEXT: 'Unable to work with empty context.',
-  CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR:
-    'Cannot preview in code completion mode without an active editor.',
-  BROWSER_EXTENSION_NOT_CONNECTED:
-    'Browser extension is not connected. Please install or reload it.',
-  TYPE_SOMETHING_TO_USE_PRESET: 'Type something to use this preset.',
-  PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS:
-    'Some presets were not run due to missing instructions.',
-  TYPE_SOMETHING_TO_USE_GROUP: 'Type something to use this group.',
-  GROUP_HAS_NO_SELECTED_PRESETS:
-    'The chosen group has no selected presets to run.',
-  NO_MODEL_PROVIDERS_CONFIGURED:
-    'No model providers configured. Please add a model provider first on the "Model Providers" page.',
+  warning_message: {
+    REVIEW_ONGOING_DISCARD:
+      'A review is currently ongoing. Would you like to discard it?',
+    SKIPPING_INVALID_PATH: (file_path: string) =>
+      `Skipping applying change to invalid path: ${file_path}`,
+    NO_VALID_CODE_BLOCKS_IN_CLIPBOARD:
+      'Unable to find valid code blocks in the clipboard.',
+    CODE_COMPLETIONS_NO_SELECTION:
+      'Code completions are not supported with active text selection.',
+    CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE:
+      'Cannot reference file outside of the workspace.',
+    WORKSPACE_PROVIDER_NOT_AVAILABLE_CANNOT_SAVE_CONTEXT:
+      'Workspace provider is not available. Cannot save context.',
+    NO_WORKSPACE_FOLDER_FOUND_CANNOT_SAVE_CONTEXT:
+      'No workspace folder found. Cannot save context.',
+    NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
+    CONTEXTS_FILE_NOT_VALID_ARRAY:
+      'Contexts file is not a valid array. Starting with empty contexts list.',
+    NO_FILES_OR_WEBSITES_SELECTED: 'No files or websites selected or open.',
+    NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
+    NO_EDITOR_OPEN: 'No editor is open.',
+    CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION:
+      'Cannot copy prompt in code completion mode with an active selection.',
+    CANNOT_COPY_PROMPT_IN_EDIT_CONTEXT_WITHOUT_CONTEXT:
+      'Cannot copy prompt in edit context mode without any context. Please add files to the context.',
+    CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR:
+      'Cannot copy prompt in code completion mode without an active editor.',
+    UNABLE_TO_WORK_WITH_EMPTY_CONTEXT: 'Unable to work with empty context.',
+    CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR:
+      'Cannot preview in code completion mode without an active editor.',
+    BROWSER_EXTENSION_NOT_CONNECTED:
+      'Browser extension is not connected. Please install or reload it.',
+    TYPE_SOMETHING_TO_USE_PRESET: 'Type something to use this preset.',
+    PRESETS_NOT_RUN_DUE_TO_MISSING_INSTRUCTIONS:
+      'Some presets were not run due to missing instructions.',
+    TYPE_SOMETHING_TO_USE_GROUP: 'Type something to use this group.',
+    GROUP_HAS_NO_SELECTED_PRESETS:
+      'The chosen group has no selected presets to run.',
+    FAILED_TO_CREATE_FILE: (file_path: string) =>
+      `Failed to create file: ${file_path}`,
+    FAILED_TO_APPLY_CHANGES_TO_FILE: (file_path: string) =>
+      `Failed to apply changes to file: ${file_path}`,
+    COULD_NOT_DELETE_FILE: (file_path: string) =>
+      `Could not delete file: ${file_path}.`,
+    COULD_NOT_RECREATE_FILE: (file_path: string) =>
+      `Could not recreate file: ${file_path}.`,
+    COULD_NOT_UNDO_FILE_MAYBE_CLOSED: (file_path: string) =>
+      `Could not undo file: ${file_path}. It might have been closed or deleted.`,
+    NO_VALID_PATHS_IN_CONTEXT: (context_name: string) =>
+      `No valid paths found in context "${context_name}".`,
+    CONFIRM_DELETE_CONTEXT: (context_name: string) =>
+      `Are you sure you want to delete context "${context_name}"?`,
+    CONFIRM_DELETE_ITEM: (item_type: 'file' | 'folder') =>
+      `Are you sure you want to delete this ${item_type}?`,
+    SAVED_CONTEXT_NOT_FOUND: (name: string, source: string) =>
+      `Saved context "${name}" from ${source} not found.`,
+    CONFIRM_DELETE_CONFIGURATION: (model: string, provider: string) =>
+      `Are you sure you want to delete the configuration for model "${model}" provided by ${provider}?`,
+    CONFIRM_DELETE_MODEL_PROVIDER: (provider_name: string) =>
+      `Are you sure you want to delete the model provider "${provider_name}"?`,
+    NO_MODELS_FOUND_MANUAL_ENTRY: (provider_name: string) =>
+      `No models found for ${provider_name}. You can enter model name manually.`,
+    NO_MODEL_PROVIDERS_CONFIGURED:
+      'No model providers configured. Please add a model provider first on the "Model Providers" page.'
+  },
 
   settings: {
     SETTINGS_TITLE: 'Settings',

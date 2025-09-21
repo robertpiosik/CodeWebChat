@@ -209,7 +209,7 @@ const perform_context_editing = async (params: {
     const initial_context = await files_collector.collect_files({})
     if (!initial_context) {
       vscode.window.showWarningMessage(
-        dictionary.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
+        dictionary.warning_message.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
       )
       return
     }
@@ -283,7 +283,7 @@ const perform_context_editing = async (params: {
 
   if (!collected_files) {
     vscode.window.showWarningMessage(
-      dictionary.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
+      dictionary.warning_message.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
     )
     return
   }

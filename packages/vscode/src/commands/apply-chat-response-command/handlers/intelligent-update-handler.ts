@@ -419,7 +419,7 @@ export const handle_intelligent_update = async (params: {
           data: change.filePath
         })
         vscode.window.showWarningMessage(
-          `Skipping applying change to invalid path: ${change.filePath}`
+          dictionary.warning_message.SKIPPING_INVALID_PATH(change.filePath)
         )
         continue
       }
@@ -438,7 +438,7 @@ export const handle_intelligent_update = async (params: {
             data: change.filePath
           })
           vscode.window.showWarningMessage(
-            `Failed to create file: ${change.filePath}`
+            dictionary.warning_message.FAILED_TO_CREATE_FILE(change.filePath)
           )
         }
       } else {
@@ -470,7 +470,9 @@ export const handle_intelligent_update = async (params: {
             data: { error, file_path: change.filePath }
           })
           vscode.window.showWarningMessage(
-            `Failed to apply changes to file: ${change.filePath}`
+            dictionary.warning_message.FAILED_TO_APPLY_CHANGES_TO_FILE(
+              change.filePath
+            )
           )
         }
       }

@@ -6,6 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { DeleteCodeCompletionsConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_code_completions_configurations } from './handle-get-code-completions-configurations'
+import { dictionary } from '@/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
@@ -27,7 +28,10 @@ export const handle_delete_code_completions_configuration = async (
   if (!config_to_delete) return
 
   const confirmation = await vscode.window.showWarningMessage(
-    `Are you sure you want to delete the configuration for model "${config_to_delete.model}" provided by ${config_to_delete.provider_name}?`,
+    dictionary.warning_message.CONFIRM_DELETE_CONFIGURATION(
+      config_to_delete.model,
+      config_to_delete.provider_name
+    ),
     { modal: true },
     'Delete'
   )

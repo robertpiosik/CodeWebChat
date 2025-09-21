@@ -268,7 +268,9 @@ const perform_code_completion = async (params: {
   const editor = vscode.window.activeTextEditor
   if (editor) {
     if (!editor.selection.isEmpty) {
-      vscode.window.showWarningMessage(dictionary.CODE_COMPLETIONS_NO_SELECTION)
+      vscode.window.showWarningMessage(
+        dictionary.warning_message.CODE_COMPLETIONS_NO_SELECTION
+      )
       return
     }
     const cancel_token_source = axios.CancelToken.source()
@@ -404,7 +406,7 @@ const perform_code_completion = async (params: {
       })
     }
   } else {
-    vscode.window.showWarningMessage(dictionary.NO_EDITOR_OPEN)
+    vscode.window.showWarningMessage(dictionary.warning_message.NO_EDITOR_OPEN)
   }
 }
 

@@ -157,7 +157,9 @@ export const handle_edit_intelligent_update_configuration = async (
             }
           } else {
             vscode.window.showWarningMessage(
-              `No models found for ${provider_info.name}. You can enter model name manually.`
+              dictionary.warning_message.NO_MODELS_FOUND_MANUAL_ENTRY(
+                provider_info.name
+              )
             )
           }
         } catch (error) {

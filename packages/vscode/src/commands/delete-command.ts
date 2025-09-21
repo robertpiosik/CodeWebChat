@@ -17,7 +17,9 @@ export function delete_command() {
         const item_type = stats.type == vscode.FileType.File ? 'file' : 'folder'
 
         const result = await vscode.window.showWarningMessage(
-          `Are you sure you want to delete this ${item_type}?`,
+          dictionary.warning_message.CONFIRM_DELETE_ITEM(
+            item_type as 'file' | 'folder'
+          ),
           { modal: true },
           'Delete'
         )

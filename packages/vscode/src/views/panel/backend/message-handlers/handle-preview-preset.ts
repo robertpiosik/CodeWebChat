@@ -133,7 +133,8 @@ export const handle_preview_preset = async (
       : pre_context_instructions
   } else {
     vscode.window.showWarningMessage(
-      dictionary.CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR
+      dictionary.warning_message
+        .CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR
     )
     return
   }

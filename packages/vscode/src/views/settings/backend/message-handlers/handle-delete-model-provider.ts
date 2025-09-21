@@ -3,6 +3,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { DeleteModelProviderMessage } from '@/views/settings/types/messages'
 import { handle_get_model_providers } from './handle-get-model-providers'
+import { dictionary } from '@/constants/dictionary'
 
 export const handle_delete_model_provider = async (
   provider: SettingsProvider,
@@ -12,7 +13,9 @@ export const handle_delete_model_provider = async (
   const provider_name_to_delete = message.provider_name
 
   const confirmation = await vscode.window.showWarningMessage(
-    `Are you sure you want to delete the model provider "${provider_name_to_delete}"?`,
+    dictionary.warning_message.CONFIRM_DELETE_MODEL_PROVIDER(
+      provider_name_to_delete
+    ),
     { modal: true },
     'Delete'
   )

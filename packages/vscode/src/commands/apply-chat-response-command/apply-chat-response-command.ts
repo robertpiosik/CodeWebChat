@@ -368,7 +368,7 @@ export const apply_chat_response_command = (
     }) => {
       if (code_review_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
-          'A review is currently ongoing. Would you like to discard it?',
+          dictionary.warning_message.REVIEW_ONGOING_DISCARD,
           { modal: true },
           'Apply Another Chat Response'
         )
@@ -719,7 +719,7 @@ export const apply_chat_response_command = (
         } else {
           if (!clipboard_content.files || clipboard_content.files.length == 0) {
             vscode.window.showWarningMessage(
-              dictionary.NO_VALID_CODE_BLOCKS_IN_CLIPBOARD
+              dictionary.warning_message.NO_VALID_CODE_BLOCKS_IN_CLIPBOARD
             )
             return null
           }

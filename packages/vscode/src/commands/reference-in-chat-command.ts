@@ -24,7 +24,7 @@ export function reference_in_chat_command(
 
       if (!workspace_root) {
         vscode.window.showWarningMessage(
-          dictionary.CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE
+          dictionary.warning_message.CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE
         )
         return
       }

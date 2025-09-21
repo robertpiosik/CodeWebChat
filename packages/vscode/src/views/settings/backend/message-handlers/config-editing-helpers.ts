@@ -18,7 +18,9 @@ export const initial_select_provider = async (
   const providers = await providers_manager.get_providers()
 
   if (providers.length == 0) {
-    vscode.window.showWarningMessage(dictionary.NO_MODEL_PROVIDERS_CONFIGURED)
+    vscode.window.showWarningMessage(
+      dictionary.warning_message.NO_MODEL_PROVIDERS_CONFIGURED
+    )
     return
   }
 
