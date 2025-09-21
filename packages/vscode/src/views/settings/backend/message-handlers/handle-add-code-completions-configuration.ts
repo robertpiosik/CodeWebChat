@@ -111,7 +111,9 @@ export const handle_add_code_completions_configuration = async (
 
   const configs = await providers_manager.get_code_completions_tool_configs()
   if (configs.some((c) => generate_id(c) === generate_id(config_to_add))) {
-    vscode.window.showWarningMessage(DICTIONARY.CONFIGURATION_ALREADY_EXISTS)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.CONFIGURATION_ALREADY_EXISTS
+    )
     return
   }
 

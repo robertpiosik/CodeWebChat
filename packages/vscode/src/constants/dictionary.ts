@@ -80,7 +80,6 @@ export const DICTIONARY = {
   NOTHING_IN_CONTEXT_TO_SAVE: 'There is nothing in your context to save.',
   CONTEXTS_FILE_NOT_VALID_ARRAY:
     'Contexts file is not a valid array. Starting with empty contexts list.',
-  CONTEXT_NAME_NOT_PROVIDED: 'Context name was not provided.',
   NO_FILES_OR_WEBSITES_SELECTED: 'No files or websites selected or open.',
   NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
   NO_EDITOR_OPEN: 'No editor is open.',
@@ -222,6 +221,7 @@ export const DICTIONARY = {
     FAILED_TO_RENAME: (message: string) => `Failed to rename: ${message}`,
     ERROR_SAVING_CONTEXT_TO_FILE: (message: string) =>
       `Error saving context to file: ${message}`,
+    CONTEXT_NAME_NOT_PROVIDED: 'Context name was not provided.',
     ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE: (message: string) =>
       `Error saving context to Workspace State: ${message}`,
     ERROR_COLLECTING_FILES_AND_WEBSITES: (message: string) =>
