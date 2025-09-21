@@ -1,6 +1,7 @@
 import { Website } from '@shared/types/websocket-message'
 import * as vscode from 'vscode'
 import { CONTEXT_CHECKED_URLS_STATE_KEY } from '../../constants/state-keys'
+import { display_token_count } from '../../utils/display-token-count'
 
 export class WebsiteItem extends vscode.TreeItem {
   public readonly token_count: number
@@ -17,11 +18,7 @@ export class WebsiteItem extends vscode.TreeItem {
 
     const content_xml = `<document title="${title}">\n<![CDATA[\n${content}\n]]>\n</document>\n`
     this.token_count = Math.floor(content_xml.length / 4)
-    const formatted_token_count =
-      this.token_count >= 1000
-        ? `${Math.floor(this.token_count / 1000)}k`
-        : `${this.token_count}`
-
+    const formatted_token_count = display_token_count(this.token_count)
     this.tooltip = `${title} - About ${formatted_token_count} tokens`
     this.description = formatted_token_count
 

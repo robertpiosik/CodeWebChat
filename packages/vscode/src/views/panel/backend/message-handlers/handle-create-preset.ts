@@ -14,14 +14,12 @@ export const handle_create_preset = async (
   const create_option = await vscode.window.showQuickPick(
     [
       {
-        id: 'preset',
-        label: '$(add) Preset',
+        label: 'Preset',
         description: 'Placed at the top of the list',
         detail: 'Custom chatbot configuration with prompt prefix/suffix.'
       },
       {
-        id: 'group',
-        label: '$(add) Group',
+        label: 'Group',
         description: 'Placed at the bottom of the list',
         detail:
           'Simultaneous initializations of selected presets, shared preffix/suffix.'
@@ -47,7 +45,7 @@ export const handle_create_preset = async (
   }
 
   let new_preset: ConfigPresetFormat
-  if (create_option.id == 'preset') {
+  if (create_option.label == 'Preset') {
     new_preset = {
       name: new_name,
       chatbot: 'AI Studio',
@@ -62,7 +60,7 @@ export const handle_create_preset = async (
   }
 
   const updated_presets =
-    create_option.id == 'preset'
+    create_option.label == 'Preset'
       ? [new_preset, ...current_presets]
       : [...current_presets, new_preset]
 
@@ -74,7 +72,7 @@ export const handle_create_preset = async (
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_CREATE_ITEM(create_option.id, error)
+      dictionary.error_message.FAILED_TO_CREATE_ITEM(create_option.label, error)
     )
   }
 }

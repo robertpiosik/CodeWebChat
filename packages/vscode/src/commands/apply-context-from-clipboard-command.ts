@@ -1,10 +1,11 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
-import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { extract_paths_from_text } from '../utils/path-parser'
 import { dictionary } from '@/constants/dictionary'
+import { display_token_count } from '../utils/display-token-count'
+import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 
 export function apply_context_from_clipboard_command(
   workspace_provider: WorkspaceProvider | undefined
@@ -98,10 +99,7 @@ export function apply_context_from_clipboard_command(
               file_path
             )
 
-            const formatted_token_count =
-              token_count >= 1000
-                ? `${Math.floor(token_count / 1000)}k`
-                : `${token_count}`
+            const formatted_token_count = display_token_count(token_count)
 
             return {
               label: path.basename(file_path),

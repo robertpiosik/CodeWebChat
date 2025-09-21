@@ -193,7 +193,7 @@ export const handle_intelligent_update_file_in_review = async (
           file_content: file_state.content,
           instruction: instructions,
           cancel_token: cancel_token_source.token,
-          on_chunk: (_, tokens_per_second, total_tokens) => {
+          on_chunk: (tokens_per_second, total_tokens) => {
             if (!has_started_receiving) {
               has_started_receiving = true
               clearInterval(wait_timer)

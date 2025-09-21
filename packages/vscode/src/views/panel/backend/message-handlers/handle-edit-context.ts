@@ -391,7 +391,7 @@ const perform_context_editing = async (params: {
       api_key: provider.api_key,
       body,
       cancellation_token: cancel_token_source.token,
-      on_chunk: (_, tokens_per_second) => {
+      on_chunk: (tokens_per_second) => {
         if (params.view_provider) {
           params.view_provider.send_message({
             command: 'SHOW_PROGRESS',

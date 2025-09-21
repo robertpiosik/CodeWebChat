@@ -3,11 +3,7 @@ import axios, { AxiosResponse } from 'axios'
 import { dictionary } from '@/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 
-type StreamCallback = (
-  formatted_total_tokens: string,
-  tokens_per_second: number,
-  total_tokens: number
-) => void
+type StreamCallback = (tokens_per_second: number, total_tokens: number) => void
 
 type InternalStreamCallback = (chunk: string) => void
 
@@ -196,15 +192,7 @@ export async function make_api_request(params: {
         const tokens_per_second =
           elapsed_seconds > 0 ? Math.round(total_tokens / elapsed_seconds) : 0
 
-        const formatted_total_tokens =
-          total_tokens >= 1000
-            ? `${(total_tokens / 1000).toFixed(1).replace(/\.0$/, '')}k`
-            : `${total_tokens}`
-        params.on_chunk!(
-          formatted_total_tokens,
-          tokens_per_second,
-          total_tokens
-        )
+        params.on_chunk!(tokens_per_second, total_tokens)
       }
     }
   }

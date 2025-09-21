@@ -20,6 +20,7 @@ import {
 import { GitRepository } from './git-repository-utils'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { dictionary } from '@/constants/dictionary'
+import { display_token_count } from './display-token-count'
 
 export interface FileData {
   path: string
@@ -317,12 +318,7 @@ const show_file_selection_dialog = async (params: {
   total_tokens: number
 }): Promise<FileData[] | undefined> => {
   const items = params.files_data.map((file) => {
-    const token_count = file.estimated_tokens
-    const formatted_token_count =
-      token_count >= 1000
-        ? `${Math.floor(token_count / 1000)}k`
-        : `${token_count}`
-
+    const formatted_token_count = display_token_count(file.estimated_tokens)
     const relative_path = path.dirname(file.relative_path)
 
     return {
@@ -337,15 +333,8 @@ const show_file_selection_dialog = async (params: {
   })
 
   const exceeded_by = params.total_tokens - params.threshold
-  const format_tokens = (tokens: number): string => {
-    if (tokens < 1000) {
-      return tokens.toString()
-    }
-    return `${Math.round(tokens / 1000)}k`
-  }
-  const formatted_total_tokens = format_tokens(params.total_tokens)
-  const formatted_exceeded_by = format_tokens(exceeded_by)
-
+  const formatted_total_tokens = display_token_count(params.total_tokens)
+  const formatted_exceeded_by = display_token_count(exceeded_by)
   vscode.window.showInformationMessage(
     `Total tokens in affected files: ${formatted_total_tokens}, exceeds threshold by ${formatted_exceeded_by}.`
   )
@@ -395,9 +384,7 @@ const generate_commit_message_with_api = async (params: {
   view_provider?: ViewProvider
 }): Promise<string | null> => {
   const token_count = Math.ceil(params.message.length / 4)
-  const formatted_token_count =
-    token_count > 1000 ? Math.ceil(token_count / 1000) + 'k' : token_count
-
+  const formatted_token_count = display_token_count(token_count)
   const messages = [
     {
       role: 'user',

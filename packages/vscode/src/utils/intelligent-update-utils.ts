@@ -190,11 +190,7 @@ export const process_file = async (params: {
   file_content: string
   instruction: string
   cancel_token?: CancelToken
-  on_chunk?: (
-    formatted_tokens: string,
-    tokens_per_second: number,
-    total_tokens: number
-  ) => void
+  on_chunk?: (tokens_per_second: number, total_tokens: number) => void
 }): Promise<string | null> => {
   Logger.info({
     function_name: 'process_file',

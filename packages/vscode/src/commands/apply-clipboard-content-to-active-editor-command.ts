@@ -84,7 +84,7 @@ export const apply_clipboard_content_to_active_editor_command = (
               file_content: original_content,
               instruction: clipboard_content,
               cancel_token: cancel_token_source.token,
-              on_chunk: (formatted_tokens, tokens_per_second, total_tokens) => {
+              on_chunk: (tokens_per_second, total_tokens) => {
                 if (estimated_total_tokens > 0) {
                   const current_progress = Math.min(
                     Math.round((total_tokens / estimated_total_tokens) * 100),
