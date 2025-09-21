@@ -41,8 +41,8 @@ export const Settings = () => {
             vscode={vscode}
             configurations={settings_data_hook.code_completions_configs}
             set_configurations={settings_data_hook.set_code_completions_configs}
-            title={DICTIONARY.CODE_COMPLETIONS_LABEL}
-            subtitle={DICTIONARY.CODE_COMPLETIONS_SUBTITLE}
+            title={DICTIONARY.settings.CODE_COMPLETIONS_LABEL}
+            subtitle={DICTIONARY.settings.CODE_COMPLETIONS_SUBTITLE}
             tool_name="CODE_COMPLETIONS"
             can_have_default={true}
           />
@@ -53,8 +53,8 @@ export const Settings = () => {
             vscode={vscode}
             configurations={settings_data_hook.edit_context_configs}
             set_configurations={settings_data_hook.set_edit_context_configs}
-            title={DICTIONARY.EDIT_CONTEXT_LABEL}
-            subtitle={DICTIONARY.EDIT_CONTEXT_SUBTITLE}
+            title={DICTIONARY.settings.EDIT_CONTEXT_LABEL}
+            subtitle={DICTIONARY.settings.EDIT_CONTEXT_SUBTITLE}
             tool_name="EDIT_CONTEXT"
             can_have_default={false}
           />
@@ -67,8 +67,8 @@ export const Settings = () => {
             set_configurations={
               settings_data_hook.set_intelligent_update_configs
             }
-            title={DICTIONARY.INTELLIGENT_UPDATE_LABEL}
-            subtitle={DICTIONARY.INTELLIGENT_UPDATE_SUBTITLE}
+            title={DICTIONARY.settings.INTELLIGENT_UPDATE_LABEL}
+            subtitle={DICTIONARY.settings.INTELLIGENT_UPDATE_SUBTITLE}
             tool_name="INTELLIGENT_UPDATE"
             can_have_default={true}
           />
@@ -79,25 +79,25 @@ export const Settings = () => {
             vscode={vscode}
             configurations={settings_data_hook.commit_messages_configs}
             set_configurations={settings_data_hook.set_commit_messages_configs}
-            title={DICTIONARY.COMMIT_MESSAGES_LABEL}
-            subtitle={DICTIONARY.COMMIT_MESSAGES_SUBTITLE}
+            title={DICTIONARY.settings.COMMIT_MESSAGES_LABEL}
+            subtitle={DICTIONARY.settings.COMMIT_MESSAGES_SUBTITLE}
             tool_name="COMMIT_MESSAGES"
             can_have_default={true}
           />
         )
       default:
-        return <div>{DICTIONARY.SELECT_SETTING_FROM_SIDEBAR}</div>
+        return <div>{DICTIONARY.settings.SELECT_SETTING_FROM_SIDEBAR}</div>
     }
   }
 
   return (
     <Layout
-      title={DICTIONARY.SETTINGS_TITLE}
+      title={DICTIONARY.settings.SETTINGS_TITLE}
       sidebar={
         <>
           <NavigationItem
             key="model-providers"
-            label={DICTIONARY.MODEL_PROVIDERS_LABEL}
+            label={DICTIONARY.settings.MODEL_PROVIDERS_LABEL}
             codicon="key"
             is_active={active_item == 'model-providers'}
             on_click={() => handle_nav_click('model-providers')}

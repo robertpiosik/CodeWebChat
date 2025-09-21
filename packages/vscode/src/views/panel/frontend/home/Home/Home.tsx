@@ -6,6 +6,7 @@ import { Donations } from '@ui/components/editor/Donations'
 import { Icon } from '@ui/components/editor/Icon'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
+import { DICTIONARY } from '@/constants/dictionary'
 
 type Props = {
   is_active: boolean
@@ -35,17 +36,19 @@ export const Home: React.FC<Props> = (props) => {
               <div className={styles['top__header__home']}>
                 <span className="codicon codicon-home" />
               </div>
-              <span className={styles['top__header__text']}>Home</span>
+              <span className={styles['top__header__text']}>
+                {DICTIONARY.home.header}
+              </span>
             </div>
             <div className={styles['top__enter-buttons']}>
               <Enter
-                label="Open View: New chat"
-                description="Send prompt with a free chatbot"
+                label={DICTIONARY.home.new_chat_label}
+                description={DICTIONARY.home.new_chat_description}
                 on_click={props.on_new_chat}
               />
               <Enter
-                label="Open View: API call"
-                description="Send prompt with an API provider"
+                label={DICTIONARY.home.api_call_label}
+                description={DICTIONARY.home.api_call_description}
                 on_click={props.on_api_call}
               />
               <div className={styles['top__donations']}>
@@ -70,14 +73,16 @@ export const Home: React.FC<Props> = (props) => {
             <div className={styles.bottom__version}>{props.version}</div>
             <div className={styles.bottom__links}>
               <div>
-                Released under the{' '}
+                {DICTIONARY.home.license_prefix}{' '}
                 <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                  GPL-3.0 license
+                  {DICTIONARY.home.license_link_text}
                 </a>
               </div>
               <div>
                 Copyright © {new Date().getFullYear()}{' '}
-                <a href="https://x.com/robertpiosik">Robert Piosik</a>
+                <a href="https://x.com/robertpiosik">
+                  {DICTIONARY.home.author}
+                </a>
               </div>
             </div>
           </div>
@@ -88,7 +93,7 @@ export const Home: React.FC<Props> = (props) => {
         <div className={styles.footer__social}>
           <a
             href="https://x.com/CodeWebChat"
-            title="Follow on X"
+            title={DICTIONARY.home.follow_x}
             className={cn(
               styles.footer__social__icon,
               styles['footer__social__icon--x']
@@ -98,7 +103,7 @@ export const Home: React.FC<Props> = (props) => {
           </a>
           <a
             href="https://www.reddit.com/r/CodeWebChat/"
-            title="Join subreddit"
+            title={DICTIONARY.home.join_reddit}
             className={cn(
               styles.footer__social__icon,
               styles['footer__social__icon--reddit']
@@ -108,7 +113,7 @@ export const Home: React.FC<Props> = (props) => {
           </a>
           <a
             href="https://discord.gg/KJySXsrSX5"
-            title="Join Discord server"
+            title={DICTIONARY.home.join_discord}
             className={cn(
               styles.footer__social__icon,
               styles['footer__social__icon--discord']
@@ -119,7 +124,7 @@ export const Home: React.FC<Props> = (props) => {
         </div>
 
         <div className={styles.footer__website}>
-          <a href="https://codeweb.chat/">Documentation</a>
+          <a href="https://codeweb.chat/">{DICTIONARY.home.documentation}</a>
         </div>
       </div>
     </div>

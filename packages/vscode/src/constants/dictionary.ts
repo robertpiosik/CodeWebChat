@@ -261,35 +261,55 @@ export const DICTIONARY = {
   MODEL_PROVIDER_NOT_FOUND_BY_NAME: (name: string) =>
     `Model provider "${name}" not found.`,
 
-  // Settings
-  SETTINGS_TITLE: 'Settings',
-  MODEL_PROVIDERS_LABEL: 'Model Providers',
-  CODE_COMPLETIONS_LABEL: 'Code Completions',
-  CODE_COMPLETIONS_SUBTITLE:
-    'Get accurate code-at-cursor from state-of-the-art reasoning models.',
-  EDIT_CONTEXT_LABEL: 'Edit Context',
-  EDIT_CONTEXT_SUBTITLE: 'Modify files based on natural language instructions.',
-  INTELLIGENT_UPDATE_LABEL: 'Intelligent Update',
-  INTELLIGENT_UPDATE_SUBTITLE:
-    'Integrate truncated code blocks and fix malformed diffs.',
-  COMMIT_MESSAGES_LABEL: 'Commit Messages',
-  COMMIT_MESSAGES_SUBTITLE:
-    'Generate meaningful summaries of changes adhering to your style.',
-  SELECT_SETTING_FROM_SIDEBAR: 'Select a setting from the sidebar.',
-  ADD_MODEL_PROVIDER_NAME_TITLE: 'Model Provider Name',
-  ADD_MODEL_PROVIDER_NAME_PROMPT: 'Enter a name for the custom model provider',
-  NAME_IS_REQUIRED: 'Name is required',
-  PROVIDER_WITH_NAME_ALREADY_EXISTS: 'A provider with this name already exists',
-  BASE_URL_TITLE: 'Base URL',
-  BASE_URL_PROMPT: 'Enter base URL for the model provider',
-  BASE_URL_IS_REQUIRED: 'Base URL is required',
-  MODEL_API_KEY_TITLE: 'Model API Key',
-  MODEL_API_KEY_PROMPT: 'Enter your model API key',
-  API_KEY_IS_REQUIRED: 'API key is required',
-  CUSTOM_ENDPOINT_LABEL: '$(edit) Custom endpoint...',
-  CUSTOM_ENDPOINT_DESCRIPTION: 'You can use any OpenAI-API compatible provider',
-  PREDEFINED_ENDPOINTS_LABEL: 'Predefined endpoints',
-  ADD_NEW_MODEL_PROVIDER_TITLE: 'Add New Model Provider',
-  ADD_NEW_MODEL_PROVIDER_PLACEHOLDER:
-    'Choose a predefined provider or create a custom one'
+  settings: {
+    SETTINGS_TITLE: 'Settings',
+    MODEL_PROVIDERS_LABEL: 'Model Providers',
+    CODE_COMPLETIONS_LABEL: 'Code Completions',
+    CODE_COMPLETIONS_SUBTITLE:
+      'Get accurate code-at-cursor from state-of-the-art reasoning models.',
+    EDIT_CONTEXT_LABEL: 'Edit Context',
+    EDIT_CONTEXT_SUBTITLE:
+      'Modify files based on natural language instructions.',
+    INTELLIGENT_UPDATE_LABEL: 'Intelligent Update',
+    INTELLIGENT_UPDATE_SUBTITLE:
+      'Integrate truncated code blocks and fix malformed diffs.',
+    COMMIT_MESSAGES_LABEL: 'Commit Messages',
+    COMMIT_MESSAGES_SUBTITLE:
+      'Generate meaningful summaries of changes adhering to your style.',
+    SELECT_SETTING_FROM_SIDEBAR: 'Select a setting from the sidebar.',
+    ADD_MODEL_PROVIDER_NAME_TITLE: 'Model Provider Name',
+    ADD_MODEL_PROVIDER_NAME_PROMPT:
+      'Enter a name for the custom model provider',
+    NAME_IS_REQUIRED: 'Name is required',
+    PROVIDER_WITH_NAME_ALREADY_EXISTS:
+      'A provider with this name already exists',
+    BASE_URL_TITLE: 'Base URL',
+    BASE_URL_PROMPT: 'Enter base URL for the model provider',
+    BASE_URL_IS_REQUIRED: 'Base URL is required',
+    MODEL_API_KEY_TITLE: 'Model API Key',
+    MODEL_API_KEY_PROMPT: 'Enter your model API key',
+    API_KEY_IS_REQUIRED: 'API key is required',
+    CUSTOM_ENDPOINT_LABEL: '$(edit) Custom endpoint...',
+    CUSTOM_ENDPOINT_DESCRIPTION:
+      'You can use any OpenAI-API compatible provider',
+    PREDEFINED_ENDPOINTS_LABEL: 'Predefined endpoints',
+    ADD_NEW_MODEL_PROVIDER_TITLE: 'Add New Model Provider',
+    ADD_NEW_MODEL_PROVIDER_PLACEHOLDER:
+      'Choose a predefined provider or create a custom one'
+  },
+
+  home: {
+    header: 'Home',
+    new_chat_label: 'Open View: New chat',
+    new_chat_description: 'Send prompt with a free chatbot',
+    api_call_label: 'Open View: API call',
+    api_call_description: 'Send prompt with an API provider',
+    license_prefix: 'Released under the',
+    license_link_text: 'GPL-3.0 license',
+    author: 'Robert Piosik',
+    follow_x: 'Follow on X',
+    join_reddit: 'Join subreddit',
+    join_discord: 'Join Discord server',
+    documentation: 'Documentation'
+  }
 }

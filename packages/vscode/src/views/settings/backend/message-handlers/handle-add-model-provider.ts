@@ -19,16 +19,16 @@ export const handle_add_model_provider = async (
 
   const create_custom_provider = async (): Promise<boolean> => {
     const name = await vscode.window.showInputBox({
-      title: DICTIONARY.ADD_MODEL_PROVIDER_NAME_TITLE,
-      prompt: DICTIONARY.ADD_MODEL_PROVIDER_NAME_PROMPT,
+      title: DICTIONARY.settings.ADD_MODEL_PROVIDER_NAME_TITLE,
+      prompt: DICTIONARY.settings.ADD_MODEL_PROVIDER_NAME_PROMPT,
       validateInput: async (value) => {
-        if (!value.trim()) return DICTIONARY.NAME_IS_REQUIRED
+        if (!value.trim()) return DICTIONARY.settings.NAME_IS_REQUIRED
         if (
           (await providers_manager.get_providers()).some(
             (p) => p.type == 'custom' && p.name == value.trim()
           )
         ) {
-          return DICTIONARY.PROVIDER_WITH_NAME_ALREADY_EXISTS
+          return DICTIONARY.settings.PROVIDER_WITH_NAME_ALREADY_EXISTS
         }
         return null
       }
@@ -38,18 +38,18 @@ export const handle_add_model_provider = async (
     }
 
     const base_url = await vscode.window.showInputBox({
-      title: DICTIONARY.BASE_URL_TITLE,
-      prompt: DICTIONARY.BASE_URL_PROMPT,
+      title: DICTIONARY.settings.BASE_URL_TITLE,
+      prompt: DICTIONARY.settings.BASE_URL_PROMPT,
       validateInput: (value) =>
-        !value.trim() ? DICTIONARY.BASE_URL_IS_REQUIRED : null
+        !value.trim() ? DICTIONARY.settings.BASE_URL_IS_REQUIRED : null
     })
     if (base_url === undefined) {
       return await show_create_provider_quick_pick()
     }
 
     const api_key = await vscode.window.showInputBox({
-      title: DICTIONARY.MODEL_API_KEY_TITLE,
-      prompt: DICTIONARY.MODEL_API_KEY_PROMPT
+      title: DICTIONARY.settings.MODEL_API_KEY_TITLE,
+      prompt: DICTIONARY.settings.MODEL_API_KEY_PROMPT
     })
     if (api_key === undefined) {
       return await show_create_provider_quick_pick()
@@ -71,10 +71,10 @@ export const handle_add_model_provider = async (
     name: keyof typeof PROVIDERS
   ): Promise<boolean> => {
     const api_key = await vscode.window.showInputBox({
-      title: DICTIONARY.MODEL_API_KEY_TITLE,
-      prompt: DICTIONARY.MODEL_API_KEY_PROMPT,
+      title: DICTIONARY.settings.MODEL_API_KEY_TITLE,
+      prompt: DICTIONARY.settings.MODEL_API_KEY_PROMPT,
       validateInput: (value) =>
-        !value.trim() ? DICTIONARY.API_KEY_IS_REQUIRED : null
+        !value.trim() ? DICTIONARY.settings.API_KEY_IS_REQUIRED : null
     })
     if (api_key === undefined) {
       return await show_create_provider_quick_pick()
@@ -103,19 +103,19 @@ export const handle_add_model_provider = async (
       ([id]) => !saved_provider_names.includes(id as keyof typeof PROVIDERS)
     )
 
-    const custom_label = DICTIONARY.CUSTOM_ENDPOINT_LABEL
+    const custom_label = DICTIONARY.settings.CUSTOM_ENDPOINT_LABEL
 
     const items: vscode.QuickPickItem[] = [
       {
         label: custom_label,
-        description: DICTIONARY.CUSTOM_ENDPOINT_DESCRIPTION
+        description: DICTIONARY.settings.CUSTOM_ENDPOINT_DESCRIPTION
       },
       {
         label: '',
         kind: vscode.QuickPickItemKind.Separator
       },
       {
-        label: DICTIONARY.PREDEFINED_ENDPOINTS_LABEL,
+        label: DICTIONARY.settings.PREDEFINED_ENDPOINTS_LABEL,
         kind: vscode.QuickPickItemKind.Separator
       },
       ...available_built_in.map((built_in_provider) => ({
@@ -126,8 +126,9 @@ export const handle_add_model_provider = async (
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
-    quick_pick.title = DICTIONARY.ADD_NEW_MODEL_PROVIDER_TITLE
-    quick_pick.placeholder = DICTIONARY.ADD_NEW_MODEL_PROVIDER_PLACEHOLDER
+    quick_pick.title = DICTIONARY.settings.ADD_NEW_MODEL_PROVIDER_TITLE
+    quick_pick.placeholder =
+      DICTIONARY.settings.ADD_NEW_MODEL_PROVIDER_PLACEHOLDER
 
     return new Promise<boolean>((resolve) => {
       let is_accepted = false
