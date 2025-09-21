@@ -145,7 +145,7 @@ export function apply_context_from_clipboard_command(
         )
       } catch (error) {
         vscode.window.showErrorMessage(
-          DICTIONARY.FAILED_TO_SELECT_FILES_FROM_CLIPBOARD(
+          DICTIONARY.error_message.FAILED_TO_SELECT_FILES_FROM_CLIPBOARD(
             error instanceof Error ? error.message : String(error)
           )
         )

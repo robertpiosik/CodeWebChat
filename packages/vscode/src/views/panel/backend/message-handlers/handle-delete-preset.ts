@@ -78,7 +78,7 @@ export const handle_delete_preset = async (
     provider.send_presets_to_webview(webview_view.webview)
   } catch (error) {
     vscode.window.showErrorMessage(
-      DICTIONARY.FAILED_TO_DELETE_ITEM(item_type, error)
+      DICTIONARY.error_message.FAILED_TO_DELETE_ITEM(item_type, error)
     )
   }
 }

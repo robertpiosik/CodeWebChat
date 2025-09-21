@@ -335,13 +335,19 @@ export async function make_api_request(params: {
         })
         return null
       } else if (axios.isAxiosError(error) && error.response?.status == 429) {
-        vscode.window.showErrorMessage(DICTIONARY.API_RATE_LIMIT_EXCEEDED)
+        vscode.window.showErrorMessage(
+          DICTIONARY.error_message.API_RATE_LIMIT_EXCEEDED
+        )
       } else if (axios.isAxiosError(error) && error.response?.status == 503) {
-        vscode.window.showErrorMessage(DICTIONARY.API_ENDPOINT_UNAVAILABLE)
+        vscode.window.showErrorMessage(
+          DICTIONARY.error_message.API_ENDPOINT_UNAVAILABLE
+        )
       } else if (axios.isAxiosError(error) && error.response?.status == 401) {
-        vscode.window.showErrorMessage(DICTIONARY.API_INVALID_KEY)
+        vscode.window.showErrorMessage(DICTIONARY.error_message.API_INVALID_KEY)
       } else {
-        vscode.window.showErrorMessage(DICTIONARY.API_REQUEST_FAILED)
+        vscode.window.showErrorMessage(
+          DICTIONARY.error_message.API_REQUEST_FAILED
+        )
       }
       Logger.error({
         function_name: 'make_api_request',

@@ -273,13 +273,17 @@ export function apply_context_command(
         show_main_menu = false
 
         if (!workspace_provider) {
-          vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_PROVIDER)
+          vscode.window.showErrorMessage(
+            DICTIONARY.error_message.NO_WORKSPACE_PROVIDER
+          )
           return
         }
 
         const workspace_root = workspace_provider.getWorkspaceRoot()
         if (!workspace_root) {
-          vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_ROOT)
+          vscode.window.showErrorMessage(
+            DICTIONARY.error_message.NO_WORKSPACE_ROOT
+          )
           return
         }
 
@@ -312,7 +316,7 @@ export function apply_context_command(
           }
         } catch (error: any) {
           vscode.window.showErrorMessage(
-            DICTIONARY.ERROR_READING_CONTEXTS_FILE(error.message)
+            DICTIONARY.error_message.ERROR_READING_CONTEXTS_FILE(error.message)
           )
           console.error('Error reading contexts file:', error)
         }
@@ -597,7 +601,7 @@ export function apply_context_command(
                         name_to_highlight = trimmed_name
                       } catch (error: any) {
                         vscode.window.showErrorMessage(
-                          DICTIONARY.ERROR_UPDATING_CONTEXT_NAME_IN_FILE(
+                          DICTIONARY.error_message.ERROR_UPDATING_CONTEXT_NAME_IN_FILE(
                             error.message
                           )
                         )
@@ -699,7 +703,7 @@ export function apply_context_command(
                       }
                     } catch (error: any) {
                       vscode.window.showErrorMessage(
-                        DICTIONARY.ERROR_DELETING_CONTEXT_FROM_FILE(
+                        DICTIONARY.error_message.ERROR_DELETING_CONTEXT_FROM_FILE(
                           error.message
                         )
                       )
@@ -737,7 +741,9 @@ export function apply_context_command(
 
           if (!context_to_apply) {
             vscode.window.showErrorMessage(
-              DICTIONARY.COULD_NOT_FIND_SELECTED_CONTEXT(selected.label)
+              DICTIONARY.error_message.COULD_NOT_FIND_SELECTED_CONTEXT(
+                selected.label
+              )
             )
             console.error(
               'Could not find selected context after potential edits:',
@@ -756,7 +762,9 @@ export function apply_context_command(
           on_context_selected()
         } catch (error: any) {
           vscode.window.showErrorMessage(
-            DICTIONARY.ERROR_SELECTING_SAVED_CONTEXT(error.message)
+            DICTIONARY.error_message.ERROR_SELECTING_SAVED_CONTEXT(
+              error.message
+            )
           )
           console.error('Error selecting saved context:', error)
         }

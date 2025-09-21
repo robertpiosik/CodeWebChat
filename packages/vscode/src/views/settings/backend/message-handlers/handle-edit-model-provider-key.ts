@@ -21,7 +21,7 @@ export const handle_change_model_provider_key = async (
 
   if (!provider_to_update) {
     vscode.window.showErrorMessage(
-      DICTIONARY.PROVIDER_NOT_FOUND_BY_NAME(provider_name)
+      DICTIONARY.error_message.PROVIDER_NOT_FOUND_BY_NAME(provider_name)
     )
     return
   }

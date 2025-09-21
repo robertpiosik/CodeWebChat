@@ -19,7 +19,9 @@ export function get_git_repository(
 ): GitRepository | null {
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) {
-    vscode.window.showErrorMessage(DICTIONARY.GIT_EXTENSION_NOT_FOUND)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.GIT_EXTENSION_NOT_FOUND
+    )
     return null
   }
 
@@ -27,7 +29,9 @@ export function get_git_repository(
   const repositories = git_api.repositories
 
   if (!repositories || repositories.length === 0) {
-    vscode.window.showErrorMessage(DICTIONARY.NO_GIT_REPOSITORY_FOUND)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.NO_GIT_REPOSITORY_FOUND
+    )
     return null
   }
 
@@ -45,7 +49,9 @@ export function get_git_repository(
   if (!repository) {
     repository = repositories[0]
     if (!repository) {
-      vscode.window.showErrorMessage(DICTIONARY.REPOSITORY_NOT_FOUND)
+      vscode.window.showErrorMessage(
+        DICTIONARY.error_message.REPOSITORY_NOT_FOUND
+      )
       return null
     }
   }

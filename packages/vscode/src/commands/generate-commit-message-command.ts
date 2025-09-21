@@ -36,7 +36,7 @@ export const generate_commit_message_command = (
           data: error
         })
         vscode.window.showErrorMessage(
-          DICTIONARY.ERROR_GENERATING_COMMIT_MESSAGE
+          DICTIONARY.error_message.ERROR_GENERATING_COMMIT_MESSAGE
         )
       }
     }

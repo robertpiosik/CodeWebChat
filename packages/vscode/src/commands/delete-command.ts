@@ -45,7 +45,7 @@ export function delete_command() {
         })
       } catch (error: any) {
         vscode.window.showErrorMessage(
-          DICTIONARY.FAILED_TO_DELETE(error.message)
+          DICTIONARY.error_message.FAILED_TO_DELETE(error.message)
         )
       }
     }

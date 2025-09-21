@@ -181,7 +181,9 @@ export const get_commit_message_config = async (
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_FOR_CONFIG_NOT_FOUND)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
+    )
     Logger.warn({
       function_name: 'get_commit_message_config',
       message: 'API provider not found for Commit Messages tool.'
@@ -190,7 +192,9 @@ export const get_commit_message_config = async (
   }
 
   if (!provider.api_key) {
-    vscode.window.showErrorMessage(DICTIONARY.API_KEY_MISSING_FOR_PROVIDER)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.API_KEY_MISSING_FOR_PROVIDER
+    )
     return null
   }
 
@@ -434,7 +438,7 @@ const generate_commit_message_with_api = async (params: {
 
       if (!response) {
         vscode.window.showErrorMessage(
-          DICTIONARY.FAILED_TO_GENERATE_COMMIT_MESSAGE
+          DICTIONARY.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
         )
         return null
       } else {
@@ -486,7 +490,7 @@ const generate_commit_message_with_api = async (params: {
 
           if (!response) {
             vscode.window.showErrorMessage(
-              DICTIONARY.FAILED_TO_GENERATE_COMMIT_MESSAGE
+              DICTIONARY.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
             )
             return null
           } else {

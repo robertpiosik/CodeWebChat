@@ -46,7 +46,7 @@ export const handle_go_to_file_in_review = async (
       data: { file_path, workspace_name }
     })
     vscode.window.showErrorMessage(
-      DICTIONARY.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
+      DICTIONARY.error_message.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
     )
     return
   }
@@ -62,6 +62,8 @@ export const handle_go_to_file_in_review = async (
       message: `Could not open file: ${file_path}`,
       data: { error, file_uri: file_uri.toString() }
     })
-    vscode.window.showErrorMessage(DICTIONARY.COULD_NOT_OPEN_FILE(file_path))
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.COULD_NOT_OPEN_FILE(file_path)
+    )
   }
 }

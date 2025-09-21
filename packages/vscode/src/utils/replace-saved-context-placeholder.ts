@@ -96,7 +96,7 @@ export const replace_saved_context_placeholder = async (params: {
 
     const workspace_root = params.workspace_provider.getWorkspaceRoot()
     if (!workspace_root) {
-      vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_ROOT)
+      vscode.window.showErrorMessage(DICTIONARY.error_message.NO_WORKSPACE_ROOT)
       continue
     }
 

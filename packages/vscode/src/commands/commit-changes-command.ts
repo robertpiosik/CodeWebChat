@@ -59,7 +59,9 @@ export const commit_changes_command = (
             message: 'Error committing changes',
             data: commit_error
           })
-          vscode.window.showErrorMessage(DICTIONARY.FAILED_TO_COMMIT_CHANGES)
+          vscode.window.showErrorMessage(
+            DICTIONARY.error_message.FAILED_TO_COMMIT_CHANGES
+          )
         }
       } catch (error) {
         Logger.error({
@@ -67,7 +69,9 @@ export const commit_changes_command = (
           message: 'Error in commit changes command',
           data: error
         })
-        vscode.window.showErrorMessage(DICTIONARY.ERROR_COMMITTING_CHANGES)
+        vscode.window.showErrorMessage(
+          DICTIONARY.error_message.ERROR_COMMITTING_CHANGES
+        )
       }
     }
   )

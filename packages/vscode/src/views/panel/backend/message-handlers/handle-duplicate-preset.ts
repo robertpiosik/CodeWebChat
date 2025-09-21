@@ -17,7 +17,9 @@ export const handle_duplicate_preset = async (
 
   const preset_to_duplicate = current_presets.find((p) => p.name == preset_name)
   if (!preset_to_duplicate) {
-    vscode.window.showErrorMessage(DICTIONARY.PRESET_NOT_FOUND(preset_name))
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.PRESET_NOT_FOUND(preset_name)
+    )
     return
   }
 
@@ -60,6 +62,8 @@ export const handle_duplicate_preset = async (
     await config.update(presets_config_key, updated_presets, true)
     provider.send_presets_to_webview(webview_view.webview)
   } catch (error) {
-    vscode.window.showErrorMessage(DICTIONARY.FAILED_TO_DUPLICATE_PRESET(error))
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.FAILED_TO_DUPLICATE_PRESET(error)
+    )
   }
 }

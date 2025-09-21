@@ -63,7 +63,9 @@ export const create_file_if_needed = async (params: {
     !vscode.workspace.workspaceFolders ||
     vscode.workspace.workspaceFolders.length == 0
   ) {
-    vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+    )
     Logger.warn({
       function_name: 'create_file_if_needed',
       message: 'No workspace folder open.'
@@ -95,7 +97,7 @@ export const create_file_if_needed = async (params: {
 
   if (!safe_path) {
     vscode.window.showErrorMessage(
-      DICTIONARY.INVALID_FILE_PATH_TRAVERSAL(params.file_path)
+      DICTIONARY.error_message.INVALID_FILE_PATH_TRAVERSAL(params.file_path)
     )
     Logger.error({
       function_name: 'create_file_if_needed',
@@ -121,7 +123,7 @@ export const create_file_if_needed = async (params: {
         data: { directory, error }
       })
       vscode.window.showErrorMessage(
-        DICTIONARY.FAILED_TO_CREATE_DIRECTORY(directory)
+        DICTIONARY.error_message.FAILED_TO_CREATE_DIRECTORY(directory)
       )
       return false
     }
@@ -141,7 +143,9 @@ export const create_file_if_needed = async (params: {
       message: 'Failed to write file',
       data: { safe_path, error }
     })
-    vscode.window.showErrorMessage(DICTIONARY.FAILED_TO_WRITE_FILE(safe_path))
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.FAILED_TO_WRITE_FILE(safe_path)
+    )
   }
   return false
 }
@@ -280,7 +284,9 @@ export const undo_files = async (params: {
       !vscode.workspace.workspaceFolders ||
       vscode.workspace.workspaceFolders.length == 0
     ) {
-      vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
+      vscode.window.showErrorMessage(
+        DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+      )
       Logger.warn({
         function_name: 'undo_files',
         message: 'No workspace folder open.'
@@ -454,7 +460,9 @@ export const undo_files = async (params: {
     })
     console.error('Error during undo:', error)
     vscode.window.showErrorMessage(
-      DICTIONARY.FAILED_TO_UNDO_CHANGES(error.message || 'Unknown error')
+      DICTIONARY.error_message.FAILED_TO_UNDO_CHANGES(
+        error.message || 'Unknown error'
+      )
     )
     return false
   }

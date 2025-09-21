@@ -30,7 +30,7 @@ export const handle_pick_open_router_model = async (
   } catch (error) {
     console.error('Error fetching Open Router models:', error)
     vscode.window.showErrorMessage(
-      DICTIONARY.FAILED_TO_FETCH_OPEN_ROUTER_MODELS
+      DICTIONARY.error_message.FAILED_TO_FETCH_OPEN_ROUTER_MODELS
     )
   }
 }

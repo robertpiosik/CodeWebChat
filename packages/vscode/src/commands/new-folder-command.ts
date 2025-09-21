@@ -18,7 +18,9 @@ export function new_folder_command() {
         ) {
           parent_path = vscode.workspace.workspaceFolders[0].uri.fsPath
         } else {
-          vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
+          vscode.window.showErrorMessage(
+            DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+          )
           return
         }
       }
@@ -33,7 +35,7 @@ export function new_folder_command() {
 
       if (!parent_path) {
         vscode.window.showErrorMessage(
-          DICTIONARY.COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FOLDER
+          DICTIONARY.error_message.COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FOLDER
         )
         return
       }
@@ -62,7 +64,7 @@ export function new_folder_command() {
 
         if (!new_folder_path) {
           vscode.window.showErrorMessage(
-            DICTIONARY.INVALID_FOLDER_NAME(folder_name)
+            DICTIONARY.error_message.INVALID_FOLDER_NAME(folder_name)
           )
           return
         }
@@ -70,7 +72,9 @@ export function new_folder_command() {
         try {
           await vscode.workspace.fs.stat(vscode.Uri.file(new_folder_path))
           vscode.window.showErrorMessage(
-            DICTIONARY.FOLDER_ALREADY_EXISTS(path.basename(new_folder_path))
+            DICTIONARY.error_message.FOLDER_ALREADY_EXISTS(
+              path.basename(new_folder_path)
+            )
           )
           return
         } catch {
@@ -82,7 +86,7 @@ export function new_folder_command() {
         )
       } catch (error: any) {
         vscode.window.showErrorMessage(
-          DICTIONARY.FAILED_TO_CREATE_FOLDER(error.message)
+          DICTIONARY.error_message.FAILED_TO_CREATE_FOLDER(error.message)
         )
       }
     }

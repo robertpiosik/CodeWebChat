@@ -182,7 +182,7 @@ const get_intelligent_update_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              DICTIONARY.API_PROVIDER_FOR_CONFIG_NOT_FOUND
+              DICTIONARY.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
             )
             resolve(undefined)
             return
@@ -209,7 +209,9 @@ const get_intelligent_update_config = async (
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+    )
     Logger.warn({
       function_name: 'get_intelligent_update_config',
       message: 'API provider not found for Intelligent Update API tool.'
@@ -395,7 +397,9 @@ export const apply_chat_response_command = (
         }
 
         if (!chat_response) {
-          vscode.window.showErrorMessage(DICTIONARY.NO_RESPONSE_TEXT)
+          vscode.window.showErrorMessage(
+            DICTIONARY.error_message.NO_RESPONSE_TEXT
+          )
           Logger.warn({
             function_name: 'apply_chat_response_command',
             message: 'Clipboard is empty.'
@@ -420,7 +424,9 @@ export const apply_chat_response_command = (
             !vscode.workspace.workspaceFolders ||
             vscode.workspace.workspaceFolders.length == 0
           ) {
-            vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
+            vscode.window.showErrorMessage(
+              DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+            )
             return null
           }
           const workspace_map = new Map<string, string>()
@@ -442,7 +448,7 @@ export const apply_chat_response_command = (
           )
           if (!safe_path || !fs.existsSync(safe_path)) {
             vscode.window.showErrorMessage(
-              DICTIONARY.FILE_NOT_FOUND(completion.file_path)
+              DICTIONARY.error_message.FILE_NOT_FOUND(completion.file_path)
             )
             Logger.warn({
               function_name: 'apply_chat_response_command',
@@ -464,7 +470,7 @@ export const apply_chat_response_command = (
             char_index > document.lineAt(line_index).text.length
           ) {
             vscode.window.showErrorMessage(
-              DICTIONARY.INVALID_POSITION_FOR_CODE_COMPLETION(
+              DICTIONARY.error_message.INVALID_POSITION_FOR_CODE_COMPLETION(
                 completion.file_path
               )
             )
@@ -499,7 +505,9 @@ export const apply_chat_response_command = (
 
         if (clipboard_content.type == 'patches' && clipboard_content.patches) {
           if (!vscode.workspace.workspaceFolders?.length) {
-            vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
+            vscode.window.showErrorMessage(
+              DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+            )
             return null
           }
 
@@ -669,7 +677,8 @@ export const apply_chat_response_command = (
               })
 
               const response = await vscode.window.showErrorMessage(
-                DICTIONARY.ERROR_DURING_INTELLIGENT_UPDATE_FIX_ATTEMPT,
+                DICTIONARY.error_message
+                  .ERROR_DURING_INTELLIGENT_UPDATE_FIX_ATTEMPT,
                 'Keep changes',
                 'Undo'
               )

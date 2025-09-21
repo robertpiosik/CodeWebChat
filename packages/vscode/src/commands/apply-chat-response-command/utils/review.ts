@@ -283,7 +283,9 @@ export const review = async (params: {
   rejected_states: OriginalFileState[]
 } | null> => {
   if (!vscode.workspace.workspaceFolders?.length) {
-    vscode.window.showErrorMessage(DICTIONARY.NO_WORKSPACE_FOLDER_OPEN)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+    )
     return null
   }
 

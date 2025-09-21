@@ -33,7 +33,9 @@ export const handle_edit_edit_context_configuration = async (
   )
 
   if (config_index == -1) {
-    vscode.window.showErrorMessage(DICTIONARY.CONFIGURATION_NOT_FOUND)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.CONFIGURATION_NOT_FOUND
+    )
     return
   }
 
@@ -138,7 +140,9 @@ export const handle_edit_edit_context_configuration = async (
       new_id !== message.configuration_id &&
       configs.some((c) => generate_id(c) === new_id)
     ) {
-      vscode.window.showErrorMessage(DICTIONARY.CONFIGURATION_ALREADY_EXISTS)
+      vscode.window.showErrorMessage(
+        DICTIONARY.error_message.CONFIGURATION_ALREADY_EXISTS
+      )
       return await show_quick_pick()
     }
 

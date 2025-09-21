@@ -21,7 +21,7 @@ export const handle_rename_model_provider = async (
 
   if (!provider_to_rename) {
     vscode.window.showErrorMessage(
-      DICTIONARY.MODEL_PROVIDER_NOT_FOUND_BY_NAME(old_name)
+      DICTIONARY.error_message.MODEL_PROVIDER_NOT_FOUND_BY_NAME(old_name)
     )
     return
   }

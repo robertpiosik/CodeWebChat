@@ -464,7 +464,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             data: { message, error }
           })
           vscode.window.showErrorMessage(
-            DICTIONARY.ERROR_HANDLING_MESSAGE(error.message)
+            DICTIONARY.error_message.ERROR_HANDLING_MESSAGE(error.message)
           )
         }
       }
@@ -548,7 +548,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           data: error
         })
         vscode.window.showErrorMessage(
-          DICTIONARY.ERROR_CALCULATING_TOKEN_COUNT(error.message)
+          DICTIONARY.error_message.ERROR_CALCULATING_TOKEN_COUNT(error.message)
         )
         this.send_message({
           command: 'TOKEN_COUNT_UPDATED',

@@ -189,7 +189,9 @@ const get_code_completion_config = async (
             selected.config.provider_name
           )
           if (!provider) {
-            vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
+            vscode.window.showErrorMessage(
+              DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+            )
             resolve(undefined)
             return
           }
@@ -215,7 +217,9 @@ const get_code_completion_config = async (
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+    )
     Logger.warn({
       function_name: 'get_code_completion_config',
       message: 'API provider not found for Code Completions tool.'
@@ -278,7 +282,7 @@ const perform_code_completion = async (params: {
 
   if (!code_completions_config.provider_name) {
     vscode.window.showErrorMessage(
-      DICTIONARY.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
+      DICTIONARY.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
       function_name: 'perform_code_completion',
@@ -287,7 +291,7 @@ const perform_code_completion = async (params: {
     return
   } else if (!code_completions_config.model) {
     vscode.window.showErrorMessage(
-      DICTIONARY.MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
+      DICTIONARY.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
       function_name: 'perform_code_completion',
@@ -301,7 +305,7 @@ const perform_code_completion = async (params: {
     const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
     if (!provider_info) {
       vscode.window.showErrorMessage(
-        DICTIONARY.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
+        DICTIONARY.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
       )
       Logger.warn({
         function_name: 'perform_code_completion',
@@ -315,7 +319,7 @@ const perform_code_completion = async (params: {
   }
 
   if (!provider.api_key) {
-    vscode.window.showErrorMessage(DICTIONARY.API_KEY_MISSING)
+    vscode.window.showErrorMessage(DICTIONARY.error_message.API_KEY_MISSING)
     return
   }
 

@@ -131,7 +131,7 @@ export const apply_clipboard_content_to_active_editor_command = (
         )
       } else {
         vscode.window.showErrorMessage(
-          DICTIONARY.FAILED_TO_APPLY_CLIPBOARD_CONTENT
+          DICTIONARY.error_message.FAILED_TO_APPLY_CLIPBOARD_CONTENT
         )
       }
     }

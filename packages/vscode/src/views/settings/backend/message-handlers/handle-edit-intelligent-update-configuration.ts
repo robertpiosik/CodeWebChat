@@ -31,7 +31,9 @@ export const handle_edit_intelligent_update_configuration = async (
   )
 
   if (config_index == -1) {
-    vscode.window.showErrorMessage(DICTIONARY.CONFIGURATION_NOT_FOUND)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.CONFIGURATION_NOT_FOUND
+    )
     return
   }
 
@@ -105,7 +107,7 @@ export const handle_edit_intelligent_update_configuration = async (
         )
         if (!provider_from_manager) {
           vscode.window.showErrorMessage(
-            DICTIONARY.PROVIDER_NOT_FOUND(provider_info.name)
+            DICTIONARY.error_message.PROVIDER_NOT_FOUND(provider_info.name)
           )
           return await show_quick_pick()
         }
@@ -117,7 +119,9 @@ export const handle_edit_intelligent_update_configuration = async (
 
         if (!base_url) {
           vscode.window.showErrorMessage(
-            DICTIONARY.BASE_URL_NOT_FOUND_FOR_PROVIDER(provider_info.name)
+            DICTIONARY.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
+              provider_info.name
+            )
           )
           return await show_quick_pick()
         }
@@ -172,7 +176,7 @@ export const handle_edit_intelligent_update_configuration = async (
             )
           } else {
             vscode.window.showErrorMessage(
-              DICTIONARY.FAILED_TO_FETCH_MODELS(
+              DICTIONARY.error_message.FAILED_TO_FETCH_MODELS(
                 error instanceof Error ? error.message : String(error)
               )
             )
@@ -269,7 +273,9 @@ export const handle_edit_intelligent_update_configuration = async (
       new_id !== message.configuration_id &&
       configs.some((c) => generate_id(c) === new_id)
     ) {
-      vscode.window.showErrorMessage(DICTIONARY.CONFIGURATION_ALREADY_EXISTS)
+      vscode.window.showErrorMessage(
+        DICTIONARY.error_message.CONFIGURATION_ALREADY_EXISTS
+      )
       return await show_quick_pick()
     }
 

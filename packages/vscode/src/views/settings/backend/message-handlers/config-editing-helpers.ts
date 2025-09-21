@@ -75,7 +75,7 @@ export const initial_select_model = async (
       )
     } else {
       vscode.window.showErrorMessage(
-        DICTIONARY.FAILED_TO_FETCH_MODELS(
+        DICTIONARY.error_message.FAILED_TO_FETCH_MODELS(
           error instanceof Error ? error.message : String(error)
         )
       )
@@ -120,7 +120,7 @@ export const edit_model_for_config = async (
   )
   if (!provider_from_manager) {
     vscode.window.showErrorMessage(
-      DICTIONARY.PROVIDER_NOT_FOUND(config.provider_name)
+      DICTIONARY.error_message.PROVIDER_NOT_FOUND(config.provider_name)
     )
     return undefined
   }
@@ -132,7 +132,9 @@ export const edit_model_for_config = async (
 
   if (!base_url) {
     vscode.window.showErrorMessage(
-      DICTIONARY.BASE_URL_NOT_FOUND_FOR_PROVIDER(config.provider_name)
+      DICTIONARY.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
+        config.provider_name
+      )
     )
     return undefined
   }
@@ -181,7 +183,7 @@ export const edit_model_for_config = async (
       )
     } else {
       vscode.window.showErrorMessage(
-        DICTIONARY.FAILED_TO_FETCH_MODELS(
+        DICTIONARY.error_message.FAILED_TO_FETCH_MODELS(
           error instanceof Error ? error.message : String(error)
         )
       )

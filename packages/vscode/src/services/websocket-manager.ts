@@ -79,7 +79,7 @@ export class WebSocketManager {
         data: error
       })
       vscode.window.showErrorMessage(
-        DICTIONARY.FAILED_TO_INITIALIZE_WEBSOCKET_SERVER(error)
+        DICTIONARY.error_message.FAILED_TO_INITIALIZE_WEBSOCKET_SERVER(error)
       )
     }
   }
@@ -186,7 +186,7 @@ export class WebSocketManager {
               this.should_reconnect = false
               this.client?.close()
               vscode.window.showErrorMessage(
-                DICTIONARY.CWC_UPDATED_RELOAD_WINDOW
+                DICTIONARY.error_message.CWC_UPDATED_RELOAD_WINDOW
               )
             }
           }

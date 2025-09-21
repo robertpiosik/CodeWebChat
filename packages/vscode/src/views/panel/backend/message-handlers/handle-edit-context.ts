@@ -137,7 +137,9 @@ const get_edit_context_config = async (
             selected.config.provider_name
           )
           if (!provider) {
-            vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
+            vscode.window.showErrorMessage(
+              DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+            )
             resolve(undefined)
             return
           }
@@ -165,7 +167,9 @@ const get_edit_context_config = async (
   )
 
   if (!provider) {
-    vscode.window.showErrorMessage(DICTIONARY.API_PROVIDER_NOT_FOUND)
+    vscode.window.showErrorMessage(
+      DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+    )
     Logger.warn({
       function_name: 'get_edit_context_config',
       message: 'API provider not found for Edit Context tool.'
@@ -225,7 +229,9 @@ const perform_context_editing = async (params: {
       input_box.onDidAccept(() => {
         const value = input_box.value.trim()
         if (value.length === 0) {
-          vscode.window.showErrorMessage(DICTIONARY.INSTRUCTION_CANNOT_BE_EMPTY)
+          vscode.window.showErrorMessage(
+            DICTIONARY.error_message.INSTRUCTION_CANNOT_BE_EMPTY
+          )
           return
         }
         resolve(value)
@@ -297,7 +303,7 @@ const perform_context_editing = async (params: {
   const { provider, config: edit_context_config } = config_result
 
   if (!provider.api_key) {
-    vscode.window.showErrorMessage(DICTIONARY.API_KEY_MISSING)
+    vscode.window.showErrorMessage(DICTIONARY.error_message.API_KEY_MISSING)
     return
   }
 
@@ -306,7 +312,7 @@ const perform_context_editing = async (params: {
     const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
     if (!provider_info) {
       vscode.window.showErrorMessage(
-        DICTIONARY.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
+        DICTIONARY.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
       )
       Logger.warn({
         function_name: 'perform_context_editing',
@@ -408,7 +414,7 @@ const perform_context_editing = async (params: {
       message: 'refactor task error',
       data: error
     })
-    vscode.window.showErrorMessage(DICTIONARY.REFACTOR_ERROR)
+    vscode.window.showErrorMessage(DICTIONARY.error_message.REFACTOR_ERROR)
   } finally {
     params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
     params.view_provider.api_call_cancel_token_source = null

@@ -47,7 +47,7 @@ const get_default_intelligent_update_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      DICTIONARY.API_PROVIDER_FOR_DEFAULT_CONFIG_NOT_FOUND
+      DICTIONARY.error_message.API_PROVIDER_FOR_DEFAULT_CONFIG_NOT_FOUND
     )
     return
   }
@@ -74,7 +74,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!original_states || !last_response) {
     vscode.window.showErrorMessage(
-      DICTIONARY.INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND
+      DICTIONARY.error_message.INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND
     )
     return
   }
@@ -85,7 +85,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!file_state) {
     vscode.window.showErrorMessage(
-      DICTIONARY.ORIGINAL_STATE_FOR_FILE_NOT_FOUND(file_name)
+      DICTIONARY.error_message.ORIGINAL_STATE_FOR_FILE_NOT_FOUND(file_name)
     )
     return
   }
@@ -116,7 +116,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!instructions) {
     vscode.window.showErrorMessage(
-      DICTIONARY.UPDATE_INSTRUCTIONS_FOR_FILE_NOT_FOUND(file_name)
+      DICTIONARY.error_message.UPDATE_INSTRUCTIONS_FOR_FILE_NOT_FOUND(file_name)
     )
     return
   }
@@ -247,7 +247,7 @@ export const handle_intelligent_update_file_in_review = async (
             data: { error, file_path }
           })
           vscode.window.showErrorMessage(
-            DICTIONARY.INTELLIGENT_UPDATE_FAILED_FOR_FILE(
+            DICTIONARY.error_message.INTELLIGENT_UPDATE_FAILED_FOR_FILE(
               file_name,
               error.message
             )

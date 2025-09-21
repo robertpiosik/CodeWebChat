@@ -482,7 +482,7 @@ export function save_context_command(
               // This case should ideally not be reached if user didn't cancel,
               // but added for safety.
               vscode.window.showErrorMessage(
-                DICTIONARY.CONTEXT_NAME_NOT_PROVIDED
+                DICTIONARY.error_message.CONTEXT_NAME_NOT_PROVIDED
               )
               return
             }
@@ -515,7 +515,9 @@ export function save_context_command(
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              DICTIONARY.ERROR_SAVING_CONTEXT_TO_FILE(error.message)
+              DICTIONARY.error_message.ERROR_SAVING_CONTEXT_TO_FILE(
+                error.message
+              )
             )
           }
         } else {
@@ -617,7 +619,9 @@ export function save_context_command(
           if (!context_name) {
             // This case should ideally not be reached if user didn't cancel,
             // but added for safety.
-            vscode.window.showErrorMessage(DICTIONARY.CONTEXT_NAME_NOT_PROVIDED)
+            vscode.window.showErrorMessage(
+              DICTIONARY.error_message.CONTEXT_NAME_NOT_PROVIDED
+            )
             return
           }
 
@@ -650,7 +654,9 @@ export function save_context_command(
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              DICTIONARY.ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE(error.message)
+              DICTIONARY.error_message.ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE(
+                error.message
+              )
             )
           }
         }

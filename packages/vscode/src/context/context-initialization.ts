@@ -126,7 +126,9 @@ export function context_initialization(context: vscode.ExtensionContext): {
       } catch (error: any) {
         console.error('Error collecting files and websites:', error)
         vscode.window.showErrorMessage(
-          DICTIONARY.ERROR_COLLECTING_FILES_AND_WEBSITES(error.message)
+          DICTIONARY.error_message.ERROR_COLLECTING_FILES_AND_WEBSITES(
+            error.message
+          )
         )
         return
       }
@@ -188,7 +190,10 @@ export function context_initialization(context: vscode.ExtensionContext): {
             )}">\n${content}\n</file>\n`
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              DICTIONARY.ERROR_READING_FILE(file_path, error.message)
+              DICTIONARY.error_message.ERROR_READING_FILE(
+                file_path,
+                error.message
+              )
             )
           }
         }

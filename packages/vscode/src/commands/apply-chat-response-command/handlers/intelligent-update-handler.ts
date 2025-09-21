@@ -33,7 +33,7 @@ export const handle_intelligent_update = async (params: {
 
   if (!default_workspace_path) {
     vscode.window.showErrorMessage(
-      DICTIONARY.CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE
+      DICTIONARY.error_message.CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE
     )
     Logger.warn({
       function_name: 'handle_intelligent_update',
@@ -85,7 +85,10 @@ export const handle_intelligent_update = async (params: {
   if (skipped_files.length > 0) {
     const skipped_list = skipped_files.join('\n')
     vscode.window.showErrorMessage(
-      DICTIONARY.UNSAFE_FILE_PATHS_SKIPPED(skipped_files.length, skipped_list)
+      DICTIONARY.error_message.UNSAFE_FILE_PATHS_SKIPPED(
+        skipped_files.length,
+        skipped_list
+      )
     )
     Logger.warn({
       function_name: 'handle_intelligent_update',
@@ -103,7 +106,7 @@ export const handle_intelligent_update = async (params: {
 
   if (files.length == 0) {
     vscode.window.showErrorMessage(
-      DICTIONARY.NO_VALID_FILE_CONTENT_IN_CLIPBOARD
+      DICTIONARY.error_message.NO_VALID_FILE_CONTENT_IN_CLIPBOARD
     )
     Logger.warn({
       function_name: 'handle_intelligent_update',
@@ -386,7 +389,7 @@ export const handle_intelligent_update = async (params: {
 
     if (error.message !== 'Operation cancelled' && !axios.isCancel(error)) {
       vscode.window.showErrorMessage(
-        DICTIONARY.ERROR_DURING_PROCESSING(error.message)
+        DICTIONARY.error_message.ERROR_DURING_PROCESSING(error.message)
       )
     }
   } finally {
@@ -484,7 +487,7 @@ export const handle_intelligent_update = async (params: {
       data: error
     })
     vscode.window.showErrorMessage(
-      DICTIONARY.ERROR_APPLYING_CHANGES(error.message)
+      DICTIONARY.error_message.ERROR_APPLYING_CHANGES(error.message)
     )
   }
 

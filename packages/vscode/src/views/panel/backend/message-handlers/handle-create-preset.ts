@@ -74,7 +74,7 @@ export const handle_create_preset = async (
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(
-      DICTIONARY.FAILED_TO_CREATE_ITEM(create_option.id, error)
+      DICTIONARY.error_message.FAILED_TO_CREATE_ITEM(create_option.id, error)
     )
   }
 }
