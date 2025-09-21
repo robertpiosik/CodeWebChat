@@ -289,11 +289,27 @@ export const handle_show_prompt_template_quick_pick = async (
         }
       } else if (
         'template' in selected_template &&
-        selected_template.template
+        selected_template.template &&
+        typeof selected_template.index == 'number'
       ) {
         is_template_accepted = true
         templates_quick_pick.hide()
         is_disposed = true
+
+        // Move the selected template to the top of the list for easier access next time
+        if (selected_template.index > 0) {
+          const [movedTemplate] = prompt_templates.splice(
+            selected_template.index,
+            1
+          )
+          prompt_templates.unshift(movedTemplate)
+          await config.update(
+            prompt_templates_key,
+            prompt_templates,
+            vscode.ConfigurationTarget.Global
+          )
+        }
+
         let prompt_text = selected_template.template.template
 
         const single_brace_regex = /\{([^{}]+)\}/g
