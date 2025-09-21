@@ -443,7 +443,10 @@ export const ChatInput: React.FC<Props> = (props) => {
             {props.is_web_mode && !props.is_connected && (
               <button
                 className={styles.footer__right__button}
-                onClick={props.on_copy}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  props.on_copy()
+                }}
                 title={props.dictionary.copy_to_clipboard}
               >
                 <Icon variant="ENTER" />
