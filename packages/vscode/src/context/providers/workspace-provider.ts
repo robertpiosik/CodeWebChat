@@ -14,10 +14,7 @@ const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 1000
 
 export class WebsitesFolderItem extends vscode.TreeItem {
   constructor(public readonly websites: WebsiteItem[]) {
-    super(
-      'Websites from browser extension',
-      vscode.TreeItemCollapsibleState.Collapsed
-    )
+    super('Saved Websites', vscode.TreeItemCollapsibleState.Collapsed)
     this.contextValue = 'websitesFolder'
   }
 }
@@ -385,7 +382,7 @@ export class WorkspaceProvider
       this.directory_selected_token_counts.clear()
     }
 
-    this.refresh()
+    this._schedule_refresh()
   }
 
   private async _handle_file_create(created_file_path?: string): Promise<void> {
@@ -428,13 +425,20 @@ export class WorkspaceProvider
   public refresh(): void {
     if (this.refresh_timeout) {
       clearTimeout(this.refresh_timeout)
+      this.refresh_timeout = null
+    }
+    this._on_did_change_tree_data.fire()
+  }
+
+  private _schedule_refresh(): void {
+    if (this.refresh_timeout) {
+      clearTimeout(this.refresh_timeout)
     }
     this.refresh_timeout = setTimeout(() => {
       this._on_did_change_tree_data.fire()
       this.refresh_timeout = null
     }, 500) // Debounce refresh to handle bulk file changes like builds
   }
-
   public clear_checks(): void {
     this.websites_provider.clear_checks()
     // Get a list of currently open files to preserve their check state
@@ -1327,7 +1331,7 @@ export class WorkspaceProvider
     this.directory_token_counts.clear()
     this.directory_selected_token_counts.clear()
 
-    this.refresh()
+    this._schedule_refresh()
   }
 
   public is_excluded(relative_path: string): boolean {
