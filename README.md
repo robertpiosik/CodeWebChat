@@ -15,13 +15,13 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 **Guiding principles**
 
-- Initialize chatbots—don't scrape responses
-- Privacy first—100% local, zero telemetry
-- Free forever—community effort
+- Initialize chatbots for conversations—don't scrape responses
+- Respect user privacy—don't collect any data
+- Free forever—open-source community effort
 
 **CWC is for you if you're**
 
-- an experienced developer working on a large codebase
+- a software engineer working on a large codebase
 - a student or hobbyist on a budget
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
@@ -54,7 +54,7 @@ Install the Connector browser extension and never copy&paste again.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-CWC is not limited to web chat initializations—with its built-in API tools, it has everything you need to support your software development efforts. Bring your own keys (BYOK) for any OpenAI-API compatible model provider for usage-based billing.
+CWC is not limited to chatbot initializations—with its built-in API tools, it aids your software development efforts at every step. To use, bring your own keys (BYOK) for any OpenAI-API compatible model provider for usage-based billing.
 
 **🛠️ Edit Context** \
 Modify files based on natural language instructions.
@@ -82,10 +82,6 @@ Generate meaningful summaries of changes adhering to your style.
 - `Code Web Chat: Code Completion using...` - ...with configuration selection.
 - `Code Web Chat: Code Completion with Instructions` - ...with instructions.
 - `Code Web Chat: Code Completion with Instructions using...` - ...with instructions and configuration selection.
-
-### Version Control
-
-- `Code Web Chat: Commit Changes` - Generate a commit message for staged changes and commit.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Enterprise security</span>
 
