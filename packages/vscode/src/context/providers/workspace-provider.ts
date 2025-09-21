@@ -8,16 +8,16 @@ import { should_ignore_file } from '../utils/should-ignore-file'
 import { natural_sort } from '../../utils/natural-sort'
 import { Logger } from '@shared/utils/logger'
 import { WebsitesProvider, WebsiteItem } from './websites-provider'
-
-function format_token_count(count: number): string {
-  return count >= 1000 ? `${Math.floor(count / 1000)}k` : `${count}`
-}
+import { display_token_count } from '@/utils/display-token-count'
 
 const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 1000
 
 export class WebsitesFolderItem extends vscode.TreeItem {
   constructor(public readonly websites: WebsiteItem[]) {
-    super('Saved Websites', vscode.TreeItemCollapsibleState.Collapsed)
+    super(
+      'Websites from browser extension',
+      vscode.TreeItemCollapsibleState.Collapsed
+    )
     this.contextValue = 'websitesFolder'
   }
 }
@@ -520,21 +520,21 @@ export class WorkspaceProvider
         this.websites_provider.get_checked_websites_token_count()
 
       let description = ''
+      let tooltip = 'Websites for context'
       if (total_tokens > 0) {
-        description = format_token_count(total_tokens)
-        if (selected_tokens > 0 && selected_tokens < total_tokens) {
-          description += ` · ${format_token_count(selected_tokens)} selected`
+        const formatted_total = display_token_count(total_tokens)
+        description = formatted_total
+        tooltip += ` · About ${formatted_total} tokens`
+
+        if (selected_tokens > 0) {
+          const formatted_selected = display_token_count(selected_tokens)
+          if (selected_tokens < total_tokens) {
+            description += ` · ${formatted_selected} selected`
+          }
+          tooltip += ` (${formatted_selected} selected)`
         }
       }
       element.description = description
-
-      let tooltip = 'Websites for context'
-      if (total_tokens > 0) {
-        tooltip += ` · About ${format_token_count(total_tokens)} tokens`
-        if (selected_tokens > 0) {
-          tooltip += ` (${format_token_count(selected_tokens)} selected)`
-        }
-      }
       element.tooltip = tooltip
       return element
     }
@@ -548,26 +548,28 @@ export class WorkspaceProvider
     const total_token_count = element.tokenCount
     const selected_token_count = element.selectedTokenCount
 
+    const formatted_total =
+      total_token_count !== undefined && total_token_count > 0
+        ? display_token_count(total_token_count)
+        : undefined
+
+    const formatted_selected =
+      selected_token_count !== undefined && selected_token_count > 0
+        ? display_token_count(selected_token_count)
+        : undefined
+
     let display_description = ''
 
     if (element.isDirectory) {
-      if (total_token_count !== undefined && total_token_count > 0) {
-        const formatted_total = format_token_count(total_token_count)
-        if (
-          selected_token_count !== undefined &&
-          selected_token_count > 0 &&
-          selected_token_count < total_token_count
-        ) {
-          const formatted_selected = format_token_count(selected_token_count)
+      if (formatted_total) {
+        if (formatted_selected && selected_token_count! < total_token_count!) {
           display_description = `${formatted_total} · ${formatted_selected} selected`
         } else {
           display_description = formatted_total
         }
       }
     } else {
-      if (total_token_count !== undefined && total_token_count > 0) {
-        display_description = format_token_count(total_token_count)
-      }
+      display_description = formatted_total ?? ''
     }
 
     const trimmed_description = display_description.trim()
@@ -575,26 +577,17 @@ export class WorkspaceProvider
       trimmed_description == '' ? undefined : trimmed_description
 
     const tooltip_parts = [element.resourceUri.fsPath]
-    if (total_token_count !== undefined) {
-      tooltip_parts.push(
-        `· About ${format_token_count(total_token_count)} tokens`
-      )
+    if (formatted_total) {
+      tooltip_parts.push(`· About ${formatted_total} tokens`)
     }
-    if (
-      element.isDirectory &&
-      selected_token_count !== undefined &&
-      selected_token_count > 0
-    ) {
+    if (element.isDirectory && formatted_selected) {
       if (
         total_token_count !== undefined &&
-        selected_token_count == total_token_count &&
-        total_token_count > 0
+        selected_token_count == total_token_count
       ) {
         tooltip_parts.push('· Fully selected')
       } else {
-        tooltip_parts.push(
-          `· ${format_token_count(selected_token_count)} selected`
-        )
+        tooltip_parts.push(`· ${formatted_selected} selected`)
       }
     }
 
@@ -605,14 +598,10 @@ export class WorkspaceProvider
       element.iconPath = new vscode.ThemeIcon('root-folder')
       // Workspace root tooltip is primarily its name and role, token info is appended if available
       let root_tooltip = `${element.label} (Workspace Root)`
-      if (total_token_count !== undefined) {
-        root_tooltip += ` • About ${format_token_count(
-          total_token_count
-        )} tokens`
-        if (selected_token_count !== undefined && selected_token_count > 0) {
-          root_tooltip += ` (${format_token_count(
-            selected_token_count
-          )} selected)`
+      if (formatted_total) {
+        root_tooltip += ` • About ${formatted_total} tokens`
+        if (formatted_selected) {
+          root_tooltip += ` (${formatted_selected} selected)`
         }
       }
       element.tooltip = root_tooltip
