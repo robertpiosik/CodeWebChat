@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export function delete_command() {
   return vscode.commands.registerCommand(
@@ -45,7 +45,7 @@ export function delete_command() {
         })
       } catch (error: any) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.FAILED_TO_DELETE(error.message)
+          dictionary.error_message.FAILED_TO_DELETE(error.message)
         )
       }
     }

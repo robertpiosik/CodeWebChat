@@ -11,7 +11,7 @@ import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constant
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 // Show inline completion using Inline Completions API
 const show_inline_completion = async (params: {
@@ -66,7 +66,7 @@ const get_code_completion_config = async (
   if (code_completions_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      DICTIONARY.NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND
     )
     return
   }
@@ -190,7 +190,7 @@ const get_code_completion_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+              dictionary.error_message.API_PROVIDER_NOT_FOUND
             )
             resolve(undefined)
             return
@@ -218,7 +218,7 @@ const get_code_completion_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+      dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
       function_name: 'get_code_completion_config',
@@ -282,7 +282,7 @@ const perform_code_completion = async (params: {
 
   if (!code_completions_config.provider_name) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
+      dictionary.error_message.API_PROVIDER_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
       function_name: 'perform_code_completion',
@@ -291,7 +291,7 @@ const perform_code_completion = async (params: {
     return
   } else if (!code_completions_config.model) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
+      dictionary.error_message.MODEL_NOT_SPECIFIED_FOR_CODE_COMPLETIONS
     )
     Logger.warn({
       function_name: 'perform_code_completion',
@@ -305,7 +305,7 @@ const perform_code_completion = async (params: {
     const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
     if (!provider_info) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
+        dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
       )
       Logger.warn({
         function_name: 'perform_code_completion',
@@ -319,14 +319,14 @@ const perform_code_completion = async (params: {
   }
 
   if (!provider.api_key) {
-    vscode.window.showErrorMessage(DICTIONARY.error_message.API_KEY_MISSING)
+    vscode.window.showErrorMessage(dictionary.error_message.API_KEY_MISSING)
     return
   }
 
   const editor = vscode.window.activeTextEditor
   if (editor) {
     if (!editor.selection.isEmpty) {
-      vscode.window.showWarningMessage(DICTIONARY.CODE_COMPLETIONS_NO_SELECTION)
+      vscode.window.showWarningMessage(dictionary.CODE_COMPLETIONS_NO_SELECTION)
       return
     }
     const cancel_token_source = axios.CancelToken.source()
@@ -384,7 +384,7 @@ const perform_code_completion = async (params: {
     vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: DICTIONARY.WAITING_FOR_API_RESPONSE,
+        title: dictionary.WAITING_FOR_API_RESPONSE,
         cancellable: true
       },
       async (progress, token) => {

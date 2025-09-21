@@ -66,7 +66,8 @@ export const handle_show_history_quick_pick = async (
 
   if (!history.length && !pinned_history.length) {
     vscode.window.showInformationMessage(
-      'No history to show for the current mode.'
+      'No history to show for the current mode.',
+      { modal: true }
     )
     return
   }
@@ -246,7 +247,8 @@ export const handle_show_history_quick_pick = async (
       if (updated_history.length == 0 && updated_pinned_history.length == 0) {
         quick_pick.hide()
         vscode.window.showInformationMessage(
-          'No history to show for the current mode.'
+          'No history to show for the current mode.',
+          { modal: true }
         )
         return
       }

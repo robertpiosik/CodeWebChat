@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import axios, { AxiosResponse } from 'axios'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 
 type StreamCallback = (
@@ -336,17 +336,17 @@ export async function make_api_request(params: {
         return null
       } else if (axios.isAxiosError(error) && error.response?.status == 429) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.API_RATE_LIMIT_EXCEEDED
+          dictionary.error_message.API_RATE_LIMIT_EXCEEDED
         )
       } else if (axios.isAxiosError(error) && error.response?.status == 503) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.API_ENDPOINT_UNAVAILABLE
+          dictionary.error_message.API_ENDPOINT_UNAVAILABLE
         )
       } else if (axios.isAxiosError(error) && error.response?.status == 401) {
-        vscode.window.showErrorMessage(DICTIONARY.error_message.API_INVALID_KEY)
+        vscode.window.showErrorMessage(dictionary.error_message.API_INVALID_KEY)
       } else {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.API_REQUEST_FAILED
+          dictionary.error_message.API_REQUEST_FAILED
         )
       }
       Logger.error({

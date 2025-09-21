@@ -6,7 +6,7 @@ import {
   get_git_repository,
   prepare_staged_changes
 } from '../utils/git-repository-utils'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import {
   generate_commit_message_from_diff,
   get_commit_message_config
@@ -60,7 +60,7 @@ export const commit_changes_command = (
             data: commit_error
           })
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.FAILED_TO_COMMIT_CHANGES
+            dictionary.error_message.FAILED_TO_COMMIT_CHANGES
           )
         }
       } catch (error) {
@@ -70,7 +70,7 @@ export const commit_changes_command = (
           data: error
         })
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.ERROR_COMMITTING_CHANGES
+          dictionary.error_message.ERROR_COMMITTING_CHANGES
         )
       }
     }

@@ -19,7 +19,7 @@ import {
 } from '../constants/state-keys'
 import { GitRepository } from './git-repository-utils'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export interface FileData {
   path: string
@@ -171,7 +171,7 @@ export const get_commit_message_config = async (
   if (!commit_message_config) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      DICTIONARY.NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND
     )
     return null
   }
@@ -182,7 +182,7 @@ export const get_commit_message_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
+      dictionary.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
     )
     Logger.warn({
       function_name: 'get_commit_message_config',
@@ -193,7 +193,7 @@ export const get_commit_message_config = async (
 
   if (!provider.api_key) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.API_KEY_MISSING_FOR_PROVIDER
+      dictionary.error_message.API_KEY_MISSING_FOR_PROVIDER
     )
     return null
   }
@@ -302,7 +302,8 @@ export const handle_file_selection_if_needed = async (params: {
   })
   if (!selected_files || selected_files.length == 0) {
     vscode.window.showInformationMessage(
-      DICTIONARY.NO_FILES_SELECTED_FOR_COMMIT_MESSAGE_GENERATION
+      dictionary.information_message
+        .NO_FILES_SELECTED_FOR_COMMIT_MESSAGE_GENERATION
     )
     return null
   }
@@ -426,7 +427,7 @@ const generate_commit_message_with_api = async (params: {
     try {
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: `${DICTIONARY.WAITING_FOR_API_RESPONSE}...`
+        title: `${dictionary.WAITING_FOR_API_RESPONSE}...`
       })
 
       const response = await make_api_request({
@@ -438,7 +439,7 @@ const generate_commit_message_with_api = async (params: {
 
       if (!response) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
+          dictionary.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
         )
         return null
       } else {
@@ -464,7 +465,7 @@ const generate_commit_message_with_api = async (params: {
     return await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: DICTIONARY.WAITING_FOR_API_RESPONSE,
+        title: dictionary.WAITING_FOR_API_RESPONSE,
         cancellable: true
       },
       async (progress, token) => {
@@ -490,7 +491,7 @@ const generate_commit_message_with_api = async (params: {
 
           if (!response) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
+              dictionary.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
             )
             return null
           } else {
@@ -501,7 +502,7 @@ const generate_commit_message_with_api = async (params: {
         } catch (error) {
           if (axios.isCancel(error)) {
             vscode.window.showInformationMessage(
-              DICTIONARY.COMMIT_MESSAGE_GENERATION_CANCELLED
+              dictionary.information_message.COMMIT_MESSAGE_GENERATION_CANCELLED
             )
             return null
           }

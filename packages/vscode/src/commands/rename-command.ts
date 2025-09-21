@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { create_safe_path } from '../utils/path-sanitizer'
 
 export function rename_command() {
@@ -30,7 +30,7 @@ export function rename_command() {
 
         if (!new_path) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.INVALID_NAME(new_name)
+            dictionary.error_message.INVALID_NAME(new_name)
           )
           return
         }
@@ -38,7 +38,7 @@ export function rename_command() {
         try {
           await vscode.workspace.fs.stat(vscode.Uri.file(new_path))
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.FILE_OR_FOLDER_ALREADY_EXISTS(
+            dictionary.error_message.FILE_OR_FOLDER_ALREADY_EXISTS(
               path.basename(new_path)
             )
           )
@@ -54,7 +54,7 @@ export function rename_command() {
         )
       } catch (error: any) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.FAILED_TO_RENAME(error.message)
+          dictionary.error_message.FAILED_TO_RENAME(error.message)
         )
       }
     }

@@ -4,7 +4,7 @@ import {
   ModelProvidersManager,
   Provider
 } from '@/services/model-providers-manager'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { ChangeModelProviderKeyMessage } from '@/views/settings/types/messages'
 import { handle_get_model_providers } from './handle-get-model-providers'
 
@@ -21,7 +21,7 @@ export const handle_change_model_provider_key = async (
 
   if (!provider_to_update) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.PROVIDER_NOT_FOUND_BY_NAME(provider_name)
+      dictionary.error_message.PROVIDER_NOT_FOUND_BY_NAME(provider_name)
     )
     return
   }

@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as os from 'os'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { createTwoFilesPatch } from 'diff'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
@@ -284,7 +284,7 @@ export const review = async (params: {
 } | null> => {
   if (!vscode.workspace.workspaceFolders?.length) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+      dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
     )
     return null
   }

@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
@@ -64,7 +64,7 @@ export const create_file_if_needed = async (params: {
     vscode.workspace.workspaceFolders.length == 0
   ) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+      dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
     )
     Logger.warn({
       function_name: 'create_file_if_needed',
@@ -97,7 +97,7 @@ export const create_file_if_needed = async (params: {
 
   if (!safe_path) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.INVALID_FILE_PATH_TRAVERSAL(params.file_path)
+      dictionary.error_message.INVALID_FILE_PATH_TRAVERSAL(params.file_path)
     )
     Logger.error({
       function_name: 'create_file_if_needed',
@@ -123,7 +123,7 @@ export const create_file_if_needed = async (params: {
         data: { directory, error }
       })
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.FAILED_TO_CREATE_DIRECTORY(directory)
+        dictionary.error_message.FAILED_TO_CREATE_DIRECTORY(directory)
       )
       return false
     }
@@ -144,7 +144,7 @@ export const create_file_if_needed = async (params: {
       data: { safe_path, error }
     })
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.FAILED_TO_WRITE_FILE(safe_path)
+      dictionary.error_message.FAILED_TO_WRITE_FILE(safe_path)
     )
   }
   return false
@@ -285,7 +285,7 @@ export const undo_files = async (params: {
       vscode.workspace.workspaceFolders.length == 0
     ) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+        dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
       )
       Logger.warn({
         function_name: 'undo_files',
@@ -460,7 +460,7 @@ export const undo_files = async (params: {
     })
     console.error('Error during undo:', error)
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.FAILED_TO_UNDO_CHANGES(
+      dictionary.error_message.FAILED_TO_UNDO_CHANGES(
         error.message || 'Unknown error'
       )
     )

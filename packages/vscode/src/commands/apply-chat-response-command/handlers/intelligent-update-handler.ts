@@ -9,7 +9,7 @@ import { OriginalFileState } from '@/commands/apply-chat-response-command/types/
 import { ToolConfig } from '@/services/model-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
 
 export const handle_intelligent_update = async (params: {
@@ -33,7 +33,7 @@ export const handle_intelligent_update = async (params: {
 
   if (!default_workspace_path) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE
+      dictionary.error_message.CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE
     )
     Logger.warn({
       function_name: 'handle_intelligent_update',
@@ -85,7 +85,7 @@ export const handle_intelligent_update = async (params: {
   if (skipped_files.length > 0) {
     const skipped_list = skipped_files.join('\n')
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.UNSAFE_FILE_PATHS_SKIPPED(
+      dictionary.error_message.UNSAFE_FILE_PATHS_SKIPPED(
         skipped_files.length,
         skipped_list
       )
@@ -98,7 +98,7 @@ export const handle_intelligent_update = async (params: {
 
     if (files.length == 0) {
       vscode.window.showInformationMessage(
-        DICTIONARY.NO_SAFE_FILE_PATHS_REMAINING
+        dictionary.information_message.NO_SAFE_FILE_PATHS_REMAINING
       )
       return null
     }
@@ -106,7 +106,7 @@ export const handle_intelligent_update = async (params: {
 
   if (files.length == 0) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.NO_VALID_FILE_CONTENT_IN_CLIPBOARD
+      dictionary.error_message.NO_VALID_FILE_CONTENT_IN_CLIPBOARD
     )
     Logger.warn({
       function_name: 'handle_intelligent_update',
@@ -389,7 +389,7 @@ export const handle_intelligent_update = async (params: {
 
     if (error.message !== 'Operation cancelled' && !axios.isCancel(error)) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.ERROR_DURING_PROCESSING(error.message)
+        dictionary.error_message.ERROR_DURING_PROCESSING(error.message)
       )
     }
   } finally {
@@ -487,7 +487,7 @@ export const handle_intelligent_update = async (params: {
       data: error
     })
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.ERROR_APPLYING_CHANGES(error.message)
+      dictionary.error_message.ERROR_APPLYING_CHANGES(error.message)
     )
   }
 

@@ -15,7 +15,7 @@ import { replace_saved_context_placeholder } from '@/utils/replace-saved-context
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { EditContextMessage } from '@/views/panel/types/messages'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 const get_edit_context_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -30,7 +30,7 @@ const get_edit_context_config = async (
   if (edit_context_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      DICTIONARY.NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND
     )
     return
   }
@@ -138,7 +138,7 @@ const get_edit_context_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+              dictionary.error_message.API_PROVIDER_NOT_FOUND
             )
             resolve(undefined)
             return
@@ -168,7 +168,7 @@ const get_edit_context_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+      dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
       function_name: 'get_edit_context_config',
@@ -209,7 +209,7 @@ const perform_context_editing = async (params: {
     const initial_context = await files_collector.collect_files({})
     if (!initial_context) {
       vscode.window.showWarningMessage(
-        DICTIONARY.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
+        dictionary.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
       )
       return
     }
@@ -230,7 +230,7 @@ const perform_context_editing = async (params: {
         const value = input_box.value.trim()
         if (value.length === 0) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.INSTRUCTION_CANNOT_BE_EMPTY
+            dictionary.error_message.INSTRUCTION_CANNOT_BE_EMPTY
           )
           return
         }
@@ -283,7 +283,7 @@ const perform_context_editing = async (params: {
 
   if (!collected_files) {
     vscode.window.showWarningMessage(
-      DICTIONARY.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
+      dictionary.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
     )
     return
   }
@@ -303,7 +303,7 @@ const perform_context_editing = async (params: {
   const { provider, config: edit_context_config } = config_result
 
   if (!provider.api_key) {
-    vscode.window.showErrorMessage(DICTIONARY.error_message.API_KEY_MISSING)
+    vscode.window.showErrorMessage(dictionary.error_message.API_KEY_MISSING)
     return
   }
 
@@ -312,7 +312,7 @@ const perform_context_editing = async (params: {
     const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
     if (!provider_info) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
+        dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
       )
       Logger.warn({
         function_name: 'perform_context_editing',
@@ -383,7 +383,7 @@ const perform_context_editing = async (params: {
     if (params.view_provider) {
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: `${DICTIONARY.WAITING_FOR_API_RESPONSE}...`
+        title: `${dictionary.WAITING_FOR_API_RESPONSE}...`
       })
     }
     const response = await make_api_request({
@@ -414,7 +414,7 @@ const perform_context_editing = async (params: {
       message: 'refactor task error',
       data: error
     })
-    vscode.window.showErrorMessage(DICTIONARY.error_message.REFACTOR_ERROR)
+    vscode.window.showErrorMessage(dictionary.error_message.REFACTOR_ERROR)
   } finally {
     params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
     params.view_provider.api_call_cancel_token_source = null

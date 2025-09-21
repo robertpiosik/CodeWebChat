@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { GoToFileInReviewMessage } from '@/views/panel/types/messages'
 import { Logger } from '@shared/utils/logger'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export const handle_go_to_file_in_review = async (
   provider: ViewProvider,
@@ -46,7 +46,7 @@ export const handle_go_to_file_in_review = async (
       data: { file_path, workspace_name }
     })
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
+      dictionary.error_message.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
     )
     return
   }
@@ -63,7 +63,7 @@ export const handle_go_to_file_in_review = async (
       data: { error, file_uri: file_uri.toString() }
     })
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.COULD_NOT_OPEN_FILE(file_path)
+      dictionary.error_message.COULD_NOT_OPEN_FILE(file_path)
     )
   }
 }

@@ -9,7 +9,7 @@ import {
   LAST_CONTEXT_SAVE_LOCATION_STATE_KEY
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 function condense_paths(
   paths: string[],
@@ -197,7 +197,7 @@ export function save_context_command(
     async () => {
       if (!workspace_provider) {
         vscode.window.showErrorMessage(
-          DICTIONARY.WORKSPACE_PROVIDER_NOT_AVAILABLE_CANNOT_SAVE_CONTEXT
+          dictionary.WORKSPACE_PROVIDER_NOT_AVAILABLE_CANNOT_SAVE_CONTEXT
         )
         return
       }
@@ -205,14 +205,14 @@ export function save_context_command(
       const workspace_root = workspace_provider.getWorkspaceRoot()
       if (!workspace_root) {
         vscode.window.showErrorMessage(
-          DICTIONARY.NO_WORKSPACE_FOLDER_FOUND_CANNOT_SAVE_CONTEXT
+          dictionary.NO_WORKSPACE_FOLDER_FOUND_CANNOT_SAVE_CONTEXT
         )
         return
       }
 
       const checked_files = workspace_provider.get_checked_files()
       if (checked_files.length == 0) {
-        vscode.window.showWarningMessage(DICTIONARY.NOTHING_IN_CONTEXT_TO_SAVE)
+        vscode.window.showWarningMessage(dictionary.NOTHING_IN_CONTEXT_TO_SAVE)
         return
       }
 
@@ -373,7 +373,7 @@ export function save_context_command(
                   file_contexts = JSON.parse(content)
                   if (!Array.isArray(file_contexts)) {
                     vscode.window.showWarningMessage(
-                      DICTIONARY.CONTEXTS_FILE_NOT_VALID_ARRAY
+                      dictionary.CONTEXTS_FILE_NOT_VALID_ARRAY
                     )
                     file_contexts = []
                   }
@@ -393,7 +393,8 @@ export function save_context_command(
                   are_paths_equal(existingContext.paths, all_prefixed_paths)
                 ) {
                   vscode.window.showInformationMessage(
-                    `A context with identical paths already exists in the file: "${existingContext.name}"`
+                    `A context with identical paths already exists in the file: "${existingContext.name}"`,
+                    { modal: true }
                   )
                   return
                 }
@@ -482,7 +483,7 @@ export function save_context_command(
               // This case should ideally not be reached if user didn't cancel,
               // but added for safety.
               vscode.window.showErrorMessage(
-                DICTIONARY.error_message.CONTEXT_NAME_NOT_PROVIDED
+                dictionary.error_message.CONTEXT_NAME_NOT_PROVIDED
               )
               return
             }
@@ -511,11 +512,12 @@ export function save_context_command(
             )
 
             vscode.window.showInformationMessage(
-              `Context "${context_name}" saved to .vscode/contexts.json successfully.`
+              `Context "${context_name}" saved to .vscode/contexts.json successfully.`,
+              { modal: true }
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.ERROR_SAVING_CONTEXT_TO_FILE(
+              dictionary.error_message.ERROR_SAVING_CONTEXT_TO_FILE(
                 error.message
               )
             )
@@ -531,7 +533,8 @@ export function save_context_command(
             for (const existingContext of saved_contexts) {
               if (are_paths_equal(existingContext.paths, all_prefixed_paths)) {
                 vscode.window.showInformationMessage(
-                  `A context with identical paths already exists in workspace state: "${existingContext.name}"`
+                  `A context with identical paths already exists in workspace state: "${existingContext.name}"`,
+                  { modal: true }
                 )
                 return
               }
@@ -620,7 +623,7 @@ export function save_context_command(
             // This case should ideally not be reached if user didn't cancel,
             // but added for safety.
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.CONTEXT_NAME_NOT_PROVIDED
+              dictionary.error_message.CONTEXT_NAME_NOT_PROVIDED
             )
             return
           }
@@ -650,11 +653,12 @@ export function save_context_command(
               updated_contexts
             )
             vscode.window.showInformationMessage(
-              `Context "${context_name}" saved to Workspace State successfully.`
+              `Context "${context_name}" saved to Workspace State successfully.`,
+              { modal: true }
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE(
+              dictionary.error_message.ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE(
                 error.message
               )
             )

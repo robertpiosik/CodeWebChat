@@ -75,7 +75,7 @@ import { code_review_promise_resolve } from '@/commands/apply-chat-response-comm
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
@@ -464,7 +464,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             data: { message, error }
           })
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.ERROR_HANDLING_MESSAGE(error.message)
+            dictionary.error_message.ERROR_HANDLING_MESSAGE(error.message)
           )
         }
       }
@@ -548,7 +548,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           data: error
         })
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.ERROR_CALCULATING_TOKEN_COUNT(error.message)
+          dictionary.error_message.ERROR_CALCULATING_TOKEN_COUNT(error.message)
         )
         this.send_message({
           command: 'TOKEN_COUNT_UPDATED',

@@ -7,7 +7,7 @@ import {
 import { parse_response } from './apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { undo_files } from './apply-chat-response-command/utils/file-operations'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export function undo_command(
   context: vscode.ExtensionContext,
@@ -27,7 +27,9 @@ export function undo_command(
     >(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY)
 
     if (!original_states || original_states.length == 0) {
-      vscode.window.showInformationMessage(DICTIONARY.NO_RECENT_CHANGES_TO_UNDO)
+      vscode.window.showInformationMessage(
+        dictionary.information_message.NO_RECENT_CHANGES_TO_UNDO
+      )
       return false
     }
 
@@ -87,7 +89,7 @@ export function undo_command(
     } catch (error: any) {
       console.error('Error during undo:', error)
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.FAILED_TO_UNDO_CHANGES(
+        dictionary.error_message.FAILED_TO_UNDO_CHANGES(
           error.message || 'Unknown error'
         )
       )

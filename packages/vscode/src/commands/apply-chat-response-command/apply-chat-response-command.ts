@@ -20,7 +20,7 @@ import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '@/const
 import { Diff } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { review, code_review_promise_resolve } from './utils/review'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 
@@ -68,7 +68,7 @@ const get_intelligent_update_config = async (
   if (intelligent_update_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      DICTIONARY.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
     )
     return
   }
@@ -182,7 +182,7 @@ const get_intelligent_update_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
+              dictionary.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
             )
             resolve(undefined)
             return
@@ -210,7 +210,7 @@ const get_intelligent_update_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.API_PROVIDER_NOT_FOUND
+      dictionary.error_message.API_PROVIDER_NOT_FOUND
     )
     Logger.warn({
       function_name: 'get_intelligent_update_config',
@@ -398,7 +398,7 @@ export const apply_chat_response_command = (
 
         if (!chat_response) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.NO_RESPONSE_TEXT
+            dictionary.error_message.NO_RESPONSE_TEXT
           )
           Logger.warn({
             function_name: 'apply_chat_response_command',
@@ -425,7 +425,7 @@ export const apply_chat_response_command = (
             vscode.workspace.workspaceFolders.length == 0
           ) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+              dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
             )
             return null
           }
@@ -448,7 +448,7 @@ export const apply_chat_response_command = (
           )
           if (!safe_path || !fs.existsSync(safe_path)) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.FILE_NOT_FOUND(completion.file_path)
+              dictionary.error_message.FILE_NOT_FOUND(completion.file_path)
             )
             Logger.warn({
               function_name: 'apply_chat_response_command',
@@ -470,7 +470,7 @@ export const apply_chat_response_command = (
             char_index > document.lineAt(line_index).text.length
           ) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.INVALID_POSITION_FOR_CODE_COMPLETION(
+              dictionary.error_message.INVALID_POSITION_FOR_CODE_COMPLETION(
                 completion.file_path
               )
             )
@@ -506,7 +506,7 @@ export const apply_chat_response_command = (
         if (clipboard_content.type == 'patches' && clipboard_content.patches) {
           if (!vscode.workspace.workspaceFolders?.length) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+              dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
             )
             return null
           }
@@ -677,7 +677,7 @@ export const apply_chat_response_command = (
               })
 
               const response = await vscode.window.showErrorMessage(
-                DICTIONARY.error_message
+                dictionary.error_message
                   .ERROR_DURING_INTELLIGENT_UPDATE_FIX_ATTEMPT,
                 'Keep changes',
                 'Undo'
@@ -719,7 +719,7 @@ export const apply_chat_response_command = (
         } else {
           if (!clipboard_content.files || clipboard_content.files.length == 0) {
             vscode.window.showWarningMessage(
-              DICTIONARY.NO_VALID_CODE_BLOCKS_IN_CLIPBOARD
+              dictionary.NO_VALID_CODE_BLOCKS_IN_CLIPBOARD
             )
             return null
           }

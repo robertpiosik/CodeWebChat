@@ -15,7 +15,7 @@ import {
   initial_select_model,
   initial_select_provider
 } from './config-editing-helpers'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
@@ -112,7 +112,7 @@ export const handle_add_code_completions_configuration = async (
   const configs = await providers_manager.get_code_completions_tool_configs()
   if (configs.some((c) => generate_id(c) === generate_id(config_to_add))) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.CONFIGURATION_ALREADY_EXISTS
+      dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
     )
     return
   }

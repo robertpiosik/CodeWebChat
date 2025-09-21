@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { DuplicatePresetMessage } from '@/views/panel/types/messages'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 
@@ -18,7 +18,7 @@ export const handle_duplicate_preset = async (
   const preset_to_duplicate = current_presets.find((p) => p.name == preset_name)
   if (!preset_to_duplicate) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.PRESET_NOT_FOUND(preset_name)
+      dictionary.error_message.PRESET_NOT_FOUND(preset_name)
     )
     return
   }
@@ -63,7 +63,7 @@ export const handle_duplicate_preset = async (
     provider.send_presets_to_webview(webview_view.webview)
   } catch (error) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.FAILED_TO_DUPLICATE_PRESET(error)
+      dictionary.error_message.FAILED_TO_DUPLICATE_PRESET(error)
     )
   }
 }

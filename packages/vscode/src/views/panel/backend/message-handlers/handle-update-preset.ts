@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { UpdatePresetMessage } from '@/views/panel/types/messages'
 import { Preset } from '@shared/types/preset'
 import {
@@ -29,7 +29,7 @@ export const handle_update_preset = async (
       `${item_type} with original name "${message.updating_preset.name}" not found.`
     )
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
+      dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
         item_type,
         message.updating_preset.name
       )

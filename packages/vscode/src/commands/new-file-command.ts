@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { create_safe_path } from '../utils/path-sanitizer'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export function new_file_command() {
   return vscode.commands.registerCommand(
@@ -19,7 +19,7 @@ export function new_file_command() {
           parent_path = vscode.workspace.workspaceFolders[0].uri.fsPath
         } else {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+            dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
           )
           return
         }
@@ -35,7 +35,7 @@ export function new_file_command() {
 
       if (!parent_path) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FILE
+          dictionary.error_message.COULD_NOT_DETERMINE_LOCATION_TO_CREATE_FILE
         )
         return
       }
@@ -64,7 +64,7 @@ export function new_file_command() {
 
         if (!file_path) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.INVALID_FILE_NAME(file_name)
+            dictionary.error_message.INVALID_FILE_NAME(file_name)
           )
           return
         }
@@ -73,7 +73,7 @@ export function new_file_command() {
         try {
           await vscode.workspace.fs.stat(vscode.Uri.file(file_path))
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.FILE_ALREADY_EXISTS(
+            dictionary.error_message.FILE_ALREADY_EXISTS(
               path.basename(file_path)
             )
           )
@@ -94,7 +94,7 @@ export function new_file_command() {
         await vscode.window.showTextDocument(document)
       } catch (error: any) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.FAILED_TO_CREATE_FILE(error.message)
+          dictionary.error_message.FAILED_TO_CREATE_FILE(error.message)
         )
       }
     }

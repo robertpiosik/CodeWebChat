@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export interface GitRepository {
   rootUri: vscode.Uri
@@ -20,7 +20,7 @@ export function get_git_repository(
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.GIT_EXTENSION_NOT_FOUND
+      dictionary.error_message.GIT_EXTENSION_NOT_FOUND
     )
     return null
   }
@@ -30,7 +30,7 @@ export function get_git_repository(
 
   if (!repositories || repositories.length === 0) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.NO_GIT_REPOSITORY_FOUND
+      dictionary.error_message.NO_GIT_REPOSITORY_FOUND
     )
     return null
   }
@@ -50,7 +50,7 @@ export function get_git_repository(
     repository = repositories[0]
     if (!repository) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.REPOSITORY_NOT_FOUND
+        dictionary.error_message.REPOSITORY_NOT_FOUND
       )
       return null
     }
@@ -74,7 +74,9 @@ export async function prepare_staged_changes(
   }).toString()
 
   if (!diff || diff.length === 0) {
-    vscode.window.showInformationMessage(DICTIONARY.NO_CHANGES_TO_COMMIT)
+    vscode.window.showInformationMessage(
+      dictionary.information_message.NO_CHANGES_TO_COMMIT
+    )
     return null
   }
 

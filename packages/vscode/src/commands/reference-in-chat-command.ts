@@ -3,7 +3,7 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { FileItem } from '../context/providers/workspace-provider'
 import { SharedFileState } from '../context/shared-file-state'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 
 export function reference_in_chat_command(
@@ -24,7 +24,7 @@ export function reference_in_chat_command(
 
       if (!workspace_root) {
         vscode.window.showWarningMessage(
-          DICTIONARY.CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE
+          dictionary.CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE
         )
         return
       }

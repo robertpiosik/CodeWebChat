@@ -10,7 +10,7 @@ import {
 } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@shared/utils/logger'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export const initial_select_provider = async (
   providers_manager: ModelProvidersManager
@@ -18,7 +18,7 @@ export const initial_select_provider = async (
   const providers = await providers_manager.get_providers()
 
   if (providers.length == 0) {
-    vscode.window.showWarningMessage(DICTIONARY.NO_MODEL_PROVIDERS_CONFIGURED)
+    vscode.window.showWarningMessage(dictionary.NO_MODEL_PROVIDERS_CONFIGURED)
     return
   }
 
@@ -71,11 +71,12 @@ export const initial_select_model = async (
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        `The '/models' route was not found for ${provider.name}. This might mean the provider does not support listing models.`
+        `The '/models' route was not found for ${provider.name}. This might mean the provider does not support listing models.`,
+        { modal: true }
       )
     } else {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.FAILED_TO_FETCH_MODELS(
+        dictionary.error_message.FAILED_TO_FETCH_MODELS(
           error instanceof Error ? error.message : String(error)
         )
       )
@@ -120,7 +121,7 @@ export const edit_model_for_config = async (
   )
   if (!provider_from_manager) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.PROVIDER_NOT_FOUND(config.provider_name)
+      dictionary.error_message.PROVIDER_NOT_FOUND(config.provider_name)
     )
     return undefined
   }
@@ -132,7 +133,7 @@ export const edit_model_for_config = async (
 
   if (!base_url) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
+      dictionary.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
         config.provider_name
       )
     )
@@ -179,11 +180,12 @@ export const edit_model_for_config = async (
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        `The '/models' route was not found for ${config.provider_name}. This might mean the provider does not support listing models. You can enter model name manually.`
+        `The '/models' route was not found for ${config.provider_name}. This might mean the provider does not support listing models. You can enter model name manually.`,
+        { modal: true }
       )
     } else {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.FAILED_TO_FETCH_MODELS(
+        dictionary.error_message.FAILED_TO_FETCH_MODELS(
           error instanceof Error ? error.message : String(error)
         )
       )

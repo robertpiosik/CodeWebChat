@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { ClipboardFile } from '../utils/clipboard-parser'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
@@ -24,7 +24,7 @@ export const handle_fast_replace = async (
       vscode.workspace.workspaceFolders.length == 0
     ) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.NO_WORKSPACE_FOLDER_OPEN
+        dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
       )
       Logger.warn({
         function_name: 'handle_fast_replace',
@@ -71,7 +71,7 @@ export const handle_fast_replace = async (
     if (unsafe_files.length > 0) {
       const unsafe_list = unsafe_files.join('\n')
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.UNSAFE_FILE_PATHS_SKIPPED(
+        dictionary.error_message.UNSAFE_FILE_PATHS_SKIPPED(
           unsafe_files.length,
           unsafe_list
         )
@@ -161,7 +161,7 @@ export const handle_fast_replace = async (
                 data: { directory, error, file_path: file.file_path }
               })
               vscode.window.showErrorMessage(
-                DICTIONARY.error_message.FAILED_TO_CREATE_DIRECTORY(
+                dictionary.error_message.FAILED_TO_CREATE_DIRECTORY(
                   file.file_path
                 )
               )
@@ -183,7 +183,7 @@ export const handle_fast_replace = async (
               data: { safe_path, error, file_path: file.file_path }
             })
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.FAILED_TO_WRITE_FILE(file.file_path)
+              dictionary.error_message.FAILED_TO_WRITE_FILE(file.file_path)
             )
             continue
           }
@@ -195,7 +195,7 @@ export const handle_fast_replace = async (
           data: { error, file_path: file.file_path }
         })
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.ERROR_PROCESSING_FILE(
+          dictionary.error_message.ERROR_PROCESSING_FILE(
             file.file_path,
             error.message || 'Unknown error'
           )
@@ -218,7 +218,7 @@ export const handle_fast_replace = async (
     })
     console.error('Error during direct file replacement:', error)
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.ERROR_REPLACING_FILES(
+      dictionary.error_message.ERROR_REPLACING_FILES(
         error.message || 'Unknown error'
       )
     )

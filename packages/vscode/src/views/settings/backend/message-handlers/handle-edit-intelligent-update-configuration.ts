@@ -12,7 +12,7 @@ import {
 } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@shared/utils/logger'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
@@ -32,7 +32,7 @@ export const handle_edit_intelligent_update_configuration = async (
 
   if (config_index == -1) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.CONFIGURATION_NOT_FOUND
+      dictionary.error_message.CONFIGURATION_NOT_FOUND
     )
     return
   }
@@ -107,7 +107,7 @@ export const handle_edit_intelligent_update_configuration = async (
         )
         if (!provider_from_manager) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.PROVIDER_NOT_FOUND(provider_info.name)
+            dictionary.error_message.PROVIDER_NOT_FOUND(provider_info.name)
           )
           return await show_quick_pick()
         }
@@ -119,7 +119,7 @@ export const handle_edit_intelligent_update_configuration = async (
 
         if (!base_url) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
+            dictionary.error_message.BASE_URL_NOT_FOUND_FOR_PROVIDER(
               provider_info.name
             )
           )
@@ -172,11 +172,12 @@ export const handle_edit_intelligent_update_configuration = async (
             error.message == MODELS_ROUTE_NOT_FOUND_ERROR
           ) {
             vscode.window.showInformationMessage(
-              `The '/models' route was not found for ${provider_info.name}. This might mean the provider does not support listing models. You can enter model name manually.`
+              `The '/models' route was not found for ${provider_info.name}. This might mean the provider does not support listing models. You can enter model name manually.`,
+              { modal: true }
             )
           } else {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.FAILED_TO_FETCH_MODELS(
+              dictionary.error_message.FAILED_TO_FETCH_MODELS(
                 error instanceof Error ? error.message : String(error)
               )
             )
@@ -274,7 +275,7 @@ export const handle_edit_intelligent_update_configuration = async (
       configs.some((c) => generate_id(c) === new_id)
     ) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.CONFIGURATION_ALREADY_EXISTS
+        dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
       )
       return await show_quick_pick()
     }

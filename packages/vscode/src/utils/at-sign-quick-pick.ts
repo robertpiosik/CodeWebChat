@@ -4,7 +4,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 import { SavedContext } from '../types/context'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export async function at_sign_quick_pick(params: {
   context: vscode.ExtensionContext
@@ -47,7 +47,7 @@ export async function at_sign_quick_pick(params: {
       const workspace_folders = vscode.workspace.workspaceFolders
       if (!workspace_folders || workspace_folders.length == 0) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.NO_WORKSPACE_FOLDERS_FOUND
+          dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
         )
         return
       }
@@ -79,7 +79,7 @@ export async function at_sign_quick_pick(params: {
 
       if (all_branches.size == 0) {
         vscode.window.showErrorMessage(
-          DICTIONARY.error_message.NO_GIT_BRANCHES_FOUND_IN_WORKSPACE
+          dictionary.error_message.NO_GIT_BRANCHES_FOUND_IN_WORKSPACE
         )
         return
       }
@@ -120,7 +120,7 @@ export async function at_sign_quick_pick(params: {
       }
     } catch (error) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.FAILED_TO_GET_GIT_BRANCHES
+        dictionary.error_message.FAILED_TO_GET_GIT_BRANCHES
       )
     }
   }
@@ -128,7 +128,7 @@ export async function at_sign_quick_pick(params: {
   if (selected.label == '#SavedContext') {
     const workspace_root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
     if (!workspace_root) {
-      vscode.window.showErrorMessage(DICTIONARY.error_message.NO_WORKSPACE_ROOT)
+      vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
       return
     }
 
@@ -183,7 +183,9 @@ export async function at_sign_quick_pick(params: {
     }
 
     if (source_options.length === 0) {
-      vscode.window.showInformationMessage(DICTIONARY.NO_SAVED_CONTEXTS_FOUND)
+      vscode.window.showInformationMessage(
+        dictionary.information_message.NO_SAVED_CONTEXTS_FOUND
+      )
       return
     }
 

@@ -4,7 +4,7 @@ import {
   ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { EditCodeCompletionsConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_code_completions_configurations } from './handle-get-code-completions-configurations'
 import { ModelFetcher } from '@/services/model-fetcher'
@@ -33,7 +33,7 @@ export const handle_edit_code_completions_configuration = async (
 
   if (config_index == -1) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.CONFIGURATION_NOT_FOUND
+      dictionary.error_message.CONFIGURATION_NOT_FOUND
     )
     return
   }
@@ -118,7 +118,7 @@ export const handle_edit_code_completions_configuration = async (
       configs.some((c) => generate_id(c) === new_id)
     ) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.CONFIGURATION_ALREADY_EXISTS
+        dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
       )
       return await show_quick_pick()
     }

@@ -12,7 +12,7 @@ import {
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export async function resolve_glob_patterns(
   patterns: string[],
@@ -274,7 +274,7 @@ export function apply_context_command(
 
         if (!workspace_provider) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.NO_WORKSPACE_PROVIDER
+            dictionary.error_message.NO_WORKSPACE_PROVIDER
           )
           return
         }
@@ -282,7 +282,7 @@ export function apply_context_command(
         const workspace_root = workspace_provider.getWorkspaceRoot()
         if (!workspace_root) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.NO_WORKSPACE_ROOT
+            dictionary.error_message.NO_WORKSPACE_ROOT
           )
           return
         }
@@ -316,7 +316,7 @@ export function apply_context_command(
           }
         } catch (error: any) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.ERROR_READING_CONTEXTS_FILE(error.message)
+            dictionary.error_message.ERROR_READING_CONTEXTS_FILE(error.message)
           )
           console.error('Error reading contexts file:', error)
         }
@@ -601,7 +601,7 @@ export function apply_context_command(
                         name_to_highlight = trimmed_name
                       } catch (error: any) {
                         vscode.window.showErrorMessage(
-                          DICTIONARY.error_message.ERROR_UPDATING_CONTEXT_NAME_IN_FILE(
+                          dictionary.error_message.ERROR_UPDATING_CONTEXT_NAME_IN_FILE(
                             error.message
                           )
                         )
@@ -669,7 +669,8 @@ export function apply_context_command(
                     if (internal_contexts.length == 0) {
                       quick_pick.hide()
                       vscode.window.showInformationMessage(
-                        DICTIONARY.NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE
+                        dictionary.information_message
+                          .NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE
                       )
                     } else {
                       quick_pick.items =
@@ -694,7 +695,8 @@ export function apply_context_command(
                       if (updated_contexts.length == 0) {
                         quick_pick.hide()
                         vscode.window.showInformationMessage(
-                          DICTIONARY.NO_SAVED_CONTEXTS_IN_JSON_FILE
+                          dictionary.information_message
+                            .NO_SAVED_CONTEXTS_IN_JSON_FILE
                         )
                       } else {
                         quick_pick.items =
@@ -703,7 +705,7 @@ export function apply_context_command(
                       }
                     } catch (error: any) {
                       vscode.window.showErrorMessage(
-                        DICTIONARY.error_message.ERROR_DELETING_CONTEXT_FROM_FILE(
+                        dictionary.error_message.ERROR_DELETING_CONTEXT_FROM_FILE(
                           error.message
                         )
                       )
@@ -741,7 +743,7 @@ export function apply_context_command(
 
           if (!context_to_apply) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.COULD_NOT_FIND_SELECTED_CONTEXT(
+              dictionary.error_message.COULD_NOT_FIND_SELECTED_CONTEXT(
                 selected.label
               )
             )
@@ -762,7 +764,7 @@ export function apply_context_command(
           on_context_selected()
         } catch (error: any) {
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.ERROR_SELECTING_SAVED_CONTEXT(
+            dictionary.error_message.ERROR_SELECTING_SAVED_CONTEXT(
               error.message
             )
           )

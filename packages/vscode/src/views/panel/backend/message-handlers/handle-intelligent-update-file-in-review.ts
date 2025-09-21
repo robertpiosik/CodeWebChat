@@ -13,7 +13,7 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import { process_file } from '@/utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import axios from 'axios'
 
 const get_default_intelligent_update_config = async (
@@ -25,7 +25,7 @@ const get_default_intelligent_update_config = async (
   if (intelligent_update_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      DICTIONARY.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
     )
     return
   }
@@ -36,7 +36,7 @@ const get_default_intelligent_update_config = async (
   if (!selected_config) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      DICTIONARY.NO_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION
+      dictionary.information_message.NO_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION
     )
     return
   }
@@ -47,7 +47,7 @@ const get_default_intelligent_update_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.API_PROVIDER_FOR_DEFAULT_CONFIG_NOT_FOUND
+      dictionary.error_message.API_PROVIDER_FOR_DEFAULT_CONFIG_NOT_FOUND
     )
     return
   }
@@ -74,7 +74,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!original_states || !last_response) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND
+      dictionary.error_message.INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND
     )
     return
   }
@@ -85,7 +85,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!file_state) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.ORIGINAL_STATE_FOR_FILE_NOT_FOUND(file_name)
+      dictionary.error_message.ORIGINAL_STATE_FOR_FILE_NOT_FOUND(file_name)
     )
     return
   }
@@ -116,7 +116,7 @@ export const handle_intelligent_update_file_in_review = async (
 
   if (!instructions) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.UPDATE_INSTRUCTIONS_FOR_FILE_NOT_FOUND(file_name)
+      dictionary.error_message.UPDATE_INSTRUCTIONS_FOR_FILE_NOT_FOUND(file_name)
     )
     return
   }
@@ -156,7 +156,7 @@ export const handle_intelligent_update_file_in_review = async (
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: DICTIONARY.WAITING_FOR_API_RESPONSE,
+      title: dictionary.WAITING_FOR_API_RESPONSE,
       cancellable: true
     },
     async (progress, token) => {
@@ -247,7 +247,7 @@ export const handle_intelligent_update_file_in_review = async (
             data: { error, file_path }
           })
           vscode.window.showErrorMessage(
-            DICTIONARY.error_message.INTELLIGENT_UPDATE_FAILED_FOR_FILE(
+            dictionary.error_message.INTELLIGENT_UPDATE_FAILED_FOR_FILE(
               file_name,
               error.message
             )

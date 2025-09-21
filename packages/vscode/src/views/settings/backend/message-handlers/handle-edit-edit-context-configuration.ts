@@ -4,7 +4,7 @@ import {
   ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { EditEditContextConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_edit_context_configurations } from './handle-get-edit-context-configurations'
 import { ModelFetcher } from '@/services/model-fetcher'
@@ -34,7 +34,7 @@ export const handle_edit_edit_context_configuration = async (
 
   if (config_index == -1) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.CONFIGURATION_NOT_FOUND
+      dictionary.error_message.CONFIGURATION_NOT_FOUND
     )
     return
   }
@@ -141,7 +141,7 @@ export const handle_edit_edit_context_configuration = async (
       configs.some((c) => generate_id(c) === new_id)
     ) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.CONFIGURATION_ALREADY_EXISTS
+        dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
       )
       return await show_quick_pick()
     }

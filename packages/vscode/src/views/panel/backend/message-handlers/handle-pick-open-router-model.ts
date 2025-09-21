@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import axios from 'axios'
 
 export const handle_pick_open_router_model = async (
@@ -30,7 +30,7 @@ export const handle_pick_open_router_model = async (
   } catch (error) {
     console.error('Error fetching Open Router models:', error)
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.FAILED_TO_FETCH_OPEN_ROUTER_MODELS
+      dictionary.error_message.FAILED_TO_FETCH_OPEN_ROUTER_MODELS
     )
   }
 }

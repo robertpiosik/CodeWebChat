@@ -10,7 +10,7 @@ import { Logger } from '@shared/utils/logger'
 import { make_api_request } from './make-api-request'
 import { cleanup_api_response } from './cleanup-api-response'
 import { refactoring_instruction } from '../constants/instructions'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 
 export const get_intelligent_update_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -23,7 +23,7 @@ export const get_intelligent_update_config = async (
   if (intelligent_update_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
     vscode.window.showInformationMessage(
-      DICTIONARY.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
+      dictionary.information_message.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
     )
     return
   }
@@ -137,7 +137,7 @@ export const get_intelligent_update_config = async (
           )
           if (!provider) {
             vscode.window.showErrorMessage(
-              DICTIONARY.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
+              dictionary.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
             )
             resolve(undefined)
             return
@@ -165,7 +165,7 @@ export const get_intelligent_update_config = async (
 
   if (!provider) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
+      dictionary.error_message.API_PROVIDER_FOR_CONFIG_NOT_FOUND
     )
     Logger.warn({
       function_name: 'get_intelligent_update_config',
@@ -238,7 +238,7 @@ export const process_file = async (params: {
 
     if (!refactored_content) {
       vscode.window.showErrorMessage(
-        DICTIONARY.error_message.APPLYING_CHANGES_FAILED_EMPTY_RESPONSE(
+        dictionary.error_message.APPLYING_CHANGES_FAILED_EMPTY_RESPONSE(
           params.file_path
         )
       )
@@ -279,7 +279,7 @@ export const process_file = async (params: {
     })
     console.error(`Refactoring error for ${params.file_path}:`, error)
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.ERROR_DURING_REFACTORING(params.file_path)
+      dictionary.error_message.ERROR_DURING_REFACTORING(params.file_path)
     )
     return null
   }

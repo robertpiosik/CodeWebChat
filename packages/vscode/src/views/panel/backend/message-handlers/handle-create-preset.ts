@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { DICTIONARY } from '@/constants/dictionary'
+import { dictionary } from '@/constants/dictionary'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import {
   config_preset_to_ui_format,
@@ -74,7 +74,7 @@ export const handle_create_preset = async (
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(
-      DICTIONARY.error_message.FAILED_TO_CREATE_ITEM(create_option.id, error)
+      dictionary.error_message.FAILED_TO_CREATE_ITEM(create_option.id, error)
     )
   }
 }
