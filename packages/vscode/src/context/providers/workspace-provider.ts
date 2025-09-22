@@ -364,62 +364,97 @@ export class WorkspaceProvider
   }
 
   private _on_file_system_changed(changed_file_path?: string): void {
-    if (changed_file_path) {
-      this.file_token_counts.delete(changed_file_path)
+    if (!changed_file_path) return
 
-      let dir_path = path.dirname(changed_file_path)
-      const workspace_root = this.get_workspace_root_for_file(changed_file_path)
+    const workspace_root = this.get_workspace_root_for_file(changed_file_path)
+    if (!workspace_root) return
 
-      while (workspace_root && dir_path.startsWith(workspace_root)) {
-        this.directory_token_counts.delete(dir_path)
-        this.directory_selected_token_counts.delete(dir_path)
-        dir_path = path.dirname(dir_path)
+    if (path.basename(changed_file_path) == '.gitignore') return
+
+    this.file_token_counts.delete(changed_file_path)
+
+    let dir_path = path.dirname(changed_file_path)
+    while (dir_path.startsWith(workspace_root)) {
+      this.directory_token_counts.delete(dir_path)
+      this.directory_selected_token_counts.delete(dir_path)
+      dir_path = path.dirname(dir_path)
+    }
+
+    if (!fs.existsSync(changed_file_path)) {
+      this.file_workspace_map.delete(changed_file_path)
+      this.checked_items.delete(changed_file_path)
+      this.partially_checked_dirs.delete(changed_file_path)
+
+      let parent_dir = path.dirname(changed_file_path)
+      while (parent_dir.startsWith(workspace_root)) {
+        this._update_parent_state(parent_dir)
+        parent_dir = path.dirname(parent_dir)
       }
-    } else {
-      // If no specific file path provided, clear all caches (fallback)
-      this.file_token_counts.clear()
-      this.directory_token_counts.clear()
-      this.directory_selected_token_counts.clear()
+
+      this._on_did_change_checked_files.fire()
     }
 
     this._schedule_refresh()
   }
 
   private async _handle_file_create(created_file_path?: string): Promise<void> {
-    if (created_file_path) {
-      if (!should_ignore_file(created_file_path, this.ignored_extensions)) {
-        this.checked_items.set(
-          created_file_path,
-          vscode.TreeItemCheckboxState.Checked
-        )
-        let dir_path = path.dirname(created_file_path)
-        const workspace_root =
-          this.get_workspace_root_for_file(created_file_path)
-        while (workspace_root && dir_path.startsWith(workspace_root)) {
+    if (!created_file_path) return
+
+    const workspace_root = this.get_workspace_root_for_file(created_file_path)
+    if (!workspace_root) return
+
+    if (path.basename(created_file_path) == '.gitignore') return
+
+    this.file_workspace_map.set(created_file_path, workspace_root)
+
+    const parent_dir = path.dirname(created_file_path)
+    const parent_state = this.checked_items.get(parent_dir)
+
+    if (parent_state === vscode.TreeItemCheckboxState.Checked) {
+      const relative_path = path.relative(workspace_root, created_file_path)
+
+      if (
+        !this.is_excluded(relative_path) &&
+        !should_ignore_file(created_file_path, this.ignored_extensions)
+      ) {
+        const is_directory = fs.statSync(created_file_path).isDirectory()
+
+        if (is_directory) {
+          this.checked_items.set(
+            created_file_path,
+            vscode.TreeItemCheckboxState.Checked
+          )
+          await this._update_directory_check_state(
+            created_file_path,
+            vscode.TreeItemCheckboxState.Checked,
+            false
+          )
+        } else {
+          this.checked_items.set(
+            created_file_path,
+            vscode.TreeItemCheckboxState.Checked
+          )
+        }
+
+        let dir_path = parent_dir
+        while (dir_path.startsWith(workspace_root)) {
+          this.directory_selected_token_counts.delete(dir_path)
           await this._update_parent_state(dir_path)
           dir_path = path.dirname(dir_path)
         }
+
         this._on_did_change_checked_files.fire()
       }
-
-      this.file_token_counts.delete(created_file_path)
-
-      let dir_path = path.dirname(created_file_path)
-      const workspace_root = this.get_workspace_root_for_file(created_file_path)
-
-      while (workspace_root && dir_path.startsWith(workspace_root)) {
-        this.directory_token_counts.delete(dir_path)
-        this.directory_selected_token_counts.delete(dir_path)
-        dir_path = path.dirname(dir_path)
-      }
-    } else {
-      // If no specific file path provided, clear all caches (fallback)
-      this.file_token_counts.clear()
-      this.directory_token_counts.clear()
-      this.directory_selected_token_counts.clear()
     }
 
-    this._on_file_system_changed(created_file_path)
+    let dir_path = parent_dir
+    while (dir_path.startsWith(workspace_root)) {
+      this.directory_token_counts.delete(dir_path)
+      this.directory_selected_token_counts.delete(dir_path)
+      dir_path = path.dirname(dir_path)
+    }
+
+    this._schedule_refresh()
   }
 
   public refresh(): void {
@@ -437,7 +472,7 @@ export class WorkspaceProvider
     this.refresh_timeout = setTimeout(() => {
       this._on_did_change_tree_data.fire()
       this.refresh_timeout = null
-    }, 500) // Debounce refresh to handle bulk file changes like builds
+    }, 1000) // Debounce refresh to handle bulk file changes like builds
   }
   public clear_checks(): void {
     this.websites_provider.clear_checks()
