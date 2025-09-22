@@ -246,10 +246,11 @@ const perform_context_editing = async (params: {
     return
   }
 
-  if (editor && !editor.selection.isEmpty) {
-    if (instructions.includes('#Selection')) {
-      instructions = replace_selection_placeholder(instructions)
-    }
+  const has_selection =
+    !!editor && !editor.selection.isEmpty && instructions.includes('#Selection')
+
+  if (has_selection) {
+    instructions = replace_selection_placeholder(instructions)
   }
 
   let pre_context_instructions = instructions
@@ -278,7 +279,8 @@ const perform_context_editing = async (params: {
   const additional_paths = extract_file_paths_from_instruction(instructions)
 
   const collected_files = await files_collector.collect_files({
-    additional_paths
+    additional_paths,
+    include_file_with_text_selection: has_selection
   })
 
   if (!collected_files) {

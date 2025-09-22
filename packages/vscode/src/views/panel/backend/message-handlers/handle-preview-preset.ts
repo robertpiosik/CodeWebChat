@@ -67,11 +67,6 @@ export const handle_preview_preset = async (
 
     text_to_send = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing_text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
   } else if (provider.web_mode != 'code-completions') {
-    const context_text =
-      provider.web_mode != 'no-context'
-        ? await files_collector.collect_files()
-        : ''
-
     let instructions = apply_preset_affixes_to_instruction({
       instruction: current_instructions,
       preset_name: message.preset.name,
@@ -82,10 +77,20 @@ export const handle_preview_preset = async (
       }
     })
 
-    if (active_editor && !active_editor.selection.isEmpty) {
-      if (instructions.includes('#Selection')) {
-        instructions = replace_selection_placeholder(instructions)
-      }
+    const has_selection =
+      !!active_editor &&
+      !active_editor.selection.isEmpty &&
+      instructions.includes('#Selection')
+
+    const context_text =
+      provider.web_mode != 'no-context'
+        ? await files_collector.collect_files({
+            include_file_with_text_selection: has_selection
+          })
+        : ''
+
+    if (has_selection) {
+      instructions = replace_selection_placeholder(instructions)
     }
 
     let pre_context_instructions = instructions

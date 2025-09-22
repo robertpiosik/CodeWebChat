@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { OpenEditorsProvider } from '../context/providers/open-editors-provider'
 import { WebsitesProvider } from '../context/providers/websites-provider'
@@ -27,6 +28,7 @@ export class FilesCollector {
     exclude_path?: string
     additional_paths?: string[]
     no_context?: boolean
+    include_file_with_text_selection?: boolean
   }): Promise<string> {
     const additional_paths = (params?.additional_paths ?? []).map((p) => {
       if (this.workspace_roots.length > 0) {
@@ -35,20 +37,29 @@ export class FilesCollector {
       return p
     })
 
-    let context_files: string[] = []
+    const context_files_list: string[] = []
 
     if (params?.no_context) {
-      context_files = additional_paths
+      context_files_list.push(...additional_paths)
     } else {
       const workspace_files = this.workspace_provider.get_checked_files()
       const open_editor_files =
         this.open_editors_provider?.get_checked_files() || []
-
-      context_files = Array.from(
-        new Set([...workspace_files, ...open_editor_files, ...additional_paths])
+      context_files_list.push(
+        ...workspace_files,
+        ...open_editor_files,
+        ...additional_paths
       )
     }
 
+    if (params?.include_file_with_text_selection) {
+      const active_editor = vscode.window.activeTextEditor
+      if (active_editor && !active_editor.selection.isEmpty) {
+        context_files_list.push(active_editor.document.uri.fsPath)
+      }
+    }
+
+    const context_files = [...new Set(context_files_list)]
     context_files.sort((a, b) => natural_sort(a, b))
 
     let collected_text = ''
