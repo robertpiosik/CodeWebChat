@@ -201,48 +201,12 @@ const perform_context_editing = async (params: {
     params.open_editors_provider
   )
 
-  let instructions: string | undefined
-
-  if (params.instructions) {
-    instructions = params.instructions
-  } else {
-    const initial_context = await files_collector.collect_files({})
-    if (!initial_context) {
-      vscode.window.showWarningMessage(
-        dictionary.warning_message.UNABLE_TO_WORK_WITH_EMPTY_CONTEXT
-      )
-      return
-    }
-
-    const last_chat_prompt =
-      params.context.workspaceState.get<string>('last-chat-prompt') || ''
-
-    const input_box = vscode.window.createInputBox()
-    input_box.placeholder = 'Enter instructions'
-    input_box.value = last_chat_prompt
-
-    input_box.onDidChangeValue(async (value) => {
-      await params.context.workspaceState.update('last-chat-prompt', value)
-    })
-
-    instructions = await new Promise<string | undefined>((resolve) => {
-      input_box.onDidAccept(() => {
-        const value = input_box.value.trim()
-        if (value.length === 0) {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.INSTRUCTION_CANNOT_BE_EMPTY
-          )
-          return
-        }
-        resolve(value)
-        input_box.hide()
-      })
-      input_box.onDidHide(() => resolve(undefined))
-      input_box.show()
-    })
-  }
+  let instructions = params.instructions
 
   if (!instructions) {
+    vscode.window.showWarningMessage(
+      dictionary.warning_message.INSTRUCTIONS_CANNOT_BE_EMPTY
+    )
     return
   }
 

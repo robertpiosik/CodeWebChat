@@ -95,6 +95,7 @@ export const dictionary = {
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR:
       'Cannot copy prompt in code completion mode without an active editor.',
     UNABLE_TO_WORK_WITH_EMPTY_CONTEXT: 'Unable to work with empty context.',
+    INSTRUCTIONS_CANNOT_BE_EMPTY: 'Instructions cannot be empty.',
     CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR:
       'Cannot preview in code completion mode without an active editor.',
     BROWSER_EXTENSION_NOT_CONNECTED:
@@ -341,7 +342,6 @@ export const dictionary = {
       'An error occurred during code completion. See console for details.',
     REFACTOR_ERROR:
       'An error occurred during refactor task. See console for details.',
-    INSTRUCTION_CANNOT_BE_EMPTY: 'Instruction cannot be empty',
     CONFIGURATION_ALREADY_EXISTS:
       'A configuration with these properties already exists.',
     CONFIGURATION_NOT_FOUND: 'Configuration not found.'
