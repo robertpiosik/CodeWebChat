@@ -321,7 +321,8 @@ export const handle_intelligent_update = async (params: {
             }
           })
 
-          if (!updated_content_result) {
+          if (updated_content_result == null) {
+            cancel_token_source.token.throwIfRequested()
             throw new Error(`Failed to apply changes to ${file.file_path}`)
           }
 
