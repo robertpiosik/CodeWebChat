@@ -55,6 +55,20 @@ export const qwen: Chatbot = {
 
     model_selector_button.click()
     await new Promise((r) => requestAnimationFrame(r))
+    const expand_more = document.querySelector(
+      'div[aria-labelledby="model-selector-0-button"] div.expand-more'
+    ) as HTMLElement
+    if (expand_more) {
+      expand_more.click()
+      await new Promise((r) => setTimeout(r, 300))
+    } else {
+      report_initialization_error({
+        function_name: 'set_model',
+        log_message: 'Expand more button not found',
+        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+      })
+      return
+    }
     const model_buttons = document.querySelectorAll(
       'div[aria-labelledby="model-selector-0-button"] button[aria-label="model-item"]'
     ) as NodeListOf<HTMLButtonElement>

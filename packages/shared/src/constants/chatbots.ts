@@ -263,10 +263,11 @@ export const CHATBOTS = {
     models: {
       'qwen3-max-preview': { label: 'Qwen3-Max-Preview' },
       'qwen3-next-80b-a3b': { label: 'Qwen3-Next-80B-A3B' },
-      'qwen3-235b-a22b-2507': {
-        label: 'Qwen3-235B-A22B-2507'
-      },
-      'qwen3-coder': { label: 'Qwen3-Coder' }
+      'qwen3-235b-a22b-2507': { label: 'Qwen3-235B-A22B-2507' },
+      'qwen3-omni-flash': { label: 'Qwen3-Omni-Flash' },
+      'qwen3-coder': { label: 'Qwen3-Coder' },
+      'qwen3-30b-a3b-2507': { label: 'Qwen3-30B-A3B-2507' },
+      'qwen3-coder-flash': { label: 'Qwen3-Coder-Flash' }
     }
   },
   Together: {
