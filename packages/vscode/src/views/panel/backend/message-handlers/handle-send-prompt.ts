@@ -511,6 +511,7 @@ async function resolve_presets(params: {
                   dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
                 )
               }
+              return []
             } else {
               return [last_preset_name]
             }
@@ -574,6 +575,7 @@ async function resolve_presets(params: {
                   dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
                 )
               }
+              return []
             } else {
               return [last_preset_name]
             }
