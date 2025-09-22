@@ -86,11 +86,16 @@ export class FilesCollector {
         const workspace_root = this._get_workspace_root_for_file(file_path)
 
         if (!workspace_root) {
-          collected_text += `<file path="${file_path}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
+          collected_text += `<file path="${file_path.replace(
+            /\\/g,
+            '/'
+          )}">\n<![CDATA[\n${content}\n]]>\n</file>\n`
           continue
         }
 
-        const relative_path = path.relative(workspace_root, file_path)
+        const relative_path = path
+          .relative(workspace_root, file_path)
+          .replace(/\\/g, '/')
 
         // Get the workspace name to prefix the path if there are multiple workspaces
         let display_path = relative_path
