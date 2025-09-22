@@ -2,10 +2,10 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a>
 
-Code Web Chat is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, Gemini, DeepSeek, and 10+ other free chatbots for its signature workflow—select files, type instructions and start a new chat hands-free! Once ready, apply the response with a single click.
+Code Web Chat is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, Gemini, DeepSeek, and 10+ other free chatbots.
 
-✅ **Save money**—free tiers and subscription-based billing \
-✅ **Save time**—multi-file edits from a single prompt
+✅ **Save money**—use generous free tiers and subscription-based billing \
+✅ **Save time**—get a comprehensive set of changes without tool calls
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, Windsurf, VSCodium, and other forks</a>.
 
@@ -15,13 +15,13 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 **Guiding principles**
 
-- Initialize chatbots for conversations—don't scrape responses
+- Initialize chatbots—don't scrape responses
 - Respect user privacy—don't collect any data
 - Free forever—open-source community effort
 
 **CWC is for you if you're**
 
-- a software engineer working on a large codebase
+- a professional working on a large codebase
 - a student or hobbyist on a budget
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
@@ -54,7 +54,7 @@ Install the Connector browser extension and never copy&paste again.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-CWC is not limited to chatbot initializations—with its built-in API tools, it aids your software development efforts at every step. To use, bring your own keys (BYOK) for any OpenAI-API compatible model provider for usage-based billing.
+CWC is not limited to chatbot initializations. To use built-in API tools, bring your own keys (BYOK) for any OpenAI-API compatible model provider for usage-based billing.
 
 **🛠️ Edit Context** \
 Modify files based on natural language instructions.
