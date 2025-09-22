@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react'
+import { FC, useState, useEffect, useMemo } from 'react'
 import { FileInReview } from '@shared/types/file-in-review'
 import cn from 'classnames'
 import styles from './Changes.module.scss'
@@ -53,6 +53,21 @@ export const Changes: FC<Props> = ({
   const fallback_count = files.filter((f) => f.is_fallback).length
   const replaced_files_count = files.filter((f) => f.is_replaced).length
 
+  const sorted_files = useMemo(() => {
+    const get_sort_score = (
+      file: FileInReview & { is_checked: boolean }
+    ): number => {
+      if (file.diff_fallback_method == 'search_and_replace') {
+        return 0
+      }
+      if (file.diff_fallback_method == 'recount') {
+        return 1
+      }
+      return 2
+    }
+    return [...files].sort((a, b) => get_sort_score(a) - get_sort_score(b))
+  }, [files])
+
   return (
     <div className={styles.container}>
       {fallback_count > 0 && (
@@ -76,7 +91,7 @@ export const Changes: FC<Props> = ({
         </div>
       )}
       <div className={styles.list}>
-        {files.map((file, index) => {
+        {sorted_files.map((file, index) => {
           const last_slash_index = file.file_path.lastIndexOf('/')
           const file_name = file.file_path.substring(last_slash_index + 1)
           const dir_path =
@@ -97,7 +112,11 @@ export const Changes: FC<Props> = ({
                 })
               }}
               role="button"
-              title={file.file_path}
+              title={`${file.file_path}${
+                file.diff_fallback_method == 'search_and_replace'
+                  ? '\nUsed aggressive fallback method—check correctness.'
+                  : ''
+              }`}
             >
               <div className={styles['item__left']}>
                 {files.length > 1 && (
@@ -118,7 +137,10 @@ export const Changes: FC<Props> = ({
                     [styles['item__left__label--deleted']]: file.is_deleted
                   })}
                 >
-                  <span>{file_name}</span>
+                  <span>
+                    {file.diff_fallback_method == 'search_and_replace' && '⚠ '}
+                    {file_name}
+                  </span>
 
                   <span>
                     {has_multiple_workspaces && file.workspace_name
