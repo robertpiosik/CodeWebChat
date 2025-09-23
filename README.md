@@ -2,12 +2,12 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a>
 
-Code Web Chat is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, Gemini, DeepSeek, and 10+ other free chatbots.
+Code Web Chat is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, AI Studio, DeepSeek, and 10+ other free chatbots.
 
 ✅ **Save money**—use generous free tiers and subscription-based billing \
-✅ **Save time**—get a comprehensive set of changes without tool calls
+✅ **Save time**—integrate multi-file changes from a single response
 
-Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, Windsurf, VSCodium, and other forks</a>.
+Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
