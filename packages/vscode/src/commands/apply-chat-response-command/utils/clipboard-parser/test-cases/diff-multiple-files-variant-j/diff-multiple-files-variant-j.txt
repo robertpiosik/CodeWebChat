@@ -1,0 +1,15 @@
+```diff
+--- src/lorem.ts
++++ src/lorem.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old lorem")
++console.log("new lorem")
+
+--- src/ipsum.ts
++++ src/ipsum.ts
+@@ -1,3 +1,3 @@
+ console.log("hello")
+-console.log("old ipsum")
++console.log("new ipsum")
+```

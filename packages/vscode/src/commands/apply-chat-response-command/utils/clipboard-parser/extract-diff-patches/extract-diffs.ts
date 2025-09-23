@@ -166,19 +166,14 @@ const parse_multiple_raw_patches = (all_lines: string[]): Diff[] => {
 
   for (const line of all_lines) {
     const is_potential_new_patch_header =
-      line.startsWith('--- a/') ||
-      line.startsWith('diff --git a/') ||
-      line.startsWith('--- "a/')
+      line.startsWith('--- ') || line.startsWith('diff --git ')
 
     if (is_potential_new_patch_header && current_patch_lines.length > 0) {
       const contains_main_header = current_patch_lines.some(
-        (l) =>
-          l.startsWith('--- a/') ||
-          l.startsWith('diff --git a/') ||
-          l.startsWith('--- "a/')
+        (l) => l.startsWith('--- ') || l.startsWith('diff --git ')
       )
-      const contains_plus_plus_plus = current_patch_lines.some(
-        (l) => l.startsWith('+++ b/') || l.startsWith('+++ "b/')
+      const contains_plus_plus_plus = current_patch_lines.some((l) =>
+        l.startsWith('+++ ')
       )
 
       if (contains_main_header && contains_plus_plus_plus) {
