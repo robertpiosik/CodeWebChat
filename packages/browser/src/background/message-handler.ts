@@ -21,7 +21,7 @@ interface ChatQueueItem {
 const chat_queue: ChatQueueItem[] = []
 let is_processing = false
 
-const CHAT_INITIALIZATION_TIMEOUT = 5000
+const CHAT_INITIALIZATION_TIMEOUT = 8000
 
 export const handle_messages = (message: WebSocketMessage) => {
   if (message.action == 'initialize-chats') {

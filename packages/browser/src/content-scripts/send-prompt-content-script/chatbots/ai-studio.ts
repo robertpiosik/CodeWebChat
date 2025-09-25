@@ -11,6 +11,10 @@ export const ai_studio: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
+        if (!document.querySelector('ms-incognito-mode-toggle > button')) {
+          setTimeout(check_for_element, 100)
+          return
+        }
         if (window.innerWidth <= 960) {
           if (document.querySelector('button.runsettings-toggle-button')) {
             resolve(null)
