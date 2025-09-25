@@ -80,11 +80,13 @@ export async function make_api_request(params: {
   const handle_chunk_metrics = (chunk: string) => {
     if (!params.on_chunk || !chunk) return
 
-    if (stream_start_time === 0) {
+    total_tokens += Math.ceil(chunk.length / 4)
+    if (stream_start_time == 0) {
       stream_start_time = Date.now()
       last_on_chunk_time = stream_start_time
+      // Don't calculate TPS on the first chunk, as elapsed time is 0
+      return
     }
-    total_tokens += Math.ceil(chunk.length / 4)
 
     const current_time = Date.now()
     if (current_time - last_on_chunk_time >= 1000) {

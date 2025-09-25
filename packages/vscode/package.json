@@ -347,10 +347,6 @@
         {
           "command": "codeWebChat.settings",
           "when": "false"
-        },
-        {
-          "command": "codeWebChat.commitChanges",
-          "when": "false"
         }
       ],
       "view/title": [
