@@ -13,6 +13,18 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
+**How it works?**
+
+CWC is dead simple—select folders and files you want to show to the model, type instructions, and pick your favorite chatbot, to continue in the browser, or call a model provider of choice, to stay in the editor.
+
+Once the response is ready, generated code blocks in the selected **EDIT FORMAT** can be integrated with a single click.
+
+| EDIT FORMAT | Token Usage | Operations             |
+| ----------- | :---------: | ---------------------- |
+| Whole       |    high     | modify, create         |
+| Truncated   |     low     | modify, create         |
+| Diff        |     low     | modify, create, delete |
+
 **Guiding principles**
 
 - Initialize chatbots—don't scrape responses
