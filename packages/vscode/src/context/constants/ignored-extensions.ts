@@ -9,6 +9,7 @@ export const ignored_extensions = new Set([
   'webp',
   'tiff',
   'psd',
+  'avif',
   // Videos
   'mp4',
   'webm',

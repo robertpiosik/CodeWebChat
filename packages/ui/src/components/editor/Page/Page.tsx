@@ -1,3 +1,4 @@
+import cn from 'classnames'
 import styles from './Page.module.scss'
 import { Scrollable } from '../Scrollable'
 import { IconButton } from '../IconButton'
@@ -8,11 +9,16 @@ type Props = {
   on_close_click?: () => void
   header_slot?: React.ReactNode
   children: React.ReactNode
+  has_outline?: boolean
 }
 
 export const Page: React.FC<Props> = (props) => {
   return (
-    <div className={styles.container}>
+    <div
+      className={cn(styles.container, {
+        [styles['container--has-outline']]: props.has_outline
+      })}
+    >
       <div className={styles.header}>
         {props.title && (
           <div className={styles.header__title}>{props.title}</div>

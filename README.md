@@ -16,7 +16,7 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 **Guiding principles**
 
 - Initialize chatbots—don't scrape responses
-- Respect user privacy—don't collect any data
+- Privacy first—don't collect any usage data
 - Free forever—open-source community effort
 
 **CWC is for you if you're**

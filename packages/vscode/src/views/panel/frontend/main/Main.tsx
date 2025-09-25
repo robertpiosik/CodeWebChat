@@ -144,7 +144,6 @@ export const Main: React.FC<Props> = (props) => {
           }))
           break
         case 'SELECTED_CONFIGURATION_CHANGED':
-          console.log(message.index)
           set_selected_configuration_index_by_mode((prev) => ({
             ...prev,
             [message.mode]: message.index

@@ -14,6 +14,7 @@ import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@/constants/dictionary'
 
@@ -312,7 +313,7 @@ const perform_context_editing = async (params: {
   const instructions_placement =
     edit_context_config.instructions_placement || 'above-and-below'
   let content: string
-  if (instructions_placement === 'below-only') {
+  if (instructions_placement == 'below-only') {
     // Place instructions only below context for better caching
     content = `${files}\n${post_context_instructions}`
   } else {
@@ -323,8 +324,7 @@ const perform_context_editing = async (params: {
   const messages = [
     {
       role: 'system',
-      content:
-        'You are an AI programming assistant. Do not include any explanations or other text.'
+      content: "You're a helpful coding assistant."
     },
     {
       role: 'user',
@@ -332,12 +332,13 @@ const perform_context_editing = async (params: {
     }
   ]
 
-  const body = {
+  const body: { [key: string]: any } = {
     messages,
     model: edit_context_config.model,
-    temperature: edit_context_config.temperature,
-    reasoning_effort: edit_context_config.reasoning_effort
+    temperature: edit_context_config.temperature
   }
+
+  apply_reasoning_effort(body, provider, edit_context_config.reasoning_effort)
 
   const cancel_token_source = axios.CancelToken.source()
 
@@ -357,11 +358,19 @@ const perform_context_editing = async (params: {
       api_key: provider.api_key,
       body,
       cancellation_token: cancel_token_source.token,
+      on_thinking_chunk: () => {
+        if (params.view_provider) {
+          params.view_provider.send_message({
+            command: 'SHOW_PROGRESS',
+            title: `${dictionary.THINKING}...`
+          })
+        }
+      },
       on_chunk: (tokens_per_second) => {
         if (params.view_provider) {
           params.view_provider.send_message({
             command: 'SHOW_PROGRESS',
-            title: 'Receiving message...',
+            title: 'Receiving response...',
             tokens_per_second
           })
         }

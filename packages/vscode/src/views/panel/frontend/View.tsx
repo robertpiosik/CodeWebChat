@@ -396,7 +396,7 @@ export const View = () => {
 
       {files_to_review && (
         <div className={styles.slot}>
-          <UiPage title="Changes">
+          <UiPage title="Changes" has_outline={true}>
             <UiChanges
               files={files_to_review}
               has_multiple_workspaces={workspace_folder_count > 1}

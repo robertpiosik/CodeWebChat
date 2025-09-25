@@ -15,6 +15,7 @@ import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constant
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { CodeCompletionMessage } from '@/views/panel/types/messages'
+import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@/constants/dictionary'
 
 const get_code_completion_config = async (
@@ -319,12 +320,17 @@ const perform_code_completion = async (params: {
       }
     ]
 
-    const body = {
+    const body: { [key: string]: any } = {
       messages,
       model: code_completions_config.model,
-      temperature: code_completions_config.temperature,
-      reasoning_effort: code_completions_config.reasoning_effort
+      temperature: code_completions_config.temperature
     }
+
+    apply_reasoning_effort(
+      body,
+      provider,
+      code_completions_config.reasoning_effort
+    )
 
     const cursor_listener = vscode.window.onDidChangeTextEditorSelection(
       (e) => {
@@ -351,7 +357,15 @@ const perform_code_completion = async (params: {
         endpoint_url,
         api_key: provider.api_key,
         body,
-        cancellation_token: cancel_token_source.token
+        cancellation_token: cancel_token_source.token,
+        on_thinking_chunk: () => {
+          if (params.view_provider) {
+            params.view_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: `${dictionary.THINKING}...`
+            })
+          }
+        }
       })
 
       if (completion) {

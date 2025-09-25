@@ -1,15 +1,21 @@
 /**
  * Cleans up the API response by iteratively stripping away wrapper markup
  * at the beginning and end of the content, without affecting the middle content.
+ * Used by intelligent update/code completions command.
  */
 export function cleanup_api_response(params: { content: string }): string {
   let content = params.content
   let changed = true
 
   if (content.startsWith('<think>')) {
-    const think_end_index = content.indexOf('</think>')
-    if (think_end_index != -1) {
-      content = content.substring(think_end_index + '</think>'.length)
+    const end_index = content.indexOf('</think>')
+    if (end_index != -1) {
+      content = content.substring(end_index + '</think>'.length)
+    }
+  } else if (content.startsWith('<thought>')) {
+    const end_index = content.indexOf('</thought>')
+    if (end_index != -1) {
+      content = content.substring(end_index + '</thought>'.length)
     }
   }
 

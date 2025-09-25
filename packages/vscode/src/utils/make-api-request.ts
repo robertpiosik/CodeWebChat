@@ -4,41 +4,20 @@ import { dictionary } from '@/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 
 type StreamCallback = (tokens_per_second: number, total_tokens: number) => void
-
-type InternalStreamCallback = (chunk: string) => void
+type ThinkingStreamCallback = (text: string) => void
 
 const DATA_PREFIX = 'data: '
 const DONE_TOKEN = '[DONE]'
-const THINK_OPEN = '<think>'
-const THINK_CLOSE = '</think>'
 
 async function process_stream_chunk(
   chunk: string,
-  buffer: string,
-  accumulated_content: string,
-  last_log_time: number,
-  logged_content_length: number,
-  think_buffer: string,
-  in_think_block: boolean,
-  think_block_ended: boolean,
-  on_chunk?: InternalStreamCallback
+  buffer: string
 ): Promise<{
   updated_buffer: string
-  updated_accumulated_content: string
-  updated_last_log_time: number
-  updated_logged_content_length: number
-  updated_think_buffer: string
-  updated_in_think_block: boolean
-  updated_think_block_ended: boolean
+  new_content: string
 }> {
   let updated_buffer = buffer
-  let updated_accumulated_content = accumulated_content
-  let updated_last_log_time = last_log_time
-  let updated_logged_content_length = logged_content_length
-  let updated_think_buffer = think_buffer
-  let updated_in_think_block = in_think_block
-  let updated_think_block_ended = think_block_ended
-
+  let new_content = ''
   try {
     updated_buffer += chunk
     const lines = updated_buffer.split('\n')
@@ -55,80 +34,7 @@ async function process_stream_chunk(
 
           const json_data = JSON.parse(json_string)
           if (json_data.choices?.[0]?.delta?.content) {
-            const new_content = json_data.choices[0].delta.content
-            updated_accumulated_content += new_content
-
-            // --- Think block handling logic ---
-            if (updated_think_block_ended) {
-              // If the first think block has already ended, stream all new content
-              if (on_chunk) {
-                on_chunk(new_content)
-              }
-            } else {
-              // We are either before, or inside, the first think block
-              updated_think_buffer += new_content
-
-              if (!updated_in_think_block) {
-                // We are currently *not* in a think block (haven't seen <think> yet)
-                const think_open_index =
-                  updated_think_buffer.indexOf(THINK_OPEN)
-                if (think_open_index != -1) {
-                  // <think> tag found!
-                  updated_in_think_block = true
-                  // Stream content *before* <think>
-                  const pre_think_content = updated_think_buffer.substring(
-                    0,
-                    think_open_index
-                  )
-                  if (pre_think_content && on_chunk) {
-                    on_chunk(pre_think_content)
-                  }
-                  // The remaining part of updated_think_buffer now starts with <think>
-                  updated_think_buffer =
-                    updated_think_buffer.substring(think_open_index)
-                } else {
-                  // No <think> tag found yet, stream this content
-                  if (on_chunk) {
-                    on_chunk(new_content)
-                  }
-                }
-              }
-
-              // Now, if we are in a think block (either just entered or already were)
-              if (updated_in_think_block) {
-                const think_close_index =
-                  updated_think_buffer.indexOf(THINK_CLOSE)
-                if (think_close_index != -1) {
-                  // </think> tag found!
-                  updated_in_think_block = false
-                  updated_think_block_ended = true
-                  // Stream content *after* </think>
-                  const post_think_content = updated_think_buffer.substring(
-                    think_close_index + THINK_CLOSE.length
-                  )
-                  if (post_think_content && on_chunk) {
-                    on_chunk(post_think_content)
-                  }
-                  // Clear the think buffer as the first think block is fully processed
-                  updated_think_buffer = ''
-                }
-                // If </think> not found, we remain in_think_block and do not stream.
-              }
-            }
-            // --- End think block handling logic ---
-
-            const current_time = Date.now()
-            if (current_time - updated_last_log_time >= 1000) {
-              Logger.info({
-                function_name: 'process_stream_chunk',
-                message: 'Streaming tokens',
-                data: `\n${updated_accumulated_content.substring(
-                  updated_logged_content_length
-                )}`
-              })
-              updated_last_log_time = current_time
-              updated_logged_content_length = updated_accumulated_content.length
-            }
+            new_content += json_data.choices[0].delta.content
           }
         } catch (parse_error) {
           Logger.warn({
@@ -149,12 +55,7 @@ async function process_stream_chunk(
 
   return {
     updated_buffer,
-    updated_accumulated_content,
-    updated_last_log_time,
-    updated_logged_content_length,
-    updated_think_buffer,
-    updated_in_think_block,
-    updated_think_block_ended
+    new_content
   }
 }
 
@@ -164,6 +65,7 @@ export async function make_api_request(params: {
   body: any
   cancellation_token: any
   on_chunk?: StreamCallback
+  on_thinking_chunk?: ThinkingStreamCallback
 }): Promise<string | null> {
   Logger.info({
     function_name: 'make_api_request',
@@ -174,27 +76,31 @@ export async function make_api_request(params: {
   let stream_start_time = 0
   let last_on_chunk_time = 0
   let total_tokens = 0
-  let internal_on_chunk: InternalStreamCallback | undefined
 
-  if (params.on_chunk) {
-    internal_on_chunk = (chunk: string) => {
-      if (stream_start_time == 0) {
-        stream_start_time = Date.now()
-        last_on_chunk_time = stream_start_time
-      }
-      total_tokens += Math.ceil(chunk.length / 4)
+  const handle_chunk_metrics = (chunk: string) => {
+    if (!params.on_chunk || !chunk) return
 
-      const current_time = Date.now()
-      if (current_time - last_on_chunk_time >= 1000) {
-        last_on_chunk_time = current_time
-
-        const elapsed_seconds = (current_time - stream_start_time) / 1000
-        const tokens_per_second =
-          elapsed_seconds > 0 ? Math.round(total_tokens / elapsed_seconds) : 0
-
-        params.on_chunk!(tokens_per_second, total_tokens)
-      }
+    if (stream_start_time === 0) {
+      stream_start_time = Date.now()
+      last_on_chunk_time = stream_start_time
     }
+    total_tokens += Math.ceil(chunk.length / 4)
+
+    const current_time = Date.now()
+    if (current_time - last_on_chunk_time >= 1000) {
+      last_on_chunk_time = current_time
+
+      const elapsed_seconds = (current_time - stream_start_time) / 1000
+      const tokens_per_second =
+        elapsed_seconds > 0 ? Math.round(total_tokens / elapsed_seconds) : 0
+
+      params.on_chunk(tokens_per_second, total_tokens)
+    }
+  }
+
+  const handle_thinking_chunk = (chunk: string) => {
+    if (!params.on_thinking_chunk || !chunk) return
+    params.on_thinking_chunk(chunk)
   }
 
   const MAX_RETRIES = 3
@@ -204,13 +110,87 @@ export async function make_api_request(params: {
     try {
       const request_body = { ...params.body, stream: true }
 
-      let accumulated_content = ''
+      let buffer = ''
+      let full_response = ''
+      let content_for_client = ''
+      let in_think_block = false
+      let think_block_closed = false
+      let processed_think_content_length = 0
+
       let last_log_time = Date.now()
       let logged_content_length = 0
-      let buffer = ''
-      let think_buffer = ''
-      let in_think_block = false
-      let think_block_ended = false
+
+      const process_content = (new_content: string) => {
+        if (!new_content) return
+
+        full_response += new_content
+
+        if (think_block_closed) {
+          content_for_client += new_content
+          handle_chunk_metrics(new_content)
+          return
+        }
+
+        if (!in_think_block) {
+          const think_start_regex = /<(think|thought)>/
+          const start_match = full_response.match(think_start_regex)
+
+          if (start_match) {
+            in_think_block = true
+            processed_think_content_length =
+              start_match.index! + start_match[0].length
+          } else {
+            const trimmed_response = full_response.trimStart()
+            if (
+              trimmed_response.length > 0 &&
+              !trimmed_response.startsWith('<')
+            ) {
+              think_block_closed = true
+              content_for_client = full_response
+              handle_chunk_metrics(full_response)
+              return
+            }
+          }
+        }
+
+        if (in_think_block) {
+          const think_end_regex = /<\/(think|thought)>/
+          const end_match = full_response
+            .substring(processed_think_content_length)
+            .match(think_end_regex)
+
+          let think_content_chunk: string
+
+          if (end_match) {
+            const end_match_absolute_index =
+              processed_think_content_length + end_match.index!
+
+            think_content_chunk = full_response.substring(
+              processed_think_content_length,
+              end_match_absolute_index
+            )
+
+            think_block_closed = true
+
+            const content_after = full_response.substring(
+              end_match_absolute_index + end_match[0].length
+            )
+            content_for_client = content_after
+            if (content_after) {
+              handle_chunk_metrics(content_after)
+            }
+          } else {
+            think_content_chunk = full_response.substring(
+              processed_think_content_length
+            )
+          }
+
+          if (think_content_chunk) {
+            handle_thinking_chunk(think_content_chunk)
+            processed_think_content_length += think_content_chunk.length
+          }
+        }
+      }
 
       const response: AxiosResponse<NodeJS.ReadableStream> = await axios.post(
         params.endpoint_url + '/chat/completions',
@@ -222,7 +202,7 @@ export async function make_api_request(params: {
             ...(params.endpoint_url == 'https://openrouter.ai/api/v1'
               ? {
                   'HTTP-Referer': 'https://codeweb.chat/',
-                  'X-Title': 'Code Web Chat (CWC)'
+                  'X-Title': 'Code Web Chat'
                 }
               : {})
           },
@@ -235,25 +215,23 @@ export async function make_api_request(params: {
 
       return new Promise((resolve, reject) => {
         response.data.on('data', async (chunk: string) => {
-          const processing_result = await process_stream_chunk(
+          const { updated_buffer, new_content } = await process_stream_chunk(
             chunk,
-            buffer,
-            accumulated_content,
-            last_log_time,
-            logged_content_length,
-            think_buffer,
-            in_think_block,
-            think_block_ended,
-            internal_on_chunk
+            buffer
           )
-          buffer = processing_result.updated_buffer
-          accumulated_content = processing_result.updated_accumulated_content
-          last_log_time = processing_result.updated_last_log_time
-          logged_content_length =
-            processing_result.updated_logged_content_length
-          think_buffer = processing_result.updated_think_buffer
-          in_think_block = processing_result.updated_in_think_block
-          think_block_ended = processing_result.updated_think_block_ended
+          buffer = updated_buffer
+          process_content(new_content)
+
+          const current_time = Date.now()
+          if (current_time - last_log_time >= 1000) {
+            Logger.info({
+              function_name: 'make_api_request',
+              message: 'Streaming tokens',
+              data: `\n${full_response.substring(logged_content_length)}`
+            })
+            last_log_time = current_time
+            logged_content_length = full_response.length
+          }
         })
 
         response.data.on('end', () => {
@@ -267,7 +245,7 @@ export async function make_api_request(params: {
                 if (json_string && json_string !== DONE_TOKEN) {
                   const json_data = JSON.parse(json_string)
                   if (json_data.choices?.[0]?.delta?.content) {
-                    accumulated_content += json_data.choices[0].delta.content
+                    process_content(json_data.choices[0].delta.content)
                   }
                 }
               }
@@ -282,11 +260,18 @@ export async function make_api_request(params: {
 
           Logger.info({
             function_name: 'make_api_request',
-            message: 'Combined code received:',
-            data: accumulated_content
+            message: 'Combined code received (full response):',
+            data: full_response
           })
+          if (in_think_block) {
+            Logger.info({
+              function_name: 'make_api_request',
+              message: 'Combined code received (for client):',
+              data: content_for_client
+            })
+          }
 
-          resolve(accumulated_content)
+          resolve(content_for_client)
         })
 
         response.data.on('error', (error: Error) => {
@@ -326,6 +311,8 @@ export async function make_api_request(params: {
         vscode.window.showErrorMessage(
           dictionary.error_message.API_RATE_LIMIT_EXCEEDED
         )
+      } else if (axios.isAxiosError(error) && error.response?.status == 400) {
+        vscode.window.showErrorMessage(dictionary.error_message.API_BAD_REQUEST)
       } else if (axios.isAxiosError(error) && error.response?.status == 503) {
         vscode.window.showErrorMessage(
           dictionary.error_message.API_ENDPOINT_UNAVAILABLE

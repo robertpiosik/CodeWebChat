@@ -114,7 +114,7 @@ export const Changes: FC<Props> = ({
               role="button"
               title={`${file.file_path}${
                 file.diff_fallback_method == 'search_and_replace'
-                  ? '\nUsed aggressive fallback method—check correctness.'
+                  ? '\nUsed aggressive fallback method. Call Intelligent Update API tool, if needed.'
                   : ''
               }`}
             >
