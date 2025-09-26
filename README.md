@@ -5,7 +5,7 @@
 Code Web Chat is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, AI Studio, DeepSeek, and 10+ other free chatbots.
 
 ✅ **Save money**—use generous free tiers and subscription-based billing \
-✅ **Save time**—integrate multi-file changes from a single response
+✅ **Save time**—finish tasks in seconds, not minutes
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
@@ -15,9 +15,9 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 **The workflow**
 
-Select folders and files you want to show to the model, type instructions, and pick your favorite chatbot, to continue in the browser, or call a model provider of choice, to stay in the editor.
+Select folders and files you want to fully show to the model, type instructions, and pick your favorite chatbot, to continue in the browser, or call a model provider of choice, to stay in the editor.
 
-Once the response is ready, generated code blocks in the selected **EDIT FORMAT** can be applied with a single click!
+Once the response is ready, generated code blocks in any EDIT FORMAT will be applied to the codebase with a single click!
 
 | EDIT FORMAT | Token usage | File operations        |
 | ----------- | :---------: | ---------------------- |
