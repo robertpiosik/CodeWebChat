@@ -15,9 +15,9 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 **The workflow**
 
-Select folders and files you want to attach in message as context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
+Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
 
-Once the response is ready, all changes can be applied to the codebase before being reviewed in a transparent and safe way.
+Once the response is ready, all changes can be applied to the codebase after you review them in a transparent and safe way.
 
 **Guiding principles**
 
@@ -60,7 +60,7 @@ Install the Connector browser extension and never copy&paste again.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-CWC is not limited to chatbot initializations. To use built-in API tools, bring your own keys (BYOK) for any OpenAI-API compatible model provider for usage-based billing.
+CWC is not limited to chatbot initializations. To use built-in API tools, bring your own keys (BYOK) for any OpenAI-API compatible model provider.
 
 **🛠️ Edit Context** \
 Modify files based on natural language instructions.

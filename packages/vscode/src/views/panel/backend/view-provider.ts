@@ -365,7 +365,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               provider: this,
               preset_name: message.preset_name,
               group_name: message.group_name,
-              show_quick_pick: message.show_quick_pick
+              show_quick_pick: message.show_quick_pick,
+              without_submission: message.without_submission
             })
           } else if (message.command == 'PREVIEW_PRESET') {
             await handle_preview_preset(this, message)

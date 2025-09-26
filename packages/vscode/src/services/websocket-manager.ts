@@ -260,7 +260,8 @@ export class WebSocketManager {
   // TODO: This needs attention - should be renamed to "initialize-chat" and handle only one at a time.
   public async initialize_chats(
     chats: Array<{ text: string; preset_name: string }>,
-    presets_config_key: string
+    presets_config_key: string,
+    without_submission?: boolean
   ): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -298,7 +299,8 @@ export class WebSocketManager {
         reasoning_effort: preset.reasoningEffort,
         system_instructions: preset.systemInstructions,
         options: preset.options,
-        client_id: this.client_id || 0 // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+        client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+        without_submission
       }
 
       Logger.info({

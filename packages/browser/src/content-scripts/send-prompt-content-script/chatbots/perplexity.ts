@@ -25,7 +25,10 @@ export const perplexity: Chatbot = {
       check_for_element()
     })
   },
-  enter_message_and_send: async (message: string) => {
+  enter_message_and_send: async (
+    message: string,
+    without_submission?: boolean
+  ) => {
     let instructions = message
     if (message.includes('<files>')) {
       instructions = message.split('<files>')[0].trim()
@@ -84,6 +87,8 @@ export const perplexity: Chatbot = {
     )
 
     await new Promise((r) => requestAnimationFrame(r))
+
+    if (without_submission) return
 
     const submit_button = document.querySelector(
       'button[data-testid="submit-button"]'

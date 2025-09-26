@@ -153,12 +153,16 @@ export const get_textarea_element = () => {
 const enter_message_and_send = async (params: {
   input_element: HTMLElement | null
   message: string
+  without_submission?: boolean
 }) => {
   if (params.input_element && params.input_element.isContentEditable) {
     params.input_element.innerText = params.message
     params.input_element.dispatchEvent(new Event('input', { bubbles: true }))
     params.input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
+
+    if (params.without_submission) return
+
     const form = params.input_element.closest('form')
     if (form) {
       form.requestSubmit()
@@ -180,6 +184,9 @@ const enter_message_and_send = async (params: {
     params.input_element.dispatchEvent(new Event('input', { bubbles: true }))
     params.input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
+
+    if (params.without_submission) return
+
     const form = params.input_element.closest('form')
     if (form) {
       form.requestSubmit()
@@ -196,7 +203,11 @@ const enter_message_and_send = async (params: {
   }
 }
 
-const initialize_chat = async (params: { message: string; chat: Chat }) => {
+const initialize_chat = async (params: {
+  message: string
+  chat: Chat
+  without_submission?: boolean
+}) => {
   if (chatbot?.set_model) {
     await chatbot.set_model(params.chat.model)
   }
@@ -219,11 +230,15 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
     await chatbot.set_options(params.chat.options || [])
   }
   if (chatbot?.enter_message_and_send) {
-    await chatbot.enter_message_and_send(params.message)
+    await chatbot.enter_message_and_send(
+      params.message,
+      params.without_submission
+    )
   } else {
     await enter_message_and_send({
       input_element: get_textarea_element(),
-      message: params.message
+      message: params.message,
+      without_submission: params.without_submission
     })
   }
 
@@ -250,6 +265,7 @@ const main = async () => {
     text: string
     current_chat: Chat
     client_id: number
+    without_submission?: boolean
   }
 
   if (!stored_data) {
@@ -272,7 +288,8 @@ const main = async () => {
 
   await initialize_chat({
     message: message_text,
-    chat: current_chat
+    chat: current_chat,
+    without_submission: stored_data.without_submission
   })
 
   // Clean up the storage entry after using it

@@ -35,7 +35,8 @@ export const dictionary = {
     unset_as_selected: 'Unset as selected',
     collapse_group: 'Collapse',
     expand_group: 'Expand',
-    copy_to_clipboard: 'Copy to clipboard'
+    copy_to_clipboard: 'Copy to clipboard',
+    run_without_submission: 'Run without submission'
   },
 
   information_message: {

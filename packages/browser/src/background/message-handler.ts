@@ -96,7 +96,8 @@ const process_next_chat = async () => {
     [`chat-init:${batch_id}`]: {
       text: current_queue_item.message.text,
       current_chat: current_chat,
-      client_id: current_queue_item.message.client_id
+      client_id: current_queue_item.message.client_id,
+      without_submission: current_queue_item.message.without_submission
     }
   })
 
@@ -177,7 +178,8 @@ const handle_initialize_chat_message = async (
     action: 'initialize-chats',
     text: message.text,
     chats: [chat_config],
-    client_id: message.client_id
+    client_id: message.client_id,
+    without_submission: message.without_submission
   }
 
   handle_initialize_chats_message(chats_message)

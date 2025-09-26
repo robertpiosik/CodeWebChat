@@ -4,7 +4,7 @@
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
   "description": "Connect your editor with free chatbots. Include websites in context.",
-  "version": "1.45.0",
+  "version": "1.46.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",

@@ -21,7 +21,10 @@ export const kimi: Chatbot = {
       check_for_element()
     })
   },
-  enter_message_and_send: async (message: string) => {
+  enter_message_and_send: async (
+    message: string,
+    without_submission?: boolean
+  ) => {
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
@@ -42,6 +45,8 @@ export const kimi: Chatbot = {
         data: message
       })
     )
+
+    if (without_submission) return
 
     await new Promise<void>((resolve) => {
       const check_button_state = () => {

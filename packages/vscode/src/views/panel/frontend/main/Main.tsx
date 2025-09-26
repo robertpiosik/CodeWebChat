@@ -284,15 +284,19 @@ export const Main: React.FC<Props> = (props) => {
     preset_name?: string
     group_name?: string
     show_quick_pick?: boolean
+    without_submission?: boolean
   }) => {
     post_message(props.vscode, {
       command: 'SEND_PROMPT',
       preset_name: params.preset_name,
       group_name: params.group_name,
-      show_quick_pick: params.show_quick_pick
+      show_quick_pick: params.show_quick_pick,
+      without_submission: params.without_submission
     })
 
-    update_chat_history(instructions)
+    if (!params.without_submission) {
+      update_chat_history(instructions)
+    }
   }
 
   const handle_copy_to_clipboard = (preset_name?: string) => {

@@ -365,7 +365,10 @@ export const ai_studio: Chatbot = {
     top_p_element.value = top_p.toString()
     top_p_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
-  enter_message_and_send: async (message: string) => {
+  enter_message_and_send: async (
+    message: string,
+    without_submission?: boolean
+  ) => {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
@@ -395,7 +398,11 @@ export const ai_studio: Chatbot = {
       }
       check()
     })
+
     await close_panel()
+
+    if (without_submission) return
+
     const send_button = document.querySelector(
       'ms-run-button > button'
     ) as HTMLElement

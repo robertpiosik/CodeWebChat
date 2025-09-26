@@ -8,5 +8,8 @@ export type Chatbot = {
   set_reasoning_effort?: (reasoning_effort?: string) => Promise<void>
   enter_system_instructions?: (instructions?: string) => Promise<void>
   inject_apply_response_button?: (client_id: number) => void
-  enter_message_and_send?: (message: string) => Promise<void>
+  enter_message_and_send?: (
+    message: string,
+    without_submission?: boolean
+  ) => Promise<void>
 }

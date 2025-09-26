@@ -93,7 +93,9 @@ export const openrouter: Chatbot = {
       return
     }
     const custom_system_instructions_button =
-      textarea.parentElement?.querySelector('div > button:last-child')
+      textarea.parentElement?.parentElement?.querySelector(
+        'div > button:last-child'
+      )
     if (!custom_system_instructions_button) {
       report_initialization_error({
         function_name: 'enter_system_instructions',

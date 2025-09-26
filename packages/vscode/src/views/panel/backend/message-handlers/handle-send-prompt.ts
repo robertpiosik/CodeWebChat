@@ -28,6 +28,7 @@ export const handle_send_prompt = async (params: {
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean
+  without_submission?: boolean
 }): Promise<void> => {
   if (
     params.provider.home_view_type === HOME_VIEW_TYPES.WEB &&
@@ -140,7 +141,8 @@ export const handle_send_prompt = async (params: {
 
     params.provider.websocket_server_instance.initialize_chats(
       chats,
-      params.provider.get_presets_config_key()
+      params.provider.get_presets_config_key(),
+      params.without_submission
     )
   } else {
     const editor = vscode.window.activeTextEditor
@@ -223,7 +225,8 @@ export const handle_send_prompt = async (params: {
 
     params.provider.websocket_server_instance.initialize_chats(
       chats,
-      params.provider.get_presets_config_key()
+      params.provider.get_presets_config_key(),
+      params.without_submission
     )
   }
 

@@ -15,6 +15,7 @@ export type InitializeChatsMessage = {
   text: string
   chats: Chat[]
   client_id: number // Client ID to identify which editor sent this message
+  without_submission?: boolean
 }
 
 export type InitializeChatMessage = {
@@ -29,6 +30,7 @@ export type InitializeChatMessage = {
   top_p?: number
   system_instructions?: string
   options?: string[]
+  without_submission?: boolean
 }
 
 export type Website = {

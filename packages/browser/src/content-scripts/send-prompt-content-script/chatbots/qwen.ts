@@ -144,7 +144,10 @@ export const qwen: Chatbot = {
       }
     }
   },
-  enter_message_and_send: async (message: string) => {
+  enter_message_and_send: async (
+    message: string,
+    without_submission?: boolean
+  ) => {
     let instructions = message
     if (message.includes('<files>')) {
       instructions = message.split('<files>')[0].trim()
@@ -197,6 +200,8 @@ export const qwen: Chatbot = {
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
+
+    if (without_submission) return
 
     // Submit
     const submit_button = document.querySelector(

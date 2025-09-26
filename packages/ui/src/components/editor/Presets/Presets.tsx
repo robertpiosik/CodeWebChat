@@ -6,6 +6,7 @@ import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { dictionary } from '@shared/constants/dictionary'
+import { use_context_menu } from '../../../hooks/use-context-menu'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -45,8 +46,8 @@ export namespace Presets {
     is_in_code_completions_mode: boolean
     has_context: boolean
     presets: Preset[]
-    on_preset_click: (preset_name: string) => void
-    on_group_click: (group_name: string) => void
+    on_preset_click: (preset_name: string, without_submission?: boolean) => void
+    on_group_click: (group_name: string, without_submission?: boolean) => void
     on_create_preset: () => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
@@ -86,6 +87,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
   const name_to_index_map = new Map(props.presets.map((p, i) => [p.name, i]))
 
+  const {
+    context_menu,
+    context_menu_ref,
+    handle_context_menu,
+    close_context_menu
+  } = use_context_menu<{
+    preset_name: string
+    is_group: boolean
+  }>()
+
   return (
     <div className={styles.container}>
       <div className={styles['my-presets']}>
@@ -106,6 +117,12 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             onClick={() => {
               props.on_group_click('Ungrouped') // disabled check will be handled by the consumer
             }}
+            onContextMenu={(e) =>
+              handle_context_menu(e, {
+                preset_name: 'Ungrouped',
+                is_group: true
+              })
+            }
             role="button"
           >
             <div className={styles.presets__item__left}>
@@ -220,6 +237,12 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     props.on_group_click(preset.name)
                   }
                 }}
+                onContextMenu={(e) =>
+                  handle_context_menu(e, {
+                    preset_name: preset.name,
+                    is_group: !preset.chatbot
+                  })
+                }
                 role="button"
               >
                 <div className={styles.presets__item__left}>
@@ -325,6 +348,30 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           })}
         </ReactSortable>
       </div>
+      {context_menu && (
+        <div
+          ref={context_menu_ref}
+          className={styles['context-menu']}
+          style={{
+            top: context_menu.y,
+            left: context_menu.x
+          }}
+        >
+          <div
+            className={styles['context-menu__item']}
+            onClick={() => {
+              if (context_menu.data.is_group) {
+                props.on_group_click(context_menu.data.preset_name, true)
+              } else {
+                props.on_preset_click(context_menu.data.preset_name, true)
+              }
+              close_context_menu()
+            }}
+          >
+            {dictionary['Presets.tsx'].run_without_submission}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
