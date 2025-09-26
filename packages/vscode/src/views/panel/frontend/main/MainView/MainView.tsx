@@ -479,24 +479,25 @@ export const MainView: React.FC<Props> = (props) => {
             COMMIT
           </button>
         </div>
-        {is_buy_me_coffee_hovered &&
-          Array.from({ length: 5 }).map((_, i) => (
-            <span
-              key={i}
-              className={styles.footer__heart}
-              style={
-                {
-                  left: `${18 + (Math.random() - 0.5) * 20}px`,
-                  animationDelay: `${i == 0 ? 0 : (i + Math.random()) / 3}s`,
-                  animationDuration: `${2 - Math.random()}s`,
-                  fontSize: `${10 + Math.random() * 8}px`
-                } as React.CSSProperties
-              }
-            >
-              ❤️
-            </span>
-          ))}
       </div>
+
+      {is_buy_me_coffee_hovered &&
+        Array.from({ length: 5 }).map((_, i) => (
+          <span
+            key={i}
+            className={styles.footer__heart}
+            style={
+              {
+                left: `${18 + (Math.random() - 0.5) * 20}px`,
+                animationDelay: `${i == 0 ? 0 : (i + Math.random()) / 3}s`,
+                animationDuration: `${2 - Math.random()}s`,
+                fontSize: `${10 + Math.random() * 8}px`
+              } as React.CSSProperties
+            }
+          >
+            ❤️
+          </span>
+        ))}
     </div>
   )
 }

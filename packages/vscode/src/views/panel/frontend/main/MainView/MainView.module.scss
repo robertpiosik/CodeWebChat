@@ -90,6 +90,7 @@
 
   &__heart {
     position: absolute;
+    z-index: 11;
     bottom: 32px;
     animation-name: float-up;
     animation-timing-function: ease-out;
