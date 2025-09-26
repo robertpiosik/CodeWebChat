@@ -12,6 +12,7 @@ import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { dictionary } from '@shared/constants/dictionary'
+import { apply_reasoning_effort } from '../utils/apply-reasoning-effort'
 
 // Show inline completion using Inline Completions API
 const show_inline_completion = async (params: {
@@ -372,73 +373,125 @@ const perform_code_completion = async (params: {
       }
     ]
 
-    const body = {
+    const body: { [key: string]: any } = {
       messages,
       model: code_completions_config.model,
-      temperature: code_completions_config.temperature,
-      reasoning_effort: code_completions_config.reasoning_effort
+      temperature: code_completions_config.temperature
     }
+
+    apply_reasoning_effort(
+      body,
+      provider,
+      code_completions_config.reasoning_effort
+    )
 
     const cursor_listener = vscode.window.onDidChangeTextEditorSelection(() => {
       cancel_token_source.cancel('User moved the cursor, cancelling request.')
     })
 
-    vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
-        cancellable: true
-      },
-      async (progress, token) => {
-        token.onCancellationRequested(() => {
-          cancel_token_source.cancel('User cancelled the operation')
-        })
+    let thinking_reported = false
+    let resolve_thinking: () => void
+    const thinking_promise = new Promise<void>((resolve) => {
+      resolve_thinking = resolve
+    })
 
-        let wait_time = 0
-        const wait_timer = setInterval(() => {
-          progress.report({
-            message: `${(wait_time / 10).toFixed(1)}s`
-          })
-          wait_time++
-        }, 100)
+    const on_thinking_chunk = () => {
+      if (!thinking_reported) {
+        thinking_reported = true
+        resolve_thinking()
+      }
+    }
 
-        try {
-          const completion_result = await make_api_request({
-            endpoint_url,
-            api_key: provider.api_key,
-            body,
-            cancellation_token: cancel_token_source.token
+    const api_promise = make_api_request({
+      endpoint_url,
+      api_key: provider.api_key,
+      body,
+      cancellation_token: cancel_token_source.token,
+      on_thinking_chunk
+    })
+
+    try {
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
+          cancellable: true
+        },
+        async (progress, token) => {
+          token.onCancellationRequested(() => {
+            cancel_token_source.cancel('User cancelled the operation')
           })
 
-          if (completion_result) {
-            const match = completion_result.response.match(
-              /<replacement>([\s\S]*?)<\/replacement>/i
-            )
-            if (match && match[1]) {
-              let decoded_completion = he.decode(match[1].trim())
-              decoded_completion = decoded_completion
-                .replace(/<!\[CDATA\[/g, '')
-                .replace(/\]\]>/g, '')
-                .trim()
-              await show_inline_completion({
-                editor,
-                position,
-                completion_text: decoded_completion
-              })
-            }
-          }
-        } catch (err: any) {
-          Logger.error({
-            function_name: 'perform_fim_completion',
-            message: 'Completion error',
-            data: err
-          })
-        } finally {
-          cursor_listener.dispose()
+          let wait_time = 0
+          const wait_timer = setInterval(() => {
+            progress.report({
+              message: `${(wait_time / 10).toFixed(1)}s`
+            })
+            wait_time++
+          }, 100)
+
+          await Promise.race([api_promise, thinking_promise])
           clearInterval(wait_timer)
         }
+      )
+
+      if (thinking_reported) {
+        await vscode.window.withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: dictionary.api_call.THINKING,
+            cancellable: true
+          },
+          async (progress, token) => {
+            token.onCancellationRequested(() => {
+              cancel_token_source.cancel('User cancelled the operation')
+            })
+
+            let thinking_time = 0
+            const thinking_timer = setInterval(() => {
+              progress.report({
+                message: `${(thinking_time / 10).toFixed(1)}s`
+              })
+              thinking_time++
+            }, 100)
+
+            try {
+              await api_promise
+            } finally {
+              clearInterval(thinking_timer)
+            }
+          }
+        )
       }
-    )
+
+      const completion_result = await api_promise
+
+      if (completion_result) {
+        const match = completion_result.response.match(
+          /<replacement>([\s\S]*?)<\/replacement>/i
+        )
+        if (match && match[1]) {
+          let decoded_completion = he.decode(match[1].trim())
+          decoded_completion = decoded_completion
+            .replace(/<!\[CDATA\[/g, '')
+            .replace(/\]\]>/g, '')
+            .trim()
+          await show_inline_completion({
+            editor,
+            position,
+            completion_text: decoded_completion
+          })
+        }
+      }
+    } catch (err: any) {
+      Logger.error({
+        function_name: 'perform_fim_completion',
+        message: 'Completion error',
+        data: err
+      })
+    } finally {
+      cursor_listener.dispose()
+    }
   }
 }
 
