@@ -270,7 +270,6 @@ export const ai_studio: Chatbot = {
         return
       }
 
-      // uncheck "set thinking budget" when it has attribute aria-checked="true"
       const manual_budget_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
       ) as HTMLElement

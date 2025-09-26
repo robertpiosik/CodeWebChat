@@ -6,6 +6,7 @@ import { make_api_request } from './make-api-request'
 import { Logger } from '@shared/utils/logger'
 import { should_ignore_file } from '../context/utils/should-ignore-file'
 import { process_single_trailing_dot } from '@/utils/process-single-trailing-dot/process-single-trailing-dot'
+import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import {
   ModelProvidersManager,
   ReasoningEffort
@@ -398,9 +399,7 @@ const generate_commit_message_with_api = async (params: {
     temperature: params.config.temperature
   } as any
 
-  if (params.config.reasoning_effort) {
-    body.reasoning_effort = params.config.reasoning_effort
-  }
+  apply_reasoning_effort(body, params.provider, params.config.reasoning_effort)
 
   const cancel_token_source = axios.CancelToken.source()
 
