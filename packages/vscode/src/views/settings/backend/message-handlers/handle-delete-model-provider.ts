@@ -3,7 +3,7 @@ import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { DeleteModelProviderMessage } from '@/views/settings/types/messages'
 import { handle_get_model_providers } from './handle-get-model-providers'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_delete_model_provider = async (
   provider: SettingsProvider,

@@ -44,17 +44,6 @@ export const Multiple = () => {
         console.log('on_toggle_group_collapsed', name)
       }
       selected_preset_name={undefined}
-      dictionary={{
-        my_chat_presets: 'My Chat Presets',
-        copy_to_clipboard: 'Copy to clipboard',
-        duplicate: 'Duplicate',
-        edit: 'Edit',
-        delete: 'Delete',
-        set_as_selected: 'Set as selected',
-        unset_as_selected: 'Unset as selected',
-        collapse_group: 'Collapse group',
-        expand_group: 'Expand group'
-      }}
     />
   )
 }
@@ -87,17 +76,6 @@ export const CodeCompletionsMode = () => {
         console.log('on_toggle_group_collapsed', name)
       }
       selected_preset_name={undefined}
-      dictionary={{
-        my_chat_presets: 'My Chat Presets',
-        copy_to_clipboard: 'Copy to clipboard',
-        duplicate: 'Duplicate',
-        edit: 'Edit',
-        delete: 'Delete',
-        set_as_selected: 'Set as selected',
-        unset_as_selected: 'Unset as selected',
-        collapse_group: 'Collapse group',
-        expand_group: 'Expand group'
-      }}
     />
   )
 }

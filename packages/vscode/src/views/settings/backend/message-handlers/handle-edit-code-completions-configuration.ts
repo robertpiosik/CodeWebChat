@@ -4,7 +4,7 @@ import {
   ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { EditCodeCompletionsConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_code_completions_configurations } from './handle-get-code-completions-configurations'
 import { ModelFetcher } from '@/services/model-fetcher'

@@ -79,7 +79,7 @@ import { code_review_promise_resolve } from '@/commands/apply-chat-response-comm
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined

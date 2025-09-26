@@ -9,7 +9,7 @@ import { OriginalFileState } from '@/commands/apply-chat-response-command/types/
 import { ToolConfig } from '@/services/model-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
 
 export const handle_intelligent_update = async (params: {

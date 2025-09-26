@@ -10,7 +10,7 @@ import { Logger } from '@shared/utils/logger'
 import { make_api_request } from './make-api-request'
 import { cleanup_api_response } from './cleanup-api-response'
 import { refactoring_instruction } from '../constants/instructions'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const get_intelligent_update_config = async (
   api_providers_manager: ModelProvidersManager,

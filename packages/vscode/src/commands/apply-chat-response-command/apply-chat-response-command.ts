@@ -20,7 +20,7 @@ import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '@/const
 import { Diff } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { review, code_review_promise_resolve } from './utils/review'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 

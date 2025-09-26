@@ -19,7 +19,7 @@ import {
 } from '../constants/state-keys'
 import { GitRepository } from './git-repository-utils'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { display_token_count } from './display-token-count'
 
 export interface FileData {
@@ -414,14 +414,22 @@ const generate_commit_message_with_api = async (params: {
     try {
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: `${dictionary.WAITING_FOR_API_RESPONSE}...`
+        title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
       })
 
       const response = await make_api_request({
         endpoint_url: params.endpoint_url,
         api_key: params.provider.api_key,
         body,
-        cancellation_token: cancel_token_source.token
+        cancellation_token: cancel_token_source.token,
+        on_thinking_chunk: () => {
+          if (params.view_provider) {
+            params.view_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: `${dictionary.api_call.THINKING}...`
+            })
+          }
+        }
       })
 
       if (!response) {
@@ -452,7 +460,7 @@ const generate_commit_message_with_api = async (params: {
     return await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: dictionary.WAITING_FOR_API_RESPONSE,
+        title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
         cancellable: true
       },
       async (progress, token) => {

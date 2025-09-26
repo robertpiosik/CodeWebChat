@@ -16,7 +16,7 @@ import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { CodeCompletionMessage } from '@/views/panel/types/messages'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -348,7 +348,7 @@ const perform_code_completion = async (params: {
       params.view_provider.api_call_cancel_token_source = cancel_token_source
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: `${dictionary.WAITING_FOR_API_RESPONSE}...`
+        title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
       })
     }
 
@@ -362,7 +362,7 @@ const perform_code_completion = async (params: {
           if (params.view_provider) {
             params.view_provider.send_message({
               command: 'SHOW_PROGRESS',
-              title: `${dictionary.THINKING}...`
+              title: `${dictionary.api_call.THINKING}...`
             })
           }
         }

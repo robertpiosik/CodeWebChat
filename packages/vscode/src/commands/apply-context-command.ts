@@ -12,7 +12,7 @@ import {
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export async function resolve_glob_patterns(
   patterns: string[],

@@ -6,7 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import { handle_get_model_providers } from './handle-get-model-providers'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')

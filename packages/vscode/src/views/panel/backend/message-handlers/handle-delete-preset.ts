@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { DeletePresetMessage } from '@/views/panel/types/messages'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 

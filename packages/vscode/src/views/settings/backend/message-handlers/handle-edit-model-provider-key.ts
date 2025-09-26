@@ -4,7 +4,7 @@ import {
   ModelProvidersManager,
   Provider
 } from '@/services/model-providers-manager'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { ChangeModelProviderKeyMessage } from '@/views/settings/types/messages'
 import { handle_get_model_providers } from './handle-get-model-providers'
 

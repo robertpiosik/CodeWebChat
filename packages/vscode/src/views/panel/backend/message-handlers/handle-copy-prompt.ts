@@ -7,7 +7,7 @@ import { replace_saved_context_placeholder } from '@/utils/replace-saved-context
 import { chat_code_completion_instructions } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 
 export const handle_copy_prompt = async (params: {

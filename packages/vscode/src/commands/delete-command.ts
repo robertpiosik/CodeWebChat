@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export function delete_command() {
   return vscode.commands.registerCommand(

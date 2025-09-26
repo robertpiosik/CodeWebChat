@@ -9,7 +9,7 @@ import {
   LAST_CONTEXT_SAVE_LOCATION_STATE_KEY
 } from '../constants/state-keys'
 import { SavedContext } from '@/types/context'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 function condense_paths(
   paths: string[],

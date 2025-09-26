@@ -5,6 +5,7 @@ import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -55,17 +56,6 @@ export namespace Presets {
     on_toggle_selected_preset: (name: string) => void
     on_toggle_group_collapsed: (name: string) => void
     selected_preset_name?: string
-    dictionary: {
-      my_chat_presets: string
-      copy_to_clipboard: string
-      duplicate: string
-      edit: string
-      delete: string
-      set_as_selected: string
-      unset_as_selected: string
-      collapse_group: string
-      expand_group: string
-    }
   }
 }
 
@@ -100,7 +90,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     <div className={styles.container}>
       <div className={styles['my-presets']}>
         <div className={styles['my-presets__left']}>
-          {props.dictionary.my_chat_presets}
+          {dictionary.my_chat_presets}
         </div>
         <IconButton codicon_icon="add" on_click={props.on_create_preset} />
       </div>
@@ -250,8 +240,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       on_click={(e) => e.stopPropagation()}
                       title={
                         preset.is_selected
-                          ? props.dictionary.unset_as_selected
-                          : props.dictionary.set_as_selected
+                          ? dictionary.unset_as_selected
+                          : dictionary.set_as_selected
                       }
                     />
                   )}
@@ -266,8 +256,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       style={{ cursor: 'pointer' }}
                       title={
                         preset.is_collapsed
-                          ? props.dictionary.expand_group
-                          : props.dictionary.collapse_group
+                          ? dictionary.expand_group
+                          : dictionary.collapse_group
                       }
                       onClick={(e) => {
                         e.stopPropagation()
@@ -298,7 +288,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     (preset.prompt_prefix || preset.prompt_suffix) && (
                       <IconButton
                         codicon_icon="copy"
-                        title={props.dictionary.copy_to_clipboard}
+                        title={dictionary.copy_to_clipboard}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_preset_copy(preset.name)
@@ -307,7 +297,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     )}
                   <IconButton
                     codicon_icon="files"
-                    title={props.dictionary.duplicate}
+                    title={dictionary.duplicate}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_duplicate(preset.name)
@@ -315,7 +305,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="edit"
-                    title={props.dictionary.edit}
+                    title={dictionary.edit}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_edit(preset.name)
@@ -323,7 +313,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="trash"
-                    title={props.dictionary.delete}
+                    title={dictionary.delete}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_delete(preset.name)

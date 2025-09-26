@@ -4,7 +4,7 @@ import {
   ModelProvidersManager,
   CustomProvider
 } from '@/services/model-providers-manager'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { RenameModelProviderMessage } from '@/views/settings/types/messages'
 import { handle_get_model_providers } from './handle-get-model-providers'
 

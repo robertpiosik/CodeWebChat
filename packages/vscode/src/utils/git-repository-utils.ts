@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export interface GitRepository {
   rootUri: vscode.Uri

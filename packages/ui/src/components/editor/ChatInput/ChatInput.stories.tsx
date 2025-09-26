@@ -4,29 +4,6 @@ export default {
   component: ChatInput
 }
 
-const dictionary = {
-  type_something: 'Type something',
-  completion_instructions: 'Completion instructions',
-  send_request: 'Send request',
-  initialize_chat: 'Initialize chat',
-  select_preset: 'Select preset',
-  select_config: 'Select config',
-  code_completions_mode_unavailable_with_text_selection:
-    'Code completions mode unavailable with text selection',
-  code_completions_mode_unavailable_without_active_editor:
-    'Code completions mode unavailable without active editor',
-  search: 'Search',
-  websocket_not_connected: 'Websocket not connected',
-  for_history_hint: 'for history hint',
-  copy_to_clipboard: 'Copy to clipboard',
-  insert_symbol: 'Insert symbol',
-  prompt_templates: 'Prompt templates',
-  approximate_token_count: 'Approximate token count',
-  use_last_choice: 'Last selection',
-  use_default: 'Use default',
-  select: 'Select'
-}
-
 export const Empty = () => (
   <ChatInput
     value=""
@@ -40,7 +17,6 @@ export const Empty = () => (
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
-    dictionary={dictionary}
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
@@ -62,7 +38,6 @@ export const WithText = () => (
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
-    dictionary={dictionary}
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
@@ -84,7 +59,6 @@ export const DisabledSubmit = () => (
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
-    dictionary={dictionary}
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
@@ -106,7 +80,6 @@ export const MultilineText = () => (
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
-    dictionary={dictionary}
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
@@ -128,7 +101,6 @@ export const LongText = () => (
     has_active_editor={true}
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
-    dictionary={dictionary}
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
@@ -153,7 +125,6 @@ export const WithTokenCount = () => (
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
-    dictionary={dictionary}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
@@ -176,7 +147,6 @@ export const WithLargeTokenCount = () => (
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
-    dictionary={dictionary}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
@@ -198,7 +168,6 @@ export const CodeCompletionsMode = () => (
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
-    dictionary={dictionary}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
@@ -220,7 +189,6 @@ export const WithActiveSelection = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_search_click={() => console.log('Search clicked')}
     is_web_mode={false}
-    dictionary={dictionary}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}
@@ -243,7 +211,6 @@ export const WithSavedContextPlaceholder = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
     on_submit_with_control={() => {}}
-    dictionary={dictionary}
     on_curly_braces_click={() => {}}
     has_context={true}
   />
@@ -265,7 +232,6 @@ export const WithActiveSelectionAndPlaceholder = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
     on_submit_with_control={() => {}}
-    dictionary={dictionary}
     on_curly_braces_click={() => {}}
     has_context={true}
   />
@@ -286,7 +252,6 @@ export const WithPlaceholderNoSelection = () => (
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
     is_web_mode={false}
-    dictionary={dictionary}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
     has_context={true}

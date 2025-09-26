@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import axios, { AxiosResponse } from 'axios'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 
 type StreamCallback = (tokens_per_second: number, total_tokens: number) => void

@@ -19,7 +19,6 @@ import { IconButton } from '@ui/components/editor/IconButton/IconButton'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
-import { dictionary } from '@/constants/dictionary'
 
 type Props = {
   initialize_chats: (params: {
@@ -293,23 +292,6 @@ export const MainView: React.FC<Props> = (props) => {
               has_active_selection={props.has_active_selection}
               has_active_editor={props.has_active_editor}
               on_caret_position_change={props.on_caret_position_change}
-              dictionary={{
-                type_something: dictionary.type_something,
-                completion_instructions: dictionary.completion_instructions,
-                use_last_choice: dictionary.use_last_choice,
-                select: dictionary.select,
-                code_completions_mode_unavailable_with_text_selection:
-                  dictionary.code_completions_mode_unavailable_with_text_selection,
-                code_completions_mode_unavailable_without_active_editor:
-                  dictionary.code_completions_mode_unavailable_without_active_editor,
-                search: dictionary.search,
-                websocket_not_connected: dictionary.websocket_not_connected,
-                for_history_hint: dictionary.for_history_hint,
-                copy_to_clipboard: dictionary.copy_to_clipboard,
-                insert_symbol: dictionary.insert_symbol,
-                prompt_templates: dictionary.prompt_templates,
-                approximate_token_count: dictionary.approximate_token_count
-              }}
               caret_position_to_set={props.caret_position_to_set}
               on_caret_position_set={props.on_caret_position_set}
               focus_and_select_key={props.chat_input_focus_and_select_key}
@@ -402,17 +384,6 @@ export const MainView: React.FC<Props> = (props) => {
                 on_toggle_selected_preset={props.on_toggle_selected_preset}
                 on_toggle_group_collapsed={props.on_toggle_group_collapsed}
                 selected_preset_name={props.selected_preset_or_group_name}
-                dictionary={{
-                  my_chat_presets: dictionary.my_chat_presets,
-                  copy_to_clipboard: dictionary.copy_to_clipboard,
-                  duplicate: dictionary.duplicate,
-                  edit: dictionary.edit,
-                  delete: dictionary.delete,
-                  set_as_selected: dictionary.set_as_selected,
-                  unset_as_selected: dictionary.unset_as_selected,
-                  collapse_group: dictionary.collapse_group,
-                  expand_group: dictionary.expand_group
-                }}
               />
             </>
           )}
@@ -432,9 +403,6 @@ export const MainView: React.FC<Props> = (props) => {
                 selected_configuration_index={
                   props.selected_configuration_index
                 }
-                dictionary={{
-                  my_configurations: dictionary.my_configurations
-                }}
               />
             </>
           )}

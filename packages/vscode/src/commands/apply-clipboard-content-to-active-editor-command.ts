@@ -6,7 +6,7 @@ import {
   get_intelligent_update_config,
   process_file
 } from '../utils/intelligent-update-utils'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const apply_clipboard_content_to_active_editor_command = (
   context: vscode.ExtensionContext

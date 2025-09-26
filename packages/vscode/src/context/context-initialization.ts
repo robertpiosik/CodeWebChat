@@ -12,7 +12,7 @@ import { SharedFileState } from './shared-file-state'
 import { marked } from 'marked'
 import { EventEmitter } from 'events'
 import { apply_context_command } from '../commands/apply-context-command'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const token_count_emitter = new EventEmitter()
 

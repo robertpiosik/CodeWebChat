@@ -6,7 +6,7 @@ import {
   get_git_repository,
   prepare_staged_changes
 } from '../utils/git-repository-utils'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import {
   generate_commit_message_from_diff,
   get_commit_message_config

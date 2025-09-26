@@ -11,7 +11,7 @@ import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constant
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 // Show inline completion using Inline Completions API
 const show_inline_completion = async (params: {
@@ -386,7 +386,7 @@ const perform_code_completion = async (params: {
     vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: dictionary.WAITING_FOR_API_RESPONSE,
+        title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
         cancellable: true
       },
       async (progress, token) => {

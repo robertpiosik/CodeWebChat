@@ -10,7 +10,7 @@ import {
 } from '@/services/model-fetcher'
 import { PROVIDERS } from '@shared/constants/providers'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const initial_select_provider = async (
   providers_manager: ModelProvidersManager

@@ -16,7 +16,7 @@ import { replace_selection_placeholder } from '@/views/panel/backend/utils/repla
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 const get_edit_context_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -350,7 +350,7 @@ const perform_context_editing = async (params: {
     if (params.view_provider) {
       params.view_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: `${dictionary.WAITING_FOR_API_RESPONSE}...`
+        title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
       })
     }
     const response = await make_api_request({
@@ -362,7 +362,7 @@ const perform_context_editing = async (params: {
         if (params.view_provider) {
           params.view_provider.send_message({
             command: 'SHOW_PROGRESS',
-            title: `${dictionary.THINKING}...`
+            title: `${dictionary.api_call.THINKING}...`
           })
         }
       },

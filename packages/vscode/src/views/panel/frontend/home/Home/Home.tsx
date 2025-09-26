@@ -6,7 +6,7 @@ import { Donations } from '@ui/components/editor/Donations'
 import { Icon } from '@ui/components/editor/Icon'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 type Props = {
   is_active: boolean

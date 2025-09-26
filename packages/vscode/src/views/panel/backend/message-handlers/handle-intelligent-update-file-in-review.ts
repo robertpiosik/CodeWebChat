@@ -13,7 +13,7 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
 import { process_file } from '@/utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'
 
 const get_default_intelligent_update_config = async (
@@ -156,7 +156,7 @@ export const handle_intelligent_update_file_in_review = async (
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: dictionary.WAITING_FOR_API_RESPONSE,
+      title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
       cancellable: true
     },
     async (progress, token) => {

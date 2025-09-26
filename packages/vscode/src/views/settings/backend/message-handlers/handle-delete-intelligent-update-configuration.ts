@@ -6,7 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { DeleteIntelligentUpdateConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_intelligent_update_configurations } from './handle-get-intelligent-update-configurations'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { env } from 'vscode'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export function open_url_command(params: { command: string; url: string }) {
   return vscode.commands.registerCommand(params.command, () => {

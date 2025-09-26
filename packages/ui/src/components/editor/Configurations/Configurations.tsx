@@ -1,6 +1,7 @@
 import styles from './Configurations.module.scss'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
+import { dictionary } from '@shared/constants/dictionary'
 
 export namespace Configurations {
   export type Configuration = {
@@ -16,9 +17,6 @@ export namespace Configurations {
     configurations: Configuration[]
     on_configuration_click: (i: number) => void
     selected_configuration_index?: number
-    dictionary: {
-      my_configurations: string
-    }
   }
 }
 
@@ -27,7 +25,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     <div className={styles.container}>
       <div className={styles.heading}>
         <div className={styles['heading__title']}>
-          {props.dictionary.my_configurations}
+          {dictionary.my_configurations}
         </div>
       </div>
 

@@ -7,7 +7,7 @@ import {
 import { parse_response } from './apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { undo_files } from './apply-chat-response-command/utils/file-operations'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export function undo_command(
   context: vscode.ExtensionContext,

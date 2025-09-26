@@ -3,7 +3,7 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { FileItem } from '../context/providers/workspace-provider'
 import { SharedFileState } from '../context/shared-file-state'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 
 export function reference_in_chat_command(

@@ -4,7 +4,7 @@ import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersPage } from './pages/ModelProvidersPage'
 import { ApiToolConfigurationPage } from './pages/ApiToolConfigurationPage'
 import { use_settings_data } from './hooks/use-settings-data'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 type NavItem =
   | 'model-providers'

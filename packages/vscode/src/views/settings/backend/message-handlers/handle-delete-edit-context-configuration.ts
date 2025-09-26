@@ -6,7 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { DeleteEditContextConfigurationMessage } from '@/views/settings/types/messages'
 import { handle_get_edit_context_configurations } from './handle-get-edit-context-configurations'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${

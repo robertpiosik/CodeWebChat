@@ -17,7 +17,7 @@ import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-
 import { WebMode } from '@shared/types/modes'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 /**
  * When preset_names is an emtpy stirng - show quick pick,

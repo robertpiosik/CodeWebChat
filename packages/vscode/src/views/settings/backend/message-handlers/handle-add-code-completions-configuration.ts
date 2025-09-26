@@ -15,7 +15,7 @@ import {
   initial_select_model,
   initial_select_provider
 } from './config-editing-helpers'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${

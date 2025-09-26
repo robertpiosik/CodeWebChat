@@ -4,7 +4,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { SAVED_CONTEXTS_STATE_KEY } from '../constants/state-keys'
 import { SavedContext } from '../types/context'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export async function at_sign_quick_pick(params: {
   context: vscode.ExtensionContext

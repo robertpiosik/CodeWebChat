@@ -3,6 +3,7 @@ import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import { Icon } from '../Icon'
+import { dictionary } from '@shared/constants/dictionary'
 
 type Props = {
   value: string
@@ -22,21 +23,6 @@ type Props = {
   on_at_sign_click: () => void
   on_curly_braces_click: () => void
   has_context: boolean
-  dictionary: {
-    type_something: string
-    completion_instructions: string
-    use_last_choice: string
-    select: string
-    code_completions_mode_unavailable_with_text_selection: string
-    code_completions_mode_unavailable_without_active_editor: string
-    search: string
-    websocket_not_connected: string
-    for_history_hint: string
-    copy_to_clipboard: string
-    insert_symbol: string
-    prompt_templates: string
-    approximate_token_count: string
-  }
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   focus_key?: number
@@ -48,7 +34,7 @@ const format_token_count = (count?: number) => {
   if (count < 1000) {
     return count.toString()
   } else {
-    return Math.floor(count / 1000) + 'K+'
+    return `${Math.floor(count / 1000)}K+`
   }
 }
 
@@ -58,6 +44,7 @@ export const ChatInput: React.FC<Props> = (props) => {
   const container_ref = useRef<HTMLDivElement>(null)
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
+  const component_dictionary = dictionary['ChatInput.tsx']
 
   useEffect(() => {
     if (textarea_ref.current) {
@@ -245,15 +232,15 @@ export const ChatInput: React.FC<Props> = (props) => {
 
     if (props.is_in_code_completions_mode) {
       if (active_history.length > 0 && is_history_enabled) {
-        return `${props.dictionary.completion_instructions} ${props.dictionary.for_history_hint}`
+        return `${component_dictionary.completion_instructions} ${component_dictionary.for_history_hint}`
       } else {
-        return props.dictionary.completion_instructions
+        return component_dictionary.completion_instructions
       }
     }
 
     return active_history.length > 0 && is_history_enabled
-      ? `${props.dictionary.type_something} ${props.dictionary.for_history_hint}`
-      : props.dictionary.type_something
+      ? `${component_dictionary.type_something} ${component_dictionary.for_history_hint}`
+      : component_dictionary.type_something
   }, [
     props.is_in_code_completions_mode,
     props.chat_history,
@@ -267,8 +254,7 @@ export const ChatInput: React.FC<Props> = (props) => {
         <div className={styles.error}>
           <div className={styles.error__inner}>
             {
-              props.dictionary
-                .code_completions_mode_unavailable_with_text_selection
+              component_dictionary.code_completions_mode_unavailable_with_text_selection
             }
           </div>
         </div>
@@ -278,8 +264,7 @@ export const ChatInput: React.FC<Props> = (props) => {
         <div className={styles.error}>
           <div className={styles.error__inner}>
             {
-              props.dictionary
-                .code_completions_mode_unavailable_without_active_editor
+              component_dictionary.code_completions_mode_unavailable_without_active_editor
             }
           </div>
         </div>
@@ -338,7 +323,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             'codicon-search'
           )}
           onClick={props.on_search_click}
-          title={`${props.dictionary.search} (${
+          title={`${component_dictionary.search} (${
             navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
               ? '⌘F'
               : 'Ctrl+F'
@@ -356,7 +341,7 @@ export const ChatInput: React.FC<Props> = (props) => {
               e.stopPropagation()
               props.on_copy()
             }}
-            title={`${props.dictionary.copy_to_clipboard} (${
+            title={`${component_dictionary.copy_to_clipboard} (${
               navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
                 ? '⌥⌘C'
                 : 'Ctrl+Alt+C'
@@ -381,7 +366,7 @@ export const ChatInput: React.FC<Props> = (props) => {
               <button
                 onClick={props.on_at_sign_click}
                 className={cn(styles['footer__left__button'])}
-                title={props.dictionary.insert_symbol}
+                title={component_dictionary.insert_symbol}
               >
                 <span>@</span>
               </button>
@@ -389,7 +374,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}
-              title={props.dictionary.prompt_templates}
+              title={component_dictionary.prompt_templates}
             >
               <span className="codicon codicon-json" />
             </button>
@@ -403,7 +388,7 @@ export const ChatInput: React.FC<Props> = (props) => {
             {props.token_count !== undefined && props.token_count > 1 && (
               <div
                 className={styles.footer__right__count}
-                title={props.dictionary.approximate_token_count}
+                title={component_dictionary.approximate_token_count}
               >
                 {format_token_count(props.token_count)}
               </div>
@@ -427,7 +412,7 @@ export const ChatInput: React.FC<Props> = (props) => {
                     </div>
                   )}
                   <Icon variant="ENTER" />
-                  <span>{props.dictionary.select}</span>
+                  <span>{component_dictionary.select}</span>
                 </button>
 
                 <button
@@ -435,7 +420,7 @@ export const ChatInput: React.FC<Props> = (props) => {
                   onClick={handle_submit}
                 >
                   <Icon variant="ENTER" />
-                  <span>{props.dictionary.use_last_choice}</span>
+                  <span>{component_dictionary.use_last_choice}</span>
                 </button>
               </>
             )}
@@ -447,10 +432,10 @@ export const ChatInput: React.FC<Props> = (props) => {
                   e.stopPropagation()
                   props.on_copy()
                 }}
-                title={props.dictionary.copy_to_clipboard}
+                title={component_dictionary.copy_to_clipboard}
               >
                 <Icon variant="ENTER" />
-                <span>{props.dictionary.copy_to_clipboard}</span>
+                <span>{component_dictionary.copy_to_clipboard}</span>
               </button>
             )}
           </div>

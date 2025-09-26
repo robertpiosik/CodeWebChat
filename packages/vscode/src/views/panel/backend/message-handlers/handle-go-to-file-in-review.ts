@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { GoToFileInReviewMessage } from '@/views/panel/types/messages'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_go_to_file_in_review = async (
   provider: ViewProvider,

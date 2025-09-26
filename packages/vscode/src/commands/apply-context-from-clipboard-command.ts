@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { extract_paths_from_text } from '../utils/path-parser'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 import { display_token_count } from '../utils/display-token-count'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 

@@ -7,7 +7,7 @@ import { replace_saved_context_placeholder } from '@/utils/replace-saved-context
 import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
 import { Preset } from '@shared/types/preset'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
-import { dictionary } from '@/constants/dictionary'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_preview_preset = async (
   provider: ViewProvider,
