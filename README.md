@@ -17,15 +17,7 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 Select folders and files you want to fully show to the model, type instructions, and pick your favorite chatbot, to continue in the browser, or call a model provider of choice, to stay in the editor.
 
-Once the response is ready, generated code blocks in any EDIT FORMAT will be applied to the codebase with a single click!
-
-| EDIT FORMAT | Token usage | File operations        |
-| ----------- | :---------: | ---------------------- |
-| Whole       |    high     | modify, create         |
-| Truncated   |    low\*    | modify, create         |
-| Diff        |     low     | modify, create, delete |
-
-<small>\* Requires the Intelligent Update API tool to apply.</small>
+Once the response is ready, all changes can be applied to the codebase before being reviewed in a fully transparent and safe way.
 
 **Guiding principles**
 
