@@ -13,6 +13,7 @@
 
 .footer {
   position: relative;
+  z-index: -1; // Makes context menu of a preset appear above
   display: flex;
   justify-content: space-between;
   gap: var(--padding-4px);
