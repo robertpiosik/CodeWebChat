@@ -19,11 +19,13 @@ CWC is dead simple—select folders and files you want to show to the model, typ
 
 Once the response is ready, generated code blocks in the selected **EDIT FORMAT** can be integrated with a single click.
 
-| EDIT FORMAT | Token Usage | Operations             |
+| EDIT FORMAT | Token usage | File operations        |
 | ----------- | :---------: | ---------------------- |
 | Whole       |    high     | modify, create         |
 | Truncated   |     low     | modify, create         |
 | Diff        |     low     | modify, create, delete |
+
+"Whole" and "truncated" edit formats are reliable with weaker models, while "diff" may require a more capable one—like Gemini 2.5 Pro.
 
 **Guiding principles**
 
