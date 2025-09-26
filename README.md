@@ -17,15 +17,17 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 CWC is dead simple—select folders and files you want to show to the model, type instructions, and pick your favorite chatbot, to continue in the browser, or call a model provider of choice, to stay in the editor.
 
-Once the response is ready, generated code blocks in the selected **EDIT FORMAT** can be integrated with a single click.
+Once the response is ready, generated code blocks in the selected **EDIT FORMAT** can be applied with a single click.
 
 | EDIT FORMAT | Token usage | File operations        |
 | ----------- | :---------: | ---------------------- |
 | Whole       |    high     | modify, create         |
-| Truncated   |     low     | modify, create         |
+| Truncated   |    low\*    | modify, create         |
 | Diff        |     low     | modify, create, delete |
 
-"Whole" and "truncated" edit formats are reliable with weaker models, while "diff" may require a more capable one—like Gemini 2.5 Pro.
+<small>\* Requires the Intelligent Update API tool to apply.</small>
+
+> "Whole" and "truncated" edit formats are reliable with cheaper models, while "diff" is fast and may require a more capable one—like Gemini 2.5 Pro.
 
 **Guiding principles**
 
