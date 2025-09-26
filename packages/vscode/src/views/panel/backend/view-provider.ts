@@ -53,6 +53,10 @@ import {
   API_EDIT_FORMAT_STATE_KEY,
   API_MODE_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY,
+  INSTRUCTIONS_ASK_STATE_KEY,
+  INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
+  INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
+  INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,
   get_last_selected_preset_key,
@@ -133,6 +137,23 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         })
       }
     })
+
+    this.edit_instructions = this.context.workspaceState.get<string>(
+      INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
+      ''
+    )
+    this.ask_instructions = this.context.workspaceState.get<string>(
+      INSTRUCTIONS_ASK_STATE_KEY,
+      ''
+    )
+    this.no_context_instructions = this.context.workspaceState.get<string>(
+      INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
+      ''
+    )
+    this.code_completion_instructions = this.context.workspaceState.get<string>(
+      INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
+      ''
+    )
 
     api_tool_config_emitter.on('api-tools-updated', () => {
       if (this._webview_view) {

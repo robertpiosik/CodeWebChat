@@ -2,7 +2,6 @@
 export const LAST_APPLIED_CHANGES_STATE_KEY = 'last-applied-changes-state'
 export const LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY =
   'last-applied-changes-editor-state'
-export const LAST_REFACTOR_INSTRUCTIONS_STATE_KEY = 'last-refactor-instructions'
 export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
@@ -45,6 +44,12 @@ export const CHAT_EDIT_FORMAT_STATE_KEY = 'chat-edit-format'
 export const API_EDIT_FORMAT_STATE_KEY = 'api-edit-format'
 export const WEB_MODE_STATE_KEY = 'web-mode'
 export const API_MODE_STATE_KEY = 'api-mode'
+
+export const INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY = 'instructions-edit-context'
+export const INSTRUCTIONS_ASK_STATE_KEY = 'instructions-ask'
+export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context'
+export const INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY =
+  'instructions-code-completions'
 
 export const HISTORY_ASK_STATE_KEY = 'history-ask'
 export const HISTORY_EDIT_STATE_KEY = 'history-edit'

@@ -46,6 +46,12 @@ export const CHATBOTS = {
         label: 'Gemini 2.5 Pro',
         disabled_options: ['disable-thinking']
       },
+      'gemini-flash-latest': {
+        label: 'Gemini Flash Latest'
+      },
+      'gemini-flash-lite-latest': {
+        label: 'Gemini Flash-Lite Latest'
+      },
       'gemini-2.5-flash': {
         label: 'Gemini 2.5 Flash'
       },
