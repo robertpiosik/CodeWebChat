@@ -66,7 +66,7 @@ export async function make_api_request(params: {
   cancellation_token: any
   on_chunk?: StreamCallback
   on_thinking_chunk?: ThinkingStreamCallback
-}): Promise<string | null> {
+}): Promise<{ response: string; thoughts?: string } | null> {
   Logger.info({
     function_name: 'make_api_request',
     message: 'API Request Body',
@@ -260,6 +260,11 @@ export async function make_api_request(params: {
             }
           }
 
+          const thoughts_match = full_response.match(
+            /<(?:think|thought)>([\s\S]*?)<\/(?:think|thought)>/
+          )
+          const thoughts = thoughts_match ? thoughts_match[1].trim() : undefined
+
           Logger.info({
             function_name: 'make_api_request',
             message: 'Combined code received (full response):',
@@ -273,7 +278,7 @@ export async function make_api_request(params: {
             })
           }
 
-          resolve(content_for_client)
+          resolve({ response: content_for_client, thoughts })
         })
 
         response.data.on('error', (error: Error) => {

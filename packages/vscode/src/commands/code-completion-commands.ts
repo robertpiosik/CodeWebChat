@@ -403,15 +403,15 @@ const perform_code_completion = async (params: {
         }, 100)
 
         try {
-          const completion = await make_api_request({
+          const completion_result = await make_api_request({
             endpoint_url,
             api_key: provider.api_key,
             body,
             cancellation_token: cancel_token_source.token
           })
 
-          if (completion) {
-            const match = completion.match(
+          if (completion_result) {
+            const match = completion_result.response.match(
               /<replacement>([\s\S]*?)<\/replacement>/i
             )
             if (match && match[1]) {

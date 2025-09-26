@@ -353,7 +353,7 @@ const perform_code_completion = async (params: {
     }
 
     try {
-      const completion = await make_api_request({
+      const result = await make_api_request({
         endpoint_url,
         api_key: provider.api_key,
         body,
@@ -368,8 +368,8 @@ const perform_code_completion = async (params: {
         }
       })
 
-      if (completion) {
-        const match = completion.match(
+      if (result) {
+        const match = result.response.match(
           /<replacement>([\s\S]*?)<\/replacement>/i
         )
         if (match && match[1]) {

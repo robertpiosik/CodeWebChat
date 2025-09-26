@@ -31,7 +31,7 @@ export const apply_reasoning_effort = (
     body.extra_body = {
       google: {
         thinking_config: {
-          include_thoughts: thinking_budget ? true : undefined,
+          include_thoughts: thinking_budget != 0 ? true : undefined,
           thinking_budget
         }
       }

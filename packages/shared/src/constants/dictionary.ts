@@ -4,7 +4,6 @@ export const dictionary = {
     THINKING: 'Thinking'
   },
 
-  // ChatInput.tsx
   'ChatInput.tsx': {
     type_something: 'Type something',
     completion_instructions: 'Completion instructions',
@@ -23,12 +22,10 @@ export const dictionary = {
     approximate_token_count: 'Approximate message length in tokens'
   },
 
-  // Configurations.tsx
   'Configurations.tsx': {
     my_configurations: 'MY CONFIGURATIONS'
   },
 
-  // Presets.tsx
   'Presets.tsx': {
     my_chat_presets: 'MY CHAT PRESETS',
     duplicate: 'Duplicate',

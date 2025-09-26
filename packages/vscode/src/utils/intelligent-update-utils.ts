@@ -215,7 +215,7 @@ export const process_file = async (params: {
   }
 
   try {
-    const refactored_content = await make_api_request({
+    const result = await make_api_request({
       endpoint_url: params.endpoint_url,
       api_key: params.api_key,
       body,
@@ -232,6 +232,7 @@ export const process_file = async (params: {
       return null
     }
 
+    const refactored_content = result?.response
     if (!refactored_content) {
       vscode.window.showErrorMessage(
         dictionary.error_message.APPLYING_CHANGES_FAILED_EMPTY_RESPONSE(

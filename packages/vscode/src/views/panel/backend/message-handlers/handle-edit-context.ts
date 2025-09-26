@@ -353,7 +353,7 @@ const perform_context_editing = async (params: {
         title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
       })
     }
-    const response = await make_api_request({
+    const result = await make_api_request({
       endpoint_url,
       api_key: provider.api_key,
       body,
@@ -377,9 +377,9 @@ const perform_context_editing = async (params: {
       }
     })
 
-    if (response) {
+    if (result) {
       vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-        response
+        response: result.response
       })
     }
   } catch (error) {

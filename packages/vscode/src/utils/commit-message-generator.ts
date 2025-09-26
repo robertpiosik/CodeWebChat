@@ -417,7 +417,7 @@ const generate_commit_message_with_api = async (params: {
         title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
       })
 
-      const response = await make_api_request({
+      const result = await make_api_request({
         endpoint_url: params.endpoint_url,
         api_key: params.provider.api_key,
         body,
@@ -432,13 +432,13 @@ const generate_commit_message_with_api = async (params: {
         }
       })
 
-      if (!response) {
+      if (!result) {
         vscode.window.showErrorMessage(
           dictionary.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
         )
         return null
       } else {
-        let commit_message = process_single_trailing_dot(response)
+        let commit_message = process_single_trailing_dot(result.response)
         commit_message = strip_wrapping_quotes(commit_message)
         return commit_message
       }
@@ -477,20 +477,22 @@ const generate_commit_message_with_api = async (params: {
         }, 100)
 
         try {
-          const response = await make_api_request({
+          const response_result = await make_api_request({
             endpoint_url: params.endpoint_url,
             api_key: params.provider.api_key,
             body,
             cancellation_token: cancel_token_source.token
           })
 
-          if (!response) {
+          if (!response_result) {
             vscode.window.showErrorMessage(
               dictionary.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
             )
             return null
           } else {
-            let commit_message = process_single_trailing_dot(response)
+            let commit_message = process_single_trailing_dot(
+              response_result.response
+            )
             commit_message = strip_wrapping_quotes(commit_message)
             return commit_message
           }
