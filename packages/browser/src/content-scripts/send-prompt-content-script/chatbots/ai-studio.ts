@@ -263,6 +263,13 @@ export const ai_studio: Chatbot = {
   },
   set_thinking_budget: async (thinking_budget?: number) => {
     if (thinking_budget === undefined) {
+      const thinking_toggle = document.querySelector(
+        'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
+      ) as HTMLElement
+      if (thinking_toggle?.getAttribute('aria-checked') == 'false') {
+        return
+      }
+
       // uncheck "set thinking budget" when it has attribute aria-checked="true"
       const manual_budget_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
@@ -293,7 +300,7 @@ export const ai_studio: Chatbot = {
       }
       if (thinking_toggle.getAttribute('aria-checked') == 'false') {
         thinking_toggle.click()
-        await new Promise((r) => requestAnimationFrame(r))
+        await new Promise((resolve) => setTimeout(resolve, 250))
       }
       const manual_budget_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="manual-budget"] button'
@@ -308,7 +315,7 @@ export const ai_studio: Chatbot = {
       }
       if (manual_budget_toggle.getAttribute('aria-checked') == 'false') {
         manual_budget_toggle.click()
-        await new Promise((r) => requestAnimationFrame(r))
+        await new Promise((resolve) => setTimeout(resolve, 250))
       }
       const budget_input = document.querySelector(
         'div[data-test-id="user-setting-budget-animation-wrapper"] input'

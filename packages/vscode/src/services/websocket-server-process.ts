@@ -209,20 +209,11 @@ class WebSocketServer {
           client.ws.send(msg_string)
         }
       }
-    } else if (
-      msg_data.action == 'invoke-fast-replace' || // <-- remove few weeks after 19 Apr 2025
-      msg_data.action == 'apply-chat-response'
-    ) {
+    } else if (msg_data.action == 'apply-chat-response') {
       const target_client_id = msg_data.client_id
       const target_client = this.vscode_clients.get(target_client_id)
       if (target_client && target_client.ws.readyState == WebSocket.OPEN) {
-        // target_client.ws.send(msg_string) <-- bring back after removing "invoke-fast-replace"
-        target_client.ws.send(
-          JSON.stringify({
-            ...msg_data,
-            action: 'apply-chat-response'
-          })
-        )
+        target_client.ws.send(msg_string)
       }
     }
   }
