@@ -15,9 +15,9 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 **The workflow**
 
-Select folders and files you want to fully show to the model, type instructions, and pick your favorite chatbot, to continue in the browser, or call a model provider of choice, to stay in the editor.
+Select folders and files you want to attach in message as context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
 
-Once the response is ready, all changes can be applied to the codebase before being reviewed in a fully transparent and safe way.
+Once the response is ready, all changes can be applied to the codebase before being reviewed in a transparent and safe way.
 
 **Guiding principles**
 
