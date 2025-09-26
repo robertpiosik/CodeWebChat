@@ -27,13 +27,14 @@ export const Progress: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
+    set_elapsed_time(0)
     const start_time = Date.now()
     const timer = setInterval(() => {
       set_elapsed_time((Date.now() - start_time) / 1000)
     }, 100)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [props.title])
 
   return (
     <div
