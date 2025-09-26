@@ -90,7 +90,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     <div className={styles.container}>
       <div className={styles['my-presets']}>
         <div className={styles['my-presets__left']}>
-          {dictionary.my_chat_presets}
+          {dictionary['Presets.tsx'].my_chat_presets}
         </div>
         <IconButton codicon_icon="add" on_click={props.on_create_preset} />
       </div>
@@ -240,8 +240,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       on_click={(e) => e.stopPropagation()}
                       title={
                         preset.is_selected
-                          ? dictionary.unset_as_selected
-                          : dictionary.set_as_selected
+                          ? dictionary['Presets.tsx'].unset_as_selected
+                          : dictionary['Presets.tsx'].set_as_selected
                       }
                     />
                   )}
@@ -256,8 +256,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       style={{ cursor: 'pointer' }}
                       title={
                         preset.is_collapsed
-                          ? dictionary.expand_group
-                          : dictionary.collapse_group
+                          ? dictionary['Presets.tsx'].expand_group
+                          : dictionary['Presets.tsx'].collapse_group
                       }
                       onClick={(e) => {
                         e.stopPropagation()
@@ -288,7 +288,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     (preset.prompt_prefix || preset.prompt_suffix) && (
                       <IconButton
                         codicon_icon="copy"
-                        title={dictionary.copy_to_clipboard}
+                        title={dictionary['Presets.tsx'].copy_to_clipboard}
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_preset_copy(preset.name)
@@ -297,7 +297,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     )}
                   <IconButton
                     codicon_icon="files"
-                    title={dictionary.duplicate}
+                    title={dictionary['Presets.tsx'].duplicate}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_duplicate(preset.name)
@@ -305,7 +305,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="edit"
-                    title={dictionary.edit}
+                    title={dictionary['Presets.tsx'].edit}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_edit(preset.name)
@@ -313,7 +313,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="trash"
-                    title={dictionary.delete}
+                    title={dictionary['Presets.tsx'].delete}
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_delete(preset.name)

@@ -24,18 +24,22 @@ export const dictionary = {
   },
 
   // Configurations.tsx
-  my_configurations: 'MY CONFIGURATIONS',
+  'Configurations.tsx': {
+    my_configurations: 'MY CONFIGURATIONS'
+  },
 
   // Presets.tsx
-  my_chat_presets: 'MY CHAT PRESETS',
-  duplicate: 'Duplicate',
-  edit: 'Edit',
-  delete: 'Delete',
-  set_as_selected: 'Set as selected',
-  unset_as_selected: 'Unset as selected',
-  collapse_group: 'Collapse',
-  expand_group: 'Expand',
-  copy_to_clipboard: 'Copy to clipboard',
+  'Presets.tsx': {
+    my_chat_presets: 'MY CHAT PRESETS',
+    duplicate: 'Duplicate',
+    edit: 'Edit',
+    delete: 'Delete',
+    set_as_selected: 'Set as selected',
+    unset_as_selected: 'Unset as selected',
+    collapse_group: 'Collapse',
+    expand_group: 'Expand',
+    copy_to_clipboard: 'Copy to clipboard'
+  },
 
   information_message: {
     NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND:
@@ -50,7 +54,7 @@ export const dictionary = {
       'No saved contexts remaining in the Workspace State.',
     NO_SAVED_CONTEXTS_IN_JSON_FILE:
       'No saved contexts remaining in the JSON file.',
-    NO_FILE_PATHS_FOUND_IN_CLIPBOARD: 'No file paths found in clipboard.',
+    NO_FILE_PATHS_FOUND_IN_CLIPBOARD: 'No file paths found in the clipboard.',
     NO_MATCHING_FILES_FOUND_FOR_CLIPBOARD_PATHS:
       'No matching files found in workspace for the paths in clipboard.',
     NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND:

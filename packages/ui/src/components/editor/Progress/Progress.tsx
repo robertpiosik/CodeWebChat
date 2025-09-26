@@ -11,15 +11,15 @@ type Props = {
 }
 
 const format_tokens_per_second = (tps: number): string => {
-  const roundedTps = Math.round(tps)
-  if (roundedTps >= 1000) {
-    return `${(roundedTps / 1000).toFixed(1)}k`
+  const rounded_tps = Math.round(tps)
+  if (rounded_tps >= 1000) {
+    return `${(rounded_tps / 1000).toFixed(1)}k`
   }
-  return roundedTps.toString()
+  return rounded_tps.toString()
 }
 
 export const Progress: React.FC<Props> = (props) => {
-  const [is_hydrated, set_is_hydrated] = useState(false)
+  const [is_hydrated, set_is_hydrated] = useState(false) // For entry animation
   const [elapsed_time, set_elapsed_time] = useState(0)
 
   useEffect(() => {

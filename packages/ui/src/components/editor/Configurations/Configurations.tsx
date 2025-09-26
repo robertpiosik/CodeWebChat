@@ -25,7 +25,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     <div className={styles.container}>
       <div className={styles.heading}>
         <div className={styles['heading__title']}>
-          {dictionary.my_configurations}
+          {dictionary['Configurations.tsx'].my_configurations}
         </div>
       </div>
 
