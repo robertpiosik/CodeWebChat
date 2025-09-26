@@ -1,6 +1,6 @@
 # Code Web Chat
 
-<a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a>
+<a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
 Code Web Chat is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, AI Studio, DeepSeek, and 10+ other free chatbots.
 
@@ -13,11 +13,11 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-**How it works?**
+**The workflow**
 
-CWC is dead simple—select folders and files you want to show to the model, type instructions, and pick your favorite chatbot, to continue in the browser, or call a model provider of choice, to stay in the editor.
+Select folders and files you want to show to the model, type instructions, and pick your favorite chatbot, to continue in the browser, or call a model provider of choice, to stay in the editor.
 
-Once the response is ready, generated code blocks in the selected **EDIT FORMAT** can be applied with a single click.
+Once the response is ready, generated code blocks in the selected **EDIT FORMAT** can be applied with a single click!
 
 | EDIT FORMAT | Token usage | File operations        |
 | ----------- | :---------: | ---------------------- |
@@ -26,8 +26,6 @@ Once the response is ready, generated code blocks in the selected **EDIT FORMAT*
 | Diff        |     low     | modify, create, delete |
 
 <small>\* Requires the Intelligent Update API tool to apply.</small>
-
-> "Whole" and "truncated" edit formats are reliable with cheaper models, while "diff" is fast and may require a more capable one—like Gemini 2.5 Pro.
 
 **Guiding principles**
 

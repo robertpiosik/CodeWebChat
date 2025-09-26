@@ -305,6 +305,20 @@ describe('clipboard-parser', () => {
         load_test_case_file('markdown-with-nested-code-block', 'file-1.txt')
       )
     })
+
+    it('should handle php opening tag before filename', () => {
+      const text = load_test_case_file('php-opening-tag', 'php-opening-tag.txt')
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.php')
+      expect(result[0].content).toBe(
+        load_test_case_file('php-opening-tag', 'file-1.txt')
+      )
+    })
   })
 
   describe('parse_file_content_only', () => {

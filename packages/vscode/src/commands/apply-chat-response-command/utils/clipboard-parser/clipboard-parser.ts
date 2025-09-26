@@ -359,6 +359,15 @@ export const parse_multiple_files = (params: {
           const trimmed_line = line.trim()
           let extracted_filename: string | null = null
 
+          if (trimmed_line.startsWith('<?php')) {
+            if (current_content) {
+              current_content += '\n' + line
+            } else {
+              current_content = line
+            }
+            continue
+          }
+
           const is_comment =
             trimmed_line.startsWith('//') ||
             trimmed_line.startsWith('#') ||
