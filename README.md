@@ -32,16 +32,16 @@ Once the response is ready, suggested multi-file changes can be integrated with 
 
 ⭐️ **Non-agentic nature**
 
-CWC works solely on hand-picked context. This design choice was dictated by the fact LLMs cannot truly reason—they only match patters seen in training data, therefore they can't reliably make informed decisions (especially those less pronounced in training data). Although agentic coding shows plausible results to some, it is characterized by extensive token demand and slowness of operation.
+CWC works solely on hand-picked context. This design choice was dictated by the fact LLMs cannot truly reason—they only match patters seen in training data, therefore they can't reliably make informed decisions (especially those less pronounced in training data). Although agentic coding shows plausible results to some, it is characterized by extensive token demand, slowness of operation and more prominent hallucinations.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
-Install a browser extension and never copy&paste again.
+Install our Connector browser extension and never copy&paste again.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-The browser extension uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to insert prepared prompt, change model, etc. on your behalf, but is not required for CWC to function.
+It uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to insert prepared prompt, change model, etc. on your behalf, but is not required for CWC to function.
 
 **Supported chatbots:**
 
