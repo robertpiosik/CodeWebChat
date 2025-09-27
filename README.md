@@ -2,10 +2,10 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-Code Web Chat is a versatile, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, AI Studio, DeepSeek, and 10+ other free chatbots.
+Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, AI Studio, DeepSeek, and 10+ other free chatbots in your favorite browser.
 
 ✅ **Save money**—use generous free tiers and subscription-based billing \
-✅ **Save time**—finish tasks in seconds, not minutes
+✅ **Save time**—get multi-file edits from a single response
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
@@ -17,7 +17,11 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
 
-Once the response is ready, multi-file suggested changes can be applied to the codebase after you review them in a transparent and safe way.
+Once the response is ready, suggested multi-file changes can be applied to the codebase after you review them in a transparent and safe way.
+
+**Non-agentic nature**
+
+CWC works solely on hand-picked context. This design choice doesn't try to remove You from coding and gives you full control over the model's outputs, making as accurate and predictable as possible.
 
 **Guiding principles**
 
@@ -32,10 +36,12 @@ Once the response is ready, multi-file suggested changes can be applied to the c
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
-Install the Connector browser extension and never copy&paste again.
+Install an [open-source](https://github.com/robertpiosik/CodeWebChat/tree/dev/packages/browser) browser extension and never copy&paste again.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
+
+The browser extension uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to change model, and other settings on your behalf.
 
 **Supported chatbots:**
 
@@ -56,14 +62,14 @@ Install the Connector browser extension and never copy&paste again.
 - Yuanbao
 - Z.AI
 
-> <small>**Legal Disclaimer:** The extension does only basic web interactions to start a new conversation. The injected _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.</small>
+> <small>**Legal disclaimer:** The injected _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.</small>
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-CWC is not limited to chatbot initializations. To use built-in API tools, bring your own keys (BYOK) for any OpenAI-API compatible model provider.
+CWC is not limited to chatbot initializations. To use built-in API tools, bring your own key (BYOK) for any OpenAI-API compatible model provider.
 
 **🛠️ Edit Context** \
-Modify files based on natural language instructions.
+Modify, create or delete files based on natural language instructions.
 
 **🛠️ Code Completions** \
 Get accurate code-at-cursor from state-of-the-art reasoning models.
@@ -101,15 +107,15 @@ The tool **does not** collect telemetry.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
-If you have a question about CWC, or want to help others, you're always welcome to join the conversation:
+If you have a question, or want to help others, you're always welcome to join the community:
 
-- [GitHub Discussions](https://github.com/robertpiosik/CodeWebChat/discussions)
 - [Discord](https://discord.gg/KJySXsrSX5)
 - [Reddit](https://www.reddit.com/r/CodeWebChat)
+- [Discussions](https://github.com/robertpiosik/CodeWebChat/discussions)
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Donations</span>
 
-[Buy me a coffee](https://buymeacoffee.com/robertpiosik)
+If you enjoy using Code Web Chat, [buying a $3 coffee](https://buymeacoffee.com/robertpiosik) is a great way to show your support for the project.
 
 **BTC:** bc1qfzajl0fc4347knr6n5hhuk52ufr4sau04su5te
 

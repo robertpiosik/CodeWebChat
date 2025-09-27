@@ -1,11 +1,16 @@
-import { useRef, useEffect, useMemo, useState } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import { Icon } from '../Icon'
 import { dictionary } from '@shared/constants/dictionary'
+import { get_highlighted_text } from './utils/get-highlighted-text'
+import { use_handlers } from './hooks/use-handlers'
+import { format_token_count } from './utils/format-token-count'
 
-type Props = {
+const component_dictionary = dictionary['ChatInput.tsx']
+
+export type ChatInputProps = {
   value: string
   chat_history: string[]
   on_change: (value: string) => void
@@ -29,22 +34,18 @@ type Props = {
   focus_and_select_key?: number
 }
 
-const format_token_count = (count?: number) => {
-  if (!count) return undefined
-  if (count < 1000) {
-    return count.toString()
-  } else {
-    return `${Math.floor(count / 1000)}K+`
-  }
-}
-
-export const ChatInput: React.FC<Props> = (props) => {
+export const ChatInput: React.FC<ChatInputProps> = (props) => {
   const textarea_ref = useRef<HTMLTextAreaElement>(null)
   const highlight_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
-  const [history_index, set_history_index] = useState(-1)
-  const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
-  const component_dictionary = dictionary['ChatInput.tsx']
+
+  const {
+    handle_select,
+    handle_input_change,
+    handle_submit,
+    handle_key_down,
+    is_history_enabled
+  } = use_handlers(props)
 
   useEffect(() => {
     if (textarea_ref.current) {
@@ -74,158 +75,6 @@ export const ChatInput: React.FC<Props> = (props) => {
       textarea_ref.current.select()
     }
   }, [props.focus_and_select_key])
-
-  const get_highlighted_text = (text: string) => {
-    if (props.is_in_code_completions_mode) {
-      const regex = /(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")/g
-      const parts = text.split(regex)
-      return parts.map((part, index) => {
-        if (
-          part &&
-          /^#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
-        ) {
-          return (
-            <span key={index} className={styles['selection-keyword']}>
-              {part}
-            </span>
-          )
-        }
-        return <span key={index}>{part}</span>
-      })
-    }
-
-    const regex =
-      /(#Selection|#Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?|#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"|`[^\s`]*\.[^\s`]+`)/g
-    const parts = text.split(regex)
-    return parts.map((part, index) => {
-      if (part == '#Selection') {
-        return (
-          <span
-            key={index}
-            className={cn(styles['selection-keyword'], {
-              [styles['selection-keyword--error']]: !props.has_active_selection
-            })}
-          >
-            {part}
-          </span>
-        )
-      }
-      if (part && /^#Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?$/.test(part)) {
-        return (
-          <span key={index} className={styles['selection-keyword']}>
-            {part}
-          </span>
-        )
-      }
-      if (
-        part &&
-        /^#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
-      ) {
-        return (
-          <span key={index} className={styles['selection-keyword']}>
-            {part}
-          </span>
-        )
-      }
-      if (part && /^`[^\s`]*\.[^\s`]+`$/.test(part)) {
-        return (
-          <span key={index} className={styles['selection-keyword']}>
-            {part}
-          </span>
-        )
-      }
-      return <span key={index}>{part}</span>
-    })
-  }
-
-  const handle_select = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    const textarea = e.currentTarget
-    const caret_position = textarea.selectionStart
-    props.on_caret_position_change(caret_position)
-  }
-
-  const handle_input_change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const new_value = e.target.value
-    props.on_change(new_value)
-    set_history_index(-1)
-
-    const textarea = e.target
-    const caret_position = textarea.selectionStart
-    if (new_value.charAt(caret_position - 1) == '@') {
-      setTimeout(() => {
-        props.on_at_sign_click()
-      }, 150)
-    }
-
-    if (!new_value) {
-      set_is_history_enabled(true)
-    }
-  }
-
-  const handle_submit = (
-    e:
-      | React.KeyboardEvent<HTMLTextAreaElement>
-      | React.MouseEvent<HTMLButtonElement>,
-    with_control?: boolean
-  ) => {
-    e.stopPropagation()
-    if (with_control || e.ctrlKey || e.metaKey) {
-      props.on_submit_with_control()
-    } else {
-      props.on_submit()
-    }
-    set_history_index(-1)
-  }
-
-  const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key == 'Enter' && e.shiftKey) {
-      e.preventDefault()
-      const textarea = e.currentTarget
-      const start = textarea.selectionStart
-      const end = textarea.selectionEnd
-
-      const new_value =
-        props.value.substring(0, start) + '\n' + props.value.substring(end)
-
-      props.on_change(new_value)
-      set_is_history_enabled(false)
-
-      setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = start + 1
-      }, 0)
-    } else if (e.key == 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handle_submit(e)
-    } else if (
-      (e.key == 'ArrowUp' || e.key == 'ArrowDown') &&
-      is_history_enabled
-    ) {
-      const active_history = props.chat_history
-
-      if (active_history.length == 0) return
-
-      e.preventDefault()
-
-      if (e.key == 'ArrowUp') {
-        if (history_index < active_history.length - 1) {
-          const new_index = history_index + 1
-          set_history_index(new_index)
-          props.on_change(active_history[new_index])
-        }
-      } else if (e.key == 'ArrowDown') {
-        if (history_index > 0) {
-          const new_index = history_index - 1
-          set_history_index(new_index)
-          props.on_change(active_history[new_index])
-        } else if (history_index == 0) {
-          set_history_index(-1)
-          props.on_change('')
-        }
-      }
-    } else if (props.value) {
-      set_is_history_enabled(false)
-    }
-  }
 
   const placeholder = useMemo(() => {
     const active_history = props.chat_history
@@ -299,7 +148,11 @@ export const ChatInput: React.FC<Props> = (props) => {
               props.on_at_sign_click()
           }}
         >
-          {get_highlighted_text(props.value)}
+          {get_highlighted_text({
+            text: props.value,
+            is_in_code_completions_mode: props.is_in_code_completions_mode,
+            has_active_selection: props.has_active_selection
+          })}
         </div>
         <TextareaAutosize
           ref={textarea_ref}

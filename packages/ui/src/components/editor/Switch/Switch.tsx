@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import styles from './Switch.module.scss'
 import cn from 'classnames'
 

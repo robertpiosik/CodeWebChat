@@ -36,7 +36,5 @@ export const apply_reasoning_effort = (
         }
       }
     }
-  } else {
-    body.reasoning_effort = reasoning_effort
   }
 }

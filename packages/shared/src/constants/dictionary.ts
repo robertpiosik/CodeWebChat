@@ -310,7 +310,7 @@ export const dictionary = {
       'Get accurate code-at-cursor from state-of-the-art reasoning models.',
     EDIT_CONTEXT_LABEL: 'Edit Context',
     EDIT_CONTEXT_SUBTITLE:
-      'Modify files based on natural language instructions.',
+      'Modify, create or delete files based on natural language instructions.',
     INTELLIGENT_UPDATE_LABEL: 'Intelligent Update',
     INTELLIGENT_UPDATE_SUBTITLE:
       'Integrate truncated code blocks and fix malformed diffs.',

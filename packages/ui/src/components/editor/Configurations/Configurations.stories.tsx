@@ -1,60 +1,50 @@
 import { Configurations } from './Configurations'
+import { useState } from 'react'
 
 export default {
   component: Configurations
 }
 
-// const configurations: Configurations.Configuration[] = [
-//   {
-//     model: 'flash-2.5',
-//     provider: 'Gemini' ,
-//   },
-//   {
-//     model: 'pro-2.5',
-//     provider: 'Gemini' ,
-//   },
-// ]
+const configurations: Configurations.Configuration[] = [
+  {
+    model: 'claude-3-haiku-20240307',
+    provider: 'Anthropic',
+    temperature: 0.7
+  },
+  {
+    model: 'gpt-4o',
+    provider: 'OpenAI',
+    reasoning_effort: 'low'
+  },
+  {
+    model: 'gemini-1.5-flash',
+    provider: 'Google',
+    cache_enabled: true
+  }
+]
 
-// export const Multiple = () => {
-//   return (
-//     <Configurations
-//       configurations={configurations}
-//       on_configuration_click={(name) => {
-//         console.log('on_preset_click', name)
-//       }}
-//       is_disabled={false}
-//       selected_Configurations={[]}
-//       on_preset_delete={(name) => console.log('on_preset_delete', name)}
-//       on_preset_edit={(name) => console.log('on_preset_edit', name)}
-//       on_preset_duplicate={(name) => console.log('on_preset_duplicate', name)}
-//       on_manage_configurations={() => console.log('on_create_preset')}
-//       on_preset_copy={(name) => console.log('on_preset_copy', name)}
-//       on_Configurations_reorder={(reordered) =>
-//         console.log('on_Configurations_reorder', reordered)
-//       }
-//       on_set_default_Configurations={() => console.log('on_set_default')}
-//     />
-//   )
-// }
+export const Default = () => {
+  const [selected_index, set_selected_index] = useState<number | undefined>(1)
 
-// export const CodeCompletionsMode = () => {
-//   return (
-//     <Configurations
-//       Configurations={Configurations}
-//       on_configuration_click={(name) => {
-//         console.log('on_preset_click', name)
-//       }}
-//       is_disabled={false}
-//       selected_Configurations={[]}
-//       on_preset_delete={(name) => console.log('on_preset_delete', name)}
-//       on_preset_edit={(name) => console.log('on_preset_edit', name)}
-//       on_preset_duplicate={(name) => console.log('on_preset_duplicate', name)}
-//       on_manage_configurations={() => console.log('on_create_preset')}
-//       on_preset_copy={(name) => console.log('on_preset_copy', name)}
-//       on_Configurations_reorder={(reordered) =>
-//         console.log('on_Configurations_reorder', reordered)
-//       }
-//       on_set_default_Configurations={() => console.log('on_set_default')}
-//     />
-//   )
-// }
+  return (
+    <Configurations
+      api_mode="edit-context"
+      configurations={configurations}
+      on_configuration_click={(index) => {
+        console.log('on_configuration_click', index)
+        set_selected_index(index)
+      }}
+      selected_configuration_index={selected_index}
+    />
+  )
+}
+
+export const Empty = () => (
+  <Configurations
+    api_mode="edit-context"
+    configurations={[]}
+    on_configuration_click={(index) => {
+      console.log('on_configuration_click', index)
+    }}
+  />
+)

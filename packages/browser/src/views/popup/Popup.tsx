@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import browser from 'webextension-polyfill'
 import { HtmlParser } from '../../utils/html-parser'
 import { StoredWebsite, use_websites_store } from './hooks/use-websites-store'

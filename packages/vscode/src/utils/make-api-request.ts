@@ -143,10 +143,15 @@ export async function make_api_request(params: {
               start_match.index! + start_match[0].length
           } else {
             const trimmed_response = full_response.trimStart()
-            if (
-              trimmed_response.length > 0 &&
-              !trimmed_response.startsWith('<')
-            ) {
+            if (trimmed_response.length == 0) {
+              return
+            }
+
+            const is_think_prefix =
+              '<think>'.startsWith(trimmed_response) ||
+              '<thought>'.startsWith(trimmed_response)
+
+            if (!is_think_prefix) {
               think_block_closed = true
               content_for_client = full_response
               handle_chunk_metrics(full_response)
