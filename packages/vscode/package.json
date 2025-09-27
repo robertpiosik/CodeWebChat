@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "CWC connects VS Code with ChatGPT, AI Studio, DeepSeek, and 10+ other free chatbots in your favorite browser",
-  "version": "1.404.0",
+  "version": "1.405.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
