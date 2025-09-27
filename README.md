@@ -13,23 +13,23 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-**The workflow**
-
-Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
-
-Once the response is ready, suggested multi-file changes can be applied to the codebase after you review them in a transparent and safe way.
-
-**Non-agentic nature**
-
-CWC works solely on hand-picked context. This design choice doesn't try to remove You from coding and gives you full control over the model's outputs, making as accurate and predictable as possible.
-
-**Guiding principles**
+⭐️ **Guiding principles**
 
 - Initialize chatbots—don't scrape responses
 - Privacy first—don't collect any usage data
 - Free forever—open-source community effort
 
-**CWC is for you if you're**
+⭐️ **The workflow**
+
+Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
+
+Once the response is ready, suggested multi-file changes can be applied to the codebase after you review them in a transparent and safe way.
+
+⭐️ **Non-agentic nature**
+
+CWC works solely on hand-picked context. This design choice doesn't try to remove You from coding and gives you full control over the model's outputs, making them as accurate and predictable as possible.
+
+⭐️ **CWC is for you if you're**
 
 - a professional working on a large codebase
 - a student or hobbyist on a budget
