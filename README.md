@@ -17,7 +17,7 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
 
-Once the response is ready, all changes can be applied to the codebase after you review them in a transparent and safe way.
+Once the response is ready, multi-file suggested changes can be applied to the codebase after you review them in a transparent and safe way.
 
 **Guiding principles**
 
