@@ -36,7 +36,7 @@ CWC works solely on hand-picked context. This design choice was motivated by the
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
-Install our Connector browser extension and never copy&paste again.
+Install our Connector browser extension and never copy & paste again.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
