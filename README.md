@@ -32,9 +32,7 @@ Once the response is ready, suggested multi-file changes can be integrated with 
 
 ⭐️ **Non-agentic nature**
 
-CWC works solely on hand-picked context. This design choice was dictated by the fact LLMs cannot truly reason—they only match patters seen in training data, therefore they can't reliably make informed decisions (especially those less pronounced in training data).
-
-Although agentic coding shows plausible results to some, it is characterized by extensive token demand and slowness of operation.
+CWC works solely on hand-picked context. This design choice was dictated by the fact LLMs cannot truly reason—they only match patters seen in training data, therefore they can't reliably make informed decisions (especially those less pronounced in training data). Although agentic coding shows plausible results to some, it is characterized by extensive token demand and slowness of operation.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
