@@ -41,7 +41,7 @@ Install our Connector browser extension and never copy & paste again.
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-It uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to insert prepared prompt, change model, etc. on your behalf, but is not required for CWC to function.
+It uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to insert prepared prompt, change model, etc., on your behalf, but is not required for CWC to function.
 
 **Supported chatbots:**
 
@@ -107,7 +107,7 @@ The tool **does not** collect telemetry.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
-If you have a question, or want to help others, you're always welcome to join the community:
+If you have a question, or want to help others, you're always welcome in our community.
 
 - [Discord](https://discord.gg/KJySXsrSX5)
 - [Reddit](https://www.reddit.com/r/CodeWebChat)
