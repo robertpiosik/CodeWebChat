@@ -1,6 +1,6 @@
 import { ProviderForClient } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
-import { ApiProviders } from '@ui/components/editor/settings/ApiProviders'
+import { ModelProviders } from '@ui/components/editor/settings/ModelProviders'
 import { Page } from '@ui/components/editor/settings/Page'
 
 type ModelProvidersPageProps = {
@@ -19,7 +19,7 @@ export const ModelProvidersPage = ({
       subtitle="Manage your model providers here. Add, edit, reorder, or delete providers as needed."
     >
       {providers && (
-        <ApiProviders
+        <ModelProviders
           providers={providers}
           on_reorder={(reordered_providers) => {
             set_providers(reordered_providers)

@@ -1,8 +1,8 @@
-import styles from './ApiProviders.module.scss'
+import styles from './ModelProviders.module.scss'
 import { ReactSortable } from 'react-sortablejs'
 import { IconButton } from '../../IconButton'
 
-export namespace ApiProviders {
+export namespace ModelProviders {
   export type Provider = {
     name: string
     type: 'built-in' | 'custom'
@@ -21,15 +21,15 @@ export namespace ApiProviders {
 }
 
 const with_ids = (
-  providers: ApiProviders.Provider[]
-): (ApiProviders.Provider & { id: string })[] => {
+  providers: ModelProviders.Provider[]
+): (ModelProviders.Provider & { id: string })[] => {
   return providers.map((provider) => ({
     ...provider,
     id: provider.name
   }))
 }
 
-export const ApiProviders: React.FC<ApiProviders.Props> = ({
+export const ModelProviders: React.FC<ModelProviders.Props> = ({
   providers,
   on_reorder,
   on_add_provider,
@@ -103,7 +103,7 @@ export const ApiProviders: React.FC<ApiProviders.Props> = ({
         ) : (
           <div className={styles.row}>
             <div className={styles['empty-message']}>
-              No API providers configured.
+              No model providers configured.
             </div>
           </div>
         )}

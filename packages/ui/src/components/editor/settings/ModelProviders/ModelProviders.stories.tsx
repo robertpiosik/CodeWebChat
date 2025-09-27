@@ -1,12 +1,11 @@
-import { ApiProviders } from './ApiProviders'
+import { ModelProviders } from './ModelProviders'
 import { useState } from 'react'
 
 export default {
-  component: ApiProviders,
-  title: 'Editor/Settings/ApiProviders'
+  component: ModelProviders
 }
 
-const initialProviders: ApiProviders.Provider[] = [
+const initial_providers: ModelProviders.Provider[] = [
   {
     name: 'OpenAI',
     type: 'built-in',
@@ -28,7 +27,7 @@ const initialProviders: ApiProviders.Provider[] = [
 ]
 
 export const Default = () => {
-  const [providers, setProviders] = useState(initialProviders)
+  const [providers, set_providers] = useState(initial_providers)
   return (
     <div
       style={{
@@ -36,11 +35,11 @@ export const Default = () => {
         backgroundColor: 'var(--vscode-sideBar-background)'
       }}
     >
-      <ApiProviders
+      <ModelProviders
         providers={providers}
         on_reorder={(reordered) => {
           console.log('reordered', reordered)
-          setProviders(reordered)
+          set_providers(reordered)
         }}
         on_add_provider={() => console.log('Add provider clicked')}
         on_delete_provider={(name) => console.log('Delete provider', name)}
@@ -59,7 +58,7 @@ export const Empty = () => {
         backgroundColor: 'var(--vscode-sideBar-background)'
       }}
     >
-      <ApiProviders
+      <ModelProviders
         providers={[]}
         on_reorder={(reordered) => console.log('reordered', reordered)}
         on_add_provider={() => console.log('Add provider clicked')}
