@@ -30,10 +30,6 @@ Select folders and files for context, type instructions, and pick your favorite 
 
 Once the response is ready, suggested multi-file changes can be integrated with the codebase after you review them in a transparent and safe way.
 
-⭐️ **Non-agentic nature**
-
-CWC works solely on hand-picked context. This design choice was motivated by the fact LLMs cannot truly reason—they only match patters seen in training data, therefore they can't reliably make informed decisions (especially those less pronounced in training data). Although agentic coding show plausible results in many scenarios, it is characterized by requirement for high-effort instructions, slowness of execution and extensive token demand.
-
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
 Install our Connector browser extension and never copy & paste again.
