@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "CWC initializes your favorite chatbot with code and instructions, hands-free!",
-  "version": "1.406.0",
+  "version": "1.407.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
