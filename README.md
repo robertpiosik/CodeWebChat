@@ -4,8 +4,8 @@
 
 Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that connects VS Code with ChatGPT, AI Studio, DeepSeek, and 10+ other free chatbots in your favorite browser.
 
-✅ **Save money**—use generous free tiers and subscription-based billing \
-✅ **Save time**—get multi-file edits from a single response
+✅ **Save money**—generous free tiers and subscription-based billing \
+✅ **Save time**—multi-file changes from a single response
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
@@ -15,33 +15,35 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 ⭐️ **Guiding principles**
 
+- Privacy first—operate locally, don't collect any data
 - Initialize chatbots—don't scrape responses
-- Privacy first—don't collect any usage data
-- Free forever—open-source community effort
-
-⭐️ **The workflow**
-
-Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
-
-Once the response is ready, suggested multi-file changes can be applied to the codebase after you review them in a transparent and safe way.
-
-⭐️ **Non-agentic nature**
-
-CWC works solely on hand-picked context. This design choice doesn't try to remove You from coding and gives you full control over the model's outputs, making them as accurate and predictable as possible.
+- Free forever—community effort
 
 ⭐️ **CWC is for you if you're**
 
 - a professional working on a large codebase
 - a student or hobbyist on a budget
 
+⭐️ **The workflow**
+
+Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
+
+Once the response is ready, suggested multi-file changes can be integrated with the codebase after you review them in a transparent and safe way.
+
+⭐️ **Non-agentic nature**
+
+CWC works solely on hand-picked context. This design choice was dictated by the fact LLMs cannot truly reason—they only match patters seen in training data, therefore they can't reliably make informed decisions (especially those less pronounced in training data).
+
+Although agentic coding shows plausible results to some, it is characterized by extensive token demand and slowness of operation.
+
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
-Install an [open-source](https://github.com/robertpiosik/CodeWebChat/tree/dev/packages/browser) browser extension and never copy&paste again.
+Install a browser extension and never copy&paste again.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-The browser extension uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to change model, and other settings on your behalf.
+The browser extension uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to insert prepared prompt, change model, etc. on your behalf, but is not required for CWC to function.
 
 **Supported chatbots:**
 
@@ -62,7 +64,7 @@ The browser extension uses a simple [content script](https://github.com/robertpi
 - Yuanbao
 - Z.AI
 
-> <small>**Legal disclaimer:** The injected _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.</small>
+> <small>**Legal disclaimer:** The injected, yellow [Apply response with CWC] button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button—changes integration process uses clipboard-stored chat response text.</small>
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
