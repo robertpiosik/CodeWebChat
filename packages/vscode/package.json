@@ -341,6 +341,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.commitChanges",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.copyContext",
           "when": "false"
         },

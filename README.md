@@ -93,10 +93,6 @@ Generate meaningful summaries of changes adhering to your style.
 - `Code Web Chat: Code Completion with Instructions` - ...with instructions.
 - `Code Web Chat: Code Completion with Instructions using...` - ...with instructions and configuration selection.
 
-### Version control
-
-- `Code Web Chat: Commit Changes` - Automatically generate a commit message for staged changes and commit them.
-
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Enterprise security</span>
 
 **Code Web Chat operates exclusively on your machine.** All your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. Model providers for API tools are called directly.
