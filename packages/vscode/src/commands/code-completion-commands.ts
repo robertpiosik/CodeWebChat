@@ -14,7 +14,6 @@ import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../utils/apply-reasoning-effort'
 
-// Show inline completion using Inline Completions API
 const show_inline_completion = async (params: {
   editor: vscode.TextEditor
   position: vscode.Position
@@ -478,7 +477,6 @@ const perform_code_completion = async (params: {
             .replace(/\]\]>/g, '')
             .trim()
 
-          console.log('xxx', Date.now())
           await show_inline_completion({
             editor,
             position,
