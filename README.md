@@ -33,9 +33,11 @@ Example message:
 
 ```
 PROMPT:      | Implement a subtract method.
+             |
 EDIT FORMAT: | <system>
 (diff)       | Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
              | </system>
+             |
 CONTEXT:     | <files>
              | <file path="src/calculator.ts">
              | <![CDATA[
@@ -43,7 +45,9 @@ CONTEXT:     | <files>
              | ]]>
              | </file>
              | </files>
+             |
 PROMPT:      | Implement a subtract method.
+             |
 EDIT FORMAT: | <system>
 (diff)       | Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
              | </system>
