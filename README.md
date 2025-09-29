@@ -51,7 +51,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 </system>
 ```
 
-By having zero overhead of tool call definitions, messages are short and yield outputs of highest accuracy.
+By having zero overhead of tool call definitions, messages are concise and yield outputs of highest accuracy. Vague instructions are no longer a problem!
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
