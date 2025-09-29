@@ -35,12 +35,12 @@ Implement a subtract method.
 Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
 </system>
 <files>
-  <file path="src/calculator.ts">
-  <![CDATA[
-  export const addNumbers = (a: number, b: number) => a + b;
-  ]]>
-  </file>
-  ...
+<file path="src/calculator.ts">
+<![CDATA[
+export const addNumbers = (a: number, b: number) => a + b;
+]]>
+</file>
+...
 </files>
 Implement a subtract method.
 <system>
