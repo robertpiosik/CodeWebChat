@@ -207,7 +207,9 @@ export const ai_studio: Chatbot = {
         })
         return
       }
-      temp_toggle.click()
+      if (!temp_toggle.classList.contains('ms-button-active')) {
+        temp_toggle.click()
+      }
     }
 
     if (supported_options['grounding-with-google-search']) {

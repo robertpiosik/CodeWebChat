@@ -41,6 +41,7 @@ const show_inline_completion = async (params: {
           'editor.action.formatDocument',
           document.uri
         )
+        controller.dispose()
         change_listener.dispose()
       }
     }
@@ -476,6 +477,8 @@ const perform_code_completion = async (params: {
             .replace(/<!\[CDATA\[/g, '')
             .replace(/\]\]>/g, '')
             .trim()
+
+          console.log('xxx', Date.now())
           await show_inline_completion({
             editor,
             position,
