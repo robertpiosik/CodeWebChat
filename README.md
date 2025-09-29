@@ -19,11 +19,6 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 - Initialize chatbots—don't scrape responses
 - Free forever—community effort
 
-⭐️ **CWC is for you if you're**
-
-- a professional working on a large codebase
-- a student or hobbyist on a budget
-
 ⭐️ **The workflow**
 
 Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
