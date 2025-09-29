@@ -48,7 +48,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 </system>
 ```
 
-CWC is non-agentic, meaning it has zero overhead of tool call definitions—messages are concise and yield complete solutions without intermediate steps.
+CWC is non-agentic, meaning it has zero overhead of added tool call definitions in every message. This design choice results in a more focused task for the model, leading to more accurate code generation.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
