@@ -27,7 +27,7 @@ Once the response is ready, suggested multi-file changes can be integrated with 
 
 ⭐️ **How it works?**
 
-It's really simple! Whenever you inititalize a new chat or make an API call, a message in XML format is constructed. It constists of the following segments: instructions, edit format, context, instructions and edit format (repeated for better adherence).
+It's really simple! Whenever you inititalize a new chat or make an API call, a message in XML-like format is constructed. It constists of the following segments: prompt, edit format instructions and context. First two are [repeated for better adherence](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#prompt-organization).
 
 ```
 Implement a subtract method.
@@ -36,7 +36,9 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 </system>
 <files>
   <file path="src/calculator.ts">
+  <![CDATA[
   export const addNumbers = (a: number, b: number) => a + b;
+  ]]>
   </file>
   ...
 </files>
@@ -46,7 +48,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 </system>
 ```
 
-CWC is non-agentic, meaning it has zero overhead of tool call definitions—messages are concise and yield solutions without intermediate steps.
+CWC is non-agentic, meaning it has zero overhead of tool call definitions—messages are concise and yield complete solutions without intermediate steps.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
