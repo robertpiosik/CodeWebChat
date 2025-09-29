@@ -27,7 +27,7 @@ Once the response is ready, suggested multi-file changes can be integrated with 
 
 ⭐️ **How it works?**
 
-It's really simple! Whenever you inititalize a new chat or make an API call, a message in XML-like format is constructed. It constists of the following segments: prompt, edit format and context. First two [are repeated for better adherence](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
+It's really simple! Whenever you inititalize a new chat or make an API call, a message in XML-like format is constructed. It constists of three segments: prompt, edit format and context. First two are repeated after context [for better adherence](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
 ```
 Implement a subtract method.
@@ -79,7 +79,7 @@ It uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/bl
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Get started with generous free tier from Google via [AI Studio](https://aistudio.google.com/api-keys) or any other OpenAI-API compatible model provider.
+Get started with generous free tier from Google via [AI Studio / API Keys](https://aistudio.google.com/api-keys) or any other OpenAI-API compatible model provider.
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
