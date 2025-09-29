@@ -40,15 +40,18 @@ Implement a subtract method.
 Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
 </system>
 <files>
-<file path="src/calculator.ts">
-export const addNumbers = (a: number, b: number) => a + b;
-</file>
+  <file path="src/calculator.ts">
+  export const addNumbers = (a: number, b: number) => a + b;
+  </file>
+  ...
 </files>
 Implement a subtract method.
 <system>
 Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
 </system>
 ```
+
+By having zero overhead of tool call definitions, messages are short and yield outputs of highest accuracy.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
