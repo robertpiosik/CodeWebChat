@@ -4,8 +4,8 @@
 
 Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that initializes your favorite chatbot with code and instructions, hands-free!
 
-✅ **All popular chatbots**—ChatGPT, Claude, Gemini, AI Studio, Qwen, DeepSeek, among others \
-✅ **Chat response integration**—accepts changes in whole, truncated and diff edit formats
+✅ **Supports popular chatbots**—ChatGPT, Claude, Gemini, AI Studio, Qwen, DeepSeek, etc. \
+✅ **Applies chat reponses**—integrates changes in whole, truncated and diff edit formats
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
@@ -30,6 +30,26 @@ Select folders and files for context, type instructions, and pick your favorite 
 
 Once the response is ready, suggested multi-file changes can be integrated with the codebase after you review them in a transparent and safe way.
 
+⭐️ **How it works?**
+
+It's really simple! Whenever you inititalize a new chat or make an API call, a message in XML format is constructed. It constists of the following segments: instructions, edit format, context, instructions and edit format (repeated for better adherence).
+
+```
+Implement a subtract method.
+<system>
+Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
+</system>
+<files>
+<file path="src/calculator.ts">
+export const addNumbers = (a: number, b: number) => a + b;
+</file>
+</files>
+Implement a subtract method.
+<system>
+Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
+</system>
+```
+
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
 Install our Connector browser extension and never copy & paste again.
@@ -37,9 +57,9 @@ Install our Connector browser extension and never copy & paste again.
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-It uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to insert prepared prompt, change model, etc., on your behalf, but is not required for CWC to function.
+It uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) to make a few actions in the chat UI like message insertion, model change and submit button click.
 
-**Supported chatbots:**
+**Supported chatbots (A-Z)**
 
 - AI Studio
 - ChatGPT
