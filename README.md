@@ -79,7 +79,7 @@ It uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/bl
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Get started with generous free tier from Google via [AI Studio / API Keys](https://aistudio.google.com/api-keys) or any other OpenAI-API compatible model provider, e.g. [OpenRouter](https://openrouter.ai/settings/keys).
+Get started with generous free tier from Google via [AI Studio / API Keys](https://aistudio.google.com/api-keys), or any other OpenAI-API compatible model provider, e.g. [OpenRouter](https://openrouter.ai/settings/keys).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
