@@ -99,7 +99,7 @@ export const grok: Chatbot = {
         get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:nth-child(2)'
+            'button:nth-child(4)'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({

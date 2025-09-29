@@ -213,19 +213,6 @@ describe('clipboard-parser', () => {
       )
     })
 
-    //     it('should handle quoted filenames', () => {
-    //       const text = load_clipboard_text('quoted-filenames.txt')
-    //       const result = parse_multiple_files({
-    //         response: text,
-    //         is_single_root_folder_workspace: true
-    //       })
-
-    //       expect(result).toHaveLength(1)
-    //       expect(result[0].file_path).toBe('src/utils.py')
-    //       expect(result[0].content).toBe(`def add(a, b):
-    //     return a + b`)
-    //     })
-
     it('should parse uncommented filename format', () => {
       const text = load_test_case_file(
         'uncommented-filename',
@@ -721,6 +708,27 @@ describe('clipboard-parser', () => {
       )
       expect(result.patches![1].content).toBe(
         load_test_case_file('diff-multiple-files-variant-j', 'file-2.txt')
+      )
+    })
+
+    it('should parse multiple diff files format in variant k', () => {
+      const text = load_test_case_file(
+        'diff-multiple-files-variant-k',
+        'diff-multiple-files-variant-k.txt'
+      )
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(2)
+
+      expect(result.patches![0].file_path).toBe('src/lorem.ts')
+      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
+
+      expect(result.patches![0].content).toBe(
+        load_test_case_file('diff-multiple-files-variant-k', 'file-1.txt')
+      )
+      expect(result.patches![1].content).toBe(
+        load_test_case_file('diff-multiple-files-variant-k', 'file-2.txt')
       )
     })
 

@@ -105,56 +105,134 @@ const process_collected_patch_lines = (
   return patch
 }
 
-const extract_code_block_patches = (normalized_text: string): Diff[] => {
-  const patches: Diff[] = []
-  const lines = normalized_text.split('\n')
+const convert_code_block_to_new_file_diff = (lines: string[]): Diff | null => {
+  if (lines.length == 0) {
+    return null
+  }
 
-  // Parse from end to beginning to find code blocks
-  const code_blocks: { start: number; end: number }[] = []
+  // Regex to find file path. It can be commented or not.
+  // It handles paths with slashes, backslashes, dots, alphanumerics, underscores, and hyphens.
+  const path_regex = /(?:(?:\/\/|#|--|<!--)\s*)?([\w./\\-]+)/
 
-  // First pass: find all closing ``` and work backwards to find opening ```diff
-  for (let i = lines.length - 1; i >= 0; i--) {
-    const trimmed_line = lines[i].trim()
+  let file_path: string | undefined
+  let path_line_index = -1
 
-    if (trimmed_line == '```') {
-      // Found closing backticks, now look backwards for opening
-      for (let j = i - 1; j >= 0; j--) {
-        const opening_line = lines[j].trim()
-        if (opening_line == '```diff') {
-          code_blocks.unshift({ start: j, end: i })
-          i = j // Skip to this position to avoid overlapping blocks
-          break
+  // Look for a file path in the first few lines of the code block
+  for (let i = 0; i < Math.min(lines.length, 5); i++) {
+    const line = lines[i].trim()
+    const match = line.match(path_regex)
+
+    if (match && match[1]) {
+      const potential_path = match[1]
+
+      if (
+        (potential_path.includes('.') || potential_path.includes('/')) &&
+        !potential_path.includes(' ')
+      ) {
+        const rest_of_line = line
+          .substring(line.indexOf(potential_path) + potential_path.length)
+          .trim()
+        // e.g. `25:5` for line and column, or `-->` for html comments
+        const is_just_path_and_location = /^(?:\d+:\d+)?\s*(-->)?\s*$/.test(
+          rest_of_line
+        )
+
+        if (is_just_path_and_location) {
+          file_path = potential_path.replace(/\\/g, '/') // normalize backslashes
+          path_line_index = i
+          break // Found it, stop searching.
         }
       }
     }
   }
 
-  // Handle unclosed block at the end
-  let last_processed_line = -1
-  if (code_blocks.length > 0) {
-    last_processed_line = code_blocks[code_blocks.length - 1].end
+  if (!file_path) {
+    return null
   }
 
-  let last_opener_index = -1
+  const content_lines = lines.filter((_, index) => index !== path_line_index)
+
+  const patch_lines = content_lines.map((line) => `+${line}`)
+  const patch_content = [
+    `--- /dev/null`,
+    `+++ b/${file_path}`,
+    `@@ -0,0 +1,${content_lines.length} @@`,
+    ...patch_lines
+  ].join('\n')
+
+  return {
+    file_path,
+    content: patch_content + '\n'
+  }
+}
+
+const extract_all_code_block_patches = (normalized_text: string): Diff[] => {
+  const patches: Diff[] = []
+  const lines = normalized_text.split('\n')
+
+  const code_block_regex = /^```(\w*)/
+
+  const code_blocks: { start: number; end: number; type: string }[] = []
+  const stack: { start: number; type: string }[] = []
+
   for (let i = 0; i < lines.length; i++) {
-    const trimmed_line = lines[i].trim()
-    if (trimmed_line == '```diff') {
-      last_opener_index = i
+    const line = lines[i]
+    const trimmed_line = line.trim()
+    const match = trimmed_line.match(code_block_regex)
+
+    if (!match) continue
+
+    const lang = match[1] || ''
+
+    if (stack.length > 0 && stack[stack.length - 1].type == 'diff') {
+      if (line.match(/^[+\- ]/)) {
+        continue
+      }
+    }
+
+    if (lang == '' && stack.length > 0 && trimmed_line == '```') {
+      const open_block = stack.pop()!
+      code_blocks.push({
+        start: open_block.start,
+        end: i,
+        type: open_block.type
+      })
+    } else {
+      stack.push({ start: i, type: lang })
     }
   }
 
-  if (last_opener_index > last_processed_line) {
+  const closed_blocks = [...code_blocks].sort((a, b) => a.start - b.start)
+
+  for (const open_block of stack) {
+    let end_line = lines.length
+    for (const closed_block of closed_blocks) {
+      if (closed_block.start > open_block.start) {
+        end_line = closed_block.start
+        break
+      }
+    }
     code_blocks.push({
-      start: last_opener_index,
-      end: lines.length
+      start: open_block.start,
+      end: end_line,
+      type: open_block.type
     })
   }
+
+  code_blocks.sort((a, b) => a.start - b.start)
 
   // Process each found code block
   for (const block of code_blocks) {
     const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
-    const processed_patches = parse_multiple_raw_patches(block_lines)
-    patches.push(...processed_patches)
+    if (block.type == 'diff') {
+      const processed_patches = parse_multiple_raw_patches(block_lines)
+      patches.push(...processed_patches)
+    } else {
+      const patch = convert_code_block_to_new_file_diff(block_lines)
+      if (patch) {
+        patches.push(patch)
+      }
+    }
   }
 
   return patches
@@ -202,10 +280,13 @@ export const extract_diffs = (clipboard_text: string): Diff[] => {
   const normalized_text = clipboard_text.replace(/\r\n/g, '\n')
   const lines = normalized_text.split('\n')
 
-  const uses_code_blocks = lines.some((line) => line.trim() == '```diff')
+  const code_block_regex = /^```(\w*)/
+  const uses_code_blocks = lines.some((line) =>
+    code_block_regex.test(line.trim())
+  )
 
   if (uses_code_blocks) {
-    return extract_code_block_patches(normalized_text)
+    return extract_all_code_block_patches(normalized_text)
   } else {
     return parse_multiple_raw_patches(lines)
   }

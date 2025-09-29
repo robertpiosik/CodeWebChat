@@ -76,9 +76,9 @@ It uses a simple [content script](https://github.com/robertpiosik/CodeWebChat/bl
 - Qwen
 - Together
 - Yuanbao
-- Z.AI
+- Z
 
-> <small>**Legal disclaimer:** The injected, yellow [Apply response with CWC] button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button—changes integration process uses clipboard-stored chat response text.</small>
+> <small>**Legal disclaimer:** The injected, yellow _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button—changes integration process uses clipboard-stored chat response text.</small>
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
