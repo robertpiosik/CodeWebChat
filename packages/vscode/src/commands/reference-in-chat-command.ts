@@ -2,14 +2,13 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { FileItem } from '../context/providers/workspace-provider'
-import { SharedFileState } from '../context/shared-file-state'
 import { dictionary } from '@shared/constants/dictionary'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 
-export function reference_in_chat_command(
+export const reference_in_chat_command = (
   view_provider: ViewProvider | undefined,
   workspace_provider: WorkspaceProvider | undefined
-) {
+) => {
   return vscode.commands.registerCommand(
     'codeWebChat.referenceInChat',
     async (uri: FileItem) => {
@@ -29,23 +28,13 @@ export function reference_in_chat_command(
         return
       }
 
-      const shared_state = SharedFileState.get_instance()
-      const is_checked = shared_state.get_checked_files().includes(file_path)
+      const is_checked = workspace_provider
+        .get_all_checked_paths()
+        .includes(file_path)
 
       if (!is_checked) {
-        const temp_item = new FileItem(
-          path.basename(file_path),
-          uri.resourceUri,
-          vscode.TreeItemCollapsibleState.None,
-          false,
-          vscode.TreeItemCheckboxState.Checked,
-          false,
-          false,
-          false
-        )
-
         await workspace_provider.update_check_state(
-          temp_item,
+          uri,
           vscode.TreeItemCheckboxState.Checked
         )
       }
