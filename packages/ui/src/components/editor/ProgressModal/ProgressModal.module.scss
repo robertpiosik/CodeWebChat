@@ -1,0 +1,51 @@
+.title {
+  text-align: center;
+}
+
+.elapsed-time {
+  text-align: center;
+  font-size: 20px;
+  font-family: monospace;
+}
+
+.tokens-per-second {
+  text-align: center;
+  font-family: monospace;
+  color: var(--vscode-descriptionForeground);
+}
+
+.progress {
+  width: 100%;
+  height: 2px;
+  background-color: var(--vscode-input-background);
+  overflow: hidden;
+  position: relative;
+
+  &__fill {
+    height: 100%;
+    background-color: var(--vscode-focusBorder);
+    transition: width var(--transition-duration-150)
+      var(--transition-timing-function);
+  }
+
+  &__fill--indeterminate {
+    height: 100%;
+    background-color: var(--vscode-focusBorder);
+    position: absolute;
+    animation: indeterminate-progress 1.5s infinite linear;
+  }
+}
+
+@keyframes indeterminate-progress {
+  from {
+    left: -50px;
+    width: 10px;
+  }
+  50% {
+    width: 50px;
+  }
+  to {
+    left: 100%;
+    width: 10px;
+  }
+}

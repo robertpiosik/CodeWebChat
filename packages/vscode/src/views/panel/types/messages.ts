@@ -470,6 +470,11 @@ export interface HideProgressMessage extends BaseMessage {
   command: 'HIDE_PROGRESS'
 }
 
+export interface ShowChatInitializedMessage extends BaseMessage {
+  command: 'SHOW_CHAT_INITIALIZED'
+  title: string
+}
+
 export interface UpdateFileInReviewMessage extends BaseMessage {
   command: 'UPDATE_FILE_IN_REVIEW'
   file: FileInReview
@@ -506,4 +511,5 @@ export type BackendMessage =
   | SelectedConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
+  | ShowChatInitializedMessage
   | UpdateFileInReviewMessage

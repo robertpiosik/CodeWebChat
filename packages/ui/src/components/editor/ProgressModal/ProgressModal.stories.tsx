@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Progress } from './Progress'
+import { ProgressModal } from './ProgressModal'
 
 export default {
-  component: Progress
+  component: ProgressModal
 }
 
 export const Indeterminate = () => {
@@ -13,7 +13,7 @@ export const Indeterminate = () => {
   }
 
   return visible ? (
-    <Progress title="Processing…" on_cancel={handleCancel} />
+    <ProgressModal title="Processing…" on_cancel={handleCancel} />
   ) : null
 }
 
@@ -42,7 +42,7 @@ export const WithProgress = () => {
   }, [])
 
   return visible ? (
-    <Progress
+    <ProgressModal
       title="Receiving..."
       progress={progress}
       tokens_per_second={250}

@@ -228,11 +228,13 @@ export const handle_send_prompt = async (params: {
     })
   }
 
-  vscode.window.showInformationMessage(
-    resolved_preset_names.length > 1
-      ? 'Chats have been initialized in the connected browser.'
-      : 'Chat has been initialized in the connected browser.'
-  )
+  params.provider.send_message({
+    command: 'SHOW_CHAT_INITIALIZED',
+    title:
+      resolved_preset_names.length > 1
+        ? 'Chats have been initialized in the connected browser.'
+        : 'Chat has been initialized in the connected browser.'
+  })
 }
 
 async function show_preset_quick_pick(params: {

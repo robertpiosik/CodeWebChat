@@ -13,7 +13,8 @@ import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
 import { Changes as UiChanges } from '@ui/components/editor/Changes'
-import { Progress as UiProgress } from '@ui/components/editor/Progress'
+import { ProgressModal as UiProgressModal } from '@ui/components/editor/ProgressModal'
+import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/ChatInitializedModal'
 
 const vscode = acquireVsCodeApi()
 
@@ -30,6 +31,9 @@ export const View = () => {
     progress?: number
     tokens_per_second?: number
   }>()
+  const [chat_initialized_title, set_chat_initialized_title] = useState<
+    string | undefined
+  >()
   const [workspace_folder_count, set_workspace_folder_count] =
     useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()
@@ -137,6 +141,8 @@ export const View = () => {
         }))
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)
+      } else if (message.command == 'SHOW_CHAT_INITIALIZED') {
+        set_chat_initialized_title(message.title)
       } else if (message.command == 'FOCUS_CHAT_INPUT') {
         set_chat_input_focus_key((k) => k + 1)
       }
@@ -453,12 +459,24 @@ export const View = () => {
 
       {progress_state && (
         <div className={styles.slot}>
-          <UiProgress
+          <UiProgressModal
             title={progress_state.title}
             progress={progress_state.progress}
             tokens_per_second={progress_state.tokens_per_second}
             on_cancel={() => {
               post_message(vscode, { command: 'CANCEL_API_REQUEST' })
+            }}
+          />
+        </div>
+      )}
+
+      {chat_initialized_title && (
+        <div className={styles.slot}>
+          <UiChatInitializedModal
+            title={chat_initialized_title}
+            duration={3000}
+            on_close={() => {
+              set_chat_initialized_title(undefined)
             }}
           />
         </div>
