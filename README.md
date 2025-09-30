@@ -21,9 +21,9 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 ⭐️ **The workflow**
 
-Select folders and files for context, type instructions, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
+Select folders and files for context, enter prompt, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
 
-The extension then constructs a message in an XML-like format—it consists of your prompt, edit format instructions, and file context.
+The extension then constructs a message in an XML-like format—it consists of your prompt, edit format instructions, and the selected context.
 
 > The prompt and edit format instructions are repeated after the context [for better model adherence](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
@@ -45,7 +45,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 </system>
 ```
 
-Once you receive the response, it can be applied to the codebase with confidence.
+Once you receive the response, it can be interactively applied to the codebase in a way that can be fully undone.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
