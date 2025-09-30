@@ -21,10 +21,14 @@ export const z_ai: Chatbot = {
       check_for_element()
     })
   },
-  inject_apply_response_button: (client_id: number) => {
+  inject_apply_response_button: (
+    client_id: number,
+    raw_instructions?: string
+  ) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id,
+        raw_instructions,
         footer,
         get_chat_turn: (f) => {
           const chat_turn = f.parentElement?.querySelector('.chat-assistant')

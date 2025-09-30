@@ -266,6 +266,8 @@ const main = async () => {
     current_chat: Chat
     client_id: number
     without_submission?: boolean
+    raw_instructions?: string
+    mode?: 'ask' | 'edit-context' | 'code-completions' | 'no-context'
   }
 
   if (!stored_data) {
@@ -295,8 +297,15 @@ const main = async () => {
   // Clean up the storage entry after using it
   await browser.storage.local.remove(storage_key)
 
-  if (chatbot?.inject_apply_response_button) {
-    chatbot.inject_apply_response_button(stored_data.client_id)
+  if (
+    chatbot?.inject_apply_response_button &&
+    (stored_data.mode == 'edit-context' ||
+      stored_data.mode == 'code-completions')
+  ) {
+    chatbot.inject_apply_response_button(
+      stored_data.client_id,
+      stored_data.raw_instructions
+    )
   }
 }
 

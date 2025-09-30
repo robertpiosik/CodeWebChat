@@ -70,10 +70,14 @@ export const kimi: Chatbot = {
       check_button_state()
     })
   },
-  inject_apply_response_button: (client_id: number) => {
+  inject_apply_response_button: (
+    client_id: number,
+    raw_instructions?: string
+  ) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id,
+        raw_instructions,
         footer,
         get_chat_turn: (f) => f.closest('.segment-content'),
         get_code_blocks: (t) => t.querySelectorAll('code'),

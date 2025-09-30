@@ -13,7 +13,7 @@ let is_reconnecting = false
 /**
  * Check if the server is healthy before attempting connection
  */
-export async function check_server_health(): Promise<boolean> {
+export const check_server_health = async (): Promise<boolean> => {
   try {
     const response = await fetch(`http://localhost:${DEFAULT_PORT}/health`)
     return response.ok
@@ -25,7 +25,7 @@ export async function check_server_health(): Promise<boolean> {
 /**
  * Connect to WebSocket server with reconnection logic
  */
-export async function connect_websocket() {
+export const connect_websocket = async (): Promise<void> => {
   // Prevent concurrent reconnection attempts
   if (is_reconnecting || websocket?.readyState === WebSocket.OPEN) {
     return
@@ -87,7 +87,7 @@ export async function connect_websocket() {
 /**
  * Send saved websites to the WebSocket server
  */
-export function send_saved_websites(websites: Website[]) {
+export const send_saved_websites = (websites: Website[]): boolean => {
   if (websocket?.readyState == WebSocket.OPEN) {
     const websites_to_send = websites.map((site) => ({
       url: site.url,
@@ -111,7 +111,7 @@ export function send_saved_websites(websites: Website[]) {
 /**
  * Send a generic message to the WebSocket server
  */
-export function send_message_to_server(message: any) {
+export const send_message_to_server = (message: any): boolean => {
   if (websocket?.readyState == WebSocket.OPEN) {
     console.debug('Sending message to server:', message)
     websocket.send(JSON.stringify(message))
@@ -124,7 +124,7 @@ export function send_message_to_server(message: any) {
 /**
  * Retrieve and send current saved websites
  */
-async function send_current_saved_websites() {
+const send_current_saved_websites = async (): Promise<void> => {
   try {
     // Create a localforage instance with the same config as in use-websites-store.ts
     const websites_store = localforage.createInstance({

@@ -418,10 +418,14 @@ export const ai_studio: Chatbot = {
     }
     send_button.click()
   },
-  inject_apply_response_button: (client_id: number) => {
+  inject_apply_response_button: (
+    client_id: number,
+    raw_instructions?: string
+  ) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id,
+        raw_instructions,
         footer,
         get_chat_turn: (f) => f.closest('ms-chat-turn'),
         get_code_blocks: (t) => t.querySelectorAll('ms-code-block code'),

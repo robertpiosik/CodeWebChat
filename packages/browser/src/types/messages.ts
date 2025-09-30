@@ -12,6 +12,7 @@ type ChatInitializedMessage = {
 type ApplyChatResponseMessage = {
   action: 'apply-chat-response'
   client_id: number
+  raw_instructions?: string
 }
 
 type GetTabDataMessage = {

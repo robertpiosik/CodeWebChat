@@ -175,7 +175,9 @@ export class WebSocketManager {
             (message as UpdateSavedWebsitesMessage).websites
           )
         } else if (message.action == 'apply-chat-response') {
-          vscode.commands.executeCommand('codeWebChat.applyChatResponse')
+          vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+            raw_instructions: message.raw_instructions
+          })
         } else if (message.action == 'ping') {
           if (message.vscode_extension_version) {
             const is_newer = this._is_version_newer(
@@ -258,19 +260,24 @@ export class WebSocketManager {
   }
 
   // TODO: This needs attention - should be renamed to "initialize-chat" and handle only one at a time.
-  public async initialize_chats(
-    chats: Array<{ text: string; preset_name: string }>,
-    presets_config_key: string,
+  public async initialize_chats(params: {
+    chats: Array<{
+      text: string
+      preset_name: string
+      raw_instructions?: string
+      mode: any
+    }>
+    presets_config_key: string
     without_submission?: boolean
-  ): Promise<void> {
+  }): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_chat_presets = config.get<any[]>(presets_config_key) ?? []
+    const web_chat_presets = config.get<any[]>(params.presets_config_key) ?? []
 
-    for (const chat of chats) {
+    for (const chat of params.chats) {
       const preset = web_chat_presets.find((p) => p.name == chat.preset_name)
       if (!preset) {
         continue
@@ -300,7 +307,9 @@ export class WebSocketManager {
         system_instructions: preset.systemInstructions,
         options: preset.options,
         client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
-        without_submission
+        without_submission: params.without_submission,
+        raw_instructions: chat.raw_instructions,
+        mode: chat.mode
       }
 
       Logger.info({
@@ -344,7 +353,8 @@ export class WebSocketManager {
       reasoning_effort: preset.reasoning_effort,
       system_instructions: preset.system_instructions,
       options: preset.options,
-      client_id: this.client_id || 0 // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+      client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
+      raw_instructions: instruction
     }
 
     Logger.info({

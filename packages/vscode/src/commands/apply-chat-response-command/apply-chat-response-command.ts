@@ -360,12 +360,21 @@ export const apply_chat_response_command = (
     'codeWebChat.applyChatResponse',
     async (args?: {
       response?: string
+      raw_instructions?: string
       suppress_fast_replace_inaccuracies_dialog?: boolean
       original_editor_state?: {
         file_path: string
         position: { line: number; character: number }
       }
     }) => {
+      if (args?.raw_instructions) {
+        Logger.info({
+          function_name: 'apply_chat_response_command',
+          message: 'Received raw instructions',
+          data: { raw_instructions: args.raw_instructions }
+        })
+      }
+
       if (code_review_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
           dictionary.warning_message.REVIEW_ONGOING_DISCARD,

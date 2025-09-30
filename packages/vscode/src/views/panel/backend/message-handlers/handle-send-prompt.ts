@@ -135,15 +135,17 @@ export const handle_send_prompt = async (params: {
     const chats = resolved_preset_names.map((preset_name) => {
       return {
         text,
-        preset_name
+        preset_name,
+        raw_instructions: completion_instructions,
+        mode: params.provider.web_mode
       }
     })
 
-    params.provider.websocket_server_instance.initialize_chats(
+    params.provider.websocket_server_instance.initialize_chats({
       chats,
-      params.provider.get_presets_config_key(),
-      params.without_submission
-    )
+      presets_config_key: params.provider.get_presets_config_key(),
+      without_submission: params.without_submission
+    })
   } else {
     const editor = vscode.window.activeTextEditor
 
@@ -218,16 +220,18 @@ export const handle_send_prompt = async (params: {
           text: context_text
             ? `${pre_context_instructions}\n<files>\n${context_text}</files>\n${post_context_instructions}`
             : pre_context_instructions,
-          preset_name
+          preset_name,
+          raw_instructions: current_instructions,
+          mode: params.provider.web_mode
         }
       })
     )
 
-    params.provider.websocket_server_instance.initialize_chats(
+    params.provider.websocket_server_instance.initialize_chats({
       chats,
-      params.provider.get_presets_config_key(),
-      params.without_submission
-    )
+      presets_config_key: params.provider.get_presets_config_key(),
+      without_submission: params.without_submission
+    })
   }
 
   vscode.window.showInformationMessage(
