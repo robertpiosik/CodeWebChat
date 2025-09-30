@@ -408,43 +408,34 @@ export class WorkspaceProvider
     this.file_workspace_map.set(created_file_path, workspace_root)
 
     const parent_dir = path.dirname(created_file_path)
-    const parent_state = this.checked_items.get(parent_dir)
+    const relative_path = path.relative(workspace_root, created_file_path)
 
-    if (parent_state === vscode.TreeItemCheckboxState.Checked) {
-      const relative_path = path.relative(workspace_root, created_file_path)
+    if (
+      !this.is_excluded(relative_path) &&
+      !should_ignore_file(created_file_path, this.ignored_extensions)
+    ) {
+      this.checked_items.set(
+        created_file_path,
+        vscode.TreeItemCheckboxState.Checked
+      )
+      const is_directory = fs.statSync(created_file_path).isDirectory()
 
-      if (
-        !this.is_excluded(relative_path) &&
-        !should_ignore_file(created_file_path, this.ignored_extensions)
-      ) {
-        const is_directory = fs.statSync(created_file_path).isDirectory()
-
-        if (is_directory) {
-          this.checked_items.set(
-            created_file_path,
-            vscode.TreeItemCheckboxState.Checked
-          )
-          await this._update_directory_check_state(
-            created_file_path,
-            vscode.TreeItemCheckboxState.Checked,
-            false
-          )
-        } else {
-          this.checked_items.set(
-            created_file_path,
-            vscode.TreeItemCheckboxState.Checked
-          )
-        }
-
-        let dir_path = parent_dir
-        while (dir_path.startsWith(workspace_root)) {
-          this.directory_selected_token_counts.delete(dir_path)
-          await this._update_parent_state(dir_path)
-          dir_path = path.dirname(dir_path)
-        }
-
-        this._on_did_change_checked_files.fire()
+      if (is_directory) {
+        await this._update_directory_check_state(
+          created_file_path,
+          vscode.TreeItemCheckboxState.Checked,
+          false
+        )
       }
+
+      let dir_path = parent_dir
+      while (dir_path.startsWith(workspace_root)) {
+        this.directory_selected_token_counts.delete(dir_path)
+        await this._update_parent_state(dir_path)
+        dir_path = path.dirname(dir_path)
+      }
+
+      this._on_did_change_checked_files.fire()
     }
 
     let dir_path = parent_dir
