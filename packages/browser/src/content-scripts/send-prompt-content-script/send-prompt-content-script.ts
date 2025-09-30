@@ -299,7 +299,8 @@ const main = async () => {
 
   if (
     chatbot?.inject_apply_response_button &&
-    (stored_data.mode == 'edit-context' ||
+    (!stored_data.mode ||
+      stored_data.mode == 'edit-context' ||
       stored_data.mode == 'code-completions')
   ) {
     chatbot.inject_apply_response_button(
