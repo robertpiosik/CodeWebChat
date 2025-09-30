@@ -4,7 +4,6 @@ import he from 'he'
 import { make_api_request } from '@/utils/make-api-request'
 import { code_completion_instructions } from '@/constants/instructions'
 import { FilesCollector } from '@/utils/files-collector'
-import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import {
   ModelProvidersManager,
   ToolConfig
@@ -291,13 +290,8 @@ const perform_code_completion = async (params: {
       params.open_editors_provider
     )
 
-    const additional_paths = completion_instructions
-      ? extract_file_paths_from_instruction(completion_instructions)
-      : []
-
     const context_text = await files_collector.collect_files({
-      exclude_path: document_path,
-      additional_paths
+      exclude_path: document_path
     })
 
     const payload = {

@@ -13,7 +13,6 @@ import {
 } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
-import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import { WebMode } from '@shared/types/modes'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
@@ -104,13 +103,9 @@ export const handle_send_prompt = async (params: {
     )
 
     const completion_instructions = params.provider.code_completion_instructions
-    const additional_paths = completion_instructions
-      ? extract_file_paths_from_instruction(completion_instructions)
-      : []
 
     const context_text = await files_collector.collect_files({
-      exclude_path: active_path,
-      additional_paths
+      exclude_path: active_path
     })
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
@@ -154,8 +149,7 @@ export const handle_send_prompt = async (params: {
       !editor.selection.isEmpty &&
       current_instructions.includes('#Selection')
 
-    const additional_paths =
-      extract_file_paths_from_instruction(current_instructions)
+    const additional_paths: string[] = []
 
     const context_text = await files_collector.collect_files({
       additional_paths,

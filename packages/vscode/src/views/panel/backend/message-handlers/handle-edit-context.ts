@@ -9,7 +9,6 @@ import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/model-providers-manager'
-import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
@@ -241,10 +240,7 @@ const perform_context_editing = async (params: {
     })
   }
 
-  const additional_paths = extract_file_paths_from_instruction(instructions)
-
   const collected_files = await files_collector.collect_files({
-    additional_paths,
     include_file_with_text_selection: has_selection
   })
 

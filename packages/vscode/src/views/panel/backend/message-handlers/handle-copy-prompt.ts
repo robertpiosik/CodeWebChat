@@ -8,7 +8,6 @@ import { chat_code_completion_instructions } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { dictionary } from '@shared/constants/dictionary'
-import { extract_file_paths_from_instruction } from '@/utils/extract-file-paths-from-instruction'
 
 export const handle_copy_prompt = async (params: {
   provider: ViewProvider
@@ -84,11 +83,7 @@ export const handle_copy_prompt = async (params: {
       !vscode.window.activeTextEditor.selection.isEmpty &&
       final_instruction.includes('#Selection')
 
-    const additional_paths =
-      extract_file_paths_from_instruction(final_instruction)
-
     const context_text = await files_collector.collect_files({
-      additional_paths,
       no_context: params.provider.web_mode == 'no-context',
       include_file_with_text_selection: has_selection
     })

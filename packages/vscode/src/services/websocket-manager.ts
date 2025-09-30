@@ -259,7 +259,6 @@ export class WebSocketManager {
     return this.has_connected_browsers
   }
 
-  // TODO: This needs attention - should be renamed to "initialize-chat" and handle only one at a time.
   public async initialize_chats(params: {
     chats: Array<{
       text: string
