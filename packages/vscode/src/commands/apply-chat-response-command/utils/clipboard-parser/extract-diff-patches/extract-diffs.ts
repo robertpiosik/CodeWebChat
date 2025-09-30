@@ -113,44 +113,92 @@ const convert_code_block_to_new_file_diff = (lines: string[]): Diff | null => {
   // Regex to find file path. It can be commented or not.
   // It handles paths with slashes, backslashes, dots, alphanumerics, underscores, and hyphens.
   const path_regex = /(?:(?:\/\/|#|--|<!--)\s*)?([\w./\\-]+)/
+  const xml_path_regex = /<file\s+path=["']([^"']+)["']/
 
   let file_path: string | undefined
   let path_line_index = -1
+  let content_lines: string[] = []
 
-  // Look for a file path in the first few lines of the code block
-  for (let i = 0; i < Math.min(lines.length, 5); i++) {
-    const line = lines[i].trim()
-    const match = line.match(path_regex)
+  // Check for XML path format
+  const first_line = lines.length > 0 ? lines[0].trim() : ''
+  const xml_match = first_line.match(xml_path_regex)
 
-    if (match && match[1]) {
-      const potential_path = match[1]
+  if (xml_match && xml_match[1]) {
+    file_path = xml_match[1].replace(/\\/g, '/')
 
-      if (
-        (potential_path.includes('.') || potential_path.includes('/')) &&
-        !potential_path.includes(' ')
-      ) {
-        const rest_of_line = line
-          .substring(line.indexOf(potential_path) + potential_path.length)
-          .trim()
-        // e.g. `25:5` for line and column, or `-->` for html comments
-        const is_just_path_and_location = /^(?:\d+:\d+)?\s*(-->)?\s*$/.test(
-          rest_of_line
-        )
+    const file_tag_start = lines.findIndex((l) => l.trim().startsWith('<file'))
+    let file_tag_end = -1
+    for (let i = lines.length - 1; i >= 0; i--) {
+      if (lines[i].trim().startsWith('</file>')) {
+        file_tag_end = i
+        break
+      }
+    }
 
-        if (is_just_path_and_location) {
-          file_path = potential_path.replace(/\\/g, '/') // normalize backslashes
-          path_line_index = i
-          break // Found it, stop searching.
+    if (
+      file_tag_start !== -1 &&
+      file_tag_end !== -1 &&
+      file_tag_end > file_tag_start
+    ) {
+      const inner_lines = lines.slice(file_tag_start + 1, file_tag_end)
+
+      const cdata_start = inner_lines.findIndex((l) =>
+        l.trim().startsWith('<![CDATA[')
+      )
+      let cdata_end = -1
+      for (let i = inner_lines.length - 1; i >= 0; i--) {
+        if (inner_lines[i].trim().endsWith(']]>')) {
+          cdata_end = i
+          break
         }
       }
+
+      if (cdata_start !== -1 && cdata_end !== -1 && cdata_end > cdata_start) {
+        content_lines = inner_lines.slice(cdata_start + 1, cdata_end)
+      } else {
+        content_lines = inner_lines
+      }
+    } else {
+      // malformed, maybe path is on first line, and content follows
+      content_lines = lines.slice(1)
+    }
+  } else {
+    // Look for a file path in the first few lines of the code block
+    for (let i = 0; i < Math.min(lines.length, 5); i++) {
+      const line = lines[i].trim()
+      const match = line.match(path_regex)
+
+      if (match && match[1]) {
+        const potential_path = match[1]
+
+        if (
+          (potential_path.includes('.') || potential_path.includes('/')) &&
+          !potential_path.includes(' ')
+        ) {
+          const rest_of_line = line
+            .substring(line.indexOf(potential_path) + potential_path.length)
+            .trim()
+          // e.g. `25:5` for line and column, or `-->` for html comments
+          const is_just_path_and_location = /^(?:\d+:\d+)?\s*(-->)?\s*$/.test(
+            rest_of_line
+          )
+
+          if (is_just_path_and_location) {
+            file_path = potential_path.replace(/\\/g, '/') // normalize backslashes
+            path_line_index = i
+            break // Found it, stop searching.
+          }
+        }
+      }
+    }
+    if (path_line_index !== -1) {
+      content_lines = lines.filter((_, index) => index !== path_line_index)
     }
   }
 
   if (!file_path) {
     return null
   }
-
-  const content_lines = lines.filter((_, index) => index !== path_line_index)
 
   const patch_lines = content_lines.map((line) => `+${line}`)
   const patch_content = [

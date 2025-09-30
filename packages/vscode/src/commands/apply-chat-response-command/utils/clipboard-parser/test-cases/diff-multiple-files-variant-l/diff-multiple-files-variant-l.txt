@@ -1,6 +1,9 @@
 ```html
-// src/lorem.html
+<file path="src/lorem.html">
+<![CDATA[
 <div>lorem ipsum</div>
+]]>
+</file>
 ```
 
 ```diff
