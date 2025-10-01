@@ -1,7 +1,8 @@
 export const dictionary = {
   api_call: {
     WAITING_FOR_API_RESPONSE: 'Waiting for API response',
-    THINKING: 'Thinking'
+    THINKING: 'Thinking',
+    RECEIVING_RESPONSE: 'Receiving response'
   },
 
   'ChatInput.tsx': {

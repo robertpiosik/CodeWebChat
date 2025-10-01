@@ -153,116 +153,180 @@ export const handle_intelligent_update_file_in_review = async (
   const safe_path = create_safe_path(workspace_root, file_path)
   if (!safe_path) return
 
-  await vscode.window.withProgress(
-    {
-      location: vscode.ProgressLocation.Notification,
-      title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
-      cancellable: true
-    },
-    async (progress, token) => {
-      const cancel_token_source = axios.CancelToken.source()
-      provider.intelligent_update_cancel_token_sources.push(cancel_token_source)
-      token.onCancellationRequested(() => {
-        cancel_token_source.cancel('Cancelled by user.')
-      })
+  const cancel_token_source = axios.CancelToken.source()
+  provider.intelligent_update_cancel_token_sources.push(cancel_token_source)
 
-      let file_progress = 0
-      let previous_file_progress = 0
-      const content_size = file_state.content.length
+  let thinking_reported = false
+  let resolve_thinking: () => void
+  const thinking_promise = new Promise<void>((resolve) => {
+    resolve_thinking = resolve
+  })
 
-      let wait_time = 0
-      let has_started_receiving = false
+  const on_thinking_chunk = () => {
+    if (!thinking_reported) {
+      thinking_reported = true
+      resolve_thinking()
+    }
+  }
 
-      const wait_timer = setInterval(() => {
-        if (!has_started_receiving) {
+  let receiving_reported = false
+  let resolve_receiving: () => void
+  const receiving_promise = new Promise<void>((resolve) => {
+    resolve_receiving = resolve
+  })
+
+  const on_chunk = () => {
+    if (!receiving_reported) {
+      receiving_reported = true
+      resolve_receiving()
+    }
+  }
+
+  const content_promise = process_file({
+    endpoint_url: endpoint_url,
+    api_key: api_provider.api_key,
+    provider: api_provider,
+    model: intelligent_update_config.model,
+    temperature: intelligent_update_config.temperature,
+    reasoning_effort: intelligent_update_config.reasoning_effort,
+    file_path: file_path,
+    file_content: file_state.content,
+    instruction: instructions,
+    cancel_token: cancel_token_source.token,
+    on_chunk,
+    on_thinking_chunk
+  })
+
+  try {
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
+        cancellable: true
+      },
+      async (progress, token) => {
+        token.onCancellationRequested(() => {
+          cancel_token_source.cancel('User cancelled the operation')
+        })
+
+        let wait_time = 0
+        const wait_timer = setInterval(() => {
           progress.report({
             message: `${(wait_time / 10).toFixed(1)}s`
           })
           wait_time++
-        }
-      }, 100)
+        }, 100)
 
-      try {
-        const updated_content = await process_file({
-          endpoint_url: endpoint_url,
-          api_key: api_provider.api_key,
-          model: intelligent_update_config.model,
-          temperature: intelligent_update_config.temperature,
-          reasoning_effort: intelligent_update_config.reasoning_effort,
-          file_path: file_path,
-          file_content: file_state.content,
-          instruction: instructions,
-          cancel_token: cancel_token_source.token,
-          on_chunk: (tokens_per_second, total_tokens) => {
-            if (!has_started_receiving) {
-              has_started_receiving = true
-              clearInterval(wait_timer)
-            }
-
-            const estimated_total_tokens = Math.ceil(content_size / 4)
-            if (estimated_total_tokens > 0) {
-              previous_file_progress = file_progress
-              file_progress = Math.min(
-                Math.round((total_tokens / estimated_total_tokens) * 100),
-                100
-              )
-              const increment = file_progress - previous_file_progress
-              progress.report({
-                increment: increment > 0 ? increment : 0,
-                message: `~${tokens_per_second} tokens/s`
-              })
-            }
-          }
-        })
-
-        if (token.isCancellationRequested) return
-
-        if (file_progress < 100) {
-          const increment = 100 - file_progress
-          progress.report({ increment: increment > 0 ? increment : 0 })
-        }
-
-        if (updated_content) {
-          // Preserve trailing newline from original file
-          const original_ends_with_newline = file_state.content.endsWith('\n')
-          const updated_ends_with_newline = updated_content.endsWith('\n')
-
-          let final_content = updated_content
-          if (original_ends_with_newline && !updated_ends_with_newline) {
-            final_content = updated_content + '\n'
-          } else if (!original_ends_with_newline && updated_ends_with_newline) {
-            final_content = updated_content.slice(0, -1)
-          }
-
-          await vscode.workspace.fs.writeFile(
-            vscode.Uri.file(safe_path),
-            Buffer.from(final_content, 'utf8')
-          )
-        }
-      } catch (error: any) {
-        if (!axios.isCancel(error) && error.message != 'Cancelled by user.') {
-          Logger.error({
-            function_name: 'handle_intelligent_update_file_in_review',
-            message: 'Error during process_file',
-            data: { error, file_path }
-          })
-          vscode.window.showErrorMessage(
-            dictionary.error_message.INTELLIGENT_UPDATE_FAILED_FOR_FILE(
-              file_name,
-              error.message
-            )
-          )
-        }
-      } finally {
+        await Promise.race([
+          content_promise,
+          thinking_promise,
+          receiving_promise
+        ])
         clearInterval(wait_timer)
-        const index =
-          provider.intelligent_update_cancel_token_sources.indexOf(
-            cancel_token_source
-          )
-        if (index > -1) {
-          provider.intelligent_update_cancel_token_sources.splice(index, 1)
-        }
       }
+    )
+
+    if (thinking_reported && !receiving_reported) {
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: dictionary.api_call.THINKING,
+          cancellable: true
+        },
+        async (progress, token) => {
+          token.onCancellationRequested(() => {
+            cancel_token_source.cancel('User cancelled the operation')
+          })
+
+          let thinking_time = 0
+          const thinking_timer = setInterval(() => {
+            progress.report({
+              message: `${(thinking_time / 10).toFixed(1)}s`
+            })
+            thinking_time++
+          }, 100)
+
+          try {
+            await Promise.race([content_promise, receiving_promise])
+          } finally {
+            clearInterval(thinking_timer)
+          }
+        }
+      )
     }
-  )
+
+    if (receiving_reported) {
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: dictionary.api_call.RECEIVING_RESPONSE,
+          cancellable: true
+        },
+        async (progress, token) => {
+          token.onCancellationRequested(() => {
+            cancel_token_source.cancel('User cancelled the operation')
+          })
+
+          let receiving_time = 0
+          const receiving_timer = setInterval(() => {
+            progress.report({
+              message: `${(receiving_time / 10).toFixed(1)}s`
+            })
+            receiving_time++
+          }, 100)
+
+          try {
+            await content_promise
+          } finally {
+            clearInterval(receiving_timer)
+          }
+        }
+      )
+    }
+
+    const updated_content = await content_promise
+
+    if (updated_content) {
+      // Preserve trailing newline from original file
+      const original_ends_with_newline = file_state.content.endsWith('\n')
+      const updated_ends_with_newline = updated_content.endsWith('\n')
+
+      let final_content = updated_content
+      if (original_ends_with_newline && !updated_ends_with_newline) {
+        final_content = updated_content + '\n'
+      } else if (!original_ends_with_newline && updated_ends_with_newline) {
+        final_content = updated_content.slice(0, -1)
+      }
+
+      await vscode.workspace.fs.writeFile(
+        vscode.Uri.file(safe_path),
+        Buffer.from(final_content, 'utf8')
+      )
+    }
+  } catch (error: any) {
+    if (
+      !axios.isCancel(error) &&
+      error.message != 'User cancelled the operation'
+    ) {
+      Logger.error({
+        function_name: 'handle_intelligent_update_file_in_review',
+        message: 'Error during process_file',
+        data: { error, file_path }
+      })
+      vscode.window.showErrorMessage(
+        dictionary.error_message.INTELLIGENT_UPDATE_FAILED_FOR_FILE(
+          file_name,
+          error.message
+        )
+      )
+    }
+  } finally {
+    const index =
+      provider.intelligent_update_cancel_token_sources.indexOf(
+        cancel_token_source
+      )
+    if (index > -1) {
+      provider.intelligent_update_cancel_token_sources.splice(index, 1)
+    }
+  }
 }

@@ -11,6 +11,7 @@ import { make_api_request } from './make-api-request'
 import { cleanup_api_response } from './cleanup-api-response'
 import { refactoring_instruction } from '../constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
+import { apply_reasoning_effort } from './apply-reasoning-effort'
 
 export const get_intelligent_update_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -183,6 +184,7 @@ export const get_intelligent_update_config = async (
 export const process_file = async (params: {
   endpoint_url: string
   api_key: string
+  provider: any
   model: string
   temperature: number
   reasoning_effort?: ReasoningEffort
@@ -191,6 +193,7 @@ export const process_file = async (params: {
   instruction: string
   cancel_token?: CancelToken
   on_chunk?: (tokens_per_second: number, total_tokens: number) => void
+  on_thinking_chunk?: (text: string) => void
 }): Promise<string | null> => {
   Logger.info({
     function_name: 'process_file',
@@ -207,12 +210,13 @@ export const process_file = async (params: {
     }
   ]
 
-  const body = {
+  const body: { [key: string]: any } = {
     messages,
     model: params.model,
-    temperature: params.temperature,
-    reasoning_effort: params.reasoning_effort
+    temperature: params.temperature
   }
+
+  apply_reasoning_effort(body, params.provider, params.reasoning_effort)
 
   try {
     const result = await make_api_request({
@@ -220,17 +224,9 @@ export const process_file = async (params: {
       api_key: params.api_key,
       body,
       cancellation_token: params.cancel_token,
-      on_chunk: params.on_chunk
+      on_chunk: params.on_chunk,
+      on_thinking_chunk: params.on_thinking_chunk
     })
-
-    if (axios.isCancel(params.cancel_token?.reason)) {
-      Logger.info({
-        function_name: 'process_file',
-        message: 'Request cancelled during API call',
-        data: params.file_path
-      })
-      return null
-    }
 
     const refactored_content = result?.response
     if (!refactored_content) {
@@ -266,7 +262,7 @@ export const process_file = async (params: {
         message: 'Request cancelled',
         data: params.file_path
       })
-      return null
+      throw error
     }
 
     Logger.error({

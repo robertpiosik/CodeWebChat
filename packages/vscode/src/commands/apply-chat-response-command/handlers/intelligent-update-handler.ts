@@ -286,6 +286,7 @@ export const handle_intelligent_update = async (params: {
           const updated_content_result = await process_file({
             endpoint_url: params.endpoint_url,
             api_key: params.api_key,
+            provider: { name: params.config.provider_name },
             model: params.config.model,
             temperature: params.config.temperature,
             reasoning_effort: params.config.reasoning_effort,

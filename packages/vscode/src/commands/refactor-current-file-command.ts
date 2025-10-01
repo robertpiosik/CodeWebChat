@@ -7,6 +7,11 @@ import {
   process_file
 } from '../utils/intelligent-update-utils'
 import { dictionary } from '@shared/constants/dictionary'
+import {
+  LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY,
+  LAST_REFACTOR_INSTRUCTION_STATE_KEY
+} from '../constants/state-keys'
+import { Logger } from '@shared/utils/logger'
 
 export const refactor_current_file_command = (
   context: vscode.ExtensionContext
@@ -24,25 +29,82 @@ export const refactor_current_file_command = (
 
       let instruction: string | undefined
       const clipboard_content = await vscode.env.clipboard.readText()
+
+      const last_instruction_source = context.workspaceState.get<string>(
+        LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY
+      )
+      const last_instruction = context.workspaceState.get<string>(
+        LAST_REFACTOR_INSTRUCTION_STATE_KEY
+      )
+
       if (!clipboard_content) {
         instruction = await vscode.window.showInputBox({
-          prompt: 'Enter your refactoring instructions'
+          prompt: 'Enter your refactoring instructions',
+          value: last_instruction
         })
+        if (instruction) {
+          await context.workspaceState.update(
+            LAST_REFACTOR_INSTRUCTION_STATE_KEY,
+            instruction
+          )
+          await context.workspaceState.update(
+            LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY,
+            'Instructions'
+          )
+        }
       } else {
-        const choice = await vscode.window.showQuickPick(
-          ['Clipboard', 'Instructions'],
-          {
-            placeHolder:
-              'Use clipboard content or enter new refactoring instructions?'
+        const choice = await new Promise<string | undefined>((resolve) => {
+          const quick_pick = vscode.window.createQuickPick()
+          const items = [{ label: 'Clipboard' }, { label: 'Instructions' }]
+          quick_pick.items = items
+          quick_pick.placeholder =
+            'Use clipboard content or enter new refactoring instructions?'
+
+          if (last_instruction_source) {
+            const active_item = items.find(
+              (item) => item.label === last_instruction_source
+            )
+            if (active_item) {
+              quick_pick.activeItems = [active_item]
+            }
           }
+
+          quick_pick.onDidAccept(() => {
+            const selected = quick_pick.selectedItems[0]
+            resolve(selected?.label)
+            quick_pick.hide()
+          })
+
+          quick_pick.onDidHide(() => {
+            quick_pick.dispose()
+            resolve(undefined)
+          })
+
+          quick_pick.show()
+        })
+
+        if (choice === undefined) {
+          return // User cancelled
+        }
+
+        await context.workspaceState.update(
+          LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY,
+          choice
         )
 
         if (choice == 'Clipboard') {
           instruction = clipboard_content
         } else if (choice == 'Instructions') {
           instruction = await vscode.window.showInputBox({
-            prompt: 'Enter your refactoring instructions'
+            prompt: 'Enter your refactoring instructions',
+            value: last_instruction
           })
+          if (instruction) {
+            await context.workspaceState.update(
+              LAST_REFACTOR_INSTRUCTION_STATE_KEY,
+              instruction
+            )
+          }
         }
       }
 
@@ -74,89 +136,161 @@ export const refactor_current_file_command = (
       const document = editor.document
       const original_content = document.getText()
       const file_path = document.uri.fsPath
+      const cancel_token_source = axios.CancelToken.source()
 
-      let result: any
+      let thinking_reported = false
+      let resolve_thinking: () => void
+      const thinking_promise = new Promise<void>((resolve) => {
+        resolve_thinking = resolve
+      })
+
+      const on_thinking_chunk = () => {
+        if (!thinking_reported) {
+          thinking_reported = true
+          resolve_thinking()
+        }
+      }
+
+      let receiving_reported = false
+      let resolve_receiving: () => void
+      const receiving_promise = new Promise<void>((resolve) => {
+        resolve_receiving = resolve
+      })
+
+      const on_chunk = () => {
+        if (!receiving_reported) {
+          receiving_reported = true
+          resolve_receiving()
+        }
+      }
+
+      const content_promise = process_file({
+        endpoint_url,
+        api_key: provider.api_key,
+        provider,
+        model: intelligent_update_config.model,
+        temperature: intelligent_update_config.temperature,
+        reasoning_effort: intelligent_update_config.reasoning_effort,
+        file_path: file_path,
+        file_content: original_content,
+        instruction,
+        cancel_token: cancel_token_source.token,
+        on_thinking_chunk,
+        on_chunk
+      })
+
       try {
-        result = await vscode.window.withProgress(
+        await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: `Refactoring current file`,
+            title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
             cancellable: true
           },
           async (progress, token) => {
-            const cancel_token_source = axios.CancelToken.source()
             token.onCancellationRequested(() => {
-              cancel_token_source.cancel('Cancelled by user.')
+              cancel_token_source.cancel('User cancelled the operation')
             })
 
-            let previous_progress = 0
-            const estimated_total_tokens = Math.ceil(
-              original_content.length / 4
-            )
+            let wait_time = 0
+            const wait_timer = setInterval(() => {
+              progress.report({
+                message: `${(wait_time / 10).toFixed(1)}s`
+              })
+              wait_time++
+            }, 100)
 
-            const content = await process_file({
-              endpoint_url,
-              api_key: provider.api_key,
-              model: intelligent_update_config.model,
-              temperature: intelligent_update_config.temperature,
-              reasoning_effort: intelligent_update_config.reasoning_effort,
-              file_path: file_path,
-              file_content: original_content,
-              instruction,
-              cancel_token: cancel_token_source.token,
-              on_chunk: (tokens_per_second, total_tokens) => {
-                if (estimated_total_tokens > 0) {
-                  const current_progress = Math.min(
-                    Math.round((total_tokens / estimated_total_tokens) * 100),
-                    100
-                  )
-                  const increment = current_progress - previous_progress
-                  if (increment > 0) {
-                    progress.report({
-                      increment,
-                      message: `~${tokens_per_second} tokens/s`
-                    })
-                    previous_progress = current_progress
-                  }
-                }
-              }
-            })
-
-            return {
-              content,
-              cancelled: token.isCancellationRequested
-            }
+            await Promise.race([
+              content_promise,
+              thinking_promise,
+              receiving_promise
+            ])
+            clearInterval(wait_timer)
           }
         )
-      } catch (error) {
-        if (axios.isCancel(error)) {
-          return
+
+        if (thinking_reported && !receiving_reported) {
+          await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: dictionary.api_call.THINKING,
+              cancellable: true
+            },
+            async (progress, token) => {
+              token.onCancellationRequested(() => {
+                cancel_token_source.cancel('User cancelled the operation')
+              })
+
+              let thinking_time = 0
+              const thinking_timer = setInterval(() => {
+                progress.report({
+                  message: `${(thinking_time / 10).toFixed(1)}s`
+                })
+                thinking_time++
+              }, 100)
+
+              try {
+                await Promise.race([content_promise, receiving_promise])
+              } finally {
+                clearInterval(thinking_timer)
+              }
+            }
+          )
         }
-        throw error
-      }
 
-      if (result.cancelled) {
-        return
-      }
+        if (receiving_reported) {
+          await vscode.window.withProgress(
+            {
+              location: vscode.ProgressLocation.Notification,
+              title: dictionary.api_call.RECEIVING_RESPONSE,
+              cancellable: true
+            },
+            async (progress, token) => {
+              token.onCancellationRequested(() => {
+                cancel_token_source.cancel('User cancelled the operation')
+              })
 
-      const updated_content = result.content
+              let receiving_time = 0
+              const receiving_timer = setInterval(() => {
+                progress.report({
+                  message: `${(receiving_time / 10).toFixed(1)}s`
+                })
+                receiving_time++
+              }, 100)
 
-      if (updated_content) {
-        const relative_path = vscode.workspace.asRelativePath(document.uri)
-        const response_for_apply = `\`\`\`\n// ${relative_path}\n${updated_content}\n\`\`\``
+              try {
+                await content_promise
+              } finally {
+                clearInterval(receiving_timer)
+              }
+            }
+          )
+        }
 
-        await vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-          response: response_for_apply,
-          suppress_fast_replace_inaccuracies_dialog: true
+        const updated_content = await content_promise
+
+        if (updated_content) {
+          const relative_path = vscode.workspace.asRelativePath(document.uri)
+          const response_for_apply = `\`\`\`\n// ${relative_path}\n${updated_content}\n\`\`\``
+
+          await vscode.commands.executeCommand(
+            'codeWebChat.applyChatResponse',
+            {
+              response: response_for_apply,
+              suppress_fast_replace_inaccuracies_dialog: true
+            }
+          )
+
+          await vscode.window.showInformationMessage(
+            dictionary.information_message
+              .CLIPBOARD_CONTENT_APPLIED_SUCCESSFULLY
+          )
+        }
+      } catch (err: any) {
+        Logger.error({
+          function_name: 'refactorCurrentFile',
+          message: 'Refactor error',
+          data: err
         })
-
-        await vscode.window.showInformationMessage(
-          dictionary.information_message.CLIPBOARD_CONTENT_APPLIED_SUCCESSFULLY
-        )
-      } else {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_APPLY_CLIPBOARD_CONTENT
-        )
       }
     }
   )

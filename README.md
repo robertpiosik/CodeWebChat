@@ -98,7 +98,7 @@ Generate meaningful summaries of changes adhering to your style.
 ### Handling chat responses
 
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase a copied to clipboard overall chat response or a single code block.
-- `Code Web Chat: Refactor Current File` - Use Intelligent Update API tool for the active editor, without context.
+- `Code Web Chat: Refactor Current File` - Use Intelligent Update API tool for the active editor, without context. Accepts clipboard text or instructions.
 - `Code Web Chat: Undo Last Changes` - Revert applied AI-suggested edits.
 
 ### Code completions
