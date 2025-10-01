@@ -1,6 +1,7 @@
 export * from './ai-studio'
 export * from './chatgpt'
 export * from './claude'
+export * from './copilot'
 export * from './deepseek'
 export * from './gemini'
 export * from './grok'

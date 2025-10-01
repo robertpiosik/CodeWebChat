@@ -23,6 +23,7 @@ import X from '../../../assets/icons/x.svg'
 import CodeWebChat from '../../../assets/icons/code-web-chat.svg'
 import ZAI from '../../../assets/icons/z-ai.svg'
 import Discord from '../../../assets/icons/discord.svg'
+import Copilot from '../../../assets/icons/copilot.svg'
 
 export namespace Icon {
   export type Variant =
@@ -51,6 +52,7 @@ export namespace Icon {
     | 'CODE_WEB_CHAT'
     | 'Z_AI'
     | 'DISCORD'
+    | 'COPILOT'
 
   export type Props = {
     variant: Variant
@@ -135,6 +137,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'DISCORD':
       icon = <Discord />
+      break
+    case 'COPILOT':
+      icon = <Copilot />
       break
     default:
       icon = <></>

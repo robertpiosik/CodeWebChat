@@ -29,6 +29,7 @@
         "https://gemini.google.com/u/*/app",
         "https://openrouter.ai/chat*",
         "https://chatgpt.com/",
+        "https://copilot.microsoft.com/",
         "https://claude.ai/new",
         "https://grok.com/",
         "https://chat.deepseek.com/",

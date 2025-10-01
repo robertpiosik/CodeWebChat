@@ -6,6 +6,7 @@ import {
   ai_studio,
   gemini,
   chatgpt,
+  copilot,
   claude,
   meta,
   mistral,
@@ -42,6 +43,9 @@ const is_openrouter = current_url.startsWith(openrouter_url)
 
 const chatgpt_url = 'https://chatgpt.com/'
 const is_chatgpt = current_url.startsWith(chatgpt_url)
+
+const copilot_url = 'https://copilot.microsoft.com/'
+const is_copilot = current_url.startsWith(copilot_url)
 
 const claude_url = 'https://claude.ai/new'
 const is_claude = current_url.startsWith(claude_url)
@@ -89,6 +93,8 @@ if (is_ai_studio) {
   chatbot = gemini
 } else if (is_chatgpt) {
   chatbot = chatgpt
+} else if (is_copilot) {
+  chatbot = copilot
 } else if (is_claude) {
   chatbot = claude
 } else if (is_meta) {
@@ -126,6 +132,7 @@ export const get_textarea_element = () => {
     [openrouter_url]: 'textarea',
     [meta_url]: 'div[contenteditable="true"]',
     [chatgpt_url]: 'div#prompt-textarea',
+    [copilot_url]: 'textarea',
     [grok_url]: 'textarea',
     [deepseek_url]: 'textarea',
     [mistral_url]: 'div[contenteditable="true"]',

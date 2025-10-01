@@ -14,6 +14,7 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'Open WebUI': 'OPEN_WEBUI',
   OpenRouter: 'OPENROUTER',
   ChatGPT: 'CHATGPT',
+  Copilot: 'COPILOT',
   Claude: 'CLAUDE',
   DeepSeek: 'DEEPSEEK',
   Mistral: 'MISTRAL',
