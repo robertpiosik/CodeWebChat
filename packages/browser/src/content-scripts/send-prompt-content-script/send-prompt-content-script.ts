@@ -34,7 +34,7 @@ const batch_id = hash.substring(hash_prefix_new.length + 1)
 const ai_studio_url = 'https://aistudio.google.com/prompts/new_chat'
 const is_ai_studio = current_url.startsWith(ai_studio_url)
 
-const gemini_url = 'https://gemini.google.com/app'
+const gemini_url = 'https://gemini.google.com/'
 const is_gemini = current_url.startsWith(gemini_url)
 
 const openrouter_url = 'https://openrouter.ai/chat'

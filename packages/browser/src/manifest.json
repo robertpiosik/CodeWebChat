@@ -3,8 +3,8 @@
   "author": "Robert Piosik",
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
-  "description": "Connect your editor with free chatbots. Include websites in context.",
-  "version": "1.48.0",
+  "description": "Connect your editor with free chatbots. Parse websites for context.",
+  "version": "1.49.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
@@ -26,6 +26,7 @@
       "matches": [
         "https://aistudio.google.com/prompts/new_chat",
         "https://gemini.google.com/app",
+        "https://gemini.google.com/u/*/app",
         "https://openrouter.ai/chat*",
         "https://chatgpt.com/",
         "https://claude.ai/new",

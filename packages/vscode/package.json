@@ -494,6 +494,14 @@
       "type": "object",
       "title": "Code Web Chat Settings",
       "properties": {
+        "codeWebChat.geminiUserId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": null,
+          "description": "Run Gemini chatbot as non-default user. Check URL for ID, e.g. gemini.google.com/u/2/app -> 2."
+        },
         "codeWebChat.commitMessageInstructions": {
           "type": "string",
           "scope": "resource",

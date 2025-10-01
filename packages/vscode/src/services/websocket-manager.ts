@@ -275,6 +275,7 @@ export class WebSocketManager {
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const web_chat_presets = config.get<any[]>(params.presets_config_key) ?? []
+    const gemini_user_id = config.get<number | null>('geminiUserId')
 
     for (const chat of params.chats) {
       const preset = web_chat_presets.find((p) => p.name == chat.preset_name)
@@ -290,6 +291,8 @@ export class WebSocketManager {
         } else {
           url = 'http://openwebui/'
         }
+      } else if (preset.chatbot == 'Gemini' && gemini_user_id) {
+        url = `https://gemini.google.com/u/${gemini_user_id}/app`
       } else {
         url = chatbot.url
       }
@@ -329,6 +332,9 @@ export class WebSocketManager {
       throw new Error('Does not have connected browsers.')
     }
 
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const geminiUserNumber = config.get<number | null>('geminiUserNumber')
+
     const chatbot = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
     let url: string
     if (preset.chatbot == 'Open WebUI') {
@@ -337,6 +343,12 @@ export class WebSocketManager {
       } else {
         url = 'http://openwebui/'
       }
+    } else if (
+      preset.chatbot == 'Gemini' &&
+      geminiUserNumber !== undefined &&
+      geminiUserNumber !== null
+    ) {
+      url = `https://gemini.google.com/u/${geminiUserNumber}/app`
     } else {
       url = chatbot.url
     }
