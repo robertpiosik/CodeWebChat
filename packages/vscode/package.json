@@ -200,8 +200,8 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.applyClipboardContentToActiveEditor",
-        "title": "Apply Clipboard Content to Active Editor",
+        "command": "codeWebChat.refactorCurrentFile",
+        "title": "Refactor Current File",
         "category": "Code Web Chat"
       },
       {

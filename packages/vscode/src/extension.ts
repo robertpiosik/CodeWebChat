@@ -23,7 +23,7 @@ import {
   generate_commit_message_command,
   commit_changes_command,
   reference_in_chat_command,
-  apply_clipboard_content_to_active_editor_command,
+  refactor_current_file_command,
   open_url_command,
   feedback_command,
   apply_context_from_clipboard_command
@@ -72,7 +72,7 @@ export async function activate(context: vscode.ExtensionContext) {
       ),
       reference_in_chat_command(view_provider, workspace_provider),
       apply_chat_response_command(context, view_provider),
-      apply_clipboard_content_to_active_editor_command(context),
+      refactor_current_file_command(context),
       undo_command(
         context,
         view_provider.set_undo_button_state,

@@ -8,11 +8,11 @@ import {
 } from '../utils/intelligent-update-utils'
 import { dictionary } from '@shared/constants/dictionary'
 
-export const apply_clipboard_content_to_active_editor_command = (
+export const refactor_current_file_command = (
   context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.applyClipboardContentToActiveEditor',
+    'codeWebChat.refactorCurrentFile',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -22,11 +22,31 @@ export const apply_clipboard_content_to_active_editor_command = (
         return
       }
 
+      let instruction: string | undefined
       const clipboard_content = await vscode.env.clipboard.readText()
       if (!clipboard_content) {
-        vscode.window.showInformationMessage(
-          dictionary.information_message.CLIPBOARD_IS_EMPTY
+        instruction = await vscode.window.showInputBox({
+          prompt: 'Enter your refactoring instructions'
+        })
+      } else {
+        const choice = await vscode.window.showQuickPick(
+          ['Clipboard', 'Instructions'],
+          {
+            placeHolder:
+              'Use clipboard content or enter new refactoring instructions?'
+          }
         )
+
+        if (choice == 'Clipboard') {
+          instruction = clipboard_content
+        } else if (choice == 'Instructions') {
+          instruction = await vscode.window.showInputBox({
+            prompt: 'Enter your refactoring instructions'
+          })
+        }
+      }
+
+      if (!instruction) {
         return
       }
 
@@ -60,7 +80,7 @@ export const apply_clipboard_content_to_active_editor_command = (
         result = await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: `Applying clipboard content to active editor`,
+            title: `Refactoring current file`,
             cancellable: true
           },
           async (progress, token) => {
@@ -82,7 +102,7 @@ export const apply_clipboard_content_to_active_editor_command = (
               reasoning_effort: intelligent_update_config.reasoning_effort,
               file_path: file_path,
               file_content: original_content,
-              instruction: clipboard_content,
+              instruction,
               cancel_token: cancel_token_source.token,
               on_chunk: (tokens_per_second, total_tokens) => {
                 if (estimated_total_tokens > 0) {
