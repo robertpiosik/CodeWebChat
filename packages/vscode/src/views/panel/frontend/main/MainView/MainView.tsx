@@ -19,6 +19,7 @@ import { IconButton } from '@ui/components/editor/IconButton/IconButton'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
+import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
 
 type Props = {
   initialize_chats: (params: {
@@ -217,6 +218,14 @@ export const MainView: React.FC<Props> = (props) => {
     }
   }
 
+  const last_choice_button_title = use_last_choice_button_title({
+    home_view_type: props.home_view_type,
+    selected_preset_or_group_name: props.selected_preset_or_group_name,
+    presets: props.presets,
+    selected_configuration_index: props.selected_configuration_index,
+    configurations: props.configurations
+  })
+
   return (
     <div ref={container_ref} className={styles.container}>
       <Scrollable>
@@ -297,6 +306,7 @@ export const MainView: React.FC<Props> = (props) => {
               on_caret_position_set={props.on_caret_position_set}
               focus_and_select_key={props.chat_input_focus_and_select_key}
               focus_key={props.chat_input_focus_key}
+              use_last_choice_button_title={last_choice_button_title}
             />
           </div>
 

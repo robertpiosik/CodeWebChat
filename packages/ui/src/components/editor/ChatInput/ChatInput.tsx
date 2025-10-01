@@ -32,6 +32,7 @@ export type ChatInputProps = {
   on_caret_position_set?: () => void
   focus_key?: number
   focus_and_select_key?: number
+  use_last_choice_button_title?: string
 }
 
 export const ChatInput: React.FC<ChatInputProps> = (props) => {
@@ -271,6 +272,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                 <button
                   className={styles.footer__right__button}
                   onClick={handle_submit}
+                  title={props.use_last_choice_button_title}
                 >
                   <Icon variant="ENTER" />
                   <span>{component_dictionary.use_last_choice}</span>
