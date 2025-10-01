@@ -21,6 +21,29 @@ export const z_ai: Chatbot = {
       check_for_element()
     })
   },
+  set_options: async (options?: string[]) => {
+    if (!options) return
+
+    const deep_think_button = document.querySelector(
+      'button[data-autothink]'
+    ) as HTMLButtonElement
+    if (!deep_think_button) {
+      report_initialization_error({
+        function_name: 'z_ai.set_options',
+        log_message: 'Auto think button not found',
+        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+      })
+      return
+    }
+
+    const should_be_on = options.includes('deep-think')
+    const is_on = deep_think_button.getAttribute('data-autothink') == 'true'
+
+    if (should_be_on != is_on) {
+      deep_think_button.click()
+      await new Promise((r) => requestAnimationFrame(r))
+    }
+  },
   inject_apply_response_button: (
     client_id: number,
     raw_instructions?: string
