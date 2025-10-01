@@ -43,7 +43,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 </system>
 ```
 
-> <small>The prompt and edit format instructions are repeated after the context [for better adherence](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).</small>
+> <small>The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).</small>
 
 Once the response is generated, it can be applied to the codebase in a fully revertible way.
 
@@ -73,7 +73,7 @@ Install the Connector browser extension and never copy & paste again.
 - Yuanbao
 - Z
 
-Necessary interactions in the chatbot interface are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
+Chat-initializing interactions in the chatbot interface are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
 
 > <small>**Legal disclaimer:** The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Changes integration process uses clipboard-stored chat response text.</small>
 
