@@ -15,6 +15,7 @@ import {
 } from '@/views/panel/types/messages'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { post_message } from '../utils/post_message'
+import { Configurations as UiConfigurations } from '@ui/components/editor/Configurations'
 
 type Props = {
   vscode: any
@@ -337,6 +338,36 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_configurations_reorder = (
+    reordered_configs: (UiConfigurations.Configuration & { id: string })[]
+  ) => {
+    if (all_configurations && props.api_mode) {
+      const current_api_configs = all_configurations[props.api_mode]
+      if (!current_api_configs) return
+
+      const reordered_api_tool_configs = reordered_configs
+        .map((ui_config) => {
+          return current_api_configs.find((c) => c.id === ui_config.id)!
+        })
+        .filter(Boolean)
+
+      if (reordered_api_tool_configs.length !== current_api_configs.length) {
+        return
+      }
+
+      set_all_configurations({
+        ...all_configurations,
+        [props.api_mode]: reordered_api_tool_configs
+      })
+
+      post_message(props.vscode, {
+        command: 'REORDER_API_TOOL_CONFIGURATIONS',
+        mode: props.api_mode,
+        configurations: reordered_api_tool_configs
+      })
+    }
+  }
+
   const handle_create_preset = () => {
     post_message(props.vscode, {
       command: 'CREATE_PRESET'
@@ -554,6 +585,7 @@ export const Main: React.FC<Props> = (props) => {
       copy_to_clipboard={handle_copy_to_clipboard}
       configurations={configurations_for_current_mode || []}
       on_configuration_click={handle_configuration_click}
+      on_configurations_reorder={handle_configurations_reorder}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       on_curly_braces_click={handle_curly_braces_click}

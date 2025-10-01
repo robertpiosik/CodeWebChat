@@ -39,6 +39,9 @@ type Props = {
   presets: Preset[]
   configurations: ApiToolConfiguration[]
   on_configuration_click: (index: number) => void
+  on_configurations_reorder: (
+    reordered_configurations: UiConfigurations.Configuration[]
+  ) => void
   has_active_editor: boolean
   has_active_selection: boolean
   has_changes_to_commit: boolean
@@ -406,12 +409,12 @@ export const MainView: React.FC<Props> = (props) => {
               <UiConfigurations
                 api_mode={props.api_mode}
                 configurations={props.configurations.map((c) => ({
-                  model: c.model,
+                  ...c,
                   provider: c.provider_name,
-                  reasoning_effort: c.reasoning_effort,
                   cache_enabled: c.instructions_placement == 'below-only'
                 }))}
                 on_configuration_click={props.on_configuration_click}
+                on_reorder={props.on_configurations_reorder}
                 selected_configuration_index={
                   props.selected_configuration_index
                 }

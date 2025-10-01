@@ -47,15 +47,40 @@
     }
 
     &__left {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-5px);
       overflow: hidden;
       white-space: nowrap;
-      overflow: hidden;
       text-overflow: ellipsis;
+      height: 100%;
 
-      > span:last-child {
-        margin-left: 0.5em;
-        opacity: 0.7;
-        font-size: 0.9em;
+      &__drag_handle {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        cursor: grab;
+        opacity: 0.5;
+
+        &:active {
+          cursor: grabbing;
+        }
+
+        &--disabled {
+          opacity: 0.3;
+          cursor: auto;
+        }
+      }
+
+      &__text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        > span:last-child {
+          margin-left: 0.5em;
+          opacity: 0.7;
+          font-size: 0.9em;
+        }
       }
     }
   }

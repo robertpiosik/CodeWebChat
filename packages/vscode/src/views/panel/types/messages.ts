@@ -10,11 +10,14 @@ export interface BaseMessage {
 }
 
 export type ApiToolConfiguration = {
+  id: string
   provider_type: string
   provider_name: string
   model: string
+  temperature: number
   reasoning_effort?: string
   instructions_placement?: InstructionsPlacement
+  is_default?: boolean
 }
 
 // === FROM FRONTEND TO BACKEND ===
@@ -197,6 +200,12 @@ export interface GetApiToolConfigurationsMessage extends BaseMessage {
   command: 'GET_API_TOOL_CONFIGURATIONS'
 }
 
+export interface ReorderApiToolConfigurationsMessage extends BaseMessage {
+  command: 'REORDER_API_TOOL_CONFIGURATIONS'
+  mode: ApiMode
+  configurations: ApiToolConfiguration[]
+}
+
 export interface GetVersionMessage extends BaseMessage {
   command: 'GET_VERSION'
 }
@@ -296,6 +305,7 @@ export type FrontendMessage =
   | GetApiModeMessage
   | SaveApiModeMessage
   | GetApiToolConfigurationsMessage
+  | ReorderApiToolConfigurationsMessage
   | SaveDonationsVisibilityMessage
   | GetVersionMessage
   | CheckClipboardForApplyMessage

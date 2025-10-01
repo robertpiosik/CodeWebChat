@@ -40,6 +40,7 @@ import {
   handle_show_prompt_template_quick_pick,
   handle_at_sign_quick_pick_for_preset_affix,
   handle_get_api_tool_configurations,
+  handle_reorder_api_tool_configurations,
   handle_pick_open_router_model,
   handle_pick_chatbot,
   handle_get_donations_visibility,
@@ -411,6 +412,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             }
           } else if (message.command == 'GET_API_TOOL_CONFIGURATIONS') {
             await handle_get_api_tool_configurations(this)
+          } else if (message.command == 'REORDER_API_TOOL_CONFIGURATIONS') {
+            await handle_reorder_api_tool_configurations(this, message)
           } else if (message.command == 'SAVE_WEB_MODE') {
             await handle_save_mode_web(this, message.mode)
           } else if (message.command == 'GET_API_MODE') {

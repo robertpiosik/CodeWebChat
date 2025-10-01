@@ -38,9 +38,17 @@ export const handle_get_api_tool_configurations = async (
   }
 
   const configurations: { [T in ApiMode]?: ApiToolConfiguration[] } = {
-    'edit-context': edit_context_configs,
+    'edit-context': edit_context_configs.map((config) => ({
+      ...config,
+      id: `${config.provider_name}:${config.model}:${config.temperature}:${
+        config.reasoning_effort ?? ''
+      }:${config.instructions_placement ?? ''}`
+    })),
     'code-completions': code_completions_configs.map((config) => ({
       ...config,
+      id: `${config.provider_name}:${config.model}:${config.temperature}:${
+        config.reasoning_effort ?? ''
+      }`,
       is_default: is_config_default(config, default_code_completions_config)
     }))
   }
