@@ -753,6 +753,27 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('should parse multiple diff files format in variant m', () => {
+      const text = load_test_case_file(
+        'diff-multiple-files-variant-m',
+        'diff-multiple-files-variant-m.txt'
+      )
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(2)
+
+      expect(result.patches![0].file_path).toBe('src/lorem.ts')
+      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
+
+      expect(result.patches![0].content).toBe(
+        load_test_case_file('diff-multiple-files-variant-m', 'file-1.txt')
+      )
+      expect(result.patches![1].content).toBe(
+        load_test_case_file('diff-multiple-files-variant-m', 'file-2.txt')
+      )
+    })
+
     it('should parse multiple diff files format with inner triple backticks', () => {
       const text = load_test_case_file(
         'diff-inner-triple-backticks',

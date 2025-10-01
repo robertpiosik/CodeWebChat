@@ -1,0 +1,4 @@
+--- a/src/lorem.ts
++++ /dev/null
+@@ -1,1 +0,0 @@
+-console.log("old lorem")

@@ -303,12 +303,25 @@ const parse_multiple_raw_patches = (all_lines: string[]): Diff[] => {
       )
 
       if (contains_main_header && contains_plus_plus_plus) {
-        const patch_info = process_collected_patch_lines(current_patch_lines)
-        if (patch_info) {
-          patches.push(patch_info)
+        let should_split = false
+        if (line.startsWith('diff --git ')) {
+          should_split = true
+        } else if (line.startsWith('--- ')) {
+          const contains_hunk = current_patch_lines.some((l) =>
+            l.startsWith('@@')
+          )
+          if (contains_hunk) {
+            should_split = true
+          }
         }
-        current_patch_lines = [line]
-        continue
+        if (should_split) {
+          const patch_info = process_collected_patch_lines(current_patch_lines)
+          if (patch_info) {
+            patches.push(patch_info)
+          }
+          current_patch_lines = [line]
+          continue
+        }
       }
     }
     current_patch_lines.push(line)
@@ -399,13 +412,42 @@ const build_patch_content = (
   let patch_content: string
 
   if (patch_start_index >= 0) {
-    const patch_lines = lines.slice(patch_start_index).map((line) => {
-      if (line.startsWith('--- ') || line.startsWith('+++ ')) {
-        return normalize_header_line(line)
+    let patch_lines = lines.slice(patch_start_index)
+
+    const hunk_start_idx = patch_lines.findIndex((line) =>
+      line.startsWith('@@')
+    )
+
+    if (hunk_start_idx > 0) {
+      const header_lines = patch_lines.slice(0, hunk_start_idx)
+      const body_lines = patch_lines.slice(hunk_start_idx)
+
+      let from_line: string | undefined
+      let to_line: string | undefined
+      let diff_git_line: string | undefined
+
+      for (const line of header_lines) {
+        if (line.startsWith('--- ')) from_line = line
+        if (line.startsWith('+++ ')) to_line = line
+        if (line.startsWith('diff --git ')) diff_git_line = line
       }
-      return line
-    })
-    patch_content = patch_lines.join('\n')
+
+      const final_header: string[] = []
+      if (diff_git_line) final_header.push(diff_git_line)
+      if (from_line) final_header.push(from_line)
+      if (to_line) final_header.push(to_line)
+
+      patch_lines = [...final_header, ...body_lines]
+    }
+
+    patch_content = patch_lines
+      .map((line) => {
+        if (line.startsWith('--- ') || line.startsWith('+++ ')) {
+          return normalize_header_line(line)
+        }
+        return line
+      })
+      .join('\n')
   } else {
     const content_start_index = lines.findIndex((line) => line.startsWith('@@'))
 
