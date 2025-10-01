@@ -383,13 +383,12 @@ export const parse_multiple_files = (params: {
             extracted_filename = extract_path_from_line_of_code(line)
           } else {
             // Heuristic for uncommented file path
-            const last_segment = trimmed_line
-              .replace(/\\/g, '/')
-              .split('/')
-              .pop()
+            const potential_path = trimmed_line.replace(/\\/g, '/')
+            const last_segment = potential_path.split('/').pop()
             if (
               last_segment?.includes('.') &&
-              !/[(){};,=[\]]/.test(trimmed_line)
+              !last_segment?.endsWith('.') &&
+              /^[a-zA-Z0-9_./@-]+$/.test(potential_path)
             ) {
               extracted_filename = trimmed_line
             }
