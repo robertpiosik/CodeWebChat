@@ -92,7 +92,7 @@ export const CHATBOTS = {
     },
     default_top_p: 0,
     models: {
-      'sonnet-4': { label: 'Sonnet 4' },
+      'sonnet-4-5': { label: 'Sonnet 4.5' },
       'opus-4-1': { label: 'Opus 4.1' }
     }
   },
