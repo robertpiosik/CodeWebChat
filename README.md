@@ -79,7 +79,7 @@ Necessary interactions in the chatbot interface are handled by the [content scri
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Anything CWC can do in the connected browser, it can do calling a model provider directly in the editor. Get started with generous free tier from Google via [AI Studio](https://aistudio.google.com/api-keys).
+Anything CWC can do in the connected browser, it can do calling a model provider directly in the editor. Get started with a generous free tier from Google via [AI Studio / API Keys](https://aistudio.google.com/api-keys).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
