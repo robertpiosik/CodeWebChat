@@ -78,14 +78,8 @@ export const handle_copy_prompt = async (params: {
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_mode) {
-    const has_selection =
-      !!vscode.window.activeTextEditor &&
-      !vscode.window.activeTextEditor.selection.isEmpty &&
-      final_instruction.includes('#Selection')
-
     const context_text = await files_collector.collect_files({
-      no_context: params.provider.web_mode == 'no-context',
-      include_file_with_text_selection: has_selection
+      no_context: params.provider.web_mode == 'no-context'
     })
 
     if (params.provider.web_mode == 'edit-context' && !context_text) {

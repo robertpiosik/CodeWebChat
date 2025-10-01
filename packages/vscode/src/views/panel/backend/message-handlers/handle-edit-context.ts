@@ -240,9 +240,7 @@ const perform_context_editing = async (params: {
     })
   }
 
-  const collected_files = await files_collector.collect_files({
-    include_file_with_text_selection: has_selection
-  })
+  const collected_files = await files_collector.collect_files()
 
   if (!collected_files) {
     vscode.window.showWarningMessage(

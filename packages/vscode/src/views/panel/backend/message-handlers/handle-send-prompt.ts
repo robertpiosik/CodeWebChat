@@ -143,18 +143,11 @@ export const handle_send_prompt = async (params: {
     })
   } else {
     const editor = vscode.window.activeTextEditor
-
-    const has_selection =
-      !!editor &&
-      !editor.selection.isEmpty &&
-      current_instructions.includes('#Selection')
-
     const additional_paths: string[] = []
 
     const context_text = await files_collector.collect_files({
       additional_paths,
-      no_context: params.provider.web_mode == 'no-context',
-      include_file_with_text_selection: has_selection
+      no_context: params.provider.web_mode == 'no-context'
     })
 
     const chats = await Promise.all(

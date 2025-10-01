@@ -84,9 +84,7 @@ export const handle_preview_preset = async (
 
     const context_text =
       provider.web_mode != 'no-context'
-        ? await files_collector.collect_files({
-            include_file_with_text_selection: has_selection
-          })
+        ? await files_collector.collect_files({})
         : ''
 
     if (has_selection) {
