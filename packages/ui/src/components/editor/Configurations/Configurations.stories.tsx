@@ -7,16 +7,19 @@ export default {
 
 const configurations: Configurations.Configuration[] = [
   {
+    id: '1',
     model: 'claude-3-haiku-20240307',
     provider: 'Anthropic',
     temperature: 0.7
   },
   {
+    id: '2',
     model: 'gpt-4o',
     provider: 'OpenAI',
     reasoning_effort: 'low'
   },
   {
+    id: '3',
     model: 'gemini-1.5-flash',
     provider: 'Google',
     cache_enabled: true
