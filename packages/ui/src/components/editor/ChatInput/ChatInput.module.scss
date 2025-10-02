@@ -94,13 +94,14 @@
   &__inner {
     display: flex;
     text-align: center;
-    padding: var(--padding-2px) var(--padding-10px) var(--padding-2px)
+    align-items: center;
+    padding: var(--padding-3px) var(--padding-10px) var(--padding-3px)
       var(--padding-8px);
     font-weight: 500;
     color: var(--vscode-activityWarningBadge-foreground);
     background-color: var(--vscode-activityWarningBadge-background);
-    white-space: nowrap;
     border-radius: var(--border-radius-999px);
+    margin: 0 var(--padding-8px);
 
     &::before {
       content: '⚠';

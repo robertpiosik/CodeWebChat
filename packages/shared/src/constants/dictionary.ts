@@ -13,7 +13,7 @@ export const dictionary = {
     code_completions_mode_unavailable_with_text_selection:
       'Remove text selection',
     code_completions_mode_unavailable_without_active_editor:
-      'Place cursor in editor',
+      'Place cursor for completion',
     search: 'Search history',
     websocket_not_connected: 'Install or reload the browser extension',
     for_history_hint: '(⇅ for history)',

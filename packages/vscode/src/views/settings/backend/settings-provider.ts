@@ -34,27 +34,37 @@ import {
   handle_edit_intelligent_update_configuration,
   handle_set_default_intelligent_update_configuration
 } from './message-handlers'
+import {
+  API_TOOLS_UPDATED_EVENT,
+  api_tool_config_emitter
+} from '@/services/model-providers-manager'
 
 export class SettingsProvider {
-  private _panel: vscode.WebviewPanel | undefined
-  private readonly _disposables: vscode.Disposable[] = []
+  private _webview_panel: vscode.WebviewPanel | undefined
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
     public readonly context: vscode.ExtensionContext
-  ) {}
+  ) {
+    api_tool_config_emitter.on(API_TOOLS_UPDATED_EVENT, () => {
+      void handle_get_code_completions_configurations(this)
+      void handle_get_edit_context_configurations(this)
+      void handle_get_intelligent_update_configurations(this)
+      void handle_get_commit_messages_configurations(this)
+    })
+  }
 
   public createOrShow() {
     const column = vscode.window.activeTextEditor
       ? vscode.window.activeTextEditor.viewColumn
       : undefined
 
-    if (this._panel) {
-      this._panel.reveal(column)
+    if (this._webview_panel) {
+      this._webview_panel.reveal(column)
       return
     }
 
-    this._panel = vscode.window.createWebviewPanel(
+    this._webview_panel = vscode.window.createWebviewPanel(
       'codeWebChatSettings',
       'Settings',
       column || vscode.ViewColumn.One,
@@ -64,18 +74,15 @@ export class SettingsProvider {
       }
     )
 
-    this._panel.onDidDispose(
-      () => {
-        this._panel = undefined
-        this._disposables.forEach((d) => d.dispose())
-      },
-      null,
-      this._disposables
+    this._webview_panel.onDidDispose(() => {
+      this._webview_panel = undefined
+    }, null)
+
+    this._webview_panel.webview.html = this._getHtmlForWebview(
+      this._webview_panel.webview
     )
 
-    this._panel.webview.html = this._getHtmlForWebview(this._panel.webview)
-
-    this._panel.webview.onDidReceiveMessage(
+    this._webview_panel.webview.onDidReceiveMessage(
       (message: FrontendMessage) => {
         switch (message.command) {
           case 'GET_MODEL_PROVIDERS':
@@ -173,14 +180,13 @@ export class SettingsProvider {
             break
         }
       },
-      null,
-      this._disposables
+      null
     )
   }
 
   public postMessage(message: BackendMessage) {
-    if (this._panel) {
-      this._panel.webview.postMessage(message)
+    if (this._webview_panel) {
+      this._webview_panel.webview.postMessage(message)
     }
   }
 

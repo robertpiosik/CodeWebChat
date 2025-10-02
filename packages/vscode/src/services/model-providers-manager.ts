@@ -13,6 +13,7 @@ import {
 import { SECRET_STORAGE_MODEL_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
 
 export const api_tool_config_emitter = new EventEmitter()
+export const API_TOOLS_UPDATED_EVENT = 'api-tools-updated'
 
 export type BuiltInProvider = {
   type: 'built-in'
@@ -82,7 +83,7 @@ export class ModelProvidersManager {
         JSON.stringify(providers)
       )
       this._providers = providers
-      api_tool_config_emitter.emit('api-tools-updated')
+      api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
     } catch (error) {
       console.error('Error saving providers to secret storage:', error)
       throw error
@@ -145,7 +146,7 @@ export class ModelProvidersManager {
       DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
       config
     )
-    api_tool_config_emitter.emit('api-tools-updated')
+    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async save_code_completions_tool_configs(
@@ -155,7 +156,7 @@ export class ModelProvidersManager {
       TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
       configs
     )
-    api_tool_config_emitter.emit('api-tools-updated')
+    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async get_edit_context_tool_configs(): Promise<EditContextConfigs> {
@@ -172,7 +173,7 @@ export class ModelProvidersManager {
       TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
       configs
     )
-    api_tool_config_emitter.emit('api-tools-updated')
+    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async get_commit_messages_tool_configs(): Promise<CommitMessagesConfigs> {
@@ -205,7 +206,7 @@ export class ModelProvidersManager {
       DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
       config
     )
-    api_tool_config_emitter.emit('api-tools-updated')
+    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async save_commit_messages_tool_configs(
@@ -215,7 +216,7 @@ export class ModelProvidersManager {
       TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
       configs
     )
-    api_tool_config_emitter.emit('api-tools-updated')
+    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async get_intelligent_update_tool_configs(): Promise<IntelligentUpdateConfigs> {
@@ -250,7 +251,7 @@ export class ModelProvidersManager {
       DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY,
       config
     )
-    api_tool_config_emitter.emit('api-tools-updated')
+    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async save_intelligent_update_tool_configs(
@@ -260,7 +261,7 @@ export class ModelProvidersManager {
       TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
       configs
     )
-    api_tool_config_emitter.emit('api-tools-updated')
+    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   /**
@@ -407,6 +408,6 @@ export class ModelProvidersManager {
       )
     }
 
-    api_tool_config_emitter.emit('api-tools-updated')
+    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 }
