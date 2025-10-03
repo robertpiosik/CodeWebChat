@@ -4,8 +4,8 @@
 
 Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that connects VS Code with free chatbots and applies suggested edits.
 
-✅ **Connects with free chatbots**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and 10+ more \
-✅ **Applies suggested edits**—seamless handling of whole, truncated and diff code blocks
+✅ **Connect with free chatbots**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and 10+ more \
+✅ **Apply suggested edits**—seamless handling of whole, truncated and diff code blocks
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
