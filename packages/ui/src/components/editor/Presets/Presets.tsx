@@ -10,22 +10,22 @@ import { use_context_menu } from '../../../hooks/use-context-menu'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
-  Gemini: 'GEMINI',
-  'Open WebUI': 'OPEN_WEBUI',
-  OpenRouter: 'OPENROUTER',
   ChatGPT: 'CHATGPT',
-  Copilot: 'COPILOT',
   Claude: 'CLAUDE',
+  Copilot: 'COPILOT',
   DeepSeek: 'DEEPSEEK',
+  Doubao: 'DOUBAO',
+  Gemini: 'GEMINI',
+  Grok: 'GROK',
+  Kimi: 'KIMI',
   Mistral: 'MISTRAL',
   // Meta: 'META',
-  Grok: 'GROK',
-  Qwen: 'QWEN',
-  Yuanbao: 'YUANBAO',
-  Kimi: 'KIMI',
-  Doubao: 'DOUBAO',
+  'Open WebUI': 'OPEN_WEBUI',
+  OpenRouter: 'OPENROUTER',
   Perplexity: 'PERPLEXITY',
+  Qwen: 'QWEN',
   Together: 'TOGETHER',
+  Yuanbao: 'YUANBAO',
   'Z.AI': 'Z_AI'
 }
 

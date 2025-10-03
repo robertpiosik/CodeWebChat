@@ -11,8 +11,8 @@ export type Chatbot = {
     client_id: number,
     raw_instructions?: string
   ) => void
-  enter_message_and_send?: (
-    message: string,
+  enter_message_and_send?: (params: {
+    message: string
     without_submission?: boolean
-  ) => Promise<void>
+  }) => Promise<void>
 }

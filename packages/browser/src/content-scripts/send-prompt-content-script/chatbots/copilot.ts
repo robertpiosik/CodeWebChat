@@ -11,7 +11,16 @@ import {
 
 export const copilot: Chatbot = {
   wait_until_ready: async () => {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => {
+      const check_for_element = () => {
+        if (document.querySelector('textarea')) {
+          resolve(null)
+        } else {
+          setTimeout(check_for_element, 100)
+        }
+      }
+      check_for_element()
+    })
   },
   set_model: async (model?: string) => {
     if (!model) return
@@ -77,10 +86,7 @@ export const copilot: Chatbot = {
 
     await new Promise((r) => requestAnimationFrame(r))
   },
-  enter_message_and_send: async (
-    message: string,
-    without_submission?: boolean
-  ) => {
+  enter_message_and_send: async (params) => {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
@@ -92,12 +98,12 @@ export const copilot: Chatbot = {
       })
       return
     }
-    input_element.value = message
+    input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
 
-    if (without_submission) return
+    if (params.without_submission) return
 
     const send_button = document.querySelector(
       'button[data-testid="submit-button"]'

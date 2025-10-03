@@ -77,6 +77,25 @@ export const CHATBOTS = {
     default_top_p: 0,
     models: {}
   },
+  Claude: {
+    url: 'https://claude.ai/new',
+    supports_custom_temperature: false,
+    supports_custom_top_p: false,
+    supports_system_instructions: false,
+    supports_user_provided_model: false,
+    supports_user_provided_port: false,
+    supports_reasoning_effort: false,
+    supports_thinking_budget: false,
+    default_system_instructions: '',
+    supported_options: {
+      'incognito-chat': 'Incognito chat'
+    },
+    default_top_p: 0,
+    models: {
+      'sonnet-4-5': { label: 'Sonnet 4.5' },
+      'opus-4-1': { label: 'Opus 4.1' }
+    }
+  },
   Copilot: {
     url: 'https://copilot.microsoft.com/',
     supports_custom_temperature: false,
@@ -95,25 +114,6 @@ export const CHATBOTS = {
       'study-and-learn': { label: 'Study and learn' },
       'smart-gpt-5': { label: 'Smart (GPT-5)' },
       search: { label: 'Search' }
-    }
-  },
-  Claude: {
-    url: 'https://claude.ai/new',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    default_system_instructions: '',
-    supported_options: {
-      'incognito-chat': 'Incognito chat'
-    },
-    default_top_p: 0,
-    models: {
-      'sonnet-4-5': { label: 'Sonnet 4.5' },
-      'opus-4-1': { label: 'Opus 4.1' }
     }
   },
   DeepSeek: {

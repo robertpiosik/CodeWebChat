@@ -25,25 +25,24 @@
     {
       "matches": [
         "https://aistudio.google.com/prompts/new_chat",
+        "https://chatgpt.com/",
+        "https://claude.ai/new",
+        "https://copilot.microsoft.com/",
+        "https://chat.deepseek.com/",
+        "https://www.doubao.com/chat/",
         "https://gemini.google.com/app",
         "https://gemini.google.com/u/*/app",
-        "https://openrouter.ai/chat*",
-        "https://chatgpt.com/",
-        "https://copilot.microsoft.com/",
-        "https://claude.ai/new",
         "https://grok.com/",
-        "https://chat.deepseek.com/",
-        "https://chat.mistral.ai/chat",
-        "https://www.meta.ai/",
-        "https://chat.qwen.ai/",
-        "https://yuanbao.tencent.com/chat*",
-        "https://www.doubao.com/chat/",
-        "https://www.perplexity.ai/",
         "https://www.kimi.com/",
-        "https://chat.z.ai/",
+        "https://chat.mistral.ai/chat",
+        "http://openwebui/",
+        "https://openrouter.ai/chat*",
+        "https://www.perplexity.ai/",
+        "https://chat.qwen.ai/",
         "https://chat.together.ai/",
-        "http://localhost/",
-        "http://openwebui/"
+        "https://yuanbao.tencent.com/chat*",
+        "https://chat.z.ai/",
+        "http://localhost/"
       ],
       "js": ["send-prompt-content-script.js"]
     }

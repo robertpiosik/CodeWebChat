@@ -32,6 +32,9 @@ export const PROVIDERS = {
   Hyperbolic: {
     base_url: 'https://api.hyperbolic.xyz/v1'
   },
+  HuggingFace: {
+    base_url: 'https://router.huggingface.co/v1'
+  },
   Mistral: {
     base_url: 'https://api.mistral.ai/v1'
   },

@@ -25,14 +25,14 @@ export const perplexity: Chatbot = {
       check_for_element()
     })
   },
-  enter_message_and_send: async (
-    message: string,
-    without_submission?: boolean
-  ) => {
-    let instructions = message
-    if (message.includes('<files>')) {
-      instructions = message.split('<files>')[0].trim()
-      const context = message.split('<files>')[1].split('</files>')[0].trim()
+  enter_message_and_send: async (params) => {
+    let instructions = params.message
+    if (params.message.includes('<files>')) {
+      instructions = params.message.split('<files>')[0].trim()
+      const context = params.message
+        .split('<files>')[1]
+        .split('</files>')[0]
+        .trim()
 
       // Upload file
       const file_input = document.querySelector(
@@ -88,7 +88,7 @@ export const perplexity: Chatbot = {
 
     await new Promise((r) => requestAnimationFrame(r))
 
-    if (without_submission) return
+    if (params.without_submission) return
 
     const submit_button = document.querySelector(
       'button[data-testid="submit-button"]'

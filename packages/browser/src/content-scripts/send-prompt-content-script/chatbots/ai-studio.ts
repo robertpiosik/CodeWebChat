@@ -367,10 +367,7 @@ export const ai_studio: Chatbot = {
     top_p_element.value = top_p.toString()
     top_p_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
-  enter_message_and_send: async (
-    message: string,
-    without_submission?: boolean
-  ) => {
+  enter_message_and_send: async (params) => {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
@@ -382,7 +379,7 @@ export const ai_studio: Chatbot = {
       })
       return
     }
-    input_element.value = message
+    input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => requestAnimationFrame(r))
@@ -403,7 +400,7 @@ export const ai_studio: Chatbot = {
 
     await close_panel()
 
-    if (without_submission) return
+    if (params.without_submission) return
 
     const send_button = document.querySelector(
       'ms-run-button > button'

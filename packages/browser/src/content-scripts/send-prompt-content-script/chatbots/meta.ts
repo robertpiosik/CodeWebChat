@@ -28,10 +28,7 @@ export const meta: Chatbot = {
       check_for_element()
     })
   },
-  enter_message_and_send: async (
-    message: string,
-    without_submission?: boolean
-  ) => {
+  enter_message_and_send: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
@@ -50,11 +47,11 @@ export const meta: Chatbot = {
         bubbles: true,
         cancelable: true,
         inputType: 'insertText',
-        data: message
+        data: params.message
       })
     )
 
-    if (without_submission) return
+    if (params.without_submission) return
 
     try {
       await new Promise<void>((resolve, reject) => {

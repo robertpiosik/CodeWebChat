@@ -1,58 +1,58 @@
+import AIStudio from '../../../assets/icons/ai-studio.svg'
 import BuyMeACoffee from '../../../assets/icons/buy-me-a-coffee.svg'
 import BuyMeACoffeeWithText from '../../../assets/icons/buy-me-a-coffee-with-text.svg'
-import AIStudio from '../../../assets/icons/ai-studio.svg'
-import Gemini from '../../../assets/icons/gemini.svg'
-import OpenWebUI from '../../../assets/icons/open-webui.svg'
-import OpenRouter from '../../../assets/icons/openrouter.svg'
 import ChatGPT from '../../../assets/icons/openai.svg'
 import Claude from '../../../assets/icons/claude.svg'
+import CodeWebChat from '../../../assets/icons/code-web-chat.svg'
+import Command from '../../../assets/icons/command.svg'
+import Copilot from '../../../assets/icons/copilot.svg'
 import DeepSeek from '../../../assets/icons/deepseek.svg'
-import Mistral from '../../../assets/icons/mistral.svg'
-import Meta from '../../../assets/icons/meta.svg'
+import Discord from '../../../assets/icons/discord.svg'
+import Doubao from '../../../assets/icons/doubao.svg'
+import Enter from '../../../assets/icons/enter.svg'
+import Gemini from '../../../assets/icons/gemini.svg'
 import Grok from '../../../assets/icons/grok.svg'
 import Kimi from '../../../assets/icons/kimi.svg'
-import Qwen from '../../../assets/icons/qwen.svg'
-import Yuanbao from '../../../assets/icons/yuanbao.svg'
-import Doubao from '../../../assets/icons/doubao.svg'
-import Together from '../../../assets/icons/together.svg'
-import Command from '../../../assets/icons/command.svg'
-import Enter from '../../../assets/icons/enter.svg'
+import Meta from '../../../assets/icons/meta.svg'
+import Mistral from '../../../assets/icons/mistral.svg'
+import OpenRouter from '../../../assets/icons/openrouter.svg'
+import OpenWebUI from '../../../assets/icons/open-webui.svg'
 import Perplexity from '../../../assets/icons/perplexity.svg'
+import Qwen from '../../../assets/icons/qwen.svg'
 import Reddit from '../../../assets/icons/reddit.svg'
+import Together from '../../../assets/icons/together.svg'
 import X from '../../../assets/icons/x.svg'
-import CodeWebChat from '../../../assets/icons/code-web-chat.svg'
+import Yuanbao from '../../../assets/icons/yuanbao.svg'
 import ZAI from '../../../assets/icons/z-ai.svg'
-import Discord from '../../../assets/icons/discord.svg'
-import Copilot from '../../../assets/icons/copilot.svg'
 
 export namespace Icon {
   export type Variant =
+    | 'AI_STUDIO'
     | 'BUY_ME_A_COFFEE'
     | 'BUY_ME_A_COFFEE_WITH_TEXT'
-    | 'AI_STUDIO'
-    | 'GEMINI'
-    | 'OPEN_WEBUI'
-    | 'OPENROUTER'
     | 'CHATGPT'
     | 'CLAUDE'
+    | 'CODE_WEB_CHAT'
+    | 'COMMAND'
+    | 'COPILOT'
     | 'DEEPSEEK'
-    | 'MISTRAL'
-    | 'META'
+    | 'DISCORD'
+    | 'DOUBAO'
+    | 'ENTER'
+    | 'GEMINI'
     | 'GROK'
     | 'KIMI'
-    | 'QWEN'
-    | 'YUANBAO'
-    | 'DOUBAO'
-    | 'TOGETHER'
-    | 'COMMAND'
-    | 'ENTER'
+    | 'META'
+    | 'MISTRAL'
+    | 'OPENROUTER'
+    | 'OPEN_WEBUI'
     | 'PERPLEXITY'
+    | 'QWEN'
     | 'REDDIT'
+    | 'TOGETHER'
     | 'X'
-    | 'CODE_WEB_CHAT'
+    | 'YUANBAO'
     | 'Z_AI'
-    | 'DISCORD'
-    | 'COPILOT'
 
   export type Props = {
     variant: Variant
@@ -63,23 +63,14 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
   let icon: JSX.Element
 
   switch (variant) {
+    case 'AI_STUDIO':
+      icon = <AIStudio />
+      break
     case 'BUY_ME_A_COFFEE':
       icon = <BuyMeACoffee />
       break
     case 'BUY_ME_A_COFFEE_WITH_TEXT':
       icon = <BuyMeACoffeeWithText />
-      break
-    case 'AI_STUDIO':
-      icon = <AIStudio />
-      break
-    case 'GEMINI':
-      icon = <Gemini />
-      break
-    case 'OPEN_WEBUI':
-      icon = <OpenWebUI />
-      break
-    case 'OPENROUTER':
-      icon = <OpenRouter />
       break
     case 'CHATGPT':
       icon = <ChatGPT />
@@ -87,14 +78,29 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'CLAUDE':
       icon = <Claude />
       break
+    case 'CODE_WEB_CHAT':
+      icon = <CodeWebChat />
+      break
+    case 'COMMAND':
+      icon = <Command />
+      break
+    case 'COPILOT':
+      icon = <Copilot />
+      break
     case 'DEEPSEEK':
       icon = <DeepSeek />
       break
-    case 'MISTRAL':
-      icon = <Mistral />
+    case 'DISCORD':
+      icon = <Discord />
       break
-    case 'META':
-      icon = <Meta />
+    case 'DOUBAO':
+      icon = <Doubao />
+      break
+    case 'ENTER':
+      icon = <Enter />
+      break
+    case 'GEMINI':
+      icon = <Gemini />
       break
     case 'GROK':
       icon = <Grok />
@@ -102,44 +108,38 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'KIMI':
       icon = <Kimi />
       break
-    case 'QWEN':
-      icon = <Qwen />
+    case 'META':
+      icon = <Meta />
       break
-    case 'YUANBAO':
-      icon = <Yuanbao />
+    case 'MISTRAL':
+      icon = <Mistral />
       break
-    case 'DOUBAO':
-      icon = <Doubao />
+    case 'OPENROUTER':
+      icon = <OpenRouter />
       break
-    case 'TOGETHER':
-      icon = <Together />
-      break
-    case 'COMMAND':
-      icon = <Command />
-      break
-    case 'ENTER':
-      icon = <Enter />
+    case 'OPEN_WEBUI':
+      icon = <OpenWebUI />
       break
     case 'PERPLEXITY':
       icon = <Perplexity />
       break
+    case 'QWEN':
+      icon = <Qwen />
+      break
     case 'REDDIT':
       icon = <Reddit />
+      break
+    case 'TOGETHER':
+      icon = <Together />
       break
     case 'X':
       icon = <X />
       break
-    case 'CODE_WEB_CHAT':
-      icon = <CodeWebChat />
+    case 'YUANBAO':
+      icon = <Yuanbao />
       break
     case 'Z_AI':
       icon = <ZAI />
-      break
-    case 'DISCORD':
-      icon = <Discord />
-      break
-    case 'COPILOT':
-      icon = <Copilot />
       break
     default:
       icon = <></>

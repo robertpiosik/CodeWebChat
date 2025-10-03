@@ -111,10 +111,7 @@ export const claude: Chatbot = {
       }
     }
   },
-  enter_message_and_send: async (
-    message: string,
-    without_submission?: boolean
-  ) => {
+  enter_message_and_send: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
@@ -128,12 +125,12 @@ export const claude: Chatbot = {
       return
     }
 
-    input_element.innerText = message
+    input_element.innerText = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
     await new Promise((r) => setTimeout(r, 500))
 
-    if (without_submission) return
+    if (params.without_submission) return
 
     const submit_button = Array.from(
       document.querySelectorAll('fieldset button')

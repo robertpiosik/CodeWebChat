@@ -130,7 +130,6 @@ export const get_textarea_element = () => {
     [ai_studio_url]: 'textarea',
     [gemini_url]: 'div[contenteditable="true"]',
     [openrouter_url]: 'textarea',
-    [meta_url]: 'div[contenteditable="true"]',
     [chatgpt_url]: 'div#prompt-textarea',
     [copilot_url]: 'textarea',
     [grok_url]: 'textarea',
@@ -237,10 +236,10 @@ const initialize_chat = async (params: {
     await chatbot.set_options(params.chat.options || [])
   }
   if (chatbot?.enter_message_and_send) {
-    await chatbot.enter_message_and_send(
-      params.message,
-      params.without_submission
-    )
+    await chatbot.enter_message_and_send({
+      message: params.message,
+      without_submission: params.without_submission
+    })
   } else {
     await enter_message_and_send({
       input_element: get_textarea_element(),
