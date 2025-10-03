@@ -175,10 +175,25 @@ export const handle_intelligent_update_file_in_review = async (
     resolve_receiving = resolve
   })
 
-  const on_chunk = () => {
+  // Track progress based on original file length
+  const original_file_size = file_state.content.length
+  const estimated_total_tokens = Math.ceil(original_file_size / 4)
+  let current_progress = 0
+  let current_tokens_per_second = 0
+
+  const on_chunk = (tokens_per_second: number, total_tokens: number) => {
     if (!receiving_reported) {
       receiving_reported = true
       resolve_receiving()
+    }
+
+    current_tokens_per_second = tokens_per_second
+
+    if (estimated_total_tokens > 0) {
+      current_progress = Math.min(
+        Math.round((total_tokens / estimated_total_tokens) * 100),
+        100
+      )
     }
   }
 
@@ -267,18 +282,40 @@ export const handle_intelligent_update_file_in_review = async (
             cancel_token_source.cancel('User cancelled the operation')
           })
 
-          let receiving_time = 0
-          const receiving_timer = setInterval(() => {
-            progress.report({
-              message: `${(receiving_time / 10).toFixed(1)}s`
-            })
-            receiving_time++
+          let last_reported_progress = 0
+          let last_reported_tps = -1 // Use -1 to ensure the first report goes through
+
+          const progress_timer = setInterval(() => {
+            if (
+              current_progress > last_reported_progress ||
+              current_tokens_per_second !== last_reported_tps
+            ) {
+              const message =
+                current_tokens_per_second > 0
+                  ? `${current_tokens_per_second} tokens/s`
+                  : 'Receiving'
+
+              progress.report({
+                message: message,
+                increment: current_progress - last_reported_progress
+              })
+              last_reported_progress = current_progress
+              last_reported_tps = current_tokens_per_second
+            }
           }, 100)
 
           try {
             await content_promise
+
+            // Ensure we report 100% at the end
+            if (last_reported_progress < 100) {
+              progress.report({
+                message: 'Complete',
+                increment: 100 - last_reported_progress
+              })
+            }
           } finally {
-            clearInterval(receiving_timer)
+            clearInterval(progress_timer)
           }
         }
       )
