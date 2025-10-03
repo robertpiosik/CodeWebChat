@@ -21,9 +21,12 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 ⭐️ **The workflow**
 
-Select folders and files for context, enter prompt, and pick your favorite chatbot—to continue in the browser, or call a model provider of choice—to stay in the editor.
+Select folders and files for context, enter prompt, pick edit format and send message via...
 
-The extension then constructs an XML-formatted message that consists of your prompt, edit format instructions, and the selected context:
+- new chat—to continue in the web browser
+- API call—to stay in the editor
+
+Prepared by the extension message consists of your prompt, edit format instructions, and the selected context, like shown in the example below:
 
 ```
 Implement a subtract function.
@@ -45,7 +48,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 
 > <small>The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).</small>
 
-The generated response can then be applied to the codebase using advanced built-in parsers.
+In seconds, as a single response is ready, changes to all affected files are ready for integration in a transparent and fully reverible way.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
@@ -59,6 +62,7 @@ Install the Connector browser extension and never copy & paste again.
 - AI Studio
 - ChatGPT
 - Claude
+- Copilot
 - DeepSeek
 - Doubao
 - Gemini
@@ -73,13 +77,13 @@ Install the Connector browser extension and never copy & paste again.
 - Yuanbao
 - Z
 
-Chat-initializing interactions in the chatbot interface are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
+Interactions of submitting the message in the chatbot interface are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
 
-> <small>**Legal disclaimer:** The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Changes integration process uses clipboard-stored chat response text.</small>
+> <small>**Legal disclaimer:** The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original copy to clipboard button present under all responses. Changes integration process reads clipboard text.</small>
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Anything CWC can do in the connected browser, it can do calling a model provider directly in the editor. Get started with a generous free tier from Google via [AI Studio / API Keys](https://aistudio.google.com/api-keys).
+Anything CWC can do in the connected browser, it can do calling a model provider of choice directly in the editor. Get started with a generous free tier from Google via [AI Studio -> API Keys](https://aistudio.google.com/api-keys).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
