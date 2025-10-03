@@ -4,7 +4,6 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import { SetDefaultIntelligentUpdateConfigurationMessage } from '@/views/settings/types/messages'
-import { handle_get_intelligent_update_configurations } from './handle-get-intelligent-update-configurations'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
@@ -20,7 +19,6 @@ export const handle_set_default_intelligent_update_configuration = async (
 
   if (configuration_id === null) {
     await providers_manager.set_default_intelligent_update_config(null)
-    await handle_get_intelligent_update_configurations(provider)
     return
   }
 
@@ -34,6 +32,4 @@ export const handle_set_default_intelligent_update_configuration = async (
       config_to_set_as_default
     )
   }
-
-  await handle_get_intelligent_update_configurations(provider)
 }

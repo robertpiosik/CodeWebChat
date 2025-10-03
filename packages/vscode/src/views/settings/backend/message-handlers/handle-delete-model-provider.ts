@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { DeleteModelProviderMessage } from '@/views/settings/types/messages'
-import { handle_get_model_providers } from './handle-get-model-providers'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_delete_model_provider = async (
@@ -29,5 +28,4 @@ export const handle_delete_model_provider = async (
     (p) => p.name !== provider_name_to_delete
   )
   await providers_manager.save_providers(updated_providers)
-  await handle_get_model_providers(provider)
 }

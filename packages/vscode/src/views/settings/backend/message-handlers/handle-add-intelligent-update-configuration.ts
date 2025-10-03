@@ -4,7 +4,6 @@ import {
   ModelProvidersManager,
   ToolConfig
 } from '@/services/model-providers-manager'
-import { handle_get_intelligent_update_configurations } from './handle-get-intelligent-update-configurations'
 import { ModelFetcher } from '@/services/model-fetcher'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import {
@@ -138,6 +137,4 @@ export const handle_add_intelligent_update_configuration = async (
 
   configs.push(config_to_add)
   await providers_manager.save_intelligent_update_tool_configs(configs)
-
-  await handle_get_intelligent_update_configurations(provider)
 }

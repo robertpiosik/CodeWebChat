@@ -5,7 +5,6 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import { DeleteIntelligentUpdateConfigurationMessage } from '@/views/settings/types/messages'
-import { handle_get_intelligent_update_configurations } from './handle-get-intelligent-update-configurations'
 import { dictionary } from '@shared/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
@@ -54,5 +53,4 @@ export const handle_delete_intelligent_update_configuration = async (
   ) {
     await providers_manager.set_default_intelligent_update_config(null)
   }
-  await handle_get_intelligent_update_configurations(provider)
 }

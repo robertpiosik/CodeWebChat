@@ -5,7 +5,6 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import { DeleteCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
-import { handle_get_commit_messages_configurations } from './handle-get-commit-messages-configurations'
 import { dictionary } from '@shared/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
@@ -54,5 +53,4 @@ export const handle_delete_commit_messages_configuration = async (
   ) {
     await providers_manager.set_default_commit_messages_config(null)
   }
-  await handle_get_commit_messages_configurations(provider)
 }

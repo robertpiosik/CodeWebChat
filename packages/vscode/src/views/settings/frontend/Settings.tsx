@@ -17,13 +17,9 @@ const vscode = acquireVsCodeApi()
 
 export const Settings = () => {
   const [active_item, set_active_item] = useState<NavItem>('model-providers')
-
   const settings_data_hook = use_settings_data(vscode)
 
-  const handle_nav_click = (item: NavItem) => {
-    set_active_item(item)
-    settings_data_hook.fetch_data_for_nav_item(item)
-  }
+  const handle_nav_click = (item: NavItem) => set_active_item(item)
 
   const render_active_page = () => {
     switch (active_item) {

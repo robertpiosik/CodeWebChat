@@ -34,25 +34,15 @@ import {
   handle_edit_intelligent_update_configuration,
   handle_set_default_intelligent_update_configuration
 } from './message-handlers'
-import {
-  API_TOOLS_UPDATED_EVENT,
-  api_tool_config_emitter
-} from '@/services/model-providers-manager'
 
 export class SettingsProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
+  private _disposables: vscode.Disposable[] = []
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
     public readonly context: vscode.ExtensionContext
-  ) {
-    api_tool_config_emitter.on(API_TOOLS_UPDATED_EVENT, () => {
-      void handle_get_code_completions_configurations(this)
-      void handle_get_edit_context_configurations(this)
-      void handle_get_intelligent_update_configurations(this)
-      void handle_get_commit_messages_configurations(this)
-    })
-  }
+  ) {}
 
   public createOrShow() {
     const column = vscode.window.activeTextEditor
@@ -76,6 +66,8 @@ export class SettingsProvider {
 
     this._webview_panel.onDidDispose(() => {
       this._webview_panel = undefined
+      this._disposables.forEach((d) => d.dispose())
+      this._disposables = []
     }, null)
 
     this._webview_panel.webview.html = this._getHtmlForWebview(
@@ -83,104 +75,124 @@ export class SettingsProvider {
     )
 
     this._webview_panel.webview.onDidReceiveMessage(
-      (message: FrontendMessage) => {
+      async (message: FrontendMessage) => {
         switch (message.command) {
           case 'GET_MODEL_PROVIDERS':
-            void handle_get_model_providers(this)
+            await handle_get_model_providers(this)
             break
           case 'REORDER_MODEL_PROVIDERS':
-            void handle_reorder_model_providers(this, message)
+            await handle_reorder_model_providers(this, message)
             break
           case 'ADD_MODEL_PROVIDER':
-            void handle_add_model_provider(this)
+            await handle_add_model_provider(this)
             break
           case 'DELETE_MODEL_PROVIDER':
-            void handle_delete_model_provider(this, message)
+            await handle_delete_model_provider(this, message)
             break
           case 'RENAME_MODEL_PROVIDER':
-            void handle_rename_model_provider(this, message)
+            await handle_rename_model_provider(this, message)
             break
           case 'CHANGE_MODEL_PROVIDER_KEY':
-            void handle_change_model_provider_key(this, message)
+            await handle_change_model_provider_key(this, message)
             break
           case 'GET_CODE_COMPLETIONS_CONFIGURATIONS':
-            void handle_get_code_completions_configurations(this)
+            await handle_get_code_completions_configurations(this)
             break
           case 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS':
-            void handle_reorder_code_completions_configurations(this, message)
+            await handle_reorder_code_completions_configurations(this, message)
             break
           case 'DELETE_CODE_COMPLETIONS_CONFIGURATION':
-            void handle_delete_code_completions_configuration(this, message)
+            await handle_delete_code_completions_configuration(this, message)
             break
           case 'ADD_CODE_COMPLETIONS_CONFIGURATION':
-            void handle_add_code_completions_configuration(this)
+            await handle_add_code_completions_configuration(this)
             break
           case 'EDIT_CODE_COMPLETIONS_CONFIGURATION':
-            void handle_edit_code_completions_configuration(this, message)
+            await handle_edit_code_completions_configuration(this, message)
             break
           case 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION':
-            void handle_set_default_code_completions_configuration(
+            await handle_set_default_code_completions_configuration(
               this,
               message
             )
             break
           case 'GET_EDIT_CONTEXT_CONFIGURATIONS':
-            void handle_get_edit_context_configurations(this)
+            await handle_get_edit_context_configurations(this)
             break
           case 'REORDER_EDIT_CONTEXT_CONFIGURATIONS':
-            void handle_reorder_edit_context_configurations(this, message)
+            await handle_reorder_edit_context_configurations(this, message)
             break
           case 'DELETE_EDIT_CONTEXT_CONFIGURATION':
-            void handle_delete_edit_context_configuration(this, message)
+            await handle_delete_edit_context_configuration(this, message)
             break
           case 'ADD_EDIT_CONTEXT_CONFIGURATION':
-            void handle_add_edit_context_configuration(this)
+            await handle_add_edit_context_configuration(this)
             break
           case 'EDIT_EDIT_CONTEXT_CONFIGURATION':
-            void handle_edit_edit_context_configuration(this, message)
+            await handle_edit_edit_context_configuration(this, message)
             break
           case 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS':
-            void handle_get_intelligent_update_configurations(this)
+            await handle_get_intelligent_update_configurations(this)
             break
           case 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS':
-            void handle_reorder_intelligent_update_configurations(this, message)
+            await handle_reorder_intelligent_update_configurations(
+              this,
+              message
+            )
             break
           case 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION':
-            void handle_delete_intelligent_update_configuration(this, message)
+            await handle_delete_intelligent_update_configuration(this, message)
             break
           case 'ADD_INTELLIGENT_UPDATE_CONFIGURATION':
-            void handle_add_intelligent_update_configuration(this)
+            await handle_add_intelligent_update_configuration(this)
+
             break
           case 'EDIT_INTELLIGENT_UPDATE_CONFIGURATION':
-            void handle_edit_intelligent_update_configuration(this, message)
+            await handle_edit_intelligent_update_configuration(this, message)
             break
           case 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION':
-            void handle_set_default_intelligent_update_configuration(
+            await handle_set_default_intelligent_update_configuration(
               this,
               message
             )
             break
           case 'GET_COMMIT_MESSAGES_CONFIGURATIONS':
-            void handle_get_commit_messages_configurations(this)
+            await handle_get_commit_messages_configurations(this)
             break
           case 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS':
-            void handle_reorder_commit_messages_configurations(this, message)
+            await handle_reorder_commit_messages_configurations(this, message)
             break
           case 'DELETE_COMMIT_MESSAGES_CONFIGURATION':
-            void handle_delete_commit_messages_configuration(this, message)
+            await handle_delete_commit_messages_configuration(this, message)
             break
           case 'ADD_COMMIT_MESSAGES_CONFIGURATION':
-            void handle_add_commit_messages_configuration(this)
+            await handle_add_commit_messages_configuration(this)
             break
           case 'EDIT_COMMIT_MESSAGES_CONFIGURATION':
-            void handle_edit_commit_messages_configuration(this, message)
+            await handle_edit_commit_messages_configuration(this, message)
             break
           case 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION':
-            void handle_set_default_commit_messages_configuration(this, message)
+            await handle_set_default_commit_messages_configuration(
+              this,
+              message
+            )
             break
         }
       },
-      null
+      null,
+      this._disposables
+    )
+
+    this._disposables.push(
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration('codeWebChat')) {
+          void handle_get_model_providers(this)
+          void handle_get_code_completions_configurations(this)
+          void handle_get_commit_messages_configurations(this)
+          void handle_get_edit_context_configurations(this)
+          void handle_get_intelligent_update_configurations(this)
+        }
+      })
     )
   }
 

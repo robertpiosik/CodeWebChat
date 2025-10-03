@@ -4,7 +4,6 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import { SetDefaultCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
-import { handle_get_commit_messages_configurations } from './handle-get-commit-messages-configurations'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${
@@ -20,7 +19,6 @@ export const handle_set_default_commit_messages_configuration = async (
 
   if (configuration_id === null) {
     await providers_manager.set_default_commit_messages_config(null)
-    await handle_get_commit_messages_configurations(provider)
     return
   }
 
@@ -34,6 +32,4 @@ export const handle_set_default_commit_messages_configuration = async (
       config_to_set_as_default
     )
   }
-
-  await handle_get_commit_messages_configurations(provider)
 }

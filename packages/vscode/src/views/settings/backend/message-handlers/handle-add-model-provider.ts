@@ -5,7 +5,6 @@ import {
   CustomProvider
 } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
-import { handle_get_model_providers } from './handle-get-model-providers'
 import { dictionary } from '@shared/constants/dictionary'
 
 const normalize_base_url = (url: string): string => {
@@ -168,6 +167,4 @@ export const handle_add_model_provider = async (
   }
 
   await show_create_provider_quick_pick()
-
-  await handle_get_model_providers(provider)
 }

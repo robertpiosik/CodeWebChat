@@ -1,19 +1,6 @@
 import * as vscode from 'vscode'
 import { PROVIDERS } from '@shared/constants/providers'
-import { EventEmitter } from 'events'
-import {
-  TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
-  TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
-  TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
-  DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
-  DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
-  TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
-  DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
-} from '@/constants/state-keys'
 import { SECRET_STORAGE_MODEL_PROVIDERS_KEY } from '@/constants/secret-storage-keys'
-
-export const api_tool_config_emitter = new EventEmitter()
-export const API_TOOLS_UPDATED_EVENT = 'api-tools-updated'
 
 export type BuiltInProvider = {
   type: 'built-in'
@@ -59,33 +46,74 @@ export class ModelProvidersManager {
 
   private async _load_providers() {
     try {
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const provider_configs = config.get<
+        {
+          type: 'built-in' | 'custom'
+          name: string
+          baseUrl?: string
+        }[]
+      >('modelProviders', [])
+
       const providers_json = await this._vscode.secrets.get(
         SECRET_STORAGE_MODEL_PROVIDERS_KEY
       )
-      const saved_providers = providers_json
+      const saved_providers_with_keys = providers_json
         ? (JSON.parse(providers_json) as Provider[])
         : []
 
-      // Make sure all built-in providers exist
-      this._providers = saved_providers.filter(
-        (provider) => provider.type == 'custom' || PROVIDERS[provider.name]
-      )
+      this._providers = provider_configs
+        .map((provider_config) => {
+          const provider_with_key = saved_providers_with_keys.find(
+            (p) =>
+              p.name == provider_config.name && p.type == provider_config.type
+          )
+          const provider: Provider = {
+            type: provider_config.type,
+            name: provider_config.name,
+            api_key: provider_with_key?.api_key || '',
+            ...(provider_config.type == 'custom' && {
+              base_url: provider_config.baseUrl || ''
+            })
+          } as Provider
+          return provider
+        })
+        .filter(
+          (provider) => provider.type == 'custom' || PROVIDERS[provider.name]
+        )
     } catch (error) {
-      console.error('Error loading providers from secret storage:', error)
+      console.error('Error loading providers:', error)
       this._providers = []
     }
   }
 
   public async save_providers(providers: Provider[]) {
     try {
+      // Save full provider info to secret storage
       await this._vscode.secrets.store(
         SECRET_STORAGE_MODEL_PROVIDERS_KEY,
         JSON.stringify(providers)
       )
+
+      // Save provider config to settings
+      const provider_configs = providers.map((p) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const config: any = { type: p.type, name: p.name }
+        if (p.type === 'custom') {
+          config.baseUrl = p.base_url
+        }
+        return config
+      })
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      await config.update(
+        'modelProviders',
+        provider_configs,
+        vscode.ConfigurationTarget.Global
+      )
+
       this._providers = providers
-      api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
     } catch (error) {
-      console.error('Error saving providers to secret storage:', error)
+      console.error('Error saving providers:', error)
       throw error
     }
   }
@@ -116,24 +144,164 @@ export class ModelProvidersManager {
     return config
   }
 
+  private _get_tool_configs_from_settings(settings_key: string): ToolConfig[] {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const settings_configs = config.get<
+      {
+        providerName: string
+        model: string
+        temperature?: number
+        reasoningEffort?: ReasoningEffort
+        maxConcurrency?: number
+        instructionsPlacement?: InstructionsPlacement
+      }[]
+    >(settings_key, [])
+
+    const tool_configs: ToolConfig[] = settings_configs
+      .map((sc) => {
+        const provider = this._providers.find((p) => p.name === sc.providerName)
+        return {
+          provider_name: sc.providerName,
+          provider_type: provider?.type || '',
+          model: sc.model,
+          temperature: sc.temperature ?? 1.0,
+          reasoning_effort: sc.reasoningEffort,
+          max_concurrency: sc.maxConcurrency,
+          instructions_placement: sc.instructionsPlacement
+        }
+      })
+      .filter((tc) => tc.provider_type)
+
+    return tool_configs.filter(
+      (c) => this._validate_tool_config(c) !== undefined
+    )
+  }
+
+  private async _save_tool_configs_to_settings(
+    settings_key: string,
+    configs: ToolConfig[]
+  ) {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const old_settings_configs = config.get<any[]>(settings_key, [])
+
+    const new_settings_configs = configs.map((c) => {
+      const old_config = old_settings_configs.find((oldC) =>
+        this._are_configs_effectively_equal(oldC, c)
+      )
+      const new_config: any = {
+        providerName: c.provider_name,
+        model: c.model,
+        temperature: c.temperature,
+        isDefault: old_config?.isDefault || false
+      }
+      if (c.reasoning_effort !== undefined)
+        new_config.reasoningEffort = c.reasoning_effort
+      if (c.max_concurrency !== undefined)
+        new_config.maxConcurrency = c.max_concurrency
+      if (c.instructions_placement !== undefined)
+        new_config.instructionsPlacement = c.instructions_placement
+      return new_config
+    })
+
+    await config.update(
+      settings_key,
+      new_settings_configs,
+      vscode.ConfigurationTarget.Global
+    )
+  }
+
+  private _are_configs_effectively_equal(
+    settings_config: any,
+    tool_config: ToolConfig
+  ): boolean {
+    return (
+      settings_config.providerName === tool_config.provider_name &&
+      settings_config.model === tool_config.model &&
+      (settings_config.temperature ?? 1.0) === tool_config.temperature &&
+      (settings_config.reasoningEffort ?? undefined) ===
+        (tool_config.reasoning_effort ?? undefined) &&
+      (settings_config.maxConcurrency ?? undefined) ===
+        (tool_config.max_concurrency ?? undefined) &&
+      (settings_config.instructionsPlacement ?? undefined) ===
+        (tool_config.instructions_placement ?? undefined)
+    )
+  }
+
+  private _get_default_tool_config_from_settings(
+    settings_key: string
+  ): ToolConfig | undefined {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const settings_configs = config.get<
+      {
+        providerName: string
+        model: string
+        temperature?: number
+        reasoningEffort?: ReasoningEffort
+        isDefault?: boolean
+        maxConcurrency?: number
+        instructionsPlacement?: InstructionsPlacement
+      }[]
+    >(settings_key, [])
+    const default_config_from_settings = settings_configs.find(
+      (c) => c.isDefault
+    )
+
+    if (default_config_from_settings) {
+      const provider = this._providers.find(
+        (p) => p.name === default_config_from_settings.providerName
+      )
+      const tool_config: ToolConfig = {
+        provider_name: default_config_from_settings.providerName,
+        provider_type: provider?.type || '',
+        model: default_config_from_settings.model,
+        temperature: default_config_from_settings.temperature ?? 1.0,
+        reasoning_effort: default_config_from_settings.reasoningEffort,
+        max_concurrency: default_config_from_settings.maxConcurrency,
+        instructions_placement:
+          default_config_from_settings.instructionsPlacement
+      }
+      const validated_config = this._validate_tool_config(tool_config)
+      if (validated_config) return validated_config
+    }
+    return undefined
+  }
+
+  private async _set_default_tool_config_in_settings(
+    settings_key: string,
+    config_to_set: ToolConfig | null
+  ) {
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const settings_configs = config.get<any[]>(settings_key, [])
+
+    const new_settings_configs = settings_configs.map((c) => {
+      const is_default =
+        config_to_set !== null &&
+        this._are_configs_effectively_equal(c, config_to_set)
+      return { ...c, isDefault: is_default }
+    })
+
+    await config.update(
+      settings_key,
+      new_settings_configs,
+      vscode.ConfigurationTarget.Global
+    )
+  }
+
   public async get_code_completions_tool_configs(): Promise<CodeCompletionsConfigs> {
     await this._load_promise
-    const configs = this._vscode.globalState.get<CodeCompletionsConfigs>(
-      TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
-      []
+    return this._get_tool_configs_from_settings(
+      'configurationsForCodeCompletions'
     )
-    return configs.filter((c) => this._validate_tool_config(c) !== undefined)
   }
 
   public async get_default_code_completions_config(): Promise<
     ToolConfig | undefined
   > {
     await this._load_promise
-    const config = this._vscode.globalState.get<ToolConfig>(
-      DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY
+    const default_config = this._get_default_tool_config_from_settings(
+      'configurationsForCodeCompletions'
     )
-    const validated_config = this._validate_tool_config(config)
-    if (validated_config) return validated_config
+    if (default_config) return default_config
 
     const configs = await this.get_code_completions_tool_configs()
     if (configs.length == 1) return configs[0]
@@ -142,58 +310,48 @@ export class ModelProvidersManager {
   }
 
   public async set_default_code_completions_config(config: ToolConfig | null) {
-    await this._vscode.globalState.update(
-      DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
+    await this._set_default_tool_config_in_settings(
+      'configurationsForCodeCompletions',
       config
     )
-    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async save_code_completions_tool_configs(
     configs: CodeCompletionsConfigs
   ) {
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
+    await this._save_tool_configs_to_settings(
+      'configurationsForCodeCompletions',
       configs
     )
-    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async get_edit_context_tool_configs(): Promise<EditContextConfigs> {
     await this._load_promise
-    const configs = this._vscode.globalState.get<EditContextConfigs>(
-      TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
-      []
-    )
-    return configs.filter((c) => this._validate_tool_config(c) !== undefined)
+    return this._get_tool_configs_from_settings('configurationsForEditContext')
   }
 
   public async save_edit_context_tool_configs(configs: EditContextConfigs) {
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
+    await this._save_tool_configs_to_settings(
+      'configurationsForEditContext',
       configs
     )
-    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async get_commit_messages_tool_configs(): Promise<CommitMessagesConfigs> {
     await this._load_promise
-    const configs = this._vscode.globalState.get<CommitMessagesConfigs>(
-      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
-      []
+    return this._get_tool_configs_from_settings(
+      'configurationsForCommitMessages'
     )
-    return configs.filter((c) => this._validate_tool_config(c) !== undefined)
   }
 
   public async get_default_commit_messages_config(): Promise<
     ToolConfig | undefined
   > {
     await this._load_promise
-    const config = this._vscode.globalState.get<ToolConfig>(
-      DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY
+    const default_config = this._get_default_tool_config_from_settings(
+      'configurationsForCommitMessages'
     )
-    const validated_config = this._validate_tool_config(config)
-    if (validated_config) return validated_config
+    if (default_config) return default_config
 
     const configs = await this.get_commit_messages_tool_configs()
     if (configs.length == 1) return configs[0]
@@ -202,41 +360,36 @@ export class ModelProvidersManager {
   }
 
   public async set_default_commit_messages_config(config: ToolConfig | null) {
-    await this._vscode.globalState.update(
-      DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
+    await this._set_default_tool_config_in_settings(
+      'configurationsForCommitMessages',
       config
     )
-    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async save_commit_messages_tool_configs(
     configs: CommitMessagesConfigs
   ) {
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
+    await this._save_tool_configs_to_settings(
+      'configurationsForCommitMessages',
       configs
     )
-    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async get_intelligent_update_tool_configs(): Promise<IntelligentUpdateConfigs> {
     await this._load_promise
-    const configs = this._vscode.globalState.get<IntelligentUpdateConfigs>(
-      TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
-      []
+    return this._get_tool_configs_from_settings(
+      'configurationsForIntelligentUpdate'
     )
-    return configs.filter((c) => this._validate_tool_config(c) !== undefined)
   }
 
   public async get_default_intelligent_update_config(): Promise<
     ToolConfig | undefined
   > {
     await this._load_promise
-    const config = this._vscode.globalState.get<ToolConfig>(
-      DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
+    const default_config = this._get_default_tool_config_from_settings(
+      'configurationsForIntelligentUpdate'
     )
-    const validated_config = this._validate_tool_config(config)
-    if (validated_config) return validated_config
+    if (default_config) return default_config
 
     const configs = await this.get_intelligent_update_tool_configs()
     if (configs.length == 1) return configs[0]
@@ -247,167 +400,48 @@ export class ModelProvidersManager {
   public async set_default_intelligent_update_config(
     config: ToolConfig | null
   ) {
-    await this._vscode.globalState.update(
-      DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY,
+    await this._set_default_tool_config_in_settings(
+      'configurationsForIntelligentUpdate',
       config
     )
-    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
   public async save_intelligent_update_tool_configs(
     configs: IntelligentUpdateConfigs
   ) {
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
+    await this._save_tool_configs_to_settings(
+      'configurationsForIntelligentUpdate',
       configs
     )
-    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 
-  /**
-   * Updates provider name references in all tool configurations when a provider is renamed
-   */
   public async update_provider_name_in_configs(params: {
     old_name: string
     new_name: string
   }): Promise<void> {
     const { old_name, new_name } = params
+    const config = vscode.workspace.getConfiguration('codeWebChat')
 
-    const completions_configs =
-      this._vscode.globalState.get<CodeCompletionsConfigs>(
-        TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
-        []
-      )
+    const settings_keys = [
+      'configurationsForCodeCompletions',
+      'configurationsForEditContext',
+      'configurationsForIntelligentUpdate',
+      'configurationsForCommitMessages'
+    ]
 
-    const updated_completions_configs = completions_configs.map((config) => {
-      if (
-        config.provider_type == 'custom' &&
-        config.provider_name == old_name
-      ) {
-        return { ...config, provider_name: new_name }
-      }
-      return config
-    })
-
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY,
-      updated_completions_configs
-    )
-
-    const default_completions_config = this._vscode.globalState.get<ToolConfig>(
-      DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY
-    )
-
-    if (
-      default_completions_config &&
-      default_completions_config.provider_type == 'custom' &&
-      default_completions_config.provider_name == old_name
-    ) {
-      await this._vscode.globalState.update(
-        DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY,
-        { ...default_completions_config, provider_name: new_name }
-      )
-    }
-
-    const edit_context_configs =
-      this._vscode.globalState.get<EditContextConfigs>(
-        TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
-        []
-      )
-
-    const updated_edit_context_configs = edit_context_configs.map((config) => {
-      if (
-        config.provider_type == 'custom' &&
-        config.provider_name == old_name
-      ) {
-        return { ...config, provider_name: new_name }
-      }
-      return config
-    })
-
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY,
-      updated_edit_context_configs
-    )
-
-    const intelligent_update_configs =
-      this._vscode.globalState.get<IntelligentUpdateConfigs>(
-        TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
-        []
-      )
-
-    const updated_intelligent_update_configs = intelligent_update_configs.map(
-      (config) => {
-        if (
-          config.provider_type == 'custom' &&
-          config.provider_name == old_name
-        ) {
-          return { ...config, provider_name: new_name }
+    for (const key of settings_keys) {
+      const configs = config.get<{ providerName: string }[]>(key, [])
+      const updated_configs = configs.map((c) => {
+        if (c.providerName === old_name) {
+          return { ...c, providerName: new_name }
         }
-        return config
-      }
-    )
-
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY,
-      updated_intelligent_update_configs
-    )
-
-    const default_intelligent_update_config =
-      this._vscode.globalState.get<ToolConfig>(
-        DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY
-      )
-
-    if (
-      default_intelligent_update_config &&
-      default_intelligent_update_config.provider_type == 'custom' &&
-      default_intelligent_update_config.provider_name == old_name
-    ) {
-      await this._vscode.globalState.update(
-        DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY,
-        { ...default_intelligent_update_config, provider_name: new_name }
+        return c
+      })
+      await config.update(
+        key,
+        updated_configs,
+        vscode.ConfigurationTarget.Global
       )
     }
-
-    const commit_messages_configs =
-      this._vscode.globalState.get<CommitMessagesConfigs>(
-        TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
-        []
-      )
-
-    const updated_commit_messages_configs = commit_messages_configs.map(
-      (config) => {
-        if (
-          config.provider_type == 'custom' &&
-          config.provider_name == old_name
-        ) {
-          return { ...config, provider_name: new_name }
-        }
-        return config
-      }
-    )
-
-    await this._vscode.globalState.update(
-      TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY,
-      updated_commit_messages_configs
-    )
-
-    const default_commit_messages_config =
-      this._vscode.globalState.get<ToolConfig>(
-        DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY
-      )
-
-    if (
-      default_commit_messages_config &&
-      default_commit_messages_config.provider_type == 'custom' &&
-      default_commit_messages_config.provider_name == old_name
-    ) {
-      await this._vscode.globalState.update(
-        DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY,
-        { ...default_commit_messages_config, provider_name: new_name }
-      )
-    }
-
-    api_tool_config_emitter.emit(API_TOOLS_UPDATED_EVENT)
   }
 }

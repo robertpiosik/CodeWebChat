@@ -5,7 +5,6 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import { DeleteEditContextConfigurationMessage } from '@/views/settings/types/messages'
-import { handle_get_edit_context_configurations } from './handle-get-edit-context-configurations'
 import { dictionary } from '@shared/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
@@ -43,5 +42,4 @@ export const handle_delete_edit_context_configuration = async (
     (c) => generate_id(c) !== configuration_id_to_delete
   )
   await providers_manager.save_edit_context_tool_configs(updated_configs)
-  await handle_get_edit_context_configurations(provider)
 }

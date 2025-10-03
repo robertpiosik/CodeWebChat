@@ -140,6 +140,4 @@ export const handle_add_edit_context_configuration = async (
 
   configs.push(config_to_add)
   await providers_manager.save_edit_context_tool_configs(configs)
-
-  await handle_get_edit_context_configurations(provider)
 }

@@ -5,7 +5,6 @@ import {
   ToolConfig
 } from '@/services/model-providers-manager'
 import { DeleteCodeCompletionsConfigurationMessage } from '@/views/settings/types/messages'
-import { handle_get_code_completions_configurations } from './handle-get-code-completions-configurations'
 import { dictionary } from '@shared/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
@@ -54,5 +53,4 @@ export const handle_delete_code_completions_configuration = async (
   ) {
     await providers_manager.set_default_code_completions_config(null)
   }
-  await handle_get_code_completions_configurations(provider)
 }

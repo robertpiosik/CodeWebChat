@@ -6,7 +6,6 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { RenameModelProviderMessage } from '@/views/settings/types/messages'
-import { handle_get_model_providers } from './handle-get-model-providers'
 
 export const handle_rename_model_provider = async (
   provider: SettingsProvider,
@@ -64,6 +63,4 @@ export const handle_rename_model_provider = async (
     old_name,
     new_name: updated_provider.name
   })
-
-  await handle_get_model_providers(provider)
 }

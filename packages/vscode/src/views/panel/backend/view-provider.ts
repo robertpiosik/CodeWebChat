@@ -75,10 +75,6 @@ import {
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
-import {
-  API_TOOLS_UPDATED_EVENT,
-  api_tool_config_emitter
-} from '@/services/model-providers-manager'
 import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review'
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
@@ -159,10 +155,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       ''
     )
 
-    api_tool_config_emitter.on(API_TOOLS_UPDATED_EVENT, () => {
-      void handle_get_api_tool_configurations(this)
-    })
-
     this.chat_edit_format = this.context.workspaceState.get<EditFormat>(
       CHAT_EDIT_FORMAT_STATE_KEY,
       'whole'
@@ -208,6 +200,17 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         ]
         if (all_preset_keys.some((key) => event.affectsConfiguration(key))) {
           this.send_presets_to_webview(this._webview_view.webview)
+        }
+
+        const all_api_config_keys = [
+          'codeWebChat.configurationsForEditContext',
+          'codeWebChat.configurationsForCodeCompletions'
+        ]
+
+        if (
+          all_api_config_keys.some((key) => event.affectsConfiguration(key))
+        ) {
+          handle_get_api_tool_configurations(this)
         }
       }
     )

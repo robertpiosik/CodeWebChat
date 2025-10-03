@@ -13,20 +13,8 @@ export const LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY =
   'last-selected-file-context-name'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
-export const TOOL_CONFIG_CODE_COMPLETIONS_STATE_KEY =
-  'toolConfigCodeCompletions'
-export const TOOL_CONFIG_EDIT_CONTEXT_STATE_KEY = 'toolConfigFileRefactoring'
-export const TOOL_CONFIG_INTELLIGENT_UPDATE_STATE_KEY =
-  'toolConfigIntelligentUpdate'
-export const TOOL_CONFIG_COMMIT_MESSAGES_STATE_KEY = 'toolConfigCommitMessages'
 export const COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY =
   'commitMessagesConfirmationThreshold'
-export const DEFAULT_CODE_COMPLETIONS_CONFIGURATION_STATE_KEY =
-  'defaultCodeCompletionsConfiguration'
-export const DEFAULT_COMMIT_MESSAGES_CONFIGURATION_STATE_KEY =
-  'defaultCommitMessagesConfiguration'
-export const DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION_STATE_KEY =
-  'defaultIntelligentUpdateConfiguration'
 export const LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY =
   'lastSelectedCodeCompletionConfigIndex'
 export const LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY =

@@ -6,7 +6,6 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { EditCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
-import { handle_get_commit_messages_configurations } from './handle-get-commit-messages-configurations'
 import { ModelFetcher } from '@/services/model-fetcher'
 import {
   edit_model_for_config,
@@ -131,7 +130,6 @@ export const handle_edit_commit_messages_configuration = async (
       selected_option === 'Model' &&
       updated_config.model !== config_to_edit.model
     ) {
-      await handle_get_commit_messages_configurations(provider)
       configs = updated_configs
       message.configuration_id = new_id
       config_index = configs.findIndex((c) => generate_id(c) === new_id)
@@ -143,5 +141,4 @@ export const handle_edit_commit_messages_configuration = async (
   }
 
   await show_quick_pick()
-  await handle_get_commit_messages_configurations(provider)
 }

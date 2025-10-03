@@ -10,15 +10,16 @@
 
 body {
   padding: 0;
-  font-size: 13px;
+  font-size: var(--font-size-13px);
   user-select: none;
+  line-height: 1.3;
 }
 
 button {
   border: none;
   background: none;
   padding: 0;
-  font-size: 13px;
+  font-size: var(--font-size-13px);
   font-family: inherit;
 }
 

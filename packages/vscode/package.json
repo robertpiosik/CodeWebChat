@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "CWC initializes popular chatbots and applies chat responses",
+  "description": "CWC connects VS Code with free chatbots and applies suggested edits",
   "version": "1.417.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
@@ -1326,6 +1326,16 @@
                 "type": "number",
                 "description": "The temperature for the model."
               },
+              "reasoningEffort": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "low",
+                  "medium",
+                  "high"
+                ],
+                "description": "The reasoning effort for the model."
+              },
               "isDefault": {
                 "type": "boolean",
                 "description": "Whether this is the default configuration for this tool."
@@ -1356,6 +1366,16 @@
               "temperature": {
                 "type": "number",
                 "description": "The temperature for the model."
+              },
+              "reasoningEffort": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "low",
+                  "medium",
+                  "high"
+                ],
+                "description": "The reasoning effort for the model."
               },
               "instructionsPlacement": {
                 "type": "string",
@@ -1392,6 +1412,16 @@
                 "type": "number",
                 "description": "The temperature for the model."
               },
+              "reasoningEffort": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "low",
+                  "medium",
+                  "high"
+                ],
+                "description": "The reasoning effort for the model."
+              },
               "isDefault": {
                 "type": "boolean",
                 "description": "Whether this is the default configuration for this tool."
@@ -1426,6 +1456,16 @@
               "temperature": {
                 "type": "number",
                 "description": "The temperature for the model."
+              },
+              "reasoningEffort": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "low",
+                  "medium",
+                  "high"
+                ],
+                "description": "The reasoning effort for the model."
               },
               "isDefault": {
                 "type": "boolean",
