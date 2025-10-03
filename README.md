@@ -5,7 +5,7 @@
 Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that initializes popular chatbots and applies chat responses.
 
 ✅ **Initializes popular chatbots**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and 10+ more \
-✅ **Applies chat responses**—seamless integration of AI-generated code blocks
+✅ **Applies chat responses**—seamless handling of whole, truncated and diff code blocks
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
@@ -48,7 +48,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 
 > <small>The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).</small>
 
-In seconds, as a single response is ready, changes to all affected files are ready for integration in a transparent and fully reverible way.
+In seconds, as the response is ready, changes to all affected files can be interactively integrated.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 

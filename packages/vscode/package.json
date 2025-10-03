@@ -1253,6 +1253,190 @@
               "template"
             ]
           }
+        },
+        "codeWebChat.modelProviders": {
+          "type": "array",
+          "description": "Configuration for AI model providers. API keys are stored separately in secret storage.",
+          "default": [],
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "title": "Built-in Provider",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Type of provider.",
+                    "const": "built-in"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the built-in provider."
+                  }
+                },
+                "required": [
+                  "type",
+                  "name"
+                ]
+              },
+              {
+                "type": "object",
+                "title": "Custom Provider",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Type of provider.",
+                    "const": "custom"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "A unique name for the custom provider."
+                  },
+                  "baseUrl": {
+                    "type": "string",
+                    "description": "The base URL of the API endpoint for the custom provider."
+                  }
+                },
+                "required": [
+                  "type",
+                  "name",
+                  "baseUrl"
+                ]
+              }
+            ]
+          }
+        },
+        "codeWebChat.configurationsForCodeCompletions": {
+          "type": "array",
+          "scope": "resource",
+          "description": "Configurations for the Code Completions tool.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "providerName": {
+                "type": "string",
+                "description": "Name of the model provider to use (must be defined in modelProviders)."
+              },
+              "model": {
+                "type": "string",
+                "description": "The model to use."
+              },
+              "temperature": {
+                "type": "number",
+                "description": "The temperature for the model."
+              },
+              "isDefault": {
+                "type": "boolean",
+                "description": "Whether this is the default configuration for this tool."
+              }
+            },
+            "required": [
+              "providerName",
+              "model"
+            ]
+          }
+        },
+        "codeWebChat.configurationsForEditContext": {
+          "type": "array",
+          "scope": "resource",
+          "description": "Configurations for the Edit Context tool.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "providerName": {
+                "type": "string",
+                "description": "Name of the model provider to use (must be defined in modelProviders)."
+              },
+              "model": {
+                "type": "string",
+                "description": "The model to use."
+              },
+              "temperature": {
+                "type": "number",
+                "description": "The temperature for the model."
+              },
+              "instructionsPlacement": {
+                "type": "string",
+                "enum": [
+                  "above-and-below",
+                  "below-only"
+                ],
+                "description": "Placement of instructions relative to the code context."
+              }
+            },
+            "required": [
+              "providerName",
+              "model"
+            ]
+          }
+        },
+        "codeWebChat.configurationsForIntelligentUpdate": {
+          "type": "array",
+          "scope": "resource",
+          "description": "Configurations for the Intelligent Update tool.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "providerName": {
+                "type": "string",
+                "description": "Name of the model provider to use (must be defined in modelProviders)."
+              },
+              "model": {
+                "type": "string",
+                "description": "The model to use."
+              },
+              "temperature": {
+                "type": "number",
+                "description": "The temperature for the model."
+              },
+              "isDefault": {
+                "type": "boolean",
+                "description": "Whether this is the default configuration for this tool."
+              },
+              "maxConcurrency": {
+                "type": "number",
+                "description": "Maximum number of concurrent requests."
+              }
+            },
+            "required": [
+              "providerName",
+              "model"
+            ]
+          }
+        },
+        "codeWebChat.configurationsForCommitMessages": {
+          "type": "array",
+          "scope": "resource",
+          "description": "Configurations for the Commit Messages tool.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "providerName": {
+                "type": "string",
+                "description": "Name of the model provider to use (must be defined in modelProviders)."
+              },
+              "model": {
+                "type": "string",
+                "description": "The model to use."
+              },
+              "temperature": {
+                "type": "number",
+                "description": "The temperature for the model."
+              },
+              "isDefault": {
+                "type": "boolean",
+                "description": "Whether this is the default configuration for this tool."
+              }
+            },
+            "required": [
+              "providerName",
+              "model"
+            ]
+          }
         }
       }
     }
