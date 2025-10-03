@@ -2,9 +2,9 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that initializes your favorite chatbot with code and instructions, hands-free!
+Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that initializes popular chatbots with code and instructions and makes it easy to apply chat responses.
 
-✅ **Supports popular chatbots**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and 10+ more \
+✅ **Initializes popular chatbots**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and 10+ more \
 ✅ **Applies chat responses**—seamless integration of AI-generated code blocks
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.

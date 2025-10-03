@@ -4,7 +4,6 @@ import { ViewProvider } from './views/panel/backend/view-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
   migrate_preset_is_default_to_is_selected,
-  migrate_gemini_to_google_provider,
   migrate_api_providers_to_model_providers
 } from './migrations'
 import {
@@ -42,8 +41,6 @@ export async function activate(context: vscode.ExtensionContext) {
   const migrations = async () => {
     // 1 September 2025
     await migrate_preset_is_default_to_is_selected(context)
-    // 3 September 2025
-    await migrate_gemini_to_google_provider(context)
     // 16 September 2025
     await migrate_api_providers_to_model_providers(context)
   }
