@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that initializes popular chatbots with code and instructions and applies chat responses.
+Code Web Chat is a community-driven, free and open-source (FOSS) AI coding tool that initializes popular chatbots and applies chat responses.
 
 ✅ **Initializes popular chatbots**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and 10+ more \
 ✅ **Applies chat responses**—seamless integration of AI-generated code blocks
@@ -83,7 +83,7 @@ Interactions of submitting the message in the chatbot interface are handled by t
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Anything CWC can do in the connected browser, it can do calling a model provider of choice directly in the editor. Get started with a generous free tier from Google via [AI Studio -> API Keys](https://aistudio.google.com/api-keys).
+Anything CWC can do in the connected browser, it can do calling a model provider of choice directly in the editor. Get started with a generous free tier from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
