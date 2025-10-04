@@ -26,7 +26,7 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 Select relevant folders and files for context, enter prompt, pick edit format and send message via...
 
 - new chat—to continue in the connected browser
-- API call—to stay in the editor
+- API call—to call a model provider within the editor
 
 Constructed message consists of your prompt, edit format instructions, and the selected context, as shown in the example:
 
@@ -50,7 +50,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 
 > <small>The prompt and edit format instructions are repeated after the context [for accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).</small>
 
-In seconds, once the response is ready, it can be interactively applied in a safe, revertible way.
+Once a single response is ready, its code blocks are extracted and applied in a safe, revertible way.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
