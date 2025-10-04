@@ -5,8 +5,9 @@
 A community-driven, free and open-source (FOSS) non-agentic AI coding tool for everyone.
 
 ✅ **Connects with free chatbots**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and 10+ more \
-✅ **Applies suggested edits**—seamless handling of whole, truncated and diff code blocks \
-✅ **Cost-efficient coding**—no upfront tool definitions or subsequent requests
+✅ **Applies suggested edits**—seamless integration of whole, truncated and diff code blocks \
+💸 **Cost-efficient**—doesn't include tool definitions or make subsequent requests \
+⚡️ **Blazing fast**—finish demanding tasks in seconds, not minutes
 
 Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
@@ -22,7 +23,7 @@ Available in <a href="https://marketplace.visualstudio.com/items?itemName=robert
 
 ⭐️ **The workflow**
 
-Select folders and files for context, enter prompt, pick edit format and send message via...
+Select relevant folders and files for context, enter prompt, pick edit format and send message via...
 
 - new chat—to continue in the connected browser
 - API call—to stay in the editor
