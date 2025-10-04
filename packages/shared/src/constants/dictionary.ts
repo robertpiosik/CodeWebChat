@@ -353,5 +353,9 @@ export const dictionary = {
     join_reddit: 'Join subreddit',
     join_discord: 'Join Discord server',
     documentation: 'Documentation'
+  },
+
+  code_web_chat_button: {
+    visit_website: 'Visit the website'
   }
 }

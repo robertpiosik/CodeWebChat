@@ -1,0 +1,33 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--padding-12px) 0 var(--padding-8px);
+  height: 32px;
+  border-radius: var(--padding-6px);
+  background-color: black;
+  color: white;
+  gap: var(--padding-8px);
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  > svg {
+    fill: white;
+
+    &:first-child {
+      height: 21px;
+    }
+
+    &:last-child {
+      height: 13px;
+    }
+  }
+}

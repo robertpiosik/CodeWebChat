@@ -4,6 +4,7 @@ import { Enter } from '@ui/components/editor/Enter'
 import { BuyMeACoffeeButton } from '@ui/components/editor/BuyMeACoffeeButton'
 import { Donations } from '@ui/components/editor/Donations'
 import { Icon } from '@ui/components/editor/Icon'
+import { CodeWebChatButton } from '@ui/components/editor/CodeWebChatButton'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
 import { dictionary } from '@shared/constants/dictionary'
@@ -40,7 +41,7 @@ export const Home: React.FC<Props> = (props) => {
                 {dictionary.home.header}
               </span>
             </div>
-            <div className={styles['top__enter-buttons']}>
+            <div className={styles['top__buttons']}>
               <Enter
                 label={dictionary.home.new_chat_label}
                 description={dictionary.home.new_chat_description}
@@ -51,7 +52,8 @@ export const Home: React.FC<Props> = (props) => {
                 description={dictionary.home.api_call_description}
                 on_click={props.on_api_call}
               />
-              <div className={styles['top__donations']}>
+              <CodeWebChatButton url="https://codeweb.chat" />
+              <div className={styles['top__buttons__donations']}>
                 <BuyMeACoffeeButton username="robertpiosik" />
                 <Donations
                   donations={donations}

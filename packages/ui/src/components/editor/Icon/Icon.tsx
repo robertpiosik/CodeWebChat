@@ -3,7 +3,8 @@ import BuyMeACoffee from '../../../assets/icons/buy-me-a-coffee.svg'
 import BuyMeACoffeeWithText from '../../../assets/icons/buy-me-a-coffee-with-text.svg'
 import ChatGPT from '../../../assets/icons/openai.svg'
 import Claude from '../../../assets/icons/claude.svg'
-import CodeWebChat from '../../../assets/icons/code-web-chat.svg'
+import CodeWebChatFace from '../../../assets/icons/code-web-chat-face.svg'
+import CodeWebChatText from '../../../assets/icons/code-web-chat-text.svg'
 import Command from '../../../assets/icons/command.svg'
 import Copilot from '../../../assets/icons/copilot.svg'
 import DeepSeek from '../../../assets/icons/deepseek.svg'
@@ -32,7 +33,8 @@ export namespace Icon {
     | 'BUY_ME_A_COFFEE_WITH_TEXT'
     | 'CHATGPT'
     | 'CLAUDE'
-    | 'CODE_WEB_CHAT'
+    | 'CODE_WEB_CHAT_FACE'
+    | 'CODE_WEB_CHAT_TEXT'
     | 'COMMAND'
     | 'COPILOT'
     | 'DEEPSEEK'
@@ -78,8 +80,11 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'CLAUDE':
       icon = <Claude />
       break
-    case 'CODE_WEB_CHAT':
-      icon = <CodeWebChat />
+    case 'CODE_WEB_CHAT_FACE':
+      icon = <CodeWebChatFace />
+      break
+    case 'CODE_WEB_CHAT_TEXT':
+      icon = <CodeWebChatText />
       break
     case 'COMMAND':
       icon = <Command />
