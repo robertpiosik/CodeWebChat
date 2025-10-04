@@ -7,7 +7,7 @@ Lightweight, privacy-first AI coding for <a href="https://marketplace.visualstud
 ✅ **Connects with free chatbots**—initializes ChatGPT, Claude, AI Studio, and 10+ more \
 ✅ **Applies suggested edits**—handles code blocks in all common edit formats \
 🫰 **Saves money and time**—zero context overhead and subsequent calls \
-🤲 **Free and open-source**—released under the GPL-3.0 license
+🫶 **Free and open-source**—released under the GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
