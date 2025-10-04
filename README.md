@@ -2,31 +2,30 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-A community-driven, free and open-source (FOSS) non-agentic AI coding tool for everyone.
+Lightweight, privacy-first AI coding for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
-✅ **Connects with free chatbots**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and 10+ more \
-✅ **Applies suggested edits**—seamless integration of whole, truncated and diff code blocks \
-💸 **Cost-efficient**—doesn't include tool definitions or make subsequent requests \
-⚡️ **Blazing fast**—finish demanding tasks in seconds, not minutes
-
-Available in <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
+✅ **Connects with free chatbots**—initializes ChatGPT, Claude, AI Studio, and 10+ more \
+✅ **Applies suggested edits**—handles code blocks in all common edit formats \
+🫰 **Saves money and time**—zero context overhead and subsequent calls \
+🤲 **Free and open-source**—released under the GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-⭐️ **Guiding principles**
+✍️ **Guiding principles**
 
-- Start new chats—don't scrape responses
-- Privacy first—operate on local machine
-- Free forever—built by an independent dev
+- Start chats but don't scrape responses
+- Don't collect telementry
+- Operate 100% locally
+- Stay free forever
 
-⭐️ **The workflow**
+💅 **The workflow**
 
-Select relevant folders and files for context, enter prompt, pick edit format and send message via...
+CWC is designed to be as simple and effective as possible—select relevant folders and files for context, enter prompt, pick edit format and send message via...
 
 - new chat—to continue in the connected browser
-- API call—to call a model provider within the editor
+- API call—to stay within the editor
 
 Constructed message consists of your prompt, edit format instructions, and the selected context, as shown in the example:
 
@@ -48,9 +47,13 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 </system>
 ```
 
-> <small>The prompt and edit format instructions are repeated after the context [for accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).</small>
+> [!NOTE]
+> The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
-Once a response is generated, its code blocks are extracted and applied in a safe, revertible way.
+Once the response is generated, suggested edits in a whole, truncated or diff edit format can be applied in a safe, fully revertible way.
+
+> [!TIP]
+> Each edit format has pros and cons. We suggest requesting diffs as they're fast to generate and CWC's built-in sophisticated fallbacks will try hard to apply them when malformed.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
