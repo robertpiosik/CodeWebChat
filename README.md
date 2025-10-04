@@ -53,7 +53,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 Once the response is generated, suggested edits in a whole, truncated or diff edit format can be applied in a safe, fully revertible way.
 
 > [!TIP]
-> Each edit format has pros and cons. We suggest requesting diffs as they're fast to generate and CWC's built-in sophisticated fallbacks will try hard to apply them when malformed.
+> Each edit format has pros and cons. We suggest requesting diffs as they're fast to generate and CWC's built-in sophisticated fallbacks will try really hard to apply them when malformed.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
