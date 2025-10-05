@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-No fluff, privacy-first AI pair programming for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
+Blazing fast, privacy-first AI pair programming for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
 ✅ **Connects with free chatbots**—initializes ChatGPT, Claude, Gemini, AI Studio, and 10+ more \
 ✅ **Applies suggested edits**—handles markdown code blocks in all common edit formats \
@@ -50,10 +50,10 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 > [!NOTE]
 > The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
-Once the response is generated, suggested edits in a whole, truncated or diff edit format can be applied in a safe, fully revertible way.
+Once the response is generated, markdown code blocks with suggested edits in a _whole_, _truncated_ or _diff_ edit format can be applied in a safe, fully revertible way.
 
 > [!TIP]
-> Each edit format has pros and cons. We suggest requesting diffs as they're fast to generate and CWC's built-in sophisticated fallbacks will try really hard to apply them when malformed.
+> Each edit format has pros and cons. With the most capable models (Claude Sonnet, Gemini Pro, GPT-5, etc.), we suggest requesting diffs as they're fast to generate and a built-in parser will try hard to apply them when came out malformed. On the other hand, with smaller models (Gemini Flash, GPT-5-mini, etc.), it's best to use "whole".
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
