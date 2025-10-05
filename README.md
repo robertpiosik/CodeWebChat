@@ -96,7 +96,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 Anything CWC can do in chatbots, it can do calling model providers directly from the editor.
 
 > [!TIP]
-> Get started with a generous free tier by getting an API key from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
+> Get started with a generous free tier getting an API key from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
