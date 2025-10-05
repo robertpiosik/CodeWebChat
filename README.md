@@ -5,7 +5,7 @@
 The fastest AI coding for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
 ✅ **Connects with free chatbots**—ChatGPT, Claude, Gemini, DeepSeek, and 10+ more \
-✅ **Applies chat responses**—code blocks in whole, truncated an diff edit format \
+✅ **Applies chat responses**—multi-file edits in a safe, fully revertible way \
 🫰 **Saves money and time**—zero context overhead and subsequent calls \
 🫶 **Free and open-source**—released under the GPL-3.0 license
 
