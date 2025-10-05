@@ -6,7 +6,7 @@ The fastest AI coding for <a href="https://marketplace.visualstudio.com/items?it
 
 ✅ **Connects with free chatbots**—ChatGPT, Claude, Gemini, DeepSeek, and 10+ more \
 ✅ **Applies chat responses**—multi-file edits in a safe, fully revertible way \
-🫰 **Saves money and time**—zero context overhead and subsequent calls \
+🫰 **Saves money and time**—zero context overhead or subsequent calls \
 🫶 **Free and open-source**—released under the GPL-3.0 license
 
 <p>
