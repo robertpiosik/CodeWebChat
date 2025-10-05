@@ -89,7 +89,7 @@ Interactions of submitting the message are handled by the [content script](https
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Anything CWC can do in chatbots, it can do calling a model provider of choice directly from the editor. Get started with a generous free tier from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
+Anything CWC can do in chatbots, it can do calling a model provider of choice directly from the editor. Get started by getting an API key from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
