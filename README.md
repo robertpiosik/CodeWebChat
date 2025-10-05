@@ -57,7 +57,7 @@ Once the response is generated, markdown code blocks with suggested edits in a _
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 
-Install the Connector browser extension and never copy & paste again.
+Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) Connector in your browser and never copy & paste again.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
@@ -82,14 +82,21 @@ Install the Connector browser extension and never copy & paste again.
 - Yuanbao
 - Z
 
-Interactions of submitting the message are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
+> [!TIP]
+> The browser extension allows you to include websites in context! Just click the extension's icon in the toolbar and click _Enable for context_. The website will appear in the context tree immediately.
+
+> [!NOTE]
+> Interactions of submitting the message are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
 
 > [!IMPORTANT]
-> Legal disclaimer; 1) The tool does not require the browser extension to operate—chats can be initialized and responses applied manually with copy & paste. 2) The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original copy to clipboard button present under all responses; these are applied solely from the copied markdown text.
+> The tool does not require the browser extension to operate—chats can be initialized and responses applied with manual copy & paste. The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button present under responses; these are applied based on the copied markdown text.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Anything CWC can do in chatbots, it can do calling a model provider of choice directly from the editor. Get started by getting an API key from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
+Anything CWC can do in chatbots, it can do calling a model provider of choice directly from the editor.
+
+> [!TIP]
+> Get started with a generous free tier by getting an API key from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
