@@ -83,7 +83,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - Z
 
 > [!TIP]
-> The browser extension allows you to include websites in context! Just click the extension's icon in the toolbar and click _Enable for context_. The website will appear in the context tree immediately.
+> With the browser extension you can include websites in context! Just click the extension's icon in the toolbar and click _Enable for context_. The website will appear in the context tree immediately.
 
 > [!NOTE]
 > Interactions of submitting the message are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
