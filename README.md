@@ -84,7 +84,8 @@ Install the Connector browser extension and never copy & paste again.
 
 Interactions of submitting the message are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
 
-> [!NOTE] > **Legal disclaimer:** The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original copy to clipboard button present under all responses. Changes integration process reads clipboard text.
+> [!IMPORTANT]
+> Legal disclaimer; 1) The tool does not require the browser extension to operate—chats can be initialized and responses applied manually with copy & paste. 2) The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original copy to clipboard button present under all responses; these are applied solely from the copied markdown text.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
