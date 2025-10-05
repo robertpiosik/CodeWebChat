@@ -130,7 +130,7 @@ Generate meaningful summaries of changes adhering to your style.
 **The tool operates exclusively on your machine.** All your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. Model providers for API tools are called directly.
 
 > [!IMPORTANT]
-> The tool **does not** collect telemetry.
+> Code Web Chat **does not** collect telemetry.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
 
