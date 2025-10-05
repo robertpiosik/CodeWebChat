@@ -16,7 +16,7 @@ Lightweight, privacy-first AI coding for <a href="https://marketplace.visualstud
 ✍️ **Guiding principles**
 
 - Start chats but don't scrape responses
-- Don't collect telementry
+- Don't collect telemetry
 - Operate 100% locally
 - Stay free forever
 
