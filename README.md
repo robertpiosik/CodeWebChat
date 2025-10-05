@@ -22,7 +22,7 @@ Fast and privacy-first AI coding for <a href="https://marketplace.visualstudio.c
 
 💅 **The workflow**
 
-CWC is designed to be as simple and effective as possible—select relevant folders and files for context, enter prompt, pick edit format and send message via...
+Select relevant folders and files for context, enter prompt, pick edit format and send message via...
 
 - new chat—to continue in the connected browser
 - API call—to stay within the editor
