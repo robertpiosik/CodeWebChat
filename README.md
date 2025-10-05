@@ -93,7 +93,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
 
-Anything CWC can do in chatbots, it can do calling a model provider of choice directly from the editor.
+Anything CWC can do in chatbots, it can do calling model providers directly from the editor.
 
 > [!TIP]
 > Get started with a generous free tier by getting an API key from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
