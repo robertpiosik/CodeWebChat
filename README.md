@@ -86,7 +86,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 > With the browser extension you can include markdown-parsed websites in context! Just click the extension's icon in the toolbar and click _Enable for context_. The website will appear in the context tree immediately, ready for selection like any other file in the workspace.
 
 > [!NOTE]
-> Web interactions of submitting the message are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
+> All web interactions of submitting the message are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
 
 > [!IMPORTANT]
 > The tool does not require the browser extension to operate—chats can be initialized and responses applied with manual copy & paste. The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button present under responses; these are applied based on the copied markdown text.
