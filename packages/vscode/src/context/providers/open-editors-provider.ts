@@ -313,7 +313,6 @@ export class OpenEditorsProvider
         vscode.TreeItemCollapsibleState.None,
         false,
         checkbox_state,
-        false, // isGitIgnored is now irrelevant as we're skipping ignored files
         false,
         true,
         token_count,

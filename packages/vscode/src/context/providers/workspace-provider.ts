@@ -66,12 +66,8 @@ export class WorkspaceProvider
     this.workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
     this.workspace_names = workspace_folders.map((folder) => folder.name)
     this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
-    this._load_all_gitignore_files()
     this._load_ignored_extensions()
     this.websites_provider.onDidChangeTreeData(() => this.refresh())
-
-    // Initialize file to workspace mapping
-    this._update_file_workspace_mapping()
 
     this.watcher = vscode.workspace.createFileSystemWatcher('**/*')
     this.watcher.onDidCreate((uri) => this._handle_file_create(uri.fsPath))
@@ -100,6 +96,8 @@ export class WorkspaceProvider
     this.tab_change_handler = vscode.window.tabGroups.onDidChangeTabs((e) => {
       this._handle_tab_changes(e)
     })
+
+    this._load_all_gitignore_files()
   }
 
   private async _save_checked_files_state(): Promise<void> {
@@ -145,61 +143,6 @@ export class WorkspaceProvider
       clearTimeout(timer)
       notification_stopper?.()
     }
-  }
-
-  private _update_file_workspace_mapping(): void {
-    this.file_workspace_map.clear()
-
-    // For each workspace root, map all files to that workspace
-    for (const workspace_root of this.workspace_roots) {
-      try {
-        const files = this.find_all_files(workspace_root)
-        for (const file of files) {
-          this.file_workspace_map.set(file, workspace_root)
-        }
-      } catch (error) {
-        Logger.error({
-          function_name: 'update_file_workspace_mapping',
-          message: `Error mapping files for workspace ${workspace_root}`,
-          data: error
-        })
-      }
-    }
-  }
-
-  public find_all_files(dir_path: string): string[] {
-    let results: string[] = []
-    try {
-      const entries = fs.readdirSync(dir_path, { withFileTypes: true })
-
-      for (const entry of entries) {
-        const full_path = path.join(dir_path, entry.name)
-
-        const relative_path = path.relative(
-          this.get_workspace_root_for_file(full_path) || dir_path,
-          full_path
-        )
-        if (this.is_excluded(relative_path)) {
-          continue
-        }
-
-        if (entry.isDirectory()) {
-          results = results.concat(this.find_all_files(full_path))
-        } else if (entry.isFile()) {
-          if (!should_ignore_file(full_path, this.ignored_extensions)) {
-            results.push(full_path)
-          }
-        }
-      }
-    } catch (error) {
-      Logger.error({
-        function_name: 'find_all_files',
-        message: `Error finding files in ${dir_path}`,
-        data: error
-      })
-    }
-
-    return results
   }
 
   public get_workspace_root_for_file(file_path: string): string | undefined {
@@ -719,7 +662,6 @@ export class WorkspaceProvider
           true, // Is directory
           this.checked_items.get(root) ??
             vscode.TreeItemCheckboxState.Unchecked,
-          false, // Is not git ignored
           false, // Is not symbolic link
           false, // Is not open file
           total_tokens,
@@ -1022,7 +964,6 @@ export class WorkspaceProvider
             : vscode.TreeItemCollapsibleState.None,
           is_directory,
           checkbox_state,
-          false, // isGitIgnored is now irrelevant as we're skipping ignored files
           is_symbolic_link,
           false, // is not an open file
           token_count,
@@ -1470,7 +1411,6 @@ export class FileItem extends vscode.TreeItem {
     public collapsibleState: vscode.TreeItemCollapsibleState,
     public isDirectory: boolean,
     public checkboxState: vscode.TreeItemCheckboxState,
-    public isGitIgnored: boolean,
     public isSymbolicLink: boolean = false,
     public isOpenFile: boolean = false,
     public tokenCount?: number,
