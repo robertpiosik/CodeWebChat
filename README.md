@@ -89,7 +89,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 > All web interactions of submitting the message are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
 
 > [!IMPORTANT]
-> The tool does not require the browser extension to operate—chats can be initialized and responses applied with manual copy & paste. The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button present under responses; these are applied based on the copied markdown text.
+> The tool does not require the browser extension to operate—chats can be initialized and responses applied with manual copy & paste. The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button present under responses—these are applied based on the copied markdown text.
 
 ## API Tools
 
