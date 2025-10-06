@@ -3,7 +3,7 @@
  * For example, "file.scss.d.ts" would return ["ts", "d.ts", "scss.d.ts"]
  */
 export function extract_extension_variations(file_path: string): string[] {
-  const filename = file_path.split(/[\\/]/).pop() || ''
+  const filename = (file_path.split(/[\\/]/).pop() || '').toLowerCase()
   const parts = filename.split('.')
 
   if (parts.length <= 1) {

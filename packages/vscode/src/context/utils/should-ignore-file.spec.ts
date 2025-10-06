@@ -111,4 +111,11 @@ describe('should_ignore_file', () => {
     const ignored = new Set(['env.local'])
     expect(should_ignore_file('.env.local', ignored)).toBe(true)
   })
+
+  it('should ignore files with capital letters in extension', () => {
+    const ignored = new Set(['svg', 'tar.gz'])
+    expect(should_ignore_file('image.SVG', ignored)).toBe(true)
+    expect(should_ignore_file('archive.TAR.GZ', ignored)).toBe(true)
+    expect(should_ignore_file('archive.Tar.Gz', ignored)).toBe(true)
+  })
 })
