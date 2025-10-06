@@ -24,11 +24,12 @@
   display: flex;
   align-items: center;
   gap: var(--padding-6px);
+  overflow: hidden;
 
   > span:first-child {
-    @media (max-width: 240px) {
-      display: none;
-    }
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
