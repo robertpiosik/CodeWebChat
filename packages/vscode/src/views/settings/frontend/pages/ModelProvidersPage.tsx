@@ -2,15 +2,22 @@ import { ProviderForClient } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
 import { ModelProviders } from '@ui/components/editor/settings/ModelProviders'
 import { Page } from '@ui/components/editor/settings/Page'
+import { forwardRef } from 'react'
 
 type ModelProvidersPageProps = {
+  id: string
   vscode: any
   providers: ProviderForClient[] | undefined
   set_providers: (providers: ProviderForClient[]) => void
 }
-export const ModelProvidersPage = (props: ModelProvidersPageProps) => {
+export const ModelProvidersPage = forwardRef<
+  HTMLDivElement,
+  ModelProvidersPageProps
+>((props, ref) => {
   return (
     <Page
+      id={props.id}
+      ref={ref}
       title="Model Providers"
       subtitle="Manage your model providers here. Add, edit, reorder, or delete providers as needed."
     >
@@ -49,4 +56,5 @@ export const ModelProvidersPage = (props: ModelProvidersPageProps) => {
       )}
     </Page>
   )
-}
+})
+ModelProvidersPage.displayName = 'ModelProvidersPage'

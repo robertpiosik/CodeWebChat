@@ -4,11 +4,14 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 60px;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .sidebar {
   width: 180px;
+  padding-top: 60px;
+  flex-shrink: 0;
 
   &__title {
     font-size: 26px;
@@ -20,10 +23,16 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    position: sticky;
+    top: 60px;
   }
 }
 
 .content {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
 }

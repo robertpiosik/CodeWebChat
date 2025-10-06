@@ -5,6 +5,8 @@
   padding: var(--padding-8px);
   border-radius: var(--border-radius-4px);
   color: var(--vscode-editor-foreground);
+  text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     background-color: var(--vscode-list-hoverBackground);

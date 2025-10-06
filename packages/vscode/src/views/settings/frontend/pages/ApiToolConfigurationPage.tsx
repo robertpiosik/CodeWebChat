@@ -3,6 +3,7 @@ import { FrontendMessage } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
 import { ConfigurationsList } from '@ui/components/editor/settings/ConfigurationsList'
 import { Page } from '@ui/components/editor/settings/Page'
+import { forwardRef } from 'react'
 
 type ToolName =
   | 'CODE_COMPLETIONS'
@@ -11,6 +12,7 @@ type ToolName =
   | 'INTELLIGENT_UPDATE'
 
 type ToolConfigurationsPageProps = {
+  id: string
   vscode: any
   title: string
   subtitle: string
@@ -20,9 +22,10 @@ type ToolConfigurationsPageProps = {
   set_configurations: (configurations: ConfigurationForClient[]) => void
 }
 
-export const ApiToolConfigurationPage = (
-  props: ToolConfigurationsPageProps
-) => {
+export const ApiToolConfigurationPage = forwardRef<
+  HTMLDivElement,
+  ToolConfigurationsPageProps
+>((props, ref) => {
   const { configurations, set_configurations } = props
 
   const add_command = `ADD_${props.tool_name}_CONFIGURATION`
@@ -50,7 +53,7 @@ export const ApiToolConfigurationPage = (
     : undefined
 
   return (
-    <Page title={props.title} subtitle={props.subtitle}>
+    <Page id={props.id} ref={ref} title={props.title} subtitle={props.subtitle}>
       {configurations && (
         <ConfigurationsList
           configurations={configurations}
@@ -84,4 +87,5 @@ export const ApiToolConfigurationPage = (
       )}
     </Page>
   )
-}
+})
+ApiToolConfigurationPage.displayName = 'ApiToolConfigurationPage'
