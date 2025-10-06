@@ -40,7 +40,9 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
           }}
         />
         <div className={styles.actions}>
-          <Button on_click={props.on_cancel}>{dict.cancel}</Button>
+          <Button on_click={props.on_cancel} is_secondary={true}>
+            {dict.cancel}
+          </Button>
           <Button on_click={handle_accept} disabled={!message.trim()}>
             {dict.commit}
           </Button>
