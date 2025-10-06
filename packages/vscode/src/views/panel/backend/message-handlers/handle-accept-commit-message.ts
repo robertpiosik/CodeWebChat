@@ -18,8 +18,6 @@ export const handle_accept_commit_message = async (
       cwd: repository.rootUri.fsPath
     })
 
-    vscode.window.showInformationMessage(`New commit: ${commit_message}.`)
-
     provider.context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
     provider.set_undo_button_state(false)
 

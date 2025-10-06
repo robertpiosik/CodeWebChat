@@ -40,6 +40,12 @@ export const dictionary = {
     run_without_submission: 'Run without submission'
   },
 
+  'CommitMessageModal.tsx': {
+    commit_changes: 'Commit changes',
+    cancel: 'Cancel',
+    commit: 'Commit'
+  },
+
   information_message: {
     NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND:
       'No "Intelligent Update" configurations found. Please add one in the settings.',

@@ -13,9 +13,9 @@ import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
 import { Changes as UiChanges } from '@ui/components/editor/Changes'
-import { ProgressModal as UiProgressModal } from '@ui/components/editor/ProgressModal'
-import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/ChatInitializedModal'
-import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/CommitMessageModal'
+import { ProgressModal as UiProgressModal } from '@ui/components/editor/modals/ProgressModal'
+import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/modals/ChatInitializedModal'
+import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/modals/CommitMessageModal'
 
 const vscode = acquireVsCodeApi()
 
@@ -491,7 +491,6 @@ export const View = () => {
       {commit_message_to_review && (
         <div className={styles.slot}>
           <UiCommitMessageModal
-            title="Review commit message"
             commit_message={commit_message_to_review}
             on_accept={(message) => {
               post_message(vscode, {

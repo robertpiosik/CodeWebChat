@@ -1,6 +1,7 @@
 .title {
   text-align: center;
   font-weight: 500;
+  margin-bottom: var(--padding-6px);
 }
 
 .textarea {
@@ -9,9 +10,8 @@
   color: var(--vscode-input-foreground);
   border: 1px solid var(--vscode-input-border);
   border-radius: var(--border-radius-2px);
-  padding: var(--padding-3px) var(--padding-6px);
-  box-sizing: border-box;
-  resize: vertical;
+  padding: var(--padding-5px) var(--padding-6px);
+  resize: none;
   font-family: var(--vscode-font-family);
   font-size: var(--vscode-font-size);
 

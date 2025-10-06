@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import styles from './ChatInitializedModal.module.scss'
-import { Button } from '../Button'
+import { Button } from '../../Button'
 import { Modal } from '../Modal'
 
 type Props = {
