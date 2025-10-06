@@ -7,17 +7,13 @@ import {
   process_file
 } from '../utils/intelligent-update-utils'
 import { dictionary } from '@shared/constants/dictionary'
-import {
-  LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY,
-  LAST_REFACTOR_INSTRUCTION_STATE_KEY
-} from '../constants/state-keys'
 import { Logger } from '@shared/utils/logger'
 
-export const refactor_current_file_command = (
+export const apply_code_block_to_active_editor_command = (
   context: vscode.ExtensionContext
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.refactorCurrentFile',
+    'codeWebChat.applyCodeBlockToActiveEditor',
     async () => {
       const editor = vscode.window.activeTextEditor
       if (!editor) {
@@ -27,88 +23,12 @@ export const refactor_current_file_command = (
         return
       }
 
-      let instruction: string | undefined
-      const clipboard_content = await vscode.env.clipboard.readText()
-
-      const last_instruction_source = context.workspaceState.get<string>(
-        LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY
-      )
-      const last_instruction = context.workspaceState.get<string>(
-        LAST_REFACTOR_INSTRUCTION_STATE_KEY
-      )
-
-      if (!clipboard_content) {
-        instruction = await vscode.window.showInputBox({
-          prompt: 'Enter your refactoring instructions',
-          value: last_instruction
-        })
-        if (instruction) {
-          await context.workspaceState.update(
-            LAST_REFACTOR_INSTRUCTION_STATE_KEY,
-            instruction
-          )
-          await context.workspaceState.update(
-            LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY,
-            'Instructions'
-          )
-        }
-      } else {
-        const choice = await new Promise<string | undefined>((resolve) => {
-          const quick_pick = vscode.window.createQuickPick()
-          const items = [{ label: 'Clipboard' }, { label: 'Instructions' }]
-          quick_pick.items = items
-          quick_pick.placeholder =
-            'Use clipboard content or enter new refactoring instructions?'
-
-          if (last_instruction_source) {
-            const active_item = items.find(
-              (item) => item.label === last_instruction_source
-            )
-            if (active_item) {
-              quick_pick.activeItems = [active_item]
-            }
-          }
-
-          quick_pick.onDidAccept(() => {
-            const selected = quick_pick.selectedItems[0]
-            resolve(selected?.label)
-            quick_pick.hide()
-          })
-
-          quick_pick.onDidHide(() => {
-            quick_pick.dispose()
-            resolve(undefined)
-          })
-
-          quick_pick.show()
-        })
-
-        if (choice === undefined) {
-          return // User cancelled
-        }
-
-        await context.workspaceState.update(
-          LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY,
-          choice
-        )
-
-        if (choice == 'Clipboard') {
-          instruction = clipboard_content
-        } else if (choice == 'Instructions') {
-          instruction = await vscode.window.showInputBox({
-            prompt: 'Enter your refactoring instructions',
-            value: last_instruction
-          })
-          if (instruction) {
-            await context.workspaceState.update(
-              LAST_REFACTOR_INSTRUCTION_STATE_KEY,
-              instruction
-            )
-          }
-        }
-      }
+      const instruction = await vscode.env.clipboard.readText()
 
       if (!instruction) {
+        vscode.window.showInformationMessage(
+          'Clipboard is empty. Please copy instructions to the clipboard.'
+        )
         return
       }
 
@@ -287,8 +207,8 @@ export const refactor_current_file_command = (
         }
       } catch (err: any) {
         Logger.error({
-          function_name: 'refactorCurrentFile',
-          message: 'Refactor error',
+          function_name: 'applyCodeBlockToActiveEditor',
+          message: 'Apply code block error',
           data: err
         })
       }
