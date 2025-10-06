@@ -14,6 +14,7 @@
   resize: none;
   font-family: var(--vscode-font-family);
   font-size: var(--vscode-font-size);
+  overflow: hidden;
 
   &:focus {
     outline: 1px solid var(--vscode-focusBorder);

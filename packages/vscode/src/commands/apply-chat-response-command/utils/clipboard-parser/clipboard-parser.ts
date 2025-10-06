@@ -534,6 +534,7 @@ export const parse_response = (
 
   if (
     response.includes('```diff') ||
+    response.includes('```patch') ||
     response.startsWith('--- ') ||
     response.startsWith('diff --git')
   ) {

@@ -1,10 +1,9 @@
 import styles from './Home.module.scss'
 import { Scrollable } from '@ui/components/editor/Scrollable'
 import { Enter } from '@ui/components/editor/Enter'
-import { BuyMeACoffeeButton } from '@ui/components/editor/BuyMeACoffeeButton'
+import { HomeLinkButton } from '@ui/components/editor/HomeLinkButton'
 import { Donations } from '@ui/components/editor/Donations'
 import { Icon } from '@ui/components/editor/Icon'
-import { CodeWebChatButton } from '@ui/components/editor/CodeWebChatButton'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
 import { dictionary } from '@shared/constants/dictionary'
@@ -52,9 +51,23 @@ export const Home: React.FC<Props> = (props) => {
                 description={dictionary.home.api_call_description}
                 on_click={props.on_api_call}
               />
-              <CodeWebChatButton url="https://codeweb.chat" />
+              <HomeLinkButton
+                url="https://codeweb.chat"
+                background_color="black"
+                fill_color="white"
+                logo_icon="CODE_WEB_CHAT_LOGO"
+                text_icon="CODE_WEB_CHAT_TEXT"
+                title="Visit CodeWebChat website"
+              />
               <div className={styles['top__buttons__donations']}>
-                <BuyMeACoffeeButton username="robertpiosik" />
+                <HomeLinkButton
+                  url="https://buymeacoffee.com/robertpiosik"
+                  background_color="#ffdd00"
+                  fill_color="black"
+                  text_icon="BUY_ME_A_COFFEE_TEXT"
+                  logo_icon="BUY_ME_A_COFFEE_LOGO"
+                  title="Support author with a donation"
+                />
                 <Donations
                   donations={donations}
                   is_fetching={is_fetching}

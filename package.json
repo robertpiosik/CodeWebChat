@@ -10,7 +10,7 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{ts,tsx,json,css,scss,md}": [
+    "*.{ts,tsx,json,css,scss,md,svg}": [
       "prettier --write"
     ]
   }

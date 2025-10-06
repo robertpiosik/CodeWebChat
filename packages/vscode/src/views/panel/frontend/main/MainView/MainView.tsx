@@ -437,7 +437,7 @@ export const MainView: React.FC<Props> = (props) => {
             onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
             onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
           >
-            <Icon variant="BUY_ME_A_COFFEE" />
+            <Icon variant="BUY_ME_A_COFFEE_LOGO" />
           </a>
         </div>
         <div className={styles.footer__right}>

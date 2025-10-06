@@ -232,7 +232,11 @@ const extract_all_code_block_patches = (normalized_text: string): Diff[] => {
 
     const lang = match[1] || ''
 
-    if (stack.length > 0 && stack[stack.length - 1].type == 'diff') {
+    if (
+      stack.length > 0 &&
+      (stack[stack.length - 1].type == 'diff' ||
+        stack[stack.length - 1].type == 'patch')
+    ) {
       if (line.match(/^[+\- ]/)) {
         continue
       }
@@ -272,7 +276,7 @@ const extract_all_code_block_patches = (normalized_text: string): Diff[] => {
   // Process each found code block
   for (const block of code_blocks) {
     const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
-    if (block.type == 'diff') {
+    if (block.type == 'diff' || block.type == 'patch') {
       const processed_patches = parse_multiple_raw_patches(block_lines)
       patches.push(...processed_patches)
     } else {

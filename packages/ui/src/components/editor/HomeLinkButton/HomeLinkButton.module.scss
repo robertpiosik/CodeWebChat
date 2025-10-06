@@ -1,0 +1,48 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--padding-8px);
+  padding: 0 var(--padding-12px) 0 var(--padding-8px);
+  height: 32px;
+  border-radius: var(--padding-6px);
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  .codicon-link-external {
+    color: inherit;
+  }
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-6px);
+
+  svg {
+    fill: currentColor;
+  }
+
+  &__logo {
+    --size: 22px;
+    width: var(--size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > svg {
+      width: var(--size);
+      height: var(--size);
+    }
+  }
+
+  > svg {
+    height: 19px;
+  }
+}
