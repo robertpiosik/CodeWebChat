@@ -638,7 +638,6 @@ export const Main: React.FC<Props> = (props) => {
       on_code_completion_with_quick_pick_click={
         handle_code_completion_with_quick_pick_click
       }
-      on_commit_click={handle_commit_click}
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
       chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}
