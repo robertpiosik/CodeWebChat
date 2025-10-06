@@ -8,7 +8,6 @@ export type HomeLinkButtonProps = {
   logo_icon: Icon.Variant
   text_icon: Icon.Variant
   label: string
-  title: string
 }
 
 export const HomeLinkButton: React.FC<HomeLinkButtonProps> = (props) => {
@@ -20,7 +19,7 @@ export const HomeLinkButton: React.FC<HomeLinkButtonProps> = (props) => {
         backgroundColor: props.background_color,
         color: props.fill_color
       }}
-      title={props.title}
+      title={props.url}
     >
       <div className={styles.left}>
         <div className={styles.left__logo}>

@@ -12,7 +12,6 @@ export const BuyMeACoffee = () => (
     logo_icon="BUY_ME_A_COFFEE_LOGO"
     text_icon="BUY_ME_A_COFFEE_TEXT"
     label="Support"
-    title="Support author"
   />
 )
 
@@ -24,6 +23,5 @@ export const CodeWebChat = () => (
     logo_icon="CODE_WEB_CHAT_LOGO"
     text_icon="CODE_WEB_CHAT_TEXT"
     label="Website"
-    title="Visit website"
   />
 )

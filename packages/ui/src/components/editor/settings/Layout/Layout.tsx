@@ -15,7 +15,7 @@ export const Layout = forwardRef<HTMLDivElement, Props>((props, ref) => {
         <div className={styles.sidebar__navigation}>{props.sidebar}</div>
       </div>
       <div className={styles.content} ref={ref}>
-        {props.children}
+        <div className={styles.content__inner}>{props.children}</div>
       </div>
     </div>
   )

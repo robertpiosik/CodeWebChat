@@ -10,6 +10,7 @@
 
   &:hover {
     background-color: var(--vscode-list-hoverBackground);
+    text-decoration: none;
   }
 
   &.active {

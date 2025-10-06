@@ -58,7 +58,6 @@ export const Home: React.FC<Props> = (props) => {
                 logo_icon="CODE_WEB_CHAT_LOGO"
                 text_icon="CODE_WEB_CHAT_TEXT"
                 label={dictionary.home.visit_website_label}
-                title={dictionary.home.visit_website}
               />
               <div className={styles['top__buttons__donations']}>
                 <HomeLinkButton
@@ -68,7 +67,6 @@ export const Home: React.FC<Props> = (props) => {
                   text_icon="BUY_ME_A_COFFEE_TEXT"
                   logo_icon="BUY_ME_A_COFFEE_LOGO"
                   label={dictionary.home.support_author_label}
-                  title={dictionary.home.support_author}
                 />
                 <Donations
                   donations={donations}

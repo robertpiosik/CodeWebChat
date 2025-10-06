@@ -56,6 +56,7 @@ export class WorkspaceProvider
   // Track which workspace root a file belongs to
   private file_workspace_map: Map<string, string> = new Map()
   private websites_provider: WebsitesProvider
+  private gitignore_initialization: Promise<void>
 
   constructor(
     workspace_folders: vscode.WorkspaceFolder[],
@@ -97,7 +98,7 @@ export class WorkspaceProvider
       this._handle_tab_changes(e)
     })
 
-    this._load_all_gitignore_files()
+    this.gitignore_initialization = this._load_all_gitignore_files()
   }
 
   private async _save_checked_files_state(): Promise<void> {
@@ -586,6 +587,8 @@ export class WorkspaceProvider
   public async getChildren(
     element?: FileItem | WebsiteItem | WebsitesFolderItem
   ): Promise<(FileItem | WebsiteItem | WebsitesFolderItem)[]> {
+    await this.gitignore_initialization
+
     if (element) {
       if (element instanceof WebsiteItem) {
         return [] // Websites are leaves
@@ -1207,6 +1210,7 @@ export class WorkspaceProvider
   }
 
   public async set_checked_files(file_paths: string[]): Promise<void> {
+    await this.gitignore_initialization
     this.checked_items.clear()
     this.partially_checked_dirs.clear()
     this.directory_selected_token_counts.clear()

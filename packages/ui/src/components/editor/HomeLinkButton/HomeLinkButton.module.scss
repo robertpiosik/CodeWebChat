@@ -30,6 +30,10 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 

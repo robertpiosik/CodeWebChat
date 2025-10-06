@@ -15,7 +15,7 @@ Fast and privacy-first AI coding for <a href="https://marketplace.visualstudio.c
 
 ✍️ **Guiding principles**
 
-- Start chats but don't scrape responses
+- Initialize chats, don't scrape responses
 - Don't collect telemetry
 - Operate 100% locally
 - Stay free forever

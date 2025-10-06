@@ -1,17 +1,18 @@
 .container {
+  --horizontal-padding: 8vw;
   display: flex;
   gap: 60px;
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
   height: 100%;
-  box-sizing: border-box;
+  padding-left: var(--horizontal-padding);
 }
 
 .sidebar {
   width: 180px;
   padding-top: 60px;
-  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 
   &__title {
     font-size: 26px;
@@ -19,20 +20,21 @@
   }
 
   &__navigation {
-    margin-top: 30px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    position: sticky;
-    top: 60px;
   }
 }
 
 .content {
   flex: 1;
   overflow-y: auto;
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-  gap: 80px;
+  padding: 60px var(--horizontal-padding) 60vh 0;
+  scroll-behavior: smooth;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    gap: 60px;
+  }
 }

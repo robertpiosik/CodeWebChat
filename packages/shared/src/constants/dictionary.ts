@@ -359,8 +359,6 @@ export const dictionary = {
     join_reddit: 'Join subreddit',
     join_discord: 'Join Discord server',
     documentation: 'Documentation',
-    visit_website: 'Visit our website',
-    support_author: 'Support author with a donation',
     visit_website_label: 'Visit website',
     support_author_label: 'Support author'
   }

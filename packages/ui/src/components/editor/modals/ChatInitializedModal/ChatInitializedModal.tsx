@@ -40,7 +40,9 @@ export const ChatInitializedModal: React.FC<Props> = (props) => {
             }}
           />
         </div>
-        <Button on_click={props.on_close}>Close</Button>
+        <Button on_click={props.on_close} is_focused={true}>
+          Close
+        </Button>
       </div>
     </Modal>
   )
