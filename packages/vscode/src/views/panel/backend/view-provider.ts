@@ -49,7 +49,8 @@ import {
   handle_go_to_file_in_review,
   handle_toggle_file_in_review,
   handle_intelligent_update_file_in_review,
-  handle_commit_changes
+  handle_commit_changes,
+  handle_accept_commit_message
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -488,6 +489,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             this._send_git_state()
           } else if (message.command == 'COMMIT_CHANGES') {
             await handle_commit_changes(this)
+          } else if (message.command == 'ACCEPT_COMMIT_MESSAGE') {
+            await handle_accept_commit_message(this, message.commit_message)
           }
         } catch (error: any) {
           Logger.error({

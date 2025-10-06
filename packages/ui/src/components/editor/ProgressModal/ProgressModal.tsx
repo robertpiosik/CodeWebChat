@@ -33,27 +33,29 @@ export const ProgressModal: React.FC<Props> = (props) => {
 
   return (
     <Modal>
-      <div className={styles.title}>{props.title}</div>
-      <div className={styles['elapsed-time']}>{elapsed_time.toFixed(1)}s</div>
-      {props.tokens_per_second !== undefined && (
-        <div className={styles['tokens-per-second']}>
-          ~{format_tokens_per_second(props.tokens_per_second)} tokens/s
-        </div>
-      )}
-      {(props.progress !== undefined ||
-        props.tokens_per_second !== undefined) && (
-        <div className={styles.progress}>
-          {props.progress !== undefined ? (
-            <div
-              className={styles.progress__fill}
-              style={{ width: `${props.progress}%` }}
-            />
-          ) : (
-            <div className={styles['progress__fill--indeterminate']} />
-          )}
-        </div>
-      )}
-      <Button on_click={props.on_cancel}>Cancel</Button>
+      <div className={styles.container}>
+        <div className={styles.title}>{props.title}</div>
+        <div className={styles['elapsed-time']}>{elapsed_time.toFixed(1)}s</div>
+        {props.tokens_per_second !== undefined && (
+          <div className={styles['tokens-per-second']}>
+            ~{format_tokens_per_second(props.tokens_per_second)} tokens/s
+          </div>
+        )}
+        {(props.progress !== undefined ||
+          props.tokens_per_second !== undefined) && (
+          <div className={styles.progress}>
+            {props.progress !== undefined ? (
+              <div
+                className={styles.progress__fill}
+                style={{ width: `${props.progress}%` }}
+              />
+            ) : (
+              <div className={styles['progress__fill--indeterminate']} />
+            )}
+          </div>
+        )}
+        <Button on_click={props.on_cancel}>Cancel</Button>
+      </div>
     </Modal>
   )
 }

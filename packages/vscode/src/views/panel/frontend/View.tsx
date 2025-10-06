@@ -15,6 +15,7 @@ import { FileInReview } from '@shared/types/file-in-review'
 import { Changes as UiChanges } from '@ui/components/editor/Changes'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/ProgressModal'
 import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/ChatInitializedModal'
+import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/CommitMessageModal'
 
 const vscode = acquireVsCodeApi()
 
@@ -32,6 +33,9 @@ export const View = () => {
     tokens_per_second?: number
   }>()
   const [chat_initialized_title, set_chat_initialized_title] = useState<
+    string | undefined
+  >()
+  const [commit_message_to_review, set_commit_message_to_review] = useState<
     string | undefined
   >()
   const [workspace_folder_count, set_workspace_folder_count] =
@@ -145,6 +149,8 @@ export const View = () => {
         set_chat_initialized_title(message.title)
       } else if (message.command == 'FOCUS_CHAT_INPUT') {
         set_chat_input_focus_key((k) => k + 1)
+      } else if (message.command == 'SHOW_COMMIT_MESSAGE_MODAL') {
+        set_commit_message_to_review(message.commit_message)
       }
     }
     window.addEventListener('message', handle_message)
@@ -478,6 +484,23 @@ export const View = () => {
             on_close={() => {
               set_chat_initialized_title(undefined)
             }}
+          />
+        </div>
+      )}
+
+      {commit_message_to_review && (
+        <div className={styles.slot}>
+          <UiCommitMessageModal
+            title="Review commit message"
+            commit_message={commit_message_to_review}
+            on_accept={(message) => {
+              post_message(vscode, {
+                command: 'ACCEPT_COMMIT_MESSAGE',
+                commit_message: message
+              })
+              set_commit_message_to_review(undefined)
+            }}
+            on_cancel={() => set_commit_message_to_review(undefined)}
           />
         </div>
       )}

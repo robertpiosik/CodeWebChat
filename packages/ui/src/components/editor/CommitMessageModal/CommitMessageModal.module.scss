@@ -1,0 +1,34 @@
+.title {
+  text-align: center;
+  font-weight: 500;
+}
+
+.textarea {
+  width: 100%;
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border: 1px solid var(--vscode-input-border);
+  border-radius: var(--border-radius-2px);
+  padding: var(--padding-3px) var(--padding-6px);
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+
+  &:focus {
+    outline: 1px solid var(--vscode-focusBorder);
+    outline-offset: -1px;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

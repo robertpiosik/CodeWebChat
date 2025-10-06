@@ -29,17 +29,19 @@ export const ChatInitializedModal: React.FC<Props> = (props) => {
 
   return (
     <Modal>
-      <div className={styles.title}>{props.title}</div>
-      <div className={styles.progress}>
-        <div
-          className={styles.progress__fill}
-          style={{
-            width: is_filling ? '100%' : '0%',
-            transition: `width ${props.duration}ms linear`
-          }}
-        />
+      <div className={styles.container}>
+        <div className={styles.title}>{props.title}</div>
+        <div className={styles.progress}>
+          <div
+            className={styles.progress__fill}
+            style={{
+              width: is_filling ? '100%' : '0%',
+              transition: `width ${props.duration}ms linear`
+            }}
+          />
+        </div>
+        <Button on_click={props.on_close}>Close</Button>
       </div>
-      <Button on_click={props.on_close}>Close</Button>
     </Modal>
   )
 }

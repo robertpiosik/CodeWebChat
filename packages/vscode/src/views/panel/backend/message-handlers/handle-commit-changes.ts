@@ -1,7 +1,5 @@
 import * as vscode from 'vscode'
-import { execSync } from 'child_process'
 import { Logger } from '@shared/utils/logger'
-import { LAST_APPLIED_CHANGES_STATE_KEY } from '@/constants/state-keys'
 import {
   get_git_repository,
   prepare_staged_changes
@@ -20,7 +18,6 @@ export const handle_commit_changes = async (
   if (!repository) return
 
   try {
-    // Check configuration first before any git operations
     const api_config = await get_commit_message_config(provider.context)
     if (!api_config) return
 
@@ -31,37 +28,16 @@ export const handle_commit_changes = async (
       context: provider.context,
       repository,
       diff,
-      api_config, // Pass the already resolved config
+      api_config,
       view_provider: provider
     })
 
     if (!commit_message) return
 
-    provider.set_undo_button_state(false)
-
-    try {
-      execSync(`git commit -m "${commit_message.replace(/"/g, '\\"')}"`, {
-        cwd: repository.rootUri.fsPath
-      })
-
-      vscode.window.showInformationMessage(`New commit: ${commit_message}.`)
-
-      provider.context.workspaceState.update(
-        LAST_APPLIED_CHANGES_STATE_KEY,
-        null
-      )
-
-      await repository.status()
-    } catch (commit_error) {
-      Logger.error({
-        function_name: 'handle_commit_changes',
-        message: 'Error committing changes',
-        data: commit_error
-      })
-      vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_COMMIT_CHANGES
-      )
-    }
+    provider.send_message({
+      command: 'SHOW_COMMIT_MESSAGE_MODAL',
+      commit_message
+    })
   } catch (error) {
     Logger.error({
       function_name: 'handle_commit_changes',

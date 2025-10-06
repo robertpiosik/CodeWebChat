@@ -36,6 +36,12 @@
   }
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-12px);
+}
+
 @keyframes indeterminate-progress {
   from {
     left: -50px;

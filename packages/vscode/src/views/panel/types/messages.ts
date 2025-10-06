@@ -270,6 +270,11 @@ export interface CommitChangesMessage extends BaseMessage {
   command: 'COMMIT_CHANGES'
 }
 
+export interface AcceptCommitMessage extends BaseMessage {
+  command: 'ACCEPT_COMMIT_MESSAGE'
+  commit_message: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -322,6 +327,7 @@ export type FrontendMessage =
   | IntelligentUpdateFileInReviewMessage
   | UpdateLastUsedPresetMessage
   | CommitChangesMessage
+  | AcceptCommitMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -495,6 +501,11 @@ export interface UpdateFileInReviewMessage extends BaseMessage {
   file: FileInReview
 }
 
+export interface ShowCommitMessageModalMessage extends BaseMessage {
+  command: 'SHOW_COMMIT_MESSAGE_MODAL'
+  commit_message: string
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusChatInputMessage
@@ -528,3 +539,4 @@ export type BackendMessage =
   | HideProgressMessage
   | ShowChatInitializedMessage
   | UpdateFileInReviewMessage
+  | ShowCommitMessageModalMessage

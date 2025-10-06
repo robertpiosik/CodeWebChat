@@ -2,6 +2,12 @@
   text-align: center;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-12px);
+}
+
 .progress {
   width: 100%;
   height: 2px;
