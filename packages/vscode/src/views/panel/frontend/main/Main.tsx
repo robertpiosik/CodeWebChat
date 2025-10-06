@@ -527,6 +527,12 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_commit_click = () => {
+    post_message(props.vscode, {
+      command: 'COMMIT_CHANGES'
+    })
+  }
+
   const instructions =
     current_mode == 'ask'
       ? props.ask_instructions
@@ -593,6 +599,7 @@ export const Main: React.FC<Props> = (props) => {
       presets={presets_for_current_mode}
       on_create_preset={handle_create_preset}
       on_quick_action_click={handle_quick_action_click}
+      on_commit_click={handle_commit_click}
       has_active_editor={props.has_active_editor}
       has_active_selection={props.has_active_selection}
       has_changes_to_commit={has_changes_to_commit}
@@ -631,6 +638,7 @@ export const Main: React.FC<Props> = (props) => {
       on_code_completion_with_quick_pick_click={
         handle_code_completion_with_quick_pick_click
       }
+      on_commit_click={handle_commit_click}
       caret_position_to_set={caret_position_to_set}
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
       chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}

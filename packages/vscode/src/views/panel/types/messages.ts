@@ -266,6 +266,10 @@ export interface IntelligentUpdateFileInReviewMessage extends BaseMessage {
   workspace_name?: string
 }
 
+export interface CommitChangesMessage extends BaseMessage {
+  command: 'COMMIT_CHANGES'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -317,6 +321,7 @@ export type FrontendMessage =
   | RequestGitStateMessage
   | IntelligentUpdateFileInReviewMessage
   | UpdateLastUsedPresetMessage
+  | CommitChangesMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

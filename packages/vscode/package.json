@@ -238,11 +238,6 @@
         "icon": "$(sparkle)"
       },
       {
-        "command": "codeWebChat.commitChanges",
-        "title": "Commit Changes",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.referenceInChat",
         "title": "Reference in Chat",
         "category": "Code Web Chat"
@@ -338,10 +333,6 @@
         },
         {
           "command": "codeWebChat.copyContextOpenEditors",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.commitChanges",
           "when": "false"
         },
         {

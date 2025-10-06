@@ -35,6 +35,7 @@ type Props = {
   on_at_sign_click: () => void
   on_curly_braces_click: () => void
   on_quick_action_click: (command: string) => void
+  on_commit_click: () => void
   is_connected: boolean
   presets: Preset[]
   configurations: ApiToolConfiguration[]
@@ -208,7 +209,7 @@ export const MainView: React.FC<Props> = (props) => {
     if (!props.has_changes_to_commit) return
 
     set_is_commit_disabled_temporarily(true)
-    props.on_quick_action_click('codeWebChat.commitChanges')
+    props.on_commit_click()
 
     setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
   }
