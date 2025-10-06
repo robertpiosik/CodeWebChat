@@ -55,7 +55,7 @@ Once the response is generated, markdown code blocks with suggested edits in a _
 > [!TIP]
 > Each edit format has pros and cons. With the most capable models **(Claude Sonnet, Gemini Pro, GPT-5, etc.)**, it's best to almost always request _diffs_. With weaker models **(Gemini Flash, GPT-5-mini, etc.)**, use _diffs_ for simple changes and _whole_ for complex ones. Use _truncated_ when a model have difficulties with _diffs_ and you don't want to pay the price of _whole_ generations, though a call to the Intelligent Update API tool will be required for integration - great when mixing a strong model for code generation and a weak model for integration.
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
+## Chatbot initialization
 
 Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) Connector in your browser and never copy & paste again.
 
@@ -91,7 +91,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 > [!IMPORTANT]
 > The tool does not require the browser extension to operate—chats can be initialized and responses applied with manual copy & paste. The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button present under responses; these are applied based on the copied markdown text.
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">API Tools</span>
+## API Tools
 
 Anything CWC can do in chatbots, it can do calling model providers directly from the editor.
 
@@ -110,7 +110,7 @@ Integrate truncated code blocks and fix malformed diffs.
 **🛠️ Commit Messages** \
 Generate meaningful summaries of changes adhering to your style.
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Commands</span>
+## Commands
 
 ### Handling chat responses
 
@@ -125,14 +125,14 @@ Generate meaningful summaries of changes adhering to your style.
 - `Code Web Chat: Code Completion with Instructions` - ...with instructions.
 - `Code Web Chat: Code Completion with Instructions using...` - ...with instructions and configuration selection.
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Enterprise security</span>
+## Enterprise security
 
 **The tool operates exclusively on your machine.** All your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. Model providers for API tools are called directly.
 
 > [!IMPORTANT]
 > Code Web Chat **does not** collect telemetry.
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Community</span>
+## Community
 
 If you have a question, or want to help others, you're always welcome in our community.
 
@@ -140,7 +140,7 @@ If you have a question, or want to help others, you're always welcome in our com
 - [Reddit](https://www.reddit.com/r/CodeWebChat)
 - [Discussions](https://github.com/robertpiosik/CodeWebChat/discussions)
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Donations</span>
+## Donations
 
 If you enjoy using Code Web Chat, [buying a $3 coffee](https://buymeacoffee.com/robertpiosik) is a great way to show your support for the project.
 
@@ -150,7 +150,7 @@ If you enjoy using Code Web Chat, [buying a $3 coffee](https://buymeacoffee.com/
 
 **XMR:** 84whVjApZJtSeRb2eEbZ1pJ7yuBoGoWHGA4JuiFvdXVBXnaRYyQ3S4kTEuzgKjpxyr3nxn1XHt9yWTRqZ3XGfY35L4yDm6R
 
-## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Contributing</span>
+## Contributing
 
 All contributions are welcome. Feel free to submit pull requests, feature requests and bug reports.
 
