@@ -20,7 +20,6 @@ import {
   delete_command,
   save_context_command,
   undo_command,
-  generate_commit_message_command,
   reference_in_chat_command,
   apply_code_block_to_active_editor_command,
   open_url_command,
@@ -98,7 +97,6 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
-    generate_commit_message_command(context),
     open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'

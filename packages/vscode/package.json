@@ -232,12 +232,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.generateCommitMessage",
-        "title": "Generate Commit Message with CWC",
-        "category": "Code Web Chat",
-        "icon": "$(sparkle)"
-      },
-      {
         "command": "codeWebChat.referenceInChat",
         "title": "Reference in Chat",
         "category": "Code Web Chat"
@@ -313,10 +307,6 @@
         },
         {
           "command": "codeWebChat.saveContext",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.generateCommitMessage",
           "when": "false"
         },
         {
@@ -471,13 +461,6 @@
           "command": "codeWebChat.referenceInChat",
           "when": "view == codeWebChatViewWorkspace",
           "group": "1_modification@3"
-        }
-      ],
-      "scm/title": [
-        {
-          "command": "codeWebChat.generateCommitMessage",
-          "group": "navigation",
-          "when": "scmProvider == git"
         }
       ]
     },

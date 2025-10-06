@@ -5,11 +5,11 @@ import {
   prepare_staged_changes
 } from '@/utils/git-repository-utils'
 import { dictionary } from '@shared/constants/dictionary'
+import { ViewProvider } from '../../view-provider'
 import {
   generate_commit_message_from_diff,
   get_commit_message_config
-} from '@/utils/commit-message-generator'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+} from './utils'
 
 export const handle_commit_changes = async (
   provider: ViewProvider
