@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import * as os from 'os'
 import { dictionary } from '@shared/constants/dictionary'
+import * as crypto from 'crypto'
 import { createTwoFilesPatch } from 'diff'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
@@ -119,9 +120,11 @@ const prepare_files_from_original_states = async (params: {
       continue
     }
 
-    const ext = path.extname(sanitized_file_path)
-    const base = path.basename(sanitized_file_path, ext)
-    const temp_filename = `${base}.tmp`
+    const hash = crypto
+      .createHash('md5')
+      .update(sanitized_file_path)
+      .digest('hex')
+    const temp_filename = `${hash}.tmp`
     const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
     const diff_stats = get_diff_stats({
@@ -129,7 +132,7 @@ const prepare_files_from_original_states = async (params: {
       new_content: current_content
     })
     const is_deleted =
-      !state.is_new && current_content === '' && state.content !== ''
+      !state.is_new && current_content == '' && state.content != ''
 
     const reviewable_file: ReviewableFile = {
       file_path: state.file_path,
@@ -163,12 +166,11 @@ const prepare_files_from_original_states = async (params: {
 
       const restored_current_content = '' // Deleted
 
-      const restored_ext = path.extname(restored_sanitized_file_path)
-      const restored_base = path.basename(
-        restored_sanitized_file_path,
-        restored_ext
-      )
-      const restored_temp_filename = `${restored_base}.${Date.now()}`
+      const restored_hash = crypto
+        .createHash('md5')
+        .update(restored_sanitized_file_path)
+        .digest('hex')
+      const restored_temp_filename = `${restored_hash}.tmp`
       const restored_temp_file_path = path.join(
         os.tmpdir(),
         restored_temp_filename

@@ -99,28 +99,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
 
-  public get_presets_config_key(): string {
-    const mode =
-      this.home_view_type == HOME_VIEW_TYPES.API ? this.api_mode : this.web_mode
-    switch (mode) {
-      case 'ask':
-        return 'chatPresetsForAskAboutContext'
-      case 'edit-context':
-        return 'chatPresetsForEditContext'
-      case 'code-completions':
-        return 'chatPresetsForCodeAtCursor'
-      case 'no-context':
-        return 'chatPresetsForNoContext'
-    }
-  }
-
-  public cancel_all_intelligent_updates() {
-    this.intelligent_update_cancel_token_sources.forEach((source) =>
-      source.cancel('Review finished.')
-    )
-    this.intelligent_update_cancel_token_sources = []
-  }
-
   constructor(
     public readonly extension_uri: vscode.Uri,
     public readonly workspace_provider: WorkspaceProvider,
@@ -288,6 +266,28 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         }
       }
     })
+  }
+
+  public get_presets_config_key(): string {
+    const mode =
+      this.home_view_type == HOME_VIEW_TYPES.API ? this.api_mode : this.web_mode
+    switch (mode) {
+      case 'ask':
+        return 'chatPresetsForAskAboutContext'
+      case 'edit-context':
+        return 'chatPresetsForEditContext'
+      case 'code-completions':
+        return 'chatPresetsForCodeAtCursor'
+      case 'no-context':
+        return 'chatPresetsForNoContext'
+    }
+  }
+
+  public cancel_all_intelligent_updates() {
+    this.intelligent_update_cancel_token_sources.forEach((source) =>
+      source.cancel('Review finished.')
+    )
+    this.intelligent_update_cancel_token_sources = []
   }
 
   private async _check_clipboard_for_apply() {
