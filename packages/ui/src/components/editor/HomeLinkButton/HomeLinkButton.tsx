@@ -7,7 +7,8 @@ export type HomeLinkButtonProps = {
   fill_color: string
   logo_icon: Icon.Variant
   text_icon: Icon.Variant
-  title?: string
+  label: string
+  title: string
 }
 
 export const HomeLinkButton: React.FC<HomeLinkButtonProps> = (props) => {
@@ -28,7 +29,10 @@ export const HomeLinkButton: React.FC<HomeLinkButtonProps> = (props) => {
 
         <Icon variant={props.text_icon} />
       </div>
-      <span className="codicon codicon-link-external" />
+      <div className={styles.right}>
+        <span>{props.label}</span>
+        <span className="codicon codicon-link-external" />
+      </div>
     </a>
   )
 }

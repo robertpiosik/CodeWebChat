@@ -53,7 +53,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 Once the response is generated, markdown code blocks with suggested edits in a _whole_, _truncated_ or _diff_ edit format can be applied in a safe, fully revertible way.
 
 > [!TIP]
-> Each edit format has pros and cons. With the most capable models **(Claude Sonnet, Gemini Pro, GPT-5, etc.)**, it's best to request _diffs_, which are demanding for correct formatting but are fast to generate. With weaker models **(Gemini Flash, GPT-5-mini, etc.)**, stick to _whole_ edit format. Use _truncated_ when a model have difficulties with _diffs_ and you don't want to pay the price of _whole_ generations. _Truncated_ code block needs API call to apply, though weaker models are sufficient.
+> Each edit format has pros and cons. With the most capable models **(Claude Sonnet, Gemini Pro, GPT-5, etc.)**, it's best to always request _diffs_. With weaker models **(Gemini Flash, GPT-5-mini, etc.)**, use _diffs_ for simpler changes and _whole_ for more complex ones. Use _truncated_ when a model have difficulties with _diffs_ and you don't want to pay the price of _whole_ generations, though a call to the Intelligent Update API tool will be required for integration - great when mixing a strong model for code generation and a weak model for integration.
 
 ## <span style="background-color: #fbb100; color: black; padding: 0.2em 0.6em; border-radius: 999px">Chatbot initialization</span>
 

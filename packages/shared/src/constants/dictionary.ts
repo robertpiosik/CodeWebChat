@@ -358,10 +358,8 @@ export const dictionary = {
     follow_x: 'Follow on X',
     join_reddit: 'Join subreddit',
     join_discord: 'Join Discord server',
-    documentation: 'Documentation'
-  },
-
-  code_web_chat_button: {
-    visit_website: 'Visit the website'
+    documentation: 'Documentation',
+    visit_website: 'Visit our website',
+    support_author: 'Support author with a donation'
   }
 }
