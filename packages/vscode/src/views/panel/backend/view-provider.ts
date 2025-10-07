@@ -50,7 +50,8 @@ import {
   handle_toggle_file_in_review,
   handle_intelligent_update_file_in_review,
   handle_commit_changes,
-  handle_accept_commit_message
+  handle_accept_commit_message,
+  handle_cancel_commit_message
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -100,6 +101,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public home_view_type: HomeViewType = HOME_VIEW_TYPES.WEB
   public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
+  public commit_was_staged_by_script: boolean = false
 
   constructor(
     public readonly extension_uri: vscode.Uri,
@@ -491,6 +493,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_commit_changes(this)
           } else if (message.command == 'ACCEPT_COMMIT_MESSAGE') {
             await handle_accept_commit_message(this, message.commit_message)
+          } else if (message.command == 'CANCEL_COMMIT_MESSAGE') {
+            await handle_cancel_commit_message(this)
           } else if (message.command == 'MANAGE_CONFIGURATIONS') {
             const section =
               message.api_mode == 'edit-context'

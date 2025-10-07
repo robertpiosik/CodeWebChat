@@ -499,7 +499,10 @@ export const View = () => {
               })
               set_commit_message_to_review(undefined)
             }}
-            on_cancel={() => set_commit_message_to_review(undefined)}
+            on_cancel={() => {
+              post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
+              set_commit_message_to_review(undefined)
+            }}
           />
         </div>
       )}

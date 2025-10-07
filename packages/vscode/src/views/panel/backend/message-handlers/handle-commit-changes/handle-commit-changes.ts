@@ -17,12 +17,21 @@ export const handle_commit_changes = async (
   const repository = get_git_repository()
   if (!repository) return
 
+  provider.commit_was_staged_by_script = false
+  const was_empty_stage = repository.state.indexChanges.length === 0
+
   try {
     const api_config = await get_commit_message_config(provider.context)
     if (!api_config) return
 
     const diff = await prepare_staged_changes(repository)
-    if (!diff) return
+    if (!diff) {
+      return
+    }
+
+    if (was_empty_stage && repository.state.indexChanges.length > 0) {
+      provider.commit_was_staged_by_script = true
+    }
 
     const commit_message = await generate_commit_message_from_diff({
       context: provider.context,
@@ -32,13 +41,23 @@ export const handle_commit_changes = async (
       view_provider: provider
     })
 
-    if (!commit_message) return
+    if (!commit_message) {
+      if (provider.commit_was_staged_by_script) {
+        await vscode.commands.executeCommand('git.unstageAll')
+      }
+      provider.commit_was_staged_by_script = false
+      return
+    }
 
     provider.send_message({
       command: 'SHOW_COMMIT_MESSAGE_MODAL',
       commit_message
     })
   } catch (error) {
+    if (provider.commit_was_staged_by_script) {
+      await vscode.commands.executeCommand('git.unstageAll')
+    }
+    provider.commit_was_staged_by_script = false
     Logger.error({
       function_name: 'handle_commit_changes',
       message: 'Error in commit changes command',
