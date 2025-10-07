@@ -136,6 +136,8 @@ export const create_file_if_needed = async (params: {
       message: 'File created',
       data: safe_path
     })
+    const document = await vscode.workspace.openTextDocument(safe_path)
+    await vscode.window.showTextDocument(document, { preview: false })
     return true
   } catch (error) {
     Logger.error({
@@ -326,10 +328,30 @@ export const undo_files = async (params: {
 
       if (state.is_new) {
         if (fs.existsSync(safe_path)) {
+          // Close any open editors for this file before deleting
           const uri = vscode.Uri.file(safe_path)
           const text_editors = vscode.window.visibleTextEditors.filter(
             (editor) => editor.document.uri.toString() === uri.toString()
           )
+
+          // Close all tabs for this file across all editor groups
+          const tabs_to_close: vscode.Tab[] = []
+          for (const tab_group of vscode.window.tabGroups.all) {
+            tabs_to_close.push(
+              ...tab_group.tabs.filter((tab) => {
+                const tab_uri = (tab.input as any)?.uri as
+                  | vscode.Uri
+                  | undefined
+                return tab_uri && tab_uri.fsPath === safe_path
+              })
+            )
+          }
+
+          if (tabs_to_close.length > 0) {
+            await vscode.window.tabGroups.close(tabs_to_close)
+          }
+
+          // Fallback: close active editor if it's still showing this file
           for (const editor of text_editors) {
             await vscode.window.showTextDocument(editor.document, {
               preview: false,
@@ -391,6 +413,8 @@ export const undo_files = async (params: {
               message: 'Recreated deleted file.',
               data: { file_path: state.file_path }
             })
+            const document = await vscode.workspace.openTextDocument(safe_path)
+            await vscode.window.showTextDocument(document, { preview: false })
           } catch (err) {
             Logger.warn({
               function_name: 'undo_files',

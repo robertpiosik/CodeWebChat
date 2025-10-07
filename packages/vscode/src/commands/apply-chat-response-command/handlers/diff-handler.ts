@@ -346,6 +346,9 @@ const handle_new_file_patch = async (
 
     await fs.promises.writeFile(safe_path, new_content, 'utf8')
 
+    const document = await vscode.workspace.openTextDocument(safe_path)
+    await vscode.window.showTextDocument(document, { preview: false })
+
     return { success: true, original_states }
   } catch (error: any) {
     Logger.error({

@@ -176,6 +176,8 @@ export const handle_fast_replace = async (
               message: 'New file created',
               data: safe_path
             })
+            const document = await vscode.workspace.openTextDocument(safe_path)
+            await vscode.window.showTextDocument(document, { preview: false })
           } catch (error) {
             Logger.error({
               function_name: 'handle_fast_replace',
