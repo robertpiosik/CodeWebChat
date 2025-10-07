@@ -30,7 +30,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
           value={message}
           onChange={(e) => set_message(e.target.value)}
           minRows={2}
-          maxRows={4}
+          maxRows={Infinity}
           autoFocus
           onKeyDown={(e) => {
             if (e.key == 'Enter' && (e.metaKey || e.ctrlKey)) {
