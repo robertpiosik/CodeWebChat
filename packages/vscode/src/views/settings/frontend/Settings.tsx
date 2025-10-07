@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Layout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
-import { ModelProvidersPage } from './pages/ModelProvidersPage'
-import { ApiToolConfigurationPage } from './pages/ApiToolConfigurationPage'
+import { ModelProvidersSection } from './sections/ModelProvidersSection'
+import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
 import { use_settings_data } from './hooks/use-settings-data'
 import { dictionary } from '@shared/constants/dictionary'
 import { post_message } from './utils/post_message'
@@ -122,7 +122,6 @@ export const Settings = () => {
   return (
     <div style={{ height: '100vh' }}>
       <Layout
-        ref={scroll_container_ref}
         title={dictionary.settings.SETTINGS_TITLE}
         sidebar={
           <>
@@ -139,14 +138,14 @@ export const Settings = () => {
           </>
         }
       >
-        <ModelProvidersPage
+        <ModelProvidersSection
           ref={(el) => (section_refs.current['model-providers'] = el)}
           id="model-providers"
           vscode={vscode}
           providers={settings_data_hook.providers}
           set_providers={settings_data_hook.set_providers}
         />
-        <ApiToolConfigurationPage
+        <ApiToolConfigurationSection
           ref={(el) => (section_refs.current['code-completions'] = el)}
           id="code-completions"
           vscode={vscode}
@@ -157,7 +156,7 @@ export const Settings = () => {
           tool_name="CODE_COMPLETIONS"
           can_have_default={true}
         />
-        <ApiToolConfigurationPage
+        <ApiToolConfigurationSection
           ref={(el) => (section_refs.current['edit-context'] = el)}
           id="edit-context"
           vscode={vscode}
@@ -168,7 +167,7 @@ export const Settings = () => {
           tool_name="EDIT_CONTEXT"
           can_have_default={false}
         />
-        <ApiToolConfigurationPage
+        <ApiToolConfigurationSection
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           id="intelligent-update"
           vscode={vscode}
@@ -179,7 +178,7 @@ export const Settings = () => {
           tool_name="INTELLIGENT_UPDATE"
           can_have_default={true}
         />
-        <ApiToolConfigurationPage
+        <ApiToolConfigurationSection
           ref={(el) => (section_refs.current['commit-messages'] = el)}
           id="commit-messages"
           vscode={vscode}

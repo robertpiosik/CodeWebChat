@@ -1,21 +1,21 @@
 import { ProviderForClient } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
 import { ModelProviders } from '@ui/components/editor/settings/ModelProviders'
-import { Page } from '@ui/components/editor/settings/Page'
+import { Section } from '@ui/components/editor/settings/Section'
 import { forwardRef } from 'react'
 
-type ModelProvidersPageProps = {
+type ModelProvidersSectionProps = {
   id: string
   vscode: any
   providers: ProviderForClient[] | undefined
   set_providers: (providers: ProviderForClient[]) => void
 }
-export const ModelProvidersPage = forwardRef<
+export const ModelProvidersSection = forwardRef<
   HTMLDivElement,
-  ModelProvidersPageProps
+  ModelProvidersSectionProps
 >((props, ref) => {
   return (
-    <Page
+    <Section
       id={props.id}
       ref={ref}
       title="Model Providers"
@@ -54,7 +54,7 @@ export const ModelProvidersPage = forwardRef<
           }}
         />
       )}
-    </Page>
+    </Section>
   )
 })
-ModelProvidersPage.displayName = 'ModelProvidersPage'
+ModelProvidersSection.displayName = 'ModelProvidersSection'

@@ -2,7 +2,7 @@ import { ConfigurationForClient } from '@/views/settings/types/messages'
 import { FrontendMessage } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
 import { ConfigurationsList } from '@ui/components/editor/settings/ConfigurationsList'
-import { Page } from '@ui/components/editor/settings/Page'
+import { Section } from '@ui/components/editor/settings/Section'
 import { forwardRef } from 'react'
 
 type ToolName =
@@ -11,7 +11,7 @@ type ToolName =
   | 'EDIT_CONTEXT'
   | 'INTELLIGENT_UPDATE'
 
-type ToolConfigurationsPageProps = {
+type ToolConfigurationsSectionProps = {
   id: string
   vscode: any
   title: string
@@ -22,9 +22,9 @@ type ToolConfigurationsPageProps = {
   set_configurations: (configurations: ConfigurationForClient[]) => void
 }
 
-export const ApiToolConfigurationPage = forwardRef<
+export const ApiToolConfigurationSection = forwardRef<
   HTMLDivElement,
-  ToolConfigurationsPageProps
+  ToolConfigurationsSectionProps
 >((props, ref) => {
   const { configurations, set_configurations } = props
 
@@ -53,7 +53,12 @@ export const ApiToolConfigurationPage = forwardRef<
     : undefined
 
   return (
-    <Page id={props.id} ref={ref} title={props.title} subtitle={props.subtitle}>
+    <Section
+      id={props.id}
+      ref={ref}
+      title={props.title}
+      subtitle={props.subtitle}
+    >
       {configurations && (
         <ConfigurationsList
           configurations={configurations}
@@ -85,7 +90,7 @@ export const ApiToolConfigurationPage = forwardRef<
           on_unset_default={handle_unset_default}
         />
       )}
-    </Page>
+    </Section>
   )
 })
-ApiToolConfigurationPage.displayName = 'ApiToolConfigurationPage'
+ApiToolConfigurationSection.displayName = 'ApiToolConfigurationSection'

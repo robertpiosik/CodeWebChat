@@ -1,4 +1,4 @@
-import styles from './Page.module.scss'
+import styles from './Section.module.scss'
 import { forwardRef } from 'react'
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
   children: React.ReactNode
 }
 
-export const Page = forwardRef<HTMLDivElement, Props>(
+export const Section = forwardRef<HTMLDivElement, Props>(
   ({ id, title, subtitle, children }, ref) => {
     return (
       <div id={id} ref={ref} className={styles.container}>
@@ -19,4 +19,4 @@ export const Page = forwardRef<HTMLDivElement, Props>(
     )
   }
 )
-Page.displayName = 'Page'
+Section.displayName = 'Section'

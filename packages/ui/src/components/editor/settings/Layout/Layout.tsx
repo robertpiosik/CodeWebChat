@@ -1,5 +1,4 @@
 import styles from './Layout.module.scss'
-import { forwardRef } from 'react'
 
 type Props = {
   title: string
@@ -7,17 +6,16 @@ type Props = {
   children: React.ReactNode
 }
 
-export const Layout = forwardRef<HTMLDivElement, Props>((props, ref) => {
+export const Layout: React.FC<Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <div className={styles.sidebar__title}>{props.title}</div>
         <div className={styles.sidebar__navigation}>{props.sidebar}</div>
       </div>
-      <div className={styles.content} ref={ref}>
+      <div className={styles.content}>
         <div className={styles.content__inner}>{props.children}</div>
       </div>
     </div>
   )
-})
-Layout.displayName = 'Layout'
+}
