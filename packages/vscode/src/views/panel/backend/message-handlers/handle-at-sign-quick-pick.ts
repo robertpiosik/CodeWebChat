@@ -1,5 +1,5 @@
 import { ViewProvider } from '@/views/panel/backend/view-provider'
-import { at_sign_quick_pick } from '@/utils/at-sign-quick-pick'
+import { at_sign_quick_pick } from '@/views/panel/backend/utils/at-sign-quick-pick'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import * as vscode from 'vscode'
 
@@ -10,7 +10,9 @@ export const handle_at_sign_quick_pick = async (
 ): Promise<void> => {
   const replacement = await at_sign_quick_pick({
     context,
-    is_for_code_completions
+    is_for_code_completions,
+    workspace_provider: provider.workspace_provider,
+    allow_reference_context_item: true
   })
 
   if (!replacement) {
