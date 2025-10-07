@@ -172,32 +172,41 @@ async function close_files_in_all_editor_groups(
   workspace_path: string
 ): Promise<vscode.Uri[]> {
   const closed_files: vscode.Uri[] = []
+  const files_to_close = new Set<string>()
 
   for (const file_path of file_paths) {
     const safe_path = create_safe_path(workspace_path, file_path)
-    if (!safe_path) {
-      continue
-    }
-
-    const uri = vscode.Uri.file(safe_path)
-
-    for (const editor of vscode.window.visibleTextEditors) {
-      if (editor.document.uri.fsPath == uri.fsPath) {
-        if (editor.document.isDirty) {
-          await editor.document.save()
-        }
-
-        closed_files.push(editor.document.uri)
-
-        await vscode.window.showTextDocument(editor.document, { preview: true })
-        await vscode.commands.executeCommand(
-          'workbench.action.closeActiveEditor'
-        )
-      }
+    if (safe_path) {
+      files_to_close.add(safe_path)
     }
   }
 
-  return closed_files
+  const tabs_to_close: vscode.Tab[] = []
+  for (const tab_group of vscode.window.tabGroups.all) {
+    tabs_to_close.push(
+      ...tab_group.tabs.filter((tab) => {
+        const uri = (tab.input as any)?.uri as vscode.Uri | undefined
+        return uri && files_to_close.has(uri.fsPath)
+      })
+    )
+  }
+
+  for (const tab of tabs_to_close) {
+    const uri = (tab.input as any).uri
+    if (tab.isDirty) {
+      const document = vscode.workspace.textDocuments.find(
+        (doc) => doc.uri.fsPath == uri.fsPath
+      )
+      if (document) await document.save()
+    }
+    closed_files.push(uri)
+  }
+
+  if (tabs_to_close.length > 0) {
+    await vscode.window.tabGroups.close(tabs_to_close)
+  }
+
+  return [...new Map(closed_files.map((item) => [item.fsPath, item])).values()]
 }
 
 // Reopens files that were closed before patch application
