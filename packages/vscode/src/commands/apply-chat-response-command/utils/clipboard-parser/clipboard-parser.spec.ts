@@ -121,6 +121,33 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('should parse html comment filename outside of code block', () => {
+      const text = load_test_case_file(
+        'html-comment-filename-outside-code-block',
+        'html-comment-filename-outside-code-block.txt'
+      )
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0].file_path).toBe('src/hello-world.html')
+      expect(result[0].content).toBe(
+        load_test_case_file(
+          'html-comment-filename-outside-code-block',
+          'file-1.txt'
+        )
+      )
+      expect(result[1].file_path).toBe('src/lorem.css')
+      expect(result[1].content).toBe(
+        load_test_case_file(
+          'html-comment-filename-outside-code-block',
+          'file-2.txt'
+        )
+      )
+    })
+
     it('should handle workspace prefixes', () => {
       const text = load_test_case_file(
         'with-workspace-prefix',

@@ -181,6 +181,7 @@ export const parse_multiple_files = (params: {
   let top_level_xml_file_mode = false
   let in_cdata = false
   let backtick_nesting_level = 0
+  let last_seen_file_path_comment: string | null = null
 
   const lines = params.response.split('\n')
 
@@ -193,6 +194,18 @@ export const parse_multiple_files = (params: {
         backtick_nesting_level = 1
         current_workspace_name = undefined
         current_file_name = ''
+        if (last_seen_file_path_comment) {
+          const { workspace_name, relative_path } = extract_workspace_and_path({
+            raw_file_path: last_seen_file_path_comment,
+            is_single_root_folder_workspace:
+              params.is_single_root_folder_workspace
+          })
+          current_file_name = relative_path
+          if (workspace_name) {
+            current_workspace_name = workspace_name
+          }
+        }
+        last_seen_file_path_comment = null
         current_content = ''
         is_first_content_line = true
         xml_file_mode = false
@@ -214,8 +227,26 @@ export const parse_multiple_files = (params: {
             current_workspace_name = workspace_name
           }
           current_content = ''
+          last_seen_file_path_comment = null
           continue
         }
+      }
+      const trimmed_line = line.trim()
+      const is_comment =
+        trimmed_line.startsWith('//') ||
+        trimmed_line.startsWith('#') ||
+        trimmed_line.startsWith('/*') ||
+        trimmed_line.startsWith('*') ||
+        trimmed_line.startsWith('--') ||
+        trimmed_line.startsWith('<!--')
+
+      if (is_comment) {
+        const extracted_filename = extract_path_from_line_of_code(line)
+        if (extracted_filename) {
+          last_seen_file_path_comment = extracted_filename
+        }
+      } else if (trimmed_line !== '') {
+        last_seen_file_path_comment = null
       }
     } else if (state == 'CONTENT') {
       if (top_level_xml_file_mode) {

@@ -1,0 +1,14 @@
+Lorem ipsum. This text should be ignored.
+
+<!-- src/hello-world.html -->
+```html
+<!DOCTYPE html>
+<p>Hello world</p>
+```
+
+This is another part of the response that should be ignored.
+
+<!-- src/lorem.css -->
+```css
+.ipsum {}
+```
