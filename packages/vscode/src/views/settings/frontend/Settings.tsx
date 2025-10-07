@@ -79,33 +79,44 @@ export const Settings = () => {
   useEffect(() => {
     if (!all_data_loaded) return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (is_scrolling_from_click.current) return
+    const handle_scroll = () => {
+      if (is_scrolling_from_click.current) return
 
-        const intersecting_entries = entries.filter((e) => e.isIntersecting)
-        if (intersecting_entries.length > 0) {
-          intersecting_entries.sort(
-            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
-          )
-          set_active_item(intersecting_entries[0].target.id as NavItem)
+      const THRESHOLD = 200 // 200px from top of viewport
+      let closest_section: NavItem | null = null
+      let closest_distance = Infinity
+
+      NAV_ITEMS_CONFIG.forEach(({ id }) => {
+        const element = section_refs.current[id]
+        if (element) {
+          const rect = element.getBoundingClientRect()
+          const distance_from_threshold = Math.abs(rect.top - THRESHOLD)
+
+          // Check if top edge is within 200px from top and is closest
+          if (
+            rect.top <= THRESHOLD &&
+            rect.top >= 0 &&
+            distance_from_threshold < closest_distance
+          ) {
+            closest_section = id
+            closest_distance = distance_from_threshold
+          }
         }
-      },
-      {
-        root: scroll_container_ref.current,
-        rootMargin: '-33% 0px -67% 0px',
-        threshold: 0
-      }
-    )
+      })
 
-    Object.values(section_refs.current).forEach((ref) => {
-      if (ref) observer.observe(ref)
-    })
+      if (closest_section) {
+        set_active_item(closest_section)
+      }
+    }
+
+    const container = scroll_container_ref.current
+    if (container) {
+      container.addEventListener('scroll', handle_scroll)
+      handle_scroll() // Check initial position
+    }
 
     return () => {
-      Object.values(section_refs.current).forEach((ref) => {
-        if (ref) observer.unobserve(ref)
-      })
+      container?.removeEventListener('scroll', handle_scroll)
     }
   }, [all_data_loaded])
 
@@ -122,6 +133,7 @@ export const Settings = () => {
   return (
     <div style={{ height: '100vh' }}>
       <Layout
+        ref={scroll_container_ref}
         title={dictionary.settings.SETTINGS_TITLE}
         sidebar={
           <>
