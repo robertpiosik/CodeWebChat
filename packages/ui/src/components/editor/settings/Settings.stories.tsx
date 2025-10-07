@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Layout } from './Layout'
 import { NavigationItem } from './NavigationItem'
-import { Page } from './Page'
+import { Section } from './Section'
 import { ModelProviders } from './ModelProviders'
 import { ConfigurationsList } from './ConfigurationsList'
 import type { Meta, StoryObj } from '@storybook/react'
@@ -126,7 +126,6 @@ const StoryComponent = () => {
       }}
     >
       <Layout
-        ref={scrollContainerRef}
         title="Settings"
         sidebar={
           <>
@@ -143,7 +142,7 @@ const StoryComponent = () => {
           </>
         }
       >
-        <Page
+        <Section
           ref={(el) => (sectionRefs.current['model-providers'] = el)}
           id="model-providers"
           title="Model Providers"
@@ -159,8 +158,8 @@ const StoryComponent = () => {
               console.log('Change API key for', name)
             }
           />
-        </Page>
-        <Page
+        </Section>
+        <Section
           ref={(el) => (sectionRefs.current['code-completions'] = el)}
           id="code-completions"
           title="Code Completions"
@@ -183,8 +182,8 @@ const StoryComponent = () => {
               )
             }}
           />
-        </Page>
-        <Page
+        </Section>
+        <Section
           ref={(el) => (sectionRefs.current['edit-context'] = el)}
           id="edit-context"
           title="Edit Context"
@@ -197,8 +196,8 @@ const StoryComponent = () => {
             on_edit={(id) => console.log('Edit edit context config', id)}
             on_reorder={setEditContext}
           />
-        </Page>
-        <Page
+        </Section>
+        <Section
           ref={(el) => (sectionRefs.current['intelligent-update'] = el)}
           id="intelligent-update"
           title="Intelligent Update"
@@ -214,8 +213,8 @@ const StoryComponent = () => {
           >
             This is a placeholder section.
           </div>
-        </Page>
-        <Page
+        </Section>
+        <Section
           ref={(el) => (sectionRefs.current['commit-messages'] = el)}
           id="commit-messages"
           title="Commit Messages"
@@ -231,7 +230,7 @@ const StoryComponent = () => {
           >
             This is a placeholder section.
           </div>
-        </Page>
+        </Section>
       </Layout>
     </div>
   )
