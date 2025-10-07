@@ -6,6 +6,7 @@ import { SAVED_CONTEXTS_STATE_KEY } from '../../../../constants/state-keys'
 import { SavedContext } from '../../../../types/context'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import { natural_sort } from '@/utils/natural-sort'
 
 export async function at_sign_quick_pick(params: {
   context: vscode.ExtensionContext
@@ -21,17 +22,17 @@ export async function at_sign_quick_pick(params: {
     {
       label: '#Selection',
       description:
-        'Places symbol that is replaced by text selection of the active editor'
+        'Places symbol that is then replaced by text selection from the active editor'
     },
     {
       label: '#Changes',
       description:
-        'Places symbol that is replaced by diff between the current branch and the selected branch'
+        'Places symbol that is then replaced by a diff of changes between the selected branch'
     },
     {
       label: '#SavedContext',
       description:
-        'Places symbol that is replaced by files from a saved context'
+        'Places symbol that is then replaced by files from a saved context'
     }
   ]
 
@@ -61,9 +62,7 @@ export async function at_sign_quick_pick(params: {
     if (selected.label == 'Reference path from context') {
       const checked_paths = params.workspace_provider.get_all_checked_paths()
       if (checked_paths.length == 0) {
-        vscode.window.showInformationMessage(
-          'No files or folders are selected in context.'
-        )
+        vscode.window.showInformationMessage('Nothing is selected in context.')
         return
       }
 
@@ -83,10 +82,12 @@ export async function at_sign_quick_pick(params: {
         return { label: relative_path.replace(/\\/g, '/') }
       })
 
+      quick_pick_items.sort((a, b) => natural_sort(a.label, b.label))
+
       const selected_path_item = await vscode.window.showQuickPick(
         quick_pick_items,
         {
-          placeHolder: 'Select a file or folder to reference'
+          placeHolder: 'Select a path to place in the input field'
         }
       )
 
