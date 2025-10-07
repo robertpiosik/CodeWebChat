@@ -273,6 +273,7 @@ const main = async () => {
     client_id: number
     without_submission?: boolean
     raw_instructions?: string
+    edit_format?: string
     mode?: 'ask' | 'edit-context' | 'code-completions' | 'no-context'
   }
 
@@ -311,7 +312,8 @@ const main = async () => {
   ) {
     chatbot.inject_apply_response_button(
       stored_data.client_id,
-      stored_data.raw_instructions
+      stored_data.raw_instructions,
+      stored_data.edit_format
     )
   }
 }

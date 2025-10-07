@@ -14,6 +14,7 @@ import { show_response_ready_notification } from './show-response-ready-notifica
 export function add_apply_response_button(params: {
   client_id: number
   raw_instructions?: string
+  edit_format?: string
   footer: Element
   get_chat_turn: (footer: Element) => HTMLElement | null
   get_code_blocks: (chat_turn: HTMLElement) => NodeListOf<Element>
@@ -51,7 +52,8 @@ export function add_apply_response_button(params: {
     browser.runtime.sendMessage<Message>({
       action: 'apply-chat-response',
       client_id: params.client_id,
-      raw_instructions: params.raw_instructions
+      raw_instructions: params.raw_instructions,
+      edit_format: params.edit_format
     })
   })
 

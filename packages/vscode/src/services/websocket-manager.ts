@@ -176,7 +176,8 @@ export class WebSocketManager {
           )
         } else if (message.action == 'apply-chat-response') {
           vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-            raw_instructions: message.raw_instructions
+            raw_instructions: message.raw_instructions,
+            edit_format: message.edit_format
           })
         } else if (message.action == 'ping') {
           if (message.vscode_extension_version) {
@@ -264,6 +265,7 @@ export class WebSocketManager {
       text: string
       preset_name: string
       raw_instructions?: string
+      edit_format?: string
       mode: any
     }>
     presets_config_key: string
@@ -311,6 +313,7 @@ export class WebSocketManager {
         client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
         without_submission: params.without_submission,
         raw_instructions: chat.raw_instructions,
+        edit_format: chat.edit_format,
         mode: chat.mode
       }
 

@@ -209,7 +209,11 @@ export const handle_send_prompt = async (params: {
             : pre_context_instructions,
           preset_name,
           raw_instructions: current_instructions,
-          mode: params.provider.web_mode
+          mode: params.provider.web_mode,
+          edit_format:
+            params.provider.web_mode === 'edit-context'
+              ? params.provider.chat_edit_format
+              : undefined
         }
       })
     )

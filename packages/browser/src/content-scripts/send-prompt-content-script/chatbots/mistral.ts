@@ -80,12 +80,14 @@ export const mistral: Chatbot = {
   },
   inject_apply_response_button: (
     client_id: number,
-    raw_instructions?: string
+    raw_instructions?: string,
+    edit_format?: string
   ) => {
     const add_buttons = (footer: Element) => {
       add_apply_response_button({
         client_id,
         raw_instructions,
+        edit_format,
         footer,
         get_chat_turn: (f) =>
           f.parentElement?.parentElement?.querySelector(

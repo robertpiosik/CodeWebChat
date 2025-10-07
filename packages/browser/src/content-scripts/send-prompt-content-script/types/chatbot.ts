@@ -9,7 +9,8 @@ export type Chatbot = {
   enter_system_instructions?: (instructions?: string) => Promise<void>
   inject_apply_response_button?: (
     client_id: number,
-    raw_instructions?: string
+    raw_instructions?: string,
+    edit_format?: string
   ) => void
   enter_message_and_send?: (params: {
     message: string

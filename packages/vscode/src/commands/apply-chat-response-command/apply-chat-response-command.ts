@@ -361,6 +361,7 @@ export const apply_chat_response_command = (
     async (args?: {
       response?: string
       raw_instructions?: string
+      edit_format?: string
       suppress_fast_replace_inaccuracies_dialog?: boolean
       original_editor_state?: {
         file_path: string
@@ -372,6 +373,14 @@ export const apply_chat_response_command = (
           function_name: 'apply_chat_response_command',
           message: 'Received raw instructions',
           data: { raw_instructions: args.raw_instructions }
+        })
+      }
+
+      if (args?.edit_format) {
+        Logger.info({
+          function_name: 'apply_chat_response_command',
+          message: 'Received edit format',
+          data: { edit_format: args.edit_format }
         })
       }
 

@@ -100,7 +100,7 @@ const process_next_chat = async () => {
       without_submission: current_queue_item.message.without_submission,
       raw_instructions: current_queue_item.message.raw_instructions,
       mode: current_queue_item.message.mode
-    },
+    }
   })
 
   // OpenRouter is a special case, in model handling via search params
@@ -183,6 +183,7 @@ const handle_initialize_chat_message = async (
     client_id: message.client_id,
     without_submission: message.without_submission,
     raw_instructions: message.raw_instructions,
+    edit_format: message.edit_format,
     mode: message.mode
   }
 
@@ -253,7 +254,8 @@ export const setup_message_listeners = () => {
           send_message_to_server({
             action: 'apply-chat-response',
             client_id: message.client_id,
-            raw_instructions: message.raw_instructions
+            raw_instructions: message.raw_instructions,
+            edit_format: message.edit_format
           } as ApplyChatResponseMessage)
         } else if (message.action == 'get-tab-data') {
           handle_get_tab_data((tab_data) => {

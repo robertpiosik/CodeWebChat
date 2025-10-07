@@ -17,6 +17,7 @@ export type InitializeChatsMessage = {
   client_id: number // Client ID to identify which editor sent this message
   without_submission?: boolean
   raw_instructions?: string
+  edit_format?: string
   mode?: any
 }
 
@@ -34,6 +35,7 @@ export type InitializeChatMessage = {
   options?: string[]
   without_submission?: boolean
   raw_instructions?: string
+  edit_format?: string
   mode?: any
 }
 
@@ -58,6 +60,7 @@ export type ApplyChatResponseMessage = {
   action: 'apply-chat-response'
   client_id: number
   raw_instructions?: string
+  edit_format?: string
 }
 
 export type ClientIdAssignmentMessage = {
