@@ -10,7 +10,7 @@ import { Logger } from '@shared/utils/logger'
 import { WebsitesProvider, WebsiteItem } from './websites-provider'
 import { display_token_count } from '@/utils/display-token-count'
 
-const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 1000
+const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 3000
 
 export class WebsitesFolderItem extends vscode.TreeItem {
   constructor(public readonly websites: WebsiteItem[]) {
