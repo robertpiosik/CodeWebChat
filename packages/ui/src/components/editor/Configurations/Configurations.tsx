@@ -2,7 +2,10 @@ import styles from './Configurations.module.scss'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
 import { dictionary } from '@shared/constants/dictionary'
+import { IconButton } from '../IconButton'
 import { ReactSortable } from 'react-sortablejs'
+
+const dict = dictionary['Configurations.tsx']
 
 export namespace Configurations {
   export type Configuration = {
@@ -20,6 +23,7 @@ export namespace Configurations {
     on_configuration_click: (i: number) => void
     on_reorder?: (configurations: Configuration[]) => void
     selected_configuration_index?: number
+    on_manage_configurations: () => void
   }
 }
 
@@ -27,9 +31,12 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
-        <div className={styles['heading__title']}>
-          {dictionary['Configurations.tsx'].my_configurations}
-        </div>
+        <div className={styles['heading__title']}>{dict.my_configurations}</div>
+
+        <IconButton
+          codicon_icon="edit"
+          on_click={props.on_manage_configurations}
+        />
       </div>
 
       <div className={styles.configurations}>

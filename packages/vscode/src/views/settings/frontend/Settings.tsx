@@ -5,6 +5,8 @@ import { ModelProvidersPage } from './pages/ModelProvidersPage'
 import { ApiToolConfigurationPage } from './pages/ApiToolConfigurationPage'
 import { use_settings_data } from './hooks/use-settings-data'
 import { dictionary } from '@shared/constants/dictionary'
+import { post_message } from './utils/post_message'
+import { BackendMessage } from '../types/messages'
 
 type NavItem =
   | 'model-providers'
@@ -50,6 +52,30 @@ export const Settings = () => {
     )
   }, [settings_data_hook])
 
+  const handle_scroll_to_section = (item_id: NavItem) => {
+    is_scrolling_from_click.current = true
+    set_active_item(item_id)
+    section_refs.current[item_id]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+    setTimeout(() => {
+      is_scrolling_from_click.current = false
+    }, 1000)
+  }
+
+  useEffect(() => {
+    if (!all_data_loaded) return
+    post_message(vscode, { command: 'SETTINGS_UI_READY' })
+    const handle_message = (event: MessageEvent<BackendMessage>) => {
+      if (event.data.command == 'SHOW_SECTION') {
+        handle_scroll_to_section(event.data.section as NavItem)
+      }
+    }
+    window.addEventListener('message', handle_message)
+    return () => window.removeEventListener('message', handle_message)
+  }, [all_data_loaded])
+
   useEffect(() => {
     if (!all_data_loaded) return
 
@@ -88,18 +114,10 @@ export const Settings = () => {
     item_id: NavItem
   ) => {
     e.preventDefault()
-    is_scrolling_from_click.current = true
-    set_active_item(item_id)
-
-    section_refs.current[item_id]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    })
-
-    setTimeout(() => {
-      is_scrolling_from_click.current = false
-    }, 1000)
+    handle_scroll_to_section(item_id)
   }
+
+  if (!all_data_loaded) return null
 
   return (
     <div style={{ height: '100vh' }}>

@@ -43,6 +43,7 @@ type Props = {
   on_configurations_reorder: (
     reordered_configurations: UiConfigurations.Configuration[]
   ) => void
+  on_manage_configurations: () => void
   has_active_editor: boolean
   has_active_selection: boolean
   has_changes_to_commit: boolean
@@ -417,6 +418,7 @@ export const MainView: React.FC<Props> = (props) => {
                 selected_configuration_index={
                   props.selected_configuration_index
                 }
+                on_manage_configurations={props.on_manage_configurations}
               />
             </>
           )}

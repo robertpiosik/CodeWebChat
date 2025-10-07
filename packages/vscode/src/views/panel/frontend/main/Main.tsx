@@ -338,6 +338,13 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_manage_configurations = () => {
+    post_message(props.vscode, {
+      command: 'MANAGE_CONFIGURATIONS',
+      api_mode: props.api_mode
+    })
+  }
+
   const handle_configurations_reorder = (
     reordered_configs: (UiConfigurations.Configuration & { id: string })[]
   ) => {
@@ -592,6 +599,7 @@ export const Main: React.FC<Props> = (props) => {
       configurations={configurations_for_current_mode || []}
       on_configuration_click={handle_configuration_click}
       on_configurations_reorder={handle_configurations_reorder}
+      on_manage_configurations={handle_manage_configurations}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
       on_curly_braces_click={handle_curly_braces_click}

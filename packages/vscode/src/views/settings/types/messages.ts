@@ -150,6 +150,10 @@ export interface SetDefaultCommitMessagesConfigurationMessage {
   configuration_id: string | null
 }
 
+export interface SettingsUiReadyMessage {
+  command: 'SETTINGS_UI_READY'
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -180,6 +184,7 @@ export type FrontendMessage =
   | DeleteCommitMessagesConfigurationMessage
   | AddCommitMessagesConfigurationMessage
   | SetDefaultCommitMessagesConfigurationMessage
+  | SettingsUiReadyMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
@@ -204,9 +209,15 @@ export interface CommitMessagesConfigurationsMessage {
   configurations: ConfigurationForClient[]
 }
 
+export interface ShowSectionMessage {
+  command: 'SHOW_SECTION'
+  section: string
+}
+
 export type BackendMessage =
   | ModelProvidersMessage
   | CodeCompletionsConfigurationsMessage
   | EditContextConfigurationsMessage
   | IntelligentUpdateConfigurationsMessage
   | CommitMessagesConfigurationsMessage
+  | ShowSectionMessage

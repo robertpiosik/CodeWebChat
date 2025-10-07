@@ -491,6 +491,15 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_commit_changes(this)
           } else if (message.command == 'ACCEPT_COMMIT_MESSAGE') {
             await handle_accept_commit_message(this, message.commit_message)
+          } else if (message.command == 'MANAGE_CONFIGURATIONS') {
+            const section =
+              message.api_mode == 'edit-context'
+                ? 'edit-context'
+                : 'code-completions'
+            await vscode.commands.executeCommand(
+              'codeWebChat.settings',
+              section
+            )
           }
         } catch (error: any) {
           Logger.error({

@@ -103,8 +103,11 @@ export async function activate(context: vscode.ExtensionContext) {
     }),
     feedback_command(),
     apply_context_from_clipboard_command(workspace_provider),
-    vscode.commands.registerCommand('codeWebChat.settings', () => {
-      settings_provider.createOrShow()
-    })
+    vscode.commands.registerCommand(
+      'codeWebChat.settings',
+      (section?: string) => {
+        settings_provider.createOrShow(section)
+      }
+    )
   )
 }

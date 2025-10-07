@@ -37,6 +37,9 @@ export const Default = () => {
         console.log('on_configuration_click', index)
         set_selected_index(index)
       }}
+      on_manage_configurations={() => {
+        console.log('on_manage_configurations')
+      }}
       selected_configuration_index={selected_index}
     />
   )
@@ -48,6 +51,9 @@ export const Empty = () => (
     configurations={[]}
     on_configuration_click={(index) => {
       console.log('on_configuration_click', index)
+    }}
+    on_manage_configurations={() => {
+      console.log('on_manage_configurations')
     }}
   />
 )

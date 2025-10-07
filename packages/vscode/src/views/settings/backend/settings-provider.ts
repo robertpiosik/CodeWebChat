@@ -38,21 +38,30 @@ import {
 export class SettingsProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
   private _disposables: vscode.Disposable[] = []
+  private _pending_section_to_show: string | undefined
 
   constructor(
     private readonly _extensionUri: vscode.Uri,
     public readonly context: vscode.ExtensionContext
   ) {}
 
-  public createOrShow() {
+  public createOrShow(section_to_show?: string) {
     const column = vscode.window.activeTextEditor
       ? vscode.window.activeTextEditor.viewColumn
       : undefined
 
     if (this._webview_panel) {
       this._webview_panel.reveal(column)
+      if (section_to_show) {
+        this.postMessage({
+          command: 'SHOW_SECTION',
+          section: section_to_show
+        })
+      }
       return
     }
+
+    this._pending_section_to_show = section_to_show
 
     this._webview_panel = vscode.window.createWebviewPanel(
       'codeWebChatSettings',
@@ -77,6 +86,15 @@ export class SettingsProvider {
     this._webview_panel.webview.onDidReceiveMessage(
       async (message: FrontendMessage) => {
         switch (message.command) {
+          case 'SETTINGS_UI_READY':
+            if (this._pending_section_to_show) {
+              this.postMessage({
+                command: 'SHOW_SECTION',
+                section: this._pending_section_to_show
+              })
+              this._pending_section_to_show = undefined
+            }
+            break
           case 'GET_MODEL_PROVIDERS':
             await handle_get_model_providers(this)
             break

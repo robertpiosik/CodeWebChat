@@ -275,6 +275,11 @@ export interface AcceptCommitMessage extends BaseMessage {
   commit_message: string
 }
 
+export interface ManageConfigurationsMessage extends BaseMessage {
+  command: 'MANAGE_CONFIGURATIONS'
+  api_mode: ApiMode
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -328,6 +333,7 @@ export type FrontendMessage =
   | UpdateLastUsedPresetMessage
   | CommitChangesMessage
   | AcceptCommitMessage
+  | ManageConfigurationsMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
