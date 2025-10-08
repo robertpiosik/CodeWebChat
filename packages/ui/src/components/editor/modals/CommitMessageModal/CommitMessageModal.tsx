@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import styles from './CommitMessageModal.module.scss'
 import { Button } from '../../Button'
 import { Modal } from '../Modal'
 import TextareaAutosize from 'react-textarea-autosize'
 import { dictionary } from '@shared/constants/dictionary'
+
+const dict = dictionary['CommitMessageModal.tsx']
 
 type Props = {
   commit_message: string
@@ -13,13 +15,39 @@ type Props = {
 
 export const CommitMessageModal: React.FC<Props> = (props) => {
   const [message, set_message] = useState(props.commit_message)
-  const dict = dictionary['CommitMessageModal.tsx']
+  const [countdown, setCountdown] = useState(5)
+  const [is_timer_active, set_is_timer_active] = useState(true)
+  const interval_ref = useRef<NodeJS.Timeout>()
 
-  const handle_accept = () => {
+  const handle_accept = useCallback(() => {
     if (message.trim()) {
       props.on_accept(message)
     }
-  }
+  }, [message, props.on_accept])
+
+  useEffect(() => {
+    if (!is_timer_active) {
+      return
+    }
+    interval_ref.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (interval_ref.current) clearInterval(interval_ref.current)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => {
+      if (interval_ref.current) clearInterval(interval_ref.current)
+    }
+  }, [is_timer_active])
+
+  useEffect(() => {
+    if (countdown == 0 && is_timer_active) {
+      handle_accept()
+    }
+  }, [countdown, is_timer_active, handle_accept])
 
   return (
     <Modal>
@@ -29,6 +57,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
           className={styles.textarea}
           value={message}
           onChange={(e) => set_message(e.target.value)}
+          onFocus={() => set_is_timer_active(false)}
           minRows={2}
           onKeyDown={(e) => {
             if (e.key == 'Enter' && (e.metaKey || e.ctrlKey)) {
@@ -47,6 +76,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
             is_focused={true}
           >
             {dict.commit}
+            {is_timer_active && countdown > 0 && ` (${countdown})`}
           </Button>
         </div>
       </div>
