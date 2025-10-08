@@ -264,7 +264,7 @@ export const View = () => {
           padding: '4px 12px 4px 18px'
         }}
       >
-        Please open a project to begin.
+        You have not yet opened a folder.
       </div>
     )
   }
