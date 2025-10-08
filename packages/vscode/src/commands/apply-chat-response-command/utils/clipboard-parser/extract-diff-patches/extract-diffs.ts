@@ -1,4 +1,5 @@
 import { Logger } from '@shared/utils/logger'
+import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 
 export type Diff = {
   file_path: string
@@ -7,7 +8,27 @@ export type Diff = {
   new_file_path?: string
 }
 
-const normalize_header_line = (line: string): string => {
+const extract_workspace_and_path = (
+  raw_file_path: string,
+  is_single_root: boolean
+): { workspace_name?: string; relative_path: string } => {
+  const file_path = raw_file_path.replace(/\\/g, '/')
+  if (is_single_root || !file_path.includes('/')) {
+    return { relative_path: file_path }
+  }
+  const first_slash_index = file_path.indexOf('/')
+  if (first_slash_index > 0) {
+    const possible_workspace = file_path.substring(0, first_slash_index)
+    const rest_of_path = file_path.substring(first_slash_index + 1)
+    return { workspace_name: possible_workspace, relative_path: rest_of_path }
+  }
+  return { relative_path: file_path }
+}
+
+const normalize_header_line = (
+  line: string,
+  is_single_root?: boolean
+): string => {
   const processed_line = line
     .replace(/\s+\d{4}-\d{2}-\d{2}.*$/, '')
     .replace(/\t.*$/, '')
@@ -19,6 +40,12 @@ const normalize_header_line = (line: string): string => {
     }
     if (path_part.startsWith('a/')) {
       path_part = path_part.substring(2)
+    }
+    if (is_single_root === false) {
+      path_part = extract_workspace_and_path(
+        path_part,
+        is_single_root
+      ).relative_path
     }
 
     if (path_part == '/dev/null') {
@@ -35,6 +62,12 @@ const normalize_header_line = (line: string): string => {
     if (path_part.startsWith('b/')) {
       path_part = path_part.substring(2)
     }
+    if (is_single_root === false) {
+      path_part = extract_workspace_and_path(
+        path_part,
+        is_single_root
+      ).relative_path
+    }
     if (path_part == '/dev/null') {
       return '+++ /dev/null'
     }
@@ -45,7 +78,8 @@ const normalize_header_line = (line: string): string => {
 }
 
 const process_collected_patch_lines = (
-  patch_lines_array: string[]
+  patch_lines_array: string[],
+  is_single_root: boolean
 ): Diff | null => {
   const joined_patch_text_for_checks = patch_lines_array.join('\n')
   if (joined_patch_text_for_checks.trim() == '') return null
@@ -80,32 +114,53 @@ const process_collected_patch_lines = (
   let content_str = build_patch_content(
     patch_lines_array,
     file_path,
-    patch_start_idx
+    patch_start_idx,
+    is_single_root
   )
 
   // If it's a rename, we need to modify the patch content to use the old path in both header lines
   if (is_rename) {
-    const normalized_to_path_line = normalize_header_line(`+++ ${to_path}`)
-    const normalized_from_path_line = normalize_header_line(`+++ ${from_path}`)
+    const normalized_to_path_line = normalize_header_line(
+      `+++ ${to_path}`,
+      is_single_root
+    )
+    const normalized_from_path_line = normalize_header_line(
+      `+++ ${from_path}`,
+      is_single_root
+    )
     content_str = content_str.replace(
       normalized_to_path_line,
       normalized_from_path_line
     )
   }
 
-  const patch: Diff = {
+  const { workspace_name, relative_path } = extract_workspace_and_path(
     file_path,
+    is_single_root
+  )
+
+  const patch: Diff = {
+    file_path: relative_path,
+    workspace_name,
     content: content_str.endsWith('\n') ? content_str : content_str + '\n'
   }
 
   if (is_rename && to_path) {
-    patch.new_file_path = to_path
+    const { workspace_name: new_workspace, relative_path: new_relative } =
+      extract_workspace_and_path(to_path, is_single_root)
+    patch.new_file_path = new_relative
+    if (new_workspace && new_workspace !== workspace_name) {
+      patch.workspace_name = new_workspace
+    }
   }
 
   return patch
 }
 
-const convert_code_block_to_new_file_diff = (lines: string[]): Diff | null => {
+const convert_code_block_to_new_file_diff = (
+  lines: string[],
+  is_single_root: boolean
+): Diff | null => {
   if (lines.length == 0) {
     return null
   }
@@ -200,21 +255,30 @@ const convert_code_block_to_new_file_diff = (lines: string[]): Diff | null => {
     return null
   }
 
+  const { workspace_name, relative_path } = extract_workspace_and_path(
+    file_path,
+    is_single_root
+  )
+
   const patch_lines = content_lines.map((line) => `+${line}`)
   const patch_content = [
     `--- /dev/null`,
-    `+++ b/${file_path}`,
+    `+++ b/${relative_path}`,
     `@@ -0,0 +1,${content_lines.length} @@`,
     ...patch_lines
   ].join('\n')
 
   return {
-    file_path,
+    file_path: relative_path,
+    workspace_name,
     content: patch_content + '\n'
   }
 }
 
-const extract_all_code_block_patches = (normalized_text: string): Diff[] => {
+const extract_all_code_block_patches = (
+  normalized_text: string,
+  is_single_root: boolean
+): Diff[] => {
   const patches: Diff[] = []
   const lines = normalized_text.split('\n')
 
@@ -277,11 +341,33 @@ const extract_all_code_block_patches = (normalized_text: string): Diff[] => {
   for (const block of code_blocks) {
     const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
     if (block.type == 'diff' || block.type == 'patch') {
-      const processed_patches = parse_multiple_raw_patches(block_lines)
+      const processed_patches = parse_multiple_raw_patches(
+        block_lines,
+        is_single_root
+      )
       patches.push(...processed_patches)
     } else {
-      const patch = convert_code_block_to_new_file_diff(block_lines)
+      // Check if there's a comment line before the code block with a file path
+      let workspace_hint: string | undefined
+      if (block.start > 0) {
+        const prev_line = lines[block.start - 1].trim()
+        const extracted = extract_path_from_line_of_code(prev_line)
+        if (extracted) {
+          const { workspace_name } = extract_workspace_and_path(
+            extracted,
+            is_single_root
+          )
+          workspace_hint = workspace_name
+        }
+      }
+      const patch = convert_code_block_to_new_file_diff(
+        block_lines,
+        is_single_root
+      )
       if (patch) {
+        if (workspace_hint && !patch.workspace_name) {
+          patch.workspace_name = workspace_hint
+        }
         patches.push(patch)
       }
     }
@@ -290,7 +376,10 @@ const extract_all_code_block_patches = (normalized_text: string): Diff[] => {
   return patches
 }
 
-const parse_multiple_raw_patches = (all_lines: string[]): Diff[] => {
+const parse_multiple_raw_patches = (
+  all_lines: string[],
+  is_single_root: boolean
+): Diff[] => {
   const patches: Diff[] = []
   let current_patch_lines: string[] = []
 
@@ -319,7 +408,10 @@ const parse_multiple_raw_patches = (all_lines: string[]): Diff[] => {
           }
         }
         if (should_split) {
-          const patch_info = process_collected_patch_lines(current_patch_lines)
+          const patch_info = process_collected_patch_lines(
+            current_patch_lines,
+            is_single_root
+          )
           if (patch_info) {
             patches.push(patch_info)
           }
@@ -332,7 +424,10 @@ const parse_multiple_raw_patches = (all_lines: string[]): Diff[] => {
   }
 
   if (current_patch_lines.length > 0) {
-    const patch_info = process_collected_patch_lines(current_patch_lines)
+    const patch_info = process_collected_patch_lines(
+      current_patch_lines,
+      is_single_root
+    )
     if (patch_info) {
       patches.push(patch_info)
     }
@@ -341,7 +436,10 @@ const parse_multiple_raw_patches = (all_lines: string[]): Diff[] => {
   return patches
 }
 
-export const extract_diffs = (clipboard_text: string): Diff[] => {
+export const extract_diffs = (
+  clipboard_text: string,
+  is_single_root: boolean = true
+): Diff[] => {
   const normalized_text = clipboard_text.replace(/\r\n/g, '\n')
   const lines = normalized_text.split('\n')
 
@@ -351,9 +449,9 @@ export const extract_diffs = (clipboard_text: string): Diff[] => {
   )
 
   if (uses_code_blocks) {
-    return extract_all_code_block_patches(normalized_text)
+    return extract_all_code_block_patches(normalized_text, is_single_root)
   } else {
-    return parse_multiple_raw_patches(lines)
+    return parse_multiple_raw_patches(lines, is_single_root)
   }
 }
 
@@ -411,7 +509,8 @@ const find_patch_start_index = (lines: string[]): number => {
 const build_patch_content = (
   lines: string[],
   file_path: string,
-  patch_start_index: number
+  patch_start_index: number,
+  is_single_root?: boolean
 ): string => {
   let patch_content: string
 
@@ -447,7 +546,7 @@ const build_patch_content = (
     patch_content = patch_lines
       .map((line) => {
         if (line.startsWith('--- ') || line.startsWith('+++ ')) {
-          return normalize_header_line(line)
+          return normalize_header_line(line, is_single_root)
         }
         return line
       })
@@ -462,11 +561,19 @@ const build_patch_content = (
           'No @@ content found, constructing minimal patch headers based on file_path.',
         data: { file_path }
       })
-      patch_content = `--- a/${file_path}\n+++ b/${file_path}`
+      const relative_file_path =
+        is_single_root === false
+          ? extract_workspace_and_path(file_path, false).relative_path
+          : file_path
+      patch_content = `--- a/${relative_file_path}\n+++ b/${relative_file_path}`
     } else {
       const patch_body_lines = lines.slice(content_start_index)
       const formatted_patch_body_lines = format_hunk_headers(patch_body_lines)
-      patch_content = `--- a/${file_path}\n+++ b/${file_path}\n${formatted_patch_body_lines.join(
+      const relative_file_path =
+        is_single_root === false
+          ? extract_workspace_and_path(file_path, is_single_root).relative_path
+          : file_path
+      patch_content = `--- a/${relative_file_path}\n+++ b/${relative_file_path}\n${formatted_patch_body_lines.join(
         '\n'
       )}`
     }

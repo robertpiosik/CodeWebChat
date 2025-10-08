@@ -569,7 +569,6 @@ export class WorkspaceProvider
 
     if (element.isWorkspaceRoot) {
       element.contextValue = 'workspaceRoot'
-      element.iconPath = new vscode.ThemeIcon('root-folder')
       // Workspace root tooltip is primarily its name and role, token info is appended if available
       let root_tooltip = `${element.label} (Workspace Root)`
       if (formatted_total) {
@@ -1427,7 +1426,6 @@ export class FileItem extends vscode.TreeItem {
     this.description = description
 
     if (this.isWorkspaceRoot) {
-      this.iconPath = new vscode.ThemeIcon('root-folder')
       this.contextValue = 'workspaceRoot'
     } else if (this.isDirectory) {
       this.iconPath = new vscode.ThemeIcon('folder')
