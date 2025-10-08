@@ -805,9 +805,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         </script>
         <style>
           body { overflow: hidden; }
-          .simplebar-scrollbar::before { background-color: var(--vscode-scrollbarSlider-background); width: 10px!important; border-radius: 0!important;  top: 0!important; right: 0!important; bottom: 0!important; left: 0!important; }
-          [data-simplebar]:hover .simplebar-scrollbar::before { opacity: 1!important }
-          .simplebar-track.simplebar-vertical { width: 10px; }
         </style>
       </head>
       <body>

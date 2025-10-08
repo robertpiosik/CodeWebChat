@@ -1,10 +1,13 @@
 .container {
-  --horizontal-padding: 8vw;
   display: flex;
   gap: 60px;
   width: 100%;
   height: 100%;
-  padding-left: var(--horizontal-padding);
+  padding-left: 60px;
+  overflow: hidden;
+  @media (min-width: 920px) {
+    padding-left: calc((100vw - 800px) / 2);
+  }
 }
 
 .sidebar {
@@ -27,14 +30,16 @@
 
 .content {
   flex: 1;
-  overflow-y: auto;
-  padding: 60px var(--horizontal-padding) 60vh 0;
-  scroll-behavior: smooth;
+  overflow: hidden;
+  display: flex;
 
   &__inner {
     display: flex;
     flex-direction: column;
-    max-width: 600px;
     gap: 60px;
+    padding: 60px 60px 0 0;
+    @media (min-width: 920px) {
+      padding-right: calc((100vw - 800px) / 2);
+    }
   }
 }
