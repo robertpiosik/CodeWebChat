@@ -130,7 +130,7 @@ Generate meaningful summaries of changes adhering to your style.
 **The tool operates exclusively on your machine.** All your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. Model providers for API tools are called directly.
 
 > [!IMPORTANT]
-> Code Web Chat **does not** collect telemetry.
+> Code Web Chat **does not** collect telemetry and works entirely on your machine.
 
 ## Community
 
