@@ -759,9 +759,15 @@ export const apply_chat_response_command = (
                 'All files are new - automatically selecting fast replace mode'
             })
           } else {
-            const has_truncated_fragments = check_for_truncated_fragments(
-              clipboard_content.files
-            )
+            let has_truncated_fragments = false
+            if (
+              args?.edit_format === undefined || // Is undefined when invoked manually
+              args?.edit_format == 'truncated'
+            ) {
+              has_truncated_fragments = check_for_truncated_fragments(
+                clipboard_content.files
+              )
+            }
 
             if (has_truncated_fragments) {
               selected_mode_label = 'Intelligent update'
