@@ -240,9 +240,10 @@ async function show_preset_quick_pick(params: {
   mode: WebMode
   provider: ViewProvider
 }): Promise<string[] | null> {
-  const last_selected_item = params.context.workspaceState.get<
-    string | undefined
-  >(get_last_selected_preset_key(params.mode), undefined)
+  const key = get_last_selected_preset_key(params.mode)
+  const last_selected_item =
+    params.context.workspaceState.get<string | undefined>(key) ??
+    params.context.globalState.get<string | undefined>(key)
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { name?: string }
@@ -317,10 +318,9 @@ async function show_preset_quick_pick(params: {
 
       if (selected && selected.name !== undefined) {
         const selected_name = selected.name
-        params.context.workspaceState.update(
-          get_last_selected_preset_key(params.mode),
-          selected_name
-        )
+        const key = get_last_selected_preset_key(params.mode)
+        params.context.workspaceState.update(key, selected_name)
+        params.context.globalState.update(key, selected_name)
         params.provider.send_message({
           command: 'SELECTED_PRESET_OR_GROUP_CHANGED',
           mode: params.mode,
@@ -489,14 +489,18 @@ async function resolve_presets(params: {
   if (!params.show_quick_pick) {
     if (params.preset_name === undefined && params.group_name === undefined) {
       // Try to use last selection if "Send" button is clicked without specific preset/group
-      const last_choice = params.context.workspaceState.get<string>(
-        last_group_or_preset_choice_state_key
-      )
+      const last_choice =
+        params.context.workspaceState.get<string>(
+          last_group_or_preset_choice_state_key
+        ) ??
+        params.context.globalState.get<string>(
+          last_group_or_preset_choice_state_key
+        )
 
       if (last_choice == PRESET) {
-        const last_preset_name = params.context.workspaceState.get<string>(
-          last_selected_preset_key
-        )
+        const last_preset_name =
+          params.context.workspaceState.get<string>(last_selected_preset_key) ??
+          params.context.globalState.get<string>(last_selected_preset_key)
         if (last_preset_name !== undefined) {
           const preset = all_presets.find((p) => p.name === last_preset_name)
           if (preset) {
@@ -518,9 +522,11 @@ async function resolve_presets(params: {
           }
         }
       } else if (last_choice == GROUP) {
-        const last_group = params.context.workspaceState.get<string>(
-          last_selected_group_state_key
-        )
+        const last_group =
+          params.context.workspaceState.get<string>(
+            last_selected_group_state_key
+          ) ??
+          params.context.globalState.get<string>(last_selected_group_state_key)
         if (last_group) {
           if (last_group == 'Ungrouped') {
             const first_group_index = all_presets.findIndex((p) => !p.chatbot)
@@ -553,14 +559,18 @@ async function resolve_presets(params: {
         }
       }
     } else {
-      const last_choice = params.context.workspaceState.get<string>(
-        last_group_or_preset_choice_state_key
-      )
+      const last_choice =
+        params.context.workspaceState.get<string>(
+          last_group_or_preset_choice_state_key
+        ) ??
+        params.context.globalState.get<string>(
+          last_group_or_preset_choice_state_key
+        )
 
       if (last_choice == PRESET) {
-        const last_preset_name = params.context.workspaceState.get<string>(
-          last_selected_preset_key
-        )
+        const last_preset_name =
+          params.context.workspaceState.get<string>(last_selected_preset_key) ??
+          params.context.globalState.get<string>(last_selected_preset_key)
         if (last_preset_name !== undefined) {
           const preset = all_presets.find((p) => p.name == last_preset_name)
           if (preset) {
@@ -582,9 +592,11 @@ async function resolve_presets(params: {
           }
         }
       } else if (last_choice == GROUP) {
-        const last_group = params.context.workspaceState.get<string>(
-          last_selected_group_state_key
-        )
+        const last_group =
+          params.context.workspaceState.get<string>(
+            last_selected_group_state_key
+          ) ??
+          params.context.globalState.get<string>(last_selected_group_state_key)
         if (last_group) {
           if (last_group == 'Ungrouped') {
             const first_group_index = all_presets.findIndex((p) => !p.chatbot)
@@ -635,9 +647,13 @@ async function resolve_presets(params: {
       ]
       quick_pick.items = items
       quick_pick.placeholder = 'Select what to initialize'
-      const last_choice = params.context.workspaceState.get<string>(
-        last_group_or_preset_choice_state_key
-      )
+      const last_choice =
+        params.context.workspaceState.get<string>(
+          last_group_or_preset_choice_state_key
+        ) ??
+        params.context.globalState.get<string>(
+          last_group_or_preset_choice_state_key
+        )
       if (last_choice) {
         const last_item = items.find((item) => item.label == last_choice)
         if (last_item) {
@@ -661,6 +677,10 @@ async function resolve_presets(params: {
     }
 
     params.context.workspaceState.update(
+      last_group_or_preset_choice_state_key,
+      choice
+    )
+    params.context.globalState.update(
       last_group_or_preset_choice_state_key,
       choice
     )
@@ -730,10 +750,11 @@ async function resolve_presets(params: {
       quick_pick.items = group_items
       quick_pick.placeholder = 'Select a group'
 
-      const last_selected_group = params.context.workspaceState.get<string>(
-        last_selected_group_state_key,
-        ''
-      )
+      const last_selected_group =
+        params.context.workspaceState.get<string>(
+          last_selected_group_state_key
+        ) ??
+        params.context.globalState.get<string>(last_selected_group_state_key)
       if (last_selected_group) {
         const last_item = group_items.find(
           (item) => item.name == last_selected_group
@@ -762,6 +783,10 @@ async function resolve_presets(params: {
 
           const group_name = selected.name
           params.context.workspaceState.update(
+            last_selected_group_state_key,
+            group_name
+          )
+          params.context.globalState.update(
             last_selected_group_state_key,
             group_name
           )

@@ -640,23 +640,26 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         web_modes.map((mode) => {
           const presets_for_mode = all_presets[mode]
           let selected_name: string | undefined = undefined
-          const last_choice = this.context.workspaceState.get<string>(
-            get_last_group_or_preset_choice_state_key(mode)
-          )
-          if (last_choice === 'Preset') {
-            const last_preset = this.context.workspaceState.get<string>(
-              get_last_selected_preset_key(mode)
-            )
+          const choice_key = get_last_group_or_preset_choice_state_key(mode)
+          const last_choice =
+            this.context.workspaceState.get<string>(choice_key) ??
+            this.context.globalState.get<string>(choice_key)
+          if (last_choice == 'Preset') {
+            const preset_key = get_last_selected_preset_key(mode)
+            const last_preset =
+              this.context.workspaceState.get<string>(preset_key) ??
+              this.context.globalState.get<string>(preset_key)
             if (
               last_preset &&
               presets_for_mode.some((p) => p.chatbot && p.name === last_preset)
             ) {
               selected_name = last_preset
             }
-          } else if (last_choice === 'Group') {
-            const last_group = this.context.workspaceState.get<string>(
-              get_last_selected_group_state_key(mode)
-            )
+          } else if (last_choice == 'Group') {
+            const group_key = get_last_selected_group_state_key(mode)
+            const last_group =
+              this.context.workspaceState.get<string>(group_key) ??
+              this.context.globalState.get<string>(group_key)
             if (last_group) {
               if (last_group === 'Ungrouped') {
                 const first_group_index = presets_for_mode.findIndex(
