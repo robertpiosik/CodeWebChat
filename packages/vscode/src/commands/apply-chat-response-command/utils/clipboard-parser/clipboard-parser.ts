@@ -23,30 +23,20 @@ export interface ClipboardContent {
   code_completion?: ClipboardCodeCompletion
 }
 
-const extract_workspace_and_path = (params: {
-  raw_file_path: string
-  is_single_root_folder_workspace?: boolean
-}): { workspace_name?: string; relative_path: string } => {
-  const file_path = params.raw_file_path.replace(/\\/g, '/')
-  // If workspace has only one root folder, don't try to extract workspace name
-  if (params.is_single_root_folder_workspace) {
+export const extract_workspace_and_path = (
+  raw_file_path: string,
+  is_single_root_folder_workspace: boolean
+): { workspace_name?: string; relative_path: string } => {
+  const file_path = raw_file_path.replace(/\\/g, '/')
+  if (is_single_root_folder_workspace || !file_path.includes('/')) {
     return { relative_path: file_path }
   }
-
-  if (!file_path.includes('/')) {
-    return { relative_path: file_path }
-  }
-
   const first_slash_index = file_path.indexOf('/')
   if (first_slash_index > 0) {
     const possible_workspace = file_path.substring(0, first_slash_index)
     const rest_of_path = file_path.substring(first_slash_index + 1)
-    return {
-      workspace_name: possible_workspace,
-      relative_path: rest_of_path
-    }
+    return { workspace_name: possible_workspace, relative_path: rest_of_path }
   }
-
   return { relative_path: file_path }
 }
 
@@ -113,11 +103,10 @@ export const parse_code_completion = (params: {
           const completion_info = extract_path_and_position(first_line_of_block)
           if (completion_info) {
             const { workspace_name, relative_path } =
-              extract_workspace_and_path({
-                raw_file_path: completion_info.path,
-                is_single_root_folder_workspace:
-                  params.is_single_root_folder_workspace
-              })
+              extract_workspace_and_path(
+                completion_info.path,
+                params.is_single_root_folder_workspace
+              )
             return {
               file_path: relative_path,
               content: cleanup_api_response({
@@ -195,11 +184,10 @@ export const parse_multiple_files = (params: {
         current_workspace_name = undefined
         current_file_name = ''
         if (last_seen_file_path_comment) {
-          const { workspace_name, relative_path } = extract_workspace_and_path({
-            raw_file_path: last_seen_file_path_comment,
-            is_single_root_folder_workspace:
-              params.is_single_root_folder_workspace
-          })
+          const { workspace_name, relative_path } = extract_workspace_and_path(
+            last_seen_file_path_comment,
+            params.is_single_root_folder_workspace
+          )
           current_file_name = relative_path
           if (workspace_name) {
             current_workspace_name = workspace_name
@@ -217,11 +205,10 @@ export const parse_multiple_files = (params: {
         if (extracted_filename) {
           state = 'CONTENT'
           top_level_xml_file_mode = true
-          const { workspace_name, relative_path } = extract_workspace_and_path({
-            raw_file_path: extracted_filename,
-            is_single_root_folder_workspace:
-              params.is_single_root_folder_workspace
-          })
+          const { workspace_name, relative_path } = extract_workspace_and_path(
+            extracted_filename,
+            params.is_single_root_folder_workspace
+          )
           current_file_name = relative_path
           if (workspace_name) {
             current_workspace_name = workspace_name
@@ -373,11 +360,10 @@ export const parse_multiple_files = (params: {
           const extracted_filename = extract_file_path_from_xml(line)
           if (extracted_filename) {
             const { workspace_name, relative_path } =
-              extract_workspace_and_path({
-                raw_file_path: extracted_filename,
-                is_single_root_folder_workspace:
-                  params.is_single_root_folder_workspace
-              })
+              extract_workspace_and_path(
+                extracted_filename,
+                params.is_single_root_folder_workspace
+              )
             current_file_name = relative_path
             if (workspace_name) {
               current_workspace_name = workspace_name
@@ -427,11 +413,10 @@ export const parse_multiple_files = (params: {
 
           if (extracted_filename) {
             const { workspace_name, relative_path } =
-              extract_workspace_and_path({
-                raw_file_path: extracted_filename,
-                is_single_root_folder_workspace:
-                  params.is_single_root_folder_workspace
-              })
+              extract_workspace_and_path(
+                extracted_filename,
+                params.is_single_root_folder_workspace
+              )
             current_file_name = relative_path
             if (workspace_name) {
               current_workspace_name = workspace_name
@@ -532,10 +517,10 @@ export const parse_file_content_only = (params: {
   const extracted_filename = extract_path_from_line_of_code(first_line)
   if (!extracted_filename) return null
 
-  const { workspace_name, relative_path } = extract_workspace_and_path({
-    raw_file_path: extracted_filename,
-    is_single_root_folder_workspace: params.is_single_root_folder_workspace
-  })
+  const { workspace_name, relative_path } = extract_workspace_and_path(
+    extracted_filename,
+    params.is_single_root_folder_workspace
+  )
 
   const content = lines.slice(1).join('\n')
   const cleaned_content = content

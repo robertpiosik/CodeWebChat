@@ -1,28 +1,12 @@
 import { Logger } from '@shared/utils/logger'
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
+import { extract_workspace_and_path } from '../clipboard-parser'
 
 export type Diff = {
   file_path: string
   content: string
   workspace_name?: string
   new_file_path?: string
-}
-
-const extract_workspace_and_path = (
-  raw_file_path: string,
-  is_single_root: boolean
-): { workspace_name?: string; relative_path: string } => {
-  const file_path = raw_file_path.replace(/\\/g, '/')
-  if (is_single_root || !file_path.includes('/')) {
-    return { relative_path: file_path }
-  }
-  const first_slash_index = file_path.indexOf('/')
-  if (first_slash_index > 0) {
-    const possible_workspace = file_path.substring(0, first_slash_index)
-    const rest_of_path = file_path.substring(first_slash_index + 1)
-    return { workspace_name: possible_workspace, relative_path: rest_of_path }
-  }
-  return { relative_path: file_path }
 }
 
 const normalize_header_line = (
