@@ -23,13 +23,12 @@ export function context_initialization(context: vscode.ExtensionContext): {
 } {
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
 
-  let workspace_provider: WorkspaceProvider
   let workspace_view: vscode.TreeView<
     FileItem | WebsiteItem | WebsitesFolderItem
   >
 
   const websites_provider = new WebsitesProvider(context)
-  workspace_provider = new WorkspaceProvider(
+  const workspace_provider = new WorkspaceProvider(
     workspace_folders as any,
     context,
     websites_provider
@@ -327,42 +326,15 @@ export function context_initialization(context: vscode.ExtensionContext): {
   )
 
   context.subscriptions.push(
-    vscode.workspace.onDidChangeWorkspaceFolders(() => {
+    vscode.workspace.onDidChangeWorkspaceFolders(async () => {
       if (vscode.workspace.workspaceFolders) {
-        const new_workspace_provider = new WorkspaceProvider(
-          vscode.workspace.workspaceFolders as any,
-          context,
-          websites_provider
+        await workspace_provider.update_workspace_folders(
+          vscode.workspace.workspaceFolders
         )
-
-        if (workspace_provider) {
-          const checked_paths = workspace_provider.get_all_checked_paths()
-          workspace_provider.dispose()
-          workspace_provider = new_workspace_provider
-          if (checked_paths.length > 0) {
-            workspace_provider.set_checked_files(checked_paths)
-          }
-        } else {
-          workspace_provider = new_workspace_provider
-        }
-
-        const old_view = workspace_view
-
-        workspace_view = vscode.window.createTreeView(
-          'codeWebChatViewWorkspace',
-          {
-            treeDataProvider: workspace_provider,
-            manageCheckboxStateManually: true
-          }
+        open_editors_provider.update_workspace_folders(
+          vscode.workspace.workspaceFolders
         )
-
-        register_workspace_view_handlers(workspace_view)
-        old_view.dispose()
-        context.subscriptions.push(workspace_view)
-
-        if (open_editors_provider) {
-          shared_state.set_providers(workspace_provider, open_editors_provider)
-        }
+        shared_state.set_providers(workspace_provider, open_editors_provider)
         update_activity_bar_badge_token_count()
       }
     })

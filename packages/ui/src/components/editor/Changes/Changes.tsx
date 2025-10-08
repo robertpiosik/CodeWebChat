@@ -159,7 +159,7 @@ export const Changes: FC<Props> = ({
                         file.diff_fallback_method == 'recount'
                           ? ' (fallback used: git apply with --recount flag)'
                           : file.diff_fallback_method == 'search_and_replace'
-                          ? ' (fallback used: custom search and replace processor)'
+                          ? ' (fallback used: search and replace matching fragments)'
                           : ''
                       }`}
                       on_click={(e) => {

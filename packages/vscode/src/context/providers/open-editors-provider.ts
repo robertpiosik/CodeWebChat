@@ -80,6 +80,13 @@ export class OpenEditorsProvider
     }, 500)
   }
 
+  public update_workspace_folders(
+    workspace_folders: readonly vscode.WorkspaceFolder[]
+  ): void {
+    this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
+    this.refresh()
+  }
+
   private _is_file_in_any_workspace(file_path: string): boolean {
     return this._workspace_roots.some((root) => file_path.startsWith(root))
   }

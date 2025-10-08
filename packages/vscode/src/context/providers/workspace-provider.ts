@@ -1405,6 +1405,27 @@ export class WorkspaceProvider
 
     return total
   }
+
+  public async update_workspace_folders(
+    workspace_folders: readonly vscode.WorkspaceFolder[]
+  ): Promise<void> {
+    const checked_paths = this.get_all_checked_paths()
+
+    this.workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
+    this.workspace_names = workspace_folders.map((folder) => folder.name)
+
+    // Clear caches that depend on workspace structure
+    this.file_workspace_map.clear()
+    this.file_token_counts.clear()
+    this.directory_token_counts.clear()
+    this.directory_selected_token_counts.clear()
+
+    // Reload gitignore files as they might have changed with new folders
+    await this._load_all_gitignore_files()
+
+    // Restore checked state and refresh
+    await this.set_checked_files(checked_paths)
+  }
 }
 
 export class FileItem extends vscode.TreeItem {
