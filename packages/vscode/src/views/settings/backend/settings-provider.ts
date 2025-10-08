@@ -195,6 +195,25 @@ export class SettingsProvider {
               message
             )
             break
+          case 'GET_COMMIT_MESSAGE_INSTRUCTIONS': {
+            const config = vscode.workspace.getConfiguration('codeWebChat')
+            const instructions =
+              config.get<string>('commitMessageInstructions') || ''
+            this.postMessage({
+              command: 'COMMIT_MESSAGE_INSTRUCTIONS',
+              instructions
+            })
+            break
+          }
+          case 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS':
+            await vscode.workspace
+              .getConfiguration('codeWebChat')
+              .update(
+                'commitMessageInstructions',
+                message.instructions,
+                vscode.ConfigurationTarget.Global
+              )
+            break
         }
       },
       null,

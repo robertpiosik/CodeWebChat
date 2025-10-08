@@ -2,8 +2,6 @@ import { ConfigurationForClient } from '@/views/settings/types/messages'
 import { FrontendMessage } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
 import { ConfigurationsList } from '@ui/components/editor/settings/ConfigurationsList'
-import { Section } from '@ui/components/editor/settings/Section'
-import { forwardRef } from 'react'
 
 type ToolName =
   | 'CODE_COMPLETIONS'
@@ -12,20 +10,16 @@ type ToolName =
   | 'INTELLIGENT_UPDATE'
 
 type ToolConfigurationsSectionProps = {
-  id: string
   vscode: any
-  title: string
-  subtitle: string
   tool_name: ToolName
   can_have_default: boolean
   configurations: ConfigurationForClient[] | undefined
   set_configurations: (configurations: ConfigurationForClient[]) => void
 }
 
-export const ApiToolConfigurationSection = forwardRef<
-  HTMLDivElement,
+export const ApiToolConfigurationSection: React.FC<
   ToolConfigurationsSectionProps
->((props, ref) => {
+> = (props) => {
   const { configurations, set_configurations } = props
 
   const add_command = `ADD_${props.tool_name}_CONFIGURATION`
@@ -53,12 +47,7 @@ export const ApiToolConfigurationSection = forwardRef<
     : undefined
 
   return (
-    <Section
-      id={props.id}
-      ref={ref}
-      title={props.title}
-      subtitle={props.subtitle}
-    >
+    <>
       {configurations && (
         <ConfigurationsList
           configurations={configurations}
@@ -90,7 +79,6 @@ export const ApiToolConfigurationSection = forwardRef<
           on_unset_default={handle_unset_default}
         />
       )}
-    </Section>
+    </>
   )
-})
-ApiToolConfigurationSection.displayName = 'ApiToolConfigurationSection'
+}

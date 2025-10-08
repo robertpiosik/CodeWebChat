@@ -150,6 +150,15 @@ export interface SetDefaultCommitMessagesConfigurationMessage {
   configuration_id: string | null
 }
 
+export interface GetCommitMessageInstructionsMessage {
+  command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS'
+}
+
+export interface UpdateCommitMessageInstructionsMessage {
+  command: 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS'
+  instructions: string
+}
+
 export interface SettingsUiReadyMessage {
   command: 'SETTINGS_UI_READY'
 }
@@ -184,6 +193,8 @@ export type FrontendMessage =
   | DeleteCommitMessagesConfigurationMessage
   | AddCommitMessagesConfigurationMessage
   | SetDefaultCommitMessagesConfigurationMessage
+  | GetCommitMessageInstructionsMessage
+  | UpdateCommitMessageInstructionsMessage
   | SettingsUiReadyMessage
 
 // === FROM BACKEND TO FRONTEND ===
@@ -209,6 +220,11 @@ export interface CommitMessagesConfigurationsMessage {
   configurations: ConfigurationForClient[]
 }
 
+export interface CommitMessageInstructionsMessage {
+  command: 'COMMIT_MESSAGE_INSTRUCTIONS'
+  instructions: string
+}
+
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
@@ -220,4 +236,5 @@ export type BackendMessage =
   | EditContextConfigurationsMessage
   | IntelligentUpdateConfigurationsMessage
   | CommitMessagesConfigurationsMessage
+  | CommitMessageInstructionsMessage
   | ShowSectionMessage

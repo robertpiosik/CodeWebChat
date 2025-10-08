@@ -1,26 +1,17 @@
 import { ProviderForClient } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
 import { ModelProviders } from '@ui/components/editor/settings/ModelProviders'
-import { Section } from '@ui/components/editor/settings/Section'
-import { forwardRef } from 'react'
 
 type ModelProvidersSectionProps = {
-  id: string
   vscode: any
   providers: ProviderForClient[] | undefined
   set_providers: (providers: ProviderForClient[]) => void
 }
-export const ModelProvidersSection = forwardRef<
-  HTMLDivElement,
-  ModelProvidersSectionProps
->((props, ref) => {
+export const ModelProvidersSection: React.FC<ModelProvidersSectionProps> = (
+  props
+) => {
   return (
-    <Section
-      id={props.id}
-      ref={ref}
-      title="Model Providers"
-      subtitle="Manage your model providers here. Add, edit, reorder, or delete providers as needed."
-    >
+    <>
       {props.providers && (
         <ModelProviders
           providers={props.providers}
@@ -54,7 +45,6 @@ export const ModelProvidersSection = forwardRef<
           }}
         />
       )}
-    </Section>
+    </>
   )
-})
-ModelProvidersSection.displayName = 'ModelProvidersSection'
+}

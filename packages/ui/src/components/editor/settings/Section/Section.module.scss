@@ -1,11 +1,23 @@
 .container {
   scroll-margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-8px);
 }
 
 .title {
   margin: 0;
+  font-size: var(--font-size-18px);
+  font-weight: 600;
 }
 
 .subtitle {
   color: var(--vscode-descriptionForeground);
+  font-size: var(--font-size-14px);
 }

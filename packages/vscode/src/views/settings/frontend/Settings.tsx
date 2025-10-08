@@ -2,38 +2,47 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import { Layout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
+import { Item } from '@ui/components/editor/settings/Item'
+import { GeneralSection } from './sections/GeneralSection'
 import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
 import { use_settings_data } from './hooks/use-settings-data'
 import { dictionary } from '@shared/constants/dictionary'
 import { post_message } from './utils/post_message'
 import { BackendMessage } from '../types/messages'
+import { Section } from '@ui/components/editor/settings/Section'
+import { Textarea } from '@ui/components/editor/settings/Textarea'
 
 type NavItem =
+  | 'general'
   | 'model-providers'
   | 'code-completions'
   | 'edit-context'
   | 'intelligent-update'
   | 'commit-messages'
 
-const NAV_ITEMS_CONFIG: { id: NavItem; label: string; codicon: string }[] = [
+const NAV_ITEMS_CONFIG: { id: NavItem; label: string }[] = [
+  {
+    id: 'general',
+    label: 'General'
+  },
   {
     id: 'model-providers',
-    label: dictionary.settings.MODEL_PROVIDERS_LABEL,
-    codicon: 'key'
+    label: dictionary.settings.MODEL_PROVIDERS_LABEL
   },
-  { id: 'code-completions', label: 'Code Completions', codicon: 'tools' },
-  { id: 'edit-context', label: 'Edit Context', codicon: 'tools' },
-  { id: 'intelligent-update', label: 'Intelligent Update', codicon: 'tools' },
-  { id: 'commit-messages', label: 'Commit Messages', codicon: 'tools' }
+  { id: 'code-completions', label: 'Code Completions' },
+  { id: 'edit-context', label: 'Edit Context' },
+  { id: 'intelligent-update', label: 'Intelligent Update' },
+  { id: 'commit-messages', label: 'Commit Messages' }
 ]
 
 const vscode = acquireVsCodeApi()
 
 export const Settings = () => {
-  const [active_item, set_active_item] = useState<NavItem>('model-providers')
+  const [active_item, set_active_item] = useState<NavItem>('general')
   const settings_data_hook = use_settings_data(vscode)
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
+    general: null,
     'model-providers': null,
     'code-completions': null,
     'edit-context': null,
@@ -48,9 +57,33 @@ export const Settings = () => {
       settings_data_hook.code_completions_configs !== undefined &&
       settings_data_hook.commit_messages_configs !== undefined &&
       settings_data_hook.edit_context_configs !== undefined &&
-      settings_data_hook.intelligent_update_configs !== undefined
+      settings_data_hook.intelligent_update_configs !== undefined &&
+      settings_data_hook.commit_message_instructions !== undefined
     )
   }, [settings_data_hook])
+
+  const [commit_instructions, set_commit_instructions] = useState('')
+
+  useEffect(() => {
+    set_commit_instructions(
+      settings_data_hook.commit_message_instructions || ''
+    )
+  }, [settings_data_hook.commit_message_instructions])
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (
+        settings_data_hook.commit_message_instructions !== undefined &&
+        commit_instructions !== settings_data_hook.commit_message_instructions
+      ) {
+        post_message(vscode, {
+          command: 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS',
+          instructions: commit_instructions
+        })
+      }
+    }, 500)
+    return () => clearTimeout(handler)
+  }, [commit_instructions, settings_data_hook.commit_message_instructions])
 
   const handle_scroll_to_section = (item_id: NavItem) => {
     is_scrolling_from_click.current = true
@@ -137,70 +170,101 @@ export const Settings = () => {
         title={dictionary.settings.SETTINGS_TITLE}
         sidebar={
           <>
-            {NAV_ITEMS_CONFIG.map(({ id, label, codicon }) => (
+            {NAV_ITEMS_CONFIG.map(({ id, label }) => (
               <NavigationItem
                 key={id}
                 href={`#${id}`}
                 label={label}
-                codicon={codicon}
-                is_active={active_item === id}
+                is_active={active_item == id}
                 on_click={(e) => handle_nav_click(e, id)}
               />
             ))}
           </>
         }
       >
-        <ModelProvidersSection
+        <Section
+          ref={(el) => (section_refs.current['general'] = el)}
+          title="General"
+          subtitle="General settings for the extension."
+        >
+          <GeneralSection vscode={vscode} />
+        </Section>
+        <Section
           ref={(el) => (section_refs.current['model-providers'] = el)}
-          id="model-providers"
-          vscode={vscode}
-          providers={settings_data_hook.providers}
-          set_providers={settings_data_hook.set_providers}
-        />
-        <ApiToolConfigurationSection
+          title="Model Providers"
+          subtitle="Manage your model providers here. Add, edit, reorder, or delete providers as needed."
+        >
+          <ModelProvidersSection
+            vscode={vscode}
+            providers={settings_data_hook.providers}
+            set_providers={settings_data_hook.set_providers}
+          />
+        </Section>
+        <Section
           ref={(el) => (section_refs.current['code-completions'] = el)}
-          id="code-completions"
-          vscode={vscode}
-          configurations={settings_data_hook.code_completions_configs}
-          set_configurations={settings_data_hook.set_code_completions_configs}
           title={dictionary.settings.CODE_COMPLETIONS_LABEL}
           subtitle={dictionary.settings.CODE_COMPLETIONS_SUBTITLE}
-          tool_name="CODE_COMPLETIONS"
-          can_have_default={true}
-        />
-        <ApiToolConfigurationSection
+        >
+          <ApiToolConfigurationSection
+            vscode={vscode}
+            configurations={settings_data_hook.code_completions_configs}
+            set_configurations={settings_data_hook.set_code_completions_configs}
+            tool_name="CODE_COMPLETIONS"
+            can_have_default={true}
+          />
+        </Section>
+        <Section
           ref={(el) => (section_refs.current['edit-context'] = el)}
-          id="edit-context"
-          vscode={vscode}
-          configurations={settings_data_hook.edit_context_configs}
-          set_configurations={settings_data_hook.set_edit_context_configs}
           title={dictionary.settings.EDIT_CONTEXT_LABEL}
           subtitle={dictionary.settings.EDIT_CONTEXT_SUBTITLE}
-          tool_name="EDIT_CONTEXT"
-          can_have_default={false}
-        />
-        <ApiToolConfigurationSection
+        >
+          <ApiToolConfigurationSection
+            vscode={vscode}
+            configurations={settings_data_hook.edit_context_configs}
+            set_configurations={settings_data_hook.set_edit_context_configs}
+            tool_name="EDIT_CONTEXT"
+            can_have_default={false}
+          />
+        </Section>
+        <Section
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
-          id="intelligent-update"
-          vscode={vscode}
-          configurations={settings_data_hook.intelligent_update_configs}
-          set_configurations={settings_data_hook.set_intelligent_update_configs}
           title={dictionary.settings.INTELLIGENT_UPDATE_LABEL}
           subtitle={dictionary.settings.INTELLIGENT_UPDATE_SUBTITLE}
-          tool_name="INTELLIGENT_UPDATE"
-          can_have_default={true}
-        />
-        <ApiToolConfigurationSection
+        >
+          <ApiToolConfigurationSection
+            vscode={vscode}
+            configurations={settings_data_hook.intelligent_update_configs}
+            set_configurations={
+              settings_data_hook.set_intelligent_update_configs
+            }
+            tool_name="INTELLIGENT_UPDATE"
+            can_have_default={true}
+          />
+        </Section>
+        <Section
           ref={(el) => (section_refs.current['commit-messages'] = el)}
-          id="commit-messages"
-          vscode={vscode}
-          configurations={settings_data_hook.commit_messages_configs}
-          set_configurations={settings_data_hook.set_commit_messages_configs}
           title={dictionary.settings.COMMIT_MESSAGES_LABEL}
-          subtitle={dictionary.settings.COMMIT_MESSAGES_SUBTITLE}
-          tool_name="COMMIT_MESSAGES"
-          can_have_default={true}
-        />
+          subtitle="Configure models for generating commit messages, and customize the instructions used."
+        >
+          <Item
+            title="Commit Message Instructions"
+            description="Customize the instructions used when generating commit messages. These instructions are sent to the model along with the code changes."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={commit_instructions}
+                onChange={(e) => set_commit_instructions(e.target.value)}
+              />
+            }
+          />
+          <ApiToolConfigurationSection
+            vscode={vscode}
+            configurations={settings_data_hook.commit_messages_configs}
+            set_configurations={settings_data_hook.set_commit_messages_configs}
+            tool_name="COMMIT_MESSAGES"
+            can_have_default={true}
+          ></ApiToolConfigurationSection>
+        </Section>
       </Layout>
     </div>
   )

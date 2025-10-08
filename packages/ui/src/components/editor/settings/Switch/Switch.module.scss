@@ -1,0 +1,52 @@
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border);
+  border-radius: 20px;
+  transition: 0.2s;
+
+  &::before {
+    position: absolute;
+    content: '';
+    height: 12px;
+    width: 12px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--vscode-input-foreground);
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+}
+
+.checked .slider {
+  background-color: var(--vscode-button-background);
+  border-color: var(--vscode-button-background);
+}
+
+.checked .slider::before {
+  transform: translateX(16px);
+  background-color: var(--vscode-button-foreground);
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

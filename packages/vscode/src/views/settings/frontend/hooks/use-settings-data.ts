@@ -22,6 +22,8 @@ export const use_settings_data = (vscode: any) => {
   const [intelligent_update_configs, set_intelligent_update_configs] = useState<
     ConfigurationForClient[] | undefined
   >(undefined)
+  const [commit_message_instructions, set_commit_message_instructions] =
+    useState<string | undefined>(undefined)
 
   useEffect(() => {
     // Request initial data
@@ -30,6 +32,7 @@ export const use_settings_data = (vscode: any) => {
     post_message(vscode, { command: 'GET_COMMIT_MESSAGES_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
   }, [vscode])
 
   useEffect(() => {
@@ -51,6 +54,9 @@ export const use_settings_data = (vscode: any) => {
         case 'INTELLIGENT_UPDATE_CONFIGURATIONS':
           set_intelligent_update_configs(message.configurations)
           break
+        case 'COMMIT_MESSAGE_INSTRUCTIONS':
+          set_commit_message_instructions(message.instructions)
+          break
       }
     }
 
@@ -71,6 +77,7 @@ export const use_settings_data = (vscode: any) => {
     edit_context_configs,
     set_edit_context_configs,
     intelligent_update_configs,
-    set_intelligent_update_configs
+    set_intelligent_update_configs,
+    commit_message_instructions
   }
 }
