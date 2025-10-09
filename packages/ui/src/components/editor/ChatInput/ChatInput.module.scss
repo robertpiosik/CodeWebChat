@@ -1,5 +1,5 @@
 .container {
-  --padding: var(--padding-4px) var(--padding-20px) var(--padding-7px)
+  --padding: var(--padding-5px) var(--padding-20px) var(--padding-5px)
     var(--padding-7px);
   position: relative;
 
@@ -112,9 +112,9 @@
 
 .textarea {
   padding: var(--padding);
-  font-family: sans-serif;
+  font-family: inherit;
   font-size: inherit;
-  line-height: 1.5;
+  line-height: inherit;
   background-color: transparent;
   color: var(--vscode-input-foreground);
   border: none;
@@ -141,7 +141,6 @@
   padding: var(--padding);
   font-family: sans-serif;
   font-size: inherit;
-  line-height: 1.5;
   pointer-events: none;
   white-space: pre-wrap;
   overflow-wrap: break-word;
