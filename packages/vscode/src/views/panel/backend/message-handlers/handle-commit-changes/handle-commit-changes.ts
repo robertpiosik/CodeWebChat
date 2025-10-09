@@ -15,14 +15,20 @@ export const handle_commit_changes = async (
   provider: ViewProvider
 ): Promise<void> => {
   const repository = get_git_repository()
-  if (!repository) return
+  if (!repository) {
+    provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+    return
+  }
 
   provider.commit_was_staged_by_script = false
   const was_empty_stage = repository.state.indexChanges.length === 0
 
   try {
     const api_config = await get_commit_message_config(provider.context)
-    if (!api_config) return
+    if (!api_config) {
+      provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+      return
+    }
 
     const diff = await prepare_staged_changes(repository)
     if (!diff) {
@@ -45,6 +51,7 @@ export const handle_commit_changes = async (
       if (provider.commit_was_staged_by_script) {
         await vscode.commands.executeCommand('git.unstageAll')
       }
+      provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       provider.commit_was_staged_by_script = false
       return
     }
@@ -57,6 +64,7 @@ export const handle_commit_changes = async (
     if (provider.commit_was_staged_by_script) {
       await vscode.commands.executeCommand('git.unstageAll')
     }
+    provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     provider.commit_was_staged_by_script = false
     Logger.error({
       function_name: 'handle_commit_changes',

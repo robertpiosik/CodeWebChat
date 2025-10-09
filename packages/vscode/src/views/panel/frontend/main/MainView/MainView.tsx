@@ -80,6 +80,7 @@ type Props = {
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
+  commit_button_enabling_trigger_count: number // Incremented when commit changes operation is cancelled
 }
 
 const web_mode_labels: Record<WebMode, string> = {
@@ -139,6 +140,10 @@ export const MainView: React.FC<Props> = (props) => {
       resize_observer.disconnect()
     }
   }, [])
+
+  useEffect(() => {
+    set_is_commit_disabled_temporarily(false)
+  }, [props.commit_button_enabling_trigger_count])
 
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
@@ -211,8 +216,6 @@ export const MainView: React.FC<Props> = (props) => {
 
     set_is_commit_disabled_temporarily(true)
     props.on_commit_click()
-
-    setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
   }
 
   const handle_heading_click = () => {

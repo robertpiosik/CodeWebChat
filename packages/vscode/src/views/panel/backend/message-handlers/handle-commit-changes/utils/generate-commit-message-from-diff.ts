@@ -78,6 +78,9 @@ const generate_commit_message_with_api = async (params: {
       })
 
       if (!result) {
+        if (cancel_token_source.token.reason) {
+          return null
+        }
         vscode.window.showErrorMessage(
           dictionary.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
         )
@@ -130,6 +133,9 @@ const generate_commit_message_with_api = async (params: {
           })
 
           if (!response_result) {
+            if (token.isCancellationRequested) {
+              return null
+            }
             vscode.window.showErrorMessage(
               dictionary.error_message.FAILED_TO_GENERATE_COMMIT_MESSAGE
             )
@@ -143,9 +149,6 @@ const generate_commit_message_with_api = async (params: {
           }
         } catch (error) {
           if (axios.isCancel(error)) {
-            vscode.window.showInformationMessage(
-              dictionary.information_message.COMMIT_MESSAGE_GENERATION_CANCELLED
-            )
             return null
           }
           Logger.error({

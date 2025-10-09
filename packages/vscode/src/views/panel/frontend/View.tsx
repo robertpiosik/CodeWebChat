@@ -39,6 +39,11 @@ export const View = () => {
   const [commit_message_to_review, set_commit_message_to_review] = useState<
     string | undefined
   >()
+  const [
+    commit_button_enabling_trigger_count,
+    set_commit_button_enabling_trigger_count
+  ] = useState(0)
+
   const [workspace_folder_count, set_workspace_folder_count] =
     useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()
@@ -154,6 +159,8 @@ export const View = () => {
         set_chat_input_focus_key((k) => k + 1)
       } else if (message.command == 'SHOW_COMMIT_MESSAGE_MODAL') {
         set_commit_message_to_review(message.commit_message)
+      } else if (message.command == 'COMMIT_PROCESS_CANCELLED') {
+        set_commit_button_enabling_trigger_count((k) => k + 1)
       }
     }
     window.addEventListener('message', handle_message)
@@ -330,6 +337,9 @@ export const View = () => {
           has_active_selection={has_active_selection}
           on_web_mode_change={handle_web_mode_change}
           on_api_mode_change={handle_api_mode_change}
+          commit_button_enabling_trigger_count={
+            commit_button_enabling_trigger_count
+          }
           chat_input_focus_and_select_key={chat_input_focus_and_select_key}
           chat_input_focus_key={chat_input_focus_key}
         />
@@ -502,10 +512,12 @@ export const View = () => {
                 commit_message: message
               })
               set_commit_message_to_review(undefined)
+              set_commit_button_enabling_trigger_count((k) => k + 1)
             }}
             on_cancel={() => {
               post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
               set_commit_message_to_review(undefined)
+              set_commit_button_enabling_trigger_count((k) => k + 1)
             }}
           />
         </div>

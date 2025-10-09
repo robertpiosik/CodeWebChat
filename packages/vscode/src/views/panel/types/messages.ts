@@ -518,6 +518,10 @@ export interface ShowCommitMessageModalMessage extends BaseMessage {
   commit_message: string
 }
 
+export interface CommitProcessCancelledMessage extends BaseMessage {
+  command: 'COMMIT_PROCESS_CANCELLED'
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusChatInputMessage
@@ -552,3 +556,4 @@ export type BackendMessage =
   | ShowChatInitializedMessage
   | UpdateFileInReviewMessage
   | ShowCommitMessageModalMessage
+  | CommitProcessCancelledMessage

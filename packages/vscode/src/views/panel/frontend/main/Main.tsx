@@ -40,6 +40,7 @@ type Props = {
   has_active_selection: boolean
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
+  commit_button_enabling_trigger_count: number
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -650,6 +651,9 @@ export const Main: React.FC<Props> = (props) => {
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
       chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}
       chat_input_focus_key={props.chat_input_focus_key}
+      commit_button_enabling_trigger_count={
+        props.commit_button_enabling_trigger_count
+      }
     />
   )
 }
