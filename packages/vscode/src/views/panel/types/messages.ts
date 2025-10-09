@@ -459,6 +459,7 @@ export interface CanUndoChangedMessage extends BaseMessage {
 export interface CodeReviewStartedMessage extends BaseMessage {
   command: 'CODE_REVIEW_STARTED'
   files: FileInReview[]
+  raw_instructions?: string
 }
 
 export interface CodeReviewFinishedMessage extends BaseMessage {

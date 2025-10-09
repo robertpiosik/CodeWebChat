@@ -27,6 +27,7 @@ export const View = () => {
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [files_to_review, set_files_to_review] =
     useState<CheckedFileInReview[]>()
+  const [raw_instructions, set_raw_instructions] = useState<string>()
   const [progress_state, set_progress_state] = useState<{
     title: string
     progress?: number
@@ -123,6 +124,7 @@ export const View = () => {
         set_files_to_review(
           message.files.map((f) => ({ ...f, is_checked: true }))
         )
+        set_raw_instructions(message.raw_instructions)
       } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
         set_files_to_review((current_files) =>
           current_files?.map((f) =>
@@ -134,6 +136,7 @@ export const View = () => {
         )
       } else if (message.command == 'CODE_REVIEW_FINISHED') {
         set_files_to_review(undefined)
+        set_raw_instructions(undefined)
       } else if (message.command == 'WORKSPACE_STATE') {
         set_workspace_folder_count(message.folder_count)
       } else if (message.command == 'SHOW_PROGRESS') {
@@ -411,6 +414,7 @@ export const View = () => {
           <UiPage title="Changes" has_outline={true}>
             <UiChanges
               files={files_to_review}
+              raw_instructions={raw_instructions}
               has_multiple_workspaces={workspace_folder_count > 1}
               on_undo={() => {
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })

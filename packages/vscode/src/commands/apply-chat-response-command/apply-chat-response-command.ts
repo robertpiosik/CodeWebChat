@@ -241,6 +241,7 @@ const handle_code_review_and_cleanup = async (params: {
     file_path: string
     position: { line: number; character: number }
   }
+  raw_instructions?: string
 }): Promise<boolean> => {
   let resolve_cleanup_promise: () => void
   ongoing_review_cleanup_promise = new Promise((resolve) => {
@@ -250,7 +251,8 @@ const handle_code_review_and_cleanup = async (params: {
   try {
     const review_result = await review({
       original_states: params.original_states,
-      view_provider: params.view_provider
+      view_provider: params.view_provider,
+      raw_instructions: params.raw_instructions
     })
 
     if (review_result === null || review_result.accepted_files.length == 0) {
@@ -890,7 +892,8 @@ export const apply_chat_response_command = (
           chat_response: review_data.chat_response,
           view_provider,
           update_undo_and_apply_button_state,
-          original_editor_state: args?.original_editor_state
+          original_editor_state: args?.original_editor_state,
+          raw_instructions: args?.raw_instructions
         })
       }
     }

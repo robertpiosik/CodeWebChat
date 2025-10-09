@@ -22,6 +22,7 @@ type Props = {
     workspace_name?: string
     is_checked: boolean
   }) => void
+  raw_instructions?: string
 }
 
 export const Changes: FC<Props> = ({
@@ -32,7 +33,8 @@ export const Changes: FC<Props> = ({
   on_focus_file,
   on_go_to_file,
   on_toggle_file,
-  on_intelligent_update
+  on_intelligent_update,
+  raw_instructions
 }) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
   const [is_keep_button_focused, set_is_keep_button_focused] = useState(false)
@@ -70,6 +72,9 @@ export const Changes: FC<Props> = ({
 
   return (
     <div className={styles.container}>
+      {raw_instructions && (
+        <div className={styles.instructions}>{raw_instructions}</div>
+      )}
       {fallback_count > 0 && (
         <div className={styles.info}>
           {files.length > 1

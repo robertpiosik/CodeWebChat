@@ -280,6 +280,7 @@ const show_diff_with_actions = async (
 export const review = async (params: {
   original_states: OriginalFileState[]
   view_provider?: ViewProvider
+  raw_instructions?: string
 }): Promise<{
   accepted_files: ReviewableFile[]
   rejected_states: OriginalFileState[]
@@ -343,7 +344,8 @@ export const review = async (params: {
     if (params.view_provider) {
       params.view_provider.send_message({
         command: 'CODE_REVIEW_STARTED',
-        files: prepared_files.map((p) => p.reviewable_file)
+        files: prepared_files.map((p) => p.reviewable_file),
+        raw_instructions: params.raw_instructions
       })
     }
 

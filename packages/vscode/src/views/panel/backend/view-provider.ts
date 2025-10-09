@@ -769,14 +769,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
   public set_apply_button_state = (can_apply: boolean) => {
     this.send_message({
       command: 'CAN_APPLY_CLIPBOARD_CHANGED',
-      can_apply: can_apply
+      can_apply
     })
   }
 
   public set_undo_button_state = (can_undo: boolean) => {
     this.send_message({
       command: 'CAN_UNDO_CHANGED',
-      can_undo: can_undo
+      can_undo
     })
   }
 

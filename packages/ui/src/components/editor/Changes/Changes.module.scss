@@ -1,21 +1,30 @@
 .container {
   display: flex;
   flex-direction: column;
+  padding-top: 6px;
 }
 
 .info {
-  padding: var(--padding-6px) var(--padding-8px);
+  padding: var(--padding-5px) var(--padding-7px);
   color: var(--vscode-descriptionForeground);
   font-size: var(--padding-12px);
   border: 1px solid var(--vscode-sideBarSectionHeader-border);
   opacity: var(--dimmed-opacity);
   margin: 0 var(--padding-12px) var(--padding-8px) var(--padding-12px);
-  border-radius: var(--border-radius-8px);
+  border-radius: var(--border-radius-5px);
 
   > span {
     vertical-align: middle;
     font-size: var(--font-size-12px);
   }
+}
+
+.instructions {
+  padding: var(--padding-5px) var(--padding-7px);
+  color: var(--vscode-descriptionForeground);
+  border: 1px solid var(--vscode-sideBarSectionHeader-border);
+  margin: 0 var(--padding-12px) var(--padding-8px) var(--padding-12px);
+  border-radius: var(--border-radius-5px);
 }
 
 .list {
