@@ -48,12 +48,9 @@ export class WorkspaceProvider
   private refresh_timeout: NodeJS.Timeout | null = null
   // Track which files were opened from workspace view to prevent auto-checking
   private opened_from_workspace_view: Set<string> = new Set()
-  // Track which tabs are currently in preview mode
   private preview_tabs: Map<string, boolean> = new Map()
   private tab_change_handler: vscode.Disposable
-  // Track directories that have some but not all children checked
   private partially_checked_dirs: Set<string> = new Set()
-  // Track which workspace root a file belongs to
   private file_workspace_map: Map<string, string> = new Map()
   private websites_provider: WebsitesProvider
   private gitignore_initialization: Promise<void>
@@ -594,12 +591,9 @@ export class WorkspaceProvider
       }
       if (element instanceof WebsitesFolderItem) {
         const websites = await this.websites_provider.getChildren()
-        // The checkbox state is handled by the websites_provider's getTreeItem
-        // which is called for each child.
         return websites
       }
 
-      // It's a FileItem (directory), get its children
       const dir_path = element.resourceUri.fsPath
 
       if (element.isDirectory) {
@@ -607,7 +601,7 @@ export class WorkspaceProvider
         if (workspace_root) {
           const relative_path = path.relative(workspace_root, dir_path)
           if (this.is_excluded(relative_path)) {
-            return [] // Return empty array for excluded directories
+            return []
           }
         }
       }
@@ -668,7 +662,7 @@ export class WorkspaceProvider
           false, // Is not open file
           total_tokens,
           selected_tokens,
-          undefined, // Initial description, will be formatted in getTreeItem
+          undefined,
           true // Is workspace root
         )
       )
@@ -729,7 +723,6 @@ export class WorkspaceProvider
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
       if (this.is_excluded(relative_dir_path)) {
-        // Directory is excluded, return 0 tokens
         this.directory_token_counts.set(dir_path, 0)
         return 0
       }
@@ -847,7 +840,6 @@ export class WorkspaceProvider
             )
           }
         } else {
-          // File
           if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
             selected_tokens += await this.calculate_file_tokens(full_path)
           }
@@ -880,7 +872,7 @@ export class WorkspaceProvider
         dir_path !== workspace_root && // Don't exclude workspace roots
         this.is_excluded(relative_dir_path)
       ) {
-        return [] // Return empty array for excluded directories
+        return []
       }
 
       const dir_entries = await fs.promises.readdir(dir_path, {
@@ -967,9 +959,9 @@ export class WorkspaceProvider
           is_directory,
           checkbox_state,
           is_symbolic_link,
-          false, // is not an open file
+          false,
           token_count,
-          selected_token_count, // Pass selectedTokenCount
+          selected_token_count,
           undefined
         )
 
@@ -991,7 +983,6 @@ export class WorkspaceProvider
   ): Promise<void> {
     if (item instanceof WebsiteItem) {
       await this.websites_provider.update_check_state(item, state)
-      // refresh is handled by onDidChangeTreeData listener
       return
     }
 
@@ -1001,7 +992,6 @@ export class WorkspaceProvider
       } else {
         this.websites_provider.clear_checks()
       }
-      // Websites provider will fire events to refresh the view
       return
     }
 
@@ -1131,7 +1121,6 @@ export class WorkspaceProvider
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
       if (this.is_excluded(relative_dir_path) || parent_is_excluded) {
-        // Don't recursively check excluded directories
         return
       }
 
@@ -1404,6 +1393,78 @@ export class WorkspaceProvider
     }
 
     return total
+  }
+
+  public async find_all_files(root_path: string): Promise<string[]> {
+    const files: string[] = []
+    const visited = new Set<string>()
+
+    const walk = async (dir_path: string) => {
+      if (visited.has(dir_path)) {
+        return
+      }
+      visited.add(dir_path)
+
+      const workspace_root = this.get_workspace_root_for_file(dir_path)
+      if (!workspace_root) {
+        return
+      }
+
+      const relative_dir_path = path.relative(workspace_root, dir_path)
+      if (
+        dir_path !== workspace_root && // Don't exclude the root itself
+        this.is_excluded(relative_dir_path)
+      ) {
+        return
+      }
+
+      try {
+        const entries = await fs.promises.readdir(dir_path, {
+          withFileTypes: true
+        })
+
+        for (const entry of entries) {
+          const full_path = path.join(dir_path, entry.name)
+          const relative_path = path.relative(workspace_root, full_path)
+
+          if (this.is_excluded(relative_path)) {
+            continue
+          }
+
+          let is_directory = entry.isDirectory()
+          const is_symbolic_link = entry.isSymbolicLink()
+          let is_broken_link = false
+
+          if (is_symbolic_link) {
+            try {
+              const stats = await fs.promises.stat(full_path)
+              is_directory = stats.isDirectory()
+            } catch {
+              is_broken_link = true
+            }
+          }
+
+          if (is_broken_link) {
+            continue
+          }
+
+          if (is_directory) {
+            await walk(full_path)
+          } else if (!should_ignore_file(full_path, this.ignored_extensions)) {
+            files.push(full_path)
+          }
+        }
+      } catch (error) {
+        Logger.error({
+          function_name: 'find_all_files.walk',
+          message: `Error reading directory ${dir_path}`,
+          data: error
+        })
+      }
+    }
+
+    await walk(root_path)
+    return files
   }
 
   public async update_workspace_folders(

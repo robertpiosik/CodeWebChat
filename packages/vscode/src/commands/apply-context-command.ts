@@ -21,7 +21,7 @@ export async function resolve_glob_patterns(
   const all_files_in_cache = new Set<string>()
 
   for (const root of workspace_provider.getWorkspaceRoots()) {
-    const files = workspace_provider.find_all_files(root)
+    const files = await workspace_provider.find_all_files(root)
     files.forEach((file) => all_files_in_cache.add(file))
   }
 
@@ -212,7 +212,7 @@ async function apply_saved_context(
       )
 
       if (!choice) {
-        return // User cancelled
+        return
       }
 
       await extension_context.workspaceState.update(
@@ -257,6 +257,72 @@ async function save_contexts_to_file(
   }
 }
 
+async function load_and_merge_file_contexts(): Promise<{
+  merged: SavedContext[]
+  context_to_roots: Map<string, string[]>
+}> {
+  const workspace_folders = vscode.workspace.workspaceFolders || []
+  const contexts_by_name = new Map<
+    string,
+    { paths: string[]; roots: string[] }
+  >()
+  const should_prefix = workspace_folders.length > 1
+
+  for (const folder of workspace_folders) {
+    const contexts_file_path = path.join(
+      folder.uri.fsPath,
+      '.vscode',
+      'contexts.json'
+    )
+
+    try {
+      if (fs.existsSync(contexts_file_path)) {
+        const content = fs.readFileSync(contexts_file_path, 'utf8')
+        const parsed = JSON.parse(content)
+        if (Array.isArray(parsed)) {
+          const contexts = parsed.filter(
+            (item) =>
+              typeof item == 'object' &&
+              item !== null &&
+              typeof item.name == 'string' &&
+              Array.isArray(item.paths) &&
+              item.paths.every((p: any) => typeof p == 'string')
+          ) as SavedContext[]
+
+          for (const context of contexts) {
+            if (!contexts_by_name.has(context.name)) {
+              contexts_by_name.set(context.name, { paths: [], roots: [] })
+            }
+            const entry = contexts_by_name.get(context.name)!
+
+            const paths_to_add = should_prefix
+              ? context.paths.map((p) => `${folder.name}:${p}`)
+              : context.paths
+
+            entry.paths.push(...paths_to_add)
+            entry.roots.push(folder.uri.fsPath)
+          }
+        }
+      }
+    } catch (error: any) {
+      console.error(`Error reading contexts file from ${folder.name}:`, error)
+    }
+  }
+
+  const merged: SavedContext[] = []
+  const context_to_roots = new Map<string, string[]>()
+
+  for (const [name, data] of contexts_by_name.entries()) {
+    merged.push({
+      name,
+      paths: data.paths
+    })
+    context_to_roots.set(name, data.roots)
+  }
+
+  return { merged, context_to_roots }
+}
+
 export function apply_context_command(
   workspace_provider: WorkspaceProvider | undefined,
   on_context_selected: () => void,
@@ -290,36 +356,9 @@ export function apply_context_command(
         let internal_contexts: SavedContext[] =
           extension_context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, [])
 
-        const contexts_file_path = path.join(
-          workspace_root,
-          '.vscode',
-          'contexts.json'
-        )
-        let file_contexts: SavedContext[] = []
-
-        try {
-          if (fs.existsSync(contexts_file_path)) {
-            const content = fs.readFileSync(contexts_file_path, 'utf8')
-            const parsed = JSON.parse(content)
-            if (Array.isArray(parsed)) {
-              file_contexts = parsed.filter(
-                (item) =>
-                  typeof item == 'object' &&
-                  item !== null &&
-                  typeof item.name == 'string' &&
-                  Array.isArray(item.paths) &&
-                  item.paths.every((p: any) => typeof p == 'string')
-              ) as SavedContext[]
-            } else {
-              console.warn('Contexts file is not an array:', contexts_file_path)
-            }
-          }
-        } catch (error: any) {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.ERROR_READING_CONTEXTS_FILE(error.message)
-          )
-          console.error('Error reading contexts file:', error)
-        }
+        const { merged: file_contexts, context_to_roots } =
+          await load_and_merge_file_contexts()
+        const workspace_folders = vscode.workspace.workspaceFolders || []
 
         const main_quick_pick_options: (vscode.QuickPickItem & {
           value: 'clipboard' | 'internal' | 'file'
@@ -333,7 +372,7 @@ export function apply_context_command(
 
         if (internal_contexts.length > 0) {
           main_quick_pick_options.push({
-            label: 'Workspace State',
+            label: 'Workspace state',
             description: `${internal_contexts.length} ${
               internal_contexts.length == 1 ? 'context' : 'contexts'
             }`,
@@ -343,7 +382,7 @@ export function apply_context_command(
 
         if (file_contexts.length > 0) {
           main_quick_pick_options.push({
-            label: 'JSON File (.vscode/contexts.json)',
+            label: 'JSON file',
             description: `${file_contexts.length} ${
               file_contexts.length == 1 ? 'context' : 'contexts'
             }`,
@@ -441,11 +480,26 @@ export function apply_context_command(
             const context_items = contexts.map((context, index) => {
               const buttons = [edit_button, delete_button]
 
+              let description = `${context.paths.length} ${
+                context.paths.length == 1 ? 'path' : 'paths'
+              }`
+
+              if (context_source === 'file') {
+                const roots = context_to_roots.get(context.name) || []
+                if (roots.length > 1) {
+                  const workspace_names = roots.map((root) => {
+                    const folder = workspace_folders.find(
+                      (f) => f.uri.fsPath === root
+                    )
+                    return folder?.name || path.basename(root)
+                  })
+                  description += ` · ${workspace_names.join(', ')}`
+                }
+              }
+
               return {
                 label: context.name,
-                description: `${context.paths.length} ${
-                  context.paths.length == 1 ? 'path' : 'paths'
-                }`,
+                description,
                 context,
                 buttons,
                 index
@@ -463,7 +517,7 @@ export function apply_context_command(
           quick_pick.items = create_quick_pick_items(contexts_to_use)
           quick_pick.placeholder = `Select saved context (from ${
             context_source == 'internal'
-              ? 'Workspace State'
+              ? 'workspace state'
               : '.vscode/contexts.json'
           })`
 
@@ -583,33 +637,67 @@ export function apply_context_command(
                     }
                   } else if (context_source == 'file') {
                     if (trimmed_name != item.context.name) {
-                      updated_contexts = file_contexts.map((c) =>
-                        c.name == item.context.name
-                          ? { ...c, name: trimmed_name }
-                          : c
-                      )
-                      context_updated = true
-                    }
+                      const roots =
+                        context_to_roots.get(item.context.name) || []
+                      let success = true
 
-                    if (context_updated) {
-                      try {
-                        await save_contexts_to_file(
-                          updated_contexts,
-                          contexts_file_path
+                      for (const root of roots) {
+                        const contexts_file_path = path.join(
+                          root,
+                          '.vscode',
+                          'contexts.json'
                         )
-                        file_contexts = updated_contexts
-                        name_to_highlight = trimmed_name
-                      } catch (error: any) {
-                        vscode.window.showErrorMessage(
-                          dictionary.error_message.ERROR_UPDATING_CONTEXT_NAME_IN_FILE(
-                            error.message
+
+                        try {
+                          if (fs.existsSync(contexts_file_path)) {
+                            const content = fs.readFileSync(
+                              contexts_file_path,
+                              'utf8'
+                            )
+                            let root_contexts = JSON.parse(content)
+
+                            if (!Array.isArray(root_contexts)) {
+                              root_contexts = []
+                            }
+
+                            const updated_root_contexts = root_contexts.map(
+                              (c: SavedContext) =>
+                                c.name == item.context.name
+                                  ? { ...c, name: trimmed_name }
+                                  : c
+                            )
+
+                            await save_contexts_to_file(
+                              updated_root_contexts,
+                              contexts_file_path
+                            )
+                          }
+                        } catch (error: any) {
+                          vscode.window.showErrorMessage(
+                            dictionary.error_message.ERROR_UPDATING_CONTEXT_NAME_IN_FILE(
+                              error.message
+                            )
                           )
+                          console.error(
+                            'Error updating context name in file:',
+                            error
+                          )
+                          success = false
+                          break
+                        }
+                      }
+
+                      if (success) {
+                        const reloaded = await load_and_merge_file_contexts()
+                        file_contexts.length = 0
+                        file_contexts.push(...reloaded.merged)
+                        context_to_roots.clear()
+                        reloaded.context_to_roots.forEach((v, k) =>
+                          context_to_roots.set(k, v)
                         )
-                        console.error(
-                          'Error updating context name in file:',
-                          error
-                        )
-                        context_updated = false
+
+                        context_updated = true
+                        name_to_highlight = trimmed_name
                       }
                     }
                   }
@@ -680,42 +768,68 @@ export function apply_context_command(
                       quick_pick.show()
                     }
                   } else if (context_source == 'file') {
-                    const updated_contexts = file_contexts.filter(
-                      (c) => c.name != item.context.name
+                    const roots = context_to_roots.get(item.context.name) || []
+                    for (const root of roots) {
+                      const contexts_file_path = path.join(
+                        root,
+                        '.vscode',
+                        'contexts.json'
+                      )
+
+                      try {
+                        if (fs.existsSync(contexts_file_path)) {
+                          const content = fs.readFileSync(
+                            contexts_file_path,
+                            'utf8'
+                          )
+                          let root_contexts = JSON.parse(content)
+
+                          if (!Array.isArray(root_contexts)) {
+                            root_contexts = []
+                          }
+
+                          root_contexts = root_contexts.filter(
+                            (c: SavedContext) => c.name !== item.context.name
+                          )
+
+                          await save_contexts_to_file(
+                            root_contexts,
+                            contexts_file_path
+                          )
+                        }
+                      } catch (error: any) {
+                        vscode.window.showErrorMessage(
+                          `Error deleting context from ${path.basename(
+                            root
+                          )}: ${error.message}`
+                        )
+                      }
+                    }
+
+                    const reloaded = await load_and_merge_file_contexts()
+                    file_contexts.length = 0
+                    file_contexts.push(...reloaded.merged)
+                    context_to_roots.clear()
+                    reloaded.context_to_roots.forEach((v, k) =>
+                      context_to_roots.set(k, v)
                     )
 
-                    try {
-                      await save_contexts_to_file(
-                        updated_contexts,
-                        contexts_file_path
-                      )
-                      vscode.window.showInformationMessage(
-                        `Deleted context "${item.context.name}" from the JSON file`
-                      )
-                      file_contexts = updated_contexts
+                    vscode.window.showInformationMessage(
+                      `Deleted context "${item.context.name}" from all workspace roots`
+                    )
 
-                      if (updated_contexts.length == 0) {
-                        quick_pick.hide()
-                        vscode.window.showInformationMessage(
-                          dictionary.information_message
-                            .NO_SAVED_CONTEXTS_IN_JSON_FILE
-                        )
-                      } else {
-                        quick_pick.items =
-                          create_quick_pick_items(updated_contexts)
-                        quick_pick.show()
-                      }
-                    } catch (error: any) {
-                      vscode.window.showErrorMessage(
-                        dictionary.error_message.ERROR_DELETING_CONTEXT_FROM_FILE(
-                          error.message
-                        )
+                    if (file_contexts.length == 0) {
+                      quick_pick.hide()
+                      vscode.window.showInformationMessage(
+                        dictionary.information_message
+                          .NO_SAVED_CONTEXTS_IN_JSON_FILE
                       )
-                      console.error('Error deleting context from file:', error)
+                    } else {
+                      quick_pick.items = create_quick_pick_items(file_contexts)
+                      quick_pick.show()
                     }
                   }
                 } else {
-                  // User cancelled delete, show quick pick again
                   quick_pick.show()
                 }
                 return
@@ -756,9 +870,14 @@ export function apply_context_command(
             return
           }
 
+          // We need the workspace root for path resolution in apply_saved_context
+          // Since we are applying a merged context, we use the primary workspace root
+          // for resolving paths that don't use the workspace prefix syntax.
+          const primary_workspace_root = workspace_provider.getWorkspaceRoot()!
+
           await apply_saved_context(
             context_to_apply,
-            workspace_root,
+            primary_workspace_root,
             workspace_provider,
             extension_context
           )

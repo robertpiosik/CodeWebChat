@@ -62,12 +62,11 @@ function condense_paths(
         const entry_path = path.join(dir_path, entry)
         const abs_entry_path = path.join(workspace_root, entry_path)
 
-        // IMPORTANT: Use the current workspace root for this file
         const current_workspace_root =
           workspace_provider.get_workspace_root_for_file(abs_entry_path) ||
           workspace_root
         const relative_entry_path = path.relative(
-          current_workspace_root, // Use the proper workspace root for this file
+          current_workspace_root,
           abs_entry_path
         )
         if (workspace_provider.is_excluded(relative_entry_path)) {
@@ -188,6 +187,58 @@ function group_files_by_workspace(
   return files_by_workspace
 }
 
+function get_contexts_file_path(workspace_root: string): string {
+  return path.join(workspace_root, '.vscode', 'contexts.json')
+}
+
+async function load_all_contexts(): Promise<
+  Map<string, { contexts: SavedContext[]; root: string }>
+> {
+  const workspace_folders = vscode.workspace.workspaceFolders || []
+  const contexts_by_name = new Map<
+    string,
+    { contexts: SavedContext[]; root: string }
+  >()
+
+  for (const folder of workspace_folders) {
+    const contexts_file_path = get_contexts_file_path(folder.uri.fsPath)
+
+    try {
+      if (fs.existsSync(contexts_file_path)) {
+        const content = fs.readFileSync(contexts_file_path, 'utf8')
+        const parsed = JSON.parse(content)
+        if (Array.isArray(parsed)) {
+          const contexts = parsed.filter(
+            (item) =>
+              typeof item == 'object' &&
+              item !== null &&
+              typeof item.name == 'string' &&
+              Array.isArray(item.paths) &&
+              item.paths.every((p: any) => typeof p == 'string')
+          ) as SavedContext[]
+
+          for (const context of contexts) {
+            if (!contexts_by_name.has(context.name)) {
+              contexts_by_name.set(context.name, {
+                contexts: [],
+                root: folder.uri.fsPath
+              })
+            }
+            contexts_by_name.get(context.name)!.contexts.push({
+              ...context,
+              _root: folder.uri.fsPath // Track which root it came from
+            } as any)
+          }
+        }
+      }
+    } catch (error: any) {
+      console.error(`Error reading contexts file from ${folder.name}:`, error)
+    }
+  }
+
+  return contexts_by_name
+}
+
 export function save_context_command(
   workspace_provider: WorkspaceProvider | undefined,
   extContext: vscode.ExtensionContext
@@ -220,37 +271,24 @@ export function save_context_command(
         return
       }
 
+      const workspace_folders = vscode.workspace.workspaceFolders || []
+
+      const files_by_workspace = group_files_by_workspace(checked_files)
+
+      const contextsByWorkspace = new Map<string, string[]>()
       let all_prefixed_paths: string[] = []
-      const workspaceFolders = vscode.workspace.workspaceFolders || []
 
-      if (workspaceFolders.length <= 1) {
-        const condensed_paths = condense_paths(
-          checked_files,
-          workspace_root,
-          workspace_provider
-        )
-        all_prefixed_paths = add_workspace_prefix(
-          condensed_paths,
-          workspace_root
-        )
-      } else {
-        const filesByWorkspace = group_files_by_workspace(checked_files)
+      for (const [root, files] of files_by_workspace.entries()) {
+        if (files.length == 0) continue
 
-        filesByWorkspace.forEach((files, root) => {
-          if (files.length == 0) return
+        const condensed_paths = condense_paths(files, root, workspace_provider)
+        const relative_paths = condensed_paths.map((p) => p.replace(/\\/g, '/'))
 
-          const condensed_paths = condense_paths(
-            files,
-            root,
-            workspace_provider
-          )
+        contextsByWorkspace.set(root, relative_paths)
 
-          const prefixed_paths = add_workspace_prefix(condensed_paths, root)
-          all_prefixed_paths = [...all_prefixed_paths, ...prefixed_paths]
-        })
+        const prefixed_paths = add_workspace_prefix(relative_paths, root)
+        all_prefixed_paths = [...all_prefixed_paths, ...prefixed_paths]
       }
-
-      all_prefixed_paths = all_prefixed_paths.map((p) => p.replace(/\\/g, '/'))
 
       all_prefixed_paths.sort((a, b) => {
         const workspace_folders = vscode.workspace.workspaceFolders
@@ -287,12 +325,6 @@ export function save_context_command(
 
         return a.localeCompare(b)
       })
-
-      const contexts_file_path = path.join(
-        workspace_root,
-        '.vscode',
-        'contexts.json'
-      )
 
       const BACK_LABEL = '$(arrow-left) Back'
       let show_storage_selection = true
@@ -364,50 +396,12 @@ export function save_context_command(
 
         if (save_location == 'file') {
           try {
-            const vscode_dir = path.join(workspace_root, '.vscode')
-            if (!fs.existsSync(vscode_dir)) {
-              fs.mkdirSync(vscode_dir, { recursive: true })
-            }
-
-            let file_contexts: SavedContext[] = []
-            if (fs.existsSync(contexts_file_path)) {
-              try {
-                const content = fs.readFileSync(contexts_file_path, 'utf8')
-                if (content.trim().length > 0) {
-                  file_contexts = JSON.parse(content)
-                  if (!Array.isArray(file_contexts)) {
-                    vscode.window.showWarningMessage(
-                      dictionary.warning_message.CONTEXTS_FILE_NOT_VALID_ARRAY
-                    )
-                    file_contexts = []
-                  }
-                }
-              } catch (error) {
-                vscode.window.showWarningMessage(
-                  `Error reading contexts file. Starting with empty contexts list.` +
-                    `Details: ${error}`
-                )
-                file_contexts = []
-              }
-            }
-
-            if (file_contexts.length > 0) {
-              for (const existingContext of file_contexts) {
-                if (
-                  are_paths_equal(existingContext.paths, all_prefixed_paths)
-                ) {
-                  vscode.window.showInformationMessage(
-                    `A context with identical paths already exists in the file: "${existingContext.name}"`,
-                    { modal: true }
-                  )
-                  return
-                }
-              }
-            }
-
             let context_name: string | undefined
 
-            if (file_contexts.length == 0) {
+            const all_contexts_map = await load_all_contexts()
+            const existing_context_names = Array.from(all_contexts_map.keys())
+
+            if (existing_context_names.length == 0) {
               context_name = await vscode.window.showInputBox({
                 prompt: 'Enter a name for this context',
                 placeHolder: 'e.g., Backend API Context',
@@ -427,12 +421,31 @@ export function save_context_command(
                   label: '$(add) Create new...'
                 },
                 { label: '', kind: vscode.QuickPickItemKind.Separator },
-                ...file_contexts.map((context) => ({
-                  label: context.name,
-                  description: `${context.paths.length} ${
-                    context.paths.length > 1 ? 'paths' : 'path'
-                  }`
-                }))
+                ...existing_context_names.map((name) => {
+                  const context_info = all_contexts_map.get(name)!
+                  const roots_with_context = context_info.contexts.map(
+                    (c) => (c as any)._root
+                  )
+                  const workspace_names = roots_with_context.map((root) => {
+                    const folder = workspace_folders.find(
+                      (f) => f.uri.fsPath === root
+                    )
+                    return folder?.name || path.basename(root)
+                  })
+
+                  const total_paths = context_info.contexts.reduce(
+                    (sum, c) => sum + c.paths.length,
+                    0
+                  )
+
+                  return {
+                    label: name,
+                    description:
+                      workspace_names.length > 1
+                        ? `${total_paths} paths · ${workspace_names.join(', ')}`
+                        : `${total_paths} paths`
+                  }
+                })
               ]
 
               const selected_item = await vscode.window.showQuickPick(
@@ -466,10 +479,9 @@ export function save_context_command(
                   return
                 }
 
-                const existing_names = file_contexts.map((ctx) => ctx.name)
-                if (existing_names.includes(context_name)) {
+                if (existing_context_names.includes(context_name)) {
                   const overwrite = await vscode.window.showWarningMessage(
-                    `A context named "${context_name}" already exists in the file. Overwrite?`,
+                    `A context named "${context_name}" already exists. Overwrite?`,
                     { modal: true },
                     'Overwrite'
                   )
@@ -484,40 +496,75 @@ export function save_context_command(
             }
 
             if (!context_name) {
-              // This case should ideally not be reached if user didn't cancel,
-              // but added for safety.
               vscode.window.showErrorMessage(
                 dictionary.error_message.CONTEXT_NAME_NOT_PROVIDED
               )
               return
             }
 
-            const new_context: SavedContext = {
-              name: context_name,
-              paths: all_prefixed_paths
+            for (const [
+              root,
+              relative_paths
+            ] of contextsByWorkspace.entries()) {
+              const contexts_file_path = get_contexts_file_path(root)
+              const vscode_dir = path.dirname(contexts_file_path)
+
+              if (!fs.existsSync(vscode_dir)) {
+                fs.mkdirSync(vscode_dir, { recursive: true })
+              }
+
+              let file_contexts: SavedContext[] = []
+              if (fs.existsSync(contexts_file_path)) {
+                try {
+                  const content = fs.readFileSync(contexts_file_path, 'utf8')
+                  if (content.trim().length > 0) {
+                    file_contexts = JSON.parse(content)
+                    if (!Array.isArray(file_contexts)) {
+                      file_contexts = []
+                    }
+                  }
+                } catch (error) {
+                  file_contexts = []
+                }
+              }
+
+              const new_context: SavedContext = {
+                name: context_name,
+                paths: relative_paths
+              }
+
+              const existing_index = file_contexts.findIndex(
+                (ctx) => ctx.name == context_name
+              )
+
+              if (existing_index != -1) {
+                file_contexts[existing_index] = new_context
+              } else {
+                file_contexts.push(new_context)
+              }
+
+              file_contexts.sort((a, b) => a.name.localeCompare(b.name))
+
+              fs.writeFileSync(
+                contexts_file_path,
+                JSON.stringify(file_contexts, null, 2),
+                'utf8'
+              )
             }
 
-            const existing_index = file_contexts.findIndex(
-              (ctx) => ctx.name == context_name
-            )
-
-            if (existing_index != -1) {
-              file_contexts[existing_index] = new_context
-            } else {
-              file_contexts.push(new_context)
-            }
-
-            file_contexts.sort((a, b) => a.name.localeCompare(b.name))
-
-            fs.writeFileSync(
-              contexts_file_path,
-              JSON.stringify(file_contexts, null, 2),
-              'utf8'
-            )
+            const affected_workspaces = Array.from(
+              contextsByWorkspace.keys()
+            ).map((root) => {
+              const folder = workspace_folders.find(
+                (f) => f.uri.fsPath === root
+              )
+              return folder?.name || path.basename(root)
+            })
 
             vscode.window.showInformationMessage(
-              `Context "${context_name}" saved to .vscode/contexts.json successfully.`,
-              { modal: true }
+              `Context "${context_name}" saved to ${affected_workspaces.join(
+                ', '
+              )}.`
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
@@ -527,7 +574,6 @@ export function save_context_command(
             )
           }
         } else {
-          // If we reach here, we're saving to Workspace State
           const saved_contexts: SavedContext[] = extContext.workspaceState.get(
             SAVED_CONTEXTS_STATE_KEY,
             []
@@ -536,9 +582,8 @@ export function save_context_command(
           if (saved_contexts.length > 0) {
             for (const existingContext of saved_contexts) {
               if (are_paths_equal(existingContext.paths, all_prefixed_paths)) {
-                vscode.window.showInformationMessage(
-                  `A context with identical paths already exists in workspace state: "${existingContext.name}"`,
-                  { modal: true }
+                vscode.window.showWarningMessage(
+                  `A context with identical paths already exists in workspace state: "${existingContext.name}"`
                 )
                 return
               }
@@ -657,8 +702,7 @@ export function save_context_command(
               updated_contexts
             )
             vscode.window.showInformationMessage(
-              `Context "${context_name}" saved to Workspace State successfully.`,
-              { modal: true }
+              `Context "${context_name}" saved to Workspace State successfully.`
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
