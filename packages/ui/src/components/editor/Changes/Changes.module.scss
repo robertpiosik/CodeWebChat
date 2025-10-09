@@ -20,7 +20,8 @@
 }
 
 .instructions {
-  padding: var(--padding-5px) var(--padding-7px);
+  padding: var(--padding-5px) var(--padding-20px) var(--padding-5px)
+    var(--padding-7px);
   color: var(--vscode-descriptionForeground);
   border: 1px solid var(--vscode-sideBarSectionHeader-border);
   margin: 0 var(--padding-12px) var(--padding-8px) var(--padding-12px);
