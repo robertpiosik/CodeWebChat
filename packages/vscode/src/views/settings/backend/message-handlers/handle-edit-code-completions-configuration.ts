@@ -12,7 +12,7 @@ import {
   edit_provider_for_config,
   edit_reasoning_effort_for_config,
   edit_temperature_for_config
-} from './config-editing-helpers'
+} from '../../utils/config-editing'
 
 const generate_id = (config: ToolConfig) =>
   `${config.provider_name}:${config.model}:${config.temperature}:${

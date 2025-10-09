@@ -13,7 +13,7 @@ import {
   edit_temperature_for_config,
   initial_select_model,
   initial_select_provider
-} from './config-editing-helpers'
+} from '../../utils/config-editing'
 import { dictionary } from '@shared/constants/dictionary'
 
 const generate_id = (config: ToolConfig) =>
