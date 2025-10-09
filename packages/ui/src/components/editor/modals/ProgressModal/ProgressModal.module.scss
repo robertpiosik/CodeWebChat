@@ -42,6 +42,69 @@
   gap: var(--padding-12px);
 }
 
+.files-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-8px);
+  max-height: 200px;
+  overflow-y: auto;
+  padding: var(--padding-4px);
+  background-color: var(--vscode-input-background);
+  border-radius: var(--border-radius-4px);
+}
+
+.file-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-4px);
+}
+
+.file-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--padding-8px);
+}
+
+.file-item__name {
+  font-family: monospace;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--vscode-descriptionForeground);
+  flex-shrink: 1;
+}
+
+.file-item__status {
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+
+  &--waiting {
+    color: var(--vscode-descriptionForeground);
+  }
+  &--thinking {
+    color: var(--vscode-focusBorder);
+  }
+  &--receiving {
+    color: var(--vscode-focusBorder);
+  }
+  &--done {
+    color: var(--vscode-testing-iconPassed);
+  }
+  &--error {
+    color: var(--vscode-testing-iconFailed);
+  }
+}
+
+.file-item__details {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
+  text-align: right;
+}
+
 @keyframes indeterminate-progress {
   from {
     left: -50px;

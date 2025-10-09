@@ -20,6 +20,21 @@ export type ApiToolConfiguration = {
   is_default?: boolean
 }
 
+export type FileProgressStatus =
+  | 'waiting'
+  | 'thinking'
+  | 'receiving'
+  | 'done'
+  | 'error'
+
+export type FileProgress = {
+  file_path: string
+  workspace_name?: string
+  status: FileProgressStatus
+  progress?: number
+  tokens_per_second?: number
+}
+
 // === FROM FRONTEND TO BACKEND ===
 export interface GetInstructionsMessage extends BaseMessage {
   command: 'GET_INSTRUCTIONS'
@@ -497,6 +512,7 @@ export interface ShowProgressMessage extends BaseMessage {
   title: string
   progress?: number
   tokens_per_second?: number
+  files?: FileProgress[]
 }
 
 export interface HideProgressMessage extends BaseMessage {

@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm } from '@/views/panel/frontend/EditPresetForm'
 import { Preset } from '@shared/types/preset'
-import { BackendMessage, FrontendMessage } from '../types/messages'
+import {
+  BackendMessage,
+  FileProgress,
+  FrontendMessage
+} from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { Home } from './home'
@@ -32,6 +36,7 @@ export const View = () => {
     title: string
     progress?: number
     tokens_per_second?: number
+    files?: FileProgress[]
   }>()
   const [chat_initialized_title, set_chat_initialized_title] = useState<
     string | undefined
@@ -145,12 +150,12 @@ export const View = () => {
       } else if (message.command == 'WORKSPACE_STATE') {
         set_workspace_folder_count(message.folder_count)
       } else if (message.command == 'SHOW_PROGRESS') {
-        set_progress_state((current) => ({
+        set_progress_state({
           title: message.title,
-          progress: message.progress ?? current?.progress,
-          tokens_per_second:
-            message.tokens_per_second ?? current?.tokens_per_second
-        }))
+          progress: message.progress,
+          tokens_per_second: message.tokens_per_second,
+          files: message.files
+        })
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)
       } else if (message.command == 'SHOW_CHAT_INITIALIZED') {
@@ -483,6 +488,7 @@ export const View = () => {
             title={progress_state.title}
             progress={progress_state.progress}
             tokens_per_second={progress_state.tokens_per_second}
+            files={progress_state.files}
             on_cancel={() => {
               post_message(vscode, { command: 'CANCEL_API_REQUEST' })
             }}

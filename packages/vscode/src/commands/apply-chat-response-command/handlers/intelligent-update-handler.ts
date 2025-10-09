@@ -11,6 +11,7 @@ import { create_file_if_needed } from '../utils/file-operations'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
+import { FileProgress } from '@/views/panel/types/messages'
 
 export const handle_intelligent_update = async (params: {
   endpoint_url: string
@@ -152,6 +153,22 @@ export const handle_intelligent_update = async (params: {
     }
   }
 
+  const file_progress_list: FileProgress[] = files.map((f) => ({
+    file_path: f.file_path,
+    workspace_name: f.workspace_name,
+    status: 'waiting'
+  }))
+
+  const update_progress = () => {
+    if (params.view_provider) {
+      params.view_provider.send_message({
+        command: 'SHOW_PROGRESS',
+        title: progress_title,
+        files: [...file_progress_list]
+      })
+    }
+  }
+
   const original_states: OriginalFileState[] = []
   const document_changes: {
     document: vscode.TextDocument | null // Null for new files
@@ -169,20 +186,10 @@ export const handle_intelligent_update = async (params: {
 
   try {
     if (params.view_provider) {
-      params.view_provider.send_message({
-        command: 'SHOW_PROGRESS',
-        title: progress_title
-      })
+      update_progress()
     }
-    let largest_file: {
-      path: string
-      size: number
-      workspaceName?: string
-    } | null = null
-    let largest_file_progress = 0
-    let previous_largest_file_progress = 0
 
-    // Pre-scan existing files to find largest and store original states
+    // Pre-scan existing files and store original states
     for (const file of existing_files) {
       let workspace_root = default_workspace_path!
       if (file.workspace_name && workspace_map.has(file.workspace_name)) {
@@ -203,7 +210,6 @@ export const handle_intelligent_update = async (params: {
         const file_uri = vscode.Uri.file(safe_path)
         const document = await vscode.workspace.openTextDocument(file_uri)
         const current_content = document.getText()
-        const content_size = current_content.length
 
         original_states.push({
           file_path: file.file_path,
@@ -211,14 +217,6 @@ export const handle_intelligent_update = async (params: {
           is_new: false,
           workspace_name: file.workspace_name
         })
-
-        if (!largest_file || content_size > largest_file.size) {
-          largest_file = {
-            path: file.file_path,
-            size: content_size,
-            workspaceName: file.workspace_name
-          }
-        }
       } catch (error) {
         Logger.warn({
           function_name: 'handle_intelligent_update',
@@ -241,6 +239,12 @@ export const handle_intelligent_update = async (params: {
     for (let i = 0; i < files.length; i += max_concurrency) {
       const batch = files.slice(i, i + max_concurrency)
       const promises = batch.map(async (file) => {
+        const file_progress_index = file_progress_list.findIndex(
+          (p) =>
+            p.file_path === file.file_path &&
+            p.workspace_name === file.workspace_name
+        )
+
         let workspace_root = default_workspace_path!
         if (file.workspace_name && workspace_map.has(file.workspace_name)) {
           workspace_root = workspace_map.get(file.workspace_name)!
@@ -283,6 +287,13 @@ export const handle_intelligent_update = async (params: {
             ? original_state.content
             : document_text
 
+          if (file_progress_index != -1) {
+            file_progress_list[file_progress_index].status = 'thinking'
+            update_progress()
+          }
+
+          let receiving_started = false
+
           const updated_content_result = await process_file({
             endpoint_url: params.endpoint_url,
             api_key: params.api_key,
@@ -295,29 +306,25 @@ export const handle_intelligent_update = async (params: {
             instruction: file.content,
             cancel_token: cancel_token_source.token,
             on_chunk: (tokens_per_second, total_tokens) => {
-              if (
-                largest_file &&
-                file.file_path == largest_file.path &&
-                file.workspace_name == largest_file.workspaceName
-              ) {
-                const estimated_total_tokens = Math.ceil(largest_file.size / 4)
+              if (file_progress_index != -1) {
+                const file_progress = file_progress_list[file_progress_index]
+                if (!receiving_started) {
+                  receiving_started = true
+                  file_progress.status = 'receiving'
+                }
+
+                file_progress.tokens_per_second = tokens_per_second
+
+                const estimated_total_tokens = Math.ceil(
+                  original_content_for_api.length / 4
+                )
                 if (estimated_total_tokens > 0) {
-                  previous_largest_file_progress = largest_file_progress
-                  largest_file_progress = Math.min(
+                  file_progress.progress = Math.min(
                     Math.round((total_tokens / estimated_total_tokens) * 100),
                     100
                   )
-                  const increment =
-                    largest_file_progress - previous_largest_file_progress
-                  if (params.view_provider && increment > 0) {
-                    params.view_provider.send_message({
-                      command: 'SHOW_PROGRESS',
-                      title: progress_title,
-                      progress: largest_file_progress,
-                      tokens_per_second
-                    })
-                  }
                 }
+                update_progress()
               }
             }
           })
@@ -325,6 +332,12 @@ export const handle_intelligent_update = async (params: {
           if (updated_content_result == null) {
             cancel_token_source.token.throwIfRequested()
             throw new Error(`Failed to apply changes to ${file.file_path}`)
+          }
+
+          if (file_progress_index != -1) {
+            file_progress_list[file_progress_index].status = 'done'
+            file_progress_list[file_progress_index].progress = 100
+            update_progress()
           }
 
           let final_content = updated_content_result // Already cleaned in process_file
@@ -335,24 +348,6 @@ export const handle_intelligent_update = async (params: {
             final_content += '\n'
           }
 
-          // Update progress for the largest file if processing finished
-          if (
-            largest_file &&
-            file.file_path == largest_file.path &&
-            file.workspace_name == largest_file.workspaceName &&
-            largest_file_progress < 100
-          ) {
-            const increment = 100 - largest_file_progress
-            largest_file_progress = 100
-            if (params.view_provider && increment > 0) {
-              params.view_provider.send_message({
-                command: 'SHOW_PROGRESS',
-                title: progress_title,
-                progress: 100
-              })
-            }
-          }
-
           return {
             document,
             content: final_content,
@@ -361,6 +356,10 @@ export const handle_intelligent_update = async (params: {
             workspaceName: file.workspace_name
           }
         } catch (error: any) {
+          if (file_progress_index != -1) {
+            file_progress_list[file_progress_index].status = 'error'
+            update_progress()
+          }
           if (axios.isCancel(error) || error.message == 'Operation cancelled') {
             throw new Error('Operation cancelled')
           }
