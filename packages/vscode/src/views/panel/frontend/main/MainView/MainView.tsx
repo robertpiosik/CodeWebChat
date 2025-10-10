@@ -486,7 +486,7 @@ export const MainView: React.FC<Props> = (props) => {
             onClick={handle_commit_click}
             title={
               props.has_changes_to_commit && !is_commit_disabled_temporarily
-                ? 'Generate a commit message and commit'
+                ? 'Generate a commit message of staged changes and commit'
                 : 'No changes to commit'
             }
             disabled={
