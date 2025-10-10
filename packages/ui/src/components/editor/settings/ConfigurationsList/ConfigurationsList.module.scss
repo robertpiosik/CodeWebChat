@@ -12,19 +12,25 @@
 .list {
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--vscode-welcomePage-tileBorder);
+  border-radius: var(--border-radius-10px);
+  overflow: hidden;
 }
 
 .row {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--vscode-editorGroup-border);
   height: 36px;
 
-  .colActions {
+  &:nth-child(odd) {
+    background-color: var(--vscode-welcomePage-tileBackground);
+  }
+
+  .col-actions {
     visibility: hidden;
   }
 
-  &:hover .colActions {
+  &:hover .col-actions {
     visibility: visible;
   }
 
@@ -35,7 +41,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 
-    .defaultIcon {
+    .default-icon {
       margin-right: 0.5em;
     }
 
@@ -47,13 +53,14 @@
   }
 }
 
-.emptyMessage {
+.empty-message {
   flex: 1;
   text-align: center;
   font-style: italic;
   color: var(--vscode-descriptionForeground);
 }
-.dragHandle {
+
+.drag-handle {
   cursor: grab;
   opacity: 0.5;
 
@@ -62,29 +69,23 @@
   }
 }
 
-.colRadio {
-  flex: 0 0 30px;
-  text-align: center;
+.col-radio {
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.colDrag {
-  flex: 0 0 30px;
-  text-align: center;
+.col-drag {
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.colActions {
-  flex: 0 0 60px;
+.col-actions {
   display: flex;
   justify-content: flex-end;
   gap: var(--padding-8px);
   padding-right: var(--padding-8px);
-
-  > span {
-    cursor: pointer;
-    opacity: 0.7;
-
-    &:hover {
-      opacity: 1;
-    }
-  }
 }

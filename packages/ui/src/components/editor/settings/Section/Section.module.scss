@@ -1,8 +1,8 @@
 .container {
-  scroll-margin-top: 60px;
+  scroll-margin-top: var(--padding-60px);
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--padding-24px);
   padding-top: var(--padding-2px); // to align with the sidebar title
 }
 
@@ -10,11 +10,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--padding-4px);
+  border-bottom: 1px solid var(--vscode-editorWidget-border);
+  padding-bottom: var(--padding-10px);
 }
 
 .title {
   margin: 0;
-  font-size: 20px;
+  font-size: var(--font-size-20px);
   font-weight: 600;
 }
 

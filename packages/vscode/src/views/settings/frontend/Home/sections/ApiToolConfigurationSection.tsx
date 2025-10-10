@@ -39,6 +39,7 @@ export const ApiToolConfigurationSection: React.FC<
           on_delete={props.on_delete}
           on_set_default={props.on_set_default}
           on_unset_default={props.on_unset_default}
+          radio_group_name={`default_configuration_${props.tool_name.toLowerCase()}`}
         />
       )}
     </>

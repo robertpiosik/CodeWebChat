@@ -21,6 +21,7 @@ export namespace ConfigurationsList {
     on_add: () => void
     on_set_default?: (configuration_id: string) => void
     on_unset_default?: () => void
+    radio_group_name?: string
   }
 }
 
@@ -32,26 +33,26 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
 
   const render_item = (config: ConfigurationsList.Configuration) => (
     <div key={config.id} className={styles.row}>
+      {sortable && (
+        <div className={cn(styles['drag-handle'], styles['col-drag'])}>
+          <span className="codicon codicon-gripper" />
+        </div>
+      )}
       {props.on_set_default && (
-        <div className={styles.colRadio}>
+        <div className={styles['col-radio']}>
           <Radio
-            name="default_configuration"
+            name={props.radio_group_name ?? 'default_configuration'}
             checked={!!config.is_default}
             title="Set as default"
             on_change={() => props.on_set_default?.(config.id)}
           />
         </div>
       )}
-      {sortable && (
-        <div className={cn(styles.dragHandle, styles.colDrag)}>
-          <span className="codicon codicon-gripper" />
-        </div>
-      )}
       <div className={styles.row__content}>
         <span>{config.model}</span>
         <span>{config.description}</span>
       </div>
-      <div className={styles.colActions}>
+      <div className={styles['col-actions']}>
         {props.on_edit && (
           <span
             className="codicon codicon-edit"
@@ -93,7 +94,7 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
                 props.on_reorder(new_list)
               }}
               tag="div"
-              handle={`.${styles.dragHandle}`}
+              handle={`.${styles['drag-handle']}`}
               animation={150}
             >
               {props.configurations.map(render_item)}
@@ -103,7 +104,9 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
           )
         ) : (
           <div className={styles.row}>
-            <div className={styles.emptyMessage}>No configurations found.</div>
+            <div className={styles['empty-message']}>
+              No configurations found.
+            </div>
           </div>
         )}
       </div>

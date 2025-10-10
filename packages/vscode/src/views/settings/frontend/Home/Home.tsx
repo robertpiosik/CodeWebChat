@@ -236,7 +236,7 @@ export const Home: React.FC<Props> = (props) => {
             can_have_default={true}
             on_add={() => props.on_add_config('CODE_COMPLETIONS')}
             on_reorder={(reordered) =>
-              props.on_reorder_configs('CODE_COMPLETions', reordered)
+              props.on_reorder_configs('CODE_COMPLETIONS', reordered)
             }
             on_edit={(id) => props.on_edit_config('CODE_COMPLETIONS', id)}
             on_delete={(id) => props.on_delete_config('CODE_COMPLETIONS', id)}
