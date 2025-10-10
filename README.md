@@ -93,7 +93,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 > With the browser extension you can include markdown-parsed websites in context! Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_. The website will appear in the context panel immediately, ready for selection like any other folder or file in the workspace.
 
 > [!IMPORTANT]
-> Legal disclaimer: The tool does not require the browser extension to operate—chats can be initialized and responses applied with manual copy & paste as well. The placed _Apply response with CWC_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
+> Legal disclaimer: The tool does not require the browser extension to operate—chats can be initialized and responses applied with manual copy & paste as well. The placed _Apply response_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
 
 ## API Tools
 
@@ -131,10 +131,7 @@ Generate meaningful summaries of changes adhering to your style.
 
 ## Enterprise security
 
-**The tool operates exclusively on your machine.** All your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. Model providers for API tools are called directly.
-
-> [!IMPORTANT]
-> Code Web Chat **does not** collect telemetry and works entirely on your machine.
+**Code Web Chat operates exclusively on your machine and does not collect telemetry.** Your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
 
 ## Community
 
