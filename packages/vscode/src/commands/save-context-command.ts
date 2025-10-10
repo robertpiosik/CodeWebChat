@@ -702,7 +702,7 @@ export function save_context_command(
               updated_contexts
             )
             vscode.window.showInformationMessage(
-              `Context "${context_name}" saved to Workspace State successfully.`
+              `Context "${context_name}" saved to the workspace state successfully.`
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
