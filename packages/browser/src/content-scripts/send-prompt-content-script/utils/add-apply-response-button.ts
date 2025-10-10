@@ -1,10 +1,8 @@
 import { Message } from '@/types/messages'
 import { Logger } from '@shared/utils/logger'
 import browser from 'webextension-polyfill'
-import {
-  apply_response_button_text,
-  apply_response_button_title
-} from '../constants/dictionary'
+import { apply_response_icon } from '../constants/apply-response-icon'
+import { apply_response_button_title } from '../constants/dictionary'
 import {
   apply_chat_response_button_style,
   set_button_disabled_state
@@ -23,9 +21,9 @@ export function add_apply_response_button(params: {
   insert_button: (footer: Element, button: HTMLButtonElement) => void
   customize_button?: (button: HTMLButtonElement) => void
 }) {
-  const existing_apply_response_button = Array.from(
-    params.footer.querySelectorAll('button')
-  ).find((btn) => btn.textContent == apply_response_button_text)
+  const existing_apply_response_button = params.footer.querySelector(
+    '.cwc-apply-response-button'
+  )
 
   if (existing_apply_response_button) return
 
@@ -40,7 +38,8 @@ export function add_apply_response_button(params: {
   }
 
   const apply_response_button = document.createElement('button')
-  apply_response_button.textContent = apply_response_button_text
+  apply_response_button.innerHTML = apply_response_icon
+  apply_response_button.classList.add('cwc-apply-response-button')
   apply_response_button.title = apply_response_button_title
   apply_chat_response_button_style(apply_response_button)
   if (params.customize_button) params.customize_button(apply_response_button)

@@ -19,7 +19,6 @@ export const Default = () => {
 
   return visible ? (
     <CommitMessageModal
-      title="Review Commit Message"
       commit_message="feat: Implement amazing new feature"
       on_accept={handle_accept}
       on_cancel={handle_cancel}
