@@ -4,9 +4,9 @@
 
 Fast and cost efficient AI coding for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
-✅ **Connects with free chatbots**—ChatGPT, Claude, Gemini, Qwen, DeepSeek, and more \
+✅ **Connects with chatbots**—ChatGPT, Claude, Gemini, AI Studio, Qwen, DeepSeek, and more \
 ✅ **Applies chat responses**—advanced response parsing for one-click integration \
-🫰 **Saves money**—non-agentic nature for minimal token usage \
+🫰 **Saves money**—all supported chatbots are free to use \
 🫶 **Open-source**—released under the GPL-3.0 license
 
 <p>
