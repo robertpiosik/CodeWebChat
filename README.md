@@ -6,8 +6,8 @@ Fast and cost efficient AI coding for <a href="https://marketplace.visualstudio.
 
 ✅ **Connects with free chatbots**—ChatGPT, Claude, Gemini, Qwen, DeepSeek, and more \
 ✅ **Applies chat responses**—advanced response parsing for one-click integration \
-🫰 **Saves money and time**—non-agentic nature for minimal token usage \
-🫶 **Free and open-source**—released under the GPL-3.0 license
+🫰 **Saves money**—non-agentic nature for minimal token usage \
+🫶 **Open-source**—released under the GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -20,7 +20,7 @@ Fast and cost efficient AI coding for <a href="https://marketplace.visualstudio.
 - Operate 100% locally
 - Stay free forever
 
-🤌 **LLM 101: Why non-agentic?**
+📖 **LLM 101: Why non-agentic?**
 
 Large language model is a pattern matcher that is created in two steps... ([read more](https://github.com/robertpiosik/CodeWebChat/blob/dev/LLM-101-WHY-NON-AGENTIC.md))
 
