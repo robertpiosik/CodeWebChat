@@ -5,7 +5,7 @@
 Fast and cost efficient AI coding for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
 
 ✅ **Connects with chatbots**—ChatGPT, Claude, Gemini, AI Studio, Qwen, DeepSeek, and more \
-✅ **Applies chat responses**—advanced response parsing for one-click integration \
+✅ **Applies responses**—one-click multi-file changes integration \
 🫰 **Saves money**—all supported chatbots are free to use \
 🫶 **Open-source**—released under the GPL-3.0 license
 
@@ -15,21 +15,21 @@ Fast and cost efficient AI coding for <a href="https://marketplace.visualstudio.
 
 ✍️ **Guiding principles**
 
-- Don't scrape chat responses
-- Don't collect telemetry
-- Operate 100% locally
-- Stay free forever
+- Intialize chats, don't scrape responses
+- Zero telemetry collection
+- 100% local operation
+- Free forever
 
 📖 **LLM 101: Why non-agentic?**
 
-Large language model is a pattern matcher that is created in two steps... ([read more](https://github.com/robertpiosik/CodeWebChat/blob/dev/LLM-101-WHY-NON-AGENTIC.md))
+Large language model is a pattern matcher that is created in two phases... ([read more](https://github.com/robertpiosik/CodeWebChat/blob/dev/LLM-101-WHY-NON-AGENTIC.md))
 
 💅 **The workflow**
 
-Select relevant folders and files for context, enter prompt, pick edit format and send message via...
+Select folders and files for context, enter prompt, pick edit format and send message via...
 
 - new chat—to continue in the connected browser
-- API call—to use a model provider with your own key (BYOK)
+- API call—to use a model provider of choice
 
 Constructed message consists of the user's prompt, edit format instructions, and the selected context, as shown in the example:
 
@@ -54,7 +54,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 > [!NOTE]
 > The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
-Once the response is generated, advanced parser extracts markdown code blocks with suggested edits in a _whole_, _truncated_ or _diff_ edit format for one-click changes.
+Once the response is generated, advanced parser extracts markdown code blocks with suggested edits in a _whole_, _truncated_ or _diff_ edit format for one-click multi-file changes integration.
 
 > [!TIP]
 > Each edit format has pros and cons. With the most capable models **(Claude Sonnet, Gemini Pro, GPT-5, etc.)**, it's best to almost always request _diffs_. With weaker models **(Gemini Flash, GPT-5-mini, etc.)**, use _diffs_ for simple changes and _whole_ for complex ones. Use _truncated_ when a model have difficulties with _diffs_ and you don't want to pay the price of _whole_ generations, though a call to the Intelligent Update API tool will be required for integration - great when mixing a strong model for code generation and a weak model for integration.
