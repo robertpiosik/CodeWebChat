@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "CWC connects your code editor with free chatbots and applies chat responses for fast and cost efficient AI coding",
-  "version": "1.431.0",
+  "description": "No-cost AI coding with free chatbots",
+  "version": "1.432.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
