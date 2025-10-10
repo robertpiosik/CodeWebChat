@@ -19,18 +19,45 @@ export class WebsitesFolderItem extends vscode.TreeItem {
   }
 }
 
+export class ContextFolderItem extends vscode.TreeItem {
+  constructor() {
+    super('Current Context', vscode.TreeItemCollapsibleState.Collapsed)
+    this.contextValue = 'contextFolder'
+  }
+}
+
 export class WorkspaceProvider
   implements
-    vscode.TreeDataProvider<FileItem | WebsiteItem | WebsitesFolderItem>,
+    vscode.TreeDataProvider<
+      FileItem | WebsiteItem | WebsitesFolderItem | ContextFolderItem
+    >,
     vscode.Disposable
 {
   private _on_did_change_tree_data: vscode.EventEmitter<
-    FileItem | WebsiteItem | WebsitesFolderItem | undefined | null | void
+    | FileItem
+    | WebsiteItem
+    | WebsitesFolderItem
+    | ContextFolderItem
+    | undefined
+    | null
+    | void
   > = new vscode.EventEmitter<
-    FileItem | WebsiteItem | WebsitesFolderItem | undefined | null | void
+    | FileItem
+    | WebsiteItem
+    | WebsitesFolderItem
+    | ContextFolderItem
+    | undefined
+    | null
+    | void
   >()
   readonly onDidChangeTreeData: vscode.Event<
-    FileItem | WebsiteItem | WebsitesFolderItem | undefined | null | void
+    | FileItem
+    | WebsiteItem
+    | WebsitesFolderItem
+    | ContextFolderItem
+    | undefined
+    | null
+    | void
   > = this._on_did_change_tree_data.event
   private workspace_roots: string[] = []
   private workspace_names: string[] = []
@@ -463,47 +490,40 @@ export class WorkspaceProvider
     this._on_did_change_checked_files.fire()
   }
 
-  getTreeItem(
-    element: FileItem | WebsiteItem | WebsitesFolderItem
-  ): vscode.TreeItem {
+  async getTreeItem(
+    element: FileItem | WebsiteItem | WebsitesFolderItem | ContextFolderItem
+  ): Promise<vscode.TreeItem> {
     if (element instanceof WebsiteItem) {
       return this.websites_provider.getTreeItem(element)
     }
 
-    if (element instanceof WebsitesFolderItem) {
-      const all_websites = element.websites
-      const checked_websites = this.websites_provider.get_checked_websites()
-
-      if (
-        all_websites.length > 0 &&
-        checked_websites.length === all_websites.length
-      ) {
-        element.checkboxState = vscode.TreeItemCheckboxState.Checked
+    if (element instanceof ContextFolderItem) {
+      const workspace_tokens = await this.get_checked_files_token_count()
+      const website_tokens =
+        this.websites_provider.get_checked_websites_token_count()
+      const total_tokens = workspace_tokens + website_tokens
+      if (total_tokens > 0) {
+        const formatted_tokens = display_token_count(total_tokens)
+        element.description = formatted_tokens
+        element.tooltip = `About ${formatted_tokens} tokens selected`
       } else {
-        element.checkboxState = vscode.TreeItemCheckboxState.Unchecked
+        element.description = undefined
+        element.tooltip = undefined
       }
+      return element
+    }
 
-      const total_tokens = all_websites.reduce(
-        (acc, w) => acc + w.token_count,
-        0
-      )
+    if (element instanceof WebsitesFolderItem) {
       const selected_tokens =
         this.websites_provider.get_checked_websites_token_count()
 
       let description = ''
-      let tooltip = 'Websites for context'
-      if (total_tokens > 0) {
-        const formatted_total = display_token_count(total_tokens)
-        description = formatted_total
-        tooltip += ` · About ${formatted_total} tokens`
+      let tooltip = ''
 
-        if (selected_tokens > 0) {
-          const formatted_selected = display_token_count(selected_tokens)
-          if (selected_tokens < total_tokens) {
-            description += ` · ${formatted_selected} selected`
-          }
-          tooltip += ` (${formatted_selected} selected)`
-        }
+      if (selected_tokens > 0) {
+        const formatted_selected = display_token_count(selected_tokens)
+        description = `${formatted_selected}`
+        tooltip = `About ${formatted_selected} tokens selected`
       }
       element.description = description
       element.tooltip = tooltip
@@ -565,7 +585,6 @@ export class WorkspaceProvider
     element.tooltip = tooltip_parts.join(' ')
 
     if (element.isWorkspaceRoot) {
-      element.contextValue = 'workspaceRoot'
       // Workspace root tooltip is primarily its name and role, token info is appended if available
       let root_tooltip = `${element.label} (Workspace Root)`
       if (formatted_total) {
@@ -581,8 +600,10 @@ export class WorkspaceProvider
   }
 
   public async getChildren(
-    element?: FileItem | WebsiteItem | WebsitesFolderItem
-  ): Promise<(FileItem | WebsiteItem | WebsitesFolderItem)[]> {
+    element?: FileItem | WebsiteItem | WebsitesFolderItem | ContextFolderItem
+  ): Promise<
+    (FileItem | WebsiteItem | WebsitesFolderItem | ContextFolderItem)[]
+  > {
     await this.gitignore_initialization
 
     if (element) {
@@ -592,6 +613,29 @@ export class WorkspaceProvider
       if (element instanceof WebsitesFolderItem) {
         const websites = await this.websites_provider.getChildren()
         return websites
+      }
+      if (element instanceof ContextFolderItem) {
+        const checked_websites = this.websites_provider.get_checked_websites()
+        const website_items = checked_websites.map(
+          (website) =>
+            new WebsiteItem(
+              website.title || website.url,
+              website.url,
+              website.content,
+              website.favicon || '',
+              vscode.TreeItemCheckboxState.Checked
+            )
+        )
+        let workspace_items: FileItem[]
+        if (this.workspace_roots.length === 1) {
+          workspace_items = await this._get_files_and_directories(
+            this.workspace_roots[0],
+            true
+          )
+        } else {
+          workspace_items = await this._get_workspace_folder_items(true)
+        }
+        return [...website_items, ...workspace_items]
       }
 
       const dir_path = element.resourceUri.fsPath
@@ -606,7 +650,11 @@ export class WorkspaceProvider
         }
       }
 
-      return this._get_files_and_directories(dir_path)
+      const is_context_view =
+        element.contextValue == 'contextWorkspaceRoot' ||
+        element.contextValue == 'contextDirectory'
+
+      return this._get_files_and_directories(dir_path, is_context_view)
     }
 
     // Root level:
@@ -615,12 +663,14 @@ export class WorkspaceProvider
     }
 
     const websites = await this.websites_provider.getChildren()
-    const root_items: (FileItem | WebsitesFolderItem)[] = []
+    const root_items: (FileItem | WebsitesFolderItem | ContextFolderItem)[] = []
 
     if (websites.length > 0) {
       root_items.push(new WebsitesFolderItem(websites))
     }
-    let workspace_items: (FileItem | WebsitesFolderItem)[]
+
+    root_items.push(new ContextFolderItem())
+    let workspace_items: FileItem[]
 
     // If there's only one workspace root, show its contents directly
     if (this.workspace_roots.length == 1) {
@@ -638,10 +688,24 @@ export class WorkspaceProvider
     return [...root_items, ...workspace_items]
   }
 
-  private async _get_workspace_folder_items(): Promise<FileItem[]> {
+  private async _get_workspace_folder_items(
+    contextView = false
+  ): Promise<FileItem[]> {
     const items: FileItem[] = []
     for (let i = 0; i < this.workspace_roots.length; i++) {
       const root = this.workspace_roots[i]
+
+      if (contextView) {
+        const state = this.checked_items.get(root)
+        const is_partially_checked = this.partially_checked_dirs.has(root)
+        if (
+          state !== vscode.TreeItemCheckboxState.Checked &&
+          !is_partially_checked
+        ) {
+          continue
+        }
+      }
+
       const uri = vscode.Uri.file(root)
       const name = this.workspace_names[i]
 
@@ -666,6 +730,10 @@ export class WorkspaceProvider
           true // Is workspace root
         )
       )
+      if (contextView) {
+        const last_item = items[items.length - 1]
+        last_item.contextValue = 'contextWorkspaceRoot'
+      }
     }
     return items
   }
@@ -858,7 +926,8 @@ export class WorkspaceProvider
   }
 
   private async _get_files_and_directories(
-    dir_path: string
+    dir_path: string,
+    context_view = false
   ): Promise<FileItem[]> {
     const items: FileItem[] = []
     try {
@@ -890,6 +959,30 @@ export class WorkspaceProvider
       for (const entry of dir_entries) {
         const full_path = path.join(dir_path, entry.name)
         const relative_path = path.relative(workspace_root, full_path)
+
+        if (context_view) {
+          const state = this.checked_items.get(full_path)
+          const is_partially_checked =
+            this.partially_checked_dirs.has(full_path)
+
+          let is_directory_for_check = entry.isDirectory()
+          if (entry.isSymbolicLink()) {
+            try {
+              is_directory_for_check = (
+                await fs.promises.stat(full_path)
+              ).isDirectory()
+            } catch {
+              // broken symlink, will be skipped later
+            }
+          }
+
+          if (
+            state != vscode.TreeItemCheckboxState.Checked &&
+            !(is_directory_for_check && is_partially_checked)
+          ) {
+            continue
+          }
+        }
 
         const is_excluded = this.is_excluded(relative_path)
 
@@ -965,6 +1058,12 @@ export class WorkspaceProvider
           undefined
         )
 
+        if (context_view) {
+          item.contextValue = item.isDirectory
+            ? 'contextDirectory'
+            : 'contextFile'
+        }
+
         items.push(item)
       }
     } catch (error) {
@@ -978,12 +1077,16 @@ export class WorkspaceProvider
   }
 
   public async update_check_state(
-    item: FileItem | WebsiteItem | WebsitesFolderItem,
+    item: FileItem | WebsiteItem | WebsitesFolderItem | ContextFolderItem,
     state: vscode.TreeItemCheckboxState
   ): Promise<void> {
     if (item instanceof WebsiteItem) {
       await this.websites_provider.update_check_state(item, state)
       return
+    }
+
+    if (item instanceof ContextFolderItem) {
+      return // Not a checkable item
     }
 
     if (item instanceof WebsitesFolderItem) {
