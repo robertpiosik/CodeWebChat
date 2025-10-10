@@ -4,7 +4,7 @@ import browser from 'webextension-polyfill'
 import {
   apply_response_button_text,
   apply_response_button_title
-} from '../constants/copy'
+} from '../constants/dictionary'
 import {
   apply_chat_response_button_style,
   set_button_disabled_state
