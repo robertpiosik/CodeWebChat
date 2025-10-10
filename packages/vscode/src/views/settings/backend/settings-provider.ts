@@ -214,6 +214,11 @@ export class SettingsProvider {
                 vscode.ConfigurationTarget.Global
               )
             break
+          case 'OPEN_EDITOR_SETTINGS':
+            await vscode.commands.executeCommand(
+              'workbench.action.openSettings'
+            )
+            break
         }
       },
       null,

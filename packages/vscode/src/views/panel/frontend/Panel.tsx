@@ -1,4 +1,4 @@
-import { Main } from './main'
+import { Main } from './Main'
 import { useEffect, useState } from 'react'
 import { Page as UiPage } from '@ui/components/editor/Page'
 import { EditPresetForm } from '@/views/panel/frontend/EditPresetForm'
@@ -10,8 +10,8 @@ import {
 } from '../types/messages'
 import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
-import { Home } from './home'
-import styles from './View.module.scss'
+import { Home } from './Home'
+import styles from './Panel.module.scss'
 import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
@@ -25,7 +25,7 @@ const vscode = acquireVsCodeApi()
 
 type CheckedFileInReview = FileInReview & { is_checked: boolean }
 
-export const View = () => {
+export const Panel = () => {
   const [active_view, set_active_view] = useState<'home' | 'main'>('home')
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()

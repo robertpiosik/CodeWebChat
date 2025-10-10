@@ -1,0 +1,7 @@
+.button {
+  color: var(--vscode-textLink-foreground);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -20,18 +20,11 @@
 }
 
 .title {
-  font-weight: 500;
-  font-size: var(--font-size-14px);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-weight: 600;
 }
 
 .description {
   color: var(--vscode-descriptionForeground);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .slot {

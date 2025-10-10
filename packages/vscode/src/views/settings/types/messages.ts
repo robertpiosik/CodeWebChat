@@ -163,6 +163,10 @@ export interface SettingsUiReadyMessage {
   command: 'SETTINGS_UI_READY'
 }
 
+export interface OpenEditorSettingsMessage {
+  command: 'OPEN_EDITOR_SETTINGS'
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -196,6 +200,7 @@ export type FrontendMessage =
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
   | SettingsUiReadyMessage
+  | OpenEditorSettingsMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface ModelProvidersMessage {
