@@ -20,6 +20,10 @@ Fast and cost efficient AI coding for <a href="https://marketplace.visualstudio.
 - Operate 100% locally
 - Stay free forever
 
+🤌 **LLM 101: Why non-agentic?**
+
+Large language model is a pattern matcher that is created in two steps... ([read more](https://github.com/robertpiosik/CodeWebChat/blob/dev/LLM-101-WHY-NON-AGENTIC.md))
+
 💅 **The workflow**
 
 Select relevant folders and files for context, enter prompt, pick edit format and send message via...
