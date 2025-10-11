@@ -14,10 +14,9 @@ No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio
 
 ✍️ **Guiding principles**
 
-- Intialize chats, don't scrape responses
-- Zero telemetry collection
+- Don't scrape chat responses
 - Operate 100% locally
-- Free forever
+- Stay free forever
 
 📖 **LLM 101: Why non-agentic?**
 
