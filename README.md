@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and other forks</a>.
+No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and others</a>.
 
 ✅ **Initializes chats**—ChatGPT, Claude, Gemini, AI Studio, Qwen, DeepSeek, and more \
 ✅ **Applies responses**—one-click multi-file changes integration \
@@ -17,10 +17,6 @@ No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio
 - Don't scrape chat responses
 - Operate 100% locally
 - Stay free forever
-
-📖 **LLM 101: Why non-agentic?**
-
-Large language model is a pattern matcher that is created in two phases... [read more](https://github.com/robertpiosik/CodeWebChat/blob/dev/LLM-101-WHY-NON-AGENTIC.md)
 
 💅 **The workflow**
 
