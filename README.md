@@ -53,10 +53,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 > [!NOTE]
 > The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
-Once the response is generated, advanced parser extracts markdown code blocks with suggested edits in a _whole_, _truncated_ or _diff_ edit format for one-click multi-file changes integration.
-
-> [!TIP]
-> Each edit format has pros and cons. With the most capable models **(Claude Sonnet, Gemini Pro, GPT-5, etc.)**, it's best to almost always request _diffs_. With weaker models **(Gemini Flash, GPT-5-mini, etc.)**, use _diffs_ for simple changes and _whole_ for complex ones. Use _truncated_ when a model have difficulties with _diffs_ and you don't want to pay the price of _whole_ generations, though a call to the Intelligent Update API tool will be required for integration - great when mixing a strong model for code generation and a weak model for integration.
+Once the response is generated, a built-in parser extracts code blocks with suggested edits for one-click multi-file changes integration.
 
 ## Chatbot initialization
 
