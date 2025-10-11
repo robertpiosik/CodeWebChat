@@ -5,55 +5,72 @@
 
 .toolbar {
   display: flex;
-  padding-bottom: var(--padding-8px);
+  padding: 0 var(--padding-8px) var(--padding-8px) var(--padding-8px);
+  align-items: center;
+  gap: var(--padding-8px);
 }
 
 .list {
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--vscode-welcomePage-tileBorder);
+  border-radius: var(--border-radius-10px);
+  overflow: hidden;
 }
 
-.row,
-.header {
+.row {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid var(--vscode-editorGroup-border);
   height: 36px;
 
-  > div {
-    white-space: nowrap;
+  &:nth-child(odd) {
+    background-color: var(--vscode-welcomePage-tileBackground);
+  }
+
+  .col-actions {
+    visibility: hidden;
+  }
+
+  &:hover .col-actions {
+    visibility: visible;
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    padding: 0 var(--padding-12px);
     overflow: hidden;
-    text-overflow: ellipsis;
+    gap: var(--padding-8px);
+
+    > div {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 
-.header {
-  font-weight: bold;
-  background-color: var(--vscode-sideBar-background);
-}
-
 .col-drag {
-  flex: 0 0 30px;
-  text-align: center;
+  width: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .col-name {
   flex: 1 1 25%;
 }
-
 .col-api-key {
   flex: 1 1 25%;
 }
-
 .col-base-url {
   flex: 1 1 45%;
-  padding-right: var(--padding-8px);
 }
-
 .col-actions {
-  flex: 0 0 100px;
   display: flex;
   justify-content: flex-end;
-  gap: var(--padding-4px);
+  gap: var(--padding-8px);
+  padding-right: var(--padding-8px);
 }
 
 .empty-message {

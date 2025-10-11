@@ -12,9 +12,4 @@
     background-color: var(--vscode-list-hoverBackground);
     text-decoration: none;
   }
-
-  &.active {
-    background-color: var(--vscode-list-activeSelectionBackground);
-    color: var(--vscode-list-activeSelectionForeground);
-  }
 }

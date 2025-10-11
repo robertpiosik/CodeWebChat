@@ -1,4 +1,3 @@
-import classNames from 'classnames'
 import styles from './NavigationItem.module.scss'
 
 type Props = {
@@ -10,13 +9,7 @@ type Props = {
 
 export const NavigationItem: React.FC<Props> = (props) => {
   return (
-    <a
-      href={props.href}
-      className={classNames(styles.container, {
-        [styles.active]: props.is_active
-      })}
-      onClick={props.on_click}
-    >
+    <a href={props.href} className={styles.container} onClick={props.on_click}>
       <span>{props.label}</span>
     </a>
   )

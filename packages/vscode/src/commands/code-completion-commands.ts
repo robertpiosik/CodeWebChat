@@ -77,34 +77,20 @@ const get_code_completion_config = async (
   if (config_index !== undefined && code_completions_configs[config_index]) {
     selected_config = code_completions_configs[config_index]
   } else if (!show_quick_pick) {
-    selected_config =
-      await api_providers_manager.get_default_code_completions_config()
+    const last_selected_index = context.workspaceState.get<number>(
+      LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
+      0
+    )
+    if (code_completions_configs[last_selected_index]) {
+      selected_config = code_completions_configs[last_selected_index]
+    } else if (code_completions_configs.length > 0) {
+      selected_config = code_completions_configs[0]
+    }
   }
 
   if (!selected_config || show_quick_pick) {
-    const set_default_button = {
-      iconPath: new vscode.ThemeIcon('pass'),
-      tooltip: 'Set as default'
-    }
-
-    const unset_default_button = {
-      iconPath: new vscode.ThemeIcon('pass-filled'),
-      tooltip: 'Unset default'
-    }
-
-    const create_items = async () => {
-      const default_config =
-        await api_providers_manager.get_default_code_completions_config()
+    const create_items = () => {
       return code_completions_configs.map((config: ToolConfig, index) => {
-        const is_default =
-          default_config &&
-          default_config.provider_type == config.provider_type &&
-          default_config.provider_name == config.provider_name &&
-          default_config.model == config.model &&
-          default_config.temperature == config.temperature &&
-          default_config.reasoning_effort == config.reasoning_effort &&
-          default_config.max_concurrency == config.max_concurrency
-
         const description_parts = [config.provider_name]
         if (config.temperature != DEFAULT_TEMPERATURE['code-completions']) {
           description_parts.push(`${config.temperature}`)
@@ -113,17 +99,9 @@ const get_code_completion_config = async (
           description_parts.push(`${config.reasoning_effort}`)
         }
 
-        const buttons = []
-        if (is_default) {
-          buttons.push(unset_default_button)
-        } else {
-          buttons.push(set_default_button)
-        }
-
         return {
-          label: is_default ? `$(check) ${config.model}` : config.model,
+          label: config.model,
           description: description_parts.join(' · '),
-          buttons,
           config,
           index
         }
@@ -131,7 +109,7 @@ const get_code_completion_config = async (
     }
 
     const quick_pick = vscode.window.createQuickPick()
-    quick_pick.items = await create_items()
+    quick_pick.items = create_items()
     quick_pick.placeholder = 'Select code completions configuration'
     quick_pick.matchOnDescription = true
 
@@ -149,21 +127,6 @@ const get_code_completion_config = async (
 
     return new Promise<{ provider: any; config: any } | undefined>(
       (resolve) => {
-        quick_pick.onDidTriggerItemButton(async (event) => {
-          const item = event.item as any
-          if (event.button === set_default_button) {
-            await api_providers_manager.set_default_code_completions_config(
-              item.config
-            )
-            quick_pick.items = await create_items()
-          } else if (event.button === unset_default_button) {
-            await api_providers_manager.set_default_code_completions_config(
-              null
-            )
-            quick_pick.items = await create_items()
-          }
-        })
-
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()

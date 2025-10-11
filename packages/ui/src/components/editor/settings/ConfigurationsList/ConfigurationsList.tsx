@@ -54,17 +54,17 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
       </div>
       <div className={styles['col-actions']}>
         {props.on_edit && (
-          <span
-            className="codicon codicon-edit"
+          <IconButton
+            codicon_icon="edit"
             title="Edit configuration"
-            onClick={() => props.on_edit?.(config.id)}
+            on_click={() => props.on_edit?.(config.id)}
           />
         )}
         {props.on_delete && (
-          <span
-            className="codicon codicon-trash"
+          <IconButton
+            codicon_icon="trash"
             title="Delete configuration"
-            onClick={() => props.on_delete?.(config.id)}
+            on_click={() => props.on_delete?.(config.id)}
           />
         )}
       </div>
