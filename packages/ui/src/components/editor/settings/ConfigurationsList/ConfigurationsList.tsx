@@ -3,7 +3,7 @@ import cn from 'classnames'
 import { Radio } from '../../Radio'
 import { ReactSortable } from 'react-sortablejs'
 import { IconButton } from '../../IconButton'
-import { Button } from '../../Button'
+import { TextButton } from '../TextButton'
 
 export namespace ConfigurationsList {
   export type Configuration = {
@@ -79,10 +79,10 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
           on_click={props.on_add}
           title="New configuration"
         />
-        {props.on_unset_default && (
-          <Button on_click={props.on_unset_default} disabled={!has_default}>
+        {props.on_unset_default && has_default && (
+          <TextButton on_click={props.on_unset_default}>
             Unset default
-          </Button>
+          </TextButton>
         )}
       </div>
       <div className={styles.list}>
