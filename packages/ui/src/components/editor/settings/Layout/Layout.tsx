@@ -23,8 +23,7 @@ export const Layout = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
       const last_child_height = last_child.offsetHeight
       const viewport_height = window.innerHeight
-      const calculated_padding =
-        viewport_height - Math.floor(last_child_height) - 60
+      const calculated_padding = viewport_height - Math.floor(last_child_height)
 
       set_padding_bottom(
         calculated_padding > 0 ? `${calculated_padding}px` : '0px'

@@ -10,7 +10,7 @@ type Props = {
 
 export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const marker_ref = useRef<HTMLDivElement>(null)
-  const container_ref = useRef<HTMLDivElement>(null)
+  const container_ref = useRef<HTMLDivElement | null>(null)
   const [is_stuck, set_is_stuck] = useState(false)
 
   useEffect(() => {
@@ -51,7 +51,17 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
   }, [])
 
   return (
-    <div ref={container_ref} className={styles.container}>
+    <div
+      ref={(node) => {
+        container_ref.current = node
+        if (typeof ref == 'function') {
+          ref(node)
+        } else if (ref) {
+          ref.current = node
+        }
+      }}
+      className={styles.container}
+    >
       <div
         className={cn(styles.header, { [styles['header--stuck']]: is_stuck })}
       >

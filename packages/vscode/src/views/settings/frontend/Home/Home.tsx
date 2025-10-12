@@ -71,7 +71,6 @@ type Props = {
 }
 
 export const Home: React.FC<Props> = (props) => {
-  const [active_item, set_active_item] = useState<NavItem>('general')
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
@@ -81,8 +80,6 @@ export const Home: React.FC<Props> = (props) => {
     'intelligent-update': null,
     'commit-messages': null
   })
-  const is_scrolling_from_click = useRef(false)
-
   const [commit_instructions, set_commit_instructions] = useState('')
 
   useEffect(() => {
@@ -106,15 +103,21 @@ export const Home: React.FC<Props> = (props) => {
   ])
 
   const handle_scroll_to_section = (item_id: NavItem) => {
-    is_scrolling_from_click.current = true
-    set_active_item(item_id)
-    section_refs.current[item_id]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    })
-    setTimeout(() => {
-      is_scrolling_from_click.current = false
-    }, 1000)
+    const section = section_refs.current[item_id]
+    const scroll_container = scroll_container_ref.current
+
+    if (section && scroll_container) {
+      const container_rect = scroll_container.getBoundingClientRect()
+      const section_rect = section.getBoundingClientRect()
+
+      const offset = section_rect.top - container_rect.top
+      const target_scroll_top = scroll_container.scrollTop + offset
+
+      scroll_container.scrollTo({
+        top: target_scroll_top,
+        behavior: 'smooth'
+      })
+    }
   }
 
   useEffect(() => {
@@ -122,48 +125,6 @@ export const Home: React.FC<Props> = (props) => {
       handle_scroll_to_section(props.scroll_to_section_on_load)
     }
   }, [props.scroll_to_section_on_load])
-
-  useEffect(() => {
-    const handle_scroll = () => {
-      if (is_scrolling_from_click.current) return
-
-      const THRESHOLD = 200 // 200px from top of viewport
-      let closest_section: NavItem | null = null
-      let closest_distance = Infinity
-
-      NAV_ITEMS_CONFIG.forEach(({ id }) => {
-        const element = section_refs.current[id]
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          const distance_from_threshold = Math.abs(rect.top - THRESHOLD)
-
-          // Check if top edge is within 200px from top and is closest
-          if (
-            rect.top <= THRESHOLD &&
-            rect.top >= 0 &&
-            distance_from_threshold < closest_distance
-          ) {
-            closest_section = id
-            closest_distance = distance_from_threshold
-          }
-        }
-      })
-
-      if (closest_section) {
-        set_active_item(closest_section)
-      }
-    }
-
-    const container = scroll_container_ref.current
-    if (container) {
-      container.addEventListener('scroll', handle_scroll)
-      handle_scroll() // Check initial position
-    }
-
-    return () => {
-      container?.removeEventListener('scroll', handle_scroll)
-    }
-  }, [])
 
   const handle_nav_click = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -185,7 +146,7 @@ export const Home: React.FC<Props> = (props) => {
                 key={id}
                 href={`#${id}`}
                 label={label}
-                is_active={active_item == id}
+                is_active={false}
                 on_click={(e) => handle_nav_click(e, id)}
               />
             ))}
