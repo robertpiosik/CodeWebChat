@@ -6,12 +6,17 @@ type Props = {
   title: string
   subtitle: React.ReactNode
   children: React.ReactNode
+  on_stuck_change?: (is_stuck: boolean) => void
 }
 
 export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const marker_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement | null>(null)
   const [is_stuck, set_is_stuck] = useState(false)
+
+  useEffect(() => {
+    props.on_stuck_change?.(is_stuck)
+  }, [is_stuck, props.on_stuck_change])
 
   useEffect(() => {
     const marker = marker_ref.current

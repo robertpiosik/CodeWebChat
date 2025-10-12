@@ -16,8 +16,8 @@ import {
 type NavItem =
   | 'general'
   | 'model-providers'
-  | 'code-completions'
   | 'edit-context'
+  | 'code-completions'
   | 'intelligent-update'
   | 'commit-messages'
 
@@ -30,8 +30,8 @@ const NAV_ITEMS_CONFIG: { id: NavItem; label: string }[] = [
     id: 'model-providers',
     label: dictionary.settings.MODEL_PROVIDERS_LABEL
   },
-  { id: 'code-completions', label: 'Code Completions' },
   { id: 'edit-context', label: 'Edit Context' },
+  { id: 'code-completions', label: 'Code Completions' },
   { id: 'intelligent-update', label: 'Intelligent Update' },
   { id: 'commit-messages', label: 'Commit Messages' }
 ]
@@ -47,10 +47,10 @@ type Props = {
 
   // handlers
   set_providers: (providers: ProviderForClient[]) => void
-  set_code_completions_configs: (configs: ConfigurationForClient[]) => void
-  set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
   set_edit_context_configs: (configs: ConfigurationForClient[]) => void
+  set_code_completions_configs: (configs: ConfigurationForClient[]) => void
   set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
+  set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
   on_commit_instructions_change: (instructions: string) => void
   on_open_editor_settings: () => void
   on_add_provider: () => void
@@ -75,12 +75,29 @@ export const Home: React.FC<Props> = (props) => {
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
     'model-providers': null,
-    'code-completions': null,
     'edit-context': null,
+    'code-completions': null,
     'intelligent-update': null,
     'commit-messages': null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
+  const [stuck_sections, set_stuck_sections] = useState(new Set<NavItem>())
+
+  const handle_stuck_change = (id: NavItem, is_stuck: boolean) => {
+    set_stuck_sections((prev) => {
+      const next = new Set(prev)
+      if (is_stuck) {
+        next.add(id)
+      } else {
+        next.delete(id)
+      }
+      return next
+    })
+  }
+
+  const nav_item_ids = NAV_ITEMS_CONFIG.map((item) => item.id)
+  const active_nav_item_id =
+    nav_item_ids.filter((id) => stuck_sections.has(id)).pop() || nav_item_ids[0]
 
   useEffect(() => {
     set_commit_instructions(props.commit_message_instructions || '')
@@ -146,7 +163,7 @@ export const Home: React.FC<Props> = (props) => {
                 key={id}
                 href={`#${id}`}
                 label={label}
-                is_active={false}
+                is_active={id === active_nav_item_id}
                 on_click={(e) => handle_nav_click(e, id)}
               />
             ))}
@@ -157,6 +174,9 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['general'] = el)}
           title="General"
           subtitle="General settings for the extension."
+          on_stuck_change={(is_stuck) =>
+            handle_stuck_change('general', is_stuck)
+          }
         >
           <Item
             title="Open Editor Settings"
@@ -172,6 +192,9 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['model-providers'] = el)}
           title="Model Providers"
           subtitle="Manage your model providers here. Add, edit, reorder, or delete providers as needed."
+          on_stuck_change={(is_stuck) =>
+            handle_stuck_change('model-providers', is_stuck)
+          }
         >
           <ModelProvidersSection
             providers={props.providers}
@@ -186,9 +209,33 @@ export const Home: React.FC<Props> = (props) => {
           />
         </Section>
         <Section
+          ref={(el) => (section_refs.current['edit-context'] = el)}
+          title={dictionary.settings.EDIT_CONTEXT_LABEL}
+          subtitle={dictionary.settings.EDIT_CONTEXT_SUBTITLE}
+          on_stuck_change={(is_stuck) =>
+            handle_stuck_change('edit-context', is_stuck)
+          }
+        >
+          <ApiToolConfigurationSection
+            configurations={props.edit_context_configs}
+            set_configurations={props.set_edit_context_configs}
+            tool_name="EDIT_CONTEXT"
+            can_have_default={false}
+            on_add={() => props.on_add_config('EDIT_CONTEXT')}
+            on_reorder={(reordered) =>
+              props.on_reorder_configs('EDIT_CONTEXT', reordered)
+            }
+            on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
+            on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
+          />
+        </Section>
+        <Section
           ref={(el) => (section_refs.current['code-completions'] = el)}
           title={dictionary.settings.CODE_COMPLETIONS_LABEL}
           subtitle={dictionary.settings.CODE_COMPLETIONS_SUBTITLE}
+          on_stuck_change={(is_stuck) =>
+            handle_stuck_change('code-completions', is_stuck)
+          }
         >
           <ApiToolConfigurationSection
             configurations={props.code_completions_configs}
@@ -210,27 +257,12 @@ export const Home: React.FC<Props> = (props) => {
           />
         </Section>
         <Section
-          ref={(el) => (section_refs.current['edit-context'] = el)}
-          title={dictionary.settings.EDIT_CONTEXT_LABEL}
-          subtitle={dictionary.settings.EDIT_CONTEXT_SUBTITLE}
-        >
-          <ApiToolConfigurationSection
-            configurations={props.edit_context_configs}
-            set_configurations={props.set_edit_context_configs}
-            tool_name="EDIT_CONTEXT"
-            can_have_default={false}
-            on_add={() => props.on_add_config('EDIT_CONTEXT')}
-            on_reorder={(reordered) =>
-              props.on_reorder_configs('EDIT_CONTEXT', reordered)
-            }
-            on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
-            on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
-          />
-        </Section>
-        <Section
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           title={dictionary.settings.INTELLIGENT_UPDATE_LABEL}
           subtitle={dictionary.settings.INTELLIGENT_UPDATE_SUBTITLE}
+          on_stuck_change={(is_stuck) =>
+            handle_stuck_change('intelligent-update', is_stuck)
+          }
         >
           <ApiToolConfigurationSection
             configurations={props.intelligent_update_configs}
@@ -255,6 +287,9 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['commit-messages'] = el)}
           title={dictionary.settings.COMMIT_MESSAGES_LABEL}
           subtitle="Configure models for generating commit messages, and customize the instructions used."
+          on_stuck_change={(is_stuck) =>
+            handle_stuck_change('commit-messages', is_stuck)
+          }
         >
           <Item
             title="Commit Message Instructions"
