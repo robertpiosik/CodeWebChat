@@ -7,7 +7,7 @@ import {
 } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
 
-export const use_settings_data = (vscode: any) => {
+export const use_settings = (vscode: any) => {
   const [providers, set_providers] = useState<ProviderForClient[] | undefined>(
     undefined
   )
