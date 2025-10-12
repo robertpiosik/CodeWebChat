@@ -2,15 +2,10 @@ import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  ToolConfig
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { DeleteEditContextConfigurationMessage } from '@/views/settings/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
-
-const generate_id = (config: ToolConfig) =>
-  `${config.provider_name}:${config.model}:${config.temperature}:${
-    config.reasoning_effort ?? ''
-  }:${config.instructions_placement ?? ''}`
 
 export const handle_delete_edit_context_configuration = async (
   provider: SettingsProvider,
@@ -22,7 +17,7 @@ export const handle_delete_edit_context_configuration = async (
   const original_configs =
     await providers_manager.get_edit_context_tool_configs()
   const config_to_delete = original_configs.find(
-    (c) => generate_id(c) === configuration_id_to_delete
+    (c) => get_tool_config_id(c) === configuration_id_to_delete
   )
   if (!config_to_delete) return
 
@@ -39,7 +34,7 @@ export const handle_delete_edit_context_configuration = async (
     return
   }
   const updated_configs = original_configs.filter(
-    (c) => generate_id(c) !== configuration_id_to_delete
+    (c) => get_tool_config_id(c) !== configuration_id_to_delete
   )
   await providers_manager.save_edit_context_tool_configs(updated_configs)
 }

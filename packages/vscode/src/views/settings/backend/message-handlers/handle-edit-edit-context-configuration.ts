@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  ToolConfig
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { EditEditContextConfigurationMessage } from '@/views/settings/types/messages'
@@ -15,11 +15,6 @@ import {
   edit_temperature_for_config
 } from '../../utils/config-editing'
 
-const generate_id = (config: ToolConfig) =>
-  `${config.provider_name}:${config.model}:${config.temperature}:${
-    config.reasoning_effort ?? ''
-  }:${config.instructions_placement ?? ''}`
-
 export const handle_edit_edit_context_configuration = async (
   provider: SettingsProvider,
   message: EditEditContextConfigurationMessage
@@ -28,7 +23,7 @@ export const handle_edit_edit_context_configuration = async (
   const model_fetcher = new ModelFetcher()
   let configs = await providers_manager.get_edit_context_tool_configs()
   let config_index = configs.findIndex(
-    (c) => generate_id(c) === message.configuration_id
+    (c) => get_tool_config_id(c) === message.configuration_id
   )
 
   if (config_index == -1) {
@@ -134,10 +129,10 @@ export const handle_edit_edit_context_configuration = async (
       }
     }
 
-    const new_id = generate_id(updated_config)
+    const new_id = get_tool_config_id(updated_config)
     if (
       new_id !== message.configuration_id &&
-      configs.some((c) => generate_id(c) === new_id)
+      configs.some((c) => get_tool_config_id(c) === new_id)
     ) {
       vscode.window.showErrorMessage(
         dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
@@ -155,7 +150,7 @@ export const handle_edit_edit_context_configuration = async (
     ) {
       configs = updated_configs
       message.configuration_id = new_id
-      config_index = configs.findIndex((c) => generate_id(c) === new_id)
+      config_index = configs.findIndex((c) => get_tool_config_id(c) === new_id)
       config_to_edit = configs[config_index]
       return await show_quick_pick()
     }

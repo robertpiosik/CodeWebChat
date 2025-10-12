@@ -40,7 +40,7 @@ export const get_tool_config_id = (config: ToolConfig): string => {
     config.max_concurrency ?? '',
     config.instructions_placement ?? ''
   ]
-    .filter(Boolean)
+    .filter((v) => v !== null && v !== undefined)
     .join(':')
 }
 

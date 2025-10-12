@@ -2,15 +2,10 @@ import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  ToolConfig
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { DeleteIntelligentUpdateConfigurationMessage } from '@/views/settings/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
-
-const generate_id = (config: ToolConfig) =>
-  `${config.provider_name}:${config.model}:${config.temperature}:${
-    config.reasoning_effort ?? ''
-  }:${config.max_concurrency ?? ''}`
 
 export const handle_delete_intelligent_update_configuration = async (
   provider: SettingsProvider,
@@ -22,7 +17,7 @@ export const handle_delete_intelligent_update_configuration = async (
   const original_configs =
     await providers_manager.get_intelligent_update_tool_configs()
   const config_to_delete = original_configs.find(
-    (c) => generate_id(c) === configuration_id_to_delete
+    (c) => get_tool_config_id(c) === configuration_id_to_delete
   )
   if (!config_to_delete) return
 
@@ -43,13 +38,13 @@ export const handle_delete_intelligent_update_configuration = async (
     await providers_manager.get_default_intelligent_update_config()
 
   const updated_configs = original_configs.filter(
-    (c) => generate_id(c) !== configuration_id_to_delete
+    (c) => get_tool_config_id(c) !== configuration_id_to_delete
   )
   await providers_manager.save_intelligent_update_tool_configs(updated_configs)
 
   if (
     original_default_config &&
-    generate_id(original_default_config) === configuration_id_to_delete
+    get_tool_config_id(original_default_config) === configuration_id_to_delete
   ) {
     await providers_manager.set_default_intelligent_update_config(null)
   }

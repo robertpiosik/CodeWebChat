@@ -1,14 +1,9 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  ToolConfig
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { SetDefaultCommitMessagesConfigurationMessage } from '@/views/settings/types/messages'
-
-const generate_id = (config: ToolConfig) =>
-  `${config.provider_name}:${config.model}:${config.temperature}:${
-    config.reasoning_effort ?? ''
-  }`
 
 export const handle_set_default_commit_messages_configuration = async (
   provider: SettingsProvider,
@@ -24,7 +19,7 @@ export const handle_set_default_commit_messages_configuration = async (
 
   const configs = await providers_manager.get_commit_messages_tool_configs()
   const config_to_set_as_default = configs.find(
-    (c) => generate_id(c) === configuration_id
+    (c) => get_tool_config_id(c) === configuration_id
   )
 
   if (config_to_set_as_default) {

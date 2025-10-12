@@ -2,7 +2,8 @@ import * as vscode from 'vscode'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  ToolConfig
+  ToolConfig,
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { ModelFetcher } from '@/services/model-fetcher'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
@@ -15,11 +16,6 @@ import {
   initial_select_provider
 } from '../../utils/config-editing'
 import { dictionary } from '@shared/constants/dictionary'
-
-const generate_id = (config: ToolConfig) =>
-  `${config.provider_name}:${config.model}:${config.temperature}:${
-    config.reasoning_effort ?? ''
-  }`
 
 export const handle_add_commit_messages_configuration = async (
   provider: SettingsProvider
@@ -109,7 +105,11 @@ export const handle_add_commit_messages_configuration = async (
   await show_quick_pick()
 
   const configs = await providers_manager.get_commit_messages_tool_configs()
-  if (configs.some((c) => generate_id(c) == generate_id(config_to_add))) {
+  if (
+    configs.some(
+      (c) => get_tool_config_id(c) == get_tool_config_id(config_to_add)
+    )
+  ) {
     vscode.window.showErrorMessage(
       dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
     )

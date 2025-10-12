@@ -1,14 +1,10 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  ToolConfig
+  ToolConfig,
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { ReorderCommitMessagesConfigurationsMessage } from '@/views/settings/types/messages'
-
-const generate_id = (config: ToolConfig) =>
-  `${config.provider_name}:${config.model}:${config.temperature}:${
-    config.reasoning_effort ?? ''
-  }`
 
 export const handle_reorder_commit_messages_configurations = async (
   provider: SettingsProvider,
@@ -22,7 +18,7 @@ export const handle_reorder_commit_messages_configurations = async (
 
   const reordered_configs = reordered_ids
     .map((id) => {
-      const found = current_configs.find((p) => generate_id(p) == id)
+      const found = current_configs.find((p) => get_tool_config_id(p) == id)
       if (!found) {
         console.error(`Config with id ${id} not found during reorder.`)
         return null

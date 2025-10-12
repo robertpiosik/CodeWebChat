@@ -1,7 +1,8 @@
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
-  ToolConfig
+  ToolConfig,
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { ConfigurationForClient } from '@/views/settings/types/messages'
 import { SupportedTool, DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
@@ -31,9 +32,7 @@ export const handle_get_edit_context_configurations = async (
   const configs_for_client: ConfigurationForClient[] = saved_configs.map(
     (config) => {
       return {
-        id: `${config.provider_name}:${config.model}:${config.temperature}:${
-          config.reasoning_effort ?? ''
-        }:${config.instructions_placement ?? ''}`,
+        id: get_tool_config_id(config),
         model: config.model,
         description: create_description(config),
         is_default: false // edit-context has no default
