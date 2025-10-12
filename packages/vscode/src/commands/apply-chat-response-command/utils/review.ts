@@ -58,15 +58,23 @@ const get_diff_stats = (params: {
   original_content: string
   new_content: string
 }): { lines_added: number; lines_removed: number } => {
-  if (params.original_content == params.new_content) {
+  const original_content_processed = params.original_content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .join('\n')
+  const new_content_processed = params.new_content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .join('\n')
+  if (original_content_processed === new_content_processed) {
     return { lines_added: 0, lines_removed: 0 }
   }
 
   const patch = createTwoFilesPatch(
     'original',
     'modified',
-    params.original_content,
-    params.new_content,
+    original_content_processed,
+    new_content_processed,
     undefined,
     undefined,
     { context: 0 }
