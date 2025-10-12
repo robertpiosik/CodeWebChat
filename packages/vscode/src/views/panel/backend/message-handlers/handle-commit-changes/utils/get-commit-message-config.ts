@@ -88,9 +88,13 @@ export const get_commit_message_config = async (
       quick_pick.placeholder = 'Select configuration for commit message'
       quick_pick.matchOnDescription = true
 
-      const last_selected_id = context.globalState.get<string>(
-        LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
-      )
+      const last_selected_id =
+        context.workspaceState.get<string>(
+          LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
+        ) ??
+        context.globalState.get<string>(
+          LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
+        )
       const last_selected_item = (
         quick_pick.items as (vscode.QuickPickItem & { id: string })[]
       ).find((item) => item.id === last_selected_id)
@@ -126,6 +130,10 @@ export const get_commit_message_config = async (
           quick_pick.hide()
 
           if (selected) {
+            context.workspaceState.update(
+              LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
+              selected.id
+            )
             context.globalState.update(
               LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
               selected.id

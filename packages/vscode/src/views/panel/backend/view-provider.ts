@@ -684,12 +684,20 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         })
       ),
       selected_configuration_id_by_mode: {
-        'edit-context': this.context.workspaceState.get<string>(
-          LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
-        ),
-        'code-completions': this.context.workspaceState.get<string>(
-          LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-        )
+        'edit-context':
+          this.context.workspaceState.get<string>(
+            LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+          ) ??
+          this.context.globalState.get<string>(
+            LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+          ),
+        'code-completions':
+          this.context.workspaceState.get<string>(
+            LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+          ) ??
+          this.context.globalState.get<string>(
+            LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+          )
       }
     })
   }
