@@ -333,6 +333,26 @@ describe('clipboard-parser', () => {
         load_test_case_file('php-opening-tag', 'file-1.txt')
       )
     })
+
+    it('should handle filename comment and backticks on the same line', () => {
+      const text = load_test_case_file(
+        'filename-comment-and-backticks-on-same-line',
+        'filename-comment-and-backticks-on-same-line.txt'
+      )
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.ts')
+      expect(result[0].content).toBe(
+        load_test_case_file(
+          'filename-comment-and-backticks-on-same-line',
+          'file-1.txt'
+        )
+      )
+    })
   })
 
   describe('parse_file_content_only', () => {

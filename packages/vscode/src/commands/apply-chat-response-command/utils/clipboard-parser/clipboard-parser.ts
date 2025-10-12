@@ -178,7 +178,16 @@ export const parse_multiple_files = (params: {
     const line = lines[i]
 
     if (state == 'TEXT') {
-      if (line.trim().startsWith('```')) {
+      const backtick_index = line.indexOf('```')
+      if (backtick_index != -1) {
+        const before_backticks = line.substring(0, backtick_index)
+        if (before_backticks.trim()) {
+          const extracted_filename =
+            extract_path_from_line_of_code(before_backticks)
+          if (extracted_filename) {
+            last_seen_file_path_comment = extracted_filename
+          }
+        }
         state = 'CONTENT'
         backtick_nesting_level = 1
         current_workspace_name = undefined
