@@ -1,7 +1,8 @@
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import {
   ModelProvidersManager,
-  ToolConfig
+  ToolConfig,
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { ApiMode } from '@shared/types/modes'
@@ -40,15 +41,11 @@ export const handle_get_api_tool_configurations = async (
   const configurations: { [T in ApiMode]?: ApiToolConfiguration[] } = {
     'edit-context': edit_context_configs.map((config) => ({
       ...config,
-      id: `${config.provider_name}:${config.model}:${config.temperature}:${
-        config.reasoning_effort ?? ''
-      }:${config.instructions_placement ?? ''}`
+      id: get_tool_config_id(config)
     })),
     'code-completions': code_completions_configs.map((config) => ({
       ...config,
-      id: `${config.provider_name}:${config.model}:${config.temperature}:${
-        config.reasoning_effort ?? ''
-      }`,
+      id: get_tool_config_id(config),
       is_default: is_config_default(config, default_code_completions_config)
     }))
   }

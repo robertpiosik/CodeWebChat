@@ -15,14 +15,14 @@ export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
 export const COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY =
   'commitMessagesConfirmationThreshold'
-export const LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY =
-  'lastSelectedCodeCompletionConfigIndex'
-export const LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY =
-  'lastSelectedFileRefactoringConfigIndex'
-export const LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY =
-  'lastSelectedCommitMessagesConfigIndex'
-export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY =
-  'lastSelectedIntelligentUpdateConfigIndex'
+export const LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY =
+  'lastSelectedCodeCompletionConfigId'
+export const LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY =
+  'lastSelectedEditContextConfigId'
+export const LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY =
+  'lastSelectedCommitMessagesConfigId'
+export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY =
+  'lastSelectedIntelligentUpdateConfigId'
 export const LAST_CHOSEN_COMMAND_BY_VIEW_TYPE_STATE_KEY =
   'lastChosenCommandByViewType'
 export const LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =

@@ -39,7 +39,7 @@ type Props = {
   is_connected: boolean
   presets: Preset[]
   configurations: ApiToolConfiguration[]
-  on_configuration_click: (index: number) => void
+  on_configuration_click: (id: string) => void
   on_configurations_reorder: (
     reordered_configurations: UiConfigurations.Configuration[]
   ) => void
@@ -66,7 +66,7 @@ type Props = {
   on_toggle_selected_preset: (name: string) => void
   on_toggle_group_collapsed: (name: string) => void
   selected_preset_or_group_name?: string
-  selected_configuration_index?: number
+  selected_configuration_id?: string
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
@@ -230,7 +230,7 @@ export const MainView: React.FC<Props> = (props) => {
     home_view_type: props.home_view_type,
     selected_preset_or_group_name: props.selected_preset_or_group_name,
     presets: props.presets,
-    selected_configuration_index: props.selected_configuration_index,
+    selected_configuration_id: props.selected_configuration_id,
     configurations: props.configurations
   })
 
@@ -418,9 +418,7 @@ export const MainView: React.FC<Props> = (props) => {
                 }))}
                 on_configuration_click={props.on_configuration_click}
                 on_reorder={props.on_configurations_reorder}
-                selected_configuration_index={
-                  props.selected_configuration_index
-                }
+                selected_configuration_id={props.selected_configuration_id}
                 on_manage_configurations={props.on_manage_configurations}
               />
             </>

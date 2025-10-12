@@ -20,14 +20,15 @@ export namespace Configurations {
   export type Props = {
     api_mode: 'edit-context' | 'code-completions'
     configurations: Configuration[]
-    on_configuration_click: (i: number) => void
+    on_configuration_click: (id: string) => void
     on_reorder?: (configurations: Configuration[]) => void
-    selected_configuration_index?: number
+    selected_configuration_id?: string
     on_manage_configurations: () => void
   }
 }
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
+  console.log('xxx', props.selected_configuration_id)
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
@@ -51,7 +52,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           handle={`.${styles.configurations__item__left__drag_handle}`}
           disabled={!props.on_reorder}
         >
-          {props.configurations.map((configuration, i) => {
+          {props.configurations.map((configuration) => {
             const description_parts = [configuration.provider]
             if (configuration.reasoning_effort) {
               description_parts.push(`${configuration.reasoning_effort}`)
@@ -68,15 +69,17 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
 
             const description = description_parts.join(' · ')
 
+            console.log('xxx1', configuration.id)
+
             return (
               <div
                 key={configuration.id}
                 className={cn(styles.configurations__item, {
                   [styles['configurations__item--highlighted']]:
-                    props.selected_configuration_index == i
+                    props.selected_configuration_id == configuration.id
                 })}
                 onClick={() => {
-                  props.on_configuration_click(i)
+                  props.on_configuration_click(configuration.id)
                 }}
                 role="button"
               >

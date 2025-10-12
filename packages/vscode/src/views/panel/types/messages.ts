@@ -170,13 +170,13 @@ export interface GetHomeViewTypeMessage extends BaseMessage {
 export interface EditContextMessage extends BaseMessage {
   command: 'EDIT_CONTEXT'
   use_quick_pick: boolean
-  config_index?: number
+  config_id?: string
 }
 
 export interface CodeCompletionMessage extends BaseMessage {
   command: 'CODE_COMPLETION'
   use_quick_pick: boolean
-  config_index?: number
+  config_id?: string
 }
 
 export interface ShowAtSignQuickPickMessage extends BaseMessage {
@@ -380,7 +380,7 @@ export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
   presets: { [T in WebMode]: Preset[] }
   selected_preset_or_group_name_by_mode?: { [T in WebMode]?: string }
-  selected_configuration_index_by_mode?: { [T in ApiMode]?: number }
+  selected_configuration_id_by_mode?: { [T in ApiMode]?: string }
 }
 
 export interface ApiToolConfigurationsMessage extends BaseMessage {
@@ -495,7 +495,7 @@ export interface SelectedPresetOrGroupChangedMessage extends BaseMessage {
 export interface SelectedConfigurationChangedMessage extends BaseMessage {
   command: 'SELECTED_CONFIGURATION_CHANGED'
   mode: ApiMode
-  index: number
+  id: string
 }
 
 export interface FocusChatInputMessage extends BaseMessage {

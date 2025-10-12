@@ -1,13 +1,14 @@
 import * as vscode from 'vscode'
 import {
   ModelProvidersManager,
-  ReasoningEffort
+  ReasoningEffort,
+  get_tool_config_id
 } from '@/services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@shared/constants/providers'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
-import { LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
+import { LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 
 export interface CommitMessageConfig {
   provider_name: string
@@ -76,6 +77,7 @@ export const get_commit_message_config = async (
             description: description_parts.join(' · '),
             config,
             index,
+            id: get_tool_config_id(config),
             buttons
           }
         })
@@ -86,16 +88,15 @@ export const get_commit_message_config = async (
       quick_pick.placeholder = 'Select configuration for commit message'
       quick_pick.matchOnDescription = true
 
-      const last_selected_index = context.globalState.get<number>(
-        LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY,
-        0
+      const last_selected_id = context.globalState.get<string>(
+        LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY
       )
+      const last_selected_item = (
+        quick_pick.items as (vscode.QuickPickItem & { id: string })[]
+      ).find((item) => item.id === last_selected_id)
 
-      if (
-        last_selected_index >= 0 &&
-        last_selected_index < quick_pick.items.length
-      ) {
-        quick_pick.activeItems = [quick_pick.items[last_selected_index]]
+      if (last_selected_item) {
+        quick_pick.activeItems = [last_selected_item]
       } else if (quick_pick.items.length > 0) {
         quick_pick.activeItems = [quick_pick.items[0]]
       }
@@ -126,8 +127,8 @@ export const get_commit_message_config = async (
 
           if (selected) {
             context.globalState.update(
-              LAST_SELECTED_COMMIT_MESSAGES_CONFIG_INDEX_STATE_KEY,
-              selected.index
+              LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY,
+              selected.id
             )
             resolve(selected.config)
           } else {

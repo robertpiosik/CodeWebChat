@@ -1,12 +1,15 @@
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
 import { Logger } from '@shared/utils/logger'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import {
+  ModelProvidersManager,
+  get_tool_config_id
+} from '@/services/model-providers-manager'
 import { make_api_request } from '@/utils/make-api-request'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
-import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
+import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
@@ -21,7 +24,7 @@ const get_edit_context_config = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
-  config_index?: number,
+  config_id?: string,
   view_provider?: ViewProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
   const edit_context_configs =
@@ -35,31 +38,35 @@ const get_edit_context_config = async (
     return
   }
 
-  let selected_config = null
+  let selected_config: ToolConfig | null = null
 
-  if (config_index !== undefined && edit_context_configs[config_index]) {
-    selected_config = edit_context_configs[config_index]
-    context.workspaceState.update(
-      LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY,
-      config_index
-    )
+  if (config_id !== undefined) {
+    selected_config =
+      edit_context_configs.find((c) => get_tool_config_id(c) === config_id) ||
+      null
+    if (selected_config) {
+      context.workspaceState.update(
+        LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+        config_id
+      )
 
-    if (view_provider) {
-      view_provider.send_message({
-        command: 'SELECTED_CONFIGURATION_CHANGED',
-        mode: 'edit-context',
-        index: config_index
-      })
+      if (view_provider) {
+        view_provider.send_message({
+          command: 'SELECTED_CONFIGURATION_CHANGED',
+          mode: 'edit-context',
+          id: config_id
+        })
+      }
     }
   } else if (!show_quick_pick) {
-    const last_selected_index = context.workspaceState.get<number>(
-      LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY
+    const last_selected_id = context.workspaceState.get<string>(
+      LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
     )
-    if (
-      last_selected_index !== undefined &&
-      edit_context_configs[last_selected_index]
-    ) {
-      selected_config = edit_context_configs[last_selected_index]
+    if (last_selected_id) {
+      selected_config =
+        edit_context_configs.find(
+          (c) => get_tool_config_id(c) === last_selected_id
+        ) || null
     }
   }
 
@@ -84,7 +91,8 @@ const get_edit_context_config = async (
           description: description_parts.join(' · '),
           buttons,
           config,
-          index
+          index,
+          id: get_tool_config_id(config)
         }
       })
     }
@@ -94,14 +102,17 @@ const get_edit_context_config = async (
     quick_pick.placeholder = 'Select configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_index = context.workspaceState.get<number>(
-      LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY,
-      0
+    const last_selected_id = context.workspaceState.get<string>(
+      LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
     )
 
-    const items = quick_pick.items
-    if (last_selected_index >= 0 && last_selected_index < items.length) {
-      quick_pick.activeItems = [items[last_selected_index]]
+    const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
+    const last_selected_item = items.find(
+      (item) => item.id === last_selected_id
+    )
+
+    if (last_selected_item) {
+      quick_pick.activeItems = [last_selected_item]
     } else if (items.length > 0) {
       quick_pick.activeItems = [items[0]]
     }
@@ -121,15 +132,15 @@ const get_edit_context_config = async (
           }
 
           context.workspaceState.update(
-            LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY,
-            selected.index
+            LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
+            selected.id
           )
 
           if (view_provider) {
             view_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               mode: 'edit-context',
-              index: selected.index
+              id: selected.id
             })
           }
 
@@ -189,7 +200,7 @@ const perform_context_editing = async (params: {
   open_editors_provider?: any
   show_quick_pick?: boolean
   instructions?: string
-  config_index?: number
+  config_id?: string
   view_provider: ViewProvider
 }) => {
   const api_providers_manager = new ModelProvidersManager(params.context)
@@ -253,7 +264,7 @@ const perform_context_editing = async (params: {
     api_providers_manager,
     params.show_quick_pick,
     params.context,
-    params.config_index,
+    params.config_id,
     params.view_provider
   )
 
@@ -401,7 +412,7 @@ export const handle_edit_context = async (
     open_editors_provider: view_provider.open_editors_provider,
     show_quick_pick: message.use_quick_pick,
     instructions: view_provider.edit_instructions,
-    config_index: message.config_index,
+    config_id: message.config_id,
     view_provider
   })
 }

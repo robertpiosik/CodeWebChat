@@ -11,7 +11,7 @@ export const use_last_choice_button_title = (params: {
   home_view_type: HomeViewType
   selected_preset_or_group_name?: string
   presets: Preset[]
-  selected_configuration_index?: number
+  selected_configuration_id?: string
   configurations: ApiToolConfiguration[]
 }): string | undefined => {
   return useMemo(() => {
@@ -61,9 +61,10 @@ export const use_last_choice_button_title = (params: {
       }
     } else {
       // HOME_VIEW_TYPES.API
-      if (params.selected_configuration_index !== undefined) {
-        const configuration =
-          params.configurations[params.selected_configuration_index]
+      if (params.selected_configuration_id !== undefined) {
+        const configuration = params.configurations.find(
+          (c) => c.id === params.selected_configuration_id
+        )
         if (configuration) {
           const description_parts = [configuration.provider_name]
           if (configuration.reasoning_effort) {
@@ -79,7 +80,7 @@ export const use_last_choice_button_title = (params: {
     params.home_view_type,
     params.selected_preset_or_group_name,
     params.presets,
-    params.selected_configuration_index,
+    params.selected_configuration_id,
     params.configurations
   ])
 }

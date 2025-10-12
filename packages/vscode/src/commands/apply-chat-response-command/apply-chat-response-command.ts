@@ -13,10 +13,13 @@ import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { handle_intelligent_update } from './handlers/intelligent-update-handler'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
-import { ModelProvidersManager } from '@/services/model-providers-manager'
+import {
+  ModelProvidersManager,
+  get_tool_config_id
+} from '@/services/model-providers-manager'
 import { apply_git_patch } from './handlers/diff-handler'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
+import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { Diff } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
 import { review, code_review_promise_resolve } from './utils/review'
@@ -121,6 +124,7 @@ const get_intelligent_update_config = async (
           }`,
           config,
           index,
+          id: get_tool_config_id(config),
           buttons
         }
       })
@@ -132,13 +136,13 @@ const get_intelligent_update_config = async (
     quick_pick.placeholder = 'Select intelligent update configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_index = context.globalState.get<number>(
-      LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY,
-      0
+    const last_selected_id = context.globalState.get<string>(
+      LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY
     )
+    const last_selected_item = items.find((item) => item.id == last_selected_id)
 
-    if (last_selected_index >= 0 && last_selected_index < items.length) {
-      quick_pick.activeItems = [items[last_selected_index]]
+    if (last_selected_item) {
+      quick_pick.activeItems = [last_selected_item]
     } else if (items.length > 0) {
       quick_pick.activeItems = [items[0]]
     }
@@ -173,8 +177,8 @@ const get_intelligent_update_config = async (
           }
 
           context.globalState.update(
-            LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_INDEX_STATE_KEY,
-            selected.index
+            LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY,
+            selected.id
           )
 
           const provider = await api_providers_manager.get_provider(

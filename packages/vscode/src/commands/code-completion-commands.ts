@@ -3,11 +3,14 @@ import axios from 'axios'
 import { make_api_request } from '../utils/make-api-request'
 import { code_completion_instructions } from '../constants/instructions'
 import { FilesCollector } from '../utils/files-collector'
-import { ModelProvidersManager } from '../services/model-providers-manager'
+import {
+  ModelProvidersManager,
+  get_tool_config_id
+} from '../services/model-providers-manager'
 import { Logger } from '@shared/utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
-import { LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY } from '@/constants/state-keys'
+import { LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { ViewProvider } from '@/views/panel/backend/view-provider'
@@ -58,7 +61,7 @@ const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
-  config_index?: number,
+  config_id?: string,
   view_provider?: ViewProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
   const code_completions_configs =
@@ -72,18 +75,24 @@ const get_code_completion_config = async (
     return
   }
 
-  let selected_config = null
+  let selected_config: ToolConfig | null = null
 
-  if (config_index !== undefined && code_completions_configs[config_index]) {
-    selected_config = code_completions_configs[config_index]
+  if (config_id !== undefined) {
+    selected_config =
+      code_completions_configs.find(
+        (c) => get_tool_config_id(c) === config_id
+      ) || null
   } else if (!show_quick_pick) {
-    const last_selected_index = context.workspaceState.get<number>(
-      LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
-      0
+    const last_selected_id = context.workspaceState.get<string>(
+      LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
     )
-    if (code_completions_configs[last_selected_index]) {
-      selected_config = code_completions_configs[last_selected_index]
-    } else if (code_completions_configs.length > 0) {
+    if (last_selected_id) {
+      selected_config =
+        code_completions_configs.find(
+          (c) => get_tool_config_id(c) === last_selected_id
+        ) || null
+    }
+    if (!selected_config && code_completions_configs.length > 0) {
       selected_config = code_completions_configs[0]
     }
   }
@@ -103,7 +112,8 @@ const get_code_completion_config = async (
           label: config.model,
           description: description_parts.join(' · '),
           config,
-          index
+          index,
+          id: get_tool_config_id(config)
         }
       })
     }
@@ -113,14 +123,17 @@ const get_code_completion_config = async (
     quick_pick.placeholder = 'Select code completions configuration'
     quick_pick.matchOnDescription = true
 
-    const last_selected_index = context.workspaceState.get<number>(
-      LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
-      0
+    const last_selected_id = context.workspaceState.get<string>(
+      LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
     )
 
-    const items = quick_pick.items
-    if (last_selected_index >= 0 && last_selected_index < items.length) {
-      quick_pick.activeItems = [items[last_selected_index]]
+    const items = quick_pick.items as (vscode.QuickPickItem & { id: string })[]
+    const last_selected_item = items.find(
+      (item) => item.id === last_selected_id
+    )
+
+    if (last_selected_item) {
+      quick_pick.activeItems = [last_selected_item]
     } else if (items.length > 0) {
       quick_pick.activeItems = [items[0]]
     }
@@ -137,15 +150,15 @@ const get_code_completion_config = async (
           }
 
           context.workspaceState.update(
-            LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
-            selected.index
+            LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
+            selected.id
           )
 
           if (view_provider) {
             view_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               mode: 'code-completions',
-              index: selected.index
+              id: selected.id
             })
           }
 
@@ -204,7 +217,7 @@ const perform_code_completion = async (params: {
   with_completion_instructions: boolean
   show_quick_pick?: boolean
   completion_instructions?: string
-  config_index?: number
+  config_id?: string
   view_provider?: ViewProvider
 }) => {
   const api_providers_manager = new ModelProvidersManager(params.context)
@@ -234,7 +247,7 @@ const perform_code_completion = async (params: {
     api_providers_manager,
     params.show_quick_pick,
     params.context,
-    params.config_index,
+    params.config_id,
     params.view_provider
   )
 

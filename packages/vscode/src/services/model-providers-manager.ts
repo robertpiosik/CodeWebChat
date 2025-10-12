@@ -31,6 +31,19 @@ export type ToolConfig = {
   instructions_placement?: InstructionsPlacement
 }
 
+export const get_tool_config_id = (config: ToolConfig): string => {
+  return [
+    config.provider_name,
+    config.model,
+    config.temperature,
+    config.reasoning_effort ?? '',
+    config.max_concurrency ?? '',
+    config.instructions_placement ?? ''
+  ]
+    .filter(Boolean)
+    .join(':')
+}
+
 export type CodeCompletionsConfigs = ToolConfig[]
 export type EditContextConfigs = ToolConfig[]
 export type IntelligentUpdateConfigs = ToolConfig[]

@@ -55,9 +55,9 @@ export const Main: React.FC<Props> = (props) => {
     [T in ApiMode]?: ApiToolConfiguration[]
   }>()
   const [
-    selected_configuration_index_by_mode,
-    set_selected_configuration_index_by_mode
-  ] = useState<{ [T in ApiMode]?: number }>()
+    selected_configuration_id_by_mode,
+    set_selected_configuration_id_by_mode
+  ] = useState<{ [T in ApiMode]?: string }>()
   const [ask_history, set_ask_history] = useState<string[]>()
   const [edit_history, set_edit_history] = useState<string[]>()
   const [no_context_history, set_no_context_history] = useState<string[]>()
@@ -90,8 +90,8 @@ export const Main: React.FC<Props> = (props) => {
           set_selected_preset_or_group_name_by_mode(
             (message as PresetsMessage).selected_preset_or_group_name_by_mode
           )
-          set_selected_configuration_index_by_mode(
-            (message as PresetsMessage).selected_configuration_index_by_mode
+          set_selected_configuration_id_by_mode(
+            (message as PresetsMessage).selected_configuration_id_by_mode
           )
           break
         case 'API_TOOL_CONFIGURATIONS':
@@ -146,9 +146,9 @@ export const Main: React.FC<Props> = (props) => {
           }))
           break
         case 'SELECTED_CONFIGURATION_CHANGED':
-          set_selected_configuration_index_by_mode((prev) => ({
+          set_selected_configuration_id_by_mode((prev) => ({
             ...prev,
-            [message.mode]: message.index
+            [message.mode]: message.id
           }))
           break
         case 'FOCUS_CHAT_INPUT':
@@ -508,20 +508,20 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_configuration_click = (index: number) => {
+  const handle_configuration_click = (id: string) => {
     const instruction = get_current_instructions()
 
     if (props.api_mode == 'edit-context') {
       post_message(props.vscode, {
         command: 'EDIT_CONTEXT',
         use_quick_pick: false,
-        config_index: index
+        config_id: id
       })
     } else if (props.api_mode == 'code-completions') {
       post_message(props.vscode, {
         command: 'CODE_COMPLETION',
         use_quick_pick: false,
-        config_index: index
+        config_id: id
       })
     }
 
@@ -631,8 +631,8 @@ export const Main: React.FC<Props> = (props) => {
       on_toggle_selected_preset={handle_toggle_selected_preset}
       on_toggle_group_collapsed={handle_toggle_group_collapsed}
       selected_preset_or_group_name={selected_preset_or_group_name}
-      selected_configuration_index={
-        selected_configuration_index_by_mode?.[props.api_mode]
+      selected_configuration_id={
+        selected_configuration_id_by_mode?.[props.api_mode]
       }
       instructions={instructions}
       set_instructions={set_instructions}

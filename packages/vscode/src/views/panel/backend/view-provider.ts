@@ -65,8 +65,8 @@ import {
   get_last_selected_group_state_key,
   get_last_selected_preset_key,
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
-  LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
-  LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY,
+  LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
+  LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
   RECENT_DONATIONS_VISIBLE_STATE_KEY,
   WEB_MODE_STATE_KEY
 } from '@/constants/state-keys'
@@ -683,13 +683,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           return [mode, selected_name]
         })
       ),
-      selected_configuration_index_by_mode: {
-        'edit-context': this.context.workspaceState.get<number>(
-          LAST_SELECTED_EDIT_CONTEXT_CONFIG_INDEX_STATE_KEY
+      selected_configuration_id_by_mode: {
+        'edit-context': this.context.workspaceState.get<string>(
+          LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
         ),
-        'code-completions': this.context.workspaceState.get<number>(
-          LAST_SELECTED_CODE_COMPLETION_CONFIG_INDEX_STATE_KEY,
-          0
+        'code-completions': this.context.workspaceState.get<string>(
+          LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
         )
       }
     })
