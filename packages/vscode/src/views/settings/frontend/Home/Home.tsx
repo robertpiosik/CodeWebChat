@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Layout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
@@ -83,8 +83,12 @@ export const Home: React.FC<Props> = (props) => {
   const [commit_instructions, set_commit_instructions] = useState('')
   const [stuck_sections, set_stuck_sections] = useState(new Set<NavItem>())
 
-  const handle_stuck_change = (id: NavItem, is_stuck: boolean) => {
+  const handle_stuck_change = useCallback((id: NavItem, is_stuck: boolean) => {
     set_stuck_sections((prev) => {
+      const is_currently_stuck = prev.has(id)
+      if (is_stuck === is_currently_stuck) {
+        return prev
+      }
       const next = new Set(prev)
       if (is_stuck) {
         next.add(id)
@@ -93,7 +97,32 @@ export const Home: React.FC<Props> = (props) => {
       }
       return next
     })
-  }
+  }, [])
+
+  const general_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('general', is_stuck),
+    [handle_stuck_change]
+  )
+  const model_providers_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('model-providers', is_stuck),
+    [handle_stuck_change]
+  )
+  const edit_context_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('edit-context', is_stuck),
+    [handle_stuck_change]
+  )
+  const code_completions_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('code-completions', is_stuck),
+    [handle_stuck_change]
+  )
+  const intelligent_update_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('intelligent-update', is_stuck),
+    [handle_stuck_change]
+  )
+  const commit_messages_on_stuck_change = useCallback(
+    (is_stuck: boolean) => handle_stuck_change('commit-messages', is_stuck),
+    [handle_stuck_change]
+  )
 
   const nav_item_ids = NAV_ITEMS_CONFIG.map((item) => item.id)
   const active_nav_item_id =
@@ -174,9 +203,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['general'] = el)}
           title="General"
           subtitle="General settings for the extension."
-          on_stuck_change={(is_stuck) =>
-            handle_stuck_change('general', is_stuck)
-          }
+          on_stuck_change={general_on_stuck_change}
         >
           <Item
             title="Open Editor Settings"
@@ -192,9 +219,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['model-providers'] = el)}
           title="Model Providers"
           subtitle="Manage your model providers here. Add, edit, reorder, or delete providers as needed."
-          on_stuck_change={(is_stuck) =>
-            handle_stuck_change('model-providers', is_stuck)
-          }
+          on_stuck_change={model_providers_on_stuck_change}
         >
           <ModelProvidersSection
             providers={props.providers}
@@ -212,9 +237,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['edit-context'] = el)}
           title={dictionary.settings.EDIT_CONTEXT_LABEL}
           subtitle={dictionary.settings.EDIT_CONTEXT_SUBTITLE}
-          on_stuck_change={(is_stuck) =>
-            handle_stuck_change('edit-context', is_stuck)
-          }
+          on_stuck_change={edit_context_on_stuck_change}
         >
           <ApiToolConfigurationSection
             configurations={props.edit_context_configs}
@@ -233,9 +256,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['code-completions'] = el)}
           title={dictionary.settings.CODE_COMPLETIONS_LABEL}
           subtitle={dictionary.settings.CODE_COMPLETIONS_SUBTITLE}
-          on_stuck_change={(is_stuck) =>
-            handle_stuck_change('code-completions', is_stuck)
-          }
+          on_stuck_change={code_completions_on_stuck_change}
         >
           <ApiToolConfigurationSection
             configurations={props.code_completions_configs}
@@ -260,9 +281,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           title={dictionary.settings.INTELLIGENT_UPDATE_LABEL}
           subtitle={dictionary.settings.INTELLIGENT_UPDATE_SUBTITLE}
-          on_stuck_change={(is_stuck) =>
-            handle_stuck_change('intelligent-update', is_stuck)
-          }
+          on_stuck_change={intelligent_update_on_stuck_change}
         >
           <ApiToolConfigurationSection
             configurations={props.intelligent_update_configs}
@@ -287,9 +306,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['commit-messages'] = el)}
           title={dictionary.settings.COMMIT_MESSAGES_LABEL}
           subtitle="Configure models for generating commit messages, and customize the instructions used."
-          on_stuck_change={(is_stuck) =>
-            handle_stuck_change('commit-messages', is_stuck)
-          }
+          on_stuck_change={commit_messages_on_stuck_change}
         >
           <Item
             title="Commit Message Instructions"
