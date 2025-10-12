@@ -349,9 +349,9 @@ export const dictionary = {
   home: {
     header: 'Home',
     new_chat_label: 'Open View: New chat',
-    new_chat_description: 'Send prompt with a free chatbot',
+    new_chat_description: 'Send prompt in a free chatbot',
     api_call_label: 'Open View: API call',
-    api_call_description: 'Send prompt with an API provider',
+    api_call_description: 'Send prompt to a model provider',
     license_prefix: 'Released under the',
     license_link_text: 'GPL-3.0 license',
     author: 'Robert Piosik',
