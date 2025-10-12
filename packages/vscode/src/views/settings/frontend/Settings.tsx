@@ -1,12 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { use_settings_data } from './hooks/use-settings-data'
 import { post_message } from './utils/post_message'
-import {
-  BackendMessage,
-  FrontendMessage,
-  ProviderForClient,
-  ConfigurationForClient
-} from '../types/messages'
+import { BackendMessage } from '../types/messages'
 import { Home } from './Home/Home'
 
 type NavItem =
@@ -49,91 +44,6 @@ export const Settings = () => {
 
   if (!all_data_loaded) return null
 
-  const handle_reorder_providers = (
-    reordered_providers: ProviderForClient[]
-  ) => {
-    settings_data_hook.set_providers(reordered_providers)
-    post_message(vscode, {
-      command: 'REORDER_MODEL_PROVIDERS',
-      providers: reordered_providers
-    })
-  }
-
-  const handle_add_provider = () => {
-    post_message(vscode, { command: 'ADD_MODEL_PROVIDER' })
-  }
-
-  const handle_delete_provider = (provider_name: string) => {
-    post_message(vscode, {
-      command: 'DELETE_MODEL_PROVIDER',
-      provider_name
-    })
-  }
-
-  const handle_rename_provider = (provider_name: string) => {
-    post_message(vscode, {
-      command: 'RENAME_MODEL_PROVIDER',
-      provider_name
-    })
-  }
-
-  const handle_change_api_key = (provider_name: string) => {
-    post_message(vscode, {
-      command: 'CHANGE_MODEL_PROVIDER_KEY',
-      provider_name
-    })
-  }
-
-  const handle_add_config = (tool_name: string) => {
-    post_message(vscode, {
-      command: `ADD_${tool_name}_CONFIGURATION`
-    } as FrontendMessage)
-  }
-
-  const handle_reorder_configs = (
-    tool_name: string,
-    reordered: ConfigurationForClient[]
-  ) => {
-    post_message(vscode, {
-      command: `REORDER_${tool_name}_CONFIGURATIONS`,
-      configurations: reordered
-    } as FrontendMessage)
-  }
-
-  const handle_edit_config = (tool_name: string, configuration_id: string) => {
-    post_message(vscode, {
-      command: `EDIT_${tool_name}_CONFIGURATION`,
-      configuration_id
-    } as FrontendMessage)
-  }
-
-  const handle_delete_config = (
-    tool_name: string,
-    configuration_id: string
-  ) => {
-    post_message(vscode, {
-      command: `DELETE_${tool_name}_CONFIGURATION`,
-      configuration_id
-    } as FrontendMessage)
-  }
-
-  const handle_set_default_config = (
-    tool_name: string,
-    configuration_id: string
-  ) => {
-    post_message(vscode, {
-      command: `SET_DEFAULT_${tool_name}_CONFIGURATION`,
-      configuration_id
-    } as FrontendMessage)
-  }
-
-  const handle_unset_default_config = (tool_name: string) => {
-    post_message(vscode, {
-      command: `SET_DEFAULT_${tool_name}_CONFIGURATION`,
-      configuration_id: null
-    } as FrontendMessage)
-  }
-
   return (
     <Home
       providers={settings_data_hook.providers!}
@@ -157,26 +67,21 @@ export const Settings = () => {
       set_intelligent_update_configs={
         settings_data_hook.set_intelligent_update_configs
       }
-      on_commit_instructions_change={(instructions) =>
-        post_message(vscode, {
-          command: 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS',
-          instructions
-        })
+      on_commit_instructions_change={
+        settings_data_hook.handle_commit_instructions_change
       }
-      on_open_editor_settings={() =>
-        post_message(vscode, { command: 'OPEN_EDITOR_SETTINGS' })
-      }
-      on_reorder_providers={handle_reorder_providers}
-      on_add_provider={handle_add_provider}
-      on_delete_provider={handle_delete_provider}
-      on_rename_provider={handle_rename_provider}
-      on_change_api_key={handle_change_api_key}
-      on_add_config={handle_add_config}
-      on_reorder_configs={handle_reorder_configs}
-      on_edit_config={handle_edit_config}
-      on_delete_config={handle_delete_config}
-      on_set_default_config={handle_set_default_config}
-      on_unset_default_config={handle_unset_default_config}
+      on_open_editor_settings={settings_data_hook.handle_open_editor_settings}
+      on_reorder_providers={settings_data_hook.handle_reorder_providers}
+      on_add_provider={settings_data_hook.handle_add_provider}
+      on_delete_provider={settings_data_hook.handle_delete_provider}
+      on_rename_provider={settings_data_hook.handle_rename_provider}
+      on_change_api_key={settings_data_hook.handle_change_api_key}
+      on_add_config={settings_data_hook.handle_add_config}
+      on_reorder_configs={settings_data_hook.handle_reorder_configs}
+      on_edit_config={settings_data_hook.handle_edit_config}
+      on_delete_config={settings_data_hook.handle_delete_config}
+      on_set_default_config={settings_data_hook.handle_set_default_config}
+      on_unset_default_config={settings_data_hook.handle_unset_default_config}
       scroll_to_section_on_load={scroll_to_section_on_load}
     />
   )

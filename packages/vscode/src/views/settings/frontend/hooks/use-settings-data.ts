@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import {
   BackendMessage,
   ConfigurationForClient,
-  ProviderForClient
+  ProviderForClient,
+  FrontendMessage
 } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post_message'
 
@@ -67,6 +68,100 @@ export const use_settings_data = (vscode: any) => {
     }
   }, [])
 
+  const handle_reorder_providers = (
+    reordered_providers: ProviderForClient[]
+  ) => {
+    set_providers(reordered_providers)
+    post_message(vscode, {
+      command: 'REORDER_MODEL_PROVIDERS',
+      providers: reordered_providers
+    })
+  }
+
+  const handle_add_provider = () => {
+    post_message(vscode, { command: 'ADD_MODEL_PROVIDER' })
+  }
+
+  const handle_delete_provider = (provider_name: string) => {
+    post_message(vscode, {
+      command: 'DELETE_MODEL_PROVIDER',
+      provider_name
+    })
+  }
+
+  const handle_rename_provider = (provider_name: string) => {
+    post_message(vscode, {
+      command: 'RENAME_MODEL_PROVIDER',
+      provider_name
+    })
+  }
+
+  const handle_change_api_key = (provider_name: string) => {
+    post_message(vscode, {
+      command: 'CHANGE_MODEL_PROVIDER_KEY',
+      provider_name
+    })
+  }
+
+  const handle_add_config = (tool_name: string) => {
+    post_message(vscode, {
+      command: `ADD_${tool_name}_CONFIGURATION`
+    } as FrontendMessage)
+  }
+
+  const handle_reorder_configs = (
+    tool_name: string,
+    reordered: ConfigurationForClient[]
+  ) => {
+    post_message(vscode, {
+      command: `REORDER_${tool_name}_CONFIGURATIONS`,
+      configurations: reordered
+    } as FrontendMessage)
+  }
+
+  const handle_edit_config = (tool_name: string, configuration_id: string) => {
+    post_message(vscode, {
+      command: `EDIT_${tool_name}_CONFIGURATION`,
+      configuration_id
+    } as FrontendMessage)
+  }
+
+  const handle_delete_config = (
+    tool_name: string,
+    configuration_id: string
+  ) => {
+    post_message(vscode, {
+      command: `DELETE_${tool_name}_CONFIGURATION`,
+      configuration_id
+    } as FrontendMessage)
+  }
+
+  const handle_set_default_config = (
+    tool_name: string,
+    configuration_id: string
+  ) => {
+    post_message(vscode, {
+      command: `SET_DEFAULT_${tool_name}_CONFIGURATION`,
+      configuration_id
+    } as FrontendMessage)
+  }
+
+  const handle_unset_default_config = (tool_name: string) => {
+    post_message(vscode, {
+      command: `SET_DEFAULT_${tool_name}_CONFIGURATION`,
+      configuration_id: null
+    } as FrontendMessage)
+  }
+
+  const handle_commit_instructions_change = (instructions: string) =>
+    post_message(vscode, {
+      command: 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS',
+      instructions
+    })
+
+  const handle_open_editor_settings = () =>
+    post_message(vscode, { command: 'OPEN_EDITOR_SETTINGS' })
+
   return {
     providers,
     set_providers,
@@ -78,6 +173,19 @@ export const use_settings_data = (vscode: any) => {
     set_edit_context_configs,
     intelligent_update_configs,
     set_intelligent_update_configs,
-    commit_message_instructions
+    commit_message_instructions,
+    handle_reorder_providers,
+    handle_add_provider,
+    handle_delete_provider,
+    handle_rename_provider,
+    handle_change_api_key,
+    handle_add_config,
+    handle_reorder_configs,
+    handle_edit_config,
+    handle_delete_config,
+    handle_set_default_config,
+    handle_unset_default_config,
+    handle_commit_instructions_change,
+    handle_open_editor_settings
   }
 }
