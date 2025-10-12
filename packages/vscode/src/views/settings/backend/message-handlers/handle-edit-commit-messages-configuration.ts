@@ -20,8 +20,8 @@ export const handle_edit_commit_messages_configuration = async (
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
   const model_fetcher = new ModelFetcher()
-  let configs = await providers_manager.get_commit_messages_tool_configs()
-  let config_index = configs.findIndex(
+  const configs = await providers_manager.get_commit_messages_tool_configs()
+  const config_index = configs.findIndex(
     (c) => get_tool_config_id(c) === message.configuration_id
   )
 
@@ -32,19 +32,21 @@ export const handle_edit_commit_messages_configuration = async (
     return
   }
 
-  let config_to_edit = configs[config_index]
+  const config_to_edit = configs[config_index]
+  const updated_config = { ...config_to_edit }
 
   type EditOption = 'Provider' | 'Model' | 'Temperature' | 'Reasoning Effort'
 
-  const show_quick_pick = async (): Promise<boolean> => {
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     const items: vscode.QuickPickItem[] = [
-      { label: 'Provider', detail: config_to_edit.provider_name },
-      { label: 'Model', detail: config_to_edit.model },
-      { label: 'Temperature', detail: `${config_to_edit.temperature}` },
+      { label: 'Provider', detail: updated_config.provider_name },
+      { label: 'Model', detail: updated_config.model },
+      { label: 'Temperature', detail: `${updated_config.temperature}` },
       {
         label: 'Reasoning Effort',
         description: 'Requires supporting model',
-        detail: config_to_edit.reasoning_effort ?? 'auto'
+        detail: updated_config.reasoning_effort ?? 'auto'
       }
     ]
 
@@ -54,10 +56,9 @@ export const handle_edit_commit_messages_configuration = async (
     })
 
     if (!selected_item) {
-      return false
+      break
     }
 
-    const updated_config = { ...config_to_edit }
     const selected_option = selected_item.label as EditOption
 
     switch (selected_option) {
@@ -66,32 +67,24 @@ export const handle_edit_commit_messages_configuration = async (
         if (new_provider) {
           updated_config.provider_name = new_provider.provider_name
           updated_config.provider_type = new_provider.provider_type
-        } else {
-          return await show_quick_pick()
         }
         break
       }
       case 'Model': {
         const new_model = await edit_model_for_config(
-          config_to_edit,
+          updated_config,
           providers_manager,
           model_fetcher
         )
-        if (new_model !== undefined && new_model !== config_to_edit.model) {
+        if (new_model !== undefined) {
           updated_config.model = new_model
-        } else {
-          // User cancelled or didn't change the model
-          return await show_quick_pick()
         }
-
         break
       }
       case 'Temperature': {
-        const new_temp = await edit_temperature_for_config(config_to_edit)
+        const new_temp = await edit_temperature_for_config(updated_config)
         if (new_temp !== undefined) {
           updated_config.temperature = new_temp
-        } else {
-          return await show_quick_pick()
         }
         break
       }
@@ -99,41 +92,28 @@ export const handle_edit_commit_messages_configuration = async (
         const new_effort = await edit_reasoning_effort_for_config()
         if (new_effort !== undefined) {
           updated_config.reasoning_effort = new_effort as any
-        } else {
-          return await show_quick_pick()
         }
         break
       }
     }
-
-    const new_id = get_tool_config_id(updated_config)
-    if (
-      new_id !== message.configuration_id &&
-      configs.some((c) => get_tool_config_id(c) === new_id)
-    ) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
-      )
-      return await show_quick_pick()
-    }
-
-    const updated_configs = [...configs]
-    updated_configs[config_index] = updated_config
-    await providers_manager.save_commit_messages_tool_configs(updated_configs)
-
-    if (
-      selected_option === 'Model' &&
-      updated_config.model !== config_to_edit.model
-    ) {
-      configs = updated_configs
-      message.configuration_id = new_id
-      config_index = configs.findIndex((c) => get_tool_config_id(c) === new_id)
-      config_to_edit = configs[config_index]
-      return await show_quick_pick()
-    }
-
-    return true
   }
 
-  await show_quick_pick()
+  if (JSON.stringify(config_to_edit) === JSON.stringify(updated_config)) {
+    return
+  }
+
+  const new_id = get_tool_config_id(updated_config)
+  if (
+    new_id !== message.configuration_id &&
+    configs.some((c) => get_tool_config_id(c) === new_id)
+  ) {
+    vscode.window.showErrorMessage(
+      dictionary.error_message.CONFIGURATION_ALREADY_EXISTS
+    )
+    return
+  }
+
+  const updated_configs = [...configs]
+  updated_configs[config_index] = updated_config
+  await providers_manager.save_commit_messages_tool_configs(updated_configs)
 }
