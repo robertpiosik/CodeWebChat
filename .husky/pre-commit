@@ -1,2 +1,4 @@
 echo "Formatting files before commit..."
 npx lint-staged
+echo "Running tests..."
+pnpm test
