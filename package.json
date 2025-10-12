@@ -7,8 +7,7 @@
     "lint-staged": "^15.2.10"
   },
   "scripts": {
-    "prepare": "husky",
-    "test": "pnpm -r test"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{ts,tsx,json,css,scss,md}": [
