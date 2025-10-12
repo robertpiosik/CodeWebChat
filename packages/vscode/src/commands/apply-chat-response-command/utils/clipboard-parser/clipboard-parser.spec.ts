@@ -14,7 +14,7 @@ describe('clipboard-parser', () => {
     )
   }
 
-  describe('parse_clipboard_multiple_files', () => {
+  describe('parse_multiple_files', () => {
     it('should parse comment filename format', () => {
       const text = load_test_case_file(
         'comment-filename',
@@ -166,7 +166,7 @@ describe('clipboard-parser', () => {
       )
     })
 
-    it('should ignore workspace prefixes when has_single_root=true', () => {
+    it('should treat workspace prefix as part of file path in a single-root workspace', () => {
       const text = load_test_case_file(
         'with-workspace-prefix',
         'with-workspace-prefix.txt'
@@ -254,21 +254,6 @@ describe('clipboard-parser', () => {
       expect(result[0].file_path).toBe('src/utils.py')
       expect(result[0].content).toBe(
         load_test_case_file('uncommented-filename', 'file-1.txt')
-      )
-    })
-
-    it('should handle inner backticks within a diff block', () => {
-      const text = load_test_case_file(
-        'diff-inner-backticks',
-        'diff-inner-backticks.txt'
-      )
-      const result = parse_response(text, true)
-
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file('diff-inner-backticks', 'file-1.txt')
       )
     })
 
@@ -386,7 +371,7 @@ describe('clipboard-parser', () => {
     })
   })
 
-  describe('parse_clipboard_content', () => {
+  describe('parse_response', () => {
     it('should parse direct diff format in variant a', () => {
       const text = load_test_case_file(
         'diff-direct-variant-a',
@@ -821,7 +806,22 @@ describe('clipboard-parser', () => {
       )
     })
 
-    it('should parse multiple diff files format with inner triple backticks', () => {
+    it('should handle inner backticks within a diff block', () => {
+      const text = load_test_case_file(
+        'diff-inner-backticks',
+        'diff-inner-backticks.txt'
+      )
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+      expect(result.patches![0].file_path).toBe('src/index.ts')
+      expect(result.patches![0].content).toBe(
+        load_test_case_file('diff-inner-backticks', 'file-1.txt')
+      )
+    })
+
+    it('should parse diff with a nested code block', () => {
       const text = load_test_case_file(
         'diff-inner-triple-backticks',
         'diff-inner-triple-backticks.txt'
