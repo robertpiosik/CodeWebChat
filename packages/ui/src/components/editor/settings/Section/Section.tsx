@@ -12,7 +12,9 @@ type Props = {
 export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const marker_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement | null>(null)
+  const class_marker_ref = useRef<HTMLDivElement>(null)
   const [is_stuck, set_is_stuck] = useState(false)
+  const [add_stuck_class, set_add_stuck_class] = useState(false)
 
   useEffect(() => {
     props.on_stuck_change?.(is_stuck)
@@ -21,19 +23,30 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
   useEffect(() => {
     const marker = marker_ref.current
     const container = container_ref.current
-    if (!marker || !container) return
+    const class_marker = class_marker_ref.current
+    if (!marker || !container || !class_marker) return
 
     let is_marker_stuck = false
+    let is_class_marker_stuck = false
     let is_container_visible = true
 
-    const update_stuck_state = () => {
+    const update_states = () => {
       set_is_stuck(is_marker_stuck && is_container_visible)
+      set_add_stuck_class(is_class_marker_stuck && is_container_visible)
     }
 
     const marker_observer = new IntersectionObserver(
       ([entry]) => {
         is_marker_stuck = !entry.isIntersecting
-        update_stuck_state()
+        update_states()
+      },
+      { threshold: 1 }
+    )
+
+    const class_marker_observer = new IntersectionObserver(
+      ([entry]) => {
+        is_class_marker_stuck = !entry.isIntersecting
+        update_states()
       },
       { threshold: 1 }
     )
@@ -41,16 +54,18 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
     const container_observer = new IntersectionObserver(
       ([entry]) => {
         is_container_visible = entry.isIntersecting
-        update_stuck_state()
+        update_states()
       },
       { threshold: 0 }
     )
 
     marker_observer.observe(marker)
+    class_marker_observer.observe(class_marker)
     container_observer.observe(container)
 
     return () => {
       marker_observer.disconnect()
+      class_marker_observer.disconnect()
       container_observer.disconnect()
     }
   }, [])
@@ -67,8 +82,11 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
       }}
       className={styles.container}
     >
+      <div className={styles.class_marker} ref={class_marker_ref} />
       <div
-        className={cn(styles.header, { [styles['header--stuck']]: is_stuck })}
+        className={cn(styles.header, {
+          [styles['header--stuck']]: add_stuck_class
+        })}
       >
         <div className={styles.header__marker} ref={marker_ref} />
         <div className={styles.header__title}>{props.title}</div>

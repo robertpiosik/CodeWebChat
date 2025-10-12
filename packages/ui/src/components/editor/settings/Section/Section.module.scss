@@ -1,7 +1,14 @@
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--padding-24px);
+}
+
+.class_marker {
+  position: absolute;
+  top: 4px;
+  height: 1px;
 }
 
 .header {
@@ -16,6 +23,8 @@
   ); // to align with the sidebar title
   padding-bottom: var(--padding-10px);
   background-color: var(--vscode-editor-background);
+  transition: box-shadow var(--transition-duration-250)
+    var(--transition-timing-function);
 
   &--stuck {
     box-shadow: var(--vscode-scrollbar-shadow) 0 6px 6px -6px;
