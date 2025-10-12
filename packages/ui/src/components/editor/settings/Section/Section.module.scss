@@ -2,10 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--padding-24px);
-
-  &--stuck {
-    box-shadow: var(--vscode-scrollbar-shadow) 0 6px 6px -6px;
-  }
 }
 
 .header {
@@ -18,17 +14,27 @@
   padding-top: calc(
     var(--padding-60px) + var(--padding-2px)
   ); // to align with the sidebar title
-  border-bottom: 2px solid var(--vscode-editorWidget-border);
   padding-bottom: var(--padding-10px);
   background-color: var(--vscode-editor-background);
-}
 
-.title {
-  margin: 0;
-  font-size: var(--font-size-20px);
-  font-weight: 600;
-}
+  &--stuck {
+    box-shadow: var(--vscode-scrollbar-shadow) 0 6px 6px -6px;
+  }
 
-.subtitle {
-  font-size: var(--font-size-14px);
+  &__marker {
+    position: absolute;
+    top: 0;
+    height: 1px;
+    margin-top: -2px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-size-20px);
+    font-weight: 600;
+  }
+
+  &__subtitle {
+    font-size: var(--font-size-14px);
+  }
 }
