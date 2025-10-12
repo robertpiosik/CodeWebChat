@@ -1,21 +1,29 @@
 .container {
   display: flex;
-  gap: var(--padding-60px);
   width: 100%;
   height: 100%;
-  padding-left: var(--padding-60px);
   overflow: hidden;
-  @media (min-width: 920px) {
-    padding-left: calc((100vw - 800px) / 2);
+  --sidebar-width: 150px;
+  @media (min-width: 770px) {
+    --sidebar-width: 180px;
   }
 }
 
 .sidebar {
-  width: 180px;
-  padding-top: var(--padding-60px);
+  position: absolute;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 30px;
+  width: var(--sidebar-width);
+  top: var(--padding-60px);
+  left: var(--padding-30px);
+  @media (min-width: 770px) {
+    left: var(--padding-60px);
+  }
+  @media (min-width: 920px) {
+    left: calc(calc((100vw - 800px) / 2));
+  }
 
   &__title {
     font-size: 22px;
@@ -38,10 +46,17 @@
   &__inner {
     display: flex;
     flex-direction: column;
-    gap: var(--padding-60px);
-    padding: var(--padding-60px) var(--padding-60px) 0 0;
+    padding: 0 var(--padding-30px) 0
+      calc(var(--sidebar-width) + var(--padding-30px) + var(--padding-30px));
+    @media (min-width: 770px) {
+      padding: 0 var(--padding-60px) 0
+        calc(var(--sidebar-width) + var(--padding-60px) + var(--padding-60px));
+    }
     @media (min-width: 920px) {
-      padding-right: calc((100vw - 800px) / 2);
+      padding: 0 calc((100vw - 800px) / 2) 0
+        calc(
+          calc((100vw - 800px) / 2) + var(--sidebar-width) + var(--padding-60px)
+        );
     }
   }
 }
