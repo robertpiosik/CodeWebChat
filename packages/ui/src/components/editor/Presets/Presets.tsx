@@ -15,6 +15,7 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   DeepSeek: 'DEEPSEEK',
   Doubao: 'DOUBAO',
   Gemini: 'GEMINI',
+  'GitHub Copilot': 'GITHUB_COPILOT',
   Grok: 'GROK',
   Kimi: 'KIMI',
   Mistral: 'MISTRAL',

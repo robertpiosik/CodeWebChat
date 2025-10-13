@@ -427,7 +427,6 @@ export const ai_studio: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('ms-chat-turn'),
-        get_code_blocks: (t) => t.querySelectorAll('ms-code-block code'),
         perform_copy: (f) => {
           const chat_turn_container = f.closest('.chat-turn-container')
           if (!chat_turn_container) {

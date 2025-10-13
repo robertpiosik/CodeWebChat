@@ -66,6 +66,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - DeepSeek
 - Doubao
 - Gemini
+- GitHub Copilot
 - Grok
 - Kimi
 - Mistral

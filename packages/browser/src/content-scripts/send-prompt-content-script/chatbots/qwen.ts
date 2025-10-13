@@ -232,7 +232,6 @@ export const qwen: Chatbot = {
           f.parentElement?.parentElement?.querySelector(
             '#response-content-container'
           ) as HTMLElement,
-        get_code_blocks: (t) => t.querySelectorAll('.cm-content'),
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,
         perform_copy: (f) => {
           const copy_button = f.querySelector(

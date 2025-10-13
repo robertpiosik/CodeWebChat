@@ -371,7 +371,6 @@ export const openrouter: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('div[data-message-id]'),
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const actions = f.querySelectorAll('button')
           const copy_button = Array.from(actions).find((button) => {

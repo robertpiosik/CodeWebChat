@@ -99,7 +99,6 @@ export const deepseek: Chatbot = {
           f.parentElement?.parentElement?.querySelector(
             '.ds-markdown'
           ) as HTMLElement,
-        get_code_blocks: (t) => t.querySelectorAll('pre'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'div[role="button"]'

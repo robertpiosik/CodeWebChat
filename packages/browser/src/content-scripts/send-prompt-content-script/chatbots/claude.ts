@@ -161,7 +161,6 @@ export const claude: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('div[data-is-streaming="false"]'),
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'button[data-testid="action-bar-copy"]'

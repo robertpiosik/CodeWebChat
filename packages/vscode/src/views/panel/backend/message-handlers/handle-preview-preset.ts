@@ -157,10 +157,11 @@ export const handle_preview_preset = async (
     port: message.preset.port
   }
 
-  provider.websocket_server_instance.preview_preset(
-    text_to_send,
-    preset_for_preview
-  )
+  provider.websocket_server_instance.preview_preset({
+    instruction: text_to_send,
+    preset: preset_for_preview,
+    raw_instructions: current_instructions
+  })
   vscode.window.showInformationMessage(
     'Preset preview sent to the connected browser.'
   )

@@ -9,11 +9,11 @@ import {
   report_initialization_error
 } from '../utils/report-initialization-error'
 
-export const copilot: Chatbot = {
+export const github_copilot: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('textarea')) {
+        if (document.querySelector('form button[aria-haspopup="true"]')) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -26,7 +26,7 @@ export const copilot: Chatbot = {
     if (!model) return
 
     const model_selector_button = document.querySelector(
-      'button[data-testid="composer-chat-mode-quick-button"]'
+      'form button[aria-haspopup="true"]'
     ) as HTMLButtonElement
     if (!model_selector_button) {
       report_initialization_error({
@@ -37,11 +37,11 @@ export const copilot: Chatbot = {
       return
     }
 
-    const model_label_to_find = (CHATBOTS['Copilot'].models as any)[model]
-      ?.label
+    const model_label_to_find = (CHATBOTS['GitHub Copilot'].models as any)[
+      model
+    ]?.label
     if (!model_label_to_find) return
 
-    // The current model text is inside the button
     if (model_selector_button.textContent?.includes(model_label_to_find)) {
       return
     }
@@ -49,7 +49,9 @@ export const copilot: Chatbot = {
     model_selector_button.click()
     await new Promise((r) => requestAnimationFrame(r))
 
-    const options_container = document.querySelector('div[id="popoverPortal"]')
+    const options_container = document.querySelector(
+      'div[data-variant="anchored"][data-width-medium]'
+    )
     if (!options_container) {
       report_initialization_error({
         function_name: 'set_model',
@@ -62,7 +64,7 @@ export const copilot: Chatbot = {
     }
 
     const options = options_container.querySelectorAll(
-      'button[role="menuitem"]'
+      'li[role="menuitemradio"]'
     )
 
     let found = false
@@ -93,7 +95,7 @@ export const copilot: Chatbot = {
     if (!input_element) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Message input textarea not found for Copilot',
+        log_message: 'Message input textarea not found for GitHub Copilot',
         alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
       })
       return
@@ -105,19 +107,15 @@ export const copilot: Chatbot = {
 
     if (params.without_submission) return
 
-    const send_button = document.querySelector(
-      'button[data-testid="submit-button"]'
-    ) as HTMLElement
-
-    if (!send_button || send_button.hasAttribute('disabled')) {
-      report_initialization_error({
-        function_name: 'enter_message_and_send',
-        log_message: 'Send button not found or disabled for Copilot',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
-      })
-      return
-    }
-    send_button.click()
+    const enter_event = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      code: 'Enter',
+      keyCode: 13,
+      which: 13,
+      bubbles: true,
+      cancelable: true
+    })
+    input_element.dispatchEvent(enter_event)
   },
   inject_apply_response_button: (
     client_id: number,
@@ -130,14 +128,14 @@ export const copilot: Chatbot = {
         raw_instructions,
         edit_format,
         footer,
-        get_chat_turn: (f) => f.closest('div[data-content="ai-message"]'),
+        get_chat_turn: (f) => f.closest('div.message-container') as HTMLElement,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button[data-testid="copy-message-button"]'
+            'button:nth-child(5)'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
-              function_name: 'copilot.perform_copy',
+              function_name: 'github_copilot.perform_copy',
               log_message: 'Copy button not found',
               alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
             })
@@ -145,15 +143,17 @@ export const copilot: Chatbot = {
           }
           copy_button.click()
         },
-        insert_button: (f, b) => f.insertBefore(b, f.firstChild)
+        insert_button: (f, b) => f.insertBefore(b, f.children[7])
       })
     }
 
     observe_for_responses({
-      chatbot_name: 'Copilot',
+      chatbot_name: 'GitHub Copilot',
       is_generating: () =>
-        !!document.querySelector('button[data-testid="stop-button"]'),
-      footer_selector: 'div[data-testid="message-item-reactions"]',
+        !!document.querySelector(
+          'path[d="M5.75 4h4.5c.966 0 1.75.784 1.75 1.75v4.5A1.75 1.75 0 0 1 10.25 12h-4.5A1.75 1.75 0 0 1 4 10.25v-4.5C4 4.784 4.784 4 5.75 4Z"]'
+        ),
+      footer_selector: 'div[data-testid="nonshared-toolbar"]',
       add_buttons
     })
   }

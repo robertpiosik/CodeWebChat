@@ -79,7 +79,6 @@ export const kimi: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('.segment-content'),
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             '.segment-assistant-actions-content > div:first-child'

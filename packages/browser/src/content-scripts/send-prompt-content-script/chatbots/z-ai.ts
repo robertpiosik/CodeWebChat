@@ -67,7 +67,6 @@ export const z_ai: Chatbot = {
           }
           return chat_turn as HTMLElement
         },
-        get_code_blocks: (t) => t.querySelectorAll('.cm-content'),
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,
         perform_copy: (f) => {
           const copy_button = f.querySelector('button.copy-response-button')

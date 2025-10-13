@@ -1,5 +1,4 @@
 import { Configurations } from './Configurations'
-import { useState } from 'react'
 
 export default {
   component: Configurations
@@ -27,20 +26,16 @@ const configurations: Configurations.Configuration[] = [
 ]
 
 export const Default = () => {
-  const [selected_index, set_selected_index] = useState<number | undefined>(1)
-
   return (
     <Configurations
       api_mode="edit-context"
       configurations={configurations}
       on_configuration_click={(index) => {
         console.log('on_configuration_click', index)
-        set_selected_index(index)
       }}
       on_manage_configurations={() => {
         console.log('on_manage_configurations')
       }}
-      selected_configuration_index={selected_index}
     />
   )
 }

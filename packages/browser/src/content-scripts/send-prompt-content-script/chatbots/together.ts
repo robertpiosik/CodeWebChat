@@ -83,7 +83,6 @@ export const together: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('div[data-testid="assistant-message"]'),
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'button:first-child'

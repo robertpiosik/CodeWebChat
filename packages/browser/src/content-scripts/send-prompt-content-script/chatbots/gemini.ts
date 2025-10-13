@@ -140,7 +140,6 @@ export const gemini: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('response-container'),
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'copy-button > button'

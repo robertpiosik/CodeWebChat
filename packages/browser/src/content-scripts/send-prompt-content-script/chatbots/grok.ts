@@ -102,7 +102,6 @@ export const grok: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('.items-start'),
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'button:nth-child(4)'

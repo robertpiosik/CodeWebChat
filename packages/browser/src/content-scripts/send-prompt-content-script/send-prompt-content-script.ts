@@ -18,7 +18,8 @@ import {
   yuanbao,
   doubao,
   kimi,
-  together
+  together,
+  github_copilot
 } from './chatbots'
 import { perplexity } from './chatbots/perplexity'
 import { z_ai } from './chatbots/z-ai'
@@ -46,6 +47,9 @@ const is_chatgpt = current_url.startsWith(chatgpt_url)
 
 const copilot_url = 'https://copilot.microsoft.com/'
 const is_copilot = current_url.startsWith(copilot_url)
+
+const github_copilot_url = 'https://github.com/copilot'
+const is_github_copilot = current_url.startsWith(github_copilot_url)
 
 const claude_url = 'https://claude.ai/new'
 const is_claude = current_url.startsWith(claude_url)
@@ -95,6 +99,8 @@ if (is_ai_studio) {
   chatbot = chatgpt
 } else if (is_copilot) {
   chatbot = copilot
+} else if (is_github_copilot) {
+  chatbot = github_copilot
 } else if (is_claude) {
   chatbot = claude
 } else if (is_meta) {
@@ -138,7 +144,8 @@ export const get_textarea_element = () => {
     [yuanbao_url]: 'div[contenteditable="true"]',
     [doubao_url]: 'textarea',
     [together_url]: 'textarea',
-    [z_ai_url]: 'textarea'
+    [z_ai_url]: 'textarea',
+    [github_copilot_url]: 'textarea'
   } as any
 
   // Find the appropriate selector based on the URL without the hash

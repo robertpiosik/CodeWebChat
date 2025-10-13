@@ -115,7 +115,6 @@ export const perplexity: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('.max-w-threadContentWidth'),
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const buttons = f.querySelectorAll('button')
           const copy_button = Array.from(buttons).find((button) => {

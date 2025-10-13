@@ -327,10 +327,11 @@ export class WebSocketManager {
     }
   }
 
-  public async preview_preset(
-    instruction: string,
+  public async preview_preset(params: {
+    instruction: string
     preset: Preset
-  ): Promise<void> {
+    raw_instructions: string
+  }): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
     }
@@ -338,16 +339,16 @@ export class WebSocketManager {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const geminiUserNumber = config.get<number | null>('geminiUserNumber')
 
-    const chatbot = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
+    const chatbot = CHATBOTS[params.preset.chatbot as keyof typeof CHATBOTS]
     let url: string
-    if (preset.chatbot == 'Open WebUI') {
-      if (preset.port) {
-        url = `http://localhost:${preset.port}/`
+    if (params.preset.chatbot == 'Open WebUI') {
+      if (params.preset.port) {
+        url = `http://localhost:${params.preset.port}/`
       } else {
         url = 'http://openwebui/'
       }
     } else if (
-      preset.chatbot == 'Gemini' &&
+      params.preset.chatbot == 'Gemini' &&
       geminiUserNumber !== undefined &&
       geminiUserNumber !== null
     ) {
@@ -358,17 +359,17 @@ export class WebSocketManager {
 
     const message: InitializeChatMessage = {
       action: 'initialize-chat',
-      text: instruction,
+      text: params.instruction,
       url,
-      model: preset.model,
-      temperature: preset.temperature,
-      top_p: preset.top_p,
-      thinking_budget: preset.thinking_budget,
-      reasoning_effort: preset.reasoning_effort,
-      system_instructions: preset.system_instructions,
-      options: preset.options,
+      model: params.preset.model,
+      temperature: params.preset.temperature,
+      top_p: params.preset.top_p,
+      thinking_budget: params.preset.thinking_budget,
+      reasoning_effort: params.preset.reasoning_effort,
+      system_instructions: params.preset.system_instructions,
+      options: params.preset.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
-      raw_instructions: instruction
+      raw_instructions: params.raw_instructions
     }
 
     Logger.info({

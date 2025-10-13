@@ -15,7 +15,6 @@ export function add_apply_response_button(params: {
   edit_format?: string
   footer: Element
   get_chat_turn: (footer: Element) => HTMLElement | null
-  get_code_blocks: (chat_turn: HTMLElement) => NodeListOf<Element>
   get_code_from_block?: (code_block: Element) => string | null | undefined
   perform_copy: (footer: Element) => void | Promise<void>
   insert_button: (footer: Element, button: HTMLButtonElement) => void

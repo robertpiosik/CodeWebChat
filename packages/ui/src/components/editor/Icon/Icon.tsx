@@ -7,6 +7,7 @@ import CodeWebChatLogo from '../../../assets/icons/code-web-chat-logo.svg'
 import CodeWebChatText from '../../../assets/icons/code-web-chat-text.svg'
 import Command from '../../../assets/icons/command.svg'
 import Copilot from '../../../assets/icons/copilot.svg'
+import GithubCopilot from '../../../assets/icons/github-copilot.svg'
 import DeepSeek from '../../../assets/icons/deepseek.svg'
 import Discord from '../../../assets/icons/discord.svg'
 import Doubao from '../../../assets/icons/doubao.svg'
@@ -37,6 +38,7 @@ export namespace Icon {
     | 'CODE_WEB_CHAT_TEXT'
     | 'COMMAND'
     | 'COPILOT'
+    | 'GITHUB_COPILOT'
     | 'DEEPSEEK'
     | 'DISCORD'
     | 'DOUBAO'
@@ -91,6 +93,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'COPILOT':
       icon = <Copilot />
+      break
+    case 'GITHUB_COPILOT':
+      icon = <GithubCopilot />
       break
     case 'DEEPSEEK':
       icon = <DeepSeek />

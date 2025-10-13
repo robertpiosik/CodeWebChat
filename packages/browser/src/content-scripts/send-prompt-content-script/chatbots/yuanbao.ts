@@ -110,7 +110,6 @@ export const yuanbao: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) => f.closest('.agent-chat__bubble__content'),
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             '.agent-chat__toolbar__copy'

@@ -93,7 +93,6 @@ export const mistral: Chatbot = {
           f.parentElement?.parentElement?.querySelector(
             'div[data-message-part-type="answer"]'
           ) as HTMLElement,
-        get_code_blocks: (t) => t.querySelectorAll('code'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'button:last-child'
