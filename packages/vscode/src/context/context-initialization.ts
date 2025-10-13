@@ -1,10 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import {
-  WorkspaceProvider,
-  FileItem,
-  ContextFolderItem
-} from './providers/workspace-provider'
+import { WorkspaceProvider, FileItem } from './providers/workspace-provider'
 import { FilesCollector } from '../utils/files-collector'
 import { OpenEditorsProvider } from './providers/open-editors-provider'
 import { WebsitesProvider, WebsiteItem } from './providers/websites-provider'
@@ -13,6 +9,7 @@ import { marked } from 'marked'
 import { EventEmitter } from 'events'
 import { apply_context_command } from '../commands/apply-context-command'
 import { dictionary } from '@shared/constants/dictionary'
+import { ContextProvider } from './providers/context-provider'
 
 export const token_count_emitter = new EventEmitter()
 
@@ -23,14 +20,15 @@ export function context_initialization(context: vscode.ExtensionContext): {
 } {
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
 
-  let workspace_view: vscode.TreeView<FileItem | ContextFolderItem>
+  let workspace_view: vscode.TreeView<FileItem>
 
   const websites_provider = new WebsitesProvider(context)
   const workspace_provider = new WorkspaceProvider(
     workspace_folders as any,
     context
   )
-  context.subscriptions.push(websites_provider)
+  const context_provider = new ContextProvider(workspace_provider)
+  context.subscriptions.push(websites_provider, context_provider)
 
   const open_editors_provider = new OpenEditorsProvider(
     workspace_folders as any,
@@ -43,14 +41,14 @@ export function context_initialization(context: vscode.ExtensionContext): {
     websites_provider
   )
 
-  const update_activity_bar_badge_token_count = async () => {
-    if (workspace_provider && workspace_view) {
-      const workspace_token_count =
+  const update_view_badges = async () => {
+    if (context_provider && context_view) {
+      const context_token_count =
         await workspace_provider.get_checked_files_token_count()
-      workspace_view.badge = {
-        value: workspace_token_count,
-        tooltip: workspace_token_count
-          ? `About ${workspace_token_count} tokens in context`
+      context_view.badge = {
+        value: context_token_count,
+        tooltip: context_token_count
+          ? `About ${context_token_count} tokens in context`
           : ''
       }
     }
@@ -79,7 +77,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
   })
 
   const register_workspace_view_handlers = (
-    view: vscode.TreeView<FileItem | ContextFolderItem>
+    view: vscode.TreeView<FileItem>
   ) => {
     view.onDidChangeCheckboxState(async (e) => {
       for (const [item, state] of e.items) {
@@ -98,7 +96,13 @@ export function context_initialization(context: vscode.ExtensionContext): {
     manageCheckboxStateManually: true
   })
 
+  const context_view = vscode.window.createTreeView('codeWebChatViewContext', {
+    treeDataProvider: context_provider,
+    manageCheckboxStateManually: true
+  })
+
   register_workspace_view_handlers(workspace_view)
+  register_workspace_view_handlers(context_view)
 
   const open_editors_view = vscode.window.createTreeView(
     'codeWebChatViewOpenEditors',
@@ -137,6 +141,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
     workspace_provider,
     open_editors_provider,
     workspace_view,
+    context_view,
     open_editors_view,
     websites_view
   )
@@ -314,7 +319,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
     apply_context_command(
       workspace_provider,
       () => {
-        update_activity_bar_badge_token_count()
+        update_view_badges()
       },
       context
     )
@@ -328,17 +333,17 @@ export function context_initialization(context: vscode.ExtensionContext): {
 
   context.subscriptions.push(
     workspace_provider.onDidChangeCheckedFiles(() => {
-      update_activity_bar_badge_token_count()
+      update_view_badges()
     }),
     open_editors_provider.onDidChangeCheckedFiles(() => {
-      update_activity_bar_badge_token_count()
+      update_view_badges()
     }),
     websites_provider.onDidChangeCheckedWebsites(() => {
-      update_activity_bar_badge_token_count()
+      update_view_badges()
     }),
     // Fixes badge not updating when websites list changes
     websites_provider.onDidChangeTreeData(() => {
-      update_activity_bar_badge_token_count()
+      update_view_badges()
       update_websites_view_message()
     })
   )
@@ -351,7 +356,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
         clearTimeout(tab_change_timeout)
       }
       tab_change_timeout = setTimeout(() => {
-        update_activity_bar_badge_token_count()
+        update_view_badges()
         tab_change_timeout = null
       }, 100) // 100ms debounce
     })
@@ -367,7 +372,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
           vscode.workspace.workspaceFolders
         )
         shared_state.set_providers(workspace_provider, open_editors_provider)
-        update_activity_bar_badge_token_count()
+        update_view_badges()
       }
     })
   )
@@ -379,14 +384,14 @@ export function context_initialization(context: vscode.ExtensionContext): {
   context.subscriptions.push(
     open_editors_provider.onDidChangeTreeData(() => {
       if (open_editors_provider!.is_initialized()) {
-        update_activity_bar_badge_token_count()
+        update_view_badges()
       }
     })
   )
 
   // Also schedule a delayed update for initial badge display
   setTimeout(() => {
-    update_activity_bar_badge_token_count()
+    update_view_badges()
   }, 1000) // Wait for 1 second to ensure VS Code has fully loaded
 
   return {

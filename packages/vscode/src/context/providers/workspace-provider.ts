@@ -11,25 +11,14 @@ import { display_token_count } from '@/utils/display-token-count'
 
 const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 3000
 
-export class ContextFolderItem extends vscode.TreeItem {
-  constructor() {
-    super('Current Context', vscode.TreeItemCollapsibleState.Collapsed)
-    this.contextValue = 'contextFolder'
-  }
-}
-
 export class WorkspaceProvider
-  implements
-    vscode.TreeDataProvider<FileItem | ContextFolderItem>,
-    vscode.Disposable
+  implements vscode.TreeDataProvider<FileItem>, vscode.Disposable
 {
   private _on_did_change_tree_data: vscode.EventEmitter<
-    FileItem | ContextFolderItem | undefined | null | void
-  > = new vscode.EventEmitter<
-    FileItem | ContextFolderItem | undefined | null | void
-  >()
+    FileItem | undefined | null | void
+  > = new vscode.EventEmitter<FileItem | undefined | null | void>()
   readonly onDidChangeTreeData: vscode.Event<
-    FileItem | ContextFolderItem | undefined | null | void
+    FileItem | undefined | null | void
   > = this._on_did_change_tree_data.event
   private workspace_roots: string[] = []
   private workspace_names: string[] = []
@@ -51,7 +40,7 @@ export class WorkspaceProvider
   private tab_change_handler: vscode.Disposable
   private partially_checked_dirs: Set<string> = new Set()
   private file_workspace_map: Map<string, string> = new Map()
-  private gitignore_initialization: Promise<void>
+  public gitignore_initialization: Promise<void>
 
   constructor(
     workspace_folders: vscode.WorkspaceFolder[],
@@ -457,22 +446,7 @@ export class WorkspaceProvider
     this._on_did_change_checked_files.fire()
   }
 
-  async getTreeItem(
-    element: FileItem | ContextFolderItem
-  ): Promise<vscode.TreeItem> {
-    if (element instanceof ContextFolderItem) {
-      const workspace_tokens = await this.get_checked_files_token_count()
-      if (workspace_tokens > 0) {
-        const formatted_tokens = display_token_count(workspace_tokens)
-        element.description = formatted_tokens
-        element.tooltip = `About ${formatted_tokens} tokens selected`
-      } else {
-        element.description = undefined
-        element.tooltip = undefined
-      }
-      return element
-    }
-
+  async getTreeItem(element: FileItem): Promise<vscode.TreeItem> {
     const key = element.resourceUri.fsPath
     const checkbox_state =
       this.checked_items.get(key) ?? vscode.TreeItemCheckboxState.Unchecked
@@ -542,25 +516,10 @@ export class WorkspaceProvider
     return element
   }
 
-  public async getChildren(
-    element?: FileItem | ContextFolderItem
-  ): Promise<(FileItem | ContextFolderItem)[]> {
+  public async getChildren(element?: FileItem): Promise<FileItem[]> {
     await this.gitignore_initialization
 
     if (element) {
-      if (element instanceof ContextFolderItem) {
-        let workspace_items: FileItem[]
-        if (this.workspace_roots.length === 1) {
-          workspace_items = await this._get_files_and_directories(
-            this.workspace_roots[0],
-            true
-          )
-        } else {
-          workspace_items = await this._get_workspace_folder_items(true)
-        }
-        return [...workspace_items]
-      }
-
       const dir_path = element.resourceUri.fsPath
 
       if (element.isDirectory) {
@@ -572,38 +531,47 @@ export class WorkspaceProvider
           }
         }
       }
-
-      const is_context_view =
-        element.contextValue == 'contextWorkspaceRoot' ||
-        element.contextValue == 'contextDirectory'
-
-      return this._get_files_and_directories(dir_path, is_context_view)
+      return this._get_files_and_directories(dir_path, false)
     }
 
-    // Root level:
     if (this.workspace_roots.length == 0) {
       return []
     }
 
-    const root_items: (FileItem | ContextFolderItem)[] = []
-
-    root_items.push(new ContextFolderItem())
-    let workspace_items: FileItem[]
-
-    // If there's only one workspace root, show its contents directly
     if (this.workspace_roots.length == 1) {
       const single_root = this.workspace_roots[0]
-      workspace_items = await this._with_token_counting_notification(() =>
+      return this._with_token_counting_notification(() =>
         this._get_files_and_directories(single_root)
       )
     } else {
-      // Otherwise, show workspace folders as root items
-      workspace_items = await this._with_token_counting_notification(() =>
+      return this._with_token_counting_notification(() =>
         this._get_workspace_folder_items()
       )
     }
+  }
 
-    return [...root_items, ...workspace_items]
+  public async getContextViewChildren(element?: FileItem): Promise<FileItem[]> {
+    await this.gitignore_initialization
+
+    if (element) {
+      const dir_path = element.resourceUri.fsPath
+      if (element.isDirectory) {
+        const workspace_root = this.get_workspace_root_for_file(dir_path)
+        if (workspace_root) {
+          const relative_path = path.relative(workspace_root, dir_path)
+          if (this.is_excluded(relative_path)) {
+            return []
+          }
+        }
+      }
+      return this._get_files_and_directories(dir_path, true)
+    }
+
+    if (this.workspace_roots.length === 1) {
+      return this._get_files_and_directories(this.workspace_roots[0], true)
+    } else {
+      return this._get_workspace_folder_items(true)
+    }
   }
 
   private async _get_workspace_folder_items(
@@ -995,13 +963,9 @@ export class WorkspaceProvider
   }
 
   public async update_check_state(
-    item: FileItem | ContextFolderItem,
+    item: FileItem,
     state: vscode.TreeItemCheckboxState
   ): Promise<void> {
-    if (item instanceof ContextFolderItem) {
-      return // Not a checkable item
-    }
-
     const key = item.resourceUri.fsPath
 
     // If a partially checked directory is clicked, check it completely

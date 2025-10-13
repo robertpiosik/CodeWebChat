@@ -72,8 +72,14 @@
           "icon": "resources/activity-bar-icon.svg"
         },
         {
-          "id": "codeWebChatViewWorkspace",
+          "id": "codeWebChatViewContext",
           "name": "Context",
+          "icon": "resources/activity-bar-icon.svg",
+          "visibility": "collapsed"
+        },
+        {
+          "id": "codeWebChatViewWorkspace",
+          "name": "Workspace",
           "icon": "resources/activity-bar-icon.svg"
         },
         {
@@ -363,11 +369,21 @@
       "view/title": [
         {
           "command": "codeWebChat.applyContext",
-          "when": "view == codeWebChatViewWorkspace",
+          "when": "view == codeWebChatViewContext",
           "group": "navigation@1"
         },
         {
           "command": "codeWebChat.saveContext",
+          "when": "view == codeWebChatViewContext",
+          "group": "navigation@2"
+        },
+        {
+          "command": "codeWebChat.checkAll",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "navigation@1"
+        },
+        {
+          "command": "codeWebChat.clearChecks",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@2"
         },
@@ -377,29 +393,19 @@
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.checkAll",
+          "command": "codeWebChat.newFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@4"
         },
         {
-          "command": "codeWebChat.clearChecks",
+          "command": "codeWebChat.newFolder",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.newFile",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@6"
-        },
-        {
-          "command": "codeWebChat.newFolder",
-          "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@7"
-        },
-        {
           "command": "codeWebChat.collapseFolders",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@8"
+          "group": "navigation@6"
         },
         {
           "command": "codeWebChat.copyContextOpenEditors",
@@ -495,7 +501,7 @@
         },
         {
           "command": "codeWebChat.referenceInChat",
-          "when": "view == codeWebChatViewWorkspace",
+          "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
           "group": "1_modification@3"
         }
       ]
