@@ -25,7 +25,6 @@ export namespace Configurations {
 }
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
-  console.log('xxx', props.selected_configuration_id)
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
@@ -65,8 +64,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             }
 
             const description = description_parts.join(' · ')
-
-            console.log('xxx1', configuration.id)
 
             return (
               <div
