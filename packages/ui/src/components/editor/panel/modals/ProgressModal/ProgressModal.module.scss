@@ -26,13 +26,13 @@
     background-color: var(--vscode-focusBorder);
     transition: width var(--transition-duration-150)
       var(--transition-timing-function);
-  }
 
-  &__fill--indeterminate {
-    height: 100%;
-    background-color: var(--vscode-focusBorder);
-    position: absolute;
-    animation: indeterminate-progress 1.5s infinite linear;
+    &--indeterminate {
+      height: 100%;
+      background-color: var(--vscode-focusBorder);
+      position: absolute;
+      animation: indeterminate-progress 1.5s infinite linear;
+    }
   }
 }
 
@@ -46,11 +46,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--padding-8px);
-  max-height: 200px;
-  overflow-y: auto;
-  padding: var(--padding-4px);
-  background-color: var(--vscode-input-background);
-  border-radius: var(--border-radius-4px);
 }
 
 .file-item {
@@ -67,18 +62,22 @@
 }
 
 .file-item__name {
-  font-family: monospace;
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--vscode-descriptionForeground);
   flex-shrink: 1;
+
+  > span:nth-child(2) {
+    margin-left: 0.5em;
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
 }
 
 .file-item__status {
   font-size: 12px;
-  font-weight: bold;
   flex-shrink: 0;
 
   &--waiting {
@@ -100,7 +99,7 @@
 
 .file-item__details {
   font-family: monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: var(--vscode-descriptionForeground);
   text-align: right;
 }
