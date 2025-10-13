@@ -38,19 +38,6 @@ export class WebsiteItem extends vscode.TreeItem {
   }
 }
 
-export class EmptyMessageItem extends vscode.TreeItem {
-  constructor() {
-    super(
-      'No websites available for context',
-      vscode.TreeItemCollapsibleState.None
-    )
-    this.description = 'Use browser extension to add some'
-    this.tooltip = 'Use browser extension to add some'
-    this.iconPath = new vscode.ThemeIcon('info')
-    this.contextValue = 'empty'
-  }
-}
-
 export class WebsitesProvider
   implements vscode.TreeDataProvider<WebsiteItem>, vscode.Disposable
 {
@@ -109,6 +96,10 @@ export class WebsitesProvider
           )
       )
     )
+  }
+
+  get_websites_count(): number {
+    return this._websites.length
   }
 
   get_checked_websites(): Website[] {

@@ -3,7 +3,7 @@ import * as path from 'path'
 import {
   WorkspaceProvider,
   FileItem,
-  WebsitesFolderItem
+  ContextFolderItem
 } from './providers/workspace-provider'
 import { FilesCollector } from '../utils/files-collector'
 import { OpenEditorsProvider } from './providers/open-editors-provider'
@@ -23,15 +23,12 @@ export function context_initialization(context: vscode.ExtensionContext): {
 } {
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
 
-  let workspace_view: vscode.TreeView<
-    FileItem | WebsiteItem | WebsitesFolderItem
-  >
+  let workspace_view: vscode.TreeView<FileItem | ContextFolderItem>
 
   const websites_provider = new WebsitesProvider(context)
   const workspace_provider = new WorkspaceProvider(
     workspace_folders as any,
-    context,
-    websites_provider
+    context
   )
   context.subscriptions.push(websites_provider)
 
@@ -47,22 +44,24 @@ export function context_initialization(context: vscode.ExtensionContext): {
   )
 
   const update_activity_bar_badge_token_count = async () => {
-    let total_token_count = 0
-
-    if (workspace_provider) {
-      total_token_count +=
+    if (workspace_provider && workspace_view) {
+      const workspace_token_count =
         await workspace_provider.get_checked_files_token_count()
-    }
-
-    if (websites_provider) {
-      total_token_count += websites_provider.get_checked_websites_token_count()
-    }
-
-    if (workspace_view) {
       workspace_view.badge = {
-        value: total_token_count,
-        tooltip: total_token_count
-          ? `About ${total_token_count} tokens in context`
+        value: workspace_token_count,
+        tooltip: workspace_token_count
+          ? `About ${workspace_token_count} tokens in context`
+          : ''
+      }
+    }
+
+    if (websites_provider && websites_view) {
+      const websites_token_count =
+        websites_provider.get_checked_websites_token_count()
+      websites_view.badge = {
+        value: websites_token_count,
+        tooltip: websites_token_count
+          ? `About ${websites_token_count} tokens in context`
           : ''
       }
     }
@@ -80,7 +79,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
   })
 
   const register_workspace_view_handlers = (
-    view: vscode.TreeView<FileItem | WebsiteItem | WebsitesFolderItem>
+    view: vscode.TreeView<FileItem | ContextFolderItem>
   ) => {
     view.onDidChangeCheckboxState(async (e) => {
       for (const [item, state] of e.items) {
@@ -109,11 +108,37 @@ export function context_initialization(context: vscode.ExtensionContext): {
     }
   )
 
+  const websites_view = vscode.window.createTreeView(
+    'codeWebChatViewWebsites',
+    {
+      treeDataProvider: websites_provider,
+      manageCheckboxStateManually: true
+    }
+  )
+
+  const update_websites_view_message = () => {
+    websites_view.message =
+      websites_provider.get_websites_count() > 0
+        ? undefined
+        : 'Websites added with the browser extension appear here.'
+  }
+
+  update_websites_view_message()
+
+  websites_view.onDidChangeCheckboxState(async (e) => {
+    for (const [item, state] of e.items) {
+      if (item instanceof WebsiteItem) {
+        await websites_provider.update_check_state(item, state)
+      }
+    }
+  })
+
   context.subscriptions.push(
     workspace_provider,
     open_editors_provider,
     workspace_view,
-    open_editors_view
+    open_editors_view,
+    websites_view
   )
 
   context.subscriptions.push(
@@ -242,6 +267,12 @@ export function context_initialization(context: vscode.ExtensionContext): {
         await open_editors_provider!.check_all()
       }
     ),
+    vscode.commands.registerCommand('codeWebChat.checkAllWebsites', () => {
+      websites_provider.check_all()
+    }),
+    vscode.commands.registerCommand('codeWebChat.clearChecksWebsites', () => {
+      websites_provider.clear_checks()
+    }),
     vscode.commands.registerCommand(
       'codeWebChat.previewWebsite',
       async (website: WebsiteItem) => {
@@ -308,6 +339,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
     // Fixes badge not updating when websites list changes
     websites_provider.onDidChangeTreeData(() => {
       update_activity_bar_badge_token_count()
+      update_websites_view_message()
     })
   )
 

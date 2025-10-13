@@ -77,6 +77,12 @@
           "icon": "resources/activity-bar-icon.svg"
         },
         {
+          "id": "codeWebChatViewWebsites",
+          "name": "Websites",
+          "icon": "resources/activity-bar-icon.svg",
+          "visibility": "collapsed"
+        },
+        {
           "id": "codeWebChatView",
           "name": "Code Web Chat",
           "type": "webview",
@@ -223,6 +229,18 @@
         "title": "Preview Website Content"
       },
       {
+        "command": "codeWebChat.checkAllWebsites",
+        "title": "Check All",
+        "category": "Code Web Chat",
+        "icon": "$(check-all)"
+      },
+      {
+        "command": "codeWebChat.clearChecksWebsites",
+        "title": "Clear All Checks",
+        "category": "Code Web Chat",
+        "icon": "$(clear-all)"
+      },
+      {
         "command": "codeWebChat.delete",
         "title": "Delete"
       },
@@ -299,6 +317,14 @@
         },
         {
           "command": "codeWebChat.previewWebsite",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.checkAllWebsites",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.clearChecksWebsites",
           "when": "false"
         },
         {
@@ -399,6 +425,16 @@
           "command": "codeWebChat.closeAllEditors",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@5"
+        },
+        {
+          "command": "codeWebChat.checkAllWebsites",
+          "when": "view == codeWebChatViewWebsites",
+          "group": "navigation@1"
+        },
+        {
+          "command": "codeWebChat.clearChecksWebsites",
+          "when": "view == codeWebChatViewWebsites",
+          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.openRepository",
