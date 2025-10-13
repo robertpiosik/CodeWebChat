@@ -4,16 +4,16 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  padding-bottom: 25px;
+  padding-bottom: 30px;
 
   &--visible {
     opacity: 1;
-    transition: opacity var(--transition-duration-250)
+    transition: all var(--transition-duration-250)
       var(--transition-timing-function);
 
     .container {
@@ -29,8 +29,9 @@
   padding: var(--padding-16px) var(--padding-12px) var(--padding-12px)
     var(--padding-12px);
   border-radius: var(--border-radius-8px);
+  border: 1px solid var(--vscode-sideBarSectionHeader-border);
   width: 100%;
   margin: var(--padding-24px);
   transform: scale(0.9);
-  max-width: 340px;
+  max-width: 320px;
 }
