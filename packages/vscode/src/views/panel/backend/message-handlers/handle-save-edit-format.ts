@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { SaveEditFormatMessage } from '@/views/panel/types/messages'
 
 export const handle_save_edit_format = async (

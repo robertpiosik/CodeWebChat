@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { WebMode } from '@shared/types/modes'
 
 export const handle_save_mode_web = async (

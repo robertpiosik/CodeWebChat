@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '../view-provider'
+import { ViewProvider } from '../panel-provider'
 
 export const handle_cancel_commit_message = async (
   provider: ViewProvider

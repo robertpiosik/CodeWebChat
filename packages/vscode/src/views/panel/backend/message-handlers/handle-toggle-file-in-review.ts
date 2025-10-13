@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { toggle_file_review_state } from '@/commands/apply-chat-response-command/utils/review'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { ToggleFileInReviewMessage } from '@/views/panel/types/messages'
 
 export const handle_toggle_file_in_review = async (

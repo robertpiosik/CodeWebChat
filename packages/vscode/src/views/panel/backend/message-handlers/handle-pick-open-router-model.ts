@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'
 

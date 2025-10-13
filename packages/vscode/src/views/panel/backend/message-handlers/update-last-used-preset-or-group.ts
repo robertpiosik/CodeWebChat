@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import {
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,

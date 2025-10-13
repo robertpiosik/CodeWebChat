@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { IntelligentUpdateFileInReviewMessage } from '@/views/panel/types/messages'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import {

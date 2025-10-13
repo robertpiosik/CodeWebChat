@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'

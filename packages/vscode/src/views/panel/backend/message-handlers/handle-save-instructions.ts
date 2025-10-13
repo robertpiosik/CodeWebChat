@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { SaveInstructionsMessage } from '@/views/panel/types/messages'
 import {
   INSTRUCTIONS_ASK_STATE_KEY,

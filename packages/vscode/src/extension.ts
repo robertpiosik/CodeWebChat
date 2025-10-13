@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
-import { ViewProvider } from './views/panel/backend/view-provider'
+import { ViewProvider } from './views/panel/backend/panel-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
   migrate_preset_is_default_to_is_selected,

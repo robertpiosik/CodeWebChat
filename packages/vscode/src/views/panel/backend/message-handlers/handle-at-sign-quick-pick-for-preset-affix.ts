@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { at_sign_quick_pick } from '@/views/panel/backend/utils/at-sign-quick-pick'
 
 export const handle_at_sign_quick_pick_for_preset_affix = async (

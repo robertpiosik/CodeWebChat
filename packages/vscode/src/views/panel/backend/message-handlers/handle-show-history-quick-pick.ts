@@ -12,7 +12,7 @@ import {
   PINNED_HISTORY_NO_CONTEXT_STATE_KEY,
   HistoryEntry
 } from '@/constants/state-keys'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { handle_get_history } from './handle-get-history'

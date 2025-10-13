@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { GitRepository } from '@/utils/git-repository-utils'
-import { ViewProvider } from '../../../view-provider'
+import { ViewProvider } from '../../../panel-provider'
 import {
   get_commit_message_config,
   CommitMessageConfig

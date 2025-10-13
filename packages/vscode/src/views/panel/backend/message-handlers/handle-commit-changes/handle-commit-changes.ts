@@ -5,7 +5,7 @@ import {
   prepare_staged_changes
 } from '@/utils/git-repository-utils'
 import { dictionary } from '@shared/constants/dictionary'
-import { ViewProvider } from '../../view-provider'
+import { ViewProvider } from '../../panel-provider'
 import {
   generate_commit_message_from_diff,
   get_commit_message_config

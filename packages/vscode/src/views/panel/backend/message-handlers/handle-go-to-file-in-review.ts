@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { GoToFileInReviewMessage } from '@/views/panel/types/messages'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'

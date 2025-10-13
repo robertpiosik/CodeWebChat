@@ -3,7 +3,7 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { FileItem } from '../context/providers/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 
 export const reference_in_chat_command = (
   view_provider: ViewProvider | undefined,

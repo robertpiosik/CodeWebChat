@@ -9,7 +9,7 @@ import {
   PINNED_HISTORY_EDIT_STATE_KEY,
   PINNED_HISTORY_NO_CONTEXT_STATE_KEY
 } from '@/constants/state-keys'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { SaveHistoryMessage } from '@/views/panel/types/messages'
 
 export const handle_save_history = async (

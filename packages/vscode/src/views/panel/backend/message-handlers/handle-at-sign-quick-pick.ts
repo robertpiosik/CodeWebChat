@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { at_sign_quick_pick } from '@/views/panel/backend/utils/at-sign-quick-pick'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import * as vscode from 'vscode'

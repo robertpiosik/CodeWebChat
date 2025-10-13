@@ -13,7 +13,7 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/model-providers-manager'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../utils/apply-reasoning-effort'
 

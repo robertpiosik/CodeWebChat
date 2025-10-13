@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { ReplacePresetsMessage } from '@/views/panel/types/messages'
 import { ui_preset_to_config_format } from '@/views/panel/backend/utils/preset-format-converters'
-import { ViewProvider } from '../view-provider'
+import { ViewProvider } from '../panel-provider'
 
 export const handle_replace_presets = async (
   provider: ViewProvider,

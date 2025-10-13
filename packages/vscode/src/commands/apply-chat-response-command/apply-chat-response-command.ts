@@ -21,7 +21,7 @@ import { apply_git_patch } from './handlers/diff-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { Diff } from './utils/clipboard-parser/extract-diff-patches'
-import { ViewProvider } from '@/views/panel/backend/view-provider'
+import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { review, code_review_promise_resolve } from './utils/review'
 import { dictionary } from '@shared/constants/dictionary'
 
