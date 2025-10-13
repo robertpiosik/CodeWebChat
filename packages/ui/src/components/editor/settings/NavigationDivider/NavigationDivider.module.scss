@@ -1,0 +1,13 @@
+.line {
+  height: 1px;
+  background-color: var(--vscode-settings-headerBorder);
+  margin: 0 var(--padding-8px);
+}
+
+.text {
+  color: var(--vscode-descriptionForeground);
+  font-size: 0.9em;
+  font-weight: 600;
+  padding: 0 var(--padding-8px);
+  margin-top: var(--padding-8px);
+}

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Layout } from '@ui/components/editor/settings/Layout'
 import { NavigationItem } from '@ui/components/editor/settings/NavigationItem'
 import { ModelProvidersSection } from './sections/ModelProvidersSection'
+import { NavigationDivider } from '@ui/components/editor/settings/NavigationDivider'
 import { Item } from '@ui/components/editor/settings/Item'
 import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
 import { dictionary } from '@shared/constants/dictionary'
@@ -21,19 +22,26 @@ type NavItem =
   | 'intelligent-update'
   | 'commit-messages'
 
-const NAV_ITEMS_CONFIG: { id: NavItem; label: string }[] = [
+type NavConfigItem =
+  | { type: 'item'; id: NavItem; label: string }
+  | { type: 'divider'; text?: string }
+
+const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
+    type: 'item',
     id: 'general',
     label: 'General'
   },
   {
+    type: 'item',
     id: 'model-providers',
     label: dictionary.settings.MODEL_PROVIDERS_LABEL
   },
-  { id: 'edit-context', label: 'Edit Context' },
-  { id: 'code-completions', label: 'Code Completions' },
-  { id: 'intelligent-update', label: 'Intelligent Update' },
-  { id: 'commit-messages', label: 'Commit Messages' }
+  { type: 'divider', text: 'API Tools' },
+  { type: 'item', id: 'edit-context', label: 'Edit Context' },
+  { type: 'item', id: 'code-completions', label: 'Code Completions' },
+  { type: 'item', id: 'intelligent-update', label: 'Intelligent Update' },
+  { type: 'item', id: 'commit-messages', label: 'Commit Messages' }
 ]
 
 type Props = {
@@ -124,7 +132,10 @@ export const Home: React.FC<Props> = (props) => {
     [handle_stuck_change]
   )
 
-  const nav_item_ids = NAV_ITEMS_CONFIG.map((item) => item.id)
+  const nav_item_ids = NAV_ITEMS_CONFIG.filter(
+    (item): item is Extract<NavConfigItem, { type: 'item' }> =>
+      item.type === 'item'
+  ).map((item) => item.id)
   const active_nav_item_id =
     nav_item_ids.filter((id) => stuck_sections.has(id)).pop() || nav_item_ids[0]
 
@@ -185,19 +196,21 @@ export const Home: React.FC<Props> = (props) => {
       <Layout
         ref={scroll_container_ref}
         title={dictionary.settings.SETTINGS_TITLE}
-        sidebar={
-          <>
-            {NAV_ITEMS_CONFIG.map(({ id, label }) => (
-              <NavigationItem
-                key={id}
-                href={`#${id}`}
-                label={label}
-                is_active={id === active_nav_item_id}
-                on_click={(e) => handle_nav_click(e, id)}
-              />
-            ))}
-          </>
-        }
+        sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
+          if (item.type == 'divider') {
+            return <NavigationDivider key={i} text={item.text} />
+          }
+
+          return (
+            <NavigationItem
+              key={i}
+              href={`#${item.id}`}
+              label={item.label}
+              is_active={item.id === active_nav_item_id}
+              on_click={(e) => handle_nav_click(e, item.id)}
+            />
+          )
+        })}
       >
         <Section
           ref={(el) => (section_refs.current['general'] = el)}
