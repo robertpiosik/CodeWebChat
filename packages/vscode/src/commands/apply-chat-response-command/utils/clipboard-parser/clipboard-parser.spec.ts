@@ -355,6 +355,23 @@ describe('clipboard-parser', () => {
         load_test_case_file('language-and-path', 'file-1.txt')
       )
     })
+
+    it('should parse path from markdown argument', () => {
+      const text = load_test_case_file(
+        'path-in-markdown-argument',
+        'path-in-markdown-argument.txt'
+      )
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.js')
+      expect(result[0].content).toBe(
+        load_test_case_file('path-in-markdown-argument', 'file-1.txt')
+      )
+    })
   })
 
   describe('parse_file_content_only', () => {

@@ -1,0 +1,8 @@
+Some text before the code block.
+
+```javascript name=src/index.js
+const message = "hello world";
+console.log(message);
+```
+
+Some text after.

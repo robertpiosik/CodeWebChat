@@ -306,7 +306,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     if (
       clipboard_text.trim() &&
       last_applied_content &&
-      clipboard_text === last_applied_content
+      clipboard_text == last_applied_content
     ) {
       this.send_message({
         command: 'CAN_APPLY_CLIPBOARD_CHANGED',

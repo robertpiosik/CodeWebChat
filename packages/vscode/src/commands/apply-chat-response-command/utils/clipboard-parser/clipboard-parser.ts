@@ -191,15 +191,25 @@ export const parse_multiple_files = (params: {
 
         const after_backticks = line.substring(backtick_index + 3).trim()
         if (after_backticks) {
-          const parts = after_backticks.split(':')
-          if (parts.length > 1) {
-            const potential_path = parts.slice(1).join(':').trim()
-            if (
-              potential_path.includes('/') ||
-              potential_path.includes('\\') ||
-              potential_path.includes('.')
-            ) {
-              last_seen_file_path_comment = potential_path
+          const name_match = after_backticks.match(
+            /(?:path|name)=(?:"([^"]+)"|'([^']+)'|(\S+))/
+          )
+          if (name_match) {
+            const path = name_match[1] || name_match[2] || name_match[3]
+            if (path) {
+              last_seen_file_path_comment = path
+            }
+          } else {
+            const parts = after_backticks.split(':')
+            if (parts.length > 1) {
+              const potential_path = parts.slice(1).join(':').trim()
+              if (
+                potential_path.includes('/') ||
+                potential_path.includes('\\') ||
+                potential_path.includes('.')
+              ) {
+                last_seen_file_path_comment = potential_path
+              }
             }
           }
         }
