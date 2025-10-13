@@ -188,6 +188,22 @@ export const parse_multiple_files = (params: {
             last_seen_file_path_comment = extracted_filename
           }
         }
+
+        const after_backticks = line.substring(backtick_index + 3).trim()
+        if (after_backticks) {
+          const parts = after_backticks.split(':')
+          if (parts.length > 1) {
+            const potential_path = parts.slice(1).join(':').trim()
+            if (
+              potential_path.includes('/') ||
+              potential_path.includes('\\') ||
+              potential_path.includes('.')
+            ) {
+              last_seen_file_path_comment = potential_path
+            }
+          }
+        }
+
         state = 'CONTENT'
         backtick_nesting_level = 1
         current_workspace_name = undefined

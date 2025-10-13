@@ -338,6 +338,23 @@ describe('clipboard-parser', () => {
         )
       )
     })
+
+    it('should parse language and path format', () => {
+      const text = load_test_case_file(
+        'language-and-path',
+        'language-and-path.txt'
+      )
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.js')
+      expect(result[0].content).toBe(
+        load_test_case_file('language-and-path', 'file-1.txt')
+      )
+    })
   })
 
   describe('parse_file_content_only', () => {
