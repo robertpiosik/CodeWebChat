@@ -490,6 +490,7 @@ export const Panel = () => {
             tokens_per_second={progress_state.tokens_per_second}
             files={progress_state.files}
             on_cancel={() => {
+              set_progress_state(undefined)
               post_message(vscode, { command: 'CANCEL_API_REQUEST' })
             }}
           />

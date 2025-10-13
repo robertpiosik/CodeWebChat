@@ -90,6 +90,7 @@
       &__text {
         overflow: hidden;
         text-overflow: ellipsis;
+        line-height: 1;
 
         > span:nth-child(2) {
           margin-left: 0.5em;
