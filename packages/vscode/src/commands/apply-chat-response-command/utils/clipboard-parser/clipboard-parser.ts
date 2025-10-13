@@ -171,6 +171,7 @@ export const parse_multiple_files = (params: {
   let in_cdata = false
   let backtick_nesting_level = 0
   let last_seen_file_path_comment: string | null = null
+  let current_language = ''
 
   const lines = params.response.split('\n')
 
@@ -190,6 +191,7 @@ export const parse_multiple_files = (params: {
         }
 
         const after_backticks = line.substring(backtick_index + 3).trim()
+        current_language = after_backticks.split(/[:\s{]/)[0]
         if (after_backticks) {
           const name_match = after_backticks.match(
             /(?:path|name)=(?:"([^"]+)"|'([^']+)'|(\S+))/
@@ -326,7 +328,8 @@ export const parse_multiple_files = (params: {
         trimmed_line == '```' &&
         backtick_nesting_level == 1 &&
         (current_content.trim() == '' ||
-          (i > 0 &&
+          ((current_language == 'markdown' || current_language == 'md') &&
+            i > 0 &&
             (lines[i - 1].trim() == '' || lines[i - 1].trim() == '```'))) &&
         (() => {
           for (let j = i + 1; j < lines.length; j++) {
