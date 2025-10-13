@@ -1,11 +1,8 @@
 import styles from './Configurations.module.scss'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
-import { dictionary } from '@shared/constants/dictionary'
 import { IconButton } from '../IconButton'
 import { ReactSortable } from 'react-sortablejs'
-
-const dict = dictionary['Configurations.tsx']
 
 export namespace Configurations {
   export type Configuration = {
@@ -32,7 +29,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles.heading}>
-        <div className={styles['heading__title']}>{dict.my_configurations}</div>
+        <div className={styles['heading__title']}>MY CONFIGURATIONS</div>
 
         <IconButton
           codicon_icon="edit"

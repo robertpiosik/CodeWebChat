@@ -5,7 +5,6 @@ import { ModelProvidersSection } from './sections/ModelProvidersSection'
 import { NavigationDivider } from '@ui/components/editor/settings/NavigationDivider'
 import { Item } from '@ui/components/editor/settings/Item'
 import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
-import { dictionary } from '@shared/constants/dictionary'
 import { Section } from '@ui/components/editor/settings/Section'
 import { TextButton } from '@ui/components/editor/settings/TextButton'
 import { Textarea } from '@ui/components/editor/settings/Textarea'
@@ -35,7 +34,7 @@ const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     type: 'item',
     id: 'model-providers',
-    label: dictionary.settings.MODEL_PROVIDERS_LABEL
+    label: 'Model Providers'
   },
   { type: 'divider', text: 'API Tools' },
   { type: 'item', id: 'edit-context', label: 'Edit Context' },
@@ -195,7 +194,7 @@ export const Home: React.FC<Props> = (props) => {
     <div style={{ height: '100vh' }}>
       <Layout
         ref={scroll_container_ref}
-        title={dictionary.settings.SETTINGS_TITLE}
+        title="Settings"
         sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
           if (item.type == 'divider') {
             return <NavigationDivider key={i} text={item.text} />
@@ -248,8 +247,9 @@ export const Home: React.FC<Props> = (props) => {
         </Section>
         <Section
           ref={(el) => (section_refs.current['edit-context'] = el)}
-          title={dictionary.settings.EDIT_CONTEXT_LABEL}
-          subtitle={dictionary.settings.EDIT_CONTEXT_SUBTITLE}
+          group="API Tool"
+          title="Edit Context"
+          subtitle="Modify, create or delete files based on natural language instructions."
           on_stuck_change={edit_context_on_stuck_change}
         >
           <ApiToolConfigurationSection
@@ -267,8 +267,9 @@ export const Home: React.FC<Props> = (props) => {
         </Section>
         <Section
           ref={(el) => (section_refs.current['code-completions'] = el)}
-          title={dictionary.settings.CODE_COMPLETIONS_LABEL}
-          subtitle={dictionary.settings.CODE_COMPLETIONS_SUBTITLE}
+          group="API Tool"
+          title="Code Completions"
+          subtitle="Get accurate code-at-cursor from state-of-the-art reasoning models."
           on_stuck_change={code_completions_on_stuck_change}
         >
           <ApiToolConfigurationSection
@@ -292,8 +293,9 @@ export const Home: React.FC<Props> = (props) => {
         </Section>
         <Section
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
-          title={dictionary.settings.INTELLIGENT_UPDATE_LABEL}
-          subtitle={dictionary.settings.INTELLIGENT_UPDATE_SUBTITLE}
+          group="API Tool"
+          title="Intelligent Update"
+          subtitle="Integrate truncated code blocks and fix malformed diffs."
           on_stuck_change={intelligent_update_on_stuck_change}
         >
           <ApiToolConfigurationSection
@@ -317,8 +319,9 @@ export const Home: React.FC<Props> = (props) => {
         </Section>
         <Section
           ref={(el) => (section_refs.current['commit-messages'] = el)}
-          title={dictionary.settings.COMMIT_MESSAGES_LABEL}
-          subtitle="Configure models for generating commit messages, and customize the instructions used."
+          group="API Tool"
+          title="Commit Messages"
+          subtitle="Generate meaningful summaries of changes adhering to your style."
           on_stuck_change={commit_messages_on_stuck_change}
         >
           <Item

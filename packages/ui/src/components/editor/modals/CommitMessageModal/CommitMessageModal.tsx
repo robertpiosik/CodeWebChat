@@ -3,9 +3,6 @@ import styles from './CommitMessageModal.module.scss'
 import { Button } from '../../Button'
 import { Modal } from '../Modal'
 import TextareaAutosize from 'react-textarea-autosize'
-import { dictionary } from '@shared/constants/dictionary'
-
-const dict = dictionary['CommitMessageModal.tsx']
 
 type Props = {
   commit_message: string
@@ -52,7 +49,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
   return (
     <Modal>
       <div className={styles.container}>
-        <div className={styles.title}>{dict.commit_changes}</div>
+        <div className={styles.title}>Commit changes</div>
         <TextareaAutosize
           className={styles.textarea}
           value={message}
@@ -68,14 +65,14 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
         />
         <div className={styles.actions}>
           <Button on_click={props.on_cancel} is_secondary={true}>
-            {dict.cancel}
+            Cancel
           </Button>
           <Button
             on_click={handle_accept}
             disabled={!message.trim()}
             is_focused={true}
           >
-            {dict.commit}
+            Commit
             {is_timer_active && countdown > 0 && ` (${countdown})`}
           </Button>
         </div>

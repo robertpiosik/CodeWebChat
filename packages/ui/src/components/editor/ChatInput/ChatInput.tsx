@@ -3,12 +3,9 @@ import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import { Icon } from '../Icon'
-import { dictionary } from '@shared/constants/dictionary'
 import { get_highlighted_text } from './utils/get-highlighted-text'
 import { use_handlers } from './hooks/use-handlers'
 import { format_token_count } from './utils/format-token-count'
-
-const component_dictionary = dictionary['ChatInput.tsx']
 
 export type ChatInputProps = {
   value: string
@@ -82,15 +79,15 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
 
     if (props.is_in_code_completions_mode) {
       if (active_history.length > 0 && is_history_enabled) {
-        return `${component_dictionary.completion_instructions} ${component_dictionary.for_history_hint}`
+        return 'Completion instructions (⇅ for history)'
       } else {
-        return component_dictionary.completion_instructions
+        return 'Completion instructions'
       }
     }
 
     return active_history.length > 0 && is_history_enabled
-      ? `${component_dictionary.type_something} ${component_dictionary.for_history_hint}`
-      : component_dictionary.type_something
+      ? 'Type something (⇅ for history)'
+      : 'Type something'
   }, [
     props.is_in_code_completions_mode,
     props.chat_history,
@@ -102,21 +99,13 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     <div className={styles.container}>
       {props.has_active_selection && props.is_in_code_completions_mode && (
         <div className={styles.error}>
-          <div className={styles.error__inner}>
-            {
-              component_dictionary.code_completions_mode_unavailable_with_text_selection
-            }
-          </div>
+          <div className={styles.error__inner}>Remove text selection</div>
         </div>
       )}
 
       {props.is_in_code_completions_mode && !props.has_active_editor && (
         <div className={styles.error}>
-          <div className={styles.error__inner}>
-            {
-              component_dictionary.code_completions_mode_unavailable_without_active_editor
-            }
-          </div>
+          <div className={styles.error__inner}>Place cursor for completion</div>
         </div>
       )}
 
@@ -177,7 +166,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             'codicon-search'
           )}
           onClick={props.on_search_click}
-          title={`${component_dictionary.search} (${
+          title={`Search history (${
             navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
               ? '⌘F'
               : 'Ctrl+F'
@@ -195,7 +184,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               e.stopPropagation()
               props.on_copy()
             }}
-            title={`${component_dictionary.copy_to_clipboard} (${
+            title={`Copy to clipboard (${
               navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
                 ? '⌥⌘C'
                 : 'Ctrl+Alt+C'
@@ -220,7 +209,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               <button
                 onClick={props.on_at_sign_click}
                 className={cn(styles['footer__left__button'])}
-                title={component_dictionary.insert_symbol}
+                title="Insert symbol"
               >
                 <span>@</span>
               </button>
@@ -228,7 +217,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}
-              title={component_dictionary.prompt_templates}
+              title="Prompt templates"
             >
               <span className="codicon codicon-json" />
             </button>
@@ -242,7 +231,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             {props.token_count !== undefined && props.token_count > 1 && (
               <div
                 className={styles.footer__right__count}
-                title={component_dictionary.approximate_token_count}
+                title="Approximate message length in tokens"
               >
                 {format_token_count(props.token_count)}
               </div>
@@ -266,7 +255,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                     </div>
                   )}
                   <Icon variant="ENTER" />
-                  <span>{component_dictionary.select}</span>
+                  <span>Select...</span>
                 </button>
 
                 <button
@@ -275,7 +264,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                   title={props.use_last_choice_button_title}
                 >
                   <Icon variant="ENTER" />
-                  <span>{component_dictionary.use_last_choice}</span>
+                  <span>Use last choice</span>
                 </button>
               </>
             )}
@@ -287,10 +276,10 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                   e.stopPropagation()
                   props.on_copy()
                 }}
-                title={component_dictionary.copy_to_clipboard}
+                title="Copy to clipboard"
               >
                 <Icon variant="ENTER" />
-                <span>{component_dictionary.copy_to_clipboard}</span>
+                <span>Copy to clipboard</span>
               </button>
             )}
           </div>

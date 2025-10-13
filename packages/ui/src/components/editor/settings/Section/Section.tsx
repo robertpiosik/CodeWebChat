@@ -6,7 +6,8 @@ type Props = {
   title: string
   subtitle: React.ReactNode
   children: React.ReactNode
-  on_stuck_change?: (is_stuck: boolean) => void
+  on_stuck_change: (is_stuck: boolean) => void
+  group?: string
 }
 
 export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
@@ -17,8 +18,8 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const [add_stuck_class, set_add_stuck_class] = useState(false)
 
   useEffect(() => {
-    props.on_stuck_change?.(is_stuck)
-  }, [is_stuck, props.on_stuck_change])
+    props.on_stuck_change(is_stuck)
+  }, [is_stuck])
 
   useEffect(() => {
     const marker = marker_ref.current
@@ -89,6 +90,9 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
         })}
       >
         <div className={styles.header__marker} ref={marker_ref} />
+        {props.group && (
+          <div className={styles.header__group}>{props.group}</div>
+        )}
         <div className={styles.header__title}>{props.title}</div>
         <div className={styles.header__subtitle}>{props.subtitle}</div>
       </div>

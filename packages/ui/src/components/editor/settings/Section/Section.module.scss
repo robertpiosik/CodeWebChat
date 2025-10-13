@@ -19,7 +19,7 @@
   flex-direction: column;
   gap: var(--padding-4px);
   padding-top: calc(
-    var(--padding-60px) + var(--padding-2px)
+    var(--padding-60px) + var(--padding-4px)
   ); // to align with the sidebar title
   padding-bottom: var(--padding-10px);
   background-color: var(--vscode-editor-background);
@@ -35,6 +35,16 @@
     top: 0;
     height: 1px;
     margin-top: -2px;
+  }
+
+  &__group {
+    position: absolute;
+    top: 38px;
+    background-color: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    font-size: var(--font-size-12px);
+    border-radius: var(--border-radius-999px);
+    padding: var(--padding-2px) var(--padding-8px);
   }
 
   &__title {

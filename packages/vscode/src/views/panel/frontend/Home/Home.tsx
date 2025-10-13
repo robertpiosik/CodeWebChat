@@ -6,7 +6,6 @@ import { Donations } from '@ui/components/editor/Donations'
 import { Icon } from '@ui/components/editor/Icon'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
-import { dictionary } from '@shared/constants/dictionary'
 
 type Props = {
   is_active: boolean
@@ -36,19 +35,17 @@ export const Home: React.FC<Props> = (props) => {
               <div className={styles['top__header__home']}>
                 <span className="codicon codicon-home" />
               </div>
-              <span className={styles['top__header__text']}>
-                {dictionary.home.header}
-              </span>
+              <span className={styles['top__header__text']}>Home</span>
             </div>
             <div className={styles['top__buttons']}>
               <Enter
-                label={dictionary.home.new_chat_label}
-                description={dictionary.home.new_chat_description}
+                label="Open View: New chat"
+                description="Send prompt in a free chatbot"
                 on_click={props.on_new_chat}
               />
               <Enter
-                label={dictionary.home.api_call_label}
-                description={dictionary.home.api_call_description}
+                label="Open View: API call"
+                description="Send prompt to a model provider"
                 on_click={props.on_api_call}
               />
               <HomeLinkButton
@@ -57,7 +54,7 @@ export const Home: React.FC<Props> = (props) => {
                 fill_color="white"
                 logo_icon="CODE_WEB_CHAT_LOGO"
                 text_icon="CODE_WEB_CHAT_TEXT"
-                label={dictionary.home.visit_website_label}
+                label="Visit website"
               />
               <div className={styles['top__buttons__donations']}>
                 <HomeLinkButton
@@ -66,7 +63,7 @@ export const Home: React.FC<Props> = (props) => {
                   fill_color="black"
                   text_icon="BUY_ME_A_COFFEE_TEXT"
                   logo_icon="BUY_ME_A_COFFEE_LOGO"
-                  label={dictionary.home.support_author_label}
+                  label="Support author"
                 />
                 <Donations
                   donations={donations}
@@ -88,16 +85,14 @@ export const Home: React.FC<Props> = (props) => {
             <div className={styles.bottom__version}>{props.version}</div>
             <div className={styles.bottom__links}>
               <div>
-                {dictionary.home.license_prefix}{' '}
+                Released under the{' '}
                 <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
-                  {dictionary.home.license_link_text}
+                  GPL-3.0 license
                 </a>
               </div>
               <div>
                 Copyright © {new Date().getFullYear()}{' '}
-                <a href="https://x.com/robertpiosik">
-                  {dictionary.home.author}
-                </a>
+                <a href="https://x.com/robertpiosik">Robert Piosik</a>
               </div>
             </div>
           </div>
@@ -108,7 +103,7 @@ export const Home: React.FC<Props> = (props) => {
         <div className={styles.footer__social}>
           <a
             href="https://x.com/CodeWebChat"
-            title={dictionary.home.follow_x}
+            title="Follow on X"
             className={cn(
               styles.footer__social__icon,
               styles['footer__social__icon--x']
@@ -118,7 +113,7 @@ export const Home: React.FC<Props> = (props) => {
           </a>
           <a
             href="https://www.reddit.com/r/CodeWebChat/"
-            title={dictionary.home.join_reddit}
+            title="Join subreddit"
             className={cn(
               styles.footer__social__icon,
               styles['footer__social__icon--reddit']
@@ -128,7 +123,7 @@ export const Home: React.FC<Props> = (props) => {
           </a>
           <a
             href="https://discord.gg/KJySXsrSX5"
-            title={dictionary.home.join_discord}
+            title="Join Discord server"
             className={cn(
               styles.footer__social__icon,
               styles['footer__social__icon--discord']
@@ -139,7 +134,7 @@ export const Home: React.FC<Props> = (props) => {
         </div>
 
         <div className={styles.footer__website}>
-          <a href="https://codeweb.chat/">{dictionary.home.documentation}</a>
+          <a href="https://codeweb.chat/">Documentation</a>
         </div>
       </div>
     </div>

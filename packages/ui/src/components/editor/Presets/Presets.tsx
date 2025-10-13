@@ -5,7 +5,6 @@ import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { dictionary } from '@shared/constants/dictionary'
 import { use_context_menu } from '../../../hooks/use-context-menu'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -101,9 +100,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles['my-presets']}>
-        <div className={styles['my-presets__left']}>
-          {dictionary['Presets.tsx'].my_chat_presets}
-        </div>
+        <div className={styles['my-presets__left']}>{'MY CHAT PRESETS'}</div>
         <IconButton codicon_icon="add" on_click={props.on_create_preset} />
       </div>
 
@@ -264,8 +261,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       on_click={(e) => e.stopPropagation()}
                       title={
                         preset.is_selected
-                          ? dictionary['Presets.tsx'].unset_as_selected
-                          : dictionary['Presets.tsx'].set_as_selected
+                          ? 'Unset as selected'
+                          : 'Set as selected'
                       }
                     />
                   )}
@@ -278,11 +275,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     <div
                       className={styles['presets__item__left__collapse-icon']}
                       style={{ cursor: 'pointer' }}
-                      title={
-                        preset.is_collapsed
-                          ? dictionary['Presets.tsx'].expand_group
-                          : dictionary['Presets.tsx'].collapse_group
-                      }
+                      title={preset.is_collapsed ? 'Expand' : 'Collapse'}
                       onClick={(e) => {
                         e.stopPropagation()
                         props.on_toggle_group_collapsed(preset.name)
@@ -312,7 +305,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     (preset.prompt_prefix || preset.prompt_suffix) && (
                       <IconButton
                         codicon_icon="copy"
-                        title={dictionary['Presets.tsx'].copy_to_clipboard}
+                        title="Copy to clipboard"
                         on_click={(e) => {
                           e.stopPropagation()
                           props.on_preset_copy(preset.name)
@@ -321,7 +314,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     )}
                   <IconButton
                     codicon_icon="files"
-                    title={dictionary['Presets.tsx'].duplicate}
+                    title="Duplicate"
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_duplicate(preset.name)
@@ -329,7 +322,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="edit"
-                    title={dictionary['Presets.tsx'].edit}
+                    title="Edit"
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_edit(preset.name)
@@ -337,7 +330,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="trash"
-                    title={dictionary['Presets.tsx'].delete}
+                    title="Delete"
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_delete(preset.name)
@@ -369,7 +362,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               close_context_menu()
             }}
           >
-            {dictionary['Presets.tsx'].run_without_submission}
+            {'Run without submission'}
           </div>
         </div>
       )}

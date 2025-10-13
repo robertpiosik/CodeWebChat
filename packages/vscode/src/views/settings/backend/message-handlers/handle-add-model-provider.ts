@@ -5,7 +5,6 @@ import {
   CustomProvider
 } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
-import { dictionary } from '@shared/constants/dictionary'
 
 const normalize_base_url = (url: string): string => {
   return url.trim().replace(/\/+$/, '')
@@ -18,16 +17,16 @@ export const handle_add_model_provider = async (
 
   const create_custom_provider = async (): Promise<boolean> => {
     const name = await vscode.window.showInputBox({
-      title: dictionary.settings.ADD_MODEL_PROVIDER_NAME_TITLE,
-      prompt: dictionary.settings.ADD_MODEL_PROVIDER_NAME_PROMPT,
+      title: 'Model Provider Name',
+      prompt: 'Enter a name for the custom model provider',
       validateInput: async (value) => {
-        if (!value.trim()) return dictionary.settings.NAME_IS_REQUIRED
+        if (!value.trim()) return 'Name is required'
         if (
           (await providers_manager.get_providers()).some(
             (p) => p.type == 'custom' && p.name == value.trim()
           )
         ) {
-          return dictionary.settings.PROVIDER_WITH_NAME_ALREADY_EXISTS
+          return 'A provider with this name already exists'
         }
         return null
       }
@@ -37,18 +36,17 @@ export const handle_add_model_provider = async (
     }
 
     const base_url = await vscode.window.showInputBox({
-      title: dictionary.settings.BASE_URL_TITLE,
-      prompt: dictionary.settings.BASE_URL_PROMPT,
-      validateInput: (value) =>
-        !value.trim() ? dictionary.settings.BASE_URL_IS_REQUIRED : null
+      title: 'Base URL',
+      prompt: 'Enter base URL for the model provider',
+      validateInput: (value) => (!value.trim() ? 'Base URL is required' : null)
     })
     if (base_url === undefined) {
       return await show_create_provider_quick_pick()
     }
 
     const api_key = await vscode.window.showInputBox({
-      title: dictionary.settings.MODEL_API_KEY_TITLE,
-      prompt: dictionary.settings.MODEL_API_KEY_PROMPT
+      title: 'Model API Key',
+      prompt: 'Enter your model API key'
     })
     if (api_key === undefined) {
       return await show_create_provider_quick_pick()
@@ -70,10 +68,9 @@ export const handle_add_model_provider = async (
     name: keyof typeof PROVIDERS
   ): Promise<boolean> => {
     const api_key = await vscode.window.showInputBox({
-      title: dictionary.settings.MODEL_API_KEY_TITLE,
-      prompt: dictionary.settings.MODEL_API_KEY_PROMPT,
-      validateInput: (value) =>
-        !value.trim() ? dictionary.settings.API_KEY_IS_REQUIRED : null
+      title: 'Model API Key',
+      prompt: 'Enter your model API key',
+      validateInput: (value) => (!value.trim() ? 'API key is required' : null)
     })
     if (api_key === undefined) {
       return await show_create_provider_quick_pick()
@@ -102,19 +99,19 @@ export const handle_add_model_provider = async (
       ([id]) => !saved_provider_names.includes(id as keyof typeof PROVIDERS)
     )
 
-    const custom_label = dictionary.settings.CUSTOM_ENDPOINT_LABEL
+    const custom_label = '$(edit) Custom endpoint...'
 
     const items: vscode.QuickPickItem[] = [
       {
         label: custom_label,
-        description: dictionary.settings.CUSTOM_ENDPOINT_DESCRIPTION
+        description: 'You can use any OpenAI-API compatible provider'
       },
       {
         label: '',
         kind: vscode.QuickPickItemKind.Separator
       },
       {
-        label: dictionary.settings.PREDEFINED_ENDPOINTS_LABEL,
+        label: 'Predefined endpoints',
         kind: vscode.QuickPickItemKind.Separator
       },
       ...available_built_in.map((built_in_provider) => ({
@@ -125,9 +122,9 @@ export const handle_add_model_provider = async (
 
     const quick_pick = vscode.window.createQuickPick()
     quick_pick.items = items
-    quick_pick.title = dictionary.settings.ADD_NEW_MODEL_PROVIDER_TITLE
+    quick_pick.title = 'Add New Model Provider'
     quick_pick.placeholder =
-      dictionary.settings.ADD_NEW_MODEL_PROVIDER_PLACEHOLDER
+      'Choose a predefined provider or create a custom one'
 
     return new Promise<boolean>((resolve) => {
       let is_accepted = false
