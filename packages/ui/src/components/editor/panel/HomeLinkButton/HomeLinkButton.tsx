@@ -1,5 +1,5 @@
 import styles from './HomeLinkButton.module.scss'
-import { Icon } from '../Icon'
+import { Icon } from '../../common/Icon'
 
 export type HomeLinkButtonProps = {
   url: string

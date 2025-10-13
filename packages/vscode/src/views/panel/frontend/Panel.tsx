@@ -1,6 +1,6 @@
 import { Main } from './Main'
 import { useEffect, useState } from 'react'
-import { Page as UiPage } from '@ui/components/editor/Page'
+import { Page as UiPage } from '@ui/components/editor/panel/Page'
 import { EditPresetForm } from '@/views/panel/frontend/EditPresetForm'
 import { Preset } from '@shared/types/preset'
 import {
@@ -8,7 +8,7 @@ import {
   FileProgress,
   FrontendMessage
 } from '../types/messages'
-import { TextButton as UiTextButton } from '@ui/components/editor/TextButton'
+import { TextButton as UiTextButton } from '@ui/components/editor/panel/TextButton'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { Home } from './Home'
 import styles from './Panel.module.scss'
@@ -16,10 +16,10 @@ import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
-import { Changes as UiChanges } from '@ui/components/editor/Changes'
-import { ProgressModal as UiProgressModal } from '@ui/components/editor/modals/ProgressModal'
-import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/modals/ChatInitializedModal'
-import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/modals/CommitMessageModal'
+import { Changes as UiChanges } from '@ui/components/editor/panel/Changes'
+import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
+import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/panel/modals/ChatInitializedModal'
+import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 
 const vscode = acquireVsCodeApi()
 

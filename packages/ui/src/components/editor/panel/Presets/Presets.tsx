@@ -3,9 +3,9 @@ import { IconButton } from '../IconButton/IconButton'
 import { Checkbox } from '../Checkbox'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
-import { Icon } from '../Icon'
+import { Icon } from '../../common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { use_context_menu } from '../../../hooks/use-context-menu'
+import { use_context_menu } from '../../../../hooks/use-context-menu'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',

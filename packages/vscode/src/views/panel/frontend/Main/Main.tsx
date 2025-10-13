@@ -15,7 +15,7 @@ import {
 } from '@/views/panel/types/messages'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { post_message } from '../utils/post_message'
-import { Configurations as UiConfigurations } from '@ui/components/editor/Configurations'
+import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 
 type Props = {
   vscode: any

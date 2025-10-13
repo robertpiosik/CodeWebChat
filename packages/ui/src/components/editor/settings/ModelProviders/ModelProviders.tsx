@@ -1,7 +1,7 @@
 import styles from './ModelProviders.module.scss'
 import { ReactSortable } from 'react-sortablejs'
 import cn from 'classnames'
-import { IconButton } from '../../IconButton'
+import { IconButton } from '../../panel/IconButton'
 
 export namespace ModelProviders {
   export type Provider = {
