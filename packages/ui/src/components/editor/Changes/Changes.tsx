@@ -53,7 +53,6 @@ export const Changes: FC<Props> = ({
   }
 
   const fallback_count = files.filter((f) => f.is_fallback).length
-  const replaced_files_count = files.filter((f) => f.is_replaced).length
 
   const sorted_files = useMemo(() => {
     const get_sort_score = (
@@ -82,15 +81,6 @@ export const Changes: FC<Props> = ({
             : 'The file'}{' '}
           required a fallback diff integration method, which may lead to
           inaccuracies. Looks off? Click{' '}
-          <span className="codicon codicon-sparkle" /> action to fix a file with
-          the Intelligent Update API tool.
-        </div>
-      )}
-      {replaced_files_count > 0 && (
-        <div className={styles.info}>
-          {`${replaced_files_count > 1 ? 'All files have' : 'The file has'}`}{' '}
-          been replaced. This may cause inaccuracies if the response had
-          unmarked truncations. Looks off? Click{' '}
           <span className="codicon codicon-sparkle" /> action to fix a file with
           the Intelligent Update API tool.
         </div>
