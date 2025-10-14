@@ -857,6 +857,27 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('should parse multiple diff files format in variant n', () => {
+      const text = load_test_case_file(
+        'diff-multiple-files-variant-n',
+        'diff-multiple-files-variant-n.txt'
+      )
+      const result = parse_response(text, true)
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(2)
+
+      expect(result.patches![0].file_path).toBe('src/lorem.html')
+      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
+
+      expect(result.patches![0].content).toBe(
+        load_test_case_file('diff-multiple-files-variant-n', 'file-1.txt')
+      )
+      expect(result.patches![1].content).toBe(
+        load_test_case_file('diff-multiple-files-variant-n', 'file-2.txt')
+      )
+    })
+
     it('should handle inner backticks within a diff block', () => {
       const text = load_test_case_file(
         'diff-inner-backticks',

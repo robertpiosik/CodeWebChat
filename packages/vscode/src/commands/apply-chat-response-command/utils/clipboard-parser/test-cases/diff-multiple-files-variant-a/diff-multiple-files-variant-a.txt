@@ -1,3 +1,5 @@
+Lorem ipsum
+
 ```diff
 --- a/src/lorem.ts
 +++ b/src/lorem.ts
@@ -7,6 +9,8 @@
 +console.log("new lorem")
 ```
 
+Lorem ipsum
+
 ```diff
 --- a/src/ipsum.ts
 +++ b/src/ipsum.ts
@@ -15,3 +19,5 @@
 -console.log("old ipsum")
 +console.log("new ipsum")
 ```
+
+Lorem ipsum

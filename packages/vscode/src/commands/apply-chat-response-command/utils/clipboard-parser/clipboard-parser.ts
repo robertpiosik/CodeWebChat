@@ -592,7 +592,10 @@ export const parse_response = (
     response.startsWith('--- ') ||
     response.startsWith('diff --git')
   ) {
-    const patches = extract_diffs(response, is_single_root_folder_workspace)
+    const patches = extract_diffs({
+      clipboard_text: response,
+      is_single_root: is_single_root_folder_workspace
+    })
     if (patches.length) {
       return {
         type: 'patches',
