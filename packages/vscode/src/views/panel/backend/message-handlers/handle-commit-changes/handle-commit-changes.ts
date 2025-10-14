@@ -14,6 +14,8 @@ import {
 export const handle_commit_changes = async (
   provider: ViewProvider
 ): Promise<void> => {
+  await vscode.workspace.saveAll()
+
   const repository = get_git_repository()
   if (!repository) {
     provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })

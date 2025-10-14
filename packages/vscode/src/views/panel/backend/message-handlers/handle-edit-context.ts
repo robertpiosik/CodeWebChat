@@ -219,6 +219,8 @@ const perform_context_editing = async (params: {
   config_id?: string
   view_provider: ViewProvider
 }) => {
+  await vscode.workspace.saveAll()
+
   const api_providers_manager = new ModelProvidersManager(params.context)
 
   const editor = vscode.window.activeTextEditor
