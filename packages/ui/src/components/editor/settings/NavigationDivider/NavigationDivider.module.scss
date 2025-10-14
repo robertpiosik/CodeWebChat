@@ -5,9 +5,8 @@
 }
 
 .text {
-  color: var(--vscode-descriptionForeground);
-  font-size: 0.9em;
-  font-weight: 600;
+  color: var(--vscode-textLink-foreground);
+  font-size: var(--padding-12px);
   padding: 0 var(--padding-8px);
   margin-top: var(--padding-8px);
 }

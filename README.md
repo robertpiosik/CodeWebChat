@@ -18,6 +18,14 @@ No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio
 - Operate 100% locally
 - Stay free forever
 
+🤌 **Why non-agentic?**
+
+Large language models (LLMs) are trained on vast datasets for many use cases. For coding, a model's training involves analyzing millions of simulated problem-solving flows, such as deriving an accepted answer from a StackOverflow question. Consequently, when the model handles your task, its "thought process" is simply a statistical pattern matching against the detailed examples it has seen.
+
+Agentic coding forges ahead and complement datasets with simulated context (files) gathering and planning. We believe real-world coding scenarios when given unspecified constraints (context and clear instructions) that can be trained into the model are inherently limited, affecting reliability and developer satisfaction.
+
+CWC keeps your mental model of the codebase updated as you progress—at a speed you never thought was possible.
+
 💅 **The workflow**
 
 Select folders and files for context, enter prompt, pick edit format and send message via...
