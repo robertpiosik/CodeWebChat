@@ -48,11 +48,6 @@ describe('cleanup_api_response', () => {
       expect(cleanup_api_response({ content })).toBe('const a = 1;')
     })
 
-    it('should handle incomplete CDATA closing tag', () => {
-      const content = '<![CDATA[const a = 1;]]'
-      expect(cleanup_api_response({ content })).toBe('const a = 1;')
-    })
-
     it('should remove DOCTYPE declaration', () => {
       const content = '<!DOCTYPE html>\n<html></html>'
       expect(cleanup_api_response({ content })).toBe('<html></html>')

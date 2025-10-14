@@ -19,6 +19,7 @@
   }
 
   &:focus {
+    outline-offset: 2px;
     outline: 1px solid var(--vscode-focusBorder);
   }
 
