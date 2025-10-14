@@ -442,10 +442,10 @@ export const apply_chat_response_command = (
         const is_single_root_folder_workspace =
           vscode.workspace.workspaceFolders?.length == 1
 
-        let clipboard_content = parse_response(
-          chat_response,
+        let clipboard_content = parse_response({
+          response: chat_response,
           is_single_root_folder_workspace
-        )
+        })
 
         if (
           clipboard_content.type == 'code-completion' &&

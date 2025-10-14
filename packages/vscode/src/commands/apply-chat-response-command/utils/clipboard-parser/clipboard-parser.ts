@@ -574,12 +574,14 @@ export const parse_file_content_only = (params: {
   return null
 }
 
-export const parse_response = (
-  response: string,
-  is_single_root_folder_workspace: boolean = true
-): ClipboardContent => {
+export const parse_response = (params: {
+  response: string
+  is_single_root_folder_workspace?: boolean
+}): ClipboardContent => {
+  const is_single_root_folder_workspace =
+    params.is_single_root_folder_workspace ?? true
   const code_completion = parse_code_completion({
-    response,
+    response: params.response,
     is_single_root_folder_workspace
   })
   if (code_completion) {
@@ -587,25 +589,22 @@ export const parse_response = (
   }
 
   if (
-    response.includes('```diff') ||
-    response.includes('```patch') ||
-    response.startsWith('--- ') ||
-    response.startsWith('diff --git')
+    params.response.includes('```diff') ||
+    params.response.includes('```patch') ||
+    params.response.startsWith('--- ') ||
+    params.response.startsWith('diff --git')
   ) {
     const patches = extract_diffs({
-      clipboard_text: response,
+      clipboard_text: params.response,
       is_single_root: is_single_root_folder_workspace
     })
     if (patches.length) {
-      return {
-        type: 'patches',
-        patches
-      }
+      return { type: 'patches', patches }
     }
   }
 
   const files = parse_multiple_files({
-    response,
+    response: params.response,
     is_single_root_folder_workspace
   })
 

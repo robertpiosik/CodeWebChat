@@ -428,7 +428,10 @@ describe('clipboard-parser', () => {
         'diff-direct-variant-a',
         'diff-direct-variant-a.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -440,7 +443,10 @@ describe('clipboard-parser', () => {
 
     it('should parse code-completion format', () => {
       const text = load_test_case_file('code-completion', 'code-completion.txt')
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('code-completion')
       expect(result.code_completion).toBeDefined()
@@ -459,7 +465,10 @@ describe('clipboard-parser', () => {
         'diff-direct-variant-b',
         'diff-direct-variant-b.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -474,7 +483,10 @@ describe('clipboard-parser', () => {
         'diff-direct-variant-c',
         'diff-direct-variant-c.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -489,7 +501,10 @@ describe('clipboard-parser', () => {
         'diff-direct-variant-d',
         'diff-direct-variant-d.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -504,7 +519,10 @@ describe('clipboard-parser', () => {
         'diff-direct-variant-e',
         'diff-direct-variant-e.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -519,7 +537,10 @@ describe('clipboard-parser', () => {
         'diff-direct-variant-f',
         'diff-direct-variant-f.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -534,7 +555,10 @@ describe('clipboard-parser', () => {
         'diff-direct-variant-g',
         'diff-direct-variant-g.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -546,7 +570,10 @@ describe('clipboard-parser', () => {
 
     it('should parse direct diff format without a/ b/ prefixes', () => {
       const text = load_test_case_file('diff-no-prefix', 'diff-no-prefix.txt')
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -561,7 +588,10 @@ describe('clipboard-parser', () => {
         'diff-direct-variant-deletion',
         'diff-direct-variant-deletion.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -573,7 +603,10 @@ describe('clipboard-parser', () => {
 
     it('should parse direct diff format for file rename', () => {
       const text = load_test_case_file('diff-rename', 'diff-rename.txt')
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -589,7 +622,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-a',
         'diff-multiple-files-variant-a.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -610,7 +646,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-b',
         'diff-multiple-files-variant-b.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -631,7 +670,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-c',
         'diff-multiple-files-variant-c.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -652,7 +694,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-d',
         'diff-multiple-files-variant-d.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -673,7 +718,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-e',
         'diff-multiple-files-variant-e.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -694,7 +742,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-f',
         'diff-multiple-files-variant-f.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -715,7 +766,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-g',
         'diff-multiple-files-variant-g.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -736,7 +790,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-h',
         'diff-multiple-files-variant-h.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -757,7 +814,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-i',
         'diff-multiple-files-variant-i.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -778,7 +838,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-j',
         'diff-multiple-files-variant-j.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -799,7 +862,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-k',
         'diff-multiple-files-variant-k.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -820,7 +886,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-l',
         'diff-multiple-files-variant-l.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -841,7 +910,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-m',
         'diff-multiple-files-variant-m.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -862,7 +934,10 @@ describe('clipboard-parser', () => {
         'diff-multiple-files-variant-n',
         'diff-multiple-files-variant-n.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(2)
@@ -883,7 +958,10 @@ describe('clipboard-parser', () => {
         'diff-inner-backticks',
         'diff-inner-backticks.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -898,7 +976,10 @@ describe('clipboard-parser', () => {
         'diff-inner-triple-backticks',
         'diff-inner-triple-backticks.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)
@@ -914,7 +995,10 @@ describe('clipboard-parser', () => {
         'diff-markdown-missing-ending',
         'diff-markdown-missing-ending.txt'
       )
-      const result = parse_response(text, true)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
 
       expect(result.type).toBe('patches')
       expect(result.patches).toHaveLength(1)

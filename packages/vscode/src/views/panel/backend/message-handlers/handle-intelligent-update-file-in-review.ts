@@ -92,10 +92,10 @@ export const handle_intelligent_update_file_in_review = async (
 
   const is_single_root_folder_workspace =
     (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
-  const parsed_response = parse_response(
-    last_response,
+  const parsed_response = parse_response({
+    response: last_response,
     is_single_root_folder_workspace
-  )
+  })
 
   let instructions = ''
   if (parsed_response.type == 'files' && parsed_response.files) {

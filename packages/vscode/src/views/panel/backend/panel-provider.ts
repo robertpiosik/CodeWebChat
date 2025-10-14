@@ -323,8 +323,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       return
     }
 
-    const content = parse_response(clipboard_text)
-
+    const is_single_root_folder_workspace =
+      (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
+    const content = parse_response({
+      response: clipboard_text,
+      is_single_root_folder_workspace
+    })
     const can_apply =
       content.code_completion != null ||
       (content.patches && content.patches.length > 0) ||
