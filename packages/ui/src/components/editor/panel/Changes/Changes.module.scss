@@ -20,6 +20,7 @@
 }
 
 .instructions {
+  position: relative;
   padding: var(--padding-5px) var(--padding-20px) var(--padding-5px)
     var(--padding-7px);
   color: var(--vscode-descriptionForeground);
@@ -27,6 +28,20 @@
   margin: 0 var(--padding-12px) var(--padding-8px) var(--padding-12px);
   border-radius: var(--border-radius-5px);
   word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  &::after {
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 4px;
+    bottom: 0;
+    left: 0;
+    background: var(--vscode-sideBar-background);
+  }
 }
 
 .list {

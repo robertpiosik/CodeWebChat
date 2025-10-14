@@ -72,7 +72,9 @@ export const Changes: FC<Props> = ({
   return (
     <div className={styles.container}>
       {raw_instructions && (
-        <div className={styles.instructions}>{raw_instructions}</div>
+        <div className={styles.instructions} title={raw_instructions}>
+          {raw_instructions}
+        </div>
       )}
       {fallback_count > 0 && (
         <div className={styles.info}>
