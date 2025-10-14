@@ -3,7 +3,7 @@
  * at the beginning and end of the content, without affecting the middle content.
  * Used by intelligent update/code completions command.
  */
-export function cleanup_api_response(params: { content: string }): string {
+export const cleanup_api_response = (params: { content: string }): string => {
   let content = params.content
   let changed = true
 
@@ -19,15 +19,26 @@ export function cleanup_api_response(params: { content: string }): string {
     }
   }
 
+  const code_block_count = (content.match(/```/g) || []).length
+  if (code_block_count === 2) {
+    const match = content.match(/```[^\n]*\n([\s\S]*?)\s*```/)
+    if (match && typeof match[1] === 'string' && match.index !== undefined) {
+      const before_text = content.substring(0, match.index).trim()
+      if (before_text.endsWith(':')) {
+        content = match[1]
+      }
+    }
+  }
+
   while (changed) {
     const original_content = content
 
     const opening_patterns = [
-      /^```[^\n]*\n/, // Markdown code block start
-      /^<files[^>]*>\s*\n?/, // Files wrapper start
-      /^<file[^>]*>\s*\n?/, // File wrapper start
-      /^<!\[CDATA\[\s*\n?/, // CDATA start
-      /^<!DOCTYPE[^>]*>\s*\n?/ // DOCTYPE declaration
+      /^```[^\n]*\n/,
+      /^<files[^>]*>\s*\n?/,
+      /^<file[^>]*>\s*\n?/,
+      /^<!\[CDATA\[\s*\n?/,
+      /^<!DOCTYPE[^>]*>\s*\n?/
     ]
 
     for (const pattern of opening_patterns) {
@@ -39,11 +50,10 @@ export function cleanup_api_response(params: { content: string }): string {
     }
 
     const closing_patterns = [
-      /\s*```\s*$/, // Markdown code block end
-      /\s*<\/files>\s*$/, // Files wrapper end
-      /\s*<\/file>\s*$/, // File wrapper end
-      /\s*\]\]>\s*$/, // CDATA end
-      /\s*\]\]\s*$/ // Potentially incomplete CDATA end (just "]]")
+      /\s*```\s*$/,
+      /\s*<\/files>\s*$/,
+      /\s*<\/file>\s*$/,
+      /\s*\]\]>\s*$/
     ]
 
     for (const pattern of closing_patterns) {
