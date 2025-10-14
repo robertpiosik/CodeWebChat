@@ -48,13 +48,17 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
 
   return (
     <Modal>
-      <div className={styles.container}>
+      <div
+        className={styles.container}
+        onMouseDown={() => {
+          set_is_timer_active(false)
+        }}
+      >
         <div className={styles.title}>Commit changes</div>
         <TextareaAutosize
           className={styles.textarea}
           value={message}
           onChange={(e) => set_message(e.target.value)}
-          onFocus={() => set_is_timer_active(false)}
           minRows={2}
           onKeyDown={(e) => {
             if (e.key == 'Enter' && (e.metaKey || e.ctrlKey)) {
