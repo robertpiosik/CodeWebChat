@@ -255,22 +255,22 @@ export const parse_multiple_files = (params: {
           continue
         }
       }
-      const trimmed_line = line.trim()
-      const is_comment =
-        trimmed_line.startsWith('//') ||
-        trimmed_line.startsWith('#') ||
-        trimmed_line.startsWith('/*') ||
-        trimmed_line.startsWith('*') ||
-        trimmed_line.startsWith('--') ||
-        trimmed_line.startsWith('<!--')
-
-      if (is_comment) {
-        const extracted_filename = extract_path_from_line_of_code(line)
-        if (extracted_filename) {
-          last_seen_file_path_comment = extracted_filename
+      let extracted_filename = extract_path_from_line_of_code(line)
+      if (!extracted_filename) {
+        const match = line.match(/`([^`]+)`/)
+        if (match && match[1]) {
+          const potential_path = match[1]
+          if (
+            potential_path.includes('/') ||
+            potential_path.includes('\\') ||
+            potential_path.includes('.')
+          ) {
+            extracted_filename = potential_path
+          }
         }
-      } else if (trimmed_line !== '') {
-        last_seen_file_path_comment = null
+      }
+      if (extracted_filename) {
+        last_seen_file_path_comment = extracted_filename
       }
     } else if (state == 'CONTENT') {
       if (top_level_xml_file_mode) {

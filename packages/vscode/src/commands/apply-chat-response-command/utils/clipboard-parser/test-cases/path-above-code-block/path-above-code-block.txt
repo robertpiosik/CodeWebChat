@@ -1,0 +1,8 @@
+
+### New File: `src/hello-world.ts`
+
+This new file
+
+```typescript
+console.log('Hello world!')
+```

@@ -131,7 +131,7 @@ Generate meaningful summaries of changes adhering to your style.
 
 ## Enterprise security
 
-**Code Web Chat operates exclusively on your machine and does not collect telemetry.** Your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
+**Code Web Chat operates exclusively on your machine.** Your code and instructions are sent directly to chatbots via editor-browser communication channel run on local Websockets. For API tools, model providers are called directly.
 
 ## Community
 

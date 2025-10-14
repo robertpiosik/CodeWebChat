@@ -89,7 +89,7 @@
           "visibility": "collapsed"
         },
         {
-          "id": "codeWebChatViewCheckpoint",
+          "id": "codeWebChatViewCheckpoints",
           "name": "Checkpoints",
           "icon": "resources/activity-bar-icon.svg",
           "visibility": "collapsed"
@@ -546,7 +546,7 @@
           "scope": "resource",
           "description": "Style of generated code blocks in \"Edit context\" mode.",
           "default": {
-            "whole": "Whenever proposing a new or updated file use the Markdown Code Block syntax. It's very important to place a file path in a comment on the top of the code block. Please show me the full code of the changed files because I have a disability which means I can't type and need to be able to copy and paste the full code. Don't use XML for files.",
+            "whole": "Whenever proposing a new or updated file use the Markdown Code Block syntax. It's very important to place a file path in a comment on the top of the code block. Please show me the full code of the proposed files because I have a disability which means I can't type and need to be able to just copy and paste. Don't use XML for files.",
             "truncated": "Whenever proposing a new or updated file use the Markdown Code Block syntax. It's very important to place a full file path in a comment on the top of the code block. Use ellipsis comments, e.g. \"// ...\", when appropriate. Don't use XML for files.",
             "diff": "Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files."
           },
