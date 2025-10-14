@@ -18,13 +18,13 @@ No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio
 - Operate 100% locally
 - Stay free forever
 
-🤌 **Why non-agentic?**
+🤌 **CWC is non-agentic, but why?**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at an accepted answer from a StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning next steps.
 
 Because the model is only as smart as examples it has seen in its pre-training, the possible coverage of real-world coding scenarios when approached at a high level is fundamentally limited.
 
-Therefore, CWC is designed in a way that aligns with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment.
+Therefore, CWC is designed in a way that aligns with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. By you, the engineer.
 
 💅 **The workflow**
 

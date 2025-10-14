@@ -89,6 +89,12 @@
           "visibility": "collapsed"
         },
         {
+          "id": "codeWebChatViewCheckpoint",
+          "name": "Checkpoints",
+          "icon": "resources/activity-bar-icon.svg",
+          "visibility": "collapsed"
+        },
+        {
           "id": "codeWebChatView",
           "name": "Code Web Chat",
           "type": "webview",
