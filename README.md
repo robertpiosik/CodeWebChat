@@ -22,9 +22,9 @@ No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio
 
 Large language models (LLMs) are trained on vast datasets for many use cases. For coding, a model's training involves analyzing millions of simulated problem-solving flows, such as deriving an accepted answer from a StackOverflow question. Consequently, when the model handles your task, its "thought process" is simply a statistical pattern matching against the detailed examples it has seen.
 
-Agentic coding forges ahead and complement datasets with simulated context (files) gathering and planning. We believe real-world coding scenarios when given unspecified constraints (context and clear instructions) that can be trained into the model are inherently limited, affecting reliability and developer satisfaction.
+Agentic coding forges ahead and complement datasets with simulated context gathering (file selection) and planning. We believe real-world coding scenarios when given unspecified constraints (context and precise instructions) that can be trained into the model are inherently limited, affecting reliability and developer satisfaction.
 
-CWC keeps your mental model of the codebase updated as you progress—at a speed you never thought was possible.
+By requiring manual context management CWC keeps your mental model of the codebase updated as you progress—at a speed you never thought was possible.
 
 💅 **The workflow**
 
