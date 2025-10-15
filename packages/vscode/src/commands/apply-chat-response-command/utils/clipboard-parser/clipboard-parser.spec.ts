@@ -65,7 +65,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses file when using file-xml format with CDATA inside a markdown code block', () => {
-      const test_case = 'file-xml-with-cdata-without-code-blocks'
+      const test_case = 'file-xml-with-cdata-inside-code-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_multiple_files({
         response: text,
@@ -377,7 +377,7 @@ describe('clipboard-parser', () => {
 
   describe('parse_response', () => {
     it('parses diff format without markdown code block or git header', () => {
-      const test_case = 'diff-direct-variant-a'
+      const test_case = 'diff-no-markdown-or-git-header'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -413,7 +413,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses diff format with git header but no markdown code block', () => {
-      const test_case = 'diff-direct-variant-b'
+      const test_case = 'diff-with-git-header-no-markdown'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -429,7 +429,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses diff format with git header but no ---/+++ lines', () => {
-      const test_case = 'diff-direct-variant-c'
+      const test_case = 'diff-with-git-header-no-file-lines'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -445,7 +445,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses diff format with git header and hunk header on same line', () => {
-      const test_case = 'diff-direct-variant-d'
+      const test_case = 'diff-git-and-hunk-header-same-line'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -461,7 +461,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses diff for a new file with git header', () => {
-      const test_case = 'diff-direct-variant-e'
+      const test_case = 'diff-new-file-with-git-header'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -477,7 +477,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses diff format with timestamps in ---/+++ lines', () => {
-      const test_case = 'diff-direct-variant-f'
+      const test_case = 'diff-with-timestamps'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -493,7 +493,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses diff format with quoted file paths in ---/+++ lines', () => {
-      const test_case = 'diff-direct-variant-g'
+      const test_case = 'diff-with-quoted-paths'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -525,7 +525,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses diff format for a file deletion', () => {
-      const test_case = 'diff-direct-variant-deletion'
+      const test_case = 'diff-file-deletion'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -558,7 +558,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs each in their own markdown code block', () => {
-      const test_case = 'diff-multiple-files-variant-a'
+      const test_case = 'diff-multiple-files-separate-markdown-blocks'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -580,7 +580,8 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs with git headers each in their own markdown code block', () => {
-      const test_case = 'diff-multiple-files-variant-b'
+      const test_case =
+        'diff-multiple-files-with-git-headers-separate-markdown-blocks'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -602,7 +603,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs with git headers and no ---/+++ lines in markdown code blocks', () => {
-      const test_case = 'diff-multiple-files-variant-c'
+      const test_case = 'diff-multiple-files-with-git-headers-no-file-lines'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -624,7 +625,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs with hunk header on same line as git header in markdown code blocks', () => {
-      const test_case = 'diff-multiple-files-variant-d'
+      const test_case = 'diff-multiple-files-git-and-hunk-header-same-line'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -646,7 +647,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple new file diffs in their own markdown code blocks', () => {
-      const test_case = 'diff-multiple-files-variant-e'
+      const test_case = 'diff-multiple-new-files-separate-markdown-blocks'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -668,7 +669,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs with timestamps in their own markdown code blocks', () => {
-      const test_case = 'diff-multiple-files-variant-f'
+      const test_case = 'diff-multiple-files-with-timestamps'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -690,7 +691,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs concatenated within a single markdown code block', () => {
-      const test_case = 'diff-multiple-files-variant-g'
+      const test_case = 'diff-multiple-files-single-markdown-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -712,7 +713,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs concatenated without a markdown code block', () => {
-      const test_case = 'diff-multiple-files-variant-h'
+      const test_case = 'diff-multiple-files-no-markdown-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -734,7 +735,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs with quoted file paths in separate markdown code blocks', () => {
-      const test_case = 'diff-multiple-files-variant-i'
+      const test_case = 'diff-multiple-files-with-quoted-paths'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -756,7 +757,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses multiple diffs without a/ b/ prefixes in a single markdown code block', () => {
-      const test_case = 'diff-multiple-files-variant-j'
+      const test_case = 'diff-multiple-files-no-prefix-single-markdown-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -778,7 +779,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses a mix of a new file in a code block and a diff in a diff block', () => {
-      const test_case = 'diff-multiple-files-variant-k'
+      const test_case = 'diff-mix-new-file-and-diff'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -800,7 +801,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses a mix of a new file in file-xml format and a diff in a diff block', () => {
-      const test_case = 'diff-multiple-files-variant-l'
+      const test_case = 'diff-mix-new-file-xml-and-diff'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -822,7 +823,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses a mix of a file deletion diff and a new file diff', () => {
-      const test_case = 'diff-multiple-files-variant-m'
+      const test_case = 'diff-mix-delete-and-new-file'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -844,7 +845,7 @@ describe('clipboard-parser', () => {
     })
 
     it('parses a mix of a new file from heading and code block, and a separate diff block', () => {
-      const test_case = 'diff-multiple-files-variant-n'
+      const test_case = 'diff-mix-new-file-from-heading-and-diff'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
@@ -866,7 +867,7 @@ describe('clipboard-parser', () => {
     })
 
     it('merges a new file and a diff for the same file path into one patch', () => {
-      const test_case = 'diff-multiple-files-variant-o'
+      const test_case = 'diff-merge-new-file-and-diff-same-path'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
