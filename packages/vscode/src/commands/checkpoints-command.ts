@@ -8,7 +8,8 @@ import { should_ignore_file } from '../context/utils/should-ignore-file'
 
 interface Checkpoint {
   timestamp: number
-  name: string
+  title: string
+  description?: string
   is_temporary?: boolean
 }
 
@@ -28,7 +29,7 @@ const get_checkpoints = async (
     try {
       const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
       await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
-      valid_checkpoints.push(checkpoint)
+      if (!checkpoint.is_temporary) valid_checkpoints.push(checkpoint)
     } catch {
       state_updated = true
     }
@@ -181,14 +182,8 @@ const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext
 ) => {
-  const name = await vscode.window.showInputBox({
-    prompt: 'Enter a name for the checkpoint',
-    value: `Checkpoint @ ${new Date().toLocaleString()}`
-  })
-
-  if (!name) return
-
   try {
+    const timestamp = Date.now()
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -196,7 +191,6 @@ const create_checkpoint = async (
         cancellable: false
       },
       async () => {
-        const timestamp = Date.now()
         const checkpoint_dir_path = get_checkpoint_path(timestamp)
         const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
         await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
@@ -204,8 +198,8 @@ const create_checkpoint = async (
         await copy_workspace_to_dir(checkpoint_dir_uri, workspace_provider)
 
         const new_checkpoint: Checkpoint = {
-          timestamp,
-          name
+          title: 'Created by user',
+          timestamp
         }
 
         const checkpoints = await get_checkpoints(context)
@@ -214,7 +208,9 @@ const create_checkpoint = async (
       }
     )
 
-    vscode.window.showInformationMessage(`Checkpoint "${name}" created.`)
+    vscode.window.showInformationMessage(
+      `Checkpoint created at ${new Date(timestamp).toLocaleString()}.`
+    )
   } catch (err: any) {
     vscode.window.showErrorMessage(
       `Failed to create checkpoint: ${err.message}`
@@ -227,7 +223,6 @@ const create_temporary_checkpoint = async (
   context: vscode.ExtensionContext
 ): Promise<Checkpoint> => {
   const timestamp = Date.now()
-  const name = `_temp_revert_${timestamp}`
   const checkpoint_dir_path = get_checkpoint_path(timestamp)
   const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
   await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
@@ -236,42 +231,41 @@ const create_temporary_checkpoint = async (
 
   const new_checkpoint: Checkpoint = {
     timestamp,
-    name,
+    title: '',
     is_temporary: true
   }
 
-  const checkpoints = await get_checkpoints(context)
-  checkpoints.push(new_checkpoint)
-  await context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
   return new_checkpoint
 }
 
-const sync_directory = async (
-  source_dir: vscode.Uri,
-  dest_dir: vscode.Uri,
-  root_path: string,
+const sync_directory = async (params: {
+  source_dir: vscode.Uri
+  dest_dir: vscode.Uri
+  root_path: string
   workspace_provider: WorkspaceProvider
-) => {
+}) => {
   let dest_entries: [string, vscode.FileType][]
   try {
-    dest_entries = await vscode.workspace.fs.readDirectory(dest_dir)
+    dest_entries = await vscode.workspace.fs.readDirectory(params.dest_dir)
   } catch (e) {
-    await fs.cp(source_dir.fsPath, dest_dir.fsPath, {
+    await fs.cp(params.source_dir.fsPath, params.dest_dir.fsPath, {
       recursive: true,
       force: true
     })
     return
   }
 
-  const source_entries = await vscode.workspace.fs.readDirectory(source_dir)
+  const source_entries = await vscode.workspace.fs.readDirectory(
+    params.source_dir
+  )
   const source_map = new Map(source_entries)
 
   for (const [name] of dest_entries) {
     if (!source_map.has(name)) {
-      const dest_uri = vscode.Uri.joinPath(dest_dir, name)
-      const relative_path = path.relative(root_path, dest_uri.fsPath)
+      const dest_uri = vscode.Uri.joinPath(params.dest_dir, name)
+      const relative_path = path.relative(params.root_path, dest_uri.fsPath)
 
-      if (workspace_provider.is_excluded(relative_path)) {
+      if (params.workspace_provider.is_excluded(relative_path)) {
         continue
       }
 
@@ -286,7 +280,7 @@ const sync_directory = async (
         dest_stat.type !== vscode.FileType.Directory &&
         should_ignore_file(
           dest_uri.fsPath,
-          workspace_provider.ignored_extensions
+          params.workspace_provider.ignored_extensions
         )
       ) {
         continue
@@ -297,8 +291,8 @@ const sync_directory = async (
   }
 
   for (const [name, type] of source_entries) {
-    const source_uri = vscode.Uri.joinPath(source_dir, name)
-    const dest_uri = vscode.Uri.joinPath(dest_dir, name)
+    const source_uri = vscode.Uri.joinPath(params.source_dir, name)
+    const dest_uri = vscode.Uri.joinPath(params.dest_dir, name)
 
     let dest_stat: vscode.FileStat | undefined
     try {
@@ -311,12 +305,11 @@ const sync_directory = async (
 
     if (type === vscode.FileType.Directory) {
       if (dest_stat?.type === vscode.FileType.Directory) {
-        await sync_directory(
-          source_uri,
-          dest_uri,
-          root_path,
-          workspace_provider
-        )
+        await sync_directory({
+          ...params,
+          source_dir: source_uri,
+          dest_dir: dest_uri
+        })
       } else {
         if (dest_stat) {
           await vscode.workspace.fs.delete(dest_uri, {
@@ -345,17 +338,17 @@ const sync_directory = async (
   }
 }
 
-const clean_directory = async (
-  dir_uri: vscode.Uri,
-  root_path: string,
+const clean_directory = async (params: {
+  dir_uri: vscode.Uri
+  root_path: string
   workspace_provider: WorkspaceProvider
-) => {
-  const entries = await vscode.workspace.fs.readDirectory(dir_uri)
+}) => {
+  const entries = await vscode.workspace.fs.readDirectory(params.dir_uri)
   for (const [name, type] of entries) {
-    const entry_uri = vscode.Uri.joinPath(dir_uri, name)
-    const relative_path = path.relative(root_path, entry_uri.fsPath)
+    const entry_uri = vscode.Uri.joinPath(params.dir_uri, name)
+    const relative_path = path.relative(params.root_path, entry_uri.fsPath)
 
-    if (workspace_provider.is_excluded(relative_path)) {
+    if (params.workspace_provider.is_excluded(relative_path)) {
       continue
     }
 
@@ -363,14 +356,14 @@ const clean_directory = async (
       type != vscode.FileType.Directory &&
       should_ignore_file(
         entry_uri.fsPath,
-        workspace_provider.ignored_extensions
+        params.workspace_provider.ignored_extensions
       )
     ) {
       continue
     }
 
     if (type === vscode.FileType.Directory) {
-      await clean_directory(entry_uri, root_path, workspace_provider)
+      await clean_directory({ ...params, dir_uri: entry_uri })
       try {
         // After cleaning, try to delete if empty. This will fail if it contains ignored files.
         const remaining = await vscode.workspace.fs.readDirectory(entry_uri)
@@ -388,53 +381,59 @@ const clean_directory = async (
   }
 }
 
-const sync_workspace_from_dir = async (
-  source_dir_uri: vscode.Uri,
+const sync_workspace_from_dir = async (params: {
+  source_dir_uri: vscode.Uri
   workspace_provider: WorkspaceProvider
-) => {
+}) => {
   const workspace_folders = vscode.workspace.workspaceFolders!
 
   if (workspace_folders.length > 1) {
     const source_entries = await vscode.workspace.fs.readDirectory(
-      source_dir_uri
+      params.source_dir_uri
     )
     const source_folders = new Map(source_entries)
     for (const folder of workspace_folders) {
       const source_folder_type = source_folders.get(folder.name)
       if (source_folder_type === vscode.FileType.Directory) {
         const source_folder_uri = vscode.Uri.joinPath(
-          source_dir_uri,
+          params.source_dir_uri,
           folder.name
         )
-        await sync_directory(
-          source_folder_uri,
-          folder.uri,
-          folder.uri.fsPath,
-          workspace_provider
-        )
+        await sync_directory({
+          source_dir: source_folder_uri,
+          dest_dir: folder.uri,
+          root_path: folder.uri.fsPath,
+          workspace_provider: params.workspace_provider
+        })
       } else {
-        await clean_directory(folder.uri, folder.uri.fsPath, workspace_provider)
+        await clean_directory({
+          dir_uri: folder.uri,
+          root_path: folder.uri.fsPath,
+          workspace_provider: params.workspace_provider
+        })
       }
     }
   } else {
-    await sync_directory(
-      source_dir_uri,
-      workspace_folders[0].uri,
-      workspace_folders[0].uri.fsPath,
-      workspace_provider
-    )
+    await sync_directory({
+      source_dir: params.source_dir_uri,
+      dest_dir: workspace_folders[0].uri,
+      root_path: workspace_folders[0].uri.fsPath,
+      workspace_provider: params.workspace_provider
+    })
   }
 }
 
-const restore_checkpoint = async (
-  checkpoint: Checkpoint,
-  workspace_provider: WorkspaceProvider,
-  context: vscode.ExtensionContext,
+const restore_checkpoint = async (params: {
+  checkpoint: Checkpoint
+  workspace_provider: WorkspaceProvider
+  context: vscode.ExtensionContext
   options?: { skip_confirmation?: boolean }
-) => {
-  if (!options?.skip_confirmation) {
+}) => {
+  if (!params.options?.skip_confirmation) {
     const confirmation = await vscode.window.showWarningMessage(
-      `This will replace all contents of your current workspace with the checkpoint "${checkpoint.name}".`,
+      `This will replace all contents of your current workspace with the checkpoint from ${new Date(
+        params.checkpoint.timestamp
+      ).toLocaleString()}.`,
       { modal: true },
       'Restore'
     )
@@ -443,10 +442,10 @@ const restore_checkpoint = async (
 
   let temp_checkpoint: Checkpoint | undefined
   try {
-    if (!options?.skip_confirmation) {
+    if (!params.options?.skip_confirmation) {
       temp_checkpoint = await create_temporary_checkpoint(
-        workspace_provider,
-        context
+        params.workspace_provider,
+        params.context
       )
     }
   } catch (err: any) {
@@ -464,15 +463,22 @@ const restore_checkpoint = async (
         cancellable: false
       },
       async () => {
-        const checkpoint_dir_path = get_checkpoint_path(checkpoint.timestamp)
+        const checkpoint_dir_path = get_checkpoint_path(
+          params.checkpoint.timestamp
+        )
         const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
-        await sync_workspace_from_dir(checkpoint_dir_uri, workspace_provider)
+        await sync_workspace_from_dir({
+          source_dir_uri: checkpoint_dir_uri,
+          workspace_provider: params.workspace_provider
+        })
       }
     )
 
-    const message = options?.skip_confirmation
+    const message = params.options?.skip_confirmation
       ? 'Successfully reverted changes.'
-      : `Checkpoint "${checkpoint.name}" restored successfully.`
+      : `Checkpoint from ${new Date(
+          params.checkpoint.timestamp
+        ).toLocaleString()} restored successfully.`
 
     if (temp_checkpoint) {
       const action = await vscode.window.showInformationMessage(
@@ -480,15 +486,22 @@ const restore_checkpoint = async (
         'Revert'
       )
       if (action === 'Revert') {
-        await restore_checkpoint(temp_checkpoint, workspace_provider, context, {
-          skip_confirmation: true
+        await restore_checkpoint({
+          checkpoint: temp_checkpoint,
+          workspace_provider: params.workspace_provider,
+          context: params.context,
+          options: { skip_confirmation: true }
         })
-        await delete_checkpoint(context, temp_checkpoint, {
-          is_reverting: true
+        await delete_checkpoint({
+          context: params.context,
+          checkpoint_to_delete: temp_checkpoint,
+          options: { is_reverting: true }
         })
       } else {
-        await delete_checkpoint(context, temp_checkpoint, {
-          is_reverting: true
+        await delete_checkpoint({
+          context: params.context,
+          checkpoint_to_delete: temp_checkpoint,
+          options: { is_reverting: true }
         })
       }
     } else {
@@ -499,21 +512,25 @@ const restore_checkpoint = async (
       `Failed to restore checkpoint: ${err.message}`
     )
     if (temp_checkpoint) {
-      await delete_checkpoint(context, temp_checkpoint, {
-        is_reverting: true
+      await delete_checkpoint({
+        context: params.context,
+        checkpoint_to_delete: temp_checkpoint,
+        options: { is_reverting: true }
       })
     }
   }
 }
 
-const delete_checkpoint = async (
-  context: vscode.ExtensionContext,
-  checkpoint_to_delete: Checkpoint,
+const delete_checkpoint = async (params: {
+  context: vscode.ExtensionContext
+  checkpoint_to_delete: Checkpoint
   options?: { is_reverting?: boolean }
-) => {
-  if (!options?.is_reverting) {
+}) => {
+  if (!params.options?.is_reverting) {
     const confirmation = await vscode.window.showWarningMessage(
-      `Are you sure you want to delete the checkpoint "${checkpoint_to_delete.name}"? This action cannot be undone.`,
+      `Are you sure you want to delete the checkpoint from ${new Date(
+        params.checkpoint_to_delete.timestamp
+      ).toLocaleString()}? This action cannot be undone.`,
       { modal: true },
       'Delete'
     )
@@ -522,7 +539,9 @@ const delete_checkpoint = async (
   }
 
   try {
-    const checkpoint_path = get_checkpoint_path(checkpoint_to_delete.timestamp)
+    const checkpoint_path = get_checkpoint_path(
+      params.checkpoint_to_delete.timestamp
+    )
     await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
       recursive: true
     })
@@ -531,18 +550,23 @@ const delete_checkpoint = async (
   }
 
   const checkpoints =
-    context.workspaceState.get<Checkpoint[]>(CHECKPOINTS_STATE_KEY, []) ?? []
+    params.context.workspaceState.get<Checkpoint[]>(
+      CHECKPOINTS_STATE_KEY,
+      []
+    ) ?? []
   const updated_checkpoints = checkpoints.filter(
-    (c) => c.timestamp != checkpoint_to_delete.timestamp
+    (c) => c.timestamp != params.checkpoint_to_delete.timestamp
   )
-  await context.workspaceState.update(
+  await params.context.workspaceState.update(
     CHECKPOINTS_STATE_KEY,
     updated_checkpoints
   )
 
-  if (!options?.is_reverting) {
+  if (!params.options?.is_reverting) {
     vscode.window.showInformationMessage(
-      `Checkpoint "${checkpoint_to_delete.name}" deleted successfully.`
+      `Checkpoint from ${new Date(
+        params.checkpoint_to_delete.timestamp
+      ).toLocaleString()} deleted successfully.`
     )
   }
 }
@@ -584,10 +608,7 @@ export const checkpoints_command = (
               .filter((c) => !c.is_temporary)
               .map((c) => ({
                 id: String(c.timestamp),
-                label: c.name,
-                description: `Saved on ${new Date(
-                  c.timestamp
-                ).toLocaleString()}`,
+                label: `Checkpoint @ ${new Date(c.timestamp).toLocaleString()}`,
                 checkpoint: c,
                 buttons: [
                   {
@@ -608,18 +629,21 @@ export const checkpoints_command = (
           if (selected.id == 'add-new') {
             await create_checkpoint(workspace_provider, context)
           } else if (selected.checkpoint) {
-            await restore_checkpoint(
-              selected.checkpoint,
+            await restore_checkpoint({
+              checkpoint: selected.checkpoint,
               workspace_provider,
               context
-            )
+            })
           }
         })
 
         quick_pick.onDidTriggerItemButton(async (e) => {
           if (e.item.checkpoint && e.button.tooltip == 'Delete Checkpoint') {
             quick_pick.hide()
-            await delete_checkpoint(context, e.item.checkpoint)
+            await delete_checkpoint({
+              context,
+              checkpoint_to_delete: e.item.checkpoint
+            })
             await show_quick_pick()
           }
         })
