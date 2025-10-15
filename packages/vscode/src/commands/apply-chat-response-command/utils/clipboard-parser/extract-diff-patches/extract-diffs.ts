@@ -381,10 +381,18 @@ const extract_all_code_block_patches = (params: {
         file_path_hint
       })
       if (patch) {
-        if (workspace_hint && !patch.workspace_name) {
-          patch.workspace_name = workspace_hint
+        const file_already_has_diff = patches.some(
+          (p) =>
+            p.file_path == patch.file_path &&
+            p.workspace_name == patch.workspace_name
+        )
+
+        if (!file_already_has_diff) {
+          if (workspace_hint && !patch.workspace_name) {
+            patch.workspace_name = workspace_hint
+          }
+          patches.push(patch)
         }
-        patches.push(patch)
       }
     }
   }

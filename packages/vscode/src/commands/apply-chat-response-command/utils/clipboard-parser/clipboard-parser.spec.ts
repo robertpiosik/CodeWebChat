@@ -953,6 +953,26 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('should parse multiple diff files format in variant o', () => {
+      const text = load_test_case_file(
+        'diff-multiple-files-variant-o',
+        'diff-multiple-files-variant-o.txt'
+      )
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+
+      expect(result.patches![0].file_path).toBe('src/ipsum.ts')
+
+      expect(result.patches![0].content).toBe(
+        load_test_case_file('diff-multiple-files-variant-o', 'file-1.txt')
+      )
+    })
+
     it('should handle inner backticks within a diff block', () => {
       const text = load_test_case_file(
         'diff-inner-backticks',
