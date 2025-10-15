@@ -8,7 +8,7 @@ Lorem ipsum. This text should be ignored.
 
 This is another part of the response that should be ignored.
 
-<!--/src/lorem.css-->
+<!--src/lorem.css-->
 ```css
 .ipsum {}
 ```
