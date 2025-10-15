@@ -27,7 +27,10 @@ export const extract_workspace_and_path = (
   raw_file_path: string,
   is_single_root_folder_workspace: boolean
 ): { workspace_name?: string; relative_path: string } => {
-  const file_path = raw_file_path.replace(/\\/g, '/')
+  let file_path = raw_file_path.replace(/\\/g, '/')
+  if (file_path.startsWith('/')) {
+    file_path = file_path.substring(1)
+  }
   if (is_single_root_folder_workspace || !file_path.includes('/')) {
     return { relative_path: file_path }
   }
@@ -256,6 +259,19 @@ export const parse_multiple_files = (params: {
         }
       }
       let extracted_filename = extract_path_from_line_of_code(line)
+      if (!extracted_filename) {
+        const trimmed = line.trim()
+        if (trimmed.startsWith('<!--') && trimmed.endsWith('-->')) {
+          const potential_path = trimmed.slice(4, -3).trim()
+          if (
+            potential_path.includes('/') ||
+            potential_path.includes('\\') ||
+            potential_path.includes('.')
+          ) {
+            extracted_filename = potential_path
+          }
+        }
+      }
       if (!extracted_filename) {
         const match = line.match(/`([^`]+)`/)
         if (match && match[1]) {

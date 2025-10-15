@@ -1,7 +1,0 @@
-Lorem ipsum
-
-<!--/src/index.js-->
-```javascript
-export default {
-}
-```
