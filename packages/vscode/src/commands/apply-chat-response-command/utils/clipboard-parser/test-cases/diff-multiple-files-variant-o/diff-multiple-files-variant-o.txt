@@ -1,3 +1,9 @@
+### New file: `src/ipsum.ts`
+
+```typescript
+<div>lorem ipsum</div>
+```
+
 ```diff
 --- src/ipsum.ts
 +++ src/ipsum.ts
@@ -5,10 +11,4 @@
  console.log("hello")
 -console.log("old ipsum")
 +console.log("new ipsum")
-```
-
-### New file: `src/ipsum.ts`
-
-```typescript
-<div>lorem ipsum</div>
 ```

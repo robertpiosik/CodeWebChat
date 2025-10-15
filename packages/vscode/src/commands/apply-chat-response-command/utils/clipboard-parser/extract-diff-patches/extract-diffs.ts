@@ -331,15 +331,34 @@ const extract_all_code_block_patches = (params: {
 
   code_blocks.sort((a, b) => a.start - b.start)
 
-  // Process each found code block
+  // First, identify all files that have explicit diff blocks.
+  // This is to avoid creating a "new file" patch from a regular code block
+  // if a proper diff for that same file exists elsewhere.
+  const files_with_diffs = new Set<string>()
+  const diff_block_patches = new Map<number, Diff[]>()
+
   for (const block of code_blocks) {
-    const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
-    if (block.type == 'diff' || block.type == 'patch') {
-      const processed_patches = parse_multiple_raw_patches({
+    if (block.type === 'diff' || block.type === 'patch') {
+      const block_lines = lines.slice(block.start + 1, block.end)
+      const parsed_patches = parse_multiple_raw_patches({
         all_lines: block_lines,
         is_single_root: params.is_single_root
       })
-      patches.push(...processed_patches)
+      if (parsed_patches.length > 0) {
+        diff_block_patches.set(block.start, parsed_patches)
+        for (const p of parsed_patches) {
+          const file_key = `${p.workspace_name || ''}:${p.file_path}`
+          files_with_diffs.add(file_key)
+        }
+      }
+    }
+  }
+
+  // Process each found code block in order of appearance.
+  for (const block of code_blocks) {
+    const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
+    if (block.type == 'diff' || block.type == 'patch') {
+      patches.push(...(diff_block_patches.get(block.start) || []))
     } else {
       // Check if there's a comment line before the code block with a file path
       let file_path_hint: string | undefined
@@ -380,14 +399,11 @@ const extract_all_code_block_patches = (params: {
         is_single_root: params.is_single_root,
         file_path_hint
       })
-      if (patch) {
-        const file_already_has_diff = patches.some(
-          (p) =>
-            p.file_path == patch.file_path &&
-            p.workspace_name == patch.workspace_name
-        )
 
-        if (!file_already_has_diff) {
+      if (patch) {
+        const file_key = `${patch.workspace_name || ''}:${patch.file_path}`
+
+        if (!files_with_diffs.has(file_key)) {
           if (workspace_hint && !patch.workspace_name) {
             patch.workspace_name = workspace_hint
           }
