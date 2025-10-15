@@ -12,14 +12,14 @@ interface Checkpoint {
   is_temporary?: boolean
 }
 
-function get_checkpoint_path(timestamp: number): string {
+const get_checkpoint_path = (timestamp: number): string => {
   const checkpoint_dir_name = `cwc-checkpoint-${timestamp}`
   return path.join(os.tmpdir(), checkpoint_dir_name)
 }
 
-async function get_checkpoints(
+const get_checkpoints = async (
   context: vscode.ExtensionContext
-): Promise<Checkpoint[]> {
+): Promise<Checkpoint[]> => {
   const checkpoints =
     context.workspaceState.get<Checkpoint[]>(CHECKPOINTS_STATE_KEY, []) ?? []
   const valid_checkpoints: Checkpoint[] = []
@@ -44,11 +44,11 @@ async function get_checkpoints(
   return valid_checkpoints.sort((a, b) => b.timestamp - a.timestamp)
 }
 
-async function directory_contains_ignored(
+const directory_contains_ignored = async (
   dir_uri: vscode.Uri,
   root_path: string,
   workspace_provider: WorkspaceProvider
-): Promise<boolean> {
+): Promise<boolean> => {
   const entries = await vscode.workspace.fs.readDirectory(dir_uri)
   for (const [name] of entries) {
     const entry_uri = vscode.Uri.joinPath(dir_uri, name)
@@ -90,12 +90,12 @@ async function directory_contains_ignored(
   return false
 }
 
-async function copy_optimised_recursively(
+const copy_optimised_recursively = async (
   source_uri: vscode.Uri,
   dest_uri: vscode.Uri,
   root_path: string,
   workspace_provider: WorkspaceProvider
-) {
+) => {
   const relative_path = path.relative(root_path, source_uri.fsPath)
   if (relative_path && workspace_provider.is_excluded(relative_path)) {
     return
@@ -148,10 +148,10 @@ async function copy_optimised_recursively(
   // Other file types are ignored. fs.stat resolves symlinks.
 }
 
-async function copy_workspace_to_dir(
+const copy_workspace_to_dir = async (
   dest_dir_uri: vscode.Uri,
   workspace_provider: WorkspaceProvider
-) {
+) => {
   const workspace_folders = vscode.workspace.workspaceFolders!
   const dest_dir_path = dest_dir_uri.fsPath
 
@@ -177,10 +177,10 @@ async function copy_workspace_to_dir(
   }
 }
 
-async function create_checkpoint(
+const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext
-) {
+) => {
   const name = await vscode.window.showInputBox({
     prompt: 'Enter a name for the checkpoint',
     value: `Checkpoint @ ${new Date().toLocaleString()}`
@@ -222,10 +222,10 @@ async function create_checkpoint(
   }
 }
 
-async function create_temporary_checkpoint(
+const create_temporary_checkpoint = async (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext
-): Promise<Checkpoint> {
+): Promise<Checkpoint> => {
   const timestamp = Date.now()
   const name = `_temp_revert_${timestamp}`
   const checkpoint_dir_path = get_checkpoint_path(timestamp)
@@ -246,12 +246,12 @@ async function create_temporary_checkpoint(
   return new_checkpoint
 }
 
-async function sync_directory(
+const sync_directory = async (
   source_dir: vscode.Uri,
   dest_dir: vscode.Uri,
   root_path: string,
   workspace_provider: WorkspaceProvider
-) {
+) => {
   let dest_entries: [string, vscode.FileType][]
   try {
     dest_entries = await vscode.workspace.fs.readDirectory(dest_dir)
@@ -345,11 +345,11 @@ async function sync_directory(
   }
 }
 
-async function clean_directory(
+const clean_directory = async (
   dir_uri: vscode.Uri,
   root_path: string,
   workspace_provider: WorkspaceProvider
-) {
+) => {
   const entries = await vscode.workspace.fs.readDirectory(dir_uri)
   for (const [name, type] of entries) {
     const entry_uri = vscode.Uri.joinPath(dir_uri, name)
@@ -388,10 +388,10 @@ async function clean_directory(
   }
 }
 
-async function sync_workspace_from_dir(
+const sync_workspace_from_dir = async (
   source_dir_uri: vscode.Uri,
   workspace_provider: WorkspaceProvider
-) {
+) => {
   const workspace_folders = vscode.workspace.workspaceFolders!
 
   if (workspace_folders.length > 1) {
@@ -426,12 +426,12 @@ async function sync_workspace_from_dir(
   }
 }
 
-async function restore_checkpoint(
+const restore_checkpoint = async (
   checkpoint: Checkpoint,
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext,
   options?: { skip_confirmation?: boolean }
-) {
+) => {
   if (!options?.skip_confirmation) {
     const confirmation = await vscode.window.showWarningMessage(
       `This will replace all contents of your current workspace with the checkpoint "${checkpoint.name}".`,
@@ -506,11 +506,11 @@ async function restore_checkpoint(
   }
 }
 
-async function delete_checkpoint(
+const delete_checkpoint = async (
   context: vscode.ExtensionContext,
   checkpoint_to_delete: Checkpoint,
   options?: { is_reverting?: boolean }
-) {
+) => {
   if (!options?.is_reverting) {
     const confirmation = await vscode.window.showWarningMessage(
       `Are you sure you want to delete the checkpoint "${checkpoint_to_delete.name}"? This action cannot be undone.`,
@@ -547,10 +547,10 @@ async function delete_checkpoint(
   }
 }
 
-export function checkpoints_command(
+export const checkpoints_command = (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext
-) {
+) => {
   return vscode.commands.registerCommand(
     'codeWebChat.checkpoints',
     async () => {
