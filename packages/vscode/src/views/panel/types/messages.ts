@@ -50,6 +50,10 @@ export interface GetEditFormat extends BaseMessage {
   command: 'GET_EDIT_FORMAT'
 }
 
+export interface GetEditFormatInstructionsMessage extends BaseMessage {
+  command: 'GET_EDIT_FORMAT_INSTRUCTIONS'
+}
+
 export interface SaveEditFormatMessage extends BaseMessage {
   command: 'SAVE_EDIT_FORMAT'
   edit_format: EditFormat
@@ -303,6 +307,7 @@ export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
   | GetEditFormat
+  | GetEditFormatInstructionsMessage
   | SaveEditFormatMessage
   | GetConnectionStatusMessage
   | GetDonationsVisibilityMessage
@@ -374,6 +379,11 @@ export interface EditFormatMessage extends BaseMessage {
   command: 'EDIT_FORMAT'
   chat_edit_format: EditFormat
   api_edit_format: EditFormat
+}
+
+export interface EditFormatInstructionsMessage extends BaseMessage {
+  command: 'EDIT_FORMAT_INSTRUCTIONS'
+  instructions: Record<EditFormat, string>
 }
 
 export interface PresetsMessage extends BaseMessage {
@@ -543,6 +553,7 @@ export type BackendMessage =
   | FocusChatInputMessage
   | ConnectionStatusMessage
   | EditFormatMessage
+  | EditFormatInstructionsMessage
   | ApiToolConfigurationsMessage
   | DonationsVisibilityMessage
   | PresetsMessage

@@ -59,6 +59,7 @@ type Props = {
   api_edit_format: EditFormat
   on_chat_edit_format_change: (edit_format: EditFormat) => void
   on_api_edit_format_change: (edit_format: EditFormat) => void
+  edit_format_instructions: Record<EditFormat, string>
   on_presets_reorder: (reordered_presets: Preset[]) => void
   on_preset_edit: (preset_name: string) => void
   on_preset_duplicate: (preset_name: string) => void
@@ -342,19 +343,22 @@ export const MainView: React.FC<Props> = (props) => {
                     value: 'whole',
                     label: 'whole',
                     title:
-                      'The model will output modified files in full. The best quality, especially from smaller models. Changed fragments are not clearly visible in a web chat interface.'
+                      'Whole instructions added to every message: ' +
+                      props.edit_format_instructions.whole
                   },
                   {
                     value: 'truncated',
                     label: 'truncated',
                     title:
-                      'The model will skip unchanged fragments in modified files. Changes are clearly visible but requires Intelligent Update API tool to apply. Smaller, fast models like Gemini Flash are sufficient.'
+                      'Truncated instructions added to every message: ' +
+                      props.edit_format_instructions.truncated
                   },
                   {
                     value: 'diff',
                     label: 'diff',
                     title:
-                      'The model will output patches. Less readable, cheap to generate and fast to apply. Models may struggle with diff correctness - might use the Intelligent Update API tool in a fallback mechanism.'
+                      'Diff instructions added to every message: ' +
+                      props.edit_format_instructions.diff
                   }
                 ]}
                 selected_value={

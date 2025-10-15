@@ -695,7 +695,7 @@ export const checkpoints_command = (
           quick_pick.items = [
             {
               id: 'add-new',
-              label: '$(add) Add new checkpoint',
+              label: '$(add) New checkpoint',
               alwaysShow: true
             },
             ...(revert_item ? [revert_item] : []),

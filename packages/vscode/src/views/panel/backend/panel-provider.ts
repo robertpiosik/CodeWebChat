@@ -30,6 +30,7 @@ import {
   handle_edit_context,
   handle_code_completion,
   handle_get_edit_format,
+  handle_get_edit_format_instructions,
   handle_at_sign_quick_pick,
   handle_get_mode_web,
   handle_save_mode_web,
@@ -182,6 +183,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         ]
         if (all_preset_keys.some((key) => event.affectsConfiguration(key))) {
           this.send_presets_to_webview(this._webview_view.webview)
+        }
+
+        if (event.affectsConfiguration('codeWebChat.editFormatInstructions')) {
+          handle_get_edit_format_instructions(this)
         }
 
         const all_api_config_keys = [
@@ -432,6 +437,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             handle_get_mode_api(this)
           } else if (message.command == 'SAVE_API_MODE') {
             await handle_save_mode_api(this, message.mode)
+          } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
+            handle_get_edit_format_instructions(this)
           } else if (message.command == 'GET_EDIT_FORMAT') {
             handle_get_edit_format(this)
           } else if (message.command == 'SAVE_EDIT_FORMAT') {

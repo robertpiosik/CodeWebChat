@@ -24,7 +24,7 @@ Large language models (LLMs) are trained on vast datasets targeting many use cas
 
 Because the model is only as smart as examples it has seen in its pre-training, the possible coverage of real-world coding scenarios when approached at a high level is fundamentally limited.
 
-Therefore, CWC is designed in a way that aligns with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. By you, the engineer.
+Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
 💅 **The workflow**
 
