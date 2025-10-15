@@ -148,6 +148,23 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('should parse html comment with leading slash in path', () => {
+      const text = load_test_case_file(
+        'html-comment-leading-slash',
+        'html-comment-leading-slash.txt'
+      )
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.js')
+      expect(result[0].content).toBe(
+        load_test_case_file('html-comment-leading-slash', 'file-1.txt')
+      )
+    })
+
     it('should handle workspace prefixes', () => {
       const text = load_test_case_file(
         'with-workspace-prefix',

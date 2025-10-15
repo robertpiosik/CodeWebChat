@@ -2,9 +2,16 @@ import * as vscode from 'vscode'
 import * as os from 'os'
 import * as path from 'path'
 import * as fs from 'fs/promises'
-import { CHECKPOINTS_STATE_KEY } from '../constants/state-keys'
+import {
+  CHECKPOINTS_STATE_KEY,
+  TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
+} from '../constants/state-keys'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { should_ignore_file } from '../context/utils/should-ignore-file'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
 
 interface Checkpoint {
   timestamp: number
@@ -67,7 +74,7 @@ const directory_contains_ignored = async (
       return true
     }
 
-    if (entry_stat.type === vscode.FileType.Directory) {
+    if (entry_stat.type == vscode.FileType.Directory) {
       if (
         await directory_contains_ignored(
           entry_uri,
@@ -77,7 +84,7 @@ const directory_contains_ignored = async (
       ) {
         return true
       }
-    } else if (entry_stat.type === vscode.FileType.File) {
+    } else if (entry_stat.type == vscode.FileType.File) {
       if (
         should_ignore_file(
           entry_uri.fsPath,
@@ -110,7 +117,7 @@ const copy_optimised_recursively = async (
     return
   }
 
-  if (source_stat.type === vscode.FileType.Directory) {
+  if (source_stat.type == vscode.FileType.Directory) {
     if (
       !(await directory_contains_ignored(
         source_uri,
@@ -135,7 +142,7 @@ const copy_optimised_recursively = async (
         workspace_provider
       )
     }
-  } else if (source_stat.type === vscode.FileType.File) {
+  } else if (source_stat.type == vscode.FileType.File) {
     if (
       should_ignore_file(
         source_uri.fsPath,
@@ -207,10 +214,6 @@ const create_checkpoint = async (
         await context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
       }
     )
-
-    vscode.window.showInformationMessage(
-      `Checkpoint created at ${new Date(timestamp).toLocaleString()}.`
-    )
   } catch (err: any) {
     vscode.window.showErrorMessage(
       `Failed to create checkpoint: ${err.message}`
@@ -219,24 +222,30 @@ const create_checkpoint = async (
 }
 
 const create_temporary_checkpoint = async (
-  workspace_provider: WorkspaceProvider,
-  context: vscode.ExtensionContext
-): Promise<Checkpoint> => {
-  const timestamp = Date.now()
-  const checkpoint_dir_path = get_checkpoint_path(timestamp)
-  const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
-  await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
+  workspace_provider: WorkspaceProvider
+): Promise<Checkpoint> =>
+  vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: 'Warming up...',
+      cancellable: false
+    },
+    async () => {
+      const timestamp = Date.now()
+      const checkpoint_dir_path = get_checkpoint_path(timestamp)
+      const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
+      await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
 
-  await copy_workspace_to_dir(checkpoint_dir_uri, workspace_provider)
+      await copy_workspace_to_dir(checkpoint_dir_uri, workspace_provider)
 
-  const new_checkpoint: Checkpoint = {
-    timestamp,
-    title: '',
-    is_temporary: true
-  }
-
-  return new_checkpoint
-}
+      const new_checkpoint: Checkpoint = {
+        timestamp,
+        title: '',
+        is_temporary: true
+      }
+      return new_checkpoint
+    }
+  )
 
 const sync_directory = async (params: {
   source_dir: vscode.Uri
@@ -303,8 +312,8 @@ const sync_directory = async (params: {
 
     const source_stat = await vscode.workspace.fs.stat(source_uri)
 
-    if (type === vscode.FileType.Directory) {
-      if (dest_stat?.type === vscode.FileType.Directory) {
+    if (type == vscode.FileType.Directory) {
+      if (dest_stat?.type == vscode.FileType.Directory) {
         await sync_directory({
           ...params,
           source_dir: source_uri,
@@ -321,9 +330,9 @@ const sync_directory = async (params: {
           force: true
         })
       }
-    } else if (type === vscode.FileType.File) {
-      if (dest_stat?.type === vscode.FileType.File) {
-        if (source_stat.mtime !== dest_stat.mtime) {
+    } else if (type == vscode.FileType.File) {
+      if (dest_stat?.type == vscode.FileType.File) {
+        if (source_stat.mtime != dest_stat.mtime) {
           await fs.copyFile(source_uri.fsPath, dest_uri.fsPath)
         }
       } else {
@@ -362,12 +371,12 @@ const clean_directory = async (params: {
       continue
     }
 
-    if (type === vscode.FileType.Directory) {
+    if (type == vscode.FileType.Directory) {
       await clean_directory({ ...params, dir_uri: entry_uri })
       try {
         // After cleaning, try to delete if empty. This will fail if it contains ignored files.
         const remaining = await vscode.workspace.fs.readDirectory(entry_uri)
-        if (remaining.length === 0) {
+        if (remaining.length == 0) {
           await vscode.workspace.fs.delete(entry_uri, {
             recursive: false
           })
@@ -394,7 +403,7 @@ const sync_workspace_from_dir = async (params: {
     const source_folders = new Map(source_entries)
     for (const folder of workspace_folders) {
       const source_folder_type = source_folders.get(folder.name)
-      if (source_folder_type === vscode.FileType.Directory) {
+      if (source_folder_type == vscode.FileType.Directory) {
         const source_folder_uri = vscode.Uri.joinPath(
           params.source_dir_uri,
           folder.name
@@ -431,26 +440,47 @@ const restore_checkpoint = async (params: {
 }) => {
   if (!params.options?.skip_confirmation) {
     const confirmation = await vscode.window.showWarningMessage(
-      `This will replace all contents of your current workspace with the checkpoint from ${new Date(
-        params.checkpoint.timestamp
-      ).toLocaleString()}.`,
+      `Restore this checkpoint? Your current work will be saved temporarily in case you need to revert.`,
       { modal: true },
       'Restore'
     )
-    if (confirmation !== 'Restore') return
+    if (confirmation != 'Restore') return
   }
 
   let temp_checkpoint: Checkpoint | undefined
   try {
     if (!params.options?.skip_confirmation) {
+      const old_temp_timestamp = params.context.workspaceState.get<number>(
+        TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
+      )
+      if (old_temp_timestamp) {
+        try {
+          const checkpoint_path = get_checkpoint_path(old_temp_timestamp)
+          await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
+            recursive: true
+          })
+        } catch (error) {
+          console.warn(
+            `Could not delete old temporary checkpoint file: ${error}`
+          )
+        }
+      }
+
       temp_checkpoint = await create_temporary_checkpoint(
-        params.workspace_provider,
-        params.context
+        params.workspace_provider
+      )
+      await params.context.workspaceState.update(
+        TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
+        temp_checkpoint.timestamp
       )
     }
   } catch (err: any) {
     vscode.window.showErrorMessage(
       `Failed to create temporary checkpoint for revert: ${err.message}`
+    )
+    await params.context.workspaceState.update(
+      TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
+      undefined
     )
     return // Don't proceed
   }
@@ -459,7 +489,9 @@ const restore_checkpoint = async (params: {
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: 'Restoring checkpoint...',
+        title: params.options?.skip_confirmation
+          ? 'Reverting...'
+          : 'Restoring checkpoint...',
         cancellable: false
       },
       async () => {
@@ -476,16 +508,14 @@ const restore_checkpoint = async (params: {
 
     const message = params.options?.skip_confirmation
       ? 'Successfully reverted changes.'
-      : `Checkpoint from ${new Date(
-          params.checkpoint.timestamp
-        ).toLocaleString()} restored successfully.`
+      : `Checkpoint restored successfully.`
 
     if (temp_checkpoint) {
       const action = await vscode.window.showInformationMessage(
         message,
         'Revert'
       )
-      if (action === 'Revert') {
+      if (action == 'Revert') {
         await restore_checkpoint({
           checkpoint: temp_checkpoint,
           workspace_provider: params.workspace_provider,
@@ -497,12 +527,10 @@ const restore_checkpoint = async (params: {
           checkpoint_to_delete: temp_checkpoint,
           options: { is_reverting: true }
         })
-      } else {
-        await delete_checkpoint({
-          context: params.context,
-          checkpoint_to_delete: temp_checkpoint,
-          options: { is_reverting: true }
-        })
+        await params.context.workspaceState.update(
+          TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
+          undefined
+        )
       }
     } else {
       vscode.window.showInformationMessage(message)
@@ -517,6 +545,10 @@ const restore_checkpoint = async (params: {
         checkpoint_to_delete: temp_checkpoint,
         options: { is_reverting: true }
       })
+      await params.context.workspaceState.update(
+        TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
+        undefined
+      )
     }
   }
 }
@@ -528,14 +560,14 @@ const delete_checkpoint = async (params: {
 }) => {
   if (!params.options?.is_reverting) {
     const confirmation = await vscode.window.showWarningMessage(
-      `Are you sure you want to delete the checkpoint from ${new Date(
+      `Are you sure you want to delete the checkpoint from ${dayjs(
         params.checkpoint_to_delete.timestamp
-      ).toLocaleString()}? This action cannot be undone.`,
+      ).fromNow()}? This action cannot be undone.`,
       { modal: true },
       'Delete'
     )
 
-    if (confirmation !== 'Delete') return
+    if (confirmation != 'Delete') return
   }
 
   try {
@@ -564,10 +596,40 @@ const delete_checkpoint = async (params: {
 
   if (!params.options?.is_reverting) {
     vscode.window.showInformationMessage(
-      `Checkpoint from ${new Date(
+      `Checkpoint from ${dayjs(
         params.checkpoint_to_delete.timestamp
-      ).toLocaleString()} deleted successfully.`
+      ).fromNow()} deleted successfully.`
     )
+  }
+}
+
+const edit_checkpoint = async (params: {
+  context: vscode.ExtensionContext
+  checkpoint_to_edit: Checkpoint
+}) => {
+  const new_description = await vscode.window.showInputBox({
+    prompt: 'Enter a description for the checkpoint',
+    value: params.checkpoint_to_edit.description || '',
+    placeHolder: 'e.g. Before refactoring the main component'
+  })
+
+  if (!new_description === undefined) return
+
+  const checkpoints =
+    params.context.workspaceState.get<Checkpoint[]>(
+      CHECKPOINTS_STATE_KEY,
+      []
+    ) ?? []
+  const checkpoint_to_update = checkpoints.find(
+    (c) => c.timestamp == params.checkpoint_to_edit.timestamp
+  )
+  if (checkpoint_to_update) {
+    checkpoint_to_update.description = new_description
+    await params.context.workspaceState.update(
+      CHECKPOINTS_STATE_KEY,
+      checkpoints
+    )
+    vscode.window.showInformationMessage('Checkpoint description updated.')
   }
 }
 
@@ -580,7 +642,7 @@ export const checkpoints_command = (
     async () => {
       if (
         !vscode.workspace.workspaceFolders ||
-        vscode.workspace.workspaceFolders.length === 0
+        vscode.workspace.workspaceFolders.length == 0
       ) {
         vscode.window.showErrorMessage(
           'Checkpoints can only be used in a workspace.'
@@ -590,7 +652,7 @@ export const checkpoints_command = (
 
       const show_quick_pick = async () => {
         const quick_pick = vscode.window.createQuickPick<
-          vscode.QuickPickItem & { id: string; checkpoint?: Checkpoint }
+          vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint }
         >()
         quick_pick.placeholder =
           'Select a checkpoint to restore or add a new one'
@@ -598,25 +660,65 @@ export const checkpoints_command = (
         const refresh_items = async () => {
           quick_pick.busy = true
           const checkpoints = await get_checkpoints(context)
+
+          const temp_checkpoint_timestamp = context.workspaceState.get<number>(
+            TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
+          )
+          let revert_item:
+            | (vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint })
+            | undefined
+
+          if (temp_checkpoint_timestamp) {
+            const three_hours_in_ms = 3 * 60 * 60 * 1000
+            if (Date.now() - temp_checkpoint_timestamp < three_hours_in_ms) {
+              try {
+                const checkpoint_path = get_checkpoint_path(
+                  temp_checkpoint_timestamp
+                )
+                await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
+                revert_item = {
+                  id: 'revert-last',
+                  label: '$(discard) Revert last restored checkpoint',
+                  alwaysShow: true
+                }
+              } catch {
+                // file doesn't exist, so we can't revert. Clean up state.
+                await context.workspaceState.update(
+                  TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
+                  undefined
+                )
+              }
+            }
+          }
+
+          const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
           quick_pick.items = [
             {
               id: 'add-new',
-              label: '$(add) Add new',
+              label: '$(add) Add new checkpoint',
               alwaysShow: true
             },
-            ...checkpoints
-              .filter((c) => !c.is_temporary)
-              .map((c) => ({
-                id: String(c.timestamp),
-                label: `Checkpoint @ ${new Date(c.timestamp).toLocaleString()}`,
-                checkpoint: c,
-                buttons: [
-                  {
-                    iconPath: new vscode.ThemeIcon('trash'),
-                    tooltip: 'Delete Checkpoint'
-                  }
-                ]
-              }))
+            ...(revert_item ? [revert_item] : []),
+            ...(visible_checkpoints.length > 0
+              ? [{ label: '', kind: vscode.QuickPickItemKind.Separator }]
+              : []),
+            ...visible_checkpoints.map((c) => ({
+              id: c.timestamp.toString(),
+              label: c.title,
+              description: dayjs(c.timestamp).fromNow(),
+              detail: c.description,
+              checkpoint: c,
+              buttons: [
+                {
+                  iconPath: new vscode.ThemeIcon('edit'),
+                  tooltip: 'Edit Description'
+                },
+                {
+                  iconPath: new vscode.ThemeIcon('trash'),
+                  tooltip: 'Delete Checkpoint'
+                }
+              ]
+            }))
           ]
           quick_pick.busy = false
         }
@@ -628,6 +730,48 @@ export const checkpoints_command = (
 
           if (selected.id == 'add-new') {
             await create_checkpoint(workspace_provider, context)
+            await show_quick_pick()
+          } else if (selected.id == 'revert-last') {
+            const temp_checkpoint_timestamp =
+              context.workspaceState.get<number>(
+                TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
+              )
+            if (!temp_checkpoint_timestamp) {
+              vscode.window.showErrorMessage(
+                'Could not find temporary checkpoint to revert.'
+              )
+              return
+            }
+
+            const confirmation = await vscode.window.showWarningMessage(
+              `Revert to the state before the last checkpoint was restored? Any changes since then will be lost.`,
+              { modal: true },
+              'Revert'
+            )
+            if (confirmation !== 'Revert') return
+
+            const temp_checkpoint: Checkpoint = {
+              timestamp: temp_checkpoint_timestamp,
+              title: 'Temporary checkpoint for revert',
+              is_temporary: true
+            }
+
+            await restore_checkpoint({
+              checkpoint: temp_checkpoint,
+              workspace_provider,
+              context,
+              options: { skip_confirmation: true }
+            })
+            // After reverting, delete the temp checkpoint and clear state.
+            await delete_checkpoint({
+              context,
+              checkpoint_to_delete: temp_checkpoint,
+              options: { is_reverting: true }
+            })
+            await context.workspaceState.update(
+              TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
+              undefined
+            )
           } else if (selected.checkpoint) {
             await restore_checkpoint({
               checkpoint: selected.checkpoint,
@@ -638,7 +782,17 @@ export const checkpoints_command = (
         })
 
         quick_pick.onDidTriggerItemButton(async (e) => {
-          if (e.item.checkpoint && e.button.tooltip == 'Delete Checkpoint') {
+          if (e.item.checkpoint && e.button.tooltip == 'Edit Description') {
+            quick_pick.hide()
+            await edit_checkpoint({
+              context,
+              checkpoint_to_edit: e.item.checkpoint
+            })
+            await show_quick_pick()
+          } else if (
+            e.item.checkpoint &&
+            e.button.tooltip == 'Delete Checkpoint'
+          ) {
             quick_pick.hide()
             await delete_checkpoint({
               context,

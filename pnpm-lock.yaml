@@ -245,8 +245,8 @@ importers:
         specifier: ^2.5.1
         version: 2.5.1
       dayjs:
-        specifier: ^1.11.10
-        version: 1.11.13
+        specifier: ^1.11.18
+        version: 1.11.18
       diff:
         specifier: ^8.0.2
         version: 8.0.2
@@ -4607,6 +4607,9 @@ packages:
 
   dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
+
+  dayjs@1.11.18:
+    resolution: {integrity: sha512-zFBQ7WFRvVRhKcWoUh+ZA1g2HVgUbsZm9sbddh8EC5iv93sui8DVVz1Npvz+r6meo9VKfa8NyLWBsQK1VvIKPA==}
 
   debounce@1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
@@ -15499,6 +15502,8 @@ snapshots:
       '@babel/runtime': 7.26.0
 
   dayjs@1.11.13: {}
+
+  dayjs@1.11.18: {}
 
   debounce@1.2.1: {}
 
