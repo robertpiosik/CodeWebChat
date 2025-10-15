@@ -104,6 +104,12 @@
         "icon": "$(copy)"
       },
       {
+        "command": "codeWebChat.duplicateWorkspace",
+        "title": "Duplicate Workspace in New Window",
+        "category": "Code Web Chat",
+        "icon": "$(multiple-windows)"
+      },
+      {
         "command": "codeWebChat.copyContextOpenEditors",
         "title": "Copy Context of Open Editors",
         "category": "Code Web Chat",
@@ -368,6 +374,10 @@
           "when": "false"
         },
         {
+          "command": "codeWebChat.duplicateWorkspace",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.settings",
           "when": "false"
         }
@@ -396,40 +406,45 @@
         {
           "command": "codeWebChat.checkpoints",
           "when": "view == codeWebChatViewWorkspace",
-          "group": "navigation@3"
-        },
-        {
-          "command": "codeWebChat.copyContext",
-          "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@4"
         },
         {
-          "command": "codeWebChat.newFile",
+          "command": "codeWebChat.duplicateWorkspace",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.newFolder",
+          "command": "codeWebChat.copyContext",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "navigation@3"
+        },
+        {
+          "command": "codeWebChat.newFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@6"
         },
         {
-          "command": "codeWebChat.collapseFolders",
+          "command": "codeWebChat.newFolder",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@7"
         },
         {
-          "command": "codeWebChat.copyContextOpenEditors",
-          "when": "view == codeWebChatViewOpenEditors",
-          "group": "navigation@1"
+          "command": "codeWebChat.collapseFolders",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "navigation@8"
         },
         {
           "command": "codeWebChat.checkAllOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
-          "group": "navigation@2"
+          "group": "navigation@1"
         },
         {
           "command": "codeWebChat.clearChecksOpenEditors",
+          "when": "view == codeWebChatViewOpenEditors",
+          "group": "navigation@2"
+        },
+        {
+          "command": "codeWebChat.copyContextOpenEditors",
           "when": "view == codeWebChatViewOpenEditors",
           "group": "navigation@3"
         },
