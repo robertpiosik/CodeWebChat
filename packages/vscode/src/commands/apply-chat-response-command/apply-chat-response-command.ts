@@ -661,10 +661,12 @@ export const apply_chat_response_command = (
             }
 
             const failed_patches_as_code_blocks = failed_patches
-              .map(
-                (patch) =>
-                  `\`\`\`\n// ${patch.file_path}\n${patch.content}\n\`\`\``
-              )
+              .map((patch) => {
+                const file_path_with_workspace = patch.workspace_name
+                  ? `${patch.workspace_name}/${patch.file_path}`
+                  : patch.file_path
+                return `\`\`\`\n// ${file_path_with_workspace}\n${patch.content}\n\`\`\``
+              })
               .join('\n')
 
             try {
