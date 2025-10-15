@@ -2,10 +2,11 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor, and others</a>.
+No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor and Windsurf</a>.
 
-✅ **Initializes chats**—ChatGPT, Claude, Gemini, AI Studio, Qwen, DeepSeek, and more \
+✅ **Initializes chats**—ChatGPT, Claude, Gemini, Qwen, DeepSeek, and more \
 ✅ **Applies responses**—one-click multi-file changes integration \
+🫰 **Saves money**—non-agenic with zero context overhead \
 🫶 **Open-source**—released under the GPL-3.0 license
 
 <p>
@@ -93,14 +94,14 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 > With the browser extension you can include markdown-parsed websites in context! Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_. The website will appear in the context panel immediately, ready for selection like any other folder or file in the workspace.
 
 > [!IMPORTANT]
-> Legal disclaimer: The tool does not require the browser extension to operate—chats can be initialized and responses applied with manual copy & paste as well. The placed _Apply response_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
+> Legal disclaimer: The placed _Apply response_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. The extension's sole purpose of chat initialization is complete once the first message is submitted.
 
 ## API Tools
 
 Anything CWC can do in chatbots, it can do calling model providers directly from the editor.
 
 > [!TIP]
-> Get started with a generous free tier getting an API key from [Google](https://aistudio.google.com/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
+> Get started with generous free tiers from [Google](https://aistudio.google.com/api-keys), [Mistral](https://console.mistral.ai/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
@@ -109,7 +110,7 @@ Modify, create or delete files based on natural language instructions.
 Get accurate code-at-cursor from state-of-the-art reasoning models.
 
 **🛠️ Intelligent Update** \
-Integrate truncated code blocks and fix malformed diffs.
+Handle the compact "truncated" edit format and malformed diffs.
 
 **🛠️ Commit Messages** \
 Generate meaningful summaries of changes adhering to your style.

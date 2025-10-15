@@ -295,7 +295,7 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
           group="API Tool"
           title="Intelligent Update"
-          subtitle="Integrate truncated code blocks and fix malformed diffs."
+          subtitle={`Handle "truncated" edit format and malformed diffs.`}
           on_stuck_change={intelligent_update_on_stuck_change}
         >
           <ApiToolConfigurationSection
