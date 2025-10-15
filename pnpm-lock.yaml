@@ -245,7 +245,7 @@ importers:
         specifier: ^2.5.1
         version: 2.5.1
       dayjs:
-        specifier: ^1.11.18
+        specifier: ^1.11.10
         version: 1.11.18
       diff:
         specifier: ^8.0.2
