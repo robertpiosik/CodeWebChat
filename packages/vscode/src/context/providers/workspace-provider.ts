@@ -24,7 +24,7 @@ export class WorkspaceProvider
   private workspace_names: string[] = []
   private checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
   private combined_gitignore = ignore()
-  private ignored_extensions: Set<string> = new Set()
+  public ignored_extensions: Set<string> = new Set()
   private watcher: vscode.FileSystemWatcher
   private gitignore_watcher: vscode.FileSystemWatcher
   private file_token_counts: Map<string, number> = new Map()

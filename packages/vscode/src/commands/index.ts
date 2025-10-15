@@ -1,5 +1,6 @@
 export * from './apply-chat-response-command/apply-chat-response-command'
 export * from './close-all-editors-command'
+export * from './checkpoints-command'
 export * from './close-editor-command'
 export * from './code-completion-commands'
 export * from './delete-command'

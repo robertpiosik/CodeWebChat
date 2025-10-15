@@ -11,6 +11,7 @@ import {
   apply_chat_response_command,
   code_completion_commands,
   close_editor_command,
+  checkpoints_command,
   close_all_editors_command,
   save_all_command,
   new_file_command,
@@ -48,7 +49,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
   await migrations()
 
-  // View
   if (workspace_provider && open_editors_provider && websites_provider) {
     const view_provider = new ViewProvider(
       context.extensionUri,
@@ -97,6 +97,7 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
+    checkpoints_command(workspace_provider, context),
     open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'

@@ -30,6 +30,7 @@ export const LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
 export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
   'last-refactor-instruction-source'
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'
+export const CHECKPOINTS_STATE_KEY = 'cwc-checkpoints'
 
 export const CHAT_EDIT_FORMAT_STATE_KEY = 'chat-edit-format'
 export const API_EDIT_FORMAT_STATE_KEY = 'api-edit-format'

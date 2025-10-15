@@ -89,12 +89,6 @@
           "visibility": "collapsed"
         },
         {
-          "id": "codeWebChatViewCheckpoints",
-          "name": "Checkpoints",
-          "icon": "resources/activity-bar-icon.svg",
-          "visibility": "collapsed"
-        },
-        {
           "id": "codeWebChatView",
           "name": "Code Web Chat",
           "type": "webview",
@@ -267,6 +261,12 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.checkpoints",
+        "title": "Checkpoints",
+        "category": "Code Web Chat",
+        "icon": "$(history)"
+      },
+      {
         "command": "codeWebChat.settings",
         "title": "Settings",
         "category": "Code Web Chat",
@@ -394,24 +394,29 @@
           "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.copyContext",
+          "command": "codeWebChat.checkpoints",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@3"
         },
         {
-          "command": "codeWebChat.newFile",
+          "command": "codeWebChat.copyContext",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@4"
         },
         {
-          "command": "codeWebChat.newFolder",
+          "command": "codeWebChat.newFile",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@5"
         },
         {
-          "command": "codeWebChat.collapseFolders",
+          "command": "codeWebChat.newFolder",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@6"
+        },
+        {
+          "command": "codeWebChat.collapseFolders",
+          "when": "view == codeWebChatViewWorkspace",
+          "group": "navigation@7"
         },
         {
           "command": "codeWebChat.copyContextOpenEditors",
