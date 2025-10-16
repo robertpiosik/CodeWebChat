@@ -342,23 +342,17 @@ export const MainView: React.FC<Props> = (props) => {
                   {
                     value: 'whole',
                     label: 'whole',
-                    title:
-                      'Whole instructions included in every message: ' +
-                      props.edit_format_instructions.whole
+                    title: `Instructions included in every message: "${props.edit_format_instructions.whole}"`
                   },
                   {
                     value: 'truncated',
                     label: 'truncated',
-                    title:
-                      'Truncated instructions included in every message: ' +
-                      props.edit_format_instructions.truncated
+                    title: `Instructions included in every message: "${props.edit_format_instructions.truncated}"`
                   },
                   {
                     value: 'diff',
                     label: 'diff',
-                    title:
-                      'Diff instructions included in every message: ' +
-                      props.edit_format_instructions.diff
+                    title: `Instructions included in every message: "${props.edit_format_instructions.diff}"`
                   }
                 ]}
                 selected_value={
