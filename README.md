@@ -120,18 +120,22 @@ Generate meaningful summaries of changes adhering to your style.
 
 ## Commands
 
-### Handling chat responses
-
-- `Code Web Chat: Apply Chat Response` - Integrate with the codebase a copied to clipboard overall chat response or a single code block.
-- `Code Web Chat: Apply Code Block to Active Editor` - Use Intelligent Update API tool on the active editor with the copied to clipboard.
-- `Code Web Chat: Undo Last Changes` - Revert applied AI-suggested edits.
-
 ### Code completions
 
 - `Code Web Chat: Code Completion` - Get code-at-cursor using API tool.
 - `Code Web Chat: Code Completion using...` - ...with configuration selection.
 - `Code Web Chat: Code Completion with Instructions` - ...with instructions.
 - `Code Web Chat: Code Completion with Instructions using...` - ...with instructions and configuration selection.
+
+### Handling chat responses
+
+- `Code Web Chat: Apply Chat Response` - Integrate with the codebase a copied to clipboard overall chat response or a single code block.
+- `Code Web Chat: Undo Last Changes` - Revert applied AI-suggested edits.
+
+### Checkpoints
+
+- `Code Web Chat: Checkpoints` - Open the checkpoint manager.
+- `Code Web Chat: Create New Checkpoint` - Save the current state of the workspace.
 
 ## Enterprise security
 

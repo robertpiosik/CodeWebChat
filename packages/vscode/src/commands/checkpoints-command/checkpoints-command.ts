@@ -118,7 +118,7 @@ export const checkpoints_command = (
                 },
                 {
                   iconPath: new vscode.ThemeIcon('trash'),
-                  tooltip: 'Delete Checkpoint'
+                  tooltip: 'Delete'
                 }
               ]
             }))

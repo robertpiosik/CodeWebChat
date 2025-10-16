@@ -218,11 +218,6 @@
         "category": "Code Web Chat"
       },
       {
-        "command": "codeWebChat.applyCodeBlockToActiveEditor",
-        "title": "Apply Code Block to Active Editor",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.newFolder",
         "title": "New Folder...",
         "icon": "$(new-folder)"
