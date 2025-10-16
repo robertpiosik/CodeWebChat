@@ -273,6 +273,11 @@
         "icon": "$(history)"
       },
       {
+        "command": "codeWebChat.createNewCheckpoint",
+        "title": "Create New Checkpoint",
+        "category": "Code Web Chat"
+      },
+      {
         "command": "codeWebChat.settings",
         "title": "Settings",
         "category": "Code Web Chat",

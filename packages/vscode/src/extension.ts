@@ -97,7 +97,7 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
-    checkpoints_command(workspace_provider, context),
+    ...checkpoints_command(workspace_provider, context),
     vscode.commands.registerCommand('codeWebChat.duplicateWorkspace', () => {
       vscode.commands.executeCommand(
         'workbench.action.duplicateWorkspaceInNewWindow'

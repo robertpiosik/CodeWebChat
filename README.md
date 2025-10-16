@@ -4,11 +4,12 @@
 
 No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor and Windsurf</a>.
 
-✅ **Initializes free chatbots**—ChatGPT, Claude, Gemini, DeepSeek, and more \
-✅ **Applies chat responses**—one-click multi-file changes integration \
-🥊 **Beats coding agents**—fast, predictable and accurate edits \
-🫰 **Saves money**—zero context overhead and tool calling \
-🫶 **Open-source**—released under the GPL-3.0 license
+🌐 **Initializes web chats**—ChatGPT, Claude, Gemini, DeepSeek, and more \
+🪄 **Applies responses**—signature multi-file changes integration process \
+🔋 **Batteries included**—code completions, checkpoints, and more \
+🥊 **Beats agents**—excels in blazing fast, accurate edits \
+🫰 **Saves money**—zero endless tool-calling \
+🫶 **Open-source**—GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -18,6 +19,7 @@ No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio
 
 - Don't scrape chat responses
 - Operate 100% locally
+- Respect user privacy
 - Stay free forever
 
 🤌 **CWC is non-agentic, but why?**

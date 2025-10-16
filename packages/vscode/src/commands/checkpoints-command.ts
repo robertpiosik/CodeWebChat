@@ -188,7 +188,7 @@ const copy_workspace_to_dir = async (
 const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext
-) => {
+): Promise<boolean> => {
   try {
     const timestamp = Date.now()
     await vscode.window.withProgress(
@@ -215,10 +215,12 @@ const create_checkpoint = async (
         await context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
       }
     )
+    return true
   } catch (err: any) {
     vscode.window.showErrorMessage(
       `Failed to create checkpoint: ${err.message}`
     )
+    return false
   }
 }
 
@@ -638,8 +640,27 @@ const edit_checkpoint = async (params: {
 export const checkpoints_command = (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext
-) => {
-  return vscode.commands.registerCommand(
+): vscode.Disposable[] => {
+  const create_new_checkpoint_command = vscode.commands.registerCommand(
+    'codeWebChat.createNewCheckpoint',
+    async () => {
+      if (
+        !vscode.workspace.workspaceFolders ||
+        vscode.workspace.workspaceFolders.length == 0
+      ) {
+        vscode.window.showErrorMessage(
+          'Checkpoints can only be used in a workspace.'
+        )
+        return
+      }
+      const success = await create_checkpoint(workspace_provider, context)
+      if (success) {
+        vscode.window.showInformationMessage('Checkpoint created successfully.')
+      }
+    }
+  )
+
+  const checkpoints_command = vscode.commands.registerCommand(
     'codeWebChat.checkpoints',
     async () => {
       if (
@@ -812,4 +833,6 @@ export const checkpoints_command = (
       await show_quick_pick()
     }
   )
+
+  return [checkpoints_command, create_new_checkpoint_command]
 }
