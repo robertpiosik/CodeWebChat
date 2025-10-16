@@ -613,7 +613,7 @@ const edit_checkpoint = async (params: {
     placeHolder: 'e.g. Before refactoring the main component'
   })
 
-  if (!new_description === undefined) return
+  if (new_description === undefined) return
 
   const checkpoints =
     params.context.workspaceState.get<Checkpoint[]>(
