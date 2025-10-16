@@ -6,7 +6,7 @@ No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio
 
 ✅ **Initializes free chatbots**—ChatGPT, Claude, Gemini, DeepSeek, and more \
 ✅ **Applies chat responses**—one-click multi-file changes integration \
-🥊 **Beats coding agents**—blazing fast, highest accuracy edits \
+🥊 **Beats coding agents**—fast, predictable and accurate edits \
 🫰 **Saves money**—zero context overhead and tool calling \
 🫶 **Open-source**—released under the GPL-3.0 license
 
