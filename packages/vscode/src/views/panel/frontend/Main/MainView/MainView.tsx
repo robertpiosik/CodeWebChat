@@ -343,21 +343,21 @@ export const MainView: React.FC<Props> = (props) => {
                     value: 'whole',
                     label: 'whole',
                     title:
-                      'Whole instructions added to every message: ' +
+                      'Whole instructions included in every message: ' +
                       props.edit_format_instructions.whole
                   },
                   {
                     value: 'truncated',
                     label: 'truncated',
                     title:
-                      'Truncated instructions added to every message: ' +
+                      'Truncated instructions included in every message: ' +
                       props.edit_format_instructions.truncated
                   },
                   {
                     value: 'diff',
                     label: 'diff',
                     title:
-                      'Diff instructions added to every message: ' +
+                      'Diff instructions included in every message: ' +
                       props.edit_format_instructions.diff
                   }
                 ]}
