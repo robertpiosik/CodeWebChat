@@ -37,15 +37,6 @@ export const Changes: FC<Props> = ({
   raw_instructions
 }) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
-  const [is_keep_button_focused, set_is_keep_button_focused] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      set_is_keep_button_focused(true)
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [])
 
   const handle_keep = () => {
     const accepted_files = files.filter((f) => f.is_checked)
@@ -217,7 +208,6 @@ export const Changes: FC<Props> = ({
         <Button
           on_click={handle_keep}
           disabled={files.filter((f) => f.is_checked).length == 0}
-          is_focused={is_keep_button_focused}
         >
           <span className="codicon codicon-check" />
           {files.length > 1 ? 'Approve Selected' : 'Approve'}

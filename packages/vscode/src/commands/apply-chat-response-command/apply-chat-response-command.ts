@@ -17,11 +17,6 @@ import {
   ModelProvidersManager,
   get_tool_config_id
 } from '@/services/model-providers-manager'
-import {
-  create_temporary_checkpoint,
-  delete_checkpoint,
-  promote_temporary_checkpoint
-} from '@/commands/checkpoints-command'
 import { apply_git_patch } from './handlers/diff-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
@@ -30,6 +25,11 @@ import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { review, code_review_promise_resolve } from './utils/review'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import {
+  create_temporary_checkpoint,
+  delete_checkpoint,
+  promote_temporary_checkpoint
+} from '../checkpoints-command/actions'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 

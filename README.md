@@ -123,7 +123,7 @@ Generate meaningful summaries of changes adhering to your style.
 ### Handling chat responses
 
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase a copied to clipboard overall chat response or a single code block.
-- `Code Web Chat: Apply Code Block to Active Editor` - Use Intelligent Update API tool on the active editor.
+- `Code Web Chat: Apply Code Block to Active Editor` - Use Intelligent Update API tool on the active editor with the copied to clipboard.
 - `Code Web Chat: Undo Last Changes` - Revert applied AI-suggested edits.
 
 ### Code completions
