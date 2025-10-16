@@ -705,6 +705,28 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('parses multiple diffs where code blocks end and start on the same line', () => {
+      const test_case = 'diff-multiple-files-same-line-backticks'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(2)
+
+      expect(result.patches![0].file_path).toBe('src/lorem.ts')
+      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
+
+      expect(result.patches![0].content).toBe(
+        load_test_case_file(test_case, 'file-1.txt')
+      )
+      expect(result.patches![1].content).toBe(
+        load_test_case_file(test_case, 'file-2.txt')
+      )
+    })
+
     it('parses multiple diffs concatenated within a single markdown code block', () => {
       const test_case = 'diff-multiple-files-single-markdown-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

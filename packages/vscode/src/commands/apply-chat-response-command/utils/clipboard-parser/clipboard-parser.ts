@@ -637,14 +637,16 @@ export const parse_response = (params: {
     return { type: 'code-completion', code_completion }
   }
 
+  const processed_response = params.response.replace(/``````/g, '```\n```')
+
   if (
-    params.response.includes('```diff') ||
-    params.response.includes('```patch') ||
-    params.response.startsWith('--- ') ||
-    params.response.startsWith('diff --git')
+    processed_response.includes('```diff') ||
+    processed_response.includes('```patch') ||
+    processed_response.startsWith('--- ') ||
+    processed_response.startsWith('diff --git')
   ) {
     const patches = extract_diffs({
-      clipboard_text: params.response,
+      clipboard_text: processed_response,
       is_single_root: is_single_root_folder_workspace
     })
     if (patches.length) {
@@ -653,7 +655,7 @@ export const parse_response = (params: {
   }
 
   const files = parse_multiple_files({
-    response: params.response,
+    response: processed_response,
     is_single_root_folder_workspace
   })
 
