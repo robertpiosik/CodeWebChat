@@ -109,6 +109,21 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('parses file path from HTML comment inside a markdown heading', () => {
+      const test_case = 'html-comment-in-markdown-heading'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('README.md')
+      expect(result[0].content).toBe(
+        load_test_case_file(test_case, 'file-1.txt')
+      )
+    })
+
     it('parses multiple files when file paths are in HTML-style comments outside of code blocks', () => {
       const test_case = 'html-comment-filename-outside-code-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

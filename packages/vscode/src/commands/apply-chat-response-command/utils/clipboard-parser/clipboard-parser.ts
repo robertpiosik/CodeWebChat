@@ -433,6 +433,39 @@ export const parse_multiple_files = (params: {
           const trimmed_line = line.trim()
           let extracted_filename: string | null = null
 
+          // Check for HTML comments embedded in markdown headings like: # <!-- file:/path -->
+          if (trimmed_line.startsWith('#')) {
+            const html_comment_match = trimmed_line.match(
+              /<!--\s*(?:file:\/?)?(.*?)\s*-->/
+            )
+            if (html_comment_match) {
+              const potential_path = html_comment_match[1].trim()
+              if (
+                potential_path.includes('/') ||
+                potential_path.includes('\\') ||
+                potential_path.includes('.')
+              ) {
+                extracted_filename = potential_path
+              }
+            }
+          }
+
+          if (extracted_filename) {
+            const { workspace_name, relative_path } =
+              extract_workspace_and_path(
+                extracted_filename,
+                params.is_single_root_folder_workspace
+              )
+            current_file_name = relative_path
+            if (workspace_name) {
+              current_workspace_name = workspace_name
+            }
+
+            // Don't include the filename line in content
+            is_first_content_line = false
+            continue
+          }
+
           if (trimmed_line.startsWith('<?php')) {
             if (current_content) {
               current_content += '\n' + line
