@@ -17,6 +17,11 @@ import {
   ModelProvidersManager,
   get_tool_config_id
 } from '@/services/model-providers-manager'
+import {
+  create_temporary_checkpoint,
+  delete_checkpoint,
+  promote_temporary_checkpoint
+} from '@/commands/checkpoints-command'
 import { apply_git_patch } from './handlers/diff-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
@@ -24,25 +29,18 @@ import { Diff } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { review, code_review_promise_resolve } from './utils/review'
 import { dictionary } from '@shared/constants/dictionary'
+import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 
 const check_if_all_files_new = async (
   files: ClipboardFile[]
 ): Promise<boolean> => {
-  if (
-    !vscode.workspace.workspaceFolders ||
-    vscode.workspace.workspaceFolders.length == 0
-  ) {
-    return false
-  }
-
   const workspace_map = new Map<string, string>()
-  vscode.workspace.workspaceFolders.forEach((folder) => {
+  vscode.workspace.workspaceFolders!.forEach((folder) => {
     workspace_map.set(folder.name, folder.uri.fsPath)
   })
-
-  const default_workspace = vscode.workspace.workspaceFolders[0].uri.fsPath
+  const default_workspace = vscode.workspace.workspaceFolders![0].uri.fsPath
 
   for (const file of files) {
     let workspace_root = default_workspace
@@ -333,7 +331,8 @@ const handle_code_review_and_cleanup = async (params: {
 
 export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
-  view_provider: ViewProvider
+  view_provider: ViewProvider,
+  workspace_provider: WorkspaceProvider
 ) => {
   const update_undo_and_apply_button_state = (
     states: OriginalFileState[] | null,
@@ -382,20 +381,11 @@ export const apply_chat_response_command = (
         position: { line: number; character: number }
       }
     }) => {
-      if (args?.raw_instructions) {
-        Logger.info({
-          function_name: 'apply_chat_response_command',
-          message: 'Received raw instructions',
-          data: { raw_instructions: args.raw_instructions }
-        })
-      }
-
-      if (args?.edit_format) {
-        Logger.info({
-          function_name: 'apply_chat_response_command',
-          message: 'Received edit format',
-          data: { edit_format: args.edit_format }
-        })
+      if (!vscode.workspace.workspaceFolders?.length) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
+        )
+        return
       }
 
       if (code_review_promise_resolve) {
@@ -415,6 +405,10 @@ export const apply_chat_response_command = (
           return
         }
       }
+
+      const temp_checkpoint = await create_temporary_checkpoint(
+        workspace_provider
+      )
 
       type ReviewData = {
         original_states: OriginalFileState[]
@@ -452,21 +446,12 @@ export const apply_chat_response_command = (
           clipboard_content.code_completion
         ) {
           const completion = clipboard_content.code_completion
-          if (
-            !vscode.workspace.workspaceFolders ||
-            vscode.workspace.workspaceFolders.length == 0
-          ) {
-            vscode.window.showErrorMessage(
-              dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
-            )
-            return null
-          }
           const workspace_map = new Map<string, string>()
-          vscode.workspace.workspaceFolders.forEach((folder) => {
+          vscode.workspace.workspaceFolders!.forEach((folder) => {
             workspace_map.set(folder.name, folder.uri.fsPath)
           })
           const default_workspace =
-            vscode.workspace.workspaceFolders[0].uri.fsPath
+            vscode.workspace.workspaceFolders![0].uri.fsPath
           let workspace_root = default_workspace
           if (
             completion.workspace_name &&
@@ -536,13 +521,6 @@ export const apply_chat_response_command = (
         }
 
         if (clipboard_content.type == 'patches' && clipboard_content.patches) {
-          if (!vscode.workspace.workspaceFolders?.length) {
-            vscode.window.showErrorMessage(
-              dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
-            )
-            return null
-          }
-
           const rename_map = new Map<string, string>()
           clipboard_content.patches.forEach((patch) => {
             if (patch.new_file_path && patch.file_path) {
@@ -562,12 +540,12 @@ export const apply_chat_response_command = (
           }
 
           const workspace_map = new Map<string, string>()
-          vscode.workspace.workspaceFolders.forEach((folder) => {
+          vscode.workspace.workspaceFolders!.forEach((folder) => {
             workspace_map.set(folder.name, folder.uri.fsPath)
           })
 
           const default_workspace =
-            vscode.workspace.workspaceFolders[0].uri.fsPath
+            vscode.workspace.workspaceFolders![0].uri.fsPath
 
           let success_count = 0
           let failure_count = 0
@@ -900,15 +878,37 @@ export const apply_chat_response_command = (
         }
       })()
 
-      if (review_data) {
-        await handle_code_review_and_cleanup({
-          original_states: review_data.original_states,
-          chat_response: review_data.chat_response,
-          view_provider,
-          update_undo_and_apply_button_state,
-          original_editor_state: args?.original_editor_state,
-          raw_instructions: args?.raw_instructions
-        })
+      let checkpoint_promoted = false
+
+      try {
+        if (review_data) {
+          const changes_accepted = await handle_code_review_and_cleanup({
+            original_states: review_data.original_states,
+            chat_response: review_data.chat_response,
+            view_provider,
+            update_undo_and_apply_button_state,
+            original_editor_state: args?.original_editor_state,
+            raw_instructions: args?.raw_instructions
+          })
+
+          if (changes_accepted) {
+            await promote_temporary_checkpoint({
+              context,
+              temp_checkpoint,
+              title: 'Before approve changes',
+              description: args?.raw_instructions
+            })
+            checkpoint_promoted = true
+          }
+        }
+      } finally {
+        if (!checkpoint_promoted) {
+          await delete_checkpoint({
+            context,
+            checkpoint_to_delete: temp_checkpoint,
+            options: { skip_undo_prompt: true }
+          })
+        }
       }
     }
   )

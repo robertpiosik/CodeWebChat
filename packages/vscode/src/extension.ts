@@ -69,7 +69,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }
       ),
       reference_in_chat_command(view_provider, workspace_provider),
-      apply_chat_response_command(context, view_provider),
+      apply_chat_response_command(context, view_provider, workspace_provider),
       apply_code_block_to_active_editor_command(context),
       undo_command(
         context,

@@ -5,15 +5,15 @@ import * as fs from 'fs/promises'
 import {
   CHECKPOINTS_STATE_KEY,
   TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
-} from '../constants/state-keys'
-import { WorkspaceProvider } from '../context/providers/workspace-provider'
-import { should_ignore_file } from '../context/utils/should-ignore-file'
+} from '../../constants/state-keys'
+import { WorkspaceProvider } from '../../context/providers/workspace-provider'
+import { should_ignore_file } from '../../context/utils/should-ignore-file'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 dayjs.extend(relativeTime)
 
-interface Checkpoint {
+export interface Checkpoint {
   timestamp: number
   title: string
   description?: string
@@ -224,13 +224,13 @@ const create_checkpoint = async (
   }
 }
 
-const create_temporary_checkpoint = async (
+export const create_temporary_checkpoint = async (
   workspace_provider: WorkspaceProvider
-): Promise<Checkpoint> =>
-  vscode.window.withProgress(
+): Promise<Checkpoint> => {
+  return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
-      title: 'Warming up...',
+      title: 'Preparing checkpoint...',
       cancellable: false
     },
     async () => {
@@ -250,6 +250,27 @@ const create_temporary_checkpoint = async (
       return new_checkpoint
     }
   )
+}
+
+export const promote_temporary_checkpoint = async (params: {
+  context: vscode.ExtensionContext
+  temp_checkpoint: Checkpoint
+  title: string
+  description?: string
+}) => {
+  const checkpoints =
+    params.context.workspaceState.get<Checkpoint[]>(
+      CHECKPOINTS_STATE_KEY,
+      []
+    ) ?? []
+  checkpoints.push({
+    ...params.temp_checkpoint,
+    is_temporary: false,
+    title: params.title,
+    description: params.description
+  })
+  await params.context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
+}
 
 const sync_directory = async (params: {
   source_dir: vscode.Uri
@@ -529,7 +550,7 @@ const restore_checkpoint = async (params: {
         await delete_checkpoint({
           context: params.context,
           checkpoint_to_delete: temp_checkpoint,
-          options: { is_reverting: true }
+          options: { skip_undo_prompt: true }
         })
         await params.context.workspaceState.update(
           TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
@@ -547,7 +568,7 @@ const restore_checkpoint = async (params: {
       await delete_checkpoint({
         context: params.context,
         checkpoint_to_delete: temp_checkpoint,
-        options: { is_reverting: true }
+        options: { skip_undo_prompt: true }
       })
       await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
@@ -557,34 +578,12 @@ const restore_checkpoint = async (params: {
   }
 }
 
-const delete_checkpoint = async (params: {
+export const delete_checkpoint = async (params: {
   context: vscode.ExtensionContext
   checkpoint_to_delete: Checkpoint
-  options?: { is_reverting?: boolean }
+  options?: { skip_undo_prompt?: boolean }
 }) => {
-  if (!params.options?.is_reverting) {
-    const confirmation = await vscode.window.showWarningMessage(
-      `Are you sure you want to delete the checkpoint from ${dayjs(
-        params.checkpoint_to_delete.timestamp
-      ).fromNow()}? This action cannot be undone.`,
-      { modal: true },
-      'Delete'
-    )
-
-    if (confirmation != 'Delete') return
-  }
-
-  try {
-    const checkpoint_path = get_checkpoint_path(
-      params.checkpoint_to_delete.timestamp
-    )
-    await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
-      recursive: true
-    })
-  } catch (error) {
-    console.warn(`Could not delete checkpoint file: ${error}`)
-  }
-
+  // First, remove checkpoint from state. This makes the deletion immediate from user's perspective.
   const checkpoints =
     params.context.workspaceState.get<Checkpoint[]>(
       CHECKPOINTS_STATE_KEY,
@@ -598,12 +597,51 @@ const delete_checkpoint = async (params: {
     updated_checkpoints
   )
 
-  if (!params.options?.is_reverting) {
-    vscode.window.showInformationMessage(
-      `Checkpoint from ${dayjs(
+  const actually_delete_files = async () => {
+    try {
+      const checkpoint_path = get_checkpoint_path(
         params.checkpoint_to_delete.timestamp
-      ).fromNow()} deleted successfully.`
-    )
+      )
+      await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
+        recursive: true
+      })
+    } catch (error) {
+      console.warn(`Could not delete checkpoint file: ${error}`)
+    }
+  }
+
+  if (!params.options?.skip_undo_prompt) {
+    vscode.window
+      .showInformationMessage(
+        `Checkpoint from ${dayjs(
+          params.checkpoint_to_delete.timestamp
+        ).fromNow()} deleted successfully.`,
+        'Revert'
+      )
+      .then(async (action) => {
+        if (action == 'Revert') {
+          // User chose to revert. Add the checkpoint back to the state.
+          const current_checkpoints =
+            params.context.workspaceState.get<Checkpoint[]>(
+              CHECKPOINTS_STATE_KEY,
+              []
+            ) ?? []
+          current_checkpoints.push(params.checkpoint_to_delete)
+          await params.context.workspaceState.update(
+            CHECKPOINTS_STATE_KEY,
+            current_checkpoints
+          )
+          vscode.window.showInformationMessage('Checkpoint deletion reverted.')
+        } else {
+          // User dismissed the notification or it timed out.
+          // Proceed with deleting the checkpoint files.
+          await actually_delete_files()
+        }
+      })
+  } else {
+    // This is a silent deletion (e.g. temporary checkpoint cleanup), no need
+    // to ask for revert.
+    await actually_delete_files()
   }
 }
 
@@ -789,7 +827,7 @@ export const checkpoints_command = (
             await delete_checkpoint({
               context,
               checkpoint_to_delete: temp_checkpoint,
-              options: { is_reverting: true }
+              options: { skip_undo_prompt: true }
             })
             await context.workspaceState.update(
               TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,

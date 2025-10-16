@@ -220,7 +220,7 @@ export const Changes: FC<Props> = ({
           is_focused={is_keep_button_focused}
         >
           <span className="codicon codicon-check" />
-          {files.length > 1 ? 'Keep Selected' : 'Keep'}
+          {files.length > 1 ? 'Approve Selected' : 'Approve'}
         </Button>
       </div>
     </div>
