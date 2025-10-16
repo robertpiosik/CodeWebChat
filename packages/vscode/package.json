@@ -346,14 +346,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.applyContext",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.saveContext",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.referenceInChat",
           "when": "false"
         },

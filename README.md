@@ -127,15 +127,20 @@ Generate meaningful summaries of changes adhering to your style.
 - `Code Web Chat: Code Completion with Instructions` - ...with instructions.
 - `Code Web Chat: Code Completion with Instructions using...` - ...with instructions and configuration selection.
 
-### Handling chat responses
+### Chat responses
 
 - `Code Web Chat: Apply Chat Response` - Integrate with the codebase a copied to clipboard overall chat response or a single code block.
-- `Code Web Chat: Undo Last Changes` - Revert applied AI-suggested edits.
+- `Code Web Chat: Undo Last Changes` - Revert applied edits.
 
 ### Checkpoints
 
-- `Code Web Chat: Checkpoints` - Open the checkpoint manager.
+- `Code Web Chat: Checkpoints` - Restore the overall workspace state to the saved checkpoint.
 - `Code Web Chat: Create New Checkpoint` - Save the current state of the workspace.
+
+### Context
+
+- `Code Web Chat: Save Current Context` - Save the currently checked files as a named context for easy reuse.
+- `Code Web Chat: Apply Context` - Apply a saved context to either replace or merge with the currently checked files.
 
 ## Enterprise security
 
