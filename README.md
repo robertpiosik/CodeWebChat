@@ -5,11 +5,11 @@
 No-cost AI coding in free chatbots for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor and Windsurf</a>.
 
 🌐 **Initializes web chats**—ChatGPT, Claude, Gemini, DeepSeek, and more \
-🪄 **Applies responses**—signature multi-file changes integration process \
+🪄 **Applies responses**—multi-file changes integration with confidence \
 🔋 **Batteries included**—code completions, checkpoints, and more \
-🥊 **Beats agents**—excels in blazing fast, accurate edits \
-🫰 **Saves money**—zero endless tool-calling \
-🫶 **Open-source**—GPL-3.0 license
+🥊 **Beats agents by design**—models perform best when not distracted \
+🫰 **Saves money**—zero context stuffing and endless tool-calling \
+🫶 **Free and open-source**—released under the GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
