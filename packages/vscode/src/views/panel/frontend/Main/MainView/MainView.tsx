@@ -47,7 +47,6 @@ type Props = {
   has_active_editor: boolean
   has_active_selection: boolean
   has_changes_to_commit: boolean
-  can_apply_clipboard: boolean
   can_undo: boolean
   chat_history: string[]
   token_count: number
@@ -183,8 +182,6 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const handle_apply_click = () => {
-    if (!props.can_apply_clipboard) return
-
     set_is_apply_disabled_temporarily(true)
     props.on_quick_action_click('codeWebChat.applyChatResponse')
 
@@ -207,10 +204,6 @@ export const MainView: React.FC<Props> = (props) => {
 
     setTimeout(() => set_is_undo_disabled_temporarily(false), 10000)
   }
-
-  useEffect(() => {
-    set_is_undo_disabled_temporarily(false)
-  }, [props.can_apply_clipboard])
 
   const handle_commit_click = () => {
     if (!props.has_changes_to_commit) return
@@ -447,14 +440,8 @@ export const MainView: React.FC<Props> = (props) => {
                 styles['footer__button--outlined']
               )}
               onClick={handle_apply_click}
-              title={
-                props.can_apply_clipboard
-                  ? 'Integrate copied message or a code block'
-                  : 'Nothing applicable found in clipboard'
-              }
-              disabled={
-                !props.can_apply_clipboard || is_apply_disabled_temporarily
-              }
+              title={'Integrate copied message or a code block'}
+              disabled={is_apply_disabled_temporarily}
             >
               APPLY
             </button>

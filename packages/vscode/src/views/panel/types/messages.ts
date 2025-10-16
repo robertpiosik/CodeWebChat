@@ -229,10 +229,6 @@ export interface GetVersionMessage extends BaseMessage {
   command: 'GET_VERSION'
 }
 
-export interface CheckClipboardForApplyMessage extends BaseMessage {
-  command: 'CHECK_CLIPBOARD_FOR_APPLY'
-}
-
 export interface EditsReviewMessage extends BaseMessage {
   command: 'EDITS_REVIEW'
   files: FileInReview[]
@@ -346,7 +342,6 @@ export type FrontendMessage =
   | ReorderApiToolConfigurationsMessage
   | SaveDonationsVisibilityMessage
   | GetVersionMessage
-  | CheckClipboardForApplyMessage
   | EditsReviewMessage
   | ToggleFileInReviewMessage
   | FocusOnFileInReviewMessage
@@ -471,11 +466,6 @@ export interface AtSignQuickPickForPresetAffixResultMessage
   text_to_insert: string
 }
 
-export interface CanApplyClipboardChangedMessage extends BaseMessage {
-  command: 'CAN_APPLY_CLIPBOARD_CHANGED'
-  can_apply: boolean
-}
-
 export interface CanUndoChangedMessage extends BaseMessage {
   command: 'CAN_UNDO_CHANGED'
   can_undo: boolean
@@ -571,7 +561,6 @@ export type BackendMessage =
   | ApiModeMessage
   | VersionMessage
   | AtSignQuickPickForPresetAffixResultMessage
-  | CanApplyClipboardChangedMessage
   | CanUndoChangedMessage
   | CodeReviewStartedMessage
   | CodeReviewFinishedMessage

@@ -80,12 +80,6 @@ export const Panel = () => {
   const [chat_input_focus_and_select_key, set_chat_input_focus_and_select_key] =
     useState(0)
 
-  const handle_mouse_enter = () => {
-    post_message(vscode, {
-      command: 'CHECK_CLIPBOARD_FOR_APPLY'
-    })
-  }
-
   const handle_instructions_change = (
     value: string,
     mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
@@ -309,7 +303,7 @@ export const Panel = () => {
       (!has_active_editor || has_active_selection))
 
   return (
-    <div className={styles.container} onMouseEnter={handle_mouse_enter}>
+    <div className={styles.container}>
       <div
         className={cn(styles.slot, {
           [styles['slot--hidden']]: active_view != 'main'

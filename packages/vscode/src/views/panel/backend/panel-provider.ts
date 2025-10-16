@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
-import { parse_response } from '@/commands/apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
 import { WebsitesProvider } from '@/context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
@@ -65,7 +64,6 @@ import {
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,
   get_last_selected_preset_key,
-  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
   RECENT_DONATIONS_VISIBLE_STATE_KEY,
@@ -158,7 +156,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
 
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
-        await this._check_clipboard_for_apply()
         const are_donations_visible = this.context.globalState.get<boolean>(
           RECENT_DONATIONS_VISIBLE_STATE_KEY,
           false
@@ -299,50 +296,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     this.intelligent_update_cancel_token_sources = []
   }
 
-  private async _check_clipboard_for_apply() {
-    if (!this._webview_view) return
-
-    const clipboard_text = await vscode.env.clipboard.readText()
-
-    const last_applied_content = this.context.workspaceState.get<string>(
-      LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
-    )
-
-    if (
-      clipboard_text.trim() &&
-      last_applied_content &&
-      clipboard_text == last_applied_content
-    ) {
-      this.send_message({
-        command: 'CAN_APPLY_CLIPBOARD_CHANGED',
-        can_apply: false
-      })
-      return
-    }
-
-    if (!clipboard_text.trim()) {
-      this.send_message({
-        command: 'CAN_APPLY_CLIPBOARD_CHANGED',
-        can_apply: false
-      })
-      return
-    }
-
-    const is_single_root_folder_workspace =
-      (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
-    const content = parse_response({
-      response: clipboard_text,
-      is_single_root_folder_workspace
-    })
-    const can_apply =
-      content.code_completion != null ||
-      (content.patches && content.patches.length > 0) ||
-      (content.files && content.files.length > 0) ||
-      false
-
-    this.send_message({ command: 'CAN_APPLY_CLIPBOARD_CHANGED', can_apply })
-  }
-
   public send_message(message: BackendMessage) {
     if (this._webview_view) {
       this._webview_view.webview.postMessage(message)
@@ -466,8 +419,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               this.context,
               message
             )
-          } else if (message.command == 'CHECK_CLIPBOARD_FOR_APPLY') {
-            await this._check_clipboard_for_apply()
           } else if (message.command == 'GET_DONATIONS_VISIBILITY') {
             handle_get_donations_visibility(this)
           } else if (message.command == 'SAVE_DONATIONS_VISIBILITY') {
@@ -782,13 +733,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       })
       setTimeout(() => this._watch_git_state(), 1000)
     }
-  }
-
-  public set_apply_button_state = (can_apply: boolean) => {
-    this.send_message({
-      command: 'CAN_APPLY_CLIPBOARD_CHANGED',
-      can_apply
-    })
   }
 
   public set_undo_button_state = (can_undo: boolean) => {

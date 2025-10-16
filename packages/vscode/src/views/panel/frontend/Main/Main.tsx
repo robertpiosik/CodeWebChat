@@ -73,8 +73,6 @@ export const Main: React.FC<Props> = (props) => {
   >()
   const [has_changes_to_commit, set_has_changes_to_commit] =
     useState<boolean>(false)
-  const [can_apply_clipboard, set_can_apply_clipboard] =
-    useState<boolean>(false)
   const [can_undo, set_can_undo] = useState<boolean>(false)
 
   const is_in_code_completions_mode =
@@ -138,9 +136,6 @@ export const Main: React.FC<Props> = (props) => {
         case 'GIT_STATE_CHANGED':
           set_has_changes_to_commit(message.has_changes_to_commit)
           break
-        case 'CAN_APPLY_CLIPBOARD_CHANGED':
-          set_can_apply_clipboard(message.can_apply)
-          break
         case 'CAN_UNDO_CHANGED':
           set_can_undo(message.can_undo)
           break
@@ -172,7 +167,6 @@ export const Main: React.FC<Props> = (props) => {
       { command: 'GET_EDIT_FORMAT' },
       { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' },
       { command: 'GET_API_TOOL_CONFIGURATIONS' },
-      { command: 'CHECK_CLIPBOARD_FOR_APPLY' },
       { command: 'REQUEST_GIT_STATE' }
     ]
     initial_messages.forEach((message) => post_message(props.vscode, message))
@@ -619,7 +613,6 @@ export const Main: React.FC<Props> = (props) => {
       has_active_editor={props.has_active_editor}
       has_active_selection={props.has_active_selection}
       has_changes_to_commit={has_changes_to_commit}
-      can_apply_clipboard={can_apply_clipboard}
       can_undo={can_undo}
       chat_history={current_history || []}
       token_count={token_count}
