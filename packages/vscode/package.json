@@ -282,6 +282,14 @@
     "menus": {
       "commandPalette": [
         {
+          "command": "codeWebChat.applyChatResponse",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.undo",
+          "when": "false"
+        },
+        {
           "command": "codeWebChat.clearChecks",
           "when": "false"
         },

@@ -112,8 +112,6 @@ export const MainView: React.FC<Props> = (props) => {
     useState(false)
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
-  const [is_undo_disabled_temporarily, set_is_undo_disabled_temporarily] =
-    useState(false)
 
   const calculate_dropdown_max_width = () => {
     if (!container_ref.current || !top_left_ref.current) return
@@ -160,7 +158,6 @@ export const MainView: React.FC<Props> = (props) => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({})
     } else {
-      set_is_undo_disabled_temporarily(false)
       if (is_in_code_completions_mode) {
         props.on_code_completion_click()
       } else {
@@ -173,7 +170,6 @@ export const MainView: React.FC<Props> = (props) => {
     if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
       props.initialize_chats({ show_quick_pick: true })
     } else {
-      set_is_undo_disabled_temporarily(false)
       if (is_in_code_completions_mode) {
         props.on_code_completion_with_quick_pick_click()
       } else {
@@ -198,12 +194,7 @@ export const MainView: React.FC<Props> = (props) => {
   }, [props.can_undo])
 
   const handle_undo_click = () => {
-    if (!props.can_undo) return
-
-    set_is_undo_disabled_temporarily(true)
     props.on_quick_action_click('codeWebChat.undo')
-
-    setTimeout(() => set_is_undo_disabled_temporarily(false), 10000)
   }
 
   const handle_commit_click = () => {
@@ -434,6 +425,19 @@ export const MainView: React.FC<Props> = (props) => {
           </a>
         </div>
         <div className={styles.footer__right}>
+          <button
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--outlined']
+            )}
+            onClick={handle_undo_click}
+            title={
+              'Restore saved state of the codebase after chat/API response integration'
+            }
+            disabled={!props.can_undo}
+          >
+            Undo
+          </button>
           {props.home_view_type == HOME_VIEW_TYPES.WEB && (
             <button
               className={cn(
@@ -444,24 +448,9 @@ export const MainView: React.FC<Props> = (props) => {
               title={'Integrate copied message or a code block'}
               disabled={is_apply_disabled_temporarily}
             >
-              APPLY
+              Apply clipboard
             </button>
           )}
-          <button
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--outlined']
-            )}
-            onClick={handle_undo_click}
-            title={
-              props.can_undo
-                ? 'Restore saved state of the codebase after chat/API response integration'
-                : 'Nothing to undo'
-            }
-            disabled={!props.can_undo || is_undo_disabled_temporarily}
-          >
-            UNDO
-          </button>
           <button
             className={cn(
               styles.footer__button,
@@ -477,7 +466,7 @@ export const MainView: React.FC<Props> = (props) => {
               !props.has_changes_to_commit || is_commit_disabled_temporarily
             }
           >
-            COMMIT
+            Commit changes
           </button>
         </div>
       </div>

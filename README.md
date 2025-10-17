@@ -127,11 +127,6 @@ Generate meaningful summaries of changes adhering to your style.
 - `Code Web Chat: Code Completion with Instructions` - ...with instructions.
 - `Code Web Chat: Code Completion with Instructions using...` - ...with instructions and configuration selection.
 
-### Chat responses
-
-- `Code Web Chat: Apply Chat Response` - Integrate with the codebase a copied to clipboard overall chat response or a single code block.
-- `Code Web Chat: Undo Last Changes` - Revert applied edits.
-
 ### Checkpoints
 
 - `Code Web Chat: Checkpoints` - Restore the overall workspace state to the saved checkpoint.
