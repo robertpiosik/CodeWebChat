@@ -9,22 +9,22 @@ import {
 } from '../utils/report-initialization-error'
 
 export const perplexity: Chatbot = {
-  wait_until_ready: async () => {
-    await new Promise((resolve) => {
-      const check_for_element = () => {
-        if (
-          document.querySelector(
-            'path[d="M8 8a3.5 3 0 0 1 3.5 -3h1a3.5 3 0 0 1 3.5 3a3 3 0 0 1 -2 3a3 4 0 0 0 -2 4"]'
-          )
-        ) {
-          resolve(null)
-        } else {
-          setTimeout(check_for_element, 100)
-        }
-      }
-      check_for_element()
-    })
-  },
+  // wait_until_ready: async () => {
+  //   await new Promise((resolve) => {
+  //     const check_for_element = () => {
+  //       if (
+  //         document.querySelector(
+  //           'path[d="M8 8a3.5 3 0 0 1 3.5 -3h1a3.5 3 0 0 1 3.5 3a3 3 0 0 1 -2 3a3 4 0 0 0 -2 4"]'
+  //         )
+  //       ) {
+  //         resolve(null)
+  //       } else {
+  //         setTimeout(check_for_element, 100)
+  //       }
+  //     }
+  //     check_for_element()
+  //   })
+  // },
   enter_message_and_send: async (params) => {
     let instructions = params.message
     if (params.message.includes('<files>')) {
@@ -55,7 +55,7 @@ export const perplexity: Chatbot = {
       await new Promise((r) => requestAnimationFrame(r))
       await new Promise((resolve) => {
         const check_for_element = () => {
-          if (document.querySelector('svg.tabler-icon-file-text')) {
+          if (document.querySelector('div[data-testid="file-type-icon"]')) {
             resolve(null)
           } else {
             setTimeout(check_for_element, 100)
@@ -116,15 +116,9 @@ export const perplexity: Chatbot = {
         footer,
         get_chat_turn: (f) => f.closest('.max-w-threadContentWidth'),
         perform_copy: (f) => {
-          const buttons = f.querySelectorAll('button')
-          const copy_button = Array.from(buttons).find((button) => {
-            const path = button.querySelectorAll('path')
-            return Array.from(path).some(
-              (p) =>
-                p.getAttribute('d') ==
-                'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'
-            )
-          }) as HTMLElement
+          const copy_button = f.querySelector(
+            'button:nth-child(4)'
+          ) as HTMLButtonElement
           if (!copy_button) {
             report_initialization_error({
               function_name: 'perplexity.perform_copy',
