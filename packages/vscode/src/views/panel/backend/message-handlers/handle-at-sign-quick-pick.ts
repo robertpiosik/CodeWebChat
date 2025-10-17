@@ -1,3 +1,4 @@
+import fs from 'fs'
 import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import * as vscode from 'vscode'
@@ -16,31 +17,48 @@ const at_sign_quick_pick = async (params: {
 
   const workspace_roots = params.workspace_provider.getWorkspaceRoots()
 
-  const quick_pick_items = checked_paths.map((p) => {
-    let relative_path = p
-    const root = params.workspace_provider.get_workspace_root_for_file(p)
-    if (root) {
-      if (workspace_roots.length > 1) {
-        const ws_name = params.workspace_provider.get_workspace_name(root)
-        relative_path = path.join(ws_name, path.relative(root, p))
-      } else {
-        relative_path = path.relative(root, p)
+  const quick_pick_items = checked_paths
+    .filter((p) => {
+      try {
+        return fs.existsSync(p) && fs.statSync(p).isFile()
+      } catch {
+        return false
       }
-    }
-    return { label: relative_path.replace(/\\/g, '/') }
-  })
+    })
+    .map((p) => {
+      let relative_path = p
+      const root = params.workspace_provider.get_workspace_root_for_file(p)
+      if (root) {
+        if (workspace_roots.length > 1) {
+          const ws_name = params.workspace_provider.get_workspace_name(root)
+          relative_path = path.join(ws_name, path.relative(root, p))
+        } else {
+          relative_path = path.relative(root, p)
+        }
+      }
+      const normalized_path = relative_path.replace(/\\/g, '/')
+      const filename = path.basename(normalized_path)
+      const dir_path = path.dirname(normalized_path)
 
-  quick_pick_items.sort((a, b) => natural_sort(a.label, b.label))
+      return {
+        label: filename,
+        description: dir_path === '.' ? '' : dir_path,
+        fullPath: normalized_path
+      }
+    })
+
+  quick_pick_items.sort((a, b) => natural_sort(a.fullPath, b.fullPath))
 
   const selected_path_item = await vscode.window.showQuickPick(
     quick_pick_items,
     {
-      placeHolder: 'Select a path to place in the input field'
+      placeHolder: 'Select a path to place in the input field',
+      matchOnDescription: true
     }
   )
 
   if (selected_path_item) {
-    return `\`${selected_path_item.label}\` `
+    return `\`${selected_path_item.fullPath}\` `
   }
   return
 }
