@@ -88,6 +88,8 @@ const generate_commit_message_with_api = async (params: {
       } else {
         let commit_message = process_single_trailing_dot(result.response)
         commit_message = strip_wrapping_quotes(commit_message)
+        // Sanitize to prevent shell syntax errors
+        commit_message = commit_message.replace(/[<>`$()]/g, '')
         return commit_message
       }
     } catch (error) {
@@ -145,6 +147,8 @@ const generate_commit_message_with_api = async (params: {
               response_result.response
             )
             commit_message = strip_wrapping_quotes(commit_message)
+            // Sanitize to prevent shell syntax errors
+            commit_message = commit_message.replace(/[<>`$()]/g, '')
             return commit_message
           }
         } catch (error) {
