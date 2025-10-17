@@ -364,10 +364,14 @@ export function apply_context_command(
           value: 'clipboard' | 'internal' | 'file'
         })[] = [
           {
-            label: 'Find file paths in the clipboard text',
-            description: 'Useful when asking AI for a list of relevant files',
+            label: 'Paths from clipboard text',
+            description: 'utility',
             value: 'clipboard'
-          }
+          },
+          {
+            label: 'Save location',
+            kind: vscode.QuickPickItemKind.Separator
+          } as any
         ]
 
         if (internal_contexts.length > 0) {
@@ -541,6 +545,7 @@ export function apply_context_command(
           }
 
           let is_showing_dialog = false
+          let go_back_after_delete = false
           const quick_pick_promise = new Promise<
             | (vscode.QuickPickItem & {
                 context?: SavedContext
@@ -566,6 +571,10 @@ export function apply_context_command(
 
             quick_pick.onDidHide(() => {
               if (is_showing_dialog) {
+                return
+              }
+              if (go_back_after_delete) {
+                resolve({ label: BACK_LABEL })
                 return
               }
               if (!is_accepted) {
@@ -703,9 +712,6 @@ export function apply_context_command(
                   }
 
                   if (context_updated) {
-                    vscode.window.showInformationMessage(
-                      `Renamed context to "${trimmed_name}".`
-                    )
                     await extension_context.workspaceState.update(
                       last_selected_context_name_key,
                       trimmed_name
@@ -730,107 +736,162 @@ export function apply_context_command(
               }
 
               if (event.button === delete_button) {
-                is_showing_dialog = true
-                const confirm_delete = await vscode.window.showWarningMessage(
-                  dictionary.warning_message.CONFIRM_DELETE_CONTEXT(
-                    item.context.name
-                  ),
-                  { modal: true },
-                  'Delete'
-                )
-                is_showing_dialog = false
+                const deleted_context = item.context
+                const deleted_context_name = item.context.name
+                const deleted_index = item.index
 
-                if (confirm_delete == 'Delete') {
-                  if (context_source == 'internal') {
-                    const updated_contexts = internal_contexts.filter(
-                      (c) => c.name != item.context.name
-                    )
+                if (context_source == 'internal') {
+                  const updated_contexts = internal_contexts.filter(
+                    (c) => c.name != deleted_context_name
+                  )
+                  await extension_context.workspaceState.update(
+                    SAVED_CONTEXTS_STATE_KEY,
+                    updated_contexts
+                  )
+                  internal_contexts = updated_contexts
+                  quick_pick.items = create_quick_pick_items(internal_contexts)
 
+                  is_showing_dialog = true
+                  const choice = await vscode.window.showInformationMessage(
+                    `Deleted context "${deleted_context_name}" from workspace state`,
+                    'Revert'
+                  )
+                  is_showing_dialog = false
+
+                  if (choice === 'Revert') {
+                    internal_contexts.splice(deleted_index, 0, deleted_context)
                     await extension_context.workspaceState.update(
                       SAVED_CONTEXTS_STATE_KEY,
-                      updated_contexts
+                      internal_contexts
                     )
-                    internal_contexts = updated_contexts
-
                     vscode.window.showInformationMessage(
-                      `Deleted context "${item.context.name}" from workspace state`
+                      `Restored context "${deleted_context_name}".`
                     )
+                    quick_pick.items =
+                      create_quick_pick_items(internal_contexts)
+                  }
 
-                    if (internal_contexts.length == 0) {
-                      quick_pick.hide()
-                      vscode.window.showInformationMessage(
-                        dictionary.information_message
-                          .NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE
+                  if (internal_contexts.length === 0) {
+                    await vscode.window.showInformationMessage(
+                      dictionary.information_message
+                        .NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE
+                    )
+                    go_back_after_delete = true
+                    quick_pick.hide()
+                  } else {
+                    quick_pick.show()
+                  }
+                } else if (context_source == 'file') {
+                  const roots = context_to_roots.get(deleted_context_name) || []
+                  const original_file_contents = new Map<string, string>()
+
+                  for (const root of roots) {
+                    const contexts_file_path = path.join(
+                      root,
+                      '.vscode',
+                      'contexts.json'
+                    )
+                    if (fs.existsSync(contexts_file_path)) {
+                      original_file_contents.set(
+                        contexts_file_path,
+                        fs.readFileSync(contexts_file_path, 'utf8')
                       )
-                    } else {
-                      quick_pick.items =
-                        create_quick_pick_items(internal_contexts)
-                      quick_pick.show()
                     }
-                  } else if (context_source == 'file') {
-                    const roots = context_to_roots.get(item.context.name) || []
-                    for (const root of roots) {
-                      const contexts_file_path = path.join(
-                        root,
-                        '.vscode',
-                        'contexts.json'
+                  }
+
+                  for (const root of roots) {
+                    const contexts_file_path = path.join(
+                      root,
+                      '.vscode',
+                      'contexts.json'
+                    )
+                    try {
+                      if (fs.existsSync(contexts_file_path)) {
+                        const content = fs.readFileSync(
+                          contexts_file_path,
+                          'utf8'
+                        )
+                        let root_contexts = JSON.parse(content)
+                        if (!Array.isArray(root_contexts)) root_contexts = []
+
+                        root_contexts = root_contexts.filter(
+                          (c: SavedContext) => c.name !== deleted_context_name
+                        )
+                        await save_contexts_to_file(
+                          root_contexts,
+                          contexts_file_path
+                        )
+                      }
+                    } catch (error: any) {
+                      vscode.window.showErrorMessage(
+                        `Error deleting context from ${path.basename(root)}: ${
+                          error.message
+                        }`
                       )
+                    }
+                  }
 
+                  let reloaded = await load_and_merge_file_contexts()
+                  file_contexts.length = 0
+                  file_contexts.push(...reloaded.merged)
+                  context_to_roots.clear()
+                  reloaded.context_to_roots.forEach((v, k) =>
+                    context_to_roots.set(k, v)
+                  )
+                  quick_pick.items = create_quick_pick_items(file_contexts)
+
+                  is_showing_dialog = true
+                  const choice = await vscode.window.showInformationMessage(
+                    `Deleted context "${deleted_context_name}" from all workspace roots`,
+                    'Revert'
+                  )
+                  is_showing_dialog = false
+
+                  if (choice === 'Revert') {
+                    let success = true
+                    for (const [
+                      file_path,
+                      content
+                    ] of original_file_contents.entries()) {
                       try {
-                        if (fs.existsSync(contexts_file_path)) {
-                          const content = fs.readFileSync(
-                            contexts_file_path,
-                            'utf8'
-                          )
-                          let root_contexts = JSON.parse(content)
-
-                          if (!Array.isArray(root_contexts)) {
-                            root_contexts = []
-                          }
-
-                          root_contexts = root_contexts.filter(
-                            (c: SavedContext) => c.name !== item.context.name
-                          )
-
-                          await save_contexts_to_file(
-                            root_contexts,
-                            contexts_file_path
-                          )
-                        }
+                        const original_contexts = JSON.parse(content)
+                        await save_contexts_to_file(
+                          original_contexts,
+                          file_path
+                        )
                       } catch (error: any) {
                         vscode.window.showErrorMessage(
-                          `Error deleting context from ${path.basename(
-                            root
-                          )}: ${error.message}`
+                          `Failed to revert context deletion in ${file_path}: ${error.message}`
                         )
+                        success = false
                       }
                     }
 
-                    const reloaded = await load_and_merge_file_contexts()
-                    file_contexts.length = 0
-                    file_contexts.push(...reloaded.merged)
-                    context_to_roots.clear()
-                    reloaded.context_to_roots.forEach((v, k) =>
-                      context_to_roots.set(k, v)
-                    )
-
-                    vscode.window.showInformationMessage(
-                      `Deleted context "${item.context.name}" from all workspace roots`
-                    )
-
-                    if (file_contexts.length == 0) {
-                      quick_pick.hide()
-                      vscode.window.showInformationMessage(
-                        dictionary.information_message
-                          .NO_SAVED_CONTEXTS_IN_JSON_FILE
+                    if (success) {
+                      reloaded = await load_and_merge_file_contexts()
+                      file_contexts.length = 0
+                      file_contexts.push(...reloaded.merged)
+                      context_to_roots.clear()
+                      reloaded.context_to_roots.forEach((v, k) =>
+                        context_to_roots.set(k, v)
                       )
-                    } else {
+                      vscode.window.showInformationMessage(
+                        `Restored context "${deleted_context_name}".`
+                      )
                       quick_pick.items = create_quick_pick_items(file_contexts)
-                      quick_pick.show()
                     }
                   }
-                } else {
-                  quick_pick.show()
+
+                  if (file_contexts.length === 0) {
+                    await vscode.window.showInformationMessage(
+                      dictionary.information_message
+                        .NO_SAVED_CONTEXTS_IN_JSON_FILE
+                    )
+                    go_back_after_delete = true
+                    quick_pick.hide()
+                  } else {
+                    quick_pick.show()
+                  }
                 }
                 return
               }

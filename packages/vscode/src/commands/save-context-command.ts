@@ -340,12 +340,12 @@ export function save_context_command(
         })[] = [
           {
             label: 'Workspace State',
-            description: "Save in the editor's internal storage",
+            description: 'internal storage',
             value: 'internal'
           },
           {
             label: 'JSON File',
-            description: 'Save in .vscode/contexts.json',
+            description: '.vscode/contexts.json',
             value: 'file'
           }
         ]

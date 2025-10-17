@@ -90,8 +90,7 @@ export const restore_checkpoint = async (params: {
         })
         await delete_checkpoint({
           context: params.context,
-          checkpoint_to_delete: temp_checkpoint,
-          options: { skip_undo_prompt: true }
+          checkpoint_to_delete: temp_checkpoint
         })
         await params.context.workspaceState.update(
           TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
@@ -108,8 +107,7 @@ export const restore_checkpoint = async (params: {
     if (temp_checkpoint) {
       await delete_checkpoint({
         context: params.context,
-        checkpoint_to_delete: temp_checkpoint,
-        options: { skip_undo_prompt: true }
+        checkpoint_to_delete: temp_checkpoint
       })
       await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,

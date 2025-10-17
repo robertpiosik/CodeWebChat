@@ -28,6 +28,5 @@ export const edit_checkpoint = async (params: {
       CHECKPOINTS_STATE_KEY,
       checkpoints
     )
-    vscode.window.showInformationMessage('Checkpoint description updated.')
   }
 }

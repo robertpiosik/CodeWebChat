@@ -1,5 +1,8 @@
 import * as vscode from 'vscode'
-import { TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY } from '../../constants/state-keys'
+import {
+  CHECKPOINTS_STATE_KEY,
+  TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
+} from '../../constants/state-keys'
 import { WorkspaceProvider } from '../../context/providers/workspace-provider'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -7,7 +10,6 @@ import type { Checkpoint } from './types'
 import {
   create_checkpoint,
   delete_checkpoint,
-  edit_checkpoint,
   get_checkpoints,
   restore_checkpoint
 } from './actions'
@@ -60,9 +62,12 @@ export const checkpoints_command = (
         quick_pick.placeholder =
           'Select a checkpoint to restore or add a new one'
 
+        let is_showing_dialog = false
+        let checkpoints: Checkpoint[] = []
+
         const refresh_items = async () => {
           quick_pick.busy = true
-          const checkpoints = await get_checkpoints(context)
+          checkpoints = await get_checkpoints(context)
 
           const temp_checkpoint_timestamp = context.workspaceState.get<number>(
             TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
@@ -105,12 +110,13 @@ export const checkpoints_command = (
             ...(visible_checkpoints.length > 0
               ? [{ label: '', kind: vscode.QuickPickItemKind.Separator }]
               : []),
-            ...visible_checkpoints.map((c) => ({
+            ...visible_checkpoints.map((c, index) => ({
               id: c.timestamp.toString(),
               label: c.title,
               description: dayjs(c.timestamp).fromNow(),
               detail: c.description,
               checkpoint: c,
+              index,
               buttons: [
                 {
                   iconPath: new vscode.ThemeIcon('edit'),
@@ -128,13 +134,14 @@ export const checkpoints_command = (
 
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0]
-          quick_pick.hide()
           if (!selected) return
 
           if (selected.id == 'add-new') {
+            quick_pick.hide()
             await create_checkpoint(workspace_provider, context)
             await show_quick_pick()
           } else if (selected.id == 'revert-last') {
+            quick_pick.hide()
             const temp_checkpoint_timestamp =
               context.workspaceState.get<number>(
                 TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
@@ -168,14 +175,14 @@ export const checkpoints_command = (
             // After reverting, delete the temp checkpoint and clear state.
             await delete_checkpoint({
               context,
-              checkpoint_to_delete: temp_checkpoint,
-              options: { skip_undo_prompt: true }
+              checkpoint_to_delete: temp_checkpoint
             })
             await context.workspaceState.update(
               TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
               undefined
             )
           } else if (selected.checkpoint) {
+            quick_pick.hide()
             await restore_checkpoint({
               checkpoint: selected.checkpoint,
               workspace_provider,
@@ -185,27 +192,116 @@ export const checkpoints_command = (
         })
 
         quick_pick.onDidTriggerItemButton(async (e) => {
-          if (e.item.checkpoint && e.button.tooltip == 'Edit Description') {
-            quick_pick.hide()
-            await edit_checkpoint({
-              context,
-              checkpoint_to_edit: e.item.checkpoint
+          const item = e.item as vscode.QuickPickItem & {
+            checkpoint?: Checkpoint
+            index?: number
+          }
+          if (!item.checkpoint) return
+
+          if (e.button.tooltip == 'Edit Description') {
+            is_showing_dialog = true
+            const new_description = await vscode.window.showInputBox({
+              prompt: 'Enter a description for the checkpoint',
+              value: item.checkpoint.description || '',
+              placeHolder: 'e.g. Before refactoring the main component'
             })
-            await show_quick_pick()
-          } else if (
-            e.item.checkpoint &&
-            e.button.tooltip == 'Delete Checkpoint'
-          ) {
-            quick_pick.hide()
-            await delete_checkpoint({
-              context,
-              checkpoint_to_delete: e.item.checkpoint
-            })
-            await show_quick_pick()
+            is_showing_dialog = false
+
+            if (new_description !== undefined) {
+              const checkpoint_to_update = checkpoints.find(
+                (c) => c.timestamp === item.checkpoint?.timestamp
+              )
+              if (checkpoint_to_update) {
+                checkpoint_to_update.description = new_description
+                await context.workspaceState.update(
+                  CHECKPOINTS_STATE_KEY,
+                  checkpoints
+                )
+                await refresh_items()
+                const active_item = quick_pick.items.find(
+                  (i) =>
+                    (i as any).checkpoint?.timestamp ===
+                    item.checkpoint?.timestamp
+                )
+                if (active_item) {
+                  quick_pick.activeItems = [active_item]
+                }
+              }
+            }
+            quick_pick.show()
+            return
+          }
+
+          if (e.button.tooltip == 'Delete') {
+            const deleted_checkpoint = item.checkpoint
+            const real_index_in_state = checkpoints.findIndex(
+              (c) => c.timestamp === deleted_checkpoint.timestamp
+            )
+            if (real_index_in_state === -1) return
+
+            const original_checkpoint_from_state =
+              checkpoints[real_index_in_state]
+
+            // Optimistically remove from state and update UI
+            const updated_checkpoints = checkpoints.filter(
+              (c) => c.timestamp !== deleted_checkpoint.timestamp
+            )
+            await context.workspaceState.update(
+              CHECKPOINTS_STATE_KEY,
+              updated_checkpoints
+            )
+            checkpoints = updated_checkpoints
+            await refresh_items()
+
+            is_showing_dialog = true
+            const choice = await vscode.window.showInformationMessage(
+              `Checkpoint from ${dayjs(
+                deleted_checkpoint.timestamp
+              ).fromNow()} deleted.`,
+              'Revert'
+            )
+            is_showing_dialog = false
+
+            if (choice === 'Revert') {
+              // Restore to state and UI
+              checkpoints.splice(
+                real_index_in_state,
+                0,
+                original_checkpoint_from_state
+              )
+              await context.workspaceState.update(
+                CHECKPOINTS_STATE_KEY,
+                checkpoints
+              )
+              vscode.window.showInformationMessage('Checkpoint restored.')
+              await refresh_items()
+            } else {
+              // Permanently delete files
+              try {
+                const checkpoint_path = get_checkpoint_path(
+                  deleted_checkpoint.timestamp
+                )
+                await vscode.workspace.fs.delete(
+                  vscode.Uri.file(checkpoint_path),
+                  { recursive: true }
+                )
+              } catch (error: any) {
+                vscode.window.showWarningMessage(
+                  `Could not delete checkpoint files: ${error.message}`
+                )
+              }
+            }
+            quick_pick.show()
+            return
           }
         })
 
-        quick_pick.onDidHide(() => quick_pick.dispose())
+        quick_pick.onDidHide(() => {
+          if (is_showing_dialog) {
+            return
+          }
+          quick_pick.dispose()
+        })
         await refresh_items()
         quick_pick.show()
       }
