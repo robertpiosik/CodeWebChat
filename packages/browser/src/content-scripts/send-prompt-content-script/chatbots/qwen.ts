@@ -165,8 +165,10 @@ export const qwen: Chatbot = {
         })
         return
       }
-      const blob = new Blob([context], { type: 'text/plain' })
-      const file = new File([blob], 'context.txt', { type: 'text/plain' })
+      const blob = new Blob([`<files>\n${context}\n</files>`], {
+        type: 'text/plain'
+      })
+      const file = new File([blob], 'files.txt', { type: 'text/plain' })
       const data_transfer = new DataTransfer()
       data_transfer.items.add(file)
       file_input.files = data_transfer.files
