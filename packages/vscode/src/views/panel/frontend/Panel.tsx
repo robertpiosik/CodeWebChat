@@ -407,12 +407,7 @@ export const Panel = () => {
               pick_chatbot={(chatbot_id) => {
                 post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
               }}
-              on_at_sign_in_affix={() => {
-                post_message(vscode, {
-                  command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX',
-                  is_for_code_completions: is_for_code_completions
-                })
-              }}
+              on_at_sign_in_affix={() => {}}
             />
           </UiPage>
         </div>

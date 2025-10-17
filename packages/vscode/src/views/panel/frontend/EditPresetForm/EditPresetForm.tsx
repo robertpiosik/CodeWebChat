@@ -151,40 +151,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         set_model(message.model_id)
       } else if (message.command == 'NEWLY_PICKED_CHATBOT') {
         handle_chatbot_change(message.chatbot_id as keyof typeof CHATBOTS)
-      } else if (
-        message.command == 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
-      ) {
-        const text_to_insert = message.text_to_insert
-        let ref, value, setter
-        if (active_field == 'prompt_prefix') {
-          ref = prefix_ref
-          value = prompt_prefix
-          setter = set_prompt_prefix
-        } else if (active_field == 'prompt_suffix') {
-          ref = suffix_ref
-          value = prompt_suffix
-          setter = set_prompt_suffix
-        } else {
-          return
-        }
-
-        if (ref.current) {
-          const start = ref.current.selectionStart
-          const current_value = value || ''
-          const new_value =
-            current_value.slice(0, start) +
-            text_to_insert +
-            current_value.slice(start)
-          setter(new_value.replace(/  +/g, ' '))
-
-          setTimeout(() => {
-            if (ref.current) {
-              const new_caret_pos = start - 1 + text_to_insert.length
-              ref.current.focus()
-              ref.current.setSelectionRange(new_caret_pos, new_caret_pos)
-            }
-          }, 0)
-        }
       }
     }
     window.addEventListener('message', handle_message)

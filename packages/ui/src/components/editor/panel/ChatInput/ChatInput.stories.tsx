@@ -18,10 +18,10 @@ export const Empty = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_hash_sign_click={() => console.log('# clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
-    has_context={true}
   />
 )
 
@@ -40,10 +40,10 @@ export const WithText = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_hash_sign_click={() => console.log('# clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
-    has_context={true}
   />
 )
 
@@ -62,10 +62,10 @@ export const LongText = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     is_web_mode={false}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_hash_sign_click={() => console.log('# clicked')}
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
-    has_context={true}
   />
 )
 
@@ -83,10 +83,10 @@ export const WithPlaceholderSavedContext = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
-    has_context={true}
   />
 )
 
@@ -104,9 +104,9 @@ export const WithPlaceholderSelection = () => (
     on_caret_position_change={(pos) => console.log('Caret position:', pos)}
     on_search_click={() => console.log('Search clicked')}
     on_at_sign_click={() => console.log('@ clicked')}
+    on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
     on_submit_with_control={() => {}}
     on_curly_braces_click={() => {}}
-    has_context={true}
   />
 )

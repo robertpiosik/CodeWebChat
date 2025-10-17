@@ -22,6 +22,10 @@ export const use_handlers = (props: ChatInputProps) => {
       setTimeout(() => {
         props.on_at_sign_click()
       }, 150)
+    } else if (new_value.charAt(caret_position - 1) == '#') {
+      setTimeout(() => {
+        props.on_hash_sign_click()
+      }, 150)
     }
 
     if (!new_value) {

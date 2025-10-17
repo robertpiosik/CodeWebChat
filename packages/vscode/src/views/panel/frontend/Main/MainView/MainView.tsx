@@ -33,6 +33,7 @@ type Props = {
   on_search_click: () => void
   on_create_preset: () => void
   on_at_sign_click: () => void
+  on_hash_sign_click: () => void
   on_curly_braces_click: () => void
   on_quick_action_click: (command: string) => void
   on_commit_click: () => void
@@ -295,8 +296,8 @@ export const MainView: React.FC<Props> = (props) => {
               on_copy={props.copy_to_clipboard}
               on_search_click={props.on_search_click}
               on_at_sign_click={props.on_at_sign_click}
+              on_hash_sign_click={props.on_hash_sign_click}
               on_curly_braces_click={props.on_curly_braces_click}
-              has_context={props.token_count > 0}
               is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
               is_connected={props.is_connected}
               token_count={props.token_count}

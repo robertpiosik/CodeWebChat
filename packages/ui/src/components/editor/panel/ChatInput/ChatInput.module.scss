@@ -175,8 +175,6 @@
 
   &__left {
     display: flex;
-    gap: var(--padding-2px);
-    overflow: hidden;
 
     &__button {
       --size: 20px;
@@ -250,7 +248,7 @@
       }
 
       &--secondary {
-        @media (max-width: 330px) {
+        @media (max-width: 360px) {
           > span {
             display: none;
           }

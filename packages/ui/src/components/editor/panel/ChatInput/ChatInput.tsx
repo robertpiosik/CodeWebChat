@@ -23,8 +23,8 @@ export type ChatInputProps = {
   is_web_mode: boolean
   on_search_click: () => void
   on_at_sign_click: () => void
+  on_hash_sign_click: () => void
   on_curly_braces_click: () => void
-  has_context: boolean
   caret_position_to_set?: number
   on_caret_position_set?: () => void
   focus_key?: number
@@ -130,14 +130,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
         }}
         ref={container_ref}
       >
-        <div
-          className={styles['highlight-container']}
-          ref={highlight_ref}
-          onClick={() => {
-            if (props.value.includes('#Selection') && props.on_at_sign_click)
-              props.on_at_sign_click()
-          }}
-        >
+        <div className={styles['highlight-container']} ref={highlight_ref}>
           {get_highlighted_text({
             text: props.value,
             is_in_code_completions_mode: props.is_in_code_completions_mode,
@@ -204,14 +197,20 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               e.stopPropagation()
             }}
           >
-            {/* TODO: Should be always visible but we need to handle including saved contexts first */}
+            <button
+              onClick={props.on_at_sign_click}
+              className={cn(styles['footer__left__button'])}
+              title="Reference file"
+            >
+              <span>@</span>
+            </button>
             {!props.is_in_code_completions_mode && (
               <button
-                onClick={props.on_at_sign_click}
+                onClick={props.on_hash_sign_click}
                 className={cn(styles['footer__left__button'])}
                 title="Insert symbol"
               >
-                <span>@</span>
+                <span>#</span>
               </button>
             )}
             <button

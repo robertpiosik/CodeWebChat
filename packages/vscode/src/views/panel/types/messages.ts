@@ -188,13 +188,13 @@ export interface ShowAtSignQuickPickMessage extends BaseMessage {
   is_for_code_completions: boolean
 }
 
-export interface CancelApiRequestMessage extends BaseMessage {
-  command: 'CANCEL_API_REQUEST'
+export interface ShowHashSignQuickPickMessage extends BaseMessage {
+  command: 'SHOW_HASH_SIGN_QUICK_PICK'
+  is_for_code_completions: boolean
 }
 
-export interface ShowAtSignQuickPickForPresetAffixMessage extends BaseMessage {
-  command: 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX'
-  is_for_code_completions: boolean
+export interface CancelApiRequestMessage extends BaseMessage {
+  command: 'CANCEL_API_REQUEST'
 }
 
 export interface GetWebModeMessage extends BaseMessage {
@@ -333,7 +333,7 @@ export type FrontendMessage =
   | CancelApiRequestMessage
   | CodeCompletionMessage
   | ShowAtSignQuickPickMessage
-  | ShowAtSignQuickPickForPresetAffixMessage
+  | ShowHashSignQuickPickMessage
   | SaveWebModeMessage
   | GetWebModeMessage
   | GetApiModeMessage
@@ -460,12 +460,6 @@ export interface VersionMessage extends BaseMessage {
   version: string
 }
 
-export interface AtSignQuickPickForPresetAffixResultMessage
-  extends BaseMessage {
-  command: 'AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX_RESULT'
-  text_to_insert: string
-}
-
 export interface CanUndoChangedMessage extends BaseMessage {
   command: 'CAN_UNDO_CHANGED'
   can_undo: boolean
@@ -560,7 +554,6 @@ export type BackendMessage =
   | WebModeMessage
   | ApiModeMessage
   | VersionMessage
-  | AtSignQuickPickForPresetAffixResultMessage
   | CanUndoChangedMessage
   | CodeReviewStartedMessage
   | CodeReviewFinishedMessage

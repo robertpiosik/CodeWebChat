@@ -1,12 +1,16 @@
 import { ViewProvider } from '@/views/panel/backend/panel-provider'
-import { at_sign_quick_pick } from '@/views/panel/backend/utils/at-sign-quick-pick'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
+import * as vscode from 'vscode'
+import { hash_sign_quick_pick } from '../utils/hash-sign-quick-pick'
 
-export const handle_at_sign_quick_pick = async (
-  provider: ViewProvider
+export const handle_hash_sign_quick_pick = async (
+  provider: ViewProvider,
+  context: vscode.ExtensionContext,
+  is_for_code_completions: boolean
 ): Promise<void> => {
-  const replacement = await at_sign_quick_pick({
-    workspace_provider: provider.workspace_provider
+  const replacement = await hash_sign_quick_pick({
+    context,
+    is_for_code_completions
   })
 
   if (!replacement) {
@@ -32,10 +36,10 @@ export const handle_at_sign_quick_pick = async (
     current_text = provider.code_completion_instructions
   }
 
-  const is_after_at_sign = current_text
+  const is_after_hash_sign = current_text
     .slice(0, provider.caret_position)
-    .endsWith('@')
-  if (is_after_at_sign) {
+    .endsWith('#')
+  if (is_after_hash_sign) {
     provider.add_text_at_cursor_position(replacement, 1)
   } else {
     provider.add_text_at_cursor_position(replacement)

@@ -38,7 +38,6 @@ import {
   handle_get_home_view_type,
   handle_get_version,
   handle_show_prompt_template_quick_pick,
-  handle_at_sign_quick_pick_for_preset_affix,
   handle_get_api_tool_configurations,
   handle_reorder_api_tool_configurations,
   handle_pick_open_router_model,
@@ -51,7 +50,8 @@ import {
   handle_intelligent_update_file_in_review,
   handle_commit_changes,
   handle_accept_commit_message,
-  handle_cancel_commit_message
+  handle_cancel_commit_message,
+  handle_hash_sign_quick_pick
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -406,18 +406,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_VERSION') {
             handle_get_version(this)
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
-            await handle_at_sign_quick_pick(
+            await handle_at_sign_quick_pick(this)
+          } else if (message.command == 'SHOW_HASH_SIGN_QUICK_PICK') {
+            await handle_hash_sign_quick_pick(
               this,
               this.context,
               message.is_for_code_completions
-            )
-          } else if (
-            message.command == 'SHOW_AT_SIGN_QUICK_PICK_FOR_PRESET_AFFIX'
-          ) {
-            await handle_at_sign_quick_pick_for_preset_affix(
-              this,
-              this.context,
-              message
             )
           } else if (message.command == 'GET_DONATIONS_VISIBILITY') {
             handle_get_donations_visibility(this)

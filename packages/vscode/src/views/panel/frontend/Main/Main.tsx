@@ -496,6 +496,13 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_hash_sign_click = () => {
+    post_message(props.vscode, {
+      command: 'SHOW_HASH_SIGN_QUICK_PICK',
+      is_for_code_completions: is_in_code_completions_mode
+    })
+  }
+
   const handle_curly_braces_click = () => {
     post_message(props.vscode, {
       command: 'SHOW_PROMPT_TEMPLATE_QUICK_PICK'
@@ -604,6 +611,7 @@ export const Main: React.FC<Props> = (props) => {
       on_manage_configurations={handle_manage_configurations}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}
+      on_hash_sign_click={handle_hash_sign_click}
       on_curly_braces_click={handle_curly_braces_click}
       is_connected={props.is_connected}
       presets={presets_for_current_mode}
