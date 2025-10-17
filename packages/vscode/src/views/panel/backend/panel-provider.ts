@@ -55,6 +55,7 @@ import {
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
+  LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
   API_MODE_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
@@ -64,16 +65,18 @@ import {
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,
   get_last_selected_preset_key,
+  LAST_APPLIED_CHANGES_STATE_KEY,
+  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
   RECENT_DONATIONS_VISIBLE_STATE_KEY,
   WEB_MODE_STATE_KEY
 } from '@/constants/state-keys'
-import { can_undo } from '@/commands/undo-command'
 import {
   config_preset_to_ui_format,
   ConfigPresetFormat
 } from '@/views/panel/backend/utils/preset-format-converters'
+import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
@@ -81,6 +84,7 @@ import { code_review_promise_resolve } from '@/commands/apply-chat-response-comm
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
+import { undo_files } from '@/commands/apply-chat-response-command/utils/file-operations'
 import { dictionary } from '@shared/constants/dictionary'
 
 export class ViewProvider implements vscode.WebviewViewProvider {
@@ -363,6 +367,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_duplicate_preset(this, message, webview_view)
           } else if (message.command == 'CREATE_PRESET') {
             await handle_create_preset(this)
+          } else if (message.command == 'UNDO') {
+            await this._handle_undo()
           } else if (message.command == 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'EDIT_CONTEXT') {
@@ -479,7 +485,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     setTimeout(() => {
       this.send_message({
         command: 'CAN_UNDO_CHANGED',
-        can_undo: can_undo(this.context)
+        can_undo: this._can_undo()
       })
     }, 1000)
   }
@@ -734,6 +740,81 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       command: 'CAN_UNDO_CHANGED',
       can_undo
     })
+  }
+
+  private _can_undo(): boolean {
+    const original_states = this.context.workspaceState.get<
+      OriginalFileState[]
+    >(LAST_APPLIED_CHANGES_STATE_KEY)
+    return !!original_states && original_states.length > 0
+  }
+
+  private async _handle_undo(): Promise<void> {
+    const context = this.context
+    const original_states = context.workspaceState.get<OriginalFileState[]>(
+      LAST_APPLIED_CHANGES_STATE_KEY
+    )
+    const editor_state = context.workspaceState.get<
+      | {
+          file_path: string
+          position: { line: number; character: number }
+        }
+      | undefined
+    >(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY)
+
+    if (!original_states || original_states.length == 0) {
+      vscode.window.showInformationMessage(
+        dictionary.information_message.NO_RECENT_CHANGES_TO_UNDO
+      )
+      return
+    }
+
+    try {
+      const success = await undo_files({ original_states })
+
+      if (!success) {
+        return
+      }
+
+      if (editor_state) {
+        try {
+          const uri = vscode.Uri.file(editor_state.file_path)
+          const document = await vscode.workspace.openTextDocument(uri)
+          const editor = await vscode.window.showTextDocument(document, {
+            preview: false
+          })
+          const position = new vscode.Position(
+            editor_state.position.line,
+            editor_state.position.character
+          )
+          editor.selection = new vscode.Selection(position, position)
+          editor.revealRange(
+            new vscode.Range(position, position),
+            vscode.TextEditorRevealType.InCenter
+          )
+        } catch (error) {
+          console.error('Error restoring editor state:', error)
+        }
+      }
+
+      context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
+      context.workspaceState.update(
+        LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
+        null
+      )
+      context.workspaceState.update(
+        LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
+        null
+      )
+      this.set_undo_button_state(false)
+    } catch (error: any) {
+      console.error('Error during undo:', error)
+      vscode.window.showErrorMessage(
+        dictionary.error_message.FAILED_TO_UNDO_CHANGES(
+          error.message || 'Unknown error'
+        )
+      )
+    }
   }
 
   private _get_html_for_webview(webview: vscode.Webview) {

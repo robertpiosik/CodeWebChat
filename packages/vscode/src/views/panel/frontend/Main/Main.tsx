@@ -548,6 +548,12 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_undo_click = () => {
+    post_message(props.vscode, {
+      command: 'UNDO'
+    })
+  }
+
   const instructions =
     current_mode == 'ask'
       ? props.ask_instructions
@@ -618,6 +624,7 @@ export const Main: React.FC<Props> = (props) => {
       on_create_preset={handle_create_preset}
       on_quick_action_click={handle_quick_action_click}
       on_commit_click={handle_commit_click}
+      on_undo_click={handle_undo_click}
       has_active_editor={props.has_active_editor}
       has_active_selection={props.has_active_selection}
       has_changes_to_commit={has_changes_to_commit}

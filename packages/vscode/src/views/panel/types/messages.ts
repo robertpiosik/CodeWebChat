@@ -299,6 +299,10 @@ export interface ManageConfigurationsMessage extends BaseMessage {
   api_mode: ApiMode
 }
 
+export interface UndoMessage extends BaseMessage {
+  command: 'UNDO'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -354,6 +358,7 @@ export type FrontendMessage =
   | AcceptCommitMessage
   | CancelCommitMessage
   | ManageConfigurationsMessage
+  | UndoMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

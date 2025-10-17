@@ -20,7 +20,6 @@ import {
   rename_command,
   delete_command,
   save_context_command,
-  undo_command,
   reference_in_chat_command,
   open_url_command,
   feedback_command,
@@ -69,7 +68,6 @@ export async function activate(context: vscode.ExtensionContext) {
       ),
       reference_in_chat_command(view_provider, workspace_provider),
       apply_chat_response_command(context, view_provider, workspace_provider),
-      undo_command(context, view_provider.set_undo_button_state),
       ...code_completion_commands(
         workspace_provider,
         open_editors_provider,

@@ -732,7 +732,7 @@ export const apply_chat_response_command = (
             const editor = vscode.window.activeTextEditor
             if (editor) {
               const choice = await vscode.window.showWarningMessage(
-                'No valid code blocks found in the clipboard text. Apply it to the active editor with the Intelligent Update API tool?',
+                'No valid code blocks found in the clipboard text. Apply found text to the active editor with the Intelligent Update API tool?',
                 { modal: true },
                 'Apply'
               )

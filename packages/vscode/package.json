@@ -252,11 +252,6 @@
         "title": "Delete"
       },
       {
-        "command": "codeWebChat.undo",
-        "title": "Undo Last Changes",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.referenceInChat",
         "title": "Reference in Chat",
         "category": "Code Web Chat"
@@ -281,14 +276,6 @@
     ],
     "menus": {
       "commandPalette": [
-        {
-          "command": "codeWebChat.applyChatResponse",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.undo",
-          "when": "false"
-        },
         {
           "command": "codeWebChat.clearChecks",
           "when": "false"

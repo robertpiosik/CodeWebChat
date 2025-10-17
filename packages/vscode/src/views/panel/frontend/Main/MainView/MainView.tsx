@@ -37,6 +37,7 @@ type Props = {
   on_curly_braces_click: () => void
   on_quick_action_click: (command: string) => void
   on_commit_click: () => void
+  on_undo_click: () => void
   is_connected: boolean
   presets: Preset[]
   configurations: ApiToolConfiguration[]
@@ -192,10 +193,6 @@ export const MainView: React.FC<Props> = (props) => {
       set_is_apply_disabled_temporarily(false)
     }, 500)
   }, [props.can_undo])
-
-  const handle_undo_click = () => {
-    props.on_quick_action_click('codeWebChat.undo')
-  }
 
   const handle_commit_click = () => {
     if (!props.has_changes_to_commit) return
@@ -425,19 +422,6 @@ export const MainView: React.FC<Props> = (props) => {
           </a>
         </div>
         <div className={styles.footer__right}>
-          <button
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--outlined']
-            )}
-            onClick={handle_undo_click}
-            title={
-              'Restore saved state of the codebase after chat/API response integration'
-            }
-            disabled={!props.can_undo}
-          >
-            Undo
-          </button>
           {props.home_view_type == HOME_VIEW_TYPES.WEB && (
             <button
               className={cn(
@@ -445,12 +429,25 @@ export const MainView: React.FC<Props> = (props) => {
                 styles['footer__button--outlined']
               )}
               onClick={handle_apply_click}
-              title={'Integrate copied message or a code block'}
+              title={'Integrate copied chat response or a single code block'}
               disabled={is_apply_disabled_temporarily}
             >
-              Apply clipboard
+              Apply
             </button>
           )}
+          <button
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--outlined']
+            )}
+            onClick={props.on_undo_click}
+            title={
+              'Restore saved state of the codebase after chat/API response integration'
+            }
+            disabled={!props.can_undo}
+          >
+            Undo
+          </button>
           <button
             className={cn(
               styles.footer__button,
