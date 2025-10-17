@@ -14,6 +14,7 @@ import Doubao from '../../../../assets/icons/doubao.svg'
 import Enter from '../../../../assets/icons/enter.svg'
 import Gemini from '../../../../assets/icons/gemini.svg'
 import Grok from '../../../../assets/icons/grok.svg'
+import HuggingChat from '../../../../assets/icons/hugging-chat.svg'
 import Kimi from '../../../../assets/icons/kimi.svg'
 import Meta from '../../../../assets/icons/meta.svg'
 import Mistral from '../../../../assets/icons/mistral.svg'
@@ -38,13 +39,14 @@ export namespace Icon {
     | 'CODE_WEB_CHAT_TEXT'
     | 'COMMAND'
     | 'COPILOT'
-    | 'GITHUB_COPILOT'
     | 'DEEPSEEK'
     | 'DISCORD'
     | 'DOUBAO'
     | 'ENTER'
     | 'GEMINI'
+    | 'GITHUB_COPILOT'
     | 'GROK'
+    | 'HUGGING_CHAT'
     | 'KIMI'
     | 'META'
     | 'MISTRAL'
@@ -94,9 +96,6 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'COPILOT':
       icon = <Copilot />
       break
-    case 'GITHUB_COPILOT':
-      icon = <GithubCopilot />
-      break
     case 'DEEPSEEK':
       icon = <DeepSeek />
       break
@@ -112,8 +111,14 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'GEMINI':
       icon = <Gemini />
       break
+    case 'GITHUB_COPILOT':
+      icon = <GithubCopilot />
+      break
     case 'GROK':
       icon = <Grok />
+      break
+    case 'HUGGING_CHAT':
+      icon = <HuggingChat />
       break
     case 'KIMI':
       icon = <Kimi />

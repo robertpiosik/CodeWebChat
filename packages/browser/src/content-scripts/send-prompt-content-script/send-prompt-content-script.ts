@@ -19,7 +19,8 @@ import {
   doubao,
   kimi,
   together,
-  github_copilot
+  github_copilot,
+  hugging_chat
 } from './chatbots'
 import { perplexity } from './chatbots/perplexity'
 import { z_ai } from './chatbots/z-ai'
@@ -66,6 +67,9 @@ const is_qwen = current_url.startsWith(qwen_url)
 const yuanbao_url = 'https://yuanbao.tencent.com/chat'
 const is_yuanbao = current_url.startsWith(yuanbao_url)
 
+const hugging_chat_url = 'https://huggingface.co/chat/'
+const is_hugging_chat = current_url.startsWith(hugging_chat_url)
+
 const meta_url = 'https://www.meta.ai/'
 const is_meta = current_url.startsWith(meta_url)
 
@@ -103,8 +107,8 @@ if (is_ai_studio) {
   chatbot = github_copilot
 } else if (is_claude) {
   chatbot = claude
-} else if (is_meta) {
-  chatbot = meta
+} else if (is_hugging_chat) {
+  chatbot = hugging_chat
 } else if (is_mistral) {
   chatbot = mistral
 } else if (is_open_webui) {
@@ -129,6 +133,8 @@ if (is_ai_studio) {
   chatbot = together
 } else if (is_z_ai) {
   chatbot = z_ai
+} else if (is_meta) {
+  chatbot = meta
 }
 
 export const get_textarea_element = () => {
@@ -145,7 +151,8 @@ export const get_textarea_element = () => {
     [doubao_url]: 'textarea',
     [together_url]: 'textarea',
     [z_ai_url]: 'textarea',
-    [github_copilot_url]: 'textarea'
+    [github_copilot_url]: 'textarea',
+    [hugging_chat_url]: 'textarea'
   } as any
 
   // Find the appropriate selector based on the URL without the hash

@@ -1,0 +1,53 @@
+import { Chatbot } from '../types/chatbot'
+import {
+  add_apply_response_button,
+  observe_for_responses
+} from '../utils/add-apply-response-button'
+import {
+  InitializationError,
+  report_initialization_error
+} from '../utils/report-initialization-error'
+
+export const hugging_chat: Chatbot = {
+  wait_until_ready: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 500))
+  },
+  inject_apply_response_button: (
+    client_id: number,
+    raw_instructions?: string,
+    edit_format?: string
+  ) => {
+    const add_buttons = (footer: Element) => {
+      add_apply_response_button({
+        client_id,
+        raw_instructions,
+        edit_format,
+        footer,
+        get_chat_turn: (f) => f.closest('div[data-message-role="assistant"]'),
+        perform_copy: (f) => {
+          const copy_button = f.querySelector(
+            'button:nth-child(3)'
+          ) as HTMLElement
+          if (!copy_button) {
+            report_initialization_error({
+              function_name: 'hugging_chat.perform_copy',
+              log_message: 'Copy button not found',
+              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+            })
+            return
+          }
+          copy_button.click()
+        },
+        insert_button: (f, b) => f.insertBefore(b, f.children[1])
+      })
+    }
+
+    observe_for_responses({
+      chatbot_name: 'Hugging Chat',
+      is_generating: () =>
+        !!document.querySelector('button.stop-generating-btn'),
+      footer_selector: 'div[data-message-role="assistant"] > div:nth-child(3)',
+      add_buttons
+    })
+  }
+}
