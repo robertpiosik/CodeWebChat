@@ -21,7 +21,6 @@ export const handle_intelligent_update = async (params: {
   context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
   view_provider?: ViewProvider
-  progress_title_override?: string
 }): Promise<OriginalFileState[] | null> => {
   const workspace_map = new Map<string, string>()
   if (vscode.workspace.workspaceFolders) {
@@ -137,20 +136,17 @@ export const handle_intelligent_update = async (params: {
   }
 
   let progress_title = ''
-  if (params.progress_title_override) {
-    progress_title = params.progress_title_override
-  } else {
-    if (existing_files.length > 0 && new_files.length > 0) {
-      progress_title = `Called Intelligent Update API tool for ${
-        existing_files.length
-      } file${existing_files.length > 1 ? 's' : ''} and creating ${
-        new_files.length
-      } new file${new_files.length > 1 ? 's' : ''}...`
-    } else if (existing_files.length > 0) {
-      progress_title = `Called Intelligent Update API tool for ${
-        existing_files.length
-      } file${existing_files.length > 1 ? 's' : ''}...`
-    }
+
+  if (existing_files.length > 0 && new_files.length > 0) {
+    progress_title = `Called Intelligent Update API tool for ${
+      existing_files.length
+    } file${existing_files.length > 1 ? 's' : ''} and creating ${
+      new_files.length
+    } new file${new_files.length > 1 ? 's' : ''}...`
+  } else if (existing_files.length > 0) {
+    progress_title = `Called Intelligent Update API tool for ${
+      existing_files.length
+    } file${existing_files.length > 1 ? 's' : ''}...`
   }
 
   const file_progress_list: FileProgress[] = files.map((f) => ({

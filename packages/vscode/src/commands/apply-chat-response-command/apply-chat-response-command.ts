@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
+import * as path from 'path'
 import { parse_response, ClipboardFile } from './utils/clipboard-parser'
 import {
   LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
@@ -728,6 +729,87 @@ export const apply_chat_response_command = (
           return null
         } else {
           if (!clipboard_content.files || clipboard_content.files.length == 0) {
+            const editor = vscode.window.activeTextEditor
+            if (editor) {
+              const choice = await vscode.window.showWarningMessage(
+                'No valid code blocks found in the clipboard text. Apply it to the active editor with the Intelligent Update API tool?',
+                { modal: true },
+                'Apply'
+              )
+
+              if (choice == 'Apply') {
+                const document = editor.document
+                const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+                  document.uri
+                )
+                const relativePath = (
+                  workspaceFolder
+                    ? path.relative(
+                        workspaceFolder.uri.fsPath,
+                        document.uri.fsPath
+                      )
+                    : path.basename(document.uri.fsPath)
+                ).replace(/\\/g, '/')
+
+                const workspace_name = workspaceFolder?.name
+
+                const file_path_for_block =
+                  workspace_name && !is_single_root_folder_workspace
+                    ? `${workspace_name}/${relativePath}`
+                    : relativePath
+
+                const fake_chat_response = `\`\`\`\n// ${file_path_for_block}\n${chat_response}\n\`\`\``
+
+                const api_providers_manager = new ModelProvidersManager(context)
+                const config_result = await get_intelligent_update_config(
+                  api_providers_manager,
+                  false,
+                  context
+                )
+
+                if (!config_result) {
+                  return null
+                }
+
+                const { provider, config: intelligent_update_config } =
+                  config_result
+
+                let endpoint_url = ''
+                if (provider.type == 'built-in') {
+                  const provider_info =
+                    PROVIDERS[provider.name as keyof typeof PROVIDERS]
+                  endpoint_url = provider_info.base_url
+                } else {
+                  endpoint_url = provider.base_url
+                }
+
+                const intelligent_update_states =
+                  await handle_intelligent_update({
+                    endpoint_url,
+                    api_key: provider.api_key,
+                    config: intelligent_update_config,
+                    chat_response: fake_chat_response,
+                    context: context,
+                    is_single_root_folder_workspace,
+                    view_provider
+                  })
+
+                if (intelligent_update_states) {
+                  update_undo_button_state(
+                    intelligent_update_states,
+                    chat_response,
+                    args?.original_editor_state
+                  )
+
+                  return {
+                    original_states: intelligent_update_states,
+                    chat_response
+                  }
+                }
+                return null
+              }
+            }
+
             vscode.window.showWarningMessage(
               dictionary.warning_message.NO_VALID_CODE_BLOCKS_IN_CLIPBOARD
             )
