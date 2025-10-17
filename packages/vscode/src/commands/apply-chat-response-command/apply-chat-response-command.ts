@@ -975,7 +975,7 @@ export const apply_chat_response_command = (
             await promote_temporary_checkpoint({
               context,
               temp_checkpoint,
-              title: 'Before approve changes',
+              title: 'Before changes approved',
               description: args?.raw_instructions
             })
             checkpoint_promoted = true
