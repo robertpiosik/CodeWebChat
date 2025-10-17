@@ -69,11 +69,7 @@ export async function activate(context: vscode.ExtensionContext) {
       ),
       reference_in_chat_command(view_provider, workspace_provider),
       apply_chat_response_command(context, view_provider, workspace_provider),
-      undo_command(
-        context,
-        view_provider.set_undo_button_state,
-        view_provider.set_apply_button_state
-      ),
+      undo_command(context, view_provider.set_undo_button_state),
       ...code_completion_commands(
         workspace_provider,
         open_editors_provider,

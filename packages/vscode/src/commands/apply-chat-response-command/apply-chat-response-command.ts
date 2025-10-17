@@ -239,7 +239,7 @@ const handle_code_review_and_cleanup = async (params: {
   original_states: OriginalFileState[]
   chat_response: string
   view_provider: ViewProvider
-  update_undo_and_apply_button_state: (
+  update_undo_button_state: (
     states: OriginalFileState[] | null,
     content?: string | null,
     original_editor_state?: {
@@ -293,7 +293,7 @@ const handle_code_review_and_cleanup = async (params: {
       await undo_files({
         original_states: params.original_states
       })
-      params.update_undo_and_apply_button_state(null)
+      params.update_undo_button_state(null)
       return false
     }
 
@@ -312,7 +312,7 @@ const handle_code_review_and_cleanup = async (params: {
     )
 
     if (accepted_states.length > 0) {
-      params.update_undo_and_apply_button_state(
+      params.update_undo_button_state(
         accepted_states,
         params.chat_response,
         params.original_editor_state
@@ -320,7 +320,7 @@ const handle_code_review_and_cleanup = async (params: {
 
       return true
     } else {
-      params.update_undo_and_apply_button_state(null)
+      params.update_undo_button_state(null)
       return false
     }
   } finally {
@@ -334,7 +334,7 @@ export const apply_chat_response_command = (
   view_provider: ViewProvider,
   workspace_provider: WorkspaceProvider
 ) => {
-  const update_undo_and_apply_button_state = (
+  const update_undo_button_state = (
     states: OriginalFileState[] | null,
     applied_content?: string | null,
     original_editor_state?: {
@@ -353,7 +353,6 @@ export const apply_chat_response_command = (
         original_editor_state
       )
       view_provider.set_undo_button_state(true)
-      view_provider.set_apply_button_state(false)
     } else {
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
       context.workspaceState.update(
@@ -365,7 +364,6 @@ export const apply_chat_response_command = (
         null
       )
       view_provider.set_undo_button_state(false)
-      view_provider.set_apply_button_state(true)
     }
   }
 
@@ -603,7 +601,7 @@ export const apply_chat_response_command = (
           if (all_original_states.length > 0) {
             set_new_paths_in_original_states(all_original_states)
             await apply_file_relocations(all_original_states)
-            update_undo_and_apply_button_state(
+            update_undo_button_state(
               all_original_states,
               chat_response,
               args?.original_editor_state
@@ -621,7 +619,7 @@ export const apply_chat_response_command = (
             if (!config_result) {
               if (success_count > 0 && all_original_states.length > 0) {
                 await undo_files({ original_states: all_original_states })
-                update_undo_and_apply_button_state(null)
+                update_undo_button_state(null)
               }
               return null
             }
@@ -667,7 +665,7 @@ export const apply_chat_response_command = (
                 ]
                 set_new_paths_in_original_states(combined_states)
                 await apply_file_relocations(combined_states)
-                update_undo_and_apply_button_state(
+                update_undo_button_state(
                   combined_states,
                   chat_response,
                   args?.original_editor_state
@@ -679,7 +677,7 @@ export const apply_chat_response_command = (
               } else {
                 if (success_count > 0 && all_original_states.length > 0) {
                   await undo_files({ original_states: all_original_states })
-                  update_undo_and_apply_button_state(null)
+                  update_undo_button_state(null)
                 }
               }
             } catch (error) {
@@ -697,7 +695,7 @@ export const apply_chat_response_command = (
 
               if (response == 'Undo' && all_original_states.length > 0) {
                 await undo_files({ original_states: all_original_states })
-                update_undo_and_apply_button_state(null)
+                update_undo_button_state(null)
               }
             }
           } else if (success_count > 0) {
@@ -848,7 +846,7 @@ export const apply_chat_response_command = (
           }
 
           if (operation_success && final_original_states) {
-            update_undo_and_apply_button_state(
+            update_undo_button_state(
               final_original_states,
               chat_response,
               args?.original_editor_state
@@ -859,7 +857,7 @@ export const apply_chat_response_command = (
               chat_response
             }
           } else {
-            update_undo_and_apply_button_state(null)
+            update_undo_button_state(null)
             Logger.info({
               function_name: 'apply_chat_response_command',
               message: 'Operation concluded without success.'
@@ -886,7 +884,7 @@ export const apply_chat_response_command = (
             original_states: review_data.original_states,
             chat_response: review_data.chat_response,
             view_provider,
-            update_undo_and_apply_button_state,
+            update_undo_button_state,
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions
           })

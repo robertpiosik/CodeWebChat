@@ -80,10 +80,11 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - Gemini
 - GitHub Copilot
 - Grok
+- HuggingChat
 - Kimi
 - Mistral
 - Open WebUI
-- OpenRouter Chat
+- OpenRouter
 - Perplexity
 - Qwen
 - Together

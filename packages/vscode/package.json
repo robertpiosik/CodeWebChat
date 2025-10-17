@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "No-cost AI coding in free chatbots (CWC)",
-  "version": "1.451.0",
+  "version": "1.452.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -583,17 +583,15 @@
             },
             {
               "name": "(1)",
-              "chatbot": "Gemini"
+              "chatbot": "Claude"
             },
             {
               "name": "(2)",
-              "chatbot": "AI Studio",
-              "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant."
+              "chatbot": "Gemini"
             },
             {
               "name": "(3)",
-              "chatbot": "Claude"
+              "chatbot": "AI Studio"
             },
             {
               "name": "(4)",
@@ -634,6 +632,26 @@
             {
               "name": "(13)",
               "chatbot": "Z.AI"
+            },
+            {
+              "name": "(14)",
+              "chatbot": "Copilot"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "GitHub Copilot"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Hugging Chat"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Open WebUI"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "OpenRouter"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -648,21 +666,23 @@
                 "type": "string",
                 "enum": [
                   "AI Studio",
-                  "Gemini",
-                  "Open WebUI",
-                  "OpenRouter",
                   "ChatGPT",
                   "Claude",
+                  "Copilot",
+                  "DeepSeek",
+                  "Doubao",
+                  "Gemini",
+                  "GitHub Copilot",
                   "Grok",
+                  "Hugging Chat",
+                  "Kimi",
                   "Perplexity",
                   "Mistral",
-                  "Meta",
-                  "DeepSeek",
+                  "Open WebUI",
+                  "OpenRouter",
                   "Qwen",
                   "Together",
                   "Yuanbao",
-                  "Doubao",
-                  "Kimi",
                   "Z.AI"
                 ],
                 "description": "Choose among supported chatbots."
@@ -748,17 +768,15 @@
             },
             {
               "name": "(1)",
-              "chatbot": "Gemini"
+              "chatbot": "Claude"
             },
             {
               "name": "(2)",
-              "chatbot": "AI Studio",
-              "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant."
+              "chatbot": "Gemini"
             },
             {
               "name": "(3)",
-              "chatbot": "Claude"
+              "chatbot": "AI Studio"
             },
             {
               "name": "(4)",
@@ -799,6 +817,26 @@
             {
               "name": "(13)",
               "chatbot": "Z.AI"
+            },
+            {
+              "name": "(14)",
+              "chatbot": "Copilot"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "GitHub Copilot"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Hugging Chat"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Open WebUI"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "OpenRouter"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -813,21 +851,23 @@
                 "type": "string",
                 "enum": [
                   "AI Studio",
-                  "Gemini",
-                  "Open WebUI",
-                  "OpenRouter",
                   "ChatGPT",
                   "Claude",
+                  "Copilot",
+                  "DeepSeek",
+                  "Doubao",
+                  "Gemini",
+                  "GitHub Copilot",
                   "Grok",
+                  "Hugging Chat",
+                  "Kimi",
                   "Perplexity",
                   "Mistral",
-                  "Meta",
-                  "DeepSeek",
+                  "Open WebUI",
+                  "OpenRouter",
                   "Qwen",
                   "Together",
                   "Yuanbao",
-                  "Doubao",
-                  "Kimi",
                   "Z.AI"
                 ],
                 "description": "Choose among supported chatbots."
@@ -913,17 +953,15 @@
             },
             {
               "name": "(1)",
-              "chatbot": "Gemini"
+              "chatbot": "Claude"
             },
             {
               "name": "(2)",
-              "chatbot": "AI Studio",
-              "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant."
+              "chatbot": "Gemini"
             },
             {
               "name": "(3)",
-              "chatbot": "Claude"
+              "chatbot": "AI Studio"
             },
             {
               "name": "(4)",
@@ -964,6 +1002,26 @@
             {
               "name": "(13)",
               "chatbot": "Z.AI"
+            },
+            {
+              "name": "(14)",
+              "chatbot": "Copilot"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "GitHub Copilot"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Hugging Chat"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Open WebUI"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "OpenRouter"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -978,21 +1036,23 @@
                 "type": "string",
                 "enum": [
                   "AI Studio",
-                  "Gemini",
-                  "Open WebUI",
-                  "OpenRouter",
                   "ChatGPT",
                   "Claude",
+                  "Copilot",
+                  "DeepSeek",
+                  "Doubao",
+                  "Gemini",
+                  "GitHub Copilot",
                   "Grok",
+                  "Hugging Chat",
+                  "Kimi",
                   "Perplexity",
                   "Mistral",
-                  "Meta",
-                  "DeepSeek",
+                  "Open WebUI",
+                  "OpenRouter",
                   "Qwen",
                   "Together",
                   "Yuanbao",
-                  "Doubao",
-                  "Kimi",
                   "Z.AI"
                 ],
                 "description": "Choose among supported chatbots."
@@ -1048,17 +1108,15 @@
             },
             {
               "name": "(1)",
-              "chatbot": "Gemini"
+              "chatbot": "Claude"
             },
             {
               "name": "(2)",
-              "chatbot": "AI Studio",
-              "temperature": 0.5,
-              "systemInstructions": "You're a helpful coding assistant."
+              "chatbot": "Gemini"
             },
             {
               "name": "(3)",
-              "chatbot": "Claude"
+              "chatbot": "AI Studio"
             },
             {
               "name": "(4)",
@@ -1099,6 +1157,26 @@
             {
               "name": "(13)",
               "chatbot": "Z.AI"
+            },
+            {
+              "name": "(14)",
+              "chatbot": "Copilot"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "GitHub Copilot"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Hugging Chat"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Open WebUI"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "OpenRouter"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -1113,21 +1191,23 @@
                 "type": "string",
                 "enum": [
                   "AI Studio",
-                  "Gemini",
-                  "Open WebUI",
-                  "OpenRouter",
                   "ChatGPT",
                   "Claude",
+                  "Copilot",
+                  "DeepSeek",
+                  "Doubao",
+                  "Gemini",
+                  "GitHub Copilot",
                   "Grok",
+                  "Hugging Chat",
+                  "Kimi",
                   "Perplexity",
                   "Mistral",
-                  "Meta",
-                  "DeepSeek",
+                  "Open WebUI",
+                  "OpenRouter",
                   "Qwen",
                   "Together",
                   "Yuanbao",
-                  "Doubao",
-                  "Kimi",
                   "Z.AI"
                 ],
                 "description": "Choose among supported chatbots."

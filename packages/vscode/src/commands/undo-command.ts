@@ -4,15 +4,13 @@ import {
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY
 } from '../constants/state-keys'
-import { parse_response } from './apply-chat-response-command/utils/clipboard-parser/clipboard-parser'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { undo_files } from './apply-chat-response-command/utils/file-operations'
 import { dictionary } from '@shared/constants/dictionary'
 
 export function undo_command(
   context: vscode.ExtensionContext,
-  on_can_undo: (can_undo: boolean) => void,
-  set_apply_button_state: (can_apply: boolean) => void
+  on_can_undo: (can_undo: boolean) => void
 ) {
   return vscode.commands.registerCommand('codeWebChat.undo', async () => {
     const original_states = context.workspaceState.get<OriginalFileState[]>(
@@ -71,24 +69,6 @@ export function undo_command(
         null
       )
       on_can_undo(false)
-
-      const clipboard_text = await vscode.env.clipboard.readText()
-      if (!clipboard_text.trim()) {
-        set_apply_button_state(false)
-      } else {
-        const is_single_root_folder_workspace =
-          (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
-        const content = parse_response({
-          response: clipboard_text,
-          is_single_root_folder_workspace
-        })
-        const can_apply =
-          content.code_completion != null ||
-          (content.patches && content.patches.length > 0) ||
-          (content.files && content.files.length > 0) ||
-          false
-        set_apply_button_state(can_apply)
-      }
 
       return true
     } catch (error: any) {
