@@ -8,7 +8,9 @@ import { get_checkpoint_path } from '../utils'
 
 export const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  title: string = 'Created by user',
+  description?: string
 ): Promise<boolean> => {
   try {
     const timestamp = Date.now()
@@ -27,8 +29,9 @@ export const create_checkpoint = async (
         await copy_workspace_to_dir(checkpoint_dir_uri, workspace_provider)
 
         const new_checkpoint: Checkpoint = {
-          title: 'Created by user',
-          timestamp
+          title,
+          timestamp,
+          description
         }
 
         const checkpoints = await get_checkpoints(context)
