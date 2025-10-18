@@ -331,6 +331,7 @@ export class WebSocketManager {
     instruction: string
     preset: Preset
     raw_instructions: string
+    mode: any
   }): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -369,7 +370,8 @@ export class WebSocketManager {
       system_instructions: params.preset.system_instructions,
       options: params.preset.options,
       client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
-      raw_instructions: params.raw_instructions
+      raw_instructions: params.raw_instructions,
+      mode: params.mode
     }
 
     Logger.info({

@@ -638,7 +638,7 @@
             },
             {
               "name": "(16)",
-              "chatbot": "Hugging Chat"
+              "chatbot": "HuggingChat"
             },
             {
               "name": "(17)",
@@ -669,7 +669,7 @@
                   "Gemini",
                   "GitHub Copilot",
                   "Grok",
-                  "Hugging Chat",
+                  "HuggingChat",
                   "Kimi",
                   "Perplexity",
                   "Mistral",
@@ -823,7 +823,7 @@
             },
             {
               "name": "(16)",
-              "chatbot": "Hugging Chat"
+              "chatbot": "HuggingChat"
             },
             {
               "name": "(17)",
@@ -854,7 +854,7 @@
                   "Gemini",
                   "GitHub Copilot",
                   "Grok",
-                  "Hugging Chat",
+                  "HuggingChat",
                   "Kimi",
                   "Perplexity",
                   "Mistral",
@@ -1008,7 +1008,7 @@
             },
             {
               "name": "(16)",
-              "chatbot": "Hugging Chat"
+              "chatbot": "HuggingChat"
             },
             {
               "name": "(17)",
@@ -1039,7 +1039,7 @@
                   "Gemini",
                   "GitHub Copilot",
                   "Grok",
-                  "Hugging Chat",
+                  "HuggingChat",
                   "Kimi",
                   "Perplexity",
                   "Mistral",
@@ -1163,7 +1163,7 @@
             },
             {
               "name": "(16)",
-              "chatbot": "Hugging Chat"
+              "chatbot": "HuggingChat"
             },
             {
               "name": "(17)",
@@ -1194,7 +1194,7 @@
                   "Gemini",
                   "GitHub Copilot",
                   "Grok",
-                  "Hugging Chat",
+                  "HuggingChat",
                   "Kimi",
                   "Perplexity",
                   "Mistral",
