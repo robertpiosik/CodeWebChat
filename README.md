@@ -145,9 +145,9 @@ Generate meaningful summaries of changes adhering to your style.
 
 If you have a question, or want to help others, you're always welcome in our community.
 
-- [Discord](https://discord.gg/KJySXsrSX5)
-- [Reddit](https://www.reddit.com/r/CodeWebChat)
-- [Discussions](https://github.com/robertpiosik/CodeWebChat/discussions)
+- [Discord server](https://discord.gg/KJySXsrSX5)
+- [Official subreddit](https://www.reddit.com/r/CodeWebChat)
+- [GitHub Discussions](https://github.com/robertpiosik/CodeWebChat/discussions)
 
 ## Donations
 
