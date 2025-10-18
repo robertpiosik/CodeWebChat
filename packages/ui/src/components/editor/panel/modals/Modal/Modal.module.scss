@@ -22,6 +22,8 @@
 }
 
 .container {
+  position: relative;
+  z-index: 1;
   background-color: var(--vscode-sideBar-background);
   padding: var(--padding-16px) var(--padding-12px) var(--padding-12px)
     var(--padding-12px);
