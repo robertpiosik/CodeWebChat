@@ -7,7 +7,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
   padding-bottom: 30px;
 
   &::before {
@@ -20,18 +19,6 @@
     background-color: var(--vscode-sideBar-background);
     opacity: 0.7;
   }
-
-  &--visible {
-    opacity: 1;
-    transition: all var(--transition-duration-250)
-      var(--transition-timing-function);
-
-    .container {
-      transform: scale(1);
-      transition: transform var(--transition-duration-250)
-        var(--transition-timing-function);
-    }
-  }
 }
 
 .container {
@@ -42,6 +29,5 @@
   border: 1px solid var(--vscode-sideBarSectionHeader-border);
   width: 100%;
   margin: var(--padding-24px);
-  transform: scale(0.9);
   max-width: 320px;
 }
