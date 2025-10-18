@@ -117,16 +117,19 @@ export const checkpoints_command = (
               detail: c.description,
               checkpoint: c,
               index,
-              buttons: [
-                {
-                  iconPath: new vscode.ThemeIcon('edit'),
-                  tooltip: 'Edit Description'
-                },
-                {
-                  iconPath: new vscode.ThemeIcon('trash'),
-                  tooltip: 'Delete'
-                }
-              ]
+              buttons:
+                c.title == 'Created by user'
+                  ? [
+                      {
+                        iconPath: new vscode.ThemeIcon('edit'),
+                        tooltip: 'Edit Description'
+                      },
+                      {
+                        iconPath: new vscode.ThemeIcon('trash'),
+                        tooltip: 'Delete'
+                      }
+                    ]
+                  : undefined
             }))
           ]
           quick_pick.busy = false
