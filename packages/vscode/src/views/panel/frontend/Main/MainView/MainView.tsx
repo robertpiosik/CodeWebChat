@@ -199,6 +199,8 @@ export const MainView: React.FC<Props> = (props) => {
 
     set_is_commit_disabled_temporarily(true)
     props.on_commit_click()
+
+    setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
   }
 
   const handle_heading_click = () => {
