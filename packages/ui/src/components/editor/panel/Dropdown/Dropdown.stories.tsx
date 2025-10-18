@@ -36,7 +36,7 @@ export const WithFooter = () => {
         options={options}
         selected_value={selected}
         on_change={set_selected}
-        footer_text="This is a footer."
+        footer="This is a footer."
       />
     </div>
   )

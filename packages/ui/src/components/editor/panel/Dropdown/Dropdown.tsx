@@ -13,7 +13,7 @@ export namespace Dropdown {
     selected_value: T
     on_change: (value: T) => void
     max_width?: number
-    footer_text?: string
+    footer?: React.ReactNode
   }
 }
 
@@ -102,8 +102,8 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
               {option.label}
             </div>
           ))}
-          {props.footer_text && (
-            <div className={styles.menu__footer}>{props.footer_text}</div>
+          {props.footer && (
+            <div className={styles.menu__footer}>{props.footer}</div>
           )}
         </div>
       )}

@@ -232,6 +232,14 @@ export const MainView: React.FC<Props> = (props) => {
     configurations: props.configurations
   })
 
+  const dropdown_footer = (
+    <>
+      Cycle down: shift+tab
+      <br />
+      Cycle up: alt+shift+tab
+    </>
+  )
+
   return (
     <div ref={container_ref} className={styles.container}>
       <Scrollable>
@@ -262,7 +270,7 @@ export const MainView: React.FC<Props> = (props) => {
                   )}
                   selected_value={props.web_mode}
                   on_change={props.on_web_mode_change}
-                  footer_text="shift+tab cycle down, alt+shift+tab cycle up"
+                  footer={dropdown_footer}
                   max_width={dropdown_max_width}
                 />
               )}
@@ -273,7 +281,7 @@ export const MainView: React.FC<Props> = (props) => {
                   )}
                   selected_value={props.api_mode}
                   on_change={props.on_api_mode_change}
-                  footer_text="shift+tab cycle down, alt+shift+tab cycle up"
+                  footer={dropdown_footer}
                   max_width={dropdown_max_width}
                 />
               )}
