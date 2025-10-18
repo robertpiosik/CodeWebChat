@@ -70,11 +70,6 @@
   width: 100%; // For easier text selection
   padding-bottom: var(--padding-12px);
 
-  &__version {
-    color: var(--vscode-descriptionForeground);
-    user-select: text;
-  }
-
   &__links {
     display: flex;
     flex-direction: column;
@@ -129,9 +124,10 @@
     }
   }
 
-  &__website {
+  &__version {
     flex: 1;
     text-align: right;
     user-select: text;
+    color: var(--vscode-descriptionForeground);
   }
 }

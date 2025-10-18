@@ -82,7 +82,6 @@ export const Home: React.FC<Props> = (props) => {
           </div>
 
           <div className={styles.bottom}>
-            <div className={styles.bottom__version}>{props.version}</div>
             <div className={styles.bottom__links}>
               <div>
                 Released under the{' '}
@@ -133,9 +132,7 @@ export const Home: React.FC<Props> = (props) => {
           </a>
         </div>
 
-        <div className={styles.footer__website}>
-          <a href="https://codeweb.chat/">Documentation</a>
-        </div>
+        <div className={styles.footer__version}>{props.version}</div>
       </div>
     </div>
   )
