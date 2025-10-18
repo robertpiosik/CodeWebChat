@@ -12,8 +12,8 @@ export namespace Dropdown {
     options: Option<T>[]
     selected_value: T
     on_change: (value: T) => void
-    title?: string
     max_width?: number
+    footer_text?: string
   }
 }
 
@@ -64,7 +64,6 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
     <div
       className={cn(styles.container, { [styles['button--open']]: is_open })}
       ref={container_ref}
-      title={props.title}
     >
       <button
         className={cn(styles.button, { [styles['button--open']]: is_open })}
@@ -103,6 +102,9 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
               {option.label}
             </div>
           ))}
+          {props.footer_text && (
+            <div className={styles.menu__footer}>{props.footer_text}</div>
+          )}
         </div>
       )}
     </div>

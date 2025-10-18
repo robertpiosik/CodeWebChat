@@ -23,6 +23,25 @@ export const Default = () => {
   )
 }
 
+export const WithFooter = () => {
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' }
+  ]
+  const [selected, set_selected] = useState<string>('option1')
+
+  return (
+    <div style={{ width: '200px' }}>
+      <Dropdown
+        options={options}
+        selected_value={selected}
+        on_change={set_selected}
+        footer_text="This is a footer."
+      />
+    </div>
+  )
+}
+
 export const LongList = () => {
   const options = Array.from({ length: 20 }, (_, i) => ({
     value: `item${i + 1}`,

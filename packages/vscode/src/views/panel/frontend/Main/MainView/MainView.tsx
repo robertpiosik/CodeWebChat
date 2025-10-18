@@ -20,6 +20,7 @@ import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
+import { use_cycle_mode } from './hooks/use-cycle-mode'
 
 type Props = {
   initialize_chats: (params: {
@@ -91,11 +92,13 @@ const web_mode_labels: Record<WebMode, string> = {
   'no-context': 'No context',
   'code-completions': 'Code at cursor'
 }
+const WEB_MODES = Object.keys(web_mode_labels) as WebMode[]
 
 const api_mode_labels: Record<ApiMode, string> = {
   'edit-context': 'Edit context',
   'code-completions': 'Code at cursor'
 }
+const API_MODES = Object.keys(api_mode_labels) as ApiMode[]
 
 export const MainView: React.FC<Props> = (props) => {
   // We need this because we can't use overflow: hidden
@@ -113,6 +116,16 @@ export const MainView: React.FC<Props> = (props) => {
     useState(false)
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
+
+  use_cycle_mode({
+    home_view_type: props.home_view_type,
+    web_mode: props.web_mode,
+    on_web_mode_change: props.on_web_mode_change,
+    api_mode: props.api_mode,
+    on_api_mode_change: props.on_api_mode_change,
+    web_modes: WEB_MODES,
+    api_modes: API_MODES
+  })
 
   const calculate_dropdown_max_width = () => {
     if (!container_ref.current || !top_left_ref.current) return
@@ -249,7 +262,7 @@ export const MainView: React.FC<Props> = (props) => {
                   )}
                   selected_value={props.web_mode}
                   on_change={props.on_web_mode_change}
-                  title={`Current mode: ${web_mode_labels[props.web_mode]}`}
+                  footer_text="shift+tab cycle down, alt+shift+tab cycle up"
                   max_width={dropdown_max_width}
                 />
               )}
@@ -260,7 +273,7 @@ export const MainView: React.FC<Props> = (props) => {
                   )}
                   selected_value={props.api_mode}
                   on_change={props.on_api_mode_change}
-                  title={`Current mode: ${api_mode_labels[props.api_mode]}`}
+                  footer_text="shift+tab cycle down, alt+shift+tab cycle up"
                   max_width={dropdown_max_width}
                 />
               )}

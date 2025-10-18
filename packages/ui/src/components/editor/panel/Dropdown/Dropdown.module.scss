@@ -44,7 +44,7 @@
 .menu {
   position: absolute;
   right: 0;
-  margin-top: 2px;
+  margin-top: var(--padding-2px);
   z-index: 3;
   background-color: var(--vscode-dropdown-background);
   border: 1px solid var(--vscode-focusBorder);
@@ -86,5 +86,12 @@
       background-color: var(--vscode-menu-selectionBackground);
       color: var(--vscode-menu-selectionForeground);
     }
+  }
+
+  &__footer {
+    border-top: 1px dashed var(--vscode-focusBorder);
+    padding: var(--padding-4px) var(--padding-8px);
+    color: var(--vscode-descriptionForeground);
+    font-size: var(--font-size-12px);
   }
 }

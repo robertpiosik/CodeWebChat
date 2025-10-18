@@ -364,7 +364,7 @@ export function apply_context_command(
           value: 'clipboard' | 'internal' | 'file'
         })[] = [
           {
-            label: 'Paths from clipboard text',
+            label: 'Select files based on paths found in the clipboard text',
             description: 'utility',
             value: 'clipboard'
           },
