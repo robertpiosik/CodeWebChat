@@ -202,7 +202,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               className={cn(styles['footer__left__button'])}
               title="Reference file"
             >
-              <span>@</span>
+              <Icon variant="AT_SIGN" />
             </button>
             {!props.is_in_code_completions_mode && (
               <button
@@ -210,7 +210,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                 className={cn(styles['footer__left__button'])}
                 title="Insert symbol"
               >
-                <span>#</span>
+                <Icon variant="HASH_SIGN" />
               </button>
             )}
             <button
@@ -218,7 +218,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               className={cn(styles['footer__left__button'])}
               title="Prompt templates"
             >
-              <span className="codicon codicon-json" />
+              <Icon variant="CURLY_BRACES" />
             </button>
           </div>
           <div

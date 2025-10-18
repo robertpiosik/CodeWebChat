@@ -1,4 +1,5 @@
 import AIStudio from '../../../../assets/icons/ai-studio.svg'
+import AtSign from '../../../../assets/icons/at-sign.svg'
 import BuyMeACoffeeLogo from '../../../../assets/icons/buy-me-a-coffee-logo.svg'
 import BuyMeACoffeeText from '../../../../assets/icons/buy-me-a-coffee-text.svg'
 import ChatGPT from '../../../../assets/icons/openai.svg'
@@ -7,6 +8,7 @@ import CodeWebChatLogo from '../../../../assets/icons/code-web-chat-logo.svg'
 import CodeWebChatText from '../../../../assets/icons/code-web-chat-text.svg'
 import Command from '../../../../assets/icons/command.svg'
 import Copilot from '../../../../assets/icons/copilot.svg'
+import CurlyBraces from '../../../../assets/icons/curly-braces.svg'
 import GithubCopilot from '../../../../assets/icons/github-copilot.svg'
 import DeepSeek from '../../../../assets/icons/deepseek.svg'
 import Discord from '../../../../assets/icons/discord.svg'
@@ -14,6 +16,7 @@ import Doubao from '../../../../assets/icons/doubao.svg'
 import Enter from '../../../../assets/icons/enter.svg'
 import Gemini from '../../../../assets/icons/gemini.svg'
 import Grok from '../../../../assets/icons/grok.svg'
+import HashSign from '../../../../assets/icons/hash-sign.svg'
 import HuggingChat from '../../../../assets/icons/hugging-chat.svg'
 import Kimi from '../../../../assets/icons/kimi.svg'
 import Meta from '../../../../assets/icons/meta.svg'
@@ -31,6 +34,7 @@ import ZAI from '../../../../assets/icons/z-ai.svg'
 export namespace Icon {
   export type Variant =
     | 'AI_STUDIO'
+    | 'AT_SIGN'
     | 'BUY_ME_A_COFFEE_LOGO'
     | 'BUY_ME_A_COFFEE_TEXT'
     | 'CHATGPT'
@@ -39,6 +43,7 @@ export namespace Icon {
     | 'CODE_WEB_CHAT_TEXT'
     | 'COMMAND'
     | 'COPILOT'
+    | 'CURLY_BRACES'
     | 'DEEPSEEK'
     | 'DISCORD'
     | 'DOUBAO'
@@ -46,6 +51,7 @@ export namespace Icon {
     | 'GEMINI'
     | 'GITHUB_COPILOT'
     | 'GROK'
+    | 'HASH_SIGN'
     | 'HUGGING_CHAT'
     | 'KIMI'
     | 'META'
@@ -72,6 +78,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'AI_STUDIO':
       icon = <AIStudio />
       break
+    case 'AT_SIGN':
+      icon = <AtSign />
+      break
     case 'BUY_ME_A_COFFEE_LOGO':
       icon = <BuyMeACoffeeLogo />
       break
@@ -96,6 +105,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'COPILOT':
       icon = <Copilot />
       break
+    case 'CURLY_BRACES':
+      icon = <CurlyBraces />
+      break
     case 'DEEPSEEK':
       icon = <DeepSeek />
       break
@@ -116,6 +128,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'GROK':
       icon = <Grok />
+      break
+    case 'HASH_SIGN':
+      icon = <HashSign />
       break
     case 'HUGGING_CHAT':
       icon = <HuggingChat />

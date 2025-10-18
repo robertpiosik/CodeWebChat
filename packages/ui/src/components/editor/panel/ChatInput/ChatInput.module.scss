@@ -185,14 +185,15 @@
       height: var(--size);
       width: var(--size);
       border-radius: 5px;
-      color: var(--vscode-icon-foreground);
 
       &:hover {
         background-color: var(--vscode-toolbar-hoverBackground);
       }
 
-      > span {
-        padding-bottom: var(--padding-2px);
+      > svg {
+        width: 14px;
+        height: 14px;
+        fill: var(--vscode-icon-foreground);
       }
     }
   }

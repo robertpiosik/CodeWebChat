@@ -9,64 +9,7 @@ import {
 } from '../utils/report-initialization-error'
 
 export const perplexity: Chatbot = {
-  // wait_until_ready: async () => {
-  //   await new Promise((resolve) => {
-  //     const check_for_element = () => {
-  //       if (
-  //         document.querySelector(
-  //           'path[d="M8 8a3.5 3 0 0 1 3.5 -3h1a3.5 3 0 0 1 3.5 3a3 3 0 0 1 -2 3a3 4 0 0 0 -2 4"]'
-  //         )
-  //       ) {
-  //         resolve(null)
-  //       } else {
-  //         setTimeout(check_for_element, 100)
-  //       }
-  //     }
-  //     check_for_element()
-  //   })
-  // },
   enter_message_and_send: async (params) => {
-    let instructions = params.message
-    if (params.message.includes('<files>')) {
-      instructions = params.message.split('<files>')[0].trim()
-      const context = params.message
-        .split('<files>')[1]
-        .split('</files>')[0]
-        .trim()
-
-      // Upload file
-      const file_input = document.querySelector(
-        'input[type="file"]'
-      ) as HTMLInputElement
-      if (!file_input) {
-        report_initialization_error({
-          function_name: 'enter_message_and_send',
-          log_message: 'File input not found',
-          alert_message: InitializationError.UNABLE_TO_UPLOAD_FILE
-        })
-        return
-      }
-      const blob = new Blob([`<files>\n${context}\n</files>`], {
-        type: 'text/plain'
-      })
-      const file = new File([blob], 'files.txt', { type: 'text/plain' })
-      const data_transfer = new DataTransfer()
-      data_transfer.items.add(file)
-      file_input.files = data_transfer.files
-      file_input.dispatchEvent(new Event('change', { bubbles: true }))
-      await new Promise((r) => requestAnimationFrame(r))
-      await new Promise((resolve) => {
-        const check_for_element = () => {
-          if (document.querySelector('div[data-testid="file-type-icon"]')) {
-            resolve(null)
-          } else {
-            setTimeout(check_for_element, 100)
-          }
-        }
-        check_for_element()
-      })
-    }
-
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
@@ -84,7 +27,7 @@ export const perplexity: Chatbot = {
         bubbles: true,
         cancelable: true,
         inputType: 'insertText',
-        data: instructions
+        data: params.message
       })
     )
 
