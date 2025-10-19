@@ -298,12 +298,12 @@ export function context_initialization(context: vscode.ExtensionContext): {
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
               <title>${website.title}</title>
               <style>
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.4; max-width: 700px; margin: 0 auto; padding: 40px; color: var(--vscode-editor-foreground); }
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.4; max-width: 700px; margin: 0 auto; padding: 40px; color: var(--vscode-foreground); }
                 body > *:first-child { margin-top: 0; }
                 body > *:last-child { margin-bottom: 0; }
-                h1 { color: var(--vscode-editor-foreground); }
+                h1 { color: var(--vscode-foreground); }
                 a { color: var(--vscode-textLink-foreground); }
-                hr { height: 1px; border: none; background-color: var(--vscode-editor-foreground); }
+                hr { height: 1px; border: none; background-color: var(--vscode-foreground); }
               </style>
             </head>
             <body>
@@ -395,7 +395,7 @@ export function context_initialization(context: vscode.ExtensionContext): {
   }, 1000) // Wait for 1 second to ensure VS Code has fully loaded
 
   return {
-    workspace_provider: workspace_provider!,
+    workspace_provider,
     open_editors_provider,
     websites_provider
   }

@@ -2,27 +2,27 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-Non-agentic AI coding in free chatbots for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor and Windsurf</a>. \
-_CWC is community driven—[join discord!](https://discord.gg/KJySXsrSX5)_
+Non-agentic AI coding in free chatbots for <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank">VS Code</a>, <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank">Cursor and Windsurf</a>.
+
+CWC is community driven. Join our [discord server](https://discord.gg/KJySXsrSX5)!
 
 🌐 **Initializes web chats**—ChatGPT, Claude, Gemini, DeepSeek, and more \
-🪄 **Applies responses**—multi-file changes integration with confidence \
-🔋 **Batteries included**—code completions, checkpoints, and more \
-🧠 **Non-agentic**—accurate, blazing fast edits without tool calling \
-🫶 **Free and open-source**—released under the GPL-3.0 license
+🪄 **Applies responses**—multi-file changes integration with easy rollback \
+🔋 **Batteries included**—code completions, commit messages, and more \
+🫶 **Free & open-source**—released under the GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-✍️ **Guiding principles**
+🫡 **Guiding principles**
 
 - Don't scrape chat responses
 - Operate 100% locally
 - Respect user privacy
 - Stay free forever
 
-🤌 **CWC is non-agentic, but why?**
+🤔 **CWC is non-agentic, but why?**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at an accepted answer from a StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning next steps.
 
@@ -30,7 +30,7 @@ Because the model is only as smart as examples it has seen in its pre-training, 
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-💅 **The workflow**
+🤓 **The workflow**
 
 Select folders and files for context, enter prompt, pick edit format and send message via...
 
