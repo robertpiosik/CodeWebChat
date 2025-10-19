@@ -80,7 +80,8 @@
         {
           "id": "codeWebChatViewWorkspace",
           "name": "Workspace",
-          "icon": "resources/activity-bar-icon.svg"
+          "icon": "resources/activity-bar-icon.svg",
+          "initialSize": 1
         },
         {
           "id": "codeWebChatViewWebsites",
@@ -92,7 +93,8 @@
           "id": "codeWebChatView",
           "name": "Code Web Chat",
           "type": "webview",
-          "icon": "resources/activity-bar-icon.svg"
+          "icon": "resources/activity-bar-icon.svg",
+          "initialSize": 6
         }
       ]
     },
