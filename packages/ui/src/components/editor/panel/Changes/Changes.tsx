@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useMemo } from 'react'
+import { FC, useState, useMemo } from 'react'
 import { FileInReview } from '@shared/types/file-in-review'
 import cn from 'classnames'
 import styles from './Changes.module.scss'

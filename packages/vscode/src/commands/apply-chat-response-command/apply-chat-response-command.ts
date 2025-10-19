@@ -985,8 +985,7 @@ export const apply_chat_response_command = (
         if (!checkpoint_promoted) {
           await delete_checkpoint({
             context,
-            checkpoint_to_delete: temp_checkpoint,
-            options: { skip_undo_prompt: true }
+            checkpoint_to_delete: temp_checkpoint
           })
         }
       }

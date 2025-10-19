@@ -135,7 +135,7 @@ Generate meaningful summaries of changes adhering to your style.
 
 ### Context
 
-- `Code Web Chat: Save Current Context` - Save the currently checked files as a named context for easy reuse.
+- `Code Web Chat: Save Context` - Save the currently checked files as a named context for easy reuse.
 - `Code Web Chat: Apply Context` - Apply a saved context to either replace or merge with the currently checked files.
 
 ## Enterprise security

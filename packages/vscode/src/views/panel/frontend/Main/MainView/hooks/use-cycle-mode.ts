@@ -16,11 +16,11 @@ export const use_cycle_mode = (params: {
 }) => {
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
-      if (event.shiftKey && event.key === 'Tab') {
+      if (event.shiftKey && event.key == 'Tab') {
         event.preventDefault()
         const go_backwards = event.altKey
 
-        if (params.home_view_type === HOME_VIEW_TYPES.WEB) {
+        if (params.home_view_type == HOME_VIEW_TYPES.WEB) {
           const current_index = params.web_modes.indexOf(params.web_mode)
           const new_index = go_backwards
             ? (current_index - 1 + params.web_modes.length) %

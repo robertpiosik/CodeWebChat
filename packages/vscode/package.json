@@ -145,7 +145,7 @@
       },
       {
         "command": "codeWebChat.saveContext",
-        "title": "Save Current Context",
+        "title": "Save Context",
         "category": "Code Web Chat",
         "icon": "$(save)"
       },
