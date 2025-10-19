@@ -198,6 +198,7 @@ export const dictionary = {
     GIT_EXTENSION_NOT_FOUND: 'Git extension not found.',
     NO_GIT_REPOSITORY_FOUND: 'No Git repository found.',
     REPOSITORY_NOT_FOUND: 'Repository not found.',
+    RESPONSE_TEXT_MISSING: 'Response text to apply is missing.',
     APPLYING_CHANGES_FAILED_EMPTY_RESPONSE: (file_path: string) =>
       `Applying changes to ${file_path} failed. Empty response from API.`,
     ERROR_DURING_REFACTORING: (file_path: string) =>
@@ -248,7 +249,6 @@ export const dictionary = {
       `Model provider "${name}" not found.`,
     API_PROVIDER_NOT_FOUND:
       'API provider for the selected API tool configuration was not found.',
-    NO_RESPONSE_TEXT: 'No response text provided and clipboard is empty.',
     NO_WORKSPACE_FOLDER_OPEN: 'No workspace folder open.',
     CANNOT_PROCESS_MULTIPLE_FILES_WITHOUT_WORKSPACE:
       'Cannot process multiple files without an open workspace folder.',

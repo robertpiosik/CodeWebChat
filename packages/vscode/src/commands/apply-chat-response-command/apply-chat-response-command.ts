@@ -405,6 +405,22 @@ export const apply_chat_response_command = (
         }
       }
 
+      let chat_response = args?.response
+      if (chat_response === undefined) {
+        chat_response = await vscode.env.clipboard.readText()
+        if (!chat_response) {
+          vscode.window.showInformationMessage(
+            dictionary.information_message.CLIPBOARD_IS_EMPTY
+          )
+          return
+        }
+      } else if (!chat_response) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.RESPONSE_TEXT_MISSING
+        )
+        return
+      }
+
       const temp_checkpoint = await create_temporary_checkpoint(
         workspace_provider
       )
@@ -415,23 +431,6 @@ export const apply_chat_response_command = (
       }
 
       const review_data = await (async (): Promise<ReviewData | null> => {
-        let chat_response = args?.response
-
-        if (!chat_response) {
-          chat_response = await vscode.env.clipboard.readText()
-        }
-
-        if (!chat_response) {
-          vscode.window.showErrorMessage(
-            dictionary.error_message.NO_RESPONSE_TEXT
-          )
-          Logger.warn({
-            function_name: 'apply_chat_response_command',
-            message: 'Clipboard is empty.'
-          })
-          return null
-        }
-
         const is_single_root_folder_workspace =
           vscode.workspace.workspaceFolders?.length == 1
 
