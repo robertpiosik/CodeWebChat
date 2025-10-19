@@ -9,6 +9,9 @@ import {
 } from '../utils/report-initialization-error'
 
 export const perplexity: Chatbot = {
+  wait_until_ready: async () => {
+    await new Promise((resolve) => setTimeout(resolve, 500))
+  },
   enter_message_and_send: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable=true]'

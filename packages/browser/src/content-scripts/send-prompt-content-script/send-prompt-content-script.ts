@@ -20,10 +20,10 @@ import {
   kimi,
   together,
   github_copilot,
-  hugging_chat
+  hugging_chat,
+  perplexity,
+  z_ai
 } from './chatbots'
-import { perplexity } from './chatbots/perplexity'
-import { z_ai } from './chatbots/z-ai'
 
 // In case url changes on load
 const current_url = window.location.href
