@@ -69,32 +69,35 @@
         {
           "id": "codeWebChatViewOpenEditors",
           "name": "Open Editors",
-          "icon": "resources/activity-bar-icon.svg"
+          "icon": "resources/activity-bar-icon.svg",
+          "initialSize": 1
         },
         {
           "id": "codeWebChatViewContext",
           "name": "Context",
           "icon": "resources/activity-bar-icon.svg",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "initialSize": 1
         },
         {
           "id": "codeWebChatViewWorkspace",
           "name": "Workspace",
           "icon": "resources/activity-bar-icon.svg",
-          "initialSize": 1
+          "initialSize": 3
         },
         {
           "id": "codeWebChatViewWebsites",
           "name": "Websites",
           "icon": "resources/activity-bar-icon.svg",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "initialSize": 1
         },
         {
           "id": "codeWebChatView",
           "name": "Code Web Chat",
           "type": "webview",
           "icon": "resources/activity-bar-icon.svg",
-          "initialSize": 6
+          "initialSize": 5
         }
       ]
     },
