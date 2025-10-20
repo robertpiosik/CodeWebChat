@@ -44,8 +44,8 @@ export const dictionary = {
   },
 
   warning_message: {
-    REVIEW_ONGOING_DISCARD:
-      'A review is currently ongoing. Would you like to discard it?',
+    REVIEW_ONGOING:
+      'Another response review is currently ongoing. Would you like to switch to the new one?',
     SKIPPING_INVALID_PATH: (file_path: string) =>
       `Skipping applying change to invalid path: ${file_path}`,
     NO_VALID_CODE_BLOCKS_IN_CLIPBOARD:

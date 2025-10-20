@@ -19,14 +19,14 @@
 .responses {
   padding: 0 var(--padding-12px);
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
 
-  &__list-item {
+  &__item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--padding-8px);
-    padding: var(--padding-5px) var(--padding-7px);
+    padding: var(--padding-5px) var(--padding-8px);
     border-radius: var(--border-radius-4px);
     width: 100%;
     text-align: left;

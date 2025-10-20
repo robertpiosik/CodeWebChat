@@ -173,22 +173,41 @@ export const Panel = () => {
         set_commit_button_enabling_trigger_count((k) => k + 1)
       } else if (message.command == 'NEW_RESPONSE_RECEIVED') {
         const now = Date.now()
-        if (response_history.length == 0) {
+
+        if (!response_history.length) {
           set_selected_history_item_created_at(now)
+          set_response_history([
+            {
+              response: message.response,
+              raw_instructions: message.raw_instructions,
+              created_at: now
+            }
+          ])
         }
-        set_response_history((prev_history) => {
+        const is_duplicate = response_history.some(
+          (item) =>
+            item.response == message.response &&
+            item.raw_instructions == message.raw_instructions
+        )
+        if (!is_duplicate) {
           const new_item = {
             response: message.response,
             raw_instructions: message.raw_instructions,
             created_at: now
           }
-          const is_duplicate = prev_history.some(
-            (item) =>
-              item.response == new_item.response &&
-              item.raw_instructions == new_item.raw_instructions
+          set_response_history([...response_history, new_item])
+          if (!files_to_review) {
+            set_selected_history_item_created_at(now)
+          }
+        } else {
+          set_selected_history_item_created_at(
+            response_history.find(
+              (item) =>
+                item.response == message.response &&
+                item.raw_instructions == message.raw_instructions
+            )?.created_at
           )
-          return is_duplicate ? prev_history : [new_item, ...prev_history]
-        })
+        }
       }
     }
     window.addEventListener('message', handle_message)
@@ -208,7 +227,7 @@ export const Panel = () => {
     initial_messages.forEach((message) => post_message(vscode, message))
 
     return () => window.removeEventListener('message', handle_message)
-  }, [response_history])
+  }, [response_history, files_to_review])
 
   const edit_preset_back_click_handler = () => {
     post_message(vscode, {
@@ -449,7 +468,6 @@ export const Panel = () => {
         <div className={styles.slot}>
           <UiPage
             title="Response Review"
-            has_outline={true}
             on_back_click={() => {
               post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
             }}

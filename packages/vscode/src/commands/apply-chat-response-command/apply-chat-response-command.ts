@@ -411,12 +411,12 @@ export const apply_chat_response_command = (
 
       if (code_review_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
-          dictionary.warning_message.REVIEW_ONGOING_DISCARD,
+          dictionary.warning_message.REVIEW_ONGOING,
           { modal: true },
-          'Apply Another Chat Response'
+          'Switch'
         )
 
-        if (choice == 'Apply Another Chat Response') {
+        if (choice == 'Switch') {
           code_review_promise_resolve({ accepted_files: [] })
           if (ongoing_review_cleanup_promise) {
             await ongoing_review_cleanup_promise

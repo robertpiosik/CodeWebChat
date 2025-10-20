@@ -22,6 +22,7 @@ button {
   font-size: var(--font-size-13px);
   font-family: inherit;
   color: inherit;
+  line-height: inherit;
 }
 
 button:not(:disabled) {

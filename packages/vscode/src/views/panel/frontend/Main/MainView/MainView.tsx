@@ -316,8 +316,8 @@ export const MainView: React.FC<Props> = (props) => {
                 {props.response_history.map((item) => (
                   <button
                     key={item.created_at}
-                    className={cn(styles['responses__list-item'], {
-                      [styles['responses__list-item--selected']]:
+                    className={cn(styles['responses__item'], {
+                      [styles['responses__item--selected']]:
                         props.selected_history_item_created_at ==
                         item.created_at
                     })}
@@ -327,12 +327,10 @@ export const MainView: React.FC<Props> = (props) => {
                       props.on_selected_history_item_change(item.created_at)
                     }}
                   >
-                    <span
-                      className={styles['responses__list-item__instruction']}
-                    >
+                    <span className={styles['responses__item__instruction']}>
                       {item.raw_instructions || 'Response without instructions'}
                     </span>
-                    <span className={styles['responses__list-item__date']}>
+                    <span className={styles['responses__item__date']}>
                       {dayjs(item.created_at).fromNow()}
                     </span>
                   </button>
