@@ -127,7 +127,7 @@ export const MainView: React.FC<Props> = (props) => {
 
   const dropdown_container_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
-  const top_left_ref = useRef<HTMLDivElement>(null)
+  const header_left_ref = useRef<HTMLDivElement>(null)
   const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
     useState(false)
   const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
@@ -149,24 +149,24 @@ export const MainView: React.FC<Props> = (props) => {
   })
 
   const calculate_dropdown_max_width = () => {
-    if (!container_ref.current || !top_left_ref.current) return
+    if (!container_ref.current || !header_left_ref.current) return
 
     const container_width = container_ref.current.offsetWidth
-    const top_left_width = top_left_ref.current.offsetWidth
-    const calculated_width = container_width - top_left_width - 36
+    const header_left_width = header_left_ref.current.offsetWidth
+    const calculated_width = container_width - header_left_width - 36
 
     set_dropdown_max_width(calculated_width)
   }
 
   useEffect(() => {
-    if (!container_ref.current || !top_left_ref.current) return
+    if (!container_ref.current || !header_left_ref.current) return
 
     const resize_observer = new ResizeObserver(() => {
       calculate_dropdown_max_width()
     })
 
     resize_observer.observe(container_ref.current)
-    resize_observer.observe(top_left_ref.current)
+    resize_observer.observe(header_left_ref.current)
 
     calculate_dropdown_max_width()
 
@@ -261,59 +261,62 @@ export const MainView: React.FC<Props> = (props) => {
     </>
   )
 
-  console.log('xxx', props.selected_history_item_created_at)
+  const scroll_to_top_key = `${props.home_view_type}-${
+    props.home_view_type == HOME_VIEW_TYPES.WEB
+      ? props.web_mode
+      : props.api_mode
+  }`
 
   return (
     <div ref={container_ref} className={styles.container}>
-      <Scrollable>
-        <div className={styles.inner}>
-          <div className={styles.top}>
-            <div className={styles.top__left} ref={top_left_ref}>
-              <UiIconButton
-                codicon_icon="chevron-left"
-                on_click={props.on_show_home}
-                title="Return to Home"
-              />
-              <button
-                className={styles['top__left__toggler']}
-                onClick={handle_heading_click}
-                title="Toggle view type"
-              >
-                {props.home_view_type == HOME_VIEW_TYPES.WEB
-                  ? 'New chat'
-                  : 'API call'}
-              </button>
-            </div>
+      <div className={styles.header}>
+        <div className={styles.header__left} ref={header_left_ref}>
+          <UiIconButton
+            codicon_icon="chevron-left"
+            on_click={props.on_show_home}
+            title="Return to Home"
+          />
+          <button
+            className={styles['header__left__toggler']}
+            onClick={handle_heading_click}
+            title="Toggle view type"
+          >
+            {props.home_view_type == HOME_VIEW_TYPES.WEB
+              ? 'New chat'
+              : 'API call'}
+          </button>
+        </div>
 
-            <div className={styles.top__right} ref={dropdown_container_ref}>
-              {props.home_view_type == HOME_VIEW_TYPES.WEB && (
-                <UiDropdown
-                  options={Object.entries(web_mode_labels).map(
-                    ([value, label]) => ({ value: value as WebMode, label })
-                  )}
-                  selected_value={props.web_mode}
-                  on_change={props.on_web_mode_change}
-                  footer={dropdown_footer}
-                  max_width={dropdown_max_width}
-                />
+        <div className={styles.header__right} ref={dropdown_container_ref}>
+          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+            <UiDropdown
+              options={Object.entries(web_mode_labels).map(
+                ([value, label]) => ({ value: value as WebMode, label })
               )}
-              {props.home_view_type == HOME_VIEW_TYPES.API && (
-                <UiDropdown
-                  options={Object.entries(api_mode_labels).map(
-                    ([value, label]) => ({ value: value as ApiMode, label })
-                  )}
-                  selected_value={props.api_mode}
-                  on_change={props.on_api_mode_change}
-                  footer={dropdown_footer}
-                  max_width={dropdown_max_width}
-                />
+              selected_value={props.web_mode}
+              on_change={props.on_web_mode_change}
+              footer={dropdown_footer}
+              max_width={dropdown_max_width}
+            />
+          )}
+          {props.home_view_type == HOME_VIEW_TYPES.API && (
+            <UiDropdown
+              options={Object.entries(api_mode_labels).map(
+                ([value, label]) => ({ value: value as ApiMode, label })
               )}
-            </div>
-          </div>
-
+              selected_value={props.api_mode}
+              on_change={props.on_api_mode_change}
+              footer={dropdown_footer}
+              max_width={dropdown_max_width}
+            />
+          )}
+        </div>
+      </div>
+      <Scrollable scroll_to_top_key={scroll_to_top_key}>
+        <div className={styles.content}>
           {props.response_history.length > 0 && (
             <>
-              <UiSeparator height={8} />
+              <UiSeparator height={4} />
               <div className={styles.responses}>
                 {props.response_history.map((item) => (
                   <button
@@ -359,7 +362,7 @@ export const MainView: React.FC<Props> = (props) => {
             </>
           )}
 
-          <UiSeparator height={8} />
+          <UiSeparator height={4} />
 
           {!props.is_connected &&
             props.home_view_type == HOME_VIEW_TYPES.WEB && (

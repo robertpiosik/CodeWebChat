@@ -1,6 +1,10 @@
 .separator {
   flex-shrink: 0;
 
+  &--4 {
+    height: var(--padding-4px);
+  }
+
   &--8 {
     height: var(--padding-8px);
   }

@@ -5,11 +5,26 @@ import cn from 'classnames'
 
 type Props = {
   children: ReactNode
+  scroll_to_top_key?: any
 }
 
-export const Scrollable: React.FC<Props> = ({ children }) => {
+export const Scrollable: React.FC<Props> = ({
+  children,
+  scroll_to_top_key
+}) => {
   const [has_top_shadow, set_has_top_shadow] = useState(false)
   const simplebar_ref = useRef<any>(null)
+
+  useEffect(() => {
+    if (scroll_to_top_key === undefined) return
+
+    const simplebar_instance = simplebar_ref.current
+    if (!simplebar_instance) return
+
+    const scroll_element = simplebar_instance.getScrollElement()
+    if (!scroll_element) return
+    scroll_element.scrollTop = 0
+  }, [scroll_to_top_key])
 
   useEffect(() => {
     const simplebar_instance = simplebar_ref.current

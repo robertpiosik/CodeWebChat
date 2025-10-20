@@ -28,16 +28,17 @@ export const Home: React.FC<Props> = (props) => {
 
   return (
     <div className={styles.container}>
+      <div className={styles['header']}>
+        <div className={styles['header__home']}>
+          <span className="codicon codicon-home" />
+        </div>
+        <span className={styles['header__text']}>Home</span>
+      </div>
+
       <Scrollable>
-        <div className={styles.inner}>
-          <div className={styles.top}>
-            <div className={styles['top__header']}>
-              <div className={styles['top__header__home']}>
-                <span className="codicon codicon-home" />
-              </div>
-              <span className={styles['top__header__text']}>Home</span>
-            </div>
-            <div className={styles['top__buttons']}>
+        <div className={styles.content}>
+          <div className={styles.inner}>
+            <div className={styles['inner__buttons']}>
               <Enter
                 label="Open View: New chat"
                 description="Send prompt in a free chatbot"
@@ -56,7 +57,7 @@ export const Home: React.FC<Props> = (props) => {
                 text_icon="CODE_WEB_CHAT_TEXT"
                 label="Visit website"
               />
-              <div className={styles['top__buttons__donations']}>
+              <div className={styles['inner__buttons__donations']}>
                 <HomeLinkButton
                   url="https://buymeacoffee.com/robertpiosik"
                   background_color="#ffdd00"
