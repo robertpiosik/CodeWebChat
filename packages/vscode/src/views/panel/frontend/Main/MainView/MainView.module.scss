@@ -18,40 +18,15 @@
 
 .responses {
   padding: 0 var(--padding-12px);
-
-  &__inner {
-    display: flex;
-    border: 1px solid var(--vscode-focusBorder);
-    border-radius: var(--border-radius-5px);
-    flex-direction: column;
-  }
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--padding-4px) var(--padding-4px) 0 var(--padding-10px);
-
-    > span {
-      font-weight: 500;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-  }
-
-  &__list {
-    display: flex;
-    flex-direction: column-reverse;
-    padding: var(--padding-4px);
-  }
+  display: flex;
+  flex-direction: column-reverse;
 
   &__list-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--padding-8px);
-    padding: var(--padding-4px) var(--padding-6px);
+    padding: var(--padding-5px) var(--padding-7px);
     border-radius: var(--border-radius-4px);
     width: 100%;
     text-align: left;

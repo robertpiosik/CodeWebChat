@@ -53,7 +53,10 @@ export const Panel = () => {
     commit_button_enabling_trigger_count,
     set_commit_button_enabling_trigger_count
   ] = useState(0)
-
+  const [
+    selected_history_item_created_at,
+    set_selected_history_item_created_at
+  ] = useState<number>()
   const [response_history, set_response_history] = useState<
     ResponseHistoryItem[]
   >([])
@@ -103,10 +106,6 @@ export const Panel = () => {
       instruction: value,
       mode: mode
     })
-  }
-
-  const handle_discard_responses = () => {
-    set_response_history([])
   }
 
   useEffect(() => {
@@ -173,11 +172,15 @@ export const Panel = () => {
       } else if (message.command == 'COMMIT_PROCESS_CANCELLED') {
         set_commit_button_enabling_trigger_count((k) => k + 1)
       } else if (message.command == 'NEW_RESPONSE_RECEIVED') {
+        const now = Date.now()
+        if (response_history.length == 0) {
+          set_selected_history_item_created_at(now)
+        }
         set_response_history((prev_history) => {
           const new_item = {
             response: message.response,
             raw_instructions: message.raw_instructions,
-            created_at: Date.now()
+            created_at: now
           }
           const is_duplicate = prev_history.some(
             (item) =>
@@ -205,7 +208,7 @@ export const Panel = () => {
     initial_messages.forEach((message) => post_message(vscode, message))
 
     return () => window.removeEventListener('message', handle_message)
-  }, [])
+  }, [response_history])
 
   const edit_preset_back_click_handler = () => {
     post_message(vscode, {
@@ -363,7 +366,8 @@ export const Panel = () => {
           on_web_mode_change={handle_web_mode_change}
           on_api_mode_change={handle_api_mode_change}
           response_history={response_history}
-          on_discard_responses={handle_discard_responses}
+          selected_history_item_created_at={selected_history_item_created_at}
+          on_selected_history_item_change={set_selected_history_item_created_at}
           commit_button_enabling_trigger_count={
             commit_button_enabling_trigger_count
           }
@@ -456,6 +460,7 @@ export const Panel = () => {
               has_multiple_workspaces={workspace_folder_count > 1}
               on_discard={() => {
                 set_response_history([])
+                set_selected_history_item_created_at(undefined)
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
               }}
               on_approve={(accepted_files) => {

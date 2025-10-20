@@ -23,7 +23,8 @@ type Props = {
     raw_instructions?: string
     created_at: number
   }[]
-  on_discard_responses: () => void
+  selected_history_item_created_at?: number
+  on_selected_history_item_change: (created_at: number) => void
   vscode: any
   on_preset_edit: (preset: Preset) => void
   on_show_home: () => void
@@ -689,7 +690,8 @@ export const Main: React.FC<Props> = (props) => {
       }
       response_history={props.response_history}
       on_response_history_item_click={handle_response_history_item_click}
-      on_discard_responses={props.on_discard_responses}
+      selected_history_item_created_at={props.selected_history_item_created_at}
+      on_selected_history_item_change={props.on_selected_history_item_change}
     />
   )
 }
