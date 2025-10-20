@@ -10,6 +10,7 @@ type Props = {
   title?: string
   is_secondary?: boolean
   is_focused?: boolean
+  is_small?: boolean
 }
 
 export const Button: FC<Props> = (props) => {
@@ -25,7 +26,8 @@ export const Button: FC<Props> = (props) => {
     <button
       ref={button_ref}
       className={cn(styles.button, {
-        [styles['button--secondary']]: props.is_secondary
+        [styles['button--secondary']]: props.is_secondary,
+        [styles['button--small']]: props.is_small
       })}
       onClick={props.on_click}
       disabled={props.disabled}

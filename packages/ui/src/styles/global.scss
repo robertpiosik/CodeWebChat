@@ -21,6 +21,7 @@ button {
   padding: 0;
   font-size: var(--font-size-13px);
   font-family: inherit;
+  color: inherit;
 }
 
 button:not(:disabled) {

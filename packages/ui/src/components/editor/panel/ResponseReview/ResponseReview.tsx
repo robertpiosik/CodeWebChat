@@ -1,7 +1,7 @@
 import { FC, useState, useMemo } from 'react'
 import { FileInReview } from '@shared/types/file-in-review'
 import cn from 'classnames'
-import styles from './Changes.module.scss'
+import styles from './ResponseReview.module.scss'
 import { Button } from '../Button'
 import { Checkbox } from '../Checkbox'
 import { IconButton } from '../IconButton/IconButton'
@@ -9,8 +9,8 @@ import { IconButton } from '../IconButton/IconButton'
 type Props = {
   files: (FileInReview & { is_checked: boolean })[]
   has_multiple_workspaces: boolean
-  on_undo: () => void
-  on_keep: (files: FileInReview[]) => void
+  on_discard: () => void
+  on_approve: (files: FileInReview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
   on_go_to_file: (file: { file_path: string; workspace_name?: string }) => void
   on_intelligent_update: (file: {
@@ -25,11 +25,11 @@ type Props = {
   raw_instructions?: string
 }
 
-export const Changes: FC<Props> = ({
+export const ResponseReview: FC<Props> = ({
   files,
   has_multiple_workspaces,
-  on_undo,
-  on_keep,
+  on_discard,
+  on_approve,
   on_focus_file,
   on_go_to_file,
   on_toggle_file,
@@ -38,9 +38,9 @@ export const Changes: FC<Props> = ({
 }) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
 
-  const handle_keep = () => {
+  const handle_approve = () => {
     const accepted_files = files.filter((f) => f.is_checked)
-    on_keep(accepted_files)
+    on_approve(accepted_files)
   }
 
   const fallback_count = files.filter((f) => f.is_fallback).length
@@ -200,17 +200,16 @@ export const Changes: FC<Props> = ({
         })}
       </div>
       <div className={styles.footer}>
-        <Button on_click={on_undo} is_secondary>
-          <span className="codicon codicon-redo" />
-
-          {files.length > 1 ? 'Discard All' : 'Discard'}
+        <Button on_click={on_discard} is_secondary>
+          <span className="codicon codicon-close" />
+          Discard
         </Button>
         <Button
-          on_click={handle_keep}
+          on_click={handle_approve}
           disabled={files.filter((f) => f.is_checked).length == 0}
         >
           <span className="codicon codicon-check" />
-          {files.length > 1 ? 'Approve Selected' : 'Approve'}
+          Approve
         </Button>
       </div>
     </div>

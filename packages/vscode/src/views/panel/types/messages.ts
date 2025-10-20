@@ -303,6 +303,12 @@ export interface UndoMessage extends BaseMessage {
   command: 'UNDO'
 }
 
+export interface ApplyResponseFromHistoryMessage extends BaseMessage {
+  command: 'APPLY_RESPONSE_FROM_HISTORY'
+  response: string
+  raw_instructions?: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -359,6 +365,7 @@ export type FrontendMessage =
   | CancelCommitMessage
   | ManageConfigurationsMessage
   | UndoMessage
+  | ApplyResponseFromHistoryMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -537,6 +544,12 @@ export interface CommitProcessCancelledMessage extends BaseMessage {
   command: 'COMMIT_PROCESS_CANCELLED'
 }
 
+export interface NewResponseReceivedMessage extends BaseMessage {
+  command: 'NEW_RESPONSE_RECEIVED'
+  response: string
+  raw_instructions?: string
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusChatInputMessage
@@ -571,3 +584,4 @@ export type BackendMessage =
   | UpdateFileInReviewMessage
   | ShowCommitMessageModalMessage
   | CommitProcessCancelledMessage
+  | NewResponseReceivedMessage

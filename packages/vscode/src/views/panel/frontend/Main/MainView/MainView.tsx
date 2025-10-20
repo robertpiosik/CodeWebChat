@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 import { Presets as UiPresets } from '@ui/components/editor/panel/Presets'
@@ -7,6 +9,7 @@ import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { HorizontalSelector as UiHorizontalSelector } from '@ui/components/editor/panel/HorizontalSelector'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
+import { Button as UiButton } from '@ui/components/editor/panel/Button/Button'
 import {
   HOME_VIEW_TYPES,
   HomeViewType
@@ -21,6 +24,8 @@ import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/compon
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
 import { use_cycle_mode } from './hooks/use-cycle-mode'
+
+dayjs.extend(relativeTime)
 
 type Props = {
   initialize_chats: (params: {
@@ -83,6 +88,16 @@ type Props = {
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
+  response_history: {
+    response: string
+    raw_instructions?: string
+    created_at: number
+  }[]
+  on_response_history_item_click: (item: {
+    response: string
+    raw_instructions?: string
+  }) => void
+  on_discard_responses: () => void
   commit_button_enabling_trigger_count: number // Incremented when commit changes operation is cancelled
 }
 
@@ -114,6 +129,10 @@ export const MainView: React.FC<Props> = (props) => {
     useState(false)
   const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
     useState(false)
+  const [
+    selected_history_item_created_at,
+    set_selected_history_item_created_at
+  ] = useState<number>()
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
 
@@ -157,6 +176,10 @@ export const MainView: React.FC<Props> = (props) => {
   useEffect(() => {
     set_is_commit_disabled_temporarily(false)
   }, [props.commit_button_enabling_trigger_count])
+
+  useEffect(() => {
+    set_selected_history_item_created_at(undefined)
+  }, [props.response_history])
 
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
@@ -287,6 +310,53 @@ export const MainView: React.FC<Props> = (props) => {
               )}
             </div>
           </div>
+
+          {props.response_history.length > 0 && (
+            <>
+              <UiSeparator height={8} />
+              <div className={styles.responses}>
+                <div className={styles.responses__inner}>
+                  <div className={styles.responses__header}>
+                    <span className={styles.responses__header__title}>
+                      Responses in review
+                    </span>
+                    <UiButton on_click={props.on_discard_responses} is_small>
+                      Close
+                    </UiButton>
+                  </div>
+
+                  <div className={styles.responses__list}>
+                    {props.response_history.map((item) => (
+                      <button
+                        key={item.created_at}
+                        className={cn(styles['responses__list-item'], {
+                          [styles['responses__list-item--selected']]:
+                            selected_history_item_created_at == item.created_at
+                        })}
+                        title={item.raw_instructions}
+                        onClick={() => {
+                          props.on_response_history_item_click(item)
+                          set_selected_history_item_created_at(item.created_at)
+                        }}
+                      >
+                        <span
+                          className={
+                            styles['responses__list-item__instruction']
+                          }
+                        >
+                          {item.raw_instructions ||
+                            'Response without instructions'}
+                        </span>
+                        <span className={styles['responses__list-item__date']}>
+                          {dayjs(item.created_at).fromNow()}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
 
           <UiSeparator height={8} />
 

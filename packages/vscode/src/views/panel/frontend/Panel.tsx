@@ -16,7 +16,7 @@ import cn from 'classnames'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from './utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
-import { Changes as UiChanges } from '@ui/components/editor/panel/Changes'
+import { ResponseReview as UiResponseReview } from '@ui/components/editor/panel/ResponseReview'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
 import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/panel/modals/ChatInitializedModal'
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
@@ -24,6 +24,11 @@ import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/edito
 const vscode = acquireVsCodeApi()
 
 type CheckedFileInReview = FileInReview & { is_checked: boolean }
+type ResponseHistoryItem = {
+  response: string
+  raw_instructions?: string
+  created_at: number
+}
 
 export const Panel = () => {
   const [active_view, set_active_view] = useState<'home' | 'main'>('home')
@@ -49,6 +54,9 @@ export const Panel = () => {
     set_commit_button_enabling_trigger_count
   ] = useState(0)
 
+  const [response_history, set_response_history] = useState<
+    ResponseHistoryItem[]
+  >([])
   const [workspace_folder_count, set_workspace_folder_count] =
     useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()
@@ -95,6 +103,10 @@ export const Panel = () => {
       instruction: value,
       mode: mode
     })
+  }
+
+  const handle_discard_responses = () => {
+    set_response_history([])
   }
 
   useEffect(() => {
@@ -160,6 +172,20 @@ export const Panel = () => {
         set_commit_message_to_review(message.commit_message)
       } else if (message.command == 'COMMIT_PROCESS_CANCELLED') {
         set_commit_button_enabling_trigger_count((k) => k + 1)
+      } else if (message.command == 'NEW_RESPONSE_RECEIVED') {
+        set_response_history((prev_history) => {
+          const new_item = {
+            response: message.response,
+            raw_instructions: message.raw_instructions,
+            created_at: Date.now()
+          }
+          const is_duplicate = prev_history.some(
+            (item) =>
+              item.response == new_item.response &&
+              item.raw_instructions == new_item.raw_instructions
+          )
+          return is_duplicate ? prev_history : [new_item, ...prev_history]
+        })
       }
     }
     window.addEventListener('message', handle_message)
@@ -336,6 +362,8 @@ export const Panel = () => {
           has_active_selection={has_active_selection}
           on_web_mode_change={handle_web_mode_change}
           on_api_mode_change={handle_api_mode_change}
+          response_history={response_history}
+          on_discard_responses={handle_discard_responses}
           commit_button_enabling_trigger_count={
             commit_button_enabling_trigger_count
           }
@@ -415,15 +443,23 @@ export const Panel = () => {
 
       {files_to_review && (
         <div className={styles.slot}>
-          <UiPage title="Changes" has_outline={true}>
-            <UiChanges
+          <UiPage
+            title="Response Review"
+            has_outline={true}
+            on_back_click={() => {
+              post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
+            }}
+          >
+            <UiResponseReview
               files={files_to_review}
               raw_instructions={raw_instructions}
               has_multiple_workspaces={workspace_folder_count > 1}
-              on_undo={() => {
+              on_discard={() => {
+                set_response_history([])
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
               }}
-              on_keep={(accepted_files) => {
+              on_approve={(accepted_files) => {
+                set_response_history([])
                 post_message(vscode, {
                   command: 'EDITS_REVIEW',
                   files: accepted_files

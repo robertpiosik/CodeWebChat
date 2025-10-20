@@ -387,6 +387,28 @@ export const apply_chat_response_command = (
         return
       }
 
+      let chat_response = args?.response
+      if (chat_response === undefined) {
+        chat_response = await vscode.env.clipboard.readText()
+        if (!chat_response) {
+          vscode.window.showInformationMessage(
+            dictionary.information_message.CLIPBOARD_IS_EMPTY
+          )
+          return
+        }
+      } else if (!chat_response) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.RESPONSE_TEXT_MISSING
+        )
+        return
+      }
+
+      view_provider.send_message({
+        command: 'NEW_RESPONSE_RECEIVED',
+        response: chat_response,
+        raw_instructions: args?.raw_instructions
+      })
+
       if (code_review_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
           dictionary.warning_message.REVIEW_ONGOING_DISCARD,
@@ -403,22 +425,6 @@ export const apply_chat_response_command = (
         } else {
           return
         }
-      }
-
-      let chat_response = args?.response
-      if (chat_response === undefined) {
-        chat_response = await vscode.env.clipboard.readText()
-        if (!chat_response) {
-          vscode.window.showInformationMessage(
-            dictionary.information_message.CLIPBOARD_IS_EMPTY
-          )
-          return
-        }
-      } else if (!chat_response) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.RESPONSE_TEXT_MISSING
-        )
-        return
       }
 
       const temp_checkpoint = await create_temporary_checkpoint(

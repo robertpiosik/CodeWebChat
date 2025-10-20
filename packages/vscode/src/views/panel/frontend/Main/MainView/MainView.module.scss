@@ -16,6 +16,72 @@
   padding: var(--padding-3px) 0 var(--padding-8px) 0;
 }
 
+.responses {
+  padding: 0 var(--padding-12px);
+
+  &__inner {
+    display: flex;
+    border: 1px solid var(--vscode-focusBorder);
+    border-radius: var(--border-radius-5px);
+    flex-direction: column;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--padding-4px) var(--padding-4px) 0 var(--padding-10px);
+
+    > span {
+      font-weight: 500;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: var(--padding-4px);
+  }
+
+  &__list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--padding-8px);
+    padding: var(--padding-4px) var(--padding-6px);
+    border-radius: var(--border-radius-4px);
+    width: 100%;
+    text-align: left;
+
+    &:hover {
+      background-color: var(--vscode-list-hoverBackground);
+    }
+
+    &--selected {
+      background-color: var(--vscode-list-inactiveSelectionBackground);
+      &:hover {
+        background-color: var(--vscode-list-inactiveSelectionBackground);
+      }
+    }
+
+    &__instruction {
+      flex-grow: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__date {
+      flex-shrink: 0;
+      opacity: 0.7;
+      font-size: var(--font-size-11px);
+    }
+  }
+}
+
 .footer {
   position: relative;
   z-index: -1; // Makes context menu of a preset appear above

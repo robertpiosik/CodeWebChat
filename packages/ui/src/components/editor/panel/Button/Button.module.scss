@@ -1,5 +1,4 @@
 .button {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,5 +44,11 @@
         background-color: var(--vscode-button-secondaryBackground);
       }
     }
+  }
+
+  &--small {
+    min-height: 24px;
+    font-size: var(--font-size-12px);
+    padding: var(--padding-2px) var(--padding-8px);
   }
 }

@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Changes } from './Changes'
+import { ResponseReview } from './ResponseReview'
 
 export default {
-  component: Changes
+  component: ResponseReview
 }
 
 const base_files = [
@@ -58,7 +58,7 @@ const log_action =
     console.log(action, ...args)
   }
 
-const InteractiveChanges = (props: any) => {
+const InteractiveResponseReview = (props: any) => {
   const [files, set_files] = useState(
     props.files.map((f: any) => ({ ...f, is_checked: true }))
   )
@@ -83,12 +83,12 @@ const InteractiveChanges = (props: any) => {
   }
 
   return (
-    <Changes
+    <ResponseReview
       {...props}
       files={files}
       on_toggle_file={handle_toggle_file}
-      on_undo={log_action('on_undo')}
-      on_keep={log_action('on_keep')}
+      on_discard={log_action('on_undo')}
+      on_approve={log_action('on_keep')}
       on_focus_file={log_action('on_focus_file')}
       on_go_to_file={log_action('on_go_to_file')}
       on_intelligent_update={log_action('on_intelligent_update')}
@@ -96,18 +96,20 @@ const InteractiveChanges = (props: any) => {
   )
 }
 
-export const Default = () => <InteractiveChanges files={base_files} />
+export const Default = () => <InteractiveResponseReview files={base_files} />
 
 export const WithSingleFile = () => (
-  <InteractiveChanges files={[base_files[0]]} />
+  <InteractiveResponseReview files={[base_files[0]]} />
 )
 
 export const WithFallbacks = () => (
-  <InteractiveChanges files={[...base_files, ...files_using_fallbacks]} />
+  <InteractiveResponseReview
+    files={[...base_files, ...files_using_fallbacks]}
+  />
 )
 
 export const WithMultipleWorkspaces = () => (
-  <InteractiveChanges
+  <InteractiveResponseReview
     files={[
       {
         ...base_files[0],

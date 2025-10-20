@@ -370,6 +370,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             await handle_create_preset(this)
           } else if (message.command == 'UNDO') {
             await this._handle_undo()
+          } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
+            await vscode.commands.executeCommand(
+              'codeWebChat.applyChatResponse',
+              {
+                response: message.response,
+                raw_instructions: message.raw_instructions
+              }
+            )
           } else if (message.command == 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'EDIT_CONTEXT') {

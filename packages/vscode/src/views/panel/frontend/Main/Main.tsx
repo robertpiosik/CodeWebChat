@@ -18,6 +18,12 @@ import { post_message } from '../utils/post_message'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 
 type Props = {
+  response_history: {
+    response: string
+    raw_instructions?: string
+    created_at: number
+  }[]
+  on_discard_responses: () => void
   vscode: any
   on_preset_edit: (preset: Preset) => void
   on_show_home: () => void
@@ -548,6 +554,17 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_response_history_item_click = (item: {
+    response: string
+    raw_instructions?: string
+  }) => {
+    post_message(props.vscode, {
+      command: 'APPLY_RESPONSE_FROM_HISTORY',
+      response: item.response,
+      raw_instructions: item.raw_instructions
+    })
+  }
+
   const handle_undo_click = () => {
     post_message(props.vscode, {
       command: 'UNDO'
@@ -670,6 +687,9 @@ export const Main: React.FC<Props> = (props) => {
       commit_button_enabling_trigger_count={
         props.commit_button_enabling_trigger_count
       }
+      response_history={props.response_history}
+      on_response_history_item_click={handle_response_history_item_click}
+      on_discard_responses={props.on_discard_responses}
     />
   )
 }

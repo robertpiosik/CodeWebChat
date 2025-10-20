@@ -130,4 +130,8 @@
   display: flex;
   gap: var(--padding-8px);
   padding: var(--padding-12px);
+
+  > button {
+    flex: 1;
+  }
 }
