@@ -346,7 +346,8 @@ export const parse_multiple_files = (params: {
         (current_content.trim() == '' ||
           ((current_language == 'markdown' || current_language == 'md') &&
             i > 0 &&
-            (lines[i - 1].trim() == '' || lines[i - 1].trim() == '```'))) &&
+            (lines[i - 1].trim() == '' ||
+              lines[i - 1].trim().endsWith('```')))) &&
         (() => {
           for (let j = i + 1; j < lines.length; j++) {
             const next_line = lines[j].trim()
@@ -505,6 +506,13 @@ export const parse_multiple_files = (params: {
                 params.is_single_root_folder_workspace
               )
             current_file_name = relative_path
+            if (
+              backtick_nesting_level > 1 &&
+              (current_language === 'markdown' || current_language === 'md')
+            ) {
+              current_content = ''
+            }
+
             if (workspace_name) {
               current_workspace_name = workspace_name
             }
@@ -529,12 +537,32 @@ export const parse_multiple_files = (params: {
           continue
         }
 
-        is_first_content_line = false
+        const lang_is_markdown =
+          current_language === 'markdown' || current_language === 'md'
 
-        if (current_content) {
-          current_content += '\n' + line
-        } else {
-          current_content = line
+        const is_markdown_file = current_file_name.endsWith('.md')
+
+        if (
+          is_markdown_file ||
+          !(
+            lang_is_markdown &&
+            current_file_name &&
+            line.trim().startsWith('```')
+          )
+        ) {
+          if (current_content) {
+            current_content += '\n' + line
+          } else {
+            current_content = line
+          }
+        }
+
+        if (
+          is_first_content_line &&
+          line.trim() !== '' &&
+          !line.trim().startsWith('```')
+        ) {
+          is_first_content_line = false
         }
       }
     }

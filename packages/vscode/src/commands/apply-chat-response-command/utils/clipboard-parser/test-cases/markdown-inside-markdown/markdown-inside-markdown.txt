@@ -1,0 +1,6 @@
+```markdown
+```ts
+// src/lorem.ts
+console.log('Hello World!')
+```
+```
