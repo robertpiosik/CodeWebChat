@@ -22,6 +22,8 @@ type Props = {
     response: string
     raw_instructions?: string
     created_at: number
+    lines_added: number
+    lines_removed: number
   }[]
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void

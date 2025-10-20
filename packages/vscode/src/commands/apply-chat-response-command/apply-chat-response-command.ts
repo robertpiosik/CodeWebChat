@@ -23,7 +23,11 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { Diff } from './utils/clipboard-parser/extract-diff-patches'
 import { ViewProvider } from '@/views/panel/backend/panel-provider'
-import { review, code_review_promise_resolve } from './utils/review'
+import {
+  review,
+  code_review_promise_resolve,
+  get_diff_stats
+} from './utils/review'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import {
@@ -402,12 +406,6 @@ export const apply_chat_response_command = (
         )
         return
       }
-
-      view_provider.send_message({
-        command: 'NEW_RESPONSE_RECEIVED',
-        response: chat_response,
-        raw_instructions: args?.raw_instructions
-      })
 
       if (code_review_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
@@ -967,6 +965,59 @@ export const apply_chat_response_command = (
 
       try {
         if (review_data) {
+          let total_lines_added = 0
+          let total_lines_removed = 0
+
+          const workspace_map = new Map<string, string>()
+          vscode.workspace.workspaceFolders!.forEach((folder) => {
+            workspace_map.set(folder.name, folder.uri.fsPath)
+          })
+          const default_workspace =
+            vscode.workspace.workspaceFolders![0].uri.fsPath
+
+          for (const state of review_data.original_states) {
+            let workspace_root = default_workspace
+            if (
+              state.workspace_name &&
+              workspace_map.has(state.workspace_name)
+            ) {
+              workspace_root = workspace_map.get(state.workspace_name)!
+            }
+
+            const sanitized_file_path = create_safe_path(
+              workspace_root,
+              state.file_path
+            )
+            if (!sanitized_file_path) {
+              continue
+            }
+
+            let current_content = ''
+            try {
+              if (fs.existsSync(sanitized_file_path)) {
+                current_content = fs.readFileSync(sanitized_file_path, 'utf8')
+              }
+            } catch (error) {
+              continue
+            }
+
+            const diff_stats = get_diff_stats({
+              original_content: state.content,
+              new_content: current_content
+            })
+
+            total_lines_added += diff_stats.lines_added
+            total_lines_removed += diff_stats.lines_removed
+          }
+
+          view_provider.send_message({
+            command: 'NEW_RESPONSE_RECEIVED',
+            response: review_data.chat_response,
+            raw_instructions: args?.raw_instructions,
+            lines_added: total_lines_added,
+            lines_removed: total_lines_removed
+          })
+
           const changes_accepted = await handle_code_review_and_cleanup({
             original_states: review_data.original_states,
             chat_response: review_data.chat_response,

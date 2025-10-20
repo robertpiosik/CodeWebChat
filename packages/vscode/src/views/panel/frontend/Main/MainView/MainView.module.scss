@@ -49,10 +49,32 @@
       text-overflow: ellipsis;
     }
 
+    &__right {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-8px);
+      flex-shrink: 0;
+    }
+
     &__date {
       flex-shrink: 0;
       opacity: 0.7;
       font-size: var(--font-size-11px);
+    }
+
+    &__stats {
+      display: flex;
+      gap: var(--padding-4px);
+      font-size: var(--font-size-11px);
+      flex-shrink: 0;
+
+      &--added {
+        color: var(--vscode-gitDecoration-addedResourceForeground);
+      }
+
+      &--removed {
+        color: var(--vscode-gitDecoration-deletedResourceForeground);
+      }
     }
   }
 }

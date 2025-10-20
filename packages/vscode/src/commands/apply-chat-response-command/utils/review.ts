@@ -54,7 +54,7 @@ type PreparedFile = {
   content_to_restore?: string
 }
 
-const get_diff_stats = (params: {
+export const get_diff_stats = (params: {
   original_content: string
   new_content: string
 }): { lines_added: number; lines_removed: number } => {

@@ -92,6 +92,8 @@ type Props = {
     response: string
     raw_instructions?: string
     created_at: number
+    lines_added: number
+    lines_removed: number
   }[]
   on_response_history_item_click: (item: {
     response: string
@@ -330,9 +332,27 @@ export const MainView: React.FC<Props> = (props) => {
                     <span className={styles['responses__item__instruction']}>
                       {item.raw_instructions || 'Response without instructions'}
                     </span>
-                    <span className={styles['responses__item__date']}>
-                      {dayjs(item.created_at).fromNow()}
-                    </span>
+                    <div className={styles['responses__item__right']}>
+                      {(item.lines_added > 0 || item.lines_removed > 0) && (
+                        <div className={styles['responses__item__stats']}>
+                          <span
+                            className={styles['responses__item__stats--added']}
+                          >
+                            +{item.lines_added}
+                          </span>
+                          <span
+                            className={
+                              styles['responses__item__stats--removed']
+                            }
+                          >
+                            -{item.lines_removed}
+                          </span>
+                        </div>
+                      )}
+                      <span className={styles['responses__item__date']}>
+                        {dayjs(item.created_at).fromNow()}
+                      </span>
+                    </div>
                   </button>
                 ))}
               </div>

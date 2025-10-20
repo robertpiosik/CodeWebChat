@@ -28,6 +28,8 @@ type ResponseHistoryItem = {
   response: string
   raw_instructions?: string
   created_at: number
+  lines_added: number
+  lines_removed: number
 }
 
 export const Panel = () => {
@@ -180,7 +182,9 @@ export const Panel = () => {
             {
               response: message.response,
               raw_instructions: message.raw_instructions,
-              created_at: now
+              created_at: now,
+              lines_added: message.lines_added,
+              lines_removed: message.lines_removed
             }
           ])
         }
@@ -193,7 +197,9 @@ export const Panel = () => {
           const new_item = {
             response: message.response,
             raw_instructions: message.raw_instructions,
-            created_at: now
+            created_at: now,
+            lines_added: message.lines_added,
+            lines_removed: message.lines_removed
           }
           set_response_history([...response_history, new_item])
           if (!files_to_review) {
