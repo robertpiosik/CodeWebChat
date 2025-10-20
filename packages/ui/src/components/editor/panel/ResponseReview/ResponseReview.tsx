@@ -201,14 +201,12 @@ export const ResponseReview: FC<Props> = ({
       </div>
       <div className={styles.footer}>
         <Button on_click={on_discard} is_secondary>
-          <span className="codicon codicon-close" />
           Discard
         </Button>
         <Button
           on_click={handle_approve}
           disabled={files.filter((f) => f.is_checked).length == 0}
         >
-          <span className="codicon codicon-check" />
           Approve
         </Button>
       </div>

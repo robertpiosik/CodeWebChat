@@ -175,7 +175,6 @@ export const Panel = () => {
         set_commit_button_enabling_trigger_count((k) => k + 1)
       } else if (message.command == 'NEW_RESPONSE_RECEIVED') {
         const now = Date.now()
-
         if (!response_history.length) {
           set_selected_history_item_created_at(now)
           set_response_history([
@@ -187,32 +186,33 @@ export const Panel = () => {
               lines_removed: message.lines_removed
             }
           ])
-        }
-        const is_duplicate = response_history.some(
-          (item) =>
-            item.response == message.response &&
-            item.raw_instructions == message.raw_instructions
-        )
-        if (!is_duplicate) {
-          const new_item = {
-            response: message.response,
-            raw_instructions: message.raw_instructions,
-            created_at: now,
-            lines_added: message.lines_added,
-            lines_removed: message.lines_removed
-          }
-          set_response_history([...response_history, new_item])
-          if (!files_to_review) {
-            set_selected_history_item_created_at(now)
-          }
         } else {
-          set_selected_history_item_created_at(
-            response_history.find(
-              (item) =>
-                item.response == message.response &&
-                item.raw_instructions == message.raw_instructions
-            )?.created_at
+          const is_duplicate = response_history.some(
+            (item) =>
+              item.response == message.response &&
+              item.raw_instructions == message.raw_instructions
           )
+          if (!is_duplicate) {
+            const new_item = {
+              response: message.response,
+              raw_instructions: message.raw_instructions,
+              created_at: now,
+              lines_added: message.lines_added,
+              lines_removed: message.lines_removed
+            }
+            set_response_history([...response_history, new_item])
+            if (!files_to_review) {
+              set_selected_history_item_created_at(now)
+            }
+          } else {
+            set_selected_history_item_created_at(
+              response_history.find(
+                (item) =>
+                  item.response == message.response &&
+                  item.raw_instructions == message.raw_instructions
+              )?.created_at
+            )
+          }
         }
       }
     }

@@ -314,17 +314,18 @@ export const MainView: React.FC<Props> = (props) => {
       </div>
       <Scrollable scroll_to_top_key={scroll_to_top_key}>
         <div className={styles.content}>
+          <UiSeparator height={4} />
           {props.response_history.length > 0 && (
             <>
-              <UiSeparator height={4} />
               <div className={styles.responses}>
                 {props.response_history.map((item) => (
                   <button
                     key={item.created_at}
                     className={cn(styles['responses__item'], {
                       [styles['responses__item--selected']]:
+                        props.response_history.length > 1 &&
                         props.selected_history_item_created_at ==
-                        item.created_at
+                          item.created_at
                     })}
                     title={item.raw_instructions}
                     onClick={() => {
@@ -362,13 +363,14 @@ export const MainView: React.FC<Props> = (props) => {
             </>
           )}
 
-          <UiSeparator height={4} />
-
           {!props.is_connected &&
-            props.home_view_type == HOME_VIEW_TYPES.WEB && (
-              <div className={styles['browser-extension-message']}>
-                <UiBrowserExtensionMessage />
-              </div>
+            props.home_view_type == HOME_VIEW_TYPES.WEB &&
+            !props.response_history.length && (
+              <>
+                <div className={styles['browser-extension-message']}>
+                  <UiBrowserExtensionMessage />
+                </div>
+              </>
             )}
 
           <div className={styles['chat-input']}>
@@ -504,20 +506,18 @@ export const MainView: React.FC<Props> = (props) => {
       </Scrollable>
 
       <div className={styles.footer}>
-        <div className={styles.footer__left}>
-          <a
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--buy-me-a-coffee']
-            )}
-            href="https://buymeacoffee.com/robertpiosik"
-            title="Support author"
-            onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
-            onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
-          >
-            <Icon variant="BUY_ME_A_COFFEE_LOGO" />
-          </a>
-        </div>
+        <a
+          className={cn(
+            styles.footer__button,
+            styles['footer__button--buy-me-a-coffee']
+          )}
+          href="https://buymeacoffee.com/robertpiosik"
+          title="Support author"
+          onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
+          onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
+        >
+          <Icon variant="BUY_ME_A_COFFEE_LOGO" />
+        </a>
         <div className={styles.footer__right}>
           {props.home_view_type == HOME_VIEW_TYPES.WEB && (
             <button

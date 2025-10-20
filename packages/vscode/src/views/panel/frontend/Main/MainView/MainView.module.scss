@@ -62,19 +62,26 @@
 }
 
 .responses {
-  padding: 0 var(--padding-12px);
+  margin: 0 var(--padding-16px);
   display: flex;
   flex-direction: column;
+  border-top-left-radius: var(--border-radius-5px);
+  border-top-right-radius: var(--border-radius-5px);
+  border: 1px solid var(--vscode-commandCenter-inactiveBorder);
+  border-bottom: 0px;
+  overflow: hidden;
+
+  &:hover {
+    border-color: var(--vscode-commandCenter-activeBorder);
+  }
 
   &__item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--padding-8px);
-    padding: var(--padding-5px) var(--padding-8px);
-    border-radius: var(--border-radius-4px);
+    gap: var(--padding-4px);
+    padding: var(--padding-3px) var(--padding-4px);
     width: 100%;
-    text-align: left;
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
@@ -88,7 +95,8 @@
     }
 
     &__instruction {
-      flex-grow: 1;
+      text-align: left;
+      font-size: var(--font-size-12px);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -97,20 +105,19 @@
     &__right {
       display: flex;
       align-items: center;
-      gap: var(--padding-8px);
+      gap: var(--padding-4px);
       flex-shrink: 0;
+      font-size: var(--font-size-11px);
     }
 
     &__date {
       flex-shrink: 0;
-      opacity: 0.7;
-      font-size: var(--font-size-11px);
+      color: var(--vscode-descriptionForeground);
     }
 
     &__stats {
       display: flex;
       gap: var(--padding-4px);
-      font-size: var(--font-size-11px);
       flex-shrink: 0;
 
       &--added {
@@ -132,12 +139,6 @@
   gap: var(--padding-4px);
   padding: var(--padding-8px) var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
-
-  &__left {
-    display: flex;
-    gap: var(--padding-4px);
-    overflow: hidden;
-  }
 
   &__right {
     display: flex;
@@ -235,13 +236,11 @@
 
   > span {
     font-size: var(--font-size-12px);
-    color: var(--vscode-foreground);
-    opacity: 0.7;
+    color: var(--vscode-descriptionForeground);
   }
 }
 
 .browser-extension-message {
   padding: 0 var(--padding-16px);
-  margin-bottom: -4px;
   position: relative;
 }
