@@ -1,3 +1,4 @@
+// packages/vscode/src/commands/apply-chat-response-command/utils/clipboard-parser/clipboard-parser.ts
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import { Diff, extract_diffs } from './extract-diff-patches'
@@ -339,6 +340,12 @@ export const parse_multiple_files = (params: {
 
       // Handle nested backticks
       if (trimmed_line.startsWith('```') && trimmed_line !== '```') {
+        if (
+          backtick_nesting_level === 1 &&
+          (current_language === 'markdown' || current_language === 'md')
+        ) {
+          is_first_content_line = true
+        }
         backtick_nesting_level++
       } else if (
         trimmed_line == '```' &&
@@ -505,25 +512,24 @@ export const parse_multiple_files = (params: {
           }
 
           if (extracted_filename) {
-            if (
-              (current_language === 'markdown' || current_language === 'md') &&
-              current_file_name
-            ) {
-              // This is a new file inside a markdown block. Save the previous one.
-              const cleaned_content = current_content.trim()
-              if (has_real_code(cleaned_content)) {
-                const file_key = `${
-                  current_workspace_name || ''
-                }:${current_file_name}`
-                if (files_map.has(file_key)) {
-                  const existing_file = files_map.get(file_key)!
-                  existing_file.content += '\n\n' + cleaned_content
-                } else {
-                  files_map.set(file_key, {
-                    file_path: current_file_name,
-                    content: cleaned_content,
-                    workspace_name: current_workspace_name
-                  })
+            if (current_language === 'markdown' || current_language === 'md') {
+              if (current_file_name) {
+                // This is a new file inside a markdown block. Save the previous one.
+                const cleaned_content = current_content.trim()
+                if (has_real_code(cleaned_content)) {
+                  const file_key = `${
+                    current_workspace_name || ''
+                  }:${current_file_name}`
+                  if (files_map.has(file_key)) {
+                    const existing_file = files_map.get(file_key)!
+                    existing_file.content += '\n\n' + cleaned_content
+                  } else {
+                    files_map.set(file_key, {
+                      file_path: current_file_name,
+                      content: cleaned_content,
+                      workspace_name: current_workspace_name
+                    })
+                  }
                 }
               }
               current_content = ''
@@ -579,10 +585,16 @@ export const parse_multiple_files = (params: {
             line.trim().startsWith('```')
           )
         ) {
-          if (current_content) {
-            current_content += '\n' + line
-          } else {
-            current_content = line
+          if (
+            !lang_is_markdown ||
+            is_markdown_file ||
+            backtick_nesting_level > 1
+          ) {
+            if (current_content) {
+              current_content += '\n' + line
+            } else {
+              current_content = line
+            }
           }
         }
 
