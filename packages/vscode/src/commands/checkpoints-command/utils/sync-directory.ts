@@ -30,19 +30,8 @@ export const sync_directory = async (params: {
       const dest_uri = vscode.Uri.joinPath(params.dest_dir, name)
       const relative_path = path.relative(params.root_path, dest_uri.fsPath)
 
-      if (params.workspace_provider.is_excluded(relative_path)) {
-        continue
-      }
-
-      let dest_stat
-      try {
-        dest_stat = await vscode.workspace.fs.stat(dest_uri)
-      } catch (e) {
-        continue
-      }
-
       if (
-        dest_stat.type !== vscode.FileType.Directory &&
+        params.workspace_provider.is_excluded(relative_path) ||
         params.workspace_provider.is_ignored_by_patterns(dest_uri.fsPath)
       ) {
         continue

@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import ignore, { Ignore } from 'ignore'
 import { CONTEXT_CHECKED_PATHS_STATE_KEY } from '../../constants/state-keys'
+import { IGNORE_PATTERNS } from '../../constants/ignore-patterns'
 import { natural_sort } from '../../utils/natural-sort'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@/utils/display-token-count'
@@ -1242,9 +1243,6 @@ export class WorkspaceProvider
       }
     }
 
-    // Add default exclusions (e.g., node_modules at the root)
-    this.combined_gitignore.add(['node_modules/'])
-
     // After updating gitignore rules, clear token caches since exclusions may have changed
     this.file_token_counts.clear()
     this.directory_token_counts.clear()
@@ -1273,6 +1271,8 @@ export class WorkspaceProvider
     if (patterns) {
       this.user_ignore.add(patterns)
     }
+
+    this.user_ignore.add(IGNORE_PATTERNS)
 
     // Clear token caches since exclusions have changed
     this.file_token_counts.clear()

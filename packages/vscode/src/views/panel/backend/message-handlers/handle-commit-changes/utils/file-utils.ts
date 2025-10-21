@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { GitRepository } from '@/utils/git-repository-utils'
+import { IGNORE_PATTERNS } from '@/constants/ignore-patterns'
 import ignore from 'ignore'
 
 export interface FileData {
@@ -20,8 +21,8 @@ export const collect_affected_files_with_metadata = async (params: {
   const staged_files = params.repository.state.indexChanges || []
   const files_data: FileData[] = []
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const ignorePatterns = config.get<string[]>('ignorePatterns') ?? []
-  const ig = ignore().add(ignorePatterns)
+  const user_ignore_patterns = config.get<string[]>('ignorePatterns') ?? []
+  const ig = ignore().add(user_ignore_patterns).add(IGNORE_PATTERNS)
 
   for (const change of staged_files) {
     const file_path = change.uri.fsPath

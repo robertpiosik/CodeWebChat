@@ -13,7 +13,10 @@ const directory_contains_ignored = async (
     const entry_uri = vscode.Uri.joinPath(dir_uri, name)
     const relative_path = path.relative(root_path, entry_uri.fsPath)
 
-    if (workspace_provider.is_excluded(relative_path)) {
+    if (
+      workspace_provider.is_excluded(relative_path) ||
+      workspace_provider.is_ignored_by_patterns(entry_uri.fsPath)
+    ) {
       return true
     }
 
@@ -35,10 +38,6 @@ const directory_contains_ignored = async (
       ) {
         return true
       }
-    } else if (entry_stat.type == vscode.FileType.File) {
-      if (workspace_provider.is_ignored_by_patterns(entry_uri.fsPath)) {
-        return true
-      }
     }
   }
   return false
@@ -51,7 +50,10 @@ export const copy_optimised_recursively = async (
   workspace_provider: WorkspaceProvider
 ) => {
   const relative_path = path.relative(root_path, source_uri.fsPath)
-  if (relative_path && workspace_provider.is_excluded(relative_path)) {
+  if (
+    (relative_path && workspace_provider.is_excluded(relative_path)) ||
+    workspace_provider.is_ignored_by_patterns(source_uri.fsPath)
+  ) {
     return
   }
 
@@ -89,9 +91,6 @@ export const copy_optimised_recursively = async (
       )
     }
   } else if (source_stat.type == vscode.FileType.File) {
-    if (workspace_provider.is_ignored_by_patterns(source_uri.fsPath)) {
-      return
-    }
     await fs.copyFile(source_uri.fsPath, dest_uri.fsPath)
   }
   // Other file types are ignored. fs.stat resolves symlinks.

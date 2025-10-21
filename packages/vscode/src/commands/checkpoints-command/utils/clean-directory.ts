@@ -12,12 +12,8 @@ export const clean_directory = async (params: {
     const entry_uri = vscode.Uri.joinPath(params.dir_uri, name)
     const relative_path = path.relative(params.root_path, entry_uri.fsPath)
 
-    if (params.workspace_provider.is_excluded(relative_path)) {
-      continue
-    }
-
     if (
-      type != vscode.FileType.Directory &&
+      params.workspace_provider.is_excluded(relative_path) ||
       params.workspace_provider.is_ignored_by_patterns(entry_uri.fsPath)
     ) {
       continue
