@@ -347,13 +347,12 @@ export const parse_multiple_files = (params: {
           ((current_language == 'markdown' || current_language == 'md') &&
             i > 0 &&
             (lines[i - 1].trim() == '' ||
-              lines[i - 1].trim().endsWith('```')))) &&
+              (current_file_name.endsWith('.md') &&
+                lines[i - 1].trim().endsWith('```'))))) &&
         (() => {
           for (let j = i + 1; j < lines.length; j++) {
             const next_line = lines[j].trim()
-            if (next_line !== '') {
-              return !next_line.startsWith('```')
-            }
+            if (next_line) return true
           }
           return false
         })()
@@ -363,6 +362,12 @@ export const parse_multiple_files = (params: {
         backtick_nesting_level++
       } else if (trimmed_line.endsWith('```')) {
         backtick_nesting_level--
+        if (
+          backtick_nesting_level === 1 &&
+          (current_language === 'markdown' || current_language === 'md')
+        ) {
+          is_first_content_line = true
+        }
       }
 
       if (backtick_nesting_level <= 0) {
@@ -500,6 +505,30 @@ export const parse_multiple_files = (params: {
           }
 
           if (extracted_filename) {
+            if (
+              (current_language === 'markdown' || current_language === 'md') &&
+              current_file_name
+            ) {
+              // This is a new file inside a markdown block. Save the previous one.
+              const cleaned_content = current_content.trim()
+              if (has_real_code(cleaned_content)) {
+                const file_key = `${
+                  current_workspace_name || ''
+                }:${current_file_name}`
+                if (files_map.has(file_key)) {
+                  const existing_file = files_map.get(file_key)!
+                  existing_file.content += '\n\n' + cleaned_content
+                } else {
+                  files_map.set(file_key, {
+                    file_path: current_file_name,
+                    content: cleaned_content,
+                    workspace_name: current_workspace_name
+                  })
+                }
+              }
+              current_content = ''
+            }
+
             const { workspace_name, relative_path } =
               extract_workspace_and_path(
                 extracted_filename,

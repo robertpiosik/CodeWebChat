@@ -300,6 +300,44 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('parses multiple files when each is wrapped in its own outer markdown code block', () => {
+      const test_case = 'markdown-wrappers'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0].file_path).toBe('src/lorem.ts')
+      expect(result[0].content).toBe(
+        load_test_case_file(test_case, 'file-1.txt')
+      )
+      expect(result[1].file_path).toBe('src/ipsum.ts')
+      expect(result[1].content).toBe(
+        load_test_case_file(test_case, 'file-2.txt')
+      )
+    })
+
+    it('parses multiple files when wrapped in a single outer markdown code block', () => {
+      const test_case = 'unclosed-markdown-wrapper'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0].file_path).toBe('src/lorem.ts')
+      expect(result[0].content).toBe(
+        load_test_case_file(test_case, 'file-1.txt')
+      )
+      expect(result[1].file_path).toBe('src/ipsum.ts')
+      expect(result[1].content).toBe(
+        load_test_case_file(test_case, 'file-2.txt')
+      )
+    })
+
     it('parses PHP files when the opening tag appears before the file path comment', () => {
       const test_case = 'php-opening-tag'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
