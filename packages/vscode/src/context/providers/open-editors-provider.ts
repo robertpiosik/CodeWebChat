@@ -3,8 +3,6 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { FileItem } from './workspace-provider'
 import { SharedFileState } from '../shared-file-state'
-import { ignored_extensions } from '../constants/ignored-extensions'
-import { should_ignore_file } from '../utils/should-ignore-file'
 import { WorkspaceProvider } from './workspace-provider'
 import { display_token_count } from '../../utils/display-token-count'
 
@@ -23,7 +21,6 @@ export class OpenEditorsProvider
   private _file_token_counts: Map<string, number> = new Map()
   private _tab_change_handler: vscode.Disposable
   private _file_change_watcher: vscode.Disposable
-  private _ignored_extensions: Set<string> = new Set()
   private _initialized: boolean = false
   private _opened_from_workspace_view: Set<string> = new Set()
   private _non_preview_files: Set<string> = new Set()
@@ -41,8 +38,6 @@ export class OpenEditorsProvider
     this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
     this._shared_state = SharedFileState.get_instance()
     this.workspace_provider = workspace_provider
-
-    this._load_ignored_extensions()
 
     this._update_preview_tabs_state()
 
@@ -63,10 +58,8 @@ export class OpenEditorsProvider
 
     this._config_change_handler = vscode.workspace.onDidChangeConfiguration(
       (event) => {
-        if (event.affectsConfiguration('codeWebChat.ignoredExtensions')) {
-          const old_ignored_extensions = new Set(this._ignored_extensions)
-          this._load_ignored_extensions()
-          this._uncheck_ignored_files(old_ignored_extensions)
+        if (event.affectsConfiguration('codeWebChat.ignorePatterns')) {
+          this._uncheck_ignored_files()
           this.refresh()
         }
       }
@@ -97,18 +90,12 @@ export class OpenEditorsProvider
     return this._workspace_roots.find((root) => file_path.startsWith(root))
   }
 
-  private _uncheck_ignored_files(old_ignored_extensions?: Set<string>): void {
+  private _uncheck_ignored_files(): void {
     const checked_files = this.get_checked_files()
 
-    const files_to_uncheck = checked_files.filter((file_path) => {
-      if (old_ignored_extensions) {
-        return (
-          !should_ignore_file(file_path, old_ignored_extensions) &&
-          should_ignore_file(file_path, this._ignored_extensions)
-        )
-      }
-      return should_ignore_file(file_path, this._ignored_extensions)
-    })
+    const files_to_uncheck = checked_files.filter((file_path) =>
+      this.workspace_provider.is_ignored_by_patterns(file_path)
+    )
 
     for (const file_path of files_to_uncheck) {
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Unchecked)
@@ -117,20 +104,6 @@ export class OpenEditorsProvider
     if (files_to_uncheck.length > 0) {
       this._on_did_change_checked_files.fire()
     }
-  }
-
-  private _load_ignored_extensions() {
-    const config = vscode.workspace.getConfiguration('codeWebChat')
-    const additional_extensions = config
-      .get<string[]>('ignoredExtensions', [])
-      .map((ext) => ext.toLowerCase().replace(/^\./, ''))
-
-    this._ignored_extensions = new Set([
-      ...ignored_extensions,
-      ...additional_extensions
-    ])
-    // Clear token cache to force recalculation
-    this._file_token_counts.clear()
   }
 
   private _update_preview_tabs_state(): void {
@@ -277,7 +250,7 @@ export class OpenEditorsProvider
 
       const file_name = path.basename(file_path)
 
-      if (should_ignore_file(file_path, this._ignored_extensions)) {
+      if (this.workspace_provider.is_ignored_by_patterns(file_path)) {
         continue
       }
 
@@ -400,7 +373,7 @@ export class OpenEditorsProvider
 
       if (!this._is_file_in_any_workspace(file_path)) continue
 
-      if (should_ignore_file(file_path, this._ignored_extensions)) continue
+      if (this.workspace_provider.is_ignored_by_patterns(file_path)) continue
 
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Checked)
 
@@ -437,7 +410,7 @@ export class OpenEditorsProvider
     for (const file_path of file_paths) {
       if (!fs.existsSync(file_path)) continue
 
-      if (should_ignore_file(file_path, this._ignored_extensions)) continue
+      if (this.workspace_provider.is_ignored_by_patterns(file_path)) continue
 
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Checked)
 

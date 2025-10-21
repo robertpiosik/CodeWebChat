@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
-import { should_ignore_file } from '../../../context/utils/should-ignore-file'
 
 export const clean_directory = async (params: {
   dir_uri: vscode.Uri
@@ -19,10 +18,7 @@ export const clean_directory = async (params: {
 
     if (
       type != vscode.FileType.Directory &&
-      should_ignore_file(
-        entry_uri.fsPath,
-        params.workspace_provider.ignored_extensions
-      )
+      params.workspace_provider.is_ignored_by_patterns(entry_uri.fsPath)
     ) {
       continue
     }

@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "The unlimited AI coding in free chatbots (CWC)",
+  "description": "Unlimited AI coding in free chatbots (CWC)",
   "version": "1.465.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
@@ -537,15 +537,58 @@
           "description": "The instructions used when generating a commit message.",
           "default": "Write a brief and precise summary for the changes, limited to a single sentence if possible and nothing else. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
         },
-        "codeWebChat.ignoredExtensions": {
+        "codeWebChat.ignorePatterns": {
           "type": "array",
-          "description": "List of file extensions to ignore in the context.",
+          "description": "List of glob patterns to ignore files and folders in the context.",
           "default": [
-            "svg"
+            "**/*.svg",
+            "**/package-lock.json",
+            "**/pnpm-lock.yaml",
+            "**/*.png",
+            "**/*.jpg",
+            "**/*.jpeg",
+            "**/*.gif",
+            "**/*.bmp",
+            "**/*.ico",
+            "**/*.webp",
+            "**/*.tiff",
+            "**/*.psd",
+            "**/*.avif",
+            "**/*.mp4",
+            "**/*.webm",
+            "**/*.avi",
+            "**/*.mov",
+            "**/*.wmv",
+            "**/*.flv",
+            "**/*.mkv",
+            "**/*.mp3",
+            "**/*.wav",
+            "**/*.ogg",
+            "**/*.m4a",
+            "**/*.aac",
+            "**/*.flac",
+            "**/*.zip",
+            "**/*.rar",
+            "**/*.7z",
+            "**/*.tar",
+            "**/*.gz",
+            "**/*.bz2",
+            "**/*.ttf",
+            "**/*.otf",
+            "**/*.woff",
+            "**/*.woff2",
+            "**/*.eot",
+            "**/*.pdf",
+            "**/*.exe",
+            "**/*.dll",
+            "**/*.so",
+            "**/*.dylib",
+            "**/*.bin",
+            "**/*.vsidx"
           ],
           "items": {
             "type": "string",
-            "description": "File extension to ignore (without the dot)"
+            "description": "A glob pattern."
           }
         },
         "codeWebChat.editFormatInstructions": {

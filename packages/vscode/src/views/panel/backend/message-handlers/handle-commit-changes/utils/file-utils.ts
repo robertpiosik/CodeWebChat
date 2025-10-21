@@ -3,8 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { GitRepository } from '@/utils/git-repository-utils'
-import { should_ignore_file } from '@/context/utils/should-ignore-file'
-import { ignored_extensions } from '@/context/constants/ignored-extensions'
+import ignore from 'ignore'
 
 export interface FileData {
   path: string
@@ -15,22 +14,14 @@ export interface FileData {
   is_large_file: boolean
 }
 
-export const get_ignored_extensions = (): Set<string> => {
-  const config = vscode.workspace.getConfiguration('codeWebChat')
-  const config_ignored_extensions = new Set(
-    config
-      .get<string[]>('ignoredExtensions', [])
-      .map((ext) => ext.toLowerCase().replace(/^\./, ''))
-  )
-  return new Set([...ignored_extensions, ...config_ignored_extensions])
-}
-
 export const collect_affected_files_with_metadata = async (params: {
   repository: GitRepository
-  ignored_extensions: Set<string>
 }): Promise<FileData[]> => {
   const staged_files = params.repository.state.indexChanges || []
   const files_data: FileData[] = []
+  const config = vscode.workspace.getConfiguration('codeWebChat')
+  const ignorePatterns = config.get<string[]>('ignorePatterns') ?? []
+  const ig = ignore().add(ignorePatterns)
 
   for (const change of staged_files) {
     const file_path = change.uri.fsPath
@@ -39,7 +30,7 @@ export const collect_affected_files_with_metadata = async (params: {
       file_path
     )
 
-    if (should_ignore_file(relative_path, params.ignored_extensions)) {
+    if (ig.ignores(relative_path)) {
       continue
     }
 

@@ -2,7 +2,6 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs/promises'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
-import { should_ignore_file } from '../../../context/utils/should-ignore-file'
 
 const directory_contains_ignored = async (
   dir_uri: vscode.Uri,
@@ -37,12 +36,7 @@ const directory_contains_ignored = async (
         return true
       }
     } else if (entry_stat.type == vscode.FileType.File) {
-      if (
-        should_ignore_file(
-          entry_uri.fsPath,
-          workspace_provider.ignored_extensions
-        )
-      ) {
+      if (workspace_provider.is_ignored_by_patterns(entry_uri.fsPath)) {
         return true
       }
     }
@@ -95,12 +89,7 @@ export const copy_optimised_recursively = async (
       )
     }
   } else if (source_stat.type == vscode.FileType.File) {
-    if (
-      should_ignore_file(
-        source_uri.fsPath,
-        workspace_provider.ignored_extensions
-      )
-    ) {
+    if (workspace_provider.is_ignored_by_patterns(source_uri.fsPath)) {
       return
     }
     await fs.copyFile(source_uri.fsPath, dest_uri.fsPath)

@@ -2,8 +2,6 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
-import { should_ignore_file } from '../context/utils/should-ignore-file'
-import { ignored_extensions } from '../context/constants/ignored-extensions'
 import {
   SAVED_CONTEXTS_STATE_KEY,
   LAST_CONTEXT_SAVE_LOCATION_STATE_KEY
@@ -28,16 +26,6 @@ function condense_paths(
     }
     dir_to_children.get(parent_dir)!.push(rel_path)
   }
-
-  const config = vscode.workspace.getConfiguration('codeWebChat')
-  const config_ignored_extensions = config.get<string[]>(
-    'ignoredExtensions',
-    []
-  )
-  const all_ignored_extensions = new Set([
-    ...ignored_extensions,
-    ...config_ignored_extensions
-  ])
 
   function are_all_files_selected(
     dir_path: string,
@@ -73,10 +61,7 @@ function condense_paths(
           continue
         }
 
-        if (
-          !fs.lstatSync(abs_entry_path).isDirectory() &&
-          should_ignore_file(entry, all_ignored_extensions)
-        ) {
+        if (workspace_provider.is_ignored_by_patterns(abs_entry_path)) {
           continue
         }
 

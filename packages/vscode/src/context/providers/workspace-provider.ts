@@ -1,10 +1,8 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import ignore from 'ignore'
-import { ignored_extensions } from '../constants/ignored-extensions'
+import ignore, { Ignore } from 'ignore'
 import { CONTEXT_CHECKED_PATHS_STATE_KEY } from '../../constants/state-keys'
-import { should_ignore_file } from '../utils/should-ignore-file'
 import { natural_sort } from '../../utils/natural-sort'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@/utils/display-token-count'
@@ -24,7 +22,7 @@ export class WorkspaceProvider
   private workspace_names: string[] = []
   private checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
   private combined_gitignore = ignore()
-  public ignored_extensions: Set<string> = new Set()
+  private user_ignore: Ignore = ignore()
   private watcher: vscode.FileSystemWatcher
   private gitignore_watcher: vscode.FileSystemWatcher
   private file_token_counts: Map<string, number> = new Map()
@@ -49,7 +47,7 @@ export class WorkspaceProvider
     this.workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
     this.workspace_names = workspace_folders.map((folder) => folder.name)
     this.onDidChangeCheckedFiles(() => this._save_checked_files_state())
-    this._load_ignored_extensions()
+    this._load_ignore_patterns()
 
     this.watcher = vscode.workspace.createFileSystemWatcher('**/*')
     this.watcher.onDidCreate((uri) => this._handle_file_create(uri.fsPath))
@@ -64,10 +62,9 @@ export class WorkspaceProvider
 
     this.config_change_handler = vscode.workspace.onDidChangeConfiguration(
       (event) => {
-        if (event.affectsConfiguration('codeWebChat.ignoredExtensions')) {
-          const old_ignored_extensions = new Set(this.ignored_extensions)
-          this._load_ignored_extensions()
-          this._uncheck_ignored_files(old_ignored_extensions)
+        if (event.affectsConfiguration('codeWebChat.ignorePatterns')) {
+          this._load_ignore_patterns()
+          this._uncheck_ignored_files()
           this.refresh()
         }
       }
@@ -152,20 +149,12 @@ export class WorkspaceProvider
     return matching_root
   }
 
-  private _uncheck_ignored_files(old_ignored_extensions?: Set<string>): void {
-    const checked_files = this.get_checked_files()
+  private _uncheck_ignored_files(): void {
+    const checked_files = this.get_all_checked_paths()
 
-    const files_to_uncheck = checked_files.filter((file_path) => {
-      if (old_ignored_extensions) {
-        // Only uncheck if it wasn't ignored before but is now
-        return (
-          !should_ignore_file(file_path, old_ignored_extensions) &&
-          should_ignore_file(file_path, this.ignored_extensions)
-        )
-      }
-      // Without old extensions comparison, uncheck all that match current ignored list
-      return should_ignore_file(file_path, this.ignored_extensions)
-    })
+    const files_to_uncheck = checked_files.filter((file_path) =>
+      this.is_ignored_by_patterns(file_path)
+    )
 
     for (const file_path of files_to_uncheck) {
       this.checked_items.set(file_path, vscode.TreeItemCheckboxState.Unchecked)
@@ -238,7 +227,7 @@ export class WorkspaceProvider
     const relative_path = path.relative(workspace_root, file_path)
     if (this.is_excluded(relative_path)) return
 
-    if (should_ignore_file(file_path, this.ignored_extensions)) return
+    if (this.is_ignored_by_patterns(file_path)) return
 
     if (
       this.checked_items.get(file_path) === vscode.TreeItemCheckboxState.Checked
@@ -337,7 +326,7 @@ export class WorkspaceProvider
 
     if (
       !this.is_excluded(relative_path) &&
-      !should_ignore_file(created_file_path, this.ignored_extensions)
+      !this.is_ignored_by_patterns(created_file_path)
     ) {
       this.checked_items.set(
         created_file_path,
@@ -694,7 +683,7 @@ export class WorkspaceProvider
           continue
         }
 
-        if (should_ignore_file(full_path, this.ignored_extensions)) {
+        if (this.is_ignored_by_patterns(full_path)) {
           continue
         }
 
@@ -765,7 +754,7 @@ export class WorkspaceProvider
 
         if (
           this.is_excluded(relative_path) ||
-          should_ignore_file(full_path, this.ignored_extensions)
+          this.is_ignored_by_patterns(full_path)
         ) {
           continue
         }
@@ -871,17 +860,12 @@ export class WorkspaceProvider
         }
 
         const is_excluded = this.is_excluded(relative_path)
-
         if (is_excluded) {
           continue
         }
 
-        const is_ignored = should_ignore_file(
-          full_path,
-          this.ignored_extensions
-        )
-
-        if (is_ignored && !entry.isDirectory()) {
+        const is_ignored = this.is_ignored_by_patterns(full_path)
+        if (is_ignored) {
           continue
         }
 
@@ -1021,7 +1005,7 @@ export class WorkspaceProvider
 
         if (
           this.is_excluded(relative_path) ||
-          should_ignore_file(sibling_path, this.ignored_extensions)
+          this.is_ignored_by_patterns(sibling_path)
         ) {
           continue
         }
@@ -1110,7 +1094,7 @@ export class WorkspaceProvider
 
         if (
           this.is_excluded(relative_path) ||
-          should_ignore_file(full_path, this.ignored_extensions)
+          this.is_ignored_by_patterns(full_path)
         ) {
           continue
         }
@@ -1195,7 +1179,7 @@ export class WorkspaceProvider
           false
         )
       } else {
-        if (!should_ignore_file(file_path, this.ignored_extensions)) {
+        if (!this.is_ignored_by_patterns(file_path)) {
           all_files_to_check.push(file_path)
         }
       }
@@ -1282,21 +1266,29 @@ export class WorkspaceProvider
     return this.combined_gitignore.ignores(relative_path)
   }
 
-  private _load_ignored_extensions() {
+  private _load_ignore_patterns() {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const additional_extensions = config
-      .get<string[]>('ignoredExtensions', [])
-      .map((ext) => ext.toLowerCase().replace(/^\./, ''))
-
-    this.ignored_extensions = new Set([
-      ...ignored_extensions,
-      ...additional_extensions
-    ])
+    const patterns = config.get<string[]>('ignorePatterns')
+    this.user_ignore = ignore()
+    if (patterns) {
+      this.user_ignore.add(patterns)
+    }
 
     // Clear token caches since exclusions have changed
     this.file_token_counts.clear()
     this.directory_token_counts.clear()
     this.directory_selected_token_counts.clear()
+  }
+
+  public is_ignored_by_patterns(file_path: string): boolean {
+    const workspace_root = this.get_workspace_root_for_file(file_path)
+    if (!workspace_root) {
+      // To handle files outside of a workspace, we can only check filename patterns
+      const basename = path.basename(file_path)
+      return this.user_ignore.ignores(basename)
+    }
+    const relative_path = path.relative(workspace_root, file_path)
+    return this.user_ignore.ignores(relative_path)
   }
 
   public async check_all(): Promise<void> {
@@ -1420,7 +1412,7 @@ export class WorkspaceProvider
 
           if (is_directory) {
             await walk(full_path)
-          } else if (!should_ignore_file(full_path, this.ignored_extensions)) {
+          } else if (!this.is_ignored_by_patterns(full_path)) {
             files.push(full_path)
           }
         }
