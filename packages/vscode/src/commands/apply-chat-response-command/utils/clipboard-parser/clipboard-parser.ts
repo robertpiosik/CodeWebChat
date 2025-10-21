@@ -341,8 +341,8 @@ export const parse_multiple_files = (params: {
       // Handle nested backticks
       if (trimmed_line.startsWith('```') && trimmed_line !== '```') {
         if (
-          backtick_nesting_level === 1 &&
-          (current_language === 'markdown' || current_language === 'md')
+          backtick_nesting_level == 1 &&
+          (current_language == 'markdown' || current_language == 'md')
         ) {
           is_first_content_line = true
         }
@@ -370,8 +370,8 @@ export const parse_multiple_files = (params: {
       } else if (trimmed_line.endsWith('```')) {
         backtick_nesting_level--
         if (
-          backtick_nesting_level === 1 &&
-          (current_language === 'markdown' || current_language === 'md')
+          backtick_nesting_level == 1 &&
+          (current_language == 'markdown' || current_language == 'md')
         ) {
           is_first_content_line = true
         }
@@ -512,7 +512,7 @@ export const parse_multiple_files = (params: {
           }
 
           if (extracted_filename) {
-            if (current_language === 'markdown' || current_language === 'md') {
+            if (current_language == 'markdown' || current_language == 'md') {
               if (current_file_name) {
                 // This is a new file inside a markdown block. Save the previous one.
                 const cleaned_content = current_content.trim()
@@ -543,7 +543,7 @@ export const parse_multiple_files = (params: {
             current_file_name = relative_path
             if (
               backtick_nesting_level > 1 &&
-              (current_language === 'markdown' || current_language === 'md')
+              (current_language == 'markdown' || current_language == 'md')
             ) {
               current_content = ''
             }
@@ -573,7 +573,7 @@ export const parse_multiple_files = (params: {
         }
 
         const lang_is_markdown =
-          current_language === 'markdown' || current_language === 'md'
+          current_language == 'markdown' || current_language == 'md'
 
         const is_markdown_file = current_file_name.endsWith('.md')
 
