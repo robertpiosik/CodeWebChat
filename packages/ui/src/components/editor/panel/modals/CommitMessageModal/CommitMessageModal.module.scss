@@ -33,4 +33,8 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--padding-8px);
+
+  > button {
+    flex: 1;
+  }
 }

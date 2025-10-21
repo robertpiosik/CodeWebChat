@@ -24,7 +24,6 @@
 .container {
   position: relative;
   z-index: 1;
-  background-color: var(--vscode-sideBar-background);
   padding: var(--padding-16px) var(--padding-12px) var(--padding-12px)
     var(--padding-12px);
   border-radius: var(--border-radius-8px);
@@ -32,4 +31,8 @@
   width: 100%;
   margin: var(--padding-24px);
   max-width: 320px;
+  background-color: var(--vscode-quickInput-background);
+  color: var(--vscode-quickInput-foreground);
+  border: 1px solid var(--vscode-widget-border);
+  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
 }

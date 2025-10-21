@@ -5,10 +5,7 @@ import {
   get_commit_message_config,
   CommitMessageConfig
 } from './get-commit-message-config'
-import {
-  get_ignored_extensions,
-  collect_affected_files_with_metadata
-} from './file-utils'
+import { collect_affected_files_with_metadata } from './file-utils'
 import { handle_file_selection_if_needed } from './handle-file-selection'
 import {
   build_files_content,
@@ -182,7 +179,6 @@ export const generate_commit_message_from_diff = async (params: {
 }): Promise<string | null> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const commit_message_prompt = config.get<string>('commitMessageInstructions')
-  const all_ignored_extensions = get_ignored_extensions()
 
   // Use provided config or get it if not provided (for backward compatibility)
   const resolved_api_config =
@@ -190,8 +186,7 @@ export const generate_commit_message_from_diff = async (params: {
   if (!resolved_api_config) return null
 
   const affected_files_data = await collect_affected_files_with_metadata({
-    repository: params.repository,
-    ignored_extensions: all_ignored_extensions
+    repository: params.repository
   })
 
   const selected_files = await handle_file_selection_if_needed({
