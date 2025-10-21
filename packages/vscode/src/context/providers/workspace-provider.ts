@@ -88,21 +88,12 @@ export class WorkspaceProvider
       CONTEXT_CHECKED_PATHS_STATE_KEY,
       checked_paths
     )
-    await this.context.globalState.update(
-      CONTEXT_CHECKED_PATHS_STATE_KEY,
-      checked_paths
-    )
   }
 
   public load_checked_files_state(): void {
-    let persisted_checked_paths = this.context.workspaceState.get<string[]>(
+    const persisted_checked_paths = this.context.workspaceState.get<string[]>(
       CONTEXT_CHECKED_PATHS_STATE_KEY
     )
-    if (!persisted_checked_paths) {
-      persisted_checked_paths = this.context.globalState.get<string[]>(
-        CONTEXT_CHECKED_PATHS_STATE_KEY
-      )
-    }
     if (persisted_checked_paths && persisted_checked_paths.length > 0) {
       this.set_checked_files(persisted_checked_paths)
     }
