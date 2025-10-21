@@ -162,12 +162,21 @@ export class WebsitesProvider
       CONTEXT_CHECKED_URLS_STATE_KEY,
       checked_urls
     )
+    await this.context.globalState.update(
+      CONTEXT_CHECKED_URLS_STATE_KEY,
+      checked_urls
+    )
   }
 
   public load_checked_websites_state(): void {
-    const checked_urls = this.context.workspaceState.get<string[]>(
+    let checked_urls = this.context.workspaceState.get<string[]>(
       CONTEXT_CHECKED_URLS_STATE_KEY
     )
+    if (!checked_urls) {
+      checked_urls = this.context.globalState.get<string[]>(
+        CONTEXT_CHECKED_URLS_STATE_KEY
+      )
+    }
     if (checked_urls) {
       for (const url of checked_urls) {
         this._checked_websites.set(url, vscode.TreeItemCheckboxState.Checked)
