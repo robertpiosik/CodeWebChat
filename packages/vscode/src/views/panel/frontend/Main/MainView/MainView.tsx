@@ -153,7 +153,7 @@ export const MainView: React.FC<Props> = (props) => {
 
     const container_width = container_ref.current.offsetWidth
     const header_left_width = header_left_ref.current.offsetWidth
-    const calculated_width = container_width - header_left_width - 36
+    const calculated_width = container_width - header_left_width - 36 - 26 // 26 is for settings button and gap
 
     set_dropdown_max_width(calculated_width)
   }
@@ -288,28 +288,35 @@ export const MainView: React.FC<Props> = (props) => {
         </div>
 
         <div className={styles.header__right} ref={dropdown_container_ref}>
-          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
-            <UiDropdown
-              options={Object.entries(web_mode_labels).map(
-                ([value, label]) => ({ value: value as WebMode, label })
-              )}
-              selected_value={props.web_mode}
-              on_change={props.on_web_mode_change}
-              footer={dropdown_footer}
-              max_width={dropdown_max_width}
-            />
-          )}
-          {props.home_view_type == HOME_VIEW_TYPES.API && (
-            <UiDropdown
-              options={Object.entries(api_mode_labels).map(
-                ([value, label]) => ({ value: value as ApiMode, label })
-              )}
-              selected_value={props.api_mode}
-              on_change={props.on_api_mode_change}
-              footer={dropdown_footer}
-              max_width={dropdown_max_width}
-            />
-          )}
+          <div className={styles.header__right__dropdown}>
+            {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+              <UiDropdown
+                options={Object.entries(web_mode_labels).map(
+                  ([value, label]) => ({ value: value as WebMode, label })
+                )}
+                selected_value={props.web_mode}
+                on_change={props.on_web_mode_change}
+                footer={dropdown_footer}
+                max_width={dropdown_max_width}
+              />
+            )}
+            {props.home_view_type == HOME_VIEW_TYPES.API && (
+              <UiDropdown
+                options={Object.entries(api_mode_labels).map(
+                  ([value, label]) => ({ value: value as ApiMode, label })
+                )}
+                selected_value={props.api_mode}
+                on_change={props.on_api_mode_change}
+                footer={dropdown_footer}
+                max_width={dropdown_max_width}
+              />
+            )}
+          </div>
+          <UiIconButton
+            codicon_icon="settings-gear"
+            on_click={() => props.on_quick_action_click('codeWebChat.settings')}
+            title="Settings"
+          />
         </div>
       </div>
       <Scrollable scroll_to_top_key={scroll_to_top_key}>

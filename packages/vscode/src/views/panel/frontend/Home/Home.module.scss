@@ -8,10 +8,17 @@
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--padding-4px);
   width: 100%;
   padding: var(--padding-5px) var(--padding-12px) var(--padding-6px)
     var(--padding-12px);
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-4px);
+  }
 
   &__home {
     display: flex;

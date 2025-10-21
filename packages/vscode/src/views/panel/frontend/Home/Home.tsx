@@ -6,8 +6,12 @@ import { Donations } from '@ui/components/editor/panel/Donations'
 import { Icon } from '@ui/components/editor/common/Icon'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
+import { IconButton } from '@ui/components/editor/panel/IconButton'
+import { post_message } from '../utils/post_message'
+import { FrontendMessage } from '@/views/panel/types/messages'
 
 type Props = {
+  vscode: any
   is_active: boolean
   on_new_chat: () => void
   on_api_call: () => void
@@ -26,13 +30,28 @@ export const Home: React.FC<Props> = (props) => {
     has_more
   } = use_latest_donations(props.is_active, props.are_donations_visible)
 
+  const handle_settings_click = () => {
+    post_message(props.vscode, {
+      command: 'EXECUTE_COMMAND',
+      command_id: 'codeWebChat.settings'
+    } as FrontendMessage)
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles['header']}>
-        <div className={styles['header__home']}>
-          <span className="codicon codicon-home" />
+        <div className={styles['header__left']}>
+          <div className={styles['header__home']}>
+            <span className="codicon codicon-home" />
+          </div>
+          <span className={styles['header__text']}>Home</span>
         </div>
-        <span className={styles['header__text']}>Home</span>
+        <IconButton
+          codicon_icon="settings-gear"
+          on_click={handle_settings_click}
+          title="Settings"
+          label="Settings"
+        />
       </div>
 
       <Scrollable>

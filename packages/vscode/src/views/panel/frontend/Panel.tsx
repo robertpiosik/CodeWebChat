@@ -406,6 +406,7 @@ export const Panel = () => {
         })}
       >
         <Home
+          vscode={vscode}
           is_active={active_view == 'home'}
           on_new_chat={() => {
             set_active_view('main')

@@ -463,17 +463,12 @@
         {
           "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
-          "group": "navigation@1"
+          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.feedback",
           "when": "view == codeWebChatView",
-          "group": "navigation@2"
-        },
-        {
-          "command": "codeWebChat.settings",
-          "when": "view == codeWebChatView",
-          "group": "navigation@3"
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
