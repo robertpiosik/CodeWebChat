@@ -18,6 +18,7 @@ import { post_message } from '../utils/post_message'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 
 type Props = {
+  scroll_reset_key: number
   response_history: {
     response: string
     raw_instructions?: string
@@ -628,6 +629,7 @@ export const Main: React.FC<Props> = (props) => {
 
   return (
     <MainView
+      scroll_reset_key={props.scroll_reset_key}
       on_show_home={props.on_show_home}
       initialize_chats={handle_initialize_chats}
       copy_to_clipboard={handle_copy_to_clipboard}

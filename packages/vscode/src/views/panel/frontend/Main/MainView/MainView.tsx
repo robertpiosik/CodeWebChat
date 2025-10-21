@@ -28,6 +28,7 @@ import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButt
 dayjs.extend(relativeTime)
 
 type Props = {
+  scroll_reset_key: number
   initialize_chats: (params: {
     preset_name?: string
     group_name?: string
@@ -261,7 +262,9 @@ export const MainView: React.FC<Props> = (props) => {
     </>
   )
 
-  const scroll_to_top_key = `${props.home_view_type}-${
+  const scroll_to_top_key = `${props.scroll_reset_key}-${
+    props.home_view_type
+  }-${
     props.home_view_type == HOME_VIEW_TYPES.WEB
       ? props.web_mode
       : props.api_mode

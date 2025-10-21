@@ -34,6 +34,8 @@ type ResponseHistoryItem = {
 
 export const Panel = () => {
   const [active_view, set_active_view] = useState<'home' | 'main'>('home')
+  const [main_view_scroll_reset_key, set_main_view_scroll_reset_key] =
+    useState(0)
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
   const [files_to_review, set_files_to_review] =
@@ -364,6 +366,7 @@ export const Panel = () => {
         })}
       >
         <Main
+          scroll_reset_key={main_view_scroll_reset_key}
           vscode={vscode}
           on_preset_edit={(preset) => {
             post_message(vscode, {
@@ -410,12 +413,14 @@ export const Panel = () => {
           is_active={active_view == 'home'}
           on_new_chat={() => {
             set_active_view('main')
+            set_main_view_scroll_reset_key((k) => k + 1)
             handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
             handle_web_mode_change('edit-context')
             set_chat_input_focus_and_select_key((k) => k + 1)
           }}
           on_api_call={() => {
             set_active_view('main')
+            set_main_view_scroll_reset_key((k) => k + 1)
             handle_home_view_type_change(HOME_VIEW_TYPES.API)
             handle_api_mode_change('edit-context')
             set_chat_input_focus_and_select_key((k) => k + 1)
