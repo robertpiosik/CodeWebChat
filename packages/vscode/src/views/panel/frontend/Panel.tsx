@@ -218,7 +218,7 @@ export const Panel = () => {
             )
           }
         }
-      } else if (message.command === 'CONTEXT_SIZE_WARNING_THRESHOLD') {
+      } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
         set_context_size_warning_threshold(message.threshold)
       }
     }
@@ -234,7 +234,8 @@ export const Panel = () => {
       { command: 'GET_CONNECTION_STATUS' },
       { command: 'REQUEST_EDITOR_STATE' },
       { command: 'REQUEST_EDITOR_SELECTION_STATE' },
-      { command: 'GET_WORKSPACE_STATE' }
+      { command: 'GET_WORKSPACE_STATE' },
+      { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 

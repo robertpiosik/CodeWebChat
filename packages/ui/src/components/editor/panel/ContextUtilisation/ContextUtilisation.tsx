@@ -4,7 +4,7 @@ import cn from 'classnames'
 
 type Props = {
   current_context_size: number
-  context_size_warning_treshold: number
+  context_size_warning_threshold: number
 }
 
 const format_number = (num: number): string => {
@@ -15,11 +15,11 @@ const format_number = (num: number): string => {
 }
 
 export const ContextUtilisation: FC<Props> = (props) => {
-  const { current_context_size, context_size_warning_treshold } = props
+  const { current_context_size, context_size_warning_threshold } = props
   const is_above_threshold =
-    current_context_size > context_size_warning_treshold
+    current_context_size > context_size_warning_threshold
   const progress = Math.min(
-    (current_context_size / context_size_warning_treshold) * 100,
+    (current_context_size / context_size_warning_threshold) * 100,
     100
   )
 
@@ -37,7 +37,7 @@ export const ContextUtilisation: FC<Props> = (props) => {
         />
       </div>
       <span className={styles.label}>
-        {format_number(context_size_warning_treshold)}
+        {format_number(context_size_warning_threshold)}
       </span>
     </div>
   )

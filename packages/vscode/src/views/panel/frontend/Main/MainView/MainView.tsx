@@ -420,7 +420,7 @@ export const MainView: React.FC<Props> = (props) => {
             />
             <UiContextUtilisation
               current_context_size={props.token_count}
-              context_size_warning_treshold={
+              context_size_warning_threshold={
                 props.context_size_warning_threshold
               }
             />

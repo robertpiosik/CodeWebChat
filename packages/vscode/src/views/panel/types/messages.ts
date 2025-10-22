@@ -109,6 +109,10 @@ export interface GetCurrentTokenCountMessage extends BaseMessage {
   command: 'GET_CURRENT_TOKEN_COUNT'
 }
 
+export interface GetContextSizeWarningThresholdMessage extends BaseMessage {
+  command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
+}
+
 export interface UpdatePresetMessage extends BaseMessage {
   command: 'UPDATE_PRESET'
   updating_preset: Preset
@@ -326,6 +330,7 @@ export type FrontendMessage =
   | GetHistoryMessage
   | SaveHistoryMessage
   | GetCurrentTokenCountMessage
+  | GetContextSizeWarningThresholdMessage
   | UpdatePresetMessage
   | DeletePresetMessage
   | DuplicatePresetMessage

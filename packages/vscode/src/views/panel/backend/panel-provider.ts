@@ -194,7 +194,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
         if (
           event.affectsConfiguration('codeWebChat.contextSizeWarningThreshold')
         ) {
-          this.send_context_size_warning_threshold()
+          this._send_context_size_warning_threshold()
         }
 
         const all_api_config_keys = [
@@ -364,6 +364,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             handle_request_editor_selection_state(this)
           } else if (message.command == 'GET_CURRENT_TOKEN_COUNT') {
             this.calculate_token_count()
+          } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
+            this._send_context_size_warning_threshold()
           } else if (message.command == 'REPLACE_PRESETS') {
             await handle_replace_presets(this, message)
           } else if (message.command == 'UPDATE_PRESET') {
@@ -506,7 +508,6 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     )
 
     this.send_presets_to_webview(webview_view.webview)
-    this.send_context_size_warning_threshold()
     // We need to wait until the webview fully initialized
     setTimeout(() => {
       this.send_message({
@@ -690,10 +691,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     })
   }
 
-  public send_context_size_warning_threshold() {
+  private _send_context_size_warning_threshold() {
     if (!this._webview_view) return
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const threshold = config.get<number>('contextSizeWarningThreshold', 60000)
+    const threshold = config.get<number>('contextSizeWarningThreshold')!
     this.send_message({
       command: 'CONTEXT_SIZE_WARNING_THRESHOLD',
       threshold
