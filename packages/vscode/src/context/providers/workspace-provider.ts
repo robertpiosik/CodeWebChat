@@ -55,8 +55,9 @@ export class WorkspaceProvider
     this.watcher.onDidChange((uri) => this._on_file_system_changed(uri.fsPath))
     this.watcher.onDidDelete((uri) => this._on_file_system_changed(uri.fsPath))
 
-    this.gitignore_watcher =
-      vscode.workspace.createFileSystemWatcher('**/.gitignore')
+    this.gitignore_watcher = vscode.workspace.createFileSystemWatcher(
+      '**/{.gitignore,.cursorignore,.codeiumignore}'
+    )
     this.gitignore_watcher.onDidCreate(() => this._load_all_gitignore_files())
     this.gitignore_watcher.onDidChange(() => this._load_all_gitignore_files())
     this.gitignore_watcher.onDidDelete(() => this._load_all_gitignore_files())
@@ -284,7 +285,13 @@ export class WorkspaceProvider
     const workspace_root = this.get_workspace_root_for_file(changed_file_path)
     if (!workspace_root) return
 
-    if (path.basename(changed_file_path) == '.gitignore') return
+    if (
+      ['.gitignore', '.cursorignore', '.codeiumignore'].includes(
+        path.basename(changed_file_path)
+      )
+    ) {
+      return
+    }
 
     this.file_token_counts.delete(changed_file_path)
 
@@ -318,7 +325,13 @@ export class WorkspaceProvider
     const workspace_root = this.get_workspace_root_for_file(created_file_path)
     if (!workspace_root) return
 
-    if (path.basename(created_file_path) == '.gitignore') return
+    if (
+      ['.gitignore', '.cursorignore', '.codeiumignore'].includes(
+        path.basename(created_file_path)
+      )
+    ) {
+      return
+    }
 
     this.file_workspace_map.set(created_file_path, workspace_root)
 
@@ -1206,7 +1219,9 @@ export class WorkspaceProvider
 
   // Load .gitignore from all levels of the workspace
   private async _load_all_gitignore_files(): Promise<void> {
-    const gitignore_files = await vscode.workspace.findFiles('**/.gitignore')
+    const gitignore_files = await vscode.workspace.findFiles(
+      '**/{.gitignore,.cursorignore,.codeiumignore}'
+    )
     this.combined_gitignore = ignore() // Reset
 
     for (const file_uri of gitignore_files) {
@@ -1237,7 +1252,7 @@ export class WorkspaceProvider
       } catch (error) {
         Logger.error({
           function_name: 'load_all_gitignore_files',
-          message: `Error reading .gitignore file at ${gitignore_path}`,
+          message: `Error reading ignore file at ${gitignore_path}`,
           data: error
         })
       }
