@@ -6,14 +6,12 @@ import ChatGPT from '../../../../assets/icons/openai.svg'
 import Claude from '../../../../assets/icons/claude.svg'
 import CodeWebChatLogo from '../../../../assets/icons/code-web-chat-logo.svg'
 import CodeWebChatText from '../../../../assets/icons/code-web-chat-text.svg'
-import Command from '../../../../assets/icons/command.svg'
 import Copilot from '../../../../assets/icons/copilot.svg'
 import CurlyBraces from '../../../../assets/icons/curly-braces.svg'
 import GithubCopilot from '../../../../assets/icons/github-copilot.svg'
 import DeepSeek from '../../../../assets/icons/deepseek.svg'
 import Discord from '../../../../assets/icons/discord.svg'
 import Doubao from '../../../../assets/icons/doubao.svg'
-import Enter from '../../../../assets/icons/enter.svg'
 import Gemini from '../../../../assets/icons/gemini.svg'
 import Grok from '../../../../assets/icons/grok.svg'
 import HashSign from '../../../../assets/icons/hash-sign.svg'
@@ -41,13 +39,11 @@ export namespace Icon {
     | 'CLAUDE'
     | 'CODE_WEB_CHAT_LOGO'
     | 'CODE_WEB_CHAT_TEXT'
-    | 'COMMAND'
     | 'COPILOT'
     | 'CURLY_BRACES'
     | 'DEEPSEEK'
     | 'DISCORD'
     | 'DOUBAO'
-    | 'ENTER'
     | 'GEMINI'
     | 'GITHUB_COPILOT'
     | 'GROK'
@@ -99,9 +95,6 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'CODE_WEB_CHAT_TEXT':
       icon = <CodeWebChatText />
       break
-    case 'COMMAND':
-      icon = <Command />
-      break
     case 'COPILOT':
       icon = <Copilot />
       break
@@ -116,9 +109,6 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'DOUBAO':
       icon = <Doubao />
-      break
-    case 'ENTER':
-      icon = <Enter />
       break
     case 'GEMINI':
       icon = <Gemini />

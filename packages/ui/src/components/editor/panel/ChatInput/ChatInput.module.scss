@@ -1,6 +1,5 @@
 .container {
-  --padding: var(--padding-4px) var(--padding-20px) var(--padding-4px)
-    var(--padding-7px);
+  --padding: var(--padding-5px) var(--padding-7px);
   position: relative;
 
   &__inner {
@@ -18,57 +17,6 @@
 
     &:focus-within {
       border-color: var(--vscode-focusBorder);
-    }
-
-    &__search-button {
-      display: flex;
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      right: 0;
-      padding: var(--padding-1px) var(--padding-3px) var(--padding-5px)
-        var(--padding-3px);
-      color: var(--vscode-icon-foreground);
-      cursor: pointer;
-      opacity: 0.7;
-
-      &::before {
-        font-size: var(--font-size-13px);
-      }
-
-      &:hover {
-        opacity: 1;
-      }
-
-      &:first-of-type {
-        z-index: 2;
-      }
-    }
-
-    &__copy-button {
-      display: flex;
-      position: absolute;
-      z-index: 1;
-      top: 18px;
-      right: 0;
-      padding: var(--padding-1px) var(--padding-3px) var(--padding-6px)
-        var(--padding-3px);
-      color: var(--vscode-icon-foreground);
-      cursor: pointer;
-      opacity: 0.8;
-
-      &::before {
-        font-size: var(--font-size-13px);
-      }
-
-      &:hover:enabled {
-        opacity: 1;
-      }
-
-      &:disabled {
-        opacity: 0.35;
-        cursor: default;
-      }
     }
 
     &--disabled {
@@ -165,7 +113,8 @@
   display: flex;
   bottom: 0;
   right: 0;
-  padding: var(--padding-6px);
+  padding: var(--padding-6px) var(--padding-8px) var(--padding-6px)
+    var(--padding-6px);
   justify-content: space-between;
   overflow: hidden;
 
@@ -201,13 +150,27 @@
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: var(--padding-4px);
+    gap: var(--padding-8px);
     pointer-events: none;
 
-    &__count {
-      font-size: 0.9em;
-      color: var(--vscode-descriptionForeground);
-      margin-right: 3px;
+    &__edit-format {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-6px);
+
+      &__button {
+        font-size: var(--font-size-11px);
+        opacity: 0.5;
+        pointer-events: all;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        &--selected {
+          opacity: 1;
+        }
+      }
     }
 
     &__button {
@@ -216,11 +179,9 @@
       justify-content: center;
       gap: 3px;
       height: 20px;
-      padding: 0 4px;
-      border-radius: 5px;
+      padding: 0 var(--padding-2px);
+      border-radius: var(--border-radius-5px);
       color: var(--vscode-foreground);
-      border: 1px solid var(--vscode-commandCenter-inactiveBorder);
-      font-size: 12px;
       pointer-events: all;
 
       > svg {
@@ -228,14 +189,12 @@
         fill: var(--vscode-icon-foreground);
       }
 
-      &:hover:enabled {
-        background-color: var(--vscode-toolbar-hoverBackground);
-        border-color: var(--vscode-commandCenter-activeBorder);
+      &.codicon::before {
+        font-size: 16px;
       }
 
-      &__ctrl {
-        color: var(--vscode-icon-foreground);
-        letter-spacing: -0.6px;
+      &:hover:enabled {
+        background-color: var(--vscode-toolbar-hoverBackground);
       }
 
       &:disabled {
@@ -244,14 +203,6 @@
 
         &:hover {
           background-color: none;
-        }
-      }
-
-      &--secondary {
-        @media (max-width: 360px) {
-          > span {
-            display: none;
-          }
         }
       }
     }

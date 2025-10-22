@@ -5,7 +5,8 @@ import cn from 'classnames'
 import { Icon } from '../../common/Icon'
 import { get_highlighted_text } from './utils/get-highlighted-text'
 import { use_handlers } from './hooks/use-handlers'
-import { format_token_count } from './utils/format-token-count'
+
+export type EditFormat = 'whole' | 'truncated' | 'diff'
 
 export type ChatInputProps = {
   value: string
@@ -14,7 +15,6 @@ export type ChatInputProps = {
   on_submit: () => void
   on_submit_with_control: () => void
   on_copy: () => void
-  token_count?: number
   is_connected: boolean
   is_in_code_completions_mode: boolean
   has_active_selection: boolean
@@ -30,6 +30,10 @@ export type ChatInputProps = {
   focus_key?: number
   focus_and_select_key?: number
   use_last_choice_button_title?: string
+  show_edit_format_selector?: boolean
+  edit_format?: EditFormat
+  on_edit_format_change?: (format: EditFormat) => void
+  edit_format_instructions?: Record<EditFormat, string>
 }
 
 export const ChatInput: React.FC<ChatInputProps> = (props) => {
@@ -152,38 +156,6 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             (props.has_active_selection || !props.has_active_editor)
           }
         />
-        <button
-          className={cn(
-            styles['container__inner__search-button'],
-            'codicon',
-            'codicon-search'
-          )}
-          onClick={props.on_search_click}
-          title={`Search history (${
-            navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
-              ? '⌘F'
-              : 'Ctrl+F'
-          })`}
-        />
-
-        {props.is_web_mode && props.is_connected && (
-          <button
-            className={cn(
-              styles['container__inner__copy-button'],
-              'codicon',
-              'codicon-copy'
-            )}
-            onClick={(e) => {
-              e.stopPropagation()
-              props.on_copy()
-            }}
-            title={`Copy to clipboard (${
-              navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
-                ? '⌥⌘C'
-                : 'Ctrl+Alt+C'
-            })`}
-          />
-        )}
 
         <div
           className={styles.footer}
@@ -227,12 +199,25 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               e.stopPropagation()
             }}
           >
-            {props.token_count !== undefined && props.token_count > 1 && (
-              <div
-                className={styles.footer__right__count}
-                title="Approximate message length in tokens"
-              >
-                {format_token_count(props.token_count)}
+            {props.show_edit_format_selector && (
+              <div className={styles['footer__right__edit-format']}>
+                {(['whole', 'truncated', 'diff'] as const).map((format) => (
+                  <button
+                    key={format}
+                    className={cn(
+                      styles['footer__right__edit-format__button'],
+                      {
+                        [styles[
+                          'footer__right__edit-format__button--selected'
+                        ]]: props.edit_format == format
+                      }
+                    )}
+                    title={props.edit_format_instructions?.[format]}
+                    onClick={() => props.on_edit_format_change?.(format)}
+                  >
+                    {format}
+                  </button>
+                ))}
               </div>
             )}
 
@@ -240,46 +225,30 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               (props.is_web_mode && props.is_connected)) && (
               <>
                 <button
-                  className={cn([
+                  className={cn(
                     styles.footer__right__button,
-                    styles['footer__right__button--secondary']
-                  ])}
-                  onClick={(e) => handle_submit(e, true)}
-                >
-                  {navigator.userAgent.toUpperCase().indexOf('MAC') >= 0 ? (
-                    <Icon variant="COMMAND" />
-                  ) : (
-                    <div className={styles.footer__right__button__ctrl}>
-                      Ctrl
-                    </div>
+                    'codicon',
+                    'codicon-send'
                   )}
-                  <Icon variant="ENTER" />
-                  <span>Select...</span>
-                </button>
-
-                <button
-                  className={styles.footer__right__button}
                   onClick={handle_submit}
                   title={props.use_last_choice_button_title}
-                >
-                  <Icon variant="ENTER" />
-                  <span>Use last choice</span>
-                </button>
+                />
               </>
             )}
 
             {props.is_web_mode && !props.is_connected && (
               <button
-                className={styles.footer__right__button}
+                className={cn(
+                  styles.footer__right__button,
+                  'codicon',
+                  'codicon-copy'
+                )}
                 onClick={(e) => {
                   e.stopPropagation()
                   props.on_copy()
                 }}
                 title="Copy to clipboard"
-              >
-                <Icon variant="ENTER" />
-                <span>Copy to clipboard</span>
-              </button>
+              />
             )}
           </div>
         </div>

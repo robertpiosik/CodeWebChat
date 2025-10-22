@@ -6,7 +6,6 @@ import { Configurations as UiConfigurations } from '@ui/components/editor/panel/
 import { Presets as UiPresets } from '@ui/components/editor/panel/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/panel/ChatInput'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
-import { HorizontalSelector as UiHorizontalSelector } from '@ui/components/editor/panel/HorizontalSelector'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import {
@@ -185,6 +184,12 @@ export const MainView: React.FC<Props> = (props) => {
       props.web_mode == 'code-completions') ||
     (props.home_view_type == HOME_VIEW_TYPES.API &&
       props.api_mode == 'code-completions')
+
+  const show_edit_format_selector =
+    (props.home_view_type == HOME_VIEW_TYPES.WEB &&
+      props.web_mode == 'edit-context') ||
+    (props.home_view_type == HOME_VIEW_TYPES.API &&
+      props.api_mode == 'edit-context')
 
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
@@ -397,7 +402,6 @@ export const MainView: React.FC<Props> = (props) => {
               on_curly_braces_click={props.on_curly_braces_click}
               is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
               is_connected={props.is_connected}
-              token_count={props.token_count}
               is_in_code_completions_mode={is_in_code_completions_mode}
               has_active_selection={props.has_active_selection}
               has_active_editor={props.has_active_editor}
@@ -407,58 +411,20 @@ export const MainView: React.FC<Props> = (props) => {
               focus_and_select_key={props.chat_input_focus_and_select_key}
               focus_key={props.chat_input_focus_key}
               use_last_choice_button_title={last_choice_button_title}
+              show_edit_format_selector={show_edit_format_selector}
+              edit_format={
+                props.home_view_type == HOME_VIEW_TYPES.WEB
+                  ? props.chat_edit_format
+                  : props.api_edit_format
+              }
+              on_edit_format_change={
+                props.home_view_type == HOME_VIEW_TYPES.WEB
+                  ? props.on_chat_edit_format_change
+                  : props.on_api_edit_format_change
+              }
+              edit_format_instructions={props.edit_format_instructions}
             />
           </div>
-
-          {((props.home_view_type == HOME_VIEW_TYPES.WEB &&
-            props.web_mode == 'edit-context') ||
-            (props.home_view_type == HOME_VIEW_TYPES.API &&
-              props.api_mode == 'edit-context')) && (
-            <div className={styles['edit-format']}>
-              <span>
-                +{' '}
-                <span
-                  title="Style of generated code blocks"
-                  style={{
-                    textDecoration: 'dotted underline',
-                    cursor: 'help'
-                  }}
-                >
-                  edit format
-                </span>{' '}
-                instructions:
-              </span>
-              <UiHorizontalSelector
-                options={[
-                  {
-                    value: 'whole',
-                    label: 'whole',
-                    title: props.edit_format_instructions.whole
-                  },
-                  {
-                    value: 'truncated',
-                    label: 'truncated',
-                    title: props.edit_format_instructions.truncated
-                  },
-                  {
-                    value: 'diff',
-                    label: 'diff',
-                    title: props.edit_format_instructions.diff
-                  }
-                ]}
-                selected_value={
-                  props.home_view_type == HOME_VIEW_TYPES.WEB
-                    ? props.chat_edit_format
-                    : props.api_edit_format
-                }
-                on_select={(value) =>
-                  props.home_view_type == HOME_VIEW_TYPES.WEB
-                    ? props.on_chat_edit_format_change(value as EditFormat)
-                    : props.on_api_edit_format_change(value as EditFormat)
-                }
-              />
-            </div>
-          )}
 
           {props.home_view_type == HOME_VIEW_TYPES.WEB && (
             <>

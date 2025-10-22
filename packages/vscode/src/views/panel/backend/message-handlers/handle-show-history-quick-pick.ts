@@ -81,7 +81,8 @@ export const handle_show_history_quick_pick = async (
     list: 'recents' | 'pinned',
     is_pinned: boolean
   ): vscode.QuickPickItem => ({
-    label: dayjs(entry.createdAt).fromNow(),
+    label: list == 'pinned' ? '$(pinned)' : '$(history)',
+    description: dayjs(entry.createdAt).fromNow(),
     detail: entry.text,
     buttons: [
       ...(!is_pinned

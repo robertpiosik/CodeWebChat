@@ -108,7 +108,12 @@ export const checkpoints_command = (
             },
             ...(revert_item ? [revert_item] : []),
             ...(visible_checkpoints.length > 0
-              ? [{ label: '', kind: vscode.QuickPickItemKind.Separator }]
+              ? [
+                  {
+                    label: 'recently created',
+                    kind: vscode.QuickPickItemKind.Separator
+                  }
+                ]
               : []),
             ...visible_checkpoints.map((c, index) => ({
               id: c.timestamp.toString(),
