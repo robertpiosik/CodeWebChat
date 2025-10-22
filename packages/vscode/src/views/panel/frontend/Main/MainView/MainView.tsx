@@ -428,7 +428,7 @@ export const MainView: React.FC<Props> = (props) => {
 
           {props.home_view_type == HOME_VIEW_TYPES.WEB && (
             <>
-              <UiSeparator height={14} />
+              <UiSeparator height={8} />
               <UiPresets
                 web_mode={props.web_mode}
                 is_connected={props.is_connected}
@@ -463,7 +463,7 @@ export const MainView: React.FC<Props> = (props) => {
 
           {props.home_view_type == HOME_VIEW_TYPES.API && (
             <>
-              <UiSeparator height={14} />
+              <UiSeparator height={8} />
               <UiConfigurations
                 api_mode={props.api_mode}
                 configurations={props.configurations.map((c) => ({
