@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
-import * as path from 'path'
 import { parse_response, ClipboardFile } from './utils/clipboard-parser'
 import {
   LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
@@ -742,24 +741,12 @@ export const apply_chat_response_command = (
 
               if (choice == 'Apply') {
                 const document = editor.document
-                const workspaceFolder = vscode.workspace.getWorkspaceFolder(
-                  document.uri
-                )
-                const relativePath = (
-                  workspaceFolder
-                    ? path.relative(
-                        workspaceFolder.uri.fsPath,
-                        document.uri.fsPath
-                      )
-                    : path.basename(document.uri.fsPath)
-                ).replace(/\\/g, '/')
-
-                const workspace_name = workspaceFolder?.name
-
-                const file_path_for_block =
-                  workspace_name && !is_single_root_folder_workspace
-                    ? `${workspace_name}/${relativePath}`
-                    : relativePath
+                const file_path_for_block = vscode.workspace
+                  .asRelativePath(
+                    document.uri,
+                    !is_single_root_folder_workspace
+                  )
+                  .replace(/\\/g, '/')
 
                 const fake_chat_response = `\`\`\`\n// ${file_path_for_block}\n${chat_response}\n\`\`\``
 
