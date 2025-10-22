@@ -259,14 +259,6 @@ export const MainView: React.FC<Props> = (props) => {
     configurations: props.configurations
   })
 
-  const dropdown_footer = (
-    <>
-      Cycle down: shift+tab
-      <br />
-      Cycle up: alt+shift+tab
-    </>
-  )
-
   const scroll_to_top_key = `${props.scroll_reset_key}-${
     props.home_view_type
   }-${
@@ -304,7 +296,7 @@ export const MainView: React.FC<Props> = (props) => {
                 )}
                 selected_value={props.web_mode}
                 on_change={props.on_web_mode_change}
-                footer={dropdown_footer}
+                info="shift+tab"
                 max_width={dropdown_max_width}
               />
             )}
@@ -315,7 +307,7 @@ export const MainView: React.FC<Props> = (props) => {
                 )}
                 selected_value={props.api_mode}
                 on_change={props.on_api_mode_change}
-                footer={dropdown_footer}
+                info="shift+tab"
                 max_width={dropdown_max_width}
               />
             )}

@@ -13,7 +13,7 @@ export namespace Dropdown {
     selected_value: T
     on_change: (value: T) => void
     max_width?: number
-    footer?: React.ReactNode
+    info?: string
   }
 }
 
@@ -73,6 +73,9 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
         <span className={styles.button__label}>
           {selected_option ? selected_option.label : 'Select an option'}
         </span>
+        {props.info && (
+          <span className={styles.button__info}>{props.info}</span>
+        )}
         {is_open ? (
           <span
             className={cn('codicon', 'codicon-chevron-up', styles.button__icon)}
@@ -102,9 +105,6 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
               {option.label}
             </div>
           ))}
-          {props.footer && (
-            <div className={styles.menu__footer}>{props.footer}</div>
-          )}
         </div>
       )}
     </div>

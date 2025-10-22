@@ -5,7 +5,7 @@
 .button {
   display: flex;
   align-items: center;
-  gap: var(--padding-2px);
+  gap: var(--padding-4px);
   padding: 0 var(--padding-5px) 0 var(--padding-7px);
   height: 24px;
   border: 1px solid var(--vscode-dropdown-border);
@@ -32,6 +32,11 @@
     flex-grow: 1;
     text-align: left;
     font-size: var(--font-size-13px);
+  }
+
+  &__info {
+    font-size: var(--font-size-11px);
+    color: var(--vscode-descriptionForeground);
   }
 
   &__icon {
@@ -86,12 +91,5 @@
       background-color: var(--vscode-menu-selectionBackground);
       color: var(--vscode-menu-selectionForeground);
     }
-  }
-
-  &__footer {
-    border-top: 1px dashed var(--vscode-focusBorder);
-    padding: var(--padding-4px) var(--padding-8px);
-    color: var(--vscode-descriptionForeground);
-    font-size: var(--font-size-12px);
   }
 }
