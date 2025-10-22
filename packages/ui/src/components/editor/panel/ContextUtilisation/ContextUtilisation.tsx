@@ -6,6 +6,14 @@ type Props = {
   context_size_warning_threshold: number
 }
 
+const format_tokens = (tokens: number): string => {
+  if (tokens < 1000) {
+    return tokens.toString()
+  }
+  const k = Math.round(tokens / 1000)
+  return k.toString() + 'k'
+}
+
 export const ContextUtilisation: React.FC<Props> = (props) => {
   const is_above_threshold =
     props.current_context_size > props.context_size_warning_threshold
@@ -13,6 +21,19 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     (props.current_context_size / props.context_size_warning_threshold) * 100,
     100
   )
+
+  const formatted_current_size = format_tokens(props.current_context_size)
+  const formatted_threshold = format_tokens(
+    props.context_size_warning_threshold
+  )
+
+  const display_current_size = is_above_threshold
+    ? `⚠ ${formatted_current_size}`
+    : formatted_current_size
+
+  const context_text = is_above_threshold
+    ? `${display_current_size} tokens in context`
+    : `${display_current_size}/${formatted_threshold} tokens in context`
 
   return (
     <div className={styles.container}>
@@ -24,15 +45,7 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
           style={{ width: `${progress}%` }}
         />
       </div>
-      <span
-        className={styles.label}
-        title="Context larger than set threshold of tokens will show warning"
-      >
-        {props.current_context_size > 0
-          ? `~${props.current_context_size}`
-          : '0'}
-        /{props.context_size_warning_threshold}
-      </span>
+      <span className={styles.label}>{context_text}</span>
     </div>
   )
 }
