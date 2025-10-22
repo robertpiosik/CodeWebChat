@@ -374,43 +374,21 @@ export function apply_context_command(
           } as any
         ]
 
-        if (internal_contexts.length > 0) {
-          main_quick_pick_options.push({
-            label: 'Workspace state',
-            description: `${internal_contexts.length} ${
-              internal_contexts.length == 1 ? 'context' : 'contexts'
-            }`,
-            value: 'internal'
-          })
-        }
+        main_quick_pick_options.push({
+          label: 'Workspace state',
+          description: `${internal_contexts.length} ${
+            internal_contexts.length == 1 ? 'context' : 'contexts'
+          }`,
+          value: 'internal'
+        })
 
-        if (file_contexts.length > 0) {
-          main_quick_pick_options.push({
-            label: 'JSON file',
-            description: `${file_contexts.length} ${
-              file_contexts.length == 1 ? 'context' : 'contexts'
-            }`,
-            value: 'file'
-          })
-        }
-
-        if (internal_contexts.length == 0 && file_contexts.length == 0) {
-          const main_selection = await vscode.window.showQuickPick(
-            main_quick_pick_options,
-            {
-              placeHolder: 'Select option'
-            }
-          )
-
-          if (!main_selection) return
-
-          if (main_selection.value == 'clipboard') {
-            await vscode.commands.executeCommand(
-              'codeWebChat.applyContextFromClipboard'
-            )
-          }
-          return
-        }
+        main_quick_pick_options.push({
+          label: 'JSON file',
+          description: `${file_contexts.length} ${
+            file_contexts.length == 1 ? 'context' : 'contexts'
+          }`,
+          value: 'file'
+        })
 
         const final_quick_pick_options = main_quick_pick_options
 
