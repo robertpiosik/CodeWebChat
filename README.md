@@ -9,7 +9,7 @@ CWC is community driven. Join our [discord server](https://discord.gg/KJySXsrSX5
 🌐 **Initializes web chats**—ChatGPT, Claude, Gemini, DeepSeek, and more \
 🪄 **Applies responses**—multi-file changes integration with easy rollback \
 🔋 **Batteries included**—code completions, commit messages, and more \
-🫰️ **Saves money and time**—lean context and zero tool calling \
+🧠 **Non-agentic**—forget about endless tool calling and markdown files \
 ❤️ **Free and open-source**—released under the GPL-3.0 license
 
 <p>
