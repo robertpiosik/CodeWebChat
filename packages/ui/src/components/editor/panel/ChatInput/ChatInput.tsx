@@ -214,6 +214,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                     )}
                     title={props.edit_format_instructions?.[format]}
                     onClick={() => props.on_edit_format_change?.(format)}
+                    data-text={format}
                   >
                     {format}
                   </button>

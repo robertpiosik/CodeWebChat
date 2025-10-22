@@ -23,7 +23,7 @@
   align-items: center;
   height: 36px;
 
-  &:nth-child(odd) {
+  &:nth-child(even) {
     background-color: var(--vscode-welcomePage-tileBackground);
   }
 
