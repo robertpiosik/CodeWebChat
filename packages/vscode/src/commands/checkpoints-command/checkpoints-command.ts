@@ -100,6 +100,18 @@ export const checkpoints_command = (
           }
 
           const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
+          const detail_counts = new Map<string, number>()
+          for (const c of visible_checkpoints) {
+            if (c.description) {
+              detail_counts.set(
+                c.description,
+                (detail_counts.get(c.description) || 0) + 1
+              )
+            }
+          }
+
+          const current_detail_counts = new Map(detail_counts)
+
           quick_pick.items = [
             {
               id: 'add-new',
@@ -115,27 +127,40 @@ export const checkpoints_command = (
                   }
                 ]
               : []),
-            ...visible_checkpoints.map((c, index) => ({
-              id: c.timestamp.toString(),
-              label: c.title,
-              description: dayjs(c.timestamp).fromNow(),
-              detail: c.description,
-              checkpoint: c,
-              index,
-              buttons:
-                c.title == 'Created by user'
-                  ? [
-                      {
-                        iconPath: new vscode.ThemeIcon('edit'),
-                        tooltip: 'Edit Description'
-                      },
-                      {
-                        iconPath: new vscode.ThemeIcon('trash'),
-                        tooltip: 'Delete'
-                      }
-                    ]
-                  : undefined
-            }))
+            ...visible_checkpoints.map((c, index) => {
+              let detail = c.description
+              if (
+                c.description &&
+                (detail_counts.get(c.description) ?? 0) > 1
+              ) {
+                const current_count = current_detail_counts.get(c.description)!
+                current_detail_counts.set(c.description, current_count - 1)
+                if (current_count > 1) {
+                  detail = `(${current_count - 1}) ${c.description}`
+                }
+              }
+              return {
+                id: c.timestamp.toString(),
+                label: c.title,
+                description: dayjs(c.timestamp).fromNow(),
+                detail,
+                checkpoint: c,
+                index,
+                buttons:
+                  c.title == 'Created by user'
+                    ? [
+                        {
+                          iconPath: new vscode.ThemeIcon('edit'),
+                          tooltip: 'Edit Description'
+                        },
+                        {
+                          iconPath: new vscode.ThemeIcon('trash'),
+                          tooltip: 'Delete'
+                        }
+                      ]
+                    : undefined
+              }
+            })
           ]
           quick_pick.busy = false
         }
