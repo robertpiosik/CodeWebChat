@@ -24,3 +24,15 @@ export const WithValue = () => {
     />
   )
 }
+export const WithMaxWidth = () => {
+  const [value, set_value] = useState('')
+
+  return (
+    <Input
+      value={value}
+      onChange={set_value}
+      placeholder="Max width is 200px"
+      max_width={200}
+    />
+  )
+}

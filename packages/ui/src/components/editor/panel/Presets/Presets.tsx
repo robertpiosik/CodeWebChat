@@ -102,7 +102,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   return (
     <div className={styles.container}>
       <div className={styles['my-presets']}>
-        <div className={styles['my-presets__left']}>{'MY CHAT PRESETS'}</div>
+        <div className={styles['my-presets__left']}>MY PRESETS</div>
         <IconButton codicon_icon="add" on_click={props.on_create_preset} />
       </div>
 

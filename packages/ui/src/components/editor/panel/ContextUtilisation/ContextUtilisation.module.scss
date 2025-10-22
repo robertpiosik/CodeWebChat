@@ -12,7 +12,7 @@
 }
 
 .bar {
-  width: 100%;
+  flex: 1;
   height: 3px;
   background-color: var(--vscode-dropdown-border);
   border-radius: var(--border-radius-999px);

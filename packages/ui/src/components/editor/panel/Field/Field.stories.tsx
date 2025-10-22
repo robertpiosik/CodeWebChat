@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Field } from './Field'
-import { Input } from '../Input'
+import { Input } from '../../common/Input'
 import { Checkbox } from '../Checkbox'
 
 export default {

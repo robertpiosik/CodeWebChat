@@ -167,6 +167,15 @@ export interface OpenEditorSettingsMessage {
   command: 'OPEN_EDITOR_SETTINGS'
 }
 
+export interface GetContextSizeWarningThresholdMessage {
+  command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD'
+}
+
+export interface UpdateContextSizeWarningThresholdMessage {
+  command: 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD'
+  threshold: number
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -200,6 +209,8 @@ export type FrontendMessage =
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
   | SettingsUiReadyMessage
+  | GetContextSizeWarningThresholdMessage
+  | UpdateContextSizeWarningThresholdMessage
   | OpenEditorSettingsMessage
 
 // === FROM BACKEND TO FRONTEND ===
@@ -230,6 +241,11 @@ export interface CommitMessageInstructionsMessage {
   instructions: string
 }
 
+export interface ContextSizeWarningThresholdMessage {
+  command: 'CONTEXT_SIZE_WARNING_THRESHOLD'
+  threshold: number
+}
+
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
@@ -242,4 +258,5 @@ export type BackendMessage =
   | IntelligentUpdateConfigurationsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
+  | ContextSizeWarningThresholdMessage
   | ShowSectionMessage

@@ -33,7 +33,9 @@ import {
   handle_add_intelligent_update_configuration,
   handle_edit_intelligent_update_configuration,
   handle_set_default_intelligent_update_configuration
-} from './message-handlers'
+} from './message-handlers' // It seems my new handlers were not auto-imported
+import { handle_get_context_size_warning_threshold } from './message-handlers/handle-get-context-size-warning-threshold'
+import { handle_update_context_size_warning_threshold } from './message-handlers/handle-update-context-size-warning-threshold'
 
 export class SettingsProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
@@ -214,6 +216,12 @@ export class SettingsProvider {
                 vscode.ConfigurationTarget.Global
               )
             break
+          case 'GET_CONTEXT_SIZE_WARNING_THRESHOLD':
+            await handle_get_context_size_warning_threshold(this)
+            break
+          case 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD':
+            await handle_update_context_size_warning_threshold(this, message)
+            break
           case 'OPEN_EDITOR_SETTINGS':
             await vscode.commands.executeCommand(
               'workbench.action.openSettings'
@@ -233,6 +241,7 @@ export class SettingsProvider {
           void handle_get_commit_messages_configurations(this)
           void handle_get_edit_context_configurations(this)
           void handle_get_intelligent_update_configurations(this)
+          void handle_get_context_size_warning_threshold(this)
         }
       })
     )

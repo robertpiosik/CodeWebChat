@@ -26,7 +26,8 @@ export const Settings = () => {
       settings_hook.commit_messages_configs !== undefined &&
       settings_hook.edit_context_configs !== undefined &&
       settings_hook.intelligent_update_configs !== undefined &&
-      settings_hook.commit_message_instructions !== undefined
+      settings_hook.commit_message_instructions !== undefined &&
+      settings_hook.context_size_warning_threshold !== undefined
     )
   }, [settings_hook])
 
@@ -51,6 +52,9 @@ export const Settings = () => {
       commit_messages_configs={settings_hook.commit_messages_configs!}
       edit_context_configs={settings_hook.edit_context_configs!}
       intelligent_update_configs={settings_hook.intelligent_update_configs!}
+      context_size_warning_threshold={
+        settings_hook.context_size_warning_threshold!
+      }
       commit_message_instructions={settings_hook.commit_message_instructions!}
       set_providers={settings_hook.set_providers}
       set_code_completions_configs={settings_hook.set_code_completions_configs}
@@ -58,6 +62,9 @@ export const Settings = () => {
       set_edit_context_configs={settings_hook.set_edit_context_configs}
       set_intelligent_update_configs={
         settings_hook.set_intelligent_update_configs
+      }
+      on_context_size_warning_threshold_change={
+        settings_hook.handle_context_size_warning_threshold_change
       }
       on_commit_instructions_change={
         settings_hook.handle_commit_instructions_change

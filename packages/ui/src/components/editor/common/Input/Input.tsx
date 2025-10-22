@@ -4,10 +4,15 @@ type Props = {
   type?: string
   value: string
   placeholder?: string
+  max_width?: number
   onChange: (value: string) => void
 }
 
 export const Input: React.FC<Props> = (props) => {
+  const style = props.max_width
+    ? { maxWidth: `${props.max_width}px` }
+    : undefined
+
   return (
     <input
       type={props.type || 'text'}
@@ -15,6 +20,7 @@ export const Input: React.FC<Props> = (props) => {
       onChange={(e) => props.onChange(e.target.value)}
       className={styles.input}
       placeholder={props.placeholder}
+      style={style}
     />
   )
 }

@@ -7,6 +7,7 @@ import { Item } from '@ui/components/editor/settings/Item'
 import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
 import { Section } from '@ui/components/editor/settings/Section'
 import { TextButton } from '@ui/components/editor/settings/TextButton'
+import { Input } from '@ui/components/editor/common/Input'
 import { Textarea } from '@ui/components/editor/settings/Textarea'
 import {
   ConfigurationForClient,
@@ -51,6 +52,7 @@ type Props = {
   edit_context_configs: ConfigurationForClient[]
   intelligent_update_configs: ConfigurationForClient[]
   commit_message_instructions: string
+  context_size_warning_threshold: number
 
   // handlers
   set_providers: (providers: ProviderForClient[]) => void
@@ -58,6 +60,7 @@ type Props = {
   set_code_completions_configs: (configs: ConfigurationForClient[]) => void
   set_intelligent_update_configs: (configs: ConfigurationForClient[]) => void
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
+  on_context_size_warning_threshold_change: (threshold: number) => void
   on_commit_instructions_change: (instructions: string) => void
   on_open_editor_settings: () => void
   on_add_provider: () => void
@@ -88,6 +91,8 @@ export const Home: React.FC<Props> = (props) => {
     'commit-messages': null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
+  const [context_size_warning_threshold, set_context_size_warning_threshold] =
+    useState('')
   const [stuck_sections, set_stuck_sections] = useState(new Set<NavItem>())
 
   const handle_stuck_change = useCallback((id: NavItem, is_stuck: boolean) => {
@@ -143,6 +148,12 @@ export const Home: React.FC<Props> = (props) => {
   }, [props.commit_message_instructions])
 
   useEffect(() => {
+    set_context_size_warning_threshold(
+      String(props.context_size_warning_threshold)
+    )
+  }, [props.context_size_warning_threshold])
+
+  useEffect(() => {
     const handler = setTimeout(() => {
       if (
         props.commit_message_instructions !== undefined &&
@@ -156,6 +167,25 @@ export const Home: React.FC<Props> = (props) => {
     commit_instructions,
     props.on_commit_instructions_change,
     props.commit_message_instructions
+  ])
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const num_threshold = parseInt(context_size_warning_threshold, 10)
+      if (
+        !isNaN(num_threshold) &&
+        num_threshold >= 0 &&
+        props.context_size_warning_threshold !== undefined &&
+        num_threshold !== props.context_size_warning_threshold
+      ) {
+        props.on_context_size_warning_threshold_change(num_threshold)
+      }
+    }, 500)
+    return () => clearTimeout(handler)
+  }, [
+    context_size_warning_threshold,
+    props.on_context_size_warning_threshold_change,
+    props.context_size_warning_threshold
   ])
 
   const handle_scroll_to_section = (item_id: NavItem) => {
@@ -224,6 +254,19 @@ export const Home: React.FC<Props> = (props) => {
               <TextButton on_click={props.on_open_editor_settings}>
                 Open Editor Settings
               </TextButton>
+            }
+          />
+          <Item
+            title="Context Size Warning Threshold"
+            description="Set the token count threshold for showing a warning about large context sizes."
+            slot_placement="below"
+            slot={
+              <Input
+                type="number"
+                value={context_size_warning_threshold}
+                onChange={set_context_size_warning_threshold}
+                max_width={100}
+              />
             }
           />
         </Section>

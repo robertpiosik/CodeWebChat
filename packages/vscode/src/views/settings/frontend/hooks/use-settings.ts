@@ -25,6 +25,8 @@ export const use_settings = (vscode: any) => {
   >(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
+  const [context_size_warning_threshold, set_context_size_warning_threshold] =
+    useState<number | undefined>(undefined)
 
   useEffect(() => {
     // Request initial data
@@ -34,6 +36,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
   }, [vscode])
 
   useEffect(() => {
@@ -57,6 +60,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'COMMIT_MESSAGE_INSTRUCTIONS':
           set_commit_message_instructions(message.instructions)
+          break
+        case 'CONTEXT_SIZE_WARNING_THRESHOLD':
+          set_context_size_warning_threshold(message.threshold)
           break
       }
     }
@@ -162,6 +168,12 @@ export const use_settings = (vscode: any) => {
   const handle_open_editor_settings = () =>
     post_message(vscode, { command: 'OPEN_EDITOR_SETTINGS' })
 
+  const handle_context_size_warning_threshold_change = (threshold: number) =>
+    post_message(vscode, {
+      command: 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD',
+      threshold
+    })
+
   return {
     providers,
     set_providers,
@@ -174,6 +186,7 @@ export const use_settings = (vscode: any) => {
     intelligent_update_configs,
     set_intelligent_update_configs,
     commit_message_instructions,
+    context_size_warning_threshold,
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
@@ -186,6 +199,7 @@ export const use_settings = (vscode: any) => {
     handle_set_default_config,
     handle_unset_default_config,
     handle_commit_instructions_change,
-    handle_open_editor_settings
+    handle_open_editor_settings,
+    handle_context_size_warning_threshold_change
   }
 }

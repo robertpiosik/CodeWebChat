@@ -1,4 +1,3 @@
-import { FC } from 'react'
 import styles from './ContextUtilisation.module.scss'
 import cn from 'classnames'
 
@@ -7,27 +6,16 @@ type Props = {
   context_size_warning_threshold: number
 }
 
-const format_number = (num: number): string => {
-  if (num < 1000) {
-    return num.toLocaleString()
-  }
-  return `${Math.floor(num / 1000)}k`
-}
-
-export const ContextUtilisation: FC<Props> = (props) => {
-  const { current_context_size, context_size_warning_threshold } = props
+export const ContextUtilisation: React.FC<Props> = (props) => {
   const is_above_threshold =
-    current_context_size > context_size_warning_threshold
+    props.current_context_size > props.context_size_warning_threshold
   const progress = Math.min(
-    (current_context_size / context_size_warning_threshold) * 100,
+    (props.current_context_size / props.context_size_warning_threshold) * 100,
     100
   )
 
   return (
     <div className={styles.container}>
-      <span className={styles.label}>
-        {format_number(current_context_size)}
-      </span>
       <div className={styles.bar}>
         <div
           className={cn(styles.bar__progress, {
@@ -36,8 +24,14 @@ export const ContextUtilisation: FC<Props> = (props) => {
           style={{ width: `${progress}%` }}
         />
       </div>
-      <span className={styles.label}>
-        {format_number(context_size_warning_threshold)}
+      <span
+        className={styles.label}
+        title="Selecting more than set threshold will show warning"
+      >
+        {props.current_context_size > 0
+          ? `~${props.current_context_size}`
+          : '0'}
+        /{props.context_size_warning_threshold} tokens in context
       </span>
     </div>
   )
