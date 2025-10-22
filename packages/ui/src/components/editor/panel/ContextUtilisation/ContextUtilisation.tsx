@@ -11,7 +11,7 @@ const format_tokens = (tokens: number): string => {
     return tokens.toString()
   }
   const k = Math.round(tokens / 1000)
-  return k.toString() + 'k'
+  return k.toString() + 'K'
 }
 
 export const ContextUtilisation: React.FC<Props> = (props) => {
@@ -39,7 +39,8 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
   if (!is_above_threshold) {
     const remaining_tokens =
       props.context_size_warning_threshold - props.current_context_size
-    title_text = `${remaining_tokens} tokens remaining until threshold (${formatted_threshold})`
+    const formatted_remaining_tokens = format_tokens(remaining_tokens)
+    title_text = `${formatted_remaining_tokens} tokens remaining until threshold`
   } else {
     title_text = `Context size (${formatted_current_size}) exceeds threshold (${formatted_threshold})`
   }

@@ -85,7 +85,7 @@ export const context_initialization = (
         )
         const formatted_threshold =
           threshold >= 1000
-            ? `${Math.round(threshold / 1000)}k`
+            ? `${Math.round(threshold / 1000)}K`
             : `${threshold}`
         vscode.window.showWarningMessage(
           dictionary.warning_message.CONTEXT_SIZE_WARNING(
