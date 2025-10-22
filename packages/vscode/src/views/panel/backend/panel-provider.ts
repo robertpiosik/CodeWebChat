@@ -191,6 +191,12 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           handle_get_edit_format_instructions(this)
         }
 
+        if (
+          event.affectsConfiguration('codeWebChat.contextSizeWarningThreshold')
+        ) {
+          this.send_context_size_warning_threshold()
+        }
+
         const all_api_config_keys = [
           'codeWebChat.configurationsForEditContext',
           'codeWebChat.configurationsForCodeCompletions'
@@ -500,6 +506,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
     )
 
     this.send_presets_to_webview(webview_view.webview)
+    this.send_context_size_warning_threshold()
     // We need to wait until the webview fully initialized
     setTimeout(() => {
       this.send_message({
@@ -680,6 +687,16 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
           )
       }
+    })
+  }
+
+  public send_context_size_warning_threshold() {
+    if (!this._webview_view) return
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const threshold = config.get<number>('contextSizeWarningThreshold', 60000)
+    this.send_message({
+      command: 'CONTEXT_SIZE_WARNING_THRESHOLD',
+      threshold
     })
   }
 

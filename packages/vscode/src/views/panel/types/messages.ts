@@ -433,6 +433,11 @@ export interface TokenCountMessage extends BaseMessage {
   token_count: number
 }
 
+export interface ContextSizeWarningThresholdMessage extends BaseMessage {
+  command: 'CONTEXT_SIZE_WARNING_THRESHOLD'
+  threshold: number
+}
+
 export interface PresetCreatedMessage extends BaseMessage {
   command: 'PRESET_CREATED'
   preset: Preset
@@ -566,6 +571,7 @@ export type BackendMessage =
   | EditorSelectionChangedMessage
   | ChatHistoryMessage
   | TokenCountMessage
+  | ContextSizeWarningThresholdMessage
   | PresetCreatedMessage
   | PresetUpdatedMessage
   | NewlyPickedOpenRouterModelMessage

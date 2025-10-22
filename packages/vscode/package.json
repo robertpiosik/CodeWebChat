@@ -537,6 +537,11 @@
           "description": "The instructions used when generating a commit message.",
           "default": "Write a brief and precise summary for the changes, limited to a single sentence if possible and nothing else. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
         },
+        "codeWebChat.contextSizeWarningThreshold": {
+          "type": "number",
+          "default": 60000,
+          "description": "Threshold for the context size to show a warning."
+        },
         "codeWebChat.ignorePatterns": {
           "type": "array",
           "description": "List of glob patterns to ignore files and folders in the context.",

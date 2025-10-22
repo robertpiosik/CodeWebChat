@@ -94,6 +94,8 @@ export const Panel = () => {
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
   const [chat_input_focus_and_select_key, set_chat_input_focus_and_select_key] =
     useState(0)
+  const [context_size_warning_threshold, set_context_size_warning_threshold] =
+    useState<number>()
 
   const handle_instructions_change = (
     value: string,
@@ -216,6 +218,8 @@ export const Panel = () => {
             )
           }
         }
+      } else if (message.command === 'CONTEXT_SIZE_WARNING_THRESHOLD') {
+        set_context_size_warning_threshold(message.threshold)
       }
     }
     window.addEventListener('message', handle_message)
@@ -317,7 +321,8 @@ export const Panel = () => {
     api_mode === undefined ||
     has_active_editor === undefined ||
     has_active_selection === undefined ||
-    workspace_folder_count === undefined
+    workspace_folder_count === undefined ||
+    context_size_warning_threshold === undefined
   ) {
     return null
   }
@@ -401,6 +406,7 @@ export const Panel = () => {
           }
           chat_input_focus_and_select_key={chat_input_focus_and_select_key}
           chat_input_focus_key={chat_input_focus_key}
+          context_size_warning_threshold={context_size_warning_threshold}
         />
       </div>
       <div

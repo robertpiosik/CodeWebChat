@@ -22,6 +22,7 @@ import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
 import { use_cycle_mode } from './hooks/use-cycle-mode'
 import { use_re_render_on_interval } from './hooks/use-re-render-on-interval'
+import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButton'
 
 dayjs.extend(relativeTime)
@@ -58,6 +59,7 @@ type Props = {
   can_undo: boolean
   chat_history: string[]
   token_count: number
+  context_size_warning_threshold: number
   web_mode: WebMode
   api_mode: ApiMode
   on_web_mode_change: (mode: WebMode) => void
@@ -380,7 +382,7 @@ export const MainView: React.FC<Props> = (props) => {
               </>
             )}
 
-          <div className={styles['chat-input']}>
+          <div className={styles['chat-input-container']}>
             <UiChatInput
               value={props.instructions}
               chat_history={props.chat_history}
@@ -415,6 +417,12 @@ export const MainView: React.FC<Props> = (props) => {
                   : props.on_api_edit_format_change
               }
               edit_format_instructions={props.edit_format_instructions}
+            />
+            <UiContextUtilisation
+              current_context_size={props.token_count}
+              context_size_warning_treshold={
+                props.context_size_warning_threshold
+              }
             />
           </div>
 

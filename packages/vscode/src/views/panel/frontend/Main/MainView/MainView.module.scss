@@ -226,7 +226,10 @@
   }
 }
 
-.chat-input {
+.chat-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-6px);
   margin: 0 var(--padding-12px);
 }
 

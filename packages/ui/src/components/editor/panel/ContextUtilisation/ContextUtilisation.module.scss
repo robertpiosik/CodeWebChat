@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: var(--padding-8px);
+  padding: 0 var(--padding-10px);
+  font-size: var(--font-size-11px);
+  color: var(--vscode-descriptionForeground);
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.bar {
+  width: 100%;
+  height: 3px;
+  background-color: var(--vscode-dropdown-border);
+  border-radius: var(--border-radius-999px);
+  overflow: hidden;
+
+  &__progress {
+    height: 100%;
+    background-color: var(--vscode-focusBorder);
+    border-top-right-radius: var(--border-radius-999px);
+    border-bottom-right-radius: var(--border-radius-999px);
+
+    &--warning {
+      background-color: var(--vscode-editorWarning-foreground);
+    }
+  }
+}

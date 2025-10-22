@@ -60,11 +60,7 @@
 
 .textarea {
   padding: var(--padding);
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
   background-color: transparent;
-  color: var(--vscode-input-foreground);
   border: none;
   resize: none;
   position: relative;
@@ -113,7 +109,7 @@
   display: flex;
   bottom: 0;
   right: 0;
-  padding: var(--padding-6px) var(--padding-8px) var(--padding-6px)
+  padding: var(--padding-6px) var(--padding-10px) var(--padding-6px)
     var(--padding-6px);
   justify-content: space-between;
   overflow: hidden;
@@ -150,7 +146,7 @@
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: var(--padding-8px);
+    gap: var(--padding-10px);
     pointer-events: none;
 
     &__edit-format {
@@ -199,7 +195,6 @@
       height: 20px;
       padding: 0 var(--padding-2px);
       border-radius: var(--border-radius-5px);
-      color: var(--vscode-foreground);
       pointer-events: all;
 
       > svg {

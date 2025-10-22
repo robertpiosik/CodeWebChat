@@ -51,6 +51,7 @@ type Props = {
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
   commit_button_enabling_trigger_count: number
+  context_size_warning_threshold: number
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -655,6 +656,7 @@ export const Main: React.FC<Props> = (props) => {
       token_count={token_count}
       web_mode={props.web_mode}
       api_mode={props.api_mode}
+      context_size_warning_threshold={props.context_size_warning_threshold}
       on_web_mode_change={props.on_web_mode_change}
       on_api_mode_change={props.on_api_mode_change}
       chat_edit_format={chat_edit_format}
