@@ -18,6 +18,8 @@ export function context_initialization(context: vscode.ExtensionContext): {
   open_editors_provider: OpenEditorsProvider
   websites_provider: WebsitesProvider
 } {
+  let was_above_threshold = false
+
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
 
   let workspace_view: vscode.TreeView<FileItem>
@@ -42,8 +44,9 @@ export function context_initialization(context: vscode.ExtensionContext): {
   )
 
   const update_view_badges = async () => {
+    let context_token_count = 0
     if (context_provider && context_view) {
-      const context_token_count =
+      context_token_count =
         await workspace_provider.get_checked_files_token_count()
       context_view.badge = {
         value: context_token_count,
@@ -53,8 +56,9 @@ export function context_initialization(context: vscode.ExtensionContext): {
       }
     }
 
+    let websites_token_count = 0
     if (websites_provider && websites_view) {
-      const websites_token_count =
+      websites_token_count =
         websites_provider.get_checked_websites_token_count()
       websites_view.badge = {
         value: websites_token_count,
@@ -64,6 +68,22 @@ export function context_initialization(context: vscode.ExtensionContext): {
       }
     }
     token_count_emitter.emit('token-count-updated')
+
+    const total_token_count = context_token_count + websites_token_count
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const threshold = config.get<number>('contextSizeWarningThreshold')
+
+    if (threshold && threshold > 0) {
+      const is_above_threshold = total_token_count > threshold
+      if (is_above_threshold && !was_above_threshold) {
+        vscode.window.showWarningMessage(
+          dictionary.warning_message.CONTEXT_SIZE_WARNING(threshold)
+        )
+      }
+      was_above_threshold = is_above_threshold
+    } else {
+      was_above_threshold = false
+    }
   }
 
   const shared_state = SharedFileState.get_instance()
