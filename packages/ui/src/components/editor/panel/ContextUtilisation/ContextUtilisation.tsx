@@ -26,12 +26,12 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
       </div>
       <span
         className={styles.label}
-        title="Selecting more than set threshold will show warning"
+        title="Context larger than set threshold of tokens will show warning"
       >
         {props.current_context_size > 0
           ? `~${props.current_context_size}`
           : '0'}
-        /{props.context_size_warning_threshold} tokens in context
+        /{props.context_size_warning_threshold}
       </span>
     </div>
   )
