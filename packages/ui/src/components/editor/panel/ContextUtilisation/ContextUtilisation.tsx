@@ -31,9 +31,18 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     ? `⚠ ${formatted_current_size}`
     : formatted_current_size
 
+  let title_text = ''
   const context_text = is_above_threshold
     ? `${display_current_size} tokens in context`
     : `${display_current_size}/${formatted_threshold} tokens in context`
+
+  if (!is_above_threshold) {
+    const remaining_tokens =
+      props.context_size_warning_threshold - props.current_context_size
+    title_text = `${remaining_tokens} tokens remaining until threshold (${formatted_threshold})`
+  } else {
+    title_text = `Context size (${formatted_current_size}) exceeds threshold (${formatted_threshold})`
+  }
 
   return (
     <div className={styles.container}>
@@ -45,7 +54,9 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
           style={{ width: `${progress}%` }}
         />
       </div>
-      <span className={styles.label}>{context_text}</span>
+      <span className={styles.label} title={title_text}>
+        {context_text}
+      </span>
     </div>
   )
 }

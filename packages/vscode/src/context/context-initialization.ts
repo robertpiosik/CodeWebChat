@@ -13,11 +13,20 @@ import { ContextProvider } from './providers/context-provider'
 
 export const token_count_emitter = new EventEmitter()
 
-export function context_initialization(context: vscode.ExtensionContext): {
+const round_token_count_for_badge = (count: number): number => {
+  if (count < 1000) {
+    return count
+  }
+  return Math.floor(count / 1000) * 1000
+}
+
+export const context_initialization = (
+  context: vscode.ExtensionContext
+): {
   workspace_provider: WorkspaceProvider
   open_editors_provider: OpenEditorsProvider
   websites_provider: WebsitesProvider
-} {
+} => {
   let was_above_threshold = false
 
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
@@ -48,24 +57,19 @@ export function context_initialization(context: vscode.ExtensionContext): {
     if (context_provider && context_view) {
       context_token_count =
         await workspace_provider.get_checked_files_token_count()
-      context_view.badge = {
-        value: context_token_count,
+      workspace_view.badge = {
+        value: round_token_count_for_badge(context_token_count),
         tooltip: context_token_count
           ? `About ${context_token_count} tokens in context`
           : ''
       }
+      context_view.badge = undefined
     }
 
     let websites_token_count = 0
-    if (websites_provider && websites_view) {
+    if (websites_provider) {
       websites_token_count =
         websites_provider.get_checked_websites_token_count()
-      websites_view.badge = {
-        value: websites_token_count,
-        tooltip: websites_token_count
-          ? `About ${websites_token_count} tokens in context`
-          : ''
-      }
     }
     token_count_emitter.emit('token-count-updated')
 
@@ -76,8 +80,18 @@ export function context_initialization(context: vscode.ExtensionContext): {
     if (threshold && threshold > 0) {
       const is_above_threshold = total_token_count > threshold
       if (is_above_threshold && !was_above_threshold) {
+        const percentage_over = Math.round(
+          ((total_token_count - threshold) / threshold) * 100
+        )
+        const formatted_threshold =
+          threshold >= 1000
+            ? `${Math.round(threshold / 1000)}k`
+            : `${threshold}`
         vscode.window.showWarningMessage(
-          dictionary.warning_message.CONTEXT_SIZE_WARNING(threshold)
+          dictionary.warning_message.CONTEXT_SIZE_WARNING(
+            formatted_threshold,
+            percentage_over
+          )
         )
       }
       was_above_threshold = is_above_threshold
