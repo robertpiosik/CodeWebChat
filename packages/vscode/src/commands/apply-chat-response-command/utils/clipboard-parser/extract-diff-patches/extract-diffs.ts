@@ -337,9 +337,31 @@ const extract_all_code_block_patches = (params: {
   const files_with_diffs = new Set<string>()
   const diff_block_patches = new Map<number, Diff[]>()
 
-  for (const block of code_blocks) {
-    if (block.type === 'diff' || block.type === 'patch') {
+  for (let i = 0; i < code_blocks.length; i++) {
+    const block = code_blocks[i]
+    if (block.type == 'diff' || block.type == 'patch') {
+      let file_path_hint: string | undefined
+      if (i > 0) {
+        const prev_block_lines = lines.slice(
+          code_blocks[i - 1].start + 1,
+          code_blocks[i - 1].end
+        )
+        const xml_path_regex = /<file\s+path=["']([^"']+)["']/
+        const non_empty_lines = prev_block_lines.filter((l) => l.trim() != '')
+        if (non_empty_lines.length === 1) {
+          const match = non_empty_lines[0].match(xml_path_regex)
+          if (match && match[1]) {
+            file_path_hint = match[1]
+          }
+        }
+      }
       const block_lines = lines.slice(block.start + 1, block.end)
+      if (file_path_hint) {
+        const { from_path, to_path } = extract_paths_from_lines(block_lines)
+        if (!from_path && !to_path) {
+          block_lines.unshift(`--- /dev/null`, `+++ b/${file_path_hint}`)
+        }
+      }
       const parsed_patches = parse_multiple_raw_patches({
         all_lines: block_lines,
         is_single_root: params.is_single_root
@@ -355,11 +377,28 @@ const extract_all_code_block_patches = (params: {
   }
 
   // Process each found code block in order of appearance.
-  for (const block of code_blocks) {
+  for (let i = 0; i < code_blocks.length; i++) {
+    const block = code_blocks[i]
     const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
     if (block.type == 'diff' || block.type == 'patch') {
       patches.push(...(diff_block_patches.get(block.start) || []))
     } else {
+      // Check if this block was a hint for the next block.
+      if (i < code_blocks.length - 1) {
+        const next_block = code_blocks[i + 1]
+        if (next_block.type === 'diff' || next_block.type === 'patch') {
+          const xml_path_regex = /<file\s+path=["']([^"']+)["']/
+          const non_empty_lines = block_lines.filter((l) => l.trim() !== '')
+          if (non_empty_lines.length === 1) {
+            const match = non_empty_lines[0].match(xml_path_regex)
+            if (match && match[1]) {
+              // This was a hint for the next block, so we should skip processing it as a file content block.
+              continue
+            }
+          }
+        }
+      }
+
       // Check if there's a comment line before the code block with a file path
       let file_path_hint: string | undefined
       let workspace_hint: string | undefined
