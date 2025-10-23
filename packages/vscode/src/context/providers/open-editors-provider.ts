@@ -276,11 +276,11 @@ export class OpenEditorsProvider
 
       let description = relative_path ? `${relative_path}` : ''
 
-      if (this._workspace_roots.length > 1 && workspace_root) {
+      if (this._workspace_roots.length > 1 && workspace_root && relative_path) {
         const workspace_folder_name = path.basename(workspace_root)
-        description = relative_path
-          ? `· ${workspace_folder_name}/${relative_path}`
-          : workspace_folder_name
+        description = `${workspace_folder_name} · ${relative_path}`
+      } else if (this._workspace_roots.length > 1 && workspace_root) {
+        description = path.basename(workspace_root)
       }
 
       const token_count = await this.workspace_provider.calculate_file_tokens(
