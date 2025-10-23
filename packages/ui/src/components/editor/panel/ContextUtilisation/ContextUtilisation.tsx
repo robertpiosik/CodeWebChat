@@ -38,7 +38,10 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
 
   if (!is_above_threshold) {
     const remaining_tokens =
-      props.context_size_warning_threshold - props.current_context_size
+      props.context_size_warning_threshold -
+      (props.current_context_size < 1000
+        ? props.current_context_size
+        : Math.floor(props.current_context_size / 1000) * 1000)
     const formatted_remaining_tokens = format_tokens(remaining_tokens)
     title_text = `${formatted_remaining_tokens} tokens remaining until threshold warning`
   } else {

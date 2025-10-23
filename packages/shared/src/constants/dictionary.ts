@@ -83,7 +83,7 @@ export const dictionary = {
     GROUP_HAS_NO_SELECTED_PRESETS:
       'The chosen group has no selected presets to run.',
     CONTEXT_SIZE_WARNING: (threshold: string, percentage: number) =>
-      `Context is now larger than set threshold of ${threshold} tokens by ${percentage}%. Unreasonably large context may degrade response quality, hit allowed usage limit faster or increase costs.`,
+      `Context exceeds threshold of ${threshold} tokens by ${percentage}%. Unreasonably large context may degrade response quality, hurt plan's usage allowance or incur significant costs.`,
     FAILED_TO_CREATE_FILE: (file_path: string) =>
       `Failed to create file: ${file_path}`,
     FAILED_TO_APPLY_CHANGES_TO_FILE: (file_path: string) =>
