@@ -142,14 +142,14 @@ export class ViewProvider implements vscode.WebviewViewProvider {
       ''
     )
 
-    this.chat_edit_format = this.context.workspaceState.get<EditFormat>(
-      CHAT_EDIT_FORMAT_STATE_KEY,
+    this.chat_edit_format =
+      this.context.workspaceState.get<EditFormat>(CHAT_EDIT_FORMAT_STATE_KEY) ??
+      this.context.globalState.get<EditFormat>(CHAT_EDIT_FORMAT_STATE_KEY) ??
       'whole'
-    )
-    this.api_edit_format = this.context.workspaceState.get<EditFormat>(
-      API_EDIT_FORMAT_STATE_KEY,
-      'diff'
-    )
+    this.api_edit_format =
+      this.context.workspaceState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
+      this.context.globalState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
+      'whole'
 
     this.web_mode = this.context.workspaceState.get<WebMode>(
       WEB_MODE_STATE_KEY,
