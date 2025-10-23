@@ -20,6 +20,7 @@ import { ResponseReview as UiResponseReview } from '@ui/components/editor/panel/
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
 import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/panel/modals/ChatInitializedModal'
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
+import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 
 const vscode = acquireVsCodeApi()
 
@@ -53,6 +54,7 @@ export const Panel = () => {
   const [commit_message_to_review, set_commit_message_to_review] = useState<
     string | undefined
   >()
+  const [files_to_stage, set_files_to_stage] = useState<string[]>()
   const [
     commit_button_enabling_trigger_count,
     set_commit_button_enabling_trigger_count
@@ -175,6 +177,8 @@ export const Panel = () => {
         set_chat_input_focus_key((k) => k + 1)
       } else if (message.command == 'SHOW_COMMIT_MESSAGE_MODAL') {
         set_commit_message_to_review(message.commit_message)
+      } else if (message.command == 'SHOW_STAGE_FILES_MODAL') {
+        set_files_to_stage(message.files)
       } else if (message.command == 'COMMIT_PROCESS_CANCELLED') {
         set_commit_button_enabling_trigger_count((k) => k + 1)
       } else if (message.command == 'NEW_RESPONSE_RECEIVED') {
@@ -571,6 +575,26 @@ export const Panel = () => {
             duration={3000}
             on_close={() => {
               set_chat_initialized_title(undefined)
+            }}
+          />
+        </div>
+      )}
+
+      {files_to_stage && (
+        <div className={styles.slot}>
+          <UiStageFilesModal
+            files={files_to_stage}
+            on_stage={(selected_files) => {
+              post_message(vscode, {
+                command: 'PROCEED_WITH_COMMIT',
+                files_to_stage: selected_files
+              })
+              set_files_to_stage(undefined)
+            }}
+            on_cancel={() => {
+              post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
+              set_files_to_stage(undefined)
+              set_commit_button_enabling_trigger_count((k) => k + 1)
             }}
           />
         </div>

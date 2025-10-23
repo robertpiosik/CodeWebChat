@@ -1,0 +1,40 @@
+.title {
+  text-align: center;
+  font-weight: 500;
+  font-size: var(--font-size-14px);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-8px);
+}
+
+.files {
+  margin: 0 -12px;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-4px);
+    padding: 0 var(--padding-12px);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-8px);
+    cursor: pointer;
+    font-size: var(--vscode-font-size);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--padding-8px);
+
+  > button {
+    flex: 1;
+  }
+}

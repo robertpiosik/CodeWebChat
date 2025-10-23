@@ -1,6 +1,6 @@
 import styles from './Presets.module.scss'
 import { IconButton } from '../IconButton/IconButton'
-import { Checkbox } from '../Checkbox'
+import { Checkbox } from '../../common/Checkbox'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../../common/Icon'

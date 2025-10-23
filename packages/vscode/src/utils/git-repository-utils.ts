@@ -6,6 +6,7 @@ export interface GitRepository {
   rootUri: vscode.Uri
   state: {
     indexChanges: any[]
+    workingTreeChanges: any[]
   }
   add: (files: string[]) => Promise<void>
   status: () => Promise<void>

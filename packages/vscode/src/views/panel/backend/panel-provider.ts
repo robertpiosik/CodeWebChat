@@ -51,7 +51,8 @@ import {
   handle_commit_changes,
   handle_accept_commit_message,
   handle_cancel_commit_message,
-  handle_hash_sign_quick_pick
+  handle_hash_sign_quick_pick,
+  handle_proceed_with_commit
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -470,6 +471,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             this._send_git_state()
           } else if (message.command == 'COMMIT_CHANGES') {
             await handle_commit_changes(this)
+          } else if (message.command == 'PROCEED_WITH_COMMIT') {
+            await handle_proceed_with_commit(this, message.files_to_stage)
           } else if (message.command == 'ACCEPT_COMMIT_MESSAGE') {
             await handle_accept_commit_message(this, message.commit_message)
 

@@ -3,7 +3,7 @@ import { FileInReview } from '@shared/types/file-in-review'
 import cn from 'classnames'
 import styles from './ResponseReview.module.scss'
 import { Button } from '../Button'
-import { Checkbox } from '../Checkbox'
+import { Checkbox } from '../../common/Checkbox'
 import { IconButton } from '../IconButton/IconButton'
 
 type Props = {

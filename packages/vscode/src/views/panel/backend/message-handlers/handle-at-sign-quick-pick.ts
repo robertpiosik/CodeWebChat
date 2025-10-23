@@ -42,7 +42,7 @@ const at_sign_quick_pick = async (params: {
 
       return {
         label: filename,
-        description: dir_path === '.' ? '' : dir_path,
+        description: dir_path == '.' ? '' : dir_path,
         fullPath: normalized_path
       }
     })

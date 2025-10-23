@@ -6,7 +6,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { Field } from '@ui/components/editor/panel/Field'
 import { Slider } from '@ui/components/editor/panel/Slider'
 import { Button } from '@ui/components/editor/panel/Button'
-import { Checkbox } from '@ui/components/editor/panel/Checkbox/Checkbox'
+import { Checkbox } from '@ui/components/editor/common/Checkbox'
 import { BackendMessage } from '@/views/panel/types/messages'
 
 type Props = {

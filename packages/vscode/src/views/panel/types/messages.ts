@@ -289,6 +289,11 @@ export interface CommitChangesMessage extends BaseMessage {
   command: 'COMMIT_CHANGES'
 }
 
+export interface ProceedWithCommitMessage extends BaseMessage {
+  command: 'PROCEED_WITH_COMMIT'
+  files_to_stage: string[]
+}
+
 export interface AcceptCommitMessage extends BaseMessage {
   command: 'ACCEPT_COMMIT_MESSAGE'
   commit_message: string
@@ -366,6 +371,7 @@ export type FrontendMessage =
   | IntelligentUpdateFileInReviewMessage
   | UpdateLastUsedPresetMessage
   | CommitChangesMessage
+  | ProceedWithCommitMessage
   | AcceptCommitMessage
   | CancelCommitMessage
   | ManageConfigurationsMessage
@@ -545,6 +551,11 @@ export interface UpdateFileInReviewMessage extends BaseMessage {
   file: FileInReview
 }
 
+export interface ShowStageFilesModalMessage extends BaseMessage {
+  command: 'SHOW_STAGE_FILES_MODAL'
+  files: string[]
+}
+
 export interface ShowCommitMessageModalMessage extends BaseMessage {
   command: 'SHOW_COMMIT_MESSAGE_MODAL'
   commit_message: string
@@ -595,6 +606,7 @@ export type BackendMessage =
   | HideProgressMessage
   | ShowChatInitializedMessage
   | UpdateFileInReviewMessage
+  | ShowStageFilesModalMessage
   | ShowCommitMessageModalMessage
   | CommitProcessCancelledMessage
   | NewResponseReceivedMessage

@@ -6,17 +6,15 @@ import cn from 'classnames'
 type Props = {
   children: ReactNode
   scroll_to_top_key?: any
+  max_height?: string
 }
 
-export const Scrollable: React.FC<Props> = ({
-  children,
-  scroll_to_top_key
-}) => {
+export const Scrollable: React.FC<Props> = (props) => {
   const [has_top_shadow, set_has_top_shadow] = useState(false)
   const simplebar_ref = useRef<any>(null)
 
   useEffect(() => {
-    if (scroll_to_top_key === undefined) return
+    if (props.scroll_to_top_key === undefined) return
 
     const simplebar_instance = simplebar_ref.current
     if (!simplebar_instance) return
@@ -24,7 +22,7 @@ export const Scrollable: React.FC<Props> = ({
     const scroll_element = simplebar_instance.getScrollElement()
     if (!scroll_element) return
     scroll_element.scrollTop = 0
-  }, [scroll_to_top_key])
+  }, [props.scroll_to_top_key])
 
   useEffect(() => {
     const simplebar_instance = simplebar_ref.current
@@ -65,10 +63,11 @@ export const Scrollable: React.FC<Props> = ({
       <SimpleBar
         ref={simplebar_ref}
         style={{
-          height: '100%'
+          height: '100%',
+          maxHeight: props.max_height
         }}
       >
-        {children}
+        {props.children}
       </SimpleBar>
     </div>
   )
