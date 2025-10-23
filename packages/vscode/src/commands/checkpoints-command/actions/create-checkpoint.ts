@@ -28,13 +28,37 @@ export const create_checkpoint = async (
 
         await copy_workspace_to_dir(checkpoint_dir_uri, workspace_provider)
 
+        const checkpoints = await get_checkpoints(context)
+        let final_description = description
+        if (title == 'Created by user' && description === undefined) {
+          const user_checkpoints = checkpoints.filter(
+            (c) => c.title == 'Created by user'
+          )
+          const first_custom_index = user_checkpoints.findIndex(
+            (c) => !c.description?.match(/^\(\d+\)$/)
+          )
+
+          const relevant_checkpoints =
+            first_custom_index === -1
+              ? user_checkpoints
+              : user_checkpoints.slice(0, first_custom_index)
+
+          const user_checkpoint_numbers = relevant_checkpoints.map((c) =>
+            parseInt(c.description!.match(/^\((\d+)\)$/)![1], 10)
+          )
+
+          const max_num =
+            user_checkpoint_numbers.length > 0
+              ? Math.max(...user_checkpoint_numbers)
+              : 0
+          final_description = `(${max_num + 1})`
+        }
         const new_checkpoint: Checkpoint = {
           title,
           timestamp,
-          description
+          description: final_description
         }
 
-        const checkpoints = await get_checkpoints(context)
         checkpoints.push(new_checkpoint)
         await context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
       }
