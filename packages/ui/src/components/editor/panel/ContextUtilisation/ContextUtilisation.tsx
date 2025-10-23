@@ -10,7 +10,7 @@ const format_tokens = (tokens: number): string => {
   if (tokens < 1000) {
     return tokens.toString()
   }
-  const k = Math.round(tokens / 1000)
+  const k = Math.floor(tokens / 1000)
   return k.toString() + 'K'
 }
 
