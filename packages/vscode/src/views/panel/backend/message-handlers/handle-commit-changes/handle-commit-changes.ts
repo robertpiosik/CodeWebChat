@@ -98,10 +98,14 @@ export const handle_commit_changes = async (
         path.relative(repository.rootUri.fsPath, change.uri.fsPath)
     )
 
-    provider.send_message({
-      command: 'SHOW_STAGE_FILES_MODAL',
-      files: unstaged_files
-    })
+    if (unstaged_files.length == 1) {
+      await handle_proceed_with_commit(provider, unstaged_files)
+    } else {
+      provider.send_message({
+        command: 'SHOW_STAGE_FILES_MODAL',
+        files: unstaged_files
+      })
+    }
   } else {
     vscode.window.showInformationMessage(
       dictionary.information_message.NO_CHANGES_TO_COMMIT
