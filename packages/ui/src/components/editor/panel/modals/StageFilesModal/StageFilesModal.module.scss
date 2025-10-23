@@ -9,6 +9,24 @@
     gap: var(--padding-8px);
     cursor: pointer;
     font-size: var(--vscode-font-size);
+
+    &__details {
+      display: flex;
+      flex: 1;
+      gap: var(--padding-6px);
+      overflow: hidden;
+    }
+
+    &__name {
+      white-space: nowrap;
+    }
+
+    &__path {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--vscode-descriptionForeground);
+    }
   }
 }
 

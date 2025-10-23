@@ -27,19 +27,40 @@ export const StageFilesModal: React.FC<Props> = (props) => {
 
   return (
     <Modal
-      title="Select files"
+      title="Select files to commit"
       content_max_height="30vh"
       content_slot={
         <div className={styles.files}>
-          {props.files.map((file) => (
-            <label key={file} className={styles.files__item}>
-              <Checkbox
-                checked={selected_files.includes(file)}
-                on_change={(is_checked) => handle_toggle_file(file, is_checked)}
-              />
-              <span>{file}</span>
-            </label>
-          ))}
+          {props.files.map((file) => {
+            const last_slash_index = file.lastIndexOf('/')
+            const filename =
+              last_slash_index == -1
+                ? file
+                : file.substring(last_slash_index + 1)
+            const dir_path =
+              last_slash_index == -1 ? '' : file.substring(0, last_slash_index)
+
+            return (
+              <label key={file} className={styles.files__item}>
+                <Checkbox
+                  checked={selected_files.includes(file)}
+                  on_change={(is_checked) =>
+                    handle_toggle_file(file, is_checked)
+                  }
+                />
+                <div className={styles.files__item__details}>
+                  <span className={styles.files__item__name} title={filename}>
+                    {filename}
+                  </span>
+                  {dir_path && (
+                    <span className={styles.files__item__path} title={dir_path}>
+                      {dir_path}
+                    </span>
+                  )}
+                </div>
+              </label>
+            )
+          })}
         </div>
       }
       footer_slot={
