@@ -155,7 +155,7 @@ export const MainView: React.FC<Props> = (props) => {
 
     const container_width = container_ref.current.offsetWidth
     const header_left_width = header_left_ref.current.offsetWidth
-    const calculated_width = container_width - header_left_width - 36 - 26 // 26 is for settings button and gap
+    const calculated_width = container_width - header_left_width - 36 - 20 // 26 is for settings button and gap
 
     set_dropdown_max_width(calculated_width)
   }
@@ -314,11 +314,14 @@ export const MainView: React.FC<Props> = (props) => {
               />
             )}
           </div>
-          <UiIconButton
-            codicon_icon="settings-gear"
-            on_click={() => props.on_quick_action_click('codeWebChat.settings')}
+
+          <button
+            className={styles['header__right__settings']}
+            onClick={() => props.on_quick_action_click('codeWebChat.settings')}
             title="Settings"
-          />
+          >
+            <span className={cn('codicon', 'codicon-settings-gear')} />
+          </button>
         </div>
       </div>
       <Scrollable scroll_to_top_key={scroll_to_top_key}>

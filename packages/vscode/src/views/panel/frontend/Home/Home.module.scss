@@ -35,6 +35,32 @@
     font-weight: 600;
     color: var(--vscode-icon-foreground);
   }
+
+  &__settings {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--padding-4px);
+    cursor: pointer;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+
+    &__icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      --size: 20px;
+      width: var(--size);
+      height: var(--size);
+      color: var(--vscode-icon-foreground);
+    }
+
+    &:hover .header__settings__icon-wrapper {
+      animation: rotate 4s linear infinite;
+    }
+  }
 }
 
 .content {
@@ -137,5 +163,14 @@
     text-align: right;
     user-select: text;
     color: var(--vscode-descriptionForeground);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

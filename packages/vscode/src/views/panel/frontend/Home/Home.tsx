@@ -46,12 +46,16 @@ export const Home: React.FC<Props> = (props) => {
           </div>
           <span className={styles['header__text']}>Home</span>
         </div>
-        <IconButton
-          codicon_icon="settings-gear"
-          on_click={handle_settings_click}
+        <button
+          className={styles['header__settings']}
+          onClick={handle_settings_click}
           title="Settings"
-          label="Settings"
-        />
+        >
+          Settings
+          <span className={styles['header__settings__icon-wrapper']}>
+            <span className={cn('codicon', 'codicon-settings-gear')} />
+          </span>
+        </button>
       </div>
 
       <Scrollable>

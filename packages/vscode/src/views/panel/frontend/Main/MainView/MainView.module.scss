@@ -60,9 +60,30 @@
     flex: 1;
     display: flex;
     align-items: center;
+    gap: var(--padding-8px);
 
     &__dropdown {
       width: 100%;
+    }
+
+    &__settings {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      --size: 20px;
+      width: var(--size);
+      height: var(--size);
+      color: var(--vscode-icon-foreground);
+      cursor: pointer;
+      text-decoration: none;
+      background: none;
+      border: none;
+      padding: 0;
+
+      &:hover > span {
+        animation: rotate 4s linear infinite;
+      }
     }
   }
 }
@@ -248,4 +269,13 @@
 .browser-extension-message {
   padding: 0 var(--padding-16px);
   position: relative;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
