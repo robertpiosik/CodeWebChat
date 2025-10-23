@@ -48,14 +48,10 @@ export const StageFilesModal: React.FC<Props> = (props) => {
                     handle_toggle_file(file, is_checked)
                   }
                 />
-                <div className={styles.files__item__details}>
-                  <span className={styles.files__item__name} title={filename}>
-                    {filename}
-                  </span>
+                <div className={styles.files__item__details} title={file}>
+                  <span>{filename}</span>
                   {dir_path && (
-                    <span className={styles.files__item__path} title={dir_path}>
-                      {dir_path}
-                    </span>
+                    <span className={styles.files__item__path}>{dir_path}</span>
                   )}
                 </div>
               </label>
@@ -64,7 +60,7 @@ export const StageFilesModal: React.FC<Props> = (props) => {
         </div>
       }
       footer_slot={
-        <div className={styles.actions}>
+        <>
           <Button on_click={props.on_cancel} is_secondary={true}>
             Cancel
           </Button>
@@ -75,7 +71,7 @@ export const StageFilesModal: React.FC<Props> = (props) => {
           >
             Proceed
           </Button>
-        </div>
+        </>
       }
     />
   )

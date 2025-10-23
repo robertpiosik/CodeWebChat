@@ -1,4 +1,5 @@
 .textarea {
+  display: flex;
   width: 100%;
   background-color: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
@@ -13,15 +14,5 @@
   &:focus {
     outline: 1px solid var(--vscode-focusBorder);
     outline-offset: -1px;
-  }
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--padding-8px);
-
-  > button {
-    flex: 1;
   }
 }

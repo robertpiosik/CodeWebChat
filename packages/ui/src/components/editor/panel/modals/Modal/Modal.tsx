@@ -16,9 +16,13 @@ export const Modal: React.FC<Props> = (props) => {
 
         {props.content_slot &&
           (props.content_max_height ? (
-            <Scrollable max_height={props.content_max_height}>
-              <div className={styles.content}>{props.content_slot}</div>
-            </Scrollable>
+            <div className={styles.scrollable}>
+              <Scrollable max_height={props.content_max_height}>
+                <div className={styles.scrollable__inner}>
+                  {props.content_slot}
+                </div>
+              </Scrollable>
+            </div>
           ) : (
             <div className={styles.content}>{props.content_slot}</div>
           ))}

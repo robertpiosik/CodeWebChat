@@ -11,31 +11,14 @@
     font-size: var(--vscode-font-size);
 
     &__details {
-      display: flex;
-      flex: 1;
-      gap: var(--padding-6px);
       overflow: hidden;
-    }
-
-    &__name {
       white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &__path {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      padding-left: var(--padding-6px);
       color: var(--vscode-descriptionForeground);
     }
-  }
-}
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--padding-8px);
-
-  > button {
-    flex: 1;
   }
 }

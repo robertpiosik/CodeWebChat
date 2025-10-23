@@ -66,6 +66,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
   return (
     <Modal
       title={props.title}
+      content_max_height={props.files ? '30vh' : undefined}
       content_slot={
         <>
           <div className={styles['elapsed-time']}>
@@ -73,15 +74,15 @@ export const ProgressModal: React.FC<Props> = (props) => {
           </div>
 
           {props.files ? (
-            <div className={styles['files-container']}>
+            <div className={styles.content}>
               {props.files.map((file) => {
                 const last_slash_index = file.file_path.lastIndexOf('/')
                 const file_name =
-                  last_slash_index === -1
+                  last_slash_index == -1
                     ? file.file_path
                     : file.file_path.substring(last_slash_index + 1)
                 const directory_path =
-                  last_slash_index === -1
+                  last_slash_index == -1
                     ? ''
                     : file.file_path.substring(0, last_slash_index)
 
@@ -102,8 +103,8 @@ export const ProgressModal: React.FC<Props> = (props) => {
                       </div>
                     </div>
                     <div className={styles.progress}>
-                      {file.status === 'thinking' ||
-                      (file.status === 'receiving' &&
+                      {file.status == 'thinking' ||
+                      (file.status == 'receiving' &&
                         file.progress === undefined) ? (
                         <div
                           className={styles['progress__fill--indeterminate']}
@@ -112,15 +113,15 @@ export const ProgressModal: React.FC<Props> = (props) => {
                         <div
                           className={cn(styles.progress__fill, {
                             [styles['progress__fill--done']]:
-                              file.status === 'done',
+                              file.status == 'done',
                             [styles['progress__fill--error']]:
-                              file.status === 'error'
+                              file.status == 'error'
                           })}
                           style={{
                             width: `${
-                              file.status === 'done' || file.status === 'error'
+                              file.status == 'done' || file.status == 'error'
                                 ? 100
-                                : file.status === 'receiving' &&
+                                : file.status == 'receiving' &&
                                   file.progress !== undefined
                                 ? file.progress
                                 : 0
@@ -129,7 +130,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
                         />
                       )}
                     </div>
-                    {file.status === 'receiving' &&
+                    {file.status == 'receiving' &&
                       file.tokens_per_second !== undefined && (
                         <div className={styles['file-item__details']}>
                           ~{format_tokens_per_second(file.tokens_per_second)}{' '}
@@ -141,10 +142,10 @@ export const ProgressModal: React.FC<Props> = (props) => {
               })}
             </div>
           ) : (
-            <>
+            <div className={styles.content}>
               {props.tokens_per_second !== undefined && (
                 <div className={styles['tokens-per-second']}>
-                  ~{format_tokens_per_second(props.tokens_per_second)} tokens/s
+                  {format_tokens_per_second(props.tokens_per_second)} tokens/s
                 </div>
               )}
               <div className={styles.progress}>
@@ -157,7 +158,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
                   <div className={styles['progress__fill--indeterminate']} />
                 )}
               </div>
-            </>
+            </div>
           )}
         </>
       }

@@ -69,7 +69,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
         />
       }
       footer_slot={
-        <div className={styles.actions} onMouseDown={stop_timer}>
+        <>
           <Button on_click={props.on_cancel} is_secondary={true}>
             Cancel
           </Button>
@@ -81,7 +81,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
             Commit
             {is_timer_active && countdown > 0 && ` (${countdown})`}
           </Button>
-        </div>
+        </>
       }
     />
   )
