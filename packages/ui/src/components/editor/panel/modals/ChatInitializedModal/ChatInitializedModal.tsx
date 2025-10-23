@@ -28,9 +28,9 @@ export const ChatInitializedModal: React.FC<Props> = (props) => {
   }, [props.duration, props.on_close])
 
   return (
-    <Modal>
-      <div className={styles.container}>
-        <div className={styles.title}>{props.title}</div>
+    <Modal
+      title={props.title}
+      content_slot={
         <div className={styles.progress}>
           <div
             className={styles.progress__fill}
@@ -40,10 +40,12 @@ export const ChatInitializedModal: React.FC<Props> = (props) => {
             }}
           />
         </div>
+      }
+      footer_slot={
         <Button on_click={props.on_close} is_focused={true}>
           Close
         </Button>
-      </div>
-    </Modal>
+      }
+    />
   )
 }

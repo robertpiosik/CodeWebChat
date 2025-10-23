@@ -3,7 +3,6 @@ import styles from './StageFilesModal.module.scss'
 import { Button } from '../../Button'
 import { Modal } from '../Modal'
 import { Checkbox } from '../../../common/Checkbox'
-import { Scrollable } from '../../Scrollable'
 
 type Props = {
   files: string[]
@@ -27,26 +26,23 @@ export const StageFilesModal: React.FC<Props> = (props) => {
   }
 
   return (
-    <Modal>
-      <div className={styles.container}>
-        <div className={styles.title}>Select files</div>{' '}
+    <Modal
+      title="Select files"
+      content_max_height="30vh"
+      content_slot={
         <div className={styles.files}>
-          <Scrollable max_height="30vh">
-            <div className={styles.files__inner}>
-              {props.files.map((file) => (
-                <label key={file} className={styles.files__item}>
-                  <Checkbox
-                    checked={selected_files.includes(file)}
-                    on_change={(is_checked) =>
-                      handle_toggle_file(file, is_checked)
-                    }
-                  />
-                  <span>{file}</span>
-                </label>
-              ))}
-            </div>
-          </Scrollable>
+          {props.files.map((file) => (
+            <label key={file} className={styles.files__item}>
+              <Checkbox
+                checked={selected_files.includes(file)}
+                on_change={(is_checked) => handle_toggle_file(file, is_checked)}
+              />
+              <span>{file}</span>
+            </label>
+          ))}
         </div>
+      }
+      footer_slot={
         <div className={styles.actions}>
           <Button on_click={props.on_cancel} is_secondary={true}>
             Cancel
@@ -59,7 +55,7 @@ export const StageFilesModal: React.FC<Props> = (props) => {
             Proceed
           </Button>
         </div>
-      </div>
-    </Modal>
+      }
+    />
   )
 }

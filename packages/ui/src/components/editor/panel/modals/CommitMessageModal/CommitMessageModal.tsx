@@ -46,15 +46,14 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
     }
   }, [countdown, is_timer_active, handle_accept])
 
+  const stop_timer = () => {
+    set_is_timer_active(false)
+  }
+
   return (
-    <Modal>
-      <div
-        className={styles.container}
-        onMouseDown={() => {
-          set_is_timer_active(false)
-        }}
-      >
-        <div className={styles.title}>Commit changes</div>
+    <Modal
+      title="Commit changes"
+      content_slot={
         <TextareaAutosize
           className={styles.textarea}
           value={message}
@@ -66,8 +65,11 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
               handle_accept()
             }
           }}
+          onMouseDown={stop_timer}
         />
-        <div className={styles.actions}>
+      }
+      footer_slot={
+        <div className={styles.actions} onMouseDown={stop_timer}>
           <Button on_click={props.on_cancel} is_secondary={true}>
             Cancel
           </Button>
@@ -80,7 +82,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
             {is_timer_active && countdown > 0 && ` (${countdown})`}
           </Button>
         </div>
-      </div>
-    </Modal>
+      }
+    />
   )
 }

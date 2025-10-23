@@ -47,6 +47,10 @@
     border: none;
     padding: 0;
 
+    > span:first-child:hover {
+      text-decoration: underline;
+    }
+
     &__icon-wrapper {
       display: flex;
       align-items: center;

@@ -1,10 +1,3 @@
-.title {
-  text-align: center;
-  font-weight: 500;
-  font-size: var(--font-size-14px);
-  margin-bottom: var(--padding-6px);
-}
-
 .textarea {
   width: 100%;
   background-color: var(--vscode-input-background);
@@ -21,12 +14,6 @@
     outline: 1px solid var(--vscode-focusBorder);
     outline-offset: -1px;
   }
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--padding-8px);
 }
 
 .actions {

@@ -50,7 +50,7 @@ export const Home: React.FC<Props> = (props) => {
           onClick={handle_settings_click}
           title="Settings"
         >
-          Settings
+          <span>Settings</span>
           <span className={styles['header__settings__icon-wrapper']}>
             <span className={cn('codicon', 'codicon-settings-gear')} />
           </span>

@@ -1,24 +1,7 @@
-.title {
-  text-align: center;
-  font-weight: 500;
-  font-size: var(--font-size-14px);
-}
-
-.container {
+.files {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-8px);
-}
-
-.files {
-  margin: 0 -12px;
-
-  &__inner {
-    display: flex;
-    flex-direction: column;
-    gap: var(--padding-4px);
-    padding: 0 var(--padding-12px);
-  }
+  gap: var(--padding-4px);
 
   &__item {
     display: flex;
