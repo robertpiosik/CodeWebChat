@@ -6,7 +6,6 @@ import { Donations } from '@ui/components/editor/panel/Donations'
 import { Icon } from '@ui/components/editor/common/Icon'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
-import { IconButton } from '@ui/components/editor/panel/IconButton'
 import { post_message } from '../utils/post_message'
 import { FrontendMessage } from '@/views/panel/types/messages'
 
