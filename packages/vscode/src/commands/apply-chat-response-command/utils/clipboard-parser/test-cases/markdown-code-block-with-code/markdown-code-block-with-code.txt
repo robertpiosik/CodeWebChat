@@ -1,0 +1,4 @@
+```markdown
+// src/main.js
+console.log("hello")
+```

@@ -1,4 +1,3 @@
-// packages/vscode/src/commands/apply-chat-response-command/utils/clipboard-parser/clipboard-parser.ts
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import { Diff, extract_diffs } from './extract-diff-patches'
@@ -175,6 +174,7 @@ export const parse_multiple_files = (params: {
   let in_cdata = false
   let backtick_nesting_level = 0
   let last_seen_file_path_comment: string | null = null
+  let is_markdown_container_block = false
   let current_language = ''
 
   const lines = params.response.split('\n')
@@ -240,6 +240,7 @@ export const parse_multiple_files = (params: {
         xml_file_mode = false
         top_level_xml_file_mode = false
         in_cdata = false
+        is_markdown_container_block = false
         continue
       } else if (line.trim().startsWith('<file')) {
         const extracted_filename = extract_file_path_from_xml(line)
@@ -347,6 +348,12 @@ export const parse_multiple_files = (params: {
           is_first_content_line = true
         }
         backtick_nesting_level++
+        if (
+          (current_language === 'markdown' || current_language === 'md') &&
+          backtick_nesting_level > 1
+        ) {
+          is_markdown_container_block = true
+        }
       } else if (
         trimmed_line == '```' &&
         backtick_nesting_level == 1 &&
@@ -364,6 +371,9 @@ export const parse_multiple_files = (params: {
           return false
         })()
       ) {
+        if (current_language === 'markdown' || current_language === 'md') {
+          is_markdown_container_block = true
+        }
         // Heuristic: A raw ``` at the start of a block (after the filename comment)
         // or after an empty line is likely opening a nested block.
         backtick_nesting_level++
@@ -588,7 +598,8 @@ export const parse_multiple_files = (params: {
           if (
             !lang_is_markdown ||
             is_markdown_file ||
-            backtick_nesting_level > 1
+            backtick_nesting_level > 1 ||
+            (current_file_name && !is_markdown_container_block)
           ) {
             if (current_content) {
               current_content += '\n' + line
