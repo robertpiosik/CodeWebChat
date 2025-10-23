@@ -22,7 +22,7 @@ export type ChatInputProps = {
   on_caret_position_change: (caret_position: number) => void
   is_web_mode: boolean
   on_search_click: () => void
-  on_at_sign_click: () => void
+  on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
   caret_position_to_set?: number
@@ -99,6 +99,32 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     props.is_web_mode
   ])
 
+  const custom_handle_key_down = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === 'Tab' && !e.shiftKey) {
+      const textarea = e.currentTarget
+      const value = textarea.value
+      const selection_start = textarea.selectionStart
+
+      if (selection_start > 0) {
+        const text_before_cursor = value.substring(0, selection_start)
+        if (
+          text_before_cursor.trim() !== '' &&
+          !/\s$/.test(text_before_cursor)
+        ) {
+          e.preventDefault()
+          const match = text_before_cursor.match(/(\S+)$/)
+          if (match) {
+            props.on_at_sign_click(match[1])
+            return
+          }
+        }
+      }
+    }
+    handle_key_down(e)
+  }
+
   return (
     <div className={styles.container}>
       {props.has_active_selection && props.is_in_code_completions_mode && (
@@ -146,7 +172,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
           placeholder={placeholder}
           value={props.value}
           onChange={handle_input_change}
-          onKeyDown={handle_key_down}
+          onKeyDown={custom_handle_key_down}
           onSelect={handle_select}
           autoFocus
           className={styles.textarea}
@@ -170,7 +196,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             }}
           >
             <button
-              onClick={props.on_at_sign_click}
+              onClick={() => props.on_at_sign_click()}
               className={cn(styles['footer__left__button'])}
               title="Reference file"
             >

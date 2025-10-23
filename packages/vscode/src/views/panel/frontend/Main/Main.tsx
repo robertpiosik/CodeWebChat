@@ -500,10 +500,11 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_at_sign_click = () => {
+  const handle_at_sign_click = (search_value?: string) => {
     post_message(props.vscode, {
       command: 'SHOW_AT_SIGN_QUICK_PICK',
-      is_for_code_completions: is_in_code_completions_mode
+      is_for_code_completions: is_in_code_completions_mode,
+      search_value
     })
   }
 

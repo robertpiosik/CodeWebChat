@@ -8,6 +8,7 @@ import { natural_sort } from '@/utils/natural-sort'
 
 const at_sign_quick_pick = async (params: {
   workspace_provider: WorkspaceProvider
+  search_value?: string
 }): Promise<string | undefined> => {
   const checked_paths = params.workspace_provider.get_all_checked_paths()
   if (checked_paths.length == 0) {
@@ -46,6 +47,14 @@ const at_sign_quick_pick = async (params: {
         fullPath: normalized_path
       }
     })
+    .filter((item) => {
+      if (params.search_value) {
+        const search_lower = params.search_value.toLowerCase()
+        const full_path_lower = item.fullPath.toLowerCase()
+        return full_path_lower.includes(search_lower)
+      }
+      return true
+    })
 
   quick_pick_items.sort((a, b) => natural_sort(a.fullPath, b.fullPath))
 
@@ -64,16 +73,23 @@ const at_sign_quick_pick = async (params: {
 }
 
 export const handle_at_sign_quick_pick = async (
-  provider: ViewProvider
+  provider: ViewProvider,
+  search_value?: string
 ): Promise<void> => {
   const replacement = await at_sign_quick_pick({
-    workspace_provider: provider.workspace_provider
+    workspace_provider: provider.workspace_provider,
+    search_value: search_value
   })
 
   if (!replacement) {
     provider.send_message({
       command: 'FOCUS_CHAT_INPUT'
     })
+    return
+  }
+
+  if (search_value) {
+    provider.add_text_at_cursor_position(replacement, search_value.length)
     return
   }
 

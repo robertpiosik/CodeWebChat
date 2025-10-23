@@ -189,6 +189,7 @@ export interface CodeCompletionMessage extends BaseMessage {
 
 export interface ShowAtSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_AT_SIGN_QUICK_PICK'
+  search_value?: string
   is_for_code_completions: boolean
 }
 

@@ -430,7 +430,7 @@ export class ViewProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_VERSION') {
             handle_get_version(this)
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
-            await handle_at_sign_quick_pick(this)
+            await handle_at_sign_quick_pick(this, message.search_value)
           } else if (message.command == 'SHOW_HASH_SIGN_QUICK_PICK') {
             await handle_hash_sign_quick_pick(
               this,

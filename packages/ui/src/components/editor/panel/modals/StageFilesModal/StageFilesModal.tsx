@@ -21,6 +21,17 @@ export const StageFilesModal: React.FC<Props> = (props) => {
     }
   }
 
+  const handle_toggle_select_all = (is_checked: boolean) => {
+    if (is_checked) {
+      set_selected_files(props.files)
+    } else {
+      set_selected_files([])
+    }
+  }
+
+  const all_selected =
+    props.files.length > 0 && selected_files.length === props.files.length
+
   const handle_stage = () => {
     props.on_stage(selected_files)
   }
@@ -31,6 +42,15 @@ export const StageFilesModal: React.FC<Props> = (props) => {
       content_max_height="30vh"
       content_slot={
         <div className={styles.files}>
+          <label className={styles.files__item}>
+            <Checkbox
+              checked={all_selected}
+              on_change={handle_toggle_select_all}
+            />
+            <div className={styles.files__item__details}>
+              <strong>Select all</strong>
+            </div>
+          </label>
           {props.files.map((file) => {
             const last_slash_index = file.lastIndexOf('/')
             const filename =
