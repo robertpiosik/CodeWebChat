@@ -6,7 +6,7 @@ Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf.
 
 CWC is community driven. Join our [discord server](https://discord.gg/KJySXsrSX5) and get involved!
 
-🌐 **Initializes web chats**—ChatGPT, Claude, Gemini, DeepSeek, and more \
+🌐 **Initializes web chats**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and more \
 🪄 **Applies responses**—multi-file changes integration with easy rollback \
 🔋 **Batteries included**—code completions, commit messages, and more \
 🧑‍💻 **Non-agentic approach**—zero endless and costly tool calling \
