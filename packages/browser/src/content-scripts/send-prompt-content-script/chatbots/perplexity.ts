@@ -11,7 +11,9 @@ import {
 export const perplexity: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => setTimeout(resolve, 500))
-    ;(document.querySelector('[contenteditable="true"]') as any)?.click()
+    if (window.innerWidth <= 768) {
+      ;(document.querySelector('[contenteditable="true"]') as any)?.click()
+    }
   },
   set_options: async (options?: string[]) => {
     if (!options) return
