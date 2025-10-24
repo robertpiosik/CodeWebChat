@@ -62,6 +62,7 @@ export const dictionary = {
     CONTEXTS_FILE_NOT_VALID_ARRAY:
       'Contexts file is not a valid array. Starting with empty contexts list.',
     NO_FILES_OR_WEBSITES_SELECTED: 'No files or websites selected or open.',
+    NOTHING_SELECTED_IN_CONTEXT: 'Nothing is selected in context.',
     NO_OPEN_EDITORS_SELECTED: 'No open editors selected.',
     NO_EDITOR_OPEN: 'No editor is open.',
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION:
@@ -108,6 +109,8 @@ export const dictionary = {
       `Are you sure you want to delete the model provider "${provider_name}"?`,
     NO_MODELS_FOUND_MANUAL_ENTRY: (provider_name: string) =>
       `No models found for ${provider_name}. You can enter model name manually.`,
+    NO_RESULTS_FOR_SEARCH_SHOWING_ALL: (search_value: string) =>
+      `No results for "${search_value}" in the selected context. Showing all items.`,
     NO_MODEL_PROVIDERS_CONFIGURED:
       'No model providers configured. Please add a model provider first on the "Model Providers" page.'
   },

@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from 'react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import styles from './MainView.module.scss'
@@ -13,9 +12,6 @@ import {
   HomeViewType
 } from '@/views/panel/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
-import { Dropdown as UiDropdown } from '@ui/components/editor/panel/Dropdown'
-import { Icon } from '@ui/components/editor/common/Icon'
-import cn from 'classnames'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
@@ -23,7 +19,10 @@ import { use_last_choice_button_title } from './hooks/use-last-choice-button-tit
 import { use_cycle_mode } from './hooks/use-cycle-mode'
 import { use_re_render_on_interval } from './hooks/use-re-render-on-interval'
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
-import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButton'
+import { WEB_MODES, API_MODES } from './modes'
+import { Footer } from './components/Footer'
+import { Header } from './components/Header'
+import cn from 'classnames'
 
 dayjs.extend(relativeTime)
 
@@ -106,42 +105,13 @@ type Props = {
   commit_button_enabling_trigger_count: number // Incremented when commit changes operation is cancelled
 }
 
-const web_mode_labels: Record<WebMode, string> = {
-  'edit-context': 'Edit context',
-  ask: 'Ask about context',
-  'no-context': 'No context',
-  'code-completions': 'Code at cursor'
-}
-const WEB_MODES = Object.keys(web_mode_labels) as WebMode[]
-
-const api_mode_labels: Record<ApiMode, string> = {
-  'edit-context': 'Edit context',
-  'code-completions': 'Code at cursor'
-}
-const API_MODES = Object.keys(api_mode_labels) as ApiMode[]
-
 export const MainView: React.FC<Props> = (props) => {
-  // We need this because we can't use overflow: hidden
-  // due to absolutely positioned dropdown menu.
-  const [dropdown_max_width, set_dropdown_max_width] = useState<
-    number | undefined
-  >(undefined)
-
-  const dropdown_container_ref = useRef<HTMLDivElement>(null)
-  const container_ref = useRef<HTMLDivElement>(null)
-  const header_left_ref = useRef<HTMLDivElement>(null)
-  const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
-    useState(false)
-  const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
-    useState(false)
-  const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
-    useState(false)
-
   // Re-render every minute to update the relative time of the history responses.
   use_re_render_on_interval(60 * 1000)
 
   use_cycle_mode({
     home_view_type: props.home_view_type,
+    on_home_view_type_change: props.on_home_view_type_change,
     web_mode: props.web_mode,
     on_web_mode_change: props.on_web_mode_change,
     api_mode: props.api_mode,
@@ -149,37 +119,6 @@ export const MainView: React.FC<Props> = (props) => {
     web_modes: WEB_MODES,
     api_modes: API_MODES
   })
-
-  const calculate_dropdown_max_width = () => {
-    if (!container_ref.current || !header_left_ref.current) return
-
-    const container_width = container_ref.current.offsetWidth
-    const header_left_width = header_left_ref.current.offsetWidth
-    const calculated_width = container_width - header_left_width - 36 - 20 // 26 is for settings button and gap
-
-    set_dropdown_max_width(calculated_width)
-  }
-
-  useEffect(() => {
-    if (!container_ref.current || !header_left_ref.current) return
-
-    const resize_observer = new ResizeObserver(() => {
-      calculate_dropdown_max_width()
-    })
-
-    resize_observer.observe(container_ref.current)
-    resize_observer.observe(header_left_ref.current)
-
-    calculate_dropdown_max_width()
-
-    return () => {
-      resize_observer.disconnect()
-    }
-  }, [])
-
-  useEffect(() => {
-    set_is_commit_disabled_temporarily(false)
-  }, [props.commit_button_enabling_trigger_count])
 
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
@@ -221,38 +160,6 @@ export const MainView: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_apply_click = () => {
-    set_is_apply_disabled_temporarily(true)
-    props.on_quick_action_click('codeWebChat.applyChatResponse')
-
-    setTimeout(() => set_is_apply_disabled_temporarily(false), 10000)
-  }
-
-  useEffect(() => {
-    // Timeout prevents jitter of non disabled state caused by order of updates,
-    // effect below reacting to props.can_apply_clipboard is fine.
-    setTimeout(() => {
-      set_is_apply_disabled_temporarily(false)
-    }, 500)
-  }, [props.can_undo])
-
-  const handle_commit_click = () => {
-    if (!props.has_changes_to_commit) return
-
-    set_is_commit_disabled_temporarily(true)
-    props.on_commit_click()
-
-    setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
-  }
-
-  const handle_heading_click = () => {
-    if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
-      props.on_home_view_type_change(HOME_VIEW_TYPES.API)
-    } else {
-      props.on_home_view_type_change(HOME_VIEW_TYPES.WEB)
-    }
-  }
-
   const last_choice_button_title = use_last_choice_button_title({
     home_view_type: props.home_view_type,
     selected_preset_or_group_name: props.selected_preset_or_group_name,
@@ -270,60 +177,17 @@ export const MainView: React.FC<Props> = (props) => {
   }`
 
   return (
-    <div ref={container_ref} className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.header__left} ref={header_left_ref}>
-          <UiIconButton
-            codicon_icon="chevron-left"
-            on_click={props.on_show_home}
-            title="Return to Home"
-          />
-          <button
-            className={styles['header__left__toggler']}
-            onClick={handle_heading_click}
-            title="Toggle view type"
-          >
-            {props.home_view_type == HOME_VIEW_TYPES.WEB
-              ? 'New chat'
-              : 'API call'}
-          </button>
-        </div>
-
-        <div className={styles.header__right} ref={dropdown_container_ref}>
-          <div className={styles.header__right__dropdown}>
-            {props.home_view_type == HOME_VIEW_TYPES.WEB && (
-              <UiDropdown
-                options={Object.entries(web_mode_labels).map(
-                  ([value, label]) => ({ value: value as WebMode, label })
-                )}
-                selected_value={props.web_mode}
-                on_change={props.on_web_mode_change}
-                info="shift+tab"
-                max_width={dropdown_max_width}
-              />
-            )}
-            {props.home_view_type == HOME_VIEW_TYPES.API && (
-              <UiDropdown
-                options={Object.entries(api_mode_labels).map(
-                  ([value, label]) => ({ value: value as ApiMode, label })
-                )}
-                selected_value={props.api_mode}
-                on_change={props.on_api_mode_change}
-                info="shift+tab"
-                max_width={dropdown_max_width}
-              />
-            )}
-          </div>
-
-          <button
-            className={styles['header__right__settings']}
-            onClick={() => props.on_quick_action_click('codeWebChat.settings')}
-            title="Settings"
-          >
-            <span className={cn('codicon', 'codicon-settings-gear')} />
-          </button>
-        </div>
-      </div>
+    <div className={styles.container}>
+      <Header
+        home_view_type={props.home_view_type}
+        on_home_view_type_change={props.on_home_view_type_change}
+        on_show_home={props.on_show_home}
+        web_mode={props.web_mode}
+        on_web_mode_change={props.on_web_mode_change}
+        api_mode={props.api_mode}
+        on_api_mode_change={props.on_api_mode_change}
+        on_quick_action_click={props.on_quick_action_click}
+      />
       <Scrollable scroll_to_top_key={scroll_to_top_key}>
         <div className={styles.content}>
           <UiSeparator height={4} />
@@ -484,83 +348,17 @@ export const MainView: React.FC<Props> = (props) => {
         </div>
       </Scrollable>
 
-      <div className={styles.footer}>
-        <a
-          className={cn(
-            styles.footer__button,
-            styles['footer__button--buy-me-a-coffee']
-          )}
-          href="https://buymeacoffee.com/robertpiosik"
-          title="Support author"
-          onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
-          onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
-        >
-          <Icon variant="BUY_ME_A_COFFEE_LOGO" />
-        </a>
-        <div className={styles.footer__right}>
-          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
-            <button
-              className={cn(
-                styles.footer__button,
-                styles['footer__button--outlined']
-              )}
-              onClick={handle_apply_click}
-              title={'Integrate copied chat response or a single code block'}
-              disabled={is_apply_disabled_temporarily}
-            >
-              Apply
-            </button>
-          )}
-          <button
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--outlined']
-            )}
-            onClick={props.on_undo_click}
-            title={
-              'Restore saved state of the codebase after chat/API response integration'
-            }
-            disabled={!props.can_undo}
-          >
-            Undo
-          </button>
-          <button
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--outlined']
-            )}
-            onClick={handle_commit_click}
-            title={
-              props.has_changes_to_commit && !is_commit_disabled_temporarily
-                ? 'Generate a commit message of staged changes and commit'
-                : 'No changes to commit'
-            }
-            disabled={
-              !props.has_changes_to_commit || is_commit_disabled_temporarily
-            }
-          >
-            Commit changes
-          </button>
-        </div>
-      </div>
-
-      {is_buy_me_coffee_hovered &&
-        Array.from({ length: 5 }).map((_, i) => (
-          <span
-            key={i}
-            className={styles.footer__heart}
-            style={
-              {
-                left: `${18 + (Math.random() - 0.5) * 20}px`,
-                animationDelay: `${i == 0 ? 0 : (i + Math.random()) / 3}s`,
-                animationDuration: `${2 - Math.random()}s`,
-                fontSize: `${10 + Math.random() * 8}px`
-              } as React.CSSProperties
-            }
-          >
-            ❤️
-          </span>
-        ))}
+      <Footer
+        home_view_type={props.home_view_type}
+        on_quick_action_click={props.on_quick_action_click}
+        on_undo_click={props.on_undo_click}
+        can_undo={props.can_undo}
+        on_commit_click={props.on_commit_click}
+        has_changes_to_commit={props.has_changes_to_commit}
+        commit_button_enabling_trigger_count={
+          props.commit_button_enabling_trigger_count
+        }
+      />
     </div>
   )
 }

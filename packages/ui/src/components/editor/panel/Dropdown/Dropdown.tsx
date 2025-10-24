@@ -43,6 +43,29 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
     set_just_opened(false)
   }
 
+  const handle_wheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+
+    const current_index = props.options.findIndex(
+      (option) => option.value === props.selected_value
+    )
+    if (current_index == -1) {
+      return
+    }
+
+    const options_count = props.options.length
+    if (options_count <= 1) return
+
+    let next_index
+    if (event.deltaY < 0) {
+      next_index = (current_index - 1 + options_count) % options_count
+    } else {
+      next_index = (current_index + 1) % options_count
+    }
+    props.on_change(props.options[next_index].value)
+  }
+
   useEffect(() => {
     const handle_click_outside = (event: MouseEvent) => {
       if (
@@ -64,6 +87,7 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
     <div
       className={cn(styles.container, { [styles['button--open']]: is_open })}
       ref={container_ref}
+      onWheel={handle_wheel}
     >
       <button
         className={cn(styles.button, { [styles['button--open']]: is_open })}

@@ -5,6 +5,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
+import { dictionary } from '@shared/constants/dictionary'
 
 const at_sign_quick_pick = async (params: {
   workspace_provider: WorkspaceProvider
@@ -12,13 +13,15 @@ const at_sign_quick_pick = async (params: {
 }): Promise<string | undefined> => {
   const checked_paths = params.workspace_provider.get_all_checked_paths()
   if (checked_paths.length == 0) {
-    vscode.window.showWarningMessage('Nothing is selected in context.')
+    vscode.window.showWarningMessage(
+      dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT
+    )
     return
   }
 
   const workspace_roots = params.workspace_provider.getWorkspaceRoots()
 
-  const quick_pick_items = checked_paths
+  const all_quick_pick_items = checked_paths
     .filter((p) => {
       try {
         return fs.existsSync(p) && fs.statSync(p).isFile()
@@ -47,19 +50,31 @@ const at_sign_quick_pick = async (params: {
         fullPath: normalized_path
       }
     })
-    .filter((item) => {
-      if (params.search_value) {
-        const search_lower = params.search_value.toLowerCase()
-        const full_path_lower = item.fullPath.toLowerCase()
-        return full_path_lower.includes(search_lower)
-      }
-      return true
+
+  let quick_pick_items_to_show = all_quick_pick_items
+
+  if (params.search_value) {
+    const filtered_items = all_quick_pick_items.filter((item) => {
+      const search_lower = params.search_value!.toLowerCase()
+      const filename_lower = item.label.toLowerCase()
+      return filename_lower.includes(search_lower)
     })
 
-  quick_pick_items.sort((a, b) => natural_sort(a.fullPath, b.fullPath))
+    if (filtered_items.length > 0) {
+      quick_pick_items_to_show = filtered_items
+    } else {
+      vscode.window.showWarningMessage(
+        dictionary.warning_message.NO_RESULTS_FOR_SEARCH_SHOWING_ALL(
+          params.search_value
+        )
+      )
+    }
+  }
+
+  quick_pick_items_to_show.sort((a, b) => natural_sort(a.fullPath, b.fullPath))
 
   const selected_path_item = await vscode.window.showQuickPick(
-    quick_pick_items,
+    quick_pick_items_to_show,
     {
       placeHolder: 'Select a path to place in the input field',
       matchOnDescription: true

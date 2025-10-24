@@ -45,10 +45,11 @@
     text-decoration: none;
     background: none;
     border: none;
-    padding: 0;
+    border-radius: var(--border-radius-5px);
+    padding-left: var(--padding-5px);
 
-    > span:first-child:hover {
-      text-decoration: underline;
+    &:hover {
+      background-color: var(--vscode-toolbar-hoverBackground);
     }
 
     &__icon-wrapper {
@@ -59,10 +60,6 @@
       width: var(--size);
       height: var(--size);
       color: var(--vscode-icon-foreground);
-    }
-
-    &:hover .header__settings__icon-wrapper {
-      animation: rotate 4s linear infinite;
     }
   }
 }
@@ -167,14 +164,5 @@
     text-align: right;
     user-select: text;
     color: var(--vscode-descriptionForeground);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }

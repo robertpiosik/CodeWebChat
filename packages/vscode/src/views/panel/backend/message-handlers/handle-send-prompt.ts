@@ -229,8 +229,8 @@ export const handle_send_prompt = async (params: {
     command: 'SHOW_CHAT_INITIALIZED',
     title:
       resolved_preset_names.length > 1
-        ? 'Chats have been initialized in the connected browser.'
-        : 'Chat has been initialized in the connected browser.'
+        ? 'Chats have been initialized in the connected browser'
+        : 'Chat has been initialized in the connected browser'
   })
 }
 

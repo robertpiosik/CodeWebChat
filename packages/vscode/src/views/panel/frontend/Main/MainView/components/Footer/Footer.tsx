@@ -1,0 +1,136 @@
+import { useState, useEffect } from 'react'
+import cn from 'classnames'
+import { Icon } from '@ui/components/editor/common/Icon'
+import {
+  HOME_VIEW_TYPES,
+  HomeViewType
+} from '@/views/panel/types/home-view-type'
+import styles from './Footer.module.scss'
+
+type Props = {
+  home_view_type: HomeViewType
+  on_quick_action_click: (command: string) => void
+  on_undo_click: () => void
+  can_undo: boolean
+  on_commit_click: () => void
+  has_changes_to_commit: boolean
+  commit_button_enabling_trigger_count: number
+}
+
+export const Footer: React.FC<Props> = (props) => {
+  const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
+    useState(false)
+  const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
+    useState(false)
+  const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
+    useState(false)
+
+  useEffect(() => {
+    set_is_commit_disabled_temporarily(false)
+  }, [props.commit_button_enabling_trigger_count])
+
+  useEffect(() => {
+    // Timeout prevents jitter of non disabled state caused by order of updates.
+    setTimeout(() => {
+      set_is_apply_disabled_temporarily(false)
+    }, 500)
+  }, [props.can_undo])
+
+  const handle_apply_click = () => {
+    set_is_apply_disabled_temporarily(true)
+    props.on_quick_action_click('codeWebChat.applyChatResponse')
+
+    setTimeout(() => set_is_apply_disabled_temporarily(false), 10000)
+  }
+
+  const handle_commit_click = () => {
+    if (!props.has_changes_to_commit) return
+
+    set_is_commit_disabled_temporarily(true)
+    props.on_commit_click()
+
+    setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
+  }
+
+  return (
+    <>
+      <div className={styles.footer}>
+        <a
+          className={cn(
+            styles.footer__button,
+            styles['footer__button--buy-me-a-coffee']
+          )}
+          href="https://buymeacoffee.com/robertpiosik"
+          title="Support author"
+          onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
+          onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
+        >
+          <Icon variant="BUY_ME_A_COFFEE_LOGO" />
+        </a>
+        <div className={styles.footer__right}>
+          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+            <button
+              className={cn(
+                styles.footer__button,
+                styles['footer__button--outlined']
+              )}
+              onClick={handle_apply_click}
+              title={'Integrate copied chat response or a single code block'}
+              disabled={is_apply_disabled_temporarily}
+            >
+              Apply
+            </button>
+          )}
+          <button
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--outlined']
+            )}
+            onClick={props.on_undo_click}
+            title={
+              'Restore saved state of the codebase after chat/API response integration'
+            }
+            disabled={!props.can_undo}
+          >
+            Undo
+          </button>
+          <button
+            className={cn(
+              styles.footer__button,
+              styles['footer__button--outlined']
+            )}
+            onClick={handle_commit_click}
+            title={
+              props.has_changes_to_commit && !is_commit_disabled_temporarily
+                ? 'Generate a commit message of staged changes and commit'
+                : 'No changes to commit'
+            }
+            disabled={
+              !props.has_changes_to_commit || is_commit_disabled_temporarily
+            }
+          >
+            Commit changes
+          </button>
+        </div>
+      </div>
+
+      {is_buy_me_coffee_hovered &&
+        Array.from({ length: 5 }).map((_, i) => (
+          <span
+            key={i}
+            className={styles.footer__heart}
+            style={
+              {
+                left: `${18 + (Math.random() - 0.5) * 20}px`,
+                animationDelay: `${i == 0 ? 0 : (i + Math.random()) / 3}s`,
+                animationDuration: `${2 - Math.random()}s`,
+                fontSize: `${10 + Math.random() * 8}px`
+              } as React.CSSProperties
+            }
+          >
+            ❤️
+          </span>
+        ))}
+    </>
+  )
+}
