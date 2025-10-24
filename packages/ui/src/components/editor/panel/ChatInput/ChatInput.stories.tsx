@@ -21,7 +21,7 @@ export const Empty = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_search_click={() => console.log('Search clicked')}
-    on_submit_with_control={() => {}}
+    on_submit_with_control={() => console.log('Submitted with control')}
     on_curly_braces_click={() => {}}
   />
 )
@@ -42,7 +42,7 @@ export const WithText = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_search_click={() => console.log('Search clicked')}
-    on_submit_with_control={() => {}}
+    on_submit_with_control={() => console.log('Submitted with control')}
     on_curly_braces_click={() => {}}
   />
 )
@@ -63,7 +63,7 @@ export const LongText = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     on_search_click={() => console.log('Search clicked')}
-    on_submit_with_control={() => {}}
+    on_submit_with_control={() => console.log('Submitted with control')}
     on_curly_braces_click={() => {}}
   />
 )
@@ -84,7 +84,7 @@ export const WithPlaceholderSavedContext = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
-    on_submit_with_control={() => {}}
+    on_submit_with_control={() => console.log('Submitted with control')}
     on_curly_braces_click={() => {}}
   />
 )
@@ -105,7 +105,7 @@ export const WithPlaceholderSelection = () => (
     on_at_sign_click={() => console.log('@ clicked')}
     on_hash_sign_click={() => console.log('# clicked')}
     is_web_mode={false}
-    on_submit_with_control={() => {}}
+    on_submit_with_control={() => console.log('Submitted with control')}
     on_curly_braces_click={() => {}}
   />
 )
@@ -128,7 +128,7 @@ export const WithEditFormatSelector = () => {
       on_at_sign_click={() => console.log('@ clicked')}
       on_hash_sign_click={() => console.log('# clicked')}
       on_search_click={() => console.log('Search clicked')}
-      on_submit_with_control={() => {}}
+      on_submit_with_control={() => console.log('Submitted with control')}
       on_curly_braces_click={() => {}}
       show_edit_format_selector={true}
       edit_format={edit_format}

@@ -6,6 +6,7 @@ import { Home } from './Home/Home'
 
 type NavItem =
   | 'general'
+  | 'presets'
   | 'model-providers'
   | 'code-completions'
   | 'edit-context'
@@ -27,7 +28,8 @@ export const Settings = () => {
       settings_hook.edit_context_configs !== undefined &&
       settings_hook.intelligent_update_configs !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
-      settings_hook.context_size_warning_threshold !== undefined
+      settings_hook.context_size_warning_threshold !== undefined &&
+      settings_hook.gemini_user_id !== undefined
     )
   }, [settings_hook])
 
@@ -56,6 +58,7 @@ export const Settings = () => {
         settings_hook.context_size_warning_threshold!
       }
       commit_message_instructions={settings_hook.commit_message_instructions!}
+      gemini_user_id={settings_hook.gemini_user_id!}
       set_providers={settings_hook.set_providers}
       set_code_completions_configs={settings_hook.set_code_completions_configs}
       set_commit_messages_configs={settings_hook.set_commit_messages_configs}
@@ -69,6 +72,7 @@ export const Settings = () => {
       on_commit_instructions_change={
         settings_hook.handle_commit_instructions_change
       }
+      on_gemini_user_id_change={settings_hook.handle_gemini_user_id_change}
       on_open_editor_settings={settings_hook.handle_open_editor_settings}
       on_reorder_providers={settings_hook.handle_reorder_providers}
       on_add_provider={settings_hook.handle_add_provider}

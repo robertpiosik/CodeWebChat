@@ -176,6 +176,15 @@ export interface UpdateContextSizeWarningThresholdMessage {
   threshold: number
 }
 
+export interface GetGeminiUserIdMessage {
+  command: 'GET_GEMINI_USER_ID'
+}
+
+export interface UpdateGeminiUserIdMessage {
+  command: 'UPDATE_GEMINI_USER_ID'
+  geminiUserId: number | null
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -211,6 +220,8 @@ export type FrontendMessage =
   | SettingsUiReadyMessage
   | GetContextSizeWarningThresholdMessage
   | UpdateContextSizeWarningThresholdMessage
+  | GetGeminiUserIdMessage
+  | UpdateGeminiUserIdMessage
   | OpenEditorSettingsMessage
 
 // === FROM BACKEND TO FRONTEND ===
@@ -246,6 +257,11 @@ export interface ContextSizeWarningThresholdMessage {
   threshold: number
 }
 
+export interface GeminiUserIdMessage {
+  command: 'GEMINI_USER_ID'
+  geminiUserId: number | null
+}
+
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
@@ -259,4 +275,5 @@ export type BackendMessage =
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
   | ContextSizeWarningThresholdMessage
+  | GeminiUserIdMessage
   | ShowSectionMessage

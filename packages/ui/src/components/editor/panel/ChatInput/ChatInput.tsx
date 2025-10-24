@@ -1,10 +1,11 @@
-import { useRef, useEffect, useMemo } from 'react'
+import { useRef, useEffect, useMemo, useState } from 'react'
 import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import { Icon } from '../../common/Icon'
 import { get_highlighted_text } from './utils/get-highlighted-text'
 import { use_handlers } from './hooks/use-handlers'
+import { use_dropdown } from './hooks/use-dropdown'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff'
 
@@ -40,7 +41,13 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   const textarea_ref = useRef<HTMLTextAreaElement>(null)
   const highlight_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
-
+  const {
+    is_dropdown_open,
+    toggle_dropdown,
+    dropdown_ref,
+    handle_copy_click,
+    handle_select_click
+  } = use_dropdown(props)
   const {
     handle_select,
     handle_input_change,
@@ -48,6 +55,12 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     handle_key_down,
     is_history_enabled
   } = use_handlers(props)
+
+  const is_mac = useMemo(
+    () => navigator.platform.toUpperCase().indexOf('MAC') >= 0,
+    []
+  )
+  const mod_key = is_mac ? 'cmd' : 'ctrl'
 
   useEffect(() => {
     if (textarea_ref.current) {
@@ -238,7 +251,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                         ]]: props.edit_format == format
                       }
                     )}
-                    title={props.edit_format_instructions?.[format]}
+                    title={`Attached edit format instructions: ${props.edit_format_instructions?.[format]}`}
                     onClick={() => props.on_edit_format_change?.(format)}
                     data-text={format}
                   >
@@ -248,35 +261,86 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               </div>
             )}
 
-            {(!props.is_web_mode ||
-              (props.is_web_mode && props.is_connected)) && (
-              <>
+            <div className={styles['footer__right__submit']} ref={dropdown_ref}>
+              {(!props.is_web_mode ||
+                (props.is_web_mode && props.is_connected)) && (
+                <>
+                  <button
+                    className={cn(
+                      styles['footer__right__submit__button'],
+                      styles['footer__right__submit__button--submit'],
+                      'codicon',
+                      'codicon-send'
+                    )}
+                    onClick={handle_submit}
+                    title={props.use_last_choice_button_title}
+                  />
+                  <button
+                    className={cn(
+                      styles['footer__right__submit__button'],
+                      styles['footer__right__submit__button--chevron'],
+                      'codicon',
+                      'codicon-chevron-down'
+                    )}
+                    onClick={toggle_dropdown}
+                    title="More actions"
+                  />
+                  {is_dropdown_open && (
+                    <div className={styles['footer__right__submit__dropdown']}>
+                      <div
+                        className={
+                          styles['footer__right__submit__dropdown__item']
+                        }
+                        onClick={handle_select_click}
+                      >
+                        Select...
+                        <span
+                          className={
+                            styles[
+                              'footer__right__submit__dropdown__item__shortcut'
+                            ]
+                          }
+                        >
+                          {mod_key}+{is_mac ? 'return' : 'enter'}
+                        </span>
+                      </div>
+                      <div
+                        className={
+                          styles['footer__right__submit__dropdown__item']
+                        }
+                        onClick={handle_copy_click}
+                      >
+                        Copy
+                        <span
+                          className={
+                            styles[
+                              'footer__right__submit__dropdown__item__shortcut'
+                            ]
+                          }
+                        >
+                          {mod_key}+{is_mac ? 'option' : 'alt'}+c
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {props.is_web_mode && !props.is_connected && (
                 <button
                   className={cn(
-                    styles.footer__right__button,
+                    styles['footer__right__submit__button'],
                     'codicon',
-                    'codicon-send'
+                    'codicon-copy'
                   )}
-                  onClick={handle_submit}
-                  title={props.use_last_choice_button_title}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    props.on_copy()
+                  }}
+                  title="Copy to clipboard"
                 />
-              </>
-            )}
-
-            {props.is_web_mode && !props.is_connected && (
-              <button
-                className={cn(
-                  styles.footer__right__button,
-                  'codicon',
-                  'codicon-copy'
-                )}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  props.on_copy()
-                }}
-                title="Copy to clipboard"
-              />
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -110,7 +110,7 @@ export const dictionary = {
     NO_MODELS_FOUND_MANUAL_ENTRY: (provider_name: string) =>
       `No models found for ${provider_name}. You can enter model name manually.`,
     NO_RESULTS_FOR_SEARCH_SHOWING_ALL: (search_value: string) =>
-      `No results for "${search_value}" in the selected context. Showing all items.`,
+      `No results for "${search_value}" in the selected context.`,
     NO_MODEL_PROVIDERS_CONFIGURED:
       'No model providers configured. Please add a model provider first on the "Model Providers" page.'
   },

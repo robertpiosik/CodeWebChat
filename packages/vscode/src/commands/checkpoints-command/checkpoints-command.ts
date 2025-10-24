@@ -227,15 +227,17 @@ export const checkpoints_command = (
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
-                await refresh_items()
-                const active_item = quick_pick.items.find(
-                  (i) =>
-                    (i as any).checkpoint?.timestamp ===
-                    item.checkpoint?.timestamp
-                )
-                if (active_item) {
-                  quick_pick.activeItems = [active_item]
-                }
+              }
+            }
+            await refresh_items()
+            if (new_description !== undefined) {
+              const active_item = quick_pick.items.find(
+                (i) =>
+                  (i as any).checkpoint?.timestamp ===
+                  item.checkpoint?.timestamp
+              )
+              if (active_item) {
+                quick_pick.activeItems = [active_item]
               }
             }
             quick_pick.show()
@@ -245,9 +247,9 @@ export const checkpoints_command = (
           if (e.button.tooltip == 'Delete') {
             const deleted_checkpoint = item.checkpoint
             const real_index_in_state = checkpoints.findIndex(
-              (c) => c.timestamp === deleted_checkpoint.timestamp
+              (c) => c.timestamp == deleted_checkpoint.timestamp
             )
-            if (real_index_in_state === -1) return
+            if (real_index_in_state == -1) return
 
             const original_checkpoint_from_state =
               checkpoints[real_index_in_state]
@@ -268,11 +270,11 @@ export const checkpoints_command = (
               `Checkpoint from ${dayjs(
                 deleted_checkpoint.timestamp
               ).fromNow()} deleted.`,
-              'Revert'
+              'Undo'
             )
             is_showing_dialog = false
 
-            if (choice === 'Revert') {
+            if (choice == 'Undo') {
               // Restore to state and UI
               checkpoints.splice(
                 real_index_in_state,

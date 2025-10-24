@@ -112,7 +112,6 @@
   padding: var(--padding-6px) var(--padding-10px) var(--padding-6px)
     var(--padding-6px);
   justify-content: space-between;
-  overflow: hidden;
 
   > div {
     flex-shrink: 0;
@@ -187,35 +186,85 @@
         }
       }
     }
-    &__button {
+
+    &__submit {
+      position: relative;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 3px;
-      height: 20px;
-      padding: 0 var(--padding-2px);
-      border-radius: var(--border-radius-5px);
       pointer-events: all;
 
-      > svg {
-        width: 10px;
-        fill: var(--vscode-icon-foreground);
+      &__button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        height: 20px;
+        border-radius: var(--border-radius-5px);
+        pointer-events: all;
+
+        > svg {
+          width: 10px;
+          fill: var(--vscode-icon-foreground);
+        }
+
+        &.codicon::before {
+          font-size: 16px;
+        }
+
+        &:hover:enabled {
+          background-color: var(--vscode-toolbar-hoverBackground);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: default;
+
+          &:hover {
+            background-color: none;
+          }
+        }
+
+        &--submit {
+          padding: 0 var(--padding-2px);
+        }
+
+        &--chevron.codicon::before {
+          font-size: 11px;
+        }
       }
 
-      &.codicon::before {
-        font-size: 16px;
-      }
+      &__dropdown {
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 0;
+        background-color: var(--vscode-menu-background);
+        border: 1px solid var(--vscode-menu-border);
+        border-radius: var(--border-radius-5px);
+        box-shadow: 0 2px 8px var(--vscode-widget-shadow);
+        z-index: 10;
+        padding: var(--padding-4px) 0;
+        width: max-content;
+        text-align: left;
 
-      &:hover:enabled {
-        background-color: var(--vscode-toolbar-hoverBackground);
-      }
+        &__item {
+          display: flex;
+          justify-content: space-between;
+          gap: var(--padding-12px);
+          align-items: center;
+          padding: var(--padding-4px) var(--padding-8px);
+          cursor: pointer;
+          color: var(--vscode-menu-foreground);
+          white-space: nowrap;
 
-      &:disabled {
-        opacity: 0.5;
-        cursor: default;
+          &:hover {
+            background-color: var(--vscode-menu-selectionBackground);
+            color: var(--vscode-menu-selectionForeground);
+          }
 
-        &:hover {
-          background-color: none;
+          &__shortcut {
+            color: var(--vscode-descriptionForeground);
+            font-size: var(--font-size-12px);
+          }
         }
       }
     }

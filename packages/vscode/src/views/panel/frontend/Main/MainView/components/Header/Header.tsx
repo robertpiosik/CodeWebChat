@@ -93,6 +93,7 @@ export const Header: React.FC<Props> = (props) => {
               on_change={props.on_web_mode_change}
               info="shift+tab"
               max_width={dropdown_max_width}
+              title="The mode influences the structure of the message"
             />
           )}
           {props.home_view_type == HOME_VIEW_TYPES.API && (
@@ -104,6 +105,7 @@ export const Header: React.FC<Props> = (props) => {
               on_change={props.on_api_mode_change}
               info="shift+tab"
               max_width={dropdown_max_width}
+              title="The mode influences the structure of the message"
             />
           )}
         </div>

@@ -27,6 +27,9 @@ export const use_settings = (vscode: any) => {
     useState<string | undefined>(undefined)
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number | undefined>(undefined)
+  const [gemini_user_id, set_gemini_user_id] = useState<
+    number | null | undefined
+  >(undefined)
 
   useEffect(() => {
     // Request initial data
@@ -37,6 +40,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
+    post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
   }, [vscode])
 
   useEffect(() => {
@@ -63,6 +67,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'CONTEXT_SIZE_WARNING_THRESHOLD':
           set_context_size_warning_threshold(message.threshold)
+          break
+        case 'GEMINI_USER_ID':
+          set_gemini_user_id(message.geminiUserId)
           break
       }
     }
@@ -174,6 +181,12 @@ export const use_settings = (vscode: any) => {
       threshold
     })
 
+  const handle_gemini_user_id_change = (geminiUserId: number | null) =>
+    post_message(vscode, {
+      command: 'UPDATE_GEMINI_USER_ID',
+      geminiUserId
+    })
+
   return {
     providers,
     set_providers,
@@ -187,6 +200,7 @@ export const use_settings = (vscode: any) => {
     set_intelligent_update_configs,
     commit_message_instructions,
     context_size_warning_threshold,
+    gemini_user_id,
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
@@ -200,6 +214,7 @@ export const use_settings = (vscode: any) => {
     handle_unset_default_config,
     handle_commit_instructions_change,
     handle_open_editor_settings,
-    handle_context_size_warning_threshold_change
+    handle_context_size_warning_threshold_change,
+    handle_gemini_user_id_change
   }
 }
