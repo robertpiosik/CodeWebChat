@@ -14,7 +14,7 @@ export const Default = () => {
 
   return visible ? (
     <ChatInitializedModal
-      title="Chat has been initialized in the connected browser."
+      title="Chat has been initialized in the connected browser"
       duration={3000}
       on_close={handle_close}
     />

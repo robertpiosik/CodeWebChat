@@ -7,6 +7,7 @@ import { ApiMode, WebMode } from '@shared/types/modes'
 
 export const use_cycle_mode = (params: {
   home_view_type: HomeViewType
+  on_home_view_type_change: (view_type: HomeViewType) => void
   web_mode: WebMode
   on_web_mode_change: (mode: WebMode) => void
   api_mode: ApiMode
@@ -35,6 +36,13 @@ export const use_cycle_mode = (params: {
             : (current_index + 1) % params.api_modes.length
           params.on_api_mode_change(params.api_modes[new_index])
         }
+      } else if (event.shiftKey && event.key == 'Escape') {
+        event.preventDefault()
+        if (params.home_view_type == HOME_VIEW_TYPES.WEB) {
+          params.on_home_view_type_change(HOME_VIEW_TYPES.API)
+        } else {
+          params.on_home_view_type_change(HOME_VIEW_TYPES.WEB)
+        }
       }
     }
 
@@ -44,6 +52,7 @@ export const use_cycle_mode = (params: {
     }
   }, [
     params.home_view_type,
+    params.on_home_view_type_change,
     params.web_mode,
     params.api_mode,
     params.web_modes,

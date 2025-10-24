@@ -61,10 +61,6 @@
       height: var(--size);
       color: var(--vscode-icon-foreground);
     }
-
-    &:hover .header__settings__icon-wrapper {
-      animation: rotate 4s linear infinite;
-    }
   }
 }
 
@@ -168,14 +164,5 @@
     text-align: right;
     user-select: text;
     color: var(--vscode-descriptionForeground);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
