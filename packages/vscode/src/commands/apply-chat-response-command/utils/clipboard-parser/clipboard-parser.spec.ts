@@ -427,6 +427,21 @@ describe('clipboard-parser', () => {
         load_test_case_file(test_case, 'file-1.txt')
       )
     })
+
+    it('parses file path when it is included immediately after the opening code block backticks', () => {
+      const test_case = 'markdown-backticks-file-path-in-one-line'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0].file_path).toBe('src/index.js')
+      expect(result[0].content).toBe(
+        load_test_case_file(test_case, 'file-1.txt')
+      )
+    })
   })
 
   describe('parse_file_content_only', () => {

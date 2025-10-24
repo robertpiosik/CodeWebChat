@@ -216,6 +216,21 @@ export const parse_multiple_files = (params: {
               ) {
                 last_seen_file_path_comment = potential_path
               }
+            } else {
+              let extracted_filename: string | null = null
+              const lang_and_path = after_backticks.split(/\s+/)
+              if (lang_and_path.length > 1) {
+                const potential_path_part = lang_and_path.slice(1).join(' ')
+                extracted_filename =
+                  extract_path_from_line_of_code(potential_path_part)
+              }
+              if (!extracted_filename) {
+                extracted_filename =
+                  extract_path_from_line_of_code(after_backticks)
+              }
+              if (extracted_filename) {
+                last_seen_file_path_comment = extracted_filename
+              }
             }
           }
         }
