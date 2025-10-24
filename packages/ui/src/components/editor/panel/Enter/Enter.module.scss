@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--padding-4px);
-  padding: var(--padding-7px) var(--padding-12px) var(--padding-7px)
+  padding: var(--padding-6px) var(--padding-12px) var(--padding-6px)
     var(--padding-8px);
   background-color: var(--vscode-button-background);
   color: var(--vscode-button-foreground);
@@ -17,7 +17,6 @@
     display: flex;
     align-items: flex-start;
     flex-direction: column;
-    gap: var(--padding-2px);
     text-align: left;
   }
 

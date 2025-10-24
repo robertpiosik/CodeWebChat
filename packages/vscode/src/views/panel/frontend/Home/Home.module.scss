@@ -45,10 +45,11 @@
     text-decoration: none;
     background: none;
     border: none;
-    padding: 0;
+    border-radius: var(--border-radius-5px);
+    padding-left: var(--padding-5px);
 
-    > span:first-child:hover {
-      text-decoration: underline;
+    &:hover {
+      background-color: var(--vscode-toolbar-hoverBackground);
     }
 
     &__icon-wrapper {

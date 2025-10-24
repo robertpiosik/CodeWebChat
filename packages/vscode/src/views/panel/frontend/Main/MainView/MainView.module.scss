@@ -80,9 +80,13 @@
       background: none;
       border: none;
       padding: 0;
+      border-radius: var(--border-radius-5px);
 
-      &:hover > span {
-        animation: rotate 4s linear infinite;
+      &:hover {
+        background-color: var(--vscode-toolbar-hoverBackground);
+        > span {
+          animation: rotate 4s linear infinite;
+        }
       }
     }
   }
