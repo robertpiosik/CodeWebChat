@@ -238,7 +238,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                         ]]: props.edit_format == format
                       }
                     )}
-                    title={props.edit_format_instructions?.[format]}
+                    title={`Edit format instructions: ${props.edit_format_instructions?.[format]}`}
                     onClick={() => props.on_edit_format_change?.(format)}
                     data-text={format}
                   >
