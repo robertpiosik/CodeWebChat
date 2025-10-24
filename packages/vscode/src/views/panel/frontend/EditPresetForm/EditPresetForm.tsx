@@ -7,6 +7,7 @@ import { Field } from '@ui/components/editor/panel/Field'
 import { Slider } from '@ui/components/editor/panel/Slider'
 import { Button } from '@ui/components/editor/panel/Button'
 import { Checkbox } from '@ui/components/editor/common/Checkbox'
+import { Input } from '@ui/components/editor/common/Input'
 import { BackendMessage } from '@/views/panel/types/messages'
 
 type Props = {
@@ -237,23 +238,18 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
       {supports_user_provided_model && (
         <Field label="Model" html_for="custom-model">
-          <input
+          <Input
             id="custom-model"
             type="text"
             value={model || ''}
-            onChange={(e) => set_model(e.target.value)}
+            onChange={set_model}
             placeholder="Enter model name"
           />
         </Field>
       )}
 
       <Field label="Name" html_for="name">
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => set_name(e.target.value)}
-        />
+        <Input id="name" type="text" value={name} onChange={set_name} />
       </Field>
 
       {supports_port && (
@@ -269,17 +265,17 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             )
           }
         >
-          <input
+          <Input
             id="port"
             type="text"
-            value={port}
-            onChange={(e) => set_port(parseInt(e.target.value))}
+            value={String(port ?? '')}
+            onChange={(value) => {
+              const num = parseInt(value, 10)
+              set_port(isNaN(num) ? undefined : num)
+            }}
             placeholder="e.g. 3000"
-            onKeyDown={
-              (e) =>
-                !/[0-9]/.test(e.key) &&
-                e.key != 'Backspace' &&
-                e.preventDefault() // This way we don't see arrows up/down
+            onKeyDown={(e) =>
+              !/[0-9]/.test(e.key) && e.key != 'Backspace' && e.preventDefault()
             }
           />
         </Field>
@@ -352,12 +348,12 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
       {supports_thinking_budget && (
         <Field label="Thinking Budget" html_for="thinking-budget">
-          <input
+          <Input
             id="thinking-budget"
             type="text"
-            value={thinking_budget ?? ''}
-            onChange={(e) => {
-              const num = parseInt(e.target.value, 10)
+            value={String(thinking_budget ?? '')}
+            onChange={(value) => {
+              const num = parseInt(value, 10)
               set_thinking_budget(isNaN(num) ? undefined : num)
             }}
             placeholder="e.g. 8000"

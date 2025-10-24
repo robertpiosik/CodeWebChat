@@ -222,6 +222,25 @@ export class SettingsProvider {
           case 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD':
             await handle_update_context_size_warning_threshold(this, message)
             break
+          case 'GET_GEMINI_USER_ID': {
+            const config = vscode.workspace.getConfiguration('codeWebChat')
+            const geminiUserId =
+              config.get<number | null>('geminiUserId') ?? null
+            this.postMessage({
+              command: 'GEMINI_USER_ID',
+              geminiUserId
+            })
+            break
+          }
+          case 'UPDATE_GEMINI_USER_ID':
+            await vscode.workspace
+              .getConfiguration('codeWebChat')
+              .update(
+                'geminiUserId',
+                message.geminiUserId,
+                vscode.ConfigurationTarget.Global
+              )
+            break
           case 'OPEN_EDITOR_SETTINGS':
             await vscode.commands.executeCommand(
               'workbench.action.openSettings'
@@ -242,6 +261,13 @@ export class SettingsProvider {
           void handle_get_edit_context_configurations(this)
           void handle_get_intelligent_update_configurations(this)
           void handle_get_context_size_warning_threshold(this)
+          {
+            const config = vscode.workspace.getConfiguration('codeWebChat')
+            this.postMessage({
+              command: 'GEMINI_USER_ID',
+              geminiUserId: config.get<number | null>('geminiUserId') ?? null
+            })
+          }
         }
       })
     )
