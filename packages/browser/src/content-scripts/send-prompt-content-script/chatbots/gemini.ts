@@ -26,7 +26,7 @@ export const gemini: Chatbot = {
     if (!model) return
     if (model && model in CHATBOTS['Gemini'].models) {
       const model_selector_trigger = document.querySelector(
-        'bard-logo + button'
+        'bard-mode-switcher button'
       ) as HTMLButtonElement
       if (!model_selector_trigger) {
         report_initialization_error({
@@ -36,11 +36,17 @@ export const gemini: Chatbot = {
         })
         return
       }
+
+      const model_label = (CHATBOTS['Gemini'].models as any)[model].label
+      if (model_selector_trigger.textContent.includes(model_label)) {
+        return
+      }
+
       model_selector_trigger.click()
       await new Promise((r) => requestAnimationFrame(r))
       const menu_content =
         document.querySelector('.mat-mdc-menu-content') ||
-        document.querySelector('mat-action-list')
+        document.querySelector('mat-bottom-sheet-container')
       if (!menu_content) {
         report_initialization_error({
           function_name: 'set_model',
@@ -56,11 +62,7 @@ export const gemini: Chatbot = {
         const name_element = option.querySelector(
           '.title-and-description > span:last-child'
         )
-        if (
-          name_element &&
-          name_element.textContent?.trim() ==
-            (CHATBOTS['Gemini'].models as any)[model].label
-        ) {
+        if (name_element && name_element.textContent?.trim() == model_label) {
           ;(option as HTMLElement).click()
           await new Promise((r) => requestAnimationFrame(r))
           break

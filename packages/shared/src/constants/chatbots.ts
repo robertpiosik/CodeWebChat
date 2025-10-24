@@ -310,7 +310,9 @@ export const CHATBOTS = {
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
     default_system_instructions: '',
-    supported_options: {},
+    supported_options: {
+      search: 'Search'
+    },
     default_top_p: 0,
     models: {}
   },

@@ -11,6 +11,43 @@ import {
 export const perplexity: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => setTimeout(resolve, 500))
+    ;(document.querySelector('[contenteditable="true"]') as any)?.click()
+  },
+  set_options: async (options?: string[]) => {
+    if (!options) return
+
+    if (options.includes('search')) {
+      // Enabled by default
+      return
+    }
+
+    const switcher_button = document.querySelector(
+      'button[data-testid="sources-switcher-button"]'
+    ) as HTMLButtonElement
+    if (!switcher_button) {
+      report_initialization_error({
+        function_name: 'perplexity.set_options',
+        log_message: 'Sources switcher button not found',
+        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+      })
+      return
+    }
+
+    switcher_button.click()
+    await new Promise((r) => requestAnimationFrame(r))
+
+    const web_toggle = document.querySelector(
+      'div[data-testid="source-toggle-web"]'
+    ) as HTMLElement
+    if (web_toggle) {
+      web_toggle.click()
+    } else {
+      report_initialization_error({
+        function_name: 'perplexity.set_options',
+        log_message: 'Web toggle button not found',
+        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+      })
+    }
   },
   enter_message_and_send: async (params) => {
     const input_element = document.querySelector(
