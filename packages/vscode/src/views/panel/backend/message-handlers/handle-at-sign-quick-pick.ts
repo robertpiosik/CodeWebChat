@@ -60,7 +60,9 @@ const at_sign_quick_pick = async (params: {
       return filename_lower.includes(search_lower)
     })
 
-    if (filtered_items.length > 0) {
+    if (filtered_items.length == 1) {
+      return `\`${filtered_items[0].fullPath}\` `
+    } else if (filtered_items.length > 1) {
       quick_pick_items_to_show = filtered_items
     } else {
       vscode.window.showWarningMessage(
