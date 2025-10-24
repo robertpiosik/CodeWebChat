@@ -27,5 +27,5 @@ export const get_checkpoints = async (
     )
   }
 
-  return valid_checkpoints.sort((a, b) => b.timestamp - a.timestamp)
+  return valid_checkpoints
 }
