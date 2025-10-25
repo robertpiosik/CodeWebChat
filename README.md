@@ -22,7 +22,7 @@ Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf.
 Code Web Chat only starts new conversations. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots terms of use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be rejected.
 
 > [!NOTE]
-> The _Apply response_ button you find under all responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button with a local WebSockets message to the editor.
+> The _Apply response_ button you find under all responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
 
 🤓 **Control over agency**
 
