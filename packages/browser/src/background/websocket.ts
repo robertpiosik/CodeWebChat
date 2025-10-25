@@ -6,13 +6,9 @@ import browser from 'webextension-polyfill'
 import type { Website } from '@ui/components/browser/SavedWebsites'
 import localforage from 'localforage'
 
-// Store WebSocket instance and connection state
 let websocket: WebSocket | null = null
 let is_reconnecting = false
 
-/**
- * Check if the server is healthy before attempting connection
- */
 export const check_server_health = async (): Promise<boolean> => {
   try {
     const response = await fetch(`http://localhost:${DEFAULT_PORT}/health`)
@@ -22,11 +18,7 @@ export const check_server_health = async (): Promise<boolean> => {
   }
 }
 
-/**
- * Connect to WebSocket server with reconnection logic
- */
 export const connect_websocket = async (): Promise<void> => {
-  // Prevent concurrent reconnection attempts
   if (is_reconnecting || websocket?.readyState === WebSocket.OPEN) {
     return
   }
@@ -34,7 +26,6 @@ export const connect_websocket = async (): Promise<void> => {
   is_reconnecting = true
 
   try {
-    // Check server health before attempting WebSocket connection
     const is_healthy = await check_server_health()
     if (!is_healthy) {
       console.debug('Server health check failed, retrying in 5 seconds...')
@@ -45,7 +36,6 @@ export const connect_websocket = async (): Promise<void> => {
       return
     }
 
-    // Get manifest data for version
     const manifest = browser.runtime.getManifest()
     const version = manifest.version
 
@@ -57,7 +47,6 @@ export const connect_websocket = async (): Promise<void> => {
       console.log('Connected with the VS Code!')
       is_reconnecting = false
 
-      // Send any saved websites immediately after connection is established
       send_current_saved_websites()
     }
 
@@ -84,9 +73,6 @@ export const connect_websocket = async (): Promise<void> => {
   }
 }
 
-/**
- * Send saved websites to the WebSocket server
- */
 export const send_saved_websites = (websites: Website[]): boolean => {
   if (websocket?.readyState == WebSocket.OPEN) {
     const websites_to_send = websites.map((site) => ({
@@ -108,9 +94,6 @@ export const send_saved_websites = (websites: Website[]): boolean => {
   return false
 }
 
-/**
- * Send a generic message to the WebSocket server
- */
 export const send_message_to_server = (message: any): boolean => {
   if (websocket?.readyState == WebSocket.OPEN) {
     console.debug('Sending message to server:', message)
@@ -121,12 +104,8 @@ export const send_message_to_server = (message: any): boolean => {
   return false
 }
 
-/**
- * Retrieve and send current saved websites
- */
 const send_current_saved_websites = async (): Promise<void> => {
   try {
-    // Create a localforage instance with the same config as in use-websites-store.ts
     const websites_store = localforage.createInstance({
       name: 'gemini-coder-connector',
       storeName: 'websites'

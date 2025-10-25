@@ -63,7 +63,6 @@ const process_next_chat = async () => {
 
   const current_queue_item = chat_queue[0]
 
-  // Clear any existing timeout
   if (current_queue_item.timeout_id) {
     clearTimeout(current_queue_item.timeout_id)
     current_queue_item.timeout_id = undefined
@@ -72,11 +71,9 @@ const process_next_chat = async () => {
   if (
     current_queue_item.current_index >= current_queue_item.message.chats.length
   ) {
-    // Current queue item is complete, remove it and process the next one
     chat_queue.shift()
 
     if (chat_queue.length > 0) {
-      // Start processing the next queue item
       chat_queue[0].current_index = 0
       await process_next_chat()
     } else {
@@ -88,10 +85,8 @@ const process_next_chat = async () => {
   const current_chat =
     current_queue_item.message.chats[current_queue_item.current_index]
 
-  // Generate a unique 3-character alphanumeric batch ID
   const batch_id = await generate_alphanumeric_id('chat-init')
 
-  // Store only the relevant information - the text and the current chat configuration
   await browser.storage.local.set({
     [`chat-init:${batch_id}`]: {
       text: current_queue_item.message.text,
@@ -118,14 +113,12 @@ const process_next_chat = async () => {
       active: true
     })
   } else {
-    // Open the tab with the current chat URL
     browser.tabs.create({
       url: `${current_chat.url}#cwc-${batch_id}`,
       active: true
     })
   }
 
-  // Increment the current index for the next chat
   current_queue_item.current_index++
 
   // Set a timeout to automatically proceed if no confirmation is received
@@ -150,14 +143,12 @@ const handle_initialize_chats_message = async (
   message: InitializeChatsMessage
 ) => {
   if (message.chats && message.chats.length > 0) {
-    // Add the new request to the queue
     chat_queue.push({
       message,
       remaining_chats: message.chats.length,
       current_index: 0
     })
 
-    // Start processing if not already doing so
     await start_processing()
   }
 }
@@ -191,9 +182,7 @@ const handle_initialize_chat_message = async (
 }
 
 const handle_chat_initialized = async () => {
-  // Process the next chat in the queue if one exists
   if (chat_queue.length > 0) {
-    // Clear the timeout since we received confirmation
     if (chat_queue[0].timeout_id) {
       clearTimeout(chat_queue[0].timeout_id)
       chat_queue[0].timeout_id = undefined
@@ -209,19 +198,37 @@ const handle_get_tab_data = async (
 ) => {
   try {
     const tabs = await browser.tabs.query({ active: true, currentWindow: true })
-    const url = tabs[0]?.url
+    const tab = tabs[0]
     const favicon_url = tabs[0]?.favIconUrl
 
-    if (!url || !url.startsWith('http')) {
+    if (!tab?.url || !tab.url.startsWith('http')) {
       throw new Error('URL is not valid')
     }
 
     let html = ''
-    const response = await fetch(url)
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
+
+    // (Firefox uses browserAction, Chrome uses action)
+    const is_firefox = typeof browser.browserAction !== 'undefined'
+
+    if (is_firefox && tab.id) {
+      // Firefox: Use the older tabs.executeScript API (MV2 style)
+      const results = await browser.tabs.executeScript(tab.id, {
+        code: 'document.documentElement.outerHTML'
+      })
+
+      if (!results || results.length === 0 || !results[0]) {
+        throw new Error('Failed to get page content')
+      }
+
+      html = results[0] as string
+    } else {
+      // Chrome: Use fetch
+      const response = await fetch(tab.url)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      html = await response.text()
     }
-    html = await response.text()
 
     let favicon_base64: string | undefined
     if (favicon_url) {
@@ -264,7 +271,7 @@ export const setup_message_listeners = () => {
           return true
         }
       }
-      return false // For messages that don't need a response
+      return false
     }
   )
 }
