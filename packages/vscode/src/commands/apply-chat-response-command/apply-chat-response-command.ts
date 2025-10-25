@@ -800,9 +800,6 @@ export const apply_chat_response_command = (
               }
             }
 
-            vscode.window.showWarningMessage(
-              dictionary.warning_message.NO_VALID_CODE_BLOCKS_IN_CLIPBOARD
-            )
             return null
           }
 
