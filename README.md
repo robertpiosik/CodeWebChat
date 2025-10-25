@@ -4,12 +4,11 @@
 
 Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf.
 
-CWC is community driven. Join our [discord server](https://discord.gg/KJySXsrSX5) and get involved!
+✅ **Initializes chatbots**—ChatGPT, Claude, Gemini, AI Studio, and 10+ more \
+✅ **Applies responses**—multi-file changes integration with easy rollback \
+✅ **Batteries included**—code completions, commit messages, and more
 
-🌐 **Initializes web chats**—ChatGPT, Claude, Gemini, AI Studio, DeepSeek, and more \
-🪄 **Applies responses**—multi-file changes integration with easy rollback \
-🔋 **Batteries included**—code completions, commit messages, and more \
-🧑‍💻 **Non-agentic approach**—zero endless and costly tool calling \
+🙌 **Community driven**—join our [discord server](https://discord.gg/KJySXsrSX5) and get involved! \
 ❤️ **Free and open-source**—released under the GPL-3.0 license
 
 <p>
@@ -18,22 +17,21 @@ CWC is community driven. Join our [discord server](https://discord.gg/KJySXsrSX5
 
 **Guiding principles**
 
-- Respect chatbot's TOS
-- Respect user privacy
-- Operate 100% locally
+- Initialize chatbot to let the user work on the solution there
+- Operate 100% locally with total user privacy
 - Stay free forever
 
-**Motivation behind non-agentic design**
+**Designed for top accuracy and speed**
 
-Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at an accepted answer from a StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning next steps.
+Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
-Because the model is only as smart as examples it has seen in its pre-training, the possible coverage of real-world coding scenarios when approached at a high level is fundamentally limited.
+Because the model is only as smart as examples it has seen in its pre-training stage, the possible coverage of real-world scenarios when approached at a high level is fundamentally limited.
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
 **The workflow**
 
-Select folders and files for context, enter prompt, pick edit format and send message via...
+Select folders and files for context, enter instructions, and send message via...
 
 - new chat—to continue in the connected browser
 - API call—to use a model provider of choice
@@ -61,7 +59,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 > [!NOTE]
 > The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
-Once the response is generated, a built-in parser extracts code blocks with suggested edits for one-click multi-file changes integration.
+Once the response is generated, CWC's built-in parser extracts code blocks with suggested edits for one-click multi-file changes integration.
 
 ## Chatbot initialization
 
