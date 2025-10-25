@@ -115,7 +115,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   const custom_handle_key_down = (
     e: React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
-    if (e.key === 'Tab' && !e.shiftKey) {
+    if (e.key == 'Tab' && !e.shiftKey) {
       const textarea = e.currentTarget
       const value = textarea.value
       const selection_start = textarea.selectionStart
@@ -310,7 +310,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                         }
                         onClick={handle_copy_click}
                       >
-                        Copy
+                        Copy prompt
                         <span
                           className={
                             styles[
@@ -330,6 +330,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                 <button
                   className={cn(
                     styles['footer__right__submit__button'],
+                    styles['footer__right__submit__button--copy'],
                     'codicon',
                     'codicon-copy'
                   )}
@@ -337,7 +338,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                     e.stopPropagation()
                     props.on_copy()
                   }}
-                  title="Copy to clipboard"
+                  title="Copy prompt"
                 />
               )}
             </div>

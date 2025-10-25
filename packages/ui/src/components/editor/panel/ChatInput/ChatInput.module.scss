@@ -231,6 +231,10 @@
         &--chevron.codicon::before {
           font-size: 11px;
         }
+
+        &--copy {
+          width: 20px;
+        }
       }
 
       &__dropdown {
@@ -258,7 +262,7 @@
 
           &:hover {
             background-color: var(--vscode-menu-selectionBackground);
-            color: var(--vscode-menu-selectionForeground);
+            color: var(--vscode-menu-selectionForeground) !important;
           }
 
           &__shortcut {
