@@ -1,8 +1,5 @@
 import browser from 'webextension-polyfill'
 
-/**
- * Clear leftover chat initialization data
- */
 export const clear_chat_init_data = async () => {
   try {
     const items = await browser.storage.local.get()

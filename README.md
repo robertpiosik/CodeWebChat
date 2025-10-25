@@ -16,14 +16,14 @@ CWC is community driven. Join our [discord server](https://discord.gg/KJySXsrSX5
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-🫡 **Guiding principles**
+**Guiding principles**
 
 - Respect chatbot's TOS
 - Respect user privacy
 - Operate 100% locally
 - Stay free forever
 
-🤔 **Motivation behind non-agentic design**
+**Motivation behind non-agentic design**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at an accepted answer from a StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning next steps.
 
@@ -31,7 +31,7 @@ Because the model is only as smart as examples it has seen in its pre-training, 
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-🤓 **The workflow**
+**The workflow**
 
 Select folders and files for context, enter prompt, pick edit format and send message via...
 

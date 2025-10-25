@@ -1,10 +1,6 @@
 import browser from 'webextension-polyfill'
 
-/**
- * Initialize the keepalive mechanism for Chromium browsers
- */
 export function setup_keep_alive() {
-  // Keep alive with alarms in chromium browsers
   if (!browser.browserAction) {
     const create_keep_alive_alarm = async () => {
       try {
