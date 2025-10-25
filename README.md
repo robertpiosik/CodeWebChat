@@ -15,13 +15,15 @@ Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf.
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
-**Guiding principles**
+## Introduction
 
-- Initialize chatbot to let the user continue there
-- Operate locally with total user privacy
-- Stay free forever
+🤔 **Is this legal?**
 
-**Zero tool calling for accuracy and speed**
+Code Web Chat only starts new conversations. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots terms of use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be rejected.
+
+> [!NOTE] > <small>_Apply response_ button you find under all responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button with a local WebSockets message to the editor.</small>
+
+🤓 **Control over agency**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
@@ -29,7 +31,7 @@ Because the model is only as smart as examples it has seen in its pre-training s
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-**Meet non-agentic workflow**
+🤝 **Meet non-agentic workflow**
 
 Select folders and files for context, enter instructions, and send message via...
 
@@ -96,9 +98,6 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 
 > [!TIP]
 > With the browser extension you can include markdown-parsed websites in context! Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_. The website will appear in the context panel immediately, ready for selection like any other folder or file in the workspace.
-
-> [!IMPORTANT]
-> Legal disclaimer: The placed _Apply response_ button is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. The extension's sole purpose of chat initialization is complete once the first message is submitted.
 
 ## API Tools
 
