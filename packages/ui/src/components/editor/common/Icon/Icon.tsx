@@ -18,6 +18,7 @@ import HashSign from '../../../../assets/icons/hash-sign.svg'
 import HuggingChat from '../../../../assets/icons/hugging-chat.svg'
 import Kimi from '../../../../assets/icons/kimi.svg'
 import Meta from '../../../../assets/icons/meta.svg'
+import Minimax from '../../../../assets/icons/minimax.svg'
 import Mistral from '../../../../assets/icons/mistral.svg'
 import OpenRouter from '../../../../assets/icons/openrouter.svg'
 import OpenWebUI from '../../../../assets/icons/open-webui.svg'
@@ -51,6 +52,7 @@ export namespace Icon {
     | 'HUGGING_CHAT'
     | 'KIMI'
     | 'META'
+    | 'MINIMAX'
     | 'MISTRAL'
     | 'OPENROUTER'
     | 'OPEN_WEBUI'
@@ -130,6 +132,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'META':
       icon = <Meta />
+      break
+    case 'MINIMAX':
+      icon = <Minimax />
       break
     case 'MISTRAL':
       icon = <Mistral />

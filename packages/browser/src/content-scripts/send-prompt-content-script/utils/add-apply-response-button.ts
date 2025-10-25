@@ -30,7 +30,7 @@ export function add_apply_response_button(params: {
   if (!chat_turn) {
     Logger.error({
       function_name: 'add_apply_response_button',
-      message: 'Chat turn container not found for footer',
+      message: 'Chat turn container not found',
       data: params.footer
     })
     return

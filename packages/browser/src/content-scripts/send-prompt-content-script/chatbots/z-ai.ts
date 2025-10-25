@@ -55,18 +55,7 @@ export const z_ai: Chatbot = {
         raw_instructions,
         edit_format,
         footer,
-        get_chat_turn: (f) => {
-          const chat_turn = f.parentElement?.querySelector('.chat-assistant')
-          if (!chat_turn) {
-            report_initialization_error({
-              function_name: 'z_ai.get_chat_turn',
-              log_message: 'Chat turn container not found for footer',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
-            })
-            return null
-          }
-          return chat_turn as HTMLElement
-        },
+        get_chat_turn: (f) => f.parentElement!.querySelector('.chat-assistant'),
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,
         perform_copy: (f) => {
           const copy_button = f.querySelector('button.copy-response-button')
