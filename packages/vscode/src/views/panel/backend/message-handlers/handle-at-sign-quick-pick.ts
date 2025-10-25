@@ -57,7 +57,16 @@ const at_sign_quick_pick = async (params: {
     const filtered_items = all_quick_pick_items.filter((item) => {
       const search_lower = params.search_value!.toLowerCase()
       const filename_lower = item.label.toLowerCase()
-      return filename_lower.includes(search_lower)
+
+      if (filename_lower.includes(search_lower)) {
+        return true
+      }
+
+      // This allows "pagetsx" to match "HomePage.tsx"
+      const filename_alphanumeric = filename_lower.replace(/[^a-z0-9]/g, '')
+      const search_alphanumeric = search_lower.replace(/[^a-z0-9]/g, '')
+
+      return filename_alphanumeric.includes(search_alphanumeric)
     })
 
     if (filtered_items.length == 1) {
