@@ -2,14 +2,13 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf.
+Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf. The best privacy, accuracy and speed.
+
+Free and open-source. Join our [discord server](https://discord.gg/KJySXsrSX5) and get involed!
 
 ✅ **Initializes chatbots**—ChatGPT, Claude, Gemini, AI Studio, and 10+ more \
 ✅ **Applies responses**—multi-file changes integration with easy rollback \
 ✅ **Batteries included**—code completions, commit messages, and more
-
-🙌 **Community driven**—join our [discord server](https://discord.gg/KJySXsrSX5) and get involved! \
-❤️ **Free and open-source**—released under the GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -24,7 +23,7 @@ Code Web Chat only starts new conversations. This idea is borrowed from [Firefox
 > [!NOTE]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button for the purpose of multi-file changes integration.
 
-🤓 **Control over agency**
+🤓 **Control over "agency"**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
