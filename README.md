@@ -17,11 +17,11 @@ Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf.
 
 **Guiding principles**
 
-- Initialize chatbot to let the user work on the solution there
-- Operate 100% locally with total user privacy
+- Initialize chatbot to let the user continue there
+- Operate locally with total user privacy
 - Stay free forever
 
-**Designed for top accuracy and speed**
+**Zero tool calling for accuracy and speed**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
@@ -29,7 +29,7 @@ Because the model is only as smart as examples it has seen in its pre-training s
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-**The workflow**
+**Meet non-agentic workflow**
 
 Select folders and files for context, enter instructions, and send message via...
 
