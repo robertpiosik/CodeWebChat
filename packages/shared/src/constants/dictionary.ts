@@ -81,6 +81,8 @@ export const dictionary = {
     TYPE_SOMETHING_TO_USE_GROUP: 'Type something to use this group.',
     GROUP_HAS_NO_SELECTED_PRESETS:
       'The chosen group has no selected presets to run.',
+    URL_OVERRIDE_DIFFERENT_DOMAIN: (preset_name: string) =>
+      `URL override for preset "${preset_name}" was discarded because it uses a different domain.`,
     CONTEXT_SIZE_WARNING: (threshold: string, percentage: number) =>
       `Context exceeds threshold of ${threshold} tokens by ${percentage}%. Unreasonably large context may degrade response quality, hurt plan's usage allowance or incur significant costs.`,
     FAILED_TO_CREATE_FILE: (file_path: string) =>

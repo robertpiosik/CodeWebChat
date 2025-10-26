@@ -297,11 +297,23 @@ export class WebSocketManager {
         }
       } else if (preset.chatbot == 'Gemini' && gemini_user_id) {
         url = `https://gemini.google.com/u/${gemini_user_id}/app`
-      } else if (chatbot.supports_custom_url_path && preset.urlPath) {
-        const base_url = new URL(chatbot.url)
-        url = `${base_url.origin}${
-          preset.urlPath.startsWith('/') ? preset.urlPath : `/${preset.urlPath}`
-        }`
+      } else if (chatbot.supports_url_override && preset.newUrl) {
+        try {
+          const original_domain = new URL(chatbot.url).hostname
+          const new_domain = new URL(preset.newUrl).hostname
+          if (original_domain == new_domain) {
+            url = preset.newUrl
+          } else {
+            url = chatbot.url
+            vscode.window.showWarningMessage(
+              dictionary.warning_message.URL_OVERRIDE_DIFFERENT_DOMAIN(
+                preset.name
+              )
+            )
+          }
+        } catch (error) {
+          url = chatbot.url
+        }
       } else {
         url = chatbot.url
       }
@@ -361,13 +373,23 @@ export class WebSocketManager {
       gemini_user_number !== null
     ) {
       url = `https://gemini.google.com/u/${gemini_user_number}/app`
-    } else if (chatbot.supports_custom_url_path && params.preset.url_path) {
-      const base_url = new URL(chatbot.url)
-      url = `${base_url.origin}${
-        params.preset.url_path.startsWith('/')
-          ? params.preset.url_path
-          : `/${params.preset.url_path}`
-      }`
+    } else if (chatbot.supports_url_override && params.preset.new_url) {
+      try {
+        const original_domain = new URL(chatbot.url).hostname
+        const new_domain = new URL(params.preset.new_url).hostname
+        if (original_domain == new_domain) {
+          url = params.preset.new_url
+        } else {
+          url = chatbot.url
+          vscode.window.showWarningMessage(
+            dictionary.warning_message.URL_OVERRIDE_DIFFERENT_DOMAIN(
+              params.preset.name
+            )
+          )
+        }
+      } catch (error) {
+        url = chatbot.url
+      }
     } else {
       url = chatbot.url
     }

@@ -14,7 +14,7 @@ export type ConfigPresetFormat = {
   systemInstructions?: string
   options?: string[]
   port?: number
-  urlPath?: string
+  newUrl?: string
   isSelected?: boolean
   isCollapsed?: boolean
 }
@@ -35,7 +35,7 @@ export function config_preset_to_ui_format(
     system_instructions: config_preset.systemInstructions,
     options: config_preset.options,
     port: config_preset.port,
-    url_path: config_preset.urlPath,
+    new_url: config_preset.newUrl,
     is_selected: config_preset.isSelected,
     is_collapsed: config_preset.isCollapsed
   }
@@ -55,7 +55,7 @@ export function ui_preset_to_config_format(preset: Preset): ConfigPresetFormat {
     systemInstructions: preset.system_instructions,
     options: preset.options,
     port: preset.port,
-    urlPath: preset.url_path,
+    newUrl: preset.new_url,
     isSelected: preset.is_selected,
     isCollapsed: preset.is_collapsed
   }

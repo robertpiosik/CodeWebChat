@@ -13,7 +13,7 @@ export type Preset = {
   system_instructions?: string
   options?: string[]
   port?: number
-  url_path?: string
+  new_url?: string
   is_selected?: boolean
   is_collapsed?: boolean
 }

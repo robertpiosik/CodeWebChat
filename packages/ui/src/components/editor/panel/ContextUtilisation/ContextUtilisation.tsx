@@ -32,9 +32,6 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     : formatted_current_size
 
   let title_text = ''
-  const context_text = is_above_threshold
-    ? `${display_current_size} tokens in context`
-    : `${display_current_size}/${formatted_threshold} tokens in context`
 
   if (!is_above_threshold) {
     const remaining_tokens =
@@ -43,9 +40,9 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
         ? props.current_context_size
         : Math.floor(props.current_context_size / 1000) * 1000)
     const formatted_remaining_tokens = format_tokens(remaining_tokens)
-    title_text = `${formatted_remaining_tokens} tokens remaining until threshold warning`
+    title_text = `${formatted_remaining_tokens} tokens remaining until threshold warning (change in settings)`
   } else {
-    title_text = `Context size (${formatted_current_size}) exceeds threshold (${formatted_threshold})`
+    title_text = `Context of size ${formatted_current_size} exceeds threshold ${formatted_threshold} by `
   }
 
   return (
@@ -59,7 +56,7 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
         />
       </div>
       <span className={styles.label} title={title_text}>
-        {context_text}
+        {display_current_size} tokens in context
       </span>
     </div>
   )

@@ -72,14 +72,11 @@ export const chatgpt: Chatbot = {
         } else {
           report_initialization_error({
             function_name: 'set_options',
-            log_message: 'Temporary chat button not found',
-            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+            log_message: 'Temporary chat button not found'
+            // Don't show alert because temporary mode doesn't work in projects (url override)
           })
         }
-      } else if (
-        option == 'think-longer' &&
-        supported_options['think-longer']
-      ) {
+      } else if (option == 'thinking' && supported_options['thinking']) {
         const plus_button = document.querySelector(
           'button[data-testid="composer-plus-btn"]'
         ) as HTMLButtonElement
@@ -87,8 +84,7 @@ export const chatgpt: Chatbot = {
           plus_button.dispatchEvent(
             new PointerEvent('pointerdown', { bubbles: true })
           )
-          await new Promise((r) => requestAnimationFrame(r))
-
+          await new Promise((resolve) => setTimeout(resolve, 500))
           const menu_items = document.querySelectorAll(
             'div[role="menuitemradio"]'
           )
