@@ -8,6 +8,7 @@ type Chatbots = {
     supports_user_provided_port: boolean
     supports_reasoning_effort: boolean
     supports_thinking_budget: boolean
+    supports_url_override: boolean
     default_system_instructions: string
     default_top_p: number
     supported_options: {
@@ -32,6 +33,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: true,
+    supports_url_override: false,
     default_system_instructions: "You're a helpful coding assistant.",
     default_top_p: 0.95,
     supported_options: {
@@ -69,10 +71,11 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: true,
     default_system_instructions: '',
     supported_options: {
       temporary: 'Temporary',
-      'think-longer': 'Think longer (free plans)'
+      thinking: 'Thinking (free plans)'
     },
     default_top_p: 0,
     models: {}
@@ -86,6 +89,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {
       'incognito-chat': 'Incognito chat'
@@ -106,6 +110,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
     default_top_p: 0,
@@ -126,6 +131,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
     default_top_p: 0,
@@ -140,6 +146,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: { 'deep-thinking': 'Deep Thinking' },
     default_top_p: 0,
@@ -154,6 +161,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     supported_options: { 'temporary-chat': 'Temporary chat' },
     default_system_instructions: '',
     default_top_p: 0,
@@ -171,6 +179,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
     default_top_p: 0,
@@ -200,6 +209,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
     default_top_p: 0,
@@ -214,6 +224,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: { private: 'Private' },
     default_top_p: 0,
@@ -234,6 +245,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
     default_top_p: 0,
@@ -248,6 +260,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
     default_top_p: 0,
@@ -262,6 +275,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {
       incognito: 'Incognito mode',
@@ -293,6 +307,7 @@ export const CHATBOTS = {
     supports_user_provided_port: true,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {},
     default_top_p: 0.9,
@@ -307,6 +322,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: true,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {
       'disable-reasoning': 'Disable reasoning (for hybrid models)'
@@ -323,6 +339,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: true,
     default_system_instructions: '',
     supported_options: {
       search: 'Search'
@@ -339,6 +356,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {
       thinking: 'Thinking',
@@ -366,6 +384,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
     default_top_p: 0,
@@ -389,6 +408,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
     default_top_p: 0,
@@ -406,6 +426,7 @@ export const CHATBOTS = {
     supports_user_provided_port: false,
     supports_reasoning_effort: false,
     supports_thinking_budget: false,
+    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {
       'deep-think': 'Deep Think'

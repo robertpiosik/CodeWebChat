@@ -43,6 +43,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     props.preset.system_instructions
   )
   const [port, set_port] = useState(props.preset.port)
+  const [new_url, set_new_url] = useState(props.preset.new_url)
   const [prompt_prefix, set_prompt_prefix] = useState(
     props.preset.prompt_prefix
   )
@@ -75,6 +76,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const supports_system_instructions =
     chatbot_config?.supports_system_instructions
   const supports_port = chatbot_config?.supports_user_provided_port
+  const supports_url_override = chatbot_config?.supports_url_override
   const supports_user_provided_model =
     chatbot_config?.supports_user_provided_model
   const models = chatbot_config?.models || {}
@@ -94,6 +96,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         ...(model ? { model } : {}),
         ...(system_instructions ? { system_instructions } : {}),
         ...(port !== undefined ? { port } : {}),
+        ...(new_url ? { new_url } : {}),
         ...(options.length ? { options } : {}),
         is_selected: props.preset.is_selected
       })
@@ -114,6 +117,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     model,
     system_instructions,
     port,
+    new_url,
     prompt_prefix,
     prompt_suffix,
     options
@@ -123,6 +127,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     set_chatbot(new_chatbot)
     set_model(Object.keys(CHATBOTS[new_chatbot].models)[0] || undefined)
     set_port(undefined)
+    set_new_url(undefined)
     set_temperature(
       CHATBOTS[new_chatbot].supports_custom_temperature ? 0.5 : undefined
     )
@@ -277,6 +282,21 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             onKeyDown={(e) =>
               !/[0-9]/.test(e.key) && e.key != 'Backspace' && e.preventDefault()
             }
+          />
+        </Field>
+      )}
+
+      {supports_url_override && (
+        <Field
+          label="New URL"
+          html_for="new-url"
+          info="Enter link of a project, space, etc."
+        >
+          <Input
+            id="new-url"
+            type="text"
+            value={new_url || ''}
+            onChange={set_new_url}
           />
         </Field>
       )}

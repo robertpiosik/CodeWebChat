@@ -51,6 +51,7 @@ export const handle_update_preset = async (
       a.system_instructions == b.system_instructions &&
       JSON.stringify(a.options) == JSON.stringify(b.options) &&
       a.port == b.port &&
+      a.new_url == b.new_url &&
       a.is_selected == b.is_selected
     )
   }

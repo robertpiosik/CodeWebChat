@@ -154,7 +154,8 @@ export const handle_preview_preset = async (
     reasoning_effort: message.preset.reasoning_effort,
     system_instructions: message.preset.system_instructions,
     options: message.preset.options,
-    port: message.preset.port
+    port: message.preset.port,
+    new_url: message.preset.new_url
   }
 
   provider.websocket_server_instance.preview_preset({

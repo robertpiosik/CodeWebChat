@@ -4,7 +4,7 @@
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
   "description": "Connect your editor with free chatbots. Parse websites for context.",
-  "version": "1.61.0",
+  "version": "1.62.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",
@@ -25,7 +25,7 @@
     {
       "matches": [
         "https://aistudio.google.com/prompts/new_chat",
-        "https://chatgpt.com/",
+        "https://chatgpt.com/*",
         "https://claude.ai/new",
         "https://copilot.microsoft.com/",
         "https://chat.deepseek.com/",
@@ -40,7 +40,7 @@
         "https://chat.mistral.ai/chat",
         "http://openwebui/",
         "https://openrouter.ai/chat*",
-        "https://www.perplexity.ai/",
+        "https://www.perplexity.ai/*",
         "https://chat.qwen.ai/",
         "https://chat.together.ai/",
         "https://yuanbao.tencent.com/chat*",

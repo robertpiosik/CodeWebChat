@@ -135,19 +135,7 @@ export const handle_intelligent_update = async (params: {
     }
   }
 
-  let progress_title = ''
-
-  if (existing_files.length > 0 && new_files.length > 0) {
-    progress_title = `Called Intelligent Update API tool for ${
-      existing_files.length
-    } file${existing_files.length > 1 ? 's' : ''} and creating ${
-      new_files.length
-    } new file${new_files.length > 1 ? 's' : ''}...`
-  } else if (existing_files.length > 0) {
-    progress_title = `Called Intelligent Update API tool for ${
-      existing_files.length
-    } file${existing_files.length > 1 ? 's' : ''}...`
-  }
+  const progress_title = 'Called Intelligent Update API tool'
 
   const file_progress_list: FileProgress[] = files.map((f) => ({
     file_path: f.file_path,

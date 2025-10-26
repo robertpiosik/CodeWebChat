@@ -11,20 +11,35 @@ import {
 
 export const chatgpt: Chatbot = {
   wait_until_ready: async () => {
-    await new Promise((resolve) => {
-      const check_for_element = () => {
-        if (
-          document.querySelector(
-            'span[data-testid="blocking-initial-modals-done"]'
-          )
-        ) {
-          resolve(null)
-        } else {
-          setTimeout(check_for_element, 100)
+    const url = new URL(window.location.href)
+    if (url.pathname == '/') {
+      await new Promise((resolve) => {
+        const check_for_element = () => {
+          if (
+            document.querySelector(
+              'span[data-testid="blocking-initial-modals-done"]'
+            )
+          ) {
+            resolve(null)
+          } else {
+            setTimeout(check_for_element, 100)
+          }
         }
-      }
-      check_for_element()
-    })
+        check_for_element()
+      })
+    } else {
+      // User used custom path url for a "project"
+      await new Promise((resolve) => {
+        const check_for_element = () => {
+          if (document.querySelector('textarea')) {
+            resolve(null)
+          } else {
+            setTimeout(check_for_element, 100)
+          }
+        }
+        check_for_element()
+      })
+    }
   },
   set_options: async (options?: string[]) => {
     if (!options) return
@@ -57,14 +72,11 @@ export const chatgpt: Chatbot = {
         } else {
           report_initialization_error({
             function_name: 'set_options',
-            log_message: 'Temporary chat button not found',
-            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+            log_message: 'Temporary chat button not found'
+            // Don't show alert because temporary mode doesn't work in projects (url override)
           })
         }
-      } else if (
-        option == 'think-longer' &&
-        supported_options['think-longer']
-      ) {
+      } else if (option == 'thinking' && supported_options['thinking']) {
         const plus_button = document.querySelector(
           'button[data-testid="composer-plus-btn"]'
         ) as HTMLButtonElement
@@ -72,8 +84,7 @@ export const chatgpt: Chatbot = {
           plus_button.dispatchEvent(
             new PointerEvent('pointerdown', { bubbles: true })
           )
-          await new Promise((r) => requestAnimationFrame(r))
-
+          await new Promise((resolve) => setTimeout(resolve, 500))
           const menu_items = document.querySelectorAll(
             'div[role="menuitemradio"]'
           )
