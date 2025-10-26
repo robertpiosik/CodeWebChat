@@ -23,7 +23,7 @@ Code Web Chat only starts new conversations. This idea is borrowed from [Firefox
 > [!NOTE]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
 
-🧠 **Control the context, guide the model**
+🧠 **Master model guidance through context ownership**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
@@ -31,10 +31,7 @@ Because the model is only as smart as examples it has seen in its pre-training s
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-> [!NOTE]
-> Coding agents conflict with a powerful technique of a model guidance through context ownership.
-
-🤝 **Meet non-agentic workflow**
+🤝 **Meet the non-agentic workflow**
 
 Select folders and files for context, enter instructions, and send message via...
 
