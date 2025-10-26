@@ -13,6 +13,7 @@ import { WebsitesProvider } from '../context/providers/websites-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { Preset } from '@shared/types/preset'
+import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 
 /**
  * Bridges the current workspace window and websocket server that runs in a separate process.
@@ -276,7 +277,8 @@ export class WebSocketManager {
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_chat_presets = config.get<any[]>(params.presets_config_key) ?? []
+    const web_chat_presets =
+      config.get<ConfigPresetFormat[]>(params.presets_config_key) ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
 
     for (const chat of params.chats) {
@@ -295,6 +297,11 @@ export class WebSocketManager {
         }
       } else if (preset.chatbot == 'Gemini' && gemini_user_id) {
         url = `https://gemini.google.com/u/${gemini_user_id}/app`
+      } else if (chatbot.supports_custom_url_path && preset.urlPath) {
+        const base_url = new URL(chatbot.url)
+        url = `${base_url.origin}${
+          preset.urlPath.startsWith('/') ? preset.urlPath : `/${preset.urlPath}`
+        }`
       } else {
         url = chatbot.url
       }
@@ -305,7 +312,7 @@ export class WebSocketManager {
         url,
         model: preset.model,
         temperature: preset.temperature,
-        top_p: preset.top_p,
+        top_p: preset.topP,
         thinking_budget: preset.thinkingBudget,
         reasoning_effort: preset.reasoningEffort,
         system_instructions: preset.systemInstructions,
@@ -338,7 +345,7 @@ export class WebSocketManager {
     }
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const geminiUserNumber = config.get<number | null>('geminiUserNumber')
+    const gemini_user_number = config.get<number | null>('geminiUserNumber')
 
     const chatbot = CHATBOTS[params.preset.chatbot as keyof typeof CHATBOTS]
     let url: string
@@ -350,10 +357,17 @@ export class WebSocketManager {
       }
     } else if (
       params.preset.chatbot == 'Gemini' &&
-      geminiUserNumber !== undefined &&
-      geminiUserNumber !== null
+      gemini_user_number !== undefined &&
+      gemini_user_number !== null
     ) {
-      url = `https://gemini.google.com/u/${geminiUserNumber}/app`
+      url = `https://gemini.google.com/u/${gemini_user_number}/app`
+    } else if (chatbot.supports_custom_url_path && params.preset.url_path) {
+      const base_url = new URL(chatbot.url)
+      url = `${base_url.origin}${
+        params.preset.url_path.startsWith('/')
+          ? params.preset.url_path
+          : `/${params.preset.url_path}`
+      }`
     } else {
       url = chatbot.url
     }

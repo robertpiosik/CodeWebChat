@@ -40,7 +40,7 @@
         "https://chat.mistral.ai/chat",
         "http://openwebui/",
         "https://openrouter.ai/chat*",
-        "https://www.perplexity.ai/",
+        "https://www.perplexity.ai/*",
         "https://chat.qwen.ai/",
         "https://chat.together.ai/",
         "https://yuanbao.tencent.com/chat*",
