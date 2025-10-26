@@ -278,13 +278,22 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                   <button
                     className={cn(
                       styles['footer__right__submit__button'],
-                      styles['footer__right__submit__button--chevron'],
-                      'codicon',
-                      'codicon-chevron-down'
+                      styles['footer__right__submit__button--chevron']
                     )}
                     onClick={toggle_dropdown}
                     title="More actions"
-                  />
+                  >
+                    <span
+                      className={cn(
+                        {
+                          [styles['footer__right__submit__button--toggled']]:
+                            is_dropdown_open
+                        },
+                        'codicon',
+                        'codicon-chevron-down'
+                      )}
+                    />
+                  </button>
                   {is_dropdown_open && (
                     <div className={styles['footer__right__submit__dropdown']}>
                       <div

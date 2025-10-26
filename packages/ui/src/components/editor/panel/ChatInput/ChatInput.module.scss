@@ -228,8 +228,15 @@
           padding: 0 var(--padding-2px);
         }
 
-        &--chevron.codicon::before {
-          font-size: 11px;
+        &--chevron {
+          > span.codicon::before {
+            font-size: 11px;
+            transition: transform 0.2s ease-in-out;
+          }
+        }
+
+        &--toggled {
+          transform: rotate(180deg);
         }
 
         &--copy {
