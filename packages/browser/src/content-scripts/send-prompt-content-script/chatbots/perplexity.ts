@@ -10,6 +10,20 @@ import {
 
 export const perplexity: Chatbot = {
   wait_until_ready: async () => {
+    const url = new URL(window.location.href)
+    if (url.pathname != '/') {
+      // User used custom path url for a "space"
+      await new Promise((resolve) => {
+        const check_for_element = () => {
+          if (document.querySelector('div[contenteditable="true"]')) {
+            resolve(null)
+          } else {
+            setTimeout(check_for_element, 100)
+          }
+        }
+        check_for_element()
+      })
+    }
     await new Promise((resolve) => setTimeout(resolve, 500))
     if (window.innerWidth <= 768) {
       ;(document.querySelector('[contenteditable="true"]') as any)?.click()

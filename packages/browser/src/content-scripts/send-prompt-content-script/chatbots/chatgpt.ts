@@ -11,20 +11,35 @@ import {
 
 export const chatgpt: Chatbot = {
   wait_until_ready: async () => {
-    await new Promise((resolve) => {
-      const check_for_element = () => {
-        if (
-          document.querySelector(
-            'span[data-testid="blocking-initial-modals-done"]'
-          )
-        ) {
-          resolve(null)
-        } else {
-          setTimeout(check_for_element, 100)
+    const url = new URL(window.location.href)
+    if (url.pathname == '/') {
+      await new Promise((resolve) => {
+        const check_for_element = () => {
+          if (
+            document.querySelector(
+              'span[data-testid="blocking-initial-modals-done"]'
+            )
+          ) {
+            resolve(null)
+          } else {
+            setTimeout(check_for_element, 100)
+          }
         }
-      }
-      check_for_element()
-    })
+        check_for_element()
+      })
+    } else {
+      // User used custom path url for a "project"
+      await new Promise((resolve) => {
+        const check_for_element = () => {
+          if (document.querySelector('textarea')) {
+            resolve(null)
+          } else {
+            setTimeout(check_for_element, 100)
+          }
+        }
+        check_for_element()
+      })
+    }
   },
   set_options: async (options?: string[]) => {
     if (!options) return
