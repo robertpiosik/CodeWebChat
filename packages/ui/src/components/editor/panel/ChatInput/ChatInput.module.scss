@@ -228,8 +228,19 @@
           padding: 0 var(--padding-2px);
         }
 
-        &--chevron.codicon::before {
-          font-size: 11px;
+        &--chevron {
+          > span.codicon::before {
+            font-size: 11px;
+            transition: transform 0.2s ease-in-out;
+          }
+        }
+
+        &--toggled {
+          transform: rotate(180deg);
+        }
+
+        &--copy {
+          width: 20px;
         }
       }
 
@@ -258,7 +269,7 @@
 
           &:hover {
             background-color: var(--vscode-menu-selectionBackground);
-            color: var(--vscode-menu-selectionForeground);
+            color: var(--vscode-menu-selectionForeground) !important;
           }
 
           &__shortcut {

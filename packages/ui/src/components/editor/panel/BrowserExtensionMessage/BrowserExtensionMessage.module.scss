@@ -3,11 +3,13 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--padding-4px);
-  padding: var(--padding-6px) var(--padding-8px);
+  padding: var(--padding-6px) var(--padding-8px)
+    calc(var(--padding-6px) + var(--padding-5px)) var(--padding-8px);
+  margin-bottom: calc(var(--padding-5px) * -1);
   background: linear-gradient(
-    150deg,
-    var(--vscode-inputOption-activeBackground),
-    var(--vscode-sideBar-background)
+    135deg,
+    rgba(255, 0, 221, 0.1) 0%,
+    rgba(37, 94, 209, 0.1) 100%
   );
   color: var(--vscode-inputOption-activeForeground);
   --border-radius: var(--border-radius-8px);

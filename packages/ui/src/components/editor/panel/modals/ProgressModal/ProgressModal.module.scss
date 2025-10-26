@@ -12,8 +12,9 @@
 
 .progress {
   width: 100%;
-  height: 2px;
-  background-color: var(--vscode-input-background);
+  height: 3px;
+  background-color: var(--vscode-dropdown-border);
+  border-radius: var(--border-radius-999px);
   overflow: hidden;
   position: relative;
 

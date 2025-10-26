@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Unlimited AI coding in free chatbots (CWC)",
-  "version": "1.482.0",
+  "version": "1.483.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -576,79 +576,83 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(3)",
               "chatbot": "AI Studio"
             },
             {
-              "name": "(4)",
-              "chatbot": "Grok"
+              "name": "(1)",
+              "chatbot": "ChatGPT"
             },
             {
-              "name": "(5)",
-              "chatbot": "Perplexity"
+              "name": "(2)",
+              "chatbot": "Claude"
             },
             {
-              "name": "(6)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(7)",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Z.AI"
-            },
-            {
-              "name": "(14)",
+              "name": "(3)",
               "chatbot": "Copilot"
             },
             {
-              "name": "(15)",
+              "name": "(4)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(7)",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "(16)",
+              "name": "(8)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(9)",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "(17)",
+              "name": "(10)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Minimax"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(13)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(18)",
+              "name": "(14)",
               "chatbot": "OpenRouter"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "Perplexity"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Qwen"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Together"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(19)",
+              "chatbot": "Z.AI"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -673,10 +677,11 @@
                   "Grok",
                   "HuggingChat",
                   "Kimi",
-                  "Perplexity",
+                  "Minimax",
                   "Mistral",
                   "Open WebUI",
                   "OpenRouter",
+                  "Perplexity",
                   "Qwen",
                   "Together",
                   "Yuanbao",
@@ -761,79 +766,83 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(3)",
               "chatbot": "AI Studio"
             },
             {
-              "name": "(4)",
-              "chatbot": "Grok"
+              "name": "(1)",
+              "chatbot": "ChatGPT"
             },
             {
-              "name": "(5)",
-              "chatbot": "Perplexity"
+              "name": "(2)",
+              "chatbot": "Claude"
             },
             {
-              "name": "(6)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(7)",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Z.AI"
-            },
-            {
-              "name": "(14)",
+              "name": "(3)",
               "chatbot": "Copilot"
             },
             {
-              "name": "(15)",
+              "name": "(4)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(7)",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "(16)",
+              "name": "(8)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(9)",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "(17)",
+              "name": "(10)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Minimax"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(13)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(18)",
+              "name": "(14)",
               "chatbot": "OpenRouter"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "Perplexity"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Qwen"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Together"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(19)",
+              "chatbot": "Z.AI"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -858,10 +867,11 @@
                   "Grok",
                   "HuggingChat",
                   "Kimi",
-                  "Perplexity",
+                  "Minimax",
                   "Mistral",
                   "Open WebUI",
                   "OpenRouter",
+                  "Perplexity",
                   "Qwen",
                   "Together",
                   "Yuanbao",
@@ -946,79 +956,83 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(3)",
               "chatbot": "AI Studio"
             },
             {
-              "name": "(4)",
-              "chatbot": "Grok"
+              "name": "(1)",
+              "chatbot": "ChatGPT"
             },
             {
-              "name": "(5)",
-              "chatbot": "Perplexity"
+              "name": "(2)",
+              "chatbot": "Claude"
             },
             {
-              "name": "(6)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(7)",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Z.AI"
-            },
-            {
-              "name": "(14)",
+              "name": "(3)",
               "chatbot": "Copilot"
             },
             {
-              "name": "(15)",
+              "name": "(4)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(7)",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "(16)",
+              "name": "(8)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(9)",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "(17)",
+              "name": "(10)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Minimax"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(13)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(18)",
+              "name": "(14)",
               "chatbot": "OpenRouter"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "Perplexity"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Qwen"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Together"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(19)",
+              "chatbot": "Z.AI"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -1043,10 +1057,11 @@
                   "Grok",
                   "HuggingChat",
                   "Kimi",
-                  "Perplexity",
+                  "Minimax",
                   "Mistral",
                   "Open WebUI",
                   "OpenRouter",
+                  "Perplexity",
                   "Qwen",
                   "Together",
                   "Yuanbao",
@@ -1101,79 +1116,83 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(1)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(3)",
               "chatbot": "AI Studio"
             },
             {
-              "name": "(4)",
-              "chatbot": "Grok"
+              "name": "(1)",
+              "chatbot": "ChatGPT"
             },
             {
-              "name": "(5)",
-              "chatbot": "Perplexity"
+              "name": "(2)",
+              "chatbot": "Claude"
             },
             {
-              "name": "(6)",
-              "chatbot": "Mistral"
-            },
-            {
-              "name": "(7)",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "(8)",
-              "chatbot": "Qwen"
-            },
-            {
-              "name": "(9)",
-              "chatbot": "Together"
-            },
-            {
-              "name": "(10)",
-              "chatbot": "Yuanbao"
-            },
-            {
-              "name": "(11)",
-              "chatbot": "Doubao"
-            },
-            {
-              "name": "(12)",
-              "chatbot": "Kimi"
-            },
-            {
-              "name": "(13)",
-              "chatbot": "Z.AI"
-            },
-            {
-              "name": "(14)",
+              "name": "(3)",
               "chatbot": "Copilot"
             },
             {
-              "name": "(15)",
+              "name": "(4)",
+              "chatbot": "DeepSeek"
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Doubao"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "Gemini"
+            },
+            {
+              "name": "(7)",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "(16)",
+              "name": "(8)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(9)",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "(17)",
+              "name": "(10)",
+              "chatbot": "Kimi"
+            },
+            {
+              "name": "(11)",
+              "chatbot": "Minimax"
+            },
+            {
+              "name": "(12)",
+              "chatbot": "Mistral"
+            },
+            {
+              "name": "(13)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(18)",
+              "name": "(14)",
               "chatbot": "OpenRouter"
+            },
+            {
+              "name": "(15)",
+              "chatbot": "Perplexity"
+            },
+            {
+              "name": "(16)",
+              "chatbot": "Qwen"
+            },
+            {
+              "name": "(17)",
+              "chatbot": "Together"
+            },
+            {
+              "name": "(18)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(19)",
+              "chatbot": "Z.AI"
             }
           ],
           "description": "Preset is a general or task specific web chat configuration.",
@@ -1198,10 +1217,11 @@
                   "Grok",
                   "HuggingChat",
                   "Kimi",
-                  "Perplexity",
+                  "Minimax",
                   "Mistral",
                   "Open WebUI",
                   "OpenRouter",
+                  "Perplexity",
                   "Qwen",
                   "Together",
                   "Yuanbao",

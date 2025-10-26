@@ -48,8 +48,6 @@ export const dictionary = {
       'Another response review is currently ongoing. Would you like to switch to the new one?',
     SKIPPING_INVALID_PATH: (file_path: string) =>
       `Skipping applying change to invalid path: ${file_path}`,
-    NO_VALID_CODE_BLOCKS_IN_CLIPBOARD:
-      'Unable to find valid code blocks in the clipboard.',
     CODE_COMPLETIONS_NO_SELECTION:
       'Code completions are not supported with active text selection.',
     CANNOT_REFERENCE_FILE_OUTSIDE_WORKSPACE:
