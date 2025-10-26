@@ -39,7 +39,7 @@ export const StageFilesModal: React.FC<Props> = (props) => {
   return (
     <Modal
       title="Select files to commit"
-      content_max_height="30vh"
+      content_max_height="calc(100vh - 150px)"
       content_slot={
         <div className={styles.files}>
           <label className={styles.files__item}>
