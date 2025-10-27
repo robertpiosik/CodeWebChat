@@ -102,8 +102,6 @@ export const checkpoints_command = (
           const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
 
           visible_checkpoints.sort((a, b) => {
-            if (a.starred && !b.starred) return -1
-            if (!a.starred && b.starred) return 1
             return b.timestamp - a.timestamp
           })
 
