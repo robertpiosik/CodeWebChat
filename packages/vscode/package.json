@@ -576,7 +576,9 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "AI Studio"
+              "chatbot": "AI Studio",
+              "temperature": 0.5,
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "(1)",
@@ -766,7 +768,9 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "AI Studio"
+              "chatbot": "AI Studio",
+              "temperature": 0.5,
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "(1)",
@@ -956,7 +960,9 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "AI Studio"
+              "chatbot": "AI Studio",
+              "temperature": 0.5,
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "(1)",
@@ -1116,7 +1122,9 @@
           "default": [
             {
               "name": "(0)",
-              "chatbot": "AI Studio"
+              "chatbot": "AI Studio",
+              "temperature": 0.5,
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "(1)",
