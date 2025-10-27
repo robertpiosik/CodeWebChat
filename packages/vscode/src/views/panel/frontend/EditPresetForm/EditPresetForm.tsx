@@ -321,12 +321,12 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         </Field>
       )}
 
-      {supports_temperature && temperature !== undefined && (
+      {supports_temperature && (
         <Field
           label="Temperature"
           title="This setting influences the variety in the model's responses. Lower values lead to more predictable and typical responses, while higher values encourage more diverse and less common responses. At 0, the model always gives the same response for a given input."
         >
-          <Slider value={temperature} onChange={set_temperature} />
+          <Slider value={temperature || 0.5} onChange={set_temperature} />
         </Field>
       )}
 
