@@ -16,22 +16,22 @@ Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf. The best 
 
 ## Introduction
 
-🤔 **Is this legal?**
+👨‍⚖️ **Is it legal?**
 
 Code Web Chat only starts new conversations. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots terms of use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be rejected.
 
 > [!NOTE]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
 
-🧠 **Master model guidance through context ownership**
+🧑‍💻 **Guide the model through context ownership**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
-Because the model is only as smart as examples it has seen in its pre-training stage, the possible coverage of real-world scenarios when approached at a high level is fundamentally limited.
+Because the model is only as smart as examples it has seen in its pre-training stage, the possible coverage of real-world problems when approached at a high level is fundamentally limited.
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-🤝 **Meet the non-agentic workflow**
+👋 **Meet the non-agentic workflow**
 
 Select folders and files for context, enter instructions, and send message via...
 
@@ -94,10 +94,10 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - Z
 
 > [!NOTE]
-> All web page interactions of submitting the message are handled by the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
+> All web page interactions of submitting the message are handled by the following [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
 
 > [!TIP]
-> With the browser extension you can include markdown-parsed websites in context! Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_. The website will appear in the context panel immediately, ready for selection like any other folder or file in the workspace.
+> With the browser extension you can include markdown-parsed websites in context. Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_.
 
 ## API Tools
 
