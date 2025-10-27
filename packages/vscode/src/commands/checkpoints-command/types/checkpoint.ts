@@ -3,4 +3,5 @@ export interface Checkpoint {
   title: string
   description?: string
   is_temporary?: boolean
+  starred?: boolean
 }

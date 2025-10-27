@@ -100,6 +100,13 @@ export const checkpoints_command = (
           }
 
           const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
+
+          visible_checkpoints.sort((a, b) => {
+            if (a.starred && !b.starred) return -1
+            if (!a.starred && b.starred) return 1
+            return b.timestamp - a.timestamp
+          })
+
           quick_pick.items = [
             {
               id: 'add-new',
@@ -118,13 +125,19 @@ export const checkpoints_command = (
             ...visible_checkpoints.map((c, index) => {
               return {
                 id: c.timestamp.toString(),
-                label: c.title,
+                label: c.starred ? `$(star-full) ${c.title}` : c.title,
                 description: dayjs(c.timestamp).fromNow(),
                 detail: c.description,
                 checkpoint: c,
                 index,
-                buttons:
-                  c.title == 'Created by user'
+                buttons: [
+                  {
+                    iconPath: new vscode.ThemeIcon(
+                      c.starred ? 'star-full' : 'star-empty'
+                    ),
+                    tooltip: c.starred ? 'Unstar' : 'Star'
+                  },
+                  ...(c.title == 'Created by user'
                     ? [
                         {
                           iconPath: new vscode.ThemeIcon('edit'),
@@ -135,7 +148,8 @@ export const checkpoints_command = (
                           tooltip: 'Delete'
                         }
                       ]
-                    : undefined
+                    : [])
+                ]
               }
             })
           ]
@@ -207,6 +221,29 @@ export const checkpoints_command = (
             index?: number
           }
           if (!item.checkpoint) return
+
+          if (e.button.tooltip == 'Star' || e.button.tooltip == 'Unstar') {
+            const checkpoint_to_update = checkpoints.find(
+              (c) => c.timestamp == item.checkpoint?.timestamp
+            )
+            if (checkpoint_to_update) {
+              checkpoint_to_update.starred = !checkpoint_to_update.starred
+              await context.workspaceState.update(
+                CHECKPOINTS_STATE_KEY,
+                checkpoints
+              )
+            }
+            await refresh_items()
+            const active_item = quick_pick.items.find(
+              (i) =>
+                (i as any).checkpoint?.timestamp === item.checkpoint?.timestamp
+            )
+            if (active_item) {
+              quick_pick.activeItems = [active_item]
+            }
+            quick_pick.show()
+            return
+          }
 
           if (e.button.tooltip == 'Edit Description') {
             is_showing_dialog = true
