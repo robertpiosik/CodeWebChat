@@ -287,7 +287,7 @@ const show_diff_with_actions = async (
 
 export const review = async (params: {
   original_states: OriginalFileState[]
-  view_provider?: ViewProvider
+  view_provider: ViewProvider
   raw_instructions?: string
 }): Promise<{
   accepted_files: ReviewableFile[]
@@ -314,11 +314,9 @@ export const review = async (params: {
 
   const text_document_change_listener =
     vscode.workspace.onDidChangeTextDocument((event) => {
-      if (!params.view_provider) return
-
       const changed_doc_path = event.document.uri.fsPath
       const changed_file_in_review = prepared_files.find(
-        (pf) => pf.sanitized_path === changed_doc_path
+        (pf) => pf.sanitized_path == changed_doc_path
       )
 
       if (changed_file_in_review) {
@@ -339,8 +337,243 @@ export const review = async (params: {
           command: 'UPDATE_FILE_IN_REVIEW',
           file: changed_file_in_review.reviewable_file
         })
+      } else {
+        // A file not in the review has been changed. Add it to the review.
+        const doc = event.document
+        if (doc.uri.scheme != 'file') return
+        const workspace_folder = vscode.workspace.getWorkspaceFolder(doc.uri)
+        if (!workspace_folder) return
+
+        // Check if it's already added to avoid races
+        if (prepared_files.some((pf) => pf.sanitized_path == doc.uri.fsPath)) {
+          return
+        }
+
+        const new_content = doc.getText()
+        const relative_path = vscode.workspace
+          .asRelativePath(doc.uri, false)
+          .replace(/\\/g, '/')
+
+        let original_content = ''
+        let is_new = false
+        if (doc.isUntitled) {
+          is_new = true
+        } else {
+          try {
+            original_content = fs.readFileSync(doc.uri.fsPath, 'utf8')
+          } catch (e) {
+            is_new = true // File on disk does not exist, but buffer does.
+          }
+        }
+
+        const new_original_state: OriginalFileState = {
+          file_path: relative_path,
+          content: original_content,
+          is_new: is_new,
+          workspace_name: workspace_folder.name
+        }
+
+        const diff_stats = get_diff_stats({
+          original_content: original_content,
+          new_content: new_content
+        })
+
+        const sanitized_file_path = doc.uri.fsPath
+        const hash = crypto
+          .createHash('md5')
+          .update(sanitized_file_path)
+          .digest('hex')
+        const temp_filename = `cwc-review-${hash}.tmp`
+        const temp_file_path = path.join(os.tmpdir(), temp_filename)
+        const is_deleted =
+          !is_new && new_content == '' && original_content != ''
+
+        const reviewable_file: ReviewableFile = {
+          file_path: relative_path,
+          content: new_content,
+          workspace_name: workspace_folder.name,
+          is_new: is_new,
+          is_deleted: is_deleted,
+          lines_added: diff_stats.lines_added,
+          lines_removed: diff_stats.lines_removed
+        }
+
+        const new_prepared_file: PreparedFile = {
+          reviewable_file,
+          sanitized_path: sanitized_file_path,
+          original_content: original_content,
+          temp_file_path,
+          file_exists: !is_new
+        }
+
+        params.original_states.push(new_original_state)
+        prepared_files.push(new_prepared_file)
+        create_temp_files_with_original_content([new_prepared_file])
+        params.view_provider.send_message({
+          command: 'UPDATE_FILE_IN_REVIEW',
+          file: new_prepared_file.reviewable_file
+        })
       }
     })
+
+  const file_delete_listener = vscode.workspace.onDidDeleteFiles((event) => {
+    for (const uri of event.files) {
+      if (uri.scheme != 'file') continue
+
+      const deleted_file_path = uri.fsPath
+      const deleted_file_in_review = prepared_files.find(
+        (pf) => pf.sanitized_path == deleted_file_path
+      )
+
+      if (!deleted_file_in_review) {
+        const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
+        if (!workspace_folder) continue
+
+        if (prepared_files.some((pf) => pf.sanitized_path == uri.fsPath)) {
+          continue
+        }
+
+        const new_content = ''
+        const relative_path = vscode.workspace
+          .asRelativePath(uri, false)
+          .replace(/\\/g, '/')
+
+        const original_content_for_undo = '' // Limitation: cannot get content of deleted file
+
+        const new_original_state: OriginalFileState = {
+          file_path: relative_path,
+          content: original_content_for_undo,
+          is_new: false,
+          workspace_name: workspace_folder.name
+        }
+
+        const diff_stats = get_diff_stats({
+          original_content: original_content_for_undo,
+          new_content: new_content
+        })
+
+        const sanitized_file_path = uri.fsPath
+        const hash = crypto
+          .createHash('md5')
+          .update(sanitized_file_path)
+          .digest('hex')
+        const temp_filename = `cwc-review-${hash}.tmp`
+        const temp_file_path = path.join(os.tmpdir(), temp_filename)
+
+        const reviewable_file: ReviewableFile = {
+          file_path: relative_path,
+          content: new_content,
+          workspace_name: workspace_folder.name,
+          is_new: false,
+          is_deleted: true,
+          lines_added: diff_stats.lines_added,
+          lines_removed: diff_stats.lines_removed
+        }
+
+        const new_prepared_file: PreparedFile = {
+          reviewable_file,
+          sanitized_path: sanitized_file_path,
+          original_content: original_content_for_undo,
+          temp_file_path,
+          file_exists: false
+        }
+
+        params.original_states.push(new_original_state)
+        prepared_files.push(new_prepared_file)
+        create_temp_files_with_original_content([new_prepared_file])
+        params.view_provider.send_message({
+          command: 'UPDATE_FILE_IN_REVIEW',
+          file: new_prepared_file.reviewable_file
+        })
+      } else {
+        deleted_file_in_review.reviewable_file.is_deleted = true
+        deleted_file_in_review.reviewable_file.content = ''
+        params.view_provider.send_message({
+          command: 'UPDATE_FILE_IN_REVIEW',
+          file: deleted_file_in_review.reviewable_file
+        })
+      }
+    }
+  })
+
+  const file_created_listener = vscode.workspace.onDidCreateFiles((event) => {
+    for (const uri of event.files) {
+      if (uri.scheme !== 'file') continue
+
+      const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
+      if (!workspace_folder) continue
+
+      // Avoid duplicates if already tracked
+      if (prepared_files.some((pf) => pf.sanitized_path === uri.fsPath)) {
+        continue
+      }
+
+      // Read the content of the newly created file (may be empty)
+      let new_content = ''
+      try {
+        new_content = fs.readFileSync(uri.fsPath, 'utf8')
+      } catch (e) {
+        new_content = ''
+      }
+
+      const relative_path = vscode.workspace
+        .asRelativePath(uri, false)
+        .replace(/\\/g, '/')
+
+      const original_content = '' // New file had no previous content
+      const is_new = true
+
+      const new_original_state: OriginalFileState = {
+        file_path: relative_path,
+        content: original_content,
+        is_new: is_new,
+        workspace_name: workspace_folder.name
+      }
+
+      const diff_stats = get_diff_stats({
+        original_content: original_content,
+        new_content: new_content
+      })
+
+      const sanitized_file_path = uri.fsPath
+      const hash = crypto
+        .createHash('md5')
+        .update(sanitized_file_path)
+        .digest('hex')
+      const temp_filename = `cwc-review-${hash}.tmp`
+      const temp_file_path = path.join(os.tmpdir(), temp_filename)
+
+      const reviewable_file: ReviewableFile = {
+        file_path: relative_path,
+        content: new_content,
+        workspace_name: workspace_folder.name,
+        is_new: true,
+        is_deleted: false,
+        lines_added: diff_stats.lines_added,
+        lines_removed: diff_stats.lines_removed
+      }
+
+      const new_prepared_file: PreparedFile = {
+        reviewable_file,
+        sanitized_path: sanitized_file_path,
+        original_content: original_content,
+        temp_file_path,
+        file_exists: false
+      }
+
+      params.original_states.push(new_original_state)
+      prepared_files.push(new_prepared_file)
+
+      // Create temp file with the original (empty) content for diff view
+      create_temp_files_with_original_content([new_prepared_file])
+
+      // Notify the panel to include this file in the review UI
+      params.view_provider.send_message({
+        command: 'UPDATE_FILE_IN_REVIEW',
+        file: new_prepared_file.reviewable_file
+      })
+    }
+  })
 
   try {
     prepared_files = await prepare_files_from_original_states({
@@ -474,15 +707,32 @@ export const review = async (params: {
           )
         )
 
-        review_items.forEach((item) => {
-          const file_identifier = `${
-            item.file.reviewable_file.workspace_name || ''
-          }:${item.file.reviewable_file.file_path}`
-          item.status = accepted_file_identifiers.has(file_identifier)
-            ? 'accepted'
-            : 'rejected'
-        })
-        break
+        const accepted_files = prepared_files
+          .filter((pf) => {
+            const identifier = `${pf.reviewable_file.workspace_name || ''}:${
+              pf.reviewable_file.file_path
+            }`
+            return accepted_file_identifiers.has(identifier)
+          })
+          .map((pf) => pf.reviewable_file)
+
+        const rejected_states = prepared_files
+          .filter((pf) => {
+            const identifier = `${pf.reviewable_file.workspace_name || ''}:${
+              pf.reviewable_file.file_path
+            }`
+            return !accepted_file_identifiers.has(identifier)
+          })
+          .map((item) => {
+            return params.original_states.find(
+              (state) =>
+                state.file_path == item.reviewable_file.file_path &&
+                state.workspace_name == item.reviewable_file.workspace_name
+            )
+          })
+          .filter((state): state is OriginalFileState => state !== undefined)
+
+        return { accepted_files, rejected_states }
       }
 
       if ('jump_to' in decision) {
@@ -526,6 +776,8 @@ export const review = async (params: {
     return { accepted_files, rejected_states }
   } finally {
     text_document_change_listener.dispose()
+    file_delete_listener.dispose()
+    file_created_listener.dispose()
     await close_review_diff_editors(prepared_files)
     cleanup_temp_files(prepared_files)
     toggle_file_review_state = undefined

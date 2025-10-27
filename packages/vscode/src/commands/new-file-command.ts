@@ -10,7 +10,6 @@ export function new_file_command() {
     async (item?: vscode.TreeItem | vscode.Uri) => {
       let parent_path: string | undefined
 
-      // Handle case when invoked from view/title (no item parameter)
       if (!item) {
         if (
           vscode.workspace.workspaceFolders &&
@@ -23,13 +22,9 @@ export function new_file_command() {
           )
           return
         }
-      }
-      // Handle case when invoked with URI (from view/title)
-      else if (item instanceof vscode.Uri) {
+      } else if (item instanceof vscode.Uri) {
         parent_path = item.fsPath
-      }
-      // Handle case when invoked with TreeItem (from context menu)
-      else if (item.resourceUri) {
+      } else if (item.resourceUri) {
         parent_path = item.resourceUri.fsPath
       }
 
@@ -40,15 +35,12 @@ export function new_file_command() {
         return
       }
 
-      // Check if the parent_path is a file and not a directory
       try {
         const stats = fs.statSync(parent_path)
         if (!stats.isDirectory()) {
           parent_path = path.dirname(parent_path)
         }
-      } catch (error) {
-        // If the path doesn't exist, we'll create it later
-      }
+      } catch {}
 
       const file_name = await vscode.window.showInputBox({
         prompt: 'Enter file name',
@@ -69,29 +61,35 @@ export function new_file_command() {
           return
         }
 
-        // Check if file already exists
+        const fileUri = vscode.Uri.file(file_path)
+
         try {
-          await vscode.workspace.fs.stat(vscode.Uri.file(file_path))
+          await vscode.workspace.fs.stat(fileUri)
           vscode.window.showErrorMessage(
             dictionary.error_message.FILE_ALREADY_EXISTS(
               path.basename(file_path)
             )
           )
           return
-        } catch {
-          // File doesn't exist, which is what we want
-        }
+        } catch {}
 
+        // Ensure parent directory exists (this does not trigger onDidCreateFiles)
         const directory = path.dirname(file_path)
         await vscode.workspace.fs.createDirectory(vscode.Uri.file(directory))
 
-        await vscode.workspace.fs.writeFile(
-          vscode.Uri.file(file_path),
-          new Uint8Array()
-        )
+        // Create the file via WorkspaceEdit to trigger onDidCreateFiles
+        const edit = new vscode.WorkspaceEdit()
+        edit.createFile(fileUri, {
+          overwrite: false,
+          contents: new Uint8Array()
+        })
+        const applied = await vscode.workspace.applyEdit(edit)
+        if (!applied) {
+          throw new Error('Failed to apply create file edit')
+        }
 
-        const document = await vscode.workspace.openTextDocument(file_path)
-        await vscode.window.showTextDocument(document)
+        const document = await vscode.workspace.openTextDocument(fileUri)
+        await vscode.window.showTextDocument(document, { preview: false })
       } catch (error: any) {
         vscode.window.showErrorMessage(
           dictionary.error_message.FAILED_TO_CREATE_FILE(error.message)
