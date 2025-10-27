@@ -257,7 +257,11 @@ export const Panel = () => {
               raw_instructions={raw_instructions}
               has_multiple_workspaces={workspace_folder_count > 1}
               on_discard={() => {
-                set_response_history([])
+                set_response_history((prev) =>
+                  prev.filter(
+                    (i) => i.created_at != selected_history_item_created_at
+                  )
+                )
                 set_selected_history_item_created_at(undefined)
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
               }}
