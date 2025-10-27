@@ -42,9 +42,15 @@ export function delete_command() {
           )
         }
 
-        await vscode.workspace.fs.delete(uri, {
-          recursive: true
+        const edit = new vscode.WorkspaceEdit()
+        edit.deleteFile(uri, {
+          recursive: true,
+          ignoreIfNotExists: true
         })
+        const applied = await vscode.workspace.applyEdit(edit)
+        if (!applied) {
+          throw new Error('Failed to apply delete edit')
+        }
       } catch (error: any) {
         vscode.window.showErrorMessage(
           dictionary.error_message.FAILED_TO_DELETE(error.message)
