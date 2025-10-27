@@ -135,14 +135,25 @@ export const use_panel = (vscode: any) => {
         )
         set_raw_instructions(message.raw_instructions)
       } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
-        set_files_to_review((current_files) =>
-          current_files?.map((f) =>
-            f.file_path == message.file.file_path &&
-            f.workspace_name == message.file.workspace_name
-              ? { ...message.file, is_checked: f.is_checked }
-              : f
+        set_files_to_review((current_files) => {
+          const files = current_files ?? []
+          const existing_file_index = files.findIndex(
+            (f) =>
+              f.file_path == message.file.file_path &&
+              f.workspace_name == message.file.workspace_name
           )
-        )
+
+          if (existing_file_index != -1) {
+            const new_files = [...files]
+            new_files[existing_file_index] = {
+              ...message.file,
+              is_checked: files[existing_file_index].is_checked
+            }
+            return new_files
+          } else {
+            return [...files, { ...message.file, is_checked: true }]
+          }
+        })
       } else if (message.command == 'CODE_REVIEW_FINISHED') {
         set_files_to_review(undefined)
         set_raw_instructions(undefined)
