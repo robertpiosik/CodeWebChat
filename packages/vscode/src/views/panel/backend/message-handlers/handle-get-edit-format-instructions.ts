@@ -1,9 +1,9 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { EditFormat } from '@shared/types/edit-format'
 
 export const handle_get_edit_format_instructions = (
-  provider: ViewProvider
+  provider: PanelProvider
 ): void => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const instructions = config.get<Record<EditFormat, string>>(

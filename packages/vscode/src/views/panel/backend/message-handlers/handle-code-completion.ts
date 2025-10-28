@@ -13,7 +13,7 @@ import { Logger } from '@shared/utils/logger'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { CodeCompletionMessage } from '@/views/panel/types/messages'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
@@ -23,7 +23,7 @@ const get_code_completion_config = async (
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   config_id?: string,
-  view_provider?: ViewProvider
+  panel_provider?: PanelProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
   const code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
@@ -53,8 +53,8 @@ const get_code_completion_config = async (
         config_id
       )
 
-      if (view_provider) {
-        view_provider.send_message({
+      if (panel_provider) {
+        panel_provider.send_message({
           command: 'SELECTED_CONFIGURATION_CHANGED',
           mode: 'code-completions',
           id: config_id
@@ -149,8 +149,8 @@ const get_code_completion_config = async (
             selected.id
           )
 
-          if (view_provider) {
-            view_provider.send_message({
+          if (panel_provider) {
+            panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               mode: 'code-completions',
               id: selected.id
@@ -213,7 +213,7 @@ const perform_code_completion = async (params: {
   show_quick_pick?: boolean
   completion_instructions?: string
   config_id?: string
-  view_provider?: ViewProvider
+  panel_provider?: PanelProvider
 }): Promise<void> => {
   const api_providers_manager = new ModelProvidersManager(params.context)
 
@@ -243,7 +243,7 @@ const perform_code_completion = async (params: {
     params.show_quick_pick,
     params.context,
     params.config_id,
-    params.view_provider
+    params.panel_provider
   )
 
   if (!config_result) {
@@ -368,9 +368,9 @@ const perform_code_completion = async (params: {
 
     let response_for_apply: string | undefined
 
-    if (params.view_provider) {
-      params.view_provider.api_call_cancel_token_source = cancel_token_source
-      params.view_provider.send_message({
+    if (params.panel_provider) {
+      params.panel_provider.api_call_cancel_token_source = cancel_token_source
+      params.panel_provider.send_message({
         command: 'SHOW_PROGRESS',
         title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
       })
@@ -383,8 +383,8 @@ const perform_code_completion = async (params: {
         body,
         cancellation_token: cancel_token_source.token,
         on_thinking_chunk: () => {
-          if (params.view_provider) {
-            params.view_provider.send_message({
+          if (params.panel_provider) {
+            params.panel_provider.send_message({
               command: 'SHOW_PROGRESS',
               title: `${dictionary.api_call.THINKING}...`
             })
@@ -423,9 +423,9 @@ const perform_code_completion = async (params: {
         dictionary.error_message.CODE_COMPLETION_ERROR
       )
     } finally {
-      if (params.view_provider) {
-        params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
-        params.view_provider.api_call_cancel_token_source = null
+      if (params.panel_provider) {
+        params.panel_provider.send_message({ command: 'HIDE_PROGRESS' })
+        params.panel_provider.api_call_cancel_token_source = null
       }
       cursor_listener.dispose()
     }
@@ -449,7 +449,7 @@ const perform_code_completion = async (params: {
 }
 
 export const handle_code_completion = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: CodeCompletionMessage
 ): Promise<void> => {
   perform_code_completion({
@@ -460,6 +460,6 @@ export const handle_code_completion = async (
     show_quick_pick: message.use_quick_pick,
     completion_instructions: provider.code_completion_instructions,
     config_id: message.config_id,
-    view_provider: provider
+    panel_provider: provider
   })
 }

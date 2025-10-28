@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import {
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,
@@ -6,7 +6,7 @@ import {
 } from '@/constants/state-keys'
 
 export const update_last_used_preset_or_group = (params: {
-  provider: ViewProvider
+  provider: PanelProvider
   preset_name?: string
   group_name?: string
 }) => {

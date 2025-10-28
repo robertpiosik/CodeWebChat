@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
-import { ViewProvider } from './views/panel/backend/panel-provider'
+import { PanelProvider } from './views/panel/backend/panel-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
   migrate_preset_is_default_to_is_selected,
@@ -48,7 +48,7 @@ export async function activate(context: vscode.ExtensionContext) {
   await migrations()
 
   if (workspace_provider && open_editors_provider && websites_provider) {
-    const view_provider = new ViewProvider(
+    const panel_provider = new PanelProvider(
       context.extensionUri,
       workspace_provider,
       open_editors_provider,
@@ -59,20 +59,20 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(
         'codeWebChatView',
-        view_provider,
+        panel_provider,
         {
           webviewOptions: {
             retainContextWhenHidden: true
           }
         }
       ),
-      reference_in_chat_command(view_provider, workspace_provider),
-      apply_chat_response_command(context, view_provider, workspace_provider),
+      reference_in_chat_command(panel_provider, workspace_provider),
+      apply_chat_response_command(context, panel_provider, workspace_provider),
       ...code_completion_commands(
         workspace_provider,
         open_editors_provider,
         context,
-        view_provider
+        panel_provider
       )
     )
   }

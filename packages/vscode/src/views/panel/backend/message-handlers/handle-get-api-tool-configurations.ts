@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import {
   ModelProvidersManager,
   ToolConfig,
@@ -8,7 +8,7 @@ import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { ApiMode } from '@shared/types/modes'
 
 export const handle_get_api_tool_configurations = async (
-  provider: ViewProvider
+  provider: PanelProvider
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)
 

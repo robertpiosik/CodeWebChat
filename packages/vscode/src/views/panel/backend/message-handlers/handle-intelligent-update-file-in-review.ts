@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { IntelligentUpdateFileInReviewMessage } from '@/views/panel/types/messages'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import {
@@ -59,7 +59,7 @@ const get_default_intelligent_update_config = async (
 }
 
 export const handle_intelligent_update_file_in_review = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: IntelligentUpdateFileInReviewMessage
 ): Promise<void> => {
   const { file_path, workspace_name } = message

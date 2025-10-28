@@ -89,7 +89,7 @@ import { undo_files } from '@/commands/apply-chat-response-command/utils/file-op
 import { create_checkpoint } from '@/commands/checkpoints-command/actions'
 import { dictionary } from '@shared/constants/dictionary'
 
-export class ViewProvider implements vscode.WebviewViewProvider {
+export class PanelProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public has_active_editor: boolean = false

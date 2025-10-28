@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'
 
 export const handle_pick_open_router_model = async (
-  provider: ViewProvider
+  provider: PanelProvider
 ): Promise<void> => {
   try {
     const response = await axios.get('https://openrouter.ai/api/v1/models')

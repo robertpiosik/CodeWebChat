@@ -1,11 +1,11 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { GoToFileInReviewMessage } from '@/views/panel/types/messages'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_go_to_file_in_review = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: GoToFileInReviewMessage
 ): Promise<void> => {
   const { file_path, workspace_name } = message

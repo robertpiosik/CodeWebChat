@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { get_git_repository, GitRepository } from '@/utils/git-repository-utils'
 import { dictionary } from '@shared/constants/dictionary'
-import { ViewProvider } from '../../panel-provider'
+import { PanelProvider } from '../../panel-provider'
 import {
   generate_commit_message_from_diff,
   get_commit_message_config
@@ -11,7 +11,7 @@ import * as path from 'path'
 import { execSync } from 'child_process'
 
 async function proceed_with_commit_generation(
-  provider: ViewProvider,
+  provider: PanelProvider,
   repository: GitRepository,
   was_empty_stage: boolean
 ) {
@@ -43,7 +43,7 @@ async function proceed_with_commit_generation(
       repository,
       diff,
       api_config,
-      view_provider: provider
+      panel_provider: provider
     })
 
     if (!commit_message) {
@@ -77,7 +77,7 @@ async function proceed_with_commit_generation(
 }
 
 export const handle_commit_changes = async (
-  provider: ViewProvider
+  provider: PanelProvider
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
@@ -115,7 +115,7 @@ export const handle_commit_changes = async (
 }
 
 export const handle_proceed_with_commit = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   files_to_stage: string[]
 ): Promise<void> => {
   const repository = get_git_repository()

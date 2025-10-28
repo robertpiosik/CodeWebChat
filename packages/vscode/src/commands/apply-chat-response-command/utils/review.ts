@@ -6,7 +6,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import * as crypto from 'crypto'
 import { createTwoFilesPatch } from 'diff'
 import { create_safe_path } from '@/utils/path-sanitizer'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { remove_directory_if_empty } from './file-operations'
 import { FileInReview } from '@shared/types/file-in-review'
@@ -280,7 +280,7 @@ const show_diff_with_actions = async (
 
 export const review = async (params: {
   original_states: OriginalFileState[]
-  view_provider: ViewProvider
+  panel_provider: PanelProvider
   raw_instructions?: string
 }): Promise<{
   accepted_files: ReviewableFile[]
@@ -344,7 +344,7 @@ export const review = async (params: {
           diff_stats.lines_removed
         changed_file_in_review.reviewable_file.content = new_content
 
-        params.view_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: changed_file_in_review.reviewable_file
         })
@@ -420,7 +420,7 @@ export const review = async (params: {
         params.original_states.push(new_original_state)
         prepared_files.push(new_prepared_file)
         create_temp_files_with_original_content([new_prepared_file])
-        params.view_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: new_prepared_file.reviewable_file
         })
@@ -494,7 +494,7 @@ export const review = async (params: {
         params.original_states.push(new_original_state)
         prepared_files.push(new_prepared_file)
         create_temp_files_with_original_content([new_prepared_file])
-        params.view_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: new_prepared_file.reviewable_file
         })
@@ -509,7 +509,7 @@ export const review = async (params: {
           diff_stats.lines_added
         deleted_file_in_review.reviewable_file.lines_removed =
           diff_stats.lines_removed
-        params.view_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: deleted_file_in_review.reviewable_file
         })
@@ -589,7 +589,7 @@ export const review = async (params: {
       create_temp_files_with_original_content([new_prepared_file])
 
       // Notify the panel to include this file in the review UI
-      params.view_provider.send_message({
+      params.panel_provider.send_message({
         command: 'UPDATE_FILE_IN_REVIEW',
         file: new_prepared_file.reviewable_file
       })
@@ -700,11 +700,11 @@ export const review = async (params: {
         })
 
         // Notify UI
-        params.view_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: existing.reviewable_file
         })
-        params.view_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: deleted_prepared.reviewable_file
         })
@@ -791,11 +791,11 @@ export const review = async (params: {
         ])
 
         // Notify UI
-        params.view_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: created_reviewable
         })
-        params.view_provider.send_message({
+        params.panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: deleted_reviewable
         })
@@ -810,8 +810,8 @@ export const review = async (params: {
       workspace_map
     })
 
-    if (params.view_provider) {
-      params.view_provider.send_message({
+    if (params.panel_provider) {
+      params.panel_provider.send_message({
         command: 'CODE_REVIEW_STARTED',
         files: prepared_files.map((p) => p.reviewable_file),
         raw_instructions: params.raw_instructions
@@ -1011,9 +1011,9 @@ export const review = async (params: {
     cleanup_temp_files(prepared_files)
     toggle_file_review_state = undefined
 
-    if (params.view_provider) {
-      params.view_provider.cancel_all_intelligent_updates()
-      params.view_provider.send_message({ command: 'CODE_REVIEW_FINISHED' })
+    if (params.panel_provider) {
+      params.panel_provider.cancel_all_intelligent_updates()
+      params.panel_provider.send_message({ command: 'CODE_REVIEW_FINISHED' })
     }
   }
 }

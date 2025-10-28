@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
@@ -10,7 +10,7 @@ import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_copy_prompt = async (params: {
-  provider: ViewProvider
+  provider: PanelProvider
   instructions: string
   preset_name?: string
 }): Promise<void> => {

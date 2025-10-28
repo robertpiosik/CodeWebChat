@@ -2,11 +2,11 @@ import {
   API_EDIT_FORMAT_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY
 } from '@/constants/state-keys'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveEditFormatMessage } from '@/views/panel/types/messages'
 
 export const handle_save_edit_format = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: SaveEditFormatMessage
 ): Promise<void> => {
   if (message.target == 'chat') {

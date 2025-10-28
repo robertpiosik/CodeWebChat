@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
@@ -23,7 +23,7 @@ import { dictionary } from '@shared/constants/dictionary'
  * if undefiend - use recently used preset/group.
  */
 export const handle_send_prompt = async (params: {
-  provider: ViewProvider
+  provider: PanelProvider
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean
@@ -238,7 +238,7 @@ async function show_preset_quick_pick(params: {
   presets: ConfigPresetFormat[]
   context: vscode.ExtensionContext
   mode: WebMode
-  provider: ViewProvider
+  provider: PanelProvider
 }): Promise<string[] | null> {
   const key = get_last_selected_preset_key(params.mode)
   const last_selected_item =
@@ -344,7 +344,7 @@ async function show_preset_quick_pick(params: {
 }
 
 async function resolve_presets(params: {
-  provider: ViewProvider
+  provider: PanelProvider
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean

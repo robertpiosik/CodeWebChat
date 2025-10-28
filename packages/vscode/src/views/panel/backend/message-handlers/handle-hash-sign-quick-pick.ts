@@ -1,10 +1,10 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import * as vscode from 'vscode'
 import { hash_sign_quick_pick } from '../utils/hash-sign-quick-pick'
 
 export const handle_hash_sign_quick_pick = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   context: vscode.ExtensionContext,
   is_for_code_completions: boolean
 ): Promise<void> => {

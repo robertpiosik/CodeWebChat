@@ -3,16 +3,16 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { FileItem } from '../context/providers/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const reference_in_chat_command = (
-  view_provider: ViewProvider | undefined,
+  panel_provider: PanelProvider | undefined,
   workspace_provider: WorkspaceProvider | undefined
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.referenceInChat',
     async (uri: FileItem) => {
-      if (!view_provider || !workspace_provider) {
+      if (!panel_provider || !workspace_provider) {
         return
       }
 
@@ -42,7 +42,7 @@ export const reference_in_chat_command = (
       const relative_path = path.relative(workspace_root, file_path)
       const reference_text = `\`${relative_path}\``
 
-      view_provider.add_text_at_cursor_position(reference_text)
+      panel_provider.add_text_at_cursor_position(reference_text)
     }
   )
 }
