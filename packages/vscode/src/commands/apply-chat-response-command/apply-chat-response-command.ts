@@ -451,9 +451,6 @@ export const apply_chat_response_command = (
           }
         }
 
-        console.log('xxx', args?.files_with_content)
-        console.log('xxx', clipboard_content)
-
         if (
           clipboard_content.type == 'code-completion' &&
           clipboard_content.code_completion
