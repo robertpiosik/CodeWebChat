@@ -13,8 +13,6 @@ export const LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY =
   'last-selected-file-context-name'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
-export const COMMIT_MESSAGES_CONFIRMATION_THRESHOLD_STATE_KEY =
-  'commitMessagesConfirmationThreshold'
 export const LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY =
   'lastSelectedCodeCompletionConfigId'
 export const LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY =

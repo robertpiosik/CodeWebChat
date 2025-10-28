@@ -6,7 +6,6 @@ import {
   CommitMessageConfig
 } from './get-commit-message-config'
 import { collect_affected_files_with_metadata } from './file-utils'
-import { handle_file_selection_if_needed } from './handle-file-selection'
 import {
   build_files_content,
   build_commit_message_prompt
@@ -189,13 +188,7 @@ export const generate_commit_message_from_diff = async (params: {
     repository: params.repository
   })
 
-  const selected_files = await handle_file_selection_if_needed({
-    context: params.context,
-    files_data: affected_files_data
-  })
-  if (!selected_files) return null
-
-  const affected_files = build_files_content(selected_files)
+  const affected_files = build_files_content(affected_files_data)
   const message = build_commit_message_prompt(
     commit_message_prompt!,
     affected_files,
