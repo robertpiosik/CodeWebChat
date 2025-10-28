@@ -23,7 +23,7 @@ Code Web Chat only starts new conversations. This idea is borrowed from [Firefox
 > [!NOTE]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
 
-🧑‍💻 **Control the context to guide the model**
+🧑‍💻 **Control the context, guide the model**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
