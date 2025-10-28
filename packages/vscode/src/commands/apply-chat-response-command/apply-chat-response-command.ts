@@ -35,6 +35,7 @@ import {
   promote_temporary_checkpoint
 } from '../checkpoints-command/actions'
 import { FileInReview } from '@shared/types/file-in-review'
+import { handle_restore_review } from './handlers/restore-review-handler'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 
@@ -436,6 +437,22 @@ export const apply_chat_response_command = (
       }
 
       const review_data = await (async (): Promise<ReviewData | null> => {
+        if (args?.files_with_content) {
+          const result = await handle_restore_review(args.files_with_content)
+          if (result.success && result.original_states) {
+            update_undo_button_state(
+              result.original_states,
+              chat_response,
+              args?.original_editor_state
+            )
+            return {
+              original_states: result.original_states,
+              chat_response
+            }
+          }
+          return null
+        }
+
         const is_single_root_folder_workspace =
           vscode.workspace.workspaceFolders?.length == 1
 
@@ -443,13 +460,6 @@ export const apply_chat_response_command = (
           response: chat_response,
           is_single_root_folder_workspace
         })
-
-        if (args?.files_with_content) {
-          clipboard_content = {
-            type: 'files',
-            files: args.files_with_content as ClipboardFile[]
-          }
-        }
 
         if (
           clipboard_content.type == 'code-completion' &&

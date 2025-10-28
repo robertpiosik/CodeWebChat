@@ -47,11 +47,15 @@ export function rename_command() {
           // Target doesn't exist, proceed with renaming.
         }
 
-        await vscode.workspace.fs.rename(
-          vscode.Uri.file(old_path),
-          vscode.Uri.file(new_path),
-          { overwrite: false }
-        )
+        const old_uri = vscode.Uri.file(old_path)
+        const new_uri = vscode.Uri.file(new_path)
+
+        const edit = new vscode.WorkspaceEdit()
+        edit.renameFile(old_uri, new_uri, { overwrite: false })
+        const applied = await vscode.workspace.applyEdit(edit)
+        if (!applied) {
+          throw new Error('Failed to apply rename edit')
+        }
       } catch (error: any) {
         vscode.window.showErrorMessage(
           dictionary.error_message.FAILED_TO_RENAME(error.message)

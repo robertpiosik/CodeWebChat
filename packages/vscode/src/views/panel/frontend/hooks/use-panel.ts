@@ -53,8 +53,6 @@ export const use_panel = (vscode: any) => {
   const [response_history, set_response_history] = useState<
     ResponseHistoryItem[]
   >([])
-
-  console.log(response_history)
   const [workspace_folder_count, set_workspace_folder_count] =
     useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()

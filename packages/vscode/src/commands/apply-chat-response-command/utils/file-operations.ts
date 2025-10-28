@@ -326,7 +326,7 @@ export const undo_files = async (params: {
         continue // Skip this file
       }
 
-      if (state.is_new) {
+      if (state.is_new && !state.file_path_to_restore) {
         if (fs.existsSync(safe_path)) {
           // Close any open editors for this file before deleting
           const uri = vscode.Uri.file(safe_path)
