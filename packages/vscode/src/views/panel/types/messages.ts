@@ -317,6 +317,7 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   command: 'APPLY_RESPONSE_FROM_HISTORY'
   response: string
   raw_instructions?: string
+  files?: FileInReview[]
 }
 
 export type FrontendMessage =
@@ -572,6 +573,7 @@ export interface NewResponseReceivedMessage extends BaseMessage {
   raw_instructions?: string
   lines_added: number
   lines_removed: number
+  files?: FileInReview[]
 }
 
 export type BackendMessage =

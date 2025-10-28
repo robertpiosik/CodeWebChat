@@ -9,10 +9,11 @@ import { create_safe_path } from '@/utils/path-sanitizer'
 import { ViewProvider } from '@/views/panel/backend/panel-provider'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { remove_directory_if_empty } from './file-operations'
+import { FileInReview } from '@shared/types/file-in-review'
 
 export type CodeReviewDecision =
   | { jump_to: { file_path: string; workspace_name?: string } }
-  | { accepted_files: Omit<ReviewableFile, 'content'>[] }
+  | { accepted_files: FileInReview[] }
 
 export type CodeReviewResult = {
   decision: CodeReviewDecision
@@ -32,17 +33,8 @@ export let toggle_file_review_state:
     }) => Promise<void>)
   | undefined
 
-type ReviewableFile = {
-  file_path: string
+type ReviewableFile = FileInReview & {
   content: string
-  workspace_name?: string
-  is_new?: boolean
-  is_deleted?: boolean
-  lines_added: number
-  lines_removed: number
-  is_fallback?: boolean
-  is_replaced?: boolean
-  diff_fallback_method?: 'recount' | 'search_and_replace'
 }
 
 type PreparedFile = {
@@ -488,6 +480,14 @@ export const review = async (params: {
       } else {
         deleted_file_in_review.reviewable_file.is_deleted = true
         deleted_file_in_review.reviewable_file.content = ''
+        const diff_stats = get_diff_stats({
+          original_content: deleted_file_in_review.original_content,
+          new_content: ''
+        })
+        deleted_file_in_review.reviewable_file.lines_added =
+          diff_stats.lines_added
+        deleted_file_in_review.reviewable_file.lines_removed =
+          diff_stats.lines_removed
         params.view_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: deleted_file_in_review.reviewable_file
