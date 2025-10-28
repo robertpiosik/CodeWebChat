@@ -7,6 +7,7 @@ Meet Code Web Chat, a universal toolkit for AI pair programming. Designed to be 
 ❤️ **Free and open-source.** _Join our [discord server](https://discord.gg/KJySXsrSX5) and get involed!_
 
 ✅ **Initializes web chats**—ChatGPT, Claude, Gemini, AI Studio, Qwen, and 10+ more \
+✅ **Calls model providers**—bring your own key or use local model via Ollama \
 ✅ **Applies responses**—multi-file changes integration with easy rollback \
 ✅ **Batteries included**—code completions, commit messages, and more
 
