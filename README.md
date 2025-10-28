@@ -2,11 +2,11 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="License: GPL-3.0" /></a>
 
-Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf. The best privacy, accuracy and speed.
+Meet Code Web Chat, a universal toolkit for AI pair programming. Designed to be an affordable, accurate and fast alternative to coding agents. Works with VS Code, Cursor, and other forks.
 
 ❤️ **Free and open-source.** _Join our [discord server](https://discord.gg/KJySXsrSX5) and get involed!_
 
-✅ **Initializes chatbots**—ChatGPT, Claude, Gemini, AI Studio, Qwen, and 10+ more \
+✅ **Initializes web chats**—ChatGPT, Claude, Gemini, AI Studio, Qwen, and 10+ more \
 ✅ **Applies responses**—multi-file changes integration with easy rollback \
 ✅ **Batteries included**—code completions, commit messages, and more
 
@@ -16,14 +16,14 @@ Unlimited AI coding in free chatbots for VS Code, Cursor and Windsurf. The best 
 
 ## Introduction
 
-👨‍⚖️ **Is it legal?**
+👨‍⚖️ **In respect to Terms of Use**
 
-Code Web Chat only starts new conversations. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots terms of use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be rejected.
+Code Web Chat only starts new conversations. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be rejected.
 
 > [!NOTE]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
 
-🧑‍💻 **Guide the model through context ownership**
+🧑‍💻 **Control the context to guide the model**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
