@@ -17,6 +17,7 @@ type ResponseHistoryItem = {
   created_at: number
   lines_added: number
   lines_removed: number
+  files?: FileInReview[]
 }
 
 export const use_panel = (vscode: any) => {
@@ -52,6 +53,8 @@ export const use_panel = (vscode: any) => {
   const [response_history, set_response_history] = useState<
     ResponseHistoryItem[]
   >([])
+
+  console.log(response_history)
   const [workspace_folder_count, set_workspace_folder_count] =
     useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()
@@ -154,6 +157,51 @@ export const use_panel = (vscode: any) => {
             return [...files, { ...message.file, is_checked: true }]
           }
         })
+        set_response_history((current_history) => {
+          const history_item_index = current_history.findIndex(
+            (item) => item.created_at === selected_history_item_created_at
+          )
+
+          if (history_item_index === -1) {
+            return current_history
+          }
+
+          const new_history = [...current_history]
+          const history_item_to_update = { ...new_history[history_item_index] }
+
+          const files_in_history = history_item_to_update.files
+            ? [...history_item_to_update.files]
+            : []
+
+          const file_in_history_index = files_in_history.findIndex(
+            (f) =>
+              f.file_path === message.file.file_path &&
+              f.workspace_name === message.file.workspace_name
+          )
+
+          if (file_in_history_index !== -1) {
+            files_in_history[file_in_history_index] = message.file
+          } else {
+            files_in_history.push(message.file)
+          }
+
+          history_item_to_update.files = files_in_history
+
+          // Recalculate total lines added/removed
+          let total_lines_added = 0
+          let total_lines_removed = 0
+          for (const file of files_in_history) {
+            total_lines_added += file.lines_added
+            total_lines_removed += file.lines_removed
+          }
+
+          history_item_to_update.lines_added = total_lines_added
+          history_item_to_update.lines_removed = total_lines_removed
+
+          new_history[history_item_index] = history_item_to_update
+
+          return new_history
+        })
       } else if (message.command == 'CODE_REVIEW_FINISHED') {
         set_files_to_review(undefined)
         set_raw_instructions(undefined)
@@ -188,7 +236,8 @@ export const use_panel = (vscode: any) => {
               raw_instructions: message.raw_instructions,
               created_at: now,
               lines_added: message.lines_added,
-              lines_removed: message.lines_removed
+              lines_removed: message.lines_removed,
+              files: message.files
             }
           ])
         } else {
@@ -203,7 +252,8 @@ export const use_panel = (vscode: any) => {
               raw_instructions: message.raw_instructions,
               created_at: now,
               lines_added: message.lines_added,
-              lines_removed: message.lines_removed
+              lines_removed: message.lines_removed,
+              files: message.files
             }
             set_response_history([...response_history, new_item])
             if (!files_to_review) {

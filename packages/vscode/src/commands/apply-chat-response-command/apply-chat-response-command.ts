@@ -34,6 +34,7 @@ import {
   delete_checkpoint,
   promote_temporary_checkpoint
 } from '../checkpoints-command/actions'
+import { FileInReview } from '@shared/types/file-in-review'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 
@@ -382,6 +383,7 @@ export const apply_chat_response_command = (
         file_path: string
         position: { line: number; character: number }
       }
+      files_with_content?: FileInReview[]
     }) => {
       if (!vscode.workspace.workspaceFolders?.length) {
         vscode.window.showErrorMessage(
@@ -441,6 +443,16 @@ export const apply_chat_response_command = (
           response: chat_response,
           is_single_root_folder_workspace
         })
+
+        if (args?.files_with_content) {
+          clipboard_content = {
+            type: 'files',
+            files: args.files_with_content as ClipboardFile[]
+          }
+        }
+
+        console.log('xxx', args?.files_with_content)
+        console.log('xxx', clipboard_content)
 
         if (
           clipboard_content.type == 'code-completion' &&
@@ -949,58 +961,78 @@ export const apply_chat_response_command = (
 
       try {
         if (review_data) {
-          let total_lines_added = 0
-          let total_lines_removed = 0
+          if (!args?.files_with_content) {
+            let total_lines_added = 0
+            let total_lines_removed = 0
+            const files_for_history: FileInReview[] = []
 
-          const workspace_map = new Map<string, string>()
-          vscode.workspace.workspaceFolders!.forEach((folder) => {
-            workspace_map.set(folder.name, folder.uri.fsPath)
-          })
-          const default_workspace =
-            vscode.workspace.workspaceFolders![0].uri.fsPath
-
-          for (const state of review_data.original_states) {
-            let workspace_root = default_workspace
-            if (
-              state.workspace_name &&
-              workspace_map.has(state.workspace_name)
-            ) {
-              workspace_root = workspace_map.get(state.workspace_name)!
-            }
-
-            const sanitized_file_path = create_safe_path(
-              workspace_root,
-              state.file_path
-            )
-            if (!sanitized_file_path) {
-              continue
-            }
-
-            let current_content = ''
-            try {
-              if (fs.existsSync(sanitized_file_path)) {
-                current_content = fs.readFileSync(sanitized_file_path, 'utf8')
-              }
-            } catch (error) {
-              continue
-            }
-
-            const diff_stats = get_diff_stats({
-              original_content: state.content,
-              new_content: current_content
+            const workspace_map = new Map<string, string>()
+            vscode.workspace.workspaceFolders!.forEach((folder) => {
+              workspace_map.set(folder.name, folder.uri.fsPath)
             })
+            const default_workspace =
+              vscode.workspace.workspaceFolders![0].uri.fsPath
 
-            total_lines_added += diff_stats.lines_added
-            total_lines_removed += diff_stats.lines_removed
+            for (const state of review_data.original_states) {
+              let workspace_root = default_workspace
+              if (
+                state.workspace_name &&
+                workspace_map.has(state.workspace_name)
+              ) {
+                workspace_root = workspace_map.get(state.workspace_name)!
+              }
+
+              const sanitized_file_path = create_safe_path(
+                workspace_root,
+                state.file_path
+              )
+              if (!sanitized_file_path) {
+                continue
+              }
+
+              let current_content = ''
+              try {
+                if (fs.existsSync(sanitized_file_path)) {
+                  current_content = fs.readFileSync(sanitized_file_path, 'utf8')
+                }
+              } catch (error) {
+                continue
+              }
+
+              const diff_stats = get_diff_stats({
+                original_content: state.content,
+                new_content: current_content
+              })
+
+              total_lines_added += diff_stats.lines_added
+              total_lines_removed += diff_stats.lines_removed
+
+              const is_deleted =
+                !state.is_new && current_content === '' && state.content !== ''
+
+              files_for_history.push({
+                file_path: state.file_path,
+                workspace_name: state.workspace_name,
+                is_new: state.is_new,
+                is_deleted,
+                lines_added: diff_stats.lines_added,
+                lines_removed: diff_stats.lines_removed,
+                is_fallback: state.is_fallback,
+                is_replaced: state.is_replaced,
+                diff_fallback_method: state.diff_fallback_method,
+                content: current_content
+              })
+            }
+
+            view_provider.send_message({
+              command: 'NEW_RESPONSE_RECEIVED',
+              response: review_data.chat_response,
+              raw_instructions: args?.raw_instructions,
+              lines_added: total_lines_added,
+              lines_removed: total_lines_removed,
+              files: files_for_history
+            })
           }
-
-          view_provider.send_message({
-            command: 'NEW_RESPONSE_RECEIVED',
-            response: review_data.chat_response,
-            raw_instructions: args?.raw_instructions,
-            lines_added: total_lines_added,
-            lines_removed: total_lines_removed
-          })
 
           const changes_accepted = await handle_code_review_and_cleanup({
             original_states: review_data.original_states,

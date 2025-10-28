@@ -384,7 +384,8 @@ export class ViewProvider implements vscode.WebviewViewProvider {
               'codeWebChat.applyChatResponse',
               {
                 response: message.response,
-                raw_instructions: message.raw_instructions
+                raw_instructions: message.raw_instructions,
+                files_with_content: message.files
               }
             )
           } else if (message.command == 'EXECUTE_COMMAND') {
