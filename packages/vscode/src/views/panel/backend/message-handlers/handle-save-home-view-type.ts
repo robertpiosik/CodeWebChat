@@ -1,8 +1,8 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveHomeViewTypeMessage } from '@/views/panel/types/messages'
 
 export const handle_save_home_view_type = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: SaveHomeViewTypeMessage
 ): Promise<void> => {
   provider.home_view_type = message.view_type

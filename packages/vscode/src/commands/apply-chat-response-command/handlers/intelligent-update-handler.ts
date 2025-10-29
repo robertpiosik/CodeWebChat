@@ -8,7 +8,7 @@ import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { create_file_if_needed } from '../utils/file-operations'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
 import { FileProgress } from '@/views/panel/types/messages'
@@ -20,7 +20,7 @@ export const handle_intelligent_update = async (params: {
   chat_response: string
   context: vscode.ExtensionContext
   is_single_root_folder_workspace: boolean
-  view_provider?: ViewProvider
+  panel_provider?: PanelProvider
 }): Promise<OriginalFileState[] | null> => {
   const workspace_map = new Map<string, string>()
   if (vscode.workspace.workspaceFolders) {
@@ -144,8 +144,8 @@ export const handle_intelligent_update = async (params: {
   }))
 
   const update_progress = () => {
-    if (params.view_provider) {
-      params.view_provider.send_message({
+    if (params.panel_provider) {
+      params.panel_provider.send_message({
         command: 'SHOW_PROGRESS',
         title: progress_title,
         files: [...file_progress_list]
@@ -164,12 +164,12 @@ export const handle_intelligent_update = async (params: {
   let api_calls_succeeded = false
   const max_concurrency = params.config.max_concurrency ?? 10
   const cancel_token_source = axios.CancelToken.source()
-  if (params.view_provider) {
-    params.view_provider.api_call_cancel_token_source = cancel_token_source
+  if (params.panel_provider) {
+    params.panel_provider.api_call_cancel_token_source = cancel_token_source
   }
 
   try {
-    if (params.view_provider) {
+    if (params.panel_provider) {
       update_progress()
     }
 
@@ -378,9 +378,9 @@ export const handle_intelligent_update = async (params: {
       )
     }
   } finally {
-    if (params.view_provider) {
-      params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
-      params.view_provider.api_call_cancel_token_source = null
+    if (params.panel_provider) {
+      params.panel_provider.send_message({ command: 'HIDE_PROGRESS' })
+      params.panel_provider.api_call_cancel_token_source = null
     }
   }
 

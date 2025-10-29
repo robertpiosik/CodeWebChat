@@ -13,7 +13,7 @@ import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/model-providers-manager'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from '../utils/apply-reasoning-effort'
 
@@ -62,7 +62,7 @@ const get_code_completion_config = async (
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   config_id?: string,
-  view_provider?: ViewProvider
+  panel_provider?: PanelProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
   const code_completions_configs =
     await api_providers_manager.get_code_completions_tool_configs()
@@ -166,8 +166,8 @@ const get_code_completion_config = async (
             selected.id
           )
 
-          if (view_provider) {
-            view_provider.send_message({
+          if (panel_provider) {
+            panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               mode: 'code-completions',
               id: selected.id
@@ -230,7 +230,7 @@ const perform_code_completion = async (params: {
   show_quick_pick?: boolean
   completion_instructions?: string
   config_id?: string
-  view_provider?: ViewProvider
+  panel_provider?: PanelProvider
 }) => {
   const api_providers_manager = new ModelProvidersManager(params.context)
 
@@ -260,7 +260,7 @@ const perform_code_completion = async (params: {
     params.show_quick_pick,
     params.context,
     params.config_id,
-    params.view_provider
+    params.panel_provider
   )
 
   if (!config_result) {
@@ -488,7 +488,7 @@ export const code_completion_commands = (
   file_tree_provider: any,
   open_editors_provider: any,
   context: vscode.ExtensionContext,
-  view_provider: ViewProvider
+  panel_provider: PanelProvider
 ) => {
   return [
     vscode.commands.registerCommand('codeWebChat.codeCompletion', async () =>
@@ -520,7 +520,7 @@ export const code_completion_commands = (
           context,
           with_completion_instructions: false,
           show_quick_pick: true,
-          view_provider
+          panel_provider
         })
     ),
     vscode.commands.registerCommand(
@@ -532,7 +532,7 @@ export const code_completion_commands = (
           context,
           with_completion_instructions: true,
           show_quick_pick: true,
-          view_provider
+          panel_provider
         })
     )
   ]

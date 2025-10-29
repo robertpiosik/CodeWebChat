@@ -5,9 +5,9 @@ import {
   HISTORY_NO_CONTEXT_STATE_KEY,
   HistoryEntry
 } from '@/constants/state-keys'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
-export const handle_get_history = (provider: ViewProvider): void => {
+export const handle_get_history = (provider: PanelProvider): void => {
   const ask_history = provider.context.workspaceState.get<HistoryEntry[]>(
     HISTORY_ASK_STATE_KEY,
     []

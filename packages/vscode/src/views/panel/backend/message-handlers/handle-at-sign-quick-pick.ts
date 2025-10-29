@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import * as vscode from 'vscode'
 import * as path from 'path'
@@ -99,7 +99,7 @@ const at_sign_quick_pick = async (params: {
 }
 
 export const handle_at_sign_quick_pick = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   search_value?: string
 ): Promise<void> => {
   const replacement = await at_sign_quick_pick({

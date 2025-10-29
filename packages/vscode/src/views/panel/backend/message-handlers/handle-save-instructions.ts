@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveInstructionsMessage } from '@/views/panel/types/messages'
 import {
   INSTRUCTIONS_ASK_STATE_KEY,
@@ -8,7 +8,7 @@ import {
 } from '@/constants/state-keys'
 
 export const handle_save_instructions = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: SaveInstructionsMessage
 ): Promise<void> => {
   const { mode, instruction } = message

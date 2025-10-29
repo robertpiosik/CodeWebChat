@@ -45,7 +45,7 @@ import {
   handle_get_donations_visibility,
   handle_save_donations_visibility,
   handle_focus_on_file_in_review,
-  handle_go_to_file_in_review,
+  handle_go_to_file,
   handle_toggle_file_in_review,
   handle_intelligent_update_file_in_review,
   handle_commit_changes,
@@ -89,7 +89,7 @@ import { undo_files } from '@/commands/apply-chat-response-command/utils/file-op
 import { create_checkpoint } from '@/commands/checkpoints-command/actions'
 import { dictionary } from '@shared/constants/dictionary'
 
-export class ViewProvider implements vscode.WebviewViewProvider {
+export class PanelProvider implements vscode.WebviewViewProvider {
   private _webview_view: vscode.WebviewView | undefined
   private _config_listener: vscode.Disposable | undefined
   public has_active_editor: boolean = false
@@ -442,10 +442,10 @@ export class ViewProvider implements vscode.WebviewViewProvider {
             handle_get_donations_visibility(this)
           } else if (message.command == 'SAVE_DONATIONS_VISIBILITY') {
             await handle_save_donations_visibility(this, message)
+          } else if (message.command == 'GO_TO_FILE') {
+            handle_go_to_file(message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_REVIEW') {
             handle_focus_on_file_in_review(this, message)
-          } else if (message.command == 'GO_TO_FILE_IN_REVIEW') {
-            handle_go_to_file_in_review(this, message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
             await handle_toggle_file_in_review(this, message)
           } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_REVIEW') {

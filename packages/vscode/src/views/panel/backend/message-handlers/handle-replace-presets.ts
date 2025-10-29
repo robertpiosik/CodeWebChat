@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
 import { ReplacePresetsMessage } from '@/views/panel/types/messages'
 import { ui_preset_to_config_format } from '@/views/panel/backend/utils/preset-format-converters'
-import { ViewProvider } from '../panel-provider'
+import { PanelProvider } from '../panel-provider'
 
 export const handle_replace_presets = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: ReplacePresetsMessage
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')

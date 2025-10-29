@@ -4,10 +4,10 @@ import { Logger } from '@shared/utils/logger'
 import { LAST_APPLIED_CHANGES_STATE_KEY } from '@/constants/state-keys'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { dictionary } from '@shared/constants/dictionary'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const handle_accept_commit_message = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   commit_message: string
 ): Promise<void> => {
   const repository = get_git_repository()

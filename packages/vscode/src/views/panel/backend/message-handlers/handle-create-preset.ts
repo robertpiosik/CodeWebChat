@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import {
@@ -8,7 +8,7 @@ import {
 } from '@/views/panel/backend/utils/preset-format-converters'
 
 export const handle_create_preset = async (
-  provider: ViewProvider
+  provider: PanelProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const create_option = await vscode.window.showQuickPick(

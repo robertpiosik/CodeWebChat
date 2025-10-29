@@ -1,6 +1,6 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
-export const handle_get_instructions = (provider: ViewProvider): void => {
+export const handle_get_instructions = (provider: PanelProvider): void => {
   provider.send_message({
     command: 'INSTRUCTIONS',
     ask: provider.ask_instructions,

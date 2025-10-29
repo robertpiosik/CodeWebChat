@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Unlimited AI coding in free chatbots (CWC)",
-  "version": "1.488.0",
+  "description": "Agent-free AI pair programming (CWC)",
+  "version": "1.489.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",

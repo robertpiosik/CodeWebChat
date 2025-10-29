@@ -12,7 +12,7 @@ import {
   PINNED_HISTORY_NO_CONTEXT_STATE_KEY,
   HistoryEntry
 } from '@/constants/state-keys'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { handle_get_history } from './handle-get-history'
@@ -20,7 +20,7 @@ import { handle_get_history } from './handle-get-history'
 dayjs.extend(relativeTime)
 
 export const handle_show_history_quick_pick = async (
-  provider: ViewProvider
+  provider: PanelProvider
 ): Promise<void> => {
   const mode: WebMode | ApiMode | undefined =
     provider.home_view_type == HOME_VIEW_TYPES.WEB

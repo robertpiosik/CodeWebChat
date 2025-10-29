@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { PickChatbotMessage } from '@/views/panel/types/messages'
 
 export const handle_pick_chatbot = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: PickChatbotMessage
 ): Promise<void> => {
   const chatbots = Object.entries(CHATBOTS)

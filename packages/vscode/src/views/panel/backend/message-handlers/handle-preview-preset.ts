@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PreviewPresetMessage } from '@/views/panel/types/messages'
 import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
@@ -10,7 +10,7 @@ import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixe
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_preview_preset = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: PreviewPresetMessage
 ): Promise<void> => {
   await vscode.workspace.saveAll()

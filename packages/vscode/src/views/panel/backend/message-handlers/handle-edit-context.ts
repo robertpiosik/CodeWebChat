@@ -15,7 +15,7 @@ import { ToolConfig } from '@/services/model-providers-manager'
 import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
@@ -25,7 +25,7 @@ const get_edit_context_config = async (
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
   config_id?: string,
-  view_provider?: ViewProvider
+  panel_provider?: PanelProvider
 ): Promise<{ provider: any; config: any } | undefined> => {
   const edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
@@ -54,8 +54,8 @@ const get_edit_context_config = async (
         config_id
       )
 
-      if (view_provider) {
-        view_provider.send_message({
+      if (panel_provider) {
+        panel_provider.send_message({
           command: 'SELECTED_CONFIGURATION_CHANGED',
           mode: 'edit-context',
           id: config_id
@@ -152,8 +152,8 @@ const get_edit_context_config = async (
             selected.id
           )
 
-          if (view_provider) {
-            view_provider.send_message({
+          if (panel_provider) {
+            panel_provider.send_message({
               command: 'SELECTED_CONFIGURATION_CHANGED',
               mode: 'edit-context',
               id: selected.id
@@ -217,7 +217,7 @@ const perform_context_editing = async (params: {
   show_quick_pick?: boolean
   instructions?: string
   config_id?: string
-  view_provider: ViewProvider
+  panel_provider: PanelProvider
 }) => {
   await vscode.workspace.saveAll()
 
@@ -283,7 +283,7 @@ const perform_context_editing = async (params: {
     params.show_quick_pick,
     params.context,
     params.config_id,
-    params.view_provider
+    params.panel_provider
   )
 
   if (!config_result) {
@@ -365,13 +365,13 @@ const perform_context_editing = async (params: {
 
   const cancel_token_source = axios.CancelToken.source()
 
-  if (params.view_provider) {
-    params.view_provider.api_call_cancel_token_source = cancel_token_source
+  if (params.panel_provider) {
+    params.panel_provider.api_call_cancel_token_source = cancel_token_source
   }
 
   try {
-    if (params.view_provider) {
-      params.view_provider.send_message({
+    if (params.panel_provider) {
+      params.panel_provider.send_message({
         command: 'SHOW_PROGRESS',
         title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
       })
@@ -382,16 +382,16 @@ const perform_context_editing = async (params: {
       body,
       cancellation_token: cancel_token_source.token,
       on_thinking_chunk: () => {
-        if (params.view_provider) {
-          params.view_provider.send_message({
+        if (params.panel_provider) {
+          params.panel_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: `${dictionary.api_call.THINKING}...`
           })
         }
       },
       on_chunk: (tokens_per_second) => {
-        if (params.view_provider) {
-          params.view_provider.send_message({
+        if (params.panel_provider) {
+          params.panel_provider.send_message({
             command: 'SHOW_PROGRESS',
             title: 'Receiving response...',
             tokens_per_second
@@ -415,22 +415,22 @@ const perform_context_editing = async (params: {
     })
     vscode.window.showErrorMessage(dictionary.error_message.REFACTOR_ERROR)
   } finally {
-    params.view_provider.send_message({ command: 'HIDE_PROGRESS' })
-    params.view_provider.api_call_cancel_token_source = null
+    params.panel_provider.send_message({ command: 'HIDE_PROGRESS' })
+    params.panel_provider.api_call_cancel_token_source = null
   }
 }
 
 export const handle_edit_context = async (
-  view_provider: ViewProvider,
+  panel_provider: PanelProvider,
   message: EditContextMessage
 ): Promise<void> => {
   perform_context_editing({
-    context: view_provider.context,
-    file_tree_provider: view_provider.workspace_provider,
-    open_editors_provider: view_provider.open_editors_provider,
+    context: panel_provider.context,
+    file_tree_provider: panel_provider.workspace_provider,
+    open_editors_provider: panel_provider.open_editors_provider,
     show_quick_pick: message.use_quick_pick,
-    instructions: view_provider.edit_instructions,
+    instructions: panel_provider.edit_instructions,
     config_id: message.config_id,
-    view_provider
+    panel_provider
   })
 }

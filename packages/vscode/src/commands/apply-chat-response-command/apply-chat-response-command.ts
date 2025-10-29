@@ -21,7 +21,7 @@ import { apply_git_patch } from './handlers/diff-handler'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 import { Diff } from './utils/clipboard-parser/extract-diff-patches'
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import {
   review,
   code_review_promise_resolve,
@@ -35,6 +35,7 @@ import {
   promote_temporary_checkpoint
 } from '../checkpoints-command/actions'
 import { FileInReview } from '@shared/types/file-in-review'
+import { handle_restore_review } from './handlers/restore-review-handler'
 
 let ongoing_review_cleanup_promise: Promise<void> | null = null
 
@@ -243,7 +244,7 @@ const get_intelligent_update_config = async (
 const handle_code_review_and_cleanup = async (params: {
   original_states: OriginalFileState[]
   chat_response: string
-  view_provider: ViewProvider
+  panel_provider: PanelProvider
   update_undo_button_state: (
     states: OriginalFileState[] | null,
     content?: string | null,
@@ -266,7 +267,7 @@ const handle_code_review_and_cleanup = async (params: {
   try {
     const review_result = await review({
       original_states: params.original_states,
-      view_provider: params.view_provider,
+      panel_provider: params.panel_provider,
       raw_instructions: params.raw_instructions
     })
 
@@ -336,7 +337,7 @@ const handle_code_review_and_cleanup = async (params: {
 
 export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
-  view_provider: ViewProvider,
+  panel_provider: PanelProvider,
   workspace_provider: WorkspaceProvider
 ) => {
   const update_undo_button_state = (
@@ -357,7 +358,7 @@ export const apply_chat_response_command = (
         LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
         original_editor_state
       )
-      view_provider.set_undo_button_state(true)
+      panel_provider.set_undo_button_state(true)
     } else {
       context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
       context.workspaceState.update(
@@ -368,7 +369,7 @@ export const apply_chat_response_command = (
         LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
         null
       )
-      view_provider.set_undo_button_state(false)
+      panel_provider.set_undo_button_state(false)
     }
   }
 
@@ -436,6 +437,22 @@ export const apply_chat_response_command = (
       }
 
       const review_data = await (async (): Promise<ReviewData | null> => {
+        if (args?.files_with_content) {
+          const result = await handle_restore_review(args.files_with_content)
+          if (result.success && result.original_states) {
+            update_undo_button_state(
+              result.original_states,
+              chat_response,
+              args?.original_editor_state
+            )
+            return {
+              original_states: result.original_states,
+              chat_response
+            }
+          }
+          return null
+        }
+
         const is_single_root_folder_workspace =
           vscode.workspace.workspaceFolders?.length == 1
 
@@ -443,16 +460,6 @@ export const apply_chat_response_command = (
           response: chat_response,
           is_single_root_folder_workspace
         })
-
-        if (args?.files_with_content) {
-          clipboard_content = {
-            type: 'files',
-            files: args.files_with_content as ClipboardFile[]
-          }
-        }
-
-        console.log('xxx', args?.files_with_content)
-        console.log('xxx', clipboard_content)
 
         if (
           clipboard_content.type == 'code-completion' &&
@@ -669,7 +676,7 @@ export const apply_chat_response_command = (
                   chat_response: failed_patches_as_code_blocks,
                   context: context,
                   is_single_root_folder_workspace,
-                  view_provider
+                  panel_provider
                 }
               )
 
@@ -793,7 +800,7 @@ export const apply_chat_response_command = (
                     chat_response: fake_chat_response,
                     context: context,
                     is_single_root_folder_workspace,
-                    view_provider
+                    panel_provider
                   })
 
                 if (intelligent_update_states) {
@@ -907,7 +914,7 @@ export const apply_chat_response_command = (
               chat_response,
               context: context,
               is_single_root_folder_workspace,
-              view_provider
+              panel_provider
             })
 
             if (final_original_states) {
@@ -1024,7 +1031,7 @@ export const apply_chat_response_command = (
               })
             }
 
-            view_provider.send_message({
+            panel_provider.send_message({
               command: 'NEW_RESPONSE_RECEIVED',
               response: review_data.chat_response,
               raw_instructions: args?.raw_instructions,
@@ -1037,7 +1044,7 @@ export const apply_chat_response_command = (
           const changes_accepted = await handle_code_review_and_cleanup({
             original_states: review_data.original_states,
             chat_response: review_data.chat_response,
-            view_provider,
+            panel_provider,
             update_undo_button_state,
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions

@@ -1,4 +1,4 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ReorderApiToolConfigurationsMessage } from '@/views/panel/types/messages'
 import {
   ModelProvidersManager,
@@ -7,7 +7,7 @@ import {
 import { get_tool_config_id } from '@/services/model-providers-manager'
 
 export const handle_reorder_api_tool_configurations = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   message: ReorderApiToolConfigurationsMessage
 ): Promise<void> => {
   const providers_manager = new ModelProvidersManager(provider.context)

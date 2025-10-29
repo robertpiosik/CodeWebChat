@@ -281,7 +281,7 @@ export const Panel = () => {
               }}
               on_go_to_file={(file) => {
                 post_message(vscode, {
-                  command: 'GO_TO_FILE_IN_REVIEW',
+                  command: 'GO_TO_FILE',
                   file_path: file.file_path,
                   workspace_name: file.workspace_name
                 })
@@ -356,6 +356,12 @@ export const Panel = () => {
               post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
               set_files_to_stage(undefined)
               set_commit_button_enabling_trigger_count((k) => k + 1)
+            }}
+            on_go_to_file={(file) => {
+              post_message(vscode, {
+                command: 'GO_TO_FILE',
+                file_path: file
+              })
             }}
           />
         </div>

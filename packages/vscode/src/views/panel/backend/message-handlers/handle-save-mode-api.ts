@@ -1,8 +1,8 @@
-import { ViewProvider } from '@/views/panel/backend/panel-provider'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ApiMode } from '@shared/types/modes'
 
 export const handle_save_mode_api = async (
-  provider: ViewProvider,
+  provider: PanelProvider,
   mode: ApiMode
 ): Promise<void> => {
   provider.api_mode = mode
