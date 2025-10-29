@@ -25,11 +25,16 @@ export const Default = () => {
     set_visible(false)
   }
 
+  const handle_go_to_file = (file: string) => {
+    alert(`Go to file: ${file}`)
+  }
+
   return visible ? (
     <StageFilesModal
       files={mock_files}
       on_stage={handle_stage}
       on_cancel={handle_cancel}
+      on_go_to_file={handle_go_to_file}
     />
   ) : null
 }

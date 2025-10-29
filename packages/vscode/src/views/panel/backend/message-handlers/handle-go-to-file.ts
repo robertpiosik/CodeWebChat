@@ -1,18 +1,16 @@
 import * as vscode from 'vscode'
-import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { GoToFileInReviewMessage } from '@/views/panel/types/messages'
+import { GoToFileMessage } from '@/views/panel/types/messages'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 
-export const handle_go_to_file_in_review = async (
-  provider: PanelProvider,
-  message: GoToFileInReviewMessage
+export const handle_go_to_file = async (
+  message: GoToFileMessage
 ): Promise<void> => {
   const { file_path, workspace_name } = message
   const workspace_folders = vscode.workspace.workspaceFolders
   if (!workspace_folders) {
     Logger.warn({
-      function_name: 'handle_go_to_file_in_review',
+      function_name: 'handle_go_to_file',
       message: 'No workspace folders open'
     })
     return
@@ -22,7 +20,7 @@ export const handle_go_to_file_in_review = async (
 
   if (workspace_name) {
     target_workspace = workspace_folders.find(
-      (folder) => folder.name === workspace_name
+      (folder) => folder.name == workspace_name
     )
   } else if (workspace_folders.length === 1) {
     target_workspace = workspace_folders[0]
@@ -41,7 +39,7 @@ export const handle_go_to_file_in_review = async (
 
   if (!target_workspace) {
     Logger.error({
-      function_name: 'handle_go_to_file_in_review',
+      function_name: 'handle_go_to_file',
       message: `Workspace not found for file: ${file_path}`,
       data: { file_path, workspace_name }
     })
@@ -58,7 +56,7 @@ export const handle_go_to_file_in_review = async (
     await vscode.window.showTextDocument(document, { preview: false })
   } catch (error) {
     Logger.error({
-      function_name: 'handle_go_to_file_in_review',
+      function_name: 'handle_go_to_file',
       message: `Could not open file: ${file_path}`,
       data: { error, file_uri: file_uri.toString() }
     })

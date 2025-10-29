@@ -45,7 +45,7 @@ import {
   handle_get_donations_visibility,
   handle_save_donations_visibility,
   handle_focus_on_file_in_review,
-  handle_go_to_file_in_review,
+  handle_go_to_file,
   handle_toggle_file_in_review,
   handle_intelligent_update_file_in_review,
   handle_commit_changes,
@@ -442,10 +442,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             handle_get_donations_visibility(this)
           } else if (message.command == 'SAVE_DONATIONS_VISIBILITY') {
             await handle_save_donations_visibility(this, message)
+          } else if (message.command == 'GO_TO_FILE') {
+            handle_go_to_file(message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_REVIEW') {
             handle_focus_on_file_in_review(this, message)
-          } else if (message.command == 'GO_TO_FILE_IN_REVIEW') {
-            handle_go_to_file_in_review(this, message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
             await handle_toggle_file_in_review(this, message)
           } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_REVIEW') {

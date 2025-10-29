@@ -3,11 +3,13 @@ import styles from './StageFilesModal.module.scss'
 import { Button } from '../../Button'
 import { Modal } from '../Modal'
 import { Checkbox } from '../../../common/Checkbox'
+import { IconButton } from '../../IconButton/IconButton'
 
 type Props = {
   files: string[]
   on_stage: (files_to_stage: string[]) => void
   on_cancel: () => void
+  on_go_to_file: (file: string) => void
 }
 
 export const StageFilesModal: React.FC<Props> = (props) => {
@@ -73,6 +75,16 @@ export const StageFilesModal: React.FC<Props> = (props) => {
                   {dir_path && (
                     <span className={styles.files__item__path}>{dir_path}</span>
                   )}
+                </div>
+                <div className={styles.files__item__actions}>
+                  <IconButton
+                    codicon_icon="go-to-file"
+                    title="Go To File"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_go_to_file(file)
+                    }}
+                  />
                 </div>
               </label>
             )

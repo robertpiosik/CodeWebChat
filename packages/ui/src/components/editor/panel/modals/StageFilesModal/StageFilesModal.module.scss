@@ -1,15 +1,26 @@
 .files {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-4px);
+  margin: 0 -12px;
 
   &__item {
     display: flex;
     align-items: center;
     gap: var(--padding-6px);
     cursor: pointer;
+    padding: 0 12px;
+    height: var(--list-item-height);
+
+    &:hover {
+      background-color: var(--vscode-list-hoverBackground);
+
+      .files__item__actions {
+        display: flex;
+      }
+    }
 
     &__details {
+      flex: 1;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -23,6 +34,10 @@
       padding-left: var(--padding-6px);
       font-size: var(--font-size-12px);
       color: var(--vscode-descriptionForeground);
+    }
+
+    &__actions {
+      display: none;
     }
   }
 }
