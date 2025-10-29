@@ -1,10 +1,7 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
-import {
-  create_temporary_checkpoint,
-  delete_checkpoint,
-  promote_temporary_checkpoint
-} from '../checkpoints-command/actions'
+import * as path from 'path'
+import { create_checkpoint } from '../checkpoints-command/actions'
 import { FileInReview } from '@shared/types/file-in-review'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
@@ -17,6 +14,7 @@ import {
   ongoing_review_cleanup_promise
 } from './utils/review-handler'
 import { process_chat_response, CommandArgs } from './response-processor'
+import { undo_files } from './utils/file-operations'
 
 export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
@@ -67,10 +65,6 @@ export const apply_chat_response_command = (
         }
       }
 
-      const temp_checkpoint = await create_temporary_checkpoint(
-        workspace_provider
-      )
-
       const review_data = await process_chat_response(
         args,
         chat_response,
@@ -78,108 +72,174 @@ export const apply_chat_response_command = (
         panel_provider
       )
 
-      let checkpoint_promoted = false
+      if (review_data) {
+        if (!args?.files_with_content) {
+          let total_lines_added = 0
+          let total_lines_removed = 0
+          const files_for_history: FileInReview[] = []
 
-      try {
-        if (review_data) {
-          if (!args?.files_with_content) {
-            let total_lines_added = 0
-            let total_lines_removed = 0
-            const files_for_history: FileInReview[] = []
+          const workspace_map = new Map<string, string>()
+          vscode.workspace.workspaceFolders!.forEach((folder) => {
+            workspace_map.set(folder.name, folder.uri.fsPath)
+          })
+          const default_workspace =
+            vscode.workspace.workspaceFolders![0].uri.fsPath
 
-            const workspace_map = new Map<string, string>()
-            vscode.workspace.workspaceFolders!.forEach((folder) => {
-              workspace_map.set(folder.name, folder.uri.fsPath)
-            })
-            const default_workspace =
-              vscode.workspace.workspaceFolders![0].uri.fsPath
-
-            for (const state of review_data.original_states) {
-              let workspace_root = default_workspace
-              if (
-                state.workspace_name &&
-                workspace_map.has(state.workspace_name)
-              ) {
-                workspace_root = workspace_map.get(state.workspace_name)!
-              }
-
-              const sanitized_file_path = create_safe_path(
-                workspace_root,
-                state.file_path
-              )
-              if (!sanitized_file_path) {
-                continue
-              }
-
-              let current_content = ''
-              try {
-                if (fs.existsSync(sanitized_file_path)) {
-                  current_content = fs.readFileSync(sanitized_file_path, 'utf8')
-                }
-              } catch (error) {
-                continue
-              }
-
-              const diff_stats = get_diff_stats({
-                original_content: state.content,
-                new_content: current_content
-              })
-
-              total_lines_added += diff_stats.lines_added
-              total_lines_removed += diff_stats.lines_removed
-
-              const is_deleted =
-                !state.is_new && current_content === '' && state.content !== ''
-
-              files_for_history.push({
-                file_path: state.file_path,
-                workspace_name: state.workspace_name,
-                is_new: state.is_new,
-                is_deleted,
-                lines_added: diff_stats.lines_added,
-                lines_removed: diff_stats.lines_removed,
-                is_fallback: state.is_fallback,
-                is_replaced: state.is_replaced,
-                diff_fallback_method: state.diff_fallback_method,
-                content: current_content
-              })
+          for (const state of review_data.original_states) {
+            let workspace_root = default_workspace
+            if (
+              state.workspace_name &&
+              workspace_map.has(state.workspace_name)
+            ) {
+              workspace_root = workspace_map.get(state.workspace_name)!
             }
 
-            panel_provider.send_message({
-              command: 'NEW_RESPONSE_RECEIVED',
-              response: review_data.chat_response,
-              raw_instructions: args?.raw_instructions,
-              lines_added: total_lines_added,
-              lines_removed: total_lines_removed,
-              files: files_for_history
+            const sanitized_file_path = create_safe_path(
+              workspace_root,
+              state.file_path
+            )
+            if (!sanitized_file_path) {
+              continue
+            }
+
+            let current_content = ''
+            try {
+              if (fs.existsSync(sanitized_file_path)) {
+                current_content = fs.readFileSync(sanitized_file_path, 'utf8')
+              }
+            } catch (error) {
+              continue
+            }
+
+            const diff_stats = get_diff_stats({
+              original_content: state.content,
+              new_content: current_content
+            })
+
+            total_lines_added += diff_stats.lines_added
+            total_lines_removed += diff_stats.lines_removed
+
+            const is_deleted =
+              !state.is_new && current_content === '' && state.content !== ''
+
+            files_for_history.push({
+              file_path: state.file_path,
+              workspace_name: state.workspace_name,
+              is_new: state.is_new,
+              is_deleted,
+              lines_added: diff_stats.lines_added,
+              lines_removed: diff_stats.lines_removed,
+              is_fallback: state.is_fallback,
+              is_replaced: state.is_replaced,
+              diff_fallback_method: state.diff_fallback_method,
+              content: current_content
             })
           }
 
-          const changes_accepted = await handle_code_review_and_cleanup({
-            original_states: review_data.original_states,
-            chat_response: review_data.chat_response,
-            panel_provider,
-            context,
-            original_editor_state: args?.original_editor_state,
-            raw_instructions: args?.raw_instructions
+          panel_provider.send_message({
+            command: 'NEW_RESPONSE_RECEIVED',
+            response: review_data.chat_response,
+            raw_instructions: args?.raw_instructions,
+            lines_added: total_lines_added,
+            lines_removed: total_lines_removed,
+            files: files_for_history
           })
-
-          if (changes_accepted) {
-            await promote_temporary_checkpoint({
-              context,
-              temp_checkpoint,
-              title: 'Before changes approved',
-              description: args?.raw_instructions
-            })
-            checkpoint_promoted = true
-          }
         }
-      } finally {
-        if (!checkpoint_promoted) {
-          await delete_checkpoint({
-            context,
-            checkpoint_to_delete: temp_checkpoint
+
+        const changes_accepted = await handle_code_review_and_cleanup({
+          original_states: review_data.original_states,
+          chat_response: review_data.chat_response,
+          panel_provider,
+          context,
+          original_editor_state: args?.original_editor_state,
+          raw_instructions: args?.raw_instructions
+        })
+
+        if (changes_accepted) {
+          const workspace_map = new Map<string, string>()
+          vscode.workspace.workspaceFolders!.forEach((folder) => {
+            workspace_map.set(folder.name, folder.uri.fsPath)
           })
+          const default_workspace =
+            vscode.workspace.workspaceFolders![0].uri.fsPath
+
+          const accepted_states: {
+            file_path: string
+            workspace_name?: string
+            content: string
+            is_deleted: boolean
+          }[] = []
+
+          for (const state of review_data.original_states) {
+            let workspace_root = default_workspace
+            if (
+              state.workspace_name &&
+              workspace_map.has(state.workspace_name)
+            ) {
+              workspace_root = workspace_map.get(state.workspace_name)!
+            }
+
+            const sanitized_file_path = create_safe_path(
+              workspace_root,
+              state.file_path
+            )
+            if (!sanitized_file_path) {
+              continue
+            }
+
+            const exists = fs.existsSync(sanitized_file_path)
+            const content = exists
+              ? fs.readFileSync(sanitized_file_path, 'utf8')
+              : ''
+
+            accepted_states.push({
+              file_path: state.file_path,
+              workspace_name: state.workspace_name,
+              content: content,
+              is_deleted: !exists
+            })
+          }
+
+          await undo_files({ original_states: review_data.original_states })
+
+          await create_checkpoint(
+            workspace_provider,
+            context,
+            'Before changes approved',
+            args?.raw_instructions
+          )
+
+          for (const accepted_state of accepted_states) {
+            let workspace_root = default_workspace
+            if (
+              accepted_state.workspace_name &&
+              workspace_map.has(accepted_state.workspace_name)
+            ) {
+              workspace_root = workspace_map.get(accepted_state.workspace_name)!
+            }
+            const sanitized_file_path = create_safe_path(
+              workspace_root,
+              accepted_state.file_path
+            )
+            if (!sanitized_file_path) continue
+
+            if (accepted_state.is_deleted) {
+              if (fs.existsSync(sanitized_file_path)) {
+                await vscode.workspace.fs.delete(
+                  vscode.Uri.file(sanitized_file_path)
+                )
+              }
+            } else {
+              const dir = path.dirname(sanitized_file_path)
+              if (!fs.existsSync(dir)) {
+                await vscode.workspace.fs.createDirectory(vscode.Uri.file(dir))
+              }
+              await vscode.workspace.fs.writeFile(
+                vscode.Uri.file(sanitized_file_path),
+                Buffer.from(accepted_state.content, 'utf8')
+              )
+            }
+          }
         }
       }
     }
