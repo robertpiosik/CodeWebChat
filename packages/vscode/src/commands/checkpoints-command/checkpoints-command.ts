@@ -131,7 +131,7 @@ export const checkpoints_command = (
                 buttons: [
                   {
                     iconPath: new vscode.ThemeIcon(
-                      c.starred ? 'star-empty' : 'star-full'
+                      c.starred ? 'star-full' : 'star-empty'
                     ),
                     tooltip: c.starred ? 'Unstar' : 'Star'
                   },
