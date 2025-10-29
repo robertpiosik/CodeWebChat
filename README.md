@@ -7,7 +7,7 @@ Agent-free AI pair programming for VS Code, Cursor, and other forks. Master cont
 ❤️ **Free and open-source.** _Join our [discord server](https://discord.gg/KJySXsrSX5) and get involed!_
 
 ✅ **Initializes free chatbots**—ChatGPT, Claude, Gemini, AI Studio, Qwen, and 10+ more \
-✅ **Calls model providers**—bring your own key or use local model via Ollama \
+✅ **Calls model providers**—bring your own keys or use local models via Ollama \
 ✅ **Applies responses**—multi-file changes integration with easy rollback \
 ✅ **Batteries included**—code completions, commit messages, and more
 
