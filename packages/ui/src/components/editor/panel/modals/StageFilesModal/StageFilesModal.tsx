@@ -4,6 +4,7 @@ import { Button } from '../../Button'
 import { Modal } from '../Modal'
 import { Checkbox } from '../../../common/Checkbox'
 import { IconButton } from '../../IconButton/IconButton'
+import cn from 'classnames'
 
 type Props = {
   files: string[]
@@ -44,7 +45,12 @@ export const StageFilesModal: React.FC<Props> = (props) => {
       content_max_height="calc(100vh - 150px)"
       content_slot={
         <div className={styles.files}>
-          <label className={styles.files__item}>
+          <label
+            className={cn(
+              styles.files__item,
+              styles['files__item--select-all']
+            )}
+          >
             <Checkbox
               checked={all_selected}
               on_change={handle_toggle_select_all}

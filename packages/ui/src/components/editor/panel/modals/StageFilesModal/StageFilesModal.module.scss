@@ -19,6 +19,16 @@
       }
     }
 
+    &--select-all {
+      &:hover {
+        background-color: transparent;
+      }
+
+      strong:hover {
+        text-decoration: underline;
+      }
+    }
+
     &__details {
       flex: 1;
       overflow: hidden;
