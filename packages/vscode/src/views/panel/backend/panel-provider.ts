@@ -81,7 +81,7 @@ import { OriginalFileState } from '@/commands/apply-chat-response-command/types/
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
-import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review'
+import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review/review'
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
