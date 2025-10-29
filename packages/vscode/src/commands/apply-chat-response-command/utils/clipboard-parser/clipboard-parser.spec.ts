@@ -622,6 +622,22 @@ describe('clipboard-parser', () => {
       )
     })
 
+    it('parses a diff inside a non-diff code block', () => {
+      const test_case = 'diff-in-non-diff-code-block'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result.type).toBe('patches')
+      expect(result.patches).toHaveLength(1)
+      expect(result.patches![0].file_path).toBe('src/index.ts')
+      expect(result.patches![0].content).toBe(
+        load_test_case_file(test_case, 'file-1.txt')
+      )
+    })
+
     it('parses diff format for a file deletion', () => {
       const test_case = 'diff-file-deletion'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

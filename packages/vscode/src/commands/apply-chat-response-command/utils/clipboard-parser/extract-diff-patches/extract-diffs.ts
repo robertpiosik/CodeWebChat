@@ -249,6 +249,30 @@ const convert_code_block_to_new_file_diff = (params: {
     return null
   }
 
+  const first_real_content_line = content_lines.find((l) => l.trim() != '')
+  if (
+    first_real_content_line &&
+    first_real_content_line
+      .trim()
+      .match(/^(@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@)/)
+  ) {
+    const { workspace_name, relative_path } = extract_workspace_and_path(
+      file_path,
+      params.is_single_root
+    )
+    const patch_content = [
+      `--- a/${relative_path}`,
+      `+++ b/${relative_path}`,
+      ...content_lines
+    ].join('\n')
+
+    return {
+      file_path: relative_path,
+      workspace_name,
+      content: patch_content + '\n'
+    }
+  }
+
   const { workspace_name, relative_path } = extract_workspace_and_path(
     file_path,
     params.is_single_root

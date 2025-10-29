@@ -734,11 +734,14 @@ export const parse_response = (params: {
 
   const processed_response = params.response.replace(/``````/g, '```\n```')
 
+  const hunk_header_regex = /^(@@\s+-\d+(?:,\d+)?\s+\+\d+(?:,\d+)?\s+@@)/m
+
   if (
     processed_response.includes('```diff') ||
     processed_response.includes('```patch') ||
     processed_response.startsWith('--- ') ||
-    processed_response.startsWith('diff --git')
+    processed_response.startsWith('diff --git') ||
+    hunk_header_regex.test(processed_response)
   ) {
     const patches = extract_diffs({
       clipboard_text: processed_response,
