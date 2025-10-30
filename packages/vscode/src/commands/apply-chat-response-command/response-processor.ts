@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import { OriginalFileState } from './types/original-file-state'
 import { handle_restore_review } from './handlers/restore-review-handler'
-import { parse_response } from './utils/clipboard-parser'
+import { parse_response, FileItem, DiffItem } from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
@@ -72,16 +72,13 @@ export const process_chat_response = async (
   const is_single_root_folder_workspace =
     vscode.workspace.workspaceFolders?.length == 1
 
-  let clipboard_content = parse_response({
+  let clipboard_items = parse_response({
     response: chat_response,
     is_single_root_folder_workspace
   })
 
-  if (
-    clipboard_content.type == 'code-completion' &&
-    clipboard_content.code_completion
-  ) {
-    const completion = clipboard_content.code_completion
+  if (clipboard_items.length == 1 && clipboard_items[0].type == 'completion') {
+    const completion = clipboard_items[0]
     const workspace_map = new Map<string, string>()
     vscode.workspace.workspaceFolders!.forEach((folder) => {
       workspace_map.set(folder.name, folder.uri.fsPath)
@@ -146,15 +143,22 @@ export const process_chat_response = async (
     }
     args.suppress_fast_replace_inaccuracies_dialog = true
 
-    clipboard_content = {
-      type: 'files',
-      files: [{ ...completion, content: new_content }]
-    } as any
+    clipboard_items = [
+      {
+        type: 'file',
+        file_path: completion.file_path,
+        content: new_content,
+        workspace_name: completion.workspace_name
+      }
+    ]
   }
 
-  if (clipboard_content.type == 'patches' && clipboard_content.patches) {
+  const item_type = clipboard_items.length > 0 ? clipboard_items[0].type : null
+
+  if (item_type == 'diff') {
+    const patches = clipboard_items as DiffItem[]
     const rename_map = new Map<string, string>()
-    clipboard_content.patches.forEach((patch) => {
+    patches.forEach((patch) => {
       if (patch.new_file_path && patch.file_path) {
         rename_map.set(patch.file_path, patch.new_file_path)
       }
@@ -187,10 +191,10 @@ export const process_chat_response = async (
     }[] = []
     let any_patch_used_fallback = false
 
-    const total_patches = clipboard_content.patches.length
+    const total_patches = patches.length
 
     for (let i = 0; i < total_patches; i++) {
-      const patch = clipboard_content.patches[i]
+      const patch = patches[i]
       let workspace_path = default_workspace
 
       if (patch.workspace_name && workspace_map.has(patch.workspace_name)) {
@@ -354,7 +358,10 @@ export const process_chat_response = async (
 
     return null
   } else {
-    if (!clipboard_content.files || clipboard_content.files.length == 0) {
+    const files = clipboard_items.filter(
+      (item): item is FileItem => item.type == 'file'
+    )
+    if (files.length == 0) {
       const editor = vscode.window.activeTextEditor
       if (editor) {
         const choice = await vscode.window.showWarningMessage(
@@ -427,7 +434,7 @@ export const process_chat_response = async (
     let selected_mode_label: 'Fast replace' | 'Intelligent update' | undefined =
       undefined
 
-    const all_files_new = await check_if_all_files_new(clipboard_content.files)
+    const all_files_new = await check_if_all_files_new(files)
 
     if (all_files_new) {
       selected_mode_label = 'Fast replace'
@@ -441,9 +448,7 @@ export const process_chat_response = async (
         args?.edit_format === undefined || // Is undefined when invoked manually
         args?.edit_format == 'truncated'
       ) {
-        has_truncated_fragments = check_for_truncated_fragments(
-          clipboard_content.files
-        )
+        has_truncated_fragments = check_for_truncated_fragments(files)
       }
 
       if (has_truncated_fragments) {
@@ -466,7 +471,7 @@ export const process_chat_response = async (
     let operation_success = false
 
     if (selected_mode_label == 'Fast replace') {
-      const result = await handle_fast_replace(clipboard_content.files)
+      const result = await handle_fast_replace(files)
       if (result.success && result.original_states) {
         if (!args?.suppress_fast_replace_inaccuracies_dialog) {
           result.original_states.forEach((s) => (s.is_replaced = true))

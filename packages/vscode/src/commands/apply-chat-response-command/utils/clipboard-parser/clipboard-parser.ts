@@ -1,6 +1,6 @@
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
-import { Diff, extract_diffs } from './extract-diff-patches'
+import { extract_diffs } from './extract-diff-patches'
 
 export interface ClipboardFile {
   file_path: string
@@ -16,12 +16,31 @@ export interface ClipboardCodeCompletion {
   workspace_name?: string
 }
 
-export interface ClipboardContent {
-  type: 'files' | 'patches' | 'code-completion'
-  files?: ClipboardFile[]
-  patches?: Diff[]
-  code_completion?: ClipboardCodeCompletion
+export interface FileItem {
+  type: 'file'
+  file_path: string
+  content: string
+  workspace_name?: string
 }
+
+export interface DiffItem {
+  type: 'diff'
+  file_path: string
+  content: string
+  workspace_name?: string
+  new_file_path?: string
+}
+
+export interface CompletionItem {
+  type: 'completion'
+  file_path: string
+  content: string
+  line: number
+  character: number
+  workspace_name?: string
+}
+
+export type ClipboardItem = FileItem | DiffItem | CompletionItem
 
 export const extract_workspace_and_path = (
   raw_file_path: string,
@@ -721,7 +740,7 @@ export const parse_file_content_only = (params: {
 export const parse_response = (params: {
   response: string
   is_single_root_folder_workspace?: boolean
-}): ClipboardContent => {
+}): ClipboardItem[] => {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
   const code_completion = parse_code_completion({
@@ -729,7 +748,7 @@ export const parse_response = (params: {
     is_single_root_folder_workspace
   })
   if (code_completion) {
-    return { type: 'code-completion', code_completion }
+    return [{ type: 'completion', ...code_completion }]
   }
 
   const processed_response = params.response.replace(/``````/g, '```\n```')
@@ -748,7 +767,7 @@ export const parse_response = (params: {
       is_single_root: is_single_root_folder_workspace
     })
     if (patches.length) {
-      return { type: 'patches', patches }
+      return patches.map((p) => ({ type: 'diff', ...p }))
     }
   }
 
@@ -757,8 +776,5 @@ export const parse_response = (params: {
     is_single_root_folder_workspace
   })
 
-  return {
-    type: 'files',
-    files
-  }
+  return files.map((f) => ({ type: 'file', ...f }))
 }

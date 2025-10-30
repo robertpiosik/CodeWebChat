@@ -24,7 +24,6 @@ export const apply_chat_response_command = (
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
     async (args?: CommandArgs) => {
-      console.log('xxx', args)
       if (!vscode.workspace.workspaceFolders?.length) {
         vscode.window.showErrorMessage(
           dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN

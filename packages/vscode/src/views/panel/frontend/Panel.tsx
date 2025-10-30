@@ -266,22 +266,8 @@ export const Panel = () => {
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
               }}
               on_approve={(accepted_files) => {
-                set_response_history((prev) => {
-                  const history_item_index = prev.findIndex(
-                    (item) =>
-                      item.created_at === selected_history_item_created_at
-                  )
-                  if (history_item_index === -1) {
-                    return prev
-                  }
-                  const new_history = [...prev]
-                  const history_item_to_update = {
-                    ...new_history[history_item_index]
-                  }
-                  history_item_to_update.files = files_to_review
-                  new_history[history_item_index] = history_item_to_update
-                  return new_history
-                })
+                set_response_history([])
+                set_selected_history_item_created_at(undefined)
                 post_message(vscode, {
                   command: 'EDITS_REVIEW',
                   files: accepted_files
