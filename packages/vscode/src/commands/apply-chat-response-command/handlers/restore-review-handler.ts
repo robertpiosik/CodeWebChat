@@ -80,134 +80,137 @@ export const handle_restore_review = async (
       content: original_content,
       is_new: !file_exists,
       workspace_name: file.workspace_name,
-      is_deleted: file.is_deleted
+      is_deleted: file.is_deleted,
+      is_checked: file.is_checked
     })
 
-    if (file.is_deleted) {
-      if (file_exists) {
-        try {
-          const tabs_to_close: vscode.Tab[] = []
-          for (const tab_group of vscode.window.tabGroups.all) {
-            tabs_to_close.push(
-              ...tab_group.tabs.filter((tab) => {
-                const tab_uri = (tab.input as any)?.uri as
-                  | vscode.Uri
-                  | undefined
-                return tab_uri && tab_uri.fsPath === safe_path
-              })
-            )
-          }
-
-          if (tabs_to_close.length > 0) {
-            await vscode.window.tabGroups.close(tabs_to_close)
-          }
-
-          fs.unlinkSync(safe_path)
-          Logger.info({
-            function_name: 'handle_restore_review',
-            message: 'File deleted',
-            data: safe_path
-          })
-          await remove_directory_if_empty({
-            dir_path: path.dirname(safe_path),
-            workspace_root
-          })
-        } catch (error) {
-          Logger.error({
-            function_name: 'handle_restore_review',
-            message: 'Error deleting file',
-            data: { safe_path, error }
-          })
-          vscode.window.showErrorMessage(
-            `Failed to delete file: ${file.file_path}`
-          )
-        }
-      }
-    } else if (file.content !== undefined) {
-      // Create or update
-      if (file_exists) {
-        try {
-          const file_uri = vscode.Uri.file(safe_path)
-          const document = await vscode.workspace.openTextDocument(file_uri)
-          const editor = await vscode.window.showTextDocument(document)
-          let final_content = file.content
-          if (
-            original_content.endsWith('\n') &&
-            !final_content.endsWith('\n')
-          ) {
-            final_content += '\n'
-          }
-          await editor.edit((edit) => {
-            edit.replace(
-              new vscode.Range(
-                document.positionAt(0),
-                document.positionAt(document.getText().length)
-              ),
-              final_content
-            )
-          })
-
-          await document.save()
-          Logger.info({
-            function_name: 'handle_restore_review',
-            message: 'Existing file replaced and saved',
-            data: safe_path
-          })
-        } catch (error) {
-          Logger.error({
-            function_name: 'handle_restore_review',
-            message: 'Error updating file',
-            data: { safe_path, error }
-          })
-          vscode.window.showErrorMessage(
-            `Failed to update file: ${file.file_path}`
-          )
-        }
-      } else {
-        // New file
-        const directory = path.dirname(safe_path)
-        if (!fs.existsSync(directory)) {
+    if (file.is_checked !== false) {
+      if (file.is_deleted) {
+        if (file_exists) {
           try {
-            fs.mkdirSync(directory, { recursive: true })
+            const tabs_to_close: vscode.Tab[] = []
+            for (const tab_group of vscode.window.tabGroups.all) {
+              tabs_to_close.push(
+                ...tab_group.tabs.filter((tab) => {
+                  const tab_uri = (tab.input as any)?.uri as
+                    | vscode.Uri
+                    | undefined
+                  return tab_uri && tab_uri.fsPath === safe_path
+                })
+              )
+            }
+
+            if (tabs_to_close.length > 0) {
+              await vscode.window.tabGroups.close(tabs_to_close)
+            }
+
+            fs.unlinkSync(safe_path)
             Logger.info({
               function_name: 'handle_restore_review',
-              message: 'Directory created',
-              data: directory
+              message: 'File deleted',
+              data: safe_path
+            })
+            await remove_directory_if_empty({
+              dir_path: path.dirname(safe_path),
+              workspace_root
             })
           } catch (error) {
             Logger.error({
               function_name: 'handle_restore_review',
-              message: 'Failed to create directory',
-              data: { directory, error, file_path: file.file_path }
+              message: 'Error deleting file',
+              data: { safe_path, error }
             })
             vscode.window.showErrorMessage(
-              dictionary.error_message.FAILED_TO_CREATE_DIRECTORY(
-                file.file_path
+              `Failed to delete file: ${file.file_path}`
+            )
+          }
+        }
+      } else if (file.content !== undefined) {
+        // Create or update
+        if (file_exists) {
+          try {
+            const file_uri = vscode.Uri.file(safe_path)
+            const document = await vscode.workspace.openTextDocument(file_uri)
+            const editor = await vscode.window.showTextDocument(document)
+            let final_content = file.content
+            if (
+              original_content.endsWith('\n') &&
+              !final_content.endsWith('\n')
+            ) {
+              final_content += '\n'
+            }
+            await editor.edit((edit) => {
+              edit.replace(
+                new vscode.Range(
+                  document.positionAt(0),
+                  document.positionAt(document.getText().length)
+                ),
+                final_content
               )
+            })
+
+            await document.save()
+            Logger.info({
+              function_name: 'handle_restore_review',
+              message: 'Existing file replaced and saved',
+              data: safe_path
+            })
+          } catch (error) {
+            Logger.error({
+              function_name: 'handle_restore_review',
+              message: 'Error updating file',
+              data: { safe_path, error }
+            })
+            vscode.window.showErrorMessage(
+              `Failed to update file: ${file.file_path}`
+            )
+          }
+        } else {
+          // New file
+          const directory = path.dirname(safe_path)
+          if (!fs.existsSync(directory)) {
+            try {
+              fs.mkdirSync(directory, { recursive: true })
+              Logger.info({
+                function_name: 'handle_restore_review',
+                message: 'Directory created',
+                data: directory
+              })
+            } catch (error) {
+              Logger.error({
+                function_name: 'handle_restore_review',
+                message: 'Failed to create directory',
+                data: { directory, error, file_path: file.file_path }
+              })
+              vscode.window.showErrorMessage(
+                dictionary.error_message.FAILED_TO_CREATE_DIRECTORY(
+                  file.file_path
+                )
+              )
+              continue
+            }
+          }
+
+          try {
+            fs.writeFileSync(safe_path, file.content)
+            Logger.info({
+              function_name: 'handle_restore_review',
+              message: 'New file created',
+              data: safe_path
+            })
+            const document = await vscode.workspace.openTextDocument(safe_path)
+            await vscode.window.showTextDocument(document, { preview: false })
+          } catch (error) {
+            Logger.error({
+              function_name: 'handle_restore_review',
+              message: 'Failed to write new file',
+              data: { safe_path, error, file_path: file.file_path }
+            })
+            vscode.window.showErrorMessage(
+              dictionary.error_message.FAILED_TO_WRITE_FILE(file.file_path)
             )
             continue
           }
-        }
-
-        try {
-          fs.writeFileSync(safe_path, file.content)
-          Logger.info({
-            function_name: 'handle_restore_review',
-            message: 'New file created',
-            data: safe_path
-          })
-          const document = await vscode.workspace.openTextDocument(safe_path)
-          await vscode.window.showTextDocument(document, { preview: false })
-        } catch (error) {
-          Logger.error({
-            function_name: 'handle_restore_review',
-            message: 'Failed to write new file',
-            data: { safe_path, error, file_path: file.file_path }
-          })
-          vscode.window.showErrorMessage(
-            dictionary.error_message.FAILED_TO_WRITE_FILE(file.file_path)
-          )
-          continue
         }
       }
     }

@@ -123,6 +123,16 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     options
   ])
 
+  let url_override_label = 'New URL'
+  let url_override_info = 'Enter link of a project, space, etc.'
+  if (chatbot == 'ChatGPT') {
+    url_override_label = 'Project URL'
+    url_override_info = 'Enter link of a project'
+  } else if (chatbot == 'Perplexity') {
+    url_override_label = 'Space URL'
+    url_override_info = 'Enter link of a space'
+  }
+
   const handle_chatbot_change = (new_chatbot: keyof typeof CHATBOTS) => {
     set_chatbot(new_chatbot)
     set_model(Object.keys(CHATBOTS[new_chatbot].models)[0] || undefined)
@@ -288,9 +298,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
       {supports_url_override && (
         <Field
-          label="New URL"
+          label={url_override_label}
           html_for="new-url"
-          info="Enter link of a project, space, etc."
+          info={url_override_info}
         >
           <Input
             id="new-url"

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { toggle_file_review_state } from '@/commands/apply-chat-response-command/utils/review'
+import { toggle_file_review_state } from '@/commands/apply-chat-response-command/utils/review/review'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ToggleFileInReviewMessage } from '@/views/panel/types/messages'
 

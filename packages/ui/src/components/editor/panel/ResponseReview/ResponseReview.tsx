@@ -7,7 +7,7 @@ import { Checkbox } from '../../common/Checkbox'
 import { IconButton } from '../IconButton/IconButton'
 
 type Props = {
-  files: (FileInReview & { is_checked: boolean })[]
+  files: FileInReview[]
   has_multiple_workspaces: boolean
   on_discard: () => void
   on_approve: (files: FileInReview[]) => void
@@ -46,9 +46,7 @@ export const ResponseReview: FC<Props> = ({
   const fallback_count = files.filter((f) => f.is_fallback).length
 
   const sorted_files = useMemo(() => {
-    const get_sort_score = (
-      file: FileInReview & { is_checked: boolean }
-    ): number => {
+    const get_sort_score = (file: FileInReview): number => {
       if (file.diff_fallback_method == 'search_and_replace') {
         return 0
       }

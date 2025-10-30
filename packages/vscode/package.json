@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Initialize free chatbots, call model providers, apply responses, and more (CWC)",
-  "version": "1.490.0",
+  "description": "CWC: Initialize free chatbots, call model providers, apply responses, batteries included",
+  "version": "1.491.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",

@@ -161,82 +161,84 @@ const convert_code_block_to_new_file_diff = (params: {
   let path_line_index = -1
   let content_lines: string[] = []
 
-  if (!file_path) {
-    // Check for XML path format
-    const first_line = params.lines.length > 0 ? params.lines[0].trim() : ''
-    const xml_match = first_line.match(xml_path_regex)
+  // Check for XML path format
+  const first_line = params.lines.length > 0 ? params.lines[0].trim() : ''
+  const xml_match = first_line.match(xml_path_regex)
 
-    if (xml_match && xml_match[1]) {
-      file_path = xml_match[1].replace(/\\/g, '/')
+  if (xml_match && xml_match[1]) {
+    file_path = xml_match[1].replace(/\\/g, '/')
 
-      const file_tag_start = params.lines.findIndex((l) =>
-        l.trim().startsWith('<file')
+    const file_tag_start = params.lines.findIndex((l) =>
+      l.trim().startsWith('<file')
+    )
+    let file_tag_end = -1
+    for (let i = params.lines.length - 1; i >= 0; i--) {
+      if (params.lines[i].trim().startsWith('</file>')) {
+        file_tag_end = i
+        break
+      }
+    }
+
+    if (
+      file_tag_start != -1 &&
+      file_tag_end != -1 &&
+      file_tag_end > file_tag_start
+    ) {
+      const inner_lines = params.lines.slice(file_tag_start + 1, file_tag_end)
+
+      const cdata_start = inner_lines.findIndex((l) =>
+        l.trim().startsWith('<![CDATA[')
       )
-      let file_tag_end = -1
-      for (let i = params.lines.length - 1; i >= 0; i--) {
-        if (params.lines[i].trim().startsWith('</file>')) {
-          file_tag_end = i
+      let cdata_end = -1
+      for (let i = inner_lines.length - 1; i >= 0; i--) {
+        if (inner_lines[i].trim().endsWith(']]>')) {
+          cdata_end = i
           break
         }
       }
 
-      if (
-        file_tag_start != -1 &&
-        file_tag_end != -1 &&
-        file_tag_end > file_tag_start
-      ) {
-        const inner_lines = params.lines.slice(file_tag_start + 1, file_tag_end)
-
-        const cdata_start = inner_lines.findIndex((l) =>
-          l.trim().startsWith('<![CDATA[')
-        )
-        let cdata_end = -1
-        for (let i = inner_lines.length - 1; i >= 0; i--) {
-          if (inner_lines[i].trim().endsWith(']]>')) {
-            cdata_end = i
-            break
-          }
-        }
-
-        if (cdata_start != -1 && cdata_end != -1 && cdata_end > cdata_start) {
-          content_lines = inner_lines.slice(cdata_start + 1, cdata_end)
-        } else {
-          content_lines = inner_lines
-        }
+      if (cdata_start != -1 && cdata_end != -1 && cdata_end > cdata_start) {
+        content_lines = inner_lines.slice(cdata_start + 1, cdata_end)
       } else {
-        // malformed, maybe path is on first line, and content follows
-        content_lines = params.lines.slice(1)
+        content_lines = inner_lines
       }
     } else {
-      // Look for a file path in the first few lines of the code block
-      for (let i = 0; i < Math.min(params.lines.length, 5); i++) {
-        const line = params.lines[i].trim()
-        const match = line.match(path_regex)
+      // malformed, maybe path is on first line, and content follows
+      content_lines = params.lines.slice(1)
+    }
+  } else {
+    // Look for a file path in the first few lines of the code block
+    for (let i = 0; i < Math.min(params.lines.length, 5); i++) {
+      const line = params.lines[i].trim()
+      const match = line.match(path_regex)
 
-        if (match && match[1]) {
-          const potential_path = match[1]
+      if (match && match[1]) {
+        const potential_path = match[1]
 
-          if (
-            (potential_path.includes('.') || potential_path.includes('/')) &&
-            !potential_path.includes(' ')
-          ) {
-            const rest_of_line = line
-              .substring(line.indexOf(potential_path) + potential_path.length)
-              .trim()
-            // e.g. `25:5` for line and column, or `-->` for html comments
-            const is_just_path_and_location = /^(?:\d+:\d+)?\s*(-->)?\s*$/.test(
-              rest_of_line
-            )
+        if (
+          (potential_path.includes('.') || potential_path.includes('/')) &&
+          !potential_path.includes(' ')
+        ) {
+          const rest_of_line = line
+            .substring(line.indexOf(potential_path) + potential_path.length)
+            .trim()
+          // e.g. `25:5` for line and column, or `-->` for html comments
+          const is_just_path_and_location = /^(?:\d+:\d+)?\s*(-->)?\s*$/.test(
+            rest_of_line
+          )
 
-            if (is_just_path_and_location) {
-              file_path = potential_path.replace(/\\/g, '/') // normalize backslashes
-              path_line_index = i
-              break // Found it, stop searching.
-            }
+          if (is_just_path_and_location) {
+            file_path = potential_path.replace(/\\/g, '/') // normalize backslashes
+            path_line_index = i
+            break // Found it, stop searching.
           }
         }
       }
     }
+  }
+
+  if (!file_path) {
+    file_path = params.file_path_hint
   }
 
   if (path_line_index != -1) {

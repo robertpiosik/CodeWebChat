@@ -131,9 +131,7 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
       } else if (message.command == 'CODE_REVIEW_STARTED') {
-        set_files_to_review(
-          message.files.map((f) => ({ ...f, is_checked: true }))
-        )
+        set_files_to_review(message.files)
         set_raw_instructions(message.raw_instructions)
       } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
         set_files_to_review((current_files) => {
