@@ -1,4 +1,2 @@
-Some introductory text.
-
 <!-- src/index.ts -->```typescript
 console.log("hello");

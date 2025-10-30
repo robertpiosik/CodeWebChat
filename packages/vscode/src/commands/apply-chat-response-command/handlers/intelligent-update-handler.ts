@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import axios from 'axios'
 import * as path from 'path'
 import * as fs from 'fs'
-import { ClipboardFile, parse_multiple_files } from '../utils/clipboard-parser'
+import { ClipboardFile } from '../utils/clipboard-parser'
 import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
@@ -12,6 +12,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
 import { FileProgress } from '@/views/panel/types/messages'
+import { parse_multiple_files } from '../utils/clipboard-parser/parsers'
 
 export const handle_intelligent_update = async (params: {
   endpoint_url: string
@@ -46,10 +47,14 @@ export const handle_intelligent_update = async (params: {
     function_name: 'handle_intelligent_update',
     message: 'Processing multiple files'
   })
-  const raw_files = parse_multiple_files({
+  const raw_items = parse_multiple_files({
     response: params.chat_response,
     is_single_root_folder_workspace: params.is_single_root_folder_workspace
   })
+
+  const raw_files = raw_items.filter(
+    (item): item is ClipboardFile => 'file_path' in item
+  )
 
   const files: ClipboardFile[] = []
   const skipped_files: string[] = []

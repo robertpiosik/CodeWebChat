@@ -10,7 +10,6 @@ import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from '../utils/post_message'
 import { FileInReview } from '@shared/types/file-in-review'
 
-type CheckedFileInReview = FileInReview & { is_checked: boolean }
 type ResponseHistoryItem = {
   response: string
   raw_instructions?: string
@@ -26,8 +25,7 @@ export const use_panel = (vscode: any) => {
     useState(0)
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
-  const [files_to_review, set_files_to_review] =
-    useState<CheckedFileInReview[]>()
+  const [files_to_review, set_files_to_review] = useState<FileInReview[]>()
   const [raw_instructions, set_raw_instructions] = useState<string>()
   const [progress_state, set_progress_state] = useState<{
     title: string

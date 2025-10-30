@@ -6,8 +6,6 @@ console.log("world")
 
 ```
 
-Lorem ipsum
-
 ```python
 # src/utils.py
 print("hello")

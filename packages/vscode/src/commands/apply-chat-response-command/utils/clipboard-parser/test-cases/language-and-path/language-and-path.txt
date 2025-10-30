@@ -1,8 +1,4 @@
-Some text before the code block.
-
 ```javascript:src/index.js
 const message = "hello world";
 console.log(message);
 ```
-
-Some text after.

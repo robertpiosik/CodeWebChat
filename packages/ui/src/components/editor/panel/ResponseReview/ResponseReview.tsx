@@ -25,25 +25,15 @@ type Props = {
   raw_instructions?: string
 }
 
-export const ResponseReview: FC<Props> = ({
-  files,
-  has_multiple_workspaces,
-  on_discard,
-  on_approve,
-  on_focus_file,
-  on_go_to_file,
-  on_toggle_file,
-  on_intelligent_update,
-  raw_instructions
-}) => {
+export const ResponseReview: FC<Props> = (props) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
 
   const handle_approve = () => {
-    const accepted_files = files.filter((f) => f.is_checked)
-    on_approve(accepted_files)
+    const accepted_files = props.files.filter((f) => f.is_checked)
+    props.on_approve(accepted_files)
   }
 
-  const fallback_count = files.filter((f) => f.is_fallback).length
+  const fallback_count = props.files.filter((f) => f.is_fallback).length
 
   const sorted_files = useMemo(() => {
     const get_sort_score = (file: FileInReview): number => {
@@ -55,20 +45,22 @@ export const ResponseReview: FC<Props> = ({
       }
       return 2
     }
-    return [...files].sort((a, b) => get_sort_score(a) - get_sort_score(b))
-  }, [files])
+    return [...props.files].sort(
+      (a, b) => get_sort_score(a) - get_sort_score(b)
+    )
+  }, [props.files])
 
   return (
     <div className={styles.container}>
-      {raw_instructions && (
-        <div className={styles.instructions} title={raw_instructions}>
-          {raw_instructions}
+      {props.raw_instructions && (
+        <div className={styles.instructions} title={props.raw_instructions}>
+          {props.raw_instructions}
         </div>
       )}
       {fallback_count > 0 && (
         <div className={styles.info}>
-          {files.length > 1
-            ? `${fallback_count} of ${files.length} files`
+          {props.files.length > 1
+            ? `${fallback_count} of ${props.files.length} files`
             : 'The file'}{' '}
           required a fallback diff integration method, which may lead to
           inaccuracies. Looks off? Click{' '}
@@ -92,7 +84,7 @@ export const ResponseReview: FC<Props> = ({
               })}
               onClick={() => {
                 set_last_clicked_file_index(index)
-                on_focus_file({
+                props.on_focus_file({
                   file_path: file.file_path,
                   workspace_name: file.workspace_name
                 })
@@ -105,11 +97,11 @@ export const ResponseReview: FC<Props> = ({
               }`}
             >
               <div className={styles['item__left']}>
-                {files.length > 1 && (
+                {props.files.length > 1 && (
                   <Checkbox
                     checked={file.is_checked}
                     on_change={(checked) => {
-                      on_toggle_file({
+                      props.on_toggle_file({
                         file_path: file.file_path,
                         workspace_name: file.workspace_name,
                         is_checked: checked
@@ -129,7 +121,7 @@ export const ResponseReview: FC<Props> = ({
                   </span>
 
                   <span>
-                    {has_multiple_workspaces && file.workspace_name
+                    {props.has_multiple_workspaces && file.workspace_name
                       ? `${file.workspace_name}/`
                       : ''}
                     {dir_path}
@@ -151,7 +143,7 @@ export const ResponseReview: FC<Props> = ({
                       on_click={(e) => {
                         e.stopPropagation()
                         set_last_clicked_file_index(index)
-                        on_intelligent_update({
+                        props.on_intelligent_update({
                           file_path: file.file_path,
                           workspace_name: file.workspace_name
                         })
@@ -164,7 +156,7 @@ export const ResponseReview: FC<Props> = ({
                     on_click={(e) => {
                       e.stopPropagation()
                       set_last_clicked_file_index(index)
-                      on_focus_file({
+                      props.on_focus_file({
                         file_path: file.file_path,
                         workspace_name: file.workspace_name
                       })
@@ -175,7 +167,7 @@ export const ResponseReview: FC<Props> = ({
                     title="Go To File"
                     on_click={(e) => {
                       e.stopPropagation()
-                      on_go_to_file({
+                      props.on_go_to_file({
                         file_path: file.file_path,
                         workspace_name: file.workspace_name
                       })
@@ -198,12 +190,12 @@ export const ResponseReview: FC<Props> = ({
         })}
       </div>
       <div className={styles.footer}>
-        <Button on_click={on_discard} is_secondary>
+        <Button on_click={props.on_discard} is_secondary>
           Discard
         </Button>
         <Button
           on_click={handle_approve}
-          disabled={files.filter((f) => f.is_checked).length == 0}
+          disabled={props.files.filter((f) => f.is_checked).length == 0}
         >
           Approve
         </Button>

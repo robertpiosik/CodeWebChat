@@ -146,7 +146,6 @@ export const store_original_file_states = async (
   return original_states
 }
 
-// Helper function to extract content from patch for preview
 export const extract_content_from_patch = (
   patch_content: string,
   original_content: string
@@ -166,7 +165,6 @@ export const extract_content_from_patch = (
   }
 }
 
-// Ensures all target files are closed before applying patches
 async function close_files_in_all_editor_groups(
   file_paths: string[],
   workspace_path: string
@@ -209,7 +207,6 @@ async function close_files_in_all_editor_groups(
   return [...new Map(closed_files.map((item) => [item.fsPath, item])).values()]
 }
 
-// Reopens files that were closed before patch application
 async function reopen_closed_files(closed_files: vscode.Uri[]): Promise<void> {
   for (const uri of closed_files) {
     try {
@@ -225,7 +222,6 @@ async function reopen_closed_files(closed_files: vscode.Uri[]): Promise<void> {
   }
 }
 
-// Opens, formats, and saves a list of files.
 async function process_modified_files(
   file_paths: string[],
   workspace_path: string
@@ -464,10 +460,15 @@ export const apply_git_patch = async (
       workspace_path
     )
 
-    await vscode.workspace.fs.writeFile(
-      vscode.Uri.file(temp_file),
-      Buffer.from(patch_content)
-    )
+    // Write patch file and ensure it's synced to disk before git apply reads it
+    const patch_buffer = Buffer.from(patch_content)
+    const fd = await fs.promises.open(temp_file, 'w')
+    try {
+      await fd.write(patch_buffer)
+      await fd.sync() // Ensure data is flushed to disk
+    } finally {
+      await fd.close()
+    }
 
     let last_error: any = null
     let success = false
@@ -546,7 +547,6 @@ export const apply_git_patch = async (
       }
     }
 
-    // Cleanup and return
     if (success) {
       await process_modified_files(file_paths, workspace_path)
       await reopen_closed_files(closed_files)

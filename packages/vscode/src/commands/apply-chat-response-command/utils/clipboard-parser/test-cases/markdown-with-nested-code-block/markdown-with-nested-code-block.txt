@@ -1,4 +1,3 @@
-Lorem ispum
 
 ```markdown
 // src/test.md
@@ -12,4 +11,3 @@ test
 ```
 test
 ```
-test

@@ -1,13 +1,15 @@
-```markdown
+Top.
+
 ```ts
 // src/lorem.ts
 console.log('lorem');
 ```
-```
 
-```markdown
+Middle.
+
 ```ts
 // src/ipsum.ts
 console.log('ipsum');
 ```
-```
+
+Bottom.
