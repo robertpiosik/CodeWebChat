@@ -35,6 +35,7 @@ export const use_panel = (vscode: any) => {
     tokens_per_second?: number
     files?: FileProgress[]
   }>()
+  const [is_applying_changes, set_is_applying_changes] = useState(false)
   const [chat_initialized_title, set_chat_initialized_title] = useState<
     string | undefined
   >()
@@ -212,6 +213,10 @@ export const use_panel = (vscode: any) => {
         })
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)
+      } else if (message.command == 'SHOW_APPLYING_CHANGES') {
+        set_is_applying_changes(true)
+      } else if (message.command == 'HIDE_APPLYING_CHANGES') {
+        set_is_applying_changes(false)
       } else if (message.command == 'SHOW_CHAT_INITIALIZED') {
         set_chat_initialized_title(message.title)
       } else if (message.command == 'FOCUS_CHAT_INPUT') {
@@ -369,6 +374,7 @@ export const use_panel = (vscode: any) => {
     raw_instructions,
     progress_state,
     set_progress_state,
+    is_applying_changes,
     chat_initialized_title,
     set_chat_initialized_title,
     commit_message_to_review,

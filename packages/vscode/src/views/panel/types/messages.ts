@@ -543,6 +543,14 @@ export interface HideProgressMessage extends BaseMessage {
   command: 'HIDE_PROGRESS'
 }
 
+export interface ShowApplyingChangesMessage extends BaseMessage {
+  command: 'SHOW_APPLYING_CHANGES'
+}
+
+export interface HideApplyingChangesMessage extends BaseMessage {
+  command: 'HIDE_APPLYING_CHANGES'
+}
+
 export interface ShowChatInitializedMessage extends BaseMessage {
   command: 'SHOW_CHAT_INITIALIZED'
   title: string
@@ -607,6 +615,8 @@ export type BackendMessage =
   | SelectedConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
+  | ShowApplyingChangesMessage
+  | HideApplyingChangesMessage
   | ShowChatInitializedMessage
   | UpdateFileInReviewMessage
   | ShowStageFilesModalMessage

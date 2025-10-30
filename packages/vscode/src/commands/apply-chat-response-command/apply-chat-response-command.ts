@@ -157,105 +157,114 @@ export const apply_chat_response_command = (
         })
 
         if (changes_accepted) {
-          const workspace_map = new Map<string, string>()
-          vscode.workspace.workspaceFolders!.forEach((folder) => {
-            workspace_map.set(folder.name, folder.uri.fsPath)
-          })
-          const default_workspace =
-            vscode.workspace.workspaceFolders![0].uri.fsPath
-
-          const accepted_states: {
-            file_path: string
-            workspace_name?: string
-            content: string
-            is_deleted: boolean
-          }[] = []
-
-          for (const state of review_data.original_states) {
-            let workspace_root = default_workspace
-            if (
-              state.workspace_name &&
-              workspace_map.has(state.workspace_name)
-            ) {
-              workspace_root = workspace_map.get(state.workspace_name)!
-            }
-
-            const sanitized_file_path = create_safe_path(
-              workspace_root,
-              state.file_path
-            )
-            if (!sanitized_file_path) {
-              continue
-            }
-
-            const exists = fs.existsSync(sanitized_file_path)
-            const content = exists
-              ? fs.readFileSync(sanitized_file_path, 'utf8')
-              : ''
-
-            accepted_states.push({
-              file_path: state.file_path,
-              workspace_name: state.workspace_name,
-              content: content,
-              is_deleted: !exists
+          panel_provider.send_message({ command: 'SHOW_APPLYING_CHANGES' })
+          try {
+            const workspace_map = new Map<string, string>()
+            vscode.workspace.workspaceFolders!.forEach((folder) => {
+              workspace_map.set(folder.name, folder.uri.fsPath)
             })
-          }
+            const default_workspace =
+              vscode.workspace.workspaceFolders![0].uri.fsPath
 
-          await undo_files({ original_states: review_data.original_states })
+            const accepted_states: {
+              file_path: string
+              workspace_name?: string
+              content: string
+              is_deleted: boolean
+            }[] = []
 
-          await create_checkpoint(
-            workspace_provider,
-            context,
-            'Before changes approved',
-            args?.raw_instructions
-          )
+            for (const state of review_data.original_states) {
+              let workspace_root = default_workspace
+              if (
+                state.workspace_name &&
+                workspace_map.has(state.workspace_name)
+              ) {
+                workspace_root = workspace_map.get(state.workspace_name)!
+              }
 
-          for (const accepted_state of accepted_states) {
-            let workspace_root = default_workspace
-            if (
-              accepted_state.workspace_name &&
-              workspace_map.has(accepted_state.workspace_name)
-            ) {
-              workspace_root = workspace_map.get(accepted_state.workspace_name)!
+              const sanitized_file_path = create_safe_path(
+                workspace_root,
+                state.file_path
+              )
+              if (!sanitized_file_path) {
+                continue
+              }
+
+              const exists = fs.existsSync(sanitized_file_path)
+              const content = exists
+                ? fs.readFileSync(sanitized_file_path, 'utf8')
+                : ''
+
+              accepted_states.push({
+                file_path: state.file_path,
+                workspace_name: state.workspace_name,
+                content: content,
+                is_deleted: !exists
+              })
             }
-            const sanitized_file_path = create_safe_path(
-              workspace_root,
-              accepted_state.file_path
-            )
-            if (!sanitized_file_path) continue
 
-            if (accepted_state.is_deleted) {
-              if (fs.existsSync(sanitized_file_path)) {
-                const tabs_to_close: vscode.Tab[] = []
-                for (const tab_group of vscode.window.tabGroups.all) {
-                  tabs_to_close.push(
-                    ...tab_group.tabs.filter((tab) => {
-                      const tab_uri = (tab.input as any)?.uri as
-                        | vscode.Uri
-                        | undefined
-                      return tab_uri && tab_uri.fsPath == sanitized_file_path
-                    })
+            await undo_files({ original_states: review_data.original_states })
+
+            await create_checkpoint(
+              workspace_provider,
+              context,
+              'Before changes approved',
+              args?.raw_instructions
+            )
+
+            for (const accepted_state of accepted_states) {
+              let workspace_root = default_workspace
+              if (
+                accepted_state.workspace_name &&
+                workspace_map.has(accepted_state.workspace_name)
+              ) {
+                workspace_root = workspace_map.get(
+                  accepted_state.workspace_name
+                )!
+              }
+              const sanitized_file_path = create_safe_path(
+                workspace_root,
+                accepted_state.file_path
+              )
+              if (!sanitized_file_path) continue
+
+              if (accepted_state.is_deleted) {
+                if (fs.existsSync(sanitized_file_path)) {
+                  const tabs_to_close: vscode.Tab[] = []
+                  for (const tab_group of vscode.window.tabGroups.all) {
+                    tabs_to_close.push(
+                      ...tab_group.tabs.filter((tab) => {
+                        const tab_uri = (tab.input as any)?.uri as
+                          | vscode.Uri
+                          | undefined
+                        return tab_uri && tab_uri.fsPath == sanitized_file_path
+                      })
+                    )
+                  }
+
+                  if (tabs_to_close.length > 0) {
+                    await vscode.window.tabGroups.close(tabs_to_close)
+                  }
+
+                  await vscode.workspace.fs.delete(
+                    vscode.Uri.file(sanitized_file_path)
                   )
                 }
-
-                if (tabs_to_close.length > 0) {
-                  await vscode.window.tabGroups.close(tabs_to_close)
+              } else {
+                const dir = path.dirname(sanitized_file_path)
+                if (!fs.existsSync(dir)) {
+                  await vscode.workspace.fs.createDirectory(
+                    vscode.Uri.file(dir)
+                  )
                 }
-
-                await vscode.workspace.fs.delete(
-                  vscode.Uri.file(sanitized_file_path)
+                await vscode.workspace.fs.writeFile(
+                  vscode.Uri.file(sanitized_file_path),
+                  Buffer.from(accepted_state.content, 'utf8')
                 )
               }
-            } else {
-              const dir = path.dirname(sanitized_file_path)
-              if (!fs.existsSync(dir)) {
-                await vscode.workspace.fs.createDirectory(vscode.Uri.file(dir))
-              }
-              await vscode.workspace.fs.writeFile(
-                vscode.Uri.file(sanitized_file_path),
-                Buffer.from(accepted_state.content, 'utf8')
-              )
             }
+          } finally {
+            panel_provider.send_message({ command: 'HIDE_APPLYING_CHANGES' })
           }
         }
       }
