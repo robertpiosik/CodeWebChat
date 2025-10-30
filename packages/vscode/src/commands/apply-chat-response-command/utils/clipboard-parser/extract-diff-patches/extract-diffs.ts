@@ -9,6 +9,13 @@ export type Diff = {
   new_file_path?: string
 }
 
+type TextBlock = {
+  type: 'text'
+  content: string
+}
+
+export type DiffOrTextBlock = Diff | TextBlock
+
 const normalize_header_line = (params: {
   line: string
   is_single_root: boolean
@@ -26,10 +33,10 @@ const normalize_header_line = (params: {
       path_part = path_part.substring(2)
     }
     if (params.is_single_root === false) {
-      path_part = extract_workspace_and_path(
-        path_part,
-        params.is_single_root
-      ).relative_path
+      path_part = extract_workspace_and_path({
+        raw_file_path: path_part,
+        is_single_root_folder_workspace: params.is_single_root
+      }).relative_path
     }
 
     if (path_part == '/dev/null') {
@@ -47,10 +54,10 @@ const normalize_header_line = (params: {
       path_part = path_part.substring(2)
     }
     if (params.is_single_root === false) {
-      path_part = extract_workspace_and_path(
-        path_part,
-        params.is_single_root
-      ).relative_path
+      path_part = extract_workspace_and_path({
+        raw_file_path: path_part,
+        is_single_root_folder_workspace: params.is_single_root
+      }).relative_path
     }
     if (path_part == '/dev/null') {
       return '+++ /dev/null'
@@ -120,10 +127,10 @@ const process_collected_patch_lines = (params: {
     )
   }
 
-  const { workspace_name, relative_path } = extract_workspace_and_path(
-    file_path,
-    params.is_single_root
-  )
+  const { workspace_name, relative_path } = extract_workspace_and_path({
+    raw_file_path: file_path,
+    is_single_root_folder_workspace: params.is_single_root
+  })
 
   const patch: Diff = {
     file_path: relative_path,
@@ -133,7 +140,10 @@ const process_collected_patch_lines = (params: {
 
   if (is_rename && to_path) {
     const { workspace_name: new_workspace, relative_path: new_relative } =
-      extract_workspace_and_path(to_path, params.is_single_root)
+      extract_workspace_and_path({
+        raw_file_path: to_path,
+        is_single_root_folder_workspace: params.is_single_root
+      })
     patch.new_file_path = new_relative
     if (new_workspace && new_workspace !== workspace_name) {
       patch.workspace_name = new_workspace
@@ -258,10 +268,10 @@ const convert_code_block_to_new_file_diff = (params: {
       .trim()
       .match(/^(@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@)/)
   ) {
-    const { workspace_name, relative_path } = extract_workspace_and_path(
-      file_path,
-      params.is_single_root
-    )
+    const { workspace_name, relative_path } = extract_workspace_and_path({
+      raw_file_path: file_path,
+      is_single_root_folder_workspace: params.is_single_root
+    })
     const patch_content = [
       `--- a/${relative_path}`,
       `+++ b/${relative_path}`,
@@ -275,10 +285,10 @@ const convert_code_block_to_new_file_diff = (params: {
     }
   }
 
-  const { workspace_name, relative_path } = extract_workspace_and_path(
-    file_path,
-    params.is_single_root
-  )
+  const { workspace_name, relative_path } = extract_workspace_and_path({
+    raw_file_path: file_path,
+    is_single_root_folder_workspace: params.is_single_root
+  })
 
   const patch_lines = content_lines.map((line) => `+${line}`)
   const patch_content = [
@@ -298,8 +308,8 @@ const convert_code_block_to_new_file_diff = (params: {
 const extract_all_code_block_patches = (params: {
   normalized_text: string
   is_single_root: boolean
-}): Diff[] => {
-  const patches: Diff[] = []
+}): DiffOrTextBlock[] => {
+  const items: DiffOrTextBlock[] = []
   const lines = params.normalized_text.split('\n')
 
   const code_block_regex = /^```(\w*)/
@@ -402,12 +412,20 @@ const extract_all_code_block_patches = (params: {
     }
   }
 
+  let last_block_end = -1
+
   // Process each found code block in order of appearance.
   for (let i = 0; i < code_blocks.length; i++) {
     const block = code_blocks[i]
+
+    const text_before = lines.slice(last_block_end + 1, block.start).join('\n')
+    if (text_before.trim()) {
+      items.push({ type: 'text', content: text_before.trim() })
+    }
+
     const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
     if (block.type == 'diff' || block.type == 'patch') {
-      patches.push(...(diff_block_patches.get(block.start) || []))
+      items.push(...(diff_block_patches.get(block.start) || []))
     } else {
       // Check if this block was a hint for the next block.
       if (i < code_blocks.length - 1) {
@@ -419,6 +437,7 @@ const extract_all_code_block_patches = (params: {
             const match = non_empty_lines[0].match(xml_path_regex)
             if (match && match[1]) {
               // This was a hint for the next block, so we should skip processing it as a file content block.
+              last_block_end = block.end
               continue
             }
           }
@@ -429,8 +448,8 @@ const extract_all_code_block_patches = (params: {
       let file_path_hint: string | undefined
       let workspace_hint: string | undefined
       if (block.start > 0) {
-        for (let i = block.start - 1; i >= Math.max(0, block.start - 5); i--) {
-          const prev_line = lines[i].trim()
+        for (let j = block.start - 1; j >= Math.max(0, block.start - 5); j--) {
+          const prev_line = lines[j].trim()
           if (!prev_line) continue
 
           let extracted = extract_path_from_line_of_code(prev_line)
@@ -450,10 +469,10 @@ const extract_all_code_block_patches = (params: {
 
           if (extracted) {
             file_path_hint = extracted
-            const { workspace_name } = extract_workspace_and_path(
-              extracted,
-              params.is_single_root
-            )
+            const { workspace_name } = extract_workspace_and_path({
+              raw_file_path: extracted,
+              is_single_root_folder_workspace: params.is_single_root
+            })
             workspace_hint = workspace_name
             break
           }
@@ -472,13 +491,21 @@ const extract_all_code_block_patches = (params: {
           if (workspace_hint && !patch.workspace_name) {
             patch.workspace_name = workspace_hint
           }
-          patches.push(patch)
+          items.push(patch)
         }
       }
     }
+    last_block_end = block.end
   }
 
-  return patches
+  if (last_block_end < lines.length - 1) {
+    const text_after = lines.slice(last_block_end + 1).join('\n')
+    if (text_after.trim()) {
+      items.push({ type: 'text', content: text_after.trim() })
+    }
+  }
+
+  return items
 }
 
 const parse_multiple_raw_patches = (params: {
@@ -544,7 +571,7 @@ const parse_multiple_raw_patches = (params: {
 export const extract_diffs = (params: {
   clipboard_text: string
   is_single_root: boolean
-}): Diff[] => {
+}): DiffOrTextBlock[] => {
   const normalized_text = params.clipboard_text.replace(/\r\n/g, '\n')
   const lines = normalized_text.split('\n')
 
@@ -679,7 +706,10 @@ const build_patch_content = (params: {
       })
       const relative_file_path =
         params.is_single_root === false
-          ? extract_workspace_and_path(params.file_path, false).relative_path
+          ? extract_workspace_and_path({
+              raw_file_path: params.file_path,
+              is_single_root_folder_workspace: false
+            }).relative_path
           : params.file_path
       patch_content = `--- a/${relative_file_path}\n+++ b/${relative_file_path}`
     } else {
@@ -687,8 +717,10 @@ const build_patch_content = (params: {
       const formatted_patch_body_lines = format_hunk_headers(patch_body_lines)
       const relative_file_path =
         params.is_single_root === false
-          ? extract_workspace_and_path(params.file_path, params.is_single_root)
-              .relative_path
+          ? extract_workspace_and_path({
+              raw_file_path: params.file_path,
+              is_single_root_folder_workspace: params.is_single_root
+            }).relative_path
           : params.file_path
       patch_content = `--- a/${relative_file_path}\n+++ b/${relative_file_path}\n${formatted_patch_body_lines.join(
         '\n'

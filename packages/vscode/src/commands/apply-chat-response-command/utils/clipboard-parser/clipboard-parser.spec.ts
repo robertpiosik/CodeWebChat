@@ -1,10 +1,7 @@
-import {
-  parse_multiple_files,
-  parse_file_content_only,
-  parse_response
-} from './clipboard-parser'
+import { parse_response, FileItem } from './clipboard-parser'
 import * as fs from 'fs'
 import * as path from 'path'
+import { parse_file_content_only, parse_multiple_files } from './parsers'
 
 describe('clipboard-parser', () => {
   const load_test_case_file = (test_case: string, filename: string): string => {
@@ -24,11 +21,11 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
-      expect(result[1].file_path).toBe('src/utils.py')
+      expect((result[1] as FileItem).file_path).toBe('src/utils.py')
       expect(result[1].content).toBe(
         load_test_case_file(test_case, '2-file.txt')
       )
@@ -43,7 +40,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -58,7 +55,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -73,7 +70,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -88,7 +85,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -103,7 +100,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -118,7 +115,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('README.md')
+      expect((result[0] as FileItem).file_path).toBe('README.md')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -133,11 +130,11 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect(result[0].file_path).toBe('src/hello-world.html')
+      expect((result[0] as FileItem).file_path).toBe('src/hello-world.html')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
-      expect(result[1].file_path).toBe('src/lorem.css')
+      expect((result[1] as FileItem).file_path).toBe('src/lorem.css')
       expect(result[1].content).toBe(
         load_test_case_file(test_case, '2-file.txt')
       )
@@ -152,8 +149,8 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.ts')
-      expect(result[0].workspace_name).toBe('frontend')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).workspace_name).toBe('frontend')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -168,8 +165,8 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('frontend/src/index.ts')
-      expect(result[0].workspace_name).toBeUndefined()
+      expect((result[0] as FileItem).file_path).toBe('frontend/src/index.ts')
+      expect((result[0] as FileItem).workspace_name).toBeUndefined()
     })
 
     it('merges content when the same file path appears in multiple code blocks', () => {
@@ -181,7 +178,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -196,11 +193,11 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
-      expect(result[1].file_path).toBe('src/utils.py')
+      expect((result[1] as FileItem).file_path).toBe('src/utils.py')
       expect(result[1].content).toBe(
         load_test_case_file(test_case, '2-file.txt')
       )
@@ -215,11 +212,11 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
-      expect(result[1].file_path).toBe('src/utils.py')
+      expect((result[1] as FileItem).file_path).toBe('src/utils.py')
       expect(result[1].content).toBe(
         load_test_case_file(test_case, '2-file.txt')
       )
@@ -234,7 +231,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/utils.py')
+      expect((result[0] as FileItem).file_path).toBe('src/utils.py')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -249,7 +246,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.js')
+      expect((result[0] as FileItem).file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -264,7 +261,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.js')
+      expect((result[0] as FileItem).file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -279,7 +276,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/test.md')
+      expect((result[0] as FileItem).file_path).toBe('src/test.md')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -294,7 +291,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/lorem.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/lorem.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -309,7 +306,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/main.js')
+      expect((result[0] as FileItem).file_path).toBe('src/main.js')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -324,11 +321,11 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect(result[0].file_path).toBe('src/lorem.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/lorem.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
-      expect(result[1].file_path).toBe('src/ipsum.ts')
+      expect((result[1] as FileItem).file_path).toBe('src/ipsum.ts')
       expect(result[1].content).toBe(
         load_test_case_file(test_case, '2-file.txt')
       )
@@ -343,11 +340,11 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect(result[0].file_path).toBe('src/lorem.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/lorem.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
-      expect(result[1].file_path).toBe('src/ipsum.ts')
+      expect((result[1] as FileItem).file_path).toBe('src/ipsum.ts')
       expect(result[1].content).toBe(
         load_test_case_file(test_case, '2-file.txt')
       )
@@ -362,7 +359,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.php')
+      expect((result[0] as FileItem).file_path).toBe('src/index.php')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -377,7 +374,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -392,7 +389,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.js')
+      expect((result[0] as FileItem).file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -407,7 +404,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.js')
+      expect((result[0] as FileItem).file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -422,7 +419,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/hello-world.ts')
+      expect((result[0] as FileItem).file_path).toBe('src/hello-world.ts')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -437,7 +434,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0].file_path).toBe('src/index.js')
+      expect((result[0] as FileItem).file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
         load_test_case_file(test_case, '1-file.txt')
       )
@@ -972,16 +969,89 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result).toHaveLength(2)
+      expect(result).toHaveLength(3)
       expect(result[0]).toMatchObject({
-        type: 'diff',
-        file_path: 'src/lorem.html',
-        content: load_test_case_file(test_case, '1-file.txt')
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
       })
       expect(result[1]).toMatchObject({
         type: 'diff',
-        file_path: 'src/ipsum.ts',
+        file_path: 'src/lorem.html',
         content: load_test_case_file(test_case, '2-file.txt')
+      })
+      expect(result[2]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '3-file.txt')
+      })
+    })
+
+    it('parses multiple files with text between the markdown code blocks', () => {
+      const test_case = 'text-between'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(5)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
+      expect(result[2]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '3-text.txt')
+      })
+      expect(result[3]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '4-file.txt')
+      })
+      expect(result[4]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '5-text.txt')
+      })
+    })
+
+    it('parses multiple diffs with text between the markdown code blocks', () => {
+      const test_case = 'diff-multiple-files-text-between'
+      const text = load_test_case_file(
+        test_case,
+        'diff-multiple-files-text-between.txt'
+      )
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(5)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
+      expect(result[2]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '3-text.txt')
+      })
+      expect(result[3]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '4-file.txt')
+      })
+      expect(result[4]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '5-text.txt')
       })
     })
 

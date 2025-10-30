@@ -4,8 +4,6 @@
 console.log('lorem');
 ```
 
-Lorem ipsum.
-
 ```ts
 // src/ipsum.ts
 console.log('ipsum');
