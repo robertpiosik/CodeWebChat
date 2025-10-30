@@ -4,7 +4,7 @@
 
 Blazing fast AI pair programming for production-grade code. Select context as you go for pro accuracy and game-changing speed.
 
-Works with VS Code, Cursor, Windsurf, and other forks.
+Works with VS Code, Cursor, Windsurf, and others.
 
 ❤️ **Free and open-source.** _Join our [discord server](https://discord.gg/KJySXsrSX5) and get involed!_
 
@@ -149,7 +149,6 @@ Generate meaningful summaries of changes adhering to your style.
 If you have a question, or want to help others, you're always welcome in our community.
 
 - [Discord server](https://discord.gg/KJySXsrSX5)
-- [Official subreddit](https://www.reddit.com/r/CodeWebChat)
 - [GitHub Discussions](https://github.com/robertpiosik/CodeWebChat/discussions)
 
 ## Donations
