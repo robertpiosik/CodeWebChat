@@ -1,4 +1,4 @@
-import { extract_diffs, Diff } from './extract-diff-patches'
+import { extract_diffs } from './extract-diff-patches'
 import { parse_code_completion, parse_multiple_files } from './parsers'
 
 export interface ClipboardFile {
@@ -116,9 +116,9 @@ export const parse_response = (params: {
     if (patches_or_text.length) {
       return patches_or_text.map((item) => {
         if ('type' in item && item.type === 'text') {
-          return item as TextItem
+          return item
         }
-        return { type: 'diff', ...(item as Diff) }
+        return { type: 'diff', ...item }
       })
     }
   }
@@ -130,8 +130,8 @@ export const parse_response = (params: {
 
   return items.map((item) => {
     if ('file_path' in item) {
-      return { type: 'file', ...(item as ClipboardFile) }
+      return { type: 'file', ...item }
     }
-    return item as TextItem
+    return item
   })
 }

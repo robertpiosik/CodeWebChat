@@ -1,4 +1,4 @@
-import { parse_response, FileItem } from './clipboard-parser'
+import { parse_response } from './clipboard-parser'
 import * as fs from 'fs'
 import * as path from 'path'
 import { parse_file_content_only, parse_multiple_files } from './parsers'
@@ -21,14 +21,14 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
-      expect((result[1] as FileItem).file_path).toBe('src/utils.py')
-      expect(result[1].content).toBe(
-        load_test_case_file(test_case, '2-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        file_path: 'src/utils.py',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses file when using file-xml format within a markdown code block', () => {
@@ -40,10 +40,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file when using file-xml format with CDATA outside a markdown code block', () => {
@@ -55,10 +55,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file when using file-xml format with CDATA inside a markdown code block', () => {
@@ -70,10 +70,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file when file-xml content is wrapped in its own markdown code block', () => {
@@ -85,10 +85,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file when file path is in an HTML-style comment inside a code block', () => {
@@ -100,10 +100,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file path from HTML comment inside a markdown heading', () => {
@@ -115,10 +115,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('README.md')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'README.md',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses multiple files when file paths are in HTML-style comments outside of code blocks', () => {
@@ -130,14 +130,14 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect((result[0] as FileItem).file_path).toBe('src/hello-world.html')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
-      expect((result[1] as FileItem).file_path).toBe('src/lorem.css')
-      expect(result[1].content).toBe(
-        load_test_case_file(test_case, '2-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/hello-world.html',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        file_path: 'src/lorem.css',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('extracts workspace name from file path when in a multi-root workspace', () => {
@@ -149,11 +149,11 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect((result[0] as FileItem).workspace_name).toBe('frontend')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        workspace_name: 'frontend',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('treats workspace name as part of the file path when in a single-root workspace', () => {
@@ -165,8 +165,7 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('frontend/src/index.ts')
-      expect((result[0] as FileItem).workspace_name).toBeUndefined()
+      expect(result[0]).toHaveProperty('file_path', 'frontend/src/index.ts')
     })
 
     it('merges content when the same file path appears in multiple code blocks', () => {
@@ -178,10 +177,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file paths that use backslashes as separators', () => {
@@ -193,14 +192,14 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
-      expect((result[1] as FileItem).file_path).toBe('src/utils.py')
-      expect(result[1].content).toBe(
-        load_test_case_file(test_case, '2-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        file_path: 'src/utils.py',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses code blocks where a curly brace is on the same line as closing backticks', () => {
@@ -212,14 +211,14 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
-      expect((result[1] as FileItem).file_path).toBe('src/utils.py')
-      expect(result[1].content).toBe(
-        load_test_case_file(test_case, '2-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        file_path: 'src/utils.py',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses file when file path is the first line of a code block without comments', () => {
@@ -231,10 +230,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/utils.py')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/utils.py',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('handles nested code blocks with language identifiers inside a code block', () => {
@@ -246,10 +245,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.js')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.js',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('handles nested code blocks without language identifiers inside a code block', () => {
@@ -261,10 +260,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.js')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.js',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses markdown files with nested code blocks correctly', () => {
@@ -276,10 +275,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/test.md')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/test.md',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses markdown files with nested markdown code blocks', () => {
@@ -291,10 +290,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/lorem.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file when file path is in a comment inside a code block of markdown type', () => {
@@ -306,10 +305,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/main.js')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/main.js',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses multiple files when each is wrapped in its own outer markdown code block', () => {
@@ -321,14 +320,14 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect((result[0] as FileItem).file_path).toBe('src/lorem.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
-      expect((result[1] as FileItem).file_path).toBe('src/ipsum.ts')
-      expect(result[1].content).toBe(
-        load_test_case_file(test_case, '2-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple files when wrapped in a single outer markdown code block', () => {
@@ -340,14 +339,14 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(2)
-      expect((result[0] as FileItem).file_path).toBe('src/lorem.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
-      expect((result[1] as FileItem).file_path).toBe('src/ipsum.ts')
-      expect(result[1].content).toBe(
-        load_test_case_file(test_case, '2-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses PHP files when the opening tag appears before the file path comment', () => {
@@ -359,10 +358,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.php')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.php',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file when file path comment and opening backticks are on the same line', () => {
@@ -374,10 +373,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file path from code block language identifier', () => {
@@ -389,10 +388,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.js')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.js',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file path from code block arguments', () => {
@@ -404,10 +403,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.js')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.js',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file path from markdown heading preceding a code block', () => {
@@ -419,10 +418,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/hello-world.ts')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/hello-world.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses file path when it is included immediately after the opening code block backticks', () => {
@@ -434,10 +433,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect((result[0] as FileItem).file_path).toBe('src/index.js')
-      expect(result[0].content).toBe(
-        load_test_case_file(test_case, '1-file.txt')
-      )
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.js',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
   })
 
