@@ -42,7 +42,7 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     const formatted_remaining_tokens = format_tokens(remaining_tokens)
     title_text = `${formatted_remaining_tokens} tokens remaining until threshold warning (change in settings)`
   } else {
-    title_text = `Context of size ${formatted_current_size} exceeds threshold ${formatted_threshold} by `
+    title_text = `Context of size ${formatted_current_size} tokens exceeds threshold by ${formatted_threshold} tokens`
   }
 
   return (
