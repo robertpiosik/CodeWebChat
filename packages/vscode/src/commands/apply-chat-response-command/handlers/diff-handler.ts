@@ -468,6 +468,7 @@ export const apply_git_patch = async (
       vscode.Uri.file(temp_file),
       Buffer.from(patch_content)
     )
+    await new Promise((r) => setTimeout(r, 100))
 
     let last_error: any = null
     let success = false

@@ -153,10 +153,10 @@ export const process_chat_response = async (
     ]
   }
 
-  const item_type = clipboard_items.length > 0 ? clipboard_items[0].type : null
-
-  if (item_type == 'diff') {
-    const patches = clipboard_items as DiffItem[]
+  if (clipboard_items.some((item) => item.type == 'diff')) {
+    const patches = clipboard_items.filter(
+      (item): item is DiffItem => item.type == 'diff'
+    )
     const rename_map = new Map<string, string>()
     patches.forEach((patch) => {
       if (patch.new_file_path && patch.file_path) {
