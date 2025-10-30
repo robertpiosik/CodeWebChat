@@ -130,11 +130,7 @@ export const parse_response = (params: {
 
   return items.map((item) => {
     if ('file_path' in item) {
-      const file = item as ClipboardFile
-      // The test expects a 'diff' type item even for new files.
-      // And the content is expected to be the raw file content, not a patch.
-      // This is inconsistent but we follow the test.
-      return { type: 'diff', ...file }
+      return { type: 'file', ...(item as ClipboardFile) }
     }
     return item as TextItem
   })

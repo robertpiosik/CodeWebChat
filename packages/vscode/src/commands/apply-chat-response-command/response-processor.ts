@@ -153,6 +153,8 @@ export const process_chat_response = async (
     ]
   }
 
+  console.log('xxx', clipboard_items)
+
   if (clipboard_items.some((item) => item.type == 'diff')) {
     const patches = clipboard_items.filter(
       (item): item is DiffItem => item.type == 'diff'

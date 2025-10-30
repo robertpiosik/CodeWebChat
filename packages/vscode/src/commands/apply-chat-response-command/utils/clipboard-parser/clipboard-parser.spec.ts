@@ -1000,7 +1000,7 @@ describe('clipboard-parser', () => {
         content: load_test_case_file(test_case, '1-text.txt')
       })
       expect(result[1]).toMatchObject({
-        type: 'diff',
+        type: 'file',
         file_path: 'src/lorem.ts',
         content: load_test_case_file(test_case, '2-file.txt')
       })
@@ -1009,7 +1009,7 @@ describe('clipboard-parser', () => {
         content: load_test_case_file(test_case, '3-text.txt')
       })
       expect(result[3]).toMatchObject({
-        type: 'diff',
+        type: 'file',
         file_path: 'src/ipsum.ts',
         content: load_test_case_file(test_case, '4-file.txt')
       })
