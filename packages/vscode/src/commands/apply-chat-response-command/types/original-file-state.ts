@@ -10,4 +10,6 @@ export type OriginalFileState = {
   diff_fallback_method?: 'recount' | 'search_and_replace'
   is_replaced?: boolean
   is_deleted?: boolean
+  is_checked?: boolean
+  ai_content?: string
 }

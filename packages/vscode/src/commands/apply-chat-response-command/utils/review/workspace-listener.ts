@@ -63,7 +63,9 @@ export const setup_workspace_listeners = (
           diff_stats.lines_added
         changed_file_in_review.reviewable_file.lines_removed =
           diff_stats.lines_removed
-        changed_file_in_review.reviewable_file.content = new_content
+        if (changed_file_in_review.reviewable_file.is_checked) {
+          changed_file_in_review.reviewable_file.content = new_content
+        }
 
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
@@ -127,7 +129,8 @@ export const setup_workspace_listeners = (
           is_new: is_new,
           is_deleted: is_deleted,
           lines_added: diff_stats.lines_added,
-          lines_removed: diff_stats.lines_removed
+          lines_removed: diff_stats.lines_removed,
+          is_checked: true
         }
 
         const new_prepared_file: PreparedFile = {
@@ -201,7 +204,8 @@ export const setup_workspace_listeners = (
           is_new: false,
           is_deleted: true,
           lines_added: diff_stats.lines_added,
-          lines_removed: diff_stats.lines_removed
+          lines_removed: diff_stats.lines_removed,
+          is_checked: true
         }
 
         const new_prepared_file: PreparedFile = {
@@ -292,7 +296,8 @@ export const setup_workspace_listeners = (
         is_new: true,
         is_deleted: false,
         lines_added: diff_stats.lines_added,
-        lines_removed: diff_stats.lines_removed
+        lines_removed: diff_stats.lines_removed,
+        is_checked: true
       }
 
       const new_prepared_file: PreparedFile = {
@@ -397,7 +402,8 @@ export const setup_workspace_listeners = (
           is_new: false,
           is_deleted: true,
           lines_added: deleted_diff_stats.lines_added,
-          lines_removed: deleted_diff_stats.lines_removed
+          lines_removed: deleted_diff_stats.lines_removed,
+          is_checked: true
         }
 
         const deleted_prepared: PreparedFile = {
@@ -455,7 +461,8 @@ export const setup_workspace_listeners = (
           is_new: true,
           is_deleted: false,
           lines_added: create_diff_stats.lines_added,
-          lines_removed: create_diff_stats.lines_removed
+          lines_removed: create_diff_stats.lines_removed,
+          is_checked: true
         }
 
         const created_prepared: PreparedFile = {
@@ -486,7 +493,8 @@ export const setup_workspace_listeners = (
           is_new: false,
           is_deleted: true,
           lines_added: deleted_diff_stats.lines_added,
-          lines_removed: deleted_diff_stats.lines_removed
+          lines_removed: deleted_diff_stats.lines_removed,
+          is_checked: true
         }
 
         const deleted_prepared: PreparedFile = {
@@ -537,6 +545,8 @@ export const setup_workspace_listeners = (
 
     if (!file_to_toggle) return
 
+    file_to_toggle.reviewable_file.is_checked = is_checked
+
     let workspace_root = default_workspace
     if (
       file_to_toggle.reviewable_file.workspace_name &&
@@ -550,13 +560,11 @@ export const setup_workspace_listeners = (
     if (!is_checked) {
       // This is the unchecking logic
       // Before reverting, capture current content if file exists
-      let current_content = ''
       if (fs.existsSync(file_to_toggle.sanitized_path)) {
         const document = await vscode.workspace.openTextDocument(
           vscode.Uri.file(file_to_toggle.sanitized_path)
         )
-        current_content = document.getText()
-        file_to_toggle.reviewable_file.content = current_content
+        const current_content = document.getText()
         file_to_toggle.content_to_restore = current_content
       }
 

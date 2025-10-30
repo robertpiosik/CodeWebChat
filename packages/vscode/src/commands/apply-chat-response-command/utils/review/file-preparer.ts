@@ -40,6 +40,12 @@ export const prepare_files_from_original_states = async (params: {
       continue
     }
 
+    let new_content_for_diff = current_content
+    if (state.is_checked === false && state.ai_content !== undefined) {
+      current_content = state.ai_content
+      new_content_for_diff = state.content
+    }
+
     const hash = crypto
       .createHash('md5')
       .update(sanitized_file_path)
@@ -49,7 +55,7 @@ export const prepare_files_from_original_states = async (params: {
 
     const diff_stats = get_diff_stats({
       original_content: state.content,
-      new_content: current_content
+      new_content: new_content_for_diff
     })
     const is_deleted =
       state.is_deleted ||
@@ -65,7 +71,8 @@ export const prepare_files_from_original_states = async (params: {
       lines_removed: diff_stats.lines_removed,
       is_fallback: state.is_fallback,
       is_replaced: state.is_replaced,
-      diff_fallback_method: state.diff_fallback_method
+      diff_fallback_method: state.diff_fallback_method,
+      is_checked: state.is_checked ?? true
     }
 
     prepared_files.push({
@@ -109,7 +116,8 @@ export const prepare_files_from_original_states = async (params: {
         is_new: false,
         is_deleted: true,
         lines_added: restored_diff_stats.lines_added,
-        lines_removed: restored_diff_stats.lines_removed
+        lines_removed: restored_diff_stats.lines_removed,
+        is_checked: state.is_checked ?? true
       }
 
       prepared_files.push({

@@ -46,15 +46,23 @@ export const process_chat_response = async (
   if (args?.files_with_content) {
     const result = await handle_restore_review(args.files_with_content)
     if (result.success && result.original_states) {
+      const augmented_states = result.original_states.map((state) => {
+        const file_in_review = args?.files_with_content!.find(
+          (f) =>
+            f.file_path === state.file_path &&
+            f.workspace_name === state.workspace_name
+        )
+        return { ...state, ai_content: file_in_review?.content }
+      })
       update_undo_button_state({
         context,
         panel_provider,
-        states: result.original_states,
+        states: augmented_states,
         applied_content: chat_response,
         original_editor_state: args?.original_editor_state
       })
       return {
-        original_states: result.original_states,
+        original_states: augmented_states,
         chat_response
       }
     }

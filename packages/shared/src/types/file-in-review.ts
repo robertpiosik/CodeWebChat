@@ -1,5 +1,6 @@
 export type FileInReview = {
   file_path: string
+  is_checked: boolean
   workspace_name?: string
   is_new?: boolean
   is_deleted?: boolean
