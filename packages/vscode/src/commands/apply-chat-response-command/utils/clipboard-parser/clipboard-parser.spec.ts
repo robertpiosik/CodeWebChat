@@ -26,11 +26,11 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(2)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
       expect(result[1].file_path).toBe('src/utils.py')
       expect(result[1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
+        load_test_case_file(test_case, '2-file.txt')
       )
     })
 
@@ -45,7 +45,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -60,7 +60,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -75,7 +75,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -90,7 +90,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -105,7 +105,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -120,7 +120,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('README.md')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -135,11 +135,11 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(2)
       expect(result[0].file_path).toBe('src/hello-world.html')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
       expect(result[1].file_path).toBe('src/lorem.css')
       expect(result[1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
+        load_test_case_file(test_case, '2-file.txt')
       )
     })
 
@@ -155,7 +155,7 @@ describe('clipboard-parser', () => {
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].workspace_name).toBe('frontend')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -183,7 +183,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -198,11 +198,11 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(2)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
       expect(result[1].file_path).toBe('src/utils.py')
       expect(result[1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
+        load_test_case_file(test_case, '2-file.txt')
       )
     })
 
@@ -217,11 +217,11 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(2)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
       expect(result[1].file_path).toBe('src/utils.py')
       expect(result[1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
+        load_test_case_file(test_case, '2-file.txt')
       )
     })
 
@@ -236,7 +236,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/utils.py')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -251,7 +251,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -266,7 +266,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -281,7 +281,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/test.md')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -296,7 +296,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/lorem.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -311,7 +311,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/main.js')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -326,11 +326,11 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(2)
       expect(result[0].file_path).toBe('src/lorem.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
       expect(result[1].file_path).toBe('src/ipsum.ts')
       expect(result[1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
+        load_test_case_file(test_case, '2-file.txt')
       )
     })
 
@@ -345,11 +345,11 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(2)
       expect(result[0].file_path).toBe('src/lorem.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
       expect(result[1].file_path).toBe('src/ipsum.ts')
       expect(result[1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
+        load_test_case_file(test_case, '2-file.txt')
       )
     })
 
@@ -364,7 +364,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.php')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -379,7 +379,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -394,7 +394,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -409,7 +409,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -424,7 +424,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/hello-world.ts')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
 
@@ -439,7 +439,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(1)
       expect(result[0].file_path).toBe('src/index.js')
       expect(result[0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
+        load_test_case_file(test_case, '1-file.txt')
       )
     })
   })
@@ -457,7 +457,7 @@ describe('clipboard-parser', () => {
       if (result) {
         expect(result.file_path).toBe('src/index.ts')
         expect(result.content).toBe(
-          load_test_case_file(test_case, 'file-1.txt')
+          load_test_case_file(test_case, '1-file.txt')
         )
       }
     })
@@ -482,12 +482,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses code completion format with file path, line, and character', () => {
@@ -498,16 +498,14 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('code-completion')
-      expect(result.code_completion).toBeDefined()
-      if (result.code_completion) {
-        expect(result.code_completion.file_path).toBe('src/index.ts')
-        expect(result.code_completion.line).toBe(25)
-        expect(result.code_completion.character).toBe(5)
-        expect(result.code_completion.content).toBe(
-          'console.log("completion");'
-        )
-      }
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'completion',
+        file_path: 'src/index.ts',
+        line: 25,
+        character: 5,
+        content: 'console.log("completion");'
+      })
     })
 
     it('parses diff format with git header but no markdown code block', () => {
@@ -518,12 +516,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff format with git header but no ---/+++ lines', () => {
@@ -534,12 +532,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff format with git header and hunk header on same line', () => {
@@ -550,12 +548,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff for a new file with git header', () => {
@@ -566,12 +564,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff format with timestamps in ---/+++ lines', () => {
@@ -582,12 +580,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff format with quoted file paths in ---/+++ lines', () => {
@@ -598,12 +596,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff format where file paths lack a/ and b/ prefixes', () => {
@@ -614,12 +612,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses a diff inside a non-diff code block', () => {
@@ -630,12 +628,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff format for a file deletion', () => {
@@ -646,12 +644,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff format for a file rename', () => {
@@ -662,13 +660,13 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/old.ts')
-      expect(result.patches![0].new_file_path).toBe('src/new.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/old.ts',
+        new_file_path: 'src/new.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses multiple diffs each in their own markdown code block', () => {
@@ -679,18 +677,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs with git headers each in their own markdown code block', () => {
@@ -702,18 +699,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs with git headers and no ---/+++ lines in markdown code blocks', () => {
@@ -724,18 +720,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs with hunk header on same line as git header in markdown code blocks', () => {
@@ -746,18 +741,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple new file diffs in their own markdown code blocks', () => {
@@ -768,18 +762,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs with timestamps in their own markdown code blocks', () => {
@@ -790,18 +783,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs where code blocks end and start on the same line', () => {
@@ -812,18 +804,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs concatenated within a single markdown code block', () => {
@@ -834,18 +825,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs concatenated without a markdown code block', () => {
@@ -856,18 +846,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs with quoted file paths in separate markdown code blocks', () => {
@@ -878,18 +867,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses multiple diffs without a/ b/ prefixes in a single markdown code block', () => {
@@ -900,18 +888,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses a mix of a new file in a code block and a diff in a diff block', () => {
@@ -922,18 +909,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.html')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.html',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses a mix of a new file in file-xml format and a diff in a diff block', () => {
@@ -944,18 +930,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.html')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.html',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses a mix of a file deletion diff and a new file diff', () => {
@@ -966,18 +951,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.ts')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('parses a mix of a new file from heading and code block, and a separate diff block', () => {
@@ -988,18 +972,17 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(2)
-
-      expect(result.patches![0].file_path).toBe('src/lorem.html')
-      expect(result.patches![1].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
-      expect(result.patches![1].content).toBe(
-        load_test_case_file(test_case, 'file-2.txt')
-      )
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.html',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
     })
 
     it('merges a new file and a diff for the same file path into one patch', () => {
@@ -1010,14 +993,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-
-      expect(result.patches![0].file_path).toBe('src/ipsum.ts')
-
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses a diff patch where the file path is specified using an XML tag preceding the diff block', () => {
@@ -1028,13 +1009,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff correctly when content contains nested backticks', () => {
@@ -1045,12 +1025,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff for a markdown file that contains a code block', () => {
@@ -1061,13 +1041,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-
-      expect(result.patches![0].file_path).toBe('README.md')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'README.md',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
 
     it('parses diff inside a markdown block that is not properly closed', () => {
@@ -1078,12 +1057,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result.type).toBe('patches')
-      expect(result.patches).toHaveLength(1)
-      expect(result.patches![0].file_path).toBe('src/index.ts')
-      expect(result.patches![0].content).toBe(
-        load_test_case_file(test_case, 'file-1.txt')
-      )
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
     })
   })
 })
