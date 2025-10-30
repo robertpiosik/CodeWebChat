@@ -13,6 +13,7 @@ import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/e
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 import { use_panel } from './hooks/use-panel'
+import { ApplyingChangesModal as UiApplyingChangesModal } from '@ui/components/editor/panel/modals/ApplyingChangesModal'
 
 const vscode = acquireVsCodeApi()
 
@@ -30,6 +31,7 @@ export const Panel = () => {
     raw_instructions,
     progress_state,
     set_progress_state,
+    is_applying_changes,
     chat_initialized_title,
     set_chat_initialized_title,
     commit_message_to_review,
@@ -312,6 +314,12 @@ export const Panel = () => {
               }}
             />
           </UiPage>
+        </div>
+      )}
+
+      {is_applying_changes && (
+        <div className={styles.slot}>
+          <UiApplyingChangesModal title="Applying changes..." />
         </div>
       )}
 
