@@ -1,4 +1,0 @@
-const { workspace_name, relative_path } =
-  extract_workspace_and_path(
-    completion_info.path,
-  )
