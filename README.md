@@ -6,14 +6,15 @@ Blazing fast AI pair programming for production-grade code. Select context as yo
 
 Works with **VS Code**, **Cursor**, **Windsurf**, **VSCodium**, and others.
 
-✅ **Send prompts anywhere**
+✅ **Sends prompts anywhere**
 
 - Chatbots—ChatGPT, Claude, Gemini, AI Studio, Qwen, etc.
 - Model providers—Gemini API, OpenRouter, local Ollama, etc.
 
-✅ **Apply responses**—multi-file changes integration with easy rollback \
+✅ **Applies responses**—multi-file changes integration with easy rollback \
 ✅ **Fully featured**—code completions, commit messages, etc. \
-❤️ **Free and open-source**—released under the GPL-3.0 license
+❤️ **Free and open-source**—released under the GPL-3.0 license \
+🔒️ **Privacy focused**—operates 100% on your local machine
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
