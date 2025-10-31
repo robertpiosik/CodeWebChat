@@ -2,17 +2,17 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import { create_checkpoint } from '../checkpoints-command/actions'
-import { FileInReview } from '@shared/types/file-in-review'
+import { FileInPreview } from '@shared/types/file-in-preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
-import { code_review_promise_resolve } from './utils/review/review'
-import { get_diff_stats } from './utils/review/diff-utils'
+import { code_review_promise_resolve } from './utils/preview/preview'
+import { get_diff_stats } from './utils/preview/diff-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {
   handle_code_review_and_cleanup,
   ongoing_review_cleanup_promise
-} from './utils/review-handler'
+} from './utils/preview-handler'
 import { process_chat_response, CommandArgs } from './response-processor'
 import { undo_files } from './utils/file-operations'
 
@@ -76,7 +76,7 @@ export const apply_chat_response_command = (
         if (!args?.files_with_content) {
           let total_lines_added = 0
           let total_lines_removed = 0
-          const files_for_history: FileInReview[] = []
+          const files_for_history: FileInPreview[] = []
 
           const workspace_map = new Map<string, string>()
           vscode.workspace.workspaceFolders!.forEach((folder) => {

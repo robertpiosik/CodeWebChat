@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { IntelligentUpdateFileInReviewMessage } from '@/views/panel/types/messages'
+import { IntelligentUpdateFileInPreviewMessage } from '@/views/panel/types/messages'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import {
   LAST_APPLIED_CHANGES_STATE_KEY,
@@ -58,9 +58,9 @@ const get_default_intelligent_update_config = async (
   }
 }
 
-export const handle_intelligent_update_file_in_review = async (
+export const handle_intelligent_update_file_in_preview = async (
   provider: PanelProvider,
-  message: IntelligentUpdateFileInReviewMessage
+  message: IntelligentUpdateFileInPreviewMessage
 ): Promise<void> => {
   const { file_path, workspace_name } = message
   const file_name = path.basename(file_path)
@@ -98,20 +98,27 @@ export const handle_intelligent_update_file_in_review = async (
   })
 
   let instructions = ''
-  if (parsed_response.type == 'files' && parsed_response.files) {
-    const file_data = parsed_response.files.find(
-      (f) =>
-        f.file_path == file_path &&
-        (!f.workspace_name || f.workspace_name == workspace_name)
-    )
-    if (file_data) instructions = file_data.content
-  } else if (parsed_response.type == 'patches' && parsed_response.patches) {
-    const patch_data = parsed_response.patches.find(
-      (p) =>
-        p.file_path == file_path &&
-        (!p.workspace_name || p.workspace_name == workspace_name)
-    )
-    if (patch_data) instructions = patch_data.content
+  const relevant_item = parsed_response.find((item) => {
+    if (
+      item.type == 'file' ||
+      item.type == 'diff' ||
+      item.type == 'completion'
+    ) {
+      return (
+        item.file_path == file_path &&
+        (!item.workspace_name || item.workspace_name == workspace_name)
+      )
+    }
+    return false
+  })
+
+  if (
+    relevant_item &&
+    (relevant_item.type == 'file' ||
+      relevant_item.type == 'diff' ||
+      relevant_item.type == 'completion')
+  ) {
+    instructions = relevant_item.content
   }
 
   if (!instructions) {

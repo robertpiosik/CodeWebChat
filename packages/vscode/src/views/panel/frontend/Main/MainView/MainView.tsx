@@ -23,7 +23,7 @@ import { WEB_MODES, API_MODES } from './modes'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import cn from 'classnames'
-import { FileInReview } from '@shared/types/file-in-review'
+import { FileInPreview } from '@shared/types/file-in-preview'
 
 dayjs.extend(relativeTime)
 
@@ -96,12 +96,12 @@ type Props = {
     created_at: number
     lines_added: number
     lines_removed: number
-    files?: FileInReview[]
+    files?: FileInPreview[]
   }[]
   on_response_history_item_click: (item: {
     response: string
     raw_instructions?: string
-    files?: FileInReview[]
+    files?: FileInPreview[]
   }) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void

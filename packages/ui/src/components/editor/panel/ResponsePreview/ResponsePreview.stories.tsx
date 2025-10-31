@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { ResponseReview } from './ResponseReview'
+import { ResponsePreview } from './ResponsePreview'
 
 export default {
-  component: ResponseReview
+  component: ResponsePreview
 }
 
 const base_files = [
@@ -58,7 +58,7 @@ const log_action =
     console.log(action, ...args)
   }
 
-const InteractiveResponseReview = (props: any) => {
+const InteractiveResponsePreview = (props: any) => {
   const [files, set_files] = useState(
     props.files.map((f: any) => ({ ...f, is_checked: true }))
   )
@@ -83,7 +83,7 @@ const InteractiveResponseReview = (props: any) => {
   }
 
   return (
-    <ResponseReview
+    <ResponsePreview
       {...props}
       files={files}
       on_toggle_file={handle_toggle_file}
@@ -96,20 +96,20 @@ const InteractiveResponseReview = (props: any) => {
   )
 }
 
-export const Default = () => <InteractiveResponseReview files={base_files} />
+export const Default = () => <InteractiveResponsePreview files={base_files} />
 
 export const WithSingleFile = () => (
-  <InteractiveResponseReview files={[base_files[0]]} />
+  <InteractiveResponsePreview files={[base_files[0]]} />
 )
 
 export const WithFallbacks = () => (
-  <InteractiveResponseReview
+  <InteractiveResponsePreview
     files={[...base_files, ...files_using_fallbacks]}
   />
 )
 
 export const WithMultipleWorkspaces = () => (
-  <InteractiveResponseReview
+  <InteractiveResponsePreview
     files={[
       {
         ...base_files[0],

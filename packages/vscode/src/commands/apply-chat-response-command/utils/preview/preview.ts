@@ -14,7 +14,7 @@ import { PreparedFile, ReviewableFile } from './types'
 export { code_review_promise_resolve } from './vscode-ui'
 export { toggle_file_review_state } from './workspace-listener'
 
-export const review = async (params: {
+export const preview = async (params: {
   original_states: OriginalFileState[]
   panel_provider: PanelProvider
   raw_instructions?: string

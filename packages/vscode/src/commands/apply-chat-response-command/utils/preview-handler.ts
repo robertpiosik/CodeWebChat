@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '../types/original-file-state'
 import { undo_files } from './file-operations'
-import { review } from './review/review'
+import { preview } from './preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { update_undo_button_state } from './state-manager'
 
@@ -25,7 +25,7 @@ export const handle_code_review_and_cleanup = async (params: {
   })
 
   try {
-    const review_result = await review({
+    const review_result = await preview({
       original_states: params.original_states,
       panel_provider: params.panel_provider,
       raw_instructions: params.raw_instructions

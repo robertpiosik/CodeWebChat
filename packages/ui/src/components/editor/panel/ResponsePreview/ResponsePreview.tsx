@@ -1,16 +1,16 @@
 import { FC, useState, useMemo } from 'react'
-import { FileInReview } from '@shared/types/file-in-review'
+import { FileInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
-import styles from './ResponseReview.module.scss'
+import styles from './ResponsePreview.module.scss'
 import { Button } from '../Button'
 import { Checkbox } from '../../common/Checkbox'
 import { IconButton } from '../IconButton/IconButton'
 
 type Props = {
-  files: FileInReview[]
+  files: FileInPreview[]
   has_multiple_workspaces: boolean
   on_discard: () => void
-  on_approve: (files: FileInReview[]) => void
+  on_approve: (files: FileInPreview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
   on_go_to_file: (file: { file_path: string; workspace_name?: string }) => void
   on_intelligent_update: (file: {
@@ -25,7 +25,7 @@ type Props = {
   raw_instructions?: string
 }
 
-export const ResponseReview: FC<Props> = (props) => {
+export const ResponsePreview: FC<Props> = (props) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
 
   const handle_approve = () => {
@@ -36,7 +36,7 @@ export const ResponseReview: FC<Props> = (props) => {
   const fallback_count = props.files.filter((f) => f.is_fallback).length
 
   const sorted_files = useMemo(() => {
-    const get_sort_score = (file: FileInReview): number => {
+    const get_sort_score = (file: FileInPreview): number => {
       if (file.diff_fallback_method == 'search_and_replace') {
         return 0
       }

@@ -8,7 +8,7 @@ import {
 import { HomeViewType } from '../../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from '../utils/post_message'
-import { FileInReview } from '@shared/types/file-in-review'
+import { FileInPreview } from '@shared/types/file-in-preview'
 
 type ResponseHistoryItem = {
   response: string
@@ -16,7 +16,7 @@ type ResponseHistoryItem = {
   created_at: number
   lines_added: number
   lines_removed: number
-  files?: FileInReview[]
+  files?: FileInPreview[]
 }
 
 export const use_panel = (vscode: any) => {
@@ -25,7 +25,7 @@ export const use_panel = (vscode: any) => {
     useState(0)
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
-  const [files_to_review, set_files_to_review] = useState<FileInReview[]>()
+  const [files_to_review, set_files_to_review] = useState<FileInPreview[]>()
   const [raw_instructions, set_raw_instructions] = useState<string>()
   const [progress_state, set_progress_state] = useState<{
     title: string
