@@ -1,4 +1,4 @@
-export type FileInReview = {
+export type FileInPreview = {
   file_path: string
   is_checked: boolean
   workspace_name?: string

@@ -6,12 +6,11 @@ Blazing fast AI pair programming for production-grade code. Select context as yo
 
 Works with VS Code, Cursor, Windsurf, and others.
 
-❤️ **Free and open-source.** _Join our [discord server](https://discord.gg/KJySXsrSX5) and get involed!_
-
 ✅ **Initializes free chatbots**—ChatGPT, Claude, Gemini, AI Studio, Qwen, and 10+ more \
 ✅ **Calls model providers**—bring your own keys or use local models via Ollama \
 ✅ **Applies responses**—multi-file changes integration with easy rollback \
-✅ **Batteries included**—code completions, commit messages, and more
+✅ **Batteries included**—code completions, commit messages, and more \
+❤️ **Free and open-source**—released under the GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />

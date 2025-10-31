@@ -1,10 +1,10 @@
-import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review/review'
+import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { FocusOnFileInReviewMessage } from '@/views/panel/types/messages'
+import { FocusOnFileInPreviewMessage } from '@/views/panel/types/messages'
 
-export const handle_focus_on_file_in_review = (
+export const handle_focus_on_file_in_preview = (
   _provider: PanelProvider,
-  message: FocusOnFileInReviewMessage
+  message: FocusOnFileInPreviewMessage
 ): void => {
   if (code_review_promise_resolve) {
     code_review_promise_resolve({

@@ -1,8 +1,8 @@
-import { FileInReview } from '@shared/types/file-in-review'
+import { FileInPreview } from '@shared/types/file-in-preview'
 
 export type CodeReviewDecision =
   | { jump_to: { file_path: string; workspace_name?: string } }
-  | { accepted_files: FileInReview[] }
+  | { accepted_files: FileInPreview[] }
 
 export type CodeReviewResult = {
   decision: CodeReviewDecision
@@ -10,7 +10,7 @@ export type CodeReviewResult = {
   temp_file_path: string
 }
 
-export type ReviewableFile = FileInReview & {
+export type ReviewableFile = FileInPreview & {
   content: string
 }
 

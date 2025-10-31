@@ -44,10 +44,10 @@ import {
   handle_pick_chatbot,
   handle_get_donations_visibility,
   handle_save_donations_visibility,
-  handle_focus_on_file_in_review,
+  handle_focus_on_file_in_preview,
   handle_go_to_file,
-  handle_toggle_file_in_review,
-  handle_intelligent_update_file_in_review,
+  handle_toggle_file_in_preview,
+  handle_intelligent_update_file_in_preview,
   handle_commit_changes,
   handle_accept_commit_message,
   handle_cancel_commit_message,
@@ -81,7 +81,7 @@ import { OriginalFileState } from '@/commands/apply-chat-response-command/types/
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
-import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/review/review'
+import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
@@ -303,7 +303,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public cancel_all_intelligent_updates() {
     this.intelligent_update_cancel_token_sources.forEach((source) =>
-      source.cancel('Review finished.')
+      source.cancel('Preview finished.')
     )
     this.intelligent_update_cancel_token_sources = []
   }
@@ -444,12 +444,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_donations_visibility(this, message)
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
-          } else if (message.command == 'FOCUS_ON_FILE_IN_REVIEW') {
-            handle_focus_on_file_in_review(this, message)
+          } else if (message.command == 'FOCUS_ON_FILE_IN_PREVIEW') {
+            handle_focus_on_file_in_preview(this, message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
-            await handle_toggle_file_in_review(this, message)
-          } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_REVIEW') {
-            await handle_intelligent_update_file_in_review(this, message)
+            await handle_toggle_file_in_preview(this, message)
+          } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW') {
+            await handle_intelligent_update_file_in_preview(this, message)
           } else if (message.command == 'EDITS_REVIEW') {
             if (code_review_promise_resolve) {
               code_review_promise_resolve({ accepted_files: message.files })

@@ -50,7 +50,7 @@ export const prepare_files_from_original_states = async (params: {
       .createHash('md5')
       .update(sanitized_file_path)
       .digest('hex')
-    const temp_filename = `cwc-review-${hash}.tmp`
+    const temp_filename = `cwc-preview-${hash}.tmp`
     const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
     const diff_stats = get_diff_stats({
@@ -98,7 +98,7 @@ export const prepare_files_from_original_states = async (params: {
         .createHash('md5')
         .update(restored_sanitized_file_path)
         .digest('hex')
-      const restored_temp_filename = `cwc-review-${restored_hash}.tmp`
+      const restored_temp_filename = `cwc-preview-${restored_hash}.tmp`
       const restored_temp_file_path = path.join(
         os.tmpdir(),
         restored_temp_filename

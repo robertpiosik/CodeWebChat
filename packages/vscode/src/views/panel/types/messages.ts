@@ -1,5 +1,5 @@
 import { EditFormat } from '@shared/types/edit-format'
-import { FileInReview } from '@shared/types/file-in-review'
+import { FileInPreview } from '@shared/types/file-in-preview'
 import { Preset } from '@shared/types/preset'
 import { HomeViewType } from './home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
@@ -236,7 +236,7 @@ export interface GetVersionMessage extends BaseMessage {
 
 export interface EditsReviewMessage extends BaseMessage {
   command: 'EDITS_REVIEW'
-  files: FileInReview[]
+  files: FileInPreview[]
 }
 
 export interface ToggleFileInReviewMessage extends BaseMessage {
@@ -246,8 +246,8 @@ export interface ToggleFileInReviewMessage extends BaseMessage {
   is_checked: boolean
 }
 
-export interface FocusOnFileInReviewMessage extends BaseMessage {
-  command: 'FOCUS_ON_FILE_IN_REVIEW'
+export interface FocusOnFileInPreviewMessage extends BaseMessage {
+  command: 'FOCUS_ON_FILE_IN_PREVIEW'
   file_path: string
   workspace_name?: string
 }
@@ -280,8 +280,8 @@ export interface SaveDonationsVisibilityMessage extends BaseMessage {
   is_visible: boolean
 }
 
-export interface IntelligentUpdateFileInReviewMessage extends BaseMessage {
-  command: 'INTELLIGENT_UPDATE_FILE_IN_REVIEW'
+export interface IntelligentUpdateFileInPreviewMessage extends BaseMessage {
+  command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW'
   file_path: string
   workspace_name?: string
 }
@@ -317,7 +317,7 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   command: 'APPLY_RESPONSE_FROM_HISTORY'
   response: string
   raw_instructions?: string
-  files?: FileInReview[]
+  files?: FileInPreview[]
 }
 
 export type FrontendMessage =
@@ -366,11 +366,11 @@ export type FrontendMessage =
   | GetVersionMessage
   | EditsReviewMessage
   | ToggleFileInReviewMessage
-  | FocusOnFileInReviewMessage
+  | FocusOnFileInPreviewMessage
   | GoToFileMessage
   | GetWorkspaceStateMessage
   | RequestGitStateMessage
-  | IntelligentUpdateFileInReviewMessage
+  | IntelligentUpdateFileInPreviewMessage
   | UpdateLastUsedPresetMessage
   | CommitChangesMessage
   | ProceedWithCommitMessage
@@ -497,7 +497,7 @@ export interface CanUndoChangedMessage extends BaseMessage {
 
 export interface CodeReviewStartedMessage extends BaseMessage {
   command: 'CODE_REVIEW_STARTED'
-  files: FileInReview[]
+  files: FileInPreview[]
   raw_instructions?: string
 }
 
@@ -558,7 +558,7 @@ export interface ShowChatInitializedMessage extends BaseMessage {
 
 export interface UpdateFileInReviewMessage extends BaseMessage {
   command: 'UPDATE_FILE_IN_REVIEW'
-  file: FileInReview
+  file: FileInPreview
 }
 
 export interface ShowStageFilesModalMessage extends BaseMessage {
@@ -581,7 +581,7 @@ export interface NewResponseReceivedMessage extends BaseMessage {
   raw_instructions?: string
   lines_added: number
   lines_removed: number
-  files?: FileInReview[]
+  files?: FileInPreview[]
 }
 
 export type BackendMessage =

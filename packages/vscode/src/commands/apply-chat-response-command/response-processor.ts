@@ -16,11 +16,11 @@ import { handle_intelligent_update } from './handlers/intelligent-update-handler
 import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { FileInReview } from '@shared/types/file-in-review'
+import { FileInPreview } from '@shared/types/file-in-preview'
 import { update_undo_button_state } from './utils/state-manager'
 import { check_if_all_files_new } from './utils/file-checks'
 
-export type ReviewData = {
+export type PreviewData = {
   original_states: OriginalFileState[]
   chat_response: string
 }
@@ -34,7 +34,7 @@ export type CommandArgs = {
     file_path: string
     position: { line: number; character: number }
   }
-  files_with_content?: FileInReview[]
+  files_with_content?: FileInPreview[]
 }
 
 export const process_chat_response = async (
@@ -42,7 +42,7 @@ export const process_chat_response = async (
   chat_response: string,
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider
-): Promise<ReviewData | null> => {
+): Promise<PreviewData | null> => {
   if (args?.files_with_content) {
     const result = await handle_restore_review(args.files_with_content)
     if (result.success && result.original_states) {

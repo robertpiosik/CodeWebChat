@@ -5,11 +5,11 @@ import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { OriginalFileState } from '../types/original-file-state'
-import { FileInReview } from '@shared/types/file-in-review'
+import { FileInPreview } from '@shared/types/file-in-preview'
 import { remove_directory_if_empty } from '../utils/file-operations'
 
 export const handle_restore_review = async (
-  files: FileInReview[]
+  files: FileInPreview[]
 ): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
   Logger.info({
     function_name: 'handle_restore_review',

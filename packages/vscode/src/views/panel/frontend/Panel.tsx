@@ -7,7 +7,7 @@ import { Home } from './Home'
 import styles from './Panel.module.scss'
 import cn from 'classnames'
 import { post_message } from './utils/post_message'
-import { ResponseReview as UiResponseReview } from '@ui/components/editor/panel/ResponseReview'
+import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/panel/ResponsePreview'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
 import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/panel/modals/ChatInitializedModal'
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
@@ -249,12 +249,12 @@ export const Panel = () => {
       {files_to_review && (
         <div className={styles.slot}>
           <UiPage
-            title="Response Review"
+            title="Response Preview"
             on_back_click={() => {
               post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
             }}
           >
-            <UiResponseReview
+            <UiResponsePreview
               files={files_to_review}
               raw_instructions={raw_instructions}
               has_multiple_workspaces={workspace_folder_count > 1}
@@ -277,7 +277,7 @@ export const Panel = () => {
               }}
               on_focus_file={(file) => {
                 post_message(vscode, {
-                  command: 'FOCUS_ON_FILE_IN_REVIEW',
+                  command: 'FOCUS_ON_FILE_IN_PREVIEW',
                   file_path: file.file_path,
                   workspace_name: file.workspace_name
                 })
@@ -307,7 +307,7 @@ export const Panel = () => {
               }}
               on_intelligent_update={(file) => {
                 post_message(vscode, {
-                  command: 'INTELLIGENT_UPDATE_FILE_IN_REVIEW',
+                  command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW',
                   file_path: file.file_path,
                   workspace_name: file.workspace_name
                 })

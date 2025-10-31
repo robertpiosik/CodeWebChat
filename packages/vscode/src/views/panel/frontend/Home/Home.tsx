@@ -134,16 +134,6 @@ export const Home: React.FC<Props> = (props) => {
             <Icon variant="X" />
           </a>
           <a
-            href="https://www.reddit.com/r/CodeWebChat/"
-            title="Join subreddit"
-            className={cn(
-              styles.footer__social__icon,
-              styles['footer__social__icon--reddit']
-            )}
-          >
-            <Icon variant="REDDIT" />
-          </a>
-          <a
             href="https://discord.gg/KJySXsrSX5"
             title="Join Discord server"
             className={cn(
