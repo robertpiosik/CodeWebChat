@@ -265,6 +265,12 @@ export const apply_chat_response_command = (
             }
           } finally {
             panel_provider.send_message({ command: 'HIDE_APPLYING_CHANGES' })
+            await create_checkpoint(
+              workspace_provider,
+              context,
+              'After changes approved',
+              args?.raw_instructions
+            )
           }
         }
       }
