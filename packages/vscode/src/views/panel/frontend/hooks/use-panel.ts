@@ -129,7 +129,7 @@ export const use_panel = (vscode: any) => {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
-      } else if (message.command == 'CODE_REVIEW_STARTED') {
+      } else if (message.command == 'CODE_PREVIEW_STARTED') {
         set_files_to_review(message.files)
         set_raw_instructions(message.raw_instructions)
       } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
@@ -197,7 +197,7 @@ export const use_panel = (vscode: any) => {
 
           return new_history
         })
-      } else if (message.command == 'CODE_REVIEW_FINISHED') {
+      } else if (message.command == 'CODE_PREVIEW_FINISHED') {
         set_files_to_review(undefined)
         set_raw_instructions(undefined)
       } else if (message.command == 'WORKSPACE_STATE') {

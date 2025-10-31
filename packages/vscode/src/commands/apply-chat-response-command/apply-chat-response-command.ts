@@ -10,7 +10,7 @@ import { code_review_promise_resolve } from './utils/preview/preview'
 import { get_diff_stats } from './utils/preview/diff-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {
-  handle_code_review_and_cleanup,
+  preview_handler,
   ongoing_review_cleanup_promise
 } from './utils/preview-handler'
 import { process_chat_response, CommandArgs } from './response-processor'
@@ -147,7 +147,7 @@ export const apply_chat_response_command = (
           })
         }
 
-        const changes_accepted = await handle_code_review_and_cleanup({
+        const changes_accepted = await preview_handler({
           original_states: review_data.original_states,
           chat_response: review_data.chat_response,
           panel_provider,

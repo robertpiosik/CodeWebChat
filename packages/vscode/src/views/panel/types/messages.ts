@@ -495,14 +495,14 @@ export interface CanUndoChangedMessage extends BaseMessage {
   can_undo: boolean
 }
 
-export interface CodeReviewStartedMessage extends BaseMessage {
-  command: 'CODE_REVIEW_STARTED'
+export interface CodePreviewStartedMessage extends BaseMessage {
+  command: 'CODE_PREVIEW_STARTED'
   files: FileInPreview[]
   raw_instructions?: string
 }
 
-export interface CodeReviewFinishedMessage extends BaseMessage {
-  command: 'CODE_REVIEW_FINISHED'
+export interface CodePreviewFinishedMessage extends BaseMessage {
+  command: 'CODE_PREVIEW_FINISHED'
 }
 
 export interface WorkspaceStateMessage extends BaseMessage {
@@ -608,8 +608,8 @@ export type BackendMessage =
   | ApiModeMessage
   | VersionMessage
   | CanUndoChangedMessage
-  | CodeReviewStartedMessage
-  | CodeReviewFinishedMessage
+  | CodePreviewStartedMessage
+  | CodePreviewFinishedMessage
   | WorkspaceStateMessage
   | SelectedPresetOrGroupChangedMessage
   | SelectedConfigurationChangedMessage
