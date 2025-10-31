@@ -105,16 +105,6 @@ export const apply_git_diff = async (
 ): Promise<boolean> => {
   try {
     const cwd = workspace_folder.uri.fsPath
-    let original_branch: string | null = null
-    try {
-      original_branch = execSync('git rev-parse --abbrev-ref HEAD', {
-        cwd,
-        encoding: 'utf8'
-      }).trim()
-    } catch (err) {
-      // Might be in detached HEAD state
-      original_branch = null
-    }
     if (target_commit) {
       const current_commit = execSync('git rev-parse HEAD', {
         cwd,
@@ -122,10 +112,15 @@ export const apply_git_diff = async (
       }).trim()
 
       if (current_commit !== target_commit) {
-        const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
-          cwd,
-          encoding: 'utf8'
-        }).trim()
+        let current_branch: string | undefined
+        try {
+          current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
+            cwd,
+            encoding: 'utf8'
+          }).trim()
+        } catch (err) {
+          // Might be in detached HEAD state
+        }
 
         if (target_branch && current_branch !== target_branch) {
           try {
