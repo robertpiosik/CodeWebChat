@@ -7,7 +7,6 @@ export const delete_checkpoint = async (params: {
   context: vscode.ExtensionContext
   checkpoint_to_delete: Checkpoint
 }) => {
-  // Remove from state
   const checkpoints =
     params.context.workspaceState.get<Checkpoint[]>(
       CHECKPOINTS_STATE_KEY,
@@ -21,7 +20,6 @@ export const delete_checkpoint = async (params: {
     updated_checkpoints
   )
 
-  // Delete files
   try {
     const checkpoint_path = get_checkpoint_path(
       params.checkpoint_to_delete.timestamp

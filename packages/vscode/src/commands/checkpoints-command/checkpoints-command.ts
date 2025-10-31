@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import {
   CHECKPOINTS_STATE_KEY,
-  TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
+  TEMPORARY_CHECKPOINT_STATE_KEY
 } from '../../constants/state-keys'
 import { WorkspaceProvider } from '../../context/providers/workspace-provider'
 import dayjs from 'dayjs'
@@ -69,19 +69,19 @@ export const checkpoints_command = (
           quick_pick.busy = true
           checkpoints = await get_checkpoints(context)
 
-          const temp_checkpoint_timestamp = context.workspaceState.get<number>(
-            TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
+          const temp_checkpoint = context.workspaceState.get<Checkpoint>(
+            TEMPORARY_CHECKPOINT_STATE_KEY
           )
           let revert_item:
             | (vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint })
             | undefined
 
-          if (temp_checkpoint_timestamp) {
+          if (temp_checkpoint) {
             const three_hours_in_ms = 3 * 60 * 60 * 1000
-            if (Date.now() - temp_checkpoint_timestamp < three_hours_in_ms) {
+            if (Date.now() - temp_checkpoint.timestamp < three_hours_in_ms) {
               try {
                 const checkpoint_path = get_checkpoint_path(
-                  temp_checkpoint_timestamp
+                  temp_checkpoint.timestamp
                 )
                 await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
                 revert_item = {
@@ -92,7 +92,7 @@ export const checkpoints_command = (
               } catch {
                 // file doesn't exist, so we can't revert. Clean up state.
                 await context.workspaceState.update(
-                  TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
+                  TEMPORARY_CHECKPOINT_STATE_KEY,
                   undefined
                 )
               }
@@ -164,28 +164,14 @@ export const checkpoints_command = (
             await show_quick_pick()
           } else if (selected.id == 'revert-last') {
             quick_pick.hide()
-            const temp_checkpoint_timestamp =
-              context.workspaceState.get<number>(
-                TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY
-              )
-            if (!temp_checkpoint_timestamp) {
+            const temp_checkpoint = context.workspaceState.get<Checkpoint>(
+              TEMPORARY_CHECKPOINT_STATE_KEY
+            )
+            if (!temp_checkpoint) {
               vscode.window.showErrorMessage(
                 'Could not find temporary checkpoint to revert.'
               )
               return
-            }
-
-            const confirmation = await vscode.window.showWarningMessage(
-              `Revert to the state before the last checkpoint was restored? Any changes since then will be lost.`,
-              { modal: true },
-              'Revert'
-            )
-            if (confirmation !== 'Revert') return
-
-            const temp_checkpoint: Checkpoint = {
-              timestamp: temp_checkpoint_timestamp,
-              title: 'Temporary checkpoint for revert',
-              is_temporary: true
             }
 
             await restore_checkpoint({
@@ -200,7 +186,7 @@ export const checkpoints_command = (
               checkpoint_to_delete: temp_checkpoint
             })
             await context.workspaceState.update(
-              TEMPORARY_CHECKPOINT_TIMESTAMP_STATE_KEY,
+              TEMPORARY_CHECKPOINT_STATE_KEY,
               undefined
             )
           } else if (selected.checkpoint) {
@@ -323,7 +309,6 @@ export const checkpoints_command = (
               vscode.window.showInformationMessage('Checkpoint restored.')
               await refresh_items()
             } else {
-              // Permanently delete files
               try {
                 const checkpoint_path = get_checkpoint_path(
                   deleted_checkpoint.timestamp
