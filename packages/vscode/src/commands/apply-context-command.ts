@@ -732,11 +732,11 @@ export function apply_context_command(
                   is_showing_dialog = true
                   const choice = await vscode.window.showInformationMessage(
                     `Deleted context "${deleted_context_name}" from workspace state`,
-                    'Revert'
+                    'Undo'
                   )
                   is_showing_dialog = false
 
-                  if (choice === 'Revert') {
+                  if (choice == 'Undo') {
                     internal_contexts.splice(deleted_index, 0, deleted_context)
                     await extension_context.workspaceState.update(
                       SAVED_CONTEXTS_STATE_KEY,
