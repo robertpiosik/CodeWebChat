@@ -52,7 +52,6 @@ type Props = {
   has_active_selection: boolean
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
-  commit_button_enabling_trigger_count: number
   context_size_warning_threshold: number
 }
 
@@ -84,9 +83,6 @@ export const Main: React.FC<Props> = (props) => {
   const [caret_position_to_set, set_caret_position_to_set] = useState<
     number | undefined
   >()
-  const [has_changes_to_commit, set_has_changes_to_commit] =
-    useState<boolean>(false)
-  const [can_undo, set_can_undo] = useState<boolean>(false)
 
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
@@ -146,12 +142,6 @@ export const Main: React.FC<Props> = (props) => {
         case 'EDIT_FORMAT_INSTRUCTIONS':
           set_edit_format_instructions(message.instructions)
           break
-        case 'GIT_STATE_CHANGED':
-          set_has_changes_to_commit(message.has_changes_to_commit)
-          break
-        case 'CAN_UNDO_CHANGED':
-          set_can_undo(message.can_undo)
-          break
         case 'SELECTED_PRESET_OR_GROUP_CHANGED':
           set_selected_preset_or_group_name_by_mode((prev) => ({
             ...prev,
@@ -179,8 +169,7 @@ export const Main: React.FC<Props> = (props) => {
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_EDIT_FORMAT' },
       { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' },
-      { command: 'GET_API_TOOL_CONFIGURATIONS' },
-      { command: 'REQUEST_GIT_STATE' }
+      { command: 'GET_API_TOOL_CONFIGURATIONS' }
     ]
     initial_messages.forEach((message) => post_message(props.vscode, message))
 
@@ -556,12 +545,6 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_commit_click = () => {
-    post_message(props.vscode, {
-      command: 'COMMIT_CHANGES'
-    })
-  }
-
   const handle_response_history_item_click = (item: {
     response: string
     raw_instructions?: string
@@ -572,12 +555,6 @@ export const Main: React.FC<Props> = (props) => {
       response: item.response,
       raw_instructions: item.raw_instructions,
       files: item.files
-    })
-  }
-
-  const handle_undo_click = () => {
-    post_message(props.vscode, {
-      command: 'UNDO'
     })
   }
 
@@ -651,12 +628,8 @@ export const Main: React.FC<Props> = (props) => {
       presets={presets_for_current_mode}
       on_create_preset={handle_create_preset}
       on_quick_action_click={handle_quick_action_click}
-      on_commit_click={handle_commit_click}
-      on_undo_click={handle_undo_click}
       has_active_editor={props.has_active_editor}
       has_active_selection={props.has_active_selection}
-      has_changes_to_commit={has_changes_to_commit}
-      can_undo={can_undo}
       chat_history={current_history || []}
       token_count={token_count}
       web_mode={props.web_mode}
@@ -696,9 +669,6 @@ export const Main: React.FC<Props> = (props) => {
       on_caret_position_set={() => set_caret_position_to_set(undefined)}
       chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}
       chat_input_focus_key={props.chat_input_focus_key}
-      commit_button_enabling_trigger_count={
-        props.commit_button_enabling_trigger_count
-      }
       response_history={props.response_history}
       on_response_history_item_click={handle_response_history_item_click}
       selected_history_item_created_at={props.selected_history_item_created_at}

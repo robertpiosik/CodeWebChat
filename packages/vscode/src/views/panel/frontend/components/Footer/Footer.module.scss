@@ -1,0 +1,99 @@
+.footer {
+  position: relative;
+  z-index: -1; // Makes context menu of a preset appear above
+  display: flex;
+  justify-content: space-between;
+  gap: var(--padding-4px);
+  padding: var(--padding-8px) var(--padding-12px);
+  border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
+
+  &__left {
+    display: flex;
+    gap: var(--padding-4px);
+
+    &__button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      width: 24px;
+      border-radius: var(--border-radius-4px);
+
+      > svg {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+      }
+
+      &--buy-me-a-coffee {
+        background-color: #f7d600;
+
+        > svg {
+          fill: black;
+        }
+      }
+
+      &--discord {
+        background-color: #7289da;
+
+        > svg {
+          fill: white;
+        }
+      }
+    }
+  }
+
+  &__right {
+    display: flex;
+    gap: var(--padding-4px);
+
+    &__button {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      gap: var(--padding-4px);
+      height: 24px;
+      padding: 0 var(--padding-5px);
+      border-radius: var(--border-radius-4px);
+
+      &:disabled {
+        opacity: var(--disabled-opacity);
+      }
+
+      &--outlined {
+        border: 1px solid var(--vscode-commandCenter-inactiveBorder);
+        &:hover:not(:disabled) {
+          border-color: var(--vscode-commandCenter-activeBorder);
+        }
+      }
+    }
+  }
+
+  &__heart {
+    position: absolute;
+    z-index: 11;
+    bottom: 32px;
+    animation-name: float-up;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+    pointer-events: none;
+    opacity: 0;
+  }
+}
+
+@keyframes float-up {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}

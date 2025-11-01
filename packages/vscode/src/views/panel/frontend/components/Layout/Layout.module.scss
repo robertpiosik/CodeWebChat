@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  pointer-events: none;
+
+  > div {
+    pointer-events: all;
+  }
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}

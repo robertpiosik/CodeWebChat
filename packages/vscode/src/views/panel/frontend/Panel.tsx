@@ -13,6 +13,8 @@ import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/e
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 import { use_panel } from './hooks/use-panel'
+import { LayoutContext } from './contexts/LayoutContext'
+import { Layout } from './components/Layout/Layout'
 
 const vscode = acquireVsCodeApi()
 
@@ -60,6 +62,8 @@ export const Panel = () => {
     chat_input_focus_and_select_key,
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
+    has_changes_to_commit,
+    can_undo,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,
@@ -125,270 +129,312 @@ export const Panel = () => {
     (web_mode == 'code-completions' &&
       (!has_active_editor || has_active_selection))
 
+  const handle_apply_click = () => {
+    post_message(vscode, {
+      command: 'EXECUTE_COMMAND',
+      command_id: 'codeWebChat.applyChatResponse'
+    })
+  }
+
+  const handle_undo_click = () => {
+    post_message(vscode, {
+      command: 'UNDO'
+    })
+  }
+
+  const handle_commit_click = () => {
+    post_message(vscode, {
+      command: 'COMMIT_CHANGES'
+    })
+  }
+
+  const layout_context_value = {
+    is_apply_visible:
+      active_view == 'main' && home_view_type == HOME_VIEW_TYPES.WEB,
+    is_undo_visible: active_view == 'main',
+    can_undo,
+    has_changes_to_commit,
+    on_apply_click: handle_apply_click,
+    on_undo_click: handle_undo_click,
+    on_commit_click: handle_commit_click,
+    commit_button_enabling_trigger_count
+  }
+
   return (
-    <div className={styles.container}>
-      <div
-        className={cn(styles.slot, {
-          [styles['slot--hidden']]: active_view != 'main'
-        })}
-      >
-        <Main
-          scroll_reset_key={main_view_scroll_reset_key}
-          vscode={vscode}
-          on_preset_edit={(preset) => {
-            post_message(vscode, {
-              command: 'UPDATE_LAST_USED_PRESET',
-              preset_name: preset.name
-            })
-            set_updating_preset(preset)
-            set_updated_preset(preset)
-          }}
-          is_connected={is_connected}
-          on_show_home={() => {
-            set_active_view('home')
-          }}
-          ask_instructions={ask_instructions}
-          edit_instructions={edit_instructions}
-          no_context_instructions={no_context_instructions}
-          code_completions_instructions={code_completions_instructions}
-          set_instructions={handle_instructions_change}
-          home_view_type={home_view_type}
-          web_mode={web_mode}
-          api_mode={api_mode}
-          on_home_view_type_change={handle_home_view_type_change}
-          has_active_editor={has_active_editor}
-          has_active_selection={has_active_selection}
-          on_web_mode_change={handle_web_mode_change}
-          on_api_mode_change={handle_api_mode_change}
-          response_history={response_history}
-          selected_history_item_created_at={selected_history_item_created_at}
-          on_selected_history_item_change={set_selected_history_item_created_at}
-          commit_button_enabling_trigger_count={
-            commit_button_enabling_trigger_count
-          }
-          chat_input_focus_and_select_key={chat_input_focus_and_select_key}
-          chat_input_focus_key={chat_input_focus_key}
-          context_size_warning_threshold={context_size_warning_threshold}
-        />
-      </div>
-      <div
-        className={cn(styles.slot, {
-          [styles['slot--hidden']]: active_view != 'home'
-        })}
-      >
-        <Home
-          vscode={vscode}
-          is_active={active_view == 'home'}
-          on_new_chat={() => {
-            set_active_view('main')
-            set_main_view_scroll_reset_key((k) => k + 1)
-            handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
-            handle_web_mode_change('edit-context')
-            set_chat_input_focus_and_select_key((k) => k + 1)
-          }}
-          on_api_call={() => {
-            set_active_view('main')
-            set_main_view_scroll_reset_key((k) => k + 1)
-            handle_home_view_type_change(HOME_VIEW_TYPES.API)
-            handle_api_mode_change('edit-context')
-            set_chat_input_focus_and_select_key((k) => k + 1)
-          }}
-          are_donations_visible={are_donations_visible}
-          on_toggle_donations_visibility={handle_donations_visibility_change}
-          version={version}
-        />
-      </div>
-
-      {updating_preset && (
+    <LayoutContext.Provider value={layout_context_value}>
+      <div className={styles.container}>
         <div className={styles.slot}>
-          <UiPage
-            on_back_click={edit_preset_back_click_handler}
-            title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
-            header_slot={
-              updated_preset?.chatbot && (
-                <UiTextButton
-                  on_click={handle_preview_preset}
-                  disabled={is_preview_disabled}
-                  title={
-                    !is_connected
-                      ? 'Unable to preview when not connected'
-                      : web_mode == 'code-completions' && !has_active_editor
-                      ? 'Cannot preview in code completion mode without an active editor'
-                      : web_mode == 'code-completions' && has_active_selection
-                      ? 'Unable to work with text selection'
-                      : !has_affixes &&
-                        !has_instructions &&
-                        web_mode != 'code-completions'
-                      ? 'Enter instructions or affixes to preview'
-                      : ''
-                  }
-                >
-                  Preview
-                </UiTextButton>
-              )
-            }
-          >
-            <EditPresetForm
-              preset={updating_preset}
-              on_update={set_updated_preset}
-              on_save={edit_preset_save_handler}
-              pick_open_router_model={() => {
-                post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
-              }}
-              pick_chatbot={(chatbot_id) => {
-                post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
-              }}
-              on_at_sign_in_affix={() => {}}
-            />
-          </UiPage>
+          <Layout>
+            <div
+              className={cn(styles.content, {
+                [styles['content--hidden']]: active_view != 'main'
+              })}
+            >
+              <Main
+                scroll_reset_key={main_view_scroll_reset_key}
+                vscode={vscode}
+                on_preset_edit={(preset) => {
+                  post_message(vscode, {
+                    command: 'UPDATE_LAST_USED_PRESET',
+                    preset_name: preset.name
+                  })
+                  set_updating_preset(preset)
+                  set_updated_preset(preset)
+                }}
+                is_connected={is_connected}
+                on_show_home={() => {
+                  set_active_view('home')
+                }}
+                ask_instructions={ask_instructions}
+                edit_instructions={edit_instructions}
+                no_context_instructions={no_context_instructions}
+                code_completions_instructions={code_completions_instructions}
+                set_instructions={handle_instructions_change}
+                home_view_type={home_view_type}
+                web_mode={web_mode}
+                api_mode={api_mode}
+                on_home_view_type_change={handle_home_view_type_change}
+                has_active_editor={has_active_editor}
+                has_active_selection={has_active_selection}
+                on_web_mode_change={handle_web_mode_change}
+                on_api_mode_change={handle_api_mode_change}
+                response_history={response_history}
+                selected_history_item_created_at={
+                  selected_history_item_created_at
+                }
+                on_selected_history_item_change={
+                  set_selected_history_item_created_at
+                }
+                chat_input_focus_and_select_key={
+                  chat_input_focus_and_select_key
+                }
+                chat_input_focus_key={chat_input_focus_key}
+                context_size_warning_threshold={context_size_warning_threshold}
+              />
+            </div>
+            <div
+              className={cn(styles.content, {
+                [styles['content--hidden']]: active_view != 'home'
+              })}
+            >
+              <Home
+                vscode={vscode}
+                is_active={active_view == 'home'}
+                on_new_chat={() => {
+                  set_active_view('main')
+                  set_main_view_scroll_reset_key((k) => k + 1)
+                  handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
+                  handle_web_mode_change('edit-context')
+                  set_chat_input_focus_and_select_key((k) => k + 1)
+                }}
+                on_api_call={() => {
+                  set_active_view('main')
+                  set_main_view_scroll_reset_key((k) => k + 1)
+                  handle_home_view_type_change(HOME_VIEW_TYPES.API)
+                  handle_api_mode_change('edit-context')
+                  set_chat_input_focus_and_select_key((k) => k + 1)
+                }}
+                are_donations_visible={are_donations_visible}
+                on_toggle_donations_visibility={
+                  handle_donations_visibility_change
+                }
+                version={version}
+              />
+            </div>
+          </Layout>
         </div>
-      )}
 
-      {items_to_review && (
-        <div className={styles.slot}>
-          <UiPage
-            title="Response Preview"
-            on_back_click={() => {
-              post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
-            }}
-          >
-            <UiResponsePreview
-              items={items_to_review}
-              raw_instructions={raw_instructions}
-              has_multiple_workspaces={workspace_folder_count > 1}
-              on_discard={() => {
-                set_response_history((prev) =>
-                  prev.filter(
-                    (i) => i.created_at != selected_history_item_created_at
-                  )
+        {updating_preset && (
+          <div className={styles.slot}>
+            <UiPage
+              on_back_click={edit_preset_back_click_handler}
+              title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
+              header_slot={
+                updated_preset?.chatbot && (
+                  <UiTextButton
+                    on_click={handle_preview_preset}
+                    disabled={is_preview_disabled}
+                    title={
+                      !is_connected
+                        ? 'Unable to preview when not connected'
+                        : web_mode == 'code-completions' && !has_active_editor
+                        ? 'Cannot preview in code completion mode without an active editor'
+                        : web_mode == 'code-completions' && has_active_selection
+                        ? 'Unable to work with text selection'
+                        : !has_affixes &&
+                          !has_instructions &&
+                          web_mode != 'code-completions'
+                        ? 'Enter instructions or affixes to preview'
+                        : ''
+                    }
+                  >
+                    Preview
+                  </UiTextButton>
                 )
-                set_selected_history_item_created_at(undefined)
+              }
+            >
+              <EditPresetForm
+                preset={updating_preset}
+                on_update={set_updated_preset}
+                on_save={edit_preset_save_handler}
+                pick_open_router_model={() => {
+                  post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
+                }}
+                pick_chatbot={(chatbot_id) => {
+                  post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
+                }}
+                on_at_sign_in_affix={() => {}}
+              />
+            </UiPage>
+          </div>
+        )}
+
+        {items_to_review && (
+          <div className={styles.slot}>
+            <UiPage
+              title="Response Preview"
+              on_back_click={() => {
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
               }}
-              on_approve={(accepted_files) => {
-                set_response_history([])
-                set_selected_history_item_created_at(undefined)
-                post_message(vscode, {
-                  command: 'EDITS_REVIEW',
-                  files: accepted_files
-                })
+            >
+              <UiResponsePreview
+                items={items_to_review}
+                raw_instructions={raw_instructions}
+                has_multiple_workspaces={workspace_folder_count > 1}
+                on_discard={() => {
+                  set_response_history((prev) =>
+                    prev.filter(
+                      (i) => i.created_at != selected_history_item_created_at
+                    )
+                  )
+                  set_selected_history_item_created_at(undefined)
+                  post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
+                }}
+                on_approve={(accepted_files) => {
+                  set_response_history([])
+                  set_selected_history_item_created_at(undefined)
+                  post_message(vscode, {
+                    command: 'EDITS_REVIEW',
+                    files: accepted_files
+                  })
+                }}
+                on_focus_file={(file) => {
+                  post_message(vscode, {
+                    command: 'FOCUS_ON_FILE_IN_PREVIEW',
+                    file_path: file.file_path,
+                    workspace_name: file.workspace_name
+                  })
+                }}
+                on_go_to_file={(file) => {
+                  post_message(vscode, {
+                    command: 'GO_TO_FILE',
+                    file_path: file.file_path,
+                    workspace_name: file.workspace_name
+                  })
+                }}
+                on_toggle_file={(file) => {
+                  set_items_to_review((current_items) =>
+                    current_items?.map((f) =>
+                      'file_path' in f &&
+                      f.file_path == file.file_path &&
+                      f.workspace_name == file.workspace_name
+                        ? { ...f, is_checked: file.is_checked }
+                        : f
+                    )
+                  )
+                  post_message(vscode, {
+                    command: 'TOGGLE_FILE_IN_REVIEW',
+                    file_path: file.file_path,
+                    workspace_name: file.workspace_name,
+                    is_checked: file.is_checked
+                  })
+                }}
+                on_intelligent_update={(file) => {
+                  post_message(vscode, {
+                    command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW',
+                    file_path: file.file_path,
+                    workspace_name: file.workspace_name
+                  })
+                }}
+              />
+            </UiPage>
+          </div>
+        )}
+
+        {progress_state && (
+          <div className={styles.slot}>
+            <UiProgressModal
+              title={progress_state.title}
+              progress={progress_state.progress}
+              tokens_per_second={progress_state.tokens_per_second}
+              files={progress_state.files}
+              on_cancel={() => {
+                set_progress_state(undefined)
+                post_message(vscode, { command: 'CANCEL_API_REQUEST' })
               }}
-              on_focus_file={(file) => {
+            />
+          </div>
+        )}
+
+        {chat_initialized_title && (
+          <div className={styles.slot}>
+            <UiChatInitializedModal
+              title={chat_initialized_title}
+              duration={3000}
+              on_close={() => {
+                set_chat_initialized_title(undefined)
+              }}
+            />
+          </div>
+        )}
+
+        {files_to_stage && (
+          <div className={styles.slot}>
+            <UiStageFilesModal
+              files={files_to_stage}
+              on_stage={(selected_files) => {
                 post_message(vscode, {
-                  command: 'FOCUS_ON_FILE_IN_PREVIEW',
-                  file_path: file.file_path,
-                  workspace_name: file.workspace_name
+                  command: 'PROCEED_WITH_COMMIT',
+                  files_to_stage: selected_files
                 })
+                set_files_to_stage(undefined)
+              }}
+              on_cancel={() => {
+                post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
+                set_files_to_stage(undefined)
+                set_commit_button_enabling_trigger_count((k) => k + 1)
               }}
               on_go_to_file={(file) => {
                 post_message(vscode, {
                   command: 'GO_TO_FILE',
-                  file_path: file.file_path,
-                  workspace_name: file.workspace_name
-                })
-              }}
-              on_toggle_file={(file) => {
-                set_items_to_review((current_items) =>
-                  current_items?.map((f) =>
-                    'file_path' in f &&
-                    f.file_path == file.file_path &&
-                    f.workspace_name == file.workspace_name
-                      ? { ...f, is_checked: file.is_checked }
-                      : f
-                  )
-                )
-                post_message(vscode, {
-                  command: 'TOGGLE_FILE_IN_REVIEW',
-                  file_path: file.file_path,
-                  workspace_name: file.workspace_name,
-                  is_checked: file.is_checked
-                })
-              }}
-              on_intelligent_update={(file) => {
-                post_message(vscode, {
-                  command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW',
-                  file_path: file.file_path,
-                  workspace_name: file.workspace_name
+                  file_path: file
                 })
               }}
             />
-          </UiPage>
-        </div>
-      )}
+          </div>
+        )}
 
-      {progress_state && (
-        <div className={styles.slot}>
-          <UiProgressModal
-            title={progress_state.title}
-            progress={progress_state.progress}
-            tokens_per_second={progress_state.tokens_per_second}
-            files={progress_state.files}
-            on_cancel={() => {
-              set_progress_state(undefined)
-              post_message(vscode, { command: 'CANCEL_API_REQUEST' })
-            }}
-          />
-        </div>
-      )}
-
-      {chat_initialized_title && (
-        <div className={styles.slot}>
-          <UiChatInitializedModal
-            title={chat_initialized_title}
-            duration={3000}
-            on_close={() => {
-              set_chat_initialized_title(undefined)
-            }}
-          />
-        </div>
-      )}
-
-      {files_to_stage && (
-        <div className={styles.slot}>
-          <UiStageFilesModal
-            files={files_to_stage}
-            on_stage={(selected_files) => {
-              post_message(vscode, {
-                command: 'PROCEED_WITH_COMMIT',
-                files_to_stage: selected_files
-              })
-              set_files_to_stage(undefined)
-            }}
-            on_cancel={() => {
-              post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
-              set_files_to_stage(undefined)
-              set_commit_button_enabling_trigger_count((k) => k + 1)
-            }}
-            on_go_to_file={(file) => {
-              post_message(vscode, {
-                command: 'GO_TO_FILE',
-                file_path: file
-              })
-            }}
-          />
-        </div>
-      )}
-
-      {commit_message_to_review && (
-        <div className={styles.slot}>
-          <UiCommitMessageModal
-            commit_message={commit_message_to_review}
-            on_accept={(message) => {
-              post_message(vscode, {
-                command: 'ACCEPT_COMMIT_MESSAGE',
-                commit_message: message
-              })
-              set_commit_message_to_review(undefined)
-              set_commit_button_enabling_trigger_count((k) => k + 1)
-            }}
-            on_cancel={() => {
-              post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
-              set_commit_message_to_review(undefined)
-              set_commit_button_enabling_trigger_count((k) => k + 1)
-            }}
-          />
-        </div>
-      )}
-    </div>
+        {commit_message_to_review && (
+          <div className={styles.slot}>
+            <UiCommitMessageModal
+              commit_message={commit_message_to_review}
+              on_accept={(message) => {
+                post_message(vscode, {
+                  command: 'ACCEPT_COMMIT_MESSAGE',
+                  commit_message: message
+                })
+                set_commit_message_to_review(undefined)
+                set_commit_button_enabling_trigger_count((k) => k + 1)
+              }}
+              on_cancel={() => {
+                post_message(vscode, { command: 'CANCEL_COMMIT_MESSAGE' })
+                set_commit_message_to_review(undefined)
+                set_commit_button_enabling_trigger_count((k) => k + 1)
+              }}
+            />
+          </div>
+        )}
+      </div>
+    </LayoutContext.Provider>
   )
 }

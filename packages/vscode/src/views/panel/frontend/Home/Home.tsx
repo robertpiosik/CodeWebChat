@@ -3,7 +3,6 @@ import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { Enter } from '@ui/components/editor/panel/Enter'
 import { HomeLinkButton } from '@ui/components/editor/panel/HomeLinkButton'
 import { Donations } from '@ui/components/editor/panel/Donations'
-import { Icon } from '@ui/components/editor/common/Icon'
 import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
 import { post_message } from '../utils/post_message'
@@ -37,7 +36,7 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   return (
-    <div className={styles.container}>
+    <>
       <div className={styles['header']}>
         <div className={styles['header__left']}>
           <div className={styles['header__home']}>
@@ -106,6 +105,7 @@ export const Home: React.FC<Props> = (props) => {
 
           <div className={styles.bottom}>
             <div className={styles.bottom__links}>
+              <div>{props.version}</div>
               <div>
                 Released under the{' '}
                 <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE">
@@ -120,33 +120,6 @@ export const Home: React.FC<Props> = (props) => {
           </div>
         </div>
       </Scrollable>
-
-      <div className={styles.footer}>
-        <div className={styles.footer__social}>
-          <a
-            href="https://x.com/CodeWebChat"
-            title="Follow on X"
-            className={cn(
-              styles.footer__social__icon,
-              styles['footer__social__icon--x']
-            )}
-          >
-            <Icon variant="X" />
-          </a>
-          <a
-            href="https://discord.gg/KJySXsrSX5"
-            title="Join Discord server"
-            className={cn(
-              styles.footer__social__icon,
-              styles['footer__social__icon--discord']
-            )}
-          >
-            <Icon variant="DISCORD" />
-          </a>
-        </div>
-
-        <div className={styles.footer__version}>{props.version}</div>
-      </div>
-    </div>
+    </>
   )
 }

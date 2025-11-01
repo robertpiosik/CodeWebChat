@@ -24,8 +24,8 @@
   border-top-right-radius: var(--border-radius-5px);
   border: 1px solid var(--vscode-commandCenter-inactiveBorder);
   border-bottom: 0px;
-  padding-bottom: 5px;
-  margin-bottom: -5px;
+  padding-bottom: var(--padding-5px);
+  margin-bottom: calc(var(--padding-5px) * -1);
   overflow: hidden;
 
   &__item {
