@@ -11,8 +11,8 @@ Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, e
 - Chatbots—_ChatGPT, Claude, Gemini, AI Studio, Qwen, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
-✅ **Apply responses**—multi-file changes integration with easy rollback \
-✅ **Fully featured**—code completions, commit messages, checkpoints... \
+✅ **Preview and apply responses**—multi-file changes integration with easy rollback \
+✅ **Includes tools you need**—code completions, commit messages, checkpoints... \
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
 🔒️ **Total privacy**—operates 100% on your local machine
 
@@ -24,7 +24,7 @@ Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, e
 
 👨‍⚖️ **Respects to chatbots' Terms of Use**
 
-Code Web Chat helps you simplify use of coding web tools like ChatGPT's canvas. The idea to initialize chats is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) (thank you!) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
+Code Web Chat helps you speed-up the use of coding web tools like ChatGPT's canvas. The idea to initialize chats is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) (thank you!) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
 
 🧑‍💻 **Guide the model with context**
 
