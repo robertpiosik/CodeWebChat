@@ -8,7 +8,7 @@ import {
 import { HomeViewType } from '../../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from '../utils/post_message'
-import { FileInPreview } from '@shared/types/file-in-preview'
+import { ItemInPreview, FileInPreview } from '@shared/types/file-in-preview'
 
 type ResponseHistoryItem = {
   response: string
@@ -25,7 +25,7 @@ export const use_panel = (vscode: any) => {
     useState(0)
   const [version, set_version] = useState<string>('')
   const [updating_preset, set_updating_preset] = useState<Preset>()
-  const [files_to_review, set_files_to_review] = useState<FileInPreview[]>()
+  const [items_to_review, set_items_to_review] = useState<ItemInPreview[]>()
   const [raw_instructions, set_raw_instructions] = useState<string>()
   const [progress_state, set_progress_state] = useState<{
     title: string
@@ -33,7 +33,6 @@ export const use_panel = (vscode: any) => {
     tokens_per_second?: number
     files?: FileProgress[]
   }>()
-  const [is_applying_changes, set_is_applying_changes] = useState(false)
   const [chat_initialized_title, set_chat_initialized_title] = useState<
     string | undefined
   >()
@@ -129,27 +128,31 @@ export const use_panel = (vscode: any) => {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
-      } else if (message.command == 'CODE_PREVIEW_STARTED') {
-        set_files_to_review(message.files)
+      } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
+        set_items_to_review(message.items)
         set_raw_instructions(message.raw_instructions)
       } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
-        set_files_to_review((current_files) => {
-          const files = current_files ?? []
-          const existing_file_index = files.findIndex(
+        set_items_to_review((current_items) => {
+          const items = current_items ?? []
+          const existing_file_index = items.findIndex(
             (f) =>
+              'file_path' in f &&
               f.file_path == message.file.file_path &&
               f.workspace_name == message.file.workspace_name
           )
 
           if (existing_file_index != -1) {
-            const new_files = [...files]
-            new_files[existing_file_index] = {
-              ...message.file,
-              is_checked: files[existing_file_index].is_checked
+            const new_items = [...items]
+            const existing_item = items[existing_file_index]
+            if ('file_path' in existing_item) {
+              new_items[existing_file_index] = {
+                ...message.file,
+                is_checked: existing_item.is_checked
+              }
             }
-            return new_files
+            return new_items
           } else {
-            return [...files, { ...message.file, is_checked: true }]
+            return [...items, { ...message.file, is_checked: true }]
           }
         })
         set_response_history((current_history) => {
@@ -197,8 +200,8 @@ export const use_panel = (vscode: any) => {
 
           return new_history
         })
-      } else if (message.command == 'CODE_PREVIEW_FINISHED') {
-        set_files_to_review(undefined)
+      } else if (message.command == 'RESPONSE_PREVIEW_FINISHED') {
+        set_items_to_review(undefined)
         set_raw_instructions(undefined)
       } else if (message.command == 'WORKSPACE_STATE') {
         set_workspace_folder_count(message.folder_count)
@@ -211,10 +214,6 @@ export const use_panel = (vscode: any) => {
         })
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)
-      } else if (message.command == 'SHOW_APPLYING_CHANGES') {
-        set_is_applying_changes(true)
-      } else if (message.command == 'HIDE_APPLYING_CHANGES') {
-        set_is_applying_changes(false)
       } else if (message.command == 'SHOW_CHAT_INITIALIZED') {
         set_chat_initialized_title(message.title)
       } else if (message.command == 'FOCUS_CHAT_INPUT') {
@@ -255,7 +254,7 @@ export const use_panel = (vscode: any) => {
               files: message.files
             }
             set_response_history([...response_history, new_item])
-            if (!files_to_review) {
+            if (!items_to_review) {
               set_selected_history_item_created_at(now)
             }
           } else {
@@ -290,7 +289,7 @@ export const use_panel = (vscode: any) => {
     initial_messages.forEach((message) => post_message(vscode, message))
 
     return () => window.removeEventListener('message', handle_message)
-  }, [response_history, files_to_review])
+  }, [response_history, items_to_review])
 
   const edit_preset_back_click_handler = () => {
     post_message(vscode, {
@@ -367,12 +366,11 @@ export const use_panel = (vscode: any) => {
     version,
     updating_preset,
     set_updating_preset,
-    files_to_review,
-    set_files_to_review,
+    items_to_review,
+    set_items_to_review,
     raw_instructions,
     progress_state,
     set_progress_state,
-    is_applying_changes,
     chat_initialized_title,
     set_chat_initialized_title,
     commit_message_to_review,

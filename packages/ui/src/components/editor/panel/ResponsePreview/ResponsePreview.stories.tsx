@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ResponsePreview } from './ResponsePreview'
+import { ItemInPreview } from '@shared/types/file-in-preview'
 
 export default {
   component: ResponsePreview
@@ -59,8 +60,10 @@ const log_action =
   }
 
 const InteractiveResponsePreview = (props: any) => {
-  const [files, set_files] = useState(
-    props.files.map((f: any) => ({ ...f, is_checked: true }))
+  const [items, set_items] = useState(
+    props.items.map((f: any) =>
+      'file_path' in f ? { ...f, is_checked: true } : f
+    )
   )
 
   const handle_toggle_file = ({
@@ -72,9 +75,11 @@ const InteractiveResponsePreview = (props: any) => {
     workspace_name?: string
     is_checked: boolean
   }) => {
-    set_files(
-      files.map((f: any) =>
-        f.file_path === file_path && f.workspace_name === workspace_name
+    set_items(
+      items.map((f: any) =>
+        'file_path' in f &&
+        f.file_path === file_path &&
+        f.workspace_name === workspace_name
           ? { ...f, is_checked }
           : f
       )
@@ -85,7 +90,7 @@ const InteractiveResponsePreview = (props: any) => {
   return (
     <ResponsePreview
       {...props}
-      files={files}
+      items={items}
       on_toggle_file={handle_toggle_file}
       on_discard={log_action('on_undo')}
       on_approve={log_action('on_keep')}
@@ -96,21 +101,21 @@ const InteractiveResponsePreview = (props: any) => {
   )
 }
 
-export const Default = () => <InteractiveResponsePreview files={base_files} />
+export const Default = () => <InteractiveResponsePreview items={base_files} />
 
 export const WithSingleFile = () => (
-  <InteractiveResponsePreview files={[base_files[0]]} />
+  <InteractiveResponsePreview items={[base_files[0]]} />
 )
 
 export const WithFallbacks = () => (
   <InteractiveResponsePreview
-    files={[...base_files, ...files_using_fallbacks]}
+    items={[...base_files, ...files_using_fallbacks]}
   />
 )
 
 export const WithMultipleWorkspaces = () => (
   <InteractiveResponsePreview
-    files={[
+    items={[
       {
         ...base_files[0],
         workspace_name: 'project-a'
@@ -125,5 +130,19 @@ export const WithMultipleWorkspaces = () => (
       }
     ]}
     has_multiple_workspaces={true}
+  />
+)
+
+export const WithText = () => (
+  <InteractiveResponsePreview
+    items={[
+      { type: 'text', content: 'This is a text item.' },
+      ...base_files,
+      {
+        type: 'text',
+        content: 'Another text item explaining something.'
+      },
+      ...files_using_fallbacks
+    ]}
   />
 )

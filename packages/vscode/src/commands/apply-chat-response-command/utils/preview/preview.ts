@@ -51,8 +51,8 @@ export const preview = async (params: {
 
     if (params.panel_provider) {
       params.panel_provider.send_message({
-        command: 'CODE_PREVIEW_STARTED',
-        files: prepared_files.map((p) => p.reviewable_file),
+        command: 'RESPONSE_PREVIEW_STARTED',
+        items: [...prepared_files.map((p) => p.reviewable_file)],
         raw_instructions: params.raw_instructions
       })
     }
@@ -174,7 +174,9 @@ export const preview = async (params: {
 
     if (params.panel_provider) {
       params.panel_provider.cancel_all_intelligent_updates()
-      params.panel_provider.send_message({ command: 'CODE_PREVIEW_FINISHED' })
+      params.panel_provider.send_message({
+        command: 'RESPONSE_PREVIEW_FINISHED'
+      })
     }
   }
 }
