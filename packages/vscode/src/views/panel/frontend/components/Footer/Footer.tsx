@@ -1,23 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import cn from 'classnames'
 import { Icon } from '@ui/components/editor/common/Icon'
-import {
-  HOME_VIEW_TYPES,
-  HomeViewType
-} from '@/views/panel/types/home-view-type'
 import styles from './Footer.module.scss'
+import { LayoutContext } from '../../contexts/LayoutContext'
 
-type Props = {
-  home_view_type: HomeViewType
-  on_quick_action_click: (command: string) => void
-  on_undo_click: () => void
-  can_undo: boolean
-  on_commit_click: () => void
-  has_changes_to_commit: boolean
-  commit_button_enabling_trigger_count: number
-}
+export const Footer: React.FC = () => {
+  const {
+    is_apply_visible,
+    is_undo_visible,
+    can_undo,
+    has_changes_to_commit,
+    on_apply_click,
+    on_undo_click,
+    on_commit_click,
+    commit_button_enabling_trigger_count
+  } = useContext(LayoutContext)
 
-export const Footer: React.FC<Props> = (props) => {
   const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
     useState(false)
   const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
@@ -27,28 +25,26 @@ export const Footer: React.FC<Props> = (props) => {
 
   useEffect(() => {
     set_is_commit_disabled_temporarily(false)
-  }, [props.commit_button_enabling_trigger_count])
+  }, [commit_button_enabling_trigger_count])
 
   useEffect(() => {
     // Timeout prevents jitter of non disabled state caused by order of updates.
     setTimeout(() => {
       set_is_apply_disabled_temporarily(false)
     }, 500)
-  }, [props.can_undo])
+  }, [can_undo])
 
   const handle_apply_click = () => {
     set_is_apply_disabled_temporarily(true)
-    props.on_quick_action_click('codeWebChat.applyChatResponse')
-
+    on_apply_click()
     setTimeout(() => set_is_apply_disabled_temporarily(false), 10000)
   }
 
   const handle_commit_click = () => {
-    if (!props.has_changes_to_commit) return
+    if (!has_changes_to_commit) return
 
     set_is_commit_disabled_temporarily(true)
-    props.on_commit_click()
-
+    on_commit_click()
     setTimeout(() => set_is_commit_disabled_temporarily(false), 10000)
   }
 
@@ -68,7 +64,7 @@ export const Footer: React.FC<Props> = (props) => {
           <Icon variant="BUY_ME_A_COFFEE_LOGO" />
         </a>
         <div className={styles.footer__right}>
-          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+          {is_apply_visible && (
             <button
               className={cn(
                 styles.footer__button,
@@ -81,19 +77,21 @@ export const Footer: React.FC<Props> = (props) => {
               Apply
             </button>
           )}
-          <button
-            className={cn(
-              styles.footer__button,
-              styles['footer__button--outlined']
-            )}
-            onClick={props.on_undo_click}
-            title={
-              'Restore saved state of the codebase after chat/API response integration'
-            }
-            disabled={!props.can_undo}
-          >
-            Undo
-          </button>
+          {is_undo_visible && (
+            <button
+              className={cn(
+                styles.footer__button,
+                styles['footer__button--outlined']
+              )}
+              onClick={on_undo_click}
+              title={
+                'Restore saved state of the codebase after chat/API response integration'
+              }
+              disabled={!can_undo}
+            >
+              Undo
+            </button>
+          )}
           <button
             className={cn(
               styles.footer__button,
@@ -101,13 +99,11 @@ export const Footer: React.FC<Props> = (props) => {
             )}
             onClick={handle_commit_click}
             title={
-              props.has_changes_to_commit && !is_commit_disabled_temporarily
+              has_changes_to_commit && !is_commit_disabled_temporarily
                 ? 'Generate a commit message of staged changes and commit'
                 : 'No changes to commit'
             }
-            disabled={
-              !props.has_changes_to_commit || is_commit_disabled_temporarily
-            }
+            disabled={!has_changes_to_commit || is_commit_disabled_temporarily}
           >
             Commit changes
           </button>

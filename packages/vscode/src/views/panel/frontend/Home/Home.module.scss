@@ -1,10 +1,3 @@
-.container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 .header {
   display: flex;
   align-items: center;
@@ -114,55 +107,5 @@
 
   a:hover {
     text-decoration: underline;
-  }
-}
-
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--padding-4px);
-  padding: var(--padding-8px) var(--padding-12px);
-  border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
-
-  &__social {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: var(--padding-8px);
-
-    &__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      --size: 24px;
-      width: var(--size);
-      height: var(--size);
-      border-radius: var(--border-radius-4px);
-
-      > svg {
-        fill: white;
-        width: 15px;
-      }
-
-      &--x {
-        background-color: black;
-      }
-
-      &--reddit {
-        background-color: #ff6314;
-      }
-
-      &--discord {
-        background-color: #7289da;
-      }
-    }
-  }
-
-  &__version {
-    flex: 1;
-    text-align: right;
-    user-select: text;
-    color: var(--vscode-descriptionForeground);
   }
 }

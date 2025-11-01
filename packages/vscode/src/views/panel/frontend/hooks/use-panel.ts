@@ -83,6 +83,9 @@ export const use_panel = (vscode: any) => {
     useState(0)
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number>()
+  const [has_changes_to_commit, set_has_changes_to_commit] =
+    useState<boolean>(false)
+  const [can_undo, set_can_undo] = useState<boolean>(false)
 
   const handle_instructions_change = (
     value: string,
@@ -269,6 +272,10 @@ export const use_panel = (vscode: any) => {
         }
       } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
         set_context_size_warning_threshold(message.threshold)
+      } else if (message.command == 'GIT_STATE_CHANGED') {
+        set_has_changes_to_commit(message.has_changes_to_commit)
+      } else if (message.command == 'CAN_UNDO_CHANGED') {
+        set_can_undo(message.can_undo)
       }
     }
     window.addEventListener('message', handle_message)
@@ -284,7 +291,8 @@ export const use_panel = (vscode: any) => {
       { command: 'REQUEST_EDITOR_STATE' },
       { command: 'REQUEST_EDITOR_SELECTION_STATE' },
       { command: 'GET_WORKSPACE_STATE' },
-      { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' }
+      { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
+      { command: 'REQUEST_GIT_STATE' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -401,6 +409,8 @@ export const use_panel = (vscode: any) => {
     chat_input_focus_and_select_key,
     set_chat_input_focus_and_select_key,
     context_size_warning_threshold,
+    has_changes_to_commit,
+    can_undo,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,

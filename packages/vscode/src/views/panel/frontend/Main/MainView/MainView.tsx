@@ -20,10 +20,10 @@ import { use_cycle_mode } from './hooks/use-cycle-mode'
 import { use_re_render_on_interval } from './hooks/use-re-render-on-interval'
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { WEB_MODES, API_MODES } from './modes'
-import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import cn from 'classnames'
 import { FileInPreview } from '@shared/types/file-in-preview'
+import { Layout } from '../../components/Layout/Layout'
 
 dayjs.extend(relativeTime)
 
@@ -43,8 +43,6 @@ type Props = {
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
   on_quick_action_click: (command: string) => void
-  on_commit_click: () => void
-  on_undo_click: () => void
   is_connected: boolean
   presets: Preset[]
   configurations: ApiToolConfiguration[]
@@ -55,8 +53,6 @@ type Props = {
   on_manage_configurations: () => void
   has_active_editor: boolean
   has_active_selection: boolean
-  has_changes_to_commit: boolean
-  can_undo: boolean
   chat_history: string[]
   token_count: number
   context_size_warning_threshold: number
@@ -105,7 +101,6 @@ type Props = {
   }) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
-  commit_button_enabling_trigger_count: number // Incremented when commit changes operation is cancelled
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -180,7 +175,7 @@ export const MainView: React.FC<Props> = (props) => {
   }`
 
   return (
-    <div className={styles.container}>
+    <Layout>
       <Header
         home_view_type={props.home_view_type}
         on_home_view_type_change={props.on_home_view_type_change}
@@ -350,18 +345,6 @@ export const MainView: React.FC<Props> = (props) => {
           )}
         </div>
       </Scrollable>
-
-      <Footer
-        home_view_type={props.home_view_type}
-        on_quick_action_click={props.on_quick_action_click}
-        on_undo_click={props.on_undo_click}
-        can_undo={props.can_undo}
-        on_commit_click={props.on_commit_click}
-        has_changes_to_commit={props.has_changes_to_commit}
-        commit_button_enabling_trigger_count={
-          props.commit_button_enabling_trigger_count
-        }
-      />
-    </div>
+    </Layout>
   )
 }
