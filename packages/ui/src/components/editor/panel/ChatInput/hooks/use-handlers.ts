@@ -11,6 +11,12 @@ export const use_handlers = (props: ChatInputProps) => {
     props.on_caret_position_change(caret_position)
   }
 
+  const handle_clear = () => {
+    props.on_change('')
+    set_history_index(-1)
+    set_is_history_enabled(true)
+  }
+
   const handle_input_change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const new_value = e.target.value
     props.on_change(new_value)
@@ -103,6 +109,7 @@ export const use_handlers = (props: ChatInputProps) => {
     handle_input_change,
     handle_submit,
     handle_key_down,
-    is_history_enabled
+    is_history_enabled,
+    handle_clear
   }
 }
