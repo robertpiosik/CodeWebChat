@@ -23,7 +23,7 @@ Works with **VS Code** and forks like **Cursor**, **Windsurf**, **VSCodium**, et
 
 ## Introduction
 
-👨‍⚖️ **Respects to chatbots' Terms of Use**
+👨‍⚖️ **Respect to chatbots' Terms of Use**
 
 Code Web Chat helps you use your favorite coding web tools like ChatGPT's canvas. The idea to initialize chatbots is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
 
