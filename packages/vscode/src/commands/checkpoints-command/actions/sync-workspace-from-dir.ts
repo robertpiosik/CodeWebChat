@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
-import { clean_directory, sync_directory } from '../utils'
+import { sync_directory } from '../utils'
 
 export const sync_workspace_from_dir = async (params: {
   source_dir_uri: vscode.Uri
@@ -27,11 +27,6 @@ export const sync_workspace_from_dir = async (params: {
           workspace_provider: params.workspace_provider
         })
       } else {
-        await clean_directory({
-          dir_uri: folder.uri,
-          root_path: folder.uri.fsPath,
-          workspace_provider: params.workspace_provider
-        })
       }
     }
   } else {

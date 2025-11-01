@@ -1,4 +1,3 @@
-export * from './copy-workspace-to-dir'
 export * from './create-checkpoint'
 export * from './create-temporary-checkpoint'
 export * from './delete-checkpoint'

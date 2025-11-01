@@ -5,7 +5,7 @@ import type { Checkpoint } from '../types'
 import { create_temporary_checkpoint } from './create-temporary-checkpoint'
 import { delete_checkpoint } from './delete-checkpoint'
 import { sync_workspace_from_dir } from './sync-workspace-from-dir'
-import { get_checkpoint_path } from '../utils'
+import { get_checkpoint_path, sync_directory } from '../utils'
 import { apply_git_diff } from '../utils/git-utils'
 import * as path from 'path'
 
@@ -103,10 +103,19 @@ export const restore_checkpoint = async (params: {
                 throw err
               }
             } else {
-              await sync_workspace_from_dir({
-                source_dir_uri: checkpoint_dir_uri,
-                workspace_provider: params.workspace_provider
-              })
+              const source_folder_uri =
+                workspace_folders.length > 1
+                  ? vscode.Uri.joinPath(checkpoint_dir_uri, folder.name)
+                  : checkpoint_dir_uri
+              try {
+                await vscode.workspace.fs.stat(source_folder_uri)
+                await sync_directory({
+                  source_dir: source_folder_uri,
+                  dest_dir: folder.uri,
+                  root_path: folder.uri.fsPath,
+                  workspace_provider: params.workspace_provider
+                })
+              } catch {}
             }
           }
         } else {
