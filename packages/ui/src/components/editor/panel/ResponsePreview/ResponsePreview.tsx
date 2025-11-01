@@ -70,9 +70,10 @@ export const ResponsePreview: FC<Props> = (props) => {
                 : ''
             return (
               <div
-                key={`${file.workspace_name ?? ''}:${file.file_path}`}
-                className={cn(styles.item, {
-                  [styles['item--selected']]: index == last_clicked_file_index
+                key={index}
+                className={cn(styles.list__file, {
+                  [styles['list__file--selected']]:
+                    index == last_clicked_file_index
                 })}
                 onClick={() => {
                   set_last_clicked_file_index(index)
@@ -88,7 +89,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                     : ''
                 }`}
               >
-                <div className={styles['item__left']}>
+                <div className={styles['list__file__left']}>
                   {files_in_preview.length > 1 && (
                     <Checkbox
                       checked={file.is_checked}
@@ -102,9 +103,10 @@ export const ResponsePreview: FC<Props> = (props) => {
                     />
                   )}
                   <div
-                    className={cn(styles['item__left__label'], {
-                      [styles['item__left__label--new']]: file.is_new,
-                      [styles['item__left__label--deleted']]: file.is_deleted
+                    className={cn(styles['list__file__left__label'], {
+                      [styles['list__file__left__label--new']]: file.is_new,
+                      [styles['list__file__left__label--deleted']]:
+                        file.is_deleted
                     })}
                   >
                     <span>
@@ -121,8 +123,8 @@ export const ResponsePreview: FC<Props> = (props) => {
                     </span>
                   </div>
                 </div>
-                <div className={styles.item__right}>
-                  <div className={styles['item__actions']}>
+                <div className={styles.list__file__right}>
+                  <div className={styles['list__file__actions']}>
                     {(file.is_fallback || file.is_replaced) && (
                       <IconButton
                         codicon_icon="sparkle"
@@ -168,11 +170,15 @@ export const ResponsePreview: FC<Props> = (props) => {
                     />
                   </div>
                   {!file.is_deleted && (
-                    <div className={styles['item__line-numbers']}>
-                      <span className={styles['item__line-numbers__added']}>
+                    <div className={styles['list__file__line-numbers']}>
+                      <span
+                        className={styles['list__file__line-numbers__added']}
+                      >
                         +{file.lines_added}
                       </span>
-                      <span className={styles['item__line-numbers__removed']}>
+                      <span
+                        className={styles['list__file__line-numbers__removed']}
+                      >
                         -{file.lines_removed}
                       </span>
                     </div>
@@ -182,7 +188,7 @@ export const ResponsePreview: FC<Props> = (props) => {
             )
           } else {
             return (
-              <div key={`text-${index}`} className={styles.textItem}>
+              <div key={index} className={styles.list__text}>
                 {item.content}
               </div>
             )

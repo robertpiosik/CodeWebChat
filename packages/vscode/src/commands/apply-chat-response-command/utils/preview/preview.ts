@@ -65,9 +65,11 @@ export const preview = async (params: {
     if (clipboard_items.length > 0) {
       const prepared_files_map = new Map<string, PreparedFile>()
       for (const pf of prepared_files) {
-        const key = `${pf.reviewable_file.workspace_name || ''}:${
-          pf.reviewable_file.file_path
-        }`
+        const key = is_single_root_folder_workspace
+          ? pf.reviewable_file.file_path
+          : `${pf.reviewable_file.workspace_name || ''}:${
+              pf.reviewable_file.file_path
+            }`
         prepared_files_map.set(key, pf)
       }
 
@@ -79,14 +81,18 @@ export const preview = async (params: {
           item.type == 'diff' ||
           item.type == 'completion'
         ) {
-          const key = `${item.workspace_name || ''}:${item.file_path}`
+          const key = is_single_root_folder_workspace
+            ? item.file_path
+            : `${item.workspace_name || ''}:${item.file_path}`
           const prepared_file = prepared_files_map.get(key)
           if (prepared_file) {
             items_for_preview.push(prepared_file.reviewable_file)
             prepared_files_map.delete(key)
           }
           if (item.type == 'diff' && item.new_file_path) {
-            const new_key = `${item.workspace_name || ''}:${item.new_file_path}`
+            const new_key = is_single_root_folder_workspace
+              ? item.new_file_path
+              : `${item.workspace_name || ''}:${item.new_file_path}`
             const new_prepared_file = prepared_files_map.get(new_key)
             if (new_prepared_file) {
               items_for_preview.push(new_prepared_file.reviewable_file)
