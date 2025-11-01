@@ -4,30 +4,23 @@
 
 Blazing fast AI pair programming for production-grade code. Select context as you go for pro accuracy and game-changing speed.
 
-Works with **VS Code**, **Cursor**, **Windsurf**, **VSCodium**, and others.
+Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, etc.
 
-✅ **Sends prompts anywhere**
+✅ **Sends prompts everywhere**
 
-- Chatbots—ChatGPT, Claude, Gemini, AI Studio, Qwen, etc.
-- Model providers—Gemini API, OpenRouter, local Ollama, etc.
+- Chatbots—_ChatGPT, Claude, Gemini, AI Studio, Qwen, etc._
+- Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Applies responses**—multi-file changes integration with easy rollback \
-🔋 **Batteries included**—code completions, commit messages, etc. \
+🔋 **Batteries included**—code completions, commit messages, checkpoints... \
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
-🔒️ **Privacy focused**—operates 100% on your local machine
+🔒️ **Total privacy**—operates 100% on your local machine
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
 </p>
 
 ## Introduction
-
-👨‍⚖️ **In respect to Terms of Use**
-
-Code Web Chat only starts new conversations. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be rejected.
-
-> [!NOTE]
-> The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button.
 
 🧑‍💻 **Guide the model with context**
 
@@ -76,7 +69,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-**Supported chatbots (A-Z)**
+**Supported chatbots**
 
 - AI Studio
 - ChatGPT
@@ -99,11 +92,15 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - Yuanbao
 - Z
 
-> [!NOTE]
-> All web page interactions of submitting the message are handled by the following [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts).
-
 > [!TIP]
 > With the browser extension you can include markdown-parsed websites in context. Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_.
+
+👨‍⚖️ **With respect to Terms of Use**
+
+The automations are limited changing chatbot settings (like the selected model), entering prompt, and optionally submitting. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots' Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
+
+> [!NOTE]
+> The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) for implementation details.
 
 ## API Tools
 
