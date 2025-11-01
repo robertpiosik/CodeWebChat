@@ -7,7 +7,6 @@ import { use_latest_donations } from './hooks/latest-donations-hook'
 import cn from 'classnames'
 import { post_message } from '../utils/post_message'
 import { FrontendMessage } from '@/views/panel/types/messages'
-import { Layout } from '../components/Layout/Layout'
 
 type Props = {
   vscode: any
@@ -37,7 +36,7 @@ export const Home: React.FC<Props> = (props) => {
   }
 
   return (
-    <Layout>
+    <>
       <div className={styles['header']}>
         <div className={styles['header__left']}>
           <div className={styles['header__home']}>
@@ -121,6 +120,6 @@ export const Home: React.FC<Props> = (props) => {
           </div>
         </div>
       </Scrollable>
-    </Layout>
+    </>
   )
 }

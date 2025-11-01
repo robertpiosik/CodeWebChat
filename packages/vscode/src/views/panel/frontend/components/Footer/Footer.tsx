@@ -51,24 +51,37 @@ export const Footer: React.FC = () => {
   return (
     <>
       <div className={styles.footer}>
-        <a
-          className={cn(
-            styles.footer__button,
-            styles['footer__button--buy-me-a-coffee']
-          )}
-          href="https://buymeacoffee.com/robertpiosik"
-          title="Support author"
-          onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
-          onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
-        >
-          <Icon variant="BUY_ME_A_COFFEE_LOGO" />
-        </a>
+        <div className={styles.footer__left}>
+          <a
+            className={cn(
+              styles.footer__left__button,
+              styles['footer__left__button--buy-me-a-coffee']
+            )}
+            href="https://buymeacoffee.com/robertpiosik"
+            title="Support author"
+            onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
+            onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
+          >
+            <Icon variant="BUY_ME_A_COFFEE_LOGO" />
+          </a>
+          <a
+            className={cn(
+              styles.footer__left__button,
+              styles['footer__left__button--discord']
+            )}
+            href="https://discord.gg/KJySXsrSX5"
+            title="Join our Discord server!"
+          >
+            <Icon variant="DISCORD" />
+          </a>
+        </div>
+
         <div className={styles.footer__right}>
           {is_apply_visible && (
             <button
               className={cn(
-                styles.footer__button,
-                styles['footer__button--outlined']
+                styles.footer__right__button,
+                styles['footer__right__button--outlined']
               )}
               onClick={handle_apply_click}
               title={'Integrate copied chat response or a single code block'}
@@ -80,8 +93,8 @@ export const Footer: React.FC = () => {
           {is_undo_visible && (
             <button
               className={cn(
-                styles.footer__button,
-                styles['footer__button--outlined']
+                styles.footer__right__button,
+                styles['footer__right__button--outlined']
               )}
               onClick={on_undo_click}
               title={
@@ -94,18 +107,18 @@ export const Footer: React.FC = () => {
           )}
           <button
             className={cn(
-              styles.footer__button,
-              styles['footer__button--outlined']
+              styles.footer__right__button,
+              styles['footer__right__button--outlined']
             )}
             onClick={handle_commit_click}
             title={
               has_changes_to_commit && !is_commit_disabled_temporarily
-                ? 'Generate a commit message of staged changes and commit'
+                ? 'Commit changes'
                 : 'No changes to commit'
             }
             disabled={!has_changes_to_commit || is_commit_disabled_temporarily}
           >
-            Commit changes
+            Commit
           </button>
         </div>
       </div>

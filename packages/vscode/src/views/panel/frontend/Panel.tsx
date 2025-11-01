@@ -14,6 +14,7 @@ import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/edito
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 import { use_panel } from './hooks/use-panel'
 import { LayoutContext } from './contexts/LayoutContext'
+import { Layout } from './components/Layout/Layout'
 
 const vscode = acquireVsCodeApi()
 
@@ -162,75 +163,85 @@ export const Panel = () => {
   return (
     <LayoutContext.Provider value={layout_context_value}>
       <div className={styles.container}>
-        <div
-          className={cn(styles.slot, {
-            [styles['slot--hidden']]: active_view != 'main'
-          })}
-        >
-          <Main
-            scroll_reset_key={main_view_scroll_reset_key}
-            vscode={vscode}
-            on_preset_edit={(preset) => {
-              post_message(vscode, {
-                command: 'UPDATE_LAST_USED_PRESET',
-                preset_name: preset.name
-              })
-              set_updating_preset(preset)
-              set_updated_preset(preset)
-            }}
-            is_connected={is_connected}
-            on_show_home={() => {
-              set_active_view('home')
-            }}
-            ask_instructions={ask_instructions}
-            edit_instructions={edit_instructions}
-            no_context_instructions={no_context_instructions}
-            code_completions_instructions={code_completions_instructions}
-            set_instructions={handle_instructions_change}
-            home_view_type={home_view_type}
-            web_mode={web_mode}
-            api_mode={api_mode}
-            on_home_view_type_change={handle_home_view_type_change}
-            has_active_editor={has_active_editor}
-            has_active_selection={has_active_selection}
-            on_web_mode_change={handle_web_mode_change}
-            on_api_mode_change={handle_api_mode_change}
-            response_history={response_history}
-            selected_history_item_created_at={selected_history_item_created_at}
-            on_selected_history_item_change={
-              set_selected_history_item_created_at
-            }
-            chat_input_focus_and_select_key={chat_input_focus_and_select_key}
-            chat_input_focus_key={chat_input_focus_key}
-            context_size_warning_threshold={context_size_warning_threshold}
-          />
-        </div>
-        <div
-          className={cn(styles.slot, {
-            [styles['slot--hidden']]: active_view != 'home'
-          })}
-        >
-          <Home
-            vscode={vscode}
-            is_active={active_view == 'home'}
-            on_new_chat={() => {
-              set_active_view('main')
-              set_main_view_scroll_reset_key((k) => k + 1)
-              handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
-              handle_web_mode_change('edit-context')
-              set_chat_input_focus_and_select_key((k) => k + 1)
-            }}
-            on_api_call={() => {
-              set_active_view('main')
-              set_main_view_scroll_reset_key((k) => k + 1)
-              handle_home_view_type_change(HOME_VIEW_TYPES.API)
-              handle_api_mode_change('edit-context')
-              set_chat_input_focus_and_select_key((k) => k + 1)
-            }}
-            are_donations_visible={are_donations_visible}
-            on_toggle_donations_visibility={handle_donations_visibility_change}
-            version={version}
-          />
+        <div className={styles.slot}>
+          <Layout>
+            <div
+              className={cn(styles.content, {
+                [styles['content--hidden']]: active_view != 'main'
+              })}
+            >
+              <Main
+                scroll_reset_key={main_view_scroll_reset_key}
+                vscode={vscode}
+                on_preset_edit={(preset) => {
+                  post_message(vscode, {
+                    command: 'UPDATE_LAST_USED_PRESET',
+                    preset_name: preset.name
+                  })
+                  set_updating_preset(preset)
+                  set_updated_preset(preset)
+                }}
+                is_connected={is_connected}
+                on_show_home={() => {
+                  set_active_view('home')
+                }}
+                ask_instructions={ask_instructions}
+                edit_instructions={edit_instructions}
+                no_context_instructions={no_context_instructions}
+                code_completions_instructions={code_completions_instructions}
+                set_instructions={handle_instructions_change}
+                home_view_type={home_view_type}
+                web_mode={web_mode}
+                api_mode={api_mode}
+                on_home_view_type_change={handle_home_view_type_change}
+                has_active_editor={has_active_editor}
+                has_active_selection={has_active_selection}
+                on_web_mode_change={handle_web_mode_change}
+                on_api_mode_change={handle_api_mode_change}
+                response_history={response_history}
+                selected_history_item_created_at={
+                  selected_history_item_created_at
+                }
+                on_selected_history_item_change={
+                  set_selected_history_item_created_at
+                }
+                chat_input_focus_and_select_key={
+                  chat_input_focus_and_select_key
+                }
+                chat_input_focus_key={chat_input_focus_key}
+                context_size_warning_threshold={context_size_warning_threshold}
+              />
+            </div>
+            <div
+              className={cn(styles.content, {
+                [styles['content--hidden']]: active_view != 'home'
+              })}
+            >
+              <Home
+                vscode={vscode}
+                is_active={active_view == 'home'}
+                on_new_chat={() => {
+                  set_active_view('main')
+                  set_main_view_scroll_reset_key((k) => k + 1)
+                  handle_home_view_type_change(HOME_VIEW_TYPES.WEB)
+                  handle_web_mode_change('edit-context')
+                  set_chat_input_focus_and_select_key((k) => k + 1)
+                }}
+                on_api_call={() => {
+                  set_active_view('main')
+                  set_main_view_scroll_reset_key((k) => k + 1)
+                  handle_home_view_type_change(HOME_VIEW_TYPES.API)
+                  handle_api_mode_change('edit-context')
+                  set_chat_input_focus_and_select_key((k) => k + 1)
+                }}
+                are_donations_visible={are_donations_visible}
+                on_toggle_donations_visibility={
+                  handle_donations_visibility_change
+                }
+                version={version}
+              />
+            </div>
+          </Layout>
         </div>
 
         {updating_preset && (

@@ -23,7 +23,6 @@ import { WEB_MODES, API_MODES } from './modes'
 import { Header } from './components/Header'
 import cn from 'classnames'
 import { FileInPreview } from '@shared/types/file-in-preview'
-import { Layout } from '../../components/Layout/Layout'
 
 dayjs.extend(relativeTime)
 
@@ -175,7 +174,7 @@ export const MainView: React.FC<Props> = (props) => {
   }`
 
   return (
-    <Layout>
+    <>
       <Header
         home_view_type={props.home_view_type}
         on_home_view_type_change={props.on_home_view_type_change}
@@ -345,6 +344,6 @@ export const MainView: React.FC<Props> = (props) => {
           )}
         </div>
       </Scrollable>
-    </Layout>
+    </>
   )
 }

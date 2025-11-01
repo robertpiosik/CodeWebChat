@@ -7,57 +7,64 @@
   padding: var(--padding-8px) var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
 
+  &__left {
+    display: flex;
+    gap: var(--padding-4px);
+
+    &__button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      width: 24px;
+      border-radius: var(--border-radius-4px);
+
+      > svg {
+        flex-shrink: 0;
+        width: 16px;
+        height: 16px;
+      }
+
+      &--buy-me-a-coffee {
+        background-color: #f7d600;
+
+        > svg {
+          fill: black;
+        }
+      }
+
+      &--discord {
+        background-color: #7289da;
+
+        > svg {
+          fill: white;
+        }
+      }
+    }
+  }
+
   &__right {
     display: flex;
     gap: var(--padding-4px);
-  }
 
-  &__button {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    gap: var(--padding-4px);
-    height: 24px;
-    padding: 0 var(--padding-5px);
-    border-radius: var(--border-radius-4px);
-    color: var(--vscode-foreground);
-
-    &:disabled {
-      opacity: var(--disabled-opacity);
-    }
-
-    > svg {
+    &__button {
+      display: flex;
+      align-items: center;
       flex-shrink: 0;
-      fill: var(--vscode-icon-foreground);
-      width: 16px;
-      height: 16px;
-    }
+      gap: var(--padding-4px);
+      height: 24px;
+      padding: 0 var(--padding-5px);
+      border-radius: var(--border-radius-4px);
 
-    &--buy-me-a-coffee {
-      background-color: #f7d600;
-      transition: transform var(--transition-duration-150)
-        var(--transition-timing-function);
-
-      &:hover {
-        transform: scale(0.95);
+      &:disabled {
+        opacity: var(--disabled-opacity);
       }
 
-      > svg {
-        fill: black;
-      }
-    }
-
-    &--filled {
-      background-color: var(--vscode-list-hoverBackground);
-      &:hover {
-        background-color: var(--vscode-toolbar-hoverBackground);
-      }
-    }
-
-    &--outlined {
-      border: 1px solid var(--vscode-commandCenter-inactiveBorder);
-      &:hover:not(:disabled) {
-        border-color: var(--vscode-commandCenter-activeBorder);
+      &--outlined {
+        border: 1px solid var(--vscode-commandCenter-inactiveBorder);
+        &:hover:not(:disabled) {
+          border-color: var(--vscode-commandCenter-activeBorder);
+        }
       }
     }
   }
