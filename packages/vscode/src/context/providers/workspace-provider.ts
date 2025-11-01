@@ -744,6 +744,9 @@ export class WorkspaceProvider
   private async _calculate_directory_selected_tokens(
     dir_path: string
   ): Promise<number> {
+    if (!dir_path) {
+      return 0
+    }
     if (this.directory_selected_token_counts.has(dir_path)) {
       return this.directory_selected_token_counts.get(dir_path)!
     }
@@ -751,7 +754,13 @@ export class WorkspaceProvider
     let selected_tokens = 0
     try {
       const workspace_root = this.get_workspace_root_for_file(dir_path)
-      if (!workspace_root) return 0
+      if (!workspace_root || workspace_root === '') {
+        Logger.warn({
+          function_name: '_calculate_directory_selected_tokens',
+          message: `No workspace root found for directory ${dir_path}`
+        })
+        return 0
+      }
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
       if (this.is_excluded(relative_dir_path)) {
