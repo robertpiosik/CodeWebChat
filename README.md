@@ -12,7 +12,7 @@ Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, e
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Preview and apply responses**—multi-file changes integration with easy rollback \
-✅ **Includes tools you need**—code completions, commit messages, checkpoints... \
+✅ **Includes essential tools**—code completions, commit messages, checkpoints... \
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
 🔒️ **Total privacy**—operates 100% on your local machine
 
