@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Send prompts with chatbots or model providers and apply responses (CWC)",
+  "description": "CWC—Blazing fast AI pair programming",
   "version": "1.495.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
