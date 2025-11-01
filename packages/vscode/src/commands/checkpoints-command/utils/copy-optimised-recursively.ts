@@ -93,5 +93,4 @@ export const copy_optimised_recursively = async (
   } else if (source_stat.type == vscode.FileType.File) {
     await fs.copyFile(source_uri.fsPath, dest_uri.fsPath)
   }
-  // Other file types are ignored. fs.stat resolves symlinks.
 }

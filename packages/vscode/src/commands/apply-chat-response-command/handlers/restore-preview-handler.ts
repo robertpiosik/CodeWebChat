@@ -8,7 +8,7 @@ import { OriginalFileState } from '../types/original-file-state'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { remove_directory_if_empty } from '../utils/file-operations'
 
-export const handle_restore_review = async (
+export const handle_restore_preview = async (
   files: FileInPreview[]
 ): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
   Logger.info({

@@ -11,3 +11,10 @@ export type FileInPreview = {
   diff_fallback_method?: 'recount' | 'search_and_replace'
   content?: string
 }
+
+export type TextContentInPreview = {
+  type: 'text'
+  content: string
+}
+
+export type ItemInPreview = FileInPreview | TextContentInPreview

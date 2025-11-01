@@ -13,7 +13,6 @@ import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/e
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 import { use_panel } from './hooks/use-panel'
-import { ApplyingChangesModal as UiApplyingChangesModal } from '@ui/components/editor/panel/modals/ApplyingChangesModal'
 
 const vscode = acquireVsCodeApi()
 
@@ -26,12 +25,11 @@ export const Panel = () => {
     version,
     updating_preset,
     set_updating_preset,
-    files_to_review,
-    set_files_to_review,
+    items_to_review,
+    set_items_to_review,
     raw_instructions,
     progress_state,
     set_progress_state,
-    is_applying_changes,
     chat_initialized_title,
     set_chat_initialized_title,
     commit_message_to_review,
@@ -246,7 +244,7 @@ export const Panel = () => {
         </div>
       )}
 
-      {files_to_review && (
+      {items_to_review && (
         <div className={styles.slot}>
           <UiPage
             title="Response Preview"
@@ -255,7 +253,7 @@ export const Panel = () => {
             }}
           >
             <UiResponsePreview
-              files={files_to_review}
+              items={items_to_review}
               raw_instructions={raw_instructions}
               has_multiple_workspaces={workspace_folder_count > 1}
               on_discard={() => {
@@ -290,8 +288,9 @@ export const Panel = () => {
                 })
               }}
               on_toggle_file={(file) => {
-                set_files_to_review((current_files) =>
-                  current_files?.map((f) =>
+                set_items_to_review((current_items) =>
+                  current_items?.map((f) =>
+                    'file_path' in f &&
                     f.file_path == file.file_path &&
                     f.workspace_name == file.workspace_name
                       ? { ...f, is_checked: file.is_checked }
@@ -314,12 +313,6 @@ export const Panel = () => {
               }}
             />
           </UiPage>
-        </div>
-      )}
-
-      {is_applying_changes && (
-        <div className={styles.slot}>
-          <UiApplyingChangesModal title="Applying changes..." />
         </div>
       )}
 

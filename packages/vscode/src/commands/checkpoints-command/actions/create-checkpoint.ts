@@ -2,9 +2,18 @@ import * as vscode from 'vscode'
 import { CHECKPOINTS_STATE_KEY } from '../../../constants/state-keys'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
 import type { Checkpoint } from '../types'
-import { copy_workspace_to_dir } from './copy-workspace-to-dir'
 import { get_checkpoints } from './get-checkpoints'
-import { get_checkpoint_path, get_incremented_description } from '../utils'
+import {
+  copy_optimised_recursively,
+  get_checkpoint_path,
+  get_incremented_description
+} from '../utils'
+import {
+  get_git_diff,
+  get_git_info,
+  is_git_repository
+} from '../utils/git-utils'
+import * as path from 'path'
 
 export const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
@@ -26,7 +35,60 @@ export const create_checkpoint = async (
         const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
         await vscode.workspace.fs.createDirectory(checkpoint_dir_uri)
 
-        await copy_workspace_to_dir(checkpoint_dir_uri, workspace_provider)
+        const workspace_folders = vscode.workspace.workspaceFolders!
+        const git_data: Record<string, any> = {}
+        let uses_git = false
+
+        for (const folder of workspace_folders) {
+          const has_git = await is_git_repository(folder)
+
+          if (has_git) {
+            uses_git = true
+            const git_info = await get_git_info(folder)
+            const diff = await get_git_diff(folder)
+
+            if (git_info && diff !== null) {
+              const folder_name = folder.name
+              git_data[folder_name] = {
+                branch: git_info.branch,
+                commit_hash: git_info.commit_hash,
+                folder_name
+              }
+
+              const diff_file_path = path.join(
+                checkpoint_dir_path,
+                `${folder_name}.diff`
+              )
+              await vscode.workspace.fs.writeFile(
+                vscode.Uri.file(diff_file_path),
+                Buffer.from(diff, 'utf8')
+              )
+            } else {
+              throw new Error(
+                `Failed to get git information for repository in ${folder.name}.`
+              )
+            }
+          } else {
+            const dest_folder_path =
+              workspace_folders.length > 1
+                ? path.join(checkpoint_dir_path, folder.name)
+                : checkpoint_dir_path
+            const dest_folder_uri = vscode.Uri.file(dest_folder_path)
+            if (workspace_folders.length > 1) {
+              await vscode.workspace.fs.createDirectory(dest_folder_uri)
+            }
+
+            const entries = await vscode.workspace.fs.readDirectory(folder.uri)
+            for (const [name] of entries) {
+              await copy_optimised_recursively(
+                vscode.Uri.joinPath(folder.uri, name),
+                vscode.Uri.joinPath(dest_folder_uri, name),
+                folder.uri.fsPath,
+                workspace_provider
+              )
+            }
+          }
+        }
 
         const checkpoints = await get_checkpoints(context)
 
@@ -39,7 +101,9 @@ export const create_checkpoint = async (
         const new_checkpoint: Checkpoint = {
           title,
           timestamp,
-          description: final_description
+          description: final_description,
+          uses_git,
+          git_data: Object.keys(git_data).length > 0 ? git_data : undefined
         }
 
         checkpoints.unshift(new_checkpoint)

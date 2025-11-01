@@ -48,9 +48,7 @@ export const sync_directory = async (params: {
     let dest_stat: vscode.FileStat | undefined
     try {
       dest_stat = await vscode.workspace.fs.stat(dest_uri)
-    } catch {
-      // does not exist
-    }
+    } catch {}
 
     const source_stat = await vscode.workspace.fs.stat(source_uri)
 

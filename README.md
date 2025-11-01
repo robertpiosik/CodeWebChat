@@ -4,13 +4,17 @@
 
 Blazing fast AI pair programming for production-grade code. Select context as you go for pro accuracy and game-changing speed.
 
-Works with VS Code, Cursor, Windsurf, and others.
+Works with **VS Code**, **Cursor**, **Windsurf**, **VSCodium**, and others.
 
-✅ **Initializes free chatbots**—ChatGPT, Claude, Gemini, AI Studio, Qwen, and 10+ more \
-✅ **Calls model providers**—bring your own keys or use local models via Ollama \
+✅ **Sends prompts anywhere**
+
+- Chatbots—ChatGPT, Claude, Gemini, AI Studio, Qwen, etc.
+- Model providers—Gemini API, OpenRouter, local Ollama, etc.
+
 ✅ **Applies responses**—multi-file changes integration with easy rollback \
-✅ **Batteries included**—code completions, commit messages, and more \
-❤️ **Free and open-source**—released under the GPL-3.0 license
+🔋 **Batteries included**—code completions, commit messages, etc. \
+❤️ **Free and open-source**—released under the GPL-3.0 license \
+🔒️ **Privacy focused**—operates 100% on your local machine
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />

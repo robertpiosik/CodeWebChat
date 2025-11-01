@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import { OriginalFileState } from './types/original-file-state'
-import { handle_restore_review } from './handlers/restore-review-handler'
+import { handle_restore_preview } from './handlers/restore-preview-handler'
 import { parse_response, FileItem, DiffItem } from './utils/clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
@@ -44,7 +44,7 @@ export const process_chat_response = async (
   panel_provider: PanelProvider
 ): Promise<PreviewData | null> => {
   if (args?.files_with_content) {
-    const result = await handle_restore_review(args.files_with_content)
+    const result = await handle_restore_preview(args.files_with_content)
     if (result.success && result.original_states) {
       const augmented_states = result.original_states.map((state) => {
         const file_in_review = args?.files_with_content!.find(

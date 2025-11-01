@@ -8,7 +8,7 @@ import { update_undo_button_state } from './state-manager'
 
 export let ongoing_review_cleanup_promise: Promise<void> | null = null
 
-export const handle_code_review_and_cleanup = async (params: {
+export const preview_handler = async (params: {
   original_states: OriginalFileState[]
   chat_response: string
   panel_provider: PanelProvider

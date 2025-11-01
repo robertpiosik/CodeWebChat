@@ -1,5 +1,5 @@
 import { EditFormat } from '@shared/types/edit-format'
-import { FileInPreview } from '@shared/types/file-in-preview'
+import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import { Preset } from '@shared/types/preset'
 import { HomeViewType } from './home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
@@ -495,14 +495,14 @@ export interface CanUndoChangedMessage extends BaseMessage {
   can_undo: boolean
 }
 
-export interface CodeReviewStartedMessage extends BaseMessage {
-  command: 'CODE_REVIEW_STARTED'
-  files: FileInPreview[]
+export interface ResponsePreviewStartedMessage extends BaseMessage {
+  command: 'RESPONSE_PREVIEW_STARTED'
+  items: ItemInPreview[]
   raw_instructions?: string
 }
 
-export interface CodeReviewFinishedMessage extends BaseMessage {
-  command: 'CODE_REVIEW_FINISHED'
+export interface ResponsePreviewFinishedMessage extends BaseMessage {
+  command: 'RESPONSE_PREVIEW_FINISHED'
 }
 
 export interface WorkspaceStateMessage extends BaseMessage {
@@ -541,14 +541,6 @@ export interface ShowProgressMessage extends BaseMessage {
 
 export interface HideProgressMessage extends BaseMessage {
   command: 'HIDE_PROGRESS'
-}
-
-export interface ShowApplyingChangesMessage extends BaseMessage {
-  command: 'SHOW_APPLYING_CHANGES'
-}
-
-export interface HideApplyingChangesMessage extends BaseMessage {
-  command: 'HIDE_APPLYING_CHANGES'
 }
 
 export interface ShowChatInitializedMessage extends BaseMessage {
@@ -608,15 +600,13 @@ export type BackendMessage =
   | ApiModeMessage
   | VersionMessage
   | CanUndoChangedMessage
-  | CodeReviewStartedMessage
-  | CodeReviewFinishedMessage
+  | ResponsePreviewStartedMessage
+  | ResponsePreviewFinishedMessage
   | WorkspaceStateMessage
   | SelectedPresetOrGroupChangedMessage
   | SelectedConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
-  | ShowApplyingChangesMessage
-  | HideApplyingChangesMessage
   | ShowChatInitializedMessage
   | UpdateFileInReviewMessage
   | ShowStageFilesModalMessage
