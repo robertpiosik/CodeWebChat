@@ -34,7 +34,7 @@ Because the model is only as smart as examples it has seen in its pre-training s
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-👋 **Meet the non-agentic workflow**
+🙋 **Meet the non-agentic workflow**
 
 Select folders and files for context, enter instructions, and send message via...
 
