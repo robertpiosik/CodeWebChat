@@ -4,7 +4,7 @@
 
 Blazing fast AI pair programming for production-grade code. Select context as you go for pro accuracy and game-changing speed.
 
-Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, etc.
+Works with **VS Code** and forks like **Cursor**, **Windsurf**, **VSCodium**, etc.
 
 ✅ **Send prompts everywhere**
 
