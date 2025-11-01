@@ -4,12 +4,14 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { setup_workspace_listeners } from './workspace-listener'
 import { prepare_files_from_original_states } from './file-preparer'
+import { parse_response } from '../clipboard-parser/clipboard-parser'
 import {
   create_temp_files_with_original_content,
   cleanup_temp_files
 } from './temp-file-manager'
 import { close_review_diff_editors, show_diff_with_actions } from './vscode-ui'
 import { PreparedFile, ReviewableFile } from './types'
+import { ItemInPreview } from '@shared/types/file-in-preview'
 
 export { code_review_promise_resolve } from './vscode-ui'
 export { toggle_file_review_state } from './workspace-listener'
@@ -18,6 +20,7 @@ export const preview = async (params: {
   original_states: OriginalFileState[]
   panel_provider: PanelProvider
   raw_instructions?: string
+  chat_response: string
 }): Promise<{
   accepted_files: ReviewableFile[]
   rejected_states: OriginalFileState[]
@@ -49,10 +52,60 @@ export const preview = async (params: {
       workspace_map
     })
 
+    const is_single_root_folder_workspace =
+      (vscode.workspace.workspaceFolders?.length ?? 0) <= 1
+
+    const clipboard_items = parse_response({
+      response: params.chat_response,
+      is_single_root_folder_workspace
+    })
+
+    const items_for_preview: ItemInPreview[] = []
+
+    if (clipboard_items.length > 0) {
+      const prepared_files_map = new Map<string, PreparedFile>()
+      for (const pf of prepared_files) {
+        const key = `${pf.reviewable_file.workspace_name || ''}:${
+          pf.reviewable_file.file_path
+        }`
+        prepared_files_map.set(key, pf)
+      }
+
+      for (const item of clipboard_items) {
+        if (item.type == 'text') {
+          items_for_preview.push({ type: 'text', content: item.content })
+        } else if (
+          item.type == 'file' ||
+          item.type == 'diff' ||
+          item.type == 'completion'
+        ) {
+          const key = `${item.workspace_name || ''}:${item.file_path}`
+          const prepared_file = prepared_files_map.get(key)
+          if (prepared_file) {
+            items_for_preview.push(prepared_file.reviewable_file)
+            prepared_files_map.delete(key)
+          }
+          if (item.type == 'diff' && item.new_file_path) {
+            const new_key = `${item.workspace_name || ''}:${item.new_file_path}`
+            const new_prepared_file = prepared_files_map.get(new_key)
+            if (new_prepared_file) {
+              items_for_preview.push(new_prepared_file.reviewable_file)
+              prepared_files_map.delete(new_key)
+            }
+          }
+        }
+      }
+      items_for_preview.push(
+        ...[...prepared_files_map.values()].map((pf) => pf.reviewable_file)
+      )
+    } else {
+      items_for_preview.push(...prepared_files.map((p) => p.reviewable_file))
+    }
+
     if (params.panel_provider) {
       params.panel_provider.send_message({
         command: 'RESPONSE_PREVIEW_STARTED',
-        items: [...prepared_files.map((p) => p.reviewable_file)],
+        items: items_for_preview,
         raw_instructions: params.raw_instructions
       })
     }
