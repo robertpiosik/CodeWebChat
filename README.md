@@ -6,7 +6,7 @@ Blazing fast AI pair programming for production-grade code. Select context as yo
 
 Works with **VS Code** and forks like **Cursor**, **Windsurf**, **VSCodium**, etc.
 
-✅ **Send prompts everywhere**
+✅ **Send prompts anywhere**
 
 - Chatbots—_ChatGPT, Claude, Gemini, AI Studio, Qwen, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
