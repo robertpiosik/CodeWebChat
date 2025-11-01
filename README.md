@@ -6,13 +6,13 @@ Blazing fast AI pair programming for production-grade code. Select context as yo
 
 Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, etc.
 
-✅ **Sends prompts everywhere**
+✅ **Send prompts everywhere**
 
 - Chatbots—_ChatGPT, Claude, Gemini, AI Studio, Qwen, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
-✅ **Applies responses**—multi-file changes integration with easy rollback \
-🔋 **Batteries included**—code completions, commit messages, checkpoints... \
+✅ **Apply responses**—multi-file changes integration with easy rollback \
+✅ **Fully featured**—code completions, commit messages, checkpoints... \
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
 🔒️ **Total privacy**—operates 100% on your local machine
 
