@@ -474,12 +474,12 @@ export const parse_multiple_files = (params: {
           }
         }
 
-        if (xml_file_mode && line.trim().startsWith('<![CDATA[')) {
+        if (line.trim().startsWith('<![CDATA[')) {
           in_cdata = true
           continue
         }
 
-        if (xml_file_mode && in_cdata && line.trim().includes(']]>')) {
+        if (in_cdata && line.trim().includes(']]>')) {
           in_cdata = false
           continue
         }
