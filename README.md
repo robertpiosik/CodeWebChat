@@ -22,6 +22,10 @@ Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, e
 
 ## Introduction
 
+👨‍⚖️ **Respects to chatbots' Terms of Use**
+
+Code Web Chat helps you simplify use of coding tools like ChatGPT's canvas. The idea to initialize chats is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
+
 🧑‍💻 **Guide the model with context**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
@@ -95,11 +99,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 > [!TIP]
 > With the browser extension you can include markdown-parsed websites in context. Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_.
 
-👨‍⚖️ **With respect to Terms of Use**
-
-The automations are limited changing chatbot settings (like the selected model), entering prompt, and optionally submitting. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots' Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
-
-> [!NOTE]
+> [!IMPORTANT]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) for implementation details.
 
 ## API Tools
