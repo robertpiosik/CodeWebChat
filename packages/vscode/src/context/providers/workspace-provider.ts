@@ -578,13 +578,13 @@ export class WorkspaceProvider
   }
 
   private async _get_workspace_folder_items(
-    contextView = false
+    context_view = false
   ): Promise<FileItem[]> {
     const items: FileItem[] = []
     for (let i = 0; i < this.workspace_roots.length; i++) {
       const root = this.workspace_roots[i]
 
-      if (contextView) {
+      if (context_view) {
         const state = this.checked_items.get(root)
         const is_partially_checked = this.partially_checked_dirs.has(root)
         if (
@@ -619,7 +619,7 @@ export class WorkspaceProvider
           true // Is workspace root
         )
       )
-      if (contextView) {
+      if (context_view) {
         const last_item = items[items.length - 1]
         last_item.contextValue = 'contextWorkspaceRoot'
       }
