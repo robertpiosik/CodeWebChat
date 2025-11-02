@@ -13,10 +13,10 @@ import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/e
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 import { use_panel } from './hooks/use-panel'
-import { Button } from '@ui/components/editor/panel/Button'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { LayoutContext } from './contexts/LayoutContext'
 import { Layout } from './components/Layout/Layout'
+import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
 
 const vscode = acquireVsCodeApi()
 
@@ -299,46 +299,36 @@ export const Panel = () => {
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
               }}
               footer_slot={
-                <>
-                  <Button
-                    on_click={() => {
-                      set_response_history((prev) =>
-                        prev.filter(
-                          (i) =>
-                            i.created_at != selected_history_item_created_at
-                        )
+                <UiResponsePreviewFooter
+                  on_discard={() => {
+                    set_response_history((prev) =>
+                      prev.filter(
+                        (i) => i.created_at != selected_history_item_created_at
                       )
-                      set_selected_history_item_created_at(undefined)
-                      post_message(vscode, {
-                        command: 'EDITS_REVIEW',
-                        files: []
-                      })
-                    }}
-                    is_secondary
-                  >
-                    Discard
-                  </Button>
-                  <Button
-                    on_click={() => {
-                      const accepted_files = items_to_review.filter(
-                        (f) => 'file_path' in f && f.is_checked
-                      ) as FileInPreview[]
-                      set_response_history([])
-                      set_selected_history_item_created_at(undefined)
-                      post_message(vscode, {
-                        command: 'EDITS_REVIEW',
-                        files: accepted_files
-                      })
-                    }}
-                    disabled={
-                      items_to_review.filter(
-                        (f) => 'file_path' in f && f.is_checked
-                      ).length == 0
-                    }
-                  >
-                    Approve
-                  </Button>
-                </>
+                    )
+                    set_selected_history_item_created_at(undefined)
+                    post_message(vscode, {
+                      command: 'EDITS_REVIEW',
+                      files: []
+                    })
+                  }}
+                  on_approve={() => {
+                    const accepted_files = items_to_review.filter(
+                      (f) => 'file_path' in f && f.is_checked
+                    ) as FileInPreview[]
+                    set_response_history([])
+                    set_selected_history_item_created_at(undefined)
+                    post_message(vscode, {
+                      command: 'EDITS_REVIEW',
+                      files: accepted_files
+                    })
+                  }}
+                  is_approve_disabled={
+                    items_to_review.filter(
+                      (f) => 'file_path' in f && f.is_checked
+                    ).length == 0
+                  }
+                />
               }
             >
               <UiResponsePreview

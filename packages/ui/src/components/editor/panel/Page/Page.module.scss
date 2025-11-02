@@ -34,12 +34,7 @@
 }
 
 .footer {
-  display: flex;
   gap: var(--padding-8px);
   padding: var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
-
-  > button {
-    flex: 1;
-  }
 }
