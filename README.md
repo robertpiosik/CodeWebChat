@@ -4,7 +4,7 @@
 
 Blazing fast AI pair programming for production-grade code. Select context as you go for game-changing accuracy and speed.
 
-Works with **VS Code** and forks like **Cursor**, **Windsurf**, **VSCodium**, etc.
+Works with **VS Code** and forks like **Cursor**, **Windsurf**, and **VSCodium**.
 
 ✅ **Send prompts anywhere**
 
@@ -12,7 +12,7 @@ Works with **VS Code** and forks like **Cursor**, **Windsurf**, **VSCodium**, et
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Apply responses**—one-click multi-file changes integration with easy rollback \
-✅ **Essential tools**—code completions, commit messages, checkpoints... \
+✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
 👥 **Community driven**—join our [Discord server](https://discord.com/invite/KJySXsrSX5) and get involved! \
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
 🔒️ **Total privacy**—operates 100% on your local machine
