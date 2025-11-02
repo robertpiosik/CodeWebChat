@@ -3,18 +3,6 @@
   flex-direction: column;
 }
 
-.my-presets {
-  display: flex;
-  align-items: center;
-  padding: 0 var(--padding-12px);
-  margin-bottom: var(--padding-2px);
-  gap: var(--padding-8px);
-
-  &__left {
-    color: var(--vscode-descriptionForeground);
-  }
-}
-
 .presets {
   display: flex;
   flex-direction: column;
@@ -126,5 +114,14 @@
       background-color: var(--vscode-menu-selectionBackground);
       color: var(--vscode-menu-selectionForeground);
     }
+  }
+}
+
+.footer {
+  display: flex;
+  padding: var(--padding-8px) var(--padding-12px);
+
+  > button {
+    flex: 1;
   }
 }

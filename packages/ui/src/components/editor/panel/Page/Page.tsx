@@ -5,7 +5,6 @@ import { IconButton } from '../IconButton'
 type Props = {
   title?: string
   on_back_click?: () => void
-  on_close_click?: () => void
   header_slot?: React.ReactNode
   footer_slot?: React.ReactNode
   children: React.ReactNode
@@ -27,16 +26,7 @@ export const Page: React.FC<Props> = (props) => {
             />
           )}
         </div>
-        <div className={styles.header__right}>
-          <div className={styles.header__right__slot}>{props.header_slot}</div>
-          {props.on_close_click && (
-            <IconButton
-              codicon_icon="chrome-close"
-              on_click={props.on_close_click}
-              title="Close"
-            />
-          )}
-        </div>
+        <div>{props.header_slot}</div>
       </div>
       <Scrollable>{props.children}</Scrollable>
       {props.footer_slot && (

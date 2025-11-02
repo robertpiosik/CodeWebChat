@@ -1,8 +1,8 @@
 import styles from './Configurations.module.scss'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
-import { IconButton } from '../IconButton'
 import { ReactSortable } from 'react-sortablejs'
+import { Button } from '../Button/Button'
 
 export namespace Configurations {
   export type Configuration = {
@@ -27,15 +27,6 @@ export namespace Configurations {
 export const Configurations: React.FC<Configurations.Props> = (props) => {
   return (
     <div className={styles.container}>
-      <div className={styles.heading}>
-        <div className={styles['heading__title']}>MY CONFIGURATIONS</div>
-
-        <IconButton
-          codicon_icon="edit"
-          on_click={props.on_manage_configurations}
-        />
-      </div>
-
       <div className={styles.configurations}>
         <ReactSortable
           list={props.configurations}
@@ -100,6 +91,11 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             )
           })}
         </ReactSortable>
+      </div>
+      <div className={styles.footer}>
+        <Button on_click={props.on_manage_configurations}>
+          Edit Configurations
+        </Button>
       </div>
     </div>
   )

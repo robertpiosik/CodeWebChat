@@ -5,6 +5,7 @@ import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../../common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { Button } from '../Button/Button'
 import { use_context_menu } from '../../../../hooks/use-context-menu'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -102,11 +103,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles['my-presets']}>
-        <div className={styles['my-presets__left']}>MY PRESETS</div>
-        <IconButton codicon_icon="add" on_click={props.on_create_preset} />
-      </div>
-
       <div className={styles.presets}>
         {props.presets[0]?.chatbot !== undefined && (
           <div
@@ -369,6 +365,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           </div>
         </div>
       )}
+      <div className={styles.footer}>
+        <Button on_click={props.on_create_preset}>Add New Preset</Button>
+      </div>
     </div>
   )
 }

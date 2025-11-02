@@ -1,3 +1,4 @@
+import cn from 'classnames'
 import { Scrollable } from '../../Scrollable'
 import styles from './Modal.module.scss'
 
@@ -6,12 +7,17 @@ type Props = {
   content_slot?: React.ReactNode
   footer_slot?: React.ReactNode
   content_max_height?: string
+  use_full_width?: boolean
 }
 
 export const Modal: React.FC<Props> = (props) => {
   return (
     <div className={styles.overlay}>
-      <div className={styles.container}>
+      <div
+        className={cn(styles.container, {
+          [styles['container--full-width']]: props.use_full_width
+        })}
+      >
         {props.title && <div className={styles.title}>{props.title}</div>}
 
         {props.content_slot &&

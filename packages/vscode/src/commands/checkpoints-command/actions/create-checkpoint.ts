@@ -1,5 +1,8 @@
 import * as vscode from 'vscode'
-import { CHECKPOINTS_STATE_KEY } from '../../../constants/state-keys'
+import {
+  CHECKPOINTS_STATE_KEY,
+  TEMPORARY_CHECKPOINT_STATE_KEY
+} from '../../../constants/state-keys'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
 import type { Checkpoint } from '../types'
 import { get_checkpoints } from './get-checkpoints'
@@ -22,6 +25,25 @@ export const create_checkpoint = async (
   description?: string
 ): Promise<Checkpoint | undefined> => {
   try {
+    const old_temp_checkpoint = context.workspaceState.get<Checkpoint>(
+      TEMPORARY_CHECKPOINT_STATE_KEY
+    )
+    if (old_temp_checkpoint) {
+      try {
+        const checkpoint_path = get_checkpoint_path(
+          old_temp_checkpoint.timestamp
+        )
+        await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
+          recursive: true
+        })
+      } catch (error) {
+        console.warn(`Could not delete old temporary checkpoint file: ${error}`)
+      }
+      await context.workspaceState.update(
+        TEMPORARY_CHECKPOINT_STATE_KEY,
+        undefined
+      )
+    }
     const timestamp = Date.now()
     const workspace_folders = vscode.workspace.workspaceFolders!
 

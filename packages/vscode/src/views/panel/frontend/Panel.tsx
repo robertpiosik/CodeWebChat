@@ -1,6 +1,6 @@
 import { Main } from './Main'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
-import { EditPresetForm } from '@/views/panel/frontend/EditPresetForm'
+import { EditPresetForm } from '@/views/panel/frontend/components/edit-preset-form/EditPresetForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/panel/TextButton'
 import { HOME_VIEW_TYPES } from '../types/home-view-type'
 import { Home } from './Home'
@@ -13,10 +13,11 @@ import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/e
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 import { use_panel } from './hooks/use-panel'
-import { Button } from '@ui/components/editor/panel/Button'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { LayoutContext } from './contexts/LayoutContext'
 import { Layout } from './components/Layout/Layout'
+import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
+import { EditPresetFormFooter } from './components/edit-preset-form/EditPresetFormFooter'
 
 const vscode = acquireVsCodeApi()
 
@@ -250,6 +251,12 @@ export const Panel = () => {
           <div className={styles.slot}>
             <UiPage
               on_back_click={edit_preset_back_click_handler}
+              footer_slot={
+                <EditPresetFormFooter
+                  on_discard={edit_preset_back_click_handler}
+                  on_save={edit_preset_save_handler}
+                />
+              }
               title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
               header_slot={
                 updated_preset?.chatbot && (
@@ -278,7 +285,6 @@ export const Panel = () => {
               <EditPresetForm
                 preset={updating_preset}
                 on_update={set_updated_preset}
-                on_save={edit_preset_save_handler}
                 pick_open_router_model={() => {
                   post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
                 }}
@@ -299,47 +305,38 @@ export const Panel = () => {
                 post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
               }}
               footer_slot={
-                <>
-                  <Button
-                    on_click={() => {
-                      set_response_history((prev) =>
-                        prev.filter(
-                          (i) =>
-                            i.created_at != selected_history_item_created_at
-                        )
+                <UiResponsePreviewFooter
+                  on_discard={() => {
+                    set_response_history((prev) =>
+                      prev.filter(
+                        (i) => i.created_at != selected_history_item_created_at
                       )
-                      set_selected_history_item_created_at(undefined)
-                      post_message(vscode, {
-                        command: 'EDITS_REVIEW',
-                        files: []
-                      })
-                    }}
-                    is_secondary
-                  >
-                    Discard
-                  </Button>
-                  <Button
-                    on_click={() => {
-                      const accepted_files = items_to_review.filter(
-                        (f) => 'file_path' in f && f.is_checked
-                      ) as FileInPreview[]
-                      set_response_history([])
-                      set_selected_history_item_created_at(undefined)
-                      post_message(vscode, {
-                        command: 'EDITS_REVIEW',
-                        files: accepted_files
-                      })
-                    }}
-                    disabled={
-                      items_to_review.filter(
-                        (f) => 'file_path' in f && f.is_checked
-                      ).length == 0
-                    }
-                  >
-                    Approve
-                  </Button>
-                </>
+                    )
+                    set_selected_history_item_created_at(undefined)
+                    post_message(vscode, {
+                      command: 'EDITS_REVIEW',
+                      files: []
+                    })
+                  }}
+                  on_approve={() => {
+                    const accepted_files = items_to_review.filter(
+                      (f) => 'file_path' in f && f.is_checked
+                    ) as FileInPreview[]
+                    set_response_history([])
+                    set_selected_history_item_created_at(undefined)
+                    post_message(vscode, {
+                      command: 'EDITS_REVIEW',
+                      files: accepted_files
+                    })
+                  }}
+                  is_approve_disabled={
+                    items_to_review.filter(
+                      (f) => 'file_path' in f && f.is_checked
+                    ).length == 0
+                  }
+                />
               }
+              header_slot={<></>}
             >
               <UiResponsePreview
                 items={items_to_review}

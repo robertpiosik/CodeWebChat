@@ -17,6 +17,7 @@ import {
 } from './utils/preview-handler'
 import { process_chat_response, CommandArgs } from './response-processor'
 import { Checkpoint } from '../checkpoints-command/types'
+import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 
 export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
@@ -72,7 +73,7 @@ export const apply_chat_response_command = (
         before_checkpoint = await create_checkpoint(
           workspace_provider,
           context,
-          'Before applying changes',
+          'Before response previewed',
           args?.raw_instructions
         )
 
@@ -171,6 +172,24 @@ export const apply_chat_response_command = (
           })
 
           if (changes_accepted) {
+            if (before_checkpoint) {
+              const checkpoints =
+                context.workspaceState.get<Checkpoint[]>(
+                  CHECKPOINTS_STATE_KEY,
+                  []
+                ) ?? []
+              const checkpoint_to_update = checkpoints.find(
+                (c) => c.timestamp == before_checkpoint!.timestamp
+              )
+              if (checkpoint_to_update) {
+                checkpoint_to_update.title = 'Before changes approved'
+                await context.workspaceState.update(
+                  CHECKPOINTS_STATE_KEY,
+                  checkpoints
+                )
+              }
+            }
+
             await create_checkpoint(
               workspace_provider,
               context,

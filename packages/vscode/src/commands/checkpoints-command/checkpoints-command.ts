@@ -9,6 +9,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import type { Checkpoint } from './types'
 import {
   create_checkpoint,
+  clear_all_checkpoints,
   delete_checkpoint,
   get_checkpoints,
   restore_checkpoint
@@ -116,6 +117,15 @@ export const checkpoints_command = (
               label: '$(add) New checkpoint',
               alwaysShow: true
             },
+            ...(visible_checkpoints.length > 0
+              ? [
+                  {
+                    id: 'clear-all',
+                    label: '$(trash) Clear all checkpoints',
+                    alwaysShow: true
+                  }
+                ]
+              : []),
             ...(revert_item ? [revert_item] : []),
             ...(visible_checkpoints.length > 0
               ? [
@@ -194,6 +204,25 @@ export const checkpoints_command = (
               TEMPORARY_CHECKPOINT_STATE_KEY,
               undefined
             )
+          } else if (selected.id == 'clear-all') {
+            quick_pick.hide()
+            const confirmation = await vscode.window.showWarningMessage(
+              'Are you sure you want to clear all checkpoints? This operation cannot be undone.',
+              { modal: true },
+              'Clear All'
+            )
+
+            if (confirmation == 'Clear All') {
+              await clear_all_checkpoints(context)
+              vscode.window.showInformationMessage(
+                'All checkpoints have been cleared.'
+              )
+            }
+            await context.workspaceState.update(
+              TEMPORARY_CHECKPOINT_STATE_KEY,
+              undefined
+            )
+            await show_quick_pick()
           } else if (selected.checkpoint) {
             quick_pick.hide()
             await restore_checkpoint({

@@ -23,23 +23,10 @@
     font-size: var(--font-size-14px);
     white-space: nowrap;
   }
-
-  &__right {
-    display: flex;
-
-    &__slot {
-      padding-right: var(--padding-3px);
-    }
-  }
 }
 
 .footer {
-  display: flex;
   gap: var(--padding-8px);
   padding: var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
-
-  > button {
-    flex: 1;
-  }
 }
