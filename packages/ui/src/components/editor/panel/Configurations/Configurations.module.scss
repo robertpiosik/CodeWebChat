@@ -3,19 +3,6 @@
   flex-direction: column;
 }
 
-.heading {
-  padding: 0 var(--padding-12px);
-  margin-bottom: var(--padding-2px);
-  display: flex;
-  align-items: center;
-  gap: var(--padding-8px);
-
-  &__title {
-    color: var(--vscode-descriptionForeground);
-    white-space: nowrap;
-  }
-}
-
 .missing-config {
   padding: var(--padding-2px) var(--padding-12px) 0 var(--padding-12px);
   font-weight: 500;
@@ -103,5 +90,15 @@
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+.footer {
+  display: flex;
+  padding: var(--padding-8px) var(--padding-12px);
+
+  > button {
+    width: 100%;
+    flex: 1;
   }
 }

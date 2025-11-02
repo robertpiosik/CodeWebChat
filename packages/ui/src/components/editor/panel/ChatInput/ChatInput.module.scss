@@ -1,5 +1,5 @@
 .container {
-  --padding: var(--padding-5px) var(--padding-7px);
+  --padding: var(--padding-5px) 15px var(--padding-5px) var(--padding-7px);
   position: relative;
 
   &__inner {
