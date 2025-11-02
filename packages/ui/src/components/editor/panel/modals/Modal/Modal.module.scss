@@ -68,4 +68,8 @@
   border: 1px solid var(--vscode-widget-border);
   display: flex;
   flex-direction: column;
+
+  &--full-width {
+    max-width: none;
+  }
 }

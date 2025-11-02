@@ -43,6 +43,7 @@ export const StageFilesModal: React.FC<Props> = (props) => {
     <Modal
       title="Select files to commit"
       content_max_height="calc(100vh - 150px)"
+      use_full_width={true}
       content_slot={
         <div className={styles.files}>
           <label
