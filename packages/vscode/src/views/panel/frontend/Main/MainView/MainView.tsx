@@ -210,22 +210,18 @@ export const MainView: React.FC<Props> = (props) => {
                       {item.raw_instructions || 'Response without instructions'}
                     </span>
                     <div className={styles['responses__item__right']}>
-                      {(item.lines_added > 0 || item.lines_removed > 0) && (
-                        <div className={styles['responses__item__stats']}>
-                          <span
-                            className={styles['responses__item__stats--added']}
-                          >
-                            +{item.lines_added}
-                          </span>
-                          <span
-                            className={
-                              styles['responses__item__stats--removed']
-                            }
-                          >
-                            -{item.lines_removed}
-                          </span>
-                        </div>
-                      )}
+                      <div className={styles['responses__item__stats']}>
+                        <span
+                          className={styles['responses__item__stats--added']}
+                        >
+                          +{item.lines_added}
+                        </span>
+                        <span
+                          className={styles['responses__item__stats--removed']}
+                        >
+                          -{item.lines_removed}
+                        </span>
+                      </div>
                       <span className={styles['responses__item__date']}>
                         {dayjs(item.created_at).fromNow()}
                       </span>

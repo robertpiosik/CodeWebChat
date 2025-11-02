@@ -2,15 +2,13 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import {
   create_checkpoint,
-  create_temporary_checkpoint,
-  delete_checkpoint,
-  promote_temporary_checkpoint
+  delete_checkpoint
 } from '../checkpoints-command/actions'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
-import { code_review_promise_resolve } from './utils/preview/preview'
+import { response_preview_promise_resolve } from './utils/preview/preview'
 import { get_diff_stats } from './utils/preview/diff-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {
@@ -51,7 +49,7 @@ export const apply_chat_response_command = (
         return
       }
 
-      if (code_review_promise_resolve) {
+      if (response_preview_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
           dictionary.warning_message.REVIEW_ONGOING,
           { modal: true },
@@ -59,7 +57,7 @@ export const apply_chat_response_command = (
         )
 
         if (choice == 'Switch') {
-          code_review_promise_resolve({ accepted_files: [] })
+          response_preview_promise_resolve({ accepted_files: [] })
           if (ongoing_review_cleanup_promise) {
             await ongoing_review_cleanup_promise
           }
@@ -69,10 +67,18 @@ export const apply_chat_response_command = (
         }
       }
 
-      let temp_checkpoint: Checkpoint | undefined
+      let before_checkpoint: Checkpoint | undefined
       try {
-        temp_checkpoint = await create_temporary_checkpoint(workspace_provider)
+        before_checkpoint = await create_checkpoint(
+          workspace_provider,
+          context,
+          'Before applying changes',
+          args?.raw_instructions
+        )
 
+        if (!before_checkpoint) {
+          return
+        }
         const review_data = await process_chat_response(
           args,
           chat_response,
@@ -165,24 +171,13 @@ export const apply_chat_response_command = (
           })
 
           if (changes_accepted) {
-            try {
-              if (temp_checkpoint) {
-                await promote_temporary_checkpoint({
-                  context,
-                  temp_checkpoint,
-                  title: 'Before changes approved',
-                  description: args?.raw_instructions
-                })
-                temp_checkpoint = undefined
-              }
-            } finally {
-              await create_checkpoint(
-                workspace_provider,
-                context,
-                'After changes approved',
-                args?.raw_instructions
-              )
-            }
+            await create_checkpoint(
+              workspace_provider,
+              context,
+              'After changes approved',
+              args?.raw_instructions
+            )
+            before_checkpoint = undefined
           }
         }
       } catch (err: any) {
@@ -190,10 +185,10 @@ export const apply_chat_response_command = (
           `An error occurred while applying changes: ${err.message}`
         )
       } finally {
-        if (temp_checkpoint) {
+        if (before_checkpoint) {
           await delete_checkpoint({
             context,
-            checkpoint_to_delete: temp_checkpoint
+            checkpoint_to_delete: before_checkpoint
           })
         }
       }

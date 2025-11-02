@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding-top: var(--padding-4px);
+  padding: var(--padding-4px) 0 var(--padding-8px) 0;
   gap: var(--padding-8px);
 }
 
@@ -23,10 +23,9 @@
 .instructions {
   position: relative;
   padding: var(--padding-5px) var(--padding-7px);
-  color: var(--vscode-descriptionForeground);
   border: 1px solid var(--vscode-sideBarSectionHeader-border);
   margin: 0 var(--padding-12px);
-  border-radius: var(--border-radius-5px);
+  border-radius: var(--border-radius-10px);
   word-wrap: break-word;
   overflow: hidden;
   display: -webkit-box;
@@ -48,8 +47,12 @@
   display: block;
 
   &__text {
+    color: var(--vscode-descriptionForeground);
     font-size: var(--font-size-12px);
     margin: var(--padding-6px) var(--padding-12px);
+    background: var(--vscode-list-hoverBackground);
+    padding: var(--padding-5px) var(--padding-7px);
+    border-radius: var(--border-radius-8px);
   }
 
   > div:first-child {

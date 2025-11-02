@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { CodeReviewDecision, CodeReviewResult, PreparedFile } from './types'
 
-export let code_review_promise_resolve:
+export let response_preview_promise_resolve:
   | ((decision: CodeReviewDecision) => void)
   | undefined
 
@@ -45,7 +45,7 @@ export const show_diff_with_actions = async (
   )
 
   return new Promise<CodeReviewResult>((resolve) => {
-    code_review_promise_resolve = async (decision) => {
+    response_preview_promise_resolve = async (decision) => {
       let final_content = ''
       try {
         const right_doc = await vscode.workspace.openTextDocument(right_doc_uri)
@@ -59,6 +59,6 @@ export const show_diff_with_actions = async (
       })
     }
   }).finally(() => {
-    code_review_promise_resolve = undefined
+    response_preview_promise_resolve = undefined
   })
 }

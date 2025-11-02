@@ -81,7 +81,7 @@ import { OriginalFileState } from '@/commands/apply-chat-response-command/types/
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { HOME_VIEW_TYPES, HomeViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
-import { code_review_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
+import { response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
@@ -451,8 +451,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW') {
             await handle_intelligent_update_file_in_preview(this, message)
           } else if (message.command == 'EDITS_REVIEW') {
-            if (code_review_promise_resolve) {
-              code_review_promise_resolve({ accepted_files: message.files })
+            if (response_preview_promise_resolve) {
+              response_preview_promise_resolve({
+                accepted_files: message.files
+              })
             }
           } else if (message.command == 'GET_WORKSPACE_STATE') {
             this.send_message({
