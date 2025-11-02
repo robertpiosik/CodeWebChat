@@ -1,6 +1,7 @@
 export * from './create-checkpoint'
 export * from './create-temporary-checkpoint'
 export * from './delete-checkpoint'
+export * from './clear-all-checkpoints'
 export * from './get-checkpoints'
 export * from './restore-checkpoint'
 export * from './sync-workspace-from-dir'
