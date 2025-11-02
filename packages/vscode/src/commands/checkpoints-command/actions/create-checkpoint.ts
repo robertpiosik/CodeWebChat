@@ -20,7 +20,7 @@ export const create_checkpoint = async (
   context: vscode.ExtensionContext,
   title: string = 'Created by user',
   description?: string
-): Promise<boolean> => {
+): Promise<Checkpoint | undefined> => {
   try {
     const timestamp = Date.now()
     const workspace_folders = vscode.workspace.workspaceFolders!
@@ -29,6 +29,8 @@ export const create_checkpoint = async (
       workspace_folders.map((folder) => is_git_repository(folder))
     )
     const all_folders_use_git = folder_git_statuses.every((status) => status)
+
+    let new_checkpoint: Checkpoint | undefined
 
     const create_checkpoint_task = async () => {
       await vscode.workspace.saveAll()
@@ -98,7 +100,7 @@ export const create_checkpoint = async (
         checkpoints
       )
 
-      const new_checkpoint: Checkpoint = {
+      const checkpoint_object: Checkpoint = {
         title,
         timestamp,
         description: final_description,
@@ -106,8 +108,9 @@ export const create_checkpoint = async (
         git_data: Object.keys(git_data).length > 0 ? git_data : undefined
       }
 
-      checkpoints.unshift(new_checkpoint)
+      checkpoints.unshift(checkpoint_object)
       await context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
+      new_checkpoint = checkpoint_object
     }
 
     if (all_folders_use_git) {
@@ -122,11 +125,11 @@ export const create_checkpoint = async (
         create_checkpoint_task
       )
     }
-    return true
+    return new_checkpoint
   } catch (err: any) {
     vscode.window.showErrorMessage(
       `Failed to create checkpoint: ${err.message}`
     )
-    return false
+    return undefined
   }
 }

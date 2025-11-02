@@ -40,8 +40,8 @@ export const checkpoints_command = (
         )
         return
       }
-      const success = await create_checkpoint(workspace_provider, context)
-      if (success) {
+      const checkpoint = await create_checkpoint(workspace_provider, context)
+      if (checkpoint) {
         vscode.window.showInformationMessage('Checkpoint created successfully.')
       }
     }
