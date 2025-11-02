@@ -13,7 +13,7 @@ import { close_review_diff_editors, show_diff_with_actions } from './vscode-ui'
 import { PreparedFile, ReviewableFile } from './types'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 
-export { code_review_promise_resolve } from './vscode-ui'
+export { response_preview_promise_resolve } from './vscode-ui'
 export { toggle_file_review_state } from './workspace-listener'
 
 export const preview = async (params: {

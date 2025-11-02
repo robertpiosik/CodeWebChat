@@ -117,7 +117,7 @@ export const setup_workspace_listeners = (
           .createHash('md5')
           .update(sanitized_file_path)
           .digest('hex')
-        const temp_filename = `cwc-review-${hash}.tmp`
+        const temp_filename = `cwc-${hash}.tmp`
         const temp_file_path = path.join(os.tmpdir(), temp_filename)
         const is_deleted =
           !is_new && new_content == '' && original_content != ''
@@ -194,7 +194,7 @@ export const setup_workspace_listeners = (
           .createHash('md5')
           .update(sanitized_file_path)
           .digest('hex')
-        const temp_filename = `cwc-review-${hash}.tmp`
+        const temp_filename = `cwc-${hash}.tmp`
         const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
         const reviewable_file: ReviewableFile = {
@@ -286,7 +286,7 @@ export const setup_workspace_listeners = (
         .createHash('md5')
         .update(sanitized_file_path)
         .digest('hex')
-      const temp_filename = `cwc-review-${hash}.tmp`
+      const temp_filename = `cwc-${hash}.tmp`
       const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
       const reviewable_file: ReviewableFile = {
@@ -386,7 +386,7 @@ export const setup_workspace_listeners = (
           .createHash('md5')
           .update(oldSanitized)
           .digest('hex')
-        const oldTemp = path.join(os.tmpdir(), `cwc-review-${oldHash}.tmp`)
+        const oldTemp = path.join(os.tmpdir(), `cwc-${oldHash}.tmp`)
 
         const deleted_diff_stats = get_diff_stats({
           original_content: existing.original_content,
@@ -447,7 +447,7 @@ export const setup_workspace_listeners = (
           .createHash('md5')
           .update(newSanitized)
           .digest('hex')
-        const newTemp = path.join(os.tmpdir(), `cwc-review-${newHash}.tmp`)
+        const newTemp = path.join(os.tmpdir(), `cwc-${newHash}.tmp`)
 
         const create_diff_stats = get_diff_stats({
           original_content: '',
@@ -478,7 +478,7 @@ export const setup_workspace_listeners = (
           .createHash('md5')
           .update(oldSanitized)
           .digest('hex')
-        const oldTemp = path.join(os.tmpdir(), `cwc-review-${oldHash}.tmp`)
+        const oldTemp = path.join(os.tmpdir(), `cwc-${oldHash}.tmp`)
 
         const deleted_diff_stats = get_diff_stats({
           original_content: new_content,

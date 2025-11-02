@@ -10,7 +10,7 @@ import { FileInPreview } from '@shared/types/file-in-preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
-import { code_review_promise_resolve } from './utils/preview/preview'
+import { response_preview_promise_resolve } from './utils/preview/preview'
 import { get_diff_stats } from './utils/preview/diff-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {
@@ -51,7 +51,7 @@ export const apply_chat_response_command = (
         return
       }
 
-      if (code_review_promise_resolve) {
+      if (response_preview_promise_resolve) {
         const choice = await vscode.window.showWarningMessage(
           dictionary.warning_message.REVIEW_ONGOING,
           { modal: true },
@@ -59,7 +59,7 @@ export const apply_chat_response_command = (
         )
 
         if (choice == 'Switch') {
-          code_review_promise_resolve({ accepted_files: [] })
+          response_preview_promise_resolve({ accepted_files: [] })
           if (ongoing_review_cleanup_promise) {
             await ongoing_review_cleanup_promise
           }
