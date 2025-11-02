@@ -1,6 +1,6 @@
 import { Main } from './Main'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
-import { EditPresetForm } from '@/views/panel/frontend/EditPresetForm'
+import { EditPresetForm } from '@/views/panel/frontend/components/edit-preset-form/EditPresetForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/panel/TextButton'
 import { HOME_VIEW_TYPES } from '../types/home-view-type'
 import { Home } from './Home'
@@ -17,6 +17,7 @@ import { FileInPreview } from '@shared/types/file-in-preview'
 import { LayoutContext } from './contexts/LayoutContext'
 import { Layout } from './components/Layout/Layout'
 import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
+import { EditPresetFormFooter } from './components/edit-preset-form/EditPresetFormFooter'
 
 const vscode = acquireVsCodeApi()
 
@@ -250,6 +251,12 @@ export const Panel = () => {
           <div className={styles.slot}>
             <UiPage
               on_back_click={edit_preset_back_click_handler}
+              footer_slot={
+                <EditPresetFormFooter
+                  on_discard={edit_preset_back_click_handler}
+                  on_save={edit_preset_save_handler}
+                />
+              }
               title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
               header_slot={
                 updated_preset?.chatbot && (
@@ -278,7 +285,6 @@ export const Panel = () => {
               <EditPresetForm
                 preset={updating_preset}
                 on_update={set_updated_preset}
-                on_save={edit_preset_save_handler}
                 pick_open_router_model={() => {
                   post_message(vscode, { command: 'PICK_OPEN_ROUTER_MODEL' })
                 }}
@@ -330,6 +336,7 @@ export const Panel = () => {
                   }
                 />
               }
+              header_slot={<></>}
             >
               <UiResponsePreview
                 items={items_to_review}

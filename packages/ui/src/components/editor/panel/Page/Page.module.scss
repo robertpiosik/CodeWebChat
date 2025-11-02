@@ -23,14 +23,6 @@
     font-size: var(--font-size-14px);
     white-space: nowrap;
   }
-
-  &__right {
-    display: flex;
-
-    &__slot {
-      padding-right: var(--padding-3px);
-    }
-  }
 }
 
 .footer {

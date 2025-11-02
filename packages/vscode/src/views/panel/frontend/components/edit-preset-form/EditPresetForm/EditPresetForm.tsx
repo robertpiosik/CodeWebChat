@@ -5,7 +5,6 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import TextareaAutosize from 'react-textarea-autosize'
 import { Field } from '@ui/components/editor/panel/Field'
 import { Slider } from '@ui/components/editor/panel/Slider'
-import { Button } from '@ui/components/editor/panel/Button'
 import { Checkbox } from '@ui/components/editor/common/Checkbox'
 import { Input } from '@ui/components/editor/common/Input'
 import { BackendMessage } from '@/views/panel/types/messages'
@@ -13,7 +12,6 @@ import { BackendMessage } from '@/views/panel/types/messages'
 type Props = {
   preset: Preset
   on_update: (updated_preset: Preset) => void
-  on_save: () => void
   pick_open_router_model: () => void
   pick_chatbot: (chatbot_id?: keyof typeof CHATBOTS) => void
   on_at_sign_in_affix: () => void
@@ -448,7 +446,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           />
         </Field>
       </>
-      <Button on_click={props.on_save}>Save</Button>
     </div>
   )
 }
