@@ -2,15 +2,12 @@ import { FC, useState } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
-import { Button } from '../Button'
 import { Checkbox } from '../../common/Checkbox'
 import { IconButton } from '../IconButton/IconButton'
 
 type Props = {
   items: ItemInPreview[]
   has_multiple_workspaces: boolean
-  on_discard: () => void
-  on_approve: (files: FileInPreview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
   on_go_to_file: (file: { file_path: string; workspace_name?: string }) => void
   on_intelligent_update: (file: {
@@ -27,13 +24,6 @@ type Props = {
 
 export const ResponsePreview: FC<Props> = (props) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
-
-  const handle_approve = () => {
-    const accepted_files = props.items.filter(
-      (f) => 'file_path' in f && f.is_checked
-    ) as FileInPreview[]
-    props.on_approve(accepted_files)
-  }
 
   const files_in_preview = props.items.filter(
     (i) => 'file_path' in i
@@ -194,20 +184,6 @@ export const ResponsePreview: FC<Props> = (props) => {
             )
           }
         })}
-      </div>
-      <div className={styles.footer}>
-        <Button on_click={props.on_discard} is_secondary>
-          Discard
-        </Button>
-        <Button
-          on_click={handle_approve}
-          disabled={
-            files_in_preview.filter((f) => 'file_path' in f && f.is_checked)
-              .length == 0
-          }
-        >
-          Approve
-        </Button>
       </div>
     </div>
   )

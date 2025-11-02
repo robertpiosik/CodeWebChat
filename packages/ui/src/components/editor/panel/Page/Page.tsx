@@ -7,6 +7,7 @@ type Props = {
   on_back_click?: () => void
   on_close_click?: () => void
   header_slot?: React.ReactNode
+  footer_slot?: React.ReactNode
   children: React.ReactNode
 }
 
@@ -38,6 +39,9 @@ export const Page: React.FC<Props> = (props) => {
         </div>
       </div>
       <Scrollable>{props.children}</Scrollable>
+      {props.footer_slot && (
+        <div className={styles.footer}>{props.footer_slot}</div>
+      )}
     </div>
   )
 }

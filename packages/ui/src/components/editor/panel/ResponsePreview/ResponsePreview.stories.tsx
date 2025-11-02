@@ -92,8 +92,6 @@ const InteractiveResponsePreview = (props: any) => {
       {...props}
       items={items}
       on_toggle_file={handle_toggle_file}
-      on_discard={log_action('on_undo')}
-      on_approve={log_action('on_keep')}
       on_focus_file={log_action('on_focus_file')}
       on_go_to_file={log_action('on_go_to_file')}
       on_intelligent_update={log_action('on_intelligent_update')}

@@ -48,6 +48,7 @@
   display: block;
 
   &__text {
+    font-size: var(--font-size-12px);
     margin: var(--padding-6px) var(--padding-12px);
   }
 
@@ -132,18 +133,5 @@
         color: var(--vscode-gitDecoration-deletedResourceForeground);
       }
     }
-  }
-}
-
-.footer {
-  position: sticky;
-  bottom: 0;
-  background: var(--vscode-sideBar-background);
-  display: flex;
-  gap: var(--padding-8px);
-  padding: var(--padding-12px);
-
-  > button {
-    flex: 1;
   }
 }
