@@ -207,7 +207,7 @@ export const checkpoints_command = (
           } else if (selected.id == 'clear-all') {
             quick_pick.hide()
             const confirmation = await vscode.window.showWarningMessage(
-              'Are you sure you want to clear all checkpoints? This action is irreversible.',
+              'Are you sure you want to clear all checkpoints? This operation cannot be undone.',
               { modal: true },
               'Clear All'
             )
