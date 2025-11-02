@@ -2,15 +2,12 @@ import { FC, useState } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
-import { Button } from '../Button'
 import { Checkbox } from '../../common/Checkbox'
 import { IconButton } from '../IconButton/IconButton'
 
 type Props = {
   items: ItemInPreview[]
   has_multiple_workspaces: boolean
-  on_discard: () => void
-  on_approve: (files: FileInPreview[]) => void
   on_focus_file: (file: { file_path: string; workspace_name?: string }) => void
   on_go_to_file: (file: { file_path: string; workspace_name?: string }) => void
   on_intelligent_update: (file: {
@@ -27,13 +24,6 @@ type Props = {
 
 export const ResponsePreview: FC<Props> = (props) => {
   const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
-
-  const handle_approve = () => {
-    const accepted_files = props.items.filter(
-      (f) => 'file_path' in f && f.is_checked
-    ) as FileInPreview[]
-    props.on_approve(accepted_files)
-  }
 
   const files_in_preview = props.items.filter(
     (i) => 'file_path' in i
@@ -70,9 +60,10 @@ export const ResponsePreview: FC<Props> = (props) => {
                 : ''
             return (
               <div
-                key={`${file.workspace_name ?? ''}:${file.file_path}`}
-                className={cn(styles.item, {
-                  [styles['item--selected']]: index == last_clicked_file_index
+                key={index}
+                className={cn(styles.list__file, {
+                  [styles['list__file--selected']]:
+                    index == last_clicked_file_index
                 })}
                 onClick={() => {
                   set_last_clicked_file_index(index)
@@ -88,7 +79,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                     : ''
                 }`}
               >
-                <div className={styles['item__left']}>
+                <div className={styles['list__file__left']}>
                   {files_in_preview.length > 1 && (
                     <Checkbox
                       checked={file.is_checked}
@@ -102,9 +93,10 @@ export const ResponsePreview: FC<Props> = (props) => {
                     />
                   )}
                   <div
-                    className={cn(styles['item__left__label'], {
-                      [styles['item__left__label--new']]: file.is_new,
-                      [styles['item__left__label--deleted']]: file.is_deleted
+                    className={cn(styles['list__file__left__label'], {
+                      [styles['list__file__left__label--new']]: file.is_new,
+                      [styles['list__file__left__label--deleted']]:
+                        file.is_deleted
                     })}
                   >
                     <span>
@@ -121,8 +113,8 @@ export const ResponsePreview: FC<Props> = (props) => {
                     </span>
                   </div>
                 </div>
-                <div className={styles.item__right}>
-                  <div className={styles['item__actions']}>
+                <div className={styles.list__file__right}>
+                  <div className={styles['list__file__actions']}>
                     {(file.is_fallback || file.is_replaced) && (
                       <IconButton
                         codicon_icon="sparkle"
@@ -168,11 +160,15 @@ export const ResponsePreview: FC<Props> = (props) => {
                     />
                   </div>
                   {!file.is_deleted && (
-                    <div className={styles['item__line-numbers']}>
-                      <span className={styles['item__line-numbers__added']}>
+                    <div className={styles['list__file__line-numbers']}>
+                      <span
+                        className={styles['list__file__line-numbers__added']}
+                      >
                         +{file.lines_added}
                       </span>
-                      <span className={styles['item__line-numbers__removed']}>
+                      <span
+                        className={styles['list__file__line-numbers__removed']}
+                      >
                         -{file.lines_removed}
                       </span>
                     </div>
@@ -182,26 +178,12 @@ export const ResponsePreview: FC<Props> = (props) => {
             )
           } else {
             return (
-              <div key={`text-${index}`} className={styles.textItem}>
+              <div key={index} className={styles.list__text}>
                 {item.content}
               </div>
             )
           }
         })}
-      </div>
-      <div className={styles.footer}>
-        <Button on_click={props.on_discard} is_secondary>
-          Discard
-        </Button>
-        <Button
-          on_click={handle_approve}
-          disabled={
-            files_in_preview.filter((f) => 'file_path' in f && f.is_checked)
-              .length == 0
-          }
-        >
-          Approve
-        </Button>
       </div>
     </div>
   )

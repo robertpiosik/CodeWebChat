@@ -9,6 +9,7 @@ export const Primary = () => (
     title="Lorem ipsum"
     on_back_click={() => {}}
     header_slot={'header slot'}
+    footer_slot={'footer slot'}
   >
     <div style={{ padding: 'var(--padding-12px)' }}>
       <p>

@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   padding-top: var(--padding-4px);
+  gap: var(--padding-8px);
 }
 
 .info {
@@ -24,7 +25,7 @@
   padding: var(--padding-5px) var(--padding-7px);
   color: var(--vscode-descriptionForeground);
   border: 1px solid var(--vscode-sideBarSectionHeader-border);
-  margin: 0 var(--padding-12px) var(--padding-8px) var(--padding-12px);
+  margin: 0 var(--padding-12px);
   border-radius: var(--border-radius-5px);
   word-wrap: break-word;
   overflow: hidden;
@@ -43,104 +44,94 @@
   }
 }
 
-.textItem {
-  padding: var(--padding-5px) var(--padding-12px);
-  margin: 0 var(--padding-12px) var(--padding-8px) var(--padding-12px);
-  color: var(--vscode-descriptionForeground);
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  border: 1px solid var(--vscode-sideBarSectionHeader-border);
-  border-radius: var(--border-radius-5px);
-}
-
 .list {
-  padding: 0 var(--spacing-s);
-}
+  display: block;
 
-.item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--padding-8px);
-  padding: 0 var(--padding-12px);
-  height: var(--list-item-height);
-  &:hover {
-    background-color: var(--vscode-list-hoverBackground);
-
-    .item__actions {
-      display: flex;
-    }
+  &__text {
+    font-size: var(--font-size-12px);
+    margin: var(--padding-6px) var(--padding-12px);
   }
 
-  &--selected {
-    background-color: var(--vscode-list-inactiveSelectionBackground);
-
-    &:hover {
-      background-color: var(--vscode-list-inactiveSelectionBackground);
-    }
+  > div:first-child {
+    margin-top: 0;
   }
 
-  &__left {
+  > div:last-child {
+    margin-bottom: 0;
+  }
+
+  &__file {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--padding-8px);
-    overflow: hidden;
+    padding: 0 var(--padding-12px);
+    height: var(--list-item-height);
+    &:hover {
+      background-color: var(--vscode-list-hoverBackground);
 
-    &__label {
-      flex: 1;
-      text-overflow: ellipsis;
+      .list__file__actions {
+        display: flex;
+      }
+    }
+
+    &--selected {
+      background-color: var(--vscode-list-inactiveSelectionBackground);
+
+      &:hover {
+        background-color: var(--vscode-list-inactiveSelectionBackground);
+      }
+    }
+
+    &__left {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-8px);
       overflow: hidden;
-      white-space: nowrap;
 
-      > span:last-child {
-        opacity: 0.7;
-        margin-left: 0.5em;
-        font-size: 0.9em;
+      &__label {
+        flex: 1;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        > span:last-child {
+          opacity: 0.7;
+          margin-left: 0.5em;
+          font-size: 0.9em;
+        }
+
+        &--new {
+          color: var(--vscode-gitDecoration-untrackedResourceForeground);
+        }
+
+        &--deleted {
+          text-decoration: line-through;
+          color: var(--vscode-gitDecoration-deletedResourceForeground);
+        }
       }
+    }
 
-      &--new {
-        color: var(--vscode-gitDecoration-untrackedResourceForeground);
+    &__right {
+      display: flex;
+      align-items: center;
+      gap: var(--padding-8px);
+    }
+
+    &__actions {
+      display: none;
+    }
+
+    &__line-numbers {
+      display: flex;
+      gap: 0.3em;
+
+      &__added {
+        color: var(--vscode-gitDecoration-addedResourceForeground);
       }
-
-      &--deleted {
-        text-decoration: line-through;
+      &__removed {
         color: var(--vscode-gitDecoration-deletedResourceForeground);
       }
     }
-  }
-
-  &__right {
-    display: flex;
-    align-items: center;
-    gap: var(--padding-8px);
-  }
-
-  &__actions {
-    display: none;
-  }
-
-  &__line-numbers {
-    display: flex;
-    gap: 0.3em;
-
-    &__added {
-      color: var(--vscode-gitDecoration-addedResourceForeground);
-    }
-    &__removed {
-      color: var(--vscode-gitDecoration-deletedResourceForeground);
-    }
-  }
-}
-
-.footer {
-  position: sticky;
-  bottom: 0;
-  background: var(--vscode-sideBar-background);
-  display: flex;
-  gap: var(--padding-8px);
-  padding: var(--padding-12px);
-
-  > button {
-    flex: 1;
   }
 }

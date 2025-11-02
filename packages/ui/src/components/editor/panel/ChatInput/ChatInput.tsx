@@ -49,6 +49,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     handle_select_click
   } = use_dropdown(props)
   const {
+    handle_clear,
     handle_select,
     handle_input_change,
     handle_submit,
@@ -173,6 +174,16 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
         }}
         ref={container_ref}
       >
+        {props.value && (
+          <button
+            className={cn(styles['clear-button'], 'codicon', 'codicon-close')}
+            onClick={() => {
+              handle_clear()
+              textarea_ref.current?.focus()
+            }}
+            title="Clear"
+          />
+        )}
         <div className={styles['highlight-container']} ref={highlight_ref}>
           {get_highlighted_text({
             text: props.value,

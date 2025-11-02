@@ -76,6 +76,29 @@
   }
 }
 
+.clear-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--vscode-icon-foreground);
+  opacity: var(--dimmed-opacity);
+
+  &::before {
+    font-size: 13px !important;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 .highlight-container {
   position: absolute;
   top: 0;

@@ -2,17 +2,18 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-Blazing fast AI pair programming for production-grade code. Select context as you go for pro accuracy and game-changing speed.
+Blazing fast AI pair programming for production-grade code. Select context as you go for game-changing accuracy and speed.
 
-Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, etc.
+Works with **VS Code** and forks like **Cursor**, **Windsurf**, **VSCodium**, etc.
 
-✅ **Sends prompts everywhere**
+✅ **Send prompts anywhere**
 
 - Chatbots—_ChatGPT, Claude, Gemini, AI Studio, Qwen, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
-✅ **Applies responses**—multi-file changes integration with easy rollback \
-🔋 **Batteries included**—code completions, commit messages, checkpoints... \
+✅ **Apply responses**—one-click multi-file changes integration with easy rollback \
+✅ **Essential tools**—code completions, commit messages, checkpoints... \
+👥 **Community driven**—join our [Discord server](https://discord.com/invite/KJySXsrSX5) and get involved! \
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
 🔒️ **Total privacy**—operates 100% on your local machine
 
@@ -22,6 +23,10 @@ Works with **VS Code**, and forks like **Cursor**, **Windsurf**, **VSCodium**, e
 
 ## Introduction
 
+👨‍⚖️ **Respect to chatbots' Terms of Use**
+
+Code Web Chat helps you use your favorite coding web tools like ChatGPT's canvas. The idea to initialize chatbots is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
+
 🧑‍💻 **Guide the model with context**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
@@ -30,7 +35,7 @@ Because the model is only as smart as examples it has seen in its pre-training s
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-👋 **Meet the non-agentic workflow**
+🙋 **Meet the non-agentic workflow**
 
 Select folders and files for context, enter instructions, and send message via...
 
@@ -95,11 +100,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 > [!TIP]
 > With the browser extension you can include markdown-parsed websites in context. Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_.
 
-👨‍⚖️ **With respect to Terms of Use**
-
-The automations are limited changing chatbot settings (like the selected model), entering prompt, and optionally submitting. This idea is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and is not against any of the supported chatbots' Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
-
-> [!NOTE]
+> [!IMPORTANT]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) for implementation details.
 
 ## API Tools

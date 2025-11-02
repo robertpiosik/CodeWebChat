@@ -23,6 +23,11 @@ export const checkpoints_command = (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext
 ): vscode.Disposable[] => {
+  let activeDeleteOperation: {
+    finalize: () => Promise<void>
+    timestamp: number
+  } | null = null
+
   const create_new_checkpoint_command = vscode.commands.registerCommand(
     'codeWebChat.createNewCheckpoint',
     async () => {
@@ -62,7 +67,7 @@ export const checkpoints_command = (
         quick_pick.placeholder =
           'Select a checkpoint to restore or add a new one'
 
-        let is_showing_dialog = false
+        let notification_count = 0
         let checkpoints: Checkpoint[] = []
 
         const refresh_items = async () => {
@@ -230,13 +235,13 @@ export const checkpoints_command = (
           }
 
           if (e.button.tooltip == 'Edit Description') {
-            is_showing_dialog = true
+            notification_count++
             const new_description = await vscode.window.showInputBox({
               prompt: 'Enter a description for the checkpoint',
               value: item.checkpoint.description || '',
               placeHolder: 'e.g. Before refactoring the main component'
             })
-            is_showing_dialog = false
+            notification_count--
 
             if (new_description !== undefined) {
               const checkpoint_to_update = checkpoints.find(
@@ -266,6 +271,10 @@ export const checkpoints_command = (
           }
 
           if (e.button.tooltip == 'Delete') {
+            if (activeDeleteOperation) {
+              await activeDeleteOperation.finalize()
+            }
+
             const deleted_checkpoint = item.checkpoint
             const real_index_in_state = checkpoints.findIndex(
               (c) => c.timestamp == deleted_checkpoint.timestamp
@@ -286,50 +295,79 @@ export const checkpoints_command = (
             checkpoints = updated_checkpoints
             await refresh_items()
 
-            is_showing_dialog = true
+            const currentOperation = {
+              timestamp: deleted_checkpoint.timestamp,
+              finalize: async () => {
+                try {
+                  const checkpoint_path = get_checkpoint_path(
+                    deleted_checkpoint.timestamp
+                  )
+                  await vscode.workspace.fs.delete(
+                    vscode.Uri.file(checkpoint_path),
+                    { recursive: true }
+                  )
+                } catch (error: any) {
+                  vscode.window.showWarningMessage(
+                    `Could not delete checkpoint files: ${error.message}`
+                  )
+                }
+              }
+            }
+            activeDeleteOperation = currentOperation
+
+            notification_count++
             const choice = await vscode.window.showInformationMessage(
               `Checkpoint from ${dayjs(
                 deleted_checkpoint.timestamp
               ).fromNow()} deleted.`,
               'Undo'
             )
-            is_showing_dialog = false
+            notification_count--
 
-            if (choice == 'Undo') {
-              // Restore to state and UI
-              checkpoints.splice(
-                real_index_in_state,
-                0,
-                original_checkpoint_from_state
-              )
-              await context.workspaceState.update(
-                CHECKPOINTS_STATE_KEY,
-                checkpoints
-              )
-              vscode.window.showInformationMessage('Checkpoint restored.')
-              await refresh_items()
-            } else {
-              try {
-                const checkpoint_path = get_checkpoint_path(
-                  deleted_checkpoint.timestamp
+            if (
+              activeDeleteOperation &&
+              activeDeleteOperation.timestamp === currentOperation.timestamp
+            ) {
+              if (choice == 'Undo') {
+                // Restore to state and UI
+                checkpoints.splice(
+                  real_index_in_state,
+                  0,
+                  original_checkpoint_from_state
                 )
-                await vscode.workspace.fs.delete(
-                  vscode.Uri.file(checkpoint_path),
-                  { recursive: true }
+                await context.workspaceState.update(
+                  CHECKPOINTS_STATE_KEY,
+                  checkpoints
                 )
-              } catch (error: any) {
-                vscode.window.showWarningMessage(
-                  `Could not delete checkpoint files: ${error.message}`
-                )
+                notification_count++
+                vscode.window
+                  .showInformationMessage('Checkpoint restored.')
+                  .then(() => {
+                    notification_count--
+                  })
+                await refresh_items()
+              } else {
+                await currentOperation.finalize()
               }
+              activeDeleteOperation = null
+            } else if (choice === 'Undo') {
+              notification_count++
+              vscode.window
+                .showInformationMessage(
+                  'Could not undo. Another checkpoint was deleted.'
+                )
+                .then(() => {
+                  notification_count--
+                })
             }
+
             quick_pick.show()
             return
           }
         })
 
         quick_pick.onDidHide(() => {
-          if (is_showing_dialog) {
+          if (notification_count > 0) {
             return
           }
           quick_pick.dispose()

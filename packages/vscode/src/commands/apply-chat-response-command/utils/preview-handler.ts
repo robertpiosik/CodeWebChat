@@ -28,7 +28,8 @@ export const preview_handler = async (params: {
     const review_result = await preview({
       original_states: params.original_states,
       panel_provider: params.panel_provider,
-      raw_instructions: params.raw_instructions
+      raw_instructions: params.raw_instructions,
+      chat_response: params.chat_response
     })
 
     if (review_result === null || review_result.accepted_files.length == 0) {

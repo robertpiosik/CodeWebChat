@@ -66,7 +66,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
   return (
     <Modal
       title={props.title}
-      content_max_height={props.files ? '30vh' : undefined}
+      content_max_height={props.files ? 'calc(100vh - 150px)' : undefined}
       content_slot={
         <>
           <div className={styles['elapsed-time']}>
