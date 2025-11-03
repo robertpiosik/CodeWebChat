@@ -1,6 +1,6 @@
 .text {
   color: var(--vscode-descriptionForeground);
-  font-size: var(--font-size-12px);
+
   margin: var(--padding-6px) var(--padding-12px);
   background: var(--vscode-list-hoverBackground);
   padding: var(--padding-5px) var(--padding-7px);
@@ -9,6 +9,7 @@
 
   > * {
     margin: 0;
+    font-size: var(--font-size-12px);
   }
   > * + * {
     margin-top: 0.5em;
@@ -18,6 +19,7 @@
     padding-left: 20px;
   }
   code {
+    font-size: var(--font-size-11px);
     background-color: var(--vscode-textCodeBlock-background);
     padding: 2px 4px;
     border-radius: 3px;
