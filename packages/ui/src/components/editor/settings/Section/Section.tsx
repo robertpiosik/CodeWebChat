@@ -96,7 +96,7 @@ export const Section = forwardRef<HTMLDivElement, Props>((props, ref) => {
         <div className={styles.header__title}>{props.title}</div>
         <div className={styles.header__subtitle}>{props.subtitle}</div>
       </div>
-      {props.children}
+      <div className={styles.content}>{props.children}</div>
     </div>
   )
 })

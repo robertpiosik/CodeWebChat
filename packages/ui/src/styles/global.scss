@@ -1,5 +1,6 @@
 :root {
   @include variables;
+  @include colors;
 }
 
 *,
@@ -11,7 +12,7 @@
 body {
   padding: 0;
   font-size: var(--font-size-13px);
-  color: var(--vscode-foreground);
+  color: var(--cwc-text-primary);
   user-select: none;
   line-height: 1.4;
 }

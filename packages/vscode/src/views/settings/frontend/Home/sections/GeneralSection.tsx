@@ -45,7 +45,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       <Section
         ref={ref}
         title="General"
-        subtitle="General settings for the extension."
+        subtitle="Configure your experience with CWC."
         on_stuck_change={props.on_stuck_change}
       >
         <Item

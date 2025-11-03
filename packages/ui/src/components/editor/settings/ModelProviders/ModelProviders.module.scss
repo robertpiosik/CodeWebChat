@@ -1,6 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
+  padding-top: var(--padding-12px);
 }
 
 .toolbar {
@@ -13,8 +14,6 @@
 .list {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--vscode-welcomePage-tileBorder);
-  border-radius: var(--border-radius-10px);
   overflow: hidden;
 }
 
