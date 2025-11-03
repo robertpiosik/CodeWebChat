@@ -266,41 +266,6 @@
           width: 20px;
         }
       }
-
-      &__dropdown {
-        position: absolute;
-        top: calc(100% + 4px);
-        right: 0;
-        background-color: var(--vscode-menu-background);
-        border: 1px solid var(--vscode-menu-border);
-        border-radius: var(--border-radius-5px);
-        box-shadow: 0 2px 8px var(--vscode-widget-shadow);
-        z-index: 10;
-        padding: var(--padding-4px) 0;
-        width: max-content;
-        text-align: left;
-
-        &__item {
-          display: flex;
-          justify-content: space-between;
-          gap: var(--padding-12px);
-          align-items: center;
-          padding: var(--padding-4px) var(--padding-8px);
-          cursor: pointer;
-          color: var(--vscode-menu-foreground);
-          white-space: nowrap;
-
-          &:hover {
-            background-color: var(--vscode-menu-selectionBackground);
-            color: var(--vscode-menu-selectionForeground) !important;
-          }
-
-          &__shortcut {
-            color: var(--vscode-descriptionForeground);
-            font-size: var(--font-size-12px);
-          }
-        }
-      }
     }
   }
 }

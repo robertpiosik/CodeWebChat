@@ -1,5 +1,4 @@
 import styles from './Page.module.scss'
-import { Scrollable } from '../Scrollable'
 import { IconButton } from '../IconButton'
 
 type Props = {
@@ -28,7 +27,7 @@ export const Page: React.FC<Props> = (props) => {
         </div>
         <div>{props.header_slot}</div>
       </div>
-      <Scrollable>{props.children}</Scrollable>
+      {props.children}
       {props.footer_slot && (
         <div className={styles.footer}>{props.footer_slot}</div>
       )}

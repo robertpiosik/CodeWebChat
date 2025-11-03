@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
@@ -6,6 +6,7 @@ import { Icon } from '../../common/Icon'
 import { get_highlighted_text } from './utils/get-highlighted-text'
 import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
+import { DropdownMenu } from '../../common/DropdownMenu'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff'
 
@@ -57,10 +58,18 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     is_history_enabled
   } = use_handlers(props)
 
-  const is_mac = useMemo(
-    () => navigator.platform.toUpperCase().indexOf('MAC') >= 0,
-    []
-  )
+  const is_mac = useMemo(() => {
+    if (typeof navigator == 'undefined') return false
+    const any_nav = navigator as any
+    const uach_platform: string | undefined = any_nav?.userAgentData?.platform
+    if (typeof uach_platform == 'string') {
+      return uach_platform.toLowerCase().includes('mac')
+    }
+    if (typeof navigator.userAgent == 'string') {
+      return /mac/i.test(navigator.userAgent)
+    }
+    return false
+  }, [])
   const mod_key = is_mac ? 'cmd' : 'ctrl'
 
   useEffect(() => {
@@ -109,8 +118,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   }, [
     props.is_in_code_completions_mode,
     props.chat_history,
-    is_history_enabled,
-    props.is_web_mode
+    is_history_enabled
   ])
 
   const custom_handle_key_down = (
@@ -306,42 +314,20 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                     />
                   </button>
                   {is_dropdown_open && (
-                    <div className={styles['footer__right__submit__dropdown']}>
-                      <div
-                        className={
-                          styles['footer__right__submit__dropdown__item']
+                    <DropdownMenu
+                      items={[
+                        {
+                          label: 'Select...',
+                          shortcut: `${mod_key}+${is_mac ? 'return' : 'enter'}`,
+                          on_click: handle_select_click
+                        },
+                        {
+                          label: 'Copy prompt',
+                          shortcut: `${mod_key}+${is_mac ? 'option' : 'alt'}+c`,
+                          on_click: handle_copy_click
                         }
-                        onClick={handle_select_click}
-                      >
-                        Select...
-                        <span
-                          className={
-                            styles[
-                              'footer__right__submit__dropdown__item__shortcut'
-                            ]
-                          }
-                        >
-                          {mod_key}+{is_mac ? 'return' : 'enter'}
-                        </span>
-                      </div>
-                      <div
-                        className={
-                          styles['footer__right__submit__dropdown__item']
-                        }
-                        onClick={handle_copy_click}
-                      >
-                        Copy prompt
-                        <span
-                          className={
-                            styles[
-                              'footer__right__submit__dropdown__item__shortcut'
-                            ]
-                          }
-                        >
-                          {mod_key}+{is_mac ? 'option' : 'alt'}+c
-                        </span>
-                      </div>
-                    </div>
+                      ]}
+                    />
                   )}
                 </>
               )}
