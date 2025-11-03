@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Blazing fast AI pair programming for production-grade code. Select context as you go for game-changing accuracy and speed. (CWC)",
-  "version": "1.505.0",
+  "description": "AI coding without agents. Guide the model to production-grade code with engineer-level control over context. (CWC)",
+  "version": "1.506.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
