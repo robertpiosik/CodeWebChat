@@ -25,7 +25,7 @@ export type FileProgressStatus =
   | 'thinking'
   | 'receiving'
   | 'done'
-  | 'error'
+  | 'retrying'
 
 export type FileProgress = {
   file_path: string

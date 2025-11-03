@@ -83,9 +83,6 @@
   &--done {
     color: var(--vscode-testing-iconPassed);
   }
-  &--error {
-    color: var(--vscode-testing-iconFailed);
-  }
 }
 
 .file-item__details {

@@ -9,7 +9,7 @@ export type FileProgressStatus =
   | 'thinking'
   | 'receiving'
   | 'done'
-  | 'error'
+  | 'retrying'
 
 export type FileProgress = {
   file_path: string
@@ -45,8 +45,8 @@ const get_status_text = (status: FileProgressStatus): string => {
       return 'Receiving...'
     case 'done':
       return 'Done'
-    case 'error':
-      return 'Error'
+    case 'retrying':
+      return 'Retrying...'
   }
 }
 
@@ -104,6 +104,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
                     </div>
                     <div className={styles.progress}>
                       {file.status == 'thinking' ||
+                      file.status == 'retrying' ||
                       (file.status == 'receiving' &&
                         file.progress === undefined) ? (
                         <div
@@ -113,13 +114,11 @@ export const ProgressModal: React.FC<Props> = (props) => {
                         <div
                           className={cn(styles.progress__fill, {
                             [styles['progress__fill--done']]:
-                              file.status == 'done',
-                            [styles['progress__fill--error']]:
-                              file.status == 'error'
+                              file.status == 'done'
                           })}
                           style={{
                             width: `${
-                              file.status == 'done' || file.status == 'error'
+                              file.status == 'done'
                                 ? 100
                                 : file.status == 'receiving' &&
                                   file.progress !== undefined
