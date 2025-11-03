@@ -150,18 +150,14 @@ export const checkpoints_command = (
                     ),
                     tooltip: c.starred ? 'Unstar' : 'Star'
                   },
-                  ...(c.title == 'Created by user'
-                    ? [
-                        {
-                          iconPath: new vscode.ThemeIcon('edit'),
-                          tooltip: 'Edit Description'
-                        },
-                        {
-                          iconPath: new vscode.ThemeIcon('trash'),
-                          tooltip: 'Delete'
-                        }
-                      ]
-                    : [])
+                  {
+                    iconPath: new vscode.ThemeIcon('edit'),
+                    tooltip: 'Edit Description'
+                  },
+                  {
+                    iconPath: new vscode.ThemeIcon('trash'),
+                    tooltip: 'Delete'
+                  }
                 ]
               }
             })
