@@ -4,6 +4,7 @@ import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
 import { Checkbox } from '../../common/Checkbox'
 import { IconButton } from '../IconButton/IconButton'
+import { TextItem } from './components'
 
 type Props = {
   items: ItemInPreview[]
@@ -177,11 +178,7 @@ export const ResponsePreview: FC<Props> = (props) => {
               </div>
             )
           } else {
-            return (
-              <div key={index} className={styles.list__text}>
-                {item.content}
-              </div>
-            )
+            return <TextItem key={index} content={item.content} />
           }
         })}
       </div>
