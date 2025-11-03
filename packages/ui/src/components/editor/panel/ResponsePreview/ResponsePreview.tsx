@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
@@ -29,6 +29,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
     new Set()
   )
+  const scroll_top_ref = useRef(0)
 
   const toggle_expanded_text_item = (index: number) => {
     set_expanded_text_items((prev) => {
@@ -48,7 +49,15 @@ export const ResponsePreview: FC<Props> = (props) => {
   const fallback_count = files_in_preview.filter((f) => f.is_fallback).length
 
   return (
-    <Scrollable key={expanded_text_items.size}>
+    <Scrollable
+      key={expanded_text_items.size}
+      // Used to restore scroll on key change.
+      // Key is changed to re-calculate simplebar container height.
+      initial_scroll_top={scroll_top_ref.current}
+      on_scroll={(top) => {
+        scroll_top_ref.current = top
+      }}
+    >
       <div className={styles.container}>
         {props.raw_instructions && (
           <div className={styles.instructions} title={props.raw_instructions}>
