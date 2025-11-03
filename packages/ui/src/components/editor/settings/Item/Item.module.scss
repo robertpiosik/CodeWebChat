@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--padding-8px);
+  padding: var(--padding-12px);
 
   &--below {
     flex-direction: column;
@@ -24,7 +25,7 @@
 }
 
 .description {
-  color: var(--vscode-descriptionForeground);
+  color: var(--cwc-text-secondary);
 }
 
 .slot {

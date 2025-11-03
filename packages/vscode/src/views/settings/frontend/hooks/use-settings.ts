@@ -5,7 +5,7 @@ import {
   ProviderForClient,
   FrontendMessage
 } from '@/views/settings/types/messages'
-import { post_message } from '../utils/post_message'
+import { post_message } from '../utils/post-message'
 
 export const use_settings = (vscode: any) => {
   const [providers, set_providers] = useState<ProviderForClient[] | undefined>(

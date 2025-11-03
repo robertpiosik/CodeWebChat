@@ -186,159 +186,152 @@ export const MainView: React.FC<Props> = (props) => {
         on_quick_action_click={props.on_quick_action_click}
       />
       <Scrollable scroll_to_top_key={scroll_to_top_key}>
-        <div className={styles.content}>
-          <UiSeparator height={4} />
-          {props.response_history.length > 0 && (
-            <>
-              <div className={styles.responses}>
-                {props.response_history.map((item) => (
-                  <button
-                    key={item.created_at}
-                    className={cn(styles['responses__item'], {
-                      [styles['responses__item--selected']]:
-                        props.response_history.length > 1 &&
-                        props.selected_history_item_created_at ==
-                          item.created_at
-                    })}
-                    title={item.raw_instructions}
-                    onClick={() => {
-                      props.on_response_history_item_click(item)
-                      props.on_selected_history_item_change(item.created_at)
-                    }}
-                  >
-                    <span className={styles['responses__item__instruction']}>
-                      {item.raw_instructions || 'Response without instructions'}
-                    </span>
-                    <div className={styles['responses__item__right']}>
-                      <div className={styles['responses__item__stats']}>
-                        <span
-                          className={styles['responses__item__stats--added']}
-                        >
-                          +{item.lines_added}
-                        </span>
-                        <span
-                          className={styles['responses__item__stats--removed']}
-                        >
-                          -{item.lines_removed}
-                        </span>
-                      </div>
-                      <span className={styles['responses__item__date']}>
-                        {dayjs(item.created_at).fromNow()}
+        <UiSeparator height={4} />
+        {props.response_history.length > 0 && (
+          <>
+            <div className={styles.responses}>
+              {props.response_history.map((item) => (
+                <button
+                  key={item.created_at}
+                  className={cn(styles['responses__item'], {
+                    [styles['responses__item--selected']]:
+                      props.response_history.length > 1 &&
+                      props.selected_history_item_created_at == item.created_at
+                  })}
+                  title={item.raw_instructions}
+                  onClick={() => {
+                    props.on_response_history_item_click(item)
+                    props.on_selected_history_item_change(item.created_at)
+                  }}
+                >
+                  <span className={styles['responses__item__instruction']}>
+                    {item.raw_instructions || 'Response without instructions'}
+                  </span>
+                  <div className={styles['responses__item__right']}>
+                    <div className={styles['responses__item__stats']}>
+                      <span className={styles['responses__item__stats--added']}>
+                        +{item.lines_added}
+                      </span>
+                      <span
+                        className={styles['responses__item__stats--removed']}
+                      >
+                        -{item.lines_removed}
                       </span>
                     </div>
-                  </button>
-                ))}
+                    <span className={styles['responses__item__date']}>
+                      {dayjs(item.created_at).fromNow()}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {!props.is_connected &&
+          props.home_view_type == HOME_VIEW_TYPES.WEB &&
+          !props.response_history.length && (
+            <>
+              <div className={styles['browser-extension-message']}>
+                <UiBrowserExtensionMessage />
               </div>
             </>
           )}
 
-          {!props.is_connected &&
-            props.home_view_type == HOME_VIEW_TYPES.WEB &&
-            !props.response_history.length && (
-              <>
-                <div className={styles['browser-extension-message']}>
-                  <UiBrowserExtensionMessage />
-                </div>
-              </>
-            )}
-
-          <div className={styles['chat-input-container']}>
-            <UiChatInput
-              value={props.instructions}
-              chat_history={props.chat_history}
-              on_change={handle_input_change}
-              on_submit={handle_submit}
-              on_submit_with_control={handle_submit_with_control}
-              on_copy={props.copy_to_clipboard}
-              on_search_click={props.on_search_click}
-              on_at_sign_click={props.on_at_sign_click}
-              on_hash_sign_click={props.on_hash_sign_click}
-              on_curly_braces_click={props.on_curly_braces_click}
-              is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
-              is_connected={props.is_connected}
-              is_in_code_completions_mode={is_in_code_completions_mode}
-              has_active_selection={props.has_active_selection}
-              has_active_editor={props.has_active_editor}
-              on_caret_position_change={props.on_caret_position_change}
-              caret_position_to_set={props.caret_position_to_set}
-              on_caret_position_set={props.on_caret_position_set}
-              focus_and_select_key={props.chat_input_focus_and_select_key}
-              focus_key={props.chat_input_focus_key}
-              use_last_choice_button_title={last_choice_button_title}
-              show_edit_format_selector={show_edit_format_selector}
-              edit_format={
-                props.home_view_type == HOME_VIEW_TYPES.WEB
-                  ? props.chat_edit_format
-                  : props.api_edit_format
-              }
-              on_edit_format_change={
-                props.home_view_type == HOME_VIEW_TYPES.WEB
-                  ? props.on_chat_edit_format_change
-                  : props.on_api_edit_format_change
-              }
-              edit_format_instructions={props.edit_format_instructions}
-            />
-            <UiContextUtilisation
-              current_context_size={props.token_count}
-              context_size_warning_threshold={
-                props.context_size_warning_threshold
-              }
-            />
-          </div>
-
-          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
-            <>
-              <UiSeparator height={8} />
-              <UiPresets
-                web_mode={props.web_mode}
-                is_connected={props.is_connected}
-                has_instructions={!!props.instructions}
-                has_context={props.token_count > 0}
-                is_in_code_completions_mode={
-                  props.web_mode == 'code-completions'
-                }
-                presets={props.presets}
-                on_create_preset={props.on_create_preset}
-                on_preset_click={(preset_name, without_submission) =>
-                  props.initialize_chats({
-                    preset_name,
-                    show_quick_pick: false,
-                    without_submission
-                  })
-                }
-                on_group_click={(group_name, without_submission) =>
-                  props.initialize_chats({ group_name, without_submission })
-                }
-                on_preset_copy={props.copy_to_clipboard}
-                on_preset_edit={props.on_preset_edit}
-                on_presets_reorder={props.on_presets_reorder}
-                on_preset_duplicate={props.on_preset_duplicate}
-                on_preset_delete={props.on_preset_delete}
-                on_toggle_selected_preset={props.on_toggle_selected_preset}
-                on_toggle_group_collapsed={props.on_toggle_group_collapsed}
-                selected_preset_name={props.selected_preset_or_group_name}
-              />
-            </>
-          )}
-
-          {props.home_view_type == HOME_VIEW_TYPES.API && (
-            <>
-              <UiSeparator height={8} />
-              <UiConfigurations
-                api_mode={props.api_mode}
-                configurations={props.configurations.map((c) => ({
-                  ...c,
-                  provider: c.provider_name,
-                  cache_enabled: c.instructions_placement == 'below-only'
-                }))}
-                on_configuration_click={props.on_configuration_click}
-                on_reorder={props.on_configurations_reorder}
-                selected_configuration_id={props.selected_configuration_id}
-                on_manage_configurations={props.on_manage_configurations}
-              />
-            </>
-          )}
+        <div className={styles['chat-input-container']}>
+          <UiChatInput
+            value={props.instructions}
+            chat_history={props.chat_history}
+            on_change={handle_input_change}
+            on_submit={handle_submit}
+            on_submit_with_control={handle_submit_with_control}
+            on_copy={props.copy_to_clipboard}
+            on_search_click={props.on_search_click}
+            on_at_sign_click={props.on_at_sign_click}
+            on_hash_sign_click={props.on_hash_sign_click}
+            on_curly_braces_click={props.on_curly_braces_click}
+            is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
+            is_connected={props.is_connected}
+            is_in_code_completions_mode={is_in_code_completions_mode}
+            has_active_selection={props.has_active_selection}
+            has_active_editor={props.has_active_editor}
+            on_caret_position_change={props.on_caret_position_change}
+            caret_position_to_set={props.caret_position_to_set}
+            on_caret_position_set={props.on_caret_position_set}
+            focus_and_select_key={props.chat_input_focus_and_select_key}
+            focus_key={props.chat_input_focus_key}
+            use_last_choice_button_title={last_choice_button_title}
+            show_edit_format_selector={show_edit_format_selector}
+            edit_format={
+              props.home_view_type == HOME_VIEW_TYPES.WEB
+                ? props.chat_edit_format
+                : props.api_edit_format
+            }
+            on_edit_format_change={
+              props.home_view_type == HOME_VIEW_TYPES.WEB
+                ? props.on_chat_edit_format_change
+                : props.on_api_edit_format_change
+            }
+            edit_format_instructions={props.edit_format_instructions}
+          />
+          <UiContextUtilisation
+            current_context_size={props.token_count}
+            context_size_warning_threshold={
+              props.context_size_warning_threshold
+            }
+          />
         </div>
+
+        {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+          <>
+            <UiSeparator height={8} />
+            <UiPresets
+              web_mode={props.web_mode}
+              is_connected={props.is_connected}
+              has_instructions={!!props.instructions}
+              has_context={props.token_count > 0}
+              is_in_code_completions_mode={props.web_mode == 'code-completions'}
+              presets={props.presets}
+              on_create_preset={props.on_create_preset}
+              on_preset_click={(preset_name, without_submission) =>
+                props.initialize_chats({
+                  preset_name,
+                  show_quick_pick: false,
+                  without_submission
+                })
+              }
+              on_group_click={(group_name, without_submission) =>
+                props.initialize_chats({ group_name, without_submission })
+              }
+              on_preset_copy={props.copy_to_clipboard}
+              on_preset_edit={props.on_preset_edit}
+              on_presets_reorder={props.on_presets_reorder}
+              on_preset_duplicate={props.on_preset_duplicate}
+              on_preset_delete={props.on_preset_delete}
+              on_toggle_selected_preset={props.on_toggle_selected_preset}
+              on_toggle_group_collapsed={props.on_toggle_group_collapsed}
+              selected_preset_name={props.selected_preset_or_group_name}
+            />
+          </>
+        )}
+
+        {props.home_view_type == HOME_VIEW_TYPES.API && (
+          <>
+            <UiSeparator height={8} />
+            <UiConfigurations
+              api_mode={props.api_mode}
+              configurations={props.configurations.map((c) => ({
+                ...c,
+                provider: c.provider_name,
+                cache_enabled: c.instructions_placement == 'below-only'
+              }))}
+              on_configuration_click={props.on_configuration_click}
+              on_reorder={props.on_configurations_reorder}
+              selected_configuration_id={props.selected_configuration_id}
+              on_manage_configurations={props.on_manage_configurations}
+            />
+          </>
+        )}
       </Scrollable>
     </>
   )

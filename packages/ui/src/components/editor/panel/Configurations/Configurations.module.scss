@@ -95,10 +95,10 @@
 
 .footer {
   display: flex;
-  padding: var(--padding-8px) var(--padding-12px);
+  padding: var(--padding-8px) var(--padding-12px) var(--padding-12px)
+    var(--padding-12px);
 
   > button {
-    width: 100%;
     flex: 1;
   }
 }
