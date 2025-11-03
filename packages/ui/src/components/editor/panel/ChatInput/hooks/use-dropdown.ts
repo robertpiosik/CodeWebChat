@@ -37,14 +37,12 @@ export const use_dropdown = ({
     }
   }, [])
 
-  const handle_copy_click = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handle_copy_click = () => {
     on_copy()
     close_dropdown()
   }
 
-  const handle_select_click = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handle_select_click = () => {
     on_submit_with_control()
     close_dropdown()
   }
