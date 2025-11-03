@@ -1,0 +1,48 @@
+.text {
+  color: var(--vscode-descriptionForeground);
+  font-size: var(--font-size-12px);
+  margin: var(--padding-6px) var(--padding-12px);
+  background: var(--vscode-list-hoverBackground);
+  padding: var(--padding-5px) var(--padding-7px);
+  border-radius: var(--border-radius-8px);
+  word-wrap: break-word;
+
+  > * {
+    margin: 0;
+  }
+  > * + * {
+    margin-top: 0.5em;
+  }
+  ul,
+  ol {
+    padding-left: 20px;
+  }
+  code {
+    background-color: var(--vscode-textCodeBlock-background);
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+
+  &--collapsed {
+    max-height: 50px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &--overflowing {
+    cursor: pointer;
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--vscode-list-hoverBackground)
+      );
+    }
+  }
+}

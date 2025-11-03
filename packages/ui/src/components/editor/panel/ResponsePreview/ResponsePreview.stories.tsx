@@ -138,7 +138,8 @@ export const WithText = () => (
       ...base_files,
       {
         type: 'text',
-        content: 'Another text item explaining something.'
+        content:
+          'Another text item explaining something with **markdown**.\n\n*   List item 1\n*   List item 2\n\n`some code here`'
       },
       ...files_using_fallbacks
     ]}

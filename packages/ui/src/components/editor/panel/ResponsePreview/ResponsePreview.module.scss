@@ -46,16 +46,6 @@
 .list {
   display: block;
 
-  &__text {
-    color: var(--vscode-descriptionForeground);
-    font-size: var(--font-size-12px);
-    margin: var(--padding-6px) var(--padding-12px);
-    background: var(--vscode-list-hoverBackground);
-    padding: var(--padding-5px) var(--padding-7px);
-    border-radius: var(--border-radius-8px);
-    word-wrap: break-word;
-  }
-
   > div:first-child {
     margin-top: 0;
   }
