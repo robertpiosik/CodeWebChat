@@ -30,8 +30,32 @@ export const ResponsePreview: FC<Props> = (props) => {
     new Set()
   )
   const scroll_top_ref = useRef(0)
+  const scrollable_ref = useRef<any>(null)
 
-  const toggle_expanded_text_item = (index: number) => {
+  const toggle_expanded_text_item = (
+    index: number,
+    element: HTMLDivElement
+  ) => {
+    const scrollable_instance = scrollable_ref.current
+    if (scrollable_instance) {
+      const scroll_container = scrollable_instance.getScrollElement()
+      if (scroll_container) {
+        const scroll_container_rect = scroll_container.getBoundingClientRect()
+        const element_rect = element.getBoundingClientRect()
+
+        if (element_rect.top < scroll_container_rect.top) {
+          // Element's top edge is above the scrollable viewport's top edge.
+          // Restore scroll position to the distance of this top edge to the top.
+          const element_position_in_scrollable_content =
+            scroll_container.scrollTop +
+            element_rect.top -
+            scroll_container_rect.top -
+            4
+          scroll_top_ref.current = element_position_in_scrollable_content
+        }
+      }
+    }
+
     set_expanded_text_items((prev) => {
       const new_set = new Set(prev)
       if (new_set.has(index)) {
@@ -50,6 +74,7 @@ export const ResponsePreview: FC<Props> = (props) => {
 
   return (
     <Scrollable
+      ref={scrollable_ref}
       key={expanded_text_items.size}
       // Used to restore scroll on key change.
       // Key is changed to re-calculate simplebar container height.
@@ -212,7 +237,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                   key={index}
                   content={item.content}
                   is_expanded={expanded_text_items.has(index)}
-                  on_toggle={() => toggle_expanded_text_item(index)}
+                  on_toggle={(element) =>
+                    toggle_expanded_text_item(index, element)
+                  }
                 />
               )
             }

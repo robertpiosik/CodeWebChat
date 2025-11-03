@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, ReactNode } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+  forwardRef,
+  useImperativeHandle
+} from 'react'
 import styles from './Scrollable.module.scss'
 import SimpleBar from 'simplebar-react'
 import cn from 'classnames'
@@ -11,9 +18,11 @@ type Props = {
   on_scroll?: (top: number) => void
 }
 
-export const Scrollable: React.FC<Props> = (props) => {
+export const Scrollable = forwardRef<any, Props>((props, ref) => {
   const [has_top_shadow, set_has_top_shadow] = useState(false)
   const simplebar_ref = useRef<any>(null)
+
+  useImperativeHandle(ref, () => simplebar_ref.current)
 
   useEffect(() => {
     if (props.scroll_to_top_key === undefined) return
@@ -87,4 +96,5 @@ export const Scrollable: React.FC<Props> = (props) => {
       </SimpleBar>
     </div>
   )
-}
+})
+Scrollable.displayName = 'Scrollable'
