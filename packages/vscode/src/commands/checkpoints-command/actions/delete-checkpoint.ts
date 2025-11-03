@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { CHECKPOINTS_STATE_KEY } from '../../../constants/state-keys'
 import type { Checkpoint } from '../types'
 import { get_checkpoint_path } from '../utils'
+import { Logger } from '@shared/utils/logger'
 
 export const delete_checkpoint = async (params: {
   context: vscode.ExtensionContext
@@ -28,6 +29,10 @@ export const delete_checkpoint = async (params: {
       recursive: true
     })
   } catch (error) {
-    console.warn(`Could not delete checkpoint file: ${error}`)
+    Logger.warn({
+      function_name: 'delete_checkpoint',
+      message: 'Could not delete checkpoint file',
+      data: error
+    })
   }
 }

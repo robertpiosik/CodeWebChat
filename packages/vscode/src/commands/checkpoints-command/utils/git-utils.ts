@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import * as path from 'path'
-
+import { Logger } from '@shared/utils/logger'
 export interface GitInfo {
   branch: string
   commit_hash: string
@@ -85,14 +85,22 @@ export const get_git_diff = async (
           // The diff output is in stdout of the error object
           untracked_diff += err.stdout.toString()
         } else {
-          console.warn(`Could not create diff for untracked file: ${file}`, err)
+          Logger.warn({
+            function_name: 'get_git_diff',
+            message: `Could not create diff for untracked file: ${file}`,
+            data: err
+          })
         }
       }
     }
 
     return diff + untracked_diff
   } catch (error) {
-    console.error('Error getting git diff:', error)
+    Logger.error({
+      function_name: 'get_git_diff',
+      message: 'Error getting git diff',
+      data: error
+    })
     return null
   }
 }
@@ -126,7 +134,11 @@ export const apply_git_diff = async (
           try {
             execSync(`git checkout ${target_branch}`, { cwd, stdio: 'pipe' })
           } catch (err) {
-            console.warn(`Could not checkout branch ${target_branch}`)
+            Logger.warn({
+              function_name: 'apply_git_diff',
+              message: `Could not checkout branch ${target_branch}`,
+              data: err
+            })
           }
         }
 
@@ -178,7 +190,11 @@ export const apply_git_diff = async (
 
     return true
   } catch (error) {
-    console.error('Error applying git diff:', error)
+    Logger.error({
+      function_name: 'apply_git_diff',
+      message: 'Error applying git diff',
+      data: error
+    })
     return false
   }
 }

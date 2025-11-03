@@ -51,11 +51,11 @@ export const Footer: React.FC = () => {
   return (
     <>
       <div className={styles.footer}>
-        <div className={styles.footer__left}>
+        <div>
           <a
             className={cn(
-              styles.footer__left__button,
-              styles['footer__left__button--buy-me-a-coffee']
+              styles['footer__icon-button'],
+              styles['footer__icon-button--buy-me-a-coffee']
             )}
             href="https://buymeacoffee.com/robertpiosik"
             title="Support author"
@@ -66,8 +66,8 @@ export const Footer: React.FC = () => {
           </a>
           <a
             className={cn(
-              styles.footer__left__button,
-              styles['footer__left__button--discord']
+              styles['footer__icon-button'],
+              styles['footer__icon-button--discord']
             )}
             href="https://discord.gg/KJySXsrSX5"
             title="Join our Discord server!"
@@ -76,12 +76,12 @@ export const Footer: React.FC = () => {
           </a>
         </div>
 
-        <div className={styles.footer__right}>
+        <div>
           {is_apply_visible && (
             <button
               className={cn(
-                styles.footer__right__button,
-                styles['footer__right__button--outlined']
+                styles['footer__action-button'],
+                styles['footer__action-button--outlined']
               )}
               onClick={handle_apply_click}
               title={'Integrate copied chat response or a single code block'}
@@ -93,8 +93,8 @@ export const Footer: React.FC = () => {
           {is_undo_visible && (
             <button
               className={cn(
-                styles.footer__right__button,
-                styles['footer__right__button--outlined']
+                styles['footer__action-button'],
+                styles['footer__action-button--outlined']
               )}
               onClick={on_undo_click}
               title={
@@ -107,8 +107,8 @@ export const Footer: React.FC = () => {
           )}
           <button
             className={cn(
-              styles.footer__right__button,
-              styles['footer__right__button--outlined']
+              styles['footer__action-button'],
+              styles['footer__action-button--outlined']
             )}
             onClick={handle_commit_click}
             title={

@@ -69,10 +69,11 @@ export async function resolve_glob_patterns(
           }
         })
       } catch (error) {
-        console.warn(
-          `Failed to resolve glob pattern "${normalized_pattern}":`,
-          error
-        )
+        Logger.warn({
+          function_name: 'resolve_glob_patterns',
+          message: `Failed to resolve glob pattern "${normalized_pattern}"`,
+          data: error
+        })
       }
     }
 
@@ -127,9 +128,10 @@ async function apply_saved_context(
       if (root) {
         resolved_path_part = path.join(root, relative_path)
       } else {
-        console.warn(
-          `Unknown workspace prefix "${prefix}" in path "${path_part}". Treating as relative to current workspace root.`
-        )
+        Logger.warn({
+          function_name: 'apply_saved_context',
+          message: `Unknown workspace prefix "${prefix}" in path "${path_part}". Treating as relative to current workspace root.`
+        })
         resolved_path_part = path.join(workspace_root, relative_path)
       }
     } else {
@@ -305,7 +307,11 @@ async function load_and_merge_file_contexts(): Promise<{
         }
       }
     } catch (error: any) {
-      console.error(`Error reading contexts file from ${folder.name}:`, error)
+      Logger.error({
+        function_name: 'load_and_merge_file_contexts',
+        message: `Error reading contexts file from ${folder.name}`,
+        data: error
+      })
     }
   }
 
@@ -665,10 +671,11 @@ export function apply_context_command(
                               error.message
                             )
                           )
-                          console.error(
-                            'Error updating context name in file:',
-                            error
-                          )
+                          Logger.error({
+                            function_name: 'apply_context_command',
+                            message: 'Error updating context name in file',
+                            data: error
+                          })
                           success = false
                           break
                         }
@@ -902,10 +909,11 @@ export function apply_context_command(
                 selected.label
               )
             )
-            console.error(
-              'Could not find selected context after potential edits:',
-              selected.label
-            )
+            Logger.error({
+              function_name: 'apply_context_command',
+              message: 'Could not find selected context after potential edits',
+              data: selected.label
+            })
             return
           }
 
@@ -928,7 +936,11 @@ export function apply_context_command(
               error.message
             )
           )
-          console.error('Error selecting saved context:', error)
+          Logger.error({
+            function_name: 'apply_context_command',
+            message: 'Error selecting saved context',
+            data: error
+          })
         }
       }
     }

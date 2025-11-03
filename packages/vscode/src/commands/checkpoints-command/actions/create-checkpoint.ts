@@ -17,6 +17,7 @@ import {
   is_git_repository
 } from '../utils/git-utils'
 import * as path from 'path'
+import { Logger } from '@shared/utils/logger'
 
 export const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
@@ -37,7 +38,11 @@ export const create_checkpoint = async (
           recursive: true
         })
       } catch (error) {
-        console.warn(`Could not delete old temporary checkpoint file: ${error}`)
+        Logger.warn({
+          function_name: 'create_checkpoint',
+          message: 'Could not delete old temporary checkpoint file',
+          data: error
+        })
       }
       await context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -88,9 +93,28 @@ export const create_checkpoint = async (
               Buffer.from(diff, 'utf8')
             )
           } else {
-            throw new Error(
-              `Failed to get git information for repository in ${folder.name}.`
-            )
+            Logger.warn({
+              function_name: 'create_checkpoint',
+              message: `Failed to get git information for repository in ${folder.name}. Falling back to file copy.`
+            })
+            const dest_folder_path =
+              workspace_folders.length > 1
+                ? path.join(checkpoint_dir_path, folder.name)
+                : checkpoint_dir_path
+            const dest_folder_uri = vscode.Uri.file(dest_folder_path)
+            if (workspace_folders.length > 1) {
+              await vscode.workspace.fs.createDirectory(dest_folder_uri)
+            }
+
+            const entries = await vscode.workspace.fs.readDirectory(folder.uri)
+            for (const [name] of entries) {
+              await copy_optimised_recursively(
+                vscode.Uri.joinPath(folder.uri, name),
+                vscode.Uri.joinPath(dest_folder_uri, name),
+                folder.uri.fsPath,
+                workspace_provider
+              )
+            }
           }
         } else {
           const dest_folder_path =
