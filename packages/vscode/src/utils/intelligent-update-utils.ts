@@ -204,7 +204,7 @@ export const process_file = async (params: {
   cancel_token?: CancelToken
   on_chunk?: (tokens_per_second: number, total_tokens: number) => void
   on_thinking_chunk?: (text: string) => void
-}): Promise<string | null> => {
+}): Promise<string> => {
   Logger.info({
     function_name: 'process_file',
     message: 'start',
@@ -228,62 +228,62 @@ export const process_file = async (params: {
 
   apply_reasoning_effort(body, params.provider, params.reasoning_effort)
 
-  try {
-    const result = await make_api_request({
-      endpoint_url: params.endpoint_url,
-      api_key: params.api_key,
-      body,
-      cancellation_token: params.cancel_token,
-      on_chunk: params.on_chunk,
-      on_thinking_chunk: params.on_thinking_chunk
-    })
-
-    const refactored_content = result?.response
-    if (!refactored_content) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.APPLYING_CHANGES_FAILED_EMPTY_RESPONSE(
-          params.file_path
-        )
-      )
-      Logger.error({
-        function_name: 'process_file',
-        message: 'API request returned empty response',
-        data: params.file_path
+  let attempt = 0
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    attempt++
+    try {
+      const result = await make_api_request({
+        endpoint_url: params.endpoint_url,
+        api_key: params.api_key,
+        body,
+        cancellation_token: params.cancel_token,
+        on_chunk: params.on_chunk,
+        on_thinking_chunk: params.on_thinking_chunk
       })
-      return null
-    }
 
-    const cleaned_content = cleanup_api_response({
-      content: refactored_content
-    })
-    Logger.info({
-      function_name: 'process_file',
-      message: 'API response received and cleaned',
-      data: {
-        file_path: params.file_path,
-        response_length: cleaned_content?.length
+      const refactored_content = result?.response
+      if (!refactored_content) {
+        Logger.error({
+          function_name: 'process_file',
+          message: 'API request returned empty response',
+          data: { file_path: params.file_path, attempt }
+        })
+        throw new Error('API request returned empty response')
       }
-    })
-    return cleaned_content
-  } catch (error: any) {
-    if (axios.isCancel(error)) {
+
+      const cleaned_content = cleanup_api_response({
+        content: refactored_content
+      })
       Logger.info({
         function_name: 'process_file',
-        message: 'Request cancelled',
-        data: params.file_path
+        message: 'API response received and cleaned',
+        data: {
+          file_path: params.file_path,
+          response_length: cleaned_content?.length
+        }
       })
-      throw error
-    }
+      return cleaned_content
+    } catch (error: any) {
+      if (axios.isCancel(error)) {
+        Logger.info({
+          function_name: 'process_file',
+          message: 'Request cancelled',
+          data: params.file_path
+        })
+        throw error
+      }
 
-    Logger.error({
-      function_name: 'process_file',
-      message: 'Refactoring error',
-      data: { error, file_path: params.file_path }
-    })
-    console.error(`Refactoring error for ${params.file_path}:`, error)
-    vscode.window.showErrorMessage(
-      dictionary.error_message.ERROR_DURING_REFACTORING(params.file_path)
-    )
-    return null
+      Logger.error({
+        function_name: 'process_file',
+        message: `Refactoring error (attempt ${attempt})`,
+        data: { error, file_path: params.file_path }
+      })
+      console.error(
+        `Refactoring error for ${params.file_path} (attempt ${attempt}):`,
+        error
+      )
+      await new Promise((resolve) => setTimeout(resolve, 5000))
+    }
   }
 }

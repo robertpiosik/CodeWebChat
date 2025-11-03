@@ -318,11 +318,6 @@ export const handle_intelligent_update = async (params: {
             }
           })
 
-          if (updated_content_result == null) {
-            cancel_token_source.token.throwIfRequested()
-            throw new Error(`Failed to apply changes to ${file.file_path}`)
-          }
-
           if (file_progress_index != -1) {
             file_progress_list[file_progress_index].status = 'done'
             file_progress_list[file_progress_index].progress = 100

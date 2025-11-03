@@ -24,10 +24,15 @@ export const TextItem: FC<Props> = ({ content }) => {
     <div
       ref={ref}
       className={cn(styles.text, {
+        [styles['text--expandable']]: is_expanded || is_overflowing,
         [styles['text--collapsed']]: !is_expanded,
         [styles['text--overflowing']]: !is_expanded && is_overflowing
       })}
-      onClick={is_overflowing ? () => set_is_expanded(true) : undefined}
+      onClick={
+        is_overflowing || is_expanded
+          ? () => set_is_expanded((prev) => !prev)
+          : undefined
+      }
     >
       <ReactMarkdown>{content}</ReactMarkdown>
     </div>
