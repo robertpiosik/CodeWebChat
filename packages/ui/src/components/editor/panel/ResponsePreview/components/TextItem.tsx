@@ -5,10 +5,11 @@ import styles from './TextItem.module.scss'
 
 type Props = {
   content: string
+  is_expanded: boolean
+  on_toggle: () => void
 }
 
-export const TextItem: FC<Props> = ({ content }) => {
-  const [is_expanded, set_is_expanded] = useState(false)
+export const TextItem: FC<Props> = ({ content, is_expanded, on_toggle }) => {
   const ref = useRef<HTMLDivElement>(null)
   const [is_overflowing, set_is_overflowing] = useState(false)
 
@@ -18,7 +19,7 @@ export const TextItem: FC<Props> = ({ content }) => {
     } else {
       set_is_overflowing(false)
     }
-  }, [content, is_expanded])
+  }, [is_expanded, content])
 
   return (
     <div
@@ -28,13 +29,9 @@ export const TextItem: FC<Props> = ({ content }) => {
         [styles['text--collapsed']]: !is_expanded,
         [styles['text--overflowing']]: !is_expanded && is_overflowing
       })}
-      onClick={
-        is_overflowing || is_expanded
-          ? () => set_is_expanded((prev) => !prev)
-          : undefined
-      }
+      onClick={is_overflowing || is_expanded ? on_toggle : undefined}
     >
-      <ReactMarkdown>{content}</ReactMarkdown>
+      <ReactMarkdown disallowedElements={['hr']}>{content}</ReactMarkdown>
     </div>
   )
 }
