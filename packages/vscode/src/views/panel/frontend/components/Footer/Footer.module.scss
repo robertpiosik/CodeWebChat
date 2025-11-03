@@ -1,4 +1,5 @@
 .footer {
+  --button-size: 24px;
   position: relative;
   z-index: -1; // Makes context menu of a preset appear above
   display: flex;
@@ -7,64 +8,59 @@
   padding: var(--padding-8px) var(--padding-12px);
   border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
 
-  &__left {
+  > div {
     display: flex;
-    gap: var(--padding-4px);
+    gap: var(--padding-6px);
+  }
 
-    &__button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 24px;
-      width: 24px;
-      border-radius: var(--border-radius-4px);
+  &__icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--button-size);
+    width: var(--button-size);
+    border-radius: var(--border-radius-4px);
+
+    > svg {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+    }
+
+    &--buy-me-a-coffee {
+      background-color: #f7d600;
 
       > svg {
-        flex-shrink: 0;
-        width: 16px;
-        height: 16px;
+        fill: black;
       }
+    }
 
-      &--buy-me-a-coffee {
-        background-color: #f7d600;
+    &--discord {
+      background-color: #5765f2;
 
-        > svg {
-          fill: black;
-        }
-      }
-
-      &--discord {
-        background-color: #5765f2;
-
-        > svg {
-          fill: white;
-        }
+      > svg {
+        fill: white;
       }
     }
   }
 
-  &__right {
+  &__action-button {
     display: flex;
+    align-items: center;
+    flex-shrink: 0;
     gap: var(--padding-4px);
+    height: var(--button-size);
+    padding: 0 var(--padding-5px);
+    border-radius: var(--border-radius-4px);
 
-    &__button {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-      gap: var(--padding-4px);
-      height: 24px;
-      padding: 0 var(--padding-5px);
-      border-radius: var(--border-radius-4px);
+    &:disabled {
+      opacity: var(--disabled-opacity);
+    }
 
-      &:disabled {
-        opacity: var(--disabled-opacity);
-      }
-
-      &--outlined {
-        border: 1px solid var(--vscode-commandCenter-inactiveBorder);
-        &:hover:not(:disabled) {
-          border-color: var(--vscode-commandCenter-activeBorder);
-        }
+    &--outlined {
+      border: 1px solid var(--vscode-commandCenter-inactiveBorder);
+      &:hover:not(:disabled) {
+        border-color: var(--vscode-commandCenter-activeBorder);
       }
     }
   }

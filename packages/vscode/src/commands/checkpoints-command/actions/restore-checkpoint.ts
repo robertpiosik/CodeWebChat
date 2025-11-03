@@ -8,6 +8,7 @@ import { sync_workspace_from_dir } from './sync-workspace-from-dir'
 import { get_checkpoint_path, sync_directory } from '../utils'
 import { apply_git_diff } from '../utils/git-utils'
 import * as path from 'path'
+import { Logger } from '@shared/utils/logger'
 
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
@@ -30,9 +31,11 @@ export const restore_checkpoint = async (params: {
             recursive: true
           })
         } catch (error) {
-          console.warn(
-            `Could not delete old temporary checkpoint file: ${error}`
-          )
+          Logger.warn({
+            function_name: 'restore_checkpoint',
+            message: 'Could not delete old temporary checkpoint file',
+            data: error
+          })
         }
       }
 
@@ -99,7 +102,11 @@ export const restore_checkpoint = async (params: {
                   throw new Error(`Failed to apply git diff for ${folder_name}`)
                 }
               } catch (err) {
-                console.error(`Error restoring git checkpoint: ${err}`)
+                Logger.error({
+                  function_name: 'restore_checkpoint',
+                  message: 'Error restoring git checkpoint',
+                  data: err
+                })
                 throw err
               }
             } else {
