@@ -1,6 +1,6 @@
 .menu {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + var(--padding-4px));
   right: 0;
   background-color: var(--vscode-menu-background);
   border: 1px solid var(--vscode-menu-border);
@@ -10,20 +10,23 @@
   padding: var(--padding-4px);
   width: max-content;
   text-align: left;
+  min-width: 100%;
 }
 
 .item {
   display: flex;
   justify-content: space-between;
-  gap: var(--padding-12px);
   align-items: center;
-  padding: var(--padding-4px) var(--padding-8px);
+  gap: var(--padding-12px);
+  padding: 0 var(--padding-6px);
+  height: 24px;
   cursor: pointer;
   color: var(--vscode-menu-foreground);
   white-space: nowrap;
   border-radius: var(--border-radius-4px);
 
-  &:hover {
+  &:hover,
+  &[data-selected='true'] {
     background-color: var(--vscode-menu-selectionBackground);
     & > span {
       color: var(--vscode-menu-selectionForeground);

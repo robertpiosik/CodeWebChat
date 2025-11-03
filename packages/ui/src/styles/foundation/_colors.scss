@@ -168,74 +168,39 @@
     var(--vscode-charts-blue) 12%,
     transparent
   );
-  --cwc-stroke-primary: color-mix(
+  --cwc-border-color: color-mix(
     in srgb,
-    var(--vscode-foreground) 16%,
+    var(--vscode-foreground) 25%,
     transparent
   );
-  --cwc-stroke-secondary: color-mix(
+  --cwc-border-color-hover: color-mix(
     in srgb,
-    var(--vscode-foreground) 12%,
+    var(--vscode-foreground) 35%,
     transparent
   );
-  --cwc-stroke-tertiary: color-mix(
-    in srgb,
-    var(--vscode-foreground) 8%,
-    transparent
-  );
-  --cwc-stroke-quaternary: color-mix(
-    in srgb,
-    var(--vscode-foreground) 4%,
-    transparent
-  );
-  --cwc-stroke-red-primary: color-mix(
+  --cwc-border-color-red: color-mix(
     in srgb,
     var(--vscode-charts-red) 56%,
     transparent
   );
-  --cwc-stroke-red-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-red) 32%,
-    transparent
-  );
-  --cwc-stroke-yellow-primary: color-mix(
+  --cwc-border-color-yellow: color-mix(
     in srgb,
     var(--vscode-charts-yellow) 56%,
     transparent
   );
-  --cwc-stroke-yellow-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-yellow) 32%,
-    transparent
-  );
-  --cwc-stroke-green-primary: color-mix(
+  --cwc-border-color-green: color-mix(
     in srgb,
     var(--vscode-charts-green) 56%,
     transparent
   );
-  --cwc-stroke-green-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-green) 32%,
-    transparent
-  );
-  --cwc-stroke-magenta-primary: color-mix(
+  --cwc-border-color-purple: color-mix(
     in srgb,
     var(--vscode-charts-purple) 56%,
     transparent
   );
-  --cwc-stroke-magenta-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-purple) 32%,
-    transparent
-  );
-  --cwc-stroke-cyan-primary: color-mix(
+  --cwc-border-color-blue: color-mix(
     in srgb,
     var(--vscode-charts-blue) 56%,
-    transparent
-  );
-  --cwc-stroke-cyan-secondary: color-mix(
-    in srgb,
-    var(--vscode-charts-blue) 32%,
     transparent
   );
   --cwc-shadow-primary: var(--vscode-widget-shadow);

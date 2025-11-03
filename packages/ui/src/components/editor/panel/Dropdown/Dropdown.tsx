@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import styles from './Dropdown.module.scss'
 import cn from 'classnames'
+import { DropdownMenu } from '../../common/DropdownMenu'
 
 export namespace Dropdown {
   export type Option<T extends string> = {
@@ -118,20 +119,14 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
       </button>
 
       {is_open && (
-        <div className={styles.menu} onMouseEnter={handle_mouse_enter}>
-          {props.options.map((option) => (
-            <div
-              key={option.value}
-              className={cn(styles.menu__item, {
-                [styles['menu__item--selected']]:
-                  just_opened && option.value == props.selected_value
-              })}
-              onClick={() => handle_select(option.value)}
-            >
-              {option.label}
-            </div>
-          ))}
-        </div>
+        <DropdownMenu
+          on_mouse_enter={handle_mouse_enter}
+          items={props.options.map((option) => ({
+            label: option.label,
+            on_click: () => handle_select(option.value),
+            is_selected: just_opened && option.value == props.selected_value
+          }))}
+        />
       )}
     </div>
   )
