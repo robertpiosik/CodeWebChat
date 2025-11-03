@@ -58,10 +58,18 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     is_history_enabled
   } = use_handlers(props)
 
-  const is_mac = useMemo(
-    () => navigator.platform.toUpperCase().indexOf('MAC') >= 0,
-    []
-  )
+  const is_mac = useMemo(() => {
+    if (typeof navigator == 'undefined') return false
+    const any_nav = navigator as any
+    const uach_platform: string | undefined = any_nav?.userAgentData?.platform
+    if (typeof uach_platform == 'string') {
+      return uach_platform.toLowerCase().includes('mac')
+    }
+    if (typeof navigator.userAgent == 'string') {
+      return /mac/i.test(navigator.userAgent)
+    }
+    return false
+  }, [])
   const mod_key = is_mac ? 'cmd' : 'ctrl'
 
   useEffect(() => {
