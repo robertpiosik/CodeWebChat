@@ -100,6 +100,7 @@ type Props = {
   }) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
+  context_file_paths: string[]
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -280,6 +281,7 @@ export const MainView: React.FC<Props> = (props) => {
                 : props.on_api_edit_format_change
             }
             edit_format_instructions={props.edit_format_instructions}
+            context_file_paths={props.context_file_paths}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}

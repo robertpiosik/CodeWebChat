@@ -86,6 +86,7 @@ export const use_panel = (vscode: any) => {
   const [has_changes_to_commit, set_has_changes_to_commit] =
     useState<boolean>(false)
   const [can_undo, set_can_undo] = useState<boolean>(false)
+  const [context_file_paths, set_context_file_paths] = useState<string[]>([])
 
   const handle_instructions_change = (
     value: string,
@@ -131,6 +132,8 @@ export const use_panel = (vscode: any) => {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
         set_has_active_selection(message.has_selection)
+      } else if (message.command == 'CONTEXT_FILES') {
+        set_context_file_paths(message.file_paths)
       } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
         set_items_to_review(message.items)
         set_raw_instructions(message.raw_instructions)
@@ -413,6 +416,7 @@ export const use_panel = (vscode: any) => {
     context_size_warning_threshold,
     has_changes_to_commit,
     can_undo,
+    context_file_paths,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,

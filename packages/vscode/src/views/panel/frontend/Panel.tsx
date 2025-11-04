@@ -67,6 +67,7 @@ export const Panel = () => {
     context_size_warning_threshold,
     has_changes_to_commit,
     can_undo,
+    context_file_paths,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,
@@ -213,6 +214,7 @@ export const Panel = () => {
                 }
                 chat_input_focus_key={chat_input_focus_key}
                 context_size_warning_threshold={context_size_warning_threshold}
+                context_file_paths={context_file_paths}
               />
             </div>
             <div

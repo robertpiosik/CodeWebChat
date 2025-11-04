@@ -53,6 +53,7 @@ type Props = {
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
   context_size_warning_threshold: number
+  context_file_paths: string[]
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -673,6 +674,7 @@ export const Main: React.FC<Props> = (props) => {
       on_response_history_item_click={handle_response_history_item_click}
       selected_history_item_created_at={props.selected_history_item_created_at}
       on_selected_history_item_change={props.on_selected_history_item_change}
+      context_file_paths={props.context_file_paths}
     />
   )
 }

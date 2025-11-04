@@ -36,6 +36,7 @@ export type ChatInputProps = {
   edit_format?: EditFormat
   on_edit_format_change?: (format: EditFormat) => void
   edit_format_instructions?: Record<EditFormat, string>
+  context_file_paths?: string[]
 }
 
 export const ChatInput: React.FC<ChatInputProps> = (props) => {
@@ -196,7 +197,8 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
           {get_highlighted_text({
             text: props.value,
             is_in_code_completions_mode: props.is_in_code_completions_mode,
-            has_active_selection: props.has_active_selection
+            has_active_selection: props.has_active_selection,
+            context_file_paths: props.context_file_paths ?? []
           })}
         </div>
         <TextareaAutosize

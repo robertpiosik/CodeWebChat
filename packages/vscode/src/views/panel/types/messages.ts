@@ -495,6 +495,11 @@ export interface CanUndoChangedMessage extends BaseMessage {
   can_undo: boolean
 }
 
+export interface ContextFilesMessage extends BaseMessage {
+  command: 'CONTEXT_FILES'
+  file_paths: string[]
+}
+
 export interface ResponsePreviewStartedMessage extends BaseMessage {
   command: 'RESPONSE_PREVIEW_STARTED'
   items: ItemInPreview[]
@@ -599,6 +604,7 @@ export type BackendMessage =
   | WebModeMessage
   | ApiModeMessage
   | VersionMessage
+  | ContextFilesMessage
   | CanUndoChangedMessage
   | ResponsePreviewStartedMessage
   | ResponsePreviewFinishedMessage
