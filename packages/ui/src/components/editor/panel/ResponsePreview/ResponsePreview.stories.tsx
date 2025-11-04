@@ -145,3 +145,24 @@ export const WithText = () => (
     ]}
   />
 )
+
+export const WithShortInstructions = () => (
+  <InteractiveResponsePreview
+    items={base_files}
+    raw_instructions="This is a short instruction."
+  />
+)
+
+export const WithMediumInstructions = () => (
+  <InteractiveResponsePreview
+    items={base_files}
+    raw_instructions="This is a medium length instruction, it should have the default font size and it's here to demonstrate the behavior."
+  />
+)
+
+export const WithLongInstructions = () => (
+  <InteractiveResponsePreview
+    items={base_files}
+    raw_instructions="This is a very long instruction, it is designed to be very long to test the small font size. It should wrap and clamp to three lines. We need to make sure this text is long enough to trigger the smaller font size. This should be more than 160 characters for sure."
+  />
+)

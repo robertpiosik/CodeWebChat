@@ -6,7 +6,7 @@
   justify-content: space-between;
   gap: var(--padding-4px);
   padding: var(--padding-8px) var(--padding-12px);
-  border-top: 1px solid var(--cwc-border-color);
+  border-top: 1px solid var(--cwc-border-color-dimmed);
 
   > div {
     display: flex;
@@ -52,10 +52,10 @@
     height: var(--button-size);
     padding: 0 var(--padding-7px);
     border-radius: var(--border-radius-4px);
-    border: 1px solid var(--vscode-commandCenter-inactiveBorder);
+    border: 1px solid var(--cwc-border-color);
 
     &:hover:not(:disabled) {
-      border-color: var(--vscode-commandCenter-activeBorder);
+      border-color: var(--cwc-border-color-hover);
     }
 
     &:disabled {

@@ -22,25 +22,33 @@
 
 .instructions {
   position: relative;
-  padding: var(--padding-5px) 15px var(--padding-5px) var(--padding-7px);
-  border: 1px solid var(--vscode-sideBarSectionHeader-border);
   margin: 0 var(--padding-12px);
-  border-radius: var(--border-radius-10px);
   word-wrap: break-word;
-  overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 600;
 
-  &::after {
-    position: absolute;
-    content: '';
-    width: 100%;
-    height: 4px;
-    bottom: 0;
-    left: 0;
-    background: var(--vscode-sideBar-background);
+  &--large {
+    font-size: 16px;
   }
+
+  &--small {
+    font-size: 13px;
+  }
+
+  // &::after {
+  //   position: absolute;
+  //   content: '';
+  //   width: 100%;
+  //   height: 4px;
+  //   bottom: 0;
+  //   left: 0;
+  //   background: var(--vscode-sideBar-background);
+  // }
 }
 
 .list {
