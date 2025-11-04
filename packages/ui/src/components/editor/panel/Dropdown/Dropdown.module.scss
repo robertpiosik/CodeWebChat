@@ -19,10 +19,7 @@
   }
 
   &--open {
-    border-color: var(--vscode-focusBorder);
-    &:hover {
-      border-color: var(--vscode-focusBorder);
-    }
+    border-color: var(--cwc-border-color);
   }
 
   &__label {
