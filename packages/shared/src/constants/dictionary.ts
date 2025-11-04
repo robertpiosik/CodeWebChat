@@ -44,8 +44,7 @@ export const dictionary = {
   },
 
   warning_message: {
-    REVIEW_ONGOING:
-      'Another response review is currently ongoing. Would you like to switch to the new one?',
+    PREVIEW_ONGOING: 'A new response has been received, switch now?',
     SKIPPING_INVALID_PATH: (file_path: string) =>
       `Skipping applying change to invalid path: ${file_path}`,
     CODE_COMPLETIONS_NO_SELECTION:
@@ -84,7 +83,7 @@ export const dictionary = {
     URL_OVERRIDE_DIFFERENT_DOMAIN: (preset_name: string) =>
       `URL override for preset "${preset_name}" was discarded because it uses a different domain.`,
     CONTEXT_SIZE_WARNING: (threshold: string, percentage: number) =>
-      `Context exceeds threshold of ${threshold} tokens by ${percentage}%. Unreasonably large context may degrade response quality, hurt usage allowance or incur unexpected costs.`,
+      `Context exceeds threshold of ${threshold} tokens by ${percentage}%. Excessive context size degrades output quality and increase resource usage.`,
     FAILED_TO_CREATE_FILE: (file_path: string) =>
       `Failed to create file: ${file_path}`,
     FAILED_TO_APPLY_CHANGES_TO_FILE: (file_path: string) =>

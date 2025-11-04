@@ -24,8 +24,8 @@ type Props = {
     response: string
     raw_instructions?: string
     created_at: number
-    lines_added: number
-    lines_removed: number
+    lines_added?: number
+    lines_removed?: number
     files?: FileInPreview[]
   }[]
   selected_history_item_created_at?: number

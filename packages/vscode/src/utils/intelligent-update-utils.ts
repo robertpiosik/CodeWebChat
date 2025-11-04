@@ -204,6 +204,8 @@ export const process_file = async (params: {
   cancel_token?: CancelToken
   on_chunk?: (tokens_per_second: number, total_tokens: number) => void
   on_thinking_chunk?: (text: string) => void
+  on_retry?: (attempt: number, error: any) => void
+  on_retry_attempt?: () => void
 }): Promise<string> => {
   Logger.info({
     function_name: 'process_file',
@@ -283,6 +285,7 @@ export const process_file = async (params: {
         `Refactoring error for ${params.file_path} (attempt ${attempt}):`,
         error
       )
+      params.on_retry?.(attempt, error)
       await new Promise((resolve) => setTimeout(resolve, 5000))
     }
   }

@@ -25,7 +25,7 @@ export type FileProgressStatus =
   | 'thinking'
   | 'receiving'
   | 'done'
-  | 'error'
+  | 'retrying'
 
 export type FileProgress = {
   file_path: string
@@ -571,8 +571,8 @@ export interface NewResponseReceivedMessage extends BaseMessage {
   command: 'NEW_RESPONSE_RECEIVED'
   response: string
   raw_instructions?: string
-  lines_added: number
-  lines_removed: number
+  lines_added?: number
+  lines_removed?: number
   files?: FileInPreview[]
 }
 

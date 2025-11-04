@@ -6,7 +6,7 @@ import styles from './TextItem.module.scss'
 type Props = {
   content: string
   is_expanded: boolean
-  on_toggle: () => void
+  on_toggle: (element: HTMLDivElement) => void
 }
 
 export const TextItem: FC<Props> = ({ content, is_expanded, on_toggle }) => {
@@ -29,7 +29,11 @@ export const TextItem: FC<Props> = ({ content, is_expanded, on_toggle }) => {
         [styles['text--collapsed']]: !is_expanded,
         [styles['text--overflowing']]: !is_expanded && is_overflowing
       })}
-      onClick={is_overflowing || is_expanded ? on_toggle : undefined}
+      onClick={
+        is_overflowing || is_expanded
+          ? () => ref.current && on_toggle(ref.current)
+          : undefined
+      }
     >
       <ReactMarkdown disallowedElements={['hr']}>{content}</ReactMarkdown>
     </div>

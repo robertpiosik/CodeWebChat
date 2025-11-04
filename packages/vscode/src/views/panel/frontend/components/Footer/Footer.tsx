@@ -79,10 +79,7 @@ export const Footer: React.FC = () => {
         <div>
           {is_apply_visible && (
             <button
-              className={cn(
-                styles['footer__action-button'],
-                styles['footer__action-button--outlined']
-              )}
+              className={styles['footer__action-button']}
               onClick={handle_apply_click}
               title={'Integrate copied chat response or a single code block'}
               disabled={is_apply_disabled_temporarily}
@@ -92,10 +89,7 @@ export const Footer: React.FC = () => {
           )}
           {is_undo_visible && (
             <button
-              className={cn(
-                styles['footer__action-button'],
-                styles['footer__action-button--outlined']
-              )}
+              className={styles['footer__action-button']}
               onClick={on_undo_click}
               title={
                 'Restore saved state of the codebase after chat/API response integration'
@@ -106,10 +100,7 @@ export const Footer: React.FC = () => {
             </button>
           )}
           <button
-            className={cn(
-              styles['footer__action-button'],
-              styles['footer__action-button--outlined']
-            )}
+            className={styles['footer__action-button']}
             onClick={handle_commit_click}
             title={
               has_changes_to_commit && !is_commit_disabled_temporarily

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
@@ -29,8 +29,33 @@ export const ResponsePreview: FC<Props> = (props) => {
   const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
     new Set()
   )
+  const scroll_top_ref = useRef(0)
+  const scrollable_ref = useRef<any>(null)
 
-  const toggle_expanded_text_item = (index: number) => {
+  const toggle_expanded_text_item = (
+    index: number,
+    element: HTMLDivElement
+  ) => {
+    const scrollable_instance = scrollable_ref.current
+    if (scrollable_instance) {
+      const scroll_container = scrollable_instance.getScrollElement()
+      if (scroll_container) {
+        const scroll_container_rect = scroll_container.getBoundingClientRect()
+        const element_rect = element.getBoundingClientRect()
+
+        if (element_rect.top < scroll_container_rect.top) {
+          // Element's top edge is above the scrollable viewport's top edge.
+          // Restore scroll position to the distance of this top edge to the top.
+          const element_position_in_scrollable_content =
+            scroll_container.scrollTop +
+            element_rect.top -
+            scroll_container_rect.top -
+            4
+          scroll_top_ref.current = element_position_in_scrollable_content
+        }
+      }
+    }
+
     set_expanded_text_items((prev) => {
       const new_set = new Set(prev)
       if (new_set.has(index)) {
@@ -48,7 +73,16 @@ export const ResponsePreview: FC<Props> = (props) => {
   const fallback_count = files_in_preview.filter((f) => f.is_fallback).length
 
   return (
-    <Scrollable key={expanded_text_items.size}>
+    <Scrollable
+      ref={scrollable_ref}
+      key={expanded_text_items.size}
+      // Used to restore scroll on key change.
+      // Key is changed to re-calculate simplebar container height.
+      initial_scroll_top={scroll_top_ref.current}
+      on_scroll={(top) => {
+        scroll_top_ref.current = top
+      }}
+    >
       <div className={styles.container}>
         {props.raw_instructions && (
           <div className={styles.instructions} title={props.raw_instructions}>
@@ -98,18 +132,17 @@ export const ResponsePreview: FC<Props> = (props) => {
                   }`}
                 >
                   <div className={styles['list__file__left']}>
-                    {files_in_preview.length > 1 && (
-                      <Checkbox
-                        checked={file.is_checked}
-                        on_change={(checked) => {
-                          props.on_toggle_file({
-                            file_path: file.file_path,
-                            workspace_name: file.workspace_name,
-                            is_checked: checked
-                          })
-                        }}
-                      />
-                    )}
+                    <Checkbox
+                      checked={file.is_checked}
+                      disabled={files_in_preview.length == 1}
+                      on_change={(checked) => {
+                        props.on_toggle_file({
+                          file_path: file.file_path,
+                          workspace_name: file.workspace_name,
+                          is_checked: checked
+                        })
+                      }}
+                    />
                     <div
                       className={cn(styles['list__file__left__label'], {
                         [styles['list__file__left__label--new']]: file.is_new,
@@ -203,7 +236,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                   key={index}
                   content={item.content}
                   is_expanded={expanded_text_items.has(index)}
-                  on_toggle={() => toggle_expanded_text_item(index)}
+                  on_toggle={(element) =>
+                    toggle_expanded_text_item(index, element)
+                  }
                 />
               )
             }

@@ -315,6 +315,19 @@ export const handle_intelligent_update = async (params: {
                 }
                 update_progress()
               }
+            },
+            on_retry_attempt: () => {
+              if (file_progress_index != -1) {
+                receiving_started = false
+                file_progress_list[file_progress_index].status = 'thinking'
+                update_progress()
+              }
+            },
+            on_retry: () => {
+              if (file_progress_index != -1) {
+                file_progress_list[file_progress_index].status = 'retrying'
+                update_progress()
+              }
             }
           })
 
@@ -340,10 +353,6 @@ export const handle_intelligent_update = async (params: {
             workspaceName: file.workspace_name
           }
         } catch (error: any) {
-          if (file_progress_index != -1) {
-            file_progress_list[file_progress_index].status = 'error'
-            update_progress()
-          }
           if (axios.isCancel(error) || error.message == 'Operation cancelled') {
             throw new Error('Operation cancelled')
           }
