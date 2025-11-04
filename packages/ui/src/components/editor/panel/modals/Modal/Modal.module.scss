@@ -49,7 +49,7 @@
   display: flex;
   gap: var(--padding-8px);
   padding: var(--padding-12px);
-  border-top: 1px solid var(--vscode-sideBarSectionHeader-border);
+  border-top: 1px solid var(--cwc-border-color);
 
   > button {
     flex: 1;
@@ -60,7 +60,7 @@
   position: relative;
   z-index: 1;
   border-radius: var(--border-radius-12px);
-  border: 1px solid var(--vscode-sideBarSectionHeader-border);
+  border: 1px solid var(--cwc-border-color);
   width: 100%;
   max-width: 320px;
   background-color: var(--vscode-quickInput-background);

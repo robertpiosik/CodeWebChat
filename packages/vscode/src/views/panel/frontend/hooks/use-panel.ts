@@ -14,8 +14,8 @@ type ResponseHistoryItem = {
   response: string
   raw_instructions?: string
   created_at: number
-  lines_added: number
-  lines_removed: number
+  lines_added?: number
+  lines_removed?: number
   files?: FileInPreview[]
 }
 
@@ -160,10 +160,10 @@ export const use_panel = (vscode: any) => {
         })
         set_response_history((current_history) => {
           const history_item_index = current_history.findIndex(
-            (item) => item.created_at === selected_history_item_created_at
+            (item) => item.created_at == selected_history_item_created_at
           )
 
-          if (history_item_index === -1) {
+          if (history_item_index == -1) {
             return current_history
           }
 
@@ -176,11 +176,11 @@ export const use_panel = (vscode: any) => {
 
           const file_in_history_index = files_in_history.findIndex(
             (f) =>
-              f.file_path === message.file.file_path &&
-              f.workspace_name === message.file.workspace_name
+              f.file_path == message.file.file_path &&
+              f.workspace_name == message.file.workspace_name
           )
 
-          if (file_in_history_index !== -1) {
+          if (file_in_history_index != -1) {
             files_in_history[file_in_history_index] = message.file
           } else {
             files_in_history.push(message.file)
@@ -242,12 +242,12 @@ export const use_panel = (vscode: any) => {
             }
           ])
         } else {
-          const is_duplicate = response_history.some(
+          const duplicate_index = response_history.findIndex(
             (item) =>
               item.response == message.response &&
               item.raw_instructions == message.raw_instructions
           )
-          if (!is_duplicate) {
+          if (duplicate_index == -1) {
             const new_item = {
               response: message.response,
               raw_instructions: message.raw_instructions,
@@ -261,13 +261,15 @@ export const use_panel = (vscode: any) => {
               set_selected_history_item_created_at(now)
             }
           } else {
-            set_selected_history_item_created_at(
-              response_history.find(
-                (item) =>
-                  item.response == message.response &&
-                  item.raw_instructions == message.raw_instructions
-              )?.created_at
-            )
+            const new_history = [...response_history]
+            const existing_item = new_history[duplicate_index]
+            new_history[duplicate_index] = {
+              ...existing_item,
+              ...message,
+              created_at: existing_item.created_at
+            }
+            set_response_history(new_history)
+            set_selected_history_item_created_at(existing_item.created_at)
           }
         }
       } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {

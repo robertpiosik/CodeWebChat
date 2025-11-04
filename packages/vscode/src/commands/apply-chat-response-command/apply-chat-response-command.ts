@@ -19,6 +19,8 @@ import { process_chat_response, CommandArgs } from './response-processor'
 import { Checkpoint } from '../checkpoints-command/types'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
 
+let in_progress = false
+
 export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
@@ -50,10 +52,24 @@ export const apply_chat_response_command = (
         return
       }
 
+      if (in_progress) {
+        panel_provider.send_message({
+          command: 'NEW_RESPONSE_RECEIVED',
+          response: chat_response,
+          raw_instructions: args?.raw_instructions
+        })
+      }
+
+      if (in_progress && !response_preview_promise_resolve) {
+        // Running intelligent update before response preview...
+        return
+      }
+      in_progress = true
+
       if (response_preview_promise_resolve) {
-        const choice = await vscode.window.showWarningMessage(
-          dictionary.warning_message.REVIEW_ONGOING,
-          { modal: true },
+        // Previewing response...
+        const choice = await vscode.window.showInformationMessage(
+          dictionary.warning_message.PREVIEW_ONGOING,
           'Switch'
         )
 
@@ -204,8 +220,9 @@ export const apply_chat_response_command = (
           `An error occurred while applying changes: ${err.message}`
         )
       } finally {
+        in_progress = false
         if (before_checkpoint) {
-          await delete_checkpoint({
+          delete_checkpoint({
             context,
             checkpoint_to_delete: before_checkpoint
           })

@@ -132,18 +132,17 @@ export const ResponsePreview: FC<Props> = (props) => {
                   }`}
                 >
                   <div className={styles['list__file__left']}>
-                    {files_in_preview.length > 1 && (
-                      <Checkbox
-                        checked={file.is_checked}
-                        on_change={(checked) => {
-                          props.on_toggle_file({
-                            file_path: file.file_path,
-                            workspace_name: file.workspace_name,
-                            is_checked: checked
-                          })
-                        }}
-                      />
-                    )}
+                    <Checkbox
+                      checked={file.is_checked}
+                      disabled={files_in_preview.length == 1}
+                      on_change={(checked) => {
+                        props.on_toggle_file({
+                          file_path: file.file_path,
+                          workspace_name: file.workspace_name,
+                          is_checked: checked
+                        })
+                      }}
+                    />
                     <div
                       className={cn(styles['list__file__left__label'], {
                         [styles['list__file__left__label--new']]: file.is_new,
