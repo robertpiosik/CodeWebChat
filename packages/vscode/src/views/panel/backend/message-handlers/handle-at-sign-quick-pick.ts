@@ -99,48 +99,48 @@ const at_sign_quick_pick = async (params: {
 }
 
 export const handle_at_sign_quick_pick = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   search_value?: string
 ): Promise<void> => {
   const replacement = await at_sign_quick_pick({
-    workspace_provider: provider.workspace_provider,
+    workspace_provider: panel_provider.workspace_provider,
     search_value: search_value
   })
 
   if (!replacement) {
-    provider.send_message({
+    panel_provider.send_message({
       command: 'FOCUS_CHAT_INPUT'
     })
     return
   }
 
   if (search_value) {
-    provider.add_text_at_cursor_position(replacement, search_value.length)
+    panel_provider.add_text_at_cursor_position(replacement, search_value.length)
     return
   }
 
   let current_text = ''
 
   const mode =
-    provider.home_view_type == HOME_VIEW_TYPES.WEB
-      ? provider.web_mode
-      : provider.api_mode
+    panel_provider.home_view_type == HOME_VIEW_TYPES.WEB
+      ? panel_provider.web_mode
+      : panel_provider.api_mode
   if (mode == 'ask') {
-    current_text = provider.ask_instructions
+    current_text = panel_provider.ask_instructions
   } else if (mode == 'edit-context') {
-    current_text = provider.edit_instructions
+    current_text = panel_provider.edit_instructions
   } else if (mode == 'no-context') {
-    current_text = provider.no_context_instructions
+    current_text = panel_provider.no_context_instructions
   } else if (mode == 'code-completions') {
-    current_text = provider.code_completion_instructions
+    current_text = panel_provider.code_completion_instructions
   }
 
   const is_after_at_sign = current_text
-    .slice(0, provider.caret_position)
+    .slice(0, panel_provider.caret_position)
     .endsWith('@')
   if (is_after_at_sign) {
-    provider.add_text_at_cursor_position(replacement, 1)
+    panel_provider.add_text_at_cursor_position(replacement, 1)
   } else {
-    provider.add_text_at_cursor_position(replacement)
+    panel_provider.add_text_at_cursor_position(replacement)
   }
 }

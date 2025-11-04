@@ -7,7 +7,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const handle_accept_commit_message = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   commit_message: string
 ): Promise<void> => {
   const repository = get_git_repository()
@@ -18,8 +18,11 @@ export const handle_accept_commit_message = async (
       cwd: repository.rootUri.fsPath
     })
 
-    provider.context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
-    provider.set_undo_button_state(false)
+    panel_provider.context.workspaceState.update(
+      LAST_APPLIED_CHANGES_STATE_KEY,
+      null
+    )
+    panel_provider.set_undo_button_state(false)
 
     await repository.status()
   } catch (commit_error) {

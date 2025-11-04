@@ -20,12 +20,12 @@ import { handle_get_history } from './handle-get-history'
 dayjs.extend(relativeTime)
 
 export const handle_show_history_quick_pick = async (
-  provider: PanelProvider
+  panel_provider: PanelProvider
 ): Promise<void> => {
   const mode: WebMode | ApiMode | undefined =
-    provider.home_view_type == HOME_VIEW_TYPES.WEB
-      ? provider.web_mode
-      : provider.api_mode
+    panel_provider.home_view_type == HOME_VIEW_TYPES.WEB
+      ? panel_provider.web_mode
+      : panel_provider.api_mode
 
   if (!mode) {
     return
@@ -53,12 +53,12 @@ export const handle_show_history_quick_pick = async (
 
   if (!history_key || !pinned_history_key) return
 
-  const history = provider.context.workspaceState.get<HistoryEntry[]>(
+  const history = panel_provider.context.workspaceState.get<HistoryEntry[]>(
     history_key,
     []
   )
   const pinned_history =
-    provider.context.workspaceState.get<HistoryEntry[]>(
+    panel_provider.context.workspaceState.get<HistoryEntry[]>(
       pinned_history_key,
       []
     ) || []
@@ -157,27 +157,27 @@ export const handle_show_history_quick_pick = async (
   const set_instructions = async (text: string) => {
     switch (mode) {
       case 'ask':
-        provider.ask_instructions = text
+        panel_provider.ask_instructions = text
         break
       case 'edit-context':
-        provider.edit_instructions = text
+        panel_provider.edit_instructions = text
         break
       case 'no-context':
-        provider.no_context_instructions = text
+        panel_provider.no_context_instructions = text
         break
       case 'code-completions':
-        provider.code_completion_instructions = text
+        panel_provider.code_completion_instructions = text
         break
       default:
         return
     }
 
-    provider.send_message({
+    panel_provider.send_message({
       command: 'INSTRUCTIONS',
-      ask: provider.ask_instructions,
-      edit_context: provider.edit_instructions,
-      no_context: provider.no_context_instructions,
-      code_completions: provider.code_completion_instructions
+      ask: panel_provider.ask_instructions,
+      edit_context: panel_provider.edit_instructions,
+      no_context: panel_provider.no_context_instructions,
+      code_completions: panel_provider.code_completion_instructions
     })
   }
 
@@ -200,7 +200,7 @@ export const handle_show_history_quick_pick = async (
       if (!item_text) return
 
       const current_pinned_history =
-        provider.context.workspaceState.get<HistoryEntry[]>(
+        panel_provider.context.workspaceState.get<HistoryEntry[]>(
           pinned_history_key,
           []
         ) || []
@@ -210,7 +210,7 @@ export const handle_show_history_quick_pick = async (
           const entry_to_pin = history.find((h) => h.text == item_text)
           if (entry_to_pin) {
             current_pinned_history.push(entry_to_pin)
-            await provider.context.workspaceState.update(
+            await panel_provider.context.workspaceState.update(
               pinned_history_key,
               current_pinned_history
             )
@@ -222,7 +222,7 @@ export const handle_show_history_quick_pick = async (
         )
         if (index != -1) {
           current_pinned_history.splice(index, 1)
-          await provider.context.workspaceState.update(
+          await panel_provider.context.workspaceState.update(
             pinned_history_key,
             current_pinned_history
           )
@@ -231,19 +231,24 @@ export const handle_show_history_quick_pick = async (
         const index = history.findIndex((h) => h.text == item_text)
         if (index != -1) {
           history.splice(index, 1)
-          await provider.context.workspaceState.update(history_key, history)
+          await panel_provider.context.workspaceState.update(
+            history_key,
+            history
+          )
         }
       }
 
       const updated_pinned_history =
-        provider.context.workspaceState.get<HistoryEntry[]>(
+        panel_provider.context.workspaceState.get<HistoryEntry[]>(
           pinned_history_key,
           []
         ) || []
       updated_pinned_history.sort((a, b) => b.createdAt - a.createdAt)
       const updated_history =
-        provider.context.workspaceState.get<HistoryEntry[]>(history_key, []) ||
-        []
+        panel_provider.context.workspaceState.get<HistoryEntry[]>(
+          history_key,
+          []
+        ) || []
 
       if (updated_history.length == 0 && updated_pinned_history.length == 0) {
         quick_pick.hide()
@@ -285,10 +290,10 @@ export const handle_show_history_quick_pick = async (
       }
 
       quick_pick.items = updated_items
-      handle_get_history(provider)
+      handle_get_history(panel_provider)
     }),
     quick_pick.onDidHide(() => {
-      provider.send_message({
+      panel_provider.send_message({
         command: 'FOCUS_CHAT_INPUT'
       })
       disposables.forEach((d) => d.dispose())

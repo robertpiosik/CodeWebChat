@@ -449,17 +449,17 @@ const perform_code_completion = async (params: {
 }
 
 export const handle_code_completion = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: CodeCompletionMessage
 ): Promise<void> => {
   perform_code_completion({
-    file_tree_provider: provider.workspace_provider,
-    open_editors_provider: provider.open_editors_provider,
-    context: provider.context,
+    file_tree_provider: panel_provider.workspace_provider,
+    open_editors_provider: panel_provider.open_editors_provider,
+    context: panel_provider.context,
     with_completion_instructions: false,
     show_quick_pick: message.use_quick_pick,
-    completion_instructions: provider.code_completion_instructions,
+    completion_instructions: panel_provider.code_completion_instructions,
     config_id: message.config_id,
-    panel_provider: provider
+    panel_provider: panel_provider
   })
 }

@@ -5,13 +5,13 @@ import { DeletePresetMessage } from '@/views/panel/types/messages'
 import { ConfigPresetFormat } from '@/views/panel/backend/utils/preset-format-converters'
 
 export const handle_delete_preset = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: DeletePresetMessage,
   webview_view: vscode.WebviewView
 ): Promise<void> => {
   const preset_name = message.name
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const presets_config_key = provider.get_presets_config_key()
+  const presets_config_key = panel_provider.get_presets_config_key()
   const current_presets =
     config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
@@ -75,7 +75,7 @@ export const handle_delete_preset = async (
       )
     }
 
-    provider.send_presets_to_webview(webview_view.webview)
+    panel_provider.send_presets_to_webview(webview_view.webview)
   } catch (error) {
     vscode.window.showErrorMessage(
       dictionary.error_message.FAILED_TO_DELETE_ITEM(item_type, error)

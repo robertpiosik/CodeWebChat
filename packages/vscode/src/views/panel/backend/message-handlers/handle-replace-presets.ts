@@ -4,11 +4,11 @@ import { ui_preset_to_config_format } from '@/views/panel/backend/utils/preset-f
 import { PanelProvider } from '../panel-provider'
 
 export const handle_replace_presets = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: ReplacePresetsMessage
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const presets_config_key = provider.get_presets_config_key()
+  const presets_config_key = panel_provider.get_presets_config_key()
   const config_formatted_presets = message.presets.map((preset) =>
     ui_preset_to_config_format(preset)
   )

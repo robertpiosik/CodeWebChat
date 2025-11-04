@@ -345,7 +345,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.send_presets_to_webview(webview_view.webview)
           } else if (message.command == 'SEND_PROMPT') {
             await handle_send_prompt({
-              provider: this,
+              panel_provider: this,
               preset_name: message.preset_name,
               group_name: message.group_name,
               show_quick_pick: message.show_quick_pick,
@@ -355,7 +355,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_preview_preset(this, message)
           } else if (message.command == 'COPY_PROMPT') {
             await handle_copy_prompt({
-              provider: this,
+              panel_provider: this,
               instructions: message.instructions,
               preset_name: message.preset_name
             })
@@ -445,9 +445,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_PREVIEW') {
-            handle_focus_on_file_in_preview(this, message)
+            handle_focus_on_file_in_preview(message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
-            await handle_toggle_file_in_preview(this, message)
+            await handle_toggle_file_in_preview(message)
           } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW') {
             await handle_intelligent_update_file_in_preview(this, message)
           } else if (message.command == 'EDITS_REVIEW') {
@@ -467,7 +467,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_pick_chatbot(this, message)
           } else if (message.command == 'UPDATE_LAST_USED_PRESET') {
             update_last_used_preset_or_group({
-              provider: this,
+              panel_provider: this,
               preset_name: message.preset_name
             })
           } else if (message.command == 'REQUEST_GIT_STATE') {

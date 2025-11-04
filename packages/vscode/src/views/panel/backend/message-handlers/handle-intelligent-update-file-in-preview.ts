@@ -59,16 +59,16 @@ const get_default_intelligent_update_config = async (
 }
 
 export const handle_intelligent_update_file_in_preview = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: IntelligentUpdateFileInPreviewMessage
 ): Promise<void> => {
   const { file_path, workspace_name } = message
   const file_name = path.basename(file_path)
 
-  const original_states = provider.context.workspaceState.get<
+  const original_states = panel_provider.context.workspaceState.get<
     OriginalFileState[]
   >(LAST_APPLIED_CHANGES_STATE_KEY)
-  const last_response = provider.context.workspaceState.get<string>(
+  const last_response = panel_provider.context.workspaceState.get<string>(
     LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY
   )
 
@@ -128,7 +128,9 @@ export const handle_intelligent_update_file_in_preview = async (
     return
   }
 
-  const api_providers_manager = new ModelProvidersManager(provider.context)
+  const api_providers_manager = new ModelProvidersManager(
+    panel_provider.context
+  )
   const config_result = await get_default_intelligent_update_config(
     api_providers_manager
   )
@@ -161,7 +163,9 @@ export const handle_intelligent_update_file_in_preview = async (
   if (!safe_path) return
 
   const cancel_token_source = axios.CancelToken.source()
-  provider.intelligent_update_cancel_token_sources.push(cancel_token_source)
+  panel_provider.intelligent_update_cancel_token_sources.push(
+    cancel_token_source
+  )
 
   let thinking_reported = false
   let resolve_thinking: () => void
@@ -366,11 +370,11 @@ export const handle_intelligent_update_file_in_preview = async (
     }
   } finally {
     const index =
-      provider.intelligent_update_cancel_token_sources.indexOf(
+      panel_provider.intelligent_update_cancel_token_sources.indexOf(
         cancel_token_source
       )
     if (index > -1) {
-      provider.intelligent_update_cancel_token_sources.splice(index, 1)
+      panel_provider.intelligent_update_cancel_token_sources.splice(index, 1)
     }
   }
 }

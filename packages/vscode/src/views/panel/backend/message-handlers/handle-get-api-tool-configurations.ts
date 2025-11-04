@@ -8,9 +8,9 @@ import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { ApiMode } from '@shared/types/modes'
 
 export const handle_get_api_tool_configurations = async (
-  provider: PanelProvider
+  panel_provider: PanelProvider
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(panel_provider.context)
 
   const [
     edit_context_configs,
@@ -50,7 +50,7 @@ export const handle_get_api_tool_configurations = async (
     }))
   }
 
-  provider.send_message({
+  panel_provider.send_message({
     command: 'API_TOOL_CONFIGURATIONS',
     configurations
   })

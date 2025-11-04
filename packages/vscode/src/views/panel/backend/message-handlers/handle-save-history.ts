@@ -13,7 +13,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveHistoryMessage } from '@/views/panel/types/messages'
 
 export const handle_save_history = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: SaveHistoryMessage
 ): Promise<void> => {
   let key: string | undefined
@@ -39,12 +39,12 @@ export const handle_save_history = async (
   if (key) {
     const text_history: string[] = message.messages
     if (text_history.length === 0) {
-      await provider.context.workspaceState.update(key, [])
+      await panel_provider.context.workspaceState.update(key, [])
       return
     }
 
     const old_history =
-      provider.context.workspaceState.get<HistoryEntry[]>(key, []) || []
+      panel_provider.context.workspaceState.get<HistoryEntry[]>(key, []) || []
     const old_history_map = new Map(
       old_history.map((entry) => [entry.text, entry])
     )
@@ -73,18 +73,23 @@ export const handle_save_history = async (
       }
     }
 
-    await provider.context.workspaceState.update(key, new_history)
+    await panel_provider.context.workspaceState.update(key, new_history)
 
     if (pinned_key) {
       const used_text = text_history[0]
       const pinned_history =
-        provider.context.workspaceState.get<HistoryEntry[]>(pinned_key, []) ||
-        []
+        panel_provider.context.workspaceState.get<HistoryEntry[]>(
+          pinned_key,
+          []
+        ) || []
       const pinned_index = pinned_history.findIndex((p) => p.text === used_text)
 
       if (pinned_index > -1) {
         pinned_history[pinned_index].createdAt = Date.now()
-        await provider.context.workspaceState.update(pinned_key, pinned_history)
+        await panel_provider.context.workspaceState.update(
+          pinned_key,
+          pinned_history
+        )
       }
     }
   }

@@ -4,7 +4,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'
 
 export const handle_pick_open_router_model = async (
-  provider: PanelProvider
+  panel_provider: PanelProvider
 ): Promise<void> => {
   try {
     const response = await axios.get('https://openrouter.ai/api/v1/models')
@@ -22,7 +22,7 @@ export const handle_pick_open_router_model = async (
     })
 
     if (selected) {
-      provider.send_message({
+      panel_provider.send_message({
         command: 'NEWLY_PICKED_OPEN_ROUTER_MODEL',
         model_id: selected.description!
       })

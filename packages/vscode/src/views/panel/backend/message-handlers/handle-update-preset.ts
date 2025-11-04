@@ -9,12 +9,12 @@ import {
 } from '@/views/panel/backend/utils/preset-format-converters'
 
 export const handle_update_preset = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: UpdatePresetMessage,
   webview_view: vscode.WebviewView
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
-  const presets_config_key = provider.get_presets_config_key()
+  const presets_config_key = panel_provider.get_presets_config_key()
   const current_presets =
     config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
@@ -67,7 +67,7 @@ export const handle_update_preset = async (
   )
 
   if (!has_changes) {
-    provider.send_message({
+    panel_provider.send_message({
       command: 'PRESET_UPDATED'
     })
     return
@@ -87,7 +87,7 @@ export const handle_update_preset = async (
     )
 
     if (result == discard_changes) {
-      provider.send_message({
+      panel_provider.send_message({
         command: 'PRESET_UPDATED'
       })
       return
@@ -136,8 +136,8 @@ export const handle_update_preset = async (
     vscode.ConfigurationTarget.Global
   )
 
-  provider.send_presets_to_webview(webview_view.webview)
-  provider.send_message({
+  panel_provider.send_presets_to_webview(webview_view.webview)
+  panel_provider.send_message({
     command: 'PRESET_UPDATED'
   })
 }

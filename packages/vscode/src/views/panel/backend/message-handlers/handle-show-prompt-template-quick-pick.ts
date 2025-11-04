@@ -11,12 +11,12 @@ type PromptTemplate = {
 const ADD_NEW_TEMPLATE_LABEL = '$(add) New prompt template'
 
 export const handle_show_prompt_template_quick_pick = async (
-  provider: PanelProvider
+  panel_provider: PanelProvider
 ): Promise<void> => {
   const mode: WebMode | ApiMode | undefined =
-    provider.home_view_type == HOME_VIEW_TYPES.WEB
-      ? provider.web_mode
-      : provider.api_mode
+    panel_provider.home_view_type == HOME_VIEW_TYPES.WEB
+      ? panel_provider.web_mode
+      : panel_provider.api_mode
 
   if (!mode) {
     return
@@ -47,27 +47,27 @@ export const handle_show_prompt_template_quick_pick = async (
   const set_instructions = async (text: string) => {
     switch (mode) {
       case 'ask':
-        provider.ask_instructions = text
+        panel_provider.ask_instructions = text
         break
       case 'edit-context':
-        provider.edit_instructions = text
+        panel_provider.edit_instructions = text
         break
       case 'no-context':
-        provider.no_context_instructions = text
+        panel_provider.no_context_instructions = text
         break
       case 'code-completions':
-        provider.code_completion_instructions = text
+        panel_provider.code_completion_instructions = text
         break
       default:
         return
     }
 
-    provider.send_message({
+    panel_provider.send_message({
       command: 'INSTRUCTIONS',
-      ask: provider.ask_instructions,
-      edit_context: provider.edit_instructions,
-      no_context: provider.no_context_instructions,
-      code_completions: provider.code_completion_instructions
+      ask: panel_provider.ask_instructions,
+      edit_context: panel_provider.edit_instructions,
+      no_context: panel_provider.no_context_instructions,
+      code_completions: panel_provider.code_completion_instructions
     })
   }
 
@@ -351,7 +351,7 @@ export const handle_show_prompt_template_quick_pick = async (
         }
 
         await set_instructions(prompt_text)
-        provider.send_message({
+        panel_provider.send_message({
           command: 'FOCUS_CHAT_INPUT'
         })
       }
@@ -455,7 +455,7 @@ export const handle_show_prompt_template_quick_pick = async (
 
       is_disposed = true
       if (!is_template_accepted) {
-        provider.send_message({
+        panel_provider.send_message({
           command: 'FOCUS_CHAT_INPUT'
         })
       }

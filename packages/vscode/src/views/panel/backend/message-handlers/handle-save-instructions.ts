@@ -8,32 +8,32 @@ import {
 } from '@/constants/state-keys'
 
 export const handle_save_instructions = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: SaveInstructionsMessage
 ): Promise<void> => {
   const { mode, instruction } = message
 
   if (mode == 'ask') {
-    provider.ask_instructions = instruction
-    await provider.context.workspaceState.update(
+    panel_provider.ask_instructions = instruction
+    await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_ASK_STATE_KEY,
       instruction
     )
   } else if (mode == 'edit-context') {
-    provider.edit_instructions = instruction
-    await provider.context.workspaceState.update(
+    panel_provider.edit_instructions = instruction
+    await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
       instruction
     )
   } else if (mode == 'no-context') {
-    provider.no_context_instructions = instruction
-    await provider.context.workspaceState.update(
+    panel_provider.no_context_instructions = instruction
+    await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
       instruction
     )
   } else if (mode == 'code-completions') {
-    provider.code_completion_instructions = instruction
-    await provider.context.workspaceState.update(
+    panel_provider.code_completion_instructions = instruction
+    await panel_provider.context.workspaceState.update(
       INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
       instruction
     )

@@ -8,7 +8,7 @@ import {
 } from '@/views/panel/backend/utils/preset-format-converters'
 
 export const handle_create_preset = async (
-  provider: PanelProvider
+  panel_provider: PanelProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const create_option = await vscode.window.showQuickPick(
@@ -34,7 +34,7 @@ export const handle_create_preset = async (
     return
   }
 
-  const presets_config_key = provider.get_presets_config_key()
+  const presets_config_key = panel_provider.get_presets_config_key()
   const current_presets =
     config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
@@ -65,7 +65,7 @@ export const handle_create_preset = async (
       : [...current_presets, new_preset]
 
   try {
-    provider.send_message({
+    panel_provider.send_message({
       command: 'PRESET_CREATED',
       preset: config_preset_to_ui_format(new_preset)
     })
