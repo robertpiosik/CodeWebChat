@@ -72,6 +72,16 @@ export const ResponsePreview: FC<Props> = (props) => {
   ) as FileInPreview[]
   const fallback_count = files_in_preview.filter((f) => f.is_fallback).length
 
+  const get_instructions_font_size_class = (text: string): string => {
+    const length = text.length
+    if (length < 80) {
+      return styles['instructions--large']
+    } else if (length > 160) {
+      return styles['instructions--small']
+    }
+    return ''
+  }
+
   return (
     <Scrollable
       ref={scrollable_ref}
@@ -85,7 +95,13 @@ export const ResponsePreview: FC<Props> = (props) => {
     >
       <div className={styles.container}>
         {props.raw_instructions && (
-          <div className={styles.instructions} title={props.raw_instructions}>
+          <div
+            className={cn(
+              styles.instructions,
+              get_instructions_font_size_class(props.raw_instructions)
+            )}
+            title={props.raw_instructions}
+          >
             {props.raw_instructions}
           </div>
         )}

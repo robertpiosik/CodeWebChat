@@ -25,7 +25,6 @@ export const TextItem: FC<Props> = ({ content, is_expanded, on_toggle }) => {
     <div
       ref={ref}
       className={cn(styles.text, {
-        [styles['text--expandable']]: is_expanded || is_overflowing,
         [styles['text--collapsed']]: !is_expanded,
         [styles['text--overflowing']]: !is_expanded && is_overflowing
       })}

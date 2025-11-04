@@ -49,7 +49,7 @@
   display: flex;
   gap: var(--padding-8px);
   padding: var(--padding-12px);
-  border-top: 1px solid var(--cwc-border-color);
+  border-top: 1px solid var(--cwc-border-color-dimmed);
 
   > button {
     flex: 1;
@@ -57,17 +57,16 @@
 }
 
 .container {
+  display: flex;
+  flex-direction: column;
   position: relative;
   z-index: 1;
   border-radius: var(--border-radius-12px);
-  border: 1px solid var(--cwc-border-color);
+  border: 1px solid var(--cwc-border-color-dimmed);
   width: 100%;
   max-width: 320px;
   background-color: var(--vscode-quickInput-background);
   color: var(--vscode-quickInput-foreground);
-  border: 1px solid var(--vscode-widget-border);
-  display: flex;
-  flex-direction: column;
 
   &--full-width {
     max-width: none;

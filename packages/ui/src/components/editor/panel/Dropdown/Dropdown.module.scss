@@ -8,14 +8,14 @@
   gap: var(--padding-4px);
   padding: 0 var(--padding-5px) 0 var(--padding-7px);
   height: 24px;
-  border: 1px solid var(--vscode-dropdown-border);
+  border: 1px solid var(--cwc-border-color-dimmed);
   border-radius: var(--border-radius-4px);
   cursor: pointer;
   color: var(--vscode-foreground);
   width: 100%;
 
   &:hover {
-    border-color: var(--vscode-commandCenter-activeBorder);
+    border-color: var(--cwc-border-color);
   }
 
   &--open {

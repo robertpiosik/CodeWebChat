@@ -178,6 +178,11 @@
     var(--vscode-foreground) 35%,
     transparent
   );
+  --cwc-border-color-dimmed: color-mix(
+    in srgb,
+    var(--vscode-foreground) 17%,
+    transparent
+  );
   --cwc-border-color-red: color-mix(
     in srgb,
     var(--vscode-charts-red) 56%,
