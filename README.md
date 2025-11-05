@@ -35,7 +35,9 @@ Therefore, CWC is designed to align with LLMs' true capabilities—that is, code
 
 🙋 **Guide the model with context**
 
-While coding agents requrie elaborative instructions to understand your intent and find relevant files, CWC is designed in a way to guide the model from the start with context. Select folders and files that should be included in full, enter prompt, and send message via...
+Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide context up front, making prompts simpler and responses faster and more accurate.
+
+Select folders and files, enter prompt, and send message via...
 
 - new chat—to continue in the connected browser
 - API call—to use a model provider of choice
