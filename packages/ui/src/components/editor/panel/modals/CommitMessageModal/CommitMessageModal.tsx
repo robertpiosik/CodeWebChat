@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useCallback } from 'react'
 import styles from './CommitMessageModal.module.scss'
 import { Button } from '../../Button'
 import { Modal } from '../Modal'
 import TextareaAutosize from 'react-textarea-autosize'
+import { use_commit_timer } from './hooks/use-commit-timer'
 
 type Props = {
   commit_message: string
@@ -12,9 +13,6 @@ type Props = {
 
 export const CommitMessageModal: React.FC<Props> = (props) => {
   const [message, set_message] = useState(props.commit_message)
-  const [countdown, setCountdown] = useState(5)
-  const [is_timer_active, set_is_timer_active] = useState(true)
-  const interval_ref = useRef<NodeJS.Timeout>()
 
   const handle_accept = useCallback(() => {
     if (message.trim()) {
@@ -22,36 +20,13 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
     }
   }, [message, props.on_accept])
 
-  useEffect(() => {
-    if (!is_timer_active) {
-      return
-    }
-    interval_ref.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          if (interval_ref.current) clearInterval(interval_ref.current)
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-    return () => {
-      if (interval_ref.current) clearInterval(interval_ref.current)
-    }
-  }, [is_timer_active])
-
-  useEffect(() => {
-    if (countdown == 0 && is_timer_active) {
-      handle_accept()
-    }
-  }, [countdown, is_timer_active, handle_accept])
-
-  const stop_timer = () => {
-    set_is_timer_active(false)
-  }
+  const commit_timer_hook = use_commit_timer({
+    on_accept: handle_accept,
+    initial_countdown: 5
+  })
 
   return (
-    <div onMouseDown={stop_timer}>
+    <div onMouseDown={commit_timer_hook.stop_timer}>
       <Modal
         title="Commit changes"
         content_slot={
@@ -75,7 +50,9 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
             </Button>
             <Button on_click={handle_accept} disabled={!message.trim()}>
               Commit
-              {is_timer_active && countdown > 0 && ` (${countdown})`}
+              {commit_timer_hook.is_timer_active &&
+                commit_timer_hook.countdown > 0 &&
+                ` (${commit_timer_hook.countdown})`}
             </Button>
           </>
         }
