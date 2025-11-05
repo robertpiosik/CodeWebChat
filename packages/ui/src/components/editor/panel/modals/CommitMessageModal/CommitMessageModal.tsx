@@ -51,34 +51,35 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
   }
 
   return (
-    <Modal
-      title="Commit changes"
-      content_slot={
-        <TextareaAutosize
-          className={styles.textarea}
-          value={message}
-          onChange={(e) => set_message(e.target.value)}
-          minRows={2}
-          onKeyDown={(e) => {
-            if (e.key == 'Enter' && (e.metaKey || e.ctrlKey)) {
-              e.preventDefault()
-              handle_accept()
-            }
-          }}
-          onMouseDown={stop_timer}
-        />
-      }
-      footer_slot={
-        <>
-          <Button on_click={props.on_cancel} is_secondary={true}>
-            Cancel
-          </Button>
-          <Button on_click={handle_accept} disabled={!message.trim()}>
-            Commit
-            {is_timer_active && countdown > 0 && ` (${countdown})`}
-          </Button>
-        </>
-      }
-    />
+    <div onMouseDown={stop_timer}>
+      <Modal
+        title="Commit changes"
+        content_slot={
+          <TextareaAutosize
+            className={styles.textarea}
+            value={message}
+            onChange={(e) => set_message(e.target.value)}
+            minRows={2}
+            onKeyDown={(e) => {
+              if (e.key == 'Enter' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault()
+                handle_accept()
+              }
+            }}
+          />
+        }
+        footer_slot={
+          <>
+            <Button on_click={props.on_cancel} is_secondary={true}>
+              Cancel
+            </Button>
+            <Button on_click={handle_accept} disabled={!message.trim()}>
+              Commit
+              {is_timer_active && countdown > 0 && ` (${countdown})`}
+            </Button>
+          </>
+        }
+      />
+    </div>
   )
 }
