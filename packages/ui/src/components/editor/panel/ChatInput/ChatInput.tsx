@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from 'react'
+import { useRef, useEffect, useMemo, useState } from 'react'
 import styles from './ChatInput.module.scss'
 import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
@@ -7,6 +7,7 @@ import { get_highlighted_text } from './utils/get-highlighted-text'
 import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
 import { DropdownMenu } from '../../common/DropdownMenu'
+import { search_paths } from '@shared/utils/search-paths'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff'
 
@@ -43,6 +44,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   const textarea_ref = useRef<HTMLTextAreaElement>(null)
   const highlight_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
+  const [caret_position, set_caret_position] = useState(0)
   const {
     is_dropdown_open,
     toggle_dropdown,
@@ -148,6 +150,28 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     handle_key_down(e)
   }
 
+  const show_tab_hint = useMemo(() => {
+    const value = props.value
+    if (
+      !value ||
+      caret_position != value.length ||
+      value.endsWith(' ') ||
+      !props.context_file_paths
+    ) {
+      return false
+    }
+    const last_word = value.trim().split(/\s+/).pop()
+
+    if (last_word && last_word.length >= 3) {
+      const matching_paths = search_paths({
+        paths: props.context_file_paths,
+        search_value: last_word
+      })
+      return matching_paths.length == 1
+    }
+
+    return false
+  }, [props.value, caret_position, props.context_file_paths])
   return (
     <div className={styles.container}>
       {props.has_active_selection && props.is_in_code_completions_mode && (
@@ -200,14 +224,21 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             has_active_selection: props.has_active_selection,
             context_file_paths: props.context_file_paths ?? []
           })}
+          {show_tab_hint && <span className={styles['tab-hint']}>TAB</span>}
         </div>
         <TextareaAutosize
           ref={textarea_ref}
           placeholder={placeholder}
           value={props.value}
-          onChange={handle_input_change}
+          onChange={(e) => {
+            handle_input_change(e)
+            set_caret_position(e.target.selectionStart)
+          }}
           onKeyDown={custom_handle_key_down}
-          onSelect={handle_select}
+          onSelect={(e) => {
+            handle_select(e)
+            set_caret_position(e.currentTarget.selectionStart)
+          }}
           autoFocus
           className={styles.textarea}
           minRows={2}

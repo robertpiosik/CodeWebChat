@@ -6,6 +6,13 @@ import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { dictionary } from '@shared/constants/dictionary'
+import { search_paths } from '@shared/utils/search-paths'
+
+type QuickPickItem = {
+  label: string
+  description: string
+  fullPath: string
+}
 
 const at_sign_quick_pick = async (params: {
   workspace_provider: WorkspaceProvider
@@ -21,7 +28,7 @@ const at_sign_quick_pick = async (params: {
 
   const workspace_roots = params.workspace_provider.getWorkspaceRoots()
 
-  const all_quick_pick_items = checked_paths
+  const all_quick_pick_items: QuickPickItem[] = checked_paths
     .filter((p) => {
       try {
         return fs.existsSync(p) && fs.statSync(p).isFile()
@@ -54,25 +61,19 @@ const at_sign_quick_pick = async (params: {
   let quick_pick_items_to_show = all_quick_pick_items
 
   if (params.search_value) {
-    const filtered_items = all_quick_pick_items.filter((item) => {
-      const search_lower = params.search_value!.toLowerCase()
-      const filename_lower = item.label.toLowerCase()
-
-      if (filename_lower.includes(search_lower)) {
-        return true
-      }
-
-      // This allows "pagetsx" to match "HomePage.tsx"
-      const filename_alphanumeric = filename_lower.replace(/[^a-z0-9]/g, '')
-      const search_alphanumeric = search_lower.replace(/[^a-z0-9]/g, '')
-
-      return filename_alphanumeric.includes(search_alphanumeric)
+    const paths = all_quick_pick_items.map((item) => item.fullPath)
+    const filtered_paths = search_paths({
+      paths,
+      search_value: params.search_value
     })
 
-    if (filtered_items.length == 1) {
-      return `\`${filtered_items[0].fullPath}\` `
-    } else if (filtered_items.length > 1) {
-      quick_pick_items_to_show = filtered_items
+    if (filtered_paths.length == 1) {
+      return `\`${filtered_paths[0]}\` `
+    } else if (filtered_paths.length > 1) {
+      const filtered_paths_set = new Set(filtered_paths)
+      quick_pick_items_to_show = all_quick_pick_items.filter((item) =>
+        filtered_paths_set.has(item.fullPath)
+      )
     } else {
       vscode.window.showWarningMessage(
         dictionary.warning_message.NO_RESULTS_FOR_SEARCH_SHOWING_ALL(
