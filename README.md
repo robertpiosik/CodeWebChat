@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-**AI coding without agents.** Guide the model to production-grade code with engineer-level control over context. Community-driven, free and open-source.
+**The privacy AI coding without agents.** Guide the model to production-grade code with engineer-level control over context. Community-driven, free and open-source.
 
 Works with VS Code, and forks like Cursor, Windsurf, etc.
 
@@ -25,7 +25,7 @@ Works with VS Code, and forks like Cursor, Windsurf, etc.
 
 Code Web Chat helps you use your favorite coding web tools like ChatGPT's canvas. The idea to initialize chatbots is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
 
-🧑‍💻 **Guide the model with context**
+🧑‍💻 **The limitations of LLMs**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
@@ -33,9 +33,11 @@ Because the model is only as smart as examples it has seen in its pre-training s
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-🙋 **Meet the non-agentic workflow**
+🙋 **Guide the model with context**
 
-Select folders and files for context, enter prompt, and send message via...
+Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide context up front, making prompts simpler and responses faster and more accurate.
+
+Select folders and files, enter prompt, and send message via...
 
 - new chat—to continue in the connected browser
 - API call—to use a model provider of choice

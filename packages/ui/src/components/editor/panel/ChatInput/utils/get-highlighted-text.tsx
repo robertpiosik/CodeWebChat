@@ -5,6 +5,7 @@ export const get_highlighted_text = (params: {
   text: string
   is_in_code_completions_mode: boolean
   has_active_selection: boolean
+  context_file_paths: string[]
 }) => {
   if (params.is_in_code_completions_mode) {
     const regex = /(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")/g
@@ -58,8 +59,15 @@ export const get_highlighted_text = (params: {
       )
     }
     if (part && /^`[^\s`]*\.[^\s`]+`$/.test(part)) {
+      const file_path = part.slice(1, -1)
       return (
-        <span key={index} className={styles['selection-keyword']}>
+        <span
+          key={index}
+          className={cn({
+            [styles['selection-keyword']]:
+              params.context_file_paths.includes(file_path)
+          })}
+        >
           {part}
         </span>
       )

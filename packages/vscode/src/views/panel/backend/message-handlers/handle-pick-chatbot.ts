@@ -4,7 +4,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { PickChatbotMessage } from '@/views/panel/types/messages'
 
 export const handle_pick_chatbot = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: PickChatbotMessage
 ): Promise<void> => {
   const chatbots = Object.entries(CHATBOTS)
@@ -48,7 +48,7 @@ export const handle_pick_chatbot = async (
     quick_pick.onDidAccept(() => {
       const selected = quick_pick.selectedItems[0]
       if (selected) {
-        provider.send_message({
+        panel_provider.send_message({
           command: 'NEWLY_PICKED_CHATBOT',
           chatbot_id: selected.label
         })

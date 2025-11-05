@@ -11,14 +11,14 @@ import * as path from 'path'
 import { execSync } from 'child_process'
 
 async function proceed_with_commit_generation(
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   repository: GitRepository,
   was_empty_stage: boolean
 ) {
   try {
-    const api_config = await get_commit_message_config(provider.context)
+    const api_config = await get_commit_message_config(panel_provider.context)
     if (!api_config) {
-      provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+      panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       return
     }
 
@@ -30,41 +30,41 @@ async function proceed_with_commit_generation(
       vscode.window.showInformationMessage(
         dictionary.information_message.NO_CHANGES_TO_COMMIT
       )
-      provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+      panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       return
     }
 
     if (was_empty_stage) {
-      provider.commit_was_staged_by_script = true
+      panel_provider.commit_was_staged_by_script = true
     }
 
     const commit_message = await generate_commit_message_from_diff({
-      context: provider.context,
+      context: panel_provider.context,
       repository,
       diff,
       api_config,
-      panel_provider: provider
+      panel_provider: panel_provider
     })
 
     if (!commit_message) {
-      if (provider.commit_was_staged_by_script) {
+      if (panel_provider.commit_was_staged_by_script) {
         await vscode.commands.executeCommand('git.unstageAll')
       }
-      provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
-      provider.commit_was_staged_by_script = false
+      panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+      panel_provider.commit_was_staged_by_script = false
       return
     }
 
-    provider.send_message({
+    panel_provider.send_message({
       command: 'SHOW_COMMIT_MESSAGE_MODAL',
       commit_message
     })
   } catch (error) {
-    if (provider.commit_was_staged_by_script) {
+    if (panel_provider.commit_was_staged_by_script) {
       await vscode.commands.executeCommand('git.unstageAll')
     }
-    provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
-    provider.commit_was_staged_by_script = false
+    panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+    panel_provider.commit_was_staged_by_script = false
     Logger.error({
       function_name: 'proceed_with_commit_generation',
       message: 'Error in commit changes command',
@@ -77,21 +77,21 @@ async function proceed_with_commit_generation(
 }
 
 export const handle_commit_changes = async (
-  provider: PanelProvider
+  panel_provider: PanelProvider
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
   const repository = get_git_repository()
   if (!repository) {
-    provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+    panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     return
   }
 
   await repository.status()
 
-  provider.commit_was_staged_by_script = false
+  panel_provider.commit_was_staged_by_script = false
   if (repository.state.indexChanges.length > 0) {
-    await proceed_with_commit_generation(provider, repository, false)
+    await proceed_with_commit_generation(panel_provider, repository, false)
   } else if (repository.state.workingTreeChanges.length > 0) {
     const unstaged_files = repository.state.workingTreeChanges.map(
       (change: any) =>
@@ -99,9 +99,9 @@ export const handle_commit_changes = async (
     )
 
     if (unstaged_files.length == 1) {
-      await handle_proceed_with_commit(provider, unstaged_files)
+      await handle_proceed_with_commit(panel_provider, unstaged_files)
     } else {
-      provider.send_message({
+      panel_provider.send_message({
         command: 'SHOW_STAGE_FILES_MODAL',
         files: unstaged_files
       })
@@ -110,22 +110,22 @@ export const handle_commit_changes = async (
     vscode.window.showInformationMessage(
       dictionary.information_message.NO_CHANGES_TO_COMMIT
     )
-    provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+    panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
   }
 }
 
 export const handle_proceed_with_commit = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   files_to_stage: string[]
 ): Promise<void> => {
   const repository = get_git_repository()
   if (!repository) {
-    provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+    panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     return
   }
 
   if (files_to_stage.length === 0) {
-    provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+    panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     return
   }
 
@@ -137,9 +137,9 @@ export const handle_proceed_with_commit = async (
 
     await repository.add(uris_to_stage)
     await new Promise((resolve) => setTimeout(resolve, 500))
-    await proceed_with_commit_generation(provider, repository, true)
+    await proceed_with_commit_generation(panel_provider, repository, true)
   } catch (error) {
-    provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+    panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     Logger.error({
       function_name: 'handle_proceed_with_commit',
       message: 'Error staging files',

@@ -10,14 +10,14 @@ import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_copy_prompt = async (params: {
-  provider: PanelProvider
+  panel_provider: PanelProvider
   instructions: string
   preset_name?: string
 }): Promise<void> => {
   const files_collector = new FilesCollector(
-    params.provider.workspace_provider,
-    params.provider.open_editors_provider,
-    params.provider.websites_provider
+    params.panel_provider.workspace_provider,
+    params.panel_provider.open_editors_provider,
+    params.panel_provider.websites_provider
   )
 
   const active_editor = vscode.window.activeTextEditor
@@ -27,15 +27,15 @@ export const handle_copy_prompt = async (params: {
     final_instruction = apply_preset_affixes_to_instruction({
       instruction: params.instructions,
       preset_name: params.preset_name,
-      presets_config_key: params.provider.get_presets_config_key()
+      presets_config_key: params.panel_provider.get_presets_config_key()
     })
   }
 
   const is_in_code_completions_mode =
-    (params.provider.home_view_type == HOME_VIEW_TYPES.WEB &&
-      params.provider.web_mode == 'code-completions') ||
-    (params.provider.home_view_type == HOME_VIEW_TYPES.API &&
-      params.provider.api_mode == 'code-completions')
+    (params.panel_provider.home_view_type == HOME_VIEW_TYPES.WEB &&
+      params.panel_provider.web_mode == 'code-completions') ||
+    (params.panel_provider.home_view_type == HOME_VIEW_TYPES.API &&
+      params.panel_provider.api_mode == 'code-completions')
 
   if (
     is_in_code_completions_mode &&
@@ -79,10 +79,10 @@ export const handle_copy_prompt = async (params: {
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_mode) {
     const context_text = await files_collector.collect_files({
-      no_context: params.provider.web_mode == 'no-context'
+      no_context: params.panel_provider.web_mode == 'no-context'
     })
 
-    if (params.provider.web_mode == 'edit-context' && !context_text) {
+    if (params.panel_provider.web_mode == 'edit-context' && !context_text) {
       vscode.window.showWarningMessage(
         dictionary.warning_message
           .CANNOT_COPY_PROMPT_IN_EDIT_CONTEXT_WITHOUT_CONTEXT
@@ -108,22 +108,22 @@ export const handle_copy_prompt = async (params: {
     if (instructions.includes('#SavedContext:')) {
       pre_context_instructions = await replace_saved_context_placeholder({
         instruction: pre_context_instructions,
-        context: params.provider.context,
-        workspace_provider: params.provider.workspace_provider
+        context: params.panel_provider.context,
+        workspace_provider: params.panel_provider.workspace_provider
       })
       post_context_instructions = await replace_saved_context_placeholder({
         instruction: post_context_instructions,
-        context: params.provider.context,
-        workspace_provider: params.provider.workspace_provider,
+        context: params.panel_provider.context,
+        workspace_provider: params.panel_provider.workspace_provider,
         just_opening_tag: true
       })
     }
 
-    if (params.provider.web_mode == 'edit-context') {
+    if (params.panel_provider.web_mode == 'edit-context') {
       const edit_format =
-        params.provider.home_view_type == HOME_VIEW_TYPES.WEB
-          ? params.provider.chat_edit_format
-          : params.provider.api_edit_format
+        params.panel_provider.home_view_type == HOME_VIEW_TYPES.WEB
+          ? params.panel_provider.chat_edit_format
+          : params.panel_provider.api_edit_format
       const all_instructions = vscode.workspace
         .getConfiguration('codeWebChat')
         .get<{ [key: string]: string }>('editFormatInstructions')

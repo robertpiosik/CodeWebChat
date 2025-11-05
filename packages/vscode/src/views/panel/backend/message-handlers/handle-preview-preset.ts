@@ -10,15 +10,15 @@ import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixe
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_preview_preset = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: PreviewPresetMessage
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
   const files_collector = new FilesCollector(
-    provider.workspace_provider,
-    provider.open_editors_provider,
-    provider.websites_provider
+    panel_provider.workspace_provider,
+    panel_provider.open_editors_provider,
+    panel_provider.websites_provider
   )
 
   const active_editor = vscode.window.activeTextEditor
@@ -26,17 +26,17 @@ export const handle_preview_preset = async (
 
   let text_to_send: string
   let current_instructions = ''
-  if (provider.web_mode == 'ask') {
-    current_instructions = provider.ask_instructions
-  } else if (provider.web_mode == 'edit-context') {
-    current_instructions = provider.edit_instructions
-  } else if (provider.web_mode == 'no-context') {
-    current_instructions = provider.no_context_instructions
-  } else if (provider.web_mode == 'code-completions') {
-    current_instructions = provider.code_completion_instructions
+  if (panel_provider.web_mode == 'ask') {
+    current_instructions = panel_provider.ask_instructions
+  } else if (panel_provider.web_mode == 'edit-context') {
+    current_instructions = panel_provider.edit_instructions
+  } else if (panel_provider.web_mode == 'no-context') {
+    current_instructions = panel_provider.no_context_instructions
+  } else if (panel_provider.web_mode == 'code-completions') {
+    current_instructions = panel_provider.code_completion_instructions
   }
 
-  if (provider.web_mode == 'code-completions' && active_editor) {
+  if (panel_provider.web_mode == 'code-completions' && active_editor) {
     const document = active_editor.document
     const position = active_editor.selection.active
 
@@ -66,11 +66,11 @@ export const handle_preview_preset = async (
     }`
 
     text_to_send = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing_text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
-  } else if (provider.web_mode != 'code-completions') {
+  } else if (panel_provider.web_mode != 'code-completions') {
     let instructions = apply_preset_affixes_to_instruction({
       instruction: current_instructions,
       preset_name: message.preset.name,
-      presets_config_key: provider.get_presets_config_key(),
+      presets_config_key: panel_provider.get_presets_config_key(),
       override_affixes: {
         promptPrefix: message.preset.prompt_prefix,
         promptSuffix: message.preset.prompt_suffix
@@ -83,7 +83,7 @@ export const handle_preview_preset = async (
       instructions.includes('#Selection')
 
     const context_text =
-      provider.web_mode != 'no-context'
+      panel_provider.web_mode != 'no-context'
         ? await files_collector.collect_files({})
         : ''
 
@@ -107,23 +107,23 @@ export const handle_preview_preset = async (
     if (pre_context_instructions.includes('#SavedContext:')) {
       pre_context_instructions = await replace_saved_context_placeholder({
         instruction: pre_context_instructions,
-        context: provider.context,
-        workspace_provider: provider.workspace_provider
+        context: panel_provider.context,
+        workspace_provider: panel_provider.workspace_provider
       })
       post_context_instructions = await replace_saved_context_placeholder({
         instruction: post_context_instructions,
-        context: provider.context,
-        workspace_provider: provider.workspace_provider,
+        context: panel_provider.context,
+        workspace_provider: panel_provider.workspace_provider,
         just_opening_tag: true
       })
     }
 
-    if (provider.web_mode == 'edit-context') {
+    if (panel_provider.web_mode == 'edit-context') {
       const all_instructions = vscode.workspace
         .getConfiguration('codeWebChat')
         .get<{ [key: string]: string }>('editFormatInstructions')
       const edit_format_instructions =
-        all_instructions?.[provider.chat_edit_format]
+        all_instructions?.[panel_provider.chat_edit_format]
       if (edit_format_instructions) {
         const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
         pre_context_instructions += `\n${system_instructions}`
@@ -158,10 +158,10 @@ export const handle_preview_preset = async (
     new_url: message.preset.new_url
   }
 
-  provider.websocket_server_instance.preview_preset({
+  panel_provider.websocket_server_instance.preview_preset({
     instruction: text_to_send,
     preset: preset_for_preview,
-    mode: provider.web_mode,
+    mode: panel_provider.web_mode,
     raw_instructions: current_instructions
   })
   vscode.window.showInformationMessage(

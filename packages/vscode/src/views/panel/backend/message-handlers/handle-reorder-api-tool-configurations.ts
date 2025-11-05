@@ -7,10 +7,10 @@ import {
 import { get_tool_config_id } from '@/services/model-providers-manager'
 
 export const handle_reorder_api_tool_configurations = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   message: ReorderApiToolConfigurationsMessage
 ): Promise<void> => {
-  const providers_manager = new ModelProvidersManager(provider.context)
+  const providers_manager = new ModelProvidersManager(panel_provider.context)
   const reordered_ids = message.configurations.map((p) => p.id)
 
   if (message.mode === 'edit-context') {

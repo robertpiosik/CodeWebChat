@@ -2,9 +2,9 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ApiMode } from '@shared/types/modes'
 
 export const handle_save_mode_api = async (
-  provider: PanelProvider,
+  panel_provider: PanelProvider,
   mode: ApiMode
 ): Promise<void> => {
-  provider.api_mode = mode
-  await provider.context.workspaceState.update('api-mode', mode)
+  panel_provider.api_mode = mode
+  await panel_provider.context.workspaceState.update('api-mode', mode)
 }

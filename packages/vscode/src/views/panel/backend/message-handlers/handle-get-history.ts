@@ -7,23 +7,22 @@ import {
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
-export const handle_get_history = (provider: PanelProvider): void => {
-  const ask_history = provider.context.workspaceState.get<HistoryEntry[]>(
+export const handle_get_history = (panel_provider: PanelProvider): void => {
+  const ask_history = panel_provider.context.workspaceState.get<HistoryEntry[]>(
     HISTORY_ASK_STATE_KEY,
     []
   )
-  const edit_history = provider.context.workspaceState.get<HistoryEntry[]>(
-    HISTORY_EDIT_STATE_KEY,
-    []
-  )
-  const code_completions_history = provider.context.workspaceState.get<
+  const edit_history = panel_provider.context.workspaceState.get<
+    HistoryEntry[]
+  >(HISTORY_EDIT_STATE_KEY, [])
+  const code_completions_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
   >(HISTORY_CODE_COMPLETIONS_STATE_KEY, [])
-  const no_context_history = provider.context.workspaceState.get<
+  const no_context_history = panel_provider.context.workspaceState.get<
     HistoryEntry[]
   >(HISTORY_NO_CONTEXT_STATE_KEY, [])
 
-  provider.send_message({
+  panel_provider.send_message({
     command: 'CHAT_HISTORY',
     ask: ask_history.map((h) => h.text),
     edit_context: edit_history.map((h) => h.text),

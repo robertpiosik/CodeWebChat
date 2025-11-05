@@ -49,7 +49,7 @@
   display: flex;
   gap: var(--padding-8px);
   padding: var(--padding-12px);
-  border-top: 1px solid var(--cwc-border-color-dimmed);
+  border-top: 1px solid var(--vscode-widget-border);
 
   > button {
     flex: 1;
@@ -62,11 +62,12 @@
   position: relative;
   z-index: 1;
   border-radius: var(--border-radius-12px);
-  border: 1px solid var(--cwc-border-color-dimmed);
   width: 100%;
   max-width: 320px;
-  background-color: var(--vscode-quickInput-background);
   color: var(--vscode-quickInput-foreground);
+  background-color: var(--vscode-quickInput-background);
+  border: 1px solid var(--vscode-widget-border);
+  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
 
   &--full-width {
     max-width: none;
