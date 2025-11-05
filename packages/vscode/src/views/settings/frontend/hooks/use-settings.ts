@@ -44,7 +44,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
-    post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE' })
+    post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
   }, [vscode])
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export const use_settings = (vscode: any) => {
         case 'GEMINI_USER_ID':
           set_gemini_user_id(message.geminiUserId)
           break
-        case 'CLEAR_CHECKS_IN_WORKSPACE':
+        case 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
           set_clear_checks_in_workspace(message.value)
           break
       }
@@ -198,7 +198,7 @@ export const use_settings = (vscode: any) => {
     value: 'ignore-open-editors' | 'uncheck-all'
   ) =>
     post_message(vscode, {
-      command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE',
+      command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR',
       value
     })
 

@@ -222,20 +222,23 @@ export class SettingsProvider {
           case 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD':
             await handle_update_context_size_warning_threshold(this, message)
             break
-          case 'GET_CLEAR_CHECKS_IN_WORKSPACE': {
+          case 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR': {
             const config = vscode.workspace.getConfiguration('codeWebChat')
             const value = config.get<'ignore-open-editors' | 'uncheck-all'>(
-              'clearChecksInWorkspace',
+              'clearChecksInWorkspaceBehavior',
               'ignore-open-editors'
             )
-            this.postMessage({ command: 'CLEAR_CHECKS_IN_WORKSPACE', value })
+            this.postMessage({
+              command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR',
+              value
+            })
             break
           }
-          case 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE':
+          case 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
             await vscode.workspace
               .getConfiguration('codeWebChat')
               .update(
-                'clearChecksInWorkspace',
+                'clearChecksInWorkspaceBehavior',
                 message.value,
                 vscode.ConfigurationTarget.Global
               )
@@ -282,10 +285,10 @@ export class SettingsProvider {
           {
             const config = vscode.workspace.getConfiguration('codeWebChat')
             this.postMessage({
-              command: 'CLEAR_CHECKS_IN_WORKSPACE',
+              command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR',
               value:
                 config.get<'ignore-open-editors' | 'uncheck-all'>(
-                  'clearChecksInWorkspace'
+                  'clearChecksInWorkspaceBehavior'
                 ) ?? 'ignore-open-editors'
             })
           }
