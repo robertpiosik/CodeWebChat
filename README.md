@@ -4,7 +4,7 @@
 
 **The privacy AI coding without agents.** Guide the model to production-grade code with engineer-level control over context. Community-driven, free and open-source.
 
-Works with VS Code, and forks like Cursor, Windsurf, etc.
+Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 
 ✅ **Send prompts anywhere**
 
