@@ -222,6 +222,24 @@ export class SettingsProvider {
           case 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD':
             await handle_update_context_size_warning_threshold(this, message)
             break
+          case 'GET_CLEAR_CHECKS_IN_WORKSPACE': {
+            const config = vscode.workspace.getConfiguration('codeWebChat')
+            const value = config.get<'ignore-open-editors' | 'uncheck-all'>(
+              'clearChecksInWorkspace',
+              'ignore-open-editors'
+            )
+            this.postMessage({ command: 'CLEAR_CHECKS_IN_WORKSPACE', value })
+            break
+          }
+          case 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE':
+            await vscode.workspace
+              .getConfiguration('codeWebChat')
+              .update(
+                'clearChecksInWorkspace',
+                message.value,
+                vscode.ConfigurationTarget.Global
+              )
+            break
           case 'GET_GEMINI_USER_ID': {
             const config = vscode.workspace.getConfiguration('codeWebChat')
             const geminiUserId =
@@ -261,6 +279,16 @@ export class SettingsProvider {
           void handle_get_edit_context_configurations(this)
           void handle_get_intelligent_update_configurations(this)
           void handle_get_context_size_warning_threshold(this)
+          {
+            const config = vscode.workspace.getConfiguration('codeWebChat')
+            this.postMessage({
+              command: 'CLEAR_CHECKS_IN_WORKSPACE',
+              value:
+                config.get<'ignore-open-editors' | 'uncheck-all'>(
+                  'clearChecksInWorkspace'
+                ) ?? 'ignore-open-editors'
+            })
+          }
           {
             const config = vscode.workspace.getConfiguration('codeWebChat')
             this.postMessage({

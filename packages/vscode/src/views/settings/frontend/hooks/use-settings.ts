@@ -30,6 +30,9 @@ export const use_settings = (vscode: any) => {
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
+  const [clear_checks_in_workspace, set_clear_checks_in_workspace] = useState<
+    'ignore-open-editors' | 'uncheck-all' | undefined
+  >(undefined)
 
   useEffect(() => {
     // Request initial data
@@ -41,6 +44,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
+    post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE' })
   }, [vscode])
 
   useEffect(() => {
@@ -70,6 +74,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'GEMINI_USER_ID':
           set_gemini_user_id(message.geminiUserId)
+          break
+        case 'CLEAR_CHECKS_IN_WORKSPACE':
+          set_clear_checks_in_workspace(message.value)
           break
       }
     }
@@ -187,6 +194,14 @@ export const use_settings = (vscode: any) => {
       geminiUserId
     })
 
+  const handle_clear_checks_in_workspace_change = (
+    value: 'ignore-open-editors' | 'uncheck-all'
+  ) =>
+    post_message(vscode, {
+      command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE',
+      value
+    })
+
   return {
     providers,
     set_providers,
@@ -201,6 +216,7 @@ export const use_settings = (vscode: any) => {
     commit_message_instructions,
     context_size_warning_threshold,
     gemini_user_id,
+    clear_checks_in_workspace,
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
@@ -215,6 +231,7 @@ export const use_settings = (vscode: any) => {
     handle_commit_instructions_change,
     handle_open_editor_settings,
     handle_context_size_warning_threshold_change,
-    handle_gemini_user_id_change
+    handle_gemini_user_id_change,
+    handle_clear_checks_in_workspace_change
   }
 }

@@ -185,6 +185,15 @@ export interface UpdateGeminiUserIdMessage {
   geminiUserId: number | null
 }
 
+export interface GetClearChecksInWorkspaceMessage {
+  command: 'GET_CLEAR_CHECKS_IN_WORKSPACE'
+}
+
+export interface UpdateClearChecksInWorkspaceMessage {
+  command: 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE'
+  value: 'ignore-open-editors' | 'uncheck-all'
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -222,6 +231,8 @@ export type FrontendMessage =
   | UpdateContextSizeWarningThresholdMessage
   | GetGeminiUserIdMessage
   | UpdateGeminiUserIdMessage
+  | GetClearChecksInWorkspaceMessage
+  | UpdateClearChecksInWorkspaceMessage
   | OpenEditorSettingsMessage
 
 // === FROM BACKEND TO FRONTEND ===
@@ -262,6 +273,11 @@ export interface GeminiUserIdMessage {
   geminiUserId: number | null
 }
 
+export interface ClearChecksInWorkspaceMessage {
+  command: 'CLEAR_CHECKS_IN_WORKSPACE'
+  value: 'ignore-open-editors' | 'uncheck-all'
+}
+
 export interface ShowSectionMessage {
   command: 'SHOW_SECTION'
   section: string
@@ -276,4 +292,5 @@ export type BackendMessage =
   | CommitMessageInstructionsMessage
   | ContextSizeWarningThresholdMessage
   | GeminiUserIdMessage
+  | ClearChecksInWorkspaceMessage
   | ShowSectionMessage
