@@ -89,7 +89,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               options={CLEAR_CHECKS_OPTIONS}
               value={props.clear_checks_in_workspace_behavior}
               onChange={props.on_clear_checks_in_workspace_behavior_change}
-              max_width={320}
             />
           }
         />
