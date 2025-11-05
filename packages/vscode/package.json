@@ -542,7 +542,7 @@
           "default": 60000,
           "description": "Threshold for the context size to show a warning."
         },
-        "codeWebChat.clearChecksInWorkspace": {
+        "codeWebChat.clearChecksInWorkspaceBehavior": {
           "type": "string",
           "enum": [
             "ignore-open-editors",

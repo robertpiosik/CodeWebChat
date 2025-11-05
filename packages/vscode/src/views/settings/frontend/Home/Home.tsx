@@ -60,7 +60,7 @@ type Props = {
   commit_message_instructions: string
   context_size_warning_threshold: number
   gemini_user_id: number | null
-  clear_checks_in_workspace: 'ignore-open-editors' | 'uncheck-all'
+  clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
 
   // handlers
   set_providers: (providers: ProviderForClient[]) => void
@@ -71,7 +71,7 @@ type Props = {
   on_context_size_warning_threshold_change: (threshold: number) => void
   on_commit_instructions_change: (instructions: string) => void
   on_gemini_user_id_change: (id: number | null) => void
-  on_clear_checks_in_workspace_change: (
+  on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
   on_open_editor_settings: () => void
@@ -237,9 +237,11 @@ export const Home: React.FC<Props> = (props) => {
           on_context_size_warning_threshold_change={
             props.on_context_size_warning_threshold_change
           }
-          clear_checks_in_workspace={props.clear_checks_in_workspace}
-          on_clear_checks_in_workspace_change={
-            props.on_clear_checks_in_workspace_change
+          clear_checks_in_workspace_behavior={
+            props.clear_checks_in_workspace_behavior
+          }
+          on_clear_checks_in_workspace_behavior_change={
+            props.on_clear_checks_in_workspace_behavior_change
           }
           on_open_editor_settings={props.on_open_editor_settings}
           on_stuck_change={general_on_stuck_change}

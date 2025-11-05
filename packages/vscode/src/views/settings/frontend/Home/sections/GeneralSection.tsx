@@ -6,9 +6,9 @@ import { TextButton } from '@ui/components/editor/settings/TextButton'
 
 type Props = {
   context_size_warning_threshold: number
-  clear_checks_in_workspace: 'ignore-open-editors' | 'uncheck-all'
+  clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
   on_context_size_warning_threshold_change: (threshold: number) => void
-  on_clear_checks_in_workspace_change: (
+  on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
   on_open_editor_settings: () => void
@@ -74,13 +74,13 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           }
         />
         <Item
-          title="Clear Checks in Workspace"
+          title="Clear Checks in Workspace Behavior"
           description="Behavior of the 'Clear Checks' command in the Workspace view."
           slot={
             <select
-              value={props.clear_checks_in_workspace}
+              value={props.clear_checks_in_workspace_behavior}
               onChange={(e) =>
-                props.on_clear_checks_in_workspace_change(
+                props.on_clear_checks_in_workspace_behavior_change(
                   e.target.value as 'ignore-open-editors' | 'uncheck-all'
                 )
               }

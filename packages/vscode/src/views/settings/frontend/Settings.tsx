@@ -30,7 +30,7 @@ export const Settings = () => {
       settings_hook.commit_message_instructions !== undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
-      settings_hook.clear_checks_in_workspace !== undefined
+      settings_hook.clear_checks_in_workspace_behavior !== undefined
     )
   }, [settings_hook])
 
@@ -60,7 +60,9 @@ export const Settings = () => {
       }
       commit_message_instructions={settings_hook.commit_message_instructions!}
       gemini_user_id={settings_hook.gemini_user_id!}
-      clear_checks_in_workspace={settings_hook.clear_checks_in_workspace!}
+      clear_checks_in_workspace_behavior={
+        settings_hook.clear_checks_in_workspace_behavior!
+      }
       set_providers={settings_hook.set_providers}
       set_code_completions_configs={settings_hook.set_code_completions_configs}
       set_commit_messages_configs={settings_hook.set_commit_messages_configs}
@@ -74,8 +76,8 @@ export const Settings = () => {
       on_commit_instructions_change={
         settings_hook.handle_commit_instructions_change
       }
-      on_clear_checks_in_workspace_change={
-        settings_hook.handle_clear_checks_in_workspace_change
+      on_clear_checks_in_workspace_behavior_change={
+        settings_hook.handle_clear_checks_in_workspace_behavior_change
       }
       on_gemini_user_id_change={settings_hook.handle_gemini_user_id_change}
       on_open_editor_settings={settings_hook.handle_open_editor_settings}
