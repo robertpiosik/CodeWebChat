@@ -35,14 +35,17 @@ Therefore, CWC is designed to align with LLMs' true capabilities—that is, code
 
 🙋 **Guide the model with context**
 
-Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide context up front, making prompts simpler and responses faster and more accurate.
+Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide full context up front allowing much simpler instructions. This saves money and time—the model doesn't have to make any tool calls, which are distracting "side quests".
 
-Meet the non-agentic workflow—select folders and files, enter prompt, and send message via...
+> [!TIP]
+> LLMs are pattern matchers—they love examples! Include some you believe will help the model understand the goal better.
+
+Meet the CWC's non-agentic workflow—select folders and files, enter instructions, and send message via...
 
 - new chat—to continue in the connected browser
 - API call—to use a model provider of choice
 
-Constructed message consists of the user's prompt, edit format instructions, and the selected context, as shown in the example:
+Constructed message looks like the following example:
 
 ```
 Implement a subtract function.
