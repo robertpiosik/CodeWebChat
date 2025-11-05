@@ -57,7 +57,6 @@ export const PresetsSection = forwardRef<HTMLDivElement, Props>(
         <Item
           title="Gemini User ID"
           description="Run Gemini chatbot as non-default user. Check URL for ID. For example: https://gemini.google.com/u/2/app -> ID is 2."
-          slot_placement="below"
           slot={
             <Input
               type="number"

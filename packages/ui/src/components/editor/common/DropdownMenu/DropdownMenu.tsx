@@ -12,15 +12,17 @@ export namespace DropdownMenu {
   export type Props = {
     items: Item[]
     on_mouse_enter?: React.MouseEventHandler<HTMLDivElement>
+    className?: string
   }
 }
 
 export const DropdownMenu: React.FC<DropdownMenu.Props> = ({
   items,
-  on_mouse_enter
+  on_mouse_enter,
+  className
 }) => {
   return (
-    <div className={cn(styles.menu)} onMouseEnter={on_mouse_enter}>
+    <div className={cn(styles.menu, className)} onMouseEnter={on_mouse_enter}>
       {items.map((item, index) => (
         <div
           key={index}

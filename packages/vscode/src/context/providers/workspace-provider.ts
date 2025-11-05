@@ -394,57 +394,70 @@ export class WorkspaceProvider
     }, 1000) // Debounce refresh to handle bulk file changes like builds
   }
   public clear_checks(): void {
-    // Get a list of currently open files to preserve their check state
-    const open_files = new Set(
-      this._get_open_editors().map((uri) => uri.fsPath)
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const clear_checks_in_workspace_behavior = config.get<string>(
+      'clearChecksInWorkspaceBehavior'
     )
 
-    const checked_open_files = Array.from(this.checked_items.entries())
-      .filter(
-        ([path, state]) =>
-          open_files.has(path) && state == vscode.TreeItemCheckboxState.Checked
+    if (clear_checks_in_workspace_behavior == 'uncheck-all') {
+      this.checked_items.clear()
+      this.partially_checked_dirs.clear()
+      this.directory_selected_token_counts.clear()
+    } else {
+      // Get a list of currently open files to preserve their check state
+      const open_files = new Set(
+        this._get_open_editors().map((uri) => uri.fsPath)
       )
-      .map(([path]) => path)
 
-    const new_checked_items = new Map<string, vscode.TreeItemCheckboxState>()
+      const checked_open_files = Array.from(this.checked_items.entries())
+        .filter(
+          ([path, state]) =>
+            open_files.has(path) &&
+            state == vscode.TreeItemCheckboxState.Checked
+        )
+        .map(([path]) => path)
 
-    for (const [path, state] of this.checked_items.entries()) {
-      if (open_files.has(path)) {
-        new_checked_items.set(path, state)
-      }
-    }
+      const new_checked_items = new Map<string, vscode.TreeItemCheckboxState>()
 
-    this.checked_items = new_checked_items
-
-    this.partially_checked_dirs.clear()
-    this.directory_selected_token_counts.clear()
-
-    for (const file_path of open_files) {
-      if (this.checked_items.has(file_path)) {
-        let dir_path = path.dirname(file_path)
-        const workspace_root = this.get_workspace_root_for_file(file_path)
-        while (workspace_root && dir_path.startsWith(workspace_root)) {
-          this._update_parent_state(dir_path)
-          dir_path = path.dirname(dir_path)
+      for (const [path, state] of this.checked_items.entries()) {
+        if (open_files.has(path)) {
+          new_checked_items.set(path, state)
         }
       }
-    }
 
-    if (checked_open_files.length > 0) {
-      vscode.window
-        .showInformationMessage(
-          `${checked_open_files.length} file${
-            checked_open_files.length == 1 ? '' : 's'
-          } remain${checked_open_files.length == 1 ? 's' : ''} checked.`,
-          'Clear open editors'
-        )
-        .then((selection) => {
-          if (selection == 'Clear open editors') {
-            vscode.commands.executeCommand('codeWebChat.clearChecksOpenEditors')
+      this.checked_items = new_checked_items
+
+      this.partially_checked_dirs.clear()
+      this.directory_selected_token_counts.clear()
+
+      for (const file_path of open_files) {
+        if (this.checked_items.has(file_path)) {
+          let dir_path = path.dirname(file_path)
+          const workspace_root = this.get_workspace_root_for_file(file_path)
+          while (workspace_root && dir_path.startsWith(workspace_root)) {
+            this._update_parent_state(dir_path)
+            dir_path = path.dirname(dir_path)
           }
-        })
-    }
+        }
+      }
 
+      if (checked_open_files.length > 0) {
+        vscode.window
+          .showInformationMessage(
+            `${checked_open_files.length} file${
+              checked_open_files.length == 1 ? '' : 's'
+            } remain${checked_open_files.length == 1 ? 's' : ''} checked.`,
+            'Clear open editors'
+          )
+          .then((selection) => {
+            if (selection == 'Clear open editors') {
+              vscode.commands.executeCommand(
+                'codeWebChat.clearChecksOpenEditors'
+              )
+            }
+          })
+      }
+    }
     this.refresh()
     this._on_did_change_checked_files.fire()
   }

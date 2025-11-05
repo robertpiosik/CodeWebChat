@@ -4,7 +4,7 @@
 
 **The privacy AI coding without agents.** Guide the model to production-grade code with engineer-level control over context. Community-driven, free and open-source.
 
-Works with VS Code, and forks like Cursor, Windsurf, etc.
+Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 
 ✅ **Send prompts anywhere**
 
@@ -37,7 +37,7 @@ Therefore, CWC is designed to align with LLMs' true capabilities—that is, code
 
 Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide context up front, making prompts simpler and responses faster and more accurate.
 
-Select folders and files, enter prompt, and send message via...
+Meet the non-agentic workflow—select folders and files, enter prompt, and send message via...
 
 - new chat—to continue in the connected browser
 - API call—to use a model provider of choice

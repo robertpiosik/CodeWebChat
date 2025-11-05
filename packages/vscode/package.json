@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "The privacy AI coding without agents (CWC)",
-  "version": "1.511.0",
+  "version": "1.512.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -157,7 +157,7 @@
       },
       {
         "command": "codeWebChat.clearChecks",
-        "title": "Clear All Checks",
+        "title": "Clear Checks",
         "category": "Code Web Chat",
         "icon": "$(clear-all)"
       },
@@ -175,7 +175,7 @@
       },
       {
         "command": "codeWebChat.clearChecksOpenEditors",
-        "title": "Clear All Checks",
+        "title": "Clear Checks",
         "category": "Code Web Chat",
         "icon": "$(clear-all)"
       },
@@ -541,6 +541,15 @@
           "type": "number",
           "default": 60000,
           "description": "Threshold for the context size to show a warning."
+        },
+        "codeWebChat.clearChecksInWorkspaceBehavior": {
+          "type": "string",
+          "enum": [
+            "ignore-open-editors",
+            "uncheck-all"
+          ],
+          "default": "ignore-open-editors",
+          "description": "Controls the behavior of the 'Clear Checks' action in the Workspace view."
         },
         "codeWebChat.ignorePatterns": {
           "type": "array",
