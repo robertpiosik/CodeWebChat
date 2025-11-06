@@ -35,7 +35,7 @@ Therefore, CWC is designed to align with LLMs' true capabilities—that is, code
 
 🧠 **Guide the model with context**
 
-Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide fine-grained context up front allowing much simpler instructions. This saves money and time as the model doesn't have to make any tool calls, which are distracting "side quests" consuming precious context space.
+Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, with CWC you provide fine-grained context up front, allowing simple, even vague instructions.
 
 > [!TIP]
 > LLMs are pattern matchers—they love examples! Include some you believe will help the model understand the goal better.
