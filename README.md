@@ -13,9 +13,9 @@ Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 
 ✅ **Apply responses**—sophisticated markdown parser for multi-file changes integration \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
-👥 **Community driven**—join our [Discord server](https://discord.com/invite/KJySXsrSX5) and get involved! \
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
-🔒️ **Total privacy**—operates 100% on your local machine
+🔒️ **Total privacy**—operates 100% on your local machine \
+👥 **Community driven**—join our [Discord server](https://discord.com/invite/KJySXsrSX5) and get involved!
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
