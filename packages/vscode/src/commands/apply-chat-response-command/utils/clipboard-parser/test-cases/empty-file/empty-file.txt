@@ -1,0 +1,9 @@
+```typescript
+// src/index.ts
+
+```
+
+```typescript
+// src/hello.ts
+console.log("hello")
+```

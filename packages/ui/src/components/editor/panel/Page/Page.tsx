@@ -28,9 +28,6 @@ export const Page: React.FC<Props> = (props) => {
         <div>{props.header_slot}</div>
       </div>
       {props.children}
-      {props.footer_slot && (
-        <div className={styles.footer}>{props.footer_slot}</div>
-      )}
     </div>
   )
 }

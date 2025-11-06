@@ -87,6 +87,9 @@ export const use_panel = (vscode: any) => {
     useState<boolean>(false)
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [context_file_paths, set_context_file_paths] = useState<string[]>([])
+  const [presets_collapsed, set_presets_collapsed] = useState<boolean>(false)
+  const [configurations_collapsed, set_configurations_collapsed] =
+    useState<boolean>(false)
 
   const handle_instructions_change = (
     value: string,
@@ -128,6 +131,9 @@ export const use_panel = (vscode: any) => {
         set_web_mode(message.mode)
       } else if (message.command == 'API_MODE') {
         set_api_mode(message.mode)
+      } else if (message.command == 'COLLAPSED_STATES') {
+        set_presets_collapsed(message.presets_collapsed)
+        set_configurations_collapsed(message.configurations_collapsed)
       } else if (message.command == 'EDITOR_STATE_CHANGED') {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
@@ -297,7 +303,8 @@ export const use_panel = (vscode: any) => {
       { command: 'REQUEST_EDITOR_SELECTION_STATE' },
       { command: 'GET_WORKSPACE_STATE' },
       { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
-      { command: 'REQUEST_GIT_STATE' }
+      { command: 'REQUEST_GIT_STATE' },
+      { command: 'GET_COLLAPSED_STATES' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -371,6 +378,24 @@ export const use_panel = (vscode: any) => {
     })
   }
 
+  const handle_presets_collapsed_change = (is_collapsed: boolean) => {
+    set_presets_collapsed(is_collapsed)
+    post_message(vscode, {
+      command: 'SAVE_COMPONENT_COLLAPSED_STATE',
+      component: 'presets',
+      is_collapsed
+    })
+  }
+
+  const handle_configurations_collapsed_change = (is_collapsed: boolean) => {
+    set_configurations_collapsed(is_collapsed)
+    post_message(vscode, {
+      command: 'SAVE_COMPONENT_COLLAPSED_STATE',
+      component: 'configurations',
+      is_collapsed
+    })
+  }
+
   return {
     active_view,
     set_active_view,
@@ -417,6 +442,8 @@ export const use_panel = (vscode: any) => {
     has_changes_to_commit,
     can_undo,
     context_file_paths,
+    presets_collapsed,
+    configurations_collapsed,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,
@@ -424,6 +451,8 @@ export const use_panel = (vscode: any) => {
     handle_web_mode_change,
     handle_api_mode_change,
     handle_home_view_type_change,
-    handle_donations_visibility_change
+    handle_donations_visibility_change,
+    handle_presets_collapsed_change,
+    handle_configurations_collapsed_change
   }
 }

@@ -8,11 +8,18 @@ type Props = {
   footer_slot?: React.ReactNode
   content_max_height?: string
   use_full_width?: boolean
+  on_background_click?: () => void
 }
 
 export const Modal: React.FC<Props> = (props) => {
+  const handle_background_click = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target == e.currentTarget) {
+      props.on_background_click?.()
+    }
+  }
+
   return (
-    <div className={styles.overlay}>
+    <div className={styles.overlay} onClick={handle_background_click}>
       <div
         className={cn(styles.container, {
           [styles['container--full-width']]: props.use_full_width

@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react'
-import styles from './CommitMessageModal.module.scss'
 import { Button } from '../../Button'
 import { Modal } from '../Modal'
-import TextareaAutosize from 'react-textarea-autosize'
+import { Textarea } from '../../../common/Textarea'
 import { use_commit_timer } from './hooks/use-commit-timer'
 
 type Props = {
@@ -30,12 +29,11 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
       <Modal
         title="Commit changes"
         content_slot={
-          <TextareaAutosize
-            className={styles.textarea}
+          <Textarea
             value={message}
-            onChange={(e) => set_message(e.target.value)}
-            minRows={2}
-            onKeyDown={(e) => {
+            on_change={set_message}
+            min_rows={2}
+            on_key_down={(e) => {
               if (e.key == 'Enter' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault()
                 handle_accept()

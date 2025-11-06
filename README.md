@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-**Meet Code Web Chat, the privacy AI coding without agents.** Guide the model to production-grade code with engineer-level control over context. Community-driven, free and open-source.
+AI coding without agents. Guide the model to production-grade code with engineer-level control over context.
 
 Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 
@@ -13,7 +13,9 @@ Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 
 ✅ **Apply responses**—sophisticated markdown parser for multi-file changes integration \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
-🔒️ **Total privacy**—operates 100% on your local machine
+❤️ **Free and open-source**—released under the GPL-3.0 license \
+🔒️ **Total privacy**—operates 100% on your local machine \
+👥 **Community driven**—join our [Discord server](https://discord.com/invite/KJySXsrSX5) and get involved!
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
@@ -25,7 +27,7 @@ Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 
 Code Web Chat helps you use your favorite coding web tools like ChatGPT's canvas. The idea to initialize chatbots is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
 
-🧑‍💻 **The limitations of LLMs**
+🧐 **The limitations of LLMs**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
@@ -33,9 +35,9 @@ Because the model is only as smart as examples it has seen in its pre-training s
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-🙋 **Guide the model with context**
+🧠 **Guide the model with context**
 
-Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide full context up front allowing much simpler instructions. This saves money and time—the model doesn't have to make any tool calls, which are distracting "side quests".
+Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, with CWC you provide fine-grained context up front, allowing simple, even vague instructions.
 
 > [!TIP]
 > LLMs are pattern matchers—they love examples! Include some you believe will help the model understand the goal better.

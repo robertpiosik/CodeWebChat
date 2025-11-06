@@ -52,6 +52,10 @@
       width: var(--size);
       height: var(--size);
       color: var(--vscode-icon-foreground);
+
+      > span {
+        font-size: 15px !important;
+      }
     }
   }
 }

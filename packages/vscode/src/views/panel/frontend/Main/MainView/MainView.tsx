@@ -1,11 +1,13 @@
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 import { Presets as UiPresets } from '@ui/components/editor/panel/Presets'
 import { ChatInput as UiChatInput } from '@ui/components/editor/panel/ChatInput'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { Preset } from '@shared/types/preset'
+import {
+  ResponseHistoryItem,
+  Responses as UiResponses
+} from '@ui/components/editor/panel/Responses'
 import { EditFormat } from '@shared/types/edit-format'
 import {
   HOME_VIEW_TYPES,
@@ -17,14 +19,9 @@ import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/compon
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
 import { use_cycle_mode } from './hooks/use-cycle-mode'
-import { use_re_render_on_interval } from './hooks/use-re-render-on-interval'
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
 import { WEB_MODES, API_MODES } from './modes'
 import { Header } from './components/Header'
-import cn from 'classnames'
-import { FileInPreview } from '@shared/types/file-in-preview'
-
-dayjs.extend(relativeTime)
 
 type Props = {
   scroll_reset_key: number
@@ -85,28 +82,20 @@ type Props = {
   on_caret_position_set?: () => void
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
-  response_history: {
-    response: string
-    raw_instructions?: string
-    created_at: number
-    lines_added?: number
-    lines_removed?: number
-    files?: FileInPreview[]
-  }[]
-  on_response_history_item_click: (item: {
-    response: string
-    raw_instructions?: string
-    files?: FileInPreview[]
-  }) => void
+  response_history: ResponseHistoryItem[]
+  on_response_history_item_click: (
+    item: Pick<ResponseHistoryItem, 'response' | 'raw_instructions' | 'files'>
+  ) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
   context_file_paths: string[]
+  presets_collapsed: boolean
+  on_presets_collapsed_change: (is_collapsed: boolean) => void
+  configurations_collapsed: boolean
+  on_configurations_collapsed_change: (is_collapsed: boolean) => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
-  // Re-render every minute to update the relative time of the history responses.
-  use_re_render_on_interval(60 * 1000)
-
   use_cycle_mode({
     home_view_type: props.home_view_type,
     on_home_view_type_change: props.on_home_view_type_change,
@@ -188,52 +177,20 @@ export const MainView: React.FC<Props> = (props) => {
       />
       <Scrollable scroll_to_top_key={scroll_to_top_key}>
         <UiSeparator height={4} />
+
         {props.response_history.length > 0 && (
-          <>
-            <div className={styles.responses}>
-              {props.response_history.map((item) => (
-                <button
-                  key={item.created_at}
-                  className={cn(styles['responses__item'], {
-                    [styles['responses__item--selected']]:
-                      props.response_history.length > 1 &&
-                      props.selected_history_item_created_at == item.created_at
-                  })}
-                  title={item.raw_instructions}
-                  onClick={() => {
-                    props.on_response_history_item_click(item)
-                    props.on_selected_history_item_change(item.created_at)
-                  }}
-                >
-                  <span className={styles['responses__item__instruction']}>
-                    {item.raw_instructions || 'Response without instructions'}
-                  </span>
-                  <div className={styles['responses__item__right']}>
-                    {item.lines_added !== undefined &&
-                      item.lines_removed !== undefined && (
-                        <div className={styles['responses__item__stats']}>
-                          <span
-                            className={styles['responses__item__stats--added']}
-                          >
-                            +{item.lines_added}
-                          </span>
-                          <span
-                            className={
-                              styles['responses__item__stats--removed']
-                            }
-                          >
-                            -{item.lines_removed}
-                          </span>
-                        </div>
-                      )}
-                    <span className={styles['responses__item__date']}>
-                      {dayjs(item.created_at).fromNow()}
-                    </span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </>
+          <UiResponses
+            response_history={props.response_history}
+            on_response_history_item_click={
+              props.on_response_history_item_click
+            }
+            selected_history_item_created_at={
+              props.selected_history_item_created_at
+            }
+            on_selected_history_item_change={
+              props.on_selected_history_item_change
+            }
+          />
         )}
 
         {!props.is_connected &&
@@ -320,6 +277,8 @@ export const MainView: React.FC<Props> = (props) => {
               on_toggle_selected_preset={props.on_toggle_selected_preset}
               on_toggle_group_collapsed={props.on_toggle_group_collapsed}
               selected_preset_name={props.selected_preset_or_group_name}
+              is_collapsed={props.presets_collapsed}
+              on_toggle_collapsed={props.on_presets_collapsed_change}
             />
           </>
         )}
@@ -338,9 +297,13 @@ export const MainView: React.FC<Props> = (props) => {
               on_reorder={props.on_configurations_reorder}
               selected_configuration_id={props.selected_configuration_id}
               on_manage_configurations={props.on_manage_configurations}
+              is_collapsed={props.configurations_collapsed}
+              on_toggle_collapsed={props.on_configurations_collapsed_change}
             />
           </>
         )}
+
+        <UiSeparator height={10} />
       </Scrollable>
     </>
   )

@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "The privacy AI coding without agents (CWC)",
-  "version": "1.513.0",
+  "description": "AI coding without agents (CWC)",
+  "version": "1.514.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",

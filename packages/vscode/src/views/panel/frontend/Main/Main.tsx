@@ -54,6 +54,10 @@ type Props = {
   chat_input_focus_key: number
   context_size_warning_threshold: number
   context_file_paths: string[]
+  presets_collapsed: boolean
+  on_presets_collapsed_change: (is_collapsed: boolean) => void
+  configurations_collapsed: boolean
+  on_configurations_collapsed_change: (is_collapsed: boolean) => void
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -675,6 +679,12 @@ export const Main: React.FC<Props> = (props) => {
       selected_history_item_created_at={props.selected_history_item_created_at}
       on_selected_history_item_change={props.on_selected_history_item_change}
       context_file_paths={props.context_file_paths}
+      presets_collapsed={props.presets_collapsed}
+      on_presets_collapsed_change={props.on_presets_collapsed_change}
+      configurations_collapsed={props.configurations_collapsed}
+      on_configurations_collapsed_change={
+        props.on_configurations_collapsed_change
+      }
     />
   )
 }

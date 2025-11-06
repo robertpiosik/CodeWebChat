@@ -1,12 +1,15 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import cn from 'classnames'
 import styles from './EditPresetForm.module.scss'
+import dropdown_styles from '@ui/components/editor/common/Dropdown/Dropdown.module.scss'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import TextareaAutosize from 'react-textarea-autosize'
 import { Field } from '@ui/components/editor/panel/Field'
 import { Slider } from '@ui/components/editor/panel/Slider'
 import { Checkbox } from '@ui/components/editor/common/Checkbox'
 import { Input } from '@ui/components/editor/common/Input'
+import { Textarea } from '@ui/components/editor/common/Textarea'
+import { Dropdown } from '@ui/components/editor/common/Dropdown'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 
@@ -54,6 +57,15 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     'prompt_prefix' | 'prompt_suffix' | null
   >(null)
 
+  const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
+  const models = useMemo(() => chatbot_config?.models || {}, [chatbot_config])
+
+  useEffect(() => {
+    if (!model && Object.keys(models).length > 0) {
+      set_model(Object.keys(models)[0])
+    }
+  }, [model, models])
+
   useEffect(() => {
     if (!chatbot) return
 
@@ -66,8 +78,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     }
   }, [model, chatbot])
 
-  const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
-
   const supports_temperature = chatbot_config?.supports_custom_temperature
   const supports_top_p = chatbot_config?.supports_custom_top_p
   const supports_thinking_budget = chatbot_config?.supports_thinking_budget
@@ -78,7 +88,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const supports_url_override = chatbot_config?.supports_url_override
   const supports_user_provided_model =
     chatbot_config?.supports_user_provided_model
-  const models = chatbot_config?.models || {}
   const supported_options = chatbot_config?.supported_options || {}
 
   useEffect(() => {
@@ -172,82 +181,78 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     return () => window.removeEventListener('message', handle_message)
   }, [active_field, prompt_prefix, prompt_suffix])
 
-  const handle_affix_change = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-    setter: (value: string) => void
+  const check_for_at_sign = (
+    value: string,
+    ref: React.RefObject<HTMLTextAreaElement>
   ) => {
-    const new_value = e.target.value
-    setter(new_value)
-
-    if (e.target.value.charAt(e.target.selectionStart - 1) == '@') {
+    if (ref.current && value.charAt(ref.current.selectionStart - 1) == '@') {
       setTimeout(() => {
         props.on_at_sign_in_affix()
       }, 150)
     }
   }
 
+  const reasoning_effort_options = [
+    { value: 'Unset', label: 'Unset' },
+    { value: 'High', label: 'High' },
+    { value: 'Medium', label: 'Medium' },
+    { value: 'Low', label: 'Low' },
+    { value: 'Minimal', label: 'Minimal' }
+  ]
+
   return (
     <Scrollable>
       <div className={styles.form}>
         {chatbot && (
           <Field label="Chatbot" html_for="chatbot">
-            <div
+            <button
+              className={dropdown_styles.button}
               onClick={(e) => {
                 e.stopPropagation()
                 props.pick_chatbot(chatbot)
               }}
             >
-              <div style={{ cursor: 'pointer' }}>
-                <div style={{ pointerEvents: 'none' }}>
-                  <select id="chatbot" value={chatbot} onChange={() => {}}>
-                    <option value={chatbot}>{chatbot}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
+              <span>{chatbot}</span>
+              <span
+                className={cn(
+                  'codicon codicon-chevron-down',
+                  dropdown_styles.chevron
+                )}
+              />
+            </button>
           </Field>
         )}
 
-        {Object.keys(models).length > 0 && (
+        {Object.keys(models).length > 0 && model && (
           <Field label="Model" html_for="model">
-            <select
-              id="model"
+            <Dropdown
+              options={Object.entries(models).map(([value, model_data]) => ({
+                value,
+                label: (model_data as any).label
+              }))}
               value={model}
-              onChange={(e) => set_model(e.target.value)}
-            >
-              {Object.entries(models).map(([value, model_data]) => (
-                <option key={value} value={value}>
-                  {(model_data as any).label}
-                </option>
-              ))}
-            </select>
+              onChange={set_model}
+            />
           </Field>
         )}
 
         {chatbot == 'OpenRouter' && (
           <Field label="Model" html_for="open-router-model">
-            <div
+            <button
+              className={dropdown_styles.button}
               onClick={(e) => {
                 e.stopPropagation()
                 props.pick_open_router_model()
               }}
             >
-              <div style={{ cursor: 'pointer' }}>
-                <div style={{ pointerEvents: 'none' }}>
-                  <select
-                    id="open-router-model"
-                    value={model || ''}
-                    onChange={() => {}}
-                  >
-                    {model ? (
-                      <option value={model}>{model}</option>
-                    ) : (
-                      <option value="">Select model</option>
-                    )}
-                  </select>
-                </div>
-              </div>
-            </div>
+              <span>{model || 'Select model'}</span>
+              <span
+                className={cn(
+                  'codicon codicon-chevron-down',
+                  dropdown_styles.chevron
+                )}
+              />
+            </button>
           </Field>
         )}
 
@@ -338,7 +343,12 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             label="Temperature"
             title="This setting influences the variety in the model's responses. Lower values lead to more predictable and typical responses, while higher values encourage more diverse and less common responses. At 0, the model always gives the same response for a given input."
           >
-            <Slider value={temperature || 0.5} onChange={set_temperature} />
+            <Slider
+              value={temperature || 0.5}
+              onChange={set_temperature}
+              min={0}
+              max={2}
+            />
           </Field>
         )}
 
@@ -350,6 +360,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             <Slider
               value={top_p || (chatbot && CHATBOTS[chatbot].default_top_p)!}
               onChange={set_top_p}
+              min={0}
+              max={1}
             />
           </Field>
         )}
@@ -360,21 +372,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             html_for="reasoning-effort"
             info="Controls the amount of thought the model puts into its response before answering. Requires supporting model."
           >
-            <select
-              id="reasoning-effort"
+            <Dropdown
+              options={reasoning_effort_options}
               value={reasoning_effort || 'Unset'}
-              onChange={(e) =>
-                set_reasoning_effort(
-                  e.target.value == 'Unset' ? undefined : e.target.value
-                )
-              }
-            >
-              <option value="Unset">Unset</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-              <option value="Minimal">Minimal</option>
-            </select>
+              onChange={(value) => {
+                set_reasoning_effort(value === 'Unset' ? undefined : value)
+              }}
+            />
           </Field>
         )}
 
@@ -404,11 +408,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             html_for="instructions"
             info="Optional tone and style instructions for the model"
           >
-            <TextareaAutosize
+            <Textarea
               id="instructions"
-              value={system_instructions}
-              onChange={(e) => set_system_instructions(e.target.value)}
-              minRows={2}
+              value={system_instructions || ''}
+              on_change={set_system_instructions}
+              min_rows={2}
             />
           </Field>
         )}
@@ -423,13 +427,16 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 : "Text prepended to all prompts used with this group's presets"
             }
           >
-            <TextareaAutosize
+            <Textarea
               id="prefix"
               ref={prefix_ref}
               value={prompt_prefix}
-              onChange={(e) => handle_affix_change(e, set_prompt_prefix)}
+              on_change={(value) => {
+                set_prompt_prefix(value)
+                check_for_at_sign(value, prefix_ref)
+              }}
               onFocus={() => set_active_field('prompt_prefix')}
-              minRows={2}
+              min_rows={2}
             />
           </Field>
 
@@ -442,13 +449,16 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 : "Text appended to all prompts used with this group's presets"
             }
           >
-            <TextareaAutosize
+            <Textarea
               id="suffix"
               ref={suffix_ref}
               value={prompt_suffix}
-              onChange={(e) => handle_affix_change(e, set_prompt_suffix)}
+              on_change={(value) => {
+                set_prompt_suffix(value)
+                check_for_at_sign(value, suffix_ref)
+              }}
               onFocus={() => set_active_field('prompt_suffix')}
-              minRows={2}
+              min_rows={2}
             />
           </Field>
         </>

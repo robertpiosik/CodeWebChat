@@ -15,21 +15,22 @@
     }
 
     &::-webkit-slider-runnable-track {
-      background: var(--vscode-input-foreground);
-      height: 1px;
+      background: linear-gradient(
+        to right,
+        var(--vscode-list-activeSelectionBackground) var(--value-percent),
+        var(--vscode-dropdown-border) var(--value-percent)
+      );
+      height: 3px;
+      border-radius: var(--border-radius-999px);
     }
 
     &::-webkit-slider-thumb {
       appearance: none;
-      margin-top: -5.5px;
+      margin-top: -4.5px;
       background-color: var(--vscode-button-background);
       height: 12px;
       width: 12px;
       border-radius: 50%;
     }
-  }
-
-  &__input {
-    width: 60px;
   }
 }
