@@ -9,7 +9,12 @@ export const Primary = () => {
   const [value, set_value] = useState(0.7)
   return (
     <div style={{ padding: '20px', width: '300px' }}>
-      <Slider value={value} onChange={(newValue) => set_value(newValue)} />
+      <Slider
+        value={value}
+        onChange={(newValue) => set_value(newValue)}
+        min={0}
+        max={2}
+      />
       <div
         style={{
           marginTop: '10px',
