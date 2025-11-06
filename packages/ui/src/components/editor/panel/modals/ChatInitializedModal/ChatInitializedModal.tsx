@@ -41,6 +41,7 @@ export const ChatInitializedModal: React.FC<Props> = (props) => {
           />
         </div>
       }
+      on_background_click={props.on_close}
       footer_slot={
         <Button on_click={props.on_close} is_focused={true}>
           Close

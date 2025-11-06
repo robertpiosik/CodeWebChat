@@ -6,7 +6,7 @@ import { NavigationDivider } from '@ui/components/editor/settings/NavigationDivi
 import { Item } from '@ui/components/editor/settings/Item'
 import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
 import { Section } from '@ui/components/editor/settings/Section'
-import { Textarea } from '@ui/components/editor/settings/Textarea'
+import { Textarea } from '@ui/components/editor/common/Textarea'
 import {
   ConfigurationForClient,
   ProviderForClient
@@ -356,7 +356,7 @@ export const Home: React.FC<Props> = (props) => {
             slot={
               <Textarea
                 value={commit_instructions}
-                onChange={(e) => set_commit_instructions(e.target.value)}
+                on_change={set_commit_instructions}
               />
             }
           />
