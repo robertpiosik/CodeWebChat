@@ -24,8 +24,8 @@ const get_edit_context_config = async (
   api_providers_manager: ModelProvidersManager,
   show_quick_pick: boolean = false,
   context: vscode.ExtensionContext,
-  config_id?: string,
-  panel_provider?: PanelProvider
+  panel_provider: PanelProvider,
+  config_id?: string
 ): Promise<{ provider: any; config: any } | undefined> => {
   const edit_context_configs =
     await api_providers_manager.get_edit_context_tool_configs()
@@ -278,145 +278,163 @@ const perform_context_editing = async (params: {
     return
   }
 
-  const config_result = await get_edit_context_config(
-    api_providers_manager,
-    params.show_quick_pick,
-    params.context,
-    params.config_id,
-    params.panel_provider
-  )
+  let current_config_id = params.config_id
+  let should_show_quick_pick = params.show_quick_pick
 
-  if (!config_result) {
-    return
-  }
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const config_result = await get_edit_context_config(
+      api_providers_manager,
+      should_show_quick_pick,
+      params.context,
+      params.panel_provider,
+      current_config_id
+    )
 
-  const { provider, config: edit_context_config } = config_result
-
-  if (!provider.api_key) {
-    vscode.window.showErrorMessage(dictionary.error_message.API_KEY_MISSING)
-    return
-  }
-
-  let endpoint_url = ''
-  if (provider.type == 'built-in') {
-    const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
-    if (!provider_info) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
-      )
-      Logger.warn({
-        function_name: 'perform_context_editing',
-        message: `Built-in provider "${provider.name}" not found.`
-      })
+    if (!config_result) {
       return
     }
-    endpoint_url = provider_info.base_url
-  } else {
-    endpoint_url = provider.base_url
-  }
 
-  const files = `<files>${collected_files}\n</files>`
+    const { provider, config: edit_context_config } = config_result
 
-  const edit_format = params.context.workspaceState.get<EditFormat>(
-    'api-edit-format',
-    'diff'
-  )
-  const all_instructions = vscode.workspace
-    .getConfiguration('codeWebChat')
-    .get<{ [key in EditFormat]: string }>('editFormatInstructions')
-  const edit_format_instructions = all_instructions?.[edit_format] ?? ''
-
-  if (edit_format_instructions) {
-    const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
-    pre_context_instructions += `\n${system_instructions}`
-    post_context_instructions += `\n${system_instructions}`
-  }
-
-  // Use instructions placement setting to determine message structure
-  const instructions_placement =
-    edit_context_config.instructions_placement || 'above-and-below'
-  let content: string
-  if (instructions_placement == 'below-only') {
-    // Place instructions only below context for better caching
-    content = `${files}\n${post_context_instructions}`
-  } else {
-    // Default: place instructions above and below context for better adherence
-    content = `${pre_context_instructions}\n${files}\n${post_context_instructions}`
-  }
-
-  const messages = [
-    {
-      role: 'system',
-      content: "You're a helpful coding assistant."
-    },
-    {
-      role: 'user',
-      content
+    if (!provider.api_key) {
+      vscode.window.showErrorMessage(dictionary.error_message.API_KEY_MISSING)
+      should_show_quick_pick = true
+      current_config_id = undefined
+      continue
     }
-  ]
 
-  const body: { [key: string]: any } = {
-    messages,
-    model: edit_context_config.model,
-    temperature: edit_context_config.temperature
-  }
-
-  apply_reasoning_effort(body, provider, edit_context_config.reasoning_effort)
-
-  const cancel_token_source = axios.CancelToken.source()
-
-  if (params.panel_provider) {
-    params.panel_provider.api_call_cancel_token_source = cancel_token_source
-  }
-
-  try {
-    if (params.panel_provider) {
-      params.panel_provider.send_message({
-        command: 'SHOW_PROGRESS',
-        title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
-      })
-    }
-    const result = await make_api_request({
-      endpoint_url,
-      api_key: provider.api_key,
-      body,
-      cancellation_token: cancel_token_source.token,
-      on_thinking_chunk: () => {
-        if (params.panel_provider) {
-          params.panel_provider.send_message({
-            command: 'SHOW_PROGRESS',
-            title: `${dictionary.api_call.THINKING}...`
-          })
-        }
-      },
-      on_chunk: (tokens_per_second) => {
-        if (params.panel_provider) {
-          params.panel_provider.send_message({
-            command: 'SHOW_PROGRESS',
-            title: 'Receiving response...',
-            tokens_per_second
-          })
-        }
+    let endpoint_url = ''
+    if (provider.type == 'built-in') {
+      const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
+      if (!provider_info) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.BUILT_IN_PROVIDER_NOT_FOUND(provider.name)
+        )
+        Logger.warn({
+          function_name: 'perform_context_editing',
+          message: `Built-in provider "${provider.name}" not found.`
+        })
+        should_show_quick_pick = true
+        current_config_id = undefined
+        continue
       }
-    })
-
-    if (result) {
-      vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
-        response: result.response,
-        raw_instructions: instructions
-      })
+      endpoint_url = provider_info.base_url
+    } else {
+      endpoint_url = provider.base_url
     }
-  } catch (error) {
-    if (axios.isCancel(error)) return
-    Logger.error({
-      function_name: 'perform_context_editing',
-      message: 'refactor task error',
-      data: error
-    })
-    vscode.window.showErrorMessage(dictionary.error_message.REFACTOR_ERROR)
-  } finally {
-    params.panel_provider.send_message({ command: 'HIDE_PROGRESS' })
-    params.panel_provider.api_call_cancel_token_source = null
+
+    const files = `<files>${collected_files}\n</files>`
+
+    const edit_format = params.context.workspaceState.get<EditFormat>(
+      'api-edit-format',
+      'diff'
+    )
+    const all_instructions = vscode.workspace
+      .getConfiguration('codeWebChat')
+      .get<{ [key in EditFormat]: string }>('editFormatInstructions')
+    const edit_format_instructions = all_instructions?.[edit_format] ?? ''
+
+    let loop_pre_context_instructions = pre_context_instructions
+    let loop_post_context_instructions = post_context_instructions
+
+    if (edit_format_instructions) {
+      const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
+      loop_pre_context_instructions += `\n${system_instructions}`
+      loop_post_context_instructions += `\n${system_instructions}`
+    }
+
+    // Use instructions placement setting to determine message structure
+    const instructions_placement =
+      edit_context_config.instructions_placement || 'above-and-below'
+    let content: string
+    if (instructions_placement == 'below-only') {
+      // Place instructions only below context for better caching
+      content = `${files}\n${loop_post_context_instructions}`
+    } else {
+      // Default: place instructions above and below context for better adherence
+      content = `${loop_pre_context_instructions}\n${files}\n${loop_post_context_instructions}`
+    }
+
+    const messages = [
+      {
+        role: 'system',
+        content: "You're a helpful coding assistant."
+      },
+      {
+        role: 'user',
+        content
+      }
+    ]
+
+    const body: { [key: string]: any } = {
+      messages,
+      model: edit_context_config.model,
+      temperature: edit_context_config.temperature
+    }
+
+    apply_reasoning_effort(body, provider, edit_context_config.reasoning_effort)
+
+    const cancel_token_source = axios.CancelToken.source()
+
+    if (params.panel_provider) {
+      params.panel_provider.api_call_cancel_token_source = cancel_token_source
+    }
+
+    try {
+      if (params.panel_provider) {
+        params.panel_provider.send_message({
+          command: 'SHOW_PROGRESS',
+          title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
+        })
+      }
+      const result = await make_api_request({
+        endpoint_url,
+        api_key: provider.api_key,
+        body,
+        cancellation_token: cancel_token_source.token,
+        on_thinking_chunk: () => {
+          if (params.panel_provider) {
+            params.panel_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: `${dictionary.api_call.THINKING}...`
+            })
+          }
+        },
+        on_chunk: (tokens_per_second) => {
+          if (params.panel_provider) {
+            params.panel_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title: 'Receiving response...',
+              tokens_per_second
+            })
+          }
+        }
+      })
+
+      if (result) {
+        vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+          response: result.response,
+          raw_instructions: instructions
+        })
+        return
+      } else {
+        should_show_quick_pick = true
+        current_config_id = undefined
+      }
+    } catch (error) {
+      if (axios.isCancel(error)) return
+      Logger.error({
+        function_name: 'perform_context_editing',
+        message: 'refactor task error',
+        data: error
+      })
+      vscode.window.showErrorMessage(dictionary.error_message.REFACTOR_ERROR)
+      return
+    } finally {
+      params.panel_provider.send_message({ command: 'HIDE_PROGRESS' })
+      params.panel_provider.api_call_cancel_token_source = null
+    }
   }
 }
 

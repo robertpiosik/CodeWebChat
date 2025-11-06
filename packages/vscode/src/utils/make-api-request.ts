@@ -9,13 +9,13 @@ type ThinkingStreamCallback = (text: string) => void
 const DATA_PREFIX = 'data: '
 const DONE_TOKEN = '[DONE]'
 
-async function process_stream_chunk(
+const process_stream_chunk = async (
   chunk: string,
   buffer: string
 ): Promise<{
   updated_buffer: string
   new_content: string
-}> {
+}> => {
   let updated_buffer = buffer
   let new_content = ''
   try {
@@ -59,14 +59,14 @@ async function process_stream_chunk(
   }
 }
 
-export async function make_api_request(params: {
+export const make_api_request = async (params: {
   endpoint_url: string
   api_key: string
   body: any
   cancellation_token: any
   on_chunk?: StreamCallback
   on_thinking_chunk?: ThinkingStreamCallback
-}): Promise<{ response: string; thoughts?: string } | null> {
+}): Promise<{ response: string; thoughts?: string } | null> => {
   Logger.info({
     function_name: 'make_api_request',
     message: 'API Request Body',
@@ -331,7 +331,7 @@ export async function make_api_request(params: {
           message: 'Request canceled',
           data: error.message
         })
-        return null
+        throw error
       } else if (axios.isAxiosError(error) && error.response?.status == 429) {
         vscode.window.showErrorMessage(
           dictionary.error_message.API_RATE_LIMIT_EXCEEDED
