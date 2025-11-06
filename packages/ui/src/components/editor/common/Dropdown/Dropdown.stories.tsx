@@ -7,7 +7,7 @@ export default {
 
 const sample_options: Dropdown.Option<string>[] = [
   { value: 'option1', label: 'Option 1' },
-  { value: 'option2', label: 'Option 2' },
+  { value: 'option2', label: 'This is a much longer option label' },
   { value: 'option3', label: 'Option 3' }
 ]
 

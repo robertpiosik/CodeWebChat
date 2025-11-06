@@ -8,7 +8,7 @@ type PromptTemplate = {
   template: string
 }
 
-const ADD_NEW_TEMPLATE_LABEL = '$(add) New prompt template'
+const ADD_NEW_TEMPLATE_LABEL = '$(add) New prompt template...'
 
 export const handle_show_prompt_template_quick_pick = async (
   panel_provider: PanelProvider

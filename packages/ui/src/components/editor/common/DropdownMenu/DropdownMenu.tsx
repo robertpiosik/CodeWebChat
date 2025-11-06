@@ -1,5 +1,5 @@
+import { useState } from 'react'
 import styles from './DropdownMenu.module.scss'
-import cn from 'classnames'
 
 export namespace DropdownMenu {
   export type Item = {
@@ -11,24 +11,24 @@ export namespace DropdownMenu {
 
   export type Props = {
     items: Item[]
-    on_mouse_enter?: React.MouseEventHandler<HTMLDivElement>
-    className?: string
   }
 }
 
-export const DropdownMenu: React.FC<DropdownMenu.Props> = ({
-  items,
-  on_mouse_enter,
-  className
-}) => {
+export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
+  const [is_preselection_respected, set_is_preselection_respected] =
+    useState<boolean>(true)
+
   return (
-    <div className={cn(styles.menu, className)} onMouseEnter={on_mouse_enter}>
-      {items.map((item, index) => (
+    <div className={styles.menu}>
+      {props.items.map((item, index) => (
         <div
           key={index}
           className={styles.item}
           onClick={item.on_click}
-          data-selected={item.is_selected}
+          data-selected={item.is_selected && is_preselection_respected}
+          onMouseEnter={() => {
+            set_is_preselection_respected(false)
+          }}
         >
           <span>{item.label}</span>
           {item.shortcut && (

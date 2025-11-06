@@ -1,13 +1,11 @@
 .dropdown {
   position: relative;
-  width: 100%;
 }
 
 .button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--padding-8px);
   background: var(--vscode-input-background);
   color: var(--vscode-input-foreground);
   border: 1px solid var(--cwc-border-color);
@@ -15,29 +13,24 @@
   border-radius: var(--border-radius-4px);
   cursor: pointer;
   width: 100%;
-  text-align: left;
 
   &:hover {
-    background: var(--vscode-list-hoverBackground);
+    border-color: var(--cwc-border-color-hover);
   }
 
-  &[data-is-open='true'] {
+  &--open {
     border-color: var(--vscode-focusBorder);
-    outline: 1px solid var(--vscode-focusBorder);
-    outline-offset: -1px;
+
+    &:hover {
+      border-color: var(--vscode-focusBorder);
+    }
   }
 }
 
 .chevron {
-  transition: transform 0.2s ease;
   color: var(--vscode-icon-foreground);
-}
 
-.chevron_open {
-  transform: rotate(180deg);
-}
-
-.menu_override {
-  left: 0;
-  right: auto;
+  &--open {
+    transform: rotate(180deg);
+  }
 }

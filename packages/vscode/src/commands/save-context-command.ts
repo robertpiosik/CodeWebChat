@@ -9,6 +9,14 @@ import {
 import { SavedContext } from '@/types/context'
 import { dictionary } from '@shared/constants/dictionary'
 
+const PROMPT_ENTER_CONTEXT_NAME = 'Enter a name for this context'
+const PLACEHOLDER_CONTEXT_NAME = 'e.g., Backend API Context'
+const VALIDATION_CONTEXT_NAME_EMPTY = 'Context name cannot be empty.'
+const LABEL_BACK = '$(arrow-left) Back'
+const LABEL_NEW_SAVED_CONTEXT = '$(add) New saved context...'
+const PLACEHOLDER_SELECT_OR_CREATE_CONTEXT =
+  'Select existing context to overwrite or create a new one'
+
 function condense_paths(
   paths: string[],
   workspace_root: string,
@@ -311,7 +319,6 @@ export function save_context_command(
         return a.localeCompare(b)
       })
 
-      const BACK_LABEL = '$(arrow-left) Back'
       let show_storage_selection = true
       while (show_storage_selection) {
         show_storage_selection = false
@@ -388,12 +395,10 @@ export function save_context_command(
 
             if (existing_context_names.length == 0) {
               context_name = await vscode.window.showInputBox({
-                prompt: 'Enter a name for this context',
-                placeHolder: 'e.g., Backend API Context',
+                prompt: PROMPT_ENTER_CONTEXT_NAME,
+                placeHolder: PLACEHOLDER_CONTEXT_NAME,
                 validateInput: (value) =>
-                  value.trim().length > 0
-                    ? null
-                    : 'Context name cannot be empty.'
+                  value.trim().length > 0 ? null : VALIDATION_CONTEXT_NAME_EMPTY
               })
 
               if (!context_name) {
@@ -401,10 +406,8 @@ export function save_context_command(
               }
             } else {
               const quick_pick_items = [
-                { label: BACK_LABEL },
-                {
-                  label: '$(add) Create new...'
-                },
+                { label: LABEL_BACK },
+                { label: LABEL_NEW_SAVED_CONTEXT },
                 { label: '', kind: vscode.QuickPickItemKind.Separator },
                 ...existing_context_names.map((name) => {
                   const context_info = all_contexts_map.get(name)!
@@ -436,8 +439,7 @@ export function save_context_command(
               const selected_item = await vscode.window.showQuickPick(
                 quick_pick_items,
                 {
-                  placeHolder:
-                    'Select existing context to overwrite or create a new one'
+                  placeHolder: PLACEHOLDER_SELECT_OR_CREATE_CONTEXT
                 }
               )
 
@@ -445,19 +447,19 @@ export function save_context_command(
                 return
               }
 
-              if (selected_item.label === BACK_LABEL) {
+              if (selected_item.label === LABEL_BACK) {
                 show_storage_selection = true
                 continue
               }
 
-              if (selected_item.label == '$(add) Create new...') {
+              if (selected_item.label == LABEL_NEW_SAVED_CONTEXT) {
                 context_name = await vscode.window.showInputBox({
-                  prompt: 'Enter a name for this context',
-                  placeHolder: 'e.g., Backend API Context',
+                  prompt: PROMPT_ENTER_CONTEXT_NAME,
+                  placeHolder: PLACEHOLDER_CONTEXT_NAME,
                   validateInput: (value) =>
                     value.trim().length > 0
                       ? null
-                      : 'Context name cannot be empty.'
+                      : VALIDATION_CONTEXT_NAME_EMPTY
                 })
 
                 if (!context_name) {
@@ -579,10 +581,10 @@ export function save_context_command(
 
           if (saved_contexts.length == 0) {
             context_name = await vscode.window.showInputBox({
-              prompt: 'Enter a name for this context',
-              placeHolder: 'e.g., Backend API Context',
+              prompt: PROMPT_ENTER_CONTEXT_NAME,
+              placeHolder: PLACEHOLDER_CONTEXT_NAME,
               validateInput: (value) =>
-                value.trim().length > 0 ? null : 'Context name cannot be empty.'
+                value.trim().length > 0 ? null : VALIDATION_CONTEXT_NAME_EMPTY
             })
 
             if (!context_name) {
@@ -594,10 +596,8 @@ export function save_context_command(
             )
 
             const quick_pick_items = [
-              { label: BACK_LABEL },
-              {
-                label: '$(add) Create new...'
-              },
+              { label: LABEL_BACK },
+              { label: LABEL_NEW_SAVED_CONTEXT },
               { label: '', kind: vscode.QuickPickItemKind.Separator },
               ...saved_contexts.map((context) => ({
                 label: context.name,
@@ -610,8 +610,7 @@ export function save_context_command(
             const selected_item = await vscode.window.showQuickPick(
               quick_pick_items,
               {
-                placeHolder:
-                  'Select existing context to overwrite or create a new one'
+                placeHolder: PLACEHOLDER_SELECT_OR_CREATE_CONTEXT
               }
             )
 
@@ -619,19 +618,17 @@ export function save_context_command(
               return
             }
 
-            if (selected_item.label === BACK_LABEL) {
+            if (selected_item.label === LABEL_BACK) {
               show_storage_selection = true
               continue
             }
 
-            if (selected_item.label == '$(add) Create new...') {
+            if (selected_item.label == LABEL_NEW_SAVED_CONTEXT) {
               context_name = await vscode.window.showInputBox({
-                prompt: 'Enter a name for this context',
-                placeHolder: 'e.g., Backend API Context',
+                prompt: PROMPT_ENTER_CONTEXT_NAME,
+                placeHolder: PLACEHOLDER_CONTEXT_NAME,
                 validateInput: (value) =>
-                  value.trim().length > 0
-                    ? null
-                    : 'Context name cannot be empty.'
+                  value.trim().length > 0 ? null : VALIDATION_CONTEXT_NAME_EMPTY
               })
 
               if (!context_name) {

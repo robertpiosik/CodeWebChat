@@ -83,7 +83,7 @@ export const dictionary = {
     URL_OVERRIDE_DIFFERENT_DOMAIN: (preset_name: string) =>
       `URL override for preset "${preset_name}" was discarded because it uses a different domain.`,
     CONTEXT_SIZE_WARNING: (threshold: string, percentage: number) =>
-      `Context exceeds threshold of ${threshold} tokens by ${percentage}%. Excessive context size degrades output quality and increase resource usage.`,
+      `Context exceeds threshold of ${threshold} tokens by ${percentage}%. Excessive context size affects accuracy and cost-efficiency.`,
     FAILED_TO_CREATE_FILE: (file_path: string) =>
       `Failed to create file: ${file_path}`,
     FAILED_TO_APPLY_CHANGES_TO_FILE: (file_path: string) =>

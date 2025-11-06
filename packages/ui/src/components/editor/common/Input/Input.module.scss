@@ -7,8 +7,11 @@
   width: 100%;
   outline: none;
 
+  &:hover {
+    border-color: var(--cwc-border-color-hover);
+  }
+
   &:focus {
-    outline: 1px solid var(--vscode-focusBorder);
-    outline-offset: -1px;
+    border-color: var(--vscode-focusBorder);
   }
 }
