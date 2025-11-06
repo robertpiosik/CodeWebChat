@@ -25,7 +25,7 @@ Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 
 Code Web Chat helps you use your favorite coding web tools like ChatGPT's canvas. The idea to initialize chatbots is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
 
-🧑‍💻 **The limitations of LLMs**
+🧐 **The limitations of LLMs**
 
 Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
@@ -33,9 +33,9 @@ Because the model is only as smart as examples it has seen in its pre-training s
 
 Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
 
-🙋 **Guide the model with context**
+🧠 **Guide the model with context**
 
-Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide full context up front allowing much simpler instructions. This saves money and time—the model doesn't have to make any tool calls, which are distracting "side quests".
+Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, CWC lets you provide fine-grained context up front allowing much simpler instructions. This saves money and time as the model doesn't have to make any tool calls, which are distracting "side quests" consuming precious context space.
 
 > [!TIP]
 > LLMs are pattern matchers—they love examples! Include some you believe will help the model understand the goal better.
