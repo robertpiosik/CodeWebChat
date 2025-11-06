@@ -68,7 +68,7 @@ export const dictionary = {
       'Cannot copy prompt in edit context mode without any context. Please add files to the context.',
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR:
       'Cannot copy prompt in code completion mode without an active editor.',
-    UNABLE_TO_WORK_WITH_EMPTY_CONTEXT: 'Unable to work with empty context.',
+    CONTEXT_CANNOT_BE_EMPTY: 'Context cannot be empty.',
     INSTRUCTIONS_CANNOT_BE_EMPTY: 'Instructions cannot be empty.',
     CANNOT_PREVIEW_IN_CODE_COMPLETION_WITHOUT_EDITOR:
       'Cannot preview in code completion mode without an active editor.',
