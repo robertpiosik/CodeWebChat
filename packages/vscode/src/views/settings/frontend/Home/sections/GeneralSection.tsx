@@ -83,7 +83,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         />
         <Item
           title="Clear Checks in Workspace Behavior"
-          description="Behavior of the 'Clear Checks' command in the Workspace view."
+          description="Behavior of the 'Clear Checks' button in the Workspace view."
           slot={
             <Dropdown
               options={CLEAR_CHECKS_OPTIONS}
