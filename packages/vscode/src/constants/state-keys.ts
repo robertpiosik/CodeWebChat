@@ -55,6 +55,9 @@ export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'
 
 export const RECENT_DONATIONS_VISIBLE_STATE_KEY = 'recent-donations-visible'
 
+export const PRESETS_COLLAPSED_STATE_KEY = 'presets-collapsed'
+export const CONFIGURATIONS_COLLAPSED_STATE_KEY = 'configurations-collapsed'
+
 export const get_last_group_or_preset_choice_state_key = (web_mode: string) =>
   `last-group-or-preset-choice-${web_mode}`
 

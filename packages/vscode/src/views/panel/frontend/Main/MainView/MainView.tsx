@@ -89,6 +89,10 @@ type Props = {
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
   context_file_paths: string[]
+  presets_collapsed: boolean
+  on_presets_collapsed_change: (is_collapsed: boolean) => void
+  configurations_collapsed: boolean
+  on_configurations_collapsed_change: (is_collapsed: boolean) => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -273,6 +277,8 @@ export const MainView: React.FC<Props> = (props) => {
               on_toggle_selected_preset={props.on_toggle_selected_preset}
               on_toggle_group_collapsed={props.on_toggle_group_collapsed}
               selected_preset_name={props.selected_preset_or_group_name}
+              is_collapsed={props.presets_collapsed}
+              on_toggle_collapsed={props.on_presets_collapsed_change}
             />
           </>
         )}
@@ -291,9 +297,13 @@ export const MainView: React.FC<Props> = (props) => {
               on_reorder={props.on_configurations_reorder}
               selected_configuration_id={props.selected_configuration_id}
               on_manage_configurations={props.on_manage_configurations}
+              is_collapsed={props.configurations_collapsed}
+              on_toggle_collapsed={props.on_configurations_collapsed_change}
             />
           </>
         )}
+
+        <UiSeparator height={10} />
       </Scrollable>
     </>
   )

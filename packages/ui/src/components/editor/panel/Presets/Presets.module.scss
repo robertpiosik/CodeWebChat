@@ -3,6 +3,29 @@
   flex-direction: column;
 }
 
+.header {
+  height: var(--list-item-height);
+  padding: 0 var(--padding-12px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-4px);
+  }
+
+  &__right {
+    display: flex;
+  }
+}
+
 .presets {
   display: flex;
   flex-direction: column;
@@ -92,7 +115,6 @@
       display: none;
       align-items: center;
       cursor: default;
-      padding-right: var(--padding-4px);
     }
   }
 }

@@ -320,6 +320,16 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   files?: FileInPreview[]
 }
 
+export interface GetCollapsedStatesMessage extends BaseMessage {
+  command: 'GET_COLLAPSED_STATES'
+}
+
+export interface SaveComponentCollapsedStateMessage extends BaseMessage {
+  command: 'SAVE_COMPONENT_COLLAPSED_STATE'
+  component: 'presets' | 'configurations'
+  is_collapsed: boolean
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -379,6 +389,8 @@ export type FrontendMessage =
   | ManageConfigurationsMessage
   | UndoMessage
   | ApplyResponseFromHistoryMessage
+  | GetCollapsedStatesMessage
+  | SaveComponentCollapsedStateMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -581,6 +593,12 @@ export interface NewResponseReceivedMessage extends BaseMessage {
   files?: FileInPreview[]
 }
 
+export interface CollapsedStatesMessage extends BaseMessage {
+  command: 'COLLAPSED_STATES'
+  presets_collapsed: boolean
+  configurations_collapsed: boolean
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusChatInputMessage
@@ -619,3 +637,4 @@ export type BackendMessage =
   | ShowCommitMessageModalMessage
   | CommitProcessCancelledMessage
   | NewResponseReceivedMessage
+  | CollapsedStatesMessage

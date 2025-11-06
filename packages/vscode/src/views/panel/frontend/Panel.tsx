@@ -68,6 +68,8 @@ export const Panel = () => {
     has_changes_to_commit,
     can_undo,
     context_file_paths,
+    presets_collapsed,
+    configurations_collapsed,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,
@@ -75,7 +77,9 @@ export const Panel = () => {
     handle_web_mode_change,
     handle_api_mode_change,
     handle_home_view_type_change,
-    handle_donations_visibility_change
+    handle_donations_visibility_change,
+    handle_presets_collapsed_change,
+    handle_configurations_collapsed_change
   } = use_panel(vscode)
 
   if (
@@ -215,6 +219,12 @@ export const Panel = () => {
                 chat_input_focus_key={chat_input_focus_key}
                 context_size_warning_threshold={context_size_warning_threshold}
                 context_file_paths={context_file_paths}
+                presets_collapsed={presets_collapsed}
+                on_presets_collapsed_change={handle_presets_collapsed_change}
+                configurations_collapsed={configurations_collapsed}
+                on_configurations_collapsed_change={
+                  handle_configurations_collapsed_change
+                }
               />
             </div>
             <div

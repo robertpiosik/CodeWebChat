@@ -3,6 +3,29 @@
   flex-direction: column;
 }
 
+.header {
+  height: var(--list-item-height);
+  padding: 0 var(--padding-12px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-4px);
+  }
+
+  &__right {
+    display: flex;
+  }
+}
+
 .missing-config {
   padding: var(--padding-2px) var(--padding-12px) 0 var(--padding-12px);
   font-weight: 500;
