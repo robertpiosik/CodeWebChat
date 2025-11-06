@@ -204,18 +204,6 @@ export const ResponsePreview: FC<Props> = (props) => {
                         />
                       )}
                       <IconButton
-                        codicon_icon="diff-single"
-                        title="Open Changes"
-                        on_click={(e) => {
-                          e.stopPropagation()
-                          set_last_clicked_file_index(index)
-                          props.on_focus_file({
-                            file_path: file.file_path,
-                            workspace_name: file.workspace_name
-                          })
-                        }}
-                      />
-                      <IconButton
                         codicon_icon="go-to-file"
                         title="Go To File"
                         on_click={(e) => {

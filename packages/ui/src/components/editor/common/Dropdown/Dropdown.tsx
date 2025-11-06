@@ -13,16 +13,10 @@ export namespace Dropdown {
     options: Option<T>[]
     value: T
     onChange: (value: T) => void
-    className?: string
   }
 }
 
-export const Dropdown = <T extends string>({
-  options,
-  value,
-  onChange,
-  className
-}: Dropdown.Props<T>) => {
+export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
   const [is_open, set_is_open] = useState(false)
   const dropdown_ref = useRef<HTMLDivElement>(null)
   const button_ref = useRef<HTMLButtonElement>(null)
@@ -30,12 +24,12 @@ export const Dropdown = <T extends string>({
 
   const longest_label = useMemo(
     () =>
-      options.reduce(
+      props.options.reduce(
         (longest, option) =>
           option.label.length > longest.length ? option.label : longest,
         ''
       ),
-    [options]
+    [props.options]
   )
 
   useLayoutEffect(() => {
@@ -51,7 +45,7 @@ export const Dropdown = <T extends string>({
     }
   }, [longest_label])
 
-  const selected_option = options.find((opt) => opt.value === value)
+  const selected_option = props.options.find((opt) => opt.value == props.value)
 
   const handle_click_outside = (event: MouseEvent) => {
     if (
@@ -69,11 +63,11 @@ export const Dropdown = <T extends string>({
     }
   }, [])
 
-  const menu_items: DropdownMenu.Item[] = options.map((option) => ({
+  const menu_items: DropdownMenu.Item[] = props.options.map((option) => ({
     label: option.label,
-    is_selected: option.value === value,
+    is_selected: option.value == props.value,
     on_click: () => {
-      onChange(option.value)
+      props.onChange(option.value)
       set_is_open(false)
     }
   }))
@@ -81,24 +75,18 @@ export const Dropdown = <T extends string>({
   const style = width ? { width: `${width}px` } : undefined
 
   return (
-    <div
-      className={cn(styles.dropdown, className)}
-      ref={dropdown_ref}
-      style={style}
-    >
+    <div className={styles.dropdown} ref={dropdown_ref} style={style}>
       <button
         ref={button_ref}
-        className={styles.button}
+        className={cn(styles.button, { [styles['button--open']]: is_open })}
         onClick={() => set_is_open(!is_open)}
-        data-is-open={is_open}
       >
         <span>{selected_option?.label ?? 'Select...'}</span>
         <span
-          className={cn(
-            'codicon codicon-chevron-down',
+          className={cn('codicon codicon-chevron-down', [
             styles.chevron,
-            is_open && styles.chevron_open
-          )}
+            { [styles['chevron--open']]: is_open }
+          ])}
         />
       </button>
       {is_open && <DropdownMenu items={menu_items} />}

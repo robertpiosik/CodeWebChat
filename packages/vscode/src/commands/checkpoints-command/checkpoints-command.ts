@@ -114,14 +114,14 @@ export const checkpoints_command = (
           quick_pick.items = [
             {
               id: 'add-new',
-              label: '$(add) New checkpoint',
+              label: '$(add) New checkpoint...',
               alwaysShow: true
             },
             ...(visible_checkpoints.length > 0
               ? [
                   {
                     id: 'clear-all',
-                    label: '$(trash) Clear all checkpoints',
+                    label: '$(trash) Clear all checkpoints...',
                     alwaysShow: true
                   }
                 ]

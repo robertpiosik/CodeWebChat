@@ -15,21 +15,22 @@
   width: 100%;
 
   &:hover {
-    background: var(--vscode-list-hoverBackground);
+    border-color: var(--cwc-border-color-hover);
   }
 
-  &[data-is-open='true'] {
+  &--open {
     border-color: var(--vscode-focusBorder);
-    outline: 1px solid var(--vscode-focusBorder);
-    outline-offset: -1px;
+
+    &:hover {
+      border-color: var(--vscode-focusBorder);
+    }
   }
 }
 
 .chevron {
-  transition: transform 0.2s ease;
   color: var(--vscode-icon-foreground);
-}
 
-.chevron_open {
-  transform: rotate(180deg);
+  &--open {
+    transform: rotate(180deg);
+  }
 }
