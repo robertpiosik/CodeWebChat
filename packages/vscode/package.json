@@ -270,8 +270,7 @@
       {
         "command": "codeWebChat.settings",
         "title": "Settings",
-        "category": "Code Web Chat",
-        "icon": "$(settings-gear)"
+        "category": "Code Web Chat"
       }
     ],
     "menus": {
