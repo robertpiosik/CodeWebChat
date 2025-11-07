@@ -22,8 +22,7 @@ import {
   save_context_command,
   reference_in_chat_command,
   open_url_command,
-  feedback_command,
-  apply_context_from_clipboard_command
+  feedback_command
 } from './commands'
 import { SettingsProvider } from './views/settings/backend/settings-provider'
 
@@ -100,7 +99,6 @@ export async function activate(context: vscode.ExtensionContext) {
       url: 'https://github.com/robertpiosik/CodeWebChat'
     }),
     feedback_command(),
-    apply_context_from_clipboard_command(workspace_provider),
     vscode.commands.registerCommand(
       'codeWebChat.settings',
       (section?: string) => {

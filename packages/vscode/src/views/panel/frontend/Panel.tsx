@@ -348,7 +348,6 @@ export const Panel = () => {
                   }
                 />
               }
-              header_slot={<></>}
             >
               <UiResponsePreview
                 items={items_to_review}

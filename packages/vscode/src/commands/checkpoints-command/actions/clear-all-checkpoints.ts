@@ -7,22 +7,30 @@ import { Logger } from '@shared/utils/logger'
 export const clear_all_checkpoints = async (
   context: vscode.ExtensionContext
 ) => {
-  const checkpoints = await get_checkpoints(context)
-
-  for (const checkpoint of checkpoints) {
-    try {
-      const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
-      await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
-        recursive: true
-      })
-    } catch (error) {
-      Logger.warn({
-        function_name: 'clear_all_checkpoints',
-        message: 'Could not delete checkpoint file',
-        data: error
-      })
+  const clear_task = async () => {
+    const checkpoints = await get_checkpoints(context)
+    for (const checkpoint of checkpoints) {
+      try {
+        const checkpoint_path = get_checkpoint_path(checkpoint.timestamp)
+        await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
+          recursive: true
+        })
+      } catch (error) {
+        Logger.warn({
+          function_name: 'clear_all_checkpoints',
+          message: 'Could not delete checkpoint file',
+          data: error
+        })
+      }
     }
+    await context.workspaceState.update(CHECKPOINTS_STATE_KEY, [])
   }
-
-  await context.workspaceState.update(CHECKPOINTS_STATE_KEY, [])
+  await vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      title: 'Clearing all checkpoints...',
+      cancellable: false
+    },
+    clear_task
+  )
 }

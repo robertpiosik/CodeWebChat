@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "AI coding without agents (CWC)",
-  "version": "1.514.0",
+  "version": "1.515.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -119,11 +119,6 @@
         "title": "Copy Context of Open Editors",
         "category": "Code Web Chat",
         "icon": "$(copy)"
-      },
-      {
-        "command": "codeWebChat.applyContextFromClipboard",
-        "title": "Apply Context from Clipboard",
-        "category": "Code Web Chat"
       },
       {
         "command": "codeWebChat.openRepository",
@@ -351,10 +346,6 @@
         },
         {
           "command": "codeWebChat.openRepository",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.applyContextFromClipboard",
           "when": "false"
         },
         {
