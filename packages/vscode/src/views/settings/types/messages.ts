@@ -159,6 +159,15 @@ export interface UpdateCommitMessageInstructionsMessage {
   instructions: string
 }
 
+export interface GetEditContextSystemInstructionsMessage {
+  command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
+}
+
+export interface UpdateEditContextSystemInstructionsMessage {
+  command: 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
+  instructions: string
+}
+
 export interface SettingsUiReadyMessage {
   command: 'SETTINGS_UI_READY'
 }
@@ -226,6 +235,8 @@ export type FrontendMessage =
   | SetDefaultCommitMessagesConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
+  | GetEditContextSystemInstructionsMessage
+  | UpdateEditContextSystemInstructionsMessage
   | SettingsUiReadyMessage
   | GetContextSizeWarningThresholdMessage
   | UpdateContextSizeWarningThresholdMessage
@@ -263,6 +274,11 @@ export interface CommitMessageInstructionsMessage {
   instructions: string
 }
 
+export interface EditContextSystemInstructionsMessage {
+  command: 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
+  instructions: string
+}
+
 export interface ContextSizeWarningThresholdMessage {
   command: 'CONTEXT_SIZE_WARNING_THRESHOLD'
   threshold: number
@@ -290,6 +306,7 @@ export type BackendMessage =
   | IntelligentUpdateConfigurationsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
+  | EditContextSystemInstructionsMessage
   | ContextSizeWarningThresholdMessage
   | GeminiUserIdMessage
   | ClearChecksInWorkspaceBehaviorMessage

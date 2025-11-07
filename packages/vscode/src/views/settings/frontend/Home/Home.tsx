@@ -56,6 +56,7 @@ type Props = {
   code_completions_configs: ConfigurationForClient[]
   commit_messages_configs: ConfigurationForClient[]
   edit_context_configs: ConfigurationForClient[]
+  edit_context_system_instructions: string
   intelligent_update_configs: ConfigurationForClient[]
   commit_message_instructions: string
   context_size_warning_threshold: number
@@ -70,6 +71,7 @@ type Props = {
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (threshold: number) => void
   on_commit_instructions_change: (instructions: string) => void
+  on_edit_context_system_instructions_change: (instructions: string) => void
   on_gemini_user_id_change: (id: number | null) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
@@ -104,6 +106,8 @@ export const Home: React.FC<Props> = (props) => {
     'commit-messages': null
   })
   const [commit_instructions, set_commit_instructions] = useState('')
+  const [edit_context_instructions, set_edit_context_instructions] =
+    useState('')
   const [stuck_sections, set_stuck_sections] = useState(new Set<NavItem>())
 
   const handle_stuck_change = useCallback((id: NavItem, is_stuck: boolean) => {
@@ -163,6 +167,10 @@ export const Home: React.FC<Props> = (props) => {
   }, [props.commit_message_instructions])
 
   useEffect(() => {
+    set_edit_context_instructions(props.edit_context_system_instructions || '')
+  }, [props.edit_context_system_instructions])
+
+  useEffect(() => {
     const handler = setTimeout(() => {
       if (
         props.commit_message_instructions !== undefined &&
@@ -176,6 +184,24 @@ export const Home: React.FC<Props> = (props) => {
     commit_instructions,
     props.on_commit_instructions_change,
     props.commit_message_instructions
+  ])
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (
+        props.edit_context_system_instructions !== undefined &&
+        edit_context_instructions !== props.edit_context_system_instructions
+      ) {
+        props.on_edit_context_system_instructions_change(
+          edit_context_instructions
+        )
+      }
+    }, 500)
+    return () => clearTimeout(handler)
+  }, [
+    edit_context_instructions,
+    props.on_edit_context_system_instructions_change,
+    props.edit_context_system_instructions
   ])
 
   const handle_scroll_to_section = (item_id: NavItem) => {
@@ -277,6 +303,17 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Modify, create or delete files based on natural language instructions."
           on_stuck_change={edit_context_on_stuck_change}
         >
+          <Item
+            title="System Instructions"
+            description="Tone and style instructions for the model."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={edit_context_instructions}
+                on_change={set_edit_context_instructions}
+              />
+            }
+          />
           <ApiToolConfigurationSection
             configurations={props.edit_context_configs}
             set_configurations={props.set_edit_context_configs}

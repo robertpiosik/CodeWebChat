@@ -9,6 +9,12 @@ import { marked } from 'marked'
 import { EventEmitter } from 'events'
 import { apply_context_command } from '../commands/apply-context-command/apply-context-command'
 import { dictionary } from '@shared/constants/dictionary'
+import {
+  CONTEXT_CHECKED_PATHS_STATE_KEY,
+  CONTEXT_CHECKED_URLS_STATE_KEY,
+  DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
+  type DuplicateWorkspaceContext
+} from '../constants/state-keys'
 import { ContextProvider } from './providers/context-provider'
 
 export const token_count_emitter = new EventEmitter()
@@ -20,13 +26,60 @@ const round_token_count_for_badge = (count: number): number => {
   return Math.floor(count / 1000) * 1000
 }
 
-export const context_initialization = (
+const restore_duplicated_workspace_context = async (
   context: vscode.ExtensionContext
-): {
+) => {
+  const duplicated_context = context.globalState.get<DuplicateWorkspaceContext>(
+    DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY
+  )
+
+  if (duplicated_context?.timestamp) {
+    const now = Date.now()
+    const age = now - duplicated_context.timestamp
+
+    if (age <= 60000) {
+      const current_workspace_folders =
+        vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ??
+        []
+
+      const sorted_current_folders = [...current_workspace_folders].sort()
+      const sorted_saved_folders = [
+        ...(duplicated_context.workspace_root_folders ?? [])
+      ].sort()
+
+      const are_workspaces_the_same =
+        sorted_current_folders.length == sorted_saved_folders.length &&
+        sorted_current_folders.every(
+          (value, index) => value == sorted_saved_folders[index]
+        )
+      if (are_workspaces_the_same) {
+        await context.workspaceState.update(
+          CONTEXT_CHECKED_PATHS_STATE_KEY,
+          duplicated_context.checked_files
+        )
+        await context.workspaceState.update(
+          CONTEXT_CHECKED_URLS_STATE_KEY,
+          duplicated_context.checked_websites
+        )
+      }
+    }
+
+    await context.globalState.update(
+      DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
+      undefined
+    )
+  }
+}
+
+export const context_initialization = async (
+  context: vscode.ExtensionContext
+): Promise<{
   workspace_provider: WorkspaceProvider
   open_editors_provider: OpenEditorsProvider
   websites_provider: WebsitesProvider
-} => {
+}> => {
+  await restore_duplicated_workspace_context(context)
+
   let was_above_threshold = false
 
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
