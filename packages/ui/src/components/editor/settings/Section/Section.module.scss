@@ -22,6 +22,8 @@
     var(--padding-60px) + var(--padding-4px)
   ); // to align with the sidebar title
   padding-bottom: var(--padding-10px);
+  padding-left: var(--padding-12px);
+  padding-right: var(--padding-12px);
   background-color: var(--vscode-editor-background);
   transition: box-shadow var(--transition-duration-250)
     var(--transition-timing-function);

@@ -4,38 +4,46 @@ import {
   FrontendMessage
 } from '@/views/settings/types/messages'
 import {
-  handle_get_model_providers,
-  handle_reorder_model_providers,
-  handle_add_model_provider,
-  handle_delete_model_provider,
-  handle_rename_model_provider,
-  handle_change_model_provider_key,
-  handle_get_code_completions_configurations,
-  handle_reorder_code_completions_configurations,
-  handle_delete_code_completions_configuration,
   handle_add_code_completions_configuration,
-  handle_edit_code_completions_configuration,
-  handle_set_default_code_completions_configuration,
-  handle_get_commit_messages_configurations,
-  handle_reorder_commit_messages_configurations,
-  handle_delete_commit_messages_configuration,
   handle_add_commit_messages_configuration,
-  handle_edit_commit_messages_configuration,
-  handle_set_default_commit_messages_configuration,
-  handle_get_edit_context_configurations,
-  handle_reorder_edit_context_configurations,
-  handle_delete_edit_context_configuration,
   handle_add_edit_context_configuration,
-  handle_edit_edit_context_configuration,
-  handle_get_intelligent_update_configurations,
-  handle_reorder_intelligent_update_configurations,
-  handle_delete_intelligent_update_configuration,
   handle_add_intelligent_update_configuration,
+  handle_add_model_provider,
+  handle_change_model_provider_key,
+  handle_delete_code_completions_configuration,
+  handle_delete_commit_messages_configuration,
+  handle_delete_edit_context_configuration,
+  handle_delete_intelligent_update_configuration,
+  handle_delete_model_provider,
+  handle_edit_code_completions_configuration,
+  handle_edit_commit_messages_configuration,
+  handle_edit_edit_context_configuration,
   handle_edit_intelligent_update_configuration,
-  handle_set_default_intelligent_update_configuration
-} from './message-handlers' // It seems my new handlers were not auto-imported
-import { handle_get_context_size_warning_threshold } from './message-handlers/handle-get-context-size-warning-threshold'
-import { handle_update_context_size_warning_threshold } from './message-handlers/handle-update-context-size-warning-threshold'
+  handle_get_clear_checks_in_workspace_behavior,
+  handle_get_code_completions_configurations,
+  handle_get_commit_message_instructions,
+  handle_get_commit_messages_configurations,
+  handle_get_context_size_warning_threshold,
+  handle_get_edit_context_configurations,
+  handle_get_edit_context_system_instructions,
+  handle_get_gemini_user_id,
+  handle_get_intelligent_update_configurations,
+  handle_get_model_providers,
+  handle_rename_model_provider,
+  handle_reorder_code_completions_configurations,
+  handle_reorder_commit_messages_configurations,
+  handle_reorder_edit_context_configurations,
+  handle_reorder_intelligent_update_configurations,
+  handle_reorder_model_providers,
+  handle_set_default_code_completions_configuration,
+  handle_set_default_commit_messages_configuration,
+  handle_set_default_intelligent_update_configuration,
+  handle_update_clear_checks_in_workspace_behavior,
+  handle_update_commit_message_instructions,
+  handle_update_context_size_warning_threshold,
+  handle_update_edit_context_system_instructions,
+  handle_update_gemini_user_id
+} from './message-handlers'
 
 export class SettingsProvider {
   private _webview_panel: vscode.WebviewPanel | undefined
@@ -151,6 +159,12 @@ export class SettingsProvider {
           case 'EDIT_EDIT_CONTEXT_CONFIGURATION':
             await handle_edit_edit_context_configuration(this, message)
             break
+          case 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS':
+            await handle_get_edit_context_system_instructions(this)
+            break
+          case 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS':
+            await handle_update_edit_context_system_instructions(message)
+            break
           case 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS':
             await handle_get_intelligent_update_configurations(this)
             break
@@ -197,24 +211,11 @@ export class SettingsProvider {
               message
             )
             break
-          case 'GET_COMMIT_MESSAGE_INSTRUCTIONS': {
-            const config = vscode.workspace.getConfiguration('codeWebChat')
-            const instructions =
-              config.get<string>('commitMessageInstructions') || ''
-            this.postMessage({
-              command: 'COMMIT_MESSAGE_INSTRUCTIONS',
-              instructions
-            })
+          case 'GET_COMMIT_MESSAGE_INSTRUCTIONS':
+            await handle_get_commit_message_instructions(this)
             break
-          }
           case 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS':
-            await vscode.workspace
-              .getConfiguration('codeWebChat')
-              .update(
-                'commitMessageInstructions',
-                message.instructions,
-                vscode.ConfigurationTarget.Global
-              )
+            await handle_update_commit_message_instructions(this, message)
             break
           case 'GET_CONTEXT_SIZE_WARNING_THRESHOLD':
             await handle_get_context_size_warning_threshold(this)
@@ -222,45 +223,20 @@ export class SettingsProvider {
           case 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD':
             await handle_update_context_size_warning_threshold(this, message)
             break
-          case 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR': {
-            const config = vscode.workspace.getConfiguration('codeWebChat')
-            const value = config.get<'ignore-open-editors' | 'uncheck-all'>(
-              'clearChecksInWorkspaceBehavior',
-              'ignore-open-editors'
-            )
-            this.postMessage({
-              command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR',
-              value
-            })
+          case 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
+            await handle_get_clear_checks_in_workspace_behavior(this)
             break
-          }
           case 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
-            await vscode.workspace
-              .getConfiguration('codeWebChat')
-              .update(
-                'clearChecksInWorkspaceBehavior',
-                message.value,
-                vscode.ConfigurationTarget.Global
-              )
+            await handle_update_clear_checks_in_workspace_behavior(
+              this,
+              message
+            )
             break
-          case 'GET_GEMINI_USER_ID': {
-            const config = vscode.workspace.getConfiguration('codeWebChat')
-            const geminiUserId =
-              config.get<number | null>('geminiUserId') ?? null
-            this.postMessage({
-              command: 'GEMINI_USER_ID',
-              geminiUserId
-            })
+          case 'GET_GEMINI_USER_ID':
+            await handle_get_gemini_user_id(this)
             break
-          }
           case 'UPDATE_GEMINI_USER_ID':
-            await vscode.workspace
-              .getConfiguration('codeWebChat')
-              .update(
-                'geminiUserId',
-                message.geminiUserId,
-                vscode.ConfigurationTarget.Global
-              )
+            await handle_update_gemini_user_id(this, message)
             break
           case 'OPEN_EDITOR_SETTINGS':
             await vscode.commands.executeCommand(
@@ -280,25 +256,12 @@ export class SettingsProvider {
           void handle_get_code_completions_configurations(this)
           void handle_get_commit_messages_configurations(this)
           void handle_get_edit_context_configurations(this)
+          void handle_get_edit_context_system_instructions(this)
           void handle_get_intelligent_update_configurations(this)
           void handle_get_context_size_warning_threshold(this)
-          {
-            const config = vscode.workspace.getConfiguration('codeWebChat')
-            this.postMessage({
-              command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR',
-              value:
-                config.get<'ignore-open-editors' | 'uncheck-all'>(
-                  'clearChecksInWorkspaceBehavior'
-                ) ?? 'ignore-open-editors'
-            })
-          }
-          {
-            const config = vscode.workspace.getConfiguration('codeWebChat')
-            this.postMessage({
-              command: 'GEMINI_USER_ID',
-              geminiUserId: config.get<number | null>('geminiUserId') ?? null
-            })
-          }
+          void handle_get_commit_message_instructions(this)
+          void handle_get_clear_checks_in_workspace_behavior(this)
+          void handle_get_gemini_user_id(this)
         }
       })
     )

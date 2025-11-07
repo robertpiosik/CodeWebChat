@@ -67,7 +67,7 @@ export const extract_workspace_and_path = (params: {
 }
 
 export const has_real_code = (content: string): boolean => {
-  if (content.trim() === '') {
+  if (content.trim() == '') {
     return true
   }
   const lines = content.split('\n')
@@ -104,13 +104,11 @@ export const parse_response = (params: {
   const processed_response = params.response.replace(/``````/g, '```\n```')
 
   const hunk_header_regex = /^(@@\s+-\d+(?:,\d+)?\s+\+\d+(?:,\d+)?\s+@@)/m
+  const has_diff_lines_regex = /^[+-] /m
 
   if (
-    processed_response.includes('```diff') ||
-    processed_response.includes('```patch') ||
-    processed_response.startsWith('--- ') ||
-    processed_response.startsWith('diff --git') ||
-    hunk_header_regex.test(processed_response)
+    hunk_header_regex.test(processed_response) &&
+    has_diff_lines_regex.test(processed_response)
   ) {
     const patches_or_text = extract_diffs({
       clipboard_text: processed_response,
@@ -118,7 +116,7 @@ export const parse_response = (params: {
     })
     if (patches_or_text.length) {
       return patches_or_text.map((item) => {
-        if ('type' in item && item.type === 'text') {
+        if ('type' in item && item.type == 'text') {
           return item
         }
         return { type: 'diff', ...item }

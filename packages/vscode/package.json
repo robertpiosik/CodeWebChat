@@ -570,6 +570,12 @@
             }
           }
         },
+        "codeWebChat.editContextSystemInstructions": {
+          "type": "string",
+          "scope": "resource",
+          "description": "System instructions for the Edit Context API tool.",
+          "default": "You're a helpful coding assistant."
+        },
         "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",
           "default": [

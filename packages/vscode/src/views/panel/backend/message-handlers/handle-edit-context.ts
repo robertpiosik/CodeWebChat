@@ -356,10 +356,14 @@ const perform_context_editing = async (params: {
       content = `${loop_pre_context_instructions}\n${files}\n${loop_post_context_instructions}`
     }
 
+    const system_instructions = vscode.workspace
+      .getConfiguration('codeWebChat')
+      .get<string>('editContextSystemInstructions')
+
     const messages = [
       {
         role: 'system',
-        content: "You're a helpful coding assistant."
+        content: system_instructions
       },
       {
         role: 'user',

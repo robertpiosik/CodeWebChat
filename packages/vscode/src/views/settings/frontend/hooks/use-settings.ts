@@ -25,6 +25,10 @@ export const use_settings = (vscode: any) => {
   >(undefined)
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
+  const [
+    edit_context_system_instructions,
+    set_edit_context_system_instructions
+  ] = useState<string | undefined>(undefined)
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number | undefined>(undefined)
   const [gemini_user_id, set_gemini_user_id] = useState<
@@ -41,6 +45,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_CODE_COMPLETIONS_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGES_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_CONFIGURATIONS' })
+    post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
@@ -63,6 +68,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'EDIT_CONTEXT_CONFIGURATIONS':
           set_edit_context_configs(message.configurations)
+          break
+        case 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS':
+          set_edit_context_system_instructions(message.instructions)
           break
         case 'INTELLIGENT_UPDATE_CONFIGURATIONS':
           set_intelligent_update_configs(message.configurations)
@@ -180,6 +188,14 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
+  const handle_edit_context_system_instructions_change = (
+    instructions: string
+  ) =>
+    post_message(vscode, {
+      command: 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS',
+      instructions
+    })
+
   const handle_open_editor_settings = () =>
     post_message(vscode, { command: 'OPEN_EDITOR_SETTINGS' })
 
@@ -215,6 +231,7 @@ export const use_settings = (vscode: any) => {
     intelligent_update_configs,
     set_intelligent_update_configs,
     commit_message_instructions,
+    edit_context_system_instructions,
     context_size_warning_threshold,
     gemini_user_id,
     clear_checks_in_workspace_behavior,
@@ -230,6 +247,7 @@ export const use_settings = (vscode: any) => {
     handle_set_default_config,
     handle_unset_default_config,
     handle_commit_instructions_change,
+    handle_edit_context_system_instructions_change,
     handle_open_editor_settings,
     handle_context_size_warning_threshold_change,
     handle_gemini_user_id_change,
