@@ -17,6 +17,7 @@ import {
   new_file_command,
   open_file_from_workspace_command,
   new_folder_command,
+  duplicate_workspace_command,
   rename_command,
   delete_command,
   save_context_command,
@@ -31,7 +32,7 @@ let websocket_server_instance: WebSocketManager | null = null
 
 export async function activate(context: vscode.ExtensionContext) {
   const { workspace_provider, open_editors_provider, websites_provider } =
-    context_initialization(context)
+    await context_initialization(context)
 
   websocket_server_instance = new WebSocketManager(context, websites_provider)
 
@@ -89,11 +90,7 @@ export async function activate(context: vscode.ExtensionContext) {
     delete_command(),
     save_context_command(workspace_provider, context),
     ...checkpoints_command(workspace_provider, context),
-    vscode.commands.registerCommand('codeWebChat.duplicateWorkspace', () => {
-      vscode.commands.executeCommand(
-        'workbench.action.duplicateWorkspaceInNewWindow'
-      )
-    }),
+    duplicate_workspace_command(workspace_provider, websites_provider, context),
     open_url_command({
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'

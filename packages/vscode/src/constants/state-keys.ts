@@ -31,6 +31,9 @@ export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'
 export const CHECKPOINTS_STATE_KEY = 'checkpoints'
 export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'
 
+export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
+  'duplicate-workspace-context'
+
 export const CHAT_EDIT_FORMAT_STATE_KEY = 'chat-edit-format'
 export const API_EDIT_FORMAT_STATE_KEY = 'api-edit-format'
 export const WEB_MODE_STATE_KEY = 'web-mode'
@@ -66,6 +69,13 @@ export const get_last_selected_preset_key = (web_mode: string) =>
 
 export const get_last_selected_group_state_key = (web_mode: string) =>
   `last-selected-group-${web_mode}`
+
+export interface DuplicateWorkspaceContext {
+  checked_files: string[]
+  checked_websites: string[]
+  timestamp: number
+  workspace_root_folders: string[]
+}
 
 export interface HistoryEntry {
   text: string
