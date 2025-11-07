@@ -185,7 +185,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                       {(file.is_fallback || file.is_replaced) && (
                         <IconButton
                           codicon_icon="sparkle"
-                          title={`Call Intelligent Update API tool${
+                          title={`Fix the file with Intelligent Update API tool${
                             file.diff_fallback_method == 'recount'
                               ? ' (fallback used: git apply with --recount flag)'
                               : file.diff_fallback_method ==
