@@ -311,13 +311,17 @@ export const make_api_request = async (params: {
     } catch (error) {
       if (
         axios.isAxiosError(error) &&
-        error.response?.status == 503 &&
+        (error.response?.status == 503 || error.code == 'ECONNRESET') &&
         attempt < MAX_RETRIES
       ) {
         const delay = RETRY_DELAYS[attempt]
+        const reason =
+          error.response?.status == 503
+            ? 'status 503'
+            : 'a socket hang up (ECONNRESET)'
         Logger.warn({
           function_name: 'make_api_request',
-          message: `API request failed with status 503. Retrying in ${
+          message: `API request failed with ${reason}. Retrying in ${
             delay / 1000
           }s... (Attempt ${attempt + 1}/${MAX_RETRIES + 1})`
         })
