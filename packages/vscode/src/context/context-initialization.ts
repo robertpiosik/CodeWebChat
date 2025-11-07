@@ -7,7 +7,7 @@ import { WebsitesProvider, WebsiteItem } from './providers/websites-provider'
 import { SharedFileState } from './shared-file-state'
 import { marked } from 'marked'
 import { EventEmitter } from 'events'
-import { apply_context_command } from '../commands/apply-context-command'
+import { apply_context_command } from '../commands/apply-context-command/apply-context-command'
 import { dictionary } from '@shared/constants/dictionary'
 import { ContextProvider } from './providers/context-provider'
 

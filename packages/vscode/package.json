@@ -121,11 +121,6 @@
         "icon": "$(copy)"
       },
       {
-        "command": "codeWebChat.applyContextFromClipboard",
-        "title": "Apply Context from Clipboard",
-        "category": "Code Web Chat"
-      },
-      {
         "command": "codeWebChat.openRepository",
         "title": "Repository",
         "category": "Code Web Chat",
@@ -351,10 +346,6 @@
         },
         {
           "command": "codeWebChat.openRepository",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.applyContextFromClipboard",
           "when": "false"
         },
         {

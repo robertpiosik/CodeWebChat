@@ -2,17 +2,19 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as glob from 'glob'
-import { WorkspaceProvider } from '../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../../context/providers/workspace-provider'
 import {
   SAVED_CONTEXTS_STATE_KEY,
   LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY,
   LAST_APPLY_CONTEXT_OPTION_STATE_KEY,
   LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
   LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY
-} from '../constants/state-keys'
+} from '../../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
+import { extract_paths_from_text } from '../../utils/path-parser'
+import { display_token_count } from '../../utils/display-token-count'
 
 export async function resolve_glob_patterns(
   patterns: string[],
@@ -339,7 +341,7 @@ export function apply_context_command(
     async () => {
       let show_main_menu = true
       let last_main_selection_value = extension_context.workspaceState.get<
-        'clipboard' | 'internal' | 'file' | undefined
+        'internal' | 'file' | 'other' | undefined
       >(LAST_APPLY_CONTEXT_OPTION_STATE_KEY)
       while (show_main_menu) {
         show_main_menu = false
@@ -367,15 +369,10 @@ export function apply_context_command(
         const workspace_folders = vscode.workspace.workspaceFolders || []
 
         const main_quick_pick_options: (vscode.QuickPickItem & {
-          value: 'clipboard' | 'internal' | 'file'
+          value: 'internal' | 'file' | 'other'
         })[] = [
           {
-            label: 'Select files based on paths found in the clipboard text',
-            description: 'utility',
-            value: 'clipboard'
-          },
-          {
-            label: 'Save location',
+            label: 'Source',
             kind: vscode.QuickPickItemKind.Separator
           } as any
         ]
@@ -396,10 +393,15 @@ export function apply_context_command(
           value: 'file'
         })
 
+        main_quick_pick_options.push({
+          label: 'Other',
+          value: 'other'
+        })
+
         const final_quick_pick_options = main_quick_pick_options
 
         const main_quick_pick = vscode.window.createQuickPick<
-          vscode.QuickPickItem & { value: 'clipboard' | 'internal' | 'file' }
+          vscode.QuickPickItem & { value: 'internal' | 'file' | 'other' }
         >()
         main_quick_pick.items = final_quick_pick_options
         main_quick_pick.placeholder = 'Select option'
@@ -414,7 +416,7 @@ export function apply_context_command(
 
         const main_selection = await new Promise<
           | (vscode.QuickPickItem & {
-              value: 'clipboard' | 'internal' | 'file'
+              value: 'internal' | 'file' | 'other'
             })
           | undefined
         >((resolve) => {
@@ -441,10 +443,313 @@ export function apply_context_command(
           last_main_selection_value
         )
 
-        if (main_selection.value == 'clipboard') {
-          await vscode.commands.executeCommand(
-            'codeWebChat.applyContextFromClipboard'
-          )
+        if (main_selection.value == 'other') {
+          const BACK_LABEL = '$(arrow-left) Back'
+          const other_quick_pick_options: (vscode.QuickPickItem & {
+            value?: 'clipboard' | 'unstaged'
+          })[] = [
+            { label: BACK_LABEL },
+            { label: '', kind: vscode.QuickPickItemKind.Separator },
+            {
+              label: 'Select files based on paths found in the clipboard text',
+              value: 'clipboard'
+            },
+            {
+              label: 'Select unstaged files',
+              value: 'unstaged'
+            }
+          ]
+
+          const other_quick_pick = vscode.window.createQuickPick<
+            vscode.QuickPickItem & { value?: 'clipboard' | 'unstaged' }
+          >()
+          other_quick_pick.items = other_quick_pick_options
+          other_quick_pick.placeholder = 'Select other option'
+
+          const other_selection = await new Promise<
+            | (vscode.QuickPickItem & { value?: 'clipboard' | 'unstaged' })
+            | undefined
+          >((resolve) => {
+            let is_accepted = false
+            other_quick_pick.onDidAccept(() => {
+              is_accepted = true
+              resolve(other_quick_pick.selectedItems[0])
+              other_quick_pick.hide()
+            })
+            other_quick_pick.onDidHide(() => {
+              if (!is_accepted) {
+                resolve(undefined)
+              }
+              other_quick_pick.dispose()
+            })
+            other_quick_pick.show()
+          })
+
+          if (!other_selection || other_selection.label === BACK_LABEL) {
+            show_main_menu = true
+            continue
+          }
+
+          if (other_selection.value == 'clipboard') {
+            try {
+              const clipboard_text = await vscode.env.clipboard.readText()
+              if (!clipboard_text) {
+                vscode.window.showInformationMessage(
+                  dictionary.information_message
+                    .NO_FILE_PATHS_FOUND_IN_CLIPBOARD
+                )
+                return
+              }
+
+              const paths = extract_paths_from_text(clipboard_text)
+              if (paths.length == 0) {
+                vscode.window.showInformationMessage(
+                  dictionary.information_message
+                    .NO_FILE_PATHS_FOUND_IN_CLIPBOARD
+                )
+                return
+              }
+
+              const workspace_roots = workspace_provider.getWorkspaceRoots()
+              const absolute_paths: string[] = []
+
+              const workspace_map = new Map<string, string>()
+              if (vscode.workspace.workspaceFolders) {
+                vscode.workspace.workspaceFolders.forEach((folder) => {
+                  workspace_map.set(folder.name, folder.uri.fsPath)
+                })
+              }
+
+              for (const raw_path of paths) {
+                if (path.isAbsolute(raw_path)) {
+                  absolute_paths.push(raw_path)
+                  continue
+                }
+
+                let resolved_path: string | null = null
+
+                if (workspace_map.size > 1) {
+                  for (const [
+                    workspace_name,
+                    workspace_root
+                  ] of workspace_map) {
+                    if (
+                      raw_path.startsWith(workspace_name + '/') ||
+                      raw_path.startsWith(workspace_name + '\\')
+                    ) {
+                      const relative_path = raw_path.substring(
+                        workspace_name.length + 1
+                      )
+                      resolved_path = path.join(workspace_root, relative_path)
+                      break
+                    }
+                  }
+                }
+
+                if (resolved_path) {
+                  absolute_paths.push(resolved_path)
+                } else {
+                  for (const root of workspace_roots) {
+                    const potential_path = path.join(root, raw_path)
+                    absolute_paths.push(potential_path)
+                  }
+                }
+              }
+
+              const existing_paths = absolute_paths.filter((p) => {
+                try {
+                  return fs.existsSync(p) && fs.statSync(p).isFile()
+                } catch {
+                  return false
+                }
+              })
+
+              if (existing_paths.length == 0) {
+                vscode.window.showInformationMessage(
+                  dictionary.information_message
+                    .NO_MATCHING_FILES_FOUND_FOR_CLIPBOARD_PATHS
+                )
+                return
+              }
+
+              const quick_pick_items = await Promise.all(
+                existing_paths.map(async (file_path) => {
+                  const token_count =
+                    await workspace_provider.calculate_file_tokens(file_path)
+
+                  const formatted_token_count = display_token_count(token_count)
+
+                  return {
+                    label: path.basename(file_path),
+                    description: `${formatted_token_count} ${path.dirname(
+                      path.relative(workspace_roots[0] || '', file_path)
+                    )}`,
+                    picked: true,
+                    file_path: file_path
+                  }
+                })
+              )
+
+              const selected_items = await vscode.window.showQuickPick(
+                quick_pick_items,
+                {
+                  canPickMany: true,
+                  placeHolder: 'Select files to include',
+                  title: `Found ${existing_paths.length} file path${
+                    existing_paths.length == 1 ? '' : 's'
+                  }`
+                }
+              )
+
+              if (!selected_items || selected_items.length === 0) {
+                return
+              }
+
+              const selected_paths = selected_items.map(
+                (item) => item.file_path
+              )
+
+              Logger.info({
+                message: `Selected ${selected_paths.length} file${
+                  selected_paths.length == 1 ? '' : 's'
+                }.`,
+                data: { paths: selected_paths }
+              })
+
+              await workspace_provider.set_checked_files(selected_paths)
+              vscode.window.showInformationMessage(
+                `Selected ${selected_paths.length} file${
+                  selected_paths.length == 1 ? '' : 's'
+                }.`
+              )
+            } catch (error) {
+              vscode.window.showErrorMessage(
+                dictionary.error_message.FAILED_TO_SELECT_FILES_FROM_CLIPBOARD(
+                  error instanceof Error ? error.message : String(error)
+                )
+              )
+            }
+            return
+          }
+          if (other_selection.value == 'unstaged') {
+            try {
+              const git_extension =
+                vscode.extensions.getExtension('vscode.git')?.exports
+              if (!git_extension) {
+                vscode.window.showErrorMessage(
+                  'Git extension is not available.'
+                )
+                return
+              }
+              const git_api = git_extension.getAPI(1)
+              if (!git_api) {
+                vscode.window.showErrorMessage('Could not get Git API.')
+                return
+              }
+
+              if (git_api.repositories.length === 0) {
+                vscode.window.showInformationMessage(
+                  'No Git repository found in the workspace.'
+                )
+                return
+              }
+
+              const unstaged_file_paths: string[] = []
+              for (const repo of git_api.repositories) {
+                repo.state.workingTreeChanges.forEach((change: any) => {
+                  unstaged_file_paths.push(change.uri.fsPath)
+                })
+              }
+
+              if (unstaged_file_paths.length === 0) {
+                vscode.window.showInformationMessage('No unstaged files found.')
+                return
+              }
+
+              const existing_unstaged_files = unstaged_file_paths.filter(
+                (p) => {
+                  try {
+                    return fs.existsSync(p) && fs.statSync(p).isFile()
+                  } catch {
+                    return false
+                  }
+                }
+              )
+
+              if (existing_unstaged_files.length == 0) {
+                vscode.window.showInformationMessage(
+                  'No actionable unstaged files found (e.g. only deletions).'
+                )
+                return
+              }
+
+              const workspace_roots = workspace_provider.getWorkspaceRoots()
+              const quick_pick_items = await Promise.all(
+                existing_unstaged_files.map(async (file_path) => {
+                  const token_count =
+                    await workspace_provider.calculate_file_tokens(file_path)
+
+                  const formatted_token_count = display_token_count(token_count)
+
+                  return {
+                    label: path.basename(file_path),
+                    description: `${formatted_token_count} ${path.dirname(
+                      path.relative(workspace_roots[0] || '', file_path)
+                    )}`,
+                    picked: true,
+                    file_path: file_path
+                  }
+                })
+              )
+
+              const selected_items = await vscode.window.showQuickPick(
+                quick_pick_items,
+                {
+                  canPickMany: true,
+                  placeHolder: 'Select files to include',
+                  title: `Found ${
+                    existing_unstaged_files.length
+                  } unstaged file${
+                    existing_unstaged_files.length == 1 ? '' : 's'
+                  }`
+                }
+              )
+
+              if (!selected_items || selected_items.length === 0) {
+                return
+              }
+
+              const selected_paths = selected_items.map(
+                (item) => item.file_path
+              )
+
+              Logger.info({
+                message: `Selected ${selected_paths.length} unstaged file${
+                  selected_paths.length == 1 ? '' : 's'
+                }.`,
+                data: { paths: selected_paths }
+              })
+
+              await workspace_provider.set_checked_files(selected_paths)
+              vscode.window.showInformationMessage(
+                `Selected ${selected_paths.length} file${
+                  selected_paths.length == 1 ? '' : 's'
+                }.`
+              )
+            } catch (error) {
+              vscode.window.showErrorMessage(
+                `Failed to select unstaged files: ${
+                  error instanceof Error ? error.message : String(error)
+                }`
+              )
+              Logger.error({
+                function_name: 'apply_context_command:unstaged',
+                message: 'Failed to select unstaged files',
+                data: error
+              })
+            }
+            return
+          }
           return
         }
 
