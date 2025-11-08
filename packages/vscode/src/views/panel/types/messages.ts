@@ -136,6 +136,9 @@ export interface CreatePresetMessage extends BaseMessage {
 
 export interface CreateGroupMessage extends BaseMessage {
   command: 'CREATE_GROUP'
+  add_on_top?: boolean
+  instant?: boolean
+  create_on_index?: number
 }
 
 export interface ExecuteCommandMessage extends BaseMessage {

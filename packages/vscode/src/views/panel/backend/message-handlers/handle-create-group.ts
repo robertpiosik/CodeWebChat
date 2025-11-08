@@ -7,7 +7,12 @@ import {
 } from '@/views/panel/backend/utils/preset-format-converters'
 
 export const handle_create_group = async (
-  panel_provider: PanelProvider
+  panel_provider: PanelProvider,
+  options: {
+    add_on_top?: boolean
+    instant?: boolean
+    create_on_index?: number
+  }
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
 
@@ -25,13 +30,24 @@ export const handle_create_group = async (
     name: new_name
   } as ConfigPresetFormat
 
-  const updated_presets = [...current_presets, new_group]
+  let updated_presets: ConfigPresetFormat[]
+  if (options.create_on_index !== undefined) {
+    updated_presets = [...current_presets]
+    updated_presets.splice(options.create_on_index, 0, new_group)
+  } else if (options.add_on_top) {
+    new_group.isCollapsed = !!options.instant
+    updated_presets = [new_group, ...current_presets]
+  } else {
+    updated_presets = [...current_presets, new_group]
+  }
 
   try {
-    panel_provider.send_message({
-      command: 'PRESET_CREATED',
-      preset: config_preset_to_ui_format(new_group)
-    })
+    if (!options.instant) {
+      panel_provider.send_message({
+        command: 'PRESET_CREATED',
+        preset: config_preset_to_ui_format(new_group)
+      })
+    }
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(

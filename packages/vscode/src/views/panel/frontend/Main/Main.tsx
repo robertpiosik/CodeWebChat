@@ -389,9 +389,14 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_create_group = () => {
+  const handle_create_group = (options?: {
+    add_on_top?: boolean
+    instant?: boolean
+    create_on_index?: number
+  }) => {
     post_message(props.vscode, {
-      command: 'CREATE_GROUP'
+      command: 'CREATE_GROUP',
+      ...options
     })
   }
 

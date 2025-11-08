@@ -35,7 +35,11 @@ type Props = {
   on_show_home: () => void
   on_search_click: () => void
   on_create_preset: () => void
-  on_create_group: () => void
+  on_create_group: (options?: {
+    add_on_top?: boolean
+    instant?: boolean
+    create_on_index?: number
+  }) => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void

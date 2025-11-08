@@ -31,6 +31,9 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'Z.AI': 'Z_AI'
 }
 
+const UNGROUPED_ID = '__ungrouped_drag_handle__'
+const TRAILING_GROUP_ID = '__trailing_group_drag_handle__'
+
 export namespace Presets {
   export type Preset = {
     name: string
@@ -52,7 +55,11 @@ export namespace Presets {
     on_preset_click: (preset_name: string, without_submission?: boolean) => void
     on_group_click: (group_name: string, without_submission?: boolean) => void
     on_create_preset: () => void
-    on_create_group: () => void
+    on_create_group: (options?: {
+      add_on_top?: boolean
+      instant?: boolean
+      create_on_index?: number
+    }) => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
@@ -110,6 +117,31 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     close_context_menu: close_add_context_menu
   } = use_context_menu()
 
+  const sortable_list = (() => {
+    let list = with_ids(get_visible_presets(props.presets))
+
+    if (props.presets[0]?.chatbot !== undefined) {
+      const ungrouped_item: Presets.Preset & { id: string } = {
+        name: 'Ungrouped',
+        id: UNGROUPED_ID
+      }
+      list = [ungrouped_item, ...list]
+    }
+
+    const last_preset = props.presets[props.presets.length - 1]
+    // A group is a preset without a `chatbot` property
+    const is_last_item_a_group = last_preset && !last_preset.chatbot
+    if (!is_last_item_a_group) {
+      const trailing_group_item: Presets.Preset & { id: string } = {
+        name: 'Group',
+        id: TRAILING_GROUP_ID
+      }
+      list = [...list, trailing_group_item]
+    }
+
+    return list
+  })()
+
   return (
     <div className={styles.container}>
       <div
@@ -140,53 +172,125 @@ export const Presets: React.FC<Presets.Props> = (props) => {
       {!props.is_collapsed && (
         <>
           <div className={styles.presets}>
-            {props.presets[0]?.chatbot !== undefined && (
-              <div
-                className={cn(styles.presets__item, {
-                  [styles['presets__item--ungrouped']]: true,
-                  [styles['presets__item--highlighted']]:
-                    props.selected_preset_name == 'Ungrouped'
-                })}
-                onClick={() => {
-                  props.on_group_click('Ungrouped') // disabled check will be handled by the consumer
-                }}
-                onContextMenu={(e) =>
-                  handle_item_context_menu(e, {
-                    preset_name: 'Ungrouped',
-                    is_group: true
-                  })
-                }
-                role="button"
-              >
-                <div className={styles.presets__item__left}>
-                  <div
-                    className={cn(
-                      styles.presets__item__left__drag_handle,
-                      styles['presets__item__left__drag_handle--disabled']
-                    )}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                    }}
-                  >
-                    <span className="codicon codicon-gripper" />
-                  </div>
-                  <div className={styles['presets__item__left__collapse-icon']}>
-                    <span className={'codicon codicon-dash'} />
-                  </div>
-                  <div className={styles.presets__item__left__text}>
-                    Ungrouped
-                  </div>
-                </div>
-              </div>
-            )}
-
             <ReactSortable
-              list={with_ids(get_visible_presets(props.presets))}
+              list={sortable_list}
               setList={(new_state) => {
+                const ungrouped_item = new_state.find(
+                  (item) => item.id === UNGROUPED_ID
+                )
+                const ungrouped_was_moved = ungrouped_item
+                  ? new_state[0].id !== UNGROUPED_ID
+                  : false
+
+                // Handle ungrouped item drag
+                if (ungrouped_item && ungrouped_was_moved) {
+                  const ungrouped_item_index = new_state.findIndex(
+                    (item) => item.id === UNGROUPED_ID
+                  )
+                  const new_state_without_ungrouped = new_state.filter(
+                    (item) => item.id !== UNGROUPED_ID
+                  )
+
+                  // Determine where to insert the new group
+                  let target_full_index: number
+
+                  if (
+                    ungrouped_item_index < new_state_without_ungrouped.length
+                  ) {
+                    // Dropped between items - find the preset at or after this position
+                    const preset_at_drop_location =
+                      new_state_without_ungrouped[ungrouped_item_index]
+
+                    if (preset_at_drop_location) {
+                      target_full_index = props.presets.findIndex(
+                        (p) => p.name === preset_at_drop_location.name
+                      )
+
+                      // Fallback if preset not found
+                      if (target_full_index === -1) {
+                        target_full_index = props.presets.length
+                      }
+                    } else {
+                      target_full_index = props.presets.length
+                    }
+                  } else {
+                    // Dropped at the end
+                    target_full_index = props.presets.length
+                  }
+
+                  // Create group at calculated position
+                  props.on_create_group({
+                    create_on_index: target_full_index,
+                    instant: true
+                  })
+                  return
+                }
+
+                // Handle trailing group item drag
+                const trailing_group_item = new_state.find(
+                  (item) => item.id === TRAILING_GROUP_ID
+                )
+                const trailing_group_was_moved = trailing_group_item
+                  ? new_state[new_state.length - 1].id !== TRAILING_GROUP_ID
+                  : false
+
+                if (trailing_group_item && trailing_group_was_moved) {
+                  const trailing_group_item_index = new_state.findIndex(
+                    (item) => item.id === TRAILING_GROUP_ID
+                  )
+                  const new_state_without_trailing_group = new_state.filter(
+                    (item) => item.id !== TRAILING_GROUP_ID
+                  )
+
+                  // Determine where to insert the new group
+                  let target_full_index: number
+
+                  if (
+                    trailing_group_item_index <
+                    new_state_without_trailing_group.length
+                  ) {
+                    // Dropped between items - find the preset at or after this position
+                    const preset_at_drop_location =
+                      new_state_without_trailing_group[
+                        trailing_group_item_index
+                      ]
+
+                    if (preset_at_drop_location) {
+                      if (preset_at_drop_location.id === UNGROUPED_ID) {
+                        target_full_index = 0
+                      } else {
+                        target_full_index = props.presets.findIndex(
+                          (p) => p.name === preset_at_drop_location.name
+                        )
+                      }
+
+                      // Fallback if preset not found
+                      if (target_full_index === -1) {
+                        target_full_index = props.presets.length
+                      }
+                    } else {
+                      target_full_index = props.presets.length
+                    }
+                  } else {
+                    // Dropped at the end
+                    target_full_index = props.presets.length
+                  }
+
+                  // Create group at calculated position
+                  props.on_create_group({
+                    create_on_index: target_full_index,
+                    instant: true
+                  })
+                  return
+                }
+
+                // Handle normal preset/group reordering
                 if (props.on_presets_reorder) {
-                  const new_visible_presets = new_state.map(
-                    ({ id, ...preset }) => preset
-                  ) as Presets.Preset[]
+                  const new_visible_presets = new_state
+                    .map(({ id, ...preset }) => preset)
+                    .filter(
+                      (p) => p.name !== 'Ungrouped' && p.name !== 'Group'
+                    ) as Presets.Preset[]
 
                   const reordered_presets: Presets.Preset[] = []
 
@@ -222,8 +326,115 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               animation={150}
               handle={`.${styles.presets__item__left__drag_handle}`}
             >
-              {get_visible_presets(props.presets).map((preset) => {
-                const i = name_to_index_map.get(preset.name)!
+              {sortable_list.map((preset) => {
+                if (preset.id == UNGROUPED_ID) {
+                  return (
+                    <div
+                      key={UNGROUPED_ID}
+                      className={cn(styles.presets__item, {
+                        [styles['presets__item--ungrouped']]: true,
+                        [styles['presets__item--highlighted']]:
+                          props.selected_preset_name == 'Ungrouped'
+                      })}
+                      onClick={() => {
+                        props.on_create_group({
+                          add_on_top: true,
+                          instant: true
+                        })
+                      }}
+                      onContextMenu={(e) =>
+                        handle_item_context_menu(e, {
+                          preset_name: 'Ungrouped',
+                          is_group: true
+                        })
+                      }
+                      role="button"
+                    >
+                      <div className={styles.presets__item__left}>
+                        <div
+                          className={styles.presets__item__left__drag_handle}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                          }}
+                        >
+                          <span className="codicon codicon-gripper" />
+                        </div>
+                        <div
+                          className={
+                            styles['presets__item__left__collapse-icon']
+                          }
+                          title={'Collapse into a new group'}
+                        >
+                          <span
+                            className={cn('codicon', {
+                              'codicon-chevron-down': true
+                            })}
+                          />
+                        </div>
+                        <div className={styles.presets__item__left__text}>
+                          Ungrouped
+                        </div>
+                      </div>
+                      <div
+                        className={styles.presets__item__right}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                        }}
+                      >
+                        <IconButton
+                          codicon_icon="edit"
+                          title="Edit"
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_create_group({ add_on_top: true })
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )
+                }
+
+                if (preset.id == TRAILING_GROUP_ID) {
+                  return (
+                    <div
+                      key={TRAILING_GROUP_ID}
+                      className={cn(
+                        styles.presets__item,
+                        styles['presets__item--ungrouped']
+                      )}
+                      title="Drag or click to create a new group"
+                    >
+                      <div className={styles.presets__item__left}>
+                        <div
+                          className={styles.presets__item__left__drag_handle}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                          }}
+                        >
+                          <span className="codicon codicon-gripper" />
+                        </div>
+                        <div className={styles.presets__item__left__text}>
+                          Group
+                        </div>
+                      </div>
+                      <div
+                        className={styles.presets__item__right}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                        }}
+                      >
+                        <IconButton
+                          codicon_icon="edit"
+                          title="Edit"
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_create_group()
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )
+                }
 
                 const is_unnamed =
                   !preset.name || /^\(\d+\)$/.test(preset.name.trim())
@@ -233,7 +444,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   display_name = is_unnamed ? preset.chatbot : preset.name
                 } else {
                   // Group (no chatbot)
-                  display_name = is_unnamed ? 'Unnamed group' : preset.name
+                  display_name = is_unnamed
+                    ? `Group ${preset.name}`
+                    : preset.name
                 }
 
                 const get_subtitle = (): string => {
@@ -322,8 +535,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         >
                           <span
                             className={cn('codicon', {
-                              'codicon-chevron-down': preset.is_collapsed,
-                              'codicon-chevron-up': !preset.is_collapsed
+                              'codicon-chevron-right': preset.is_collapsed,
+                              'codicon-chevron-down': !preset.is_collapsed
                             })}
                           />
                         </div>

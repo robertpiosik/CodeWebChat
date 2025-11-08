@@ -437,7 +437,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'CREATE_PRESET') {
             await handle_create_preset(this)
           } else if (message.command == 'CREATE_GROUP') {
-            await handle_create_group(this)
+            await handle_create_group(this, {
+              add_on_top: message.add_on_top,
+              instant: message.instant,
+              create_on_index: message.create_on_index
+            })
           } else if (message.command == 'UNDO') {
             await this._handle_undo()
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
