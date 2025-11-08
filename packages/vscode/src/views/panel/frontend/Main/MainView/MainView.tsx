@@ -302,8 +302,6 @@ export const MainView: React.FC<Props> = (props) => {
             />
           </>
         )}
-
-        <UiSeparator height={10} />
       </Scrollable>
     </>
   )

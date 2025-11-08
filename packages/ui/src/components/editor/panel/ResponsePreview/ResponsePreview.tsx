@@ -25,7 +25,9 @@ type Props = {
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
-  const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
+  const [last_clicked_file_index, set_last_clicked_file_index] = useState(
+    props.items.findIndex((i) => i.type == 'file')
+  )
   const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
     new Set()
   )

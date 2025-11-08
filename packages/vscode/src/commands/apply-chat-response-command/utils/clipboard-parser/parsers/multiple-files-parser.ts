@@ -180,9 +180,10 @@ export const parse_multiple_files = (params: {
         if (match && match[1]) {
           const potential_path = match[1]
           if (
-            potential_path.includes('/') ||
-            potential_path.includes('\\') ||
-            potential_path.includes('.')
+            (potential_path.includes('/') ||
+              potential_path.includes('\\') ||
+              potential_path.includes('.')) &&
+            !potential_path.includes(' ')
           ) {
             extracted_filename = potential_path
           }
