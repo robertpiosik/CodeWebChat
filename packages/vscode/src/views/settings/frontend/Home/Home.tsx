@@ -396,8 +396,8 @@ export const Home: React.FC<Props> = (props) => {
           on_stuck_change={commit_messages_on_stuck_change}
         >
           <Item
-            title="Commit Message Instructions"
-            description="Customize the instructions used when generating commit messages. These instructions are sent to the model along with the code changes."
+            title="Instructions"
+            description="Guidelines for how generated commit messages should be written. Use this to set tone, structure, and conventions (e.g., Conventional Commits, line limits, gitmoji), which will be applied when creating summaries of changes."
             slot_placement="below"
             slot={
               <Textarea
