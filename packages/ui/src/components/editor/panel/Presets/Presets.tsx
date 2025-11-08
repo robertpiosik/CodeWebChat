@@ -5,7 +5,6 @@ import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../../common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { Button } from '../Button/Button'
 import { use_context_menu } from '../../../../hooks/use-context-menu'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -53,6 +52,7 @@ export namespace Presets {
     on_preset_click: (preset_name: string, without_submission?: boolean) => void
     on_group_click: (group_name: string, without_submission?: boolean) => void
     on_create_preset: () => void
+    on_create_group: () => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
@@ -94,14 +94,21 @@ export const Presets: React.FC<Presets.Props> = (props) => {
   const name_to_index_map = new Map(props.presets.map((p, i) => [p.name, i]))
 
   const {
-    context_menu,
-    context_menu_ref,
-    handle_context_menu,
-    close_context_menu
+    context_menu: item_context_menu,
+    context_menu_ref: item_context_menu_ref,
+    handle_context_menu: handle_item_context_menu,
+    close_context_menu: close_item_context_menu
   } = use_context_menu<{
     preset_name: string
     is_group: boolean
   }>()
+
+  const {
+    context_menu: add_context_menu,
+    context_menu_ref: add_context_menu_ref,
+    handle_context_menu: handle_add_context_menu,
+    close_context_menu: close_add_context_menu
+  } = use_context_menu()
 
   return (
     <div className={styles.container}>
@@ -124,9 +131,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             codicon_icon="add"
             on_click={(e) => {
               e.stopPropagation()
-              props.on_create_preset()
+              handle_add_context_menu(e, {})
             }}
-            title="Add New Preset"
+            title="Add New Preset or Group"
           />
         </div>
       </div>
@@ -144,7 +151,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   props.on_group_click('Ungrouped') // disabled check will be handled by the consumer
                 }}
                 onContextMenu={(e) =>
-                  handle_context_menu(e, {
+                  handle_item_context_menu(e, {
                     preset_name: 'Ungrouped',
                     is_group: true
                   })
@@ -266,7 +273,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       }
                     }}
                     onContextMenu={(e) =>
-                      handle_context_menu(e, {
+                      handle_item_context_menu(e, {
                         preset_name: preset.name,
                         is_group: !preset.chatbot
                       })
@@ -374,27 +381,59 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               })}
             </ReactSortable>
           </div>
-          {context_menu && (
+          {item_context_menu && (
             <div
-              ref={context_menu_ref}
+              ref={item_context_menu_ref}
               className={styles['context-menu']}
               style={{
-                top: context_menu.y,
-                left: context_menu.x
+                top: item_context_menu.y,
+                left: item_context_menu.x
               }}
             >
               <div
                 className={styles['context-menu__item']}
                 onClick={() => {
-                  if (context_menu.data.is_group) {
-                    props.on_group_click(context_menu.data.preset_name, true)
+                  if (item_context_menu.data.is_group) {
+                    props.on_group_click(
+                      item_context_menu.data.preset_name,
+                      true
+                    )
                   } else {
-                    props.on_preset_click(context_menu.data.preset_name, true)
+                    props.on_preset_click(
+                      item_context_menu.data.preset_name,
+                      true
+                    )
                   }
-                  close_context_menu()
+                  close_item_context_menu()
                 }}
               >
                 {'Run without submission'}
+              </div>
+            </div>
+          )}
+          {add_context_menu && (
+            <div
+              ref={add_context_menu_ref}
+              className={styles['context-menu']}
+              style={{ top: add_context_menu.y, left: add_context_menu.x }}
+            >
+              <div
+                className={styles['context-menu__item']}
+                onClick={() => {
+                  props.on_create_preset()
+                  close_add_context_menu()
+                }}
+              >
+                New Preset
+              </div>
+              <div
+                className={styles['context-menu__item']}
+                onClick={() => {
+                  props.on_create_group()
+                  close_add_context_menu()
+                }}
+              >
+                New Group
               </div>
             </div>
           )}

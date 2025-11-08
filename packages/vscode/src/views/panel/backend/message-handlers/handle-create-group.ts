@@ -1,13 +1,12 @@
 import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { CHATBOTS } from '@shared/constants/chatbots'
 import {
   config_preset_to_ui_format,
   ConfigPresetFormat
 } from '@/views/panel/backend/utils/preset-format-converters'
 
-export const handle_create_preset = async (
+export const handle_create_group = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -22,25 +21,21 @@ export const handle_create_preset = async (
     new_name = `(${copy_number++})`
   }
 
-  const new_preset: ConfigPresetFormat = {
-    name: new_name,
-    chatbot: 'AI Studio',
-    model: Object.keys(CHATBOTS['AI Studio'].models)[0],
-    temperature: 0.5,
-    systemInstructions: CHATBOTS['AI Studio'].default_system_instructions
-  }
+  const new_group = {
+    name: new_name
+  } as ConfigPresetFormat
 
-  const updated_presets = [new_preset, ...current_presets]
+  const updated_presets = [...current_presets, new_group]
 
   try {
     panel_provider.send_message({
       command: 'PRESET_CREATED',
-      preset: config_preset_to_ui_format(new_preset)
+      preset: config_preset_to_ui_format(new_group)
     })
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_CREATE_ITEM('Preset', error)
+      dictionary.error_message.FAILED_TO_CREATE_ITEM('Group', error)
     )
   }
 }

@@ -361,10 +361,14 @@ const perform_context_editing = async (params: {
       .get<string>('editContextSystemInstructions')
 
     const messages = [
-      {
-        role: 'system',
-        content: system_instructions
-      },
+      ...(system_instructions
+        ? [
+            {
+              role: 'system',
+              content: system_instructions
+            }
+          ]
+        : []),
       {
         role: 'user',
         content

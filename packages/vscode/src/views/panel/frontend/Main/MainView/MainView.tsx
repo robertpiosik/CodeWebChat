@@ -35,6 +35,7 @@ type Props = {
   on_show_home: () => void
   on_search_click: () => void
   on_create_preset: () => void
+  on_create_group: () => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
@@ -258,6 +259,7 @@ export const MainView: React.FC<Props> = (props) => {
               has_context={props.token_count > 0}
               is_in_code_completions_mode={props.web_mode == 'code-completions'}
               presets={props.presets}
+              on_create_group={props.on_create_group}
               on_create_preset={props.on_create_preset}
               on_preset_click={(preset_name, without_submission) =>
                 props.initialize_chats({

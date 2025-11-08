@@ -229,7 +229,7 @@ export const parse_multiple_files = (params: {
             }:${current_file_name}`
             if (file_ref_map.has(file_key)) {
               const existing_file = file_ref_map.get(file_key)!
-              existing_file.content += '\n\n' + final_content
+              existing_file.content = final_content
             } else {
               const new_file = {
                 type: 'file' as const,
@@ -331,7 +331,7 @@ export const parse_multiple_files = (params: {
           }:${current_file_name}`
           if (file_ref_map.has(file_key)) {
             const existing_file = file_ref_map.get(file_key)!
-            existing_file.content += '\n\n' + cleaned_content
+            existing_file.content = cleaned_content
           } else {
             const new_file = {
               type: 'file' as const,
@@ -464,7 +464,7 @@ export const parse_multiple_files = (params: {
                   }:${current_file_name}`
                   if (file_ref_map.has(file_key)) {
                     const existing_file = file_ref_map.get(file_key)!
-                    existing_file.content += '\n\n' + cleaned_content
+                    existing_file.content = cleaned_content
                   } else {
                     const new_file = {
                       type: 'file' as const,
@@ -576,7 +576,7 @@ export const parse_multiple_files = (params: {
       const file_key = `${current_workspace_name || ''}:${current_file_name}`
       if (file_ref_map.has(file_key)) {
         const existing_file = file_ref_map.get(file_key)!
-        existing_file.content += '\n\n' + cleaned_content
+        existing_file.content = cleaned_content
       } else {
         const new_file = {
           type: 'file' as const,

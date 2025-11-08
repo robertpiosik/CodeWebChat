@@ -389,6 +389,12 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_create_group = () => {
+    post_message(props.vscode, {
+      command: 'CREATE_GROUP'
+    })
+  }
+
   const handle_preset_edit = (name: string) => {
     const current_presets = all_presets ? all_presets[props.web_mode] : []
     const preset = current_presets.find((preset) => preset.name == name)
@@ -632,6 +638,7 @@ export const Main: React.FC<Props> = (props) => {
       is_connected={props.is_connected}
       presets={presets_for_current_mode}
       on_create_preset={handle_create_preset}
+      on_create_group={handle_create_group}
       on_quick_action_click={handle_quick_action_click}
       has_active_editor={props.has_active_editor}
       has_active_selection={props.has_active_selection}

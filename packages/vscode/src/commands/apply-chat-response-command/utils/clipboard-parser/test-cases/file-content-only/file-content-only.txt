@@ -1,2 +1,4 @@
-// src/index.ts
+/**
+ * src/index.ts
+ */
 console.log("hello")

@@ -1,5 +1,6 @@
 export * from './handle-copy-prompt'
 export * from './handle-create-preset'
+export * from './handle-create-group'
 export * from './handle-delete-preset'
 export * from './handle-duplicate-preset'
 export * from './handle-get-connection-status'
