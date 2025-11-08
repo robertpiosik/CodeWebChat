@@ -148,9 +148,6 @@ export const ResponsePreview: FC<Props> = (props) => {
                       ? '\nUsed aggressive fallback method. Call Intelligent Update API tool, if needed.'
                       : ''
                   }`}
-                  onMouseEnter={() => {
-                    set_last_clicked_file_index(-1)
-                  }}
                 >
                   <div className={styles['list__file__left']}>
                     <Checkbox
