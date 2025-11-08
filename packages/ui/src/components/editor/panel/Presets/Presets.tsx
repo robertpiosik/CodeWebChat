@@ -220,11 +220,27 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     }}
                   />
                   <IconButton
+                    codicon_icon="files"
+                    title="Duplicate"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_preset_duplicate(preset.name)
+                    }}
+                  />
+                  <IconButton
                     codicon_icon="edit"
                     title="Edit"
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_edit(preset.name)
+                    }}
+                  />
+                  <IconButton
+                    codicon_icon="trash"
+                    title="Delete"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_preset_delete(preset.name)
                     }}
                   />
                 </div>
