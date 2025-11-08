@@ -120,7 +120,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         )}
         <div className={styles.list}>
           {props.items.map((item, index) => {
-            if (item.type === 'file') {
+            if (item.type == 'file') {
               const file = item
               const last_slash_index = file.file_path.lastIndexOf('/')
               const file_name = file.file_path.substring(last_slash_index + 1)
@@ -148,6 +148,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                       ? '\nUsed aggressive fallback method. Call Intelligent Update API tool, if needed.'
                       : ''
                   }`}
+                  onMouseEnter={() => {
+                    set_last_clicked_file_index(-1)
+                  }}
                 >
                   <div className={styles['list__file__left']}>
                     <Checkbox
