@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import { Input } from '@ui/components/editor/common/Input'
 import { Item } from '@ui/components/editor/settings/Item'
 import { Section } from '@ui/components/editor/settings/Section'
+import { Group } from '@ui/components/editor/settings/Group/Group'
 import { Textarea } from '@ui/components/editor/common/Textarea'
 import { EditFormatInstructions } from '@/views/settings/types/messages'
 
@@ -88,57 +89,61 @@ export const PresetsSection = forwardRef<HTMLDivElement, Props>(
         subtitle="Set up your favorite chatbot to run with a model of choice, prompt prefix or suffix, and more."
         on_stuck_change={props.on_stuck_change}
       >
-        <Item
-          title="Gemini User ID"
-          description="Run Gemini chatbot as non-default user. Check URL for the numeric ID."
-          slot={
-            <Input
-              type="number"
-              value={gemini_user_id_str}
-              onChange={set_gemini_user_id_str}
-              max_width={60}
-            />
-          }
-        />
-        <Item
-          title="'Whole' Edit Format Instructions"
-          description="Instructions for generating code in 'whole' edit format."
-          slot_placement="below"
-          slot={
-            <Textarea
-              value={instructions.whole}
-              on_change={(value) =>
-                set_instructions((prev) => ({ ...prev, whole: value }))
-              }
-            />
-          }
-        />
-        <Item
-          title="'Truncated' Edit Format Instructions"
-          description="Instructions for generating code in 'truncated' edit format."
-          slot_placement="below"
-          slot={
-            <Textarea
-              value={instructions.truncated}
-              on_change={(value) =>
-                set_instructions((prev) => ({ ...prev, truncated: value }))
-              }
-            />
-          }
-        />
-        <Item
-          title="'Diff' Edit Format Instructions"
-          description="Instructions for generating code in 'diff' edit format."
-          slot_placement="below"
-          slot={
-            <Textarea
-              value={instructions.diff}
-              on_change={(value) =>
-                set_instructions((prev) => ({ ...prev, diff: value }))
-              }
-            />
-          }
-        />
+        <Group>
+          <Item
+            title="Gemini User ID"
+            description="Run Gemini chatbot as non-default user. Check URL for the numeric ID."
+            slot={
+              <Input
+                type="number"
+                value={gemini_user_id_str}
+                onChange={set_gemini_user_id_str}
+                max_width={60}
+              />
+            }
+          />
+        </Group>
+        <Group title="Edit Format Instructions">
+          <Item
+            title="Whole"
+            description="Instructions for generating code in 'whole' edit format."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={instructions.whole}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, whole: value }))
+                }
+              />
+            }
+          />
+          <Item
+            title="Truncated"
+            description="Instructions for generating code in 'truncated' edit format."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={instructions.truncated}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, truncated: value }))
+                }
+              />
+            }
+          />
+          <Item
+            title="Diff"
+            description="Instructions for generating code in 'diff' edit format."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={instructions.diff}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, diff: value }))
+                }
+              />
+            }
+          />
+        </Group>
       </Section>
     )
   }

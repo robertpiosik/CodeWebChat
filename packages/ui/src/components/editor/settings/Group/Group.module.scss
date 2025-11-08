@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-10px);
+}
+
+.title {
+  font-size: var(--font-size-12px);
+  padding-left: var(--padding-12px);
+  color: var(--cwc-text-color-dimmed);
+}
+.container {
+  border-radius: var(--border-radius-10px);
+  color: var(--vscode-sideBarTitle-foreground);
+  background-color: var(--cwc-bg-tertiary);
+
+  > div {
+    border-top: 1px solid var(--cwc-border-color-dimmed);
+  }
+
+  > div:first-child {
+    border-top-width: 0;
+  }
+}
