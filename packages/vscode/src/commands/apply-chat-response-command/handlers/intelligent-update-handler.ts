@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import axios from 'axios'
 import * as path from 'path'
 import * as fs from 'fs'
-import { ClipboardFile } from '../utils/clipboard-parser'
+import { FileItem } from '../utils/clipboard-parser'
 import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
@@ -53,10 +53,10 @@ export const handle_intelligent_update = async (params: {
   })
 
   const raw_files = raw_items.filter(
-    (item): item is ClipboardFile => 'file_path' in item
+    (item): item is FileItem => item.type == 'file'
   )
 
-  const files: ClipboardFile[] = []
+  const files: FileItem[] = []
   const skipped_files: string[] = []
 
   for (const file of raw_files) {
@@ -120,8 +120,8 @@ export const handle_intelligent_update = async (params: {
     return null
   }
 
-  const new_files: ClipboardFile[] = []
-  const existing_files: ClipboardFile[] = []
+  const new_files: FileItem[] = []
+  const existing_files: FileItem[] = []
 
   for (const file of files) {
     let file_exists = false

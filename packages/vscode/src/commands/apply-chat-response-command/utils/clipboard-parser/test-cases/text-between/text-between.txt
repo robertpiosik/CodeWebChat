@@ -1,4 +1,4 @@
-Top.
+Top. `top.ts`
 
 ```ts
 // src/lorem.ts
@@ -6,6 +6,9 @@ console.log('lorem');
 ```
 
 Middle.
+```ts
+console.log('some inline code');
+```
 
 ```ts
 // src/ipsum.ts

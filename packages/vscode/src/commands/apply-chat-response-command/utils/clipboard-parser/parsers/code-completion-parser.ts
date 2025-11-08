@@ -1,8 +1,5 @@
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
-import {
-  ClipboardCodeCompletion,
-  extract_workspace_and_path
-} from '../clipboard-parser'
+import { CompletionItem, extract_workspace_and_path } from '../clipboard-parser'
 
 const extract_path_and_position = (
   line: string
@@ -31,7 +28,7 @@ const extract_path_and_position = (
 export const parse_code_completion = (params: {
   response: string
   is_single_root_folder_workspace: boolean
-}): ClipboardCodeCompletion | null => {
+}): CompletionItem | null => {
   const lines = params.response.split('\n')
   let in_code_block = false
   let first_line_of_block: string | null = null
@@ -50,6 +47,7 @@ export const parse_code_completion = (params: {
                   params.is_single_root_folder_workspace
               })
             return {
+              type: 'completion',
               file_path: relative_path,
               content: cleanup_api_response({
                 content: content_lines.join('\n')

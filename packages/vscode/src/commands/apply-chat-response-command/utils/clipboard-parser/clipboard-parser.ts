@@ -1,20 +1,6 @@
 import { extract_diffs } from './extract-diff-patches'
 import { parse_code_completion, parse_multiple_files } from './parsers'
 
-export interface ClipboardFile {
-  file_path: string
-  content: string
-  workspace_name?: string
-}
-
-export interface ClipboardCodeCompletion {
-  file_path: string
-  content: string
-  line: number
-  character: number
-  workspace_name?: string
-}
-
 export interface FileItem {
   type: 'file'
   file_path: string
@@ -98,7 +84,7 @@ export const parse_response = (params: {
     is_single_root_folder_workspace
   })
   if (code_completion) {
-    return [{ type: 'completion', ...code_completion }]
+    return [code_completion]
   }
 
   const processed_response = params.response.replace(/``````/g, '```\n```')
@@ -129,10 +115,5 @@ export const parse_response = (params: {
     is_single_root_folder_workspace
   })
 
-  return items.map((item) => {
-    if ('file_path' in item) {
-      return { type: 'file', ...item }
-    }
-    return item
-  })
+  return items
 }

@@ -1,4 +1,5 @@
 export type FileInPreview = {
+  type: 'file'
   file_path: string
   is_checked: boolean
   workspace_name?: string
