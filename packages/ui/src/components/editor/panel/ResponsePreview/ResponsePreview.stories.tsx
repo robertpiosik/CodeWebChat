@@ -8,16 +8,19 @@ export default {
 
 const base_files = [
   {
+    type: 'file',
     file_path: 'src/components/Button/Button.tsx',
     lines_added: 10,
     lines_removed: 2
   },
   {
+    type: 'file',
     file_path: 'src/components/Input/Input.module.scss',
     lines_added: 5,
     lines_removed: 5
   },
   {
+    type: 'file',
     file_path: 'src/utils/helpers.ts',
     lines_added: 20,
     lines_removed: 0
@@ -26,18 +29,21 @@ const base_files = [
 
 const files_using_fallbacks = [
   {
+    type: 'file',
     file_path: 'src/new-feature.ts',
     is_new: true,
     lines_added: 50,
     lines_removed: 0
   },
   {
+    type: 'file',
     file_path: 'src/old-component.tsx',
     is_deleted: true,
     lines_added: 0,
     lines_removed: 100
   },
   {
+    type: 'file',
     file_path: 'src/complex-logic.js',
     is_fallback: true,
     diff_fallback_method: 'recount',
@@ -45,6 +51,7 @@ const files_using_fallbacks = [
     lines_removed: 12
   },
   {
+    type: 'file',
     file_path: 'src/aggressive-fallback.css',
     is_fallback: true,
     diff_fallback_method: 'search_and_replace',
@@ -62,7 +69,7 @@ const log_action =
 const InteractiveResponsePreview = (props: any) => {
   const [items, set_items] = useState(
     props.items.map((f: any) =>
-      'file_path' in f ? { ...f, is_checked: true } : f
+      f.type == 'file' ? { ...f, is_checked: true } : f
     )
   )
 
@@ -77,9 +84,9 @@ const InteractiveResponsePreview = (props: any) => {
   }) => {
     set_items(
       items.map((f: any) =>
-        'file_path' in f &&
-        f.file_path === file_path &&
-        f.workspace_name === workspace_name
+        f.type == 'file' &&
+        f.file_path == file_path &&
+        f.workspace_name == workspace_name
           ? { ...f, is_checked }
           : f
       )

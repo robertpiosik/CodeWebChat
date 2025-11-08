@@ -62,6 +62,7 @@ export const prepare_files_from_original_states = async (params: {
       (!state.is_new && current_content == '' && state.content != '')
 
     const reviewable_file: ReviewableFile = {
+      type: 'file',
       file_path: state.file_path,
       content: current_content,
       workspace_name: state.workspace_name,
@@ -110,6 +111,7 @@ export const prepare_files_from_original_states = async (params: {
       })
 
       const restored_reviewable_file: ReviewableFile = {
+        type: 'file',
         file_path: state.file_path_to_restore,
         content: restored_current_content,
         workspace_name: state.workspace_name,

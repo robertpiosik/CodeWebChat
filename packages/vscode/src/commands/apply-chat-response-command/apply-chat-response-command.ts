@@ -154,6 +154,7 @@ export const apply_chat_response_command = (
                 !state.is_new && current_content === '' && state.content !== ''
 
               files_for_history.push({
+                type: 'file',
                 file_path: state.file_path,
                 workspace_name: state.workspace_name,
                 is_new: state.is_new,

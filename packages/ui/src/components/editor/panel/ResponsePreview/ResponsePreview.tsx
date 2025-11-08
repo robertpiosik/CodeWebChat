@@ -68,7 +68,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   }
 
   const files_in_preview = props.items.filter(
-    (i) => 'file_path' in i
+    (i) => i.type == 'file'
   ) as FileInPreview[]
   const fallback_count = files_in_preview.filter((f) => f.is_fallback).length
 
@@ -118,7 +118,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         )}
         <div className={styles.list}>
           {props.items.map((item, index) => {
-            if ('file_path' in item) {
+            if (item.type === 'file') {
               const file = item
               const last_slash_index = file.file_path.lastIndexOf('/')
               const file_name = file.file_path.substring(last_slash_index + 1)
