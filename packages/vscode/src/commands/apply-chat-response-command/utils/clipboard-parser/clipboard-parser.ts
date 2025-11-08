@@ -104,7 +104,7 @@ export const parse_response = (params: {
   const processed_response = params.response.replace(/``````/g, '```\n```')
 
   const hunk_header_regex = /^(@@\s+-\d+(?:,\d+)?\s+\+\d+(?:,\d+)?\s+@@)/m
-  const has_diff_lines_regex = /^[+-] /m
+  const has_diff_lines_regex = /^[+-]/m
 
   if (
     hunk_header_regex.test(processed_response) &&
