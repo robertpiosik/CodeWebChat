@@ -62,12 +62,12 @@ export const Home: React.FC<Props> = (props) => {
             <div className={styles['inner__buttons']}>
               <Enter
                 label="Open View: New chat"
-                description="Send prompt in a free chatbot"
+                description="Send message with chatbot"
                 on_click={props.on_new_chat}
               />
               <Enter
                 label="Open View: API call"
-                description="Send prompt to a model provider"
+                description="Call model providers directly"
                 on_click={props.on_api_call}
               />
               <HomeLinkButton
