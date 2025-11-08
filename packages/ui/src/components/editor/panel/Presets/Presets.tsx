@@ -109,13 +109,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     is_group: boolean
   }>()
 
-  const {
-    context_menu: add_context_menu,
-    context_menu_ref: add_context_menu_ref,
-    handle_context_menu: handle_add_context_menu,
-    close_context_menu: close_add_context_menu
-  } = use_context_menu()
-
   const sortable_list = (() => {
     let list = with_ids(get_visible_presets(props.presets))
 
@@ -162,9 +155,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             codicon_icon="add"
             on_click={(e) => {
               e.stopPropagation()
-              handle_add_context_menu(e, {})
+              props.on_create_preset()
             }}
-            title="Add New Preset or Group"
+            title="Add New Preset"
           />
         </div>
       </div>
@@ -653,32 +646,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 }}
               >
                 {'Run without submission'}
-              </div>
-            </div>
-          )}
-          {add_context_menu && (
-            <div
-              ref={add_context_menu_ref}
-              className={styles['context-menu']}
-              style={{ top: add_context_menu.y, left: add_context_menu.x }}
-            >
-              <div
-                className={styles['context-menu__item']}
-                onClick={() => {
-                  props.on_create_preset()
-                  close_add_context_menu()
-                }}
-              >
-                New Preset
-              </div>
-              <div
-                className={styles['context-menu__item']}
-                onClick={() => {
-                  props.on_create_group()
-                  close_add_context_menu()
-                }}
-              >
-                New Group
               </div>
             </div>
           )}
