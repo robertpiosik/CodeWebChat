@@ -59,6 +59,7 @@ export namespace Presets {
       add_on_top?: boolean
       instant?: boolean
       create_on_index?: number
+      move_preset_with_name_after?: string
     }) => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
@@ -97,8 +98,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     }
     return visible_presets
   }
-
-  const name_to_index_map = new Map(props.presets.map((p, i) => [p.name, i]))
 
   const {
     context_menu: item_context_menu,
@@ -226,6 +225,23 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   return
                 }
 
+                // Handle preset dragged under trailing group
+                const last_item = new_state[new_state.length - 1]
+                const second_to_last_item =
+                  new_state.length > 1 ? new_state[new_state.length - 2] : null
+
+                if (
+                  last_item?.id === TRAILING_GROUP_ID &&
+                  second_to_last_item &&
+                  second_to_last_item.chatbot
+                ) {
+                  props.on_create_group({
+                    instant: true,
+                    move_preset_with_name_after: second_to_last_item.name
+                  })
+                  return
+                }
+
                 // Handle trailing group item drag
                 const trailing_group_item = new_state.find(
                   (item) => item.id === TRAILING_GROUP_ID
@@ -337,10 +353,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           props.selected_preset_name == 'Ungrouped'
                       })}
                       onClick={() => {
-                        props.on_create_group({
-                          add_on_top: true,
-                          instant: true
-                        })
+                        props.on_group_click('Ungrouped')
                       }}
                       onContextMenu={(e) =>
                         handle_item_context_menu(e, {
@@ -363,7 +376,12 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           className={
                             styles['presets__item__left__collapse-icon']
                           }
-                          title={'Collapse into a new group'}
+                          onClick={() => {
+                            props.on_create_group({
+                              add_on_top: true,
+                              instant: true
+                            })
+                          }}
                         >
                           <span
                             className={cn('codicon', {
@@ -402,7 +420,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         styles.presets__item,
                         styles['presets__item--ungrouped']
                       )}
-                      title="Drag or click to create a new group"
                     >
                       <div className={styles.presets__item__left}>
                         <div
@@ -412,6 +429,21 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           }}
                         >
                           <span className="codicon codicon-gripper" />
+                        </div>
+                        <div
+                          className={
+                            styles['presets__item__left__collapse-icon']
+                          }
+                          onClick={() =>
+                            props.on_create_group({ instant: true })
+                          }
+                          role="button"
+                        >
+                          <span
+                            className={cn('codicon', {
+                              'codicon-chevron-down': true
+                            })}
+                          />
                         </div>
                         <div className={styles.presets__item__left__text}>
                           Group

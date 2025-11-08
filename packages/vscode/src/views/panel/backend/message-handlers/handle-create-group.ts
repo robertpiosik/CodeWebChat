@@ -12,6 +12,7 @@ export const handle_create_group = async (
     add_on_top?: boolean
     instant?: boolean
     create_on_index?: number
+    move_preset_with_name_after?: string
   }
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
@@ -31,13 +32,25 @@ export const handle_create_group = async (
   } as ConfigPresetFormat
 
   let updated_presets: ConfigPresetFormat[]
-  if (options.create_on_index !== undefined) {
+  if (options.move_preset_with_name_after) {
+    const preset_to_move_name = options.move_preset_with_name_after
+    const preset_to_move_index = current_presets.findIndex(
+      (p) => p.name == preset_to_move_name
+    )
+    if (preset_to_move_index != -1) {
+      const [preset_to_move] = current_presets.splice(preset_to_move_index, 1)
+      updated_presets = [...current_presets, new_group, preset_to_move]
+    } else {
+      updated_presets = [...current_presets, new_group]
+    }
+  } else if (options.create_on_index !== undefined) {
     updated_presets = [...current_presets]
     updated_presets.splice(options.create_on_index, 0, new_group)
   } else if (options.add_on_top) {
     new_group.isCollapsed = !!options.instant
     updated_presets = [new_group, ...current_presets]
   } else {
+    new_group.isCollapsed = !!options.instant
     updated_presets = [...current_presets, new_group]
   }
 
