@@ -1,4 +1,4 @@
-Top. `abc.ts`
+Top. `top.ts`
 
 ```ts
 // src/lorem.ts

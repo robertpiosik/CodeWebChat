@@ -195,8 +195,16 @@ export const parse_multiple_files = (params: {
         }
         current_text_block = ''
         last_seen_file_path_comment = extracted_filename
-      } else if (!last_seen_file_path_comment) {
-        current_text_block += line + '\n'
+
+        const trimmed = line.trim()
+        // If it doesn't start with a known comment marker, assume it's text.
+        if (!/^\s*(<!--|#|\/\/|\/\*|--)/.test(trimmed)) {
+          current_text_block += line + '\n'
+        }
+      } else {
+        if (!last_seen_file_path_comment) {
+          current_text_block += line + '\n'
+        }
       }
     } else if (state == 'CONTENT') {
       if (top_level_xml_file_mode) {
