@@ -318,7 +318,7 @@ export const Panel = () => {
               }}
               footer_slot={
                 <UiResponsePreviewFooter
-                  on_discard={() => {
+                  on_reject={() => {
                     set_response_history((prev) =>
                       prev.filter(
                         (i) => i.created_at != selected_history_item_created_at
@@ -330,7 +330,7 @@ export const Panel = () => {
                       files: []
                     })
                   }}
-                  on_approve={() => {
+                  on_accept={() => {
                     const accepted_files = items_to_review.filter(
                       (f) => 'file_path' in f && f.is_checked
                     ) as FileInPreview[]
@@ -341,7 +341,7 @@ export const Panel = () => {
                       files: accepted_files
                     })
                   }}
-                  is_approve_disabled={
+                  is_accept_disabled={
                     items_to_review.filter(
                       (f) => 'file_path' in f && f.is_checked
                     ).length == 0
