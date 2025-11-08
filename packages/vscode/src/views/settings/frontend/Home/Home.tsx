@@ -9,7 +9,8 @@ import { Section } from '@ui/components/editor/settings/Section'
 import { Textarea } from '@ui/components/editor/common/Textarea'
 import {
   ConfigurationForClient,
-  ProviderForClient
+  ProviderForClient,
+  EditFormatInstructions
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
 import { PresetsSection } from './sections/PresetsSection'
@@ -61,6 +62,7 @@ type Props = {
   commit_message_instructions: string
   context_size_warning_threshold: number
   gemini_user_id: number | null
+  edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
 
   // handlers
@@ -71,6 +73,9 @@ type Props = {
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (threshold: number) => void
   on_commit_instructions_change: (instructions: string) => void
+  on_edit_format_instructions_change: (
+    instructions: EditFormatInstructions
+  ) => void
   on_edit_context_system_instructions_change: (instructions: string) => void
   on_gemini_user_id_change: (id: number | null) => void
   on_clear_checks_in_workspace_behavior_change: (
@@ -276,6 +281,10 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['presets'] = el)}
           gemini_user_id={props.gemini_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
+          edit_format_instructions={props.edit_format_instructions}
+          on_edit_format_instructions_change={
+            props.on_edit_format_instructions_change
+          }
           on_stuck_change={presets_on_stuck_change}
         />
         <Section

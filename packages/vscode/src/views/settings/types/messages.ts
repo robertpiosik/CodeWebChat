@@ -14,6 +14,12 @@ export type ConfigurationForClient = {
   is_default?: boolean
 }
 
+export type EditFormatInstructions = {
+  whole: string
+  truncated: string
+  diff: string
+}
+
 // === FROM FRONTEND TO BACKEND ===
 export interface GetModelProvidersMessage {
   command: 'GET_MODEL_PROVIDERS'
@@ -168,6 +174,15 @@ export interface UpdateEditContextSystemInstructionsMessage {
   instructions: string
 }
 
+export interface GetEditFormatInstructionsMessage {
+  command: 'GET_EDIT_FORMAT_INSTRUCTIONS'
+}
+
+export interface UpdateEditFormatInstructionsMessage {
+  command: 'UPDATE_EDIT_FORMAT_INSTRUCTIONS'
+  instructions: EditFormatInstructions
+}
+
 export interface SettingsUiReadyMessage {
   command: 'SETTINGS_UI_READY'
 }
@@ -237,6 +252,8 @@ export type FrontendMessage =
   | UpdateCommitMessageInstructionsMessage
   | GetEditContextSystemInstructionsMessage
   | UpdateEditContextSystemInstructionsMessage
+  | GetEditFormatInstructionsMessage
+  | UpdateEditFormatInstructionsMessage
   | SettingsUiReadyMessage
   | GetContextSizeWarningThresholdMessage
   | UpdateContextSizeWarningThresholdMessage
@@ -279,6 +296,11 @@ export interface EditContextSystemInstructionsMessage {
   instructions: string
 }
 
+export interface EditFormatInstructionsMessage {
+  command: 'EDIT_FORMAT_INSTRUCTIONS'
+  instructions: EditFormatInstructions
+}
+
 export interface ContextSizeWarningThresholdMessage {
   command: 'CONTEXT_SIZE_WARNING_THRESHOLD'
   threshold: number
@@ -307,6 +329,7 @@ export type BackendMessage =
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
   | EditContextSystemInstructionsMessage
+  | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage
   | GeminiUserIdMessage
   | ClearChecksInWorkspaceBehaviorMessage

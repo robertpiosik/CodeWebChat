@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import {
   BackendMessage,
+  EditFormatInstructions,
   ConfigurationForClient,
   ProviderForClient,
   FrontendMessage
@@ -31,6 +32,9 @@ export const use_settings = (vscode: any) => {
   ] = useState<string | undefined>(undefined)
   const [context_size_warning_threshold, set_context_size_warning_threshold] =
     useState<number | undefined>(undefined)
+  const [edit_format_instructions, set_edit_format_instructions] = useState<
+    EditFormatInstructions | undefined
+  >(undefined)
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
@@ -49,6 +53,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
+    post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
   }, [vscode])
@@ -80,6 +85,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'CONTEXT_SIZE_WARNING_THRESHOLD':
           set_context_size_warning_threshold(message.threshold)
+          break
+        case 'EDIT_FORMAT_INSTRUCTIONS':
+          set_edit_format_instructions(message.instructions)
           break
         case 'GEMINI_USER_ID':
           set_gemini_user_id(message.geminiUserId)
@@ -205,6 +213,14 @@ export const use_settings = (vscode: any) => {
       threshold
     })
 
+  const handle_edit_format_instructions_change = (
+    instructions: EditFormatInstructions
+  ) =>
+    post_message(vscode, {
+      command: 'UPDATE_EDIT_FORMAT_INSTRUCTIONS',
+      instructions
+    })
+
   const handle_gemini_user_id_change = (geminiUserId: number | null) =>
     post_message(vscode, {
       command: 'UPDATE_GEMINI_USER_ID',
@@ -233,6 +249,7 @@ export const use_settings = (vscode: any) => {
     commit_message_instructions,
     edit_context_system_instructions,
     context_size_warning_threshold,
+    edit_format_instructions,
     gemini_user_id,
     clear_checks_in_workspace_behavior,
     handle_reorder_providers,
@@ -250,6 +267,7 @@ export const use_settings = (vscode: any) => {
     handle_edit_context_system_instructions_change,
     handle_open_editor_settings,
     handle_context_size_warning_threshold_change,
+    handle_edit_format_instructions_change,
     handle_gemini_user_id_change,
     handle_clear_checks_in_workspace_behavior_change
   }

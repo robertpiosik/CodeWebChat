@@ -574,7 +574,7 @@
           "type": "string",
           "scope": "resource",
           "description": "System instructions for the Edit Context API tool.",
-          "default": "You're a helpful coding assistant."
+          "default": "You're a helpful coding assistant. Don't introduce redundant comments in code."
         },
         "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",

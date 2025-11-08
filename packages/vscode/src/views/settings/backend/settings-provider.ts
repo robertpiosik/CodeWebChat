@@ -26,6 +26,7 @@ import {
   handle_get_context_size_warning_threshold,
   handle_get_edit_context_configurations,
   handle_get_edit_context_system_instructions,
+  handle_get_edit_format_instructions,
   handle_get_gemini_user_id,
   handle_get_intelligent_update_configurations,
   handle_get_model_providers,
@@ -42,6 +43,7 @@ import {
   handle_update_commit_message_instructions,
   handle_update_context_size_warning_threshold,
   handle_update_edit_context_system_instructions,
+  handle_update_edit_format_instructions,
   handle_update_gemini_user_id
 } from './message-handlers'
 
@@ -165,6 +167,12 @@ export class SettingsProvider {
           case 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS':
             await handle_update_edit_context_system_instructions(message)
             break
+          case 'GET_EDIT_FORMAT_INSTRUCTIONS':
+            await handle_get_edit_format_instructions(this)
+            break
+          case 'UPDATE_EDIT_FORMAT_INSTRUCTIONS':
+            await handle_update_edit_format_instructions(message)
+            break
           case 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS':
             await handle_get_intelligent_update_configurations(this)
             break
@@ -257,6 +265,7 @@ export class SettingsProvider {
           void handle_get_commit_messages_configurations(this)
           void handle_get_edit_context_configurations(this)
           void handle_get_edit_context_system_instructions(this)
+          void handle_get_edit_format_instructions(this)
           void handle_get_intelligent_update_configurations(this)
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
