@@ -252,7 +252,40 @@ export const Main: React.FC<Props> = (props) => {
           options: preset.options,
           port: preset.port,
           is_selected: preset.is_selected || undefined,
-          is_collapsed: preset.is_collapsed || undefined
+          is_collapsed: preset.is_collapsed || undefined,
+          is_pinned: preset.is_pinned || undefined
+        }))
+      })
+    }
+  }
+
+  const handle_toggle_preset_pinned = (name: string) => {
+    if (all_presets) {
+      const presets_for_current_mode = all_presets[props.web_mode]
+      const updated_presets = presets_for_current_mode.map((p) =>
+        p.name == name ? { ...p, is_pinned: !p.is_pinned } : p
+      )
+
+      set_all_presets({ ...all_presets, [props.web_mode]: updated_presets })
+
+      post_message(props.vscode, {
+        command: 'REPLACE_PRESETS',
+        presets: updated_presets.map((preset) => ({
+          name: preset.name,
+          chatbot: preset.chatbot,
+          prompt_prefix: preset.prompt_prefix,
+          prompt_suffix: preset.prompt_suffix,
+          model: preset.model,
+          temperature: preset.temperature,
+          top_p: preset.top_p,
+          thinking_budget: preset.thinking_budget,
+          reasoning_effort: preset.reasoning_effort,
+          system_instructions: preset.system_instructions,
+          options: preset.options,
+          port: preset.port,
+          is_selected: preset.is_selected || undefined,
+          is_collapsed: preset.is_collapsed || undefined,
+          is_pinned: preset.is_pinned || undefined
         }))
       })
     }
@@ -283,7 +316,8 @@ export const Main: React.FC<Props> = (props) => {
           options: preset.options,
           port: preset.port,
           is_selected: preset.is_selected || undefined,
-          is_collapsed: preset.is_collapsed || undefined
+          is_collapsed: preset.is_collapsed || undefined,
+          is_pinned: preset.is_pinned || undefined
         }))
       })
     }
@@ -341,7 +375,8 @@ export const Main: React.FC<Props> = (props) => {
         options: preset.options,
         port: preset.port,
         is_selected: preset.is_selected,
-        is_collapsed: preset.is_collapsed
+        is_collapsed: preset.is_collapsed,
+        is_pinned: preset.is_pinned
       }))
     })
   }
@@ -664,6 +699,7 @@ export const Main: React.FC<Props> = (props) => {
       on_preset_duplicate={handle_preset_duplicate}
       on_preset_delete={handle_preset_delete}
       on_toggle_selected_preset={handle_toggle_selected_preset}
+      on_toggle_preset_pinned={handle_toggle_preset_pinned}
       on_toggle_group_collapsed={handle_toggle_group_collapsed}
       selected_preset_or_group_name={selected_preset_or_group_name}
       selected_configuration_id={

@@ -71,6 +71,7 @@ type Props = {
   on_preset_duplicate: (preset_name: string) => void
   on_preset_delete: (preset_name: string) => void
   on_toggle_selected_preset: (name: string) => void
+  on_toggle_preset_pinned: (name: string) => void
   on_toggle_group_collapsed: (name: string) => void
   selected_preset_or_group_name?: string
   selected_configuration_id?: string
@@ -281,6 +282,7 @@ export const MainView: React.FC<Props> = (props) => {
               on_preset_duplicate={props.on_preset_duplicate}
               on_preset_delete={props.on_preset_delete}
               on_toggle_selected_preset={props.on_toggle_selected_preset}
+              on_toggle_preset_pinned={props.on_toggle_preset_pinned}
               on_toggle_group_collapsed={props.on_toggle_group_collapsed}
               selected_preset_name={props.selected_preset_or_group_name}
               is_collapsed={props.presets_collapsed}

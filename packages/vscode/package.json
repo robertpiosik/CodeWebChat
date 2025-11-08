@@ -761,6 +761,10 @@
               "isCollapsed": {
                 "type": "boolean",
                 "description": "Whether this group is collapsed by default."
+              },
+              "isPinned": {
+                "type": "boolean",
+                "description": "Whether this preset is shown above the list."
               }
             },
             "required": [
@@ -953,6 +957,10 @@
               "isCollapsed": {
                 "type": "boolean",
                 "description": "Whether this group is collapsed by default."
+              },
+              "isPinned": {
+                "type": "boolean",
+                "description": "Whether this preset is shown above the list."
               }
             },
             "required": [
@@ -1115,6 +1123,10 @@
               "isCollapsed": {
                 "type": "boolean",
                 "description": "Whether this group is collapsed by default."
+              },
+              "isPinned": {
+                "type": "boolean",
+                "description": "Whether this preset is shown above the list."
               }
             },
             "required": [
@@ -1307,6 +1319,10 @@
               "isCollapsed": {
                 "type": "boolean",
                 "description": "Whether this group is collapsed by default."
+              },
+              "isPinned": {
+                "type": "boolean",
+                "description": "Whether this preset is shown above the list."
               }
             },
             "required": [

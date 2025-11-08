@@ -17,6 +17,7 @@ export type ConfigPresetFormat = {
   newUrl?: string
   isSelected?: boolean
   isCollapsed?: boolean
+  isPinned?: boolean
 }
 
 export function config_preset_to_ui_format(
@@ -37,7 +38,8 @@ export function config_preset_to_ui_format(
     port: config_preset.port,
     new_url: config_preset.newUrl,
     is_selected: config_preset.isSelected,
-    is_collapsed: config_preset.isCollapsed
+    is_collapsed: config_preset.isCollapsed,
+    is_pinned: config_preset.isPinned
   }
 }
 
@@ -57,6 +59,7 @@ export function ui_preset_to_config_format(preset: Preset): ConfigPresetFormat {
     port: preset.port,
     newUrl: preset.new_url,
     isSelected: preset.is_selected,
-    isCollapsed: preset.is_collapsed
+    isCollapsed: preset.is_collapsed,
+    isPinned: preset.is_pinned
   }
 }

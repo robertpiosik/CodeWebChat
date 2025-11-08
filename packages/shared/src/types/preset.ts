@@ -16,4 +16,5 @@ export type Preset = {
   new_url?: string
   is_selected?: boolean
   is_collapsed?: boolean
+  is_pinned?: boolean
 }

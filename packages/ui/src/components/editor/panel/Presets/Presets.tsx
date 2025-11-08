@@ -43,6 +43,7 @@ export namespace Presets {
     prompt_suffix?: string
     is_selected?: boolean
     is_collapsed?: boolean
+    is_pinned?: boolean
   }
 
   export type Props = {
@@ -67,6 +68,7 @@ export namespace Presets {
     on_preset_duplicate: (name: string) => void
     on_preset_delete: (name: string) => void
     on_toggle_selected_preset: (name: string) => void
+    on_toggle_preset_pinned: (name: string) => void
     on_toggle_group_collapsed: (name: string) => void
     selected_preset_name?: string
     is_collapsed: boolean
@@ -84,6 +86,18 @@ const with_ids = (
 }
 
 export const Presets: React.FC<Presets.Props> = (props) => {
+  const {
+    context_menu: item_context_menu,
+    context_menu_ref: item_context_menu_ref,
+    handle_context_menu: handle_item_context_menu,
+    close_context_menu: close_item_context_menu
+  } = use_context_menu<{
+    preset_name: string
+    is_group: boolean
+  }>()
+
+  const pinned_presets = props.presets.filter((p) => p.is_pinned && p.chatbot)
+
   const get_visible_presets = (presets: Presets.Preset[]): Presets.Preset[] => {
     const visible_presets: Presets.Preset[] = []
     let is_in_collapsed_group = false
@@ -98,16 +112,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     }
     return visible_presets
   }
-
-  const {
-    context_menu: item_context_menu,
-    context_menu_ref: item_context_menu_ref,
-    handle_context_menu: handle_item_context_menu,
-    close_context_menu: close_item_context_menu
-  } = use_context_menu<{
-    preset_name: string
-    is_group: boolean
-  }>()
 
   const sortable_list = (() => {
     let list = with_ids(get_visible_presets(props.presets))
@@ -136,6 +140,99 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
   return (
     <div className={styles.container}>
+      {pinned_presets.length > 0 && (
+        <div className={styles.presets}>
+          {pinned_presets.map((preset) => {
+            const is_unnamed =
+              !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+
+            const display_name: string = is_unnamed
+              ? preset.chatbot!
+              : preset.name
+
+            const get_subtitle = (): string => {
+              const { chatbot, model } = preset
+
+              const model_display_name =
+                model && chatbot
+                  ? (CHATBOTS[chatbot].models as any)[model]?.label || model
+                  : null
+
+              if (is_unnamed) {
+                return model_display_name || ''
+              }
+
+              if (model_display_name) {
+                return `${chatbot} · ${model_display_name}`
+              }
+
+              return chatbot!
+            }
+
+            return (
+              <div
+                key={preset.name}
+                className={cn(styles.presets__item, {
+                  [styles['presets__item--highlighted']]:
+                    props.selected_preset_name == preset.name
+                })}
+                onClick={() => {
+                  props.on_preset_click(preset.name)
+                }}
+                onContextMenu={(e) =>
+                  handle_item_context_menu(e, {
+                    preset_name: preset.name,
+                    is_group: false
+                  })
+                }
+                role="button"
+              >
+                <div className={styles.presets__item__left}>
+                  <div className={styles.presets__item__left__icon}>
+                    <Icon variant={chatbot_to_icon[preset.chatbot!]} />
+                  </div>
+                  <div className={styles.presets__item__left__text}>
+                    <span>{display_name}</span>
+                    <span>{get_subtitle()}</span>
+                  </div>
+                </div>
+
+                <div
+                  className={styles.presets__item__right}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {(preset.prompt_prefix || preset.prompt_suffix) && (
+                    <IconButton
+                      codicon_icon="copy"
+                      title="Copy to clipboard"
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_preset_copy(preset.name)
+                      }}
+                    />
+                  )}
+                  <IconButton
+                    codicon_icon={preset.is_pinned ? 'pinned' : 'pin'}
+                    title={preset.is_pinned ? 'Unpin' : 'Pin'}
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_toggle_preset_pinned(preset.name)
+                    }}
+                  />
+                  <IconButton
+                    codicon_icon="edit"
+                    title="Edit"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_preset_edit(preset.name)
+                    }}
+                  />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
       <div
         className={styles.header}
         onClick={() => props.on_toggle_collapsed(!props.is_collapsed)}
@@ -589,6 +686,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                             }}
                           />
                         )}
+                      {preset.chatbot && (
+                        <IconButton
+                          codicon_icon={preset.is_pinned ? 'pinned' : 'pin'}
+                          title={preset.is_pinned ? 'Unpin' : 'Pin'}
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_toggle_preset_pinned(preset.name)
+                          }}
+                        />
+                      )}
                       <IconButton
                         codicon_icon="files"
                         title="Duplicate"
