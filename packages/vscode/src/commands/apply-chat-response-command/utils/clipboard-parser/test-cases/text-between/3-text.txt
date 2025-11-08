@@ -1,1 +1,4 @@
 Middle.
+```ts
+console.log('some inline code');
+```

@@ -4,11 +4,11 @@ import * as fs from 'fs'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
-import { ClipboardFile } from '../utils/clipboard-parser'
+import { FileItem } from '../utils/clipboard-parser'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 
 export const handle_fast_replace = async (
-  files: ClipboardFile[]
+  files: FileItem[]
 ): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
   Logger.info({
     function_name: 'handle_fast_replace',
@@ -16,7 +16,7 @@ export const handle_fast_replace = async (
     data: { file_count: files.length }
   })
   try {
-    const safe_files: ClipboardFile[] = []
+    const safe_files: FileItem[] = []
     const unsafe_files: string[] = []
 
     if (

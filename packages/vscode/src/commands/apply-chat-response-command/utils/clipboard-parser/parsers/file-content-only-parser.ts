@@ -1,6 +1,6 @@
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import {
-  ClipboardFile,
+  FileItem,
   extract_workspace_and_path,
   has_real_code
 } from '../clipboard-parser'
@@ -8,7 +8,7 @@ import {
 export const parse_file_content_only = (params: {
   response: string
   is_single_root_folder_workspace: boolean
-}): ClipboardFile | null => {
+}): FileItem | null => {
   if (params.response.includes('```')) {
     return null
   }
@@ -44,6 +44,7 @@ export const parse_file_content_only = (params: {
 
   if (has_real_code(cleaned_content)) {
     return {
+      type: 'file',
       file_path: relative_path,
       content: cleaned_content,
       workspace_name: workspace_name

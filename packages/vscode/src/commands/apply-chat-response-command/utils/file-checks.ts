@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
-import { ClipboardFile } from './clipboard-parser'
+import { FileItem } from './clipboard-parser'
 import { create_safe_path } from '@/utils/path-sanitizer'
 
 export const check_if_all_files_new = async (
-  files: ClipboardFile[]
+  files: FileItem[]
 ): Promise<boolean> => {
   const workspace_map = new Map<string, string>()
   vscode.workspace.workspaceFolders!.forEach((folder) => {

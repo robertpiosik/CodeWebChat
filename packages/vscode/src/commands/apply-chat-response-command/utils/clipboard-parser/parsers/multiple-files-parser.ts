@@ -1,6 +1,6 @@
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import {
-  ClipboardFile,
+  FileItem,
   TextItem,
   extract_workspace_and_path,
   has_real_code
@@ -15,14 +15,14 @@ const extract_file_path_from_xml = (line: string): string | null => {
 export const parse_multiple_files = (params: {
   response: string
   is_single_root_folder_workspace: boolean
-}): (ClipboardFile | TextItem)[] => {
+}): (FileItem | TextItem)[] => {
   const file_content_result = parse_file_content_only(params)
   if (file_content_result) {
     return [file_content_result]
   }
 
-  const results: (ClipboardFile | TextItem)[] = []
-  const file_ref_map = new Map<string, ClipboardFile>()
+  const results: (FileItem | TextItem)[] = []
+  const file_ref_map = new Map<string, FileItem>()
   let current_text_block = ''
 
   let state = 'TEXT'
@@ -222,6 +222,7 @@ export const parse_multiple_files = (params: {
               existing_file.content += '\n\n' + final_content
             } else {
               const new_file = {
+                type: 'file' as const,
                 file_path: current_file_name,
                 content: final_content,
                 workspace_name: current_workspace_name
@@ -323,12 +324,27 @@ export const parse_multiple_files = (params: {
             existing_file.content += '\n\n' + cleaned_content
           } else {
             const new_file = {
+              type: 'file' as const,
               file_path: current_file_name,
               content: cleaned_content,
               workspace_name: current_workspace_name
             }
             file_ref_map.set(file_key, new_file)
             results.push(new_file)
+          }
+        } else if (!current_file_name) {
+          const raw_code_block = [
+            `\`\`\`${current_language}`,
+            current_content,
+            '```'
+          ].join('\n')
+
+          const last_result =
+            results.length > 0 ? results[results.length - 1] : null
+          if (last_result && last_result.type === 'text') {
+            last_result.content += '\n' + raw_code_block
+          } else {
+            results.push({ type: 'text', content: raw_code_block })
           }
         }
 
@@ -441,6 +457,7 @@ export const parse_multiple_files = (params: {
                     existing_file.content += '\n\n' + cleaned_content
                   } else {
                     const new_file = {
+                      type: 'file' as const,
                       file_path: current_file_name,
                       content: cleaned_content,
                       workspace_name: current_workspace_name
@@ -552,6 +569,7 @@ export const parse_multiple_files = (params: {
         existing_file.content += '\n\n' + cleaned_content
       } else {
         const new_file = {
+          type: 'file' as const,
           file_path: current_file_name,
           content: cleaned_content,
           workspace_name: current_workspace_name
