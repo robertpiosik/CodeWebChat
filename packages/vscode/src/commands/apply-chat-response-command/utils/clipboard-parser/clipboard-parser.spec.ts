@@ -492,6 +492,26 @@ describe('clipboard-parser', () => {
       }
     })
 
+    it('parses file content when file path is in a multi-line comment', () => {
+      const test_case = 'path-in-multi-line-comment'
+      const text = load_test_case_file(
+        test_case,
+        `path-in-multi-line-comment.txt`
+      )
+      const result = parse_file_content_only({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).not.toBeNull()
+      if (result) {
+        expect(result.file_path).toBe('src/index.ts')
+        expect(result.content).toBe(
+          load_test_case_file(test_case, '1-file.txt')
+        )
+      }
+    })
+
     it('returns null when response is just text and not a file', () => {
       const text = 'This is just regular text without a file path'
       const result = parse_file_content_only({
