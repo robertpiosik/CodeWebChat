@@ -155,6 +155,30 @@ export const make_api_request = async (params: {
             processed_think_content_length =
               start_match.index! + start_match[0].length
           } else {
+            const think_end_regex = /<\/(think|thought)>/
+            const end_match = full_response.match(think_end_regex)
+
+            if (end_match) {
+              const think_content_chunk = full_response.substring(
+                0,
+                end_match.index!
+              )
+              if (think_content_chunk) {
+                handle_thinking_chunk(think_content_chunk)
+              }
+
+              think_block_closed = true
+
+              const content_after = full_response.substring(
+                end_match.index! + end_match[0].length
+              )
+              content_for_client = content_after
+              if (content_after) {
+                handle_chunk_metrics(content_after)
+              }
+              return
+            }
+
             const trimmed_response = full_response.trimStart()
             if (trimmed_response.length == 0) {
               return
@@ -281,7 +305,27 @@ export const make_api_request = async (params: {
           const thoughts_match = full_response.match(
             /<(?:think|thought)>([\s\S]*?)<\/(?:think|thought)>/
           )
-          const thoughts = thoughts_match ? thoughts_match[1].trim() : undefined
+          let thoughts = thoughts_match ? thoughts_match[1].trim() : undefined
+          let final_content = content_for_client
+
+          if (!thoughts_match) {
+            const end_match = full_response.match(/<\/(?:think|thought)>/)
+            if (end_match) {
+              const start_match = full_response.match(/<(?:think|thought)>/)
+              if (!start_match) {
+                thoughts = full_response.substring(0, end_match.index).trim()
+                final_content = full_response
+                  .substring(end_match.index! + end_match[0].length)
+                  .trim()
+                Logger.info({
+                  function_name: 'make_api_request',
+                  message:
+                    'Detected closing tag without opening tag, stripped content before </think>',
+                  data: { thoughts: 'xxx' }
+                })
+              }
+            }
+          }
 
           Logger.info({
             function_name: 'make_api_request',
@@ -296,7 +340,7 @@ export const make_api_request = async (params: {
             })
           }
 
-          resolve({ response: content_for_client, thoughts })
+          resolve({ response: final_content, thoughts })
         })
 
         response.data.on('error', (error: Error) => {

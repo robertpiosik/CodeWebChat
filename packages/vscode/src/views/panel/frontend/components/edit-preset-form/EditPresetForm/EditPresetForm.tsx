@@ -106,7 +106,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         ...(port !== undefined ? { port } : {}),
         ...(new_url ? { new_url } : {}),
         ...(options.length ? { options } : {}),
-        is_selected: props.preset.is_selected
+        is_selected: props.preset.is_selected,
+        is_pinned: props.preset.is_pinned
       })
     } else {
       props.on_update({

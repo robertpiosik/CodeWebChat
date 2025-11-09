@@ -15,4 +15,4 @@ console.log('some inline code');
 console.log('ipsum');
 ```
 
-Bottom.
+Bottom `test test`.

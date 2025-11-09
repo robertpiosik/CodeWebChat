@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "AI coding without agents (CWC)",
-  "version": "1.518.0",
+  "version": "1.519.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -574,7 +574,7 @@
           "type": "string",
           "scope": "resource",
           "description": "System instructions for the Edit Context API tool.",
-          "default": "You're a helpful coding assistant."
+          "default": "You're a helpful coding assistant. Don't introduce redundant comments in code."
         },
         "codeWebChat.chatPresetsForAskAboutContext": {
           "type": "array",
@@ -761,6 +761,10 @@
               "isCollapsed": {
                 "type": "boolean",
                 "description": "Whether this group is collapsed by default."
+              },
+              "isPinned": {
+                "type": "boolean",
+                "description": "Whether this preset is shown above the list."
               }
             },
             "required": [
@@ -953,6 +957,10 @@
               "isCollapsed": {
                 "type": "boolean",
                 "description": "Whether this group is collapsed by default."
+              },
+              "isPinned": {
+                "type": "boolean",
+                "description": "Whether this preset is shown above the list."
               }
             },
             "required": [
@@ -1115,6 +1123,10 @@
               "isCollapsed": {
                 "type": "boolean",
                 "description": "Whether this group is collapsed by default."
+              },
+              "isPinned": {
+                "type": "boolean",
+                "description": "Whether this preset is shown above the list."
               }
             },
             "required": [
@@ -1307,6 +1319,10 @@
               "isCollapsed": {
                 "type": "boolean",
                 "description": "Whether this group is collapsed by default."
+              },
+              "isPinned": {
+                "type": "boolean",
+                "description": "Whether this preset is shown above the list."
               }
             },
             "required": [

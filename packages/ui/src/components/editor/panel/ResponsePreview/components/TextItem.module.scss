@@ -23,28 +23,17 @@
     padding: 2px 4px;
     border-radius: 3px;
   }
+}
 
-  &--collapsed {
-    max-height: 50px;
-    overflow: hidden;
-    position: relative;
+.hidden {
+  display: flex;
+  align-items: center;
+  margin: 0 var(--padding-12px);
+  gap: var(--padding-8px);
+}
 
-    &:hover {
-      color: inherit;
-    }
-  }
-
-  &--overflowing::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      var(--vscode-sideBar-background)
-    );
-  }
+.line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: var(--cwc-border-color-dimmed);
 }

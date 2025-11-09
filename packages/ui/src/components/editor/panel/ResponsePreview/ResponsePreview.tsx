@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useState } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
@@ -25,47 +25,9 @@ type Props = {
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
-  const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
-  const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
-    new Set()
+  const [last_clicked_file_index, set_last_clicked_file_index] = useState(
+    props.items.findIndex((i) => i.type == 'file')
   )
-  const scroll_top_ref = useRef(0)
-  const scrollable_ref = useRef<any>(null)
-
-  const toggle_expanded_text_item = (
-    index: number,
-    element: HTMLDivElement
-  ) => {
-    const scrollable_instance = scrollable_ref.current
-    if (scrollable_instance) {
-      const scroll_container = scrollable_instance.getScrollElement()
-      if (scroll_container) {
-        const scroll_container_rect = scroll_container.getBoundingClientRect()
-        const element_rect = element.getBoundingClientRect()
-
-        if (element_rect.top < scroll_container_rect.top) {
-          // Element's top edge is above the scrollable viewport's top edge.
-          // Restore scroll position to the distance of this top edge to the top.
-          const element_position_in_scrollable_content =
-            scroll_container.scrollTop +
-            element_rect.top -
-            scroll_container_rect.top -
-            4
-          scroll_top_ref.current = element_position_in_scrollable_content
-        }
-      }
-    }
-
-    set_expanded_text_items((prev) => {
-      const new_set = new Set(prev)
-      if (new_set.has(index)) {
-        new_set.delete(index)
-      } else {
-        new_set.add(index)
-      }
-      return new_set
-    })
-  }
 
   const files_in_preview = props.items.filter(
     (i) => i.type == 'file'
@@ -83,16 +45,7 @@ export const ResponsePreview: FC<Props> = (props) => {
   }
 
   return (
-    <Scrollable
-      ref={scrollable_ref}
-      key={expanded_text_items.size}
-      // Used to restore scroll on key change.
-      // Key is changed to re-calculate simplebar container height.
-      initial_scroll_top={scroll_top_ref.current}
-      on_scroll={(top) => {
-        scroll_top_ref.current = top
-      }}
-    >
+    <Scrollable>
       <div className={styles.container}>
         {props.raw_instructions && (
           <div
@@ -118,7 +71,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         )}
         <div className={styles.list}>
           {props.items.map((item, index) => {
-            if (item.type === 'file') {
+            if (item.type == 'file') {
               const file = item
               const last_slash_index = file.file_path.lastIndexOf('/')
               const file_name = file.file_path.substring(last_slash_index + 1)
@@ -235,16 +188,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                 </div>
               )
             } else {
-              return (
-                <TextItem
-                  key={index}
-                  content={item.content}
-                  is_expanded={expanded_text_items.has(index)}
-                  on_toggle={(element) =>
-                    toggle_expanded_text_item(index, element)
-                  }
-                />
-              )
+              return <TextItem key={index} content={item.content} />
             }
           })}
         </div>

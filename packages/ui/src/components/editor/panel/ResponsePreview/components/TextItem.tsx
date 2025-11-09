@@ -1,38 +1,35 @@
-import { FC, useEffect, useRef, useState } from 'react'
-import cn from 'classnames'
+import { FC, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './TextItem.module.scss'
+import { IconButton } from '../../IconButton/IconButton'
 
 type Props = {
   content: string
-  is_expanded: boolean
-  on_toggle: (element: HTMLDivElement) => void
 }
 
-export const TextItem: FC<Props> = ({ content, is_expanded, on_toggle }) => {
-  const ref = useRef<HTMLDivElement>(null)
-  const [is_overflowing, set_is_overflowing] = useState(false)
+export const TextItem: FC<Props> = ({ content }) => {
+  const [is_hidden, set_is_hidden] = useState(true)
 
-  useEffect(() => {
-    if (ref.current && !is_expanded) {
-      set_is_overflowing(ref.current.scrollHeight > ref.current.clientHeight)
-    } else {
-      set_is_overflowing(false)
-    }
-  }, [is_expanded, content])
+  if (is_hidden) {
+    return (
+      <div className={styles.hidden}>
+        <div className={styles.line} />
+        <IconButton
+          codicon_icon="add"
+          on_click={() => set_is_hidden(false)}
+          title="Show text"
+        />
+        <div className={styles.line} />
+      </div>
+    )
+  }
 
   return (
     <div
-      ref={ref}
-      className={cn(styles.text, {
-        [styles['text--collapsed']]: !is_expanded,
-        [styles['text--overflowing']]: !is_expanded && is_overflowing
-      })}
-      onClick={
-        is_overflowing || is_expanded
-          ? () => ref.current && on_toggle(ref.current)
-          : undefined
-      }
+      className={styles.text}
+      onClick={() => {
+        set_is_hidden(true)
+      }}
     >
       <ReactMarkdown disallowedElements={['hr']}>{content}</ReactMarkdown>
     </div>

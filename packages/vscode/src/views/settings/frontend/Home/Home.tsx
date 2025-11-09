@@ -5,11 +5,13 @@ import { ModelProvidersSection } from './sections/ModelProvidersSection'
 import { NavigationDivider } from '@ui/components/editor/settings/NavigationDivider'
 import { Item } from '@ui/components/editor/settings/Item'
 import { ApiToolConfigurationSection } from './sections/ApiToolConfigurationSection'
+import { Group } from '@ui/components/editor/settings/Group/Group'
 import { Section } from '@ui/components/editor/settings/Section'
 import { Textarea } from '@ui/components/editor/common/Textarea'
 import {
   ConfigurationForClient,
-  ProviderForClient
+  ProviderForClient,
+  EditFormatInstructions
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
 import { PresetsSection } from './sections/PresetsSection'
@@ -61,6 +63,7 @@ type Props = {
   commit_message_instructions: string
   context_size_warning_threshold: number
   gemini_user_id: number | null
+  edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
 
   // handlers
@@ -71,6 +74,9 @@ type Props = {
   set_commit_messages_configs: (configs: ConfigurationForClient[]) => void
   on_context_size_warning_threshold_change: (threshold: number) => void
   on_commit_instructions_change: (instructions: string) => void
+  on_edit_format_instructions_change: (
+    instructions: EditFormatInstructions
+  ) => void
   on_edit_context_system_instructions_change: (instructions: string) => void
   on_gemini_user_id_change: (id: number | null) => void
   on_clear_checks_in_workspace_behavior_change: (
@@ -276,6 +282,10 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['presets'] = el)}
           gemini_user_id={props.gemini_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
+          edit_format_instructions={props.edit_format_instructions}
+          on_edit_format_instructions_change={
+            props.on_edit_format_instructions_change
+          }
           on_stuck_change={presets_on_stuck_change}
         />
         <Section
@@ -284,17 +294,19 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Manage your model providers here. Add, edit, reorder, or delete providers as needed."
           on_stuck_change={model_providers_on_stuck_change}
         >
-          <ModelProvidersSection
-            providers={props.providers}
-            on_reorder={(reordered) => {
-              props.set_providers(reordered)
-              props.on_reorder_providers(reordered)
-            }}
-            on_add_provider={props.on_add_provider}
-            on_delete_provider={props.on_delete_provider}
-            on_rename_provider={props.on_rename_provider}
-            on_change_api_key={props.on_change_api_key}
-          />
+          <Group>
+            <ModelProvidersSection
+              providers={props.providers}
+              on_reorder={(reordered) => {
+                props.set_providers(reordered)
+                props.on_reorder_providers(reordered)
+              }}
+              on_add_provider={props.on_add_provider}
+              on_delete_provider={props.on_delete_provider}
+              on_rename_provider={props.on_rename_provider}
+              on_change_api_key={props.on_change_api_key}
+            />
+          </Group>
         </Section>
         <Section
           ref={(el) => (section_refs.current['edit-context'] = el)}
@@ -303,29 +315,31 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Modify, create or delete files based on natural language instructions."
           on_stuck_change={edit_context_on_stuck_change}
         >
-          <Item
-            title="System Instructions"
-            description="Tone and style instructions for the model."
-            slot_placement="below"
-            slot={
-              <Textarea
-                value={edit_context_instructions}
-                on_change={set_edit_context_instructions}
-              />
-            }
-          />
-          <ApiToolConfigurationSection
-            configurations={props.edit_context_configs}
-            set_configurations={props.set_edit_context_configs}
-            tool_name="EDIT_CONTEXT"
-            can_have_default={false}
-            on_add={() => props.on_add_config('EDIT_CONTEXT')}
-            on_reorder={(reordered) =>
-              props.on_reorder_configs('EDIT_CONTEXT', reordered)
-            }
-            on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
-            on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
-          />
+          <Group>
+            <Item
+              title="System Instructions"
+              description="Tone and style instructions for the model."
+              slot_placement="below"
+              slot={
+                <Textarea
+                  value={edit_context_instructions}
+                  on_change={set_edit_context_instructions}
+                />
+              }
+            />
+            <ApiToolConfigurationSection
+              configurations={props.edit_context_configs}
+              set_configurations={props.set_edit_context_configs}
+              tool_name="EDIT_CONTEXT"
+              can_have_default={false}
+              on_add={() => props.on_add_config('EDIT_CONTEXT')}
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('EDIT_CONTEXT', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('EDIT_CONTEXT', id)}
+              on_delete={(id) => props.on_delete_config('EDIT_CONTEXT', id)}
+            />
+          </Group>
         </Section>
         <Section
           ref={(el) => (section_refs.current['code-completions'] = el)}
@@ -334,24 +348,26 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Get accurate code-at-cursor from state-of-the-art reasoning models."
           on_stuck_change={code_completions_on_stuck_change}
         >
-          <ApiToolConfigurationSection
-            configurations={props.code_completions_configs}
-            set_configurations={props.set_code_completions_configs}
-            tool_name="CODE_COMPLETIONS"
-            can_have_default={true}
-            on_add={() => props.on_add_config('CODE_COMPLETIONS')}
-            on_reorder={(reordered) =>
-              props.on_reorder_configs('CODE_COMPLETIONS', reordered)
-            }
-            on_edit={(id) => props.on_edit_config('CODE_COMPLETIONS', id)}
-            on_delete={(id) => props.on_delete_config('CODE_COMPLETIONS', id)}
-            on_set_default={(id) =>
-              props.on_set_default_config('CODE_COMPLETIONS', id)
-            }
-            on_unset_default={() =>
-              props.on_unset_default_config('CODE_COMPLETIONS')
-            }
-          />
+          <Group>
+            <ApiToolConfigurationSection
+              configurations={props.code_completions_configs}
+              set_configurations={props.set_code_completions_configs}
+              tool_name="CODE_COMPLETIONS"
+              can_have_default={true}
+              on_add={() => props.on_add_config('CODE_COMPLETIONS')}
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('CODE_COMPLETIONS', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('CODE_COMPLETIONS', id)}
+              on_delete={(id) => props.on_delete_config('CODE_COMPLETIONS', id)}
+              on_set_default={(id) =>
+                props.on_set_default_config('CODE_COMPLETIONS', id)
+              }
+              on_unset_default={() =>
+                props.on_unset_default_config('CODE_COMPLETIONS')
+              }
+            />
+          </Group>
         </Section>
         <Section
           ref={(el) => (section_refs.current['intelligent-update'] = el)}
@@ -360,24 +376,28 @@ export const Home: React.FC<Props> = (props) => {
           subtitle={`Handle "truncated" edit format and malformed diffs.`}
           on_stuck_change={intelligent_update_on_stuck_change}
         >
-          <ApiToolConfigurationSection
-            configurations={props.intelligent_update_configs}
-            set_configurations={props.set_intelligent_update_configs}
-            tool_name="INTELLIGENT_UPDATE"
-            can_have_default={true}
-            on_add={() => props.on_add_config('INTELLIGENT_UPDATE')}
-            on_reorder={(reordered) =>
-              props.on_reorder_configs('INTELLIGENT_UPDATE', reordered)
-            }
-            on_edit={(id) => props.on_edit_config('INTELLIGENT_UPDATE', id)}
-            on_delete={(id) => props.on_delete_config('INTELLIGENT_UPDATE', id)}
-            on_set_default={(id) =>
-              props.on_set_default_config('INTELLIGENT_UPDATE', id)
-            }
-            on_unset_default={() =>
-              props.on_unset_default_config('INTELLIGENT_UPDATE')
-            }
-          />
+          <Group>
+            <ApiToolConfigurationSection
+              configurations={props.intelligent_update_configs}
+              set_configurations={props.set_intelligent_update_configs}
+              tool_name="INTELLIGENT_UPDATE"
+              can_have_default={true}
+              on_add={() => props.on_add_config('INTELLIGENT_UPDATE')}
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('INTELLIGENT_UPDATE', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('INTELLIGENT_UPDATE', id)}
+              on_delete={(id) =>
+                props.on_delete_config('INTELLIGENT_UPDATE', id)
+              }
+              on_set_default={(id) =>
+                props.on_set_default_config('INTELLIGENT_UPDATE', id)
+              }
+              on_unset_default={() =>
+                props.on_unset_default_config('INTELLIGENT_UPDATE')
+              }
+            />
+          </Group>
         </Section>
         <Section
           ref={(el) => (section_refs.current['commit-messages'] = el)}
@@ -386,35 +406,37 @@ export const Home: React.FC<Props> = (props) => {
           subtitle="Generate meaningful summaries of changes adhering to your style."
           on_stuck_change={commit_messages_on_stuck_change}
         >
-          <Item
-            title="Commit Message Instructions"
-            description="Customize the instructions used when generating commit messages. These instructions are sent to the model along with the code changes."
-            slot_placement="below"
-            slot={
-              <Textarea
-                value={commit_instructions}
-                on_change={set_commit_instructions}
-              />
-            }
-          />
-          <ApiToolConfigurationSection
-            configurations={props.commit_messages_configs}
-            set_configurations={props.set_commit_messages_configs}
-            tool_name="COMMIT_MESSAGES"
-            can_have_default={true}
-            on_add={() => props.on_add_config('COMMIT_MESSAGES')}
-            on_reorder={(reordered) =>
-              props.on_reorder_configs('COMMIT_MESSAGES', reordered)
-            }
-            on_edit={(id) => props.on_edit_config('COMMIT_MESSAGES', id)}
-            on_delete={(id) => props.on_delete_config('COMMIT_MESSAGES', id)}
-            on_set_default={(id) =>
-              props.on_set_default_config('COMMIT_MESSAGES', id)
-            }
-            on_unset_default={() =>
-              props.on_unset_default_config('COMMIT_MESSAGES')
-            }
-          />
+          <Group>
+            <Item
+              title="Instructions"
+              description="Guidelines for how generated commit messages should be written. Use this to set tone, structure, and conventions (e.g., Conventional Commits, line limits, gitmoji), which will be applied when creating summaries of changes."
+              slot_placement="below"
+              slot={
+                <Textarea
+                  value={commit_instructions}
+                  on_change={set_commit_instructions}
+                />
+              }
+            />
+            <ApiToolConfigurationSection
+              configurations={props.commit_messages_configs}
+              set_configurations={props.set_commit_messages_configs}
+              tool_name="COMMIT_MESSAGES"
+              can_have_default={true}
+              on_add={() => props.on_add_config('COMMIT_MESSAGES')}
+              on_reorder={(reordered) =>
+                props.on_reorder_configs('COMMIT_MESSAGES', reordered)
+              }
+              on_edit={(id) => props.on_edit_config('COMMIT_MESSAGES', id)}
+              on_delete={(id) => props.on_delete_config('COMMIT_MESSAGES', id)}
+              on_set_default={(id) =>
+                props.on_set_default_config('COMMIT_MESSAGES', id)
+              }
+              on_unset_default={() =>
+                props.on_unset_default_config('COMMIT_MESSAGES')
+              }
+            />
+          </Group>
         </Section>
       </Layout>
     </div>

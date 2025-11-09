@@ -15,6 +15,7 @@ import {
   handle_delete_preset,
   handle_duplicate_preset,
   handle_create_preset,
+  handle_create_group,
   handle_preview_preset,
   handle_save_edit_format,
   handle_show_history_quick_pick,
@@ -435,6 +436,12 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_duplicate_preset(this, message, webview_view)
           } else if (message.command == 'CREATE_PRESET') {
             await handle_create_preset(this)
+          } else if (message.command == 'CREATE_GROUP') {
+            await handle_create_group(this, {
+              add_on_top: message.add_on_top,
+              instant: message.instant,
+              create_on_index: message.create_on_index
+            })
           } else if (message.command == 'UNDO') {
             await this._handle_undo()
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {

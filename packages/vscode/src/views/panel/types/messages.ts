@@ -134,6 +134,13 @@ export interface CreatePresetMessage extends BaseMessage {
   command: 'CREATE_PRESET'
 }
 
+export interface CreateGroupMessage extends BaseMessage {
+  command: 'CREATE_GROUP'
+  add_on_top?: boolean
+  instant?: boolean
+  create_on_index?: number
+}
+
 export interface ExecuteCommandMessage extends BaseMessage {
   command: 'EXECUTE_COMMAND'
   command_id: string
@@ -352,6 +359,7 @@ export type FrontendMessage =
   | DeletePresetMessage
   | DuplicatePresetMessage
   | CreatePresetMessage
+  | CreateGroupMessage
   | ExecuteCommandMessage
   | ShowHistoryQuickPickMessage
   | ShowPromptTemplateQuickPickMessage

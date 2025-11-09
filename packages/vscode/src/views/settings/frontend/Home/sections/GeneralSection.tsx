@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import { Input } from '@ui/components/editor/common/Input'
 import { Dropdown } from '@ui/components/editor/common/Dropdown'
 import { Item } from '@ui/components/editor/settings/Item'
+import { Group } from '@ui/components/editor/settings/Group/Group'
 import { Section } from '@ui/components/editor/settings/Section'
 import { TextButton } from '@ui/components/editor/settings/TextButton'
 
@@ -60,38 +61,40 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         subtitle="Configure your experience with CWC."
         on_stuck_change={props.on_stuck_change}
       >
-        <Item
-          title="Open Editor Settings"
-          description="For general editor settings, visit the Editor Settings Page."
-          slot={
-            <TextButton on_click={props.on_open_editor_settings}>
-              Open Editor Settings
-            </TextButton>
-          }
-        />
-        <Item
-          title="Context Size Warning Threshold"
-          description="Set the token count threshold for showing a warning about large context sizes."
-          slot={
-            <Input
-              type="number"
-              value={context_size_warning_threshold}
-              onChange={set_context_size_warning_threshold}
-              max_width={100}
-            />
-          }
-        />
-        <Item
-          title="Clear Checks in Workspace Behavior"
-          description="Behavior of the 'Clear Checks' button in the Workspace view."
-          slot={
-            <Dropdown
-              options={CLEAR_CHECKS_OPTIONS}
-              value={props.clear_checks_in_workspace_behavior}
-              onChange={props.on_clear_checks_in_workspace_behavior_change}
-            />
-          }
-        />
+        <Group>
+          <Item
+            title="Open Editor Settings"
+            description="For general editor settings, visit the Editor Settings Page."
+            slot={
+              <TextButton on_click={props.on_open_editor_settings}>
+                Open Editor Settings
+              </TextButton>
+            }
+          />
+          <Item
+            title="Context Size Warning Threshold"
+            description="Set the token count threshold for showing a warning about large context sizes."
+            slot={
+              <Input
+                type="number"
+                value={context_size_warning_threshold}
+                onChange={set_context_size_warning_threshold}
+                max_width={100}
+              />
+            }
+          />
+          <Item
+            title="Clear Checks in Workspace Behavior"
+            description="Behavior of the 'Clear Checks' button in the Workspace view."
+            slot={
+              <Dropdown
+                options={CLEAR_CHECKS_OPTIONS}
+                value={props.clear_checks_in_workspace_behavior}
+                onChange={props.on_clear_checks_in_workspace_behavior_change}
+              />
+            }
+          />
+        </Group>
       </Section>
     )
   }

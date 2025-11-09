@@ -35,6 +35,11 @@ type Props = {
   on_show_home: () => void
   on_search_click: () => void
   on_create_preset: () => void
+  on_create_group: (options?: {
+    add_on_top?: boolean
+    instant?: boolean
+    create_on_index?: number
+  }) => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
@@ -66,6 +71,7 @@ type Props = {
   on_preset_duplicate: (preset_name: string) => void
   on_preset_delete: (preset_name: string) => void
   on_toggle_selected_preset: (name: string) => void
+  on_toggle_preset_pinned: (name: string) => void
   on_toggle_group_collapsed: (name: string) => void
   selected_preset_or_group_name?: string
   selected_configuration_id?: string
@@ -258,6 +264,7 @@ export const MainView: React.FC<Props> = (props) => {
               has_context={props.token_count > 0}
               is_in_code_completions_mode={props.web_mode == 'code-completions'}
               presets={props.presets}
+              on_create_group={props.on_create_group}
               on_create_preset={props.on_create_preset}
               on_preset_click={(preset_name, without_submission) =>
                 props.initialize_chats({
@@ -275,6 +282,7 @@ export const MainView: React.FC<Props> = (props) => {
               on_preset_duplicate={props.on_preset_duplicate}
               on_preset_delete={props.on_preset_delete}
               on_toggle_selected_preset={props.on_toggle_selected_preset}
+              on_toggle_preset_pinned={props.on_toggle_preset_pinned}
               on_toggle_group_collapsed={props.on_toggle_group_collapsed}
               selected_preset_name={props.selected_preset_or_group_name}
               is_collapsed={props.presets_collapsed}
@@ -302,8 +310,6 @@ export const MainView: React.FC<Props> = (props) => {
             />
           </>
         )}
-
-        <UiSeparator height={10} />
       </Scrollable>
     </>
   )
