@@ -423,7 +423,8 @@ const perform_context_editing = async (params: {
       if (result) {
         vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
           response: result.response,
-          raw_instructions: instructions
+          raw_instructions: instructions,
+          edit_format
         })
         return
       } else {

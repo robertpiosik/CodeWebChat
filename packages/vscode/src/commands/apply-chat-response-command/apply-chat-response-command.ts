@@ -218,7 +218,7 @@ export const apply_chat_response_command = (
         }
       } catch (err: any) {
         vscode.window.showErrorMessage(
-          `An error occurred while applying changes: ${err.message}`
+          dictionary.error_message.APPLYING_CHANGES_GENERIC_ERROR(err.message)
         )
       } finally {
         in_progress = false
