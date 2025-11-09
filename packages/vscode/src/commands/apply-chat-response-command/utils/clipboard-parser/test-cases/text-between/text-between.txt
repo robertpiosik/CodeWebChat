@@ -15,27 +15,4 @@ console.log('some inline code');
 console.log('ipsum');
 ```
 
----
-
-### List of removed comments (one per line)
-
-```markdown
-// 1 minute in milliseconds
-// Get unstitched images from API
-// No unstitched scenes available.
-// Processing scene ${data.scene_id} from tour ${data.tour_id}
-// Create temporary directory
-// Download all images
-// Download hugin project if available
-// Clear and prepare working directory
-// Copy files to working directory
-// Run stitcher
-// Append the file buffer directly - form-data package handles this properly
-// If layer_name exists
-// Clean up temp directory
-// Indicate successful processing
-// Error processing unstitched images
-// Starting unstitched images checker...
-// If no images were available or processing failed, wait for the interval
-// If processing was successful, immediately try processing the next image
-```
+Bottom `test test`.
