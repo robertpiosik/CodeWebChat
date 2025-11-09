@@ -25,7 +25,9 @@ type Props = {
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
-  const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
+  const [last_clicked_file_index, set_last_clicked_file_index] = useState(
+    props.items.findIndex((i) => i.type == 'file')
+  )
   const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
     new Set()
   )
@@ -201,18 +203,6 @@ export const ResponsePreview: FC<Props> = (props) => {
                           }}
                         />
                       )}
-                      <IconButton
-                        codicon_icon="diff-single"
-                        title="Open Changes"
-                        on_click={(e) => {
-                          e.stopPropagation()
-                          set_last_clicked_file_index(index)
-                          props.on_focus_file({
-                            file_path: file.file_path,
-                            workspace_name: file.workspace_name
-                          })
-                        }}
-                      />
                       <IconButton
                         codicon_icon="go-to-file"
                         title="Go To File"

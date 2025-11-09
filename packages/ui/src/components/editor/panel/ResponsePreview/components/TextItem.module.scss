@@ -22,6 +22,11 @@
     padding: 2px 4px;
     border-radius: 3px;
   }
+
+  pre {
+    display: flex;
+    overflow: auto;
+  }
 }
 
 .hidden {
