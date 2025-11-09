@@ -64,6 +64,7 @@ import {
   INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
+  get_configurations_collapsed_state_key,
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,
   get_last_selected_preset_key,
@@ -71,8 +72,7 @@ import {
   LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
-  PRESETS_COLLAPSED_STATE_KEY,
-  CONFIGURATIONS_COLLAPSED_STATE_KEY,
+  get_presets_collapsed_state_key,
   RECENT_DONATIONS_VISIBLE_STATE_KEY,
   WEB_MODE_STATE_KEY
 } from '@/constants/state-keys'
@@ -110,8 +110,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public commit_was_staged_by_script: boolean = false
-  public presets_collapsed: boolean = false
-  public configurations_collapsed: boolean = false
 
   constructor(
     public readonly extension_uri: vscode.Uri,
@@ -129,15 +127,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         })
       }
     })
-
-    this.presets_collapsed = this.context.globalState.get<boolean>(
-      PRESETS_COLLAPSED_STATE_KEY,
-      false
-    )
-    this.configurations_collapsed = this.context.globalState.get<boolean>(
-      CONFIGURATIONS_COLLAPSED_STATE_KEY,
-      false
-    )
 
     this.edit_instructions = this.context.workspaceState.get<string>(
       INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
@@ -180,22 +169,37 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           RECENT_DONATIONS_VISIBLE_STATE_KEY,
           false
         )
+        const WEB_MODES: WebMode[] = [
+          'ask',
+          'edit-context',
+          'code-completions',
+          'no-context'
+        ]
+        const API_MODES: ApiMode[] = ['edit-context', 'code-completions']
         this.send_message({
           command: 'DONATIONS_VISIBILITY',
           is_visible: are_donations_visible
         })
-        this.presets_collapsed = this.context.globalState.get<boolean>(
-          PRESETS_COLLAPSED_STATE_KEY,
-          false
-        )
-        this.configurations_collapsed = this.context.globalState.get<boolean>(
-          CONFIGURATIONS_COLLAPSED_STATE_KEY,
-          false
-        )
         this.send_message({
           command: 'COLLAPSED_STATES',
-          presets_collapsed: this.presets_collapsed,
-          configurations_collapsed: this.configurations_collapsed
+          presets_collapsed_by_web_mode: Object.fromEntries(
+            WEB_MODES.map((mode) => [
+              mode,
+              this.context.globalState.get<boolean>(
+                get_presets_collapsed_state_key(mode),
+                false
+              )
+            ])
+          ),
+          configurations_collapsed_by_api_mode: Object.fromEntries(
+            API_MODES.map((mode) => [
+              mode,
+              this.context.globalState.get<boolean>(
+                get_configurations_collapsed_state_key(mode),
+                false
+              )
+            ])
+          )
         })
       }
     })
@@ -565,22 +569,43 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               section
             )
           } else if (message.command == 'GET_COLLAPSED_STATES') {
+            const WEB_MODES: WebMode[] = [
+              'ask',
+              'edit-context',
+              'code-completions',
+              'no-context'
+            ]
+            const API_MODES: ApiMode[] = ['edit-context', 'code-completions']
             this.send_message({
               command: 'COLLAPSED_STATES',
-              presets_collapsed: this.presets_collapsed,
-              configurations_collapsed: this.configurations_collapsed
+              presets_collapsed_by_web_mode: Object.fromEntries(
+                WEB_MODES.map((mode) => [
+                  mode,
+                  this.context.globalState.get<boolean>(
+                    get_presets_collapsed_state_key(mode),
+                    false
+                  )
+                ])
+              ),
+              configurations_collapsed_by_api_mode: Object.fromEntries(
+                API_MODES.map((mode) => [
+                  mode,
+                  this.context.globalState.get<boolean>(
+                    get_configurations_collapsed_state_key(mode),
+                    false
+                  )
+                ])
+              )
             })
           } else if (message.command == 'SAVE_COMPONENT_COLLAPSED_STATE') {
             if (message.component == 'presets') {
-              this.presets_collapsed = message.is_collapsed
               await this.context.globalState.update(
-                PRESETS_COLLAPSED_STATE_KEY,
+                get_presets_collapsed_state_key(message.mode as WebMode),
                 message.is_collapsed
               )
             } else if (message.component == 'configurations') {
-              this.configurations_collapsed = message.is_collapsed
               await this.context.globalState.update(
-                CONFIGURATIONS_COLLAPSED_STATE_KEY,
+                get_configurations_collapsed_state_key(message.mode as ApiMode),
                 message.is_collapsed
               )
             }

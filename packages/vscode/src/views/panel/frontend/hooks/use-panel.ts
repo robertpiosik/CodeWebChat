@@ -87,9 +87,12 @@ export const use_panel = (vscode: any) => {
     useState<boolean>(false)
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [context_file_paths, set_context_file_paths] = useState<string[]>([])
-  const [presets_collapsed, set_presets_collapsed] = useState<boolean>(false)
-  const [configurations_collapsed, set_configurations_collapsed] =
-    useState<boolean>(false)
+  const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
+    useState<{ [mode in WebMode]?: boolean }>({})
+  const [
+    configurations_collapsed_by_api_mode,
+    set_configurations_collapsed_by_api_mode
+  ] = useState<{ [mode in ApiMode]?: boolean }>({})
 
   const handle_instructions_change = (
     value: string,
@@ -132,8 +135,10 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'API_MODE') {
         set_api_mode(message.mode)
       } else if (message.command == 'COLLAPSED_STATES') {
-        set_presets_collapsed(message.presets_collapsed)
-        set_configurations_collapsed(message.configurations_collapsed)
+        set_presets_collapsed_by_web_mode(message.presets_collapsed_by_web_mode)
+        set_configurations_collapsed_by_api_mode(
+          message.configurations_collapsed_by_api_mode
+        )
       } else if (message.command == 'EDITOR_STATE_CHANGED') {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
@@ -379,20 +384,30 @@ export const use_panel = (vscode: any) => {
   }
 
   const handle_presets_collapsed_change = (is_collapsed: boolean) => {
-    set_presets_collapsed(is_collapsed)
+    if (!web_mode) return
+    set_presets_collapsed_by_web_mode((prev) => ({
+      ...prev,
+      [web_mode]: is_collapsed
+    }))
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'presets',
-      is_collapsed
+      is_collapsed,
+      mode: web_mode
     })
   }
 
   const handle_configurations_collapsed_change = (is_collapsed: boolean) => {
-    set_configurations_collapsed(is_collapsed)
+    if (!api_mode) return
+    set_configurations_collapsed_by_api_mode((prev) => ({
+      ...prev,
+      [api_mode]: is_collapsed
+    }))
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'configurations',
-      is_collapsed
+      is_collapsed,
+      mode: api_mode
     })
   }
 
@@ -442,8 +457,12 @@ export const use_panel = (vscode: any) => {
     has_changes_to_commit,
     can_undo,
     context_file_paths,
-    presets_collapsed,
-    configurations_collapsed,
+    presets_collapsed: web_mode
+      ? presets_collapsed_by_web_mode[web_mode] ?? false
+      : false,
+    configurations_collapsed: api_mode
+      ? configurations_collapsed_by_api_mode[api_mode] ?? false
+      : false,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,
