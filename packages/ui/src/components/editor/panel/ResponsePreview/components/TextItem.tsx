@@ -1,37 +1,38 @@
-import { FC, useState } from 'react'
+import { FC, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './TextItem.module.scss'
-import { IconButton } from '../../IconButton/IconButton'
+import { IconButton } from '../../IconButton'
 
 type Props = {
   content: string
+  is_expanded: boolean
+  on_toggle: (element: HTMLDivElement) => void
 }
 
-export const TextItem: FC<Props> = ({ content }) => {
-  const [is_hidden, set_is_hidden] = useState(true)
-
-  if (is_hidden) {
-    return (
-      <div className={styles.hidden}>
-        <div className={styles.line} />
-        <IconButton
-          codicon_icon="add"
-          on_click={() => set_is_hidden(false)}
-          title="Show text"
-        />
-        <div className={styles.line} />
-      </div>
-    )
-  }
+export const TextItem: FC<Props> = ({ content, is_expanded, on_toggle }) => {
+  const ref = useRef<HTMLDivElement>(null)
 
   return (
-    <div
-      className={styles.text}
-      onClick={() => {
-        set_is_hidden(true)
-      }}
-    >
-      <ReactMarkdown disallowedElements={['hr']}>{content}</ReactMarkdown>
-    </div>
+    <>
+      {is_expanded ? (
+        <div
+          ref={ref}
+          className={styles.text}
+          onClick={() => ref.current && on_toggle(ref.current)}
+        >
+          <ReactMarkdown disallowedElements={['hr']}>{content}</ReactMarkdown>
+        </div>
+      ) : (
+        <div ref={ref} className={styles.hidden}>
+          <div className={styles.line} />
+          <IconButton
+            codicon_icon="list-flat"
+            on_click={() => ref.current && on_toggle(ref.current)}
+            title="Show text"
+          />
+          <div className={styles.line} />
+        </div>
+      )}
+    </>
   )
 }

@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
@@ -25,12 +25,50 @@ type Props = {
 }
 
 export const ResponsePreview: FC<Props> = (props) => {
-  const [last_clicked_file_index, set_last_clicked_file_index] = useState(
-    props.items.findIndex((i) => i.type == 'file')
+  const [last_clicked_file_index, set_last_clicked_file_index] = useState(0)
+  const [expanded_text_items, set_expanded_text_items] = useState<Set<number>>(
+    new Set()
   )
+  const scroll_top_ref = useRef(0)
+  const scrollable_ref = useRef<any>(null)
+
+  const toggle_expanded_text_item = (
+    index: number,
+    element: HTMLDivElement
+  ) => {
+    const scrollable_instance = scrollable_ref.current
+    if (scrollable_instance) {
+      const scroll_container = scrollable_instance.getScrollElement()
+      if (scroll_container) {
+        const scroll_container_rect = scroll_container.getBoundingClientRect()
+        const element_rect = element.getBoundingClientRect()
+
+        if (element_rect.top < scroll_container_rect.top) {
+          // Element's top edge is above the scrollable viewport's top edge.
+          // Restore scroll position to the distance of this top edge to the top.
+          const element_position_in_scrollable_content =
+            scroll_container.scrollTop +
+            element_rect.top -
+            scroll_container_rect.top -
+            4
+          scroll_top_ref.current = element_position_in_scrollable_content
+        }
+      }
+    }
+
+    set_expanded_text_items((prev) => {
+      const new_set = new Set(prev)
+      if (new_set.has(index)) {
+        new_set.delete(index)
+      } else {
+        new_set.add(index)
+      }
+      return new_set
+    })
+  }
 
   const files_in_preview = props.items.filter(
-    (i) => i.type == 'file'
+    (i) => 'file_path' in i
   ) as FileInPreview[]
   const fallback_count = files_in_preview.filter((f) => f.is_fallback).length
 
@@ -45,7 +83,14 @@ export const ResponsePreview: FC<Props> = (props) => {
   }
 
   return (
-    <Scrollable>
+    <Scrollable
+      ref={scrollable_ref}
+      initial_scroll_top={scroll_top_ref.current}
+      scroll_trigger={expanded_text_items.size}
+      on_scroll={(top) => {
+        scroll_top_ref.current = top
+      }}
+    >
       <div className={styles.container}>
         {props.raw_instructions && (
           <div
@@ -71,7 +116,7 @@ export const ResponsePreview: FC<Props> = (props) => {
         )}
         <div className={styles.list}>
           {props.items.map((item, index) => {
-            if (item.type == 'file') {
+            if ('file_path' in item) {
               const file = item
               const last_slash_index = file.file_path.lastIndexOf('/')
               const file_name = file.file_path.substring(last_slash_index + 1)
@@ -138,7 +183,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                       {(file.is_fallback || file.is_replaced) && (
                         <IconButton
                           codicon_icon="sparkle"
-                          title={`Fix the file with Intelligent Update API tool${
+                          title={`Call Intelligent Update API tool${
                             file.diff_fallback_method == 'recount'
                               ? ' (fallback used: git apply with --recount flag)'
                               : file.diff_fallback_method ==
@@ -156,6 +201,18 @@ export const ResponsePreview: FC<Props> = (props) => {
                           }}
                         />
                       )}
+                      <IconButton
+                        codicon_icon="diff-single"
+                        title="Open Changes"
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          set_last_clicked_file_index(index)
+                          props.on_focus_file({
+                            file_path: file.file_path,
+                            workspace_name: file.workspace_name
+                          })
+                        }}
+                      />
                       <IconButton
                         codicon_icon="go-to-file"
                         title="Go To File"
@@ -188,7 +245,16 @@ export const ResponsePreview: FC<Props> = (props) => {
                 </div>
               )
             } else {
-              return <TextItem key={index} content={item.content} />
+              return (
+                <TextItem
+                  key={index}
+                  content={item.content}
+                  is_expanded={expanded_text_items.has(index)}
+                  on_toggle={(element) =>
+                    toggle_expanded_text_item(index, element)
+                  }
+                />
+              )
             }
           })}
         </div>

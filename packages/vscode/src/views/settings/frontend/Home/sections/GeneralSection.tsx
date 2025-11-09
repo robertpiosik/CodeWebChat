@@ -5,6 +5,8 @@ import { Item } from '@ui/components/editor/settings/Item'
 import { Group } from '@ui/components/editor/settings/Group/Group'
 import { Section } from '@ui/components/editor/settings/Section'
 import { TextButton } from '@ui/components/editor/settings/TextButton'
+import { Textarea } from '@ui/components/editor/common/Textarea'
+import { EditFormatInstructions } from '@/views/settings/types/messages'
 
 type ClearChecksBehavior = 'ignore-open-editors' | 'uncheck-all'
 
@@ -16,9 +18,13 @@ const CLEAR_CHECKS_OPTIONS: Dropdown.Option<ClearChecksBehavior>[] = [
 type Props = {
   context_size_warning_threshold: number
   clear_checks_in_workspace_behavior: ClearChecksBehavior
+  edit_format_instructions: EditFormatInstructions
   on_context_size_warning_threshold_change: (threshold: number) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: ClearChecksBehavior
+  ) => void
+  on_edit_format_instructions_change: (
+    instructions: EditFormatInstructions
   ) => void
   on_open_editor_settings: () => void
   on_stuck_change: (is_stuck: boolean) => void
@@ -28,12 +34,23 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const [context_size_warning_threshold, set_context_size_warning_threshold] =
       useState('')
+    const [instructions, set_instructions] = useState<EditFormatInstructions>({
+      whole: '',
+      truncated: '',
+      diff: ''
+    })
 
     useEffect(() => {
       set_context_size_warning_threshold(
         String(props.context_size_warning_threshold)
       )
     }, [props.context_size_warning_threshold])
+
+    useEffect(() => {
+      if (props.edit_format_instructions) {
+        set_instructions(props.edit_format_instructions)
+      }
+    }, [props.edit_format_instructions])
 
     useEffect(() => {
       const handler = setTimeout(() => {
@@ -52,6 +69,23 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       context_size_warning_threshold,
       props.on_context_size_warning_threshold_change,
       props.context_size_warning_threshold
+    ])
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        if (
+          props.edit_format_instructions &&
+          JSON.stringify(instructions) !==
+            JSON.stringify(props.edit_format_instructions)
+        ) {
+          props.on_edit_format_instructions_change(instructions)
+        }
+      }, 500)
+      return () => clearTimeout(handler)
+    }, [
+      instructions,
+      props.on_edit_format_instructions_change,
+      props.edit_format_instructions
     ])
 
     return (
@@ -91,6 +125,47 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 options={CLEAR_CHECKS_OPTIONS}
                 value={props.clear_checks_in_workspace_behavior}
                 onChange={props.on_clear_checks_in_workspace_behavior_change}
+              />
+            }
+          />
+        </Group>
+        <Group title="Edit Format Instructions">
+          <Item
+            title="Whole"
+            description="Instructions for generating code in 'whole' edit format."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={instructions.whole}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, whole: value }))
+                }
+              />
+            }
+          />
+          <Item
+            title="Truncated"
+            description="Instructions for generating code in 'truncated' edit format."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={instructions.truncated}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, truncated: value }))
+                }
+              />
+            }
+          />
+          <Item
+            title="Diff"
+            description="Instructions for generating code in 'diff' edit format."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={instructions.diff}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, diff: value }))
+                }
               />
             }
           />

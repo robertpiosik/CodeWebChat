@@ -16,6 +16,7 @@ type Props = {
   max_height?: string
   initial_scroll_top?: number
   on_scroll?: (top: number) => void
+  scroll_trigger?: number
 }
 
 export const Scrollable = forwardRef<any, Props>((props, ref) => {
@@ -77,7 +78,7 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
         scroll_element.scrollTop = props.initial_scroll_top
       })
     }
-  }, [props.initial_scroll_top])
+  }, [props.initial_scroll_top, props.scroll_trigger])
 
   return (
     <div
