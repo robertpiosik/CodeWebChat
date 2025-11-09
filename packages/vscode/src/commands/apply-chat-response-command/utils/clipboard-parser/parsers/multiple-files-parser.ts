@@ -186,17 +186,23 @@ export const parse_multiple_files = (params: {
             !potential_path.includes(' ') &&
             /[a-zA-Z0-9]/.test(potential_path)
           ) {
-            let is_followed_by_code_block = false
-            for (let j = i + 1; j < lines.length; j++) {
-              const next_line = lines[j].trim()
-              if (next_line.startsWith('```')) {
-                is_followed_by_code_block = true
-                break
-              }
-            }
+            const before = line.substring(0, match.index!)
+            const after = line.substring(match.index! + match[0].length)
 
-            if (is_followed_by_code_block) {
-              extracted_filename = potential_path
+            // Avoid matching file paths that are part of a sentence.
+            if (!(/[a-zA-Z]/.test(before) && /[a-zA-Z]/.test(after))) {
+              let is_followed_by_code_block = false
+              for (let j = i + 1; j < lines.length; j++) {
+                const next_line = lines[j].trim()
+                if (next_line.startsWith('```')) {
+                  is_followed_by_code_block = true
+                  break
+                }
+              }
+
+              if (is_followed_by_code_block) {
+                extracted_filename = potential_path
+              }
             }
           }
         }
