@@ -275,6 +275,10 @@ export const Home: React.FC<Props> = (props) => {
           on_clear_checks_in_workspace_behavior_change={
             props.on_clear_checks_in_workspace_behavior_change
           }
+          edit_format_instructions={props.edit_format_instructions}
+          on_edit_format_instructions_change={
+            props.on_edit_format_instructions_change
+          }
           on_open_editor_settings={props.on_open_editor_settings}
           on_stuck_change={general_on_stuck_change}
         />
@@ -282,10 +286,6 @@ export const Home: React.FC<Props> = (props) => {
           ref={(el) => (section_refs.current['presets'] = el)}
           gemini_user_id={props.gemini_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
-          edit_format_instructions={props.edit_format_instructions}
-          on_edit_format_instructions_change={
-            props.on_edit_format_instructions_change
-          }
           on_stuck_change={presets_on_stuck_change}
         />
         <Section
