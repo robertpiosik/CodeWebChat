@@ -62,7 +62,7 @@ export const Home: React.FC<Props> = (props) => {
             <div className={styles['inner__buttons']}>
               <Enter
                 label="Open View: New chat"
-                description="Send message with chatbot"
+                description="Send messages with chatbots"
                 on_click={props.on_new_chat}
               />
               <Enter

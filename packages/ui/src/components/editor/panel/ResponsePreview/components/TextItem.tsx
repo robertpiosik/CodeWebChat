@@ -23,13 +23,13 @@ export const TextItem: FC<Props> = ({ content, is_expanded, on_toggle }) => {
           <ReactMarkdown disallowedElements={['hr']}>{content}</ReactMarkdown>
         </div>
       ) : (
-        <div ref={ref} className={styles.hidden}>
+        <div
+          ref={ref}
+          className={styles.hidden}
+          onClick={() => ref.current && on_toggle(ref.current)}
+        >
           <div className={styles.line} />
-          <IconButton
-            codicon_icon="list-flat"
-            on_click={() => ref.current && on_toggle(ref.current)}
-            title="Show text"
-          />
+          <IconButton codicon_icon="list-selection" title="Show text" />
           <div className={styles.line} />
         </div>
       )}

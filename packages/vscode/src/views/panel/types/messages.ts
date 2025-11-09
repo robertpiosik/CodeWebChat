@@ -335,6 +335,7 @@ export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
   component: 'presets' | 'configurations'
   is_collapsed: boolean
+  mode: WebMode | ApiMode
 }
 
 export type FrontendMessage =
@@ -603,8 +604,8 @@ export interface NewResponseReceivedMessage extends BaseMessage {
 
 export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
-  presets_collapsed: boolean
-  configurations_collapsed: boolean
+  presets_collapsed_by_web_mode: { [mode in WebMode]?: boolean }
+  configurations_collapsed_by_api_mode: { [mode in ApiMode]?: boolean }
 }
 
 export type BackendMessage =
