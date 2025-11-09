@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding: var(--padding-4px) 0 var(--padding-8px) 0;
+  padding: var(--padding-4px) 0 var(--padding-12px) 0;
   gap: var(--padding-8px);
 }
 
@@ -42,7 +42,9 @@
 }
 
 .list {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: var(--padding-4px);
 
   > div:first-child {
     margin-top: 0;
@@ -57,10 +59,15 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--padding-8px);
-    padding: 0 var(--padding-12px);
-    height: var(--list-item-height);
+    border: 1px solid var(--cwc-border-color-dimmed);
+    padding: 0 var(--padding-8px);
+    margin: 0 var(--padding-12px);
+    height: 34px;
+    border-radius: 8px;
+
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
+      border-color: var(--cwc-border-color);
 
       .list__file__actions {
         display: flex;
@@ -69,10 +76,6 @@
 
     &--selected {
       background-color: var(--vscode-list-inactiveSelectionBackground);
-
-      &:hover {
-        background-color: var(--vscode-list-inactiveSelectionBackground);
-      }
     }
 
     &__left {

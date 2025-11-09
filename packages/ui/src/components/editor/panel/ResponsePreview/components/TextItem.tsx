@@ -26,7 +26,7 @@ export const TextItem: FC<Props> = ({ content, is_expanded, on_toggle }) => {
         <div ref={ref} className={styles.hidden}>
           <div className={styles.line} />
           <IconButton
-            codicon_icon="add"
+            codicon_icon="list-flat"
             on_click={() => ref.current && on_toggle(ref.current)}
             title="Show text"
           />
