@@ -68,7 +68,7 @@ export const parse_multiple_files = (params: {
         }
 
         if (current_text_block.trim()) {
-          results.push({ type: 'text', content: current_text_block.trim() })
+          results.push({ type: 'text', content: current_text_block })
         }
         current_text_block = ''
 
@@ -368,8 +368,8 @@ export const parse_multiple_files = (params: {
 
           const last_result =
             results.length > 0 ? results[results.length - 1] : null
-          if (last_result && last_result.type === 'text') {
-            last_result.content += '\n' + raw_code_block
+          if (last_result && last_result.type == 'text') {
+            last_result.content += raw_code_block
           } else {
             results.push({ type: 'text', content: raw_code_block })
           }
@@ -381,7 +381,7 @@ export const parse_multiple_files = (params: {
         current_workspace_name = undefined
         xml_file_mode = false
         in_cdata = false
-        if (last_backticks_index !== -1) {
+        if (last_backticks_index != -1) {
           current_text_block = line.substring(last_backticks_index + 3)
         }
       } else {
@@ -551,7 +551,8 @@ export const parse_multiple_files = (params: {
             !lang_is_markdown ||
             is_markdown_file ||
             backtick_nesting_level > 1 ||
-            (current_file_name && !is_markdown_container_block)
+            (current_file_name && !is_markdown_container_block) ||
+            !current_file_name
           ) {
             if (current_content) {
               current_content += '\n' + line
@@ -605,8 +606,15 @@ export const parse_multiple_files = (params: {
         results.push(new_file)
       }
     }
-  } else if (state === 'TEXT' && current_text_block.trim()) {
+  } else if (state == 'TEXT' && current_text_block.trim()) {
     results.push({ type: 'text', content: current_text_block.trim() })
+  }
+
+  // Trim text items at the end to ensure clean output
+  for (const result of results) {
+    if (result.type == 'text') {
+      result.content = result.content.trim()
+    }
   }
 
   return results

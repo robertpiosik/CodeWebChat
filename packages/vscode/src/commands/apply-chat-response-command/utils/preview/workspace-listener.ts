@@ -123,6 +123,7 @@ export const setup_workspace_listeners = (
           !is_new && new_content == '' && original_content != ''
 
         const reviewable_file: ReviewableFile = {
+          type: 'file',
           file_path: relative_path,
           content: new_content,
           workspace_name: workspace_folder.name,
@@ -198,6 +199,7 @@ export const setup_workspace_listeners = (
         const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
         const reviewable_file: ReviewableFile = {
+          type: 'file',
           file_path: relative_path,
           content: new_content,
           workspace_name: workspace_folder.name,
@@ -290,6 +292,7 @@ export const setup_workspace_listeners = (
       const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
       const reviewable_file: ReviewableFile = {
+        type: 'file',
         file_path: relative_path,
         content: new_content,
         workspace_name: workspace_folder.name,
@@ -394,6 +397,7 @@ export const setup_workspace_listeners = (
         })
 
         const deleted_reviewable: ReviewableFile = {
+          type: 'file',
           file_path: old_relative,
           content: '',
           workspace_name:
@@ -455,6 +459,7 @@ export const setup_workspace_listeners = (
         })
 
         const created_reviewable: ReviewableFile = {
+          type: 'file',
           file_path: new_relative,
           content: new_content,
           workspace_name: new_workspace_folder.name,
@@ -486,6 +491,7 @@ export const setup_workspace_listeners = (
         })
 
         const deleted_reviewable: ReviewableFile = {
+          type: 'file',
           file_path: old_relative,
           content: '',
           workspace_name:

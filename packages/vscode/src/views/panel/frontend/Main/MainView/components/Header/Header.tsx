@@ -69,12 +69,12 @@ export const Header: React.FC<Props> = (props) => {
         <UiIconButton
           codicon_icon="chevron-left"
           on_click={props.on_show_home}
-          title="Return to Home"
+          title="Return"
         />
         <button
           className={styles['header__left__toggler']}
           onClick={handle_heading_click}
-          title="Toggle view type (shift+esc)"
+          title="Change view"
         >
           {props.home_view_type == HOME_VIEW_TYPES.WEB
             ? 'New chat'
@@ -91,9 +91,8 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.web_mode}
               on_change={props.on_web_mode_change}
-              info="shift+tab"
               max_width={dropdown_max_width}
-              title="The mode influences the structure of the message"
+              info="mode"
             />
           )}
           {props.home_view_type == HOME_VIEW_TYPES.API && (
@@ -103,9 +102,8 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.api_mode}
               on_change={props.on_api_mode_change}
-              info="shift+tab"
               max_width={dropdown_max_width}
-              title="The mode influences the structure of the message"
+              info="mode"
             />
           )}
         </div>

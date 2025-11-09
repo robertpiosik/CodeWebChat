@@ -17,6 +17,7 @@
   }
 
   code {
+    font-family: monospace;
     font-size: var(--font-size-11px);
     background-color: var(--vscode-textCodeBlock-background);
     padding: 2px 4px;
@@ -32,12 +33,35 @@
 .hidden {
   display: flex;
   align-items: center;
-  margin: 0 var(--padding-12px);
+  margin: var(--padding-4px) var(--padding-12px);
   gap: var(--padding-8px);
+  padding-right: var(--padding-9px);
+  position: relative;
+
+  &:hover {
+    color: var(--cwc-text-color);
+
+    & .line {
+      background-color: var(--cwc-border-color) !important;
+    }
+  }
 }
 
 .line {
   flex-grow: 1;
   height: 1px;
   background-color: var(--cwc-border-color-dimmed);
+}
+
+.icon {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--vscode-sideBar-background);
+  padding: 0 var(--padding-8px);
+}
+
+.tokens {
+  font-size: var(--font-size-12px);
+  color: var(--cwc-text-color-dimmed);
 }

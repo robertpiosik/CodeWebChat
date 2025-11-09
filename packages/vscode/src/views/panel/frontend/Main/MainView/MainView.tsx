@@ -18,9 +18,7 @@ import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { use_last_choice_button_title } from './hooks/use-last-choice-button-title'
-import { use_cycle_mode } from './hooks/use-cycle-mode'
 import { ContextUtilisation as UiContextUtilisation } from '@ui/components/editor/panel/ContextUtilisation'
-import { WEB_MODES, API_MODES } from './modes'
 import { Header } from './components/Header'
 
 type Props = {
@@ -102,17 +100,6 @@ type Props = {
 }
 
 export const MainView: React.FC<Props> = (props) => {
-  use_cycle_mode({
-    home_view_type: props.home_view_type,
-    on_home_view_type_change: props.on_home_view_type_change,
-    web_mode: props.web_mode,
-    on_web_mode_change: props.on_web_mode_change,
-    api_mode: props.api_mode,
-    on_api_mode_change: props.on_api_mode_change,
-    web_modes: WEB_MODES,
-    api_modes: API_MODES
-  })
-
   const is_in_code_completions_mode =
     (props.home_view_type == HOME_VIEW_TYPES.WEB &&
       props.web_mode == 'code-completions') ||
