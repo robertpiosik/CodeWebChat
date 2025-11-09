@@ -459,14 +459,17 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           props.selected_preset_name == 'Ungrouped'
                       })}
                       onClick={() => {
-                        props.on_group_click('Ungrouped')
+                        props.on_create_group({
+                          add_on_top: true,
+                          instant: true
+                        })
                       }}
-                      onContextMenu={(e) =>
+                      onContextMenu={(e) => {
                         handle_item_context_menu(e, {
                           preset_name: 'Ungrouped',
                           is_group: true
                         })
-                      }
+                      }}
                       role="button"
                     >
                       <div className={styles.presets__item__left}>
@@ -482,12 +485,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           className={
                             styles['presets__item__left__collapse-icon']
                           }
-                          onClick={() => {
-                            props.on_create_group({
-                              add_on_top: true,
-                              instant: true
-                            })
-                          }}
                         >
                           <span
                             className={cn('codicon', {
@@ -505,6 +502,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           e.stopPropagation()
                         }}
                       >
+                        <IconButton
+                          codicon_icon="run-coverage"
+                          title="Run"
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_group_click('Ungrouped')
+                          }}
+                        />
                         <IconButton
                           codicon_icon="edit"
                           title="Edit"
@@ -526,6 +531,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         styles.presets__item,
                         styles['presets__item--ungrouped']
                       )}
+                      onClick={() => props.on_create_group({ instant: true })}
+                      role="button"
                     >
                       <div className={styles.presets__item__left}>
                         <div
@@ -540,10 +547,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           className={
                             styles['presets__item__left__collapse-icon']
                           }
-                          onClick={() =>
-                            props.on_create_group({ instant: true })
-                          }
-                          role="button"
                         >
                           <span
                             className={cn('codicon', {
@@ -561,6 +564,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           e.stopPropagation()
                         }}
                       >
+                        <IconButton
+                          codicon_icon="run-coverage"
+                          title="Run"
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_group_click('Ungrouped')
+                          }}
+                        />
                         <IconButton
                           codicon_icon="edit"
                           title="Edit"
@@ -620,7 +631,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       if (preset.chatbot) {
                         props.on_preset_click(preset.name)
                       } else {
-                        props.on_group_click(preset.name)
+                        props.on_toggle_group_collapsed(preset.name)
                       }
                     }}
                     onContextMenu={(e) =>
@@ -665,11 +676,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                             styles['presets__item__left__collapse-icon']
                           }
                           style={{ cursor: 'pointer' }}
-                          title={preset.is_collapsed ? 'Expand' : 'Collapse'}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            props.on_toggle_group_collapsed(preset.name)
-                          }}
                         >
                           <span
                             className={cn('codicon', {
@@ -691,6 +697,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         e.stopPropagation()
                       }}
                     >
+                      {!preset.chatbot && (
+                        <IconButton
+                          codicon_icon="run-coverage"
+                          title="Run"
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_group_click(preset.name)
+                          }}
+                        />
+                      )}
                       {preset.chatbot &&
                         (preset.prompt_prefix || preset.prompt_suffix) && (
                           <IconButton
