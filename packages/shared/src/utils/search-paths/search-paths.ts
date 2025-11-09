@@ -17,7 +17,7 @@ const is_prefix_match_recursive = (params: {
   part_idx: number
   memo: Record<string, boolean>
 }): boolean => {
-  const key = `${params.part_idx}:${params.query.length}`
+  const key = `${params.part_idx}:${params.query}`
   if (params.memo[key] !== undefined) {
     return params.memo[key]
   }
@@ -71,6 +71,9 @@ export const search_paths = (params: {
 }): string[] => {
   if (!params.search_value) {
     return params.paths
+  }
+  if (/[/\\\.]$/.test(params.search_value)) {
+    return []
   }
   return params.paths.filter((path_item) => {
     const search_lower = params.search_value.toLowerCase()

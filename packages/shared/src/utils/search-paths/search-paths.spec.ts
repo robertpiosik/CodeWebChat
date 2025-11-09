@@ -37,6 +37,21 @@ describe('search_paths', () => {
     expect(result[0]).toBe('src/routes/HomePage.tsx')
   })
 
+  it('should not find "src/routes/HomePage.tsx" with query "pagesrc"', () => {
+    const result = search_paths({ paths, search_value: 'pagesrc' })
+    expect(result).toHaveLength(0)
+  })
+
+  it('should not find "src/routes/HomePage.tsx" with query "page."', () => {
+    const result = search_paths({ paths, search_value: 'page.' })
+    expect(result).toHaveLength(0)
+  })
+
+  it('should not find "src/routes/HomePage.tsx" with query "src/"', () => {
+    const result = search_paths({ paths, search_value: 'src/' })
+    expect(result).toHaveLength(0)
+  })
+
   it('should not find "src/routes/HomePage.tsx" with query "srcagetsx"', () => {
     const result = search_paths({ paths, search_value: 'srcagetsx' })
     expect(result).toHaveLength(0)
