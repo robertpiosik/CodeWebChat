@@ -146,6 +146,16 @@ export const preview = async (params: {
 
       const result = await show_diff_with_actions(review_item.file)
 
+      if (prepared_files.length > review_items.length) {
+        const new_prepared_files = prepared_files.slice(review_items.length)
+        for (const pf of new_prepared_files) {
+          review_items.push({
+            file: pf,
+            status: 'pending'
+          })
+        }
+      }
+
       review_item.file.reviewable_file.content = result.new_content
       const { decision } = result
 
