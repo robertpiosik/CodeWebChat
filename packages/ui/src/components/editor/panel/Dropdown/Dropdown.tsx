@@ -41,10 +41,6 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
     set_just_opened(false)
   }
 
-  const handle_mouse_enter = () => {
-    set_just_opened(false)
-  }
-
   const handle_wheel = (event: React.WheelEvent<HTMLDivElement>) => {
     event.preventDefault()
     event.stopPropagation()
@@ -120,7 +116,6 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
 
       {is_open && (
         <DropdownMenu
-          on_mouse_enter={handle_mouse_enter}
           items={props.options.map((option) => ({
             label: option.label,
             on_click: () => handle_select(option.value),

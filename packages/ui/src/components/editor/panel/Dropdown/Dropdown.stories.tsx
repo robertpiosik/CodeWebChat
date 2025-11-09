@@ -36,7 +36,7 @@ export const WithInfo = () => {
         options={options}
         selected_value={selected}
         on_change={set_selected}
-        info="shift+tab"
+        info="mode"
       />
     </div>
   )
