@@ -1,6 +1,7 @@
 import { FC, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './TextItem.module.scss'
+import { IconButton } from '../../IconButton'
 
 type Props = {
   content: string
@@ -29,10 +30,14 @@ export const TextItem: FC<Props> = (props) => {
           className={styles.hidden}
           onClick={() => ref.current && props.on_toggle(ref.current)}
           title={props.content}
-          role="button"
         >
           <div className={styles.line} />
-          {Math.floor(props.content.length * 0.25)}
+          <div className={styles.icon}>
+            <IconButton codicon_icon="add" />
+          </div>
+          <span className={styles.tokens}>
+            {Math.floor(props.content.length * 0.25) || 1}
+          </span>
         </div>
       )}
     </>
