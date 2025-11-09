@@ -20,8 +20,6 @@ export const handle_delete_preset = async (
 
   const deleted_preset = current_presets[preset_index]
   const item_type = deleted_preset.chatbot ? 'preset' : 'group'
-  const item_type_capitalized =
-    item_type.charAt(0).toUpperCase() + item_type.slice(1)
 
   const is_unnamed = !preset_name || /^\(\d+\)$/.test(preset_name.trim())
   const display_preset_name = is_unnamed ? 'Unnamed' : preset_name
@@ -50,30 +48,6 @@ export const handle_delete_preset = async (
       updated_presets,
       vscode.ConfigurationTarget.Global
     )
-
-    const button_text = 'Undo'
-    const undo_result = await vscode.window.showInformationMessage(
-      is_unnamed
-        ? `${item_type_capitalized} has been deleted.`
-        : `${item_type_capitalized} "${display_preset_name}" has been deleted.`,
-      button_text
-    )
-
-    if (undo_result == button_text && deleted_preset) {
-      const restored_presets = [...updated_presets]
-      restored_presets.splice(preset_index, 0, deleted_preset)
-
-      await config.update(
-        presets_config_key,
-        restored_presets,
-        vscode.ConfigurationTarget.Global
-      )
-      vscode.window.showInformationMessage(
-        is_unnamed
-          ? `${item_type_capitalized} has been restored.`
-          : `${item_type_capitalized} "${display_preset_name}" has been restored.`
-      )
-    }
 
     panel_provider.send_presets_to_webview(webview_view.webview)
   } catch (error) {
