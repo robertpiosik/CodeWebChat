@@ -96,6 +96,21 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     is_group: boolean
   }>()
 
+  const ungrouped_selected_count = (() => {
+    let count = 0
+    if (props.presets[0]?.chatbot !== undefined) {
+      for (const p of props.presets) {
+        if (!p.chatbot) {
+          break
+        }
+        if (p.is_selected) {
+          count++
+        }
+      }
+    }
+    return count
+  })()
+
   const pinned_presets = props.presets.filter((p) => p.is_pinned && p.chatbot)
 
   const get_visible_presets = (presets: Presets.Preset[]): Presets.Preset[] => {
@@ -493,7 +508,11 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           />
                         </div>
                         <div className={styles.presets__item__left__text}>
-                          Ungrouped
+                          <span>Ungrouped</span>
+                          <span>
+                            {ungrouped_selected_count > 0 &&
+                              `${ungrouped_selected_count} selected`}
+                          </span>
                         </div>
                       </div>
                       <div
@@ -594,14 +613,37 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 } else {
                   // Group (no chatbot)
                   display_name = is_unnamed
-                    ? `Group ${preset.name}`
-                    : preset.name
+                    ? 'Group'
+                    : preset.name.replace(/ \(\d+\)$/, '')
                 }
 
                 const get_subtitle = (): string => {
                   const { chatbot, model } = preset
 
                   if (!chatbot) {
+                    const group_index = props.presets.findIndex(
+                      (p) => p.name === preset.name
+                    )
+
+                    if (group_index !== -1) {
+                      let selected_count = 0
+                      for (
+                        let i = group_index + 1;
+                        i < props.presets.length;
+                        i++
+                      ) {
+                        const child_preset = props.presets[i]
+                        if (!child_preset.chatbot) {
+                          break
+                        }
+                        if (child_preset.is_selected) {
+                          selected_count++
+                        }
+                      }
+                      if (selected_count > 0) {
+                        return `${selected_count} selected`
+                      }
+                    }
                     return model || ''
                   }
 

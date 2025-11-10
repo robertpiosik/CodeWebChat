@@ -264,10 +264,7 @@ export const Panel = () => {
             <UiPage
               on_back_click={edit_preset_back_click_handler}
               footer_slot={
-                <EditPresetFormFooter
-                  on_discard={edit_preset_back_click_handler}
-                  on_save={edit_preset_save_handler}
-                />
+                <EditPresetFormFooter on_save={edit_preset_save_handler} />
               }
               title={`Edit ${!updated_preset?.chatbot ? 'Group' : 'Preset'}`}
               header_slot={
