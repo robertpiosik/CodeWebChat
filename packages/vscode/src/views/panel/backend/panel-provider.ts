@@ -89,7 +89,6 @@ import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 import { undo_files } from '@/commands/apply-chat-response-command/utils/file-operations'
-import { create_checkpoint } from '@/commands/checkpoints-command/actions'
 import { dictionary } from '@shared/constants/dictionary'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
@@ -547,16 +546,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_proceed_with_commit(this, message.files_to_stage)
           } else if (message.command == 'ACCEPT_COMMIT_MESSAGE') {
             await handle_accept_commit_message(this, message.commit_message)
-
-            const title = 'Committed changes'
-            const description = message.commit_message
-
-            await create_checkpoint(
-              this.workspace_provider,
-              this.context,
-              title,
-              description
-            )
           } else if (message.command == 'CANCEL_COMMIT_MESSAGE') {
             await handle_cancel_commit_message(this)
           } else if (message.command == 'MANAGE_CONFIGURATIONS') {

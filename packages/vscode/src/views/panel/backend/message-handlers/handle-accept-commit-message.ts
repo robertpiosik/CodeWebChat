@@ -5,6 +5,7 @@ import { LAST_APPLIED_CHANGES_STATE_KEY } from '@/constants/state-keys'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { create_checkpoint } from '@/commands/checkpoints-command/actions'
 
 export const handle_accept_commit_message = async (
   panel_provider: PanelProvider,
@@ -25,6 +26,15 @@ export const handle_accept_commit_message = async (
     panel_provider.set_undo_button_state(false)
 
     await repository.status()
+
+    const title = 'Committed changes'
+    const description = commit_message
+    await create_checkpoint(
+      panel_provider.workspace_provider,
+      panel_provider.context,
+      title,
+      description
+    )
   } catch (commit_error) {
     Logger.error({
       function_name: 'handle_accept_commit_message',
