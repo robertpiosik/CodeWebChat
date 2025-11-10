@@ -208,6 +208,7 @@ export const dictionary = {
     ERROR_DURING_REFACTORING: (file_path: string) =>
       `An error occurred during refactoring ${file_path}. See console for details.`,
     API_RATE_LIMIT_EXCEEDED: 'API request failed. Rate limit exceeded.',
+    API_PAYLOAD_TOO_LARGE: 'API request failed. The context is too large.',
     API_BAD_REQUEST: 'API request failed. Bad request.',
     API_ENDPOINT_UNAVAILABLE:
       'Endpoint is currently unable to handle the request. Wait a few moments and retry or use another API provider.',

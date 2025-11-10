@@ -96,19 +96,24 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     is_group: boolean
   }>()
 
-  const ungrouped_selected_count = (() => {
-    let count = 0
+  const { ungrouped_selected_count, ungrouped_preset_count } = (() => {
+    let selected_count = 0
+    let preset_count = 0
     if (props.presets[0]?.chatbot !== undefined) {
       for (const p of props.presets) {
         if (!p.chatbot) {
           break
         }
+        preset_count++
         if (p.is_selected) {
-          count++
+          selected_count++
         }
       }
     }
-    return count
+    return {
+      ungrouped_selected_count: selected_count,
+      ungrouped_preset_count: preset_count
+    }
   })()
 
   const pinned_presets = props.presets.filter((p) => p.is_pinned && p.chatbot)
@@ -510,8 +515,15 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         <div className={styles.presets__item__left__text}>
                           <span>Ungrouped</span>
                           <span>
-                            {ungrouped_selected_count > 0 &&
-                              `${ungrouped_selected_count} selected`}
+                            {`${ungrouped_preset_count} ${
+                              ungrouped_preset_count === 1
+                                ? 'preset'
+                                : 'presets'
+                            }${
+                              ungrouped_selected_count > 0
+                                ? ` · ${ungrouped_selected_count} selected`
+                                : ''
+                            }`}
                           </span>
                         </div>
                       </div>
@@ -523,7 +535,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       >
                         <IconButton
                           codicon_icon="run-coverage"
-                          title="Run"
+                          title="Run selected presets in this group"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_group_click('Ungrouped')
@@ -626,6 +638,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     )
 
                     if (group_index !== -1) {
+                      let preset_count = 0
                       let selected_count = 0
                       for (
                         let i = group_index + 1;
@@ -636,13 +649,18 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         if (!child_preset.chatbot) {
                           break
                         }
+                        preset_count++
                         if (child_preset.is_selected) {
                           selected_count++
                         }
                       }
-                      if (selected_count > 0) {
-                        return `${selected_count} selected`
-                      }
+                      return `${preset_count} ${
+                        preset_count == 1 ? 'preset' : 'presets'
+                      }${
+                        selected_count > 0
+                          ? ` · ${selected_count} selected`
+                          : ''
+                      }`
                     }
                     return model || ''
                   }

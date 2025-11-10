@@ -384,6 +384,10 @@ export const make_api_request = async (params: {
         vscode.window.showErrorMessage(
           dictionary.error_message.API_RATE_LIMIT_EXCEEDED
         )
+      } else if (axios.isAxiosError(error) && error.response?.status == 413) {
+        vscode.window.showErrorMessage(
+          dictionary.error_message.API_PAYLOAD_TOO_LARGE
+        )
       } else if (axios.isAxiosError(error) && error.response?.status == 400) {
         vscode.window.showErrorMessage(dictionary.error_message.API_BAD_REQUEST)
       } else if (axios.isAxiosError(error) && error.response?.status == 503) {

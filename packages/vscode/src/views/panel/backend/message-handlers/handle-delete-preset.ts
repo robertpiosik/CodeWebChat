@@ -21,23 +21,36 @@ export const handle_delete_preset = async (
   const deleted_preset = current_presets[preset_index]
   const item_type = deleted_preset.chatbot ? 'preset' : 'group'
 
-  const is_unnamed = !preset_name || /^\(\d+\)$/.test(preset_name.trim())
-  const display_preset_name = is_unnamed ? 'Unnamed' : preset_name
+  let should_show_confirmation = true
+  if (item_type == 'group') {
+    const next_preset = current_presets[preset_index + 1]
+    const is_empty = !next_preset || !next_preset.chatbot
+    const has_affixes =
+      !!deleted_preset.promptPrefix || !!deleted_preset.promptSuffix
+    if (is_empty && !has_affixes) {
+      should_show_confirmation = false
+    }
+  }
 
-  const delete_button = 'Delete'
-  const result = await vscode.window.showInformationMessage(
-    'Please confirm',
-    {
-      modal: true,
-      detail: is_unnamed
-        ? `Are you sure you want to delete this ${item_type}?`
-        : `Are you sure you want to delete ${item_type} "${display_preset_name}"?`
-    },
-    delete_button
-  )
+  if (should_show_confirmation) {
+    const is_unnamed = !preset_name || /^\(\d+\)$/.test(preset_name.trim())
+    const display_preset_name = is_unnamed ? 'Unnamed' : preset_name
 
-  if (result != delete_button) {
-    return
+    const delete_button = 'Delete'
+    const result = await vscode.window.showInformationMessage(
+      'Please confirm',
+      {
+        modal: true,
+        detail: is_unnamed
+          ? `Are you sure you want to delete this ${item_type}?`
+          : `Are you sure you want to delete ${item_type} "${display_preset_name}"?`
+      },
+      delete_button
+    )
+
+    if (result != delete_button) {
+      return
+    }
   }
 
   const updated_presets = current_presets.filter((p) => p.name != preset_name)
