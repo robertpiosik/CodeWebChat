@@ -20,10 +20,6 @@ import { dictionary } from '@shared/constants/dictionary'
 
 const BACK_ACTION = '<<BACK>>'
 
-/**
- * When preset_names is an emtpy stirng - show quick pick,
- * if undefiend - use recently used preset/group.
- */
 export const handle_send_prompt = async (params: {
   panel_provider: PanelProvider
   preset_name?: string
@@ -492,7 +488,6 @@ async function show_preset_quick_pick(params: {
   for (let i = 0; i < presets.length; i++) {
     const preset = presets[i]
     if (!preset.chatbot) {
-      // Group
       let group_presets_count = 0
       let selected_presets_count = 0
       for (let j = i + 1; j < presets.length; j++) {
