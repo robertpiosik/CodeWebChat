@@ -643,146 +643,76 @@ async function resolve_presets(params: {
     // It also handles cases where a specified preset/group was not found.
   }
 
-  if (!params.show_quick_pick) {
-    if (params.preset_name === undefined && params.group_name === undefined) {
-      // Try to use last selection if "Send" button is clicked without specific preset/group
-      const last_choice =
-        params.context.workspaceState.get<string>(
-          last_group_or_preset_choice_state_key
-        ) ??
-        params.context.globalState.get<string>(
-          last_group_or_preset_choice_state_key
-        )
+  if (
+    !params.show_quick_pick &&
+    params.preset_name === undefined &&
+    params.group_name === undefined
+  ) {
+    // Try to use last selection if "Send" button is clicked without specific preset/group
+    const last_choice =
+      params.context.workspaceState.get<string>(
+        last_group_or_preset_choice_state_key
+      ) ??
+      params.context.globalState.get<string>(
+        last_group_or_preset_choice_state_key
+      )
 
-      if (last_choice == PRESET) {
-        const last_preset_name =
-          params.context.workspaceState.get<string>(last_selected_preset_key) ??
-          params.context.globalState.get<string>(last_selected_preset_key)
-        if (last_preset_name !== undefined) {
-          const preset = all_presets.find((p) => p.name === last_preset_name)
-          if (preset) {
-            if (get_is_preset_disabled(preset)) {
-              if (
-                !is_in_code_completions_mode &&
-                !current_instructions &&
-                !preset.promptPrefix &&
-                !preset.promptSuffix
-              ) {
-                vscode.window.showWarningMessage(
-                  dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
-                )
-              }
-              return []
-            } else {
-              return [last_preset_name]
+    if (last_choice == PRESET) {
+      const last_preset_name =
+        params.context.workspaceState.get<string>(last_selected_preset_key) ??
+        params.context.globalState.get<string>(last_selected_preset_key)
+      if (last_preset_name !== undefined) {
+        const preset = all_presets.find((p) => p.name === last_preset_name)
+        if (preset) {
+          if (get_is_preset_disabled(preset)) {
+            if (
+              !is_in_code_completions_mode &&
+              !current_instructions &&
+              !preset.promptPrefix &&
+              !preset.promptSuffix
+            ) {
+              vscode.window.showWarningMessage(
+                dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
+              )
             }
-          }
-        }
-      } else if (last_choice == GROUP) {
-        const last_group =
-          params.context.workspaceState.get<string>(
-            last_selected_group_state_key
-          ) ??
-          params.context.globalState.get<string>(last_selected_group_state_key)
-        if (last_group) {
-          if (last_group == 'Ungrouped') {
-            const first_group_index = all_presets.findIndex((p) => !p.chatbot)
-            const relevant_presets =
-              first_group_index == -1
-                ? all_presets
-                : all_presets.slice(0, first_group_index)
-            const preset_names = relevant_presets
-              .filter((p) => p.isSelected && !get_is_preset_disabled(p))
-              .map((p) => p.name)
-            if (preset_names.length > 0) return preset_names
+            return []
           } else {
-            const group_index = all_presets.findIndex(
-              (p) => p.name == last_group
-            )
-            const preset_names: string[] = []
-            if (group_index != -1) {
-              for (let i = group_index + 1; i < all_presets.length; i++) {
-                const preset = all_presets[i]
-                if (!preset.chatbot) {
-                  break // next group
-                }
-                if (preset.isSelected && !get_is_preset_disabled(preset)) {
-                  preset_names.push(preset.name)
-                }
-              }
-            }
-            if (preset_names.length > 0) return preset_names
+            return [last_preset_name]
           }
         }
       }
-    } else {
-      const last_choice =
+    } else if (last_choice == GROUP) {
+      const last_group =
         params.context.workspaceState.get<string>(
-          last_group_or_preset_choice_state_key
+          last_selected_group_state_key
         ) ??
-        params.context.globalState.get<string>(
-          last_group_or_preset_choice_state_key
-        )
-
-      if (last_choice == PRESET) {
-        const last_preset_name =
-          params.context.workspaceState.get<string>(last_selected_preset_key) ??
-          params.context.globalState.get<string>(last_selected_preset_key)
-        if (last_preset_name !== undefined) {
-          const preset = all_presets.find((p) => p.name == last_preset_name)
-          if (preset) {
-            if (get_is_preset_disabled(preset)) {
-              if (
-                !is_in_code_completions_mode &&
-                !current_instructions &&
-                !preset.promptPrefix &&
-                !preset.promptSuffix
-              ) {
-                vscode.window.showWarningMessage(
-                  dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
-                )
+        params.context.globalState.get<string>(last_selected_group_state_key)
+      if (last_group) {
+        if (last_group == 'Ungrouped') {
+          const first_group_index = all_presets.findIndex((p) => !p.chatbot)
+          const relevant_presets =
+            first_group_index == -1
+              ? all_presets
+              : all_presets.slice(0, first_group_index)
+          const preset_names = relevant_presets
+            .filter((p) => p.isSelected && !get_is_preset_disabled(p))
+            .map((p) => p.name)
+          if (preset_names.length > 0) return preset_names
+        } else {
+          const group_index = all_presets.findIndex((p) => p.name == last_group)
+          const preset_names: string[] = []
+          if (group_index != -1) {
+            for (let i = group_index + 1; i < all_presets.length; i++) {
+              const preset = all_presets[i]
+              if (!preset.chatbot) {
+                break // next group
               }
-              return []
-            } else {
-              return [last_preset_name]
-            }
-          }
-        }
-      } else if (last_choice == GROUP) {
-        const last_group =
-          params.context.workspaceState.get<string>(
-            last_selected_group_state_key
-          ) ??
-          params.context.globalState.get<string>(last_selected_group_state_key)
-        if (last_group) {
-          if (last_group == 'Ungrouped') {
-            const first_group_index = all_presets.findIndex((p) => !p.chatbot)
-            const relevant_presets =
-              first_group_index == -1
-                ? all_presets
-                : all_presets.slice(0, first_group_index)
-            const preset_names = relevant_presets
-              .filter((p) => p.isSelected && !get_is_preset_disabled(p))
-              .map((p) => p.name)
-            if (preset_names.length > 0) return preset_names
-          } else {
-            const group_index = all_presets.findIndex(
-              (p) => p.name == last_group
-            )
-            const preset_names: string[] = []
-            if (group_index != -1) {
-              for (let i = group_index + 1; i < all_presets.length; i++) {
-                const preset = all_presets[i]
-                if (!preset.chatbot) {
-                  break // next group
-                }
-                if (preset.isSelected && !get_is_preset_disabled(preset)) {
-                  preset_names.push(preset.name)
-                }
+              if (preset.isSelected && !get_is_preset_disabled(preset)) {
+                preset_names.push(preset.name)
               }
             }
-            if (preset_names.length > 0) return preset_names
           }
+          if (preset_names.length > 0) return preset_names
         }
       }
     }

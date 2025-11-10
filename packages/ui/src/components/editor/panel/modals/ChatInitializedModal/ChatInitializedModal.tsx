@@ -21,7 +21,7 @@ export const ChatInitializedModal: React.FC<Props> = (props) => {
     return () => {
       clearTimeout(timeout)
     }
-  }, [props.duration, props.on_close])
+  }, [])
 
   return (
     <Modal
