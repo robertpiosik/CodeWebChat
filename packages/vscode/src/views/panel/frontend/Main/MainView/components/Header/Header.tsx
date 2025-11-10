@@ -92,7 +92,7 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.web_mode}
               on_change={props.on_web_mode_change}
               max_width={dropdown_max_width}
-              info="prompt"
+              info="prompt type"
             />
           )}
           {props.home_view_type == HOME_VIEW_TYPES.API && (
@@ -103,7 +103,7 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.api_mode}
               on_change={props.on_api_mode_change}
               max_width={dropdown_max_width}
-              info="prompt"
+              info="prompt type"
             />
           )}
         </div>
