@@ -13,17 +13,13 @@ export const ChatInitializedModal: React.FC<Props> = (props) => {
   const [is_filling, set_is_filling] = useState(false)
 
   useEffect(() => {
-    const request_id = requestAnimationFrame(() => {
-      set_is_filling(true)
-    })
-
-    const close_timeout = setTimeout(() => {
+    set_is_filling(true)
+    const timeout = setTimeout(() => {
       props.on_close()
     }, props.duration)
 
     return () => {
-      cancelAnimationFrame(request_id)
-      clearTimeout(close_timeout)
+      clearTimeout(timeout)
     }
   }, [props.duration, props.on_close])
 
