@@ -53,7 +53,10 @@ import {
   handle_accept_commit_message,
   handle_cancel_commit_message,
   handle_hash_sign_quick_pick,
-  handle_proceed_with_commit
+  handle_proceed_with_commit,
+  handle_get_collapsed_states,
+  handle_manage_configurations,
+  handle_save_component_collapsed_state
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -549,55 +552,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'CANCEL_COMMIT_MESSAGE') {
             await handle_cancel_commit_message(this)
           } else if (message.command == 'MANAGE_CONFIGURATIONS') {
-            const section =
-              message.api_mode == 'edit-context'
-                ? 'edit-context'
-                : 'code-completions'
-            await vscode.commands.executeCommand(
-              'codeWebChat.settings',
-              section
-            )
+            await handle_manage_configurations(message)
           } else if (message.command == 'GET_COLLAPSED_STATES') {
-            const WEB_MODES: WebMode[] = [
-              'ask',
-              'edit-context',
-              'code-completions',
-              'no-context'
-            ]
-            const API_MODES: ApiMode[] = ['edit-context', 'code-completions']
-            this.send_message({
-              command: 'COLLAPSED_STATES',
-              presets_collapsed_by_web_mode: Object.fromEntries(
-                WEB_MODES.map((mode) => [
-                  mode,
-                  this.context.globalState.get<boolean>(
-                    get_presets_collapsed_state_key(mode),
-                    false
-                  )
-                ])
-              ),
-              configurations_collapsed_by_api_mode: Object.fromEntries(
-                API_MODES.map((mode) => [
-                  mode,
-                  this.context.globalState.get<boolean>(
-                    get_configurations_collapsed_state_key(mode),
-                    false
-                  )
-                ])
-              )
-            })
+            handle_get_collapsed_states(this)
           } else if (message.command == 'SAVE_COMPONENT_COLLAPSED_STATE') {
-            if (message.component == 'presets') {
-              await this.context.globalState.update(
-                get_presets_collapsed_state_key(message.mode as WebMode),
-                message.is_collapsed
-              )
-            } else if (message.component == 'configurations') {
-              await this.context.globalState.update(
-                get_configurations_collapsed_state_key(message.mode as ApiMode),
-                message.is_collapsed
-              )
-            }
+            await handle_save_component_collapsed_state(this, message)
           }
         } catch (error: any) {
           Logger.error({
