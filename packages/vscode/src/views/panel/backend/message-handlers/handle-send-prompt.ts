@@ -320,7 +320,7 @@ async function show_preset_quick_pick(params: {
       items.push({
         label: 'Ungrouped',
         group_name: 'Ungrouped',
-        description: `${selected_count} selected`
+        description: selected_count > 0 ? `${selected_count} selected` : ''
       })
     }
   }
@@ -342,7 +342,8 @@ async function show_preset_quick_pick(params: {
           ? 'Group'
           : preset.name.replace(/ \(\d+\)$/, ''),
         group_name: preset.name,
-        description: `${selected_presets_count} selected`
+        description:
+          selected_presets_count > 0 ? `${selected_presets_count} selected` : ''
       })
     } else {
       // Preset
