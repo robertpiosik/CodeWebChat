@@ -597,7 +597,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       >
                         <IconButton
                           codicon_icon="run-all-coverage"
-                          title="Run"
+                          title="Run selected presets"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_group_click('Ungrouped')
@@ -763,7 +763,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       {!preset.chatbot && (
                         <IconButton
                           codicon_icon="run-all-coverage"
-                          title="Run"
+                          title="Run selected presets"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_group_click(preset.name)

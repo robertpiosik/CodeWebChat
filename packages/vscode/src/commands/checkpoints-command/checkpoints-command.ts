@@ -68,6 +68,11 @@ export const checkpoints_command = (
         quick_pick.placeholder =
           'Select a checkpoint to restore or add a new one'
 
+        const clear_all_button: vscode.QuickInputButton = {
+          iconPath: new vscode.ThemeIcon('trash'),
+          tooltip: 'Delete all checkpoints'
+        }
+
         let notification_count = 0
         let checkpoints: Checkpoint[] = []
 
@@ -107,6 +112,12 @@ export const checkpoints_command = (
 
           const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
 
+          if (visible_checkpoints.length > 0) {
+            quick_pick.buttons = [clear_all_button]
+          } else {
+            quick_pick.buttons = []
+          }
+
           visible_checkpoints.sort((a, b) => {
             return b.timestamp - a.timestamp
           })
@@ -117,15 +128,6 @@ export const checkpoints_command = (
               label: '$(add) New checkpoint...',
               alwaysShow: true
             },
-            ...(visible_checkpoints.length > 0
-              ? [
-                  {
-                    id: 'clear-all',
-                    label: '$(trash) Clear all checkpoints...',
-                    alwaysShow: true
-                  }
-                ]
-              : []),
             ...(revert_item ? [revert_item] : []),
             ...(visible_checkpoints.length > 0
               ? [
@@ -200,7 +202,18 @@ export const checkpoints_command = (
               TEMPORARY_CHECKPOINT_STATE_KEY,
               undefined
             )
-          } else if (selected.id == 'clear-all') {
+          } else if (selected.checkpoint) {
+            quick_pick.hide()
+            await restore_checkpoint({
+              checkpoint: selected.checkpoint,
+              workspace_provider,
+              context
+            })
+          }
+        })
+
+        quick_pick.onDidTriggerButton(async (button) => {
+          if (button === clear_all_button) {
             quick_pick.hide()
             const confirmation = await vscode.window.showWarningMessage(
               'Are you sure you want to clear all checkpoints? This operation cannot be undone.',
@@ -219,13 +232,6 @@ export const checkpoints_command = (
               undefined
             )
             await show_quick_pick()
-          } else if (selected.checkpoint) {
-            quick_pick.hide()
-            await restore_checkpoint({
-              checkpoint: selected.checkpoint,
-              workspace_provider,
-              context
-            })
           }
         })
 
