@@ -2,6 +2,8 @@ import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace-provider'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import {
+  API_EDIT_FORMAT_STATE_KEY,
+  CHAT_EDIT_FORMAT_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
@@ -27,6 +29,26 @@ export function duplicate_workspace_command(
         checked_websites,
         workspace_root_folders,
         timestamp: Date.now()
+      }
+
+      const api_edit_format = context.workspaceState.get(
+        API_EDIT_FORMAT_STATE_KEY
+      )
+      if (api_edit_format) {
+        await context.globalState.update(
+          API_EDIT_FORMAT_STATE_KEY,
+          api_edit_format
+        )
+      }
+
+      const chat_edit_format = context.workspaceState.get(
+        CHAT_EDIT_FORMAT_STATE_KEY
+      )
+      if (chat_edit_format) {
+        await context.globalState.update(
+          CHAT_EDIT_FORMAT_STATE_KEY,
+          chat_edit_format
+        )
       }
 
       await context.globalState.update(
