@@ -240,7 +240,7 @@ async function show_presets_in_group_quick_pick(params: {
   is_in_code_completions_mode: boolean
   current_instructions: string
   group_name: string
-}): Promise<string | null | typeof BACK_ACTION> {
+}): Promise<string | string[] | null | typeof BACK_ACTION> {
   const {
     presets,
     group_name,
@@ -271,7 +271,13 @@ async function show_presets_in_group_quick_pick(params: {
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { preset_name: string }
   >()
-  quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+  const run_group_button: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('run-all-coverage'),
+    tooltip: 'Run all selected presets'
+  }
+
+  quick_pick.buttons = [vscode.QuickInputButtons.Back, run_group_button]
 
   const items = presets_in_group.map((preset) => {
     const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
@@ -290,11 +296,7 @@ async function show_presets_in_group_quick_pick(params: {
   })
 
   quick_pick.items = items
-  quick_pick.placeholder = `Select a preset from "${
-    group_name === 'Ungrouped'
-      ? 'Ungrouped'
-      : group_name.replace(/ \(\d+\)$/, '')
-  }" group`
+  quick_pick.placeholder = 'Search presets by name'
   quick_pick.matchOnDescription = true
 
   const last_preset_key = get_last_selected_preset_key(panel_provider.web_mode)
@@ -309,73 +311,87 @@ async function show_presets_in_group_quick_pick(params: {
     if (last_item) quick_pick.activeItems = [last_item]
   }
 
-  return new Promise<string | null | typeof BACK_ACTION>((resolve) => {
-    let resolved = false
-    let did_accept = false
-    let did_trigger_back = false
-    const disposables: vscode.Disposable[] = []
+  return new Promise<string | string[] | null | typeof BACK_ACTION>(
+    (resolve) => {
+      let resolved = false
+      let did_accept = false
+      let did_trigger_back = false
+      const disposables: vscode.Disposable[] = []
 
-    const do_resolve = (value: string | null | typeof BACK_ACTION) => {
-      if (resolved) return
-      resolved = true
-      resolve(value)
-    }
-
-    quick_pick.onDidTriggerButton((button) => {
-      if (button === vscode.QuickInputButtons.Back) {
-        did_trigger_back = true
-        do_resolve(BACK_ACTION)
-        quick_pick.hide()
-      }
-    })
-
-    quick_pick.onDidAccept(async () => {
-      const selected = quick_pick.selectedItems[0] as any
-      did_accept = true
-      quick_pick.hide()
-
-      if (!selected) {
-        do_resolve(null)
-        return
+      const do_resolve = (
+        value: string | string[] | null | typeof BACK_ACTION
+      ) => {
+        if (resolved) return
+        resolved = true
+        resolve(value)
       }
 
-      if (selected.preset_name) {
-        const preset = presets.find((p) => p.name === selected.preset_name)!
-        if (get_is_preset_disabled(preset)) {
-          if (
-            !is_in_code_completions_mode &&
-            !current_instructions &&
-            !preset.promptPrefix &&
-            !preset.promptSuffix
-          ) {
-            vscode.window.showWarningMessage(
-              dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
-            )
+      quick_pick.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
+          did_trigger_back = true
+          do_resolve(BACK_ACTION)
+          quick_pick.hide()
+        } else if (button === run_group_button) {
+          const selected_presets = presets_in_group
+            .filter((p) => p.isSelected)
+            .map((p) => p.name)
+
+          if (selected_presets.length > 0) {
+            do_resolve(selected_presets)
           }
-          do_resolve(null)
-        } else {
-          do_resolve(selected.preset_name)
+          quick_pick.hide()
+          return
         }
-      } else {
-        do_resolve(null)
-      }
-    })
+      })
 
-    quick_pick.onDidHide(() => {
-      disposables.forEach((d) => d.dispose())
-      quick_pick.dispose()
+      quick_pick.onDidAccept(async () => {
+        const selected = quick_pick.selectedItems[0] as any
+        did_accept = true
+        quick_pick.hide()
 
-      // If hidden without accepting or clicking back, treat as back action (Escape key)
-      if (!did_accept && !did_trigger_back) {
-        do_resolve(BACK_ACTION)
-      } else {
-        do_resolve(null)
-      }
-    })
+        if (!selected) {
+          do_resolve(null)
+          return
+        }
 
-    disposables.push(quick_pick)
-    quick_pick.show()
-  })
+        if (selected.preset_name) {
+          const preset = presets.find((p) => p.name === selected.preset_name)!
+          if (get_is_preset_disabled(preset)) {
+            if (
+              !is_in_code_completions_mode &&
+              !current_instructions &&
+              !preset.promptPrefix &&
+              !preset.promptSuffix
+            ) {
+              vscode.window.showWarningMessage(
+                dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
+              )
+            }
+            do_resolve(null)
+          } else {
+            do_resolve(selected.preset_name)
+          }
+        } else {
+          do_resolve(null)
+        }
+      })
+
+      quick_pick.onDidHide(() => {
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+
+        // If hidden without accepting or clicking back, treat as back action (Escape key)
+        if (!did_accept && !did_trigger_back) {
+          do_resolve(BACK_ACTION)
+        } else {
+          do_resolve(null)
+        }
+      })
+
+      disposables.push(quick_pick)
+      quick_pick.show()
+    }
+  )
 }
 
 async function show_preset_quick_pick(params: {
@@ -448,12 +464,21 @@ async function show_preset_quick_pick(params: {
           // Fall through to show the main quick pick
           group_to_highlight_on_back = group_name
         } else if (preset_name_from_group) {
-          update_last_used_preset_or_group({
-            panel_provider,
-            preset_name: preset_name_from_group,
-            group_name: group_name
-          })
-          return [preset_name_from_group]
+          if (typeof preset_name_from_group == 'string') {
+            update_last_used_preset_or_group({
+              panel_provider,
+              preset_name: preset_name_from_group,
+              group_name: group_name
+            })
+            return [preset_name_from_group]
+          } else {
+            // It's a string[]
+            update_last_used_preset_or_group({
+              panel_provider,
+              group_name: group_name
+            })
+            return preset_name_from_group
+          }
         } else {
           return [] // User dismissed quick pick
         }
@@ -467,8 +492,8 @@ async function show_preset_quick_pick(params: {
     context.globalState.get<string>(last_group_key)
 
   const run_group_button: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('run-coverage'),
-    tooltip: 'Run selected presets in this group'
+    iconPath: new vscode.ThemeIcon('run-all-coverage'),
+    tooltip: 'Run selected presets'
   }
 
   const quick_pick = vscode.window.createQuickPick<
@@ -497,7 +522,7 @@ async function show_preset_quick_pick(params: {
       label: 'Ungrouped',
       group_name: 'Ungrouped',
       description,
-      buttons: selected_presets_count > 0 ? [run_group_button] : undefined
+      buttons: [run_group_button]
     })
   }
 
@@ -513,15 +538,13 @@ async function show_preset_quick_pick(params: {
         if (p_in_group.isSelected) selected_presets_count++
       }
 
-      let description = ''
-      if (group_presets_count > 0) {
-        description = `${group_presets_count} ${
-          group_presets_count == 1 ? 'preset' : 'presets'
-        }`
-        if (selected_presets_count > 0) {
-          description += ` · ${selected_presets_count} selected`
-        }
-      }
+      const description = `${group_presets_count} ${
+        group_presets_count == 1 ? 'preset' : 'presets'
+      }${
+        selected_presets_count > 0
+          ? ` · ${selected_presets_count} selected`
+          : ''
+      }`
 
       const is_unnamed_group =
         !preset.name || /^\(\d+\)$/.test(preset.name.trim())
@@ -531,7 +554,7 @@ async function show_preset_quick_pick(params: {
           : preset.name.replace(/ \(\d+\)$/, ''),
         group_name: preset.name,
         description,
-        buttons: selected_presets_count > 0 ? [run_group_button] : undefined
+        buttons: [run_group_button]
       })
     }
   }
@@ -600,13 +623,13 @@ async function show_preset_quick_pick(params: {
       if (selected.group_name) {
         is_navigating = true
         quick_pick.hide()
-        const preset_name = await show_presets_in_group_quick_pick({
+        const result = await show_presets_in_group_quick_pick({
           ...params,
           group_name: selected.group_name
         })
         is_navigating = false
 
-        if (preset_name == BACK_ACTION) {
+        if (result == BACK_ACTION) {
           quick_pick.value = ''
           quick_pick.items = items
           quick_pick.activeItems = [selected]
@@ -614,13 +637,22 @@ async function show_preset_quick_pick(params: {
           return
         }
 
-        if (preset_name) {
-          update_last_used_preset_or_group({
-            panel_provider,
-            preset_name: preset_name,
-            group_name: selected.group_name
-          })
-          do_resolve([preset_name])
+        if (result) {
+          if (typeof result == 'string') {
+            update_last_used_preset_or_group({
+              panel_provider,
+              preset_name: result,
+              group_name: selected.group_name
+            })
+            do_resolve([result])
+          } else {
+            // It's a string[]
+            update_last_used_preset_or_group({
+              panel_provider,
+              group_name: selected.group_name
+            })
+            do_resolve(result)
+          }
         } else {
           do_resolve([])
         }

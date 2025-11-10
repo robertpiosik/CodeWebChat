@@ -393,7 +393,7 @@ const perform_context_editing = async (params: {
       if (params.panel_provider) {
         params.panel_provider.send_message({
           command: 'SHOW_PROGRESS',
-          title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
+          title: `${dictionary.api_call.WAITING_FOR_RESPONSE}...`
         })
       }
       const result = await make_api_request({

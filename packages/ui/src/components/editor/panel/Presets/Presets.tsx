@@ -534,8 +534,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         }}
                       >
                         <IconButton
-                          codicon_icon="run-coverage"
-                          title="Run selected presets in this group"
+                          codicon_icon="run-all-coverage"
+                          title="Run selected presets"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_group_click('Ungrouped')
@@ -596,7 +596,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         }}
                       >
                         <IconButton
-                          codicon_icon="run-coverage"
+                          codicon_icon="run-all-coverage"
                           title="Run"
                           on_click={(e) => {
                             e.stopPropagation()
@@ -654,14 +654,17 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           selected_count++
                         }
                       }
-                      return `${preset_count} ${
-                        preset_count == 1 ? 'preset' : 'presets'
-                      }${
-                        selected_count > 0
-                          ? ` · ${selected_count} selected`
-                          : ''
-                      }`
+                      if (preset.is_collapsed) {
+                        let text = `${preset_count} ${
+                          preset_count == 1 ? 'preset' : 'presets'
+                        }`
+                        if (selected_count > 0) {
+                          text += ` · ${selected_count} selected`
+                        }
+                        return text
+                      }
                     }
+
                     return model || ''
                   }
 
@@ -759,7 +762,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     >
                       {!preset.chatbot && (
                         <IconButton
-                          codicon_icon="run-coverage"
+                          codicon_icon="run-all-coverage"
                           title="Run"
                           on_click={(e) => {
                             e.stopPropagation()

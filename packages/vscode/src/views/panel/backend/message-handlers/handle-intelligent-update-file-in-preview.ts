@@ -227,7 +227,7 @@ export const handle_intelligent_update_file_in_preview = async (
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
+        title: dictionary.api_call.WAITING_FOR_RESPONSE,
         cancellable: true
       },
       async (progress, token) => {
