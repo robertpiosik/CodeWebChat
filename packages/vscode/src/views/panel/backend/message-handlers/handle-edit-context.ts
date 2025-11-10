@@ -9,7 +9,10 @@ import { make_api_request } from '@/utils/make-api-request'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
 import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
-import { LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
+import {
+  API_EDIT_FORMAT_STATE_KEY,
+  LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
+} from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
@@ -326,10 +329,12 @@ const perform_context_editing = async (params: {
 
     const files = `<files>${collected_files}\n</files>`
 
-    const edit_format = params.context.workspaceState.get<EditFormat>(
-      'api-edit-format',
-      'diff'
-    )
+    const edit_format =
+      params.context.workspaceState.get<EditFormat>(
+        API_EDIT_FORMAT_STATE_KEY
+      ) ??
+      params.context.globalState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
+      'whole'
     const all_instructions = vscode.workspace
       .getConfiguration('codeWebChat')
       .get<{ [key in EditFormat]: string }>('editFormatInstructions')
