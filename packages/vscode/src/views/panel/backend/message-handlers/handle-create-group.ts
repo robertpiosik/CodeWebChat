@@ -50,7 +50,6 @@ export const handle_create_group = async (
     new_group.isCollapsed = !!options.instant
     updated_presets = [new_group, ...current_presets]
   } else {
-    new_group.isCollapsed = !!options.instant
     updated_presets = [...current_presets, new_group]
   }
 

@@ -268,11 +268,6 @@ async function show_presets_in_group_quick_pick(params: {
     }
   }
 
-  if (presets_in_group.length === 0) {
-    vscode.window.showWarningMessage('This group contains no presets.')
-    return null
-  }
-
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { preset_name: string }
   >()
@@ -424,23 +419,44 @@ async function show_preset_quick_pick(params: {
         }
       }
 
-      const preset_name_from_group = await show_presets_in_group_quick_pick({
-        ...params,
-        group_name: group_name
-      })
+      const presets_in_group: ConfigPresetFormat[] = []
+      if (group_name == 'Ungrouped') {
+        const first_group_index = presets.findIndex((p) => !p.chatbot)
+        const ungrouped_presets =
+          first_group_index == -1
+            ? presets
+            : presets.slice(0, first_group_index)
+        presets_in_group.push(...ungrouped_presets.filter((p) => p.chatbot))
+      } else {
+        const group_index = presets.findIndex((p) => p.name === group_name)
+        if (group_index != -1) {
+          for (let i = group_index + 1; i < presets.length; i++) {
+            const preset = presets[i]
+            if (!preset.chatbot) break
+            presets_in_group.push(preset)
+          }
+        }
+      }
 
-      if (preset_name_from_group === BACK_ACTION) {
-        // Fall through to show the main quick pick
-        group_to_highlight_on_back = group_name
-      } else if (preset_name_from_group) {
-        update_last_used_preset_or_group({
-          panel_provider,
-          preset_name: preset_name_from_group,
+      if (presets_in_group.length > 0) {
+        const preset_name_from_group = await show_presets_in_group_quick_pick({
+          ...params,
           group_name: group_name
         })
-        return [preset_name_from_group]
-      } else {
-        return [] // User dismissed quick pick
+
+        if (preset_name_from_group === BACK_ACTION) {
+          // Fall through to show the main quick pick
+          group_to_highlight_on_back = group_name
+        } else if (preset_name_from_group) {
+          update_last_used_preset_or_group({
+            panel_provider,
+            preset_name: preset_name_from_group,
+            group_name: group_name
+          })
+          return [preset_name_from_group]
+        } else {
+          return [] // User dismissed quick pick
+        }
       }
     }
   }
@@ -481,7 +497,7 @@ async function show_preset_quick_pick(params: {
       label: 'Ungrouped',
       group_name: 'Ungrouped',
       description,
-      buttons: [run_group_button]
+      buttons: selected_presets_count > 0 ? [run_group_button] : undefined
     })
   }
 
@@ -497,13 +513,16 @@ async function show_preset_quick_pick(params: {
         if (p_in_group.isSelected) selected_presets_count++
       }
 
-      const description = `${group_presets_count} ${
-        group_presets_count == 1 ? 'preset' : 'presets'
-      }${
-        selected_presets_count > 0
-          ? ` · ${selected_presets_count} selected`
-          : ''
-      }`
+      let description = ''
+      if (group_presets_count > 0) {
+        description = `${group_presets_count} ${
+          group_presets_count == 1 ? 'preset' : 'presets'
+        }`
+        if (selected_presets_count > 0) {
+          description += ` · ${selected_presets_count} selected`
+        }
+      }
+
       const is_unnamed_group =
         !preset.name || /^\(\d+\)$/.test(preset.name.trim())
       items.push({
@@ -512,7 +531,7 @@ async function show_preset_quick_pick(params: {
           : preset.name.replace(/ \(\d+\)$/, ''),
         group_name: preset.name,
         description,
-        buttons: [run_group_button]
+        buttons: selected_presets_count > 0 ? [run_group_button] : undefined
       })
     }
   }
@@ -789,9 +808,10 @@ async function resolve_presets(params: {
       const last_preset_name =
         params.context.workspaceState.get<string>(last_selected_preset_key) ??
         params.context.globalState.get<string>(last_selected_preset_key)
+
       if (last_preset_name !== undefined) {
         const preset = all_presets.find((p) => p.name === last_preset_name)
-        if (preset) {
+        if (preset && preset.chatbot) {
           if (get_is_preset_disabled(preset)) {
             if (
               !is_in_code_completions_mode &&
