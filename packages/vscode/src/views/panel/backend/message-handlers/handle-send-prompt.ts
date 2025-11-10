@@ -278,10 +278,41 @@ async function show_preset_quick_pick(params: {
     group_name?: string
   })[] = []
 
-  if (presets.length > 0 && presets[0].chatbot) {
-    const first_group_index = presets.findIndex((p) => !p.chatbot)
+  const pinned_presets = presets.filter((p) => p.isPinned && p.chatbot)
+  const other_presets = presets.filter((p) => !(p.isPinned && p.chatbot))
+
+  if (pinned_presets.length > 0) {
+    for (const preset of pinned_presets) {
+      const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+      const chatbot_models = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
+        .models as any
+      const model = preset.model
+        ? chatbot_models[preset.model]?.label || preset.model
+        : ''
+
+      items.push({
+        label: `$(pinned) ${is_unnamed ? preset.chatbot! : preset.name}`,
+        preset_name: preset.name,
+        description: is_unnamed
+          ? model
+          : `${preset.chatbot}${model ? ` · ${model}` : ''}`
+      })
+    }
+
+    if (other_presets.length > 0) {
+      items.push({
+        label: '',
+        kind: vscode.QuickPickItemKind.Separator
+      })
+    }
+  }
+
+  if (other_presets.length > 0 && other_presets[0].chatbot) {
+    const first_group_index = other_presets.findIndex((p) => !p.chatbot)
     const ungrouped_presets =
-      first_group_index === -1 ? presets : presets.slice(0, first_group_index)
+      first_group_index === -1
+        ? other_presets
+        : other_presets.slice(0, first_group_index)
     if (ungrouped_presets.length > 0) {
       const selected_count = ungrouped_presets.filter(
         (p) => p.isSelected
@@ -296,20 +327,22 @@ async function show_preset_quick_pick(params: {
     }
   }
 
-  for (const preset of presets) {
+  for (const preset of other_presets) {
     if (!preset.chatbot) {
       // Group
-      const group_index = presets.indexOf(preset)
+      const group_index = other_presets.indexOf(preset)
       let selected_presets_count = 0
-      for (let i = group_index + 1; i < presets.length; i++) {
-        const p = presets[i]
+      for (let i = group_index + 1; i < other_presets.length; i++) {
+        const p = other_presets[i]
         if (!p.chatbot) break
         if (p.isSelected) selected_presets_count++
       }
       const is_unnamed_group =
         !preset.name || /^\(\d+\)$/.test(preset.name.trim())
       items.push({
-        label: is_unnamed_group ? `Group ${preset.name}` : preset.name,
+        label: is_unnamed_group
+          ? 'Group'
+          : preset.name.replace(/ \(\d+\)$/, ''),
         group_name: preset.name,
         description: `${selected_presets_count} selected preset${
           selected_presets_count != 1 ? 's' : ''

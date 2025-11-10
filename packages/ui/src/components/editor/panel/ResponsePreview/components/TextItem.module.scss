@@ -41,27 +41,27 @@
   &:hover {
     color: var(--cwc-text-color);
 
-    & .line {
+    & .hidden__line {
       background-color: var(--cwc-border-color) !important;
     }
   }
-}
 
-.line {
-  flex-grow: 1;
-  height: 1px;
-  background-color: var(--cwc-border-color-dimmed);
-}
+  &__line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: var(--cwc-border-color-dimmed);
+  }
 
-.icon {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--vscode-sideBar-background);
-  padding: 0 var(--padding-8px);
-}
+  &__icon {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--vscode-sideBar-background);
+    padding: 0 var(--padding-8px);
+  }
 
-.tokens {
-  font-size: var(--font-size-12px);
-  color: var(--cwc-text-color-dimmed);
+  &__tokens {
+    font-size: var(--font-size-12px);
+    color: var(--cwc-text-color-dimmed);
+  }
 }

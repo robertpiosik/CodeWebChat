@@ -31,11 +31,11 @@ export const TextItem: FC<Props> = (props) => {
           onClick={() => ref.current && props.on_toggle(ref.current)}
           title={props.content}
         >
-          <div className={styles.line} />
-          <div className={styles.icon}>
+          <div className={styles.hidden__line} />
+          <div className={styles.hidden__icon}>
             <IconButton codicon_icon="add" />
           </div>
-          <span className={styles.tokens}>
+          <span className={styles.hidden__tokens}>
             {Math.floor(props.content.length * 0.25) || 1}
           </span>
         </div>

@@ -594,8 +594,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 } else {
                   // Group (no chatbot)
                   display_name = is_unnamed
-                    ? `Group ${preset.name}`
-                    : preset.name
+                    ? 'Group'
+                    : preset.name.replace(/ \(\d+\)$/, '')
                 }
 
                 const get_subtitle = (): string => {
