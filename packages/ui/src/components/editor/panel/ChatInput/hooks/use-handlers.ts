@@ -4,6 +4,9 @@ import { ChatInputProps } from '../ChatInput'
 export const use_handlers = (props: ChatInputProps) => {
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
+  const [saved_value_before_at_sign, set_saved_value_before_at_sign] = useState<
+    string | null
+  >(null)
 
   const handle_select = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
     const textarea = e.currentTarget
@@ -15,6 +18,7 @@ export const use_handlers = (props: ChatInputProps) => {
     props.on_change('')
     set_history_index(-1)
     set_is_history_enabled(true)
+    set_saved_value_before_at_sign(null)
   }
 
   const handle_input_change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -22,9 +26,13 @@ export const use_handlers = (props: ChatInputProps) => {
     props.on_change(new_value)
     set_history_index(-1)
 
+    // Clear saved value on any input change
+    set_saved_value_before_at_sign(null)
+
     const textarea = e.target
     const caret_position = textarea.selectionStart
     if (new_value.charAt(caret_position - 1) == '@') {
+      set_saved_value_before_at_sign(props.value)
       setTimeout(() => {
         props.on_at_sign_click()
       }, 150)
@@ -55,6 +63,37 @@ export const use_handlers = (props: ChatInputProps) => {
   }
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Backspace') {
+      const textarea = e.currentTarget
+      const { selectionStart, selectionEnd, value } = textarea
+
+      if (selectionStart > 0 && selectionStart === selectionEnd) {
+        const text_before_cursor = value.substring(0, selectionStart)
+        const path_regex = /`([^\s`]*\.[^\s`]+)`$/
+        const match = text_before_cursor.match(path_regex)
+
+        if (match) {
+          const full_match = match[0] // e.g., `path/to/file.ts`
+          const file_path = match[1] // e.g., path/to/file.ts
+
+          if (props.context_file_paths?.includes(file_path)) {
+            e.preventDefault()
+            const new_caret_position = selectionStart - full_match.length
+            const new_value =
+              value.substring(0, new_caret_position) +
+              value.substring(selectionStart)
+            props.on_change(new_value)
+            set_is_history_enabled(!new_value)
+
+            setTimeout(() => {
+              textarea.selectionStart = new_caret_position
+              textarea.selectionEnd = new_caret_position
+            }, 0)
+            return
+          }
+        }
+      }
+    }
     if (e.key == 'Enter' && e.shiftKey) {
       e.preventDefault()
       const textarea = e.currentTarget
@@ -77,6 +116,8 @@ export const use_handlers = (props: ChatInputProps) => {
       (e.key == 'ArrowUp' || e.key == 'ArrowDown') &&
       is_history_enabled
     ) {
+      set_saved_value_before_at_sign(null)
+
       const active_history = props.chat_history
 
       if (active_history.length == 0) return
@@ -99,6 +140,23 @@ export const use_handlers = (props: ChatInputProps) => {
           props.on_change('')
         }
       }
+    } else if (
+      e.key == 'z' &&
+      (e.ctrlKey || e.metaKey) &&
+      !e.shiftKey &&
+      saved_value_before_at_sign !== null
+    ) {
+      // Handle Cmd/Ctrl + Z to undo @ sign action
+      e.preventDefault()
+      const restored_value = saved_value_before_at_sign
+      set_saved_value_before_at_sign(null)
+      props.on_change(restored_value)
+
+      // Restore caret position
+      setTimeout(() => {
+        const textarea = e.currentTarget
+        textarea.selectionStart = textarea.selectionEnd = restored_value.length
+      }, 0)
     } else if (props.value) {
       set_is_history_enabled(false)
     }
