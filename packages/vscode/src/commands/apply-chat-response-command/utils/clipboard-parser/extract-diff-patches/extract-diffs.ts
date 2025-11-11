@@ -178,7 +178,12 @@ const convert_code_block_to_new_file_diff = (params: {
   const xml_match = first_line.match(xml_path_regex)
 
   if (xml_match && xml_match[1]) {
-    file_path = xml_match[1].replace(/\\/g, '/')
+    const potential_path = xml_match[1].replace(/\\/g, '/')
+    if (potential_path.endsWith('/')) {
+      // This is a directory, not a file.
+      return null
+    }
+    file_path = potential_path
 
     const file_tag_start = params.lines.findIndex((l) =>
       l.trim().startsWith('<file')
@@ -228,6 +233,8 @@ const convert_code_block_to_new_file_diff = (params: {
         const potential_path = match[1]
 
         if (
+          !potential_path.endsWith('/') &&
+          !potential_path.endsWith('\\') &&
           (potential_path.includes('.') || potential_path.includes('/')) &&
           !potential_path.includes(' ') &&
           /[a-zA-Z0-9]/.test(potential_path)
@@ -490,6 +497,10 @@ const extract_all_code_block_patches = (params: {
           }
 
           if (extracted) {
+            if (extracted.endsWith('/') || extracted.endsWith('\\')) {
+              continue
+            }
+
             file_path_hint = extracted
             const { workspace_name } = extract_workspace_and_path({
               raw_file_path: extracted,
@@ -507,6 +518,17 @@ const extract_all_code_block_patches = (params: {
       })
 
       if (patch) {
+        const last_item = items.length > 0 ? items[items.length - 1] : undefined
+        if (
+          file_path_hint &&
+          last_item &&
+          last_item.type == 'text' &&
+          (last_item.content.trim() == file_path_hint ||
+            last_item.content.trim() == `\`${file_path_hint}\``)
+        ) {
+          items.pop()
+        }
+
         const file_key = `${patch.workspace_name || ''}:${patch.file_path}`
 
         if (!files_with_diffs.has(file_key)) {
