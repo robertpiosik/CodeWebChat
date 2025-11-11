@@ -90,11 +90,11 @@ export const parse_response = (params: {
   const processed_response = params.response.replace(/``````/g, '```\n```')
 
   const hunk_header_regex = /^(@@\s+-\d+(?:,\d+)?\s+\+\d+(?:,\d+)?\s+@@)/m
-  const has_diff_lines_regex = /^[+-]/m
+  const diff_header_regex = /^---\s+.+\n\+\+\+\s+.+/m
 
   if (
-    hunk_header_regex.test(processed_response) &&
-    has_diff_lines_regex.test(processed_response)
+    hunk_header_regex.test(processed_response) ||
+    diff_header_regex.test(processed_response)
   ) {
     const patches_or_text = extract_diffs({
       clipboard_text: processed_response,

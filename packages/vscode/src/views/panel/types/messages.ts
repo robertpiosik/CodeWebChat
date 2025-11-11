@@ -265,6 +265,11 @@ export interface GoToFileMessage extends BaseMessage {
   workspace_name?: string
 }
 
+export interface ShowDiffMessage extends BaseMessage {
+  command: 'SHOW_DIFF'
+  file_path: string
+}
+
 export interface GetWorkspaceStateMessage extends BaseMessage {
   command: 'GET_WORKSPACE_STATE'
 }
@@ -387,6 +392,7 @@ export type FrontendMessage =
   | ToggleFileInReviewMessage
   | FocusOnFileInPreviewMessage
   | GoToFileMessage
+  | ShowDiffMessage
   | GetWorkspaceStateMessage
   | RequestGitStateMessage
   | IntelligentUpdateFileInPreviewMessage

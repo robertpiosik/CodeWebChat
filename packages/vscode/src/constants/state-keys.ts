@@ -72,14 +72,15 @@ export const get_last_selected_preset_key = (web_mode: string) =>
 export const get_last_selected_group_state_key = (web_mode: string) =>
   `last-selected-group-${web_mode}`
 
-export interface DuplicateWorkspaceContext {
+export type DuplicateWorkspaceContext = {
   checked_files: string[]
   checked_websites: string[]
   timestamp: number
   workspace_root_folders: string[]
+  open_editors?: { path: string; view_column?: number }[]
 }
 
-export interface HistoryEntry {
+export type HistoryEntry = {
   text: string
   createdAt: number
 }

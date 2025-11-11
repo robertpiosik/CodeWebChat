@@ -4,7 +4,6 @@ export const apply_chat_response_button_style = (button: HTMLButtonElement) => {
   button.style.borderRadius = '999px'
   button.style.backgroundColor = '#fbb100'
   button.style.cursor = 'pointer'
-  button.style.transition = 'opacity 0.2s ease-in-out'
   button.style.border = 'none'
   button.style.display = 'flex'
   button.style.alignItems = 'center'

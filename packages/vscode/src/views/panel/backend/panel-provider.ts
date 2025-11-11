@@ -47,17 +47,21 @@ import {
   handle_save_donations_visibility,
   handle_focus_on_file_in_preview,
   handle_go_to_file,
+  handle_show_diff,
   handle_toggle_file_in_preview,
   handle_intelligent_update_file_in_preview,
   handle_commit_changes,
   handle_accept_commit_message,
   handle_cancel_commit_message,
   handle_hash_sign_quick_pick,
-  handle_proceed_with_commit
+  handle_proceed_with_commit,
+  handle_get_collapsed_states,
+  handle_manage_configurations,
+  handle_save_component_collapsed_state,
+  handle_undo
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
-  LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
   API_MODE_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY,
   INSTRUCTIONS_ASK_STATE_KEY,
@@ -69,7 +73,6 @@ import {
   get_last_selected_group_state_key,
   get_last_selected_preset_key,
   LAST_APPLIED_CHANGES_STATE_KEY,
-  LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
   get_presets_collapsed_state_key,
@@ -88,8 +91,6 @@ import { response_preview_promise_resolve } from '@/commands/apply-chat-response
 import { Logger } from '@shared/utils/logger'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
-import { undo_files } from '@/commands/apply-chat-response-command/utils/file-operations'
-import { create_checkpoint } from '@/commands/checkpoints-command/actions'
 import { dictionary } from '@shared/constants/dictionary'
 
 export class PanelProvider implements vscode.WebviewViewProvider {
@@ -447,7 +448,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               create_on_index: message.create_on_index
             })
           } else if (message.command == 'UNDO') {
-            await this._handle_undo()
+            await handle_undo(this)
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
             await vscode.commands.executeCommand(
               'codeWebChat.applyChatResponse',
@@ -513,6 +514,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_donations_visibility(this, message)
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
+          } else if (message.command == 'SHOW_DIFF') {
+            await handle_show_diff(message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_PREVIEW') {
             handle_focus_on_file_in_preview(message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
@@ -547,68 +550,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_proceed_with_commit(this, message.files_to_stage)
           } else if (message.command == 'ACCEPT_COMMIT_MESSAGE') {
             await handle_accept_commit_message(this, message.commit_message)
-
-            const title = 'Committed changes'
-            const description = message.commit_message
-
-            await create_checkpoint(
-              this.workspace_provider,
-              this.context,
-              title,
-              description
-            )
           } else if (message.command == 'CANCEL_COMMIT_MESSAGE') {
             await handle_cancel_commit_message(this)
           } else if (message.command == 'MANAGE_CONFIGURATIONS') {
-            const section =
-              message.api_mode == 'edit-context'
-                ? 'edit-context'
-                : 'code-completions'
-            await vscode.commands.executeCommand(
-              'codeWebChat.settings',
-              section
-            )
+            await handle_manage_configurations(message)
           } else if (message.command == 'GET_COLLAPSED_STATES') {
-            const WEB_MODES: WebMode[] = [
-              'ask',
-              'edit-context',
-              'code-completions',
-              'no-context'
-            ]
-            const API_MODES: ApiMode[] = ['edit-context', 'code-completions']
-            this.send_message({
-              command: 'COLLAPSED_STATES',
-              presets_collapsed_by_web_mode: Object.fromEntries(
-                WEB_MODES.map((mode) => [
-                  mode,
-                  this.context.globalState.get<boolean>(
-                    get_presets_collapsed_state_key(mode),
-                    false
-                  )
-                ])
-              ),
-              configurations_collapsed_by_api_mode: Object.fromEntries(
-                API_MODES.map((mode) => [
-                  mode,
-                  this.context.globalState.get<boolean>(
-                    get_configurations_collapsed_state_key(mode),
-                    false
-                  )
-                ])
-              )
-            })
+            handle_get_collapsed_states(this)
           } else if (message.command == 'SAVE_COMPONENT_COLLAPSED_STATE') {
-            if (message.component == 'presets') {
-              await this.context.globalState.update(
-                get_presets_collapsed_state_key(message.mode as WebMode),
-                message.is_collapsed
-              )
-            } else if (message.component == 'configurations') {
-              await this.context.globalState.update(
-                get_configurations_collapsed_state_key(message.mode as ApiMode),
-                message.is_collapsed
-              )
-            }
+            await handle_save_component_collapsed_state(this, message)
           }
         } catch (error: any) {
           Logger.error({
@@ -901,74 +850,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       OriginalFileState[]
     >(LAST_APPLIED_CHANGES_STATE_KEY)
     return !!original_states && original_states.length > 0
-  }
-
-  private async _handle_undo(): Promise<void> {
-    const context = this.context
-    const original_states = context.workspaceState.get<OriginalFileState[]>(
-      LAST_APPLIED_CHANGES_STATE_KEY
-    )
-    const editor_state = context.workspaceState.get<
-      | {
-          file_path: string
-          position: { line: number; character: number }
-        }
-      | undefined
-    >(LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY)
-
-    if (!original_states || original_states.length == 0) {
-      vscode.window.showInformationMessage(
-        dictionary.information_message.NO_RECENT_CHANGES_TO_UNDO
-      )
-      return
-    }
-
-    try {
-      const success = await undo_files({ original_states })
-
-      if (!success) {
-        return
-      }
-
-      if (editor_state) {
-        try {
-          const uri = vscode.Uri.file(editor_state.file_path)
-          const document = await vscode.workspace.openTextDocument(uri)
-          const editor = await vscode.window.showTextDocument(document, {
-            preview: false
-          })
-          const position = new vscode.Position(
-            editor_state.position.line,
-            editor_state.position.character
-          )
-          editor.selection = new vscode.Selection(position, position)
-          editor.revealRange(
-            new vscode.Range(position, position),
-            vscode.TextEditorRevealType.InCenter
-          )
-        } catch (error) {
-          console.error('Error restoring editor state:', error)
-        }
-      }
-
-      context.workspaceState.update(LAST_APPLIED_CHANGES_STATE_KEY, null)
-      context.workspaceState.update(
-        LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY,
-        null
-      )
-      context.workspaceState.update(
-        LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY,
-        null
-      )
-      this.set_undo_button_state(false)
-    } catch (error: any) {
-      console.error('Error during undo:', error)
-      vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_UNDO_CHANGES(
-          error.message || 'Unknown error'
-        )
-      )
-    }
   }
 
   private _get_html_for_webview(webview: vscode.Webview) {

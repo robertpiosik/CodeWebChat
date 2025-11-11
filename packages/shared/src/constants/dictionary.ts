@@ -1,6 +1,6 @@
 export const dictionary = {
   api_call: {
-    WAITING_FOR_API_RESPONSE: 'Waiting for API response',
+    WAITING_FOR_RESPONSE: 'Waiting for response',
     THINKING: 'Thinking',
     RECEIVING_RESPONSE: 'Receiving response'
   },

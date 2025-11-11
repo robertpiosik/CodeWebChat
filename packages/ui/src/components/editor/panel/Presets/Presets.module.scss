@@ -115,26 +115,6 @@
   }
 }
 
-.context-menu {
-  position: fixed;
-  background-color: var(--vscode-menu-background);
-  border: 1px solid var(--vscode-menu-border);
-  color: var(--vscode-menu-foreground);
-  box-shadow: 0 2px 8px var(--vscode-widget-shadow);
-  padding: var(--padding-4px) 0;
-  border-radius: 4px;
-
-  &__item {
-    padding: var(--padding-4px) var(--padding-12px);
-    cursor: pointer;
-
-    &:hover {
-      background-color: var(--vscode-menu-selectionBackground);
-      color: var(--vscode-menu-selectionForeground);
-    }
-  }
-}
-
 .footer {
   display: flex;
   padding: var(--padding-8px) var(--padding-12px) var(--padding-12px)

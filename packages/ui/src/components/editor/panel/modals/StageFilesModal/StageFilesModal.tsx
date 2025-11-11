@@ -11,6 +11,7 @@ type Props = {
   on_stage: (files_to_stage: string[]) => void
   on_cancel: () => void
   on_go_to_file: (file: string) => void
+  on_show_diff: (file: string) => void
 }
 
 export const StageFilesModal: React.FC<Props> = (props) => {
@@ -56,9 +57,7 @@ export const StageFilesModal: React.FC<Props> = (props) => {
               checked={all_selected}
               on_change={handle_toggle_select_all}
             />
-            <div className={styles.files__item__details}>
-              <strong>Select all</strong>
-            </div>
+            <div className={styles.files__item__details}>Select all</div>
           </label>
           {props.files.map((file) => {
             const last_slash_index = file.lastIndexOf('/')
@@ -84,6 +83,14 @@ export const StageFilesModal: React.FC<Props> = (props) => {
                   )}
                 </div>
                 <div className={styles.files__item__actions}>
+                  <IconButton
+                    codicon_icon="diff-single"
+                    title="Show Diff"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_show_diff(file)
+                    }}
+                  />
                   <IconButton
                     codicon_icon="go-to-file"
                     title="Go To File"

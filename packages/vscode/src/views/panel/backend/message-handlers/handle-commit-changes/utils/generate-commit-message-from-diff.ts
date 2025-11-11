@@ -55,7 +55,7 @@ const generate_commit_message_with_api = async (params: {
     try {
       params.panel_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
+        title: `${dictionary.api_call.WAITING_FOR_RESPONSE}...`
       })
 
       const result = await make_api_request({
@@ -106,7 +106,7 @@ const generate_commit_message_with_api = async (params: {
     return await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
-        title: dictionary.api_call.WAITING_FOR_API_RESPONSE,
+        title: dictionary.api_call.WAITING_FOR_RESPONSE,
         cancellable: true
       },
       async (progress, token) => {

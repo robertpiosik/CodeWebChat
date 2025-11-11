@@ -20,13 +20,7 @@
     }
 
     &--select-all {
-      &:hover {
-        background-color: transparent;
-      }
-
-      strong:hover {
-        text-decoration: underline;
-      }
+      font-weight: 500;
     }
 
     &__details {

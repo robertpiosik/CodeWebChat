@@ -372,7 +372,7 @@ const perform_code_completion = async (params: {
       params.panel_provider.api_call_cancel_token_source = cancel_token_source
       params.panel_provider.send_message({
         command: 'SHOW_PROGRESS',
-        title: `${dictionary.api_call.WAITING_FOR_API_RESPONSE}...`
+        title: `${dictionary.api_call.WAITING_FOR_RESPONSE}...`
       })
     }
 

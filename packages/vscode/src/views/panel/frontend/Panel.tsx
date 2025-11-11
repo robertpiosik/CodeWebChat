@@ -340,7 +340,7 @@ export const Panel = () => {
                   }}
                   is_accept_disabled={
                     items_to_review.filter(
-                      (f) => f.type === 'file' && f.is_checked
+                      (f) => f.type == 'file' && f.is_checked
                     ).length == 0
                   }
                 />
@@ -367,7 +367,7 @@ export const Panel = () => {
                 on_toggle_file={(file) => {
                   set_items_to_review((current_items) =>
                     current_items?.map((f) =>
-                      f.type === 'file' &&
+                      f.type == 'file' &&
                       f.file_path == file.file_path &&
                       f.workspace_name == file.workspace_name
                         ? { ...f, is_checked: file.is_checked }
@@ -439,6 +439,12 @@ export const Panel = () => {
               on_go_to_file={(file) => {
                 post_message(vscode, {
                   command: 'GO_TO_FILE',
+                  file_path: file
+                })
+              }}
+              on_show_diff={(file) => {
+                post_message(vscode, {
+                  command: 'SHOW_DIFF',
                   file_path: file
                 })
               }}

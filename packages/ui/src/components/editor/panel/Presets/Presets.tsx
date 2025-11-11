@@ -5,7 +5,6 @@ import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../../common/Icon'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { use_context_menu } from '../../../../hooks/use-context-menu'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -86,16 +85,6 @@ const with_ids = (
 }
 
 export const Presets: React.FC<Presets.Props> = (props) => {
-  const {
-    context_menu: item_context_menu,
-    context_menu_ref: item_context_menu_ref,
-    handle_context_menu: handle_item_context_menu,
-    close_context_menu: close_item_context_menu
-  } = use_context_menu<{
-    preset_name: string
-    is_group: boolean
-  }>()
-
   const { ungrouped_selected_count, ungrouped_preset_count } = (() => {
     let selected_count = 0
     let preset_count = 0
@@ -199,12 +188,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 onClick={() => {
                   props.on_preset_click(preset.name)
                 }}
-                onContextMenu={(e) =>
-                  handle_item_context_menu(e, {
-                    preset_name: preset.name,
-                    is_group: false
-                  })
-                }
                 role="button"
               >
                 <div className={styles.presets__item__left}>
@@ -237,6 +220,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_toggle_preset_pinned(preset.name)
+                    }}
+                  />
+                  <IconButton
+                    codicon_icon="debug-continue-small"
+                    title="Run without submission"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      props.on_preset_click(preset.name, true)
                     }}
                   />
                   <IconButton
@@ -484,12 +475,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           instant: true
                         })
                       }}
-                      onContextMenu={(e) => {
-                        handle_item_context_menu(e, {
-                          preset_name: 'Ungrouped',
-                          is_group: true
-                        })
-                      }}
                       role="button"
                     >
                       <div className={styles.presets__item__left}>
@@ -534,8 +519,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         }}
                       >
                         <IconButton
-                          codicon_icon="run-coverage"
-                          title="Run selected presets in this group"
+                          codicon_icon="run-all-coverage"
+                          title="Run selected presets"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_group_click('Ungrouped')
@@ -596,8 +581,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         }}
                       >
                         <IconButton
-                          codicon_icon="run-coverage"
-                          title="Run"
+                          codicon_icon="run-all-coverage"
+                          title="Run selected presets"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_group_click('Ungrouped')
@@ -654,14 +639,17 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           selected_count++
                         }
                       }
-                      return `${preset_count} ${
-                        preset_count == 1 ? 'preset' : 'presets'
-                      }${
-                        selected_count > 0
-                          ? ` · ${selected_count} selected`
-                          : ''
-                      }`
+                      if (preset.is_collapsed) {
+                        let text = `${preset_count} ${
+                          preset_count == 1 ? 'preset' : 'presets'
+                        }`
+                        if (selected_count > 0) {
+                          text += ` · ${selected_count} selected`
+                        }
+                        return text
+                      }
                     }
+
                     return model || ''
                   }
 
@@ -694,12 +682,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         props.on_toggle_group_collapsed(preset.name)
                       }
                     }}
-                    onContextMenu={(e) =>
-                      handle_item_context_menu(e, {
-                        preset_name: preset.name,
-                        is_group: !preset.chatbot
-                      })
-                    }
                     role="button"
                   >
                     <div className={styles.presets__item__left}>
@@ -759,8 +741,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     >
                       {!preset.chatbot && (
                         <IconButton
-                          codicon_icon="run-coverage"
-                          title="Run"
+                          codicon_icon="run-all-coverage"
+                          title="Run selected presets"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_group_click(preset.name)
@@ -785,6 +767,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_toggle_preset_pinned(preset.name)
+                          }}
+                        />
+                      )}
+                      {preset.chatbot && (
+                        <IconButton
+                          codicon_icon="debug-continue-small"
+                          title="Run without submission"
+                          on_click={(e) => {
+                            e.stopPropagation()
+                            props.on_preset_click(preset.name, true)
                           }}
                         />
                       )}
@@ -818,36 +810,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               })}
             </ReactSortable>
           </div>
-          {item_context_menu && (
-            <div
-              ref={item_context_menu_ref}
-              className={styles['context-menu']}
-              style={{
-                top: item_context_menu.y,
-                left: item_context_menu.x
-              }}
-            >
-              <div
-                className={styles['context-menu__item']}
-                onClick={() => {
-                  if (item_context_menu.data.is_group) {
-                    props.on_group_click(
-                      item_context_menu.data.preset_name,
-                      true
-                    )
-                  } else {
-                    props.on_preset_click(
-                      item_context_menu.data.preset_name,
-                      true
-                    )
-                  }
-                  close_item_context_menu()
-                }}
-              >
-                {'Run without submission'}
-              </div>
-            </div>
-          )}
         </>
       )}
     </div>

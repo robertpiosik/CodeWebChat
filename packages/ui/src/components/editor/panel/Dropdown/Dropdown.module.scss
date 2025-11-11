@@ -5,7 +5,7 @@
 .button {
   display: flex;
   align-items: center;
-  gap: var(--padding-2px);
+  gap: var(--padding-3px);
   padding: 0 var(--padding-5px) 0 var(--padding-7px);
   height: 24px;
   border: 1px solid var(--cwc-border-color-dimmed);
@@ -39,7 +39,6 @@
 
   &__icon {
     font-size: var(--font-size-14px) !important;
-    margin-left: var(--padding-2px);
     color: var(--vscode-icon-foreground);
   }
 }
