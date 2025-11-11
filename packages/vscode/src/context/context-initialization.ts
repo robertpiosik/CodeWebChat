@@ -61,6 +61,23 @@ const restore_duplicated_workspace_context = async (
           CONTEXT_CHECKED_URLS_STATE_KEY,
           duplicated_context.checked_websites
         )
+        if (duplicated_context.open_editors) {
+          for (const editor_info of duplicated_context.open_editors) {
+            try {
+              const uri = vscode.Uri.file(editor_info.path)
+              const document = await vscode.workspace.openTextDocument(uri)
+              await vscode.window.showTextDocument(document, {
+                viewColumn: editor_info.view_column,
+                preview: false
+              })
+            } catch (error) {
+              console.error(
+                `Failed to restore open editor for ${editor_info.path}:`,
+                error
+              )
+            }
+          }
+        }
       }
     }
 

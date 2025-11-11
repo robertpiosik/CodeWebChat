@@ -77,6 +77,7 @@ export type DuplicateWorkspaceContext = {
   checked_websites: string[]
   timestamp: number
   workspace_root_folders: string[]
+  open_editors?: { path: string; view_column?: number }[]
 }
 
 export type HistoryEntry = {

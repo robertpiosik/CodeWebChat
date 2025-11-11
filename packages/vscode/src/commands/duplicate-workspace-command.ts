@@ -24,11 +24,27 @@ export function duplicate_workspace_command(
         vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath) ??
         []
 
+      const open_editors: { path: string; view_column?: number }[] = []
+      for (const tab_group of vscode.window.tabGroups.all) {
+        for (const tab of tab_group.tabs) {
+          if (
+            tab.input instanceof vscode.TabInputText &&
+            tab.input.uri.scheme == 'file'
+          ) {
+            open_editors.push({
+              path: tab.input.uri.fsPath,
+              view_column: tab_group.viewColumn
+            })
+          }
+        }
+      }
+
       const context_to_save: DuplicateWorkspaceContext = {
         checked_files,
         checked_websites,
         workspace_root_folders,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        open_editors
       }
 
       const api_edit_format = context.workspaceState.get(
