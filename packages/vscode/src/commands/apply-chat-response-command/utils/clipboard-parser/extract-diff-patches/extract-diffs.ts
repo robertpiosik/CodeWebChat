@@ -3,6 +3,7 @@ import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-
 import { extract_workspace_and_path } from '../clipboard-parser'
 
 export type Diff = {
+  type: 'diff'
   file_path: string
   content: string
   workspace_name?: string
@@ -133,6 +134,7 @@ const process_collected_patch_lines = (params: {
   })
 
   const patch: Diff = {
+    type: 'diff',
     file_path: relative_path,
     workspace_name,
     content: content_str.endsWith('\n') ? content_str : content_str + '\n'
@@ -227,7 +229,8 @@ const convert_code_block_to_new_file_diff = (params: {
 
         if (
           (potential_path.includes('.') || potential_path.includes('/')) &&
-          !potential_path.includes(' ')
+          !potential_path.includes(' ') &&
+          /[a-zA-Z0-9]/.test(potential_path)
         ) {
           const rest_of_line = line
             .substring(line.indexOf(potential_path) + potential_path.length)
@@ -279,6 +282,7 @@ const convert_code_block_to_new_file_diff = (params: {
     ].join('\n')
 
     return {
+      type: 'diff',
       file_path: relative_path,
       workspace_name,
       content: patch_content + '\n'
@@ -299,6 +303,7 @@ const convert_code_block_to_new_file_diff = (params: {
   ].join('\n')
 
   return {
+    type: 'diff',
     file_path: relative_path,
     workspace_name,
     content: patch_content + '\n'
@@ -417,13 +422,30 @@ const extract_all_code_block_patches = (params: {
   // Process each found code block in order of appearance.
   for (let i = 0; i < code_blocks.length; i++) {
     const block = code_blocks[i]
+    const block_lines = lines.slice(block.start + 1, block.end)
+
+    if (block.type != 'diff' && block.type != 'patch') {
+      const has_truncation_comment = block_lines.some((line) => {
+        const trimmed = line.trim()
+        return (
+          trimmed.startsWith('// ...') ||
+          trimmed.startsWith('# ...') ||
+          trimmed.startsWith('/* ...') ||
+          trimmed.startsWith('* ...') ||
+          trimmed.startsWith('-- ...') ||
+          trimmed.startsWith('<!-- ...')
+        )
+      })
+      if (has_truncation_comment) {
+        continue
+      }
+    }
 
     const text_before = lines.slice(last_block_end + 1, block.start).join('\n')
     if (text_before.trim()) {
       items.push({ type: 'text', content: text_before.trim() })
     }
 
-    const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
     if (block.type == 'diff' || block.type == 'patch') {
       items.push(...(diff_block_patches.get(block.start) || []))
     } else {
@@ -492,6 +514,11 @@ const extract_all_code_block_patches = (params: {
             patch.workspace_name = workspace_hint
           }
           items.push(patch)
+        }
+      } else {
+        const block_content = lines.slice(block.start, block.end + 1).join('\n')
+        if (block_lines.join('').trim()) {
+          items.push({ type: 'text', content: block_content })
         }
       }
     }

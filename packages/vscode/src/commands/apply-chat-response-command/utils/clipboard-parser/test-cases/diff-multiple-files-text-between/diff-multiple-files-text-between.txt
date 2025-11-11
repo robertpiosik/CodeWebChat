@@ -1,4 +1,10 @@
-Top.
+Lorem ipsum `src/index.ts`
+
+```ts
+console.log();
+// ...
+```
+
 
 ```diff
 --- a/src/lorem.ts
