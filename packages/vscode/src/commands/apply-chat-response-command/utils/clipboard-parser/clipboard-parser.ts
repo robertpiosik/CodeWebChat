@@ -101,12 +101,7 @@ export const parse_response = (params: {
       is_single_root: is_single_root_folder_workspace
     })
     if (patches_or_text.length) {
-      return patches_or_text.map((item) => {
-        if ('type' in item && item.type == 'text') {
-          return item
-        }
-        return { type: 'diff', ...item }
-      })
+      return patches_or_text
     }
   }
 

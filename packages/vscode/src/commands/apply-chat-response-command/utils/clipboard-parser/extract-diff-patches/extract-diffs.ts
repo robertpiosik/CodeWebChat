@@ -3,6 +3,7 @@ import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-
 import { extract_workspace_and_path } from '../clipboard-parser'
 
 export type Diff = {
+  type: 'diff'
   file_path: string
   content: string
   workspace_name?: string
@@ -133,6 +134,7 @@ const process_collected_patch_lines = (params: {
   })
 
   const patch: Diff = {
+    type: 'diff',
     file_path: relative_path,
     workspace_name,
     content: content_str.endsWith('\n') ? content_str : content_str + '\n'
@@ -176,7 +178,12 @@ const convert_code_block_to_new_file_diff = (params: {
   const xml_match = first_line.match(xml_path_regex)
 
   if (xml_match && xml_match[1]) {
-    file_path = xml_match[1].replace(/\\/g, '/')
+    const potential_path = xml_match[1].replace(/\\/g, '/')
+    if (potential_path.endsWith('/')) {
+      // This is a directory, not a file.
+      return null
+    }
+    file_path = potential_path
 
     const file_tag_start = params.lines.findIndex((l) =>
       l.trim().startsWith('<file')
@@ -226,8 +233,11 @@ const convert_code_block_to_new_file_diff = (params: {
         const potential_path = match[1]
 
         if (
+          !potential_path.endsWith('/') &&
+          !potential_path.endsWith('\\') &&
           (potential_path.includes('.') || potential_path.includes('/')) &&
-          !potential_path.includes(' ')
+          !potential_path.includes(' ') &&
+          /[a-zA-Z0-9]/.test(potential_path)
         ) {
           const rest_of_line = line
             .substring(line.indexOf(potential_path) + potential_path.length)
@@ -279,6 +289,7 @@ const convert_code_block_to_new_file_diff = (params: {
     ].join('\n')
 
     return {
+      type: 'diff',
       file_path: relative_path,
       workspace_name,
       content: patch_content + '\n'
@@ -299,6 +310,7 @@ const convert_code_block_to_new_file_diff = (params: {
   ].join('\n')
 
   return {
+    type: 'diff',
     file_path: relative_path,
     workspace_name,
     content: patch_content + '\n'
@@ -417,13 +429,30 @@ const extract_all_code_block_patches = (params: {
   // Process each found code block in order of appearance.
   for (let i = 0; i < code_blocks.length; i++) {
     const block = code_blocks[i]
+    const block_lines = lines.slice(block.start + 1, block.end)
+
+    if (block.type != 'diff' && block.type != 'patch') {
+      const has_truncation_comment = block_lines.some((line) => {
+        const trimmed = line.trim()
+        return (
+          trimmed.startsWith('// ...') ||
+          trimmed.startsWith('# ...') ||
+          trimmed.startsWith('/* ...') ||
+          trimmed.startsWith('* ...') ||
+          trimmed.startsWith('-- ...') ||
+          trimmed.startsWith('<!-- ...')
+        )
+      })
+      if (has_truncation_comment) {
+        continue
+      }
+    }
 
     const text_before = lines.slice(last_block_end + 1, block.start).join('\n')
     if (text_before.trim()) {
       items.push({ type: 'text', content: text_before.trim() })
     }
 
-    const block_lines = lines.slice(block.start + 1, block.end) // Exclude the ``` lines
     if (block.type == 'diff' || block.type == 'patch') {
       items.push(...(diff_block_patches.get(block.start) || []))
     } else {
@@ -468,6 +497,10 @@ const extract_all_code_block_patches = (params: {
           }
 
           if (extracted) {
+            if (extracted.endsWith('/') || extracted.endsWith('\\')) {
+              continue
+            }
+
             file_path_hint = extracted
             const { workspace_name } = extract_workspace_and_path({
               raw_file_path: extracted,
@@ -485,6 +518,17 @@ const extract_all_code_block_patches = (params: {
       })
 
       if (patch) {
+        const last_item = items.length > 0 ? items[items.length - 1] : undefined
+        if (
+          file_path_hint &&
+          last_item &&
+          last_item.type == 'text' &&
+          (last_item.content.trim() == file_path_hint ||
+            last_item.content.trim() == `\`${file_path_hint}\``)
+        ) {
+          items.pop()
+        }
+
         const file_key = `${patch.workspace_name || ''}:${patch.file_path}`
 
         if (!files_with_diffs.has(file_key)) {
@@ -492,6 +536,11 @@ const extract_all_code_block_patches = (params: {
             patch.workspace_name = workspace_hint
           }
           items.push(patch)
+        }
+      } else {
+        const block_content = lines.slice(block.start, block.end + 1).join('\n')
+        if (block_lines.join('').trim()) {
+          items.push({ type: 'text', content: block_content })
         }
       }
     }
