@@ -223,7 +223,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     }}
                   />
                   <IconButton
-                    codicon_icon="debug-pause"
+                    codicon_icon="debug-continue-small"
                     title="Run without submission"
                     on_click={(e) => {
                       e.stopPropagation()
