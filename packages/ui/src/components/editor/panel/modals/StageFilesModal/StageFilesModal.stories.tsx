@@ -29,12 +29,17 @@ export const Default = () => {
     alert(`Go to file: ${file}`)
   }
 
+  const handle_show_diff = (file: string) => {
+    alert(`Show diff for file: ${file}`)
+  }
+
   return visible ? (
     <StageFilesModal
       files={mock_files}
       on_stage={handle_stage}
       on_cancel={handle_cancel}
       on_go_to_file={handle_go_to_file}
+      on_show_diff={handle_show_diff}
     />
   ) : null
 }

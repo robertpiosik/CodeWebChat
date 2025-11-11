@@ -47,6 +47,7 @@ import {
   handle_save_donations_visibility,
   handle_focus_on_file_in_preview,
   handle_go_to_file,
+  handle_show_diff,
   handle_toggle_file_in_preview,
   handle_intelligent_update_file_in_preview,
   handle_commit_changes,
@@ -513,6 +514,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_donations_visibility(this, message)
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
+          } else if (message.command == 'SHOW_DIFF') {
+            await handle_show_diff(message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_PREVIEW') {
             handle_focus_on_file_in_preview(message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {

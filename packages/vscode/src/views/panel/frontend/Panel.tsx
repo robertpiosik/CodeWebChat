@@ -442,6 +442,12 @@ export const Panel = () => {
                   file_path: file
                 })
               }}
+              on_show_diff={(file) => {
+                post_message(vscode, {
+                  command: 'SHOW_DIFF',
+                  file_path: file
+                })
+              }}
             />
           </div>
         )}
