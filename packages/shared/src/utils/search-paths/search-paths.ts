@@ -83,14 +83,13 @@ export const search_paths = (params: {
       return true
     }
 
-    const query_alphanumeric = search_lower.replace(/[^a-z0-9]/g, '')
-    if (!query_alphanumeric) {
+    if (/[^a-z0-9]/.test(search_lower)) {
       return false
     }
 
     const parts = get_path_parts(path_item)
     return is_prefix_match_recursive({
-      query: query_alphanumeric,
+      query: search_lower,
       parts,
       part_idx: 0,
       memo: {}

@@ -37,6 +37,11 @@ describe('search_paths', () => {
     expect(result[0]).toBe('src/routes/HomePage.tsx')
   })
 
+  it('should not find "src/routes/HomePage.tsx" with query "src-page"', () => {
+    const result = search_paths({ paths, search_value: 'src-page' })
+    expect(result).toHaveLength(0)
+  })
+
   it('should not find "src/routes/HomePage.tsx" with query "pagesrc"', () => {
     const result = search_paths({ paths, search_value: 'pagesrc' })
     expect(result).toHaveLength(0)
