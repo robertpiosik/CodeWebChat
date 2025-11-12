@@ -596,6 +596,13 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_go_to_file = (file_path: string) => {
+    post_message(props.vscode, {
+      command: 'GO_TO_FILE',
+      file_path
+    })
+  }
+
   const handle_response_history_item_click = (item: {
     response: string
     raw_instructions?: string
@@ -733,6 +740,7 @@ export const Main: React.FC<Props> = (props) => {
       on_configurations_collapsed_change={
         props.on_configurations_collapsed_change
       }
+      on_go_to_file={handle_go_to_file}
     />
   )
 }

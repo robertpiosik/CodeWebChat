@@ -22,7 +22,7 @@ export const handle_go_to_file = async (
     target_workspace = workspace_folders.find(
       (folder) => folder.name == workspace_name
     )
-  } else if (workspace_folders.length === 1) {
+  } else if (workspace_folders.length == 1) {
     target_workspace = workspace_folders[0]
   } else {
     for (const folder of workspace_folders) {

@@ -68,9 +68,11 @@ export const get_highlighted_text = (params: {
               (path) => path.endsWith('/' + sub_part) || path == sub_part
             )
             if (is_context_file) {
-              return `<span class="${styles['file-keyword']}">${escape_html(
-                sub_part
-              )}</span>`
+              return `<span class="${styles['file-keyword']}"><span class="${
+                styles['file-keyword__icon']
+              }"></span><span class="${
+                styles['file-keyword__text']
+              }">${escape_html(sub_part)}</span></span>`
             }
           }
           return escape_html(sub_part)

@@ -135,18 +135,37 @@
 
 .file-keyword {
   font-size: var(--font-size-12px);
-  background-color: var(--vscode-editor-selectionBackground);
+  background-color: color-mix(
+    in srgb,
+    var(--vscode-charts-blue) 20%,
+    transparent
+  );
   border-radius: var(--border-radius-4px);
   padding: 0 var(--padding-4px) 0 var(--padding-3px);
   display: inline-flex;
   align-items: center;
-  cursor: pointer;
+  gap: var(--padding-3px);
+  line-height: 1.2;
+  transform: translateY(1.5px);
 
-  &::before {
-    font-family: 'codicon';
-    content: '\ea7b';
-    margin-right: var(--padding-3px);
-    font-size: var(--font-size-12px);
+  &__icon {
+    display: flex;
+
+    &::before {
+      font-family: 'codicon';
+      content: '\ea7b';
+      font-size: var(--font-size-12px);
+      transition: none;
+    }
+  }
+
+  &:hover &__icon::before {
+    content: '\ea76';
+    cursor: pointer;
+  }
+
+  &__text {
+    cursor: pointer;
   }
 }
 

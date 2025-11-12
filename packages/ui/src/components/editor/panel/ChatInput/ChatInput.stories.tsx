@@ -166,6 +166,7 @@ export const WithFilePaths = () => (
     on_search_click={() => console.log('Search clicked')}
     on_submit_with_control={() => console.log('Submitted with control')}
     on_curly_braces_click={() => {}}
+    on_go_to_file={(path) => console.log('Go to file:', path)}
     context_file_paths={['path/to/my/file.ts']}
   />
 )

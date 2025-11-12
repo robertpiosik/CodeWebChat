@@ -38,6 +38,7 @@ export type ChatInputProps = {
   on_edit_format_change?: (format: EditFormat) => void
   edit_format_instructions?: Record<EditFormat, string>
   context_file_paths?: string[]
+  on_go_to_file?: (file_path: string) => void
 }
 
 const get_caret_position_from_div = (element: HTMLElement): number => {
@@ -318,6 +319,14 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   }, [props.focus_and_select_key])
 
   useEffect(() => {
+    const input_element = input_ref.current
+    if (input_element) {
+      const is_focused = document.activeElement === input_element
+      if (!is_focused) input_element.focus()
+    }
+  }, [props.value])
+
+  useEffect(() => {
     const on_selection_change = () => {
       if (document.activeElement === input_ref.current && input_ref.current) {
         const pos = get_caret_position_from_div(input_ref.current)
@@ -357,28 +366,27 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
 
   const custom_handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key == 'Tab' && !e.shiftKey) {
-      const value = e.currentTarget.innerText
+      const value = e.currentTarget.textContent ?? ''
       const selection_start = caret_position
+      const text_before_cursor = value.substring(0, selection_start)
 
-      if (selection_start > 0) {
-        const text_before_cursor = value.substring(0, selection_start)
-        if (
-          text_before_cursor.trim() != '' &&
-          !/\s$/.test(text_before_cursor)
-        ) {
-          e.preventDefault()
-          const match = text_before_cursor.match(/(\S+)$/)
-          if (match) {
-            props.on_at_sign_click(match[1])
-            return
-          }
-        }
+      if (selection_start == 0 || /\s$/.test(text_before_cursor)) {
+        e.preventDefault()
+        props.on_at_sign_click()
+        return
+      }
+
+      e.preventDefault()
+      const match = text_before_cursor.match(/(\S+)$/)
+      if (match) {
+        props.on_at_sign_click(match[1])
+        return
       }
     }
 
     // Handle backspace on shortened filenames
     if (e.key == 'Backspace' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
-      const display_value = e.currentTarget.innerText
+      const display_value = e.currentTarget.textContent ?? ''
       const cursor_pos = caret_position
 
       // Check if we're at the end of a word that looks like a filename
@@ -409,13 +417,17 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
 
   const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement
-    if (target.classList.contains(styles['file-keyword'])) {
+    const icon_element = target.closest(`.${styles['file-keyword__icon']}`)
+    const text_element = target.closest(`.${styles['file-keyword__text']}`)
+
+    if (icon_element) {
       e.preventDefault()
       e.stopPropagation()
 
       const input_element = input_ref.current
       if (!input_element) return
 
+      // Logic for deletion based on caret position
       const display_pos = get_caret_position_from_div(input_element)
       const raw_pos = map_display_pos_to_raw_pos(
         display_pos,
@@ -426,11 +438,11 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
       let start_of_path = -1
       let end_of_path = -1
 
-      if (props.value[raw_pos] === '`') {
+      if (props.value[raw_pos] == '`') {
         // case: raw_pos at start
         start_of_path = raw_pos
         end_of_path = props.value.indexOf('`', start_of_path + 1)
-      } else if (raw_pos > 0 && props.value[raw_pos - 1] === '`') {
+      } else if (raw_pos > 0 && props.value[raw_pos - 1] == '`') {
         // case: raw_pos at end
         end_of_path = raw_pos - 1
         const text_before = props.value.substring(0, end_of_path)
@@ -438,8 +450,8 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
       }
 
       if (
-        start_of_path !== -1 &&
-        end_of_path !== -1 &&
+        start_of_path != -1 &&
+        end_of_path != -1 &&
         start_of_path < end_of_path
       ) {
         const path_in_backticks = props.value.substring(
@@ -472,6 +484,25 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             }
           }, 0)
         }
+      }
+    } else if (text_element) {
+      // Clicking on file name text should open the file
+      e.preventDefault()
+      e.stopPropagation()
+
+      const filename = text_element.textContent
+      if (filename && props.on_go_to_file && props.context_file_paths) {
+        const file_path = props.context_file_paths.find(
+          (p) => p.endsWith('/' + filename) || p == filename
+        )
+        if (file_path) {
+          props.on_go_to_file(file_path)
+        }
+      }
+
+      // Keep focus on input
+      if (input_ref.current) {
+        input_ref.current.focus()
       }
     }
   }
@@ -580,6 +611,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             >
               <Icon variant="CURLY_BRACES" />
             </button>
+            <span className={styles.icon}></span>
           </div>
           <div
             className={styles.footer__right}

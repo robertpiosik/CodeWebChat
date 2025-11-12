@@ -97,6 +97,7 @@ type Props = {
   on_presets_collapsed_change: (is_collapsed: boolean) => void
   configurations_collapsed: boolean
   on_configurations_collapsed_change: (is_collapsed: boolean) => void
+  on_go_to_file: (file_path: string) => void
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -232,6 +233,7 @@ export const MainView: React.FC<Props> = (props) => {
             }
             edit_format_instructions={props.edit_format_instructions}
             context_file_paths={props.context_file_paths}
+            on_go_to_file={props.on_go_to_file}
           />
           <UiContextUtilisation
             current_context_size={props.token_count}

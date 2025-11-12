@@ -68,7 +68,7 @@ export const use_handlers = (props: ChatInputProps) => {
   }
 
   const handle_input_change = (e: React.FormEvent<HTMLDivElement>) => {
-    let new_display_value = e.currentTarget.innerText
+    let new_display_value = e.currentTarget.textContent ?? ''
     if (new_display_value == '\n') {
       new_display_value = ''
     }
