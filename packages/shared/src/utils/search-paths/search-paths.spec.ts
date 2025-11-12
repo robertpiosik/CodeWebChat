@@ -1,7 +1,7 @@
 import { search_paths } from './search-paths'
 
 describe('search_paths', () => {
-  const paths = ['src/index.ts', 'src/routes/HomePage.tsx', 'src/utils.py']
+  const paths = ['src/index.x.ts', 'src/routes/HomePage.tsx', 'src/utils.py']
 
   it('should return all paths for an empty search', () => {
     expect(search_paths({ paths, search_value: '' })).toEqual(paths)
@@ -13,10 +13,10 @@ describe('search_paths', () => {
     expect(result[0]).toBe('src/index.ts')
   })
 
-  it('should find "src/index.ts" with query "indexts"', () => {
+  it('should find "src/index.x.ts" with query "indexts"', () => {
     const result = search_paths({ paths, search_value: 'indexts' })
     expect(result).toHaveLength(1)
-    expect(result[0]).toBe('src/index.ts')
+    expect(result[0]).toBe('src/index.x.ts')
   })
 
   it('should find "src/index.ts" with query "srcindex"', () => {
