@@ -207,7 +207,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
             on_curly_braces_click={props.on_curly_braces_click}
-            is_web_mode={props.main_view_type == MAIN_VIEW_TYPES.WEB}
+            is_web_view_type={props.main_view_type == MAIN_VIEW_TYPES.WEB}
             is_connected={props.is_connected}
             is_in_code_completions_mode={is_in_code_completions_mode}
             has_active_selection={props.has_active_selection}
