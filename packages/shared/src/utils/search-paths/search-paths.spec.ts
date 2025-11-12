@@ -5,6 +5,7 @@ describe('search_paths', () => {
     'src/index.ts',
     'src/routes/HomePage.tsx',
     'src/test.spec.ts',
+    'src/test.ts',
     'src/utils.py'
   ]
 
@@ -28,6 +29,12 @@ describe('search_paths', () => {
     const result = search_paths({ paths, search_value: 'srcspec' })
     expect(result).toHaveLength(1)
     expect(result[0]).toBe('src/test.spec.ts')
+  })
+
+  it('should find "src/test.ts" with query "testts"', () => {
+    const result = search_paths({ paths, search_value: 'testts' })
+    expect(result).toHaveLength(1)
+    expect(result[0]).toBe('src/test.ts')
   })
 
   it('should find "src/index.ts" with query "srcindex"', () => {
