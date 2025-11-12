@@ -262,7 +262,6 @@ export interface FocusOnFileInPreviewMessage extends BaseMessage {
 export interface GoToFileMessage extends BaseMessage {
   command: 'GO_TO_FILE'
   file_path: string
-  workspace_name?: string
 }
 
 export interface ShowDiffMessage extends BaseMessage {

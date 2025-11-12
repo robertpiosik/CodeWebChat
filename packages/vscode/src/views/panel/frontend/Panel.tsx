@@ -360,8 +360,9 @@ export const Panel = () => {
                 on_go_to_file={(file) => {
                   post_message(vscode, {
                     command: 'GO_TO_FILE',
-                    file_path: file.file_path,
-                    workspace_name: file.workspace_name
+                    file_path: file.workspace_name
+                      ? `${file.workspace_name}/${file.file_path}`
+                      : file.file_path
                   })
                 }}
                 on_toggle_file={(file) => {

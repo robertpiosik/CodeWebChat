@@ -6,7 +6,7 @@ import { dictionary } from '@shared/constants/dictionary'
 export const handle_go_to_file = async (
   message: GoToFileMessage
 ): Promise<void> => {
-  const { file_path, workspace_name } = message
+  const { file_path } = message
   const workspace_folders = vscode.workspace.workspaceFolders
   if (!workspace_folders) {
     Logger.warn({
@@ -17,22 +17,31 @@ export const handle_go_to_file = async (
   }
 
   let target_workspace: vscode.WorkspaceFolder | undefined
+  let relative_file_path = file_path
 
-  if (workspace_name) {
-    target_workspace = workspace_folders.find(
-      (folder) => folder.name == workspace_name
-    )
-  } else if (workspace_folders.length == 1) {
-    target_workspace = workspace_folders[0]
-  } else {
+  if (workspace_folders.length > 1) {
     for (const folder of workspace_folders) {
-      const potential_uri = vscode.Uri.joinPath(folder.uri, file_path)
-      try {
-        await vscode.workspace.fs.stat(potential_uri)
+      if (file_path.startsWith(`${folder.name}/`)) {
         target_workspace = folder
+        relative_file_path = file_path.substring(folder.name.length + 1)
         break
-      } catch {
-        // file not in this workspace folder
+      }
+    }
+  }
+
+  if (!target_workspace) {
+    if (workspace_folders.length == 1) {
+      target_workspace = workspace_folders[0]
+    } else {
+      for (const folder of workspace_folders) {
+        const potential_uri = vscode.Uri.joinPath(folder.uri, file_path)
+        try {
+          await vscode.workspace.fs.stat(potential_uri)
+          target_workspace = folder
+          break
+        } catch {
+          // file not in this workspace folder
+        }
       }
     }
   }
@@ -41,7 +50,7 @@ export const handle_go_to_file = async (
     Logger.error({
       function_name: 'handle_go_to_file',
       message: `Workspace not found for file: ${file_path}`,
-      data: { file_path, workspace_name }
+      data: { file_path }
     })
     vscode.window.showErrorMessage(
       dictionary.error_message.WORKSPACE_NOT_FOUND_FOR_FILE(file_path)
@@ -49,7 +58,7 @@ export const handle_go_to_file = async (
     return
   }
 
-  const file_uri = vscode.Uri.joinPath(target_workspace.uri, file_path)
+  const file_uri = vscode.Uri.joinPath(target_workspace.uri, relative_file_path)
 
   try {
     const document = await vscode.workspace.openTextDocument(file_uri)
