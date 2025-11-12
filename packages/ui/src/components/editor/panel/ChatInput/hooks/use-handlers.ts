@@ -68,7 +68,10 @@ export const use_handlers = (props: ChatInputProps) => {
   }
 
   const handle_input_change = (e: React.FormEvent<HTMLDivElement>) => {
-    const new_display_value = e.currentTarget.innerText
+    let new_display_value = e.currentTarget.innerText
+    if (new_display_value == '\n') {
+      new_display_value = ''
+    }
 
     // Convert display text back to the original format with backticks
     // This is a reverse transformation
