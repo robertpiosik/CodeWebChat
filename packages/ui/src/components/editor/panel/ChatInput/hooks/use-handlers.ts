@@ -1,5 +1,57 @@
 import { useState } from 'react'
 import { ChatInputProps } from '../ChatInput'
+import { get_display_text } from '../utils/get-display-text'
+
+const get_caret_position_from_div = (element: HTMLElement): number => {
+  const selection = window.getSelection()
+  if (!selection || selection.rangeCount === 0) {
+    return 0
+  }
+  const range = selection.getRangeAt(0)
+  const pre_caret_range = range.cloneRange()
+  pre_caret_range.selectNodeContents(element)
+  pre_caret_range.setEnd(range.endContainer, range.endOffset)
+  return pre_caret_range.toString().length
+}
+
+const set_caret_position_for_div = (element: HTMLElement, position: number) => {
+  const selection = window.getSelection()
+  if (!selection) return
+  const range = document.createRange()
+  let char_count = 0
+  let found = false
+
+  function find_text_node_and_offset(node: Node) {
+    if (found) return
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text_node = node as Text
+      const next_char_count = char_count + text_node.length
+      if (position >= char_count && position <= next_char_count) {
+        range.setStart(node, position - char_count)
+        range.collapse(true)
+        found = true
+      } else {
+        char_count = next_char_count
+      }
+    } else {
+      for (let i = 0; i < node.childNodes.length; i++) {
+        find_text_node_and_offset(node.childNodes[i])
+        if (found) break
+      }
+    }
+  }
+
+  find_text_node_and_offset(element)
+  if (found) {
+    selection.removeAllRanges()
+    selection.addRange(range)
+  } else {
+    range.selectNodeContents(element)
+    range.collapse(false)
+    selection.removeAllRanges()
+    selection.addRange(range)
+  }
+}
 
 export const use_handlers = (props: ChatInputProps) => {
   const [history_index, set_history_index] = useState(-1)
@@ -8,12 +60,6 @@ export const use_handlers = (props: ChatInputProps) => {
     string | null
   >(null)
 
-  const handle_select = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    const textarea = e.currentTarget
-    const caret_position = textarea.selectionStart
-    props.on_caret_position_change(caret_position)
-  }
-
   const handle_clear = () => {
     props.on_change('')
     set_history_index(-1)
@@ -21,22 +67,44 @@ export const use_handlers = (props: ChatInputProps) => {
     set_saved_value_before_at_sign(null)
   }
 
-  const handle_input_change = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const new_value = e.target.value
+  const handle_input_change = (e: React.FormEvent<HTMLDivElement>) => {
+    const new_display_value = e.currentTarget.innerText
+
+    // Convert display text back to the original format with backticks
+    // This is a reverse transformation
+    let new_value = new_display_value
+    const context_file_paths = props.context_file_paths ?? []
+
+    // Find all potential filenames in the text and check if they should be wrapped in backticks
+    const words = new_display_value.split(/(\s+)/)
+    const converted_words = words.map((word) => {
+      // Check if this looks like a filename
+      if (/^[^\s,;:.!?]+\.[^\s,;:.!?]+$/.test(word)) {
+        // Check if any context path ends with this filename
+        const matching_path = context_file_paths.find(
+          (path) => path.endsWith('/' + word) || path === word
+        )
+        if (matching_path) {
+          return `\`${matching_path}\``
+        }
+      }
+      return word
+    })
+    new_value = converted_words.join('')
+
     props.on_change(new_value)
     set_history_index(-1)
 
     // Clear saved value on any input change
     set_saved_value_before_at_sign(null)
 
-    const textarea = e.target
-    const caret_position = textarea.selectionStart
-    if (new_value.charAt(caret_position - 1) == '@') {
+    const caret_position = get_caret_position_from_div(e.currentTarget)
+    if (new_display_value.charAt(caret_position - 1) == '@') {
       set_saved_value_before_at_sign(props.value)
       setTimeout(() => {
         props.on_at_sign_click()
       }, 150)
-    } else if (new_value.charAt(caret_position - 1) == '#') {
+    } else if (new_display_value.charAt(caret_position - 1) == '#') {
       setTimeout(() => {
         props.on_hash_sign_click()
       }, 150)
@@ -49,7 +117,7 @@ export const use_handlers = (props: ChatInputProps) => {
 
   const handle_submit = (
     e:
-      | React.KeyboardEvent<HTMLTextAreaElement>
+      | React.KeyboardEvent<HTMLDivElement>
       | React.MouseEvent<HTMLButtonElement>,
     with_control?: boolean
   ) => {
@@ -62,54 +130,8 @@ export const use_handlers = (props: ChatInputProps) => {
     set_history_index(-1)
   }
 
-  const handle_key_down = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Backspace') {
-      const textarea = e.currentTarget
-      const { selectionStart, selectionEnd, value } = textarea
-
-      if (selectionStart > 0 && selectionStart === selectionEnd) {
-        const text_before_cursor = value.substring(0, selectionStart)
-        const path_regex = /`([^\s`]*\.[^\s`]+)`$/
-        const match = text_before_cursor.match(path_regex)
-
-        if (match) {
-          const full_match = match[0] // e.g., `path/to/file.ts`
-          const file_path = match[1] // e.g., path/to/file.ts
-
-          if (props.context_file_paths?.includes(file_path)) {
-            e.preventDefault()
-            const new_caret_position = selectionStart - full_match.length
-            const new_value =
-              value.substring(0, new_caret_position) +
-              value.substring(selectionStart)
-            props.on_change(new_value)
-            set_is_history_enabled(!new_value)
-
-            setTimeout(() => {
-              textarea.selectionStart = new_caret_position
-              textarea.selectionEnd = new_caret_position
-            }, 0)
-            return
-          }
-        }
-      }
-    }
-    if (e.key == 'Enter' && e.shiftKey) {
-      e.preventDefault()
-      const textarea = e.currentTarget
-      const start = textarea.selectionStart
-      const end = textarea.selectionEnd
-
-      const new_value =
-        props.value.substring(0, start) + '\n' + props.value.substring(end)
-
-      props.on_change(new_value)
-      set_is_history_enabled(false)
-
-      setTimeout(() => {
-        textarea.selectionStart = textarea.selectionEnd = start + 1
-      }, 0)
-    } else if (e.key == 'Enter' && !e.shiftKey) {
+  const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key == 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handle_submit(e)
     } else if (
@@ -154,8 +176,11 @@ export const use_handlers = (props: ChatInputProps) => {
 
       // Restore caret position
       setTimeout(() => {
-        const textarea = e.currentTarget
-        textarea.selectionStart = textarea.selectionEnd = restored_value.length
+        const display_restored = get_display_text(
+          restored_value,
+          props.context_file_paths ?? []
+        )
+        set_caret_position_for_div(e.currentTarget, display_restored.length)
       }, 0)
     } else if (props.value) {
       set_is_history_enabled(false)
@@ -163,7 +188,6 @@ export const use_handlers = (props: ChatInputProps) => {
   }
 
   return {
-    handle_select,
     handle_input_change,
     handle_submit,
     handle_key_down,

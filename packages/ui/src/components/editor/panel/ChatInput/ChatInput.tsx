@@ -1,6 +1,5 @@
 import { useRef, useEffect, useMemo, useState } from 'react'
 import styles from './ChatInput.module.scss'
-import TextareaAutosize from 'react-textarea-autosize'
 import cn from 'classnames'
 import { Icon } from '../../common/Icon'
 import { get_highlighted_text } from './utils/get-highlighted-text'
@@ -8,6 +7,7 @@ import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { search_paths } from '@shared/utils/search-paths'
+import { get_display_text } from './utils/get-display-text'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff'
 
@@ -40,9 +40,143 @@ export type ChatInputProps = {
   context_file_paths?: string[]
 }
 
+const get_caret_position_from_div = (element: HTMLElement): number => {
+  const selection = window.getSelection()
+  if (!selection || selection.rangeCount == 0) {
+    return 0
+  }
+  const range = selection.getRangeAt(0)
+  const pre_caret_range = range.cloneRange()
+  pre_caret_range.selectNodeContents(element)
+  pre_caret_range.setEnd(range.endContainer, range.endOffset)
+  return pre_caret_range.toString().length
+}
+
+const set_caret_position_for_div = (element: HTMLElement, position: number) => {
+  const selection = window.getSelection()
+  if (!selection) return
+  const range = document.createRange()
+  let char_count = 0
+  let found = false
+
+  const find_text_node_and_offset = (node: Node) => {
+    if (found) return
+    if (node.nodeType == Node.TEXT_NODE) {
+      const text_node = node as Text
+      const next_char_count = char_count + text_node.length
+      if (position >= char_count && position <= next_char_count) {
+        range.setStart(node, position - char_count)
+        range.collapse(true)
+        found = true
+      } else {
+        char_count = next_char_count
+      }
+    } else {
+      for (let i = 0; i < node.childNodes.length; i++) {
+        find_text_node_and_offset(node.childNodes[i])
+        if (found) break
+      }
+    }
+  }
+
+  find_text_node_and_offset(element)
+  if (found) {
+    selection.removeAllRanges()
+    selection.addRange(range)
+  } else {
+    range.selectNodeContents(element)
+    range.collapse(false)
+    selection.removeAllRanges()
+    selection.addRange(range)
+  }
+}
+
+const map_display_pos_to_raw_pos = (
+  display_pos: number,
+  raw_text: string,
+  context_file_paths: string[]
+): number => {
+  let raw_pos = 0
+  let current_display_pos = 0
+  let last_raw_index = 0
+
+  const regex = /`([^\s`]*\.[^\s`]+)`/g
+  let match
+
+  while ((match = regex.exec(raw_text)) !== null) {
+    const file_path = match[1]
+    if (context_file_paths.includes(file_path)) {
+      const filename = file_path.split('/').pop() || file_path
+      const raw_match_length = match[0].length
+      const display_match_length = filename.length
+
+      const text_before_length = match.index - last_raw_index
+
+      if (display_pos <= current_display_pos + text_before_length) {
+        return raw_pos + (display_pos - current_display_pos)
+      }
+
+      current_display_pos += text_before_length
+      raw_pos += text_before_length
+
+      if (display_pos <= current_display_pos + display_match_length) {
+        const pos_in_filename = display_pos - current_display_pos
+        if (pos_in_filename < display_match_length) {
+          // Cursor is inside the displayed filename. Map to the start of the raw path string.
+          return raw_pos
+        } else {
+          // Cursor is at the end of the displayed filename. Map to the end of the raw path string.
+          return raw_pos + raw_match_length
+        }
+      }
+
+      current_display_pos += display_match_length
+      raw_pos += raw_match_length
+      last_raw_index = regex.lastIndex
+    }
+  }
+
+  // Cursor is in the text after all matches
+  return raw_pos + (display_pos - current_display_pos)
+}
+
+const map_raw_pos_to_display_pos = (
+  raw_pos: number,
+  raw_text: string,
+  context_file_paths: string[]
+): number => {
+  let display_pos = 0
+  let current_raw_pos = 0
+  let last_raw_index = 0
+
+  const regex = /`([^\s`]*\.[^\s`]+)`/g
+  let match
+
+  while ((match = regex.exec(raw_text)) !== null) {
+    const file_path = match[1]
+    if (context_file_paths.includes(file_path)) {
+      const filename = file_path.split('/').pop() || file_path
+      const raw_match_length = match[0].length
+      const display_match_length = filename.length
+      const text_before_length = match.index - last_raw_index
+      if (raw_pos <= current_raw_pos + text_before_length) {
+        return display_pos + (raw_pos - current_raw_pos)
+      }
+      current_raw_pos += text_before_length
+      display_pos += text_before_length
+      if (raw_pos <= current_raw_pos + raw_match_length) {
+        return display_pos + display_match_length
+      }
+      current_raw_pos += raw_match_length
+      display_pos += display_match_length
+      last_raw_index = regex.lastIndex
+    }
+  }
+  return display_pos + (raw_pos - current_raw_pos)
+}
+
 export const ChatInput: React.FC<ChatInputProps> = (props) => {
-  const textarea_ref = useRef<HTMLTextAreaElement>(null)
-  const highlight_ref = useRef<HTMLDivElement>(null)
+  const input_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
   const {
@@ -54,7 +188,6 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   } = use_dropdown(props)
   const {
     handle_clear,
-    handle_select,
     handle_input_change,
     handle_submit,
     handle_key_down,
@@ -75,34 +208,132 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   }, [])
   const mod_key = is_mac ? 'cmd' : 'ctrl'
 
+  const display_text = useMemo(() => {
+    return get_display_text(props.value, props.context_file_paths ?? [])
+  }, [props.value, props.context_file_paths])
+
+  const show_tab_hint = useMemo(() => {
+    const value = display_text
+    if (
+      !value ||
+      caret_position != value.length ||
+      value.endsWith(' ') ||
+      !props.context_file_paths
+    ) {
+      return false
+    }
+
+    // Check if cursor is at the end of a shortened filename
+    const text_before_cursor = value.substring(0, caret_position)
+    const filename_match = text_before_cursor.match(
+      /([^\s,;:.!?`]+\.[^\s,;:.!?`]+)$/
+    )
+
+    if (filename_match) {
+      const filename = filename_match[1]
+      const is_shortened_filename = props.context_file_paths.some(
+        (path) => path.endsWith('/' + filename) || path === filename
+      )
+      if (is_shortened_filename) {
+        return false
+      }
+    }
+
+    const last_word = value.trim().split(/\s+/).pop()
+
+    if (last_word && last_word.length >= 3) {
+      const matching_paths = search_paths({
+        paths: props.context_file_paths,
+        search_value: last_word
+      })
+      return matching_paths.length == 1
+    }
+
+    return false
+  }, [display_text, caret_position, props.context_file_paths])
+
+  const highlighted_html = useMemo(() => {
+    return get_highlighted_text({
+      text: display_text,
+      is_in_code_completions_mode: props.is_in_code_completions_mode,
+      has_active_selection: props.has_active_selection,
+      context_file_paths: props.context_file_paths ?? []
+    })
+  }, [
+    display_text,
+    props.is_in_code_completions_mode,
+    props.has_active_selection,
+    props.context_file_paths
+  ])
+
   useEffect(() => {
-    if (textarea_ref.current) {
-      textarea_ref.current.focus()
+    const input_element = input_ref.current
+    if (input_element && input_element.innerHTML !== highlighted_html) {
+      const selection_start = get_caret_position_from_div(input_element)
+      input_element.innerHTML = highlighted_html
+      set_caret_position_for_div(input_element, selection_start)
+    }
+  }, [highlighted_html])
+
+  useEffect(() => {
+    if (input_ref.current) {
+      input_ref.current.focus()
       if (
         props.caret_position_to_set !== undefined &&
         props.on_caret_position_set
       ) {
-        textarea_ref.current.setSelectionRange(
+        const display_pos = map_raw_pos_to_display_pos(
           props.caret_position_to_set,
-          props.caret_position_to_set
+          props.value,
+          props.context_file_paths ?? []
         )
+        set_caret_position_for_div(input_ref.current, display_pos)
         props.on_caret_position_set()
       }
     }
-  }, [props.caret_position_to_set])
+  }, [
+    props.caret_position_to_set,
+    props.on_caret_position_set,
+    props.value,
+    props.context_file_paths
+  ])
 
   useEffect(() => {
-    if (textarea_ref.current) {
-      textarea_ref.current.focus()
+    if (input_ref.current) {
+      input_ref.current.focus()
     }
   }, [props.focus_key])
 
   useEffect(() => {
-    if (textarea_ref.current) {
-      textarea_ref.current.focus()
-      textarea_ref.current.select()
+    if (input_ref.current) {
+      input_ref.current.focus()
+      const selection = window.getSelection()
+      if (selection) {
+        const range = document.createRange()
+        range.selectNodeContents(input_ref.current)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
     }
   }, [props.focus_and_select_key])
+
+  useEffect(() => {
+    const on_selection_change = () => {
+      if (document.activeElement === input_ref.current && input_ref.current) {
+        const pos = get_caret_position_from_div(input_ref.current)
+        set_caret_position(pos)
+        const raw_pos = map_display_pos_to_raw_pos(
+          pos,
+          props.value,
+          props.context_file_paths ?? []
+        )
+        props.on_caret_position_change(raw_pos)
+      }
+    }
+    document.addEventListener('selectionchange', on_selection_change)
+    return () =>
+      document.removeEventListener('selectionchange', on_selection_change)
+  }, [props.on_caret_position_change, props.value, props.context_file_paths])
 
   const placeholder = useMemo(() => {
     const active_history = props.chat_history
@@ -124,18 +355,15 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     is_history_enabled
   ])
 
-  const custom_handle_key_down = (
-    e: React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
+  const custom_handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key == 'Tab' && !e.shiftKey) {
-      const textarea = e.currentTarget
-      const value = textarea.value
-      const selection_start = textarea.selectionStart
+      const value = e.currentTarget.innerText
+      const selection_start = caret_position
 
       if (selection_start > 0) {
         const text_before_cursor = value.substring(0, selection_start)
         if (
-          text_before_cursor.trim() !== '' &&
+          text_before_cursor.trim() != '' &&
           !/\s$/.test(text_before_cursor)
         ) {
           e.preventDefault()
@@ -147,31 +375,38 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
         }
       }
     }
+
+    // Handle backspace on shortened filenames
+    if (e.key == 'Backspace' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
+      const display_value = e.currentTarget.innerText
+      const cursor_pos = caret_position
+
+      // Check if we're at the end of a word that looks like a filename
+      if (cursor_pos > 0) {
+        const text_before = display_value.substring(0, cursor_pos)
+        const filename_match = text_before.match(
+          /([^\s,;:.!?`]+\.[^\s,;:.!?`]+)$/
+        )
+
+        if (filename_match) {
+          const filename = filename_match[1]
+          const matching_path = props.context_file_paths?.find(
+            (path) => path.endsWith('/' + filename) || path === filename
+          )
+
+          if (matching_path) {
+            e.preventDefault()
+            const new_value = props.value.replace(`\`${matching_path}\``, '')
+            props.on_change(new_value)
+            return
+          }
+        }
+      }
+    }
+
     handle_key_down(e)
   }
 
-  const show_tab_hint = useMemo(() => {
-    const value = props.value
-    if (
-      !value ||
-      caret_position != value.length ||
-      value.endsWith(' ') ||
-      !props.context_file_paths
-    ) {
-      return false
-    }
-    const last_word = value.trim().split(/\s+/).pop()
-
-    if (last_word && last_word.length >= 3) {
-      const matching_paths = search_paths({
-        paths: props.context_file_paths,
-        search_value: last_word
-      })
-      return matching_paths.length == 1
-    }
-
-    return false
-  }, [props.value, caret_position, props.context_file_paths])
   return (
     <div className={styles.container}>
       {props.has_active_selection && props.is_in_code_completions_mode && (
@@ -206,52 +441,44 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
           }
         }}
         ref={container_ref}
+        onClick={() => input_ref.current?.focus()}
       >
         {props.value && (
           <button
             className={cn(styles['clear-button'], 'codicon', 'codicon-close')}
             onClick={() => {
               handle_clear()
-              textarea_ref.current?.focus()
+              input_ref.current?.focus()
             }}
             title="Clear"
           />
         )}
-        <div className={styles['highlight-container']} ref={highlight_ref}>
-          {get_highlighted_text({
-            text: props.value,
-            is_in_code_completions_mode: props.is_in_code_completions_mode,
-            has_active_selection: props.has_active_selection,
-            context_file_paths: props.context_file_paths ?? []
-          })}
-          {show_tab_hint && <span className={styles['tab-hint']}>TAB</span>}
-        </div>
-        <TextareaAutosize
-          ref={textarea_ref}
-          placeholder={placeholder}
-          value={props.value}
-          onChange={(e) => {
-            handle_input_change(e)
-            set_caret_position(e.target.selectionStart)
-          }}
+        <div
+          ref={input_ref}
+          contentEditable={true}
+          suppressContentEditableWarning={true}
+          onInput={handle_input_change}
           onKeyDown={custom_handle_key_down}
-          onSelect={(e) => {
-            handle_select(e)
-            set_caret_position(e.currentTarget.selectionStart)
-          }}
           autoFocus
-          className={styles.textarea}
-          minRows={2}
-          disabled={
-            props.is_in_code_completions_mode &&
-            (props.has_active_selection || !props.has_active_editor)
-          }
+          className={cn(styles.input, {
+            [styles['input-with-tab-hint']]: show_tab_hint
+          })}
+          data-placeholder={placeholder}
         />
 
         <div
           className={styles.footer}
           onClick={() => {
-            textarea_ref.current?.select()
+            if (input_ref.current) {
+              input_ref.current.focus()
+              const selection = window.getSelection()
+              if (selection) {
+                const range = document.createRange()
+                range.selectNodeContents(input_ref.current)
+                selection.removeAllRanges()
+                selection.addRange(range)
+              }
+            }
           }}
         >
           <div
@@ -364,7 +591,6 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                   )}
                 </>
               )}
-
               {props.is_web_mode && !props.is_connected && (
                 <button
                   className={cn(
