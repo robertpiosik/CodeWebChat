@@ -75,7 +75,7 @@
     outline: none;
   }
 
-  &:empty:before {
+  &--empty:before {
     content: attr(data-placeholder);
     position: absolute;
     color: var(--vscode-input-placeholderForeground);

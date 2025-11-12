@@ -532,7 +532,8 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
           onClick={handle_input_click}
           autoFocus
           className={cn(styles.input, {
-            [styles['input-with-tab-hint']]: show_tab_hint
+            [styles['input-with-tab-hint']]: show_tab_hint,
+            [styles['input--empty']]: !props.value
           })}
           data-placeholder={placeholder}
         />
