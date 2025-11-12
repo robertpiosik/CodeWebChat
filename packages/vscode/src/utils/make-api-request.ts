@@ -251,7 +251,8 @@ export const make_api_request = async (params: {
               : {})
           },
           cancelToken: params.cancellation_token,
-          responseType: 'stream'
+          responseType: 'stream',
+          timeout: 10000
         }
       )
 
@@ -355,13 +356,17 @@ export const make_api_request = async (params: {
     } catch (error) {
       if (
         axios.isAxiosError(error) &&
-        (error.response?.status == 503 || error.code == 'ECONNRESET') &&
+        (error.response?.status == 503 ||
+          error.code == 'ECONNRESET' ||
+          error.code == 'ECONNABORTED') &&
         attempt < MAX_RETRIES
       ) {
         const delay = RETRY_DELAYS[attempt]
         const reason =
           error.response?.status == 503
             ? 'status 503'
+            : error.code == 'ECONNABORTED'
+            ? 'a timeout'
             : 'a socket hang up (ECONNRESET)'
         Logger.warn({
           function_name: 'make_api_request',
