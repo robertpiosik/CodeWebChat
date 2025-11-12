@@ -227,7 +227,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     // Check if cursor is at the end of a shortened filename
     const text_before_cursor = value.substring(0, caret_position)
     const filename_match = text_before_cursor.match(
-      /([^\s,;:.!?`]*\.[^\s,;:.!?`]+)$/
+      /([^\s,;:!?`]*\.[^\s,;:!?`]+)$/
     )
 
     if (filename_match) {
@@ -385,7 +385,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
       if (cursor_pos > 0) {
         const text_before = display_value.substring(0, cursor_pos)
         const filename_match = text_before.match(
-          /([^\s,;:.!?`]*\.[^\s,;:.!?`]+)$/
+          /([^\s,;:!?`]*\.[^\s,;:!?`]+)$/
         )
 
         if (filename_match) {

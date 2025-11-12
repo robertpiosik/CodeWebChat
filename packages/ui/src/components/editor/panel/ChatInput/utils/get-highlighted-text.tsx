@@ -34,7 +34,7 @@ export const get_highlighted_text = (params: {
   }
 
   const regex =
-    /(#Selection|#Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?|#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")/g
+    /(#Selection|#Changes:[^\s,;:!?]+|#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")/g
   const parts = params.text.split(regex)
 
   return parts
@@ -45,7 +45,7 @@ export const get_highlighted_text = (params: {
         })
         return `<span class="${className}">${escape_html(part)}</span>`
       }
-      if (part && /^#Changes:[^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?$/.test(part)) {
+      if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
         return `<span class="${styles['selection-keyword']}">${escape_html(
           part
         )}</span>`
@@ -59,7 +59,7 @@ export const get_highlighted_text = (params: {
         )}</span>`
       }
 
-      const filename_regex = /([^\s,;:.!?`]*\.[^\s,;:.!?`]+)/g
+      const filename_regex = /([^\s,;:!?`]*\.[^\s,;:!?`]+)/g
       return part
         .split(filename_regex)
         .map((sub_part, index) => {

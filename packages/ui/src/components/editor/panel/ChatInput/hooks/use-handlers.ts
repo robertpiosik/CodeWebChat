@@ -82,7 +82,7 @@ export const use_handlers = (props: ChatInputProps) => {
     const words = new_display_value.split(/(\s+)/)
     const converted_words = words.map((word) => {
       // Check if this looks like a filename
-      if (/^[^\s,;:.!?]*\.[^\s,;:.!?]+$/.test(word)) {
+      if (/^[^\s,;:!?`]*\.[^\s,;:!?`]+$/.test(word)) {
         // Check if any context path ends with this filename
         const matching_path = context_file_paths.find(
           (path) => path.endsWith('/' + word) || path === word
