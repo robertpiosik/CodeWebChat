@@ -12,7 +12,7 @@ import {
   get_last_selected_preset_key
 } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
-import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
+import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { WebMode } from '@shared/types/modes'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
@@ -28,7 +28,7 @@ export const handle_send_prompt = async (params: {
   without_submission?: boolean
 }): Promise<void> => {
   if (
-    params.panel_provider.home_view_type === HOME_VIEW_TYPES.WEB &&
+    params.panel_provider.main_view_type === MAIN_VIEW_TYPES.WEB &&
     !params.panel_provider.websocket_server_instance.is_connected_with_browser()
   ) {
     vscode.window.showWarningMessage(

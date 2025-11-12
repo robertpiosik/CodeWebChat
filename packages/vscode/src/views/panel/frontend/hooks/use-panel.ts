@@ -5,7 +5,7 @@ import {
   FileProgress,
   FrontendMessage
 } from '../../types/messages'
-import { HomeViewType } from '../../types/home-view-type'
+import { MainViewType } from '../../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from '../utils/post_message'
 import { ItemInPreview, FileInPreview } from '@shared/types/file-in-preview'
@@ -75,7 +75,7 @@ export const use_panel = (vscode: any) => {
   >()
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
-  const [home_view_type, set_home_view_type] = useState<HomeViewType>()
+  const [main_view_type, set_main_view_type] = useState<MainViewType>()
   const [web_mode, set_web_mode] = useState<WebMode>()
   const [api_mode, set_api_mode] = useState<ApiMode>()
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
@@ -128,8 +128,8 @@ export const use_panel = (vscode: any) => {
         set_version(message.version)
       } else if (message.command == 'DONATIONS_VISIBILITY') {
         set_are_donations_visible(message.is_visible)
-      } else if (message.command == 'HOME_VIEW_TYPE') {
-        set_home_view_type(message.view_type)
+      } else if (message.command == 'MAIN_VIEW_TYPE') {
+        set_main_view_type(message.view_type)
       } else if (message.command == 'WEB_MODE') {
         set_web_mode(message.mode)
       } else if (message.command == 'API_MODE') {
@@ -300,7 +300,7 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_VERSION' },
       { command: 'GET_DONATIONS_VISIBILITY' },
-      { command: 'GET_HOME_VIEW_TYPE' },
+      { command: 'GET_MAIN_VIEW_TYPE' },
       { command: 'GET_WEB_MODE' },
       { command: 'GET_API_MODE' },
       { command: 'GET_CONNECTION_STATUS' },
@@ -365,11 +365,11 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_home_view_type_change = (view_type: HomeViewType) => {
-    set_home_view_type(view_type)
+  const handle_main_view_type_change = (view_type: MainViewType) => {
+    set_main_view_type(view_type)
     set_chat_input_focus_key((k) => k + 1)
     post_message(vscode, {
-      command: 'SAVE_HOME_VIEW_TYPE',
+      command: 'SAVE_MAIN_VIEW_TYPE',
       view_type
     })
   }
@@ -447,7 +447,7 @@ export const use_panel = (vscode: any) => {
     has_active_editor,
     has_active_selection,
     code_completions_instructions,
-    home_view_type,
+    main_view_type,
     web_mode,
     api_mode,
     chat_input_focus_key,
@@ -469,7 +469,7 @@ export const use_panel = (vscode: any) => {
     handle_preview_preset,
     handle_web_mode_change,
     handle_api_mode_change,
-    handle_home_view_type_change,
+    handle_main_view_type_change,
     handle_donations_visibility_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change

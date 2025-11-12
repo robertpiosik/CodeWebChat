@@ -10,8 +10,8 @@ import {
 } from '@ui/components/editor/panel/Responses'
 import { EditFormat } from '@shared/types/edit-format'
 import {
-  HOME_VIEW_TYPES,
-  HomeViewType
+  MAIN_VIEW_TYPES,
+  MainViewType
 } from '@/views/panel/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
@@ -76,8 +76,8 @@ type Props = {
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
-  home_view_type: HomeViewType
-  on_home_view_type_change: (value: HomeViewType) => void
+  main_view_type: MainViewType
+  on_main_view_type_change: (value: MainViewType) => void
   on_edit_context_click: () => void
   on_edit_context_with_quick_pick_click: () => void
   on_code_completion_click: () => void
@@ -102,15 +102,15 @@ type Props = {
 
 export const MainView: React.FC<Props> = (props) => {
   const is_in_code_completions_mode =
-    (props.home_view_type == HOME_VIEW_TYPES.WEB &&
+    (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
       props.web_mode == 'code-completions') ||
-    (props.home_view_type == HOME_VIEW_TYPES.API &&
+    (props.main_view_type == MAIN_VIEW_TYPES.API &&
       props.api_mode == 'code-completions')
 
   const show_edit_format_selector =
-    (props.home_view_type == HOME_VIEW_TYPES.WEB &&
+    (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
       props.web_mode == 'edit-context') ||
-    (props.home_view_type == HOME_VIEW_TYPES.API &&
+    (props.main_view_type == MAIN_VIEW_TYPES.API &&
       props.api_mode == 'edit-context')
 
   const handle_input_change = (value: string) => {
@@ -118,7 +118,7 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const handle_submit = async () => {
-    if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
+    if (props.main_view_type == MAIN_VIEW_TYPES.WEB) {
       props.initialize_chats({})
     } else {
       if (is_in_code_completions_mode) {
@@ -130,7 +130,7 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const handle_submit_with_control = async () => {
-    if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
+    if (props.main_view_type == MAIN_VIEW_TYPES.WEB) {
       props.initialize_chats({ show_quick_pick: true })
     } else {
       if (is_in_code_completions_mode) {
@@ -142,7 +142,7 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const last_choice_button_title = use_last_choice_button_title({
-    home_view_type: props.home_view_type,
+    main_view_type: props.main_view_type,
     selected_preset_or_group_name: props.selected_preset_or_group_name,
     presets: props.presets,
     selected_configuration_id: props.selected_configuration_id,
@@ -150,9 +150,9 @@ export const MainView: React.FC<Props> = (props) => {
   })
 
   const scroll_to_top_key = `${props.scroll_reset_key}-${
-    props.home_view_type
+    props.main_view_type
   }-${
-    props.home_view_type == HOME_VIEW_TYPES.WEB
+    props.main_view_type == MAIN_VIEW_TYPES.WEB
       ? props.web_mode
       : props.api_mode
   }`
@@ -160,8 +160,8 @@ export const MainView: React.FC<Props> = (props) => {
   return (
     <>
       <Header
-        home_view_type={props.home_view_type}
-        on_home_view_type_change={props.on_home_view_type_change}
+        main_view_type={props.main_view_type}
+        on_main_view_type_change={props.on_main_view_type_change}
         on_show_home={props.on_show_home}
         web_mode={props.web_mode}
         on_web_mode_change={props.on_web_mode_change}
@@ -171,6 +171,14 @@ export const MainView: React.FC<Props> = (props) => {
       />
       <Scrollable scroll_to_top_key={scroll_to_top_key}>
         <UiSeparator height={4} />
+
+        {!props.is_connected && props.main_view_type == MAIN_VIEW_TYPES.WEB && (
+          <>
+            <div className={styles['browser-extension-message']}>
+              <UiBrowserExtensionMessage />
+            </div>
+          </>
+        )}
 
         {props.response_history.length > 0 && (
           <UiResponses
@@ -187,16 +195,6 @@ export const MainView: React.FC<Props> = (props) => {
           />
         )}
 
-        {!props.is_connected &&
-          props.home_view_type == HOME_VIEW_TYPES.WEB &&
-          !props.response_history.length && (
-            <>
-              <div className={styles['browser-extension-message']}>
-                <UiBrowserExtensionMessage />
-              </div>
-            </>
-          )}
-
         <div className={styles['chat-input-container']}>
           <UiChatInput
             value={props.instructions}
@@ -209,7 +207,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
             on_curly_braces_click={props.on_curly_braces_click}
-            is_web_mode={props.home_view_type == HOME_VIEW_TYPES.WEB}
+            is_web_mode={props.main_view_type == MAIN_VIEW_TYPES.WEB}
             is_connected={props.is_connected}
             is_in_code_completions_mode={is_in_code_completions_mode}
             has_active_selection={props.has_active_selection}
@@ -222,12 +220,12 @@ export const MainView: React.FC<Props> = (props) => {
             use_last_choice_button_title={last_choice_button_title}
             show_edit_format_selector={show_edit_format_selector}
             edit_format={
-              props.home_view_type == HOME_VIEW_TYPES.WEB
+              props.main_view_type == MAIN_VIEW_TYPES.WEB
                 ? props.chat_edit_format
                 : props.api_edit_format
             }
             on_edit_format_change={
-              props.home_view_type == HOME_VIEW_TYPES.WEB
+              props.main_view_type == MAIN_VIEW_TYPES.WEB
                 ? props.on_chat_edit_format_change
                 : props.on_api_edit_format_change
             }
@@ -243,7 +241,7 @@ export const MainView: React.FC<Props> = (props) => {
           />
         </div>
 
-        {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+        {props.main_view_type == MAIN_VIEW_TYPES.WEB && (
           <>
             <UiSeparator height={8} />
             <UiPresets
@@ -280,7 +278,7 @@ export const MainView: React.FC<Props> = (props) => {
           </>
         )}
 
-        {props.home_view_type == HOME_VIEW_TYPES.API && (
+        {props.main_view_type == MAIN_VIEW_TYPES.API && (
           <>
             <UiSeparator height={8} />
             <UiConfigurations

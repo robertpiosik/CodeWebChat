@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import cn from 'classnames'
 import {
-  HOME_VIEW_TYPES,
-  HomeViewType
+  MAIN_VIEW_TYPES,
+  MainViewType
 } from '@/views/panel/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { Dropdown as UiDropdown } from '@ui/components/editor/panel/Dropdown'
@@ -11,8 +11,8 @@ import styles from './Header.module.scss'
 import { api_mode_labels, web_mode_labels } from '../../modes'
 
 type Props = {
-  home_view_type: HomeViewType
-  on_home_view_type_change: (value: HomeViewType) => void
+  main_view_type: MainViewType
+  on_main_view_type_change: (value: MainViewType) => void
   on_show_home: () => void
   web_mode: WebMode
   api_mode: ApiMode
@@ -29,10 +29,10 @@ export const Header: React.FC<Props> = (props) => {
   const header_left_ref = useRef<HTMLDivElement>(null)
 
   const handle_heading_click = () => {
-    if (props.home_view_type == HOME_VIEW_TYPES.WEB) {
-      props.on_home_view_type_change(HOME_VIEW_TYPES.API)
+    if (props.main_view_type == MAIN_VIEW_TYPES.WEB) {
+      props.on_main_view_type_change(MAIN_VIEW_TYPES.API)
     } else {
-      props.on_home_view_type_change(HOME_VIEW_TYPES.WEB)
+      props.on_main_view_type_change(MAIN_VIEW_TYPES.WEB)
     }
   }
 
@@ -76,7 +76,7 @@ export const Header: React.FC<Props> = (props) => {
           onClick={handle_heading_click}
           title="Change view"
         >
-          {props.home_view_type == HOME_VIEW_TYPES.WEB
+          {props.main_view_type == MAIN_VIEW_TYPES.WEB
             ? 'New chat'
             : 'API call'}
         </button>
@@ -84,7 +84,7 @@ export const Header: React.FC<Props> = (props) => {
 
       <div className={styles.header__right}>
         <div className={styles.header__right__dropdown}>
-          {props.home_view_type == HOME_VIEW_TYPES.WEB && (
+          {props.main_view_type == MAIN_VIEW_TYPES.WEB && (
             <UiDropdown
               options={Object.entries(web_mode_labels).map(
                 ([value, label]) => ({ value: value as WebMode, label })
@@ -95,7 +95,7 @@ export const Header: React.FC<Props> = (props) => {
               info="prompt type"
             />
           )}
-          {props.home_view_type == HOME_VIEW_TYPES.API && (
+          {props.main_view_type == MAIN_VIEW_TYPES.API && (
             <UiDropdown
               options={Object.entries(api_mode_labels).map(
                 ([value, label]) => ({ value: value as ApiMode, label })

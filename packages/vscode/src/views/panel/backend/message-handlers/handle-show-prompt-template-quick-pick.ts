@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
+import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 
 type PromptTemplate = {
@@ -14,7 +14,7 @@ export const handle_show_prompt_template_quick_pick = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
   const mode: WebMode | ApiMode | undefined =
-    panel_provider.home_view_type == HOME_VIEW_TYPES.WEB
+    panel_provider.main_view_type == MAIN_VIEW_TYPES.WEB
       ? panel_provider.web_mode
       : panel_provider.api_mode
 

@@ -1,5 +1,5 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
+import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import * as vscode from 'vscode'
 import { hash_sign_quick_pick } from '../utils/hash-sign-quick-pick'
 
@@ -23,7 +23,7 @@ export const handle_hash_sign_quick_pick = async (
   let current_text = ''
 
   const mode =
-    panel_provider.home_view_type == HOME_VIEW_TYPES.WEB
+    panel_provider.main_view_type == MAIN_VIEW_TYPES.WEB
       ? panel_provider.web_mode
       : panel_provider.api_mode
   if (mode == 'ask') {

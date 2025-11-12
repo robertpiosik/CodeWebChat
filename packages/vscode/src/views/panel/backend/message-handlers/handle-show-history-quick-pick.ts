@@ -13,7 +13,7 @@ import {
   HistoryEntry
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { HOME_VIEW_TYPES } from '@/views/panel/types/home-view-type'
+import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { handle_get_history } from './handle-get-history'
 
@@ -23,7 +23,7 @@ export const handle_show_history_quick_pick = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
   const mode: WebMode | ApiMode | undefined =
-    panel_provider.home_view_type == HOME_VIEW_TYPES.WEB
+    panel_provider.main_view_type == MAIN_VIEW_TYPES.WEB
       ? panel_provider.web_mode
       : panel_provider.api_mode
 

@@ -3,8 +3,8 @@ import { MainView } from './MainView'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import {
-  HOME_VIEW_TYPES,
-  HomeViewType
+  MAIN_VIEW_TYPES,
+  MainViewType
 } from '@/views/panel/types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import {
@@ -42,10 +42,10 @@ type Props = {
     value: string,
     mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
   ) => void
-  home_view_type: HomeViewType
+  main_view_type: MainViewType
   web_mode: WebMode
   api_mode: ApiMode
-  on_home_view_type_change: (view_type: HomeViewType) => void
+  on_main_view_type_change: (view_type: MainViewType) => void
   on_web_mode_change: (mode: WebMode) => void
   on_api_mode_change: (mode: ApiMode) => void
   has_active_editor: boolean
@@ -90,9 +90,9 @@ export const Main: React.FC<Props> = (props) => {
   >()
 
   const is_in_code_completions_mode =
-    (props.home_view_type == HOME_VIEW_TYPES.WEB &&
+    (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
       props.web_mode == 'code-completions') ||
-    (props.home_view_type == HOME_VIEW_TYPES.API &&
+    (props.main_view_type == MAIN_VIEW_TYPES.API &&
       props.api_mode == 'code-completions')
 
   useEffect(() => {
@@ -182,7 +182,7 @@ export const Main: React.FC<Props> = (props) => {
   }, [])
 
   const current_mode =
-    props.home_view_type == HOME_VIEW_TYPES.WEB
+    props.main_view_type == MAIN_VIEW_TYPES.WEB
       ? props.web_mode
       : props.api_mode
 
@@ -485,7 +485,7 @@ export const Main: React.FC<Props> = (props) => {
       return props.code_completions_instructions
     }
     const mode =
-      props.home_view_type == HOME_VIEW_TYPES.WEB
+      props.main_view_type == MAIN_VIEW_TYPES.WEB
         ? props.web_mode
         : props.api_mode
     if (mode == 'ask') return props.ask_instructions
@@ -664,7 +664,7 @@ export const Main: React.FC<Props> = (props) => {
     selected_preset_or_group_name_by_mode?.[props.web_mode]
 
   const configurations_for_current_mode =
-    all_configurations && props.home_view_type == HOME_VIEW_TYPES.API
+    all_configurations && props.main_view_type == MAIN_VIEW_TYPES.API
       ? all_configurations[props.api_mode]
       : []
 
@@ -715,8 +715,8 @@ export const Main: React.FC<Props> = (props) => {
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}
-      home_view_type={props.home_view_type}
-      on_home_view_type_change={props.on_home_view_type_change}
+      main_view_type={props.main_view_type}
+      on_main_view_type_change={props.on_main_view_type_change}
       on_edit_context_click={handle_edit_context_click}
       on_edit_context_with_quick_pick_click={
         handle_edit_context_with_quick_pick_click

@@ -1,7 +1,7 @@
-export const HOME_VIEW_TYPES = {
+export const MAIN_VIEW_TYPES = {
   WEB: 'New chat',
   API: 'API call'
 }
 
-export type HomeViewType =
-  (typeof HOME_VIEW_TYPES)[keyof typeof HOME_VIEW_TYPES]
+export type MainViewType =
+  (typeof MAIN_VIEW_TYPES)[keyof typeof MAIN_VIEW_TYPES]
