@@ -349,14 +349,6 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.copyContextOpenEditors",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.copyContext",
-          "when": "false"
-        },
-        {
           "command": "codeWebChat.duplicateWorkspace",
           "when": "false"
         },

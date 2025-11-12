@@ -145,6 +145,8 @@ Generate meaningful summaries of changes adhering to your style.
 
 - `Code Web Chat: Save Context` - Save the currently checked files as a named context for easy reuse.
 - `Code Web Chat: Apply Context` - Apply a saved context to either replace or merge with the currently checked files.
+- `Code Web Chat: Copy Context` - Copy the paths and content of checked files from the Workspace view to the clipboard.
+- `Code Web Chat: Copy Context of Open Editors` - Copy the paths and content of checked files from the Open Editors view to the clipboard.
 
 ## Enterprise security
 
