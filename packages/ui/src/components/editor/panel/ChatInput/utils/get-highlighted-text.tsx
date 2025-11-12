@@ -59,7 +59,7 @@ export const get_highlighted_text = (params: {
         )}</span>`
       }
 
-      const filename_regex = /([^\s,;:.!?`]+\.[^\s,;:.!?`]+)/g
+      const filename_regex = /([^\s,;:.!?`]*\.[^\s,;:.!?`]+)/g
       return part
         .split(filename_regex)
         .map((sub_part, index) => {
@@ -68,9 +68,9 @@ export const get_highlighted_text = (params: {
               (path) => path.endsWith('/' + sub_part) || path == sub_part
             )
             if (is_context_file) {
-              return `<span class="${
-                styles['selection-keyword']
-              }">${escape_html(sub_part)}</span>`
+              return `<span class="${styles['file-keyword']}">${escape_html(
+                sub_part
+              )}</span>`
             }
           }
           return escape_html(sub_part)

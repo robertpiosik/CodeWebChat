@@ -113,13 +113,12 @@
     align-items: center;
     justify-content: center;
     color: var(--cwc-text-color);
-    opacity: 0.5;
     font-size: var(--font-size-10px);
-    padding: 0 3px;
-    margin-left: 2px;
+    padding: 0 var(--padding-3px);
+    margin-left: var(--padding-2px);
     font-weight: 500;
     border: 1px solid var(--cwc-border-color);
-    border-radius: 5px;
+    border-radius: var(--border-radius-5px);
     pointer-events: none;
   }
 }
@@ -131,6 +130,23 @@
 
   &--error {
     background-color: var(--vscode-diffEditor-removedLineBackground);
+  }
+}
+
+.file-keyword {
+  font-size: var(--font-size-12px);
+  background-color: var(--vscode-editor-selectionBackground);
+  border-radius: var(--border-radius-4px);
+  padding: 0 var(--padding-4px) 0 var(--padding-3px);
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &::before {
+    font-family: 'codicon';
+    content: '\ea7b';
+    margin-right: var(--padding-3px);
+    font-size: var(--font-size-12px);
   }
 }
 

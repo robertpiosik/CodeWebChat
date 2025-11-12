@@ -218,6 +218,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
       !value ||
       caret_position != value.length ||
       value.endsWith(' ') ||
+      value.endsWith('\n') ||
       !props.context_file_paths
     ) {
       return false
@@ -226,7 +227,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     // Check if cursor is at the end of a shortened filename
     const text_before_cursor = value.substring(0, caret_position)
     const filename_match = text_before_cursor.match(
-      /([^\s,;:.!?`]+\.[^\s,;:.!?`]+)$/
+      /([^\s,;:.!?`]*\.[^\s,;:.!?`]+)$/
     )
 
     if (filename_match) {
@@ -385,7 +386,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
       if (cursor_pos > 0) {
         const text_before = display_value.substring(0, cursor_pos)
         const filename_match = text_before.match(
-          /([^\s,;:.!?`]+\.[^\s,;:.!?`]+)$/
+          /([^\s,;:.!?`]*\.[^\s,;:.!?`]+)$/
         )
 
         if (filename_match) {
@@ -405,6 +406,75 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     }
 
     handle_key_down(e)
+  }
+
+  const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement
+    if (target.classList.contains(styles['file-keyword'])) {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const input_element = input_ref.current
+      if (!input_element) return
+
+      const display_pos = get_caret_position_from_div(input_element)
+      const raw_pos = map_display_pos_to_raw_pos(
+        display_pos,
+        props.value,
+        props.context_file_paths ?? []
+      )
+
+      let start_of_path = -1
+      let end_of_path = -1
+
+      if (props.value[raw_pos] === '`') {
+        // case: raw_pos at start
+        start_of_path = raw_pos
+        end_of_path = props.value.indexOf('`', start_of_path + 1)
+      } else if (raw_pos > 0 && props.value[raw_pos - 1] === '`') {
+        // case: raw_pos at end
+        end_of_path = raw_pos - 1
+        const text_before = props.value.substring(0, end_of_path)
+        start_of_path = text_before.lastIndexOf('`')
+      }
+
+      if (
+        start_of_path !== -1 &&
+        end_of_path !== -1 &&
+        start_of_path < end_of_path
+      ) {
+        const path_in_backticks = props.value.substring(
+          start_of_path + 1,
+          end_of_path
+        )
+        if (props.context_file_paths?.includes(path_in_backticks)) {
+          let leading_part = props.value.substring(0, start_of_path)
+          let trailing_part = props.value.substring(end_of_path + 1)
+
+          // Handle spacing.
+          if (leading_part.endsWith(' ')) {
+            leading_part = leading_part.slice(0, -1)
+          } else if (trailing_part.startsWith(' ')) {
+            trailing_part = trailing_part.substring(1)
+          }
+
+          const new_value = leading_part + trailing_part
+          const new_raw_cursor_pos = leading_part.length
+          props.on_change(new_value)
+
+          setTimeout(() => {
+            if (input_ref.current) {
+              const display_pos = map_raw_pos_to_display_pos(
+                new_raw_cursor_pos,
+                new_value,
+                props.context_file_paths ?? []
+              )
+              set_caret_position_for_div(input_ref.current, display_pos)
+            }
+          }, 0)
+        }
+      }
+    }
   }
 
   return (
@@ -459,6 +529,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
           suppressContentEditableWarning={true}
           onInput={handle_input_change}
           onKeyDown={custom_handle_key_down}
+          onClick={handle_input_click}
           autoFocus
           className={cn(styles.input, {
             [styles['input-with-tab-hint']]: show_tab_hint
