@@ -73,6 +73,21 @@ const set_caret_position_for_div = (element: HTMLElement, position: number) => {
         char_count = next_char_count
       }
     } else {
+      if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        (node as HTMLElement).getAttribute('contenteditable') === 'false'
+      ) {
+        const text_len = node.textContent?.length ?? 0
+        const next_char_count = char_count + text_len
+        if (position >= char_count && position <= next_char_count) {
+          range.setStartAfter(node)
+          range.collapse(true)
+          found = true
+        } else {
+          char_count = next_char_count
+        }
+        return // Do not iterate over children
+      }
       for (let i = 0; i < node.childNodes.length; i++) {
         find_text_node_and_offset(node.childNodes[i])
         if (found) break
@@ -256,13 +271,13 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
 
   const highlighted_html = useMemo(() => {
     return get_highlighted_text({
-      text: display_text,
+      text: props.value,
       is_in_code_completions_mode: props.is_in_code_completions_mode,
       has_active_selection: props.has_active_selection,
       context_file_paths: props.context_file_paths ?? []
     })
   }, [
-    display_text,
+    props.value,
     props.is_in_code_completions_mode,
     props.has_active_selection,
     props.context_file_paths
@@ -384,29 +399,83 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
       }
     }
 
-    // Handle backspace on shortened filenames
-    if (e.key == 'Backspace' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
-      const display_value = e.currentTarget.textContent ?? ''
-      const cursor_pos = caret_position
+    if (e.key == 'Backspace') {
+      const selection = window.getSelection()
+      if (
+        input_ref.current &&
+        selection &&
+        selection.rangeCount > 0 &&
+        selection.isCollapsed
+      ) {
+        const range = selection.getRangeAt(0)
+        let node_before_cursor: Node | null = null
 
-      // Check if we're at the end of a word that looks like a filename
-      if (cursor_pos > 0) {
-        const text_before = display_value.substring(0, cursor_pos)
-        const filename_match = text_before.match(
-          /([^\s,;:!?`]*\.[^\s,;:!?`]+)$/
-        )
+        if (
+          range.startContainer.nodeType === Node.TEXT_NODE &&
+          range.startOffset === 0
+        ) {
+          node_before_cursor = range.startContainer.previousSibling
+        } else if (
+          range.startContainer.nodeType === Node.ELEMENT_NODE &&
+          range.startOffset > 0
+        ) {
+          node_before_cursor =
+            range.startContainer.childNodes[range.startOffset - 1]
+        }
 
-        if (filename_match) {
-          const filename = filename_match[1]
-          const matching_path = props.context_file_paths?.find(
-            (path) => path.endsWith('/' + filename) || path === filename
-          )
-
-          if (matching_path) {
+        if (
+          node_before_cursor &&
+          node_before_cursor.nodeType === Node.ELEMENT_NODE
+        ) {
+          const el = node_before_cursor as HTMLElement
+          if (el.classList.contains(styles['file-keyword'])) {
             e.preventDefault()
-            const new_value = props.value.replace(`\`${matching_path}\``, '')
-            props.on_change(new_value)
-            return
+
+            const display_pos = get_caret_position_from_div(input_ref.current)
+            const raw_pos = map_display_pos_to_raw_pos(
+              display_pos,
+              props.value,
+              props.context_file_paths ?? []
+            )
+
+            let start_of_path = -1
+            let end_of_path = -1
+
+            end_of_path = raw_pos - 1
+            if (end_of_path >= 0 && props.value[end_of_path] === '`') {
+              const text_before = props.value.substring(0, end_of_path)
+              start_of_path = text_before.lastIndexOf('`')
+            }
+
+            if (
+              start_of_path !== -1 &&
+              end_of_path !== -1 &&
+              start_of_path < end_of_path
+            ) {
+              const path_in_backticks = props.value.substring(
+                start_of_path + 1,
+                end_of_path
+              )
+              if (props.context_file_paths?.includes(path_in_backticks)) {
+                const new_value =
+                  props.value.substring(0, start_of_path) +
+                  props.value.substring(end_of_path + 1)
+                const new_raw_cursor_pos = start_of_path
+                props.on_change(new_value)
+
+                setTimeout(() => {
+                  if (input_ref.current) {
+                    const display_pos = map_raw_pos_to_display_pos(
+                      new_raw_cursor_pos,
+                      new_value,
+                      props.context_file_paths ?? []
+                    )
+                    set_caret_position_for_div(input_ref.current, display_pos)
+                  }
+                }, 0)
+                return
+              }
+            }
           }
         }
       }
@@ -490,12 +559,12 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
       e.preventDefault()
       e.stopPropagation()
 
-      const filename = text_element.textContent
-      if (filename && props.on_go_to_file && props.context_file_paths) {
-        const file_path = props.context_file_paths.find(
-          (p) => p.endsWith('/' + filename) || p == filename
-        )
-        if (file_path) {
+      const file_keyword_element = text_element.closest<HTMLElement>(
+        `.${styles['file-keyword']}`
+      )
+      if (file_keyword_element) {
+        const file_path = file_keyword_element.getAttribute('title')
+        if (file_path && props.on_go_to_file) {
           props.on_go_to_file(file_path)
         }
       }

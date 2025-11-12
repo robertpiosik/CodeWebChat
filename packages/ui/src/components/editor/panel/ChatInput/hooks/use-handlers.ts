@@ -34,6 +34,21 @@ const set_caret_position_for_div = (element: HTMLElement, position: number) => {
         char_count = next_char_count
       }
     } else {
+      if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        (node as HTMLElement).getAttribute('contenteditable') === 'false'
+      ) {
+        const text_len = node.textContent?.length ?? 0
+        const next_char_count = char_count + text_len
+        if (position >= char_count && position <= next_char_count) {
+          range.setStartAfter(node)
+          range.collapse(true)
+          found = true
+        } else {
+          char_count = next_char_count
+        }
+        return // Do not iterate over children
+      }
       for (let i = 0; i < node.childNodes.length; i++) {
         find_text_node_and_offset(node.childNodes[i])
         if (found) break
@@ -53,6 +68,39 @@ const set_caret_position_for_div = (element: HTMLElement, position: number) => {
   }
 }
 
+const reconstruct_raw_value_from_node = (node: Node): string => {
+  if (node.nodeType === Node.TEXT_NODE) {
+    return node.textContent || ''
+  }
+
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    const el = node as HTMLElement
+
+    if (el.dataset.type === 'file-keyword') {
+      const path = el.getAttribute('title')
+      if (path) {
+        return `\`${path}\``
+      }
+    }
+
+    if (el.dataset.type === 'selection-keyword') {
+      return el.textContent || ''
+    }
+
+    if (el.childNodes.length > 0) {
+      let content = ''
+      for (const child of Array.from(el.childNodes)) {
+        content += reconstruct_raw_value_from_node(child)
+      }
+      return content
+    }
+
+    return el.textContent || ''
+  }
+
+  return ''
+}
+
 export const use_handlers = (props: ChatInputProps) => {
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
@@ -68,39 +116,18 @@ export const use_handlers = (props: ChatInputProps) => {
   }
 
   const handle_input_change = (e: React.FormEvent<HTMLDivElement>) => {
-    let new_display_value = e.currentTarget.textContent ?? ''
-    if (new_display_value == '\n') {
-      new_display_value = ''
+    const new_value = reconstruct_raw_value_from_node(e.currentTarget)
+
+    if (new_value === props.value) {
+      return
     }
-
-    // Convert display text back to the original format with backticks
-    // This is a reverse transformation
-    let new_value = new_display_value
-    const context_file_paths = props.context_file_paths ?? []
-
-    // Find all potential filenames in the text and check if they should be wrapped in backticks
-    const words = new_display_value.split(/(\s+)/)
-    const converted_words = words.map((word) => {
-      // Check if this looks like a filename
-      if (/^[^\s,;:!?`]*\.[^\s,;:!?`]+$/.test(word)) {
-        // Check if any context path ends with this filename
-        const matching_path = context_file_paths.find(
-          (path) => path.endsWith('/' + word) || path === word
-        )
-        if (matching_path) {
-          return `\`${matching_path}\``
-        }
-      }
-      return word
-    })
-    new_value = converted_words.join('')
-
     props.on_change(new_value)
     set_history_index(-1)
 
     // Clear saved value on any input change
     set_saved_value_before_at_sign(null)
 
+    const new_display_value = e.currentTarget.textContent ?? ''
     const caret_position = get_caret_position_from_div(e.currentTarget)
     if (new_display_value.charAt(caret_position - 1) == '@') {
       set_saved_value_before_at_sign(props.value)

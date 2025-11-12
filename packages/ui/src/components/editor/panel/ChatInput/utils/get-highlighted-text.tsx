@@ -9,6 +9,39 @@ const escape_html = (str: string): string =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;')
 
+const process_text_part_for_files = (
+  text: string,
+  context_file_paths: string[]
+): string => {
+  const file_path_regex = /`([^\s`]*\.[^\s`]+)`/g
+  const parts = text.split(file_path_regex)
+
+  return parts
+    .map((part, index) => {
+      // part at odd index is a file_path
+      if (index % 2 == 1) {
+        const file_path = part
+        if (context_file_paths.includes(file_path)) {
+          const filename = file_path.split('/').pop() || file_path
+          return `<span class="${
+            styles['file-keyword']
+          }" contentEditable="false" data-type="file-keyword" title="${escape_html(
+            file_path
+          )}"><span class="${
+            styles['file-keyword__icon']
+          }"></span><span class="${styles['file-keyword__text']}">${escape_html(
+            filename
+          )}</span></span>`
+        }
+        // If not a context file, return with backticks
+        return `\`${escape_html(file_path)}\``
+      }
+      // part at even index is regular text
+      return escape_html(part)
+    })
+    .join('')
+}
+
 export const get_highlighted_text = (params: {
   text: string
   is_in_code_completions_mode: boolean
@@ -19,16 +52,18 @@ export const get_highlighted_text = (params: {
     const regex = /(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")/g
     const parts = params.text.split(regex)
     return parts
-      .map((part, index) => {
+      .map((part) => {
         if (
           part &&
           /^#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
         ) {
-          return `<span class="${styles['selection-keyword']}">${escape_html(
+          return `<span class="${
+            styles['selection-keyword']
+          }" contentEditable="false" data-type="selection-keyword">${escape_html(
             part
           )}</span>`
         }
-        return escape_html(part)
+        return process_text_part_for_files(part, params.context_file_paths)
       })
       .join('')
   }
@@ -43,10 +78,14 @@ export const get_highlighted_text = (params: {
         const className = cn(styles['selection-keyword'], {
           [styles['selection-keyword--error']]: !params.has_active_selection
         })
-        return `<span class="${className}">${escape_html(part)}</span>`
+        return `<span class="${className}" contentEditable="false" data-type="selection-keyword">${escape_html(
+          part
+        )}</span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
-        return `<span class="${styles['selection-keyword']}">${escape_html(
+        return `<span class="${
+          styles['selection-keyword']
+        }" contentEditable="false" data-type="selection-keyword">${escape_html(
           part
         )}</span>`
       }
@@ -54,35 +93,14 @@ export const get_highlighted_text = (params: {
         part &&
         /^#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
       ) {
-        return `<span class="${styles['selection-keyword']}">${escape_html(
+        return `<span class="${
+          styles['selection-keyword']
+        }" contentEditable="false" data-type="selection-keyword">${escape_html(
           part
         )}</span>`
       }
 
-      const filename_regex = /([^\s,;:!?`]*\.[^\s,;:!?`]+)/g
-      return part
-        .split(filename_regex)
-        .map((sub_part, index) => {
-          if (index % 2 == 1) {
-            const is_context_file = params.context_file_paths.some(
-              (path) => path.endsWith('/' + sub_part) || path == sub_part
-            )
-            if (is_context_file) {
-              const full_path = params.context_file_paths.find(
-                (path) => path.endsWith('/' + sub_part) || path == sub_part
-              )
-              return `<span class="${styles['file-keyword']}"${
-                full_path ? ` title="${escape_html(full_path)}"` : ''
-              }><span class="${
-                styles['file-keyword__icon']
-              }"></span><span class="${
-                styles['file-keyword__text']
-              }">${escape_html(sub_part)}</span></span>`
-            }
-          }
-          return escape_html(sub_part)
-        })
-        .join('')
+      return process_text_part_for_files(part, params.context_file_paths)
     })
     .join('')
 }
