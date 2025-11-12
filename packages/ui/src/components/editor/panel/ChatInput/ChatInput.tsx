@@ -278,7 +278,6 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
 
   useEffect(() => {
     if (input_ref.current) {
-      input_ref.current.focus()
       if (
         props.caret_position_to_set !== undefined &&
         props.on_caret_position_set
@@ -530,7 +529,6 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
           onInput={handle_input_change}
           onKeyDown={custom_handle_key_down}
           onClick={handle_input_click}
-          autoFocus
           className={cn(styles.input, {
             [styles['input-with-tab-hint']]: show_tab_hint,
             [styles['input--empty']]: !props.value
