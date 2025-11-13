@@ -80,6 +80,21 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses file when using file-xml format with a non-standard tag', () => {
+      const test_case = 'file-xml-non-standard-tag'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
     it('parses file when CDATA is present inside a markdown code block with a comment filename', () => {
       const test_case = 'cdata-inside-code-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

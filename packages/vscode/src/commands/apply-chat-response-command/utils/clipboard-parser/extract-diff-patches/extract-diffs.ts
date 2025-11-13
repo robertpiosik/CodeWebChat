@@ -167,7 +167,7 @@ const convert_code_block_to_new_file_diff = (params: {
   // Regex to find file path. It can be commented or not.
   // It handles paths with slashes, backslashes, dots, alphanumerics, underscores, and hyphens.
   const path_regex = /(?:(?:\/\/|#|--|<!--)\s*)?([\w./\\-]+)/
-  const xml_path_regex = /<file\s+path=["']([^"']+)["']/
+  const xml_path_regex = /<(\w+)\s+path=["']([^"']+)["']/
 
   let file_path: string | undefined = params.file_path_hint
   let path_line_index = -1
@@ -177,8 +177,9 @@ const convert_code_block_to_new_file_diff = (params: {
   const first_line = params.lines.length > 0 ? params.lines[0].trim() : ''
   const xml_match = first_line.match(xml_path_regex)
 
-  if (xml_match && xml_match[1]) {
-    const potential_path = xml_match[1].replace(/\\/g, '/')
+  if (xml_match && xml_match[1] && xml_match[2]) {
+    const xml_tag_name = xml_match[1]
+    const potential_path = xml_match[2].replace(/\\/g, '/')
     if (potential_path.endsWith('/')) {
       // This is a directory, not a file.
       return null
@@ -186,11 +187,11 @@ const convert_code_block_to_new_file_diff = (params: {
     file_path = potential_path
 
     const file_tag_start = params.lines.findIndex((l) =>
-      l.trim().startsWith('<file')
+      l.trim().startsWith(`<${xml_tag_name}`)
     )
     let file_tag_end = -1
     for (let i = params.lines.length - 1; i >= 0; i--) {
-      if (params.lines[i].trim().startsWith('</file>')) {
+      if (params.lines[i].trim().startsWith(`</${xml_tag_name}>`)) {
         file_tag_end = i
         break
       }

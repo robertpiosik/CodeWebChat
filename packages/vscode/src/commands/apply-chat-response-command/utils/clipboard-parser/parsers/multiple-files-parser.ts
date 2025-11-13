@@ -7,9 +7,14 @@ import {
 } from '../clipboard-parser'
 import { parse_file_content_only } from './file-content-only-parser'
 
-const extract_file_path_from_xml = (line: string): string | null => {
-  const match = line.match(/<file\s+path=["']([^"']+)["']/)
-  return match ? match[1] : null
+const extract_file_path_from_xml = (
+  line: string
+): { tagName: string; path: string } | null => {
+  const match = line.match(/<(\w+)\s+path=["']([^"']+)["']/)
+  if (match && match[1] && match[2]) {
+    return { tagName: match[1], path: match[2] }
+  }
+  return null
 }
 
 export const parse_multiple_files = (params: {
@@ -37,6 +42,7 @@ export const parse_multiple_files = (params: {
   let last_seen_file_path_comment: string | null = null
   let is_markdown_container_block = false
   let current_language = ''
+  let current_xml_tag: string | null = null
 
   const lines = params.response.split('\n')
 
@@ -136,18 +142,19 @@ export const parse_multiple_files = (params: {
         in_cdata = false
         is_markdown_container_block = false
         continue
-      } else if (line.trim().startsWith('<file')) {
-        const extracted_filename = extract_file_path_from_xml(line)
-        if (extracted_filename) {
+      } else if (line.trim().startsWith('<')) {
+        const xml_info = extract_file_path_from_xml(line)
+        if (xml_info) {
           if (current_text_block.trim()) {
             results.push({ type: 'text', content: current_text_block.trim() })
           }
           current_text_block = ''
 
           state = 'CONTENT'
+          current_xml_tag = xml_info.tagName
           top_level_xml_file_mode = true
           const { workspace_name, relative_path } = extract_workspace_and_path({
-            raw_file_path: extracted_filename,
+            raw_file_path: xml_info.path,
             is_single_root_folder_workspace:
               params.is_single_root_folder_workspace
           })
@@ -228,7 +235,7 @@ export const parse_multiple_files = (params: {
       }
     } else if (state == 'CONTENT') {
       if (top_level_xml_file_mode) {
-        if (line.trim().startsWith('</file>')) {
+        if (line.trim().startsWith(`</${current_xml_tag}>`)) {
           let final_content = current_content.trim()
           const content_lines = final_content.split('\n')
           if (
@@ -265,6 +272,7 @@ export const parse_multiple_files = (params: {
           current_workspace_name = undefined
           top_level_xml_file_mode = false
           in_cdata = false
+          current_xml_tag = null
         } else if (line.trim().startsWith('<![CDATA[')) {
           in_cdata = true
         } else if (in_cdata && line.trim().includes(']]>')) {
@@ -386,12 +394,12 @@ export const parse_multiple_files = (params: {
           current_text_block = line.substring(last_backticks_index + 3)
         }
       } else {
-        if (is_first_content_line && line.trim().startsWith('<file')) {
-          const extracted_filename = extract_file_path_from_xml(line)
-          if (extracted_filename) {
+        if (is_first_content_line && line.trim().startsWith('<')) {
+          const xml_info = extract_file_path_from_xml(line)
+          if (xml_info) {
             const { workspace_name, relative_path } =
               extract_workspace_and_path({
-                raw_file_path: extracted_filename,
+                raw_file_path: xml_info.path,
                 is_single_root_folder_workspace:
                   params.is_single_root_folder_workspace
               })
@@ -400,6 +408,7 @@ export const parse_multiple_files = (params: {
               current_workspace_name = workspace_name
             }
             xml_file_mode = true
+            current_xml_tag = xml_info.tagName
             is_first_content_line = false
             continue
           }
@@ -531,7 +540,11 @@ export const parse_multiple_files = (params: {
           continue
         }
 
-        if (xml_file_mode && !in_cdata && line.trim() == '</file>') {
+        if (
+          xml_file_mode &&
+          !in_cdata &&
+          line.trim() == `</${current_xml_tag}>`
+        ) {
           continue
         }
 
