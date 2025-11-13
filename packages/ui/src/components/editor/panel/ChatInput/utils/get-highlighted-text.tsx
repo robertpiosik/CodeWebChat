@@ -71,7 +71,7 @@ export const get_highlighted_text = (params: {
             context_name
           )}"><span class="${styles['keyword__icon']}"></span><span class="${
             styles['keyword__text']
-          }">Saved context ${escape_html(context_name)}</span></span>`
+          }">Saved context: ${escape_html(context_name)}</span></span>`
         }
         return process_text_part_for_files(part, params.context_file_paths)
       })
@@ -103,7 +103,7 @@ export const get_highlighted_text = (params: {
           styles['keyword__icon']
         }"></span><span class="${
           styles['keyword__text']
-        }">Changes</span></span>`
+        }">Changes: ${escape_html(branch_name)}</span></span>`
       }
       const saved_context_match = part.match(
         /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
@@ -122,7 +122,7 @@ export const get_highlighted_text = (params: {
           styles['keyword__icon']
         }"></span><span class="${
           styles['keyword__text']
-        }">Saved context ${escape_html(context_name)}</span></span>`
+        }">Saved context: ${escape_html(context_name)}</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)

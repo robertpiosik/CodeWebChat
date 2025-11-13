@@ -21,10 +21,11 @@ export const get_display_text = (
         return match
       }
       if (changes_keyword) {
-        return 'Changes'
+        const branch_name = changes_keyword.substring('#Changes:'.length)
+        return `Changes: ${branch_name}`
       }
       if (saved_context_keyword) {
-        return `Saved context ${context_name}`
+        return `Saved context: ${context_name}`
       }
       return match
     }
