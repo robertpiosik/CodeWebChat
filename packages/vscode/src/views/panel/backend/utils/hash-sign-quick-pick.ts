@@ -2,31 +2,35 @@ import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import * as path from 'path'
 import * as fs from 'fs'
-import { SAVED_CONTEXTS_STATE_KEY } from '../../../../constants/state-keys'
-import { SavedContext } from '../../../../types/context'
 import { dictionary } from '@shared/constants/dictionary'
+import { SAVED_CONTEXTS_STATE_KEY } from '@/constants/state-keys'
+import { SavedContext } from '@/types/context'
 
 export async function hash_sign_quick_pick(params: {
   context: vscode.ExtensionContext
   is_for_code_completions: boolean
 }): Promise<string | undefined> {
+  const selection_label = '$(list-flat) Selection'
+  const changes_label = '$(git-pull-request-draft) Changes'
+  const saved_context_label = '$(checklist) Saved context'
+
   let items = [
     {
-      label: '$(list-flat) Selection',
+      label: selection_label,
       description: 'Text selection from the active editor'
     },
     {
-      label: '$(git-pull-request-draft) Changes',
-      description: 'Diff of changes between the selected branch'
+      label: changes_label,
+      description: 'Diff with the selected branch'
     },
     {
-      label: '$(checklist) Saved context',
-      description: 'Include files from the saved context'
+      label: saved_context_label,
+      description: 'XML-formatted files'
     }
   ]
 
   if (params.is_for_code_completions) {
-    items = items.filter((item) => item.label == '#SavedContext')
+    items = items.filter((item) => item.label == saved_context_label)
   }
 
   // eslint-disable-next-line no-constant-condition
@@ -40,11 +44,11 @@ export async function hash_sign_quick_pick(params: {
       return
     }
 
-    if (selected.label == '$(list-flat) Selection') {
+    if (selected.label == selection_label) {
       return '#Selection '
     }
 
-    if (selected.label == '$(git-pull-request-draft) Changes') {
+    if (selected.label == changes_label) {
       try {
         const workspace_folders = vscode.workspace.workspaceFolders
         if (!workspace_folders || workspace_folders.length == 0) {
@@ -131,7 +135,7 @@ export async function hash_sign_quick_pick(params: {
       continue
     }
 
-    if (selected.label == '$(checklist) Saved context') {
+    if (selected.label == saved_context_label) {
       const workspace_root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
       if (!workspace_root) {
         vscode.window.showErrorMessage(
@@ -184,13 +188,13 @@ export async function hash_sign_quick_pick(params: {
         source_options.push({
           label: 'JSON File (.vscode/contexts.json)',
           description: `${file_contexts.length} context${
-            file_contexts.length === 1 ? '' : 's'
+            file_contexts.length == 1 ? '' : 's'
           }`,
           value: 'JSON'
         })
       }
 
-      if (source_options.length === 0) {
+      if (source_options.length == 0) {
         vscode.window.showInformationMessage(
           dictionary.information_message.NO_SAVED_CONTEXTS_FOUND
         )
