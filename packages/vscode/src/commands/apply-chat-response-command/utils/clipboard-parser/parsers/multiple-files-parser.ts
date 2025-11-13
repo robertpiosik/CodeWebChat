@@ -183,6 +183,7 @@ export const parse_multiple_files = (params: {
             (potential_path.includes('/') ||
               potential_path.includes('\\') ||
               potential_path.includes('.')) &&
+            !potential_path.includes('${') &&
             !potential_path.includes(' ') &&
             /[a-zA-Z0-9]/.test(potential_path)
           ) {
