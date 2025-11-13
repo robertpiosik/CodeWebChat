@@ -300,6 +300,21 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
         apply_deletion(start_index, start_index + search_pattern.length)
       }
     }
+    // Check if it's a saved context keyword
+    else if (
+      keyword_element.classList.contains(styles['keyword--saved-context'])
+    ) {
+      const context_type = keyword_element.dataset.contextType
+      const context_name = keyword_element.dataset.contextName
+      if (!context_type || !context_name) return
+
+      const search_pattern = `#SavedContext:${context_type} "${context_name}"`
+      const start_index = props.value.indexOf(search_pattern)
+
+      if (start_index !== -1) {
+        apply_deletion(start_index, start_index + search_pattern.length)
+      }
+    }
     // Check if it's a selection keyword
     else if (keyword_element.classList.contains(styles['keyword--selection'])) {
       const search_pattern = '#Selection'

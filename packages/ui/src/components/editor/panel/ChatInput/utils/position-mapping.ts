@@ -7,13 +7,16 @@ export const map_display_pos_to_raw_pos = (
   let current_display_pos = 0
   let last_raw_index = 0
 
-  const regex = /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)/g
+  const regex =
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
     const file_path = match[1]
     const changes_keyword = match[2]
     const selection_keyword = match[3]
+    const saved_context_keyword = match[4]
+    const context_name = match[5]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -27,6 +30,9 @@ export const map_display_pos_to_raw_pos = (
       is_replacement_match = true
     } else if (selection_keyword) {
       display_match_length = 'Selection'.length
+      is_replacement_match = true
+    } else if (saved_context_keyword) {
+      display_match_length = `Saved context ${context_name}`.length
       is_replacement_match = true
     }
 
@@ -71,13 +77,16 @@ export const map_raw_pos_to_display_pos = (
   let current_raw_pos = 0
   let last_raw_index = 0
 
-  const regex = /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)/g
+  const regex =
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
     const file_path = match[1]
     const changes_keyword = match[2]
     const selection_keyword = match[3]
+    const saved_context_keyword = match[4]
+    const context_name = match[5]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -91,6 +100,9 @@ export const map_raw_pos_to_display_pos = (
       is_replacement_match = true
     } else if (selection_keyword) {
       display_match_length = 'Selection'.length
+      is_replacement_match = true
+    } else if (saved_context_keyword) {
+      display_match_length = `Saved context ${context_name}`.length
       is_replacement_match = true
     }
 

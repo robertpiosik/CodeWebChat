@@ -12,19 +12,16 @@ export async function hash_sign_quick_pick(params: {
 }): Promise<string | undefined> {
   let items = [
     {
-      label: '#Selection',
-      description:
-        'Places symbol that is then replaced by text selection from the active editor'
+      label: '$(list-flat) Selection',
+      description: 'Text selection from the active editor'
     },
     {
-      label: '#Changes',
-      description:
-        'Places symbol that is then replaced by a diff of changes between the selected branch'
+      label: '$(git-pull-request-draft) Changes',
+      description: 'Diff of changes between the selected branch'
     },
     {
-      label: '#SavedContext',
-      description:
-        'Places symbol that is then replaced by files from a saved context'
+      label: '$(checklist) Saved context',
+      description: 'Include files from the saved context'
     }
   ]
 
@@ -43,11 +40,11 @@ export async function hash_sign_quick_pick(params: {
       return
     }
 
-    if (selected.label == '#Selection') {
+    if (selected.label == '$(list-flat) Selection') {
       return '#Selection '
     }
 
-    if (selected.label == '#Changes') {
+    if (selected.label == '$(git-pull-request-draft) Changes') {
       try {
         const workspace_folders = vscode.workspace.workspaceFolders
         if (!workspace_folders || workspace_folders.length == 0) {
@@ -134,7 +131,7 @@ export async function hash_sign_quick_pick(params: {
       continue
     }
 
-    if (selected.label == '#SavedContext') {
+    if (selected.label == '$(checklist) Saved context') {
       const workspace_root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath
       if (!workspace_root) {
         vscode.window.showErrorMessage(

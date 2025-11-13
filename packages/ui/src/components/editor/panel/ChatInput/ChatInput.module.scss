@@ -175,6 +175,10 @@
     content: '\ebdb';
   }
 
+  &--saved-context &__icon::before {
+    content: '\eab3';
+  }
+
   &--selection &__icon::before {
     content: '\eb84';
   }

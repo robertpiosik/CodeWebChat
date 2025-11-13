@@ -47,28 +47,41 @@ export const get_highlighted_text = (params: {
   has_active_selection: boolean
   context_file_paths: string[]
 }): string => {
+  const saved_context_regex_part =
+    '#SavedContext:(?:WorkspaceState|JSON)\\s+"[^"]+"'
   if (params.is_in_code_completions_mode) {
-    const regex = /(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")/g
+    const regex = new RegExp(`(${saved_context_regex_part})`, 'g')
     const parts = params.text.split(regex)
     return parts
       .map((part) => {
-        if (
-          part &&
-          /^#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
-        ) {
-          return `<span class="${
-            styles['selection-keyword']
-          }" contentEditable="false" data-type="selection-keyword">${escape_html(
-            part
-          )}</span>`
+        const saved_context_match = part.match(
+          /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
+        )
+        if (part && saved_context_match) {
+          const context_type = saved_context_match[1]
+          const context_name = saved_context_match[2]
+          return `<span class="${cn(
+            styles['keyword'],
+            styles['keyword--saved-context']
+          )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${escape_html(
+            context_type
+          )}" data-context-name="${escape_html(
+            context_name
+          )}" title="Saved Context: ${escape_html(
+            context_name
+          )}"><span class="${styles['keyword__icon']}"></span><span class="${
+            styles['keyword__text']
+          }">Saved context ${escape_html(context_name)}</span></span>`
         }
         return process_text_part_for_files(part, params.context_file_paths)
       })
       .join('')
   }
 
-  const regex =
-    /(#Selection|#Changes:[^\s,;:!?]+|#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")/g
+  const regex = new RegExp(
+    `(#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part})`,
+    'g'
+  )
   const parts = params.text.split(regex)
 
   return parts
@@ -92,15 +105,24 @@ export const get_highlighted_text = (params: {
           styles['keyword__text']
         }">Changes</span></span>`
       }
-      if (
-        part &&
-        /^#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+"$/.test(part)
-      ) {
-        return `<span class="${
-          styles['selection-keyword']
-        }" contentEditable="false" data-type="selection-keyword">${escape_html(
-          part
-        )}</span>`
+      const saved_context_match = part.match(
+        /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
+      )
+      if (part && saved_context_match) {
+        const context_type = saved_context_match[1]
+        const context_name = saved_context_match[2]
+        return `<span class="${cn(
+          styles['keyword'],
+          styles['keyword--saved-context']
+        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${escape_html(
+          context_type
+        )}" data-context-name="${escape_html(
+          context_name
+        )}" title="Saved Context: ${escape_html(context_name)}"><span class="${
+          styles['keyword__icon']
+        }"></span><span class="${
+          styles['keyword__text']
+        }">Saved context ${escape_html(context_name)}</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)
