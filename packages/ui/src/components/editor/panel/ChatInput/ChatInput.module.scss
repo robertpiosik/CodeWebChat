@@ -163,14 +163,11 @@
     cursor: pointer;
   }
 
-  &__text {
-  }
-
   &--file &__icon::before {
     content: '\ea7b';
   }
 
-  &--file &__text {
+  &--file {
     cursor: pointer;
   }
 
