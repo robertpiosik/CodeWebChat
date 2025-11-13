@@ -25,7 +25,7 @@ export const get_display_text = (
         return `Changes: ${branch_name}`
       }
       if (saved_context_keyword) {
-        return `Saved context: ${context_name}`
+        return `Context: ${context_name}`
       }
       return match
     }

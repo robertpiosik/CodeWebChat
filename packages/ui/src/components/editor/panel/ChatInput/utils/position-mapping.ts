@@ -33,7 +33,7 @@ export const map_display_pos_to_raw_pos = (
       display_match_length = 'Selection'.length
       is_replacement_match = true
     } else if (saved_context_keyword) {
-      display_match_length = `Saved context: ${context_name}`.length
+      display_match_length = `Context: ${context_name}`.length
       is_replacement_match = true
     }
 
@@ -104,7 +104,7 @@ export const map_raw_pos_to_display_pos = (
       display_match_length = 'Selection'.length
       is_replacement_match = true
     } else if (saved_context_keyword) {
-      display_match_length = `Saved context: ${context_name}`.length
+      display_match_length = `Context: ${context_name}`.length
       is_replacement_match = true
     }
 

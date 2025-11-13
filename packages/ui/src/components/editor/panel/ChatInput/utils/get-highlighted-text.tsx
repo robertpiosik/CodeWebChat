@@ -67,11 +67,11 @@ export const get_highlighted_text = (params: {
             context_type
           )}" data-context-name="${escape_html(
             context_name
-          )}" title="Saved Context: ${escape_html(
-            context_name
-          )}"><span class="${styles['keyword__icon']}"></span><span class="${
+          )}" title="Context: ${escape_html(context_name)}"><span class="${
+            styles['keyword__icon']
+          }"></span><span class="${
             styles['keyword__text']
-          }">Saved context: ${escape_html(context_name)}</span></span>`
+          }">Context: ${escape_html(context_name)}</span></span>`
         }
         return process_text_part_for_files(part, params.context_file_paths)
       })
@@ -118,11 +118,11 @@ export const get_highlighted_text = (params: {
           context_type
         )}" data-context-name="${escape_html(
           context_name
-        )}" title="Saved Context: ${escape_html(context_name)}"><span class="${
+        )}" title="Context: ${escape_html(context_name)}"><span class="${
           styles['keyword__icon']
         }"></span><span class="${
           styles['keyword__text']
-        }">Saved context: ${escape_html(context_name)}</span></span>`
+        }">Context: ${escape_html(context_name)}</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)
