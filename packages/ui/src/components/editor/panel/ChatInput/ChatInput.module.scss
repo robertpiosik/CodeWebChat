@@ -164,11 +164,14 @@
   }
 
   &__text {
-    cursor: pointer;
   }
 
   &--file &__icon::before {
     content: '\ea7b';
+  }
+
+  &--file &__text {
+    cursor: pointer;
   }
 
   &--changes &__icon::before {
