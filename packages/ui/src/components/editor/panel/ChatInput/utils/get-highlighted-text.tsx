@@ -23,15 +23,14 @@ const process_text_part_for_files = (
         const file_path = part
         if (context_file_paths.includes(file_path)) {
           const filename = file_path.split('/').pop() || file_path
-          return `<span class="${
-            styles['file-keyword']
-          }" contentEditable="false" data-type="file-keyword" title="${escape_html(
+          return `<span class="${cn(
+            styles['keyword'],
+            styles['keyword--file']
+          )}" contentEditable="false" data-type="file-keyword" title="${escape_html(
             file_path
-          )}"><span class="${
-            styles['file-keyword__icon']
-          }"></span><span class="${styles['file-keyword__text']}">${escape_html(
-            filename
-          )}</span></span>`
+          )}"><span class="${styles['keyword__icon']}"></span><span class="${
+            styles['keyword__text']
+          }">${escape_html(filename)}</span></span>`
         }
         // If not a context file, return with backticks
         return `\`${escape_html(file_path)}\``
@@ -75,19 +74,23 @@ export const get_highlighted_text = (params: {
   return parts
     .map((part) => {
       if (part === '#Selection') {
-        const className = cn(styles['selection-keyword'], {
-          [styles['selection-keyword--error']]: !params.has_active_selection
+        const className = cn(styles['keyword'], styles['keyword--selection'], {
+          [styles['keyword--selection-error']]: !params.has_active_selection
         })
-        return `<span class="${className}" contentEditable="false" data-type="selection-keyword">${escape_html(
-          part
-        )}</span>`
+        return `<span class="${className}" contentEditable="false" data-type="selection-keyword" title="Selection"><span class="${styles['keyword__icon']}"></span><span class="${styles['keyword__text']}">Selection</span></span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
-        return `<span class="${
-          styles['selection-keyword']
-        }" contentEditable="false" data-type="selection-keyword">${escape_html(
-          part
-        )}</span>`
+        const branch_name = part.substring('#Changes:'.length)
+        return `<span class="${cn(
+          styles['keyword'],
+          styles['keyword--changes']
+        )}" contentEditable="false" data-type="changes-keyword" data-branch-name="${escape_html(
+          branch_name
+        )}" title="Diff with ${escape_html(branch_name)}"><span class="${
+          styles['keyword__icon']
+        }"></span><span class="${
+          styles['keyword__text']
+        }">Changes</span></span>`
       }
       if (
         part &&

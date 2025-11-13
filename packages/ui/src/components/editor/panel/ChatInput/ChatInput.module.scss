@@ -133,7 +133,7 @@
   }
 }
 
-.file-keyword {
+.keyword {
   font-size: var(--font-size-12px);
   background-color: color-mix(
     in srgb,
@@ -153,7 +153,6 @@
 
     &::before {
       font-family: 'codicon';
-      content: '\ea7b';
       font-size: var(--font-size-12px);
       transition: none;
     }
@@ -166,6 +165,26 @@
 
   &__text {
     cursor: pointer;
+  }
+
+  &--file &__icon::before {
+    content: '\ea7b';
+  }
+
+  &--changes &__icon::before {
+    content: '\ebdb';
+  }
+
+  &--selection &__icon::before {
+    content: '\eb84';
+  }
+
+  &--selection-error {
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-charts-red) 20%,
+      transparent
+    );
   }
 }
 

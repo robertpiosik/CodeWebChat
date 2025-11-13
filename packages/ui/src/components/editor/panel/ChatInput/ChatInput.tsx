@@ -12,6 +12,10 @@ import {
   get_caret_position_from_div,
   set_caret_position_for_div
 } from './utils/caret'
+import {
+  map_display_pos_to_raw_pos,
+  map_raw_pos_to_display_pos
+} from './utils/position-mapping'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff'
 
@@ -45,90 +49,6 @@ export type ChatInputProps = {
   on_go_to_file?: (file_path: string) => void
 }
 
-const map_display_pos_to_raw_pos = (
-  display_pos: number,
-  raw_text: string,
-  context_file_paths: string[]
-): number => {
-  let raw_pos = 0
-  let current_display_pos = 0
-  let last_raw_index = 0
-
-  const regex = /`([^\s`]*\.[^\s`]+)`/g
-  let match
-
-  while ((match = regex.exec(raw_text)) !== null) {
-    const file_path = match[1]
-    if (context_file_paths.includes(file_path)) {
-      const filename = file_path.split('/').pop() || file_path
-      const raw_match_length = match[0].length
-      const display_match_length = filename.length
-
-      const text_before_length = match.index - last_raw_index
-
-      if (display_pos <= current_display_pos + text_before_length) {
-        return raw_pos + (display_pos - current_display_pos)
-      }
-
-      current_display_pos += text_before_length
-      raw_pos += text_before_length
-
-      if (display_pos <= current_display_pos + display_match_length) {
-        const pos_in_filename = display_pos - current_display_pos
-        if (pos_in_filename < display_match_length) {
-          // Cursor is inside the displayed filename. Map to the start of the raw path string.
-          return raw_pos
-        } else {
-          // Cursor is at the end of the displayed filename. Map to the end of the raw path string.
-          return raw_pos + raw_match_length
-        }
-      }
-
-      current_display_pos += display_match_length
-      raw_pos += raw_match_length
-      last_raw_index = regex.lastIndex
-    }
-  }
-
-  // Cursor is in the text after all matches
-  return raw_pos + (display_pos - current_display_pos)
-}
-
-const map_raw_pos_to_display_pos = (
-  raw_pos: number,
-  raw_text: string,
-  context_file_paths: string[]
-): number => {
-  let display_pos = 0
-  let current_raw_pos = 0
-  let last_raw_index = 0
-
-  const regex = /`([^\s`]*\.[^\s`]+)`/g
-  let match
-
-  while ((match = regex.exec(raw_text)) !== null) {
-    const file_path = match[1]
-    if (context_file_paths.includes(file_path)) {
-      const filename = file_path.split('/').pop() || file_path
-      const raw_match_length = match[0].length
-      const display_match_length = filename.length
-      const text_before_length = match.index - last_raw_index
-      if (raw_pos <= current_raw_pos + text_before_length) {
-        return display_pos + (raw_pos - current_raw_pos)
-      }
-      current_raw_pos += text_before_length
-      display_pos += text_before_length
-      if (raw_pos <= current_raw_pos + raw_match_length) {
-        return display_pos + display_match_length
-      }
-      current_raw_pos += raw_match_length
-      display_pos += display_match_length
-      last_raw_index = regex.lastIndex
-    }
-  }
-  return display_pos + (raw_pos - current_raw_pos)
-}
-
 export const ChatInput: React.FC<ChatInputProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
@@ -146,7 +66,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     handle_submit,
     handle_key_down,
     is_history_enabled
-  } = use_handlers(props)
+  } = use_handlers(props, input_ref)
 
   const is_mac = useMemo(() => {
     if (typeof navigator == 'undefined') return false
@@ -317,188 +237,96 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     is_history_enabled
   ])
 
-  const custom_handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key == 'Tab' && !e.shiftKey) {
-      const value = e.currentTarget.textContent ?? ''
-      const selection_start = caret_position
-      const text_before_cursor = value.substring(0, selection_start)
+  const apply_deletion = (start_pos: number, end_pos: number) => {
+    let leading_part = props.value.substring(0, start_pos)
+    let trailing_part = props.value.substring(end_pos)
 
-      if (selection_start == 0 || /\s$/.test(text_before_cursor)) {
-        e.preventDefault()
-        props.on_at_sign_click()
-        return
-      }
-
-      e.preventDefault()
-      const match = text_before_cursor.match(/(\S+)$/)
-      if (match) {
-        props.on_at_sign_click(match[1])
-        return
-      }
+    // Handle spacing
+    if (leading_part.endsWith(' ')) {
+      leading_part = leading_part.slice(0, -1)
+    } else if (trailing_part.startsWith(' ')) {
+      trailing_part = trailing_part.substring(1)
     }
 
-    if (e.key == 'Backspace') {
-      const selection = window.getSelection()
-      if (
-        input_ref.current &&
-        selection &&
-        selection.rangeCount > 0 &&
-        selection.isCollapsed
-      ) {
-        const range = selection.getRangeAt(0)
-        let node_before_cursor: Node | null = null
+    const new_value = leading_part + trailing_part
+    const new_raw_cursor_pos = leading_part.length
+    props.on_change(new_value)
 
-        if (
-          range.startContainer.nodeType === Node.TEXT_NODE &&
-          range.startOffset === 0
-        ) {
-          node_before_cursor = range.startContainer.previousSibling
-        } else if (
-          range.startContainer.nodeType === Node.ELEMENT_NODE &&
-          range.startOffset > 0
-        ) {
-          node_before_cursor =
-            range.startContainer.childNodes[range.startOffset - 1]
-        }
+    setTimeout(() => {
+      if (input_ref.current) {
+        const display_pos = map_raw_pos_to_display_pos(
+          new_raw_cursor_pos,
+          new_value,
+          props.context_file_paths ?? []
+        )
+        set_caret_position_for_div(input_ref.current, display_pos)
+      }
+    }, 0)
+  }
 
-        if (
-          node_before_cursor &&
-          node_before_cursor.nodeType === Node.ELEMENT_NODE
-        ) {
-          const el = node_before_cursor as HTMLElement
-          if (el.classList.contains(styles['file-keyword'])) {
-            e.preventDefault()
+  const handle_keyword_deletion = (clicked_element: HTMLElement) => {
+    const input_element = input_ref.current
+    if (!input_element) return
 
-            const display_pos = get_caret_position_from_div(input_ref.current)
-            const raw_pos = map_display_pos_to_raw_pos(
-              display_pos,
-              props.value,
-              props.context_file_paths ?? []
-            )
+    // Find the keyword element
+    const keyword_element = clicked_element.closest(
+      `.${styles['keyword']}`
+    ) as HTMLElement
 
-            let start_of_path = -1
-            let end_of_path = -1
+    if (!keyword_element) return
 
-            end_of_path = raw_pos - 1
-            if (end_of_path >= 0 && props.value[end_of_path] === '`') {
-              const text_before = props.value.substring(0, end_of_path)
-              start_of_path = text_before.lastIndexOf('`')
-            }
+    // Check if it's a file keyword
+    if (keyword_element.classList.contains(styles['keyword--file'])) {
+      const file_path = keyword_element.getAttribute('title')
+      if (!file_path || !props.context_file_paths?.includes(file_path)) return
 
-            if (
-              start_of_path !== -1 &&
-              end_of_path !== -1 &&
-              start_of_path < end_of_path
-            ) {
-              const path_in_backticks = props.value.substring(
-                start_of_path + 1,
-                end_of_path
-              )
-              if (props.context_file_paths?.includes(path_in_backticks)) {
-                const new_value =
-                  props.value.substring(0, start_of_path) +
-                  props.value.substring(end_of_path + 1)
-                const new_raw_cursor_pos = start_of_path
-                props.on_change(new_value)
+      // Find this file path in the raw value
+      const search_pattern = `\`${file_path}\``
+      const start_index = props.value.indexOf(search_pattern)
 
-                setTimeout(() => {
-                  if (input_ref.current) {
-                    const display_pos = map_raw_pos_to_display_pos(
-                      new_raw_cursor_pos,
-                      new_value,
-                      props.context_file_paths ?? []
-                    )
-                    set_caret_position_for_div(input_ref.current, display_pos)
-                  }
-                }, 0)
-                return
-              }
-            }
-          }
-        }
+      if (start_index !== -1) {
+        apply_deletion(start_index, start_index + search_pattern.length)
       }
     }
+    // Check if it's a changes keyword
+    else if (keyword_element.classList.contains(styles['keyword--changes'])) {
+      const branch_name = keyword_element.dataset.branchName
+      if (!branch_name) return
 
-    handle_key_down(e)
+      const search_pattern = `#Changes:${branch_name}`
+      const start_index = props.value.indexOf(search_pattern)
+
+      if (start_index !== -1) {
+        apply_deletion(start_index, start_index + search_pattern.length)
+      }
+    }
+    // Check if it's a selection keyword
+    else if (keyword_element.classList.contains(styles['keyword--selection'])) {
+      const search_pattern = '#Selection'
+      const start_index = props.value.indexOf(search_pattern)
+
+      if (start_index !== -1) {
+        apply_deletion(start_index, start_index + search_pattern.length)
+      }
+    }
   }
 
   const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement
-    const icon_element = target.closest(`.${styles['file-keyword__icon']}`)
-    const text_element = target.closest(`.${styles['file-keyword__text']}`)
+    const icon_element = target.closest(`.${styles['keyword__icon']}`)
+    const text_element = target.closest(`.${styles['keyword__text']}`)
 
     if (icon_element) {
       e.preventDefault()
       e.stopPropagation()
-
-      const input_element = input_ref.current
-      if (!input_element) return
-
-      // Logic for deletion based on caret position
-      const display_pos = get_caret_position_from_div(input_element)
-      const raw_pos = map_display_pos_to_raw_pos(
-        display_pos,
-        props.value,
-        props.context_file_paths ?? []
-      )
-
-      let start_of_path = -1
-      let end_of_path = -1
-
-      if (props.value[raw_pos] == '`') {
-        // case: raw_pos at start
-        start_of_path = raw_pos
-        end_of_path = props.value.indexOf('`', start_of_path + 1)
-      } else if (raw_pos > 0 && props.value[raw_pos - 1] == '`') {
-        // case: raw_pos at end
-        end_of_path = raw_pos - 1
-        const text_before = props.value.substring(0, end_of_path)
-        start_of_path = text_before.lastIndexOf('`')
-      }
-
-      if (
-        start_of_path != -1 &&
-        end_of_path != -1 &&
-        start_of_path < end_of_path
-      ) {
-        const path_in_backticks = props.value.substring(
-          start_of_path + 1,
-          end_of_path
-        )
-        if (props.context_file_paths?.includes(path_in_backticks)) {
-          let leading_part = props.value.substring(0, start_of_path)
-          let trailing_part = props.value.substring(end_of_path + 1)
-
-          // Handle spacing.
-          if (leading_part.endsWith(' ')) {
-            leading_part = leading_part.slice(0, -1)
-          } else if (trailing_part.startsWith(' ')) {
-            trailing_part = trailing_part.substring(1)
-          }
-
-          const new_value = leading_part + trailing_part
-          const new_raw_cursor_pos = leading_part.length
-          props.on_change(new_value)
-
-          setTimeout(() => {
-            if (input_ref.current) {
-              const display_pos = map_raw_pos_to_display_pos(
-                new_raw_cursor_pos,
-                new_value,
-                props.context_file_paths ?? []
-              )
-              set_caret_position_for_div(input_ref.current, display_pos)
-            }
-          }, 0)
-        }
-      }
+      handle_keyword_deletion(icon_element as HTMLElement)
     } else if (text_element) {
       // Clicking on file name text should open the file
       e.preventDefault()
       e.stopPropagation()
 
       const file_keyword_element = text_element.closest<HTMLElement>(
-        `.${styles['file-keyword']}`
+        `.${styles['keyword--file']}`
       )
       if (file_keyword_element) {
         const file_path = file_keyword_element.getAttribute('title')
@@ -565,7 +393,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
           contentEditable={true}
           suppressContentEditableWarning={true}
           onInput={handle_input_change}
-          onKeyDown={custom_handle_key_down}
+          onKeyDown={handle_key_down}
           onClick={handle_input_click}
           className={cn(styles.input, {
             [styles['input-with-tab-hint']]: show_tab_hint,
