@@ -31,6 +31,11 @@
   &__collapse > span {
     cursor: pointer;
     font-weight: 500;
+    font-size: var(--font-size-12px);
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -38,7 +43,6 @@
   display: flex;
   align-items: center;
   margin: var(--padding-2px) var(--padding-12px);
-  gap: var(--padding-8px);
   padding-right: var(--padding-9px);
   position: relative;
 
@@ -54,6 +58,7 @@
     flex: 1;
     height: 1px;
     background-color: var(--cwc-border-color-dimmed);
+    margin: 0 10px 0 4px;
   }
 
   &__tokens {
