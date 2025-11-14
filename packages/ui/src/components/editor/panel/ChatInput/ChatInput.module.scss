@@ -141,34 +141,62 @@
     transparent
   );
   border-radius: var(--border-radius-4px);
-  padding: 0 var(--padding-4px) 0 var(--padding-3px);
   display: inline-flex;
   align-items: center;
-  gap: var(--padding-3px);
   line-height: 1.2;
   transform: translateY(1.5px);
 
   &__icon {
     display: flex;
+    padding: 0 var(--padding-3px);
+    border-radius: var(--border-radius-4px);
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
 
     &::before {
       font-family: 'codicon';
       font-size: var(--font-size-12px);
       transition: none;
+      border-radius: var(--border-radius-4px);
     }
+
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
+  }
+
+  &__text {
+    border-radius: var(--border-radius-4px);
+    padding-right: var(--padding-4px);
+    padding-left: var(--padding-4px);
+    margin-left: -4px;
   }
 
   &:hover &__icon::before {
     content: '\ea76';
-    cursor: pointer;
   }
 
   &--file &__icon::before {
     content: '\ea7b';
   }
 
-  &--file {
+  &--file &__text {
     cursor: pointer;
+  }
+
+  &--file &__text {
+    &:hover {
+      background-color: color-mix(
+        in srgb,
+        var(--vscode-charts-blue) 30%,
+        transparent
+      );
+    }
   }
 
   &--changes &__icon::before {
@@ -186,7 +214,16 @@
   &--selection-error {
     background-color: color-mix(
       in srgb,
-      var(--vscode-charts-red) 20%,
+      var(--vscode-charts-red) 30%,
+      transparent
+    );
+  }
+
+  // hover on close icon of selection error
+  &--selection-error &__icon:hover {
+    background-color: color-mix(
+      in srgb,
+      var(--vscode-charts-red) 40%,
       transparent
     );
   }

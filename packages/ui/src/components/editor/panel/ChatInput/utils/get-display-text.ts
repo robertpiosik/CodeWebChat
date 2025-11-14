@@ -22,10 +22,10 @@ export const get_display_text = (
       }
       if (changes_keyword) {
         const branch_name = changes_keyword.substring('#Changes:'.length)
-        return `Changes: ${branch_name}`
+        return `Diff with ${branch_name}`
       }
       if (saved_context_keyword) {
-        return `Context: ${context_name}`
+        return `Context "${context_name}"`
       }
       return match
     }

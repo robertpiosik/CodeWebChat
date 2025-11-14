@@ -1,14 +1,6 @@
 import cn from 'classnames'
 import styles from '../ChatInput.module.scss'
 
-const escape_html = (str: string): string =>
-  str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-
 const process_text_part_for_files = (
   text: string,
   context_file_paths: string[]
@@ -26,17 +18,17 @@ const process_text_part_for_files = (
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--file']
-          )}" contentEditable="false" data-type="file-keyword" title="${escape_html(
-            file_path
-          )}"><span class="${styles['keyword__icon']}"></span><span class="${
+          )}" contentEditable="false" data-type="file-keyword" title="${file_path}"><span class="${
+            styles['keyword__icon']
+          }"></span><span class="${
             styles['keyword__text']
-          }">${escape_html(filename)}</span></span>`
+          }">${filename}</span></span>`
         }
         // If not a context file, return with backticks
-        return `\`${escape_html(file_path)}\``
+        return `\`${file_path}\``
       }
       // part at even index is regular text
-      return escape_html(part)
+      return part
     })
     .join('')
 }
@@ -63,15 +55,11 @@ export const get_highlighted_text = (params: {
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--saved-context']
-          )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${escape_html(
-            context_type
-          )}" data-context-name="${escape_html(
-            context_name
-          )}" title="Context: ${escape_html(context_name)}"><span class="${
+          )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${context_name}" title="Context &quot;${context_name}&quot;"><span class="${
             styles['keyword__icon']
           }"></span><span class="${
             styles['keyword__text']
-          }">Context: ${escape_html(context_name)}</span></span>`
+          }">Context "${context_name}"</span></span>`
         }
         return process_text_part_for_files(part, params.context_file_paths)
       })
@@ -86,24 +74,25 @@ export const get_highlighted_text = (params: {
 
   return parts
     .map((part) => {
-      if (part === '#Selection') {
+      if (part == '#Selection') {
         const className = cn(styles['keyword'], styles['keyword--selection'], {
           [styles['keyword--selection-error']]: !params.has_active_selection
         })
-        return `<span class="${className}" contentEditable="false" data-type="selection-keyword" title="Selection"><span class="${styles['keyword__icon']}"></span><span class="${styles['keyword__text']}">Selection</span></span>`
+        const title = !params.has_active_selection
+          ? 'Missing text selection'
+          : ''
+        return `<span class="${className}" contentEditable="false" data-type="selection-keyword" title="${title}"><span class="${styles['keyword__icon']}"></span><span class="${styles['keyword__text']}">Selection</span></span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
         const branch_name = part.substring('#Changes:'.length)
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--changes']
-        )}" contentEditable="false" data-type="changes-keyword" data-branch-name="${escape_html(
-          branch_name
-        )}" title="Diff with ${escape_html(branch_name)}"><span class="${
+        )}" contentEditable="false" data-type="changes-keyword" data-branch-name="${branch_name}"><span class="${
           styles['keyword__icon']
         }"></span><span class="${
           styles['keyword__text']
-        }">Changes: ${escape_html(branch_name)}</span></span>`
+        }">Diff with ${branch_name}</span></span>`
       }
       const saved_context_match = part.match(
         /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
@@ -114,15 +103,11 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--saved-context']
-        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${escape_html(
-          context_type
-        )}" data-context-name="${escape_html(
-          context_name
-        )}" title="Context: ${escape_html(context_name)}"><span class="${
+        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${context_name}" title="Context &quot;${context_name}&quot;"><span class="${
           styles['keyword__icon']
         }"></span><span class="${
           styles['keyword__text']
-        }">Context: ${escape_html(context_name)}</span></span>`
+        }">Context "${context_name}"</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)
