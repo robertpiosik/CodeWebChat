@@ -55,7 +55,7 @@ export const get_highlighted_text = (params: {
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--saved-context']
-          )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${context_name}" title="Context &quot;${context_name}&quot;"><span class="${
+          )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${context_name}"><span class="${
             styles['keyword__icon']
           }"></span><span class="${
             styles['keyword__text']
@@ -103,7 +103,7 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--saved-context']
-        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${context_name}" title="Context &quot;${context_name}&quot;"><span class="${
+        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${context_name}"><span class="${
           styles['keyword__icon']
         }"></span><span class="${
           styles['keyword__text']
