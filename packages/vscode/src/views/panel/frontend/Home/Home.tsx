@@ -78,15 +78,23 @@ export const Home: React.FC<Props> = (props) => {
                 text_icon="CODE_WEB_CHAT_TEXT"
                 label="Visit website"
               />
+              <HomeLinkButton
+                url="https://buymeacoffee.com/robertpiosik"
+                background_color="#ffdd00"
+                fill_color="black"
+                text_icon="BUY_ME_A_COFFEE_TEXT"
+                logo_icon="BUY_ME_A_COFFEE_LOGO"
+                label="Support author"
+              />
+              <HomeLinkButton
+                url="https://discord.gg/KJySXsrSX5"
+                background_color="#5765f2"
+                fill_color="white"
+                logo_icon="DISCORD_LOGO"
+                text_icon="DISCORD_TEXT"
+                label="Get involved"
+              />
               <div className={styles['inner__buttons__donations']}>
-                <HomeLinkButton
-                  url="https://buymeacoffee.com/robertpiosik"
-                  background_color="#ffdd00"
-                  fill_color="black"
-                  text_icon="BUY_ME_A_COFFEE_TEXT"
-                  logo_icon="BUY_ME_A_COFFEE_LOGO"
-                  label="Support author"
-                />
                 <Donations
                   donations={donations}
                   is_fetching={is_fetching}

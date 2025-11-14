@@ -27,6 +27,14 @@
       height: 16px;
     }
 
+    &--cwc {
+      background-color: black;
+
+      > svg {
+        fill: white;
+      }
+    }
+
     &--buy-me-a-coffee {
       background-color: #f7d600;
 
@@ -61,33 +69,5 @@
     &:disabled {
       opacity: var(--disabled-opacity);
     }
-  }
-
-  &__heart {
-    position: absolute;
-    z-index: 11;
-    bottom: 32px;
-    animation-name: float-up;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards;
-    pointer-events: none;
-    opacity: 0;
-  }
-}
-
-@keyframes float-up {
-  from {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  40% {
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-40px);
-    opacity: 0;
   }
 }

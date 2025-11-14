@@ -10,7 +10,8 @@ import Copilot from '../../../../assets/icons/copilot.svg'
 import CurlyBraces from '../../../../assets/icons/curly-braces.svg'
 import GithubCopilot from '../../../../assets/icons/github-copilot.svg'
 import DeepSeek from '../../../../assets/icons/deepseek.svg'
-import Discord from '../../../../assets/icons/discord.svg'
+import DiscordLogo from '../../../../assets/icons/discord-logo.svg'
+import DiscordText from '../../../../assets/icons/discord-text.svg'
 import Doubao from '../../../../assets/icons/doubao.svg'
 import Gemini from '../../../../assets/icons/gemini.svg'
 import Grok from '../../../../assets/icons/grok.svg'
@@ -42,7 +43,8 @@ export namespace Icon {
     | 'COPILOT'
     | 'CURLY_BRACES'
     | 'DEEPSEEK'
-    | 'DISCORD'
+    | 'DISCORD_LOGO'
+    | 'DISCORD_TEXT'
     | 'DOUBAO'
     | 'GEMINI'
     | 'GITHUB_COPILOT'
@@ -104,8 +106,11 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'DEEPSEEK':
       icon = <DeepSeek />
       break
-    case 'DISCORD':
-      icon = <Discord />
+    case 'DISCORD_LOGO':
+      icon = <DiscordLogo />
+      break
+    case 'DISCORD_TEXT':
+      icon = <DiscordText />
       break
     case 'DOUBAO':
       icon = <Doubao />

@@ -16,8 +16,6 @@ export const Footer: React.FC = () => {
     commit_button_enabling_trigger_count
   } = useContext(LayoutContext)
 
-  const [is_buy_me_coffee_hovered, set_is_buy_me_coffee_hovered] =
-    useState(false)
   const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
     useState(false)
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
@@ -55,12 +53,20 @@ export const Footer: React.FC = () => {
           <a
             className={cn(
               styles['footer__icon-button'],
+              styles['footer__icon-button--cwc']
+            )}
+            href="https://codeweb.chat"
+            title="https://codeweb.chat"
+          >
+            <Icon variant="CODE_WEB_CHAT_LOGO" />
+          </a>
+          <a
+            className={cn(
+              styles['footer__icon-button'],
               styles['footer__icon-button--buy-me-a-coffee']
             )}
             href="https://buymeacoffee.com/robertpiosik"
-            title="Support author"
-            onMouseEnter={() => set_is_buy_me_coffee_hovered(true)}
-            onMouseLeave={() => set_is_buy_me_coffee_hovered(false)}
+            title="https://buymeacoffee.com/robertpiosik"
           >
             <Icon variant="BUY_ME_A_COFFEE_LOGO" />
           </a>
@@ -70,9 +76,9 @@ export const Footer: React.FC = () => {
               styles['footer__icon-button--discord']
             )}
             href="https://discord.gg/KJySXsrSX5"
-            title="Join our Discord server!"
+            title="https://discord.gg/KJySXsrSX5"
           >
-            <Icon variant="DISCORD" />
+            <Icon variant="DISCORD_LOGO" />
           </a>
         </div>
 
@@ -113,24 +119,6 @@ export const Footer: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {is_buy_me_coffee_hovered &&
-        Array.from({ length: 5 }).map((_, i) => (
-          <span
-            key={i}
-            className={styles.footer__heart}
-            style={
-              {
-                left: `${18 + (Math.random() - 0.5) * 20}px`,
-                animationDelay: `${i == 0 ? 0 : (i + Math.random()) / 3}s`,
-                animationDuration: `${2 - Math.random()}s`,
-                fontSize: `${10 + Math.random() * 8}px`
-              } as React.CSSProperties
-            }
-          >
-            ❤️
-          </span>
-        ))}
     </>
   )
 }
