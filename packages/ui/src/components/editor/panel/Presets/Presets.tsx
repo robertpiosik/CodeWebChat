@@ -224,7 +224,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   />
                   <IconButton
                     codicon_icon="file-media"
-                    title="Pause for media upload"
+                    title="Run and pause for media upload"
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_preset_click(preset.name, true)
@@ -773,7 +773,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       {preset.chatbot && (
                         <IconButton
                           codicon_icon="file-media"
-                          title="Pause for media upload"
+                          title="Run and pause for media upload"
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_preset_click(preset.name, true)
