@@ -208,6 +208,7 @@
     display: flex;
 
     &__button {
+      position: relative;
       --size: 20px;
       display: flex;
       align-items: center;
@@ -224,6 +225,41 @@
       > svg {
         height: 11px;
         fill: var(--vscode-icon-foreground);
+      }
+    }
+
+    &__at-sign-warning {
+      position: absolute;
+      z-index: 1;
+      bottom: calc(100% + 3px);
+      left: 0;
+      transform: translateX(-4px);
+      font-size: var(--font-size-12px);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: var(--padding-4px);
+      padding: var(--padding-3px) var(--padding-6px);
+      border-radius: var(--border-radius-6px);
+      background-color: var(--vscode-quickInput-background);
+      border: 1px solid var(--vscode-widget-border);
+      box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+
+      &::before {
+        font-family: 'codicon';
+        content: '\ea6c';
+        color: var(--vscode-problemsWarningIcon-foreground);
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 8px;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid var(--vscode-quickInput-background);
+        filter: drop-shadow(0 1px 0.5px var(--vscode-widget-border));
       }
     }
   }

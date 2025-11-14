@@ -53,6 +53,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
+  const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
   const {
     is_dropdown_open,
     toggle_dropdown,
@@ -216,6 +217,15 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     return () =>
       document.removeEventListener('selectionchange', on_selection_change)
   }, [props.on_caret_position_change, props.value, props.context_file_paths])
+
+  useEffect(() => {
+    if (show_at_sign_tooltip) {
+      const timer = setTimeout(() => {
+        set_show_at_sign_tooltip(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [show_at_sign_tooltip])
 
   const placeholder = useMemo(() => {
     const active_history = props.chat_history
@@ -439,11 +449,25 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             }}
           >
             <button
-              onClick={() => props.on_at_sign_click()}
+              onClick={() => {
+                if (
+                  !props.context_file_paths ||
+                  props.context_file_paths.length === 0
+                ) {
+                  set_show_at_sign_tooltip(true)
+                } else {
+                  props.on_at_sign_click()
+                }
+              }}
               className={cn(styles['footer__left__button'])}
               title="Reference file"
             >
               <Icon variant="AT_SIGN" />
+              {show_at_sign_tooltip && (
+                <div className={styles['footer__left__at-sign-warning']}>
+                  Nothing is selected in context.
+                </div>
+              )}
             </button>
             {!props.is_in_code_completions_mode && (
               <button
