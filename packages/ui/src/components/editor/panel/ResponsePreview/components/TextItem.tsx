@@ -23,6 +23,9 @@ export const TextItem: FC<Props> = (props) => {
           <ReactMarkdown disallowedElements={['hr']}>
             {props.content}
           </ReactMarkdown>
+          <div className={styles.text__collapse}>
+            <span>Show less</span>
+          </div>
         </div>
       ) : (
         <div

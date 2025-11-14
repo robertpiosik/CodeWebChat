@@ -27,6 +27,11 @@
     display: flex;
     overflow: auto;
   }
+
+  &__collapse > span {
+    cursor: pointer;
+    font-weight: 500;
+  }
 }
 
 .hidden {

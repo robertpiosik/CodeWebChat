@@ -1,6 +1,7 @@
 .responses {
   margin: 0 var(--padding-16px);
   display: flex;
+  position: relative;
   flex-direction: column;
   border-top-left-radius: var(--border-radius-5px);
   border-top-right-radius: var(--border-radius-5px);
@@ -9,6 +10,7 @@
   padding-bottom: var(--padding-5px);
   margin-bottom: calc(var(--padding-5px) * -1);
   overflow: hidden;
+  background-color: var(--vscode-sideBar-background);
 
   &:hover {
     border-color: var(--cwc-border-color);
