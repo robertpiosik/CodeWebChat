@@ -4,6 +4,7 @@ import {
   MAIN_VIEW_TYPES,
   MainViewType
 } from '@/views/panel/types/home-view-type'
+import { use_is_narrow_viewport } from '@shared/hooks'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { Dropdown as UiDropdown } from '@ui/components/editor/panel/Dropdown'
 import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButton'
@@ -26,6 +27,7 @@ export const Header: React.FC<Props> = (props) => {
     number | undefined
   >(undefined)
   const header_ref = useRef<HTMLDivElement>(null)
+  const is_narrow_viewport = use_is_narrow_viewport(294)
   const header_left_ref = useRef<HTMLDivElement>(null)
 
   const handle_heading_click = () => {
@@ -92,7 +94,7 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.web_mode}
               on_change={props.on_web_mode_change}
               max_width={dropdown_max_width}
-              info="prompt type"
+              info={is_narrow_viewport ? undefined : 'prompt type'}
               title="Change prompt type"
             />
           )}
@@ -104,7 +106,7 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.api_mode}
               on_change={props.on_api_mode_change}
               max_width={dropdown_max_width}
-              info="prompt type"
+              info={is_narrow_viewport ? undefined : 'prompt type'}
               title="Change prompt type"
             />
           )}

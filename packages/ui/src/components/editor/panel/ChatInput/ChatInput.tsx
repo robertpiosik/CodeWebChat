@@ -5,8 +5,8 @@ import { Icon } from '../../common/Icon'
 import { get_highlighted_text } from './utils/get-highlighted-text'
 import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
-import { use_is_narrow_viewport } from './hooks/use-is-narrow-viewport'
 import { DropdownMenu } from '../../common/DropdownMenu'
+import { use_is_narrow_viewport } from '@shared/hooks'
 import { search_paths } from '@shared/utils/search-paths'
 import { get_display_text } from './utils/get-display-text'
 import {
@@ -55,7 +55,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   const container_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
   const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
-  const is_narrow_viewport = use_is_narrow_viewport()
+  const is_narrow_viewport = use_is_narrow_viewport(268)
   const {
     is_dropdown_open,
     toggle_dropdown,

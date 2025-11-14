@@ -154,7 +154,21 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(bufferutil@4.0.9)(utf-8-validate@6.0.5)(webpack-cli@5.1.4)(webpack@5.102.1)
 
-  packages/shared: {}
+  packages/shared:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.60
+        version: 18.3.18
+      '@types/react-dom':
+        specifier: ^18.2.19
+        version: 18.3.5(@types/react@18.3.18)
 
   packages/ui:
     dependencies:
