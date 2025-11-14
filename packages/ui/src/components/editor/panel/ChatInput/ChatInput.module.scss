@@ -282,6 +282,7 @@
       background-color: var(--vscode-quickInput-background);
       border: 1px solid var(--vscode-widget-border);
       box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+      pointer-events: none;
 
       &::before {
         font-family: 'codicon';

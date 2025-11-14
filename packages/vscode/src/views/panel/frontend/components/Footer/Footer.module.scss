@@ -69,5 +69,35 @@
     &:disabled {
       opacity: var(--disabled-opacity);
     }
+
+    &__text {
+      display: inline;
+    }
+
+    &__icon {
+      display: none !important;
+    }
+
+    @media (max-width: 293px) {
+      padding: 0;
+      width: var(--button-size);
+      justify-content: center;
+
+      &__text {
+        display: none;
+      }
+
+      &__icon {
+        display: inline !important;
+      }
+    }
+
+    &--no-shrink {
+      @media (max-width: 293px) {
+        padding: 0 var(--padding-7px);
+        width: auto;
+        justify-content: initial;
+      }
+    }
   }
 }

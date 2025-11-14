@@ -459,6 +459,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                   props.on_at_sign_click()
                 }
               }}
+              onMouseLeave={() => set_show_at_sign_tooltip(false)}
               className={cn(styles['footer__left__button'])}
               title="Reference file"
             >

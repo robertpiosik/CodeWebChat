@@ -85,7 +85,10 @@ export const Footer: React.FC = () => {
         <div>
           {is_apply_visible && (
             <button
-              className={styles['footer__action-button']}
+              className={cn(
+                styles['footer__action-button'],
+                styles['footer__action-button--no-shrink']
+              )}
               onClick={handle_apply_click}
               title={'Integrate copied chat response or a single code block'}
               disabled={is_apply_disabled_temporarily}
@@ -102,7 +105,16 @@ export const Footer: React.FC = () => {
               }
               disabled={!can_undo}
             >
-              Undo
+              <span className={styles['footer__action-button__text']}>
+                Undo
+              </span>
+              <span
+                className={cn(
+                  styles['footer__action-button__icon'],
+                  'codicon',
+                  'codicon-redo'
+                )}
+              />
             </button>
           )}
           <button
@@ -115,7 +127,16 @@ export const Footer: React.FC = () => {
             }
             disabled={!has_changes_to_commit || is_commit_disabled_temporarily}
           >
-            Commit
+            <span className={styles['footer__action-button__text']}>
+              Commit
+            </span>
+            <span
+              className={cn(
+                styles['footer__action-button__icon'],
+                'codicon',
+                'codicon-git-commit'
+              )}
+            />
           </button>
         </div>
       </div>
