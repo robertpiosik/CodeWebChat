@@ -46,17 +46,9 @@
   }
 
   &__line {
-    flex-grow: 1;
+    flex: 1;
     height: 1px;
     background-color: var(--cwc-border-color-dimmed);
-  }
-
-  &__icon {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--vscode-sideBar-background);
-    padding: 0 var(--padding-8px);
   }
 
   &__tokens {

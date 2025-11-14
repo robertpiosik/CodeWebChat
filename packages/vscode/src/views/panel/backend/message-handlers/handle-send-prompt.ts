@@ -286,7 +286,7 @@ async function show_presets_in_group_quick_pick(params: {
 
   const run_without_submission_button: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('file-media'),
-    tooltip: 'Pause for file upload'
+    tooltip: 'Pause for media upload'
   }
 
   quick_pick.buttons = [vscode.QuickInputButtons.Back, run_group_button]
@@ -545,7 +545,7 @@ async function show_preset_quick_pick(params: {
 
   const run_without_submission_button: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('file-media'),
-    tooltip: 'Pause for file upload'
+    tooltip: 'Pause for media upload'
   }
 
   const quick_pick = vscode.window.createQuickPick<
