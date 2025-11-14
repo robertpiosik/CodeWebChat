@@ -30,6 +30,7 @@ export const TextItem: FC<Props> = (props) => {
           className={styles.hidden}
           onClick={() => ref.current && props.on_toggle(ref.current)}
           title={props.content}
+          role="button"
         >
           <div className={styles.hidden__line} />
           <span className={styles.hidden__tokens}>
