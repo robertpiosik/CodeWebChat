@@ -96,6 +96,10 @@ export async function activate(context: vscode.ExtensionContext) {
       url: 'https://github.com/robertpiosik/CodeWebChat'
     }),
     feedback_command(),
+    open_url_command({
+      command: 'codeWebChat.twitter',
+      url: 'https://x.com/CodeWebChat'
+    }),
     vscode.commands.registerCommand(
       'codeWebChat.settings',
       (section?: string) => {

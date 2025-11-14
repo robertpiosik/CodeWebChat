@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "AI coding without agents (CWC)",
-  "version": "1.542.0",
+  "version": "1.543.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -132,6 +132,12 @@
         "title": "Feedback",
         "category": "Code Web Chat",
         "icon": "$(feedback)"
+      },
+      {
+        "command": "codeWebChat.twitter",
+        "title": "Twitter",
+        "category": "Code Web Chat",
+        "icon": "$(twitter)"
       },
       {
         "command": "codeWebChat.applyContext",
@@ -282,6 +288,10 @@
         },
         {
           "command": "codeWebChat.feedback",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.twitter",
           "when": "false"
         },
         {
@@ -446,12 +456,17 @@
         {
           "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
-          "group": "navigation@2"
+          "group": "navigation@1"
         },
         {
           "command": "codeWebChat.feedback",
           "when": "view == codeWebChatView",
-          "group": "navigation@1"
+          "group": "navigation@3"
+        },
+        {
+          "command": "codeWebChat.twitter",
+          "when": "view == codeWebChatView",
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [
