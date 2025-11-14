@@ -147,6 +147,7 @@ Generate meaningful summaries of changes adhering to your style.
 - `Code Web Chat: Apply Context` - Apply a saved context to either replace or merge with the currently checked files.
 - `Code Web Chat: Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.
 - `Code Web Chat: Copy Context of Open Editors` - Copy XML-formatted checked files from the Open Editors view to the clipboard.
+- `Code Web Chat: Find Paths in Clipboard` - Select files based on paths found in the clipboard text.
 
 ## Enterprise security
 

@@ -27,8 +27,6 @@ export async function handle_workspace_state_source(
       tooltip: 'Delete'
     }
 
-    const BACK_LABEL = '$(arrow-left) Back'
-
     const create_quick_pick_items = (contexts: SavedContext[]) => {
       const context_items = contexts.map((context, index) => {
         const buttons = [edit_button, delete_button]
@@ -45,17 +43,14 @@ export async function handle_workspace_state_source(
           index
         }
       })
-
-      return [
-        { label: BACK_LABEL },
-        { label: '', kind: vscode.QuickPickItemKind.Separator },
-        ...context_items
-      ]
+      return context_items
     }
 
     const quick_pick = vscode.window.createQuickPick()
+    quick_pick.title = 'Select Saved Context'
     quick_pick.items = create_quick_pick_items(internal_contexts)
     quick_pick.placeholder = `Select saved context (from workspace state)`
+    quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
     const last_selected_context_name =
       extension_context.workspaceState.get<string>(
@@ -74,169 +69,182 @@ export async function handle_workspace_state_source(
     let is_showing_dialog = false
     let go_back_after_delete = false
     const quick_pick_promise = new Promise<
+      | 'back'
       | (vscode.QuickPickItem & {
           context?: SavedContext
         })
       | undefined
     >((resolve) => {
       let is_accepted = false
-      quick_pick.onDidAccept(() => {
-        is_accepted = true
-        const selectedItem = quick_pick
-          .selectedItems[0] as vscode.QuickPickItem & {
-          context?: SavedContext
-        }
-        if (selectedItem?.context) {
-          extension_context.workspaceState.update(
-            LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
-            selectedItem.context.name
-          )
-        }
-        quick_pick.hide()
-        resolve(selectedItem)
-      })
+      let did_trigger_back = false
+      const disposables: vscode.Disposable[] = []
 
-      quick_pick.onDidHide(() => {
-        if (is_showing_dialog) {
-          return
-        }
-        if (go_back_after_delete) {
-          resolve({ label: BACK_LABEL })
-          return
-        }
-        if (!is_accepted) {
-          resolve(undefined)
-        }
-      })
+      disposables.push(
+        quick_pick.onDidTriggerButton((button) => {
+          if (button === vscode.QuickInputButtons.Back) {
+            did_trigger_back = true
+            quick_pick.hide()
+            resolve('back')
+          }
+        }),
+        quick_pick.onDidAccept(() => {
+          is_accepted = true
+          const selectedItem = quick_pick
+            .selectedItems[0] as vscode.QuickPickItem & {
+            context?: SavedContext
+          }
+          if (selectedItem?.context) {
+            extension_context.workspaceState.update(
+              LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
+              selectedItem.context.name
+            )
+          }
+          quick_pick.hide()
+          resolve(selectedItem)
+        }),
 
-      quick_pick.onDidTriggerItemButton(async (event) => {
-        const item = event.item as vscode.QuickPickItem & {
-          context: SavedContext
-          index: number
-        }
+        quick_pick.onDidHide(() => {
+          if (is_showing_dialog) {
+            return
+          }
+          if (go_back_after_delete) {
+            resolve('back')
+          } else if (!is_accepted && !did_trigger_back) {
+            resolve('back')
+          }
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+        }),
 
-        await extension_context.workspaceState.update(
-          LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
-          item.context.name
-        )
-
-        if (event.button === edit_button) {
-          is_showing_dialog = true
-          const new_name = await vscode.window.showInputBox({
-            prompt: 'Enter new name for context',
-            value: item.context.name,
-            validateInput: (value) => {
-              if (!value.trim()) {
-                return 'Name cannot be empty'
-              }
-
-              const duplicate = internal_contexts.find(
-                (c) => c.name == value.trim() && c.name != item.context.name
-              )
-
-              if (duplicate) {
-                return 'A context with this name already exists'
-              }
-
-              return null
-            }
-          })
-          is_showing_dialog = false
-
-          let name_to_highlight = item.context.name
-
-          if (new_name?.trim()) {
-            const trimmed_name = new_name.trim()
-            let context_updated = false
-
-            if (trimmed_name != item.context.name) {
-              const updated_contexts = internal_contexts.map((c) =>
-                c.name == item.context.name ? { ...c, name: trimmed_name } : c
-              )
-
-              await extension_context.workspaceState.update(
-                SAVED_CONTEXTS_STATE_KEY,
-                updated_contexts
-              )
-              internal_contexts = updated_contexts
-              context_updated = true
-              name_to_highlight = trimmed_name
-            }
-
-            if (context_updated) {
-              await extension_context.workspaceState.update(
-                LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
-                trimmed_name
-              )
-            }
+        quick_pick.onDidTriggerItemButton(async (event) => {
+          const item = event.item as vscode.QuickPickItem & {
+            context: SavedContext
+            index: number
           }
 
-          // Always refresh and show the quick pick, even if cancelled
-          quick_pick.items = create_quick_pick_items(internal_contexts)
-          const active_item = quick_pick.items.find(
-            (i) => i.label == name_to_highlight
-          )
-          if (active_item) {
-            quick_pick.activeItems = [active_item]
-          }
-          quick_pick.show()
-          return
-        }
-
-        if (event.button === delete_button) {
-          const deleted_context = item.context
-          const deleted_context_name = item.context.name
-          const deleted_index = item.index
-
-          const updated_contexts = internal_contexts.filter(
-            (c) => c.name != deleted_context_name
-          )
           await extension_context.workspaceState.update(
-            SAVED_CONTEXTS_STATE_KEY,
-            updated_contexts
+            LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
+            item.context.name
           )
-          internal_contexts = updated_contexts
-          quick_pick.items = create_quick_pick_items(internal_contexts)
 
-          is_showing_dialog = true
-          const choice = await vscode.window.showInformationMessage(
-            `Deleted context "${deleted_context_name}" from workspace state`,
-            'Undo'
-          )
-          is_showing_dialog = false
+          if (event.button === edit_button) {
+            is_showing_dialog = true
+            const new_name = await vscode.window.showInputBox({
+              prompt: 'Enter new name for context',
+              value: item.context.name,
+              validateInput: (value) => {
+                if (!value.trim()) {
+                  return 'Name cannot be empty'
+                }
 
-          if (choice == 'Undo') {
-            internal_contexts.splice(deleted_index, 0, deleted_context)
+                const duplicate = internal_contexts.find(
+                  (c) => c.name == value.trim() && c.name != item.context.name
+                )
+
+                if (duplicate) {
+                  return 'A context with this name already exists'
+                }
+
+                return null
+              }
+            })
+            is_showing_dialog = false
+
+            let name_to_highlight = item.context.name
+
+            if (new_name?.trim()) {
+              const trimmed_name = new_name.trim()
+              let context_updated = false
+
+              if (trimmed_name != item.context.name) {
+                const updated_contexts = internal_contexts.map((c) =>
+                  c.name == item.context.name ? { ...c, name: trimmed_name } : c
+                )
+
+                await extension_context.workspaceState.update(
+                  SAVED_CONTEXTS_STATE_KEY,
+                  updated_contexts
+                )
+                internal_contexts = updated_contexts
+                context_updated = true
+                name_to_highlight = trimmed_name
+              }
+
+              if (context_updated) {
+                await extension_context.workspaceState.update(
+                  LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
+                  trimmed_name
+                )
+              }
+            }
+
+            // Always refresh and show the quick pick, even if cancelled
+            quick_pick.items = create_quick_pick_items(internal_contexts)
+            const active_item = quick_pick.items.find(
+              (i) => i.label == name_to_highlight
+            )
+            if (active_item) {
+              quick_pick.activeItems = [active_item]
+            }
+            quick_pick.show()
+            return
+          }
+
+          if (event.button === delete_button) {
+            const deleted_context = item.context
+            const deleted_context_name = item.context.name
+            const deleted_index = item.index
+
+            const updated_contexts = internal_contexts.filter(
+              (c) => c.name != deleted_context_name
+            )
             await extension_context.workspaceState.update(
               SAVED_CONTEXTS_STATE_KEY,
-              internal_contexts
+              updated_contexts
             )
-            vscode.window.showInformationMessage(
-              `Restored context "${deleted_context_name}".`
-            )
+            internal_contexts = updated_contexts
             quick_pick.items = create_quick_pick_items(internal_contexts)
-          }
 
-          if (internal_contexts.length === 0) {
-            await vscode.window.showInformationMessage(
-              dictionary.information_message
-                .NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE
+            is_showing_dialog = true
+            const choice = await vscode.window.showInformationMessage(
+              `Deleted context "${deleted_context_name}" from workspace state`,
+              'Undo'
             )
-            go_back_after_delete = true
-            quick_pick.hide()
-          } else {
-            quick_pick.show()
+            is_showing_dialog = false
+
+            if (choice == 'Undo') {
+              internal_contexts.splice(deleted_index, 0, deleted_context)
+              await extension_context.workspaceState.update(
+                SAVED_CONTEXTS_STATE_KEY,
+                internal_contexts
+              )
+              vscode.window.showInformationMessage(
+                `Restored context "${deleted_context_name}".`
+              )
+              quick_pick.items = create_quick_pick_items(internal_contexts)
+            }
+
+            if (internal_contexts.length === 0) {
+              await vscode.window.showInformationMessage(
+                dictionary.information_message
+                  .NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE
+              )
+              go_back_after_delete = true
+              quick_pick.hide()
+            } else {
+              quick_pick.show()
+            }
+            return
           }
-          return
-        }
-      })
+        })
+      )
     })
 
     quick_pick.show()
     const selected = await quick_pick_promise
     if (!selected) return
 
-    if (selected.label === BACK_LABEL && !selected.context) {
+    if (selected === 'back') {
       return 'back'
     }
 

@@ -7,7 +7,6 @@ import {
 import { SavedContext } from '@/types/context'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  handle_clipboard_source,
   handle_json_file_source,
   handle_unstaged_files_source,
   handle_workspace_state_source,
@@ -51,12 +50,7 @@ export function apply_context_command(
 
         const main_quick_pick_options: (vscode.QuickPickItem & {
           value: 'internal' | 'file' | 'other'
-        })[] = [
-          {
-            label: 'Source',
-            kind: vscode.QuickPickItemKind.Separator
-          } as any
-        ]
+        })[] = []
 
         main_quick_pick_options.push({
           label: 'Workspace state',
@@ -84,6 +78,7 @@ export function apply_context_command(
         const main_quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { value: 'internal' | 'file' | 'other' }
         >()
+        main_quick_pick.title = 'Select Source'
         main_quick_pick.items = final_quick_pick_options
         main_quick_pick.placeholder = 'Select option'
         if (last_main_selection_value) {
@@ -143,12 +138,9 @@ export function apply_context_command(
             show_main_menu = true
           }
         } else if (main_selection.value == 'other') {
-          const BACK_LABEL = '$(arrow-left) Back'
           const other_quick_pick_options: (vscode.QuickPickItem & {
             value?: 'clipboard' | 'unstaged'
           })[] = [
-            { label: BACK_LABEL },
-            { label: '', kind: vscode.QuickPickItemKind.Separator },
             {
               label: 'Select files based on paths found in the clipboard text',
               value: 'clipboard'
@@ -162,35 +154,53 @@ export function apply_context_command(
           const other_quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { value?: 'clipboard' | 'unstaged' }
           >()
+          other_quick_pick.title = 'Select Source'
           other_quick_pick.items = other_quick_pick_options
           other_quick_pick.placeholder = 'Select other option'
+          other_quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
           const other_selection = await new Promise<
+            | 'back'
             | (vscode.QuickPickItem & { value?: 'clipboard' | 'unstaged' })
             | undefined
           >((resolve) => {
             let is_accepted = false
-            other_quick_pick.onDidAccept(() => {
-              is_accepted = true
-              resolve(other_quick_pick.selectedItems[0])
-              other_quick_pick.hide()
-            })
-            other_quick_pick.onDidHide(() => {
-              if (!is_accepted) {
-                resolve(undefined)
-              }
-              other_quick_pick.dispose()
-            })
+            let did_trigger_back = false
+            const disposables: vscode.Disposable[] = []
+
+            disposables.push(
+              other_quick_pick.onDidTriggerButton((button) => {
+                if (button === vscode.QuickInputButtons.Back) {
+                  did_trigger_back = true
+                  other_quick_pick.hide()
+                  resolve('back')
+                }
+              }),
+              other_quick_pick.onDidAccept(() => {
+                is_accepted = true
+                resolve(other_quick_pick.selectedItems[0])
+                other_quick_pick.hide()
+              }),
+              other_quick_pick.onDidHide(() => {
+                if (!is_accepted && !did_trigger_back) {
+                  resolve('back')
+                }
+                disposables.forEach((d) => d.dispose())
+                other_quick_pick.dispose()
+              })
+            )
             other_quick_pick.show()
           })
 
-          if (!other_selection || other_selection.label === BACK_LABEL) {
+          if (!other_selection || other_selection === 'back') {
             show_main_menu = true
             continue
           }
 
           if (other_selection.value == 'clipboard') {
-            await handle_clipboard_source(workspace_provider)
+            await vscode.commands.executeCommand(
+              'codeWebChat.findPathsInClipboard'
+            )
             return
           }
           if (other_selection.value == 'unstaged') {

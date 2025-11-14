@@ -11,6 +11,7 @@ import {
   apply_chat_response_command,
   code_completion_commands,
   close_editor_command,
+  find_paths_in_clipboard_command,
   checkpoints_command,
   close_all_editors_command,
   save_all_command,
@@ -88,6 +89,7 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
+    find_paths_in_clipboard_command(workspace_provider),
     ...checkpoints_command(workspace_provider, context),
     duplicate_workspace_command(workspace_provider, websites_provider, context),
     open_url_command({
