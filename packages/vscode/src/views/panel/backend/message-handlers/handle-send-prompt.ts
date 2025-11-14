@@ -310,6 +310,7 @@ async function show_presets_in_group_quick_pick(params: {
 
   quick_pick.items = items
   quick_pick.placeholder = 'Search presets by name'
+  quick_pick.title = 'Select Preset'
   quick_pick.matchOnDescription = true
 
   const last_preset_key = get_last_selected_preset_key(panel_provider.web_mode)
@@ -463,7 +464,7 @@ async function show_preset_quick_pick(params: {
 
   if (last_choice === 'Preset' && last_selected_preset) {
     const preset = presets.find((p) => p.name === last_selected_preset)
-    if (preset) {
+    if (preset && !preset.isPinned) {
       let group_name = 'Ungrouped'
       if (preset.chatbot) {
         const preset_index = presets.findIndex(
@@ -542,6 +543,11 @@ async function show_preset_quick_pick(params: {
     tooltip: 'Run selected presets'
   }
 
+  const run_without_submission_button: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon('debug-continue-small'),
+    tooltip: 'Run without submission'
+  }
+
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { preset_name?: string; group_name?: string }
   >()
@@ -550,6 +556,36 @@ async function show_preset_quick_pick(params: {
     preset_name?: string
     group_name?: string
   })[] = []
+
+  const pinned_presets = presets.filter((p) => p.isPinned && p.chatbot)
+
+  if (pinned_presets.length > 0) {
+    items.push({ label: 'Pinned', kind: vscode.QuickPickItemKind.Separator })
+    pinned_presets.forEach((preset) => {
+      const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+      const chatbot_models = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
+        .models as any
+      const model = preset.model
+        ? chatbot_models[preset.model]?.label || preset.model
+        : ''
+      items.push({
+        label: `$(pinned) ${is_unnamed ? preset.chatbot! : preset.name}`,
+        preset_name: preset.name,
+        description: is_unnamed
+          ? model
+          : `${preset.chatbot}${model ? ` · ${model}` : ''}`,
+        buttons: [run_without_submission_button]
+      })
+    })
+  }
+
+  const has_groups =
+    (presets.length > 0 && presets[0].chatbot) ||
+    presets.some((p) => !p.chatbot)
+
+  if (has_groups) {
+    items.push({ label: 'Groups', kind: vscode.QuickPickItemKind.Separator })
+  }
 
   if (presets.length > 0 && presets[0].chatbot) {
     let group_presets_count = 0
@@ -607,6 +643,7 @@ async function show_preset_quick_pick(params: {
 
   quick_pick.items = items
   quick_pick.placeholder = 'Select a group to run presets from'
+  quick_pick.title = 'Select Group'
   quick_pick.matchOnDescription = true
 
   if (group_to_highlight_on_back) {
@@ -642,7 +679,7 @@ async function show_preset_quick_pick(params: {
     }
 
     quick_pick.onDidTriggerItemButton(async (e) => {
-      const item = e.item as any & { group_name?: string }
+      const item = e.item as any & { group_name?: string; preset_name?: string }
       if (item.group_name && e.button === run_group_button) {
         quick_pick.hide()
 
@@ -659,6 +696,30 @@ async function show_preset_quick_pick(params: {
           })
         }
         do_resolve(resolution)
+      } else if (
+        item.preset_name &&
+        e.button === run_without_submission_button
+      ) {
+        quick_pick.hide()
+        const preset = presets.find((p) => p.name === item.preset_name)!
+        if (params.get_is_preset_disabled(preset)) {
+          if (
+            !params.is_in_code_completions_mode &&
+            !params.current_instructions &&
+            !preset.promptPrefix &&
+            !preset.promptSuffix
+          ) {
+            vscode.window.showWarningMessage(
+              dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
+            )
+          }
+          do_resolve(null)
+        } else {
+          do_resolve({
+            preset_names: [item.preset_name],
+            without_submission: true
+          })
+        }
       }
     })
 
@@ -671,7 +732,42 @@ async function show_preset_quick_pick(params: {
         return
       }
 
-      if (selected.group_name) {
+      if (selected.preset_name) {
+        quick_pick.hide()
+        const preset = presets.find((p) => p.name === selected.preset_name)!
+        if (params.get_is_preset_disabled(preset)) {
+          if (
+            !params.is_in_code_completions_mode &&
+            !params.current_instructions &&
+            !preset.promptPrefix &&
+            !preset.promptSuffix
+          ) {
+            vscode.window.showWarningMessage(
+              dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
+            )
+          }
+          do_resolve(null)
+        } else {
+          let group_name = 'Ungrouped'
+          const preset_index = presets.findIndex(
+            (p) => p.name === selected.preset_name
+          )
+          if (preset_index > -1) {
+            for (let i = preset_index - 1; i >= 0; i--) {
+              if (!presets[i].chatbot) {
+                group_name = presets[i].name
+                break
+              }
+            }
+          }
+          update_last_used_preset_or_group({
+            panel_provider,
+            preset_name: selected.preset_name,
+            group_name: group_name
+          })
+          do_resolve({ preset_names: [selected.preset_name] })
+        }
+      } else if (selected.group_name) {
         is_navigating = true
         quick_pick.hide()
         const result = await show_presets_in_group_quick_pick({

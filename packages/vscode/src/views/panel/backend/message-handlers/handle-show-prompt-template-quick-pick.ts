@@ -123,14 +123,11 @@ export const handle_show_prompt_template_quick_pick = async (
     template: PromptTemplate,
     index: number
   ): Promise<boolean> => {
-    const BACK_LABEL = '$(arrow-left) Back'
     const NAME_LABEL = 'Name'
     const TEMPLATE_LABEL = 'Template'
 
     const create_edit_options = () => {
       return [
-        { label: BACK_LABEL },
-        { label: '', kind: vscode.QuickPickItemKind.Separator },
         {
           label: NAME_LABEL,
           description: template.name || 'Not set'
@@ -149,18 +146,27 @@ export const handle_show_prompt_template_quick_pick = async (
     edit_quick_pick.items = create_edit_options()
     edit_quick_pick.title = 'Edit Template'
     edit_quick_pick.placeholder = 'Select what to edit'
+    edit_quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
     return new Promise<boolean>((resolve) => {
       let is_accepted = false
+      let did_trigger_back = false
       const edit_disposables: vscode.Disposable[] = []
 
       edit_disposables.push(
+        edit_quick_pick.onDidTriggerButton((button) => {
+          if (button === vscode.QuickInputButtons.Back) {
+            did_trigger_back = true
+            edit_quick_pick.hide()
+            resolve(false) // User clicked 'Back', do not cancel the main quick pick
+          }
+        }),
         edit_quick_pick.onDidAccept(async () => {
           is_accepted = true
           const selected = edit_quick_pick.selectedItems[0]
-          if (!selected || selected.label === BACK_LABEL) {
+          if (!selected) {
             edit_quick_pick.hide()
-            resolve(false) // User clicked 'Back', do not cancel the main quick pick
+            resolve(false) // User cancelled, do not cancel the main quick pick
             return
           }
 
@@ -189,17 +195,13 @@ export const handle_show_prompt_template_quick_pick = async (
                 vscode.ConfigurationTarget.Global
               )
               next_template_state = updated_template
-            } else {
-              // User cancelled the input box (pressed Escape)
-              resolve(true) // Indicate full cancellation
-              return
             }
 
             const should_cancel_entirely = await edit_template(
               next_template_state,
               index
             )
-            resolve(should_cancel_entirely) // Pass through the result of the recursive call
+            resolve(should_cancel_entirely)
           } else if (selected.label == TEMPLATE_LABEL) {
             const new_template_text = await vscode.window.showInputBox({
               prompt: 'Enter the prompt template',
@@ -221,22 +223,18 @@ export const handle_show_prompt_template_quick_pick = async (
                 vscode.ConfigurationTarget.Global
               )
               next_template_state = updated_template
-            } else if (new_template_text === undefined) {
-              // User cancelled the input box
-              resolve(true) // Indicate full cancellation
-              return
             }
 
             const should_cancel_entirely = await edit_template(
               next_template_state,
               index
             )
-            resolve(should_cancel_entirely) // Pass through the result of the recursive call
+            resolve(should_cancel_entirely)
           }
         }),
         edit_quick_pick.onDidHide(() => {
-          if (!is_accepted) {
-            resolve(true) // If quick pick is hidden without accepting, it means user cancelled entirely
+          if (!is_accepted && !did_trigger_back) {
+            resolve(false) // If quick pick is hidden without accepting (e.g. Escape), treat as 'Back'
           }
           edit_disposables.forEach((d) => d.dispose())
         })
@@ -380,6 +378,13 @@ export const handle_show_prompt_template_quick_pick = async (
           // User clicked 'Back' from the edit quick pick, or successfully edited and returned to it.
           // We need to re-show the main templates_quick_pick.
           templates_quick_pick.items = create_template_items(prompt_templates)
+          // Highlight the item that was just edited
+          const edited_item = templates_quick_pick.items.find(
+            (i) => i.index === item.index
+          )
+          if (edited_item) {
+            templates_quick_pick.activeItems = [edited_item]
+          }
           if (!is_disposed) {
             templates_quick_pick.show()
           }
