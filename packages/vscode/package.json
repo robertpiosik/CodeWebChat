@@ -128,12 +128,6 @@
         "icon": "$(github-alt)"
       },
       {
-        "command": "codeWebChat.feedback",
-        "title": "Feedback",
-        "category": "Code Web Chat",
-        "icon": "$(feedback)"
-      },
-      {
         "command": "codeWebChat.twitter",
         "title": "Twitter",
         "category": "Code Web Chat",
@@ -284,10 +278,6 @@
       "commandPalette": [
         {
           "command": "codeWebChat.clearChecks",
-          "when": "false"
-        },
-        {
-          "command": "codeWebChat.feedback",
           "when": "false"
         },
         {
@@ -457,11 +447,6 @@
           "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
           "group": "navigation@1"
-        },
-        {
-          "command": "codeWebChat.feedback",
-          "when": "view == codeWebChatView",
-          "group": "navigation@3"
         },
         {
           "command": "codeWebChat.twitter",

@@ -22,8 +22,7 @@ import {
   delete_command,
   save_context_command,
   reference_in_chat_command,
-  open_url_command,
-  feedback_command
+  open_url_command
 } from './commands'
 import { SettingsProvider } from './views/settings/backend/settings-provider'
 
@@ -95,7 +94,6 @@ export async function activate(context: vscode.ExtensionContext) {
       command: 'codeWebChat.openRepository',
       url: 'https://github.com/robertpiosik/CodeWebChat'
     }),
-    feedback_command(),
     open_url_command({
       command: 'codeWebChat.twitter',
       url: 'https://x.com/CodeWebChat'
