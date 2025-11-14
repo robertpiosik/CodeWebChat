@@ -56,7 +56,7 @@ export const Footer: React.FC = () => {
               styles['footer__icon-button--cwc']
             )}
             href="https://codeweb.chat"
-            title="https://codeweb.chat"
+            title="Visit website"
           >
             <Icon variant="CODE_WEB_CHAT_LOGO" />
           </a>
@@ -65,8 +65,8 @@ export const Footer: React.FC = () => {
               styles['footer__icon-button'],
               styles['footer__icon-button--buy-me-a-coffee']
             )}
-            href="https://buymeacoffee.com/robertpiosik"
-            title="https://buymeacoffee.com/robertpiosik"
+            href="https://coindrop.to/cwc"
+            title="Donate"
           >
             <Icon variant="BUY_ME_A_COFFEE_LOGO" />
           </a>
@@ -76,7 +76,7 @@ export const Footer: React.FC = () => {
               styles['footer__icon-button--discord']
             )}
             href="https://discord.gg/KJySXsrSX5"
-            title="https://discord.gg/KJySXsrSX5"
+            title="Get involved"
           >
             <Icon variant="DISCORD_LOGO" />
           </a>
