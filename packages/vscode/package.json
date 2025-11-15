@@ -451,12 +451,12 @@
         {
           "command": "codeWebChat.openRepository",
           "when": "view == codeWebChatView",
-          "group": "navigation@1"
+          "group": "navigation@2"
         },
         {
           "command": "codeWebChat.twitter",
           "when": "view == codeWebChatView",
-          "group": "navigation@2"
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
