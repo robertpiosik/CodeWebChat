@@ -54,9 +54,6 @@ export const use_panel = (vscode: any) => {
   const [workspace_folder_count, set_workspace_folder_count] =
     useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()
-  const [are_donations_visible, set_are_donations_visible] = useState<
-    boolean | undefined
-  >()
   const [updated_preset, set_updated_preset] = useState<Preset>()
   const [ask_instructions, set_ask_instructions] = useState<
     string | undefined
@@ -126,8 +123,6 @@ export const use_panel = (vscode: any) => {
         set_is_connected(message.connected)
       } else if (message.command == 'VERSION') {
         set_version(message.version)
-      } else if (message.command == 'DONATIONS_VISIBILITY') {
-        set_are_donations_visible(message.is_visible)
       } else if (message.command == 'MAIN_VIEW_TYPE') {
         set_main_view_type(message.view_type)
       } else if (message.command == 'WEB_MODE') {
@@ -299,7 +294,6 @@ export const use_panel = (vscode: any) => {
     const initial_messages: FrontendMessage[] = [
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_VERSION' },
-      { command: 'GET_DONATIONS_VISIBILITY' },
       { command: 'GET_MAIN_VIEW_TYPE' },
       { command: 'GET_WEB_MODE' },
       { command: 'GET_API_MODE' },
@@ -374,15 +368,6 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_donations_visibility_change = () => {
-    const is_visible = !are_donations_visible
-    set_are_donations_visible(is_visible)
-    post_message(vscode, {
-      command: 'SAVE_DONATIONS_VISIBILITY',
-      is_visible
-    })
-  }
-
   const handle_presets_collapsed_change = (is_collapsed: boolean) => {
     if (!web_mode) return
     set_presets_collapsed_by_web_mode((prev) => ({
@@ -438,7 +423,6 @@ export const use_panel = (vscode: any) => {
     set_response_history,
     workspace_folder_count,
     is_connected,
-    are_donations_visible,
     updated_preset,
     set_updated_preset,
     ask_instructions,
@@ -470,7 +454,6 @@ export const use_panel = (vscode: any) => {
     handle_web_mode_change,
     handle_api_mode_change,
     handle_main_view_type_change,
-    handle_donations_visibility_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change
   }

@@ -289,15 +289,6 @@ export interface UpdateLastUsedPresetMessage extends BaseMessage {
   preset_name: string
 }
 
-export interface GetDonationsVisibilityMessage extends BaseMessage {
-  command: 'GET_DONATIONS_VISIBILITY'
-}
-
-export interface SaveDonationsVisibilityMessage extends BaseMessage {
-  command: 'SAVE_DONATIONS_VISIBILITY'
-  is_visible: boolean
-}
-
 export interface IntelligentUpdateFileInPreviewMessage extends BaseMessage {
   command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW'
   file_path: string
@@ -356,7 +347,6 @@ export type FrontendMessage =
   | GetEditFormatInstructionsMessage
   | SaveEditFormatMessage
   | GetConnectionStatusMessage
-  | GetDonationsVisibilityMessage
   | GetPresetsMessage
   | ReplacePresetsMessage
   | SendPromptMessage
@@ -393,7 +383,6 @@ export type FrontendMessage =
   | GetApiToolConfigurationsMessage
   | ReorderApiToolConfigurationsMessage
   | TogglePinnedApiToolConfigurationMessage
-  | SaveDonationsVisibilityMessage
   | GetVersionMessage
   | EditsReviewMessage
   | ToggleFileInReviewMessage
@@ -565,11 +554,6 @@ export interface FocusChatInputMessage extends BaseMessage {
   command: 'FOCUS_CHAT_INPUT'
 }
 
-export interface DonationsVisibilityMessage extends BaseMessage {
-  command: 'DONATIONS_VISIBILITY'
-  is_visible: boolean
-}
-
 export interface ShowProgressMessage extends BaseMessage {
   command: 'SHOW_PROGRESS'
   title: string
@@ -628,7 +612,6 @@ export type BackendMessage =
   | EditFormatMessage
   | EditFormatInstructionsMessage
   | ApiToolConfigurationsMessage
-  | DonationsVisibilityMessage
   | PresetsMessage
   | EditorStateChangedMessage
   | GitStateChangedMessage

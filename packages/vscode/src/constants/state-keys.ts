@@ -56,8 +56,6 @@ export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY =
   'pinned-history-code-completions'
 export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'
 
-export const RECENT_DONATIONS_VISIBLE_STATE_KEY = 'recent-donations-visible'
-
 export const get_presets_collapsed_state_key = (web_mode: string) =>
   `presets-collapsed-${web_mode}`
 export const get_configurations_collapsed_state_key = (api_mode: string) =>

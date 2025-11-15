@@ -47,8 +47,6 @@ import {
   handle_reorder_api_tool_configurations,
   handle_pick_open_router_model,
   handle_pick_chatbot,
-  handle_get_donations_visibility,
-  handle_save_donations_visibility,
   handle_focus_on_file_in_preview,
   handle_go_to_file,
   handle_show_diff,
@@ -80,7 +78,6 @@ import {
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
   get_presets_collapsed_state_key,
-  RECENT_DONATIONS_VISIBLE_STATE_KEY,
   WEB_MODE_STATE_KEY
 } from '@/constants/state-keys'
 import {
@@ -170,10 +167,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
-        const are_donations_visible = this.context.globalState.get<boolean>(
-          RECENT_DONATIONS_VISIBLE_STATE_KEY,
-          false
-        )
         const WEB_MODES: WebMode[] = [
           'ask',
           'edit-context',
@@ -181,10 +174,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           'no-context'
         ]
         const API_MODES: ApiMode[] = ['edit-context', 'code-completions']
-        this.send_message({
-          command: 'DONATIONS_VISIBILITY',
-          is_visible: are_donations_visible
-        })
         this.send_message({
           command: 'COLLAPSED_STATES',
           presets_collapsed_by_web_mode: Object.fromEntries(
@@ -541,10 +530,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               this.context,
               message.is_for_code_completions
             )
-          } else if (message.command == 'GET_DONATIONS_VISIBILITY') {
-            handle_get_donations_visibility(this)
-          } else if (message.command == 'SAVE_DONATIONS_VISIBILITY') {
-            await handle_save_donations_visibility(this, message)
           } else if (message.command == 'GO_TO_FILE') {
             handle_go_to_file(message)
           } else if (message.command == 'SHOW_DIFF') {

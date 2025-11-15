@@ -49,7 +49,6 @@ export const Panel = () => {
     set_response_history,
     workspace_folder_count,
     is_connected,
-    are_donations_visible,
     updated_preset,
     set_updated_preset,
     ask_instructions,
@@ -77,7 +76,6 @@ export const Panel = () => {
     handle_web_mode_change,
     handle_api_mode_change,
     handle_main_view_type_change,
-    handle_donations_visibility_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change
   } = use_panel(vscode)
@@ -87,7 +85,6 @@ export const Panel = () => {
     edit_instructions === undefined ||
     no_context_instructions === undefined ||
     !version ||
-    are_donations_visible === undefined ||
     code_completions_instructions === undefined ||
     main_view_type === undefined ||
     web_mode === undefined ||
@@ -249,10 +246,6 @@ export const Panel = () => {
                   handle_api_mode_change('edit-context')
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
-                are_donations_visible={are_donations_visible}
-                on_toggle_donations_visibility={
-                  handle_donations_visibility_change
-                }
                 version={version}
               />
             </div>
