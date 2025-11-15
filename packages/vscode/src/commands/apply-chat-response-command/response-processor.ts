@@ -77,8 +77,10 @@ export const process_chat_response = async (
     is_single_root_folder_workspace
   })
 
-  if (clipboard_items.length == 1 && clipboard_items[0].type == 'completion') {
-    const completion = clipboard_items[0]
+  if (clipboard_items.some((item) => item.type == 'completion')) {
+    const completion = clipboard_items.find(
+      (item) => item.type == 'completion'
+    )!
     const workspace_map = new Map<string, string>()
     vscode.workspace.workspaceFolders!.forEach((folder) => {
       workspace_map.set(folder.name, folder.uri.fsPath)

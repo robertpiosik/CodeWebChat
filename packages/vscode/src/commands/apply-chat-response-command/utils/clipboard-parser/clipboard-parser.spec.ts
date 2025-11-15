@@ -584,7 +584,7 @@ describe('clipboard-parser', () => {
       expect(result).toHaveLength(3)
       expect(result[0]).toMatchObject({
         type: 'text',
-        content: 'Some text before.'
+        content: load_test_case_file(test_case, '1-text.txt')
       })
       expect(result[1]).toMatchObject({
         type: 'completion',
@@ -595,7 +595,7 @@ describe('clipboard-parser', () => {
       })
       expect(result[2]).toMatchObject({
         type: 'text',
-        content: 'Some text after.'
+        content: load_test_case_file(test_case, '2-text.txt')
       })
     })
 

@@ -1,8 +1,7 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import he from 'he'
 import { make_api_request } from '@/utils/make-api-request'
-import { code_completion_instructions } from '@/constants/instructions'
+import { chat_code_completion_instructions } from '@/constants/instructions'
 import { FilesCollector } from '@/utils/files-collector'
 import {
   ModelProvidersManager,
@@ -315,6 +314,13 @@ const perform_code_completion = async (params: {
       new vscode.Range(position, document.positionAt(document.getText().length))
     )
 
+    const relative_path = vscode.workspace.asRelativePath(document.uri)
+    const main_instructions = chat_code_completion_instructions(
+      relative_path,
+      position.line,
+      position.character
+    )
+
     const files_collector = new FilesCollector(
       params.file_tree_provider,
       params.open_editors_provider
@@ -325,17 +331,15 @@ const perform_code_completion = async (params: {
     })
 
     const payload = {
-      before: `<files>\n${context_text}<file path="${vscode.workspace.asRelativePath(
-        document.uri
-      )}">\n<![CDATA[\n${text_before_cursor}`,
+      before: `<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}`,
       after: `${text_after_cursor}\n]]>\n</file>\n</files>`
     }
 
-    const content = `${code_completion_instructions}\n${payload.before}${
+    const content = `${main_instructions}\n${payload.before}${
       completion_instructions
         ? `<missing_text>${completion_instructions}</missing_text>`
         : '<missing_text>'
-    }${payload.after}\n${code_completion_instructions}`
+    }${payload.after}\n${main_instructions}`
 
     const messages = [
       {
@@ -393,22 +397,7 @@ const perform_code_completion = async (params: {
       })
 
       if (result) {
-        const match = result.response.match(
-          /<replacement>([\s\S]*?)<\/replacement>/i
-        )
-        if (match && match[1]) {
-          let decoded_completion = he.decode(match[1].trim())
-          decoded_completion = decoded_completion
-            .replace(/<!\[CDATA\[/g, '')
-            .replace(/\]\]>/g, '')
-            .trim()
-
-          const new_content =
-            text_before_cursor + decoded_completion + text_after_cursor
-
-          const relative_path = vscode.workspace.asRelativePath(document.uri)
-          response_for_apply = `\`\`\`\n// ${relative_path}\n${new_content}\n\`\`\``
-        }
+        response_for_apply = result.response
       }
     } catch (err: any) {
       if (axios.isCancel(err)) {
