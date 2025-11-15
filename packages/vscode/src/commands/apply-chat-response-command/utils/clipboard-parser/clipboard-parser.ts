@@ -79,12 +79,12 @@ export const parse_response = (params: {
 }): ClipboardItem[] => {
   const is_single_root_folder_workspace =
     params.is_single_root_folder_workspace ?? true
-  const code_completion = parse_code_completion({
+  const code_completion_items = parse_code_completion({
     response: params.response,
     is_single_root_folder_workspace
   })
-  if (code_completion) {
-    return [code_completion]
+  if (code_completion_items && code_completion_items.length > 0) {
+    return code_completion_items
   }
 
   const processed_response = params.response.replace(/``````/g, '```\n```')

@@ -573,6 +573,32 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses code completion format with surrounding text', () => {
+      const test_case = 'code-completion-with-text'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(3)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: 'Some text before.'
+      })
+      expect(result[1]).toMatchObject({
+        type: 'completion',
+        file_path: 'src/index.ts',
+        line: 25,
+        character: 5,
+        content: 'console.log("completion");'
+      })
+      expect(result[2]).toMatchObject({
+        type: 'text',
+        content: 'Some text after.'
+      })
+    })
+
     it('parses diff format with git header but no markdown code block', () => {
       const test_case = 'diff-with-git-header-no-markdown'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

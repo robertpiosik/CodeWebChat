@@ -294,7 +294,7 @@ export const parse_multiple_files = (params: {
         }
         backtick_nesting_level++
         if (
-          (current_language === 'markdown' || current_language === 'md') &&
+          (current_language == 'markdown' || current_language === 'md') &&
           backtick_nesting_level > 1
         ) {
           is_markdown_container_block = true
@@ -318,7 +318,7 @@ export const parse_multiple_files = (params: {
           return false
         })()
       ) {
-        if (current_language === 'markdown' || current_language === 'md') {
+        if (current_language == 'markdown' || current_language === 'md') {
           is_markdown_container_block = true
         }
         backtick_nesting_level++

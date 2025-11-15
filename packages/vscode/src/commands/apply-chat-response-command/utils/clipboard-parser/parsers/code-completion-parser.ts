@@ -1,5 +1,9 @@
 import { cleanup_api_response } from '@/utils/cleanup-api-response'
-import { CompletionItem, extract_workspace_and_path } from '../clipboard-parser'
+import {
+  CompletionItem,
+  TextItem,
+  extract_workspace_and_path
+} from '../clipboard-parser'
 
 const extract_path_and_position = (
   line: string
@@ -28,61 +32,71 @@ const extract_path_and_position = (
 export const parse_code_completion = (params: {
   response: string
   is_single_root_folder_workspace: boolean
-}): CompletionItem | null => {
+}): (CompletionItem | TextItem)[] | null => {
   const lines = params.response.split('\n')
-  let in_code_block = false
-  let first_line_of_block: string | null = null
-  let content_lines: string[] = []
+  let code_block_start_index = -1
+  let code_block_end_index = -1
 
-  for (const line of lines) {
-    if (line.trim().startsWith('```')) {
-      if (in_code_block) {
-        if (first_line_of_block) {
-          const completion_info = extract_path_and_position(first_line_of_block)
-          if (completion_info) {
-            const { workspace_name, relative_path } =
-              extract_workspace_and_path({
-                raw_file_path: completion_info.path,
-                is_single_root_folder_workspace:
-                  params.is_single_root_folder_workspace
-              })
-            return {
-              type: 'completion',
-              file_path: relative_path,
-              content: cleanup_api_response({
-                content: content_lines.join('\n')
-              }),
-              line: completion_info.line,
-              character: completion_info.character,
-              workspace_name
-            }
-          }
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].trim().startsWith('```')) {
+      code_block_start_index = i
+      for (let j = i + 1; j < lines.length; j++) {
+        if (lines[j].trim().startsWith('```')) {
+          code_block_end_index = j
+          break
         }
-        in_code_block = false
-        first_line_of_block = null
-        content_lines = []
-      } else {
-        in_code_block = true
       }
-      continue
-    }
-
-    if (in_code_block) {
-      if (first_line_of_block === null) {
-        first_line_of_block = line
-      } else {
-        content_lines.push(line)
-      }
+      break
     }
   }
 
-  // Handle unclosed block at end of file
-  if (in_code_block && first_line_of_block) {
-    const completion_info = extract_path_and_position(first_line_of_block)
-    if (completion_info) {
-      // This case is not handled and will result in returning null.
-    }
+  if (code_block_start_index === -1) {
+    return null
   }
 
-  return null
+  if (code_block_end_index === -1) {
+    code_block_end_index = lines.length - 1
+  }
+
+  const first_line_of_block = lines[code_block_start_index + 1]
+  const completion_info = extract_path_and_position(first_line_of_block)
+
+  if (!completion_info) {
+    return null
+  }
+
+  const results: (CompletionItem | TextItem)[] = []
+  const text_before = lines.slice(0, code_block_start_index).join('\n').trim()
+  if (text_before) {
+    results.push({ type: 'text', content: text_before })
+  }
+
+  const { workspace_name, relative_path } = extract_workspace_and_path({
+    raw_file_path: completion_info.path,
+    is_single_root_folder_workspace: params.is_single_root_folder_workspace
+  })
+
+  const content_lines = lines.slice(
+    code_block_start_index + 2,
+    code_block_end_index
+  )
+
+  results.push({
+    type: 'completion',
+    file_path: relative_path,
+    content: cleanup_api_response({ content: content_lines.join('\n') }),
+    line: completion_info.line,
+    character: completion_info.character,
+    workspace_name
+  })
+
+  const text_after = lines
+    .slice(code_block_end_index + 1)
+    .join('\n')
+    .trim()
+  if (text_after) {
+    results.push({ type: 'text', content: text_after })
+  }
+
+  return results
 }
