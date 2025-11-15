@@ -15,7 +15,8 @@ const configurations: Configurations.Configuration[] = [
     id: '2',
     model: 'gpt-4o',
     provider: 'OpenAI',
-    reasoning_effort: 'low'
+    reasoning_effort: 'low',
+    is_pinned: true
   },
   {
     id: '3',
@@ -30,11 +31,18 @@ export const Default = () => {
     <Configurations
       api_mode="edit-context"
       configurations={configurations}
-      on_configuration_click={(index) => {
-        console.log('on_configuration_click', index)
+      on_configuration_click={(id) => {
+        console.log('on_configuration_click', id)
       }}
       on_manage_configurations={() => {
         console.log('on_manage_configurations')
+      }}
+      on_toggle_pinned={(id) => {
+        console.log('on_toggle_pinned', id)
+      }}
+      is_collapsed={false}
+      on_toggle_collapsed={(is_collapsed) => {
+        console.log('on_toggle_collapsed', is_collapsed)
       }}
     />
   )
@@ -44,11 +52,15 @@ export const Empty = () => (
   <Configurations
     api_mode="edit-context"
     configurations={[]}
-    on_configuration_click={(index) => {
-      console.log('on_configuration_click', index)
+    on_configuration_click={(id) => {
+      console.log('on_configuration_click', id)
     }}
     on_manage_configurations={() => {
       console.log('on_manage_configurations')
+    }}
+    is_collapsed={false}
+    on_toggle_collapsed={(is_collapsed) => {
+      console.log('on_toggle_collapsed', is_collapsed)
     }}
   />
 )

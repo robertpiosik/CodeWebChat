@@ -12,6 +12,7 @@ export namespace Configurations {
     temperature?: number
     reasoning_effort?: string
     cache_enabled?: boolean
+    is_pinned?: boolean
   }
 
   export type Props = {
@@ -19,6 +20,7 @@ export namespace Configurations {
     configurations: Configuration[]
     on_configuration_click: (id: string) => void
     on_reorder?: (configurations: Configuration[]) => void
+    on_toggle_pinned?: (id: string) => void
     selected_configuration_id?: string
     on_manage_configurations: () => void
     is_collapsed: boolean
@@ -27,8 +29,83 @@ export namespace Configurations {
 }
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
+  const pinned_configurations = props.configurations.filter((c) => c.is_pinned)
+  const unpinned_configurations = props.configurations.filter(
+    (c) => !c.is_pinned
+  )
+
+  const renderConfigurationItem = (
+    configuration: Configurations.Configuration
+  ) => {
+    const description_parts = [configuration.provider]
+    if (configuration.reasoning_effort) {
+      description_parts.push(`${configuration.reasoning_effort}`)
+    }
+    if (
+      configuration.temperature &&
+      configuration.temperature != DEFAULT_TEMPERATURE[props.api_mode]
+    ) {
+      description_parts.push(`${configuration.temperature}`)
+    }
+    if (configuration.cache_enabled) {
+      description_parts.push('cache-enabled')
+    }
+
+    const description = description_parts.join(' · ')
+
+    return (
+      <div
+        key={configuration.id}
+        className={cn(styles.configurations__item, {
+          [styles['configurations__item--highlighted']]:
+            props.selected_configuration_id == configuration.id
+        })}
+        onClick={() => {
+          props.on_configuration_click(configuration.id)
+        }}
+        role="button"
+      >
+        <div className={styles.configurations__item__left}>
+          <div
+            className={cn(styles.configurations__item__left__drag_handle, {
+              [styles['configurations__item__left__drag_handle--disabled']]:
+                !props.on_reorder || configuration.is_pinned
+            })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="codicon codicon-gripper" />
+          </div>
+          <div className={styles.configurations__item__left__text}>
+            <span>{configuration.model}</span>
+            <span>{description}</span>
+          </div>
+        </div>
+        {props.on_toggle_pinned && (
+          <div
+            className={styles.configurations__item__right}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <IconButton
+              codicon_icon={configuration.is_pinned ? 'pinned' : 'pin'}
+              title={configuration.is_pinned ? 'Unpin' : 'Pin'}
+              on_click={(e) => {
+                e.stopPropagation()
+                props.on_toggle_pinned?.(configuration.id)
+              }}
+            />
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className={styles.container}>
+      {pinned_configurations.length > 0 && (
+        <div className={styles.configurations}>
+          {pinned_configurations.map(renderConfigurationItem)}
+        </div>
+      )}
       <div
         className={styles.header}
         onClick={() => props.on_toggle_collapsed(!props.is_collapsed)}
@@ -58,68 +135,17 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         <>
           <div className={styles.configurations}>
             <ReactSortable
-              list={props.configurations}
+              list={unpinned_configurations}
               setList={(new_state) => {
                 if (props.on_reorder) {
-                  props.on_reorder(new_state)
+                  props.on_reorder([...pinned_configurations, ...new_state])
                 }
               }}
               animation={150}
               handle={`.${styles.configurations__item__left__drag_handle}`}
               disabled={!props.on_reorder}
             >
-              {props.configurations.map((configuration) => {
-                const description_parts = [configuration.provider]
-                if (configuration.reasoning_effort) {
-                  description_parts.push(`${configuration.reasoning_effort}`)
-                }
-                if (
-                  configuration.temperature &&
-                  configuration.temperature !=
-                    DEFAULT_TEMPERATURE[props.api_mode]
-                ) {
-                  description_parts.push(`${configuration.temperature}`)
-                }
-                if (configuration.cache_enabled) {
-                  description_parts.push('cache-enabled')
-                }
-
-                const description = description_parts.join(' · ')
-
-                return (
-                  <div
-                    key={configuration.id}
-                    className={cn(styles.configurations__item, {
-                      [styles['configurations__item--highlighted']]:
-                        props.selected_configuration_id == configuration.id
-                    })}
-                    onClick={() => {
-                      props.on_configuration_click(configuration.id)
-                    }}
-                    role="button"
-                  >
-                    <div className={styles.configurations__item__left}>
-                      <div
-                        className={cn(
-                          styles.configurations__item__left__drag_handle,
-                          {
-                            [styles[
-                              'configurations__item__left__drag_handle--disabled'
-                            ]]: !props.on_reorder
-                          }
-                        )}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <span className="codicon codicon-gripper" />
-                      </div>
-                      <div className={styles.configurations__item__left__text}>
-                        <span>{configuration.model}</span>
-                        <span>{description}</span>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
+              {unpinned_configurations.map(renderConfigurationItem)}
             </ReactSortable>
           </div>
         </>
