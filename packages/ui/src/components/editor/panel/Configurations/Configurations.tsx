@@ -30,12 +30,10 @@ export namespace Configurations {
 
 export const Configurations: React.FC<Configurations.Props> = (props) => {
   const pinned_configurations = props.configurations.filter((c) => c.is_pinned)
-  const unpinned_configurations = props.configurations.filter(
-    (c) => !c.is_pinned
-  )
 
-  const renderConfigurationItem = (
-    configuration: Configurations.Configuration
+  const render_configuration_item = (
+    configuration: Configurations.Configuration,
+    is_dragging_disabled: boolean
   ) => {
     const description_parts = [configuration.provider]
     if (configuration.reasoning_effort) {
@@ -69,7 +67,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           <div
             className={cn(styles.configurations__item__left__drag_handle, {
               [styles['configurations__item__left__drag_handle--disabled']]:
-                !props.on_reorder || configuration.is_pinned
+                is_dragging_disabled
             })}
             onClick={(e) => e.stopPropagation()}
           >
@@ -103,7 +101,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     <div className={styles.container}>
       {pinned_configurations.length > 0 && (
         <div className={styles.configurations}>
-          {pinned_configurations.map(renderConfigurationItem)}
+          {pinned_configurations.map((i) => render_configuration_item(i, true))}
         </div>
       )}
       <div
@@ -135,17 +133,19 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         <>
           <div className={styles.configurations}>
             <ReactSortable
-              list={unpinned_configurations}
+              list={props.configurations}
               setList={(new_state) => {
                 if (props.on_reorder) {
-                  props.on_reorder([...pinned_configurations, ...new_state])
+                  props.on_reorder(new_state)
                 }
               }}
               animation={150}
               handle={`.${styles.configurations__item__left__drag_handle}`}
               disabled={!props.on_reorder}
             >
-              {unpinned_configurations.map(renderConfigurationItem)}
+              {props.configurations.map((i) =>
+                render_configuration_item(i, false)
+              )}
             </ReactSortable>
           </div>
         </>
