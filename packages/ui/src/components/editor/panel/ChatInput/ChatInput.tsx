@@ -244,15 +244,6 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
       document.removeEventListener('selectionchange', on_selection_change)
   }, [props.on_caret_position_change, props.value, props.context_file_paths])
 
-  useEffect(() => {
-    if (show_at_sign_tooltip) {
-      const timer = setTimeout(() => {
-        set_show_at_sign_tooltip(false)
-      }, 2000)
-      return () => clearTimeout(timer)
-    }
-  }, [show_at_sign_tooltip])
-
   const placeholder = useMemo(() => {
     const active_history = props.chat_history
 
@@ -493,10 +484,13 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             }}
           >
             <button
-              onClick={() => {
+              onMouseEnter={() => {
                 if (has_no_context) {
                   set_show_at_sign_tooltip(true)
-                } else {
+                }
+              }}
+              onClick={() => {
+                if (!has_no_context) {
                   props.on_at_sign_click()
                 }
               }}

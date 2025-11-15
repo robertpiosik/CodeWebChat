@@ -26,7 +26,7 @@ async function proceed_with_commit_generation(
       cwd: repository.rootUri.fsPath
     }).toString()
 
-    if (!diff || diff.length === 0) {
+    if (!diff || diff.length == 0) {
       vscode.window.showInformationMessage(
         dictionary.information_message.NO_CHANGES_TO_COMMIT
       )
