@@ -70,15 +70,6 @@ async function proceed_with_commit_generation(
       await handle_accept_commit_message(panel_provider, commit_message)
       panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       panel_provider.commit_was_staged_by_script = false
-      const commit_message_lines = commit_message.split('\n')
-      const shortened_commit_message = commit_message_lines.length
-        ? `${commit_message_lines[0]}...`
-        : commit_message_lines[0]
-      vscode.window.showInformationMessage(
-        dictionary.information_message.COMMIT_CREATED_SUCCESSFULLY(
-          shortened_commit_message
-        )
-      )
     }
   } catch (error) {
     if (panel_provider.commit_was_staged_by_script) {

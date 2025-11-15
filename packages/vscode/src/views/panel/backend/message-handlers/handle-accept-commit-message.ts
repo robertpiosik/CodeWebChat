@@ -29,6 +29,15 @@ export const handle_accept_commit_message = async (
 
     const title = 'Committed changes'
     const description = commit_message
+    const commit_message_lines = commit_message.split('\n')
+    const shortened_commit_message = commit_message_lines.length
+      ? `${commit_message_lines[0]}...`
+      : commit_message_lines[0]
+    vscode.window.showInformationMessage(
+      dictionary.information_message.COMMIT_CREATED_SUCCESSFULLY(
+        shortened_commit_message
+      )
+    )
     await create_checkpoint(
       panel_provider.workspace_provider,
       panel_provider.context,
