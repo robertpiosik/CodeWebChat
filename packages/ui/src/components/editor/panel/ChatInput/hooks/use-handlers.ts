@@ -401,28 +401,28 @@ export const use_handlers = (
   const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { key, shiftKey, ctrlKey, metaKey } = e
 
-    if (key === 'Tab' && !shiftKey) {
+    if (key == 'Tab' && !shiftKey) {
       handle_tab_key(e)
       return
     }
 
-    if (key === 'Backspace') {
+    if (key == 'Backspace') {
       handle_backspace_key(e)
       return
     }
 
-    if (key === 'Enter' && !shiftKey) {
+    if (key == 'Enter' && !shiftKey) {
       e.preventDefault()
       handle_submit(e)
       return
     }
 
-    if ((key === 'ArrowUp' || key === 'ArrowDown') && is_history_enabled) {
+    if ((key == 'ArrowUp' || key == 'ArrowDown') && is_history_enabled) {
       handle_history_navigation(e)
       return
     }
 
-    if (key === 'z' && (ctrlKey || metaKey) && !shiftKey) {
+    if (key == 'z' && (ctrlKey || metaKey) && !shiftKey) {
       handle_undo_at_sign(e)
       return
     }
