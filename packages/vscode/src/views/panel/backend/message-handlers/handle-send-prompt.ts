@@ -5,7 +5,7 @@ import { replace_selection_placeholder } from '@/views/panel/backend/utils/repla
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
-import { chat_code_completion_instructions } from '@/constants/instructions'
+import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import {
   get_last_group_or_preset_choice_state_key,
   get_last_selected_group_state_key,
@@ -110,7 +110,7 @@ export const handle_send_prompt = async (params: {
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
 
-    const main_instructions = chat_code_completion_instructions(
+    const main_instructions = code_completion_instructions_for_panel(
       relative_path,
       position.line,
       position.character

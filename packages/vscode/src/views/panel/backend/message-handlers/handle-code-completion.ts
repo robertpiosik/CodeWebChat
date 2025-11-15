@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
 import { make_api_request } from '@/utils/make-api-request'
-import { chat_code_completion_instructions } from '@/constants/instructions'
+import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import { FilesCollector } from '@/utils/files-collector'
 import {
   ModelProvidersManager,
@@ -315,7 +315,7 @@ const perform_code_completion = async (params: {
     )
 
     const relative_path = vscode.workspace.asRelativePath(document.uri)
-    const main_instructions = chat_code_completion_instructions(
+    const main_instructions = code_completion_instructions_for_panel(
       relative_path,
       position.line,
       position.character

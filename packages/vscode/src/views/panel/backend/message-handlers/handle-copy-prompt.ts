@@ -4,7 +4,7 @@ import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
 import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
-import { chat_code_completion_instructions } from '@/constants/instructions'
+import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
 import { dictionary } from '@shared/constants/dictionary'
@@ -68,7 +68,7 @@ export const handle_copy_prompt = async (params: {
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
     const relative_path = active_path.replace(workspace_folder + '/', '')
 
-    const instructions = `${chat_code_completion_instructions(
+    const instructions = `${code_completion_instructions_for_panel(
       relative_path,
       position.line,
       position.character
