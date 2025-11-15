@@ -22,7 +22,7 @@ import {
   rename_command,
   delete_command,
   save_context_command,
-  reference_in_chat_command,
+  reference_in_prompt_command,
   open_url_command
 } from './commands'
 import { SettingsProvider } from './views/settings/backend/settings-provider'
@@ -66,7 +66,7 @@ export async function activate(context: vscode.ExtensionContext) {
           }
         }
       ),
-      reference_in_chat_command(panel_provider, workspace_provider),
+      reference_in_prompt_command(panel_provider, workspace_provider),
       apply_chat_response_command(context, panel_provider, workspace_provider),
       ...code_completion_commands(
         workspace_provider,

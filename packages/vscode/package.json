@@ -258,8 +258,8 @@
         "title": "Delete"
       },
       {
-        "command": "codeWebChat.referenceInChat",
-        "title": "Reference in Chat",
+        "command": "codeWebChat.referenceInPrompt",
+        "title": "Reference in Prompt",
         "category": "Code Web Chat"
       },
       {
@@ -346,7 +346,7 @@
           "when": "false"
         },
         {
-          "command": "codeWebChat.referenceInChat",
+          "command": "codeWebChat.referenceInPrompt",
           "when": "false"
         },
         {
@@ -476,7 +476,7 @@
           "group": "1_modification@2"
         },
         {
-          "command": "codeWebChat.referenceInChat",
+          "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "1_modification@3"
         },
@@ -501,7 +501,7 @@
           "group": "1_modification@2"
         },
         {
-          "command": "codeWebChat.referenceInChat",
+          "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
           "group": "1_modification@3"
         }

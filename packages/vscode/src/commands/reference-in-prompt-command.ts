@@ -5,12 +5,12 @@ import { FileItem } from '../context/providers/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
-export const reference_in_chat_command = (
+export const reference_in_prompt_command = (
   panel_provider: PanelProvider | undefined,
   workspace_provider: WorkspaceProvider | undefined
 ) => {
   return vscode.commands.registerCommand(
-    'codeWebChat.referenceInChat',
+    'codeWebChat.referenceInPrompt',
     async (uri: FileItem) => {
       if (!panel_provider || !workspace_provider) {
         return
