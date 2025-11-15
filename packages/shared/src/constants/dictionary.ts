@@ -40,7 +40,9 @@ export const dictionary = {
     NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND:
       'No "Edit Context" configurations found. Please add one in the settings.',
     PRESET_PREVIEW_SENT_TO_BROWSER:
-      'Preset preview sent to the connected browser'
+      'Preset preview sent to the connected browser',
+    COMMIT_CREATED_SUCCESSFULLY: (commit_summary: string) =>
+      `Commit created: "${commit_summary}"`
   },
 
   warning_message: {

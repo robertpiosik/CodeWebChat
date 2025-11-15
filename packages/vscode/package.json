@@ -525,6 +525,12 @@
           "description": "The instructions used when generating a commit message.",
           "default": "Write a brief and precise summary for the changes, limited to a single sentence if possible and nothing else. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
         },
+        "codeWebChat.commitMessageAutoAcceptAfter": {
+          "type": "number",
+          "scope": "resource",
+          "default": 5,
+          "description": "Automatically accept commit message after a specified number of seconds."
+        },
         "codeWebChat.contextSizeWarningThreshold": {
           "type": "number",
           "default": 60000,

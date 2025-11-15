@@ -22,6 +22,7 @@ import {
   handle_get_clear_checks_in_workspace_behavior,
   handle_get_code_completions_configurations,
   handle_get_commit_message_instructions,
+  handle_get_commit_message_auto_accept_after,
   handle_get_commit_messages_configurations,
   handle_get_context_size_warning_threshold,
   handle_get_edit_context_configurations,
@@ -41,6 +42,7 @@ import {
   handle_set_default_intelligent_update_configuration,
   handle_update_clear_checks_in_workspace_behavior,
   handle_update_commit_message_instructions,
+  handle_update_commit_message_auto_accept_after,
   handle_update_context_size_warning_threshold,
   handle_update_edit_context_system_instructions,
   handle_update_edit_format_instructions,
@@ -225,6 +227,12 @@ export class SettingsProvider {
           case 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS':
             await handle_update_commit_message_instructions(this, message)
             break
+          case 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER':
+            await handle_get_commit_message_auto_accept_after(this)
+            break
+          case 'UPDATE_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER':
+            await handle_update_commit_message_auto_accept_after(message)
+            break
           case 'GET_CONTEXT_SIZE_WARNING_THRESHOLD':
             await handle_get_context_size_warning_threshold(this)
             break
@@ -269,6 +277,7 @@ export class SettingsProvider {
           void handle_get_intelligent_update_configurations(this)
           void handle_get_context_size_warning_threshold(this)
           void handle_get_commit_message_instructions(this)
+          void handle_get_commit_message_auto_accept_after(this)
           void handle_get_clear_checks_in_workspace_behavior(this)
           void handle_get_gemini_user_id(this)
         }

@@ -584,6 +584,7 @@ export interface ShowStageFilesModalMessage extends BaseMessage {
 export interface ShowCommitMessageModalMessage extends BaseMessage {
   command: 'SHOW_COMMIT_MESSAGE_MODAL'
   commit_message: string
+  auto_accept_after_seconds: number
 }
 
 export interface CommitProcessCancelledMessage extends BaseMessage {

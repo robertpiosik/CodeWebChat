@@ -29,6 +29,7 @@ export const Settings = () => {
       settings_hook.edit_context_system_instructions !== undefined &&
       settings_hook.intelligent_update_configs !== undefined &&
       settings_hook.commit_message_instructions !== undefined &&
+      settings_hook.commit_message_auto_accept_after !== undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
       settings_hook.edit_format_instructions !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
@@ -64,6 +65,9 @@ export const Settings = () => {
         settings_hook.context_size_warning_threshold!
       }
       commit_message_instructions={settings_hook.commit_message_instructions!}
+      commit_message_auto_accept_after={
+        settings_hook.commit_message_auto_accept_after!
+      }
       edit_format_instructions={settings_hook.edit_format_instructions!}
       gemini_user_id={settings_hook.gemini_user_id!}
       clear_checks_in_workspace_behavior={
@@ -81,6 +85,9 @@ export const Settings = () => {
       }
       on_commit_instructions_change={
         settings_hook.handle_commit_instructions_change
+      }
+      on_commit_message_auto_accept_after_change={
+        settings_hook.handle_commit_message_auto_accept_after_change
       }
       on_edit_context_system_instructions_change={
         settings_hook.handle_edit_context_system_instructions_change

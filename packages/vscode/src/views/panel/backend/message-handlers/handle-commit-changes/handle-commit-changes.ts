@@ -9,6 +9,7 @@ import {
 } from './utils'
 import * as path from 'path'
 import { execSync } from 'child_process'
+import { handle_accept_commit_message } from '../handle-accept-commit-message'
 
 async function proceed_with_commit_generation(
   panel_provider: PanelProvider,
@@ -55,10 +56,30 @@ async function proceed_with_commit_generation(
       return
     }
 
-    panel_provider.send_message({
-      command: 'SHOW_COMMIT_MESSAGE_MODAL',
-      commit_message
-    })
+    const auto_accept_after = vscode.workspace
+      .getConfiguration('codeWebChat')
+      .get<number>('commitMessageAutoAcceptAfter')
+
+    if (auto_accept_after && auto_accept_after > 0) {
+      panel_provider.send_message({
+        command: 'SHOW_COMMIT_MESSAGE_MODAL',
+        commit_message,
+        auto_accept_after_seconds: auto_accept_after
+      })
+    } else {
+      await handle_accept_commit_message(panel_provider, commit_message)
+      panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
+      panel_provider.commit_was_staged_by_script = false
+      const commit_message_lines = commit_message.split('\n')
+      const shortened_commit_message = commit_message_lines.length
+        ? `${commit_message_lines[0]}...`
+        : commit_message_lines[0]
+      vscode.window.showInformationMessage(
+        dictionary.information_message.COMMIT_CREATED_SUCCESSFULLY(
+          shortened_commit_message
+        )
+      )
+    }
   } catch (error) {
     if (panel_provider.commit_was_staged_by_script) {
       await vscode.commands.executeCommand('git.unstageAll')

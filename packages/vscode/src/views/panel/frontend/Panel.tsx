@@ -449,7 +449,10 @@ export const Panel = () => {
         {commit_message_to_review && (
           <div className={styles.slot}>
             <UiCommitMessageModal
-              commit_message={commit_message_to_review}
+              commit_message={commit_message_to_review.commit_message}
+              auto_accept_after_seconds={
+                commit_message_to_review.auto_accept_after_seconds
+              }
               on_accept={(message) => {
                 post_message(vscode, {
                   command: 'ACCEPT_COMMIT_MESSAGE',

@@ -37,7 +37,11 @@ export const use_panel = (vscode: any) => {
     string | undefined
   >()
   const [commit_message_to_review, set_commit_message_to_review] = useState<
-    string | undefined
+    | {
+        commit_message: string
+        auto_accept_after_seconds: number
+      }
+    | undefined
   >()
   const [files_to_stage, set_files_to_stage] = useState<string[]>()
   const [
@@ -231,7 +235,10 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'FOCUS_CHAT_INPUT') {
         set_chat_input_focus_key((k) => k + 1)
       } else if (message.command == 'SHOW_COMMIT_MESSAGE_MODAL') {
-        set_commit_message_to_review(message.commit_message)
+        set_commit_message_to_review({
+          commit_message: message.commit_message,
+          auto_accept_after_seconds: message.auto_accept_after_seconds
+        })
       } else if (message.command == 'SHOW_STAGE_FILES_MODAL') {
         set_files_to_stage(message.files)
       } else if (message.command == 'COMMIT_PROCESS_CANCELLED') {

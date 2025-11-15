@@ -27,6 +27,10 @@ export const use_settings = (vscode: any) => {
   const [commit_message_instructions, set_commit_message_instructions] =
     useState<string | undefined>(undefined)
   const [
+    commit_message_auto_accept_after,
+    set_commit_message_auto_accept_after
+  ] = useState<number | null | undefined>(undefined)
+  const [
     edit_context_system_instructions,
     set_edit_context_system_instructions
   ] = useState<string | undefined>(undefined)
@@ -52,6 +56,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS' })
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
@@ -82,6 +87,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'COMMIT_MESSAGE_INSTRUCTIONS':
           set_commit_message_instructions(message.instructions)
+          break
+        case 'COMMIT_MESSAGE_AUTO_ACCEPT_AFTER':
+          set_commit_message_auto_accept_after(message.seconds)
           break
         case 'CONTEXT_SIZE_WARNING_THRESHOLD':
           set_context_size_warning_threshold(message.threshold)
@@ -196,6 +204,13 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
+  const handle_commit_message_auto_accept_after_change = (
+    seconds: number | null
+  ) =>
+    post_message(vscode, {
+      command: 'UPDATE_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER',
+      seconds
+    })
   const handle_edit_context_system_instructions_change = (
     instructions: string
   ) =>
@@ -247,6 +262,7 @@ export const use_settings = (vscode: any) => {
     intelligent_update_configs,
     set_intelligent_update_configs,
     commit_message_instructions,
+    commit_message_auto_accept_after,
     edit_context_system_instructions,
     context_size_warning_threshold,
     edit_format_instructions,
@@ -264,6 +280,7 @@ export const use_settings = (vscode: any) => {
     handle_set_default_config,
     handle_unset_default_config,
     handle_commit_instructions_change,
+    handle_commit_message_auto_accept_after_change,
     handle_edit_context_system_instructions_change,
     handle_open_editor_settings,
     handle_context_size_warning_threshold_change,

@@ -20,6 +20,7 @@ export const Default = () => {
   return visible ? (
     <CommitMessageModal
       commit_message="feat: Implement amazing new feature"
+      auto_accept_after_seconds={5}
       on_accept={handle_accept}
       on_cancel={handle_cancel}
     />

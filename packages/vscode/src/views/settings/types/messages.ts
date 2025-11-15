@@ -165,6 +165,15 @@ export interface UpdateCommitMessageInstructionsMessage {
   instructions: string
 }
 
+export interface GetCommitMessageAutoAcceptAfterMessage {
+  command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER'
+}
+
+export interface UpdateCommitMessageAutoAcceptAfterMessage {
+  command: 'UPDATE_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER'
+  seconds: number | null
+}
+
 export interface GetEditContextSystemInstructionsMessage {
   command: 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
 }
@@ -250,6 +259,8 @@ export type FrontendMessage =
   | SetDefaultCommitMessagesConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
+  | GetCommitMessageAutoAcceptAfterMessage
+  | UpdateCommitMessageAutoAcceptAfterMessage
   | GetEditContextSystemInstructionsMessage
   | UpdateEditContextSystemInstructionsMessage
   | GetEditFormatInstructionsMessage
@@ -291,6 +302,11 @@ export interface CommitMessageInstructionsMessage {
   instructions: string
 }
 
+export interface CommitMessageAutoAcceptAfterMessage {
+  command: 'COMMIT_MESSAGE_AUTO_ACCEPT_AFTER'
+  seconds: number | null
+}
+
 export interface EditContextSystemInstructionsMessage {
   command: 'EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
   instructions: string
@@ -328,6 +344,7 @@ export type BackendMessage =
   | IntelligentUpdateConfigurationsMessage
   | CommitMessagesConfigurationsMessage
   | CommitMessageInstructionsMessage
+  | CommitMessageAutoAcceptAfterMessage
   | EditContextSystemInstructionsMessage
   | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage

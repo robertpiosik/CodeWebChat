@@ -6,6 +6,7 @@ import { use_commit_timer } from './hooks/use-commit-timer'
 
 type Props = {
   commit_message: string
+  auto_accept_after_seconds: number
   on_accept: (message: string) => void
   on_cancel: () => void
 }
@@ -21,7 +22,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
 
   const commit_timer_hook = use_commit_timer({
     on_accept: handle_accept,
-    initial_countdown: 5
+    initial_countdown: props.auto_accept_after_seconds
   })
 
   return (
