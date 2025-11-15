@@ -12,5 +12,5 @@ export const chat_code_completion_instructions = (
     column + 1
   }. Always refer to the symbol "<missing_text>" as "cursor position" and "replacement" as "completion".`
 
-export const refactoring_instruction =
+export const intelligent_update_instructions =
   "User requested refactor of a file. Please show me the full code of the updated <file>, without explanations or any other text. I have a disability which means I can't type and need to be able to copy and paste the full code."

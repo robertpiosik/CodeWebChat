@@ -10,7 +10,7 @@ import { LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY } from '../constan
 import { Logger } from '@shared/utils/logger'
 import { make_api_request } from './make-api-request'
 import { cleanup_api_response } from './cleanup-api-response'
-import { refactoring_instruction } from '../constants/instructions'
+import { intelligent_update_instructions } from '../constants/instructions'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_reasoning_effort } from './apply-reasoning-effort'
 
@@ -213,7 +213,7 @@ export const process_file = async (params: {
     data: { file_path: params.file_path }
   })
   const file_content_block = `<file>\n<![CDATA[\n${params.file_content}\n]]>\n</file>`
-  const content = `${file_content_block}\n${refactoring_instruction}\n<![CDATA[\n${params.instruction}\n]]>`
+  const content = `${file_content_block}\n${intelligent_update_instructions}\n<![CDATA[\n${params.instruction}\n]]>`
 
   const messages = [
     {
