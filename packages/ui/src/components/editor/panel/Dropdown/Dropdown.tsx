@@ -64,6 +64,18 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
     props.on_change(props.options[next_index].value)
   }
 
+  const handle_mouse_enter = () => {
+    if (!is_open) {
+      set_just_opened(true)
+    }
+    set_is_open(true)
+  }
+
+  const handle_mouse_leave = () => {
+    set_is_open(false)
+    set_just_opened(false)
+  }
+
   useEffect(() => {
     const handle_click_outside = (event: MouseEvent) => {
       if (
@@ -86,6 +98,8 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
       className={cn(styles.container, { [styles['button--open']]: is_open })}
       ref={container_ref}
       onWheel={handle_wheel}
+      onMouseEnter={handle_mouse_enter}
+      onMouseLeave={handle_mouse_leave}
     >
       <button
         className={cn(styles.button, { [styles['button--open']]: is_open })}

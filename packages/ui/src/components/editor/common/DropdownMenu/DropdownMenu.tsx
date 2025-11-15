@@ -20,22 +20,24 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
 
   return (
     <div className={styles.menu}>
-      {props.items.map((item, index) => (
-        <div
-          key={index}
-          className={styles.item}
-          onClick={item.on_click}
-          data-selected={item.is_selected && is_preselection_respected}
-          onMouseEnter={() => {
-            set_is_preselection_respected(false)
-          }}
-        >
-          <span>{item.label}</span>
-          {item.shortcut && (
-            <span className={styles.shortcut}>{item.shortcut}</span>
-          )}
-        </div>
-      ))}
+      <div className={styles.menu__inner}>
+        {props.items.map((item, index) => (
+          <div
+            key={index}
+            className={styles.item}
+            onClick={item.on_click}
+            data-selected={item.is_selected && is_preselection_respected}
+            onMouseEnter={() => {
+              set_is_preselection_respected(false)
+            }}
+          >
+            <span>{item.label}</span>
+            {item.shortcut && (
+              <span className={styles.shortcut}>{item.shortcut}</span>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

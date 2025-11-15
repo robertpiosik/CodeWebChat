@@ -1,16 +1,20 @@
 .menu {
   position: absolute;
-  top: calc(100% + var(--padding-4px));
+  top: 100%;
+  padding-top: 4px;
   right: 0;
-  background-color: var(--vscode-quickInput-background);
-  border-radius: var(--border-radius-8px);
-  border: 1px solid var(--vscode-widget-border);
-  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
   z-index: 2;
-  padding: var(--padding-4px);
   width: max-content;
   text-align: left;
   min-width: 100%;
+
+  &__inner {
+    background-color: var(--vscode-quickInput-background);
+    border-radius: var(--border-radius-8px);
+    border: 1px solid var(--vscode-widget-border);
+    box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+    padding: var(--padding-4px);
+  }
 }
 
 .item {
