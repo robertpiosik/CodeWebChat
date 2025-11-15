@@ -29,10 +29,12 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
   )
 
   const handle_toggle = () => {
-    if (!is_open) {
-      set_just_opened(true)
+    // if dropdown is open, clicking it should not close it
+    if (is_open) {
+      return
     }
-    set_is_open(!is_open)
+    set_is_open(true)
+    set_just_opened(true)
   }
 
   const handle_select = (value: T) => {
