@@ -17,6 +17,29 @@ import {
   map_display_pos_to_raw_pos,
   map_raw_pos_to_display_pos
 } from './utils/position-mapping'
+import { dictionary } from '@shared/constants/dictionary'
+
+const Tooltip: React.FC<{
+  message: string
+  align: 'left' | 'right'
+  is_warning?: boolean
+  offset: number
+}> = (params) => (
+  <div
+    className={cn(styles.tooltip, {
+      [styles['tooltip--align-left']]: params.align == 'left',
+      [styles['tooltip--align-right']]: params.align == 'right',
+      [styles['tooltip--warning']]: params.is_warning
+    })}
+    style={
+      params.offset !== undefined
+        ? ({ '--tooltip-offset': `${params.offset}px` } as React.CSSProperties)
+        : undefined
+    }
+  >
+    {params.message}
+  </div>
+)
 
 export type EditFormat = 'whole' | 'truncated' | 'diff'
 
@@ -55,6 +78,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
   const container_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
   const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
+  const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const is_narrow_viewport = use_is_narrow_viewport(268)
   const {
     is_dropdown_open,
@@ -369,6 +393,9 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
     }
   }
 
+  const has_no_context =
+    !props.context_file_paths || props.context_file_paths.length == 0
+
   return (
     <div className={styles.container}>
       {props.has_active_selection && props.is_in_code_completions_mode && (
@@ -444,6 +471,21 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
             }
           }}
         >
+          {show_at_sign_tooltip && (
+            <Tooltip
+              message={dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT}
+              align="left"
+              offset={8}
+              is_warning
+            />
+          )}
+          {props.use_last_choice_button_title && show_submit_tooltip && (
+            <Tooltip
+              message={props.use_last_choice_button_title}
+              offset={28}
+              align="right"
+            />
+          )}
           <div
             className={styles.footer__left}
             onClick={(e) => {
@@ -452,10 +494,7 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
           >
             <button
               onClick={() => {
-                if (
-                  !props.context_file_paths ||
-                  props.context_file_paths.length === 0
-                ) {
+                if (has_no_context) {
                   set_show_at_sign_tooltip(true)
                 } else {
                   props.on_at_sign_click()
@@ -466,11 +505,6 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
               title="Reference file"
             >
               <Icon variant="AT_SIGN" />
-              {show_at_sign_tooltip && (
-                <div className={styles['footer__left__at-sign-warning']}>
-                  Nothing is selected in context.
-                </div>
-              )}
             </button>
             {!props.is_in_code_completions_mode && (
               <button
@@ -536,7 +570,8 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
                       'codicon-send'
                     )}
                     onClick={handle_submit}
-                    title={props.use_last_choice_button_title}
+                    onMouseEnter={() => set_show_submit_tooltip(true)}
+                    onMouseLeave={() => set_show_submit_tooltip(false)}
                   />
                   <button
                     className={cn(
