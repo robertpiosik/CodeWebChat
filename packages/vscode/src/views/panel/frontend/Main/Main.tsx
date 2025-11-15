@@ -418,6 +418,16 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
+  const handle_toggle_pinned_configuration = (id: string) => {
+    if (props.api_mode) {
+      post_message(props.vscode, {
+        command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION',
+        mode: props.api_mode,
+        configuration_id: id
+      })
+    }
+  }
+
   const handle_create_preset = () => {
     post_message(props.vscode, {
       command: 'CREATE_PRESET'
@@ -677,6 +687,7 @@ export const Main: React.FC<Props> = (props) => {
       configurations={configurations_for_current_mode || []}
       on_configuration_click={handle_configuration_click}
       on_configurations_reorder={handle_configurations_reorder}
+      on_toggle_pinned_configuration={handle_toggle_pinned_configuration}
       on_manage_configurations={handle_manage_configurations}
       on_search_click={handle_search_click}
       on_at_sign_click={handle_at_sign_click}

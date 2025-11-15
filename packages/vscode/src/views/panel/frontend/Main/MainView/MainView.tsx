@@ -49,6 +49,7 @@ type Props = {
   on_configurations_reorder: (
     reordered_configurations: UiConfigurations.Configuration[]
   ) => void
+  on_toggle_pinned_configuration: (id: string) => void
   on_manage_configurations: () => void
   has_active_editor: boolean
   has_active_selection: boolean
@@ -290,6 +291,7 @@ export const MainView: React.FC<Props> = (props) => {
               }))}
               on_configuration_click={props.on_configuration_click}
               on_reorder={props.on_configurations_reorder}
+              on_toggle_pinned={props.on_toggle_pinned_configuration}
               selected_configuration_id={props.selected_configuration_id}
               on_manage_configurations={props.on_manage_configurations}
               is_collapsed={props.configurations_collapsed}

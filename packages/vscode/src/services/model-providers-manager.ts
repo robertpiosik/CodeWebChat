@@ -29,6 +29,7 @@ export type ToolConfig = {
   reasoning_effort?: ReasoningEffort
   max_concurrency?: number
   instructions_placement?: InstructionsPlacement
+  is_pinned?: boolean
 }
 
 export const get_tool_config_id = (config: ToolConfig): string => {
@@ -167,6 +168,7 @@ export class ModelProvidersManager {
         reasoningEffort?: ReasoningEffort
         maxConcurrency?: number
         instructionsPlacement?: InstructionsPlacement
+        isPinned?: boolean
       }[]
     >(settings_key, [])
 
@@ -180,7 +182,8 @@ export class ModelProvidersManager {
           temperature: sc.temperature ?? 1.0,
           reasoning_effort: sc.reasoningEffort,
           max_concurrency: sc.maxConcurrency,
-          instructions_placement: sc.instructionsPlacement
+          instructions_placement: sc.instructionsPlacement,
+          is_pinned: sc.isPinned
         }
       })
       .filter((tc) => tc.provider_type)
@@ -213,6 +216,7 @@ export class ModelProvidersManager {
         new_config.maxConcurrency = c.max_concurrency
       if (c.instructions_placement !== undefined)
         new_config.instructionsPlacement = c.instructions_placement
+      if (c.is_pinned) new_config.isPinned = c.is_pinned
       return new_config
     })
 
@@ -253,6 +257,7 @@ export class ModelProvidersManager {
         isDefault?: boolean
         maxConcurrency?: number
         instructionsPlacement?: InstructionsPlacement
+        isPinned?: boolean
       }[]
     >(settings_key, [])
     const default_config_from_settings = settings_configs.find(
@@ -271,7 +276,8 @@ export class ModelProvidersManager {
         reasoning_effort: default_config_from_settings.reasoningEffort,
         max_concurrency: default_config_from_settings.maxConcurrency,
         instructions_placement:
-          default_config_from_settings.instructionsPlacement
+          default_config_from_settings.instructionsPlacement,
+        is_pinned: default_config_from_settings.isPinned
       }
       const validated_config = this._validate_tool_config(tool_config)
       if (validated_config) return validated_config

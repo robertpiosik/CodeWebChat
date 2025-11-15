@@ -18,6 +18,7 @@ export type ApiToolConfiguration = {
   reasoning_effort?: string
   instructions_placement?: InstructionsPlacement
   is_default?: boolean
+  is_pinned?: boolean
 }
 
 export type FileProgressStatus =
@@ -237,6 +238,12 @@ export interface ReorderApiToolConfigurationsMessage extends BaseMessage {
   configurations: ApiToolConfiguration[]
 }
 
+export interface TogglePinnedApiToolConfigurationMessage extends BaseMessage {
+  command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
+  mode: ApiMode
+  configuration_id: string
+}
+
 export interface GetVersionMessage extends BaseMessage {
   command: 'GET_VERSION'
 }
@@ -385,6 +392,7 @@ export type FrontendMessage =
   | SaveApiModeMessage
   | GetApiToolConfigurationsMessage
   | ReorderApiToolConfigurationsMessage
+  | TogglePinnedApiToolConfigurationMessage
   | SaveDonationsVisibilityMessage
   | GetVersionMessage
   | EditsReviewMessage

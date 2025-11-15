@@ -3,6 +3,10 @@ import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
 import { WebsitesProvider } from '@/context/providers/websites-provider'
+import {
+  ModelProvidersManager,
+  get_tool_config_id
+} from '@/services/model-providers-manager'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
@@ -479,6 +483,35 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_get_api_tool_configurations(this)
           } else if (message.command == 'REORDER_API_TOOL_CONFIGURATIONS') {
             await handle_reorder_api_tool_configurations(this, message)
+          } else if (
+            message.command == 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
+          ) {
+            const { mode, configuration_id } = message
+            const providers_manager = new ModelProvidersManager(this.context)
+            let configs
+            if (mode === 'edit-context') {
+              configs = await providers_manager.get_edit_context_tool_configs()
+            } else if (mode === 'code-completions') {
+              configs =
+                await providers_manager.get_code_completions_tool_configs()
+            } else {
+              return
+            }
+
+            const config = configs.find(
+              (c) => get_tool_config_id(c) === configuration_id
+            )
+            if (!config) return
+
+            config.is_pinned = !config.is_pinned
+
+            if (mode === 'edit-context') {
+              await providers_manager.save_edit_context_tool_configs(configs)
+            } else if (mode === 'code-completions') {
+              await providers_manager.save_code_completions_tool_configs(
+                configs
+              )
+            }
           } else if (message.command == 'SAVE_WEB_MODE') {
             await handle_save_mode_web(this, message.mode)
           } else if (message.command == 'GET_API_MODE') {
