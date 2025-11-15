@@ -462,7 +462,7 @@ export const Home: React.FC<Props> = (props) => {
             />
             <Item
               title="Modal Duration"
-              description="Automatically accept the generated commit message after a specified number of seconds. Set 0 to disable the modal."
+              description="Automatically accept the generated commit message after a specified number of seconds. Set 0 to auto-accept generated summaries."
               slot={
                 <Input
                   type="number"
