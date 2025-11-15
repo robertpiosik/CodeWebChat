@@ -1,0 +1,8 @@
+Some text before.
+
+```typescript
+// src/index.ts 25:5
+console.log("completion");
+```
+
+Some text after.
