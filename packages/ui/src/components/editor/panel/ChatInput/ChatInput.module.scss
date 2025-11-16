@@ -96,7 +96,6 @@
   cursor: pointer;
   color: var(--vscode-icon-foreground);
   opacity: var(--dimmed-opacity);
-  z-index: 0;
 
   &::before {
     font-size: 13px !important;
