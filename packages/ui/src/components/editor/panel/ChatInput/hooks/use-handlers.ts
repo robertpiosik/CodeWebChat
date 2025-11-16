@@ -362,20 +362,30 @@ export const use_handlers = (
 
     e.preventDefault()
 
+    const update_and_set_caret = (value: string) => {
+      props.on_change(value)
+      set_caret_position_after_change(
+        input_ref,
+        value.length,
+        value,
+        props.context_file_paths ?? []
+      )
+    }
+
     if (e.key === 'ArrowUp') {
       if (history_index < active_history.length - 1) {
         const new_index = history_index + 1
         set_history_index(new_index)
-        props.on_change(active_history[new_index])
+        update_and_set_caret(active_history[new_index])
       }
     } else if (e.key === 'ArrowDown') {
       if (history_index > 0) {
         const new_index = history_index - 1
         set_history_index(new_index)
-        props.on_change(active_history[new_index])
+        update_and_set_caret(active_history[new_index])
       } else if (history_index === 0) {
         set_history_index(-1)
-        props.on_change('')
+        update_and_set_caret('')
       }
     }
   }
