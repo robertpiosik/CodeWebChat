@@ -36,6 +36,14 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
       }
       case 'selection-keyword':
         return '#Selection'
+      case 'commit-keyword': {
+        const repo_name = el.dataset.repoName
+        const commit_hash = el.dataset.commitHash
+        const commit_message = el.dataset.commitMessage
+        return repo_name && commit_hash && commit_message !== undefined
+          ? `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
+          : ''
+      }
     }
 
     if (el.childNodes.length > 0) {
@@ -255,6 +263,32 @@ export const use_handlers = (
     return false
   }
 
+  const handle_commit_keyword_deletion = (
+    raw_pos: number,
+    context_file_paths: string[]
+  ): boolean => {
+    const text_before_cursor = props.value.substring(0, raw_pos)
+    const match = text_before_cursor.match(/#Commit:[^:]+:[^\s"]+\s+"[^"]*"$/)
+
+    if (match) {
+      const start_of_match = raw_pos - match[0].length
+      const new_value =
+        props.value.substring(0, start_of_match) +
+        props.value.substring(raw_pos)
+      const new_raw_cursor_pos = start_of_match
+      props.on_change(new_value)
+
+      set_caret_position_after_change(
+        input_ref,
+        new_raw_cursor_pos,
+        new_value,
+        context_file_paths
+      )
+      return true
+    }
+    return false
+  }
+
   const handle_keyword_deletion_by_backspace = (
     el: HTMLElement,
     display_pos: number
@@ -280,6 +314,10 @@ export const use_handlers = (
 
     if (el.dataset.type === 'selection-keyword') {
       return handle_selection_keyword_deletion(raw_pos, context_file_paths)
+    }
+
+    if (el.dataset.type === 'commit-keyword') {
+      return handle_commit_keyword_deletion(raw_pos, context_file_paths)
     }
 
     return false
@@ -341,7 +379,8 @@ export const use_handlers = (
         el.dataset.type === 'file-keyword' ||
         el.dataset.type === 'changes-keyword' ||
         el.dataset.type === 'selection-keyword' ||
-        el.dataset.type === 'saved-context-keyword'
+        el.dataset.type === 'saved-context-keyword' ||
+        el.dataset.type === 'commit-keyword'
       ) {
         const display_pos = get_caret_position_from_div(input_ref.current)
         if (handle_keyword_deletion_by_backspace(el, display_pos)) {

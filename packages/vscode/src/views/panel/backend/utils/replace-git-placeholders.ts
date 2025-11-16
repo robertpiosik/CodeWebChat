@@ -5,7 +5,7 @@ import * as path from 'path'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { Logger } from '@shared/utils/logger'
 
-function build_changes_xml(diff: string, cwd: string): string {
+const build_changes_xml = (diff: string, cwd: string): string => {
   // Split diff into per-file sections. Each section starts with 'diff --git '.
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
 
@@ -69,6 +69,7 @@ function build_changes_xml(diff: string, cwd: string): string {
   }
   return ''
 }
+
 export const replace_changes_placeholder = async (params: {
   instruction: string
   after_context?: boolean
@@ -223,4 +224,157 @@ export const replace_changes_placeholder = async (params: {
       )
     }
   }
+}
+
+const build_commit_changes_xml = (
+  diff: string,
+  cwd: string,
+  commit_hash: string,
+  commit_message?: string
+): string => {
+  const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
+
+  if (file_diffs.length == 0) {
+    return ''
+  }
+
+  let changes_content = ''
+
+  for (const file_diff_content of file_diffs) {
+    const full_file_diff = 'diff --git ' + file_diff_content
+    const lines = full_file_diff.split('\n')
+    const old_path_line = lines.find((l) => l.startsWith('--- a/'))
+    const new_path_line = lines.find((l) => l.startsWith('+++ b/'))
+
+    const old_path = old_path_line
+      ? old_path_line.substring('--- a/'.length)
+      : undefined
+    const new_path = new_path_line
+      ? new_path_line.substring('+++ b/'.length)
+      : undefined
+
+    let file_path: string | undefined
+    let is_deleted = false
+
+    if (new_path && new_path != '/dev/null') {
+      file_path = new_path
+    } else if (old_path && old_path != '/dev/null') {
+      file_path = old_path
+      if (new_path == '/dev/null') {
+        is_deleted = true
+      }
+    }
+
+    if (file_path) {
+      let file_content = ''
+      if (!is_deleted) {
+        try {
+          file_content = execSync(`git show ${commit_hash}:"./${file_path}"`, {
+            cwd,
+            encoding: 'utf-8'
+          })
+        } catch (e) {
+          Logger.error({
+            function_name: 'build_commit_changes_xml',
+            message: `Could not read file for diff from commit: ${file_path}`,
+            data: e
+          })
+        }
+      }
+
+      changes_content += `<change path="${file_path}">\n`
+      changes_content += `<diff>\n<![CDATA[\n${full_file_diff}\n]]>\n</diff>\n`
+      changes_content += `<file>\n<![CDATA[\n${file_content}\n]]>\n</file>\n`
+      changes_content += `</change>\n`
+    }
+  }
+
+  if (changes_content) {
+    const message_attribute = commit_message
+      ? ` message="${commit_message.replace(/"/g, '&quot;')}"`
+      : ''
+    return `\n<commit${message_attribute}>\n<changes>\n${changes_content}</changes>\n</commit>\n`
+  }
+  return ''
+}
+
+export const replace_commit_placeholder = async (params: {
+  instruction: string
+  after_context?: boolean
+}): Promise<string> => {
+  const regex = /#Commit:([^:]+):([a-fA-F0-9]+)\s*(?:"([^"]*)")?/g
+  if (params.after_context) {
+    return params.instruction.replace(
+      regex,
+      (_match, _folder, _hash, message) => {
+        const message_attr = message
+          ? ` message="${message.replace(/"/g, '&quot;')}"`
+          : ''
+        return `<commit${message_attr}/>`
+      }
+    )
+  }
+
+  let result_instruction = params.instruction
+  const matches = [...result_instruction.matchAll(regex)]
+
+  const workspace_folders = vscode.workspace.workspaceFolders
+  if (!workspace_folders) {
+    return result_instruction.replace(regex, '')
+  }
+
+  for (const match of matches) {
+    const full_match = match[0]
+    const folder_name = match[1]
+    const commit_hash = match[2]
+    const commit_message = match[3]
+
+    const target_folder = workspace_folders.find(
+      (folder) => folder.name === folder_name
+    )
+    if (!target_folder) {
+      vscode.window.showErrorMessage(
+        `Workspace folder "${folder_name}" not found.`
+      )
+      result_instruction = result_instruction.replace(full_match, '')
+      continue
+    }
+
+    try {
+      const diff = execSync(`git show ${commit_hash}`, {
+        cwd: target_folder.uri.fsPath,
+        encoding: 'utf-8'
+      }).toString()
+
+      if (!diff || diff.length == 0) {
+        vscode.window.showInformationMessage(
+          `Commit ${commit_hash} seems empty.`
+        )
+        result_instruction = result_instruction.replace(full_match, '')
+        continue
+      }
+
+      const replacement_text = build_commit_changes_xml(
+        diff,
+        target_folder.uri.fsPath,
+        commit_hash,
+        commit_message
+      )
+      result_instruction = result_instruction.replace(
+        full_match,
+        replacement_text
+      )
+    } catch (error) {
+      vscode.window.showErrorMessage(
+        `Failed to get diff for commit ${commit_hash}.`
+      )
+      Logger.error({
+        function_name: 'replace_commit_placeholder',
+        message: `Error getting diff for commit ${commit_hash}`,
+        data: error
+      })
+      result_instruction = result_instruction.replace(full_match, '')
+    }
+  }
+  return result_instruction
 }

@@ -15,7 +15,10 @@ import {
 } from '@/constants/state-keys'
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/model-providers-manager'
-import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
+import {
+  replace_changes_placeholder,
+  replace_commit_placeholder
+} from '@/views/panel/backend/utils/replace-git-placeholders'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
@@ -254,6 +257,12 @@ const perform_context_editing = async (params: {
 
   if (pre_context_instructions.includes('#Changes:')) {
     pre_context_instructions = await replace_changes_placeholder({
+      instruction: pre_context_instructions
+    })
+  }
+
+  if (pre_context_instructions.includes('#Commit:')) {
+    pre_context_instructions = await replace_commit_placeholder({
       instruction: pre_context_instructions
     })
   }

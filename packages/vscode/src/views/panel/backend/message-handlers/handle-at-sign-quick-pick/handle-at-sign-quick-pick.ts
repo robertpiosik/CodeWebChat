@@ -68,7 +68,7 @@ const at_sign_quick_pick = async (params: {
     })
 
     if (filtered_paths.length == 1) {
-      return `\`${filtered_paths[0]}\``
+      return `\`${filtered_paths[0]}\` `
     } else if (filtered_paths.length > 1) {
       const filtered_paths_set = new Set(filtered_paths)
       quick_pick_items_to_show = all_quick_pick_items.filter((item) =>
@@ -94,7 +94,7 @@ const at_sign_quick_pick = async (params: {
   )
 
   if (selected_path_item) {
-    return `\`${selected_path_item.fullPath}\``
+    return `\`${selected_path_item.fullPath}\` `
   }
   return
 }

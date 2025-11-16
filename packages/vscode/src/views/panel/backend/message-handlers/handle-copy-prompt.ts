@@ -2,7 +2,10 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
-import { replace_changes_placeholder } from '@/views/panel/backend/utils/replace-changes-placeholder'
+import {
+  replace_changes_placeholder,
+  replace_commit_placeholder
+} from '@/views/panel/backend/utils/replace-git-placeholders'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
@@ -100,6 +103,16 @@ export const handle_copy_prompt = async (params: {
         instruction: pre_context_instructions
       })
       post_context_instructions = await replace_changes_placeholder({
+        instruction: post_context_instructions,
+        after_context: true
+      })
+    }
+
+    if (instructions.includes('#Commit:')) {
+      pre_context_instructions = await replace_commit_placeholder({
+        instruction: pre_context_instructions
+      })
+      post_context_instructions = await replace_commit_placeholder({
         instruction: post_context_instructions,
         after_context: true
       })

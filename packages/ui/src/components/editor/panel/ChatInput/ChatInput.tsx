@@ -351,6 +351,20 @@ export const ChatInput: React.FC<ChatInputProps> = (props) => {
         apply_deletion(start_index, start_index + search_pattern.length)
       }
     }
+    // Check if it's a commit keyword
+    else if (keyword_element.classList.contains(styles['keyword--commit'])) {
+      const repo_name = keyword_element.dataset.repoName
+      const commit_hash = keyword_element.dataset.commitHash
+      const commit_message = keyword_element.dataset.commitMessage
+      if (!repo_name || !commit_hash || commit_message === undefined) return
+
+      const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
+      const start_index = props.value.indexOf(search_pattern)
+
+      if (start_index !== -1) {
+        apply_deletion(start_index, start_index + search_pattern.length)
+      }
+    }
   }
 
   const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {

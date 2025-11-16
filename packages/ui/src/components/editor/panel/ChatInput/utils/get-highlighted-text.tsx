@@ -66,8 +66,9 @@ export const get_highlighted_text = (params: {
       .join('')
   }
 
+  const commit_regex_part = '#Commit:[^:]+:[^\\s"]+\\s+"[^"]*"'
   const regex = new RegExp(
-    `(#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part})`,
+    `(#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part}|${commit_regex_part})`,
     'g'
   )
   const parts = params.text.split(regex)
@@ -108,6 +109,21 @@ export const get_highlighted_text = (params: {
         }"></span><span class="${
           styles['keyword__text']
         }">Context "${context_name}"</span></span>`
+      }
+      const commit_match = part.match(/^#Commit:([^:]+):([^\s"]+)\s+"([^"]*)"$/)
+      if (part && commit_match) {
+        const repo_name = commit_match[1]
+        const commit_hash = commit_match[2]
+        const commit_message = commit_match[3]
+        const short_hash = commit_hash.substring(0, 7)
+        return `<span class="${cn(
+          styles['keyword'],
+          styles['keyword--commit']
+        )}" contentEditable="false" data-type="commit-keyword" data-repo-name="${repo_name}" data-commit-hash="${commit_hash}" data-commit-message="${commit_message}" title="${commit_message}"><span class="${
+          styles['keyword__icon']
+        }"></span><span class="${
+          styles['keyword__text']
+        }">${short_hash}</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)

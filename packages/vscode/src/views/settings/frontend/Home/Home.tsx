@@ -451,7 +451,7 @@ export const Home: React.FC<Props> = (props) => {
           <Group>
             <Item
               title="Instructions"
-              description="Style and conventions (e.g. Conventional Commits, gitmoji) for generated commit messages."
+              description="Describe style and conventions (e.g. Conventional Commits, gitmoji) for the generated commit message."
               slot_placement="below"
               slot={
                 <Textarea

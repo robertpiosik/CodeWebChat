@@ -8,7 +8,7 @@ export const map_display_pos_to_raw_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#Commit:[^:]+:([^\s"]+)\s+"[^"]*")/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -17,6 +17,8 @@ export const map_display_pos_to_raw_pos = (
     const selection_keyword = match[3]
     const saved_context_keyword = match[4]
     const context_name = match[5]
+    const commit_keyword = match[6]
+    const commit_hash = match[7]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -34,6 +36,10 @@ export const map_display_pos_to_raw_pos = (
       is_replacement_match = true
     } else if (saved_context_keyword) {
       display_match_length = `Context "${context_name}"`.length
+      is_replacement_match = true
+    } else if (commit_keyword) {
+      const short_hash = commit_hash.substring(0, 7)
+      display_match_length = short_hash.length
       is_replacement_match = true
     }
 
@@ -79,7 +85,7 @@ export const map_raw_pos_to_display_pos = (
   let last_raw_index = 0
 
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#Commit:[^:]+:([^\s"]+)\s+"[^"]*")/g
   let match
 
   while ((match = regex.exec(raw_text)) !== null) {
@@ -88,6 +94,8 @@ export const map_raw_pos_to_display_pos = (
     const selection_keyword = match[3]
     const saved_context_keyword = match[4]
     const context_name = match[5]
+    const commit_keyword = match[6]
+    const commit_hash = match[7]
 
     let is_replacement_match = false
     let display_match_length = 0
@@ -105,6 +113,10 @@ export const map_raw_pos_to_display_pos = (
       is_replacement_match = true
     } else if (saved_context_keyword) {
       display_match_length = `Context "${context_name}"`.length
+      is_replacement_match = true
+    } else if (commit_keyword) {
+      const short_hash = commit_hash.substring(0, 7)
+      display_match_length = short_hash.length
       is_replacement_match = true
     }
 

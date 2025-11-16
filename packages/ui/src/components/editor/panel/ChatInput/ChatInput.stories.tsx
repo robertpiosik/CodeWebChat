@@ -115,6 +115,28 @@ export const WithPlaceholderSelection = () => (
   />
 )
 
+export const WithCommit = () => (
+  <ChatInput
+    value='Ask about #Commit:my-repo:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 "Initial commit"'
+    chat_history={[]}
+    on_change={(value) => console.log('Changed:', value)}
+    on_submit={() => console.log('Submitted')}
+    on_copy={() => console.log('Copied')}
+    is_connected={true}
+    is_in_code_completions_mode={false}
+    has_active_editor={true}
+    has_active_selection={false}
+    on_caret_position_change={(pos) => console.log('Caret position:', pos)}
+    on_search_click={() => console.log('Search clicked')}
+    on_at_sign_click={() => console.log('@ clicked')}
+    on_hash_sign_click={() => console.log('# clicked')}
+    is_web_view_type={false}
+    on_submit_with_control={() => console.log('Submitted with control')}
+    context_file_paths={[]}
+    on_curly_braces_click={() => {}}
+  />
+)
+
 export const WithEditFormatSelector = () => {
   const [edit_format, set_edit_format] = useState<EditFormat>('diff')
   return (

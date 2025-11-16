@@ -204,6 +204,10 @@
     content: '\ebdb';
   }
 
+  &--commit &__icon::before {
+    content: '\eafc';
+  }
+
   &--saved-context &__icon::before {
     content: '\eab3';
   }

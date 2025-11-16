@@ -3,7 +3,7 @@ export const get_display_text = (
   context_file_paths: string[]
 ): string => {
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#SavedContext:(?:WorkspaceState|JSON)\s+"([^"]+)")|(#Commit:[^:]+:([^\s"]+)\s+"[^"]*")/g
   return text.replace(
     regex,
     (
@@ -11,7 +11,9 @@ export const get_display_text = (
       file_path,
       changes_keyword,
       saved_context_keyword,
-      context_name
+      context_name,
+      commit_keyword,
+      commit_hash
     ) => {
       if (file_path) {
         if (context_file_paths.includes(file_path)) {
@@ -26,6 +28,10 @@ export const get_display_text = (
       }
       if (saved_context_keyword) {
         return `Context "${context_name}"`
+      }
+      if (commit_keyword) {
+        const short_hash = commit_hash.substring(0, 7)
+        return short_hash
       }
       return match
     }
