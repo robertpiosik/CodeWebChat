@@ -277,6 +277,12 @@
         "command": "codeWebChat.settings",
         "title": "Settings",
         "category": "Code Web Chat"
+      },
+      {
+        "command": "codeWebChat.generateCommitMessage",
+        "title": "Generate Commit Message with CWC",
+        "category": "Code Web Chat",
+        "icon": "$(sparkle)"
       }
     ],
     "menus": {
@@ -457,6 +463,13 @@
           "command": "codeWebChat.twitter",
           "when": "view == codeWebChatView",
           "group": "navigation@1"
+        }
+      ],
+      "scm/title": [
+        {
+          "command": "codeWebChat.generateCommitMessage",
+          "group": "navigation",
+          "when": "scmProvider == git"
         }
       ],
       "view/item/context": [

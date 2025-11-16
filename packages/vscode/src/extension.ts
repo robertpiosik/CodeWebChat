@@ -1,5 +1,10 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
+import {
+  get_git_repository,
+  prepare_staged_changes
+} from './utils/git-repository-utils'
+import { generate_commit_message_from_diff } from './views/panel/backend/message-handlers/handle-commit-changes/utils'
 import { PanelProvider } from './views/panel/backend/panel-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
@@ -104,6 +109,29 @@ export async function activate(context: vscode.ExtensionContext) {
       'codeWebChat.settings',
       (section?: string) => {
         settings_provider.createOrShow(section)
+      }
+    )
+  )
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'codeWebChat.generateCommitMessage',
+      async (source_control?: vscode.SourceControl) => {
+        const repository = get_git_repository(source_control)
+        if (!repository) return
+
+        const diff = await prepare_staged_changes(repository)
+
+        if (!diff) return
+
+        const commit_message = await generate_commit_message_from_diff({
+          context,
+          repository,
+          diff
+        })
+        if (commit_message) {
+          repository.inputBox.value = commit_message
+        }
       }
     )
   )

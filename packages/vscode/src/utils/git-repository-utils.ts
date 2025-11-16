@@ -63,11 +63,19 @@ export function get_git_repository(
 export async function prepare_staged_changes(
   repository: GitRepository
 ): Promise<string | null> {
+  await repository.status()
   const staged_changes = repository.state.indexChanges || []
 
-  if (staged_changes.length === 0) {
-    await repository.add([])
+  if (
+    staged_changes.length === 0 &&
+    repository.state.workingTreeChanges.length > 0
+  ) {
+    const uris_to_stage = repository.state.workingTreeChanges.map(
+      (change: any) => change.uri.fsPath
+    )
+    await repository.add(uris_to_stage)
     await new Promise((resolve) => setTimeout(resolve, 500))
+    await repository.status()
   }
 
   const diff = execSync('git diff --staged', {
