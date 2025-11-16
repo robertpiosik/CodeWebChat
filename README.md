@@ -160,16 +160,6 @@ If you have a question, or want to help others, you're always welcome in our com
 - [Discord server](https://discord.gg/KJySXsrSX5)
 - [GitHub Discussions](https://github.com/robertpiosik/CodeWebChat/discussions)
 
-## Donations
-
-If you enjoy using Code Web Chat, [buying a $3 coffee](https://buymeacoffee.com/robertpiosik) is a great way to show your support for the project.
-
-**BTC:** bc1qfzajl0fc4347knr6n5hhuk52ufr4sau04su5te
-
-**ETH:** 0x532eA8CA70aBfbA6bfE35e6B3b7b301b175Cf86D
-
-**XMR:** 84whVjApZJtSeRb2eEbZ1pJ7yuBoGoWHGA4JuiFvdXVBXnaRYyQ3S4kTEuzgKjpxyr3nxn1XHt9yWTRqZ3XGfY35L4yDm6R
-
 ## Contributing
 
 All contributions are welcome. Feel free to submit pull requests, feature requests and bug reports.
