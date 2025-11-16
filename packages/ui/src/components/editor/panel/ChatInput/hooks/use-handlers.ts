@@ -423,8 +423,11 @@ export const use_handlers = (
     }
 
     if (key == 'z' && (ctrlKey || metaKey) && !shiftKey) {
-      handle_undo_at_sign(e)
-      return
+      if (saved_value_before_at_sign !== null) {
+        handle_undo_at_sign(e)
+        return
+      }
+      // Otherwise, we don't return, allowing the default undo behavior
     }
 
     if (props.value) {

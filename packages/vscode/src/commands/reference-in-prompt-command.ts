@@ -32,7 +32,10 @@ export const reference_in_prompt_command = (
         .get_all_checked_paths()
         .includes(file_path)
 
-      if (!is_checked) {
+      const is_partially_checked =
+        uri.isDirectory && workspace_provider.is_partially_checked(file_path)
+
+      if (!is_checked && !is_partially_checked) {
         await workspace_provider.update_check_state(
           uri,
           vscode.TreeItemCheckboxState.Checked

@@ -1328,6 +1328,10 @@ export class WorkspaceProvider
     return this.user_ignore.ignores(relative_path)
   }
 
+  public is_partially_checked(path: string): boolean {
+    return this.partially_checked_dirs.has(path)
+  }
+
   public async check_all(): Promise<void> {
     for (const workspace_root of this.workspace_roots) {
       this.checked_items.set(
