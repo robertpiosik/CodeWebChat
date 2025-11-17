@@ -159,9 +159,6 @@ export const Main: React.FC<Props> = (props) => {
             [message.mode]: message.id
           }))
           break
-        case 'FOCUS_PROMPT_FIELD':
-          // This is handled in View.tsx, which will trigger a re-render.
-          break
       }
     }
 
