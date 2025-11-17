@@ -18,7 +18,7 @@ Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 👥 **Community driven**—join our [Discord server](https://discord.com/invite/KJySXsrSX5) and get involved!
 
 <p>
-<img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/demo.gif" alt="Walkthrough" />
+<img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.jpg" alt="Screenshot" />
 </p>
 
 ## Introduction
