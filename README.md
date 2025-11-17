@@ -42,12 +42,9 @@ Unlike coding agents that require detailed instructions to understand your inten
 > [!TIP]
 > LLMs are pattern matchers—they love examples! Include some you believe will help the model understand the goal better.
 
-Meet the CWC's non-agentic workflow—select folders and files, enter instructions, and send message via...
+Meet the CWC's non-agentic workflow—select folders and files, enter instructions, and send message in a new web chat or with an API provider of choice.
 
-- new chat—to continue in the connected browser
-- API call—to use a model provider of choice
-
-Constructed message looks like the following example:
+Constructed message is simple and focuses the model's whole attention on the task:
 
 ```
 Implement a subtract function.
@@ -70,7 +67,7 @@ Whenever proposing a new or updated file use the Markdown Code Block syntax. Eac
 > [!NOTE]
 > The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
-Once the response is generated, CWC's built-in parser extracts code blocks with suggested edits for one-click multi-file changes integration.
+Once the response is generated, sophisticated parser extracts code blocks with suggested edits for one-click multi-file changes integration.
 
 ## Chatbot initialization
 

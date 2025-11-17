@@ -218,7 +218,7 @@ export const MainView: React.FC<Props> = (props) => {
             on_caret_position_set={props.on_caret_position_set}
             focus_and_select_key={props.chat_input_focus_and_select_key}
             focus_key={props.chat_input_focus_key}
-            use_last_choice_button_title={last_choice_button_title}
+            last_choice_button_title={last_choice_button_title}
             show_edit_format_selector={show_edit_format_selector}
             edit_format={
               props.main_view_type == MAIN_VIEW_TYPES.WEB

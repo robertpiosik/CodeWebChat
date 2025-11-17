@@ -64,7 +64,7 @@ export type PromptFieldProps = {
   on_caret_position_set?: () => void
   focus_key?: number
   focus_and_select_key?: number
-  use_last_choice_button_title?: string
+  last_choice_button_title?: string
   show_edit_format_selector?: boolean
   edit_format?: EditFormat
   on_edit_format_change?: (format: EditFormat) => void
@@ -519,9 +519,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               is_warning
             />
           )}
-          {props.use_last_choice_button_title && show_submit_tooltip && (
+          {props.last_choice_button_title && show_submit_tooltip && (
             <Tooltip
-              message={props.use_last_choice_button_title}
+              message={props.last_choice_button_title}
               offset={28}
               align="right"
             />
