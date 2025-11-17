@@ -232,7 +232,7 @@ export const use_panel = (vscode: any) => {
         set_progress_state(undefined)
       } else if (message.command == 'SHOW_CHAT_INITIALIZED') {
         set_chat_initialized_title(message.title)
-      } else if (message.command == 'FOCUS_CHAT_INPUT') {
+      } else if (message.command == 'FOCUS_PROMPT_FIELD') {
         set_chat_input_focus_key((k) => k + 1)
       } else if (message.command == 'SHOW_COMMIT_MESSAGE_MODAL') {
         set_commit_message_to_review({
