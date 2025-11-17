@@ -38,6 +38,9 @@ export const PROVIDERS = {
   Mistral: {
     base_url: 'https://api.mistral.ai/v1'
   },
+  Ollama: {
+    base_url: 'http://localhost:11434/v1'
+  },
   OpenAI: {
     base_url: 'https://api.openai.com/v1'
   },
