@@ -366,6 +366,10 @@
         {
           "command": "codeWebChat.settings",
           "when": "false"
+        },
+        {
+          "command": "codeWebChat.generateCommitMessage",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -777,7 +781,7 @@
               },
               "isCollapsed": {
                 "type": "boolean",
-                "description": "Whether this group is collapsed by default."
+                "description": "Whether this group is collapsed."
               },
               "isPinned": {
                 "type": "boolean",
@@ -973,7 +977,7 @@
               },
               "isCollapsed": {
                 "type": "boolean",
-                "description": "Whether this group is collapsed by default."
+                "description": "Whether this group is collapsed."
               },
               "isPinned": {
                 "type": "boolean",
@@ -1139,7 +1143,7 @@
               },
               "isCollapsed": {
                 "type": "boolean",
-                "description": "Whether this group is collapsed by default."
+                "description": "Whether this group is collapsed."
               },
               "isPinned": {
                 "type": "boolean",
@@ -1335,7 +1339,7 @@
               },
               "isCollapsed": {
                 "type": "boolean",
-                "description": "Whether this group is collapsed by default."
+                "description": "Whether this group is collapsed."
               },
               "isPinned": {
                 "type": "boolean",
