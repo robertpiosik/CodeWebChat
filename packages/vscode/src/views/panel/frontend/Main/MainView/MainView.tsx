@@ -1,7 +1,7 @@
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 import { Presets as UiPresets } from '@ui/components/editor/panel/Presets'
-import { ChatInput as UiChatInput } from '@ui/components/editor/panel/ChatInput'
+import { PromptField as UiPromptField } from '@ui/components/editor/panel/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { Preset } from '@shared/types/preset'
 import {
@@ -197,7 +197,7 @@ export const MainView: React.FC<Props> = (props) => {
         )}
 
         <div className={styles['chat-input-container']}>
-          <UiChatInput
+          <UiPromptField
             value={props.instructions}
             chat_history={props.chat_history}
             on_change={handle_input_change}

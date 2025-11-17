@@ -1,5 +1,5 @@
 import { useRef, useEffect, useMemo, useState } from 'react'
-import styles from './ChatInput.module.scss'
+import styles from './PromptField.module.scss'
 import cn from 'classnames'
 import { Icon } from '../../common/Icon'
 import { get_highlighted_text } from './utils/get-highlighted-text'
@@ -43,7 +43,7 @@ const Tooltip: React.FC<{
 
 export type EditFormat = 'whole' | 'truncated' | 'diff'
 
-export type ChatInputProps = {
+export type PromptFieldProps = {
   value: string
   chat_history: string[]
   on_change: (value: string) => void
@@ -73,7 +73,7 @@ export type ChatInputProps = {
   on_go_to_file?: (file_path: string) => void
 }
 
-export const ChatInput: React.FC<ChatInputProps> = (props) => {
+export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)

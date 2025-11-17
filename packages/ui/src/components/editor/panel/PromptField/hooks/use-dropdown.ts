@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
-import type { ChatInputProps } from '../ChatInput'
+import type { PromptFieldProps } from '../PromptField'
 
 type UseDropdownParams = Pick<
-  ChatInputProps,
+  PromptFieldProps,
   'on_copy' | 'on_submit_with_control'
 >
 

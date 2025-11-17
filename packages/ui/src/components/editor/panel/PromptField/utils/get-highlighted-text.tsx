@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import styles from '../ChatInput.module.scss'
+import styles from '../PromptField.module.scss'
 
 const process_text_part_for_files = (
   text: string,

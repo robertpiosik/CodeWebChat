@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { ChatInput, type EditFormat } from './ChatInput'
+import { PromptField, type EditFormat } from './PromptField'
 
 export default {
-  component: ChatInput
+  component: PromptField
 }
 
 export const Empty = () => (
-  <ChatInput
+  <PromptField
     value=""
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
@@ -28,7 +28,7 @@ export const Empty = () => (
 )
 
 export const WithText = () => (
-  <ChatInput
+  <PromptField
     value="Hello, this is a sample message"
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
@@ -50,7 +50,7 @@ export const WithText = () => (
 )
 
 export const LongText = () => (
-  <ChatInput
+  <PromptField
     value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
@@ -72,7 +72,7 @@ export const LongText = () => (
 )
 
 export const WithPlaceholderSavedContext = () => (
-  <ChatInput
+  <PromptField
     value='Ask about the #SavedContext:JSON "My Context"'
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
@@ -94,7 +94,7 @@ export const WithPlaceholderSavedContext = () => (
 )
 
 export const WithPlaceholderSelection = () => (
-  <ChatInput
+  <PromptField
     value="Ask about the #Selection"
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
@@ -116,7 +116,7 @@ export const WithPlaceholderSelection = () => (
 )
 
 export const WithCommit = () => (
-  <ChatInput
+  <PromptField
     value='Ask about #Commit:my-repo:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0 "Initial commit"'
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}
@@ -140,7 +140,7 @@ export const WithCommit = () => (
 export const WithEditFormatSelector = () => {
   const [edit_format, set_edit_format] = useState<EditFormat>('diff')
   return (
-    <ChatInput
+    <PromptField
       value="Hello, this is a sample message"
       chat_history={[]}
       on_change={(value) => console.log('Changed:', value)}
@@ -171,7 +171,7 @@ export const WithEditFormatSelector = () => {
 }
 
 export const WithFilePaths = () => (
-  <ChatInput
+  <PromptField
     value="This is about `path/to/my/file.ts` and not about `another/file.txt`"
     chat_history={[]}
     on_change={(value) => console.log('Changed:', value)}

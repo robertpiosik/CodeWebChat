@@ -1,5 +1,5 @@
 import { RefObject, useState } from 'react'
-import { ChatInputProps } from '../ChatInput'
+import { PromptFieldProps } from '../PromptField'
 import { get_display_text } from '../utils/get-display-text'
 import {
   get_caret_position_from_div,
@@ -79,7 +79,7 @@ const set_caret_position_after_change = (
 }
 
 export const use_handlers = (
-  props: ChatInputProps,
+  props: PromptFieldProps,
   input_ref: RefObject<HTMLDivElement>
 ) => {
   const [history_index, set_history_index] = useState(-1)

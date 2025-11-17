@@ -550,8 +550,8 @@ export interface SelectedConfigurationChangedMessage extends BaseMessage {
   id: string
 }
 
-export interface FocusChatInputMessage extends BaseMessage {
-  command: 'FOCUS_CHAT_INPUT'
+export interface FocusPromptFieldMessage extends BaseMessage {
+  command: 'FOCUS_PROMPT_FIELD'
 }
 
 export interface ShowProgressMessage extends BaseMessage {
@@ -608,7 +608,7 @@ export interface CollapsedStatesMessage extends BaseMessage {
 
 export type BackendMessage =
   | InstructionsMessage
-  | FocusChatInputMessage
+  | FocusPromptFieldMessage
   | ConnectionStatusMessage
   | EditFormatMessage
   | EditFormatInstructionsMessage
