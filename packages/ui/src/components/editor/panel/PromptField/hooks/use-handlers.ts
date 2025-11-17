@@ -1,6 +1,5 @@
-import { RefObject, useState } from 'react'
+import { RefObject, useState, useEffect } from 'react'
 import { PromptFieldProps } from '../PromptField'
-import { get_display_text } from '../utils/get-display-text'
 import {
   get_caret_position_from_div,
   set_caret_position_for_div
@@ -84,15 +83,31 @@ export const use_handlers = (
 ) => {
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
-  const [saved_value_before_at_sign, set_saved_value_before_at_sign] = useState<
-    string | null
-  >(null)
+  const [undo_stack, set_undo_stack] = useState<string[]>([])
+  const [redo_stack, set_redo_stack] = useState<string[]>([])
+
+  useEffect(() => {
+    set_is_history_enabled(history_index >= 0 || !props.value)
+  }, [history_index, props.value])
+
+  const update_value = (new_value: string, caret_pos?: number) => {
+    if (new_value === props.value) return
+    set_undo_stack((prev) => [...prev, props.value])
+    set_redo_stack([])
+    props.on_change(new_value)
+    if (caret_pos !== undefined) {
+      set_caret_position_after_change(
+        input_ref,
+        caret_pos,
+        new_value,
+        props.context_file_paths ?? []
+      )
+    }
+  }
 
   const handle_clear = () => {
-    props.on_change('')
+    update_value('')
     set_history_index(-1)
-    set_is_history_enabled(true)
-    set_saved_value_before_at_sign(null)
   }
 
   const handle_input_change = (e: React.FormEvent<HTMLDivElement>) => {
@@ -102,17 +117,14 @@ export const use_handlers = (
     if (new_value === props.value) {
       return
     }
-
-    props.on_change(new_value)
+    update_value(new_value)
     set_history_index(-1)
-    set_saved_value_before_at_sign(null)
 
     const new_display_value = currentTarget.textContent ?? ''
     const caret_position = get_caret_position_from_div(currentTarget)
     const char_before_caret = new_display_value.charAt(caret_position - 1)
 
     if (char_before_caret === '@') {
-      set_saved_value_before_at_sign(props.value)
       setTimeout(() => {
         props.on_at_sign_click()
       }, 150)
@@ -120,10 +132,6 @@ export const use_handlers = (
       setTimeout(() => {
         props.on_hash_sign_click()
       }, 150)
-    }
-
-    if (!new_value) {
-      set_is_history_enabled(true)
     }
   }
 
@@ -169,14 +177,7 @@ export const use_handlers = (
           props.value.substring(0, start_of_path) +
           props.value.substring(end_of_path + 1)
         const new_raw_cursor_pos = start_of_path
-        props.on_change(new_value)
-
-        set_caret_position_after_change(
-          input_ref,
-          new_raw_cursor_pos,
-          new_value,
-          context_file_paths
-        )
+        update_value(new_value, new_raw_cursor_pos)
         return true
       }
     }
@@ -196,14 +197,7 @@ export const use_handlers = (
         props.value.substring(0, start_of_match) +
         props.value.substring(raw_pos)
       const new_raw_cursor_pos = start_of_match
-      props.on_change(new_value)
-
-      set_caret_position_after_change(
-        input_ref,
-        new_raw_cursor_pos,
-        new_value,
-        context_file_paths
-      )
+      update_value(new_value, new_raw_cursor_pos)
       return true
     }
     return false
@@ -224,14 +218,7 @@ export const use_handlers = (
         props.value.substring(0, start_of_match) +
         props.value.substring(raw_pos)
       const new_raw_cursor_pos = start_of_match
-      props.on_change(new_value)
-
-      set_caret_position_after_change(
-        input_ref,
-        new_raw_cursor_pos,
-        new_value,
-        context_file_paths
-      )
+      update_value(new_value, new_raw_cursor_pos)
       return true
     }
     return false
@@ -250,14 +237,7 @@ export const use_handlers = (
         props.value.substring(0, start_of_match) +
         props.value.substring(raw_pos)
       const new_raw_cursor_pos = start_of_match
-      props.on_change(new_value)
-
-      set_caret_position_after_change(
-        input_ref,
-        new_raw_cursor_pos,
-        new_value,
-        context_file_paths
-      )
+      update_value(new_value, new_raw_cursor_pos)
       return true
     }
     return false
@@ -276,14 +256,7 @@ export const use_handlers = (
         props.value.substring(0, start_of_match) +
         props.value.substring(raw_pos)
       const new_raw_cursor_pos = start_of_match
-      props.on_change(new_value)
-
-      set_caret_position_after_change(
-        input_ref,
-        new_raw_cursor_pos,
-        new_value,
-        context_file_paths
-      )
+      update_value(new_value, new_raw_cursor_pos)
       return true
     }
     return false
@@ -393,8 +366,6 @@ export const use_handlers = (
   const handle_history_navigation = (
     e: React.KeyboardEvent<HTMLDivElement>
   ) => {
-    set_saved_value_before_at_sign(null)
-
     const active_history = props.chat_history
 
     if (active_history.length === 0) return
@@ -402,13 +373,7 @@ export const use_handlers = (
     e.preventDefault()
 
     const update_and_set_caret = (value: string) => {
-      props.on_change(value)
-      set_caret_position_after_change(
-        input_ref,
-        value.length,
-        value,
-        props.context_file_paths ?? []
-      )
+      update_value(value, value.length)
     }
 
     if (e.key === 'ArrowUp') {
@@ -429,27 +394,45 @@ export const use_handlers = (
     }
   }
 
-  const handle_undo_at_sign = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (saved_value_before_at_sign === null) return
-
-    e.preventDefault()
-    const restored_value = saved_value_before_at_sign
-    set_saved_value_before_at_sign(null)
-    props.on_change(restored_value)
-
-    // Restore caret position
-    setTimeout(() => {
-      const display_restored = get_display_text(
-        restored_value,
-        props.context_file_paths ?? []
-      )
-      set_caret_position_for_div(e.currentTarget, display_restored.length)
-    }, 0)
-  }
-
   const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const { key, shiftKey, ctrlKey, metaKey } = e
-
+    const { key, shiftKey } = e
+    if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() === 'z') {
+      e.preventDefault()
+      if (undo_stack.length > 0) {
+        const prev_value = undo_stack[undo_stack.length - 1]
+        set_undo_stack((prev) => prev.slice(0, -1))
+        set_redo_stack((prev) => [...prev, props.value])
+        props.on_change(prev_value)
+        set_caret_position_after_change(
+          input_ref,
+          prev_value.length,
+          prev_value,
+          props.context_file_paths ?? []
+        )
+        set_history_index(-1)
+      }
+      return
+    }
+    if (
+      ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'y') ||
+      ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() === 'z')
+    ) {
+      e.preventDefault()
+      if (redo_stack.length > 0) {
+        const next_value = redo_stack[redo_stack.length - 1]
+        set_redo_stack((prev) => prev.slice(0, -1))
+        set_undo_stack((prev) => [...prev, props.value])
+        props.on_change(next_value)
+        set_caret_position_after_change(
+          input_ref,
+          next_value.length,
+          next_value,
+          props.context_file_paths ?? []
+        )
+        set_history_index(-1)
+      }
+      return
+    }
     if (key == 'Tab' && !shiftKey) {
       handle_tab_key(e)
       return
@@ -469,18 +452,6 @@ export const use_handlers = (
     if ((key == 'ArrowUp' || key == 'ArrowDown') && is_history_enabled) {
       handle_history_navigation(e)
       return
-    }
-
-    if (key == 'z' && (ctrlKey || metaKey) && !shiftKey) {
-      if (saved_value_before_at_sign !== null) {
-        handle_undo_at_sign(e)
-        return
-      }
-      // Otherwise, we don't return, allowing the default undo behavior
-    }
-
-    if (props.value) {
-      set_is_history_enabled(false)
     }
   }
 
