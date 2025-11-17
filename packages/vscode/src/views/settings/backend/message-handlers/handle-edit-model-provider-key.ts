@@ -26,8 +26,8 @@ export const handle_change_model_provider_key = async (
   }
 
   const new_api_key = await vscode.window.showInputBox({
-    title: `Model API Key for ${provider_name}`,
-    prompt: 'Enter your model API key. Press Esc to keep the current one.',
+    title: `API Key for ${provider_name}`,
+    prompt: 'Enter your API key.',
     password: true,
     placeHolder: provider_to_update.api_key
       ? `...${provider_to_update.api_key.slice(-4)}`
@@ -35,13 +35,26 @@ export const handle_change_model_provider_key = async (
   })
 
   if (new_api_key === undefined) {
-    // User cancelled
     return
+  }
+
+  const trimmed_api_key = new_api_key.trim()
+
+  if (trimmed_api_key == '' && provider_to_update.api_key) {
+    const confirmation = await vscode.window.showWarningMessage(
+      `Are you sure you want to clear the API key for ${provider_name}? This action cannot be undone.`,
+      { modal: true },
+      'Clear API Key'
+    )
+
+    if (confirmation != 'Clear API Key') {
+      return
+    }
   }
 
   const updated_provider: Provider = {
     ...provider_to_update,
-    api_key: new_api_key.trim()
+    api_key: trimmed_api_key
   }
 
   const providers = await providers_manager.get_providers()

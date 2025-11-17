@@ -44,18 +44,24 @@ export const handle_add_model_provider = async (
       return await show_create_provider_quick_pick()
     }
 
-    const api_key = await vscode.window.showInputBox({
-      title: 'Model API Key',
-      prompt: 'Enter your model API key'
-    })
-    if (api_key === undefined) {
-      return await show_create_provider_quick_pick()
+    const normalized_base_url = normalize_base_url(base_url)
+    const is_local = normalized_base_url.includes('localhost')
+
+    let api_key: string | undefined = ''
+    if (!is_local) {
+      api_key = await vscode.window.showInputBox({
+        title: 'API Key',
+        prompt: 'Enter your API key'
+      })
+      if (api_key === undefined) {
+        return await show_create_provider_quick_pick()
+      }
     }
 
     const new_provider: CustomProvider = {
       type: 'custom' as const,
       name: name.trim(),
-      base_url: normalize_base_url(base_url),
+      base_url: normalized_base_url,
       api_key: api_key?.trim() || ''
     }
 
@@ -67,13 +73,18 @@ export const handle_add_model_provider = async (
   const create_built_in_provider = async (
     name: keyof typeof PROVIDERS
   ): Promise<boolean> => {
-    const api_key = await vscode.window.showInputBox({
-      title: 'Model API Key',
-      prompt: 'Enter your model API key',
-      validateInput: (value) => (!value.trim() ? 'API key is required' : null)
-    })
-    if (api_key === undefined) {
-      return await show_create_provider_quick_pick()
+    const provider_info = PROVIDERS[name]
+    const is_local = provider_info.base_url.includes('localhost')
+
+    let api_key: string | undefined = ''
+    if (!is_local) {
+      api_key = await vscode.window.showInputBox({
+        title: 'API Key',
+        prompt: 'Enter your API key'
+      })
+      if (api_key === undefined) {
+        return await show_create_provider_quick_pick()
+      }
     }
 
     const providers = await providers_manager.get_providers()

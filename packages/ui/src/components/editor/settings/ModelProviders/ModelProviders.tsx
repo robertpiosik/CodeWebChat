@@ -49,11 +49,13 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
             title="Rename provider"
           />
         )}
-        <IconButton
-          codicon_icon="key"
-          on_click={() => props.on_change_api_key(provider.name)}
-          title="Change API key"
-        />
+        {!provider.baseUrl.includes('localhost') && (
+          <IconButton
+            codicon_icon="key"
+            on_click={() => props.on_change_api_key(provider.name)}
+            title="Change API key"
+          />
+        )}
         <IconButton
           codicon_icon="trash"
           on_click={() => props.on_delete_provider(provider.name)}
