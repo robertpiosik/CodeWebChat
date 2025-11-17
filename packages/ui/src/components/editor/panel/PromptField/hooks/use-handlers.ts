@@ -20,7 +20,7 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
 
     switch (el.dataset.type) {
       case 'file-keyword': {
-        const path = el.getAttribute('title')
+        const path = el.dataset.path
         return path ? `\`${path}\`` : ''
       }
       case 'changes-keyword': {

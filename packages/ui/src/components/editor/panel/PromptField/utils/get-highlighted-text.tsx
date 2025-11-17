@@ -1,6 +1,16 @@
 import cn from 'classnames'
 import styles from '../PromptField.module.scss'
 
+const escape_html = (str: string): string => {
+  if (!str) return ''
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
 const process_text_part_for_files = (
   text: string,
   context_file_paths: string[]
@@ -18,17 +28,19 @@ const process_text_part_for_files = (
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--file']
-          )}" contentEditable="false" data-type="file-keyword" title="${file_path}"><span class="${
+          )}" contentEditable="false" data-type="file-keyword" data-path="${escape_html(
+            file_path
+          )}" title="${escape_html(file_path)}"><span class="${
             styles['keyword__icon']
-          }"></span><span class="${
-            styles['keyword__text']
-          }">${filename}</span></span>`
+          }"></span><span class="${styles['keyword__text']}">${escape_html(
+            filename
+          )}</span></span>`
         }
         // If not a context file, return with backticks
-        return `\`${file_path}\``
+        return `\`${escape_html(file_path)}\``
       }
       // part at even index is regular text
-      return part
+      return escape_html(part)
     })
     .join('')
 }
@@ -55,11 +67,11 @@ export const get_highlighted_text = (params: {
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--saved-context']
-          )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${context_name}"><span class="${
-            styles['keyword__icon']
-          }"></span><span class="${
+          )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
+            context_name
+          )}"><span class="${styles['keyword__icon']}"></span><span class="${
             styles['keyword__text']
-          }">Context "${context_name}"</span></span>`
+          }">Context "${escape_html(context_name)}"</span></span>`
         }
         return process_text_part_for_files(part, params.context_file_paths)
       })
@@ -89,11 +101,11 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--changes']
-        )}" contentEditable="false" data-type="changes-keyword" data-branch-name="${branch_name}"><span class="${
-          styles['keyword__icon']
-        }"></span><span class="${
+        )}" contentEditable="false" data-type="changes-keyword" data-branch-name="${escape_html(
+          branch_name
+        )}"><span class="${styles['keyword__icon']}"></span><span class="${
           styles['keyword__text']
-        }">Diff with ${branch_name}</span></span>`
+        }">Diff with ${escape_html(branch_name)}</span></span>`
       }
       const saved_context_match = part.match(
         /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
@@ -104,11 +116,11 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--saved-context']
-        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${context_name}"><span class="${
-          styles['keyword__icon']
-        }"></span><span class="${
+        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
+          context_name
+        )}"><span class="${styles['keyword__icon']}"></span><span class="${
           styles['keyword__text']
-        }">Context "${context_name}"</span></span>`
+        }">Context "${escape_html(context_name)}"</span></span>`
       }
       const commit_match = part.match(/^#Commit:([^:]+):([^\s"]+)\s+"([^"]*)"$/)
       if (part && commit_match) {
@@ -119,11 +131,17 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--commit']
-        )}" contentEditable="false" data-type="commit-keyword" data-repo-name="${repo_name}" data-commit-hash="${commit_hash}" data-commit-message="${commit_message}" title="${commit_message}"><span class="${
+        )}" contentEditable="false" data-type="commit-keyword" data-repo-name="${escape_html(
+          repo_name
+        )}" data-commit-hash="${escape_html(
+          commit_hash
+        )}" data-commit-message="${escape_html(
+          commit_message
+        )}" title="${escape_html(commit_message)}"><span class="${
           styles['keyword__icon']
-        }"></span><span class="${
-          styles['keyword__text']
-        }">${short_hash}</span></span>`
+        }"></span><span class="${styles['keyword__text']}">${escape_html(
+          short_hash
+        )}</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)
