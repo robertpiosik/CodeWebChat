@@ -6,6 +6,7 @@ import {
 } from '@/services/model-providers-manager'
 import { dictionary } from '@shared/constants/dictionary'
 import { ChangeModelProviderKeyMessage } from '@/views/settings/types/messages'
+import { handle_get_model_providers } from './handle-get-model-providers'
 
 export const handle_change_model_provider_key = async (
   provider: SettingsProvider,
@@ -62,4 +63,5 @@ export const handle_change_model_provider_key = async (
     p.name == provider_name ? updated_provider : p
   )
   await providers_manager.save_providers(updated_providers)
+  await handle_get_model_providers(provider)
 }
