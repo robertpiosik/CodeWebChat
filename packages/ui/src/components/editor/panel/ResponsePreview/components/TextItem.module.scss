@@ -1,3 +1,8 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
 .text {
   margin: var(--padding-6px) var(--padding-12px);
   word-wrap: break-word;
@@ -30,8 +35,9 @@
 
   &__collapse > span {
     cursor: pointer;
-    font-weight: 500;
+    font-style: italic;
     font-size: var(--font-size-12px);
+    color: var(--cwc-text-color-dimmed);
 
     &:hover {
       text-decoration: underline;
@@ -39,17 +45,18 @@
   }
 }
 
-.hidden {
+.header {
   display: flex;
   align-items: center;
   margin: 0 var(--padding-12px);
   padding-right: var(--padding-9px);
   position: relative;
+  cursor: pointer;
 
   &:hover {
     color: var(--cwc-text-color);
 
-    & .hidden__line {
+    & .header__line {
       background-color: var(--cwc-border-color) !important;
     }
   }

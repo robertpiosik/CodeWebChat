@@ -1,7 +1,6 @@
 import { FC, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import styles from './TextItem.module.scss'
-import cn from 'classnames'
 import { IconButton } from '../../IconButton'
 
 type Props = {
@@ -11,15 +10,32 @@ type Props = {
 }
 
 export const TextItem: FC<Props> = (props) => {
-  const ref = useRef<HTMLDivElement>(null)
+  const header_ref = useRef<HTMLDivElement>(null)
 
   return (
-    <>
-      {props.is_expanded ? (
+    <div className={styles.container}>
+      <div
+        ref={header_ref}
+        className={styles.header}
+        onClick={() =>
+          header_ref.current && props.on_toggle(header_ref.current)
+        }
+        title={props.content}
+      >
+        <IconButton
+          codicon_icon={props.is_expanded ? 'chevron-down' : 'chevron-right'}
+        />
+        <div className={styles.header__line} />
+        <span className={styles.header__tokens}>
+          {Math.floor(props.content.length * 0.25) || 1}
+        </span>
+      </div>
+      {props.is_expanded && (
         <div
-          ref={ref}
           className={styles.text}
-          onClick={() => ref.current && props.on_toggle(ref.current)}
+          onClick={() =>
+            header_ref.current && props.on_toggle(header_ref.current)
+          }
         >
           <ReactMarkdown disallowedElements={['hr']}>
             {props.content}
@@ -28,20 +44,7 @@ export const TextItem: FC<Props> = (props) => {
             <span>Show less</span>
           </div>
         </div>
-      ) : (
-        <div
-          ref={ref}
-          className={styles.hidden}
-          onClick={() => ref.current && props.on_toggle(ref.current)}
-          title={props.content}
-        >
-          <IconButton codicon_icon="chevron-right" />
-          <div className={styles.hidden__line} />
-          <span className={styles.hidden__tokens}>
-            {Math.floor(props.content.length * 0.25) || 1}
-          </span>
-        </div>
       )}
-    </>
+    </div>
   )
 }
