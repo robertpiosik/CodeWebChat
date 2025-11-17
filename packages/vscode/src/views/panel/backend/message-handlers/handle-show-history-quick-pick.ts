@@ -294,7 +294,7 @@ export const handle_show_history_quick_pick = async (
     }),
     quick_pick.onDidHide(() => {
       panel_provider.send_message({
-        command: 'FOCUS_CHAT_INPUT'
+        command: 'FOCUS_PROMPT_FIELD'
       })
       disposables.forEach((d) => d.dispose())
     })

@@ -350,7 +350,7 @@ export const handle_show_prompt_template_quick_pick = async (
 
         await set_instructions(prompt_text)
         panel_provider.send_message({
-          command: 'FOCUS_CHAT_INPUT'
+          command: 'FOCUS_PROMPT_FIELD'
         })
       }
     }),
@@ -461,7 +461,7 @@ export const handle_show_prompt_template_quick_pick = async (
       is_disposed = true
       if (!is_template_accepted) {
         panel_provider.send_message({
-          command: 'FOCUS_CHAT_INPUT'
+          command: 'FOCUS_PROMPT_FIELD'
         })
       }
       disposables.forEach((d) => d.dispose())

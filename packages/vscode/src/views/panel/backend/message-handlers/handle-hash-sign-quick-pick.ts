@@ -15,7 +15,7 @@ export const handle_hash_sign_quick_pick = async (
 
   if (!replacement) {
     panel_provider.send_message({
-      command: 'FOCUS_CHAT_INPUT'
+      command: 'FOCUS_PROMPT_FIELD'
     })
     return
   }
