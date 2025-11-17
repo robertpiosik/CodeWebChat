@@ -499,17 +499,19 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         </div>
                         <div className={styles.presets__item__left__text}>
                           <span>Ungrouped</span>
-                          <span>
-                            {`${ungrouped_preset_count} ${
-                              ungrouped_preset_count === 1
-                                ? 'preset'
-                                : 'presets'
-                            }${
-                              ungrouped_selected_count > 0
-                                ? ` · ${ungrouped_selected_count} selected`
-                                : ''
-                            }`}
-                          </span>
+                          {props.is_collapsed && (
+                            <span>
+                              {`${ungrouped_preset_count} ${
+                                ungrouped_preset_count === 1
+                                  ? 'preset'
+                                  : 'presets'
+                              }${
+                                ungrouped_selected_count > 0
+                                  ? ` · ${ungrouped_selected_count} selected`
+                                  : ''
+                              }`}
+                            </span>
+                          )}
                         </div>
                       </div>
                       <div
