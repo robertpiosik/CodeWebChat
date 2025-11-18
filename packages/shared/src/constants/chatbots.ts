@@ -18,6 +18,7 @@ type Chatbots = {
       [model: string]: {
         label: string
         disabled_options?: string[]
+        supported_reasoning_efforts?: string[]
       }
     }
   }
@@ -44,6 +45,11 @@ export const CHATBOTS = {
       'url-context': 'URL context'
     },
     models: {
+      'gemini-3-pro-preview': {
+        label: 'Gemini 3 Pro Preview',
+        disabled_options: ['disable-thinking'],
+        supported_reasoning_efforts: ['high', 'low']
+      },
       'gemini-2.5-pro': {
         label: 'Gemini 2.5 Pro',
         disabled_options: ['disable-thinking']

@@ -74,10 +74,10 @@ export const WithMultipleFiles = () => {
         let updated = false
         for (let i = 0; i < new_files.length; i++) {
           const file = new_files[i]
-          if (file.status === 'receiving' && (file.progress ?? 0) < 100) {
+          if (file.status == 'receiving' && (file.progress ?? 0) < 100) {
             const new_progress = Math.min((file.progress ?? 0) + 20, 100)
             new_files[i] =
-              new_progress === 100
+              new_progress == 100
                 ? { ...file, status: 'done', progress: 100 }
                 : { ...file, progress: new_progress }
             updated = true
@@ -87,9 +87,9 @@ export const WithMultipleFiles = () => {
 
         // Transition a thinking file to receiving
         const thinking_index = new_files.findIndex(
-          (f) => f.status === 'thinking'
+          (f) => f.status == 'thinking'
         )
-        if (thinking_index !== -1) {
+        if (thinking_index != -1) {
           new_files[thinking_index] = {
             ...new_files[thinking_index],
             status: 'receiving',
@@ -100,8 +100,8 @@ export const WithMultipleFiles = () => {
         }
 
         // Transition a waiting file to thinking
-        const waiting_index = new_files.findIndex((f) => f.status === 'waiting')
-        if (waiting_index !== -1) {
+        const waiting_index = new_files.findIndex((f) => f.status == 'waiting')
+        if (waiting_index != -1) {
           new_files[waiting_index] = {
             ...new_files[waiting_index],
             status: 'thinking'
@@ -109,23 +109,8 @@ export const WithMultipleFiles = () => {
           return new_files
         }
 
-        // If all are done/error, stop
-        if (
-          new_files.every((f) => f.status === 'done' || f.status === 'error')
-        ) {
+        if (new_files.every((f) => f.status == 'done')) {
           clearInterval(timer)
-        } else if (!new_files.some((f) => f.status === 'error')) {
-          // Make one an error for demonstration
-          const last_done_index = new_files.findLastIndex(
-            (f) => f.status === 'done'
-          )
-          if (last_done_index !== -1) {
-            new_files[last_done_index] = {
-              ...new_files[last_done_index],
-              status: 'error'
-            }
-            return new_files
-          }
         }
 
         return new_files

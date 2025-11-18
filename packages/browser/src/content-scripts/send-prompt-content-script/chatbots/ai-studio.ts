@@ -2,10 +2,7 @@ import { Chatbot } from '../types/chatbot'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
 import { add_apply_response_button } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const ai_studio: Chatbot = {
   wait_until_ready: async () => {
@@ -32,63 +29,6 @@ export const ai_studio: Chatbot = {
       check_for_element()
     })
   },
-  set_model: async (model?: string) => {
-    if (!model) return
-    await open_panel()
-    const model_selector = document.querySelector(
-      'button.model-selector-card'
-    ) as HTMLButtonElement
-    if (!model_selector) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model selector button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
-      })
-      return
-    }
-    const model_name = model_selector.querySelector(
-      'span.title'
-    ) as HTMLSpanElement
-    if (!model_name) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model name element not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
-      })
-      return
-    }
-    if (
-      model_name.textContent ==
-      (CHATBOTS['AI Studio'].models as any)[model]?.label
-    ) {
-      return
-    }
-    model_selector.click()
-    await new Promise((r) => requestAnimationFrame(r))
-    // Click "All" filter option
-    ;(
-      document.querySelector(
-        'div.model-categories-container button'
-      ) as HTMLButtonElement
-    )?.click()
-    await new Promise((r) => requestAnimationFrame(r))
-    const model_options = Array.from(
-      document.querySelectorAll('ms-model-carousel-row button.content-button')
-    )
-    for (const option of model_options) {
-      const model_name_element = option.querySelector(
-        'span.model-title-text'
-      ) as HTMLElement
-      if (
-        model_name_element?.textContent?.trim() ==
-        (CHATBOTS['AI Studio'].models as any)[model]?.label
-      ) {
-        ;(option as HTMLElement).click()
-        break
-      }
-    }
-    await new Promise((resolve) => setTimeout(resolve, 500)) // System instructions use the same sliding panel so we need to wait for it complete closure
-  },
   enter_system_instructions: async (system_instructions?: string) => {
     if (!system_instructions) return
     await open_panel()
@@ -98,8 +38,7 @@ export const ai_studio: Chatbot = {
     if (!system_instructions_button) {
       report_initialization_error({
         function_name: 'enter_system_instructions',
-        log_message: 'System instructions button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+        log_message: 'System instructions button not found'
       })
       return
     }
@@ -113,8 +52,7 @@ export const ai_studio: Chatbot = {
     if (!close_button) {
       report_initialization_error({
         function_name: 'enter_system_instructions',
-        log_message: 'Close button for system instructions dialog not found',
-        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+        log_message: 'Close button for system instructions dialog not found'
       })
       return
     }
@@ -125,8 +63,7 @@ export const ai_studio: Chatbot = {
     if (!panel) {
       report_initialization_error({
         function_name: 'enter_system_instructions',
-        log_message: 'System instructions panel not found',
-        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+        log_message: 'System instructions panel not found'
       })
       return
     }
@@ -135,8 +72,7 @@ export const ai_studio: Chatbot = {
     if (!textarea) {
       report_initialization_error({
         function_name: 'enter_system_instructions',
-        log_message: 'System instructions textarea not found',
-        alert_message: InitializationError.UNABLE_TO_SET_SYSTEM_INSTRUCTIONS
+        log_message: 'System instructions textarea not found'
       })
       return
     }
@@ -169,8 +105,7 @@ export const ai_studio: Chatbot = {
     if (!thinking_toggle) {
       report_initialization_error({
         function_name: 'set_options',
-        log_message: 'Thinking toggle not found',
-        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+        log_message: 'Thinking toggle not found'
       })
       return
     }
@@ -202,8 +137,7 @@ export const ai_studio: Chatbot = {
       if (!temp_toggle) {
         report_initialization_error({
           function_name: 'set_options',
-          log_message: 'Temporary chat toggle not found',
-          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+          log_message: 'Temporary chat toggle not found'
         })
         return
       }
@@ -219,8 +153,7 @@ export const ai_studio: Chatbot = {
       if (!grounding_button) {
         report_initialization_error({
           function_name: 'set_options',
-          log_message: 'Grounding with Google Search button not found',
-          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+          log_message: 'Grounding with Google Search button not found'
         })
         return
       }
@@ -238,8 +171,7 @@ export const ai_studio: Chatbot = {
       if (!url_context_button) {
         report_initialization_error({
           function_name: 'set_options',
-          log_message: 'URL context button not found',
-          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+          log_message: 'URL context button not found'
         })
         return
       }
@@ -255,13 +187,60 @@ export const ai_studio: Chatbot = {
     if (!temperature_element) {
       report_initialization_error({
         function_name: 'set_temperature',
-        log_message: 'Temperature input not found',
-        alert_message: InitializationError.UNABLE_TO_SET_TEMPERATURE
+        log_message: 'Temperature input not found'
       })
       return
     }
     temperature_element.value = temperature.toString()
     temperature_element.dispatchEvent(new Event('change', { bubbles: true }))
+  },
+  set_reasoning_effort: async (reasoning_effort?: string) => {
+    if (!reasoning_effort) return
+
+    await open_panel()
+
+    const thinking_level_setting = document.querySelector(
+      'ms-thinking-level-setting mat-form-field > div'
+    ) as HTMLElement
+
+    if (!thinking_level_setting) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Thinking level setting element not found'
+      })
+      return
+    }
+
+    thinking_level_setting.click()
+    await new Promise((r) => requestAnimationFrame(r))
+
+    const options_container = document.querySelector(
+      '.cdk-overlay-container div[role="listbox"]'
+    )
+    if (!options_container) {
+      report_initialization_error({
+        function_name: 'set_reasoning_effort',
+        log_message: 'Reasoning effort options container not found'
+      })
+      return
+    }
+
+    const target_label =
+      reasoning_effort.charAt(0).toUpperCase() + reasoning_effort.slice(1)
+
+    const options = Array.from(
+      options_container.querySelectorAll('mat-option')
+    ) as HTMLElement[]
+
+    for (const option of options) {
+      const label = option.textContent?.trim()
+      if (label == target_label) {
+        option.click()
+        break
+      }
+    }
+
+    await new Promise((r) => requestAnimationFrame(r))
   },
   set_thinking_budget: async (thinking_budget?: number) => {
     if (thinking_budget === undefined) {
@@ -278,8 +257,7 @@ export const ai_studio: Chatbot = {
       if (!manual_budget_toggle) {
         report_initialization_error({
           function_name: 'set_thinking_budget',
-          log_message: 'Manual budget toggle not found',
-          alert_message: InitializationError.UNABLE_TO_SET_THINKING_BUDGET
+          log_message: 'Manual budget toggle not found'
         })
         return
       }
@@ -294,8 +272,7 @@ export const ai_studio: Chatbot = {
       if (!thinking_toggle) {
         report_initialization_error({
           function_name: 'set_thinking_budget',
-          log_message: 'Thinking toggle not found',
-          alert_message: InitializationError.UNABLE_TO_SET_THINKING_BUDGET
+          log_message: 'Thinking toggle not found'
         })
         return
       }
@@ -309,8 +286,7 @@ export const ai_studio: Chatbot = {
       if (!manual_budget_toggle) {
         report_initialization_error({
           function_name: 'set_thinking_budget',
-          log_message: 'Manual budget toggle not found',
-          alert_message: InitializationError.UNABLE_TO_SET_THINKING_BUDGET
+          log_message: 'Manual budget toggle not found'
         })
         return
       }
@@ -324,8 +300,7 @@ export const ai_studio: Chatbot = {
       if (!budget_input) {
         report_initialization_error({
           function_name: 'set_thinking_budget',
-          log_message: 'Budget input not found',
-          alert_message: InitializationError.UNABLE_TO_SET_THINKING_BUDGET
+          log_message: 'Budget input not found'
         })
         return
       }
@@ -359,8 +334,7 @@ export const ai_studio: Chatbot = {
     if (!top_p_element) {
       report_initialization_error({
         function_name: 'set_top_p',
-        log_message: 'Top-p input not found',
-        alert_message: InitializationError.UNABLE_TO_SET_TOP_P
+        log_message: 'Top-p input not found'
       })
       return
     }
@@ -374,8 +348,7 @@ export const ai_studio: Chatbot = {
     if (!input_element) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Message input textarea not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Message input textarea not found'
       })
       return
     }
@@ -408,8 +381,7 @@ export const ai_studio: Chatbot = {
     if (!send_button) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Send button not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Send button not found'
       })
       return
     }
@@ -432,8 +404,7 @@ export const ai_studio: Chatbot = {
           if (!chat_turn_container) {
             report_initialization_error({
               function_name: 'ai_studio.perform_copy',
-              log_message: 'Chat turn container not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Chat turn container not found'
             })
             return
           }
@@ -443,8 +414,7 @@ export const ai_studio: Chatbot = {
           if (!options) {
             report_initialization_error({
               function_name: 'ai_studio.perform_copy',
-              log_message: 'Options button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Options button not found'
             })
             return
           }
@@ -457,8 +427,7 @@ export const ai_studio: Chatbot = {
           if (!markdown_copy_button) {
             report_initialization_error({
               function_name: 'ai_studio.perform_copy',
-              log_message: 'Markdown copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Markdown copy button not found'
             })
             return
           }
@@ -505,8 +474,7 @@ const open_panel = async () => {
     if (!tune_button) {
       report_initialization_error({
         function_name: 'open_panel',
-        log_message: 'Tune button not found',
-        alert_message: InitializationError.UNABLE_TO_OPEN_SETTINGS_PANEL
+        log_message: 'Tune button not found'
       })
       return
     }
@@ -524,8 +492,7 @@ const close_panel = async () => {
     if (!close_button) {
       report_initialization_error({
         function_name: 'close_panel',
-        log_message: 'Close button for settings panel not found',
-        alert_message: InitializationError.UNABLE_TO_CLOSE_SETTINGS_PANEL
+        log_message: 'Close button for settings panel not found'
       })
       return
     }
@@ -538,8 +505,7 @@ const close_panel = async () => {
       if (!close_button) {
         report_initialization_error({
           function_name: 'close_panel',
-          log_message: 'Close button for settings panel not found',
-          alert_message: InitializationError.UNABLE_TO_CLOSE_SETTINGS_PANEL
+          log_message: 'Close button for settings panel not found'
         })
         return
       }

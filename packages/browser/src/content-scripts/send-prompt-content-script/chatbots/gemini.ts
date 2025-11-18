@@ -4,10 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const gemini: Chatbot = {
   wait_until_ready: async () => {
@@ -31,8 +28,7 @@ export const gemini: Chatbot = {
       if (!model_selector_trigger) {
         report_initialization_error({
           function_name: 'set_model',
-          log_message: 'Model selector trigger not found',
-          alert_message: InitializationError.UNABLE_TO_SET_MODEL
+          log_message: 'Model selector trigger not found'
         })
         return
       }
@@ -50,8 +46,7 @@ export const gemini: Chatbot = {
       if (!menu_content) {
         report_initialization_error({
           function_name: 'set_model',
-          log_message: 'Model selector menu not found',
-          alert_message: InitializationError.UNABLE_TO_SET_MODEL
+          log_message: 'Model selector menu not found'
         })
         return
       }
@@ -104,8 +99,7 @@ export const gemini: Chatbot = {
       if (!temp_chat_button) {
         report_initialization_error({
           function_name: 'set_options',
-          log_message: 'Temporary chat button not found',
-          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+          log_message: 'Temporary chat button not found'
         })
         return
       }
@@ -120,8 +114,7 @@ export const gemini: Chatbot = {
         if (!side_nav_menu_button) {
           report_initialization_error({
             function_name: 'set_options',
-            log_message: 'Side nav menu button not found to close',
-            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+            log_message: 'Side nav menu button not found to close'
           })
           return
         }
@@ -149,8 +142,7 @@ export const gemini: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'gemini.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

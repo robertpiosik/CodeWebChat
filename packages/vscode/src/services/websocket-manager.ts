@@ -289,7 +289,13 @@ export class WebSocketManager {
 
       const chatbot = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
       let url: string
-      if (preset.chatbot == 'Open WebUI') {
+      if (preset.chatbot == 'AI Studio') {
+        if (preset.model) {
+          url = `${chatbot.url}?model=${preset.model}`
+        } else {
+          url = chatbot.url
+        }
+      } else if (preset.chatbot == 'Open WebUI') {
         if (preset.port) {
           url = `http://localhost:${preset.port}/`
         } else {
@@ -361,7 +367,13 @@ export class WebSocketManager {
 
     const chatbot = CHATBOTS[params.preset.chatbot as keyof typeof CHATBOTS]
     let url: string
-    if (params.preset.chatbot == 'Open WebUI') {
+    if (params.preset.chatbot == 'AI Studio') {
+      if (params.preset.model) {
+        url = `${chatbot.url}?model=${params.preset.model}`
+      } else {
+        url = chatbot.url
+      }
+    } else if (params.preset.chatbot == 'Open WebUI') {
       if (params.preset.port) {
         url = `http://localhost:${params.preset.port}/`
       } else {

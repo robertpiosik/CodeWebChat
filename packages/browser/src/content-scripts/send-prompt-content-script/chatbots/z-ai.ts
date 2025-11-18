@@ -3,10 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const z_ai: Chatbot = {
   wait_until_ready: async () => {
@@ -30,8 +27,7 @@ export const z_ai: Chatbot = {
     if (!deep_think_button) {
       report_initialization_error({
         function_name: 'z_ai.set_options',
-        log_message: 'Auto think button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+        log_message: 'Auto think button not found'
       })
       return
     }
@@ -62,8 +58,7 @@ export const z_ai: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'z_ai.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

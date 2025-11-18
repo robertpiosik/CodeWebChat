@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Responses, ResponseHistoryItem } from './Responses'
+import { Responses } from './Responses'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 
 export default {
   component: Responses

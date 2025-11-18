@@ -4,10 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const github_copilot: Chatbot = {
   wait_until_ready: async () => {
@@ -31,8 +28,7 @@ export const github_copilot: Chatbot = {
     if (!model_selector_button) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Model selector button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model selector button not found'
       })
       return
     }
@@ -55,8 +51,7 @@ export const github_copilot: Chatbot = {
     if (!options_container) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Model options container not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model options container not found'
       })
       // click again to close
       model_selector_button.click()
@@ -79,8 +74,7 @@ export const github_copilot: Chatbot = {
     if (!found) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: `Model option "${model_label_to_find}" not found`,
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: `Model option "${model_label_to_find}" not found`
       })
       // click again to close dropdown
       model_selector_button.click()
@@ -95,8 +89,7 @@ export const github_copilot: Chatbot = {
     if (!input_element) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Message input textarea not found for GitHub Copilot',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Message input textarea not found for GitHub Copilot'
       })
       return
     }
@@ -136,8 +129,7 @@ export const github_copilot: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'github_copilot.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

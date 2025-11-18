@@ -59,6 +59,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
   const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
   const models = useMemo(() => chatbot_config?.models || {}, [chatbot_config])
+  const model_info = useMemo(
+    () =>
+      chatbot && model ? (CHATBOTS[chatbot].models as any)[model] : undefined,
+    [chatbot, model]
+  )
 
   useEffect(() => {
     if (!model && Object.keys(models).length > 0) {
@@ -67,21 +72,18 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   }, [model, models])
 
   useEffect(() => {
-    if (!chatbot) return
-
-    const model_info = model
-      ? (CHATBOTS[chatbot].models as any)[model]
-      : undefined
     if (model_info) {
       const disabled = model_info.disabled_options || []
       set_options((prev) => prev.filter((o) => !disabled.includes(o)))
     }
-  }, [model, chatbot])
+  }, [model_info])
 
   const supports_temperature = chatbot_config?.supports_custom_temperature
   const supports_top_p = chatbot_config?.supports_custom_top_p
   const supports_thinking_budget = chatbot_config?.supports_thinking_budget
-  const supports_reasoning_effort = chatbot_config?.supports_reasoning_effort
+  const supports_reasoning_effort =
+    chatbot_config?.supports_reasoning_effort ||
+    !!model_info?.supported_reasoning_efforts
   const supports_system_instructions =
     chatbot_config?.supports_system_instructions
   const supports_port = chatbot_config?.supports_user_provided_port
@@ -193,13 +195,32 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     }
   }
 
-  const reasoning_effort_options = [
-    { value: 'Unset', label: 'Unset' },
-    { value: 'High', label: 'High' },
-    { value: 'Medium', label: 'Medium' },
-    { value: 'Low', label: 'Low' },
-    { value: 'Minimal', label: 'Minimal' }
-  ]
+  const reasoning_effort_options = useMemo(() => {
+    if (model_info?.supported_reasoning_efforts) {
+      return [
+        { value: '—', label: '—' },
+        ...model_info.supported_reasoning_efforts.map((effort: string) => {
+          const capitalized = effort.charAt(0).toUpperCase() + effort.slice(1)
+          return { value: effort, label: capitalized }
+        })
+      ]
+    }
+    return [
+      { value: '—', label: '—' },
+      { value: 'High', label: 'High' },
+      { value: 'Medium', label: 'Medium' },
+      { value: 'Low', label: 'Low' },
+      { value: 'Minimal', label: 'Minimal' }
+    ]
+  }, [model_info])
+
+  useEffect(() => {
+    if (
+      reasoning_effort &&
+      !reasoning_effort_options.find((o) => o.value === reasoning_effort)
+    )
+      set_reasoning_effort(undefined)
+  }, [reasoning_effort, reasoning_effort_options])
 
   return (
     <Scrollable>
@@ -319,6 +340,24 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           </Field>
         )}
 
+        {supports_reasoning_effort && (
+          <Field
+            label="Reasoning Effort"
+            html_for="reasoning-effort"
+            info={`Controls the amount of thought the model puts into its response before answering.${
+              chatbot == 'OpenRouter' ? ' Requires supporting model.' : ''
+            }`}
+          >
+            <Dropdown
+              options={reasoning_effort_options}
+              value={reasoning_effort || '—'}
+              onChange={(value) => {
+                set_reasoning_effort(value == '—' ? undefined : value)
+              }}
+            />
+          </Field>
+        )}
+
         {Object.keys(supported_options).length > 0 && (
           <Field label="Options">
             <div className={styles.options}>
@@ -367,41 +406,26 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           </Field>
         )}
 
-        {supports_reasoning_effort && (
-          <Field
-            label="Reasoning Effort"
-            html_for="reasoning-effort"
-            info="Controls the amount of thought the model puts into its response before answering. Requires supporting model."
-          >
-            <Dropdown
-              options={reasoning_effort_options}
-              value={reasoning_effort || 'Unset'}
-              onChange={(value) => {
-                set_reasoning_effort(value === 'Unset' ? undefined : value)
-              }}
-            />
-          </Field>
-        )}
-
-        {supports_thinking_budget && (
-          <Field label="Thinking Budget" html_for="thinking-budget">
-            <Input
-              id="thinking-budget"
-              type="text"
-              value={String(thinking_budget ?? '')}
-              onChange={(value) => {
-                const num = parseInt(value, 10)
-                set_thinking_budget(isNaN(num) ? undefined : num)
-              }}
-              placeholder="e.g. 8000"
-              onKeyDown={(e) =>
-                !/[0-9]/.test(e.key) &&
-                e.key != 'Backspace' &&
-                e.preventDefault()
-              }
-            />
-          </Field>
-        )}
+        {supports_thinking_budget &&
+          !supports_reasoning_effort && ( // Additional check for AI Studio
+            <Field label="Thinking Budget" html_for="thinking-budget">
+              <Input
+                id="thinking-budget"
+                type="text"
+                value={String(thinking_budget ?? '')}
+                onChange={(value) => {
+                  const num = parseInt(value, 10)
+                  set_thinking_budget(isNaN(num) ? undefined : num)
+                }}
+                placeholder="e.g. 8000"
+                onKeyDown={(e) =>
+                  !/[0-9]/.test(e.key) &&
+                  e.key != 'Backspace' &&
+                  e.preventDefault()
+                }
+              />
+            </Field>
+          )}
 
         {supports_system_instructions && (
           <Field

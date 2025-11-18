@@ -4,10 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const together: Chatbot = {
   wait_until_ready: async () => {
@@ -35,8 +32,7 @@ export const together: Chatbot = {
     if (!model_selector_button) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Model selector button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model selector button not found'
       })
       return
     }
@@ -56,8 +52,7 @@ export const together: Chatbot = {
     if (!models_dropdown) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Models dropdown not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Models dropdown not found'
       })
       return
     }
@@ -90,8 +85,7 @@ export const together: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'together.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

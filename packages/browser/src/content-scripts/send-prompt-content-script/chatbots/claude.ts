@@ -4,10 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const claude: Chatbot = {
   wait_until_ready: async () => {
@@ -30,8 +27,7 @@ export const claude: Chatbot = {
     if (!model_selector_button) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Model selector button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model selector button not found'
       })
       return
     }
@@ -40,8 +36,7 @@ export const claude: Chatbot = {
     if (!model_name_to_find) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: `Model "${model}" not found`,
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: `Model "${model}" not found`
       })
       return
     }
@@ -62,8 +57,7 @@ export const claude: Chatbot = {
     if (menu_items.length == 0) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Model selector menu items not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model selector menu items not found'
       })
       return
     }
@@ -96,16 +90,14 @@ export const claude: Chatbot = {
         } else {
           report_initialization_error({
             function_name: 'set_options',
-            log_message: 'Incognito chat button not found for Claude',
-            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+            log_message: 'Incognito chat button not found for Claude'
           })
           return
         }
       } else {
         report_initialization_error({
           function_name: 'set_options',
-          log_message: 'Incognito chat button path not found for Claude',
-          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+          log_message: 'Incognito chat button path not found for Claude'
         })
         return
       }
@@ -119,8 +111,7 @@ export const claude: Chatbot = {
     if (!input_element) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Message input not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Message input not found'
       })
       return
     }
@@ -142,8 +133,7 @@ export const claude: Chatbot = {
     if (!submit_button) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Submit button not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Submit button not found'
       })
       return
     }
@@ -168,8 +158,7 @@ export const claude: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'claude.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

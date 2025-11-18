@@ -4,10 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const yuanbao: Chatbot = {
   wait_until_ready: async () => {
@@ -31,8 +28,7 @@ export const yuanbao: Chatbot = {
     if (!model_selector_button) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Model selector button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model selector button not found'
       })
       return
     }
@@ -66,8 +62,7 @@ export const yuanbao: Chatbot = {
       if (!deep_think_button) {
         report_initialization_error({
           function_name: 'set_options',
-          log_message: 'Deep think button not found',
-          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+          log_message: 'Deep think button not found'
         })
         return
       }
@@ -85,8 +80,7 @@ export const yuanbao: Chatbot = {
       if (!search_button) {
         report_initialization_error({
           function_name: 'set_options',
-          log_message: 'Search button not found',
-          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+          log_message: 'Search button not found'
         })
         return
       }
@@ -117,8 +111,7 @@ export const yuanbao: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'yuanbao.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

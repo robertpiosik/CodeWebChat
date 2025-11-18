@@ -3,10 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const mistral: Chatbot = {
   wait_until_ready: async () => {
@@ -38,8 +35,7 @@ export const mistral: Chatbot = {
       } else {
         report_initialization_error({
           function_name: 'set_options',
-          log_message: 'Incognito button not found',
-          alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+          log_message: 'Incognito button not found'
         })
       }
     }
@@ -51,8 +47,7 @@ export const mistral: Chatbot = {
     if (!think_button_icon_path) {
       report_initialization_error({
         function_name: 'set_options',
-        log_message: 'Think button icon not found',
-        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+        log_message: 'Think button icon not found'
       })
       return
     }
@@ -64,8 +59,7 @@ export const mistral: Chatbot = {
     if (!think_button) {
       report_initialization_error({
         function_name: 'set_options',
-        log_message: 'Think button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+        log_message: 'Think button not found'
       })
       return
     }
@@ -100,16 +94,14 @@ export const mistral: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'mistral.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }
           if (!copy_button) {
             report_initialization_error({
               function_name: 'mistral.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

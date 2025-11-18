@@ -3,10 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const perplexity: Chatbot = {
   wait_until_ready: async () => {
@@ -43,8 +40,7 @@ export const perplexity: Chatbot = {
     if (!switcher_button) {
       report_initialization_error({
         function_name: 'perplexity.set_options',
-        log_message: 'Sources switcher button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+        log_message: 'Sources switcher button not found'
       })
       return
     }
@@ -60,8 +56,7 @@ export const perplexity: Chatbot = {
     } else {
       report_initialization_error({
         function_name: 'perplexity.set_options',
-        log_message: 'Web toggle button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+        log_message: 'Web toggle button not found'
       })
     }
   },
@@ -72,8 +67,7 @@ export const perplexity: Chatbot = {
     if (!input_element) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Message input not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Message input not found'
       })
       return
     }
@@ -97,8 +91,7 @@ export const perplexity: Chatbot = {
     if (!submit_button) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Submit button not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Submit button not found'
       })
       return
     }
@@ -123,8 +116,7 @@ export const perplexity: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'perplexity.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

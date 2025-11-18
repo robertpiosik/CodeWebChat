@@ -3,10 +3,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const hugging_chat: Chatbot = {
   wait_until_ready: async () => {
@@ -21,8 +18,7 @@ export const hugging_chat: Chatbot = {
     if (!model_picker_button) {
       report_initialization_error({
         function_name: 'hugging_chat.set_model',
-        log_message: 'Model picker button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model picker button not found'
       })
       return
     }
@@ -45,8 +41,7 @@ export const hugging_chat: Chatbot = {
     if (!dialog) {
       report_initialization_error({
         function_name: 'hugging_chat.set_model',
-        log_message: 'Model picker dialog not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model picker dialog not found'
       })
       return
     }
@@ -58,8 +53,7 @@ export const hugging_chat: Chatbot = {
     if (!model_button) {
       report_initialization_error({
         function_name: 'hugging_chat.set_model',
-        log_message: `Model button for "${model}" not found`,
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: `Model button for "${model}" not found`
       })
 
       const close_button = dialog.querySelector('button') as HTMLButtonElement
@@ -79,8 +73,7 @@ export const hugging_chat: Chatbot = {
     if (!activate_button) {
       report_initialization_error({
         function_name: 'hugging_chat.set_model',
-        log_message: 'Activate model button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Activate model button not found'
       })
       return
     }
@@ -107,8 +100,7 @@ export const hugging_chat: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'hugging_chat.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

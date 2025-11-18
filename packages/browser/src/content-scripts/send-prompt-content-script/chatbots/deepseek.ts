@@ -4,10 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const deepseek: Chatbot = {
   wait_until_ready: async () => {
@@ -35,8 +32,7 @@ export const deepseek: Chatbot = {
     if (!deep_think_button) {
       report_initialization_error({
         function_name: 'set_options',
-        log_message: 'DeepThink button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+        log_message: 'DeepThink button not found'
       })
       return
     }
@@ -48,8 +44,7 @@ export const deepseek: Chatbot = {
     if (!search_button) {
       report_initialization_error({
         function_name: 'set_options',
-        log_message: 'Search button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+        log_message: 'Search button not found'
       })
       return
     }
@@ -106,16 +101,14 @@ export const deepseek: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'deepseek.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }
           if (!copy_button) {
             report_initialization_error({
               function_name: 'deepseek.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

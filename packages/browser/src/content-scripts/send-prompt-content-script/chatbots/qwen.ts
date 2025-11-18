@@ -4,10 +4,7 @@ import {
   add_apply_response_button,
   observe_for_responses
 } from '../utils/add-apply-response-button'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const qwen: Chatbot = {
   wait_until_ready: async () => {
@@ -40,8 +37,7 @@ export const qwen: Chatbot = {
     if (!model_selector_button) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Model selector button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Model selector button not found'
       })
       return
     }
@@ -64,8 +60,7 @@ export const qwen: Chatbot = {
     } else {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Expand more button not found',
-        alert_message: InitializationError.UNABLE_TO_SET_MODEL
+        log_message: 'Expand more button not found'
       })
       return
     }
@@ -106,8 +101,7 @@ export const qwen: Chatbot = {
         if (!search_button) {
           report_initialization_error({
             function_name: 'set_options',
-            log_message: 'Search button not found',
-            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+            log_message: 'Search button not found'
           })
           return
         }
@@ -119,8 +113,7 @@ export const qwen: Chatbot = {
         if (!model_selector_button) {
           report_initialization_error({
             function_name: 'set_options',
-            log_message: 'Model selector button for temporary chat not found',
-            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+            log_message: 'Model selector button for temporary chat not found'
           })
           return
         }
@@ -132,8 +125,7 @@ export const qwen: Chatbot = {
         if (!temporary_switch) {
           report_initialization_error({
             function_name: 'set_options',
-            log_message: 'Temporary chat switch not found',
-            alert_message: InitializationError.UNABLE_TO_SET_OPTIONS
+            log_message: 'Temporary chat switch not found'
           })
           return
         }
@@ -160,8 +152,7 @@ export const qwen: Chatbot = {
       if (!file_input) {
         report_initialization_error({
           function_name: 'enter_message_and_send',
-          log_message: 'File input not found',
-          alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE_WITH_FILE
+          log_message: 'File input not found'
         })
         return
       }
@@ -193,8 +184,7 @@ export const qwen: Chatbot = {
     if (!input_element) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Message input textarea not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Message input textarea not found'
       })
       return
     }
@@ -212,8 +202,7 @@ export const qwen: Chatbot = {
     if (!submit_button) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Send button not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Send button not found'
       })
       return
     }
@@ -242,16 +231,14 @@ export const qwen: Chatbot = {
           if (!copy_button) {
             report_initialization_error({
               function_name: 'qwen.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }
           if (!copy_button) {
             report_initialization_error({
               function_name: 'qwen.perform_copy',
-              log_message: 'Copy button not found',
-              alert_message: InitializationError.UNABLE_TO_COPY_RESPONSE
+              log_message: 'Copy button not found'
             })
             return
           }

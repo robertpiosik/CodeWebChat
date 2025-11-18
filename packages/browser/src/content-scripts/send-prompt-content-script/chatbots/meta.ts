@@ -1,8 +1,5 @@
 import { Chatbot } from '../types/chatbot'
-import {
-  InitializationError,
-  report_initialization_error
-} from '../utils/report-initialization-error'
+import { report_initialization_error } from '../utils/report-initialization-error'
 // import browser from 'webextension-polyfill'
 // import {
 //   apply_chat_response_button_style,
@@ -36,8 +33,7 @@ export const meta: Chatbot = {
     if (!input_element) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Message input element not found',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Message input element not found'
       })
       return
     }
@@ -87,8 +83,7 @@ export const meta: Chatbot = {
     } catch (error) {
       report_initialization_error({
         function_name: 'enter_message_and_send',
-        log_message: 'Failed to send message',
-        alert_message: InitializationError.UNABLE_TO_SEND_MESSAGE
+        log_message: 'Failed to send message'
       })
     }
   }

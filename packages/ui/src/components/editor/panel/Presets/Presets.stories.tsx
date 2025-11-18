@@ -44,6 +44,10 @@ export const Primary = () => {
         console.log('on_toggle_group_collapsed', name)
       }
       selected_preset_name={undefined}
+      is_collapsed={false}
+      on_create_group={() => {}}
+      on_toggle_collapsed={() => {}}
+      on_toggle_preset_pinned={() => {}}
     />
   )
 }
