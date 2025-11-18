@@ -4,10 +4,8 @@ import { Presets as UiPresets } from '@ui/components/editor/panel/Presets'
 import { PromptField as UiPromptField } from '@ui/components/editor/panel/PromptField'
 import { Separator as UiSeparator } from '@ui/components/editor/panel/Separator'
 import { Preset } from '@shared/types/preset'
-import {
-  ResponseHistoryItem,
-  Responses as UiResponses
-} from '@ui/components/editor/panel/Responses'
+import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
 import {
   MAIN_VIEW_TYPES,
@@ -88,9 +86,7 @@ type Props = {
   chat_input_focus_and_select_key: number
   chat_input_focus_key: number
   response_history: ResponseHistoryItem[]
-  on_response_history_item_click: (
-    item: Pick<ResponseHistoryItem, 'response' | 'raw_instructions' | 'files'>
-  ) => void
+  on_response_history_item_click: (item: ResponseHistoryItem) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
   context_file_paths: string[]

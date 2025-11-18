@@ -2,7 +2,7 @@ import { FileInPreview } from '@shared/types/file-in-preview'
 
 export type CodeReviewDecision =
   | { jump_to: { file_path: string; workspace_name?: string } }
-  | { accepted_files: FileInPreview[] }
+  | { accepted_files: FileInPreview[]; created_at?: number }
 
 export type CodeReviewResult = {
   decision: CodeReviewDecision

@@ -18,6 +18,7 @@ export const preview_handler = async (params: {
     position: { line: number; character: number }
   }
   raw_instructions?: string
+  created_at?: number
 }): Promise<boolean> => {
   let resolve_cleanup_promise: () => void
   ongoing_review_cleanup_promise = new Promise((resolve) => {
@@ -25,14 +26,28 @@ export const preview_handler = async (params: {
   })
 
   try {
-    const review_result = await preview({
+    const preview_result = await preview({
       original_states: params.original_states,
       panel_provider: params.panel_provider,
       raw_instructions: params.raw_instructions,
-      chat_response: params.chat_response
+      chat_response: params.chat_response,
+      context: params.context,
+      created_at: params.created_at
     })
 
-    if (review_result === null || review_result.accepted_files.length == 0) {
+    if (preview_result === null || preview_result.accepted_files.length == 0) {
+      if (preview_result?.created_at) {
+        const history = params.panel_provider.response_history
+        const new_history = history.filter(
+          (item) => item.created_at !== preview_result.created_at
+        )
+
+        params.panel_provider.response_history = new_history
+        params.panel_provider.send_message({
+          command: 'RESPONSE_HISTORY',
+          history: new_history
+        })
+      }
       if (params.original_editor_state) {
         try {
           const uri = vscode.Uri.file(params.original_editor_state.file_path)
@@ -68,14 +83,14 @@ export const preview_handler = async (params: {
       return false
     }
 
-    if (review_result.rejected_states.length > 0) {
+    if (preview_result.rejected_states.length > 0) {
       await undo_files({
-        original_states: review_result.rejected_states
+        original_states: preview_result.rejected_states
       })
     }
 
     const accepted_states = params.original_states.filter((state) =>
-      review_result.accepted_files.some(
+      preview_result.accepted_files.some(
         (accepted) =>
           accepted.file_path == state.file_path &&
           accepted.workspace_name == state.workspace_name
@@ -83,6 +98,13 @@ export const preview_handler = async (params: {
     )
 
     if (accepted_states.length > 0) {
+      if (preview_result.created_at) {
+        params.panel_provider.response_history = []
+        params.panel_provider.send_message({
+          command: 'RESPONSE_HISTORY',
+          history: []
+        })
+      }
       update_undo_button_state({
         context: params.context,
         panel_provider: params.panel_provider,

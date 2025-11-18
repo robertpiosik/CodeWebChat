@@ -1,5 +1,6 @@
 import { EditFormat } from '@shared/types/edit-format'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Preset } from '@shared/types/preset'
 import { MainViewType } from './home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
@@ -98,6 +99,10 @@ export interface RequestEditorSelectionStateMessage extends BaseMessage {
 
 export interface GetHistoryMessage extends BaseMessage {
   command: 'GET_HISTORY'
+}
+
+export interface GetResponseHistoryMessage extends BaseMessage {
+  command: 'GET_RESPONSE_HISTORY'
 }
 
 export interface SaveHistoryMessage extends BaseMessage {
@@ -248,9 +253,10 @@ export interface GetVersionMessage extends BaseMessage {
   command: 'GET_VERSION'
 }
 
-export interface EditsReviewMessage extends BaseMessage {
-  command: 'EDITS_REVIEW'
+export interface ResponsePreviewMessage extends BaseMessage {
+  command: 'RESPONSE_PREVIEW'
   files: FileInPreview[]
+  created_at?: number
 }
 
 export interface ToggleFileInReviewMessage extends BaseMessage {
@@ -327,6 +333,7 @@ export interface ApplyResponseFromHistoryMessage extends BaseMessage {
   response: string
   raw_instructions?: string
   files?: FileInPreview[]
+  created_at: number
 }
 
 export interface GetCollapsedStatesMessage extends BaseMessage {
@@ -354,6 +361,7 @@ export type FrontendMessage =
   | RequestEditorStateMessage
   | RequestEditorSelectionStateMessage
   | GetHistoryMessage
+  | GetResponseHistoryMessage
   | SaveHistoryMessage
   | GetCurrentTokenCountMessage
   | GetContextSizeWarningThresholdMessage
@@ -384,7 +392,7 @@ export type FrontendMessage =
   | ReorderApiToolConfigurationsMessage
   | TogglePinnedApiToolConfigurationMessage
   | GetVersionMessage
-  | EditsReviewMessage
+  | ResponsePreviewMessage
   | ToggleFileInReviewMessage
   | FocusOnFileInPreviewMessage
   | GoToFileMessage
@@ -462,6 +470,11 @@ export interface ChatHistoryMessage extends BaseMessage {
   edit_context: string[]
   no_context: string[]
   code_completions: string[]
+}
+
+export interface ResponseHistoryMessage extends BaseMessage {
+  command: 'RESPONSE_HISTORY'
+  history: ResponseHistoryItem[]
 }
 
 export interface TokenCountMessage extends BaseMessage {
@@ -591,15 +604,6 @@ export interface CommitProcessCancelledMessage extends BaseMessage {
   command: 'COMMIT_PROCESS_CANCELLED'
 }
 
-export interface NewResponseReceivedMessage extends BaseMessage {
-  command: 'NEW_RESPONSE_RECEIVED'
-  response: string
-  raw_instructions?: string
-  lines_added?: number
-  lines_removed?: number
-  files?: FileInPreview[]
-}
-
 export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
   presets_collapsed_by_web_mode: { [mode in WebMode]?: boolean }
@@ -618,6 +622,7 @@ export type BackendMessage =
   | GitStateChangedMessage
   | EditorSelectionChangedMessage
   | ChatHistoryMessage
+  | ResponseHistoryMessage
   | TokenCountMessage
   | ContextSizeWarningThresholdMessage
   | PresetCreatedMessage
@@ -642,5 +647,4 @@ export type BackendMessage =
   | ShowStageFilesModalMessage
   | ShowCommitMessageModalMessage
   | CommitProcessCancelledMessage
-  | NewResponseReceivedMessage
   | CollapsedStatesMessage

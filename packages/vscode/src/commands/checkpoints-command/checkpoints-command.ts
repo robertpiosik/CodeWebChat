@@ -14,6 +14,7 @@ import {
   get_checkpoints,
   restore_checkpoint
 } from './actions'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from './utils'
 
 dayjs.extend(relativeTime)
@@ -22,7 +23,8 @@ export type { Checkpoint } from './types'
 
 export const checkpoints_command = (
   workspace_provider: WorkspaceProvider,
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  panel_provider: PanelProvider
 ): vscode.Disposable[] => {
   let activeDeleteOperation: {
     finalize: () => Promise<void>
@@ -191,7 +193,8 @@ export const checkpoints_command = (
               checkpoint: temp_checkpoint,
               workspace_provider,
               context,
-              options: { skip_confirmation: true }
+              options: { skip_confirmation: true },
+              panel_provider
             })
             // After reverting, delete the temp checkpoint and clear state.
             await delete_checkpoint({
@@ -207,7 +210,8 @@ export const checkpoints_command = (
             await restore_checkpoint({
               checkpoint: selected.checkpoint,
               workspace_provider,
-              context
+              context,
+              panel_provider
             })
           }
         })

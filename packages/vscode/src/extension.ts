@@ -78,7 +78,8 @@ export async function activate(context: vscode.ExtensionContext) {
         open_editors_provider,
         context,
         panel_provider
-      )
+      ),
+      ...checkpoints_command(workspace_provider, context, panel_provider)
     )
   }
 
@@ -95,7 +96,6 @@ export async function activate(context: vscode.ExtensionContext) {
     delete_command(),
     save_context_command(workspace_provider, context),
     find_paths_in_clipboard_command(workspace_provider),
-    ...checkpoints_command(workspace_provider, context),
     duplicate_workspace_command(workspace_provider, websites_provider, context),
     open_url_command({
       command: 'codeWebChat.openRepository',

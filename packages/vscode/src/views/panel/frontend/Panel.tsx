@@ -304,7 +304,7 @@ export const Panel = () => {
             <UiPage
               title="Response Preview"
               on_back_click={() => {
-                post_message(vscode, { command: 'EDITS_REVIEW', files: [] })
+                post_message(vscode, { command: 'RESPONSE_PREVIEW', files: [] })
               }}
               footer_slot={
                 <UiResponsePreviewFooter
@@ -316,8 +316,9 @@ export const Panel = () => {
                     )
                     set_selected_history_item_created_at(undefined)
                     post_message(vscode, {
-                      command: 'EDITS_REVIEW',
-                      files: []
+                      command: 'RESPONSE_PREVIEW',
+                      files: [],
+                      created_at: selected_history_item_created_at
                     })
                   }}
                   on_accept={() => {
@@ -327,8 +328,9 @@ export const Panel = () => {
                     set_response_history([])
                     set_selected_history_item_created_at(undefined)
                     post_message(vscode, {
-                      command: 'EDITS_REVIEW',
-                      files: accepted_files
+                      command: 'RESPONSE_PREVIEW',
+                      files: accepted_files,
+                      created_at: selected_history_item_created_at
                     })
                   }}
                   is_accept_disabled={

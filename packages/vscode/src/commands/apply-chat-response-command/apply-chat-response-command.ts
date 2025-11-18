@@ -18,8 +18,10 @@ import {
 import { process_chat_response, CommandArgs } from './response-processor'
 import { Checkpoint } from '../checkpoints-command/types'
 import { CHECKPOINTS_STATE_KEY } from '@/constants/state-keys'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 
 let in_progress = false
+let placeholder_created_at_for_update: number | undefined
 
 export const apply_chat_response_command = (
   context: vscode.ExtensionContext,
@@ -52,28 +54,33 @@ export const apply_chat_response_command = (
         return
       }
 
-      if (in_progress) {
-        panel_provider.send_message({
-          command: 'NEW_RESPONSE_RECEIVED',
-          response: chat_response,
-          raw_instructions: args?.raw_instructions
-        })
-      }
-
       if (in_progress && !response_preview_promise_resolve) {
         // Running intelligent update before response preview...
         return
       }
-      in_progress = true
 
       if (response_preview_promise_resolve) {
         // Previewing response...
+        const history = panel_provider.response_history
+
+        const new_item: ResponseHistoryItem = {
+          response: chat_response,
+          raw_instructions: args?.raw_instructions,
+          created_at: Date.now()
+        }
+
+        history.push(new_item)
+        panel_provider.send_message({
+          command: 'RESPONSE_HISTORY',
+          history
+        })
         const choice = await vscode.window.showInformationMessage(
           dictionary.warning_message.PREVIEW_ONGOING,
           'Switch'
         )
 
         if (choice == 'Switch') {
+          placeholder_created_at_for_update = new_item.created_at
           response_preview_promise_resolve({ accepted_files: [] })
           if (ongoing_review_cleanup_promise) {
             await ongoing_review_cleanup_promise
@@ -84,6 +91,7 @@ export const apply_chat_response_command = (
         }
       }
 
+      in_progress = true
       let before_checkpoint: Checkpoint | undefined
       try {
         before_checkpoint = await create_checkpoint(
@@ -104,6 +112,7 @@ export const apply_chat_response_command = (
         )
 
         if (review_data) {
+          let created_at_for_preview = args?.created_at
           if (!args?.files_with_content) {
             let total_lines_added = 0
             let total_lines_removed = 0
@@ -168,24 +177,58 @@ export const apply_chat_response_command = (
                 is_checked: true
               })
             }
+            const history = panel_provider.response_history
+
+            if (placeholder_created_at_for_update) {
+              const item_to_update = history.find(
+                (i) => i.created_at === placeholder_created_at_for_update
+              )
+              if (item_to_update) {
+                item_to_update.files = files_for_history
+                item_to_update.lines_added = total_lines_added
+                item_to_update.lines_removed = total_lines_removed
+              }
+              created_at_for_preview = placeholder_created_at_for_update
+              placeholder_created_at_for_update = undefined
+            } else {
+              const item_to_update =
+                args?.created_at &&
+                history.find((i) => i.created_at === args.created_at)
+
+              if (item_to_update) {
+                item_to_update.files = files_for_history
+                item_to_update.lines_added = total_lines_added
+                item_to_update.lines_removed = total_lines_removed
+              } else {
+                created_at_for_preview = Date.now()
+                const new_item: ResponseHistoryItem = {
+                  response: review_data.chat_response,
+                  raw_instructions: args?.raw_instructions,
+                  created_at: created_at_for_preview,
+                  lines_added: total_lines_added,
+                  lines_removed: total_lines_removed,
+                  files: files_for_history
+                }
+
+                history.push(new_item)
+              }
+            }
 
             panel_provider.send_message({
-              command: 'NEW_RESPONSE_RECEIVED',
-              response: review_data.chat_response,
-              raw_instructions: args?.raw_instructions,
-              lines_added: total_lines_added,
-              lines_removed: total_lines_removed,
-              files: files_for_history
+              command: 'RESPONSE_HISTORY',
+              history
             })
           }
 
+          const history_for_checkpoint = [...panel_provider.response_history]
           const changes_accepted = await preview_handler({
             original_states: review_data.original_states,
             chat_response: review_data.chat_response,
             panel_provider,
             context,
             original_editor_state: args?.original_editor_state,
-            raw_instructions: args?.raw_instructions
+            raw_instructions: args?.raw_instructions,
+            created_at: created_at_for_preview
           })
 
           if (changes_accepted) {
@@ -200,6 +243,9 @@ export const apply_chat_response_command = (
               )
               if (checkpoint_to_update) {
                 checkpoint_to_update.title = 'Before changes approved'
+                checkpoint_to_update.response_history = history_for_checkpoint
+                checkpoint_to_update.response_preview_item_created_at =
+                  created_at_for_preview
                 await context.workspaceState.update(
                   CHECKPOINTS_STATE_KEY,
                   checkpoints

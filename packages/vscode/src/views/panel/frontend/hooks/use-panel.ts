@@ -8,16 +8,8 @@ import {
 import { MainViewType } from '../../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { post_message } from '../utils/post_message'
-import { ItemInPreview, FileInPreview } from '@shared/types/file-in-preview'
-
-type ResponseHistoryItem = {
-  response: string
-  raw_instructions?: string
-  created_at: number
-  lines_added?: number
-  lines_removed?: number
-  files?: FileInPreview[]
-}
+import { ItemInPreview } from '@shared/types/file-in-preview'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 
 export const use_panel = (vscode: any) => {
   const [active_view, set_active_view] = useState<'home' | 'main'>('home')
@@ -171,51 +163,6 @@ export const use_panel = (vscode: any) => {
             return [...items, { ...message.file, is_checked: true }]
           }
         })
-        set_response_history((current_history) => {
-          const history_item_index = current_history.findIndex(
-            (item) => item.created_at == selected_history_item_created_at
-          )
-
-          if (history_item_index == -1) {
-            return current_history
-          }
-
-          const new_history = [...current_history]
-          const history_item_to_update = { ...new_history[history_item_index] }
-
-          const files_in_history = history_item_to_update.files
-            ? [...history_item_to_update.files]
-            : []
-
-          const file_in_history_index = files_in_history.findIndex(
-            (f) =>
-              f.file_path == message.file.file_path &&
-              f.workspace_name == message.file.workspace_name
-          )
-
-          if (file_in_history_index != -1) {
-            files_in_history[file_in_history_index] = message.file
-          } else {
-            files_in_history.push(message.file)
-          }
-
-          history_item_to_update.files = files_in_history
-
-          // Recalculate total lines added/removed
-          let total_lines_added = 0
-          let total_lines_removed = 0
-          for (const file of files_in_history) {
-            total_lines_added += file.lines_added
-            total_lines_removed += file.lines_removed
-          }
-
-          history_item_to_update.lines_added = total_lines_added
-          history_item_to_update.lines_removed = total_lines_removed
-
-          new_history[history_item_index] = history_item_to_update
-
-          return new_history
-        })
       } else if (message.command == 'RESPONSE_PREVIEW_FINISHED') {
         set_items_to_review(undefined)
         set_raw_instructions(undefined)
@@ -243,51 +190,8 @@ export const use_panel = (vscode: any) => {
         set_files_to_stage(message.files)
       } else if (message.command == 'COMMIT_PROCESS_CANCELLED') {
         set_commit_button_enabling_trigger_count((k) => k + 1)
-      } else if (message.command == 'NEW_RESPONSE_RECEIVED') {
-        const now = Date.now()
-        if (!response_history.length) {
-          set_selected_history_item_created_at(now)
-          set_response_history([
-            {
-              response: message.response,
-              raw_instructions: message.raw_instructions,
-              created_at: now,
-              lines_added: message.lines_added,
-              lines_removed: message.lines_removed,
-              files: message.files
-            }
-          ])
-        } else {
-          const duplicate_index = response_history.findIndex(
-            (item) =>
-              item.response == message.response &&
-              item.raw_instructions == message.raw_instructions
-          )
-          if (duplicate_index == -1) {
-            const new_item = {
-              response: message.response,
-              raw_instructions: message.raw_instructions,
-              created_at: now,
-              lines_added: message.lines_added,
-              lines_removed: message.lines_removed,
-              files: message.files
-            }
-            set_response_history([...response_history, new_item])
-            if (!items_to_review) {
-              set_selected_history_item_created_at(now)
-            }
-          } else {
-            const new_history = [...response_history]
-            const existing_item = new_history[duplicate_index]
-            new_history[duplicate_index] = {
-              ...existing_item,
-              ...message,
-              created_at: existing_item.created_at
-            }
-            set_response_history(new_history)
-            set_selected_history_item_created_at(existing_item.created_at)
-          }
-        }
+      } else if (message.command == 'RESPONSE_HISTORY') {
+        set_response_history(message.history)
       } else if (message.command == 'CONTEXT_SIZE_WARNING_THRESHOLD') {
         set_context_size_warning_threshold(message.threshold)
       } else if (message.command == 'GIT_STATE_CHANGED') {
@@ -300,6 +204,7 @@ export const use_panel = (vscode: any) => {
 
     const initial_messages: FrontendMessage[] = [
       { command: 'GET_INSTRUCTIONS' },
+      { command: 'GET_RESPONSE_HISTORY' },
       { command: 'GET_VERSION' },
       { command: 'GET_MAIN_VIEW_TYPE' },
       { command: 'GET_WEB_MODE' },
@@ -315,7 +220,7 @@ export const use_panel = (vscode: any) => {
     initial_messages.forEach((message) => post_message(vscode, message))
 
     return () => window.removeEventListener('message', handle_message)
-  }, [response_history, items_to_review])
+  }, [])
 
   const edit_preset_back_click_handler = () => {
     post_message(vscode, {

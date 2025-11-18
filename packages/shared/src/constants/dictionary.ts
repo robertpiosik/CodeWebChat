@@ -268,8 +268,8 @@ export const dictionary = {
     API_KEY_MISSING: 'API key is missing. Please add it in the Settings tab.',
     CODE_COMPLETION_ERROR:
       'An error occurred during code completion. See console for details.',
-    REFACTOR_ERROR:
-      'An error occurred during refactor task. See console for details.',
+    EDIT_CONTEXT_ERROR:
+      'An error occurred during context editing. See console for details.',
     CONFIGURATION_ALREADY_EXISTS:
       'A configuration with these properties already exists',
     CONFIGURATION_NOT_FOUND: 'Configuration not found',

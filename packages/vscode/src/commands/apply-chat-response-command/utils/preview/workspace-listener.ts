@@ -23,7 +23,9 @@ export const setup_workspace_listeners = (
   original_states: OriginalFileState[],
   panel_provider: PanelProvider,
   workspace_map: Map<string, string>,
-  default_workspace: string
+  default_workspace: string,
+  context: vscode.ExtensionContext,
+  created_at?: number
 ) => {
   const deleted_files_content_cache = new Map<string, string>()
 
@@ -45,7 +47,7 @@ export const setup_workspace_listeners = (
   )
 
   const text_document_change_listener =
-    vscode.workspace.onDidChangeTextDocument((event) => {
+    vscode.workspace.onDidChangeTextDocument(async (event) => {
       const changed_doc_path = event.document.uri.fsPath
       const changed_file_in_review = prepared_files.find(
         (pf) => pf.sanitized_path == changed_doc_path
@@ -65,6 +67,41 @@ export const setup_workspace_listeners = (
           diff_stats.lines_removed
         if (changed_file_in_review.reviewable_file.is_checked) {
           changed_file_in_review.reviewable_file.content = new_content
+        }
+
+        if (created_at) {
+          const history = panel_provider.response_history
+          const item_to_update = history.find(
+            (i) => i.created_at === created_at
+          )
+          if (item_to_update && item_to_update.files) {
+            const file_in_history = item_to_update.files.find(
+              (f) =>
+                f.file_path ==
+                  changed_file_in_review.reviewable_file.file_path &&
+                f.workspace_name ==
+                  changed_file_in_review.reviewable_file.workspace_name
+            )
+            if (file_in_history) {
+              if (changed_file_in_review.reviewable_file.is_checked) {
+                file_in_history.content = new_content
+              }
+              file_in_history.lines_added = diff_stats.lines_added
+              file_in_history.lines_removed = diff_stats.lines_removed
+              let total_lines_added = 0
+              let total_lines_removed = 0
+              item_to_update.files.forEach((f) => {
+                total_lines_added += f.lines_added
+                total_lines_removed += f.lines_removed
+              })
+              item_to_update.lines_added = total_lines_added
+              item_to_update.lines_removed = total_lines_removed
+              panel_provider.send_message({
+                command: 'RESPONSE_HISTORY',
+                history
+              })
+            }
+          }
         }
 
         panel_provider.send_message({
@@ -552,6 +589,21 @@ export const setup_workspace_listeners = (
     if (!file_to_toggle) return
 
     file_to_toggle.reviewable_file.is_checked = is_checked
+
+    if (created_at) {
+      const history = panel_provider.response_history
+      const item_to_update = history.find((i) => i.created_at === created_at)
+      if (item_to_update && item_to_update.files) {
+        const file_in_history = item_to_update.files.find(
+          (f) =>
+            f.file_path === file_path && f.workspace_name === workspace_name
+        )
+        if (file_in_history) {
+          file_in_history.is_checked = is_checked
+          panel_provider.send_message({ command: 'RESPONSE_HISTORY', history })
+        }
+      }
+    }
 
     let workspace_root = default_workspace
     if (

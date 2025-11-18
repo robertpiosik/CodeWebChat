@@ -16,18 +16,11 @@ import {
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { post_message } from '../utils/post_message'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
-import { FileInPreview } from '@shared/types/file-in-preview'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 
 type Props = {
   scroll_reset_key: number
-  response_history: {
-    response: string
-    raw_instructions?: string
-    created_at: number
-    lines_added?: number
-    lines_removed?: number
-    files?: FileInPreview[]
-  }[]
+  response_history: ResponseHistoryItem[]
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
   vscode: any
@@ -610,16 +603,13 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_response_history_item_click = (item: {
-    response: string
-    raw_instructions?: string
-    files?: FileInPreview[]
-  }) => {
+  const handle_response_history_item_click = (item: ResponseHistoryItem) => {
     post_message(props.vscode, {
       command: 'APPLY_RESPONSE_FROM_HISTORY',
       response: item.response,
       raw_instructions: item.raw_instructions,
-      files: item.files
+      files: item.files,
+      created_at: item.created_at
     })
   }
 

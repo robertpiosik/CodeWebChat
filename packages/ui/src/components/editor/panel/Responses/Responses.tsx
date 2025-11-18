@@ -2,27 +2,14 @@ import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { FileInPreview } from '@shared/types/file-in-preview'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import styles from './Responses.module.scss'
 
 dayjs.extend(relativeTime)
 
-export type ResponseHistoryItem = {
-  response: string
-  raw_instructions?: string
-  created_at: number
-  lines_added?: number
-  lines_removed?: number
-  files?: FileInPreview[]
-}
-
 type Props = {
   response_history: ResponseHistoryItem[]
-  on_response_history_item_click: (item: {
-    response: string
-    raw_instructions?: string
-    files?: FileInPreview[]
-  }) => void
+  on_response_history_item_click: (item: ResponseHistoryItem) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
 }

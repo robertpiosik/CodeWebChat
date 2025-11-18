@@ -9,15 +9,26 @@ import { get_checkpoint_path, sync_directory } from '../utils'
 import { apply_git_diff } from '../utils/git-utils'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
+import { ongoing_review_cleanup_promise } from '../../apply-chat-response-command/utils/preview-handler'
 
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
   workspace_provider: WorkspaceProvider
   context: vscode.ExtensionContext
+  panel_provider: PanelProvider
   options?: { skip_confirmation?: boolean }
 }) => {
   let temp_checkpoint: Checkpoint | undefined
   try {
+    if (response_preview_promise_resolve) {
+      response_preview_promise_resolve({ accepted_files: [] })
+      if (ongoing_review_cleanup_promise) {
+        await ongoing_review_cleanup_promise
+      }
+    }
+
     if (!params.options?.skip_confirmation) {
       const old_temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
         TEMPORARY_CHECKPOINT_STATE_KEY
@@ -134,6 +145,40 @@ export const restore_checkpoint = async (params: {
       }
     )
 
+    if (params.checkpoint.response_history) {
+      params.panel_provider.response_history =
+        params.checkpoint.response_history
+      params.panel_provider.send_message({
+        command: 'RESPONSE_HISTORY',
+        history: params.checkpoint.response_history
+      })
+    } else {
+      params.panel_provider.response_history = []
+      params.panel_provider.send_message({
+        command: 'RESPONSE_HISTORY',
+        history: []
+      })
+    }
+
+    if (
+      params.checkpoint.title == 'Before changes approved' &&
+      params.checkpoint.response_preview_item_created_at &&
+      params.checkpoint.response_history
+    ) {
+      const item_to_preview = params.checkpoint.response_history.find(
+        (item) =>
+          item.created_at == params.checkpoint.response_preview_item_created_at
+      )
+      if (item_to_preview) {
+        vscode.commands.executeCommand('codeWebChat.applyChatResponse', {
+          response: item_to_preview.response,
+          raw_instructions: item_to_preview.raw_instructions,
+          files_with_content: item_to_preview.files,
+          created_at: item_to_preview.created_at
+        })
+      }
+    }
+
     const message = params.options?.skip_confirmation
       ? 'Successfully reverted changes.'
       : `Checkpoint restored successfully.`
@@ -148,7 +193,8 @@ export const restore_checkpoint = async (params: {
           checkpoint: temp_checkpoint,
           workspace_provider: params.workspace_provider,
           context: params.context,
-          options: { skip_confirmation: true }
+          options: { skip_confirmation: true },
+          panel_provider: params.panel_provider
         })
         await delete_checkpoint({
           context: params.context,

@@ -90,6 +90,7 @@ import { MAIN_VIEW_TYPES, MainViewType } from '../types/home-view-type'
 import { ApiMode, WebMode } from '@shared/types/modes'
 import { response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
 import { Logger } from '@shared/utils/logger'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { CancelTokenSource } from 'axios'
 import { update_last_used_preset_or_group } from './message-handlers/update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
@@ -112,6 +113,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public commit_was_staged_by_script: boolean = false
+  public response_history: ResponseHistoryItem[] = []
 
   constructor(
     public readonly extension_uri: vscode.Uri,
@@ -390,6 +392,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         try {
           if (message.command == 'GET_HISTORY') {
             handle_get_history(this)
+          } else if (message.command == 'GET_RESPONSE_HISTORY') {
+            this.send_message({
+              command: 'RESPONSE_HISTORY',
+              history: this.response_history
+            })
           } else if (message.command == 'SAVE_HISTORY') {
             await handle_save_history(this, message)
           } else if (message.command == 'GET_INSTRUCTIONS') {
@@ -448,7 +455,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               {
                 response: message.response,
                 raw_instructions: message.raw_instructions,
-                files_with_content: message.files
+                files_with_content: message.files,
+                created_at: message.created_at
               }
             )
           } else if (message.command == 'EXECUTE_COMMAND') {
@@ -540,10 +548,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_toggle_file_in_preview(message)
           } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW') {
             await handle_intelligent_update_file_in_preview(this, message)
-          } else if (message.command == 'EDITS_REVIEW') {
+          } else if (message.command == 'RESPONSE_PREVIEW') {
             if (response_preview_promise_resolve) {
               response_preview_promise_resolve({
-                accepted_files: message.files
+                accepted_files: message.files,
+                created_at: message.created_at
               })
             }
           } else if (message.command == 'GET_WORKSPACE_STATE') {

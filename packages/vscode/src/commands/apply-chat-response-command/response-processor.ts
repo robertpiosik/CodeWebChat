@@ -35,6 +35,7 @@ export type CommandArgs = {
     position: { line: number; character: number }
   }
   files_with_content?: FileInPreview[]
+  created_at?: number
 }
 
 export const process_chat_response = async (
@@ -52,7 +53,11 @@ export const process_chat_response = async (
             f.file_path === state.file_path &&
             f.workspace_name === state.workspace_name
         )
-        return { ...state, ai_content: file_in_review?.content }
+        return {
+          ...state,
+          ai_content: file_in_review?.content,
+          is_checked: file_in_review?.is_checked
+        }
       })
       update_undo_button_state({
         context,

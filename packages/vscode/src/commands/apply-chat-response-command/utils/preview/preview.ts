@@ -21,9 +21,12 @@ export const preview = async (params: {
   panel_provider: PanelProvider
   raw_instructions?: string
   chat_response: string
+  context: vscode.ExtensionContext
+  created_at?: number
 }): Promise<{
   accepted_files: ReviewableFile[]
   rejected_states: OriginalFileState[]
+  created_at?: number
 } | null> => {
   if (!vscode.workspace.workspaceFolders?.length) {
     vscode.window.showErrorMessage(
@@ -125,7 +128,9 @@ export const preview = async (params: {
       params.original_states,
       params.panel_provider,
       workspace_map,
-      default_workspace
+      default_workspace,
+      params.context,
+      params.created_at
     )
 
     create_temp_files_with_original_content(prepared_files)
@@ -160,7 +165,13 @@ export const preview = async (params: {
       const { decision } = result
 
       if ('accepted_files' in decision) {
-        await vscode.workspace.saveAll()
+        const has_unsaved_editors = vscode.workspace.textDocuments.some(
+          (doc) => doc.isDirty
+        )
+        if (has_unsaved_editors) {
+          await vscode.workspace.saveAll()
+          await new Promise((resolve) => setTimeout(resolve, 500))
+        }
 
         const accepted_files_info = decision.accepted_files
         const accepted_file_identifiers = new Set(
@@ -194,7 +205,11 @@ export const preview = async (params: {
           })
           .filter((state): state is OriginalFileState => state !== undefined)
 
-        return { accepted_files, rejected_states }
+        return {
+          accepted_files,
+          rejected_states,
+          created_at: decision.created_at
+        }
       }
 
       if ('jump_to' in decision) {
