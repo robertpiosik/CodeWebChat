@@ -3,8 +3,8 @@
   "author": "Robert Piosik",
   "name": "Code Web Chat Connector",
   "short_name": "CWC",
-  "description": "Connect your editor with free chatbots. Parse websites for context.",
-  "version": "1.63.0",
+  "description": "CWC lets you send selected files and instructions to chatbots and model providers",
+  "version": "1.64.0",
   "homepage_url": "https://github.com/robertpiosik/CodeWebChat",
   "icons": {
     "16": "icons/icon-16.png",

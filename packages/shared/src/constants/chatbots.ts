@@ -172,8 +172,8 @@ export const CHATBOTS = {
     default_system_instructions: '',
     default_top_p: 0,
     models: {
-      '2.5-flash': { label: '2.5 Flash' },
-      '2.5-pro': { label: '2.5 Pro' }
+      fast: { label: 'Fast' },
+      thinking: { label: 'Thinking' }
     }
   },
   'GitHub Copilot': {

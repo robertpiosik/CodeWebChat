@@ -20,7 +20,6 @@ export const gemini: Chatbot = {
     })
   },
   set_model: async (model?: string) => {
-    if (!model) return
     if (model && model in CHATBOTS['Gemini'].models) {
       const model_selector_trigger = document.querySelector(
         'bard-mode-switcher button'
@@ -34,7 +33,7 @@ export const gemini: Chatbot = {
       }
 
       const model_label = (CHATBOTS['Gemini'].models as any)[model].label
-      if (model_selector_trigger.textContent.includes(model_label)) {
+      if (model_selector_trigger.textContent == model_label) {
         return
       }
 
@@ -50,12 +49,10 @@ export const gemini: Chatbot = {
         })
         return
       }
-      const model_options = Array.from(
-        menu_content.querySelectorAll('button[mat-menu-item]')
-      )
+      const model_options = Array.from(menu_content.querySelectorAll('button'))
       for (const option of model_options) {
         const name_element = option.querySelector(
-          '.title-and-description > span:last-child'
+          '.title-and-description > span:first-child'
         )
         if (name_element && name_element.textContent?.trim() == model_label) {
           ;(option as HTMLElement).click()
@@ -107,7 +104,7 @@ export const gemini: Chatbot = {
       temp_chat_button.click()
       await new Promise((r) => requestAnimationFrame(r))
 
-      if (side_nav_menu_button_clicked) {
+      if (side_nav_menu_button_clicked && window.innerWidth >= 960) {
         const side_nav_menu_button = document.querySelector(
           side_nav_menu_button_selector
         ) as HTMLButtonElement
