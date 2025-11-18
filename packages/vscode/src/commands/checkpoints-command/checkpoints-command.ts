@@ -67,6 +67,7 @@ export const checkpoints_command = (
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint }
         >()
+        quick_pick.title = 'Checkpoints'
         quick_pick.placeholder =
           'Select a checkpoint to restore or add a new one'
 
@@ -154,10 +155,14 @@ export const checkpoints_command = (
                     ),
                     tooltip: c.starred ? 'Unstar' : 'Star'
                   },
-                  {
-                    iconPath: new vscode.ThemeIcon('edit'),
-                    tooltip: 'Edit Description'
-                  },
+                  ...(c.title == 'Created by user'
+                    ? [
+                        {
+                          iconPath: new vscode.ThemeIcon('edit'),
+                          tooltip: 'Edit Description'
+                        }
+                      ]
+                    : []),
                   {
                     iconPath: new vscode.ThemeIcon('trash'),
                     tooltip: 'Delete'

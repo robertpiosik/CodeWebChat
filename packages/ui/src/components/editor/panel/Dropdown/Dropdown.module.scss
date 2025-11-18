@@ -35,6 +35,7 @@
     font-size: var(--font-size-11px);
     color: var(--vscode-descriptionForeground);
     white-space: nowrap;
+    padding-left: var(--padding-3px);
   }
 
   &__icon {
