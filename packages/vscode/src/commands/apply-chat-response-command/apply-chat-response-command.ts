@@ -242,7 +242,7 @@ export const apply_chat_response_command = (
                 (c) => c.timestamp == before_checkpoint!.timestamp
               )
               if (checkpoint_to_update) {
-                checkpoint_to_update.title = 'Before changes approved'
+                checkpoint_to_update.title = 'Accepted response preview'
                 checkpoint_to_update.response_history = history_for_checkpoint
                 checkpoint_to_update.response_preview_item_created_at =
                   created_at_for_preview
@@ -253,12 +253,6 @@ export const apply_chat_response_command = (
               }
             }
 
-            await create_checkpoint(
-              workspace_provider,
-              context,
-              'After changes approved',
-              args?.raw_instructions
-            )
             before_checkpoint = undefined
           }
         }
