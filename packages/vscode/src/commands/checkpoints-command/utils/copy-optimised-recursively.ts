@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs/promises'
-import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 
 const directory_contains_ignored = async (
   dir_uri: vscode.Uri,

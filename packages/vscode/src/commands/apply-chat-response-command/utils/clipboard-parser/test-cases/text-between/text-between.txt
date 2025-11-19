@@ -1,4 +1,13 @@
-Top. `top.ts`
+I have removed all comments from the provided files.
+
+The changes are:
+
+1.  **`daemon.ts`**: Removed numerous inline comments explaining steps like API calls, file downloads, directory preparation, and cleanup.
+2.  **`src/index.ts`**: Removed the comment explaining the aspect ratio check.
+3.  **`src/tasks/clean-from-people.ts`**: Removed the comment describing the file movement logic after running the tourist filter script.
+4.  **`src/tasks/stitch-dslr-images.ts`**: Removed comments explaining the purpose of checking for `project.pto` and the logic for replacing image path placeholders within the `.pto` file content.
+
+Here are the updated files:
 
 ```ts
 // src/lorem.ts

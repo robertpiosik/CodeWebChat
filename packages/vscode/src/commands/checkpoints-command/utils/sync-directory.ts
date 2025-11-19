@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 
 export const sync_directory = async (params: {
   source_dir: vscode.Uri
