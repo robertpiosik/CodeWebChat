@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import * as fs from 'fs/promises'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
 
 export const sync_directory = async (params: {
@@ -13,9 +12,8 @@ export const sync_directory = async (params: {
   try {
     dest_entries = await vscode.workspace.fs.readDirectory(params.dest_dir)
   } catch (e) {
-    await fs.cp(params.source_dir.fsPath, params.dest_dir.fsPath, {
-      recursive: true,
-      force: true
+    await vscode.workspace.fs.copy(params.source_dir, params.dest_dir, {
+      overwrite: true
     })
     return
   }
@@ -65,15 +63,16 @@ export const sync_directory = async (params: {
             recursive: true
           })
         }
-        await fs.cp(source_uri.fsPath, dest_uri.fsPath, {
-          recursive: true,
-          force: true
+        await vscode.workspace.fs.copy(source_uri, dest_uri, {
+          overwrite: true
         })
       }
     } else if (type == vscode.FileType.File) {
       if (dest_stat?.type == vscode.FileType.File) {
         if (source_stat.mtime != dest_stat.mtime) {
-          await fs.copyFile(source_uri.fsPath, dest_uri.fsPath)
+          await vscode.workspace.fs.copy(source_uri, dest_uri, {
+            overwrite: true
+          })
         }
       } else {
         if (dest_stat) {
@@ -81,7 +80,9 @@ export const sync_directory = async (params: {
             recursive: true
           })
         }
-        await fs.copyFile(source_uri.fsPath, dest_uri.fsPath)
+        await vscode.workspace.fs.copy(source_uri, dest_uri, {
+          overwrite: true
+        })
       }
     }
   }
