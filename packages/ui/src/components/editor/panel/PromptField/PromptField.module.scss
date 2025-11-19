@@ -379,7 +379,7 @@
 
 .tooltip {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   bottom: calc(100% - 2px);
   font-size: var(--font-size-12px);
   white-space: normal;

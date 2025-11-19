@@ -24,8 +24,8 @@ export const handle_hash_sign_quick_pick = async (
 
   const mode =
     panel_provider.main_view_type == MAIN_VIEW_TYPES.WEB
-      ? panel_provider.web_mode
-      : panel_provider.api_mode
+      ? panel_provider.web_prompt_type
+      : panel_provider.api_prompt_type
   if (mode == 'ask') {
     current_text = panel_provider.ask_instructions
   } else if (mode == 'edit-context') {

@@ -29,7 +29,7 @@ const configurations: Configurations.Configuration[] = [
 export const Default = () => {
   return (
     <Configurations
-      api_mode="edit-context"
+      api_prompt_type="edit-context"
       configurations={configurations}
       on_configuration_click={(id) => {
         console.log('on_configuration_click', id)
@@ -50,7 +50,7 @@ export const Default = () => {
 
 export const Empty = () => (
   <Configurations
-    api_mode="edit-context"
+    api_prompt_type="edit-context"
     configurations={[]}
     on_configuration_click={(id) => {
       console.log('on_configuration_click', id)

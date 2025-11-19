@@ -56,19 +56,21 @@ export const PINNED_HISTORY_CODE_COMPLETIONS_STATE_KEY =
   'pinned-history-code-completions'
 export const PINNED_HISTORY_NO_CONTEXT_STATE_KEY = 'pinned-history-no-context'
 
-export const get_presets_collapsed_state_key = (web_mode: string) =>
-  `presets-collapsed-${web_mode}`
-export const get_configurations_collapsed_state_key = (api_mode: string) =>
-  `configurations-collapsed-${api_mode}`
+export const get_presets_collapsed_state_key = (web_prompt_type: string) =>
+  `presets-collapsed-${web_prompt_type}`
+export const get_configurations_collapsed_state_key = (
+  api_prompt_type: string
+) => `configurations-collapsed-${api_prompt_type}`
 
-export const get_last_group_or_preset_choice_state_key = (web_mode: string) =>
-  `last-group-or-preset-choice-${web_mode}`
+export const get_last_group_or_preset_choice_state_key = (
+  web_prompt_type: string
+) => `last-group-or-preset-choice-${web_prompt_type}`
 
-export const get_last_selected_preset_key = (web_mode: string) =>
-  `last-selected-preset-${web_mode}`
+export const get_last_selected_preset_key = (web_prompt_type: string) =>
+  `last-selected-preset-${web_prompt_type}`
 
-export const get_last_selected_group_state_key = (web_mode: string) =>
-  `last-selected-group-${web_mode}`
+export const get_last_selected_group_state_key = (web_prompt_type: string) =>
+  `last-selected-group-${web_prompt_type}`
 
 export type DuplicateWorkspaceContext = {
   checked_files: string[]

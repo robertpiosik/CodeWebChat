@@ -11,7 +11,7 @@ import {
   MAIN_VIEW_TYPES,
   MainViewType
 } from '@/views/panel/types/home-view-type'
-import { ApiMode, WebMode } from '@shared/types/modes'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
@@ -54,10 +54,10 @@ type Props = {
   chat_history: string[]
   token_count: number
   context_size_warning_threshold: number
-  web_mode: WebMode
-  api_mode: ApiMode
-  on_web_mode_change: (mode: WebMode) => void
-  on_api_mode_change: (mode: ApiMode) => void
+  web_prompt_type: WebPromptType
+  api_prompt_type: ApiPromptType
+  on_web_mode_change: (mode: WebPromptType) => void
+  on_api_mode_change: (mode: ApiPromptType) => void
   chat_edit_format: EditFormat
   api_edit_format: EditFormat
   on_chat_edit_format_change: (edit_format: EditFormat) => void
@@ -100,15 +100,15 @@ type Props = {
 export const MainView: React.FC<Props> = (props) => {
   const is_in_code_completions_mode =
     (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
-      props.web_mode == 'code-completions') ||
+      props.web_prompt_type == 'code-completions') ||
     (props.main_view_type == MAIN_VIEW_TYPES.API &&
-      props.api_mode == 'code-completions')
+      props.api_prompt_type == 'code-completions')
 
   const show_edit_format_selector =
     (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
-      props.web_mode == 'edit-context') ||
+      props.web_prompt_type == 'edit-context') ||
     (props.main_view_type == MAIN_VIEW_TYPES.API &&
-      props.api_mode == 'edit-context')
+      props.api_prompt_type == 'edit-context')
 
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
@@ -150,8 +150,8 @@ export const MainView: React.FC<Props> = (props) => {
     props.main_view_type
   }-${
     props.main_view_type == MAIN_VIEW_TYPES.WEB
-      ? props.web_mode
-      : props.api_mode
+      ? props.web_prompt_type
+      : props.api_prompt_type
   }`
 
   return (
@@ -160,9 +160,9 @@ export const MainView: React.FC<Props> = (props) => {
         main_view_type={props.main_view_type}
         on_main_view_type_change={props.on_main_view_type_change}
         on_show_home={props.on_show_home}
-        web_mode={props.web_mode}
+        web_prompt_type={props.web_prompt_type}
         on_web_mode_change={props.on_web_mode_change}
-        api_mode={props.api_mode}
+        api_prompt_type={props.api_prompt_type}
         on_api_mode_change={props.on_api_mode_change}
         on_quick_action_click={props.on_quick_action_click}
       />
@@ -242,11 +242,13 @@ export const MainView: React.FC<Props> = (props) => {
           <>
             <UiSeparator height={8} />
             <UiPresets
-              web_mode={props.web_mode}
+              web_prompt_type={props.web_prompt_type}
               is_connected={props.is_connected}
               has_instructions={!!props.instructions}
               has_context={props.token_count > 0}
-              is_in_code_completions_mode={props.web_mode == 'code-completions'}
+              is_in_code_completions_mode={
+                props.web_prompt_type == 'code-completions'
+              }
               presets={props.presets}
               on_create_group={props.on_create_group}
               on_create_preset={props.on_create_preset}
@@ -279,7 +281,7 @@ export const MainView: React.FC<Props> = (props) => {
           <>
             <UiSeparator height={8} />
             <UiConfigurations
-              api_mode={props.api_mode}
+              api_prompt_type={props.api_prompt_type}
               configurations={props.configurations.map((c) => ({
                 ...c,
                 provider: c.provider_name,

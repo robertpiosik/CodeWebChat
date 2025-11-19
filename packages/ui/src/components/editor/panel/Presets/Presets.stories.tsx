@@ -19,7 +19,7 @@ const presets: Presets.Preset[] = [
 export const Primary = () => {
   return (
     <Presets
-      web_mode="edit-context"
+      web_prompt_type="edit-context"
       is_connected={true}
       has_instructions={true}
       is_in_code_completions_mode={false}

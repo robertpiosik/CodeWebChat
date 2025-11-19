@@ -5,7 +5,7 @@ import {
   MainViewType
 } from '@/views/panel/types/home-view-type'
 import { use_is_narrow_viewport } from '@shared/hooks'
-import { ApiMode, WebMode } from '@shared/types/modes'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Dropdown as UiDropdown } from '@ui/components/editor/panel/Dropdown'
 import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButton'
 import styles from './Header.module.scss'
@@ -15,10 +15,10 @@ type Props = {
   main_view_type: MainViewType
   on_main_view_type_change: (value: MainViewType) => void
   on_show_home: () => void
-  web_mode: WebMode
-  api_mode: ApiMode
-  on_web_mode_change: (mode: WebMode) => void
-  on_api_mode_change: (mode: ApiMode) => void
+  web_prompt_type: WebPromptType
+  api_prompt_type: ApiPromptType
+  on_web_mode_change: (mode: WebPromptType) => void
+  on_api_mode_change: (mode: ApiPromptType) => void
   on_quick_action_click: (command: string) => void
 }
 
@@ -76,7 +76,7 @@ export const Header: React.FC<Props> = (props) => {
         <button
           className={styles['header__left__toggler']}
           onClick={handle_heading_click}
-          title="Change view"
+          title="Change mode"
         >
           {props.main_view_type == MAIN_VIEW_TYPES.WEB
             ? MAIN_VIEW_TYPES.WEB
@@ -89,9 +89,9 @@ export const Header: React.FC<Props> = (props) => {
           {props.main_view_type == MAIN_VIEW_TYPES.WEB && (
             <UiDropdown
               options={Object.entries(web_mode_labels).map(
-                ([value, label]) => ({ value: value as WebMode, label })
+                ([value, label]) => ({ value: value as WebPromptType, label })
               )}
-              selected_value={props.web_mode}
+              selected_value={props.web_prompt_type}
               on_change={props.on_web_mode_change}
               max_width={dropdown_max_width}
               info={is_narrow_viewport ? undefined : 'prompt type'}
@@ -101,9 +101,9 @@ export const Header: React.FC<Props> = (props) => {
           {props.main_view_type == MAIN_VIEW_TYPES.API && (
             <UiDropdown
               options={Object.entries(api_mode_labels).map(
-                ([value, label]) => ({ value: value as ApiMode, label })
+                ([value, label]) => ({ value: value as ApiPromptType, label })
               )}
-              selected_value={props.api_mode}
+              selected_value={props.api_prompt_type}
               on_change={props.on_api_mode_change}
               max_width={dropdown_max_width}
               info={is_narrow_viewport ? undefined : 'prompt type'}

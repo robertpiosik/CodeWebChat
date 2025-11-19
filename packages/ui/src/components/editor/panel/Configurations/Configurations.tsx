@@ -16,7 +16,7 @@ export namespace Configurations {
   }
 
   export type Props = {
-    api_mode: 'edit-context' | 'code-completions'
+    api_prompt_type: 'edit-context' | 'code-completions'
     configurations: Configuration[]
     on_configuration_click: (id: string) => void
     on_reorder?: (configurations: Configuration[]) => void
@@ -41,7 +41,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     }
     if (
       configuration.temperature &&
-      configuration.temperature != DEFAULT_TEMPERATURE[props.api_mode]
+      configuration.temperature != DEFAULT_TEMPERATURE[props.api_prompt_type]
     ) {
       description_parts.push(`${configuration.temperature}`)
     }

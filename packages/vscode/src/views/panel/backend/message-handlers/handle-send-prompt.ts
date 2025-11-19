@@ -16,7 +16,7 @@ import {
 } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
-import { WebMode } from '@shared/types/modes'
+import { WebPromptType } from '@shared/types/prompt-types'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
@@ -42,16 +42,16 @@ export const handle_send_prompt = async (params: {
 
   let current_instructions = ''
   const is_in_code_completions_mode =
-    params.panel_provider.web_mode == 'code-completions'
+    params.panel_provider.web_prompt_type == 'code-completions'
 
   if (is_in_code_completions_mode) {
     current_instructions = params.panel_provider.code_completion_instructions
   } else {
-    if (params.panel_provider.web_mode == 'ask') {
+    if (params.panel_provider.web_prompt_type == 'ask') {
       current_instructions = params.panel_provider.ask_instructions
-    } else if (params.panel_provider.web_mode == 'edit-context') {
+    } else if (params.panel_provider.web_prompt_type == 'edit-context') {
       current_instructions = params.panel_provider.edit_instructions
-    } else if (params.panel_provider.web_mode == 'no-context') {
+    } else if (params.panel_provider.web_prompt_type == 'no-context') {
       current_instructions = params.panel_provider.no_context_instructions
     }
   }
@@ -135,7 +135,7 @@ export const handle_send_prompt = async (params: {
         text,
         preset_name,
         raw_instructions: completion_instructions,
-        mode: params.panel_provider.web_mode
+        mode: params.panel_provider.web_prompt_type
       }
     })
 
@@ -151,7 +151,7 @@ export const handle_send_prompt = async (params: {
 
     const context_text = await files_collector.collect_files({
       additional_paths,
-      no_context: params.panel_provider.web_mode == 'no-context'
+      no_context: params.panel_provider.web_prompt_type == 'no-context'
     })
 
     const chats = await Promise.all(
@@ -206,7 +206,7 @@ export const handle_send_prompt = async (params: {
           })
         }
 
-        if (params.panel_provider.web_mode == 'edit-context') {
+        if (params.panel_provider.web_prompt_type == 'edit-context') {
           const all_instructions = vscode.workspace
             .getConfiguration('codeWebChat')
             .get<{ [key: string]: string }>('editFormatInstructions')
@@ -225,9 +225,9 @@ export const handle_send_prompt = async (params: {
             : pre_context_instructions,
           preset_name,
           raw_instructions: current_instructions,
-          mode: params.panel_provider.web_mode,
+          mode: params.panel_provider.web_prompt_type,
           edit_format:
-            params.panel_provider.web_mode === 'edit-context'
+            params.panel_provider.web_prompt_type === 'edit-context'
               ? params.panel_provider.chat_edit_format
               : undefined
         }
@@ -328,7 +328,9 @@ async function show_presets_in_group_quick_pick(params: {
   quick_pick.title = 'Select Preset'
   quick_pick.matchOnDescription = true
 
-  const last_preset_key = get_last_selected_preset_key(panel_provider.web_mode)
+  const last_preset_key = get_last_selected_preset_key(
+    panel_provider.web_prompt_type
+  )
   const last_selected_preset =
     panel_provider.context.workspaceState.get<string>(last_preset_key) ??
     panel_provider.context.globalState.get<string>(last_preset_key)
@@ -457,7 +459,7 @@ async function show_presets_in_group_quick_pick(params: {
 async function show_preset_quick_pick(params: {
   presets: ConfigPresetFormat[]
   context: vscode.ExtensionContext
-  mode: WebMode
+  mode: WebPromptType
   panel_provider: PanelProvider
   get_is_preset_disabled: (preset: ConfigPresetFormat) => boolean
   is_in_code_completions_mode: boolean
@@ -845,12 +847,14 @@ async function resolve_presets(params: {
   context: vscode.ExtensionContext
 }): Promise<{ preset_names: string[]; without_submission?: boolean }> {
   const last_group_or_preset_choice_state_key =
-    get_last_group_or_preset_choice_state_key(params.panel_provider.web_mode)
+    get_last_group_or_preset_choice_state_key(
+      params.panel_provider.web_prompt_type
+    )
   const last_selected_preset_key = get_last_selected_preset_key(
-    params.panel_provider.web_mode
+    params.panel_provider.web_prompt_type
   )
   const last_selected_group_state_key = get_last_selected_group_state_key(
-    params.panel_provider.web_mode
+    params.panel_provider.web_prompt_type
   )
 
   const PRESET = 'Preset'
@@ -859,17 +863,17 @@ async function resolve_presets(params: {
   const presets_config_key = params.panel_provider.get_presets_config_key()
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
   const is_in_code_completions_mode =
-    params.panel_provider.web_mode == 'code-completions'
+    params.panel_provider.web_prompt_type == 'code-completions'
 
   let current_instructions = ''
   if (is_in_code_completions_mode) {
     current_instructions = params.panel_provider.code_completion_instructions
   } else {
-    if (params.panel_provider.web_mode == 'ask') {
+    if (params.panel_provider.web_prompt_type == 'ask') {
       current_instructions = params.panel_provider.ask_instructions
-    } else if (params.panel_provider.web_mode == 'edit-context') {
+    } else if (params.panel_provider.web_prompt_type == 'edit-context') {
       current_instructions = params.panel_provider.edit_instructions
-    } else if (params.panel_provider.web_mode == 'no-context') {
+    } else if (params.panel_provider.web_prompt_type == 'no-context') {
       current_instructions = params.panel_provider.no_context_instructions
     }
   }
@@ -1064,7 +1068,7 @@ async function resolve_presets(params: {
   const resolution = await show_preset_quick_pick({
     presets: all_presets,
     context: params.context,
-    mode: params.panel_provider.web_mode,
+    mode: params.panel_provider.web_prompt_type,
     panel_provider: params.panel_provider,
     get_is_preset_disabled,
     is_in_code_completions_mode,

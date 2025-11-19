@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
-import { ApiMode, WebMode } from '@shared/types/modes'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 type PromptTemplate = {
   name?: string
@@ -13,10 +13,10 @@ const ADD_NEW_TEMPLATE_LABEL = '$(add) New prompt template...'
 export const handle_show_prompt_template_quick_pick = async (
   panel_provider: PanelProvider
 ): Promise<void> => {
-  const mode: WebMode | ApiMode | undefined =
+  const mode: WebPromptType | ApiPromptType | undefined =
     panel_provider.main_view_type == MAIN_VIEW_TYPES.WEB
-      ? panel_provider.web_mode
-      : panel_provider.api_mode
+      ? panel_provider.web_prompt_type
+      : panel_provider.api_prompt_type
 
   if (!mode) {
     return

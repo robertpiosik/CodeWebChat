@@ -6,7 +6,7 @@ import {
   FrontendMessage
 } from '../../types/messages'
 import { MainViewType } from '../../types/home-view-type'
-import { ApiMode, WebMode } from '@shared/types/modes'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { post_message } from '../utils/post_message'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -71,8 +71,8 @@ export const use_panel = (vscode: any) => {
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
   const [main_view_type, set_main_view_type] = useState<MainViewType>()
-  const [web_mode, set_web_mode] = useState<WebMode>()
-  const [api_mode, set_api_mode] = useState<ApiMode>()
+  const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
+  const [api_prompt_type, set_api_mode] = useState<ApiPromptType>()
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
   const [chat_input_focus_and_select_key, set_chat_input_focus_and_select_key] =
     useState(0)
@@ -83,11 +83,11 @@ export const use_panel = (vscode: any) => {
   const [can_undo, set_can_undo] = useState<boolean>(false)
   const [context_file_paths, set_context_file_paths] = useState<string[]>([])
   const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
-    useState<{ [mode in WebMode]?: boolean }>({})
+    useState<{ [mode in WebPromptType]?: boolean }>({})
   const [
     configurations_collapsed_by_api_mode,
     set_configurations_collapsed_by_api_mode
-  ] = useState<{ [mode in ApiMode]?: boolean }>({})
+  ] = useState<{ [mode in ApiPromptType]?: boolean }>({})
 
   const handle_instructions_change = (
     value: string,
@@ -123,9 +123,9 @@ export const use_panel = (vscode: any) => {
         set_version(message.version)
       } else if (message.command == 'MAIN_VIEW_TYPE') {
         set_main_view_type(message.view_type)
-      } else if (message.command == 'WEB_MODE') {
+      } else if (message.command == 'WEB_PROMPT_TYPE') {
         set_web_mode(message.mode)
-      } else if (message.command == 'API_MODE') {
+      } else if (message.command == 'API_PROMPT_TYPE') {
         set_api_mode(message.mode)
       } else if (message.command == 'COLLAPSED_STATES') {
         set_presets_collapsed_by_web_mode(message.presets_collapsed_by_web_mode)
@@ -251,7 +251,7 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_web_mode_change = (new_mode: WebMode) => {
+  const handle_web_mode_change = (new_mode: WebPromptType) => {
     set_web_mode(new_mode)
     set_chat_input_focus_and_select_key((k) => k + 1)
     post_message(vscode, {
@@ -263,7 +263,7 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_api_mode_change = (new_mode: ApiMode) => {
+  const handle_api_mode_change = (new_mode: ApiPromptType) => {
     set_api_mode(new_mode)
     set_chat_input_focus_and_select_key((k) => k + 1)
     post_message(vscode, {
@@ -285,30 +285,30 @@ export const use_panel = (vscode: any) => {
   }
 
   const handle_presets_collapsed_change = (is_collapsed: boolean) => {
-    if (!web_mode) return
+    if (!web_prompt_type) return
     set_presets_collapsed_by_web_mode((prev) => ({
       ...prev,
-      [web_mode]: is_collapsed
+      [web_prompt_type]: is_collapsed
     }))
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'presets',
       is_collapsed,
-      mode: web_mode
+      mode: web_prompt_type
     })
   }
 
   const handle_configurations_collapsed_change = (is_collapsed: boolean) => {
-    if (!api_mode) return
+    if (!api_prompt_type) return
     set_configurations_collapsed_by_api_mode((prev) => ({
       ...prev,
-      [api_mode]: is_collapsed
+      [api_prompt_type]: is_collapsed
     }))
     post_message(vscode, {
       command: 'SAVE_COMPONENT_COLLAPSED_STATE',
       component: 'configurations',
       is_collapsed,
-      mode: api_mode
+      mode: api_prompt_type
     })
   }
 
@@ -349,8 +349,8 @@ export const use_panel = (vscode: any) => {
     has_active_selection,
     code_completions_instructions,
     main_view_type,
-    web_mode,
-    api_mode,
+    web_prompt_type,
+    api_prompt_type,
     chat_input_focus_key,
     chat_input_focus_and_select_key,
     set_chat_input_focus_and_select_key,
@@ -358,11 +358,11 @@ export const use_panel = (vscode: any) => {
     has_changes_to_commit,
     can_undo,
     context_file_paths,
-    presets_collapsed: web_mode
-      ? presets_collapsed_by_web_mode[web_mode] ?? false
+    presets_collapsed: web_prompt_type
+      ? presets_collapsed_by_web_mode[web_prompt_type] ?? false
       : false,
-    configurations_collapsed: api_mode
-      ? configurations_collapsed_by_api_mode[api_mode] ?? false
+    configurations_collapsed: api_prompt_type
+      ? configurations_collapsed_by_api_mode[api_prompt_type] ?? false
       : false,
     handle_instructions_change,
     edit_preset_back_click_handler,

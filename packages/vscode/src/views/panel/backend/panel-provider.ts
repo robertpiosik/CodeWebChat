@@ -87,7 +87,7 @@ import {
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { MAIN_VIEW_TYPES, MainViewType } from '../types/home-view-type'
-import { ApiMode, WebMode } from '@shared/types/modes'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
@@ -105,10 +105,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public edit_instructions: string = ''
   public no_context_instructions: string = ''
   public code_completion_instructions: string = ''
-  public web_mode: WebMode
+  public web_prompt_type: WebPromptType
   public chat_edit_format: EditFormat
   public api_edit_format: EditFormat
-  public api_mode: ApiMode
+  public api_prompt_type: ApiPromptType
   public main_view_type: MainViewType = MAIN_VIEW_TYPES.WEB
   public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
@@ -158,24 +158,24 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       this.context.globalState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
       'whole'
 
-    this.web_mode = this.context.workspaceState.get<WebMode>(
+    this.web_prompt_type = this.context.workspaceState.get<WebPromptType>(
       WEB_MODE_STATE_KEY,
       'edit-context'
     )
-    this.api_mode = this.context.workspaceState.get<ApiMode>(
+    this.api_prompt_type = this.context.workspaceState.get<ApiPromptType>(
       API_MODE_STATE_KEY,
       'edit-context'
     )
 
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
-        const WEB_MODES: WebMode[] = [
+        const WEB_MODES: WebPromptType[] = [
           'ask',
           'edit-context',
           'code-completions',
           'no-context'
         ]
-        const API_MODES: ApiMode[] = ['edit-context', 'code-completions']
+        const API_MODES: ApiPromptType[] = ['edit-context', 'code-completions']
         this.send_message({
           command: 'COLLAPSED_STATES',
           presets_collapsed_by_web_mode: Object.fromEntries(
@@ -306,9 +306,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       ) {
         if (
           (this.main_view_type == MAIN_VIEW_TYPES.WEB &&
-            this.web_mode == 'code-completions') ||
+            this.web_prompt_type == 'code-completions') ||
           (this.main_view_type == MAIN_VIEW_TYPES.API &&
-            this.api_mode == 'code-completions')
+            this.api_prompt_type == 'code-completions')
         ) {
           this.calculate_token_count()
         }
@@ -318,7 +318,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public get_presets_config_key(): string {
     const mode =
-      this.main_view_type == MAIN_VIEW_TYPES.API ? this.api_mode : this.web_mode
+      this.main_view_type == MAIN_VIEW_TYPES.API
+        ? this.api_prompt_type
+        : this.web_prompt_type
     switch (mode) {
       case 'ask':
         return 'chatPresetsForAskAboutContext'
@@ -613,7 +615,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public calculate_token_count() {
     if (
       this.main_view_type == MAIN_VIEW_TYPES.WEB &&
-      this.web_mode == 'no-context'
+      this.web_prompt_type == 'no-context'
     ) {
       this.send_message({
         command: 'TOKEN_COUNT_UPDATED',
@@ -626,9 +628,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     const is_code_completions_mode =
       (this.main_view_type == MAIN_VIEW_TYPES.WEB &&
-        this.web_mode == 'code-completions') ||
+        this.web_prompt_type == 'code-completions') ||
       (this.main_view_type == MAIN_VIEW_TYPES.API &&
-        this.api_mode == 'code-completions')
+        this.api_prompt_type == 'code-completions')
 
     Promise.all([
       this.workspace_provider.get_checked_files_token_count({
@@ -689,13 +691,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public send_presets_to_webview(_: vscode.Webview) {
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const web_modes: WebMode[] = [
+    const web_modes: WebPromptType[] = [
       'ask',
       'edit-context',
       'code-completions',
       'no-context'
     ]
-    const mode_to_config_key: Record<WebMode, string> = {
+    const mode_to_config_key: Record<WebPromptType, string> = {
       ask: 'chatPresetsForAskAboutContext',
       'edit-context': 'chatPresetsForEditContext',
       'code-completions': 'chatPresetsForCodeAtCursor',
@@ -714,7 +716,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           .map((preset_config) => config_preset_to_ui_format(preset_config))
         return [mode, presets_ui]
       })
-    ) as { [T in WebMode]: Preset[] }
+    ) as { [T in WebPromptType]: Preset[] }
     this.send_message({
       command: 'PRESETS',
       presets: all_presets,
@@ -920,17 +922,17 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const is_in_code_completions_mode =
       (this.main_view_type == MAIN_VIEW_TYPES.WEB &&
-        this.web_mode == 'code-completions') ||
+        this.web_prompt_type == 'code-completions') ||
       (this.main_view_type == MAIN_VIEW_TYPES.API &&
-        this.api_mode == 'code-completions')
+        this.api_prompt_type == 'code-completions')
 
     let current_instructions = ''
     let new_instructions = ''
-    const mode: WebMode | ApiMode = is_in_code_completions_mode
+    const mode: WebPromptType | ApiPromptType = is_in_code_completions_mode
       ? 'code-completions'
       : this.main_view_type == MAIN_VIEW_TYPES.WEB
-      ? this.web_mode
-      : this.api_mode
+      ? this.web_prompt_type
+      : this.api_prompt_type
 
     switch (mode) {
       case 'ask':

@@ -453,6 +453,13 @@ export const use_handlers = (
       handle_history_navigation(e)
       return
     }
+
+    if (key == 'Escape') {
+      if (input_ref.current) {
+        input_ref.current.blur()
+      }
+      return
+    }
   }
 
   return {

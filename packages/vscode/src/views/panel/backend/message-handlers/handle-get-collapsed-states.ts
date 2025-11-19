@@ -3,18 +3,18 @@ import {
   get_presets_collapsed_state_key
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { ApiMode, WebMode } from '@shared/types/modes'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 export const handle_get_collapsed_states = (
   panel_provider: PanelProvider
 ): void => {
-  const WEB_MODES: WebMode[] = [
+  const WEB_MODES: WebPromptType[] = [
     'ask',
     'edit-context',
     'code-completions',
     'no-context'
   ]
-  const API_MODES: ApiMode[] = ['edit-context', 'code-completions']
+  const API_MODES: ApiPromptType[] = ['edit-context', 'code-completions']
   panel_provider.send_message({
     command: 'COLLAPSED_STATES',
     presets_collapsed_by_web_mode: Object.fromEntries(

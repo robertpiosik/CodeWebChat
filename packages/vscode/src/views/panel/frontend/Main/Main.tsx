@@ -6,7 +6,7 @@ import {
   MAIN_VIEW_TYPES,
   MainViewType
 } from '@/views/panel/types/home-view-type'
-import { ApiMode, WebMode } from '@shared/types/modes'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   BackendMessage,
   ApiToolConfigurationsMessage,
@@ -36,11 +36,11 @@ type Props = {
     mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
   ) => void
   main_view_type: MainViewType
-  web_mode: WebMode
-  api_mode: ApiMode
+  web_prompt_type: WebPromptType
+  api_prompt_type: ApiPromptType
   on_main_view_type_change: (view_type: MainViewType) => void
-  on_web_mode_change: (mode: WebMode) => void
-  on_api_mode_change: (mode: ApiMode) => void
+  on_web_mode_change: (mode: WebPromptType) => void
+  on_api_mode_change: (mode: ApiPromptType) => void
   has_active_editor: boolean
   has_active_selection: boolean
   chat_input_focus_and_select_key: number
@@ -55,19 +55,19 @@ type Props = {
 
 export const Main: React.FC<Props> = (props) => {
   const [all_presets, set_all_presets] = useState<{
-    [T in WebMode]: Preset[]
+    [T in WebPromptType]: Preset[]
   }>()
   const [
     selected_preset_or_group_name_by_mode,
     set_selected_preset_or_group_name_by_mode
-  ] = useState<{ [T in WebMode]?: string }>()
+  ] = useState<{ [T in WebPromptType]?: string }>()
   const [all_configurations, set_all_configurations] = useState<{
-    [T in ApiMode]?: ApiToolConfiguration[]
+    [T in ApiPromptType]?: ApiToolConfiguration[]
   }>()
   const [
     selected_configuration_id_by_mode,
     set_selected_configuration_id_by_mode
-  ] = useState<{ [T in ApiMode]?: string }>()
+  ] = useState<{ [T in ApiPromptType]?: string }>()
   const [ask_history, set_ask_history] = useState<string[]>()
   const [edit_history, set_edit_history] = useState<string[]>()
   const [no_context_history, set_no_context_history] = useState<string[]>()
@@ -84,9 +84,9 @@ export const Main: React.FC<Props> = (props) => {
 
   const is_in_code_completions_mode =
     (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
-      props.web_mode == 'code-completions') ||
+      props.web_prompt_type == 'code-completions') ||
     (props.main_view_type == MAIN_VIEW_TYPES.API &&
-      props.api_mode == 'code-completions')
+      props.api_prompt_type == 'code-completions')
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
@@ -173,8 +173,8 @@ export const Main: React.FC<Props> = (props) => {
 
   const current_mode =
     props.main_view_type == MAIN_VIEW_TYPES.WEB
-      ? props.web_mode
-      : props.api_mode
+      ? props.web_prompt_type
+      : props.api_prompt_type
 
   const update_chat_history = (instruction: string) => {
     if (!instruction.trim()) {
@@ -219,12 +219,15 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_toggle_selected_preset = (name: string) => {
     if (all_presets) {
-      const presets_for_current_mode = all_presets[props.web_mode]
+      const presets_for_current_mode = all_presets[props.web_prompt_type]
       const updated_presets = presets_for_current_mode.map((p) =>
         p.name == name ? { ...p, is_selected: !p.is_selected } : p
       )
 
-      set_all_presets({ ...all_presets, [props.web_mode]: updated_presets })
+      set_all_presets({
+        ...all_presets,
+        [props.web_prompt_type]: updated_presets
+      })
 
       post_message(props.vscode, {
         command: 'REPLACE_PRESETS',
@@ -251,12 +254,15 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_toggle_preset_pinned = (name: string) => {
     if (all_presets) {
-      const presets_for_current_mode = all_presets[props.web_mode]
+      const presets_for_current_mode = all_presets[props.web_prompt_type]
       const updated_presets = presets_for_current_mode.map((p) =>
         p.name == name ? { ...p, is_pinned: !p.is_pinned } : p
       )
 
-      set_all_presets({ ...all_presets, [props.web_mode]: updated_presets })
+      set_all_presets({
+        ...all_presets,
+        [props.web_prompt_type]: updated_presets
+      })
 
       post_message(props.vscode, {
         command: 'REPLACE_PRESETS',
@@ -283,12 +289,15 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_toggle_group_collapsed = (name: string) => {
     if (all_presets) {
-      const presets_for_current_mode = all_presets[props.web_mode]
+      const presets_for_current_mode = all_presets[props.web_prompt_type]
       const updated_presets = presets_for_current_mode.map((p) =>
         p.name == name ? { ...p, is_collapsed: !p.is_collapsed } : p
       )
 
-      set_all_presets({ ...all_presets, [props.web_mode]: updated_presets })
+      set_all_presets({
+        ...all_presets,
+        [props.web_prompt_type]: updated_presets
+      })
 
       post_message(props.vscode, {
         command: 'REPLACE_PRESETS',
@@ -374,15 +383,15 @@ export const Main: React.FC<Props> = (props) => {
   const handle_manage_configurations = () => {
     post_message(props.vscode, {
       command: 'MANAGE_CONFIGURATIONS',
-      api_mode: props.api_mode
+      api_prompt_type: props.api_prompt_type
     })
   }
 
   const handle_configurations_reorder = (
     reordered_configs: (UiConfigurations.Configuration & { id: string })[]
   ) => {
-    if (all_configurations && props.api_mode) {
-      const current_api_configs = all_configurations[props.api_mode]
+    if (all_configurations && props.api_prompt_type) {
+      const current_api_configs = all_configurations[props.api_prompt_type]
       if (!current_api_configs) return
 
       const reordered_api_tool_configs = reordered_configs
@@ -397,22 +406,22 @@ export const Main: React.FC<Props> = (props) => {
 
       set_all_configurations({
         ...all_configurations,
-        [props.api_mode]: reordered_api_tool_configs
+        [props.api_prompt_type]: reordered_api_tool_configs
       })
 
       post_message(props.vscode, {
         command: 'REORDER_API_TOOL_CONFIGURATIONS',
-        mode: props.api_mode,
+        mode: props.api_prompt_type,
         configurations: reordered_api_tool_configs
       })
     }
   }
 
   const handle_toggle_pinned_configuration = (id: string) => {
-    if (props.api_mode) {
+    if (props.api_prompt_type) {
       post_message(props.vscode, {
         command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION',
-        mode: props.api_mode,
+        mode: props.api_prompt_type,
         configuration_id: id
       })
     }
@@ -436,7 +445,9 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const handle_preset_edit = (name: string) => {
-    const current_presets = all_presets ? all_presets[props.web_mode] : []
+    const current_presets = all_presets
+      ? all_presets[props.web_prompt_type]
+      : []
     const preset = current_presets.find((preset) => preset.name == name)
     if (preset) props.on_preset_edit(preset)
   }
@@ -486,8 +497,8 @@ export const Main: React.FC<Props> = (props) => {
     }
     const mode =
       props.main_view_type == MAIN_VIEW_TYPES.WEB
-        ? props.web_mode
-        : props.api_mode
+        ? props.web_prompt_type
+        : props.api_prompt_type
     if (mode == 'ask') return props.ask_instructions
     if (mode == 'edit-context') return props.edit_instructions
     if (mode == 'no-context') return props.no_context_instructions
@@ -572,13 +583,13 @@ export const Main: React.FC<Props> = (props) => {
   const handle_configuration_click = (id: string) => {
     const instruction = get_current_instructions()
 
-    if (props.api_mode == 'edit-context') {
+    if (props.api_prompt_type == 'edit-context') {
       post_message(props.vscode, {
         command: 'EDIT_CONTEXT',
         use_quick_pick: false,
         config_id: id
       })
-    } else if (props.api_mode == 'code-completions') {
+    } else if (props.api_prompt_type == 'code-completions') {
       post_message(props.vscode, {
         command: 'CODE_COMPLETION',
         use_quick_pick: false,
@@ -655,14 +666,14 @@ export const Main: React.FC<Props> = (props) => {
     return <></>
   }
 
-  const presets_for_current_mode = all_presets[props.web_mode]
+  const presets_for_current_mode = all_presets[props.web_prompt_type]
 
   const selected_preset_or_group_name =
-    selected_preset_or_group_name_by_mode?.[props.web_mode]
+    selected_preset_or_group_name_by_mode?.[props.web_prompt_type]
 
   const configurations_for_current_mode =
     all_configurations && props.main_view_type == MAIN_VIEW_TYPES.API
-      ? all_configurations[props.api_mode]
+      ? all_configurations[props.api_prompt_type]
       : []
 
   return (
@@ -689,8 +700,8 @@ export const Main: React.FC<Props> = (props) => {
       has_active_selection={props.has_active_selection}
       chat_history={current_history || []}
       token_count={token_count}
-      web_mode={props.web_mode}
-      api_mode={props.api_mode}
+      web_prompt_type={props.web_prompt_type}
+      api_prompt_type={props.api_prompt_type}
       context_size_warning_threshold={props.context_size_warning_threshold}
       on_web_mode_change={props.on_web_mode_change}
       on_api_mode_change={props.on_api_mode_change}
@@ -708,7 +719,7 @@ export const Main: React.FC<Props> = (props) => {
       on_toggle_group_collapsed={handle_toggle_group_collapsed}
       selected_preset_or_group_name={selected_preset_or_group_name}
       selected_configuration_id={
-        selected_configuration_id_by_mode?.[props.api_mode]
+        selected_configuration_id_by_mode?.[props.api_prompt_type]
       }
       instructions={instructions}
       set_instructions={set_instructions}

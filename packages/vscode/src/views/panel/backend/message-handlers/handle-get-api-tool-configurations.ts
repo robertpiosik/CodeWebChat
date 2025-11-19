@@ -5,7 +5,7 @@ import {
   get_tool_config_id
 } from '@/services/model-providers-manager'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
-import { ApiMode } from '@shared/types/modes'
+import { ApiPromptType } from '@shared/types/prompt-types'
 
 export const handle_get_api_tool_configurations = async (
   panel_provider: PanelProvider
@@ -38,7 +38,7 @@ export const handle_get_api_tool_configurations = async (
     )
   }
 
-  const configurations: { [T in ApiMode]?: ApiToolConfiguration[] } = {
+  const configurations: { [T in ApiPromptType]?: ApiToolConfiguration[] } = {
     'edit-context': edit_context_configs.map((config) => ({
       ...config,
       id: get_tool_config_id(config)

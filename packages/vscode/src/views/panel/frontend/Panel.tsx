@@ -59,8 +59,8 @@ export const Panel = () => {
     has_active_selection,
     code_completions_instructions,
     main_view_type,
-    web_mode,
-    api_mode,
+    web_prompt_type,
+    api_prompt_type,
     chat_input_focus_key,
     chat_input_focus_and_select_key,
     set_chat_input_focus_and_select_key,
@@ -88,9 +88,9 @@ export const Panel = () => {
     !version ||
     code_completions_instructions === undefined ||
     main_view_type === undefined ||
-    web_mode === undefined ||
+    web_prompt_type === undefined ||
     is_connected === undefined ||
-    api_mode === undefined ||
+    api_prompt_type === undefined ||
     has_active_editor === undefined ||
     has_active_selection === undefined ||
     workspace_folder_count === undefined ||
@@ -112,14 +112,17 @@ export const Panel = () => {
   }
 
   const is_for_code_completions =
-    (main_view_type == MAIN_VIEW_TYPES.WEB && web_mode == 'code-completions') ||
-    (main_view_type == MAIN_VIEW_TYPES.API && api_mode == 'code-completions')
+    (main_view_type == MAIN_VIEW_TYPES.WEB &&
+      web_prompt_type == 'code-completions') ||
+    (main_view_type == MAIN_VIEW_TYPES.API &&
+      api_prompt_type == 'code-completions')
 
   const get_current_instructions = () => {
     if (is_for_code_completions) {
       return code_completions_instructions
     }
-    const mode = main_view_type == MAIN_VIEW_TYPES.WEB ? web_mode : api_mode
+    const mode =
+      main_view_type == MAIN_VIEW_TYPES.WEB ? web_prompt_type : api_prompt_type
     if (mode == 'ask') return ask_instructions
     if (mode == 'edit-context') return edit_instructions
     if (mode == 'no-context') return no_context_instructions
@@ -131,8 +134,10 @@ export const Panel = () => {
   const has_instructions = !!get_current_instructions().trim()
   const is_preview_disabled =
     !is_connected ||
-    (!has_affixes && !has_instructions && web_mode != 'code-completions') ||
-    (web_mode == 'code-completions' &&
+    (!has_affixes &&
+      !has_instructions &&
+      web_prompt_type != 'code-completions') ||
+    (web_prompt_type == 'code-completions' &&
       (!has_active_editor || has_active_selection))
 
   const handle_apply_click = () => {
@@ -197,8 +202,8 @@ export const Panel = () => {
                 code_completions_instructions={code_completions_instructions}
                 set_instructions={handle_instructions_change}
                 main_view_type={main_view_type}
-                web_mode={web_mode}
-                api_mode={api_mode}
+                web_prompt_type={web_prompt_type}
+                api_prompt_type={api_prompt_type}
                 on_main_view_type_change={handle_main_view_type_change}
                 has_active_editor={has_active_editor}
                 has_active_selection={has_active_selection}
@@ -269,13 +274,15 @@ export const Panel = () => {
                     title={
                       !is_connected
                         ? 'Unable to preview when not connected'
-                        : web_mode == 'code-completions' && !has_active_editor
+                        : web_prompt_type == 'code-completions' &&
+                          !has_active_editor
                         ? 'Cannot preview in code completion mode without an active editor'
-                        : web_mode == 'code-completions' && has_active_selection
+                        : web_prompt_type == 'code-completions' &&
+                          has_active_selection
                         ? 'Unable to work with text selection'
                         : !has_affixes &&
                           !has_instructions &&
-                          web_mode != 'code-completions'
+                          web_prompt_type != 'code-completions'
                         ? 'Enter instructions or affixes to preview'
                         : ''
                     }

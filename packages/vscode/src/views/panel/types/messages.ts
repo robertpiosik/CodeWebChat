@@ -3,7 +3,7 @@ import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Preset } from '@shared/types/preset'
 import { MainViewType } from './home-view-type'
-import { ApiMode, WebMode } from '@shared/types/modes'
+import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { InstructionsPlacement } from '@/services/model-providers-manager'
 
 export interface BaseMessage {
@@ -221,7 +221,7 @@ export interface GetWebModeMessage extends BaseMessage {
 
 export interface SaveWebModeMessage extends BaseMessage {
   command: 'SAVE_WEB_MODE'
-  mode: WebMode
+  mode: WebPromptType
 }
 
 export interface GetApiModeMessage extends BaseMessage {
@@ -230,7 +230,7 @@ export interface GetApiModeMessage extends BaseMessage {
 
 export interface SaveApiModeMessage extends BaseMessage {
   command: 'SAVE_API_MODE'
-  mode: ApiMode
+  mode: ApiPromptType
 }
 
 export interface GetApiToolConfigurationsMessage extends BaseMessage {
@@ -239,13 +239,13 @@ export interface GetApiToolConfigurationsMessage extends BaseMessage {
 
 export interface ReorderApiToolConfigurationsMessage extends BaseMessage {
   command: 'REORDER_API_TOOL_CONFIGURATIONS'
-  mode: ApiMode
+  mode: ApiPromptType
   configurations: ApiToolConfiguration[]
 }
 
 export interface TogglePinnedApiToolConfigurationMessage extends BaseMessage {
   command: 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
-  mode: ApiMode
+  mode: ApiPromptType
   configuration_id: string
 }
 
@@ -321,7 +321,7 @@ export interface CancelCommitMessage extends BaseMessage {
 
 export interface ManageConfigurationsMessage extends BaseMessage {
   command: 'MANAGE_CONFIGURATIONS'
-  api_mode: ApiMode
+  api_prompt_type: ApiPromptType
 }
 
 export interface UndoMessage extends BaseMessage {
@@ -344,7 +344,7 @@ export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
   component: 'presets' | 'configurations'
   is_collapsed: boolean
-  mode: WebMode | ApiMode
+  mode: WebPromptType | ApiPromptType
 }
 
 export type FrontendMessage =
@@ -439,14 +439,14 @@ export interface EditFormatInstructionsMessage extends BaseMessage {
 
 export interface PresetsMessage extends BaseMessage {
   command: 'PRESETS'
-  presets: { [T in WebMode]: Preset[] }
-  selected_preset_or_group_name_by_mode?: { [T in WebMode]?: string }
-  selected_configuration_id_by_mode?: { [T in ApiMode]?: string }
+  presets: { [T in WebPromptType]: Preset[] }
+  selected_preset_or_group_name_by_mode?: { [T in WebPromptType]?: string }
+  selected_configuration_id_by_mode?: { [T in ApiPromptType]?: string }
 }
 
 export interface ApiToolConfigurationsMessage extends BaseMessage {
   command: 'API_TOOL_CONFIGURATIONS'
-  configurations: { [T in ApiMode]?: ApiToolConfiguration[] }
+  configurations: { [T in ApiPromptType]?: ApiToolConfiguration[] }
 }
 
 export interface EditorStateChangedMessage extends BaseMessage {
@@ -511,14 +511,14 @@ export interface MainViewTypeMessage extends BaseMessage {
   view_type: MainViewType
 }
 
-export interface WebModeMessage extends BaseMessage {
-  command: 'WEB_MODE'
-  mode: WebMode
+export interface WebPromptTypeMessage extends BaseMessage {
+  command: 'WEB_PROMPT_TYPE'
+  mode: WebPromptType
 }
 
-export interface ApiModeMessage extends BaseMessage {
-  command: 'API_MODE'
-  mode: ApiMode
+export interface ApiPromptTypeMessage extends BaseMessage {
+  command: 'API_PROMPT_TYPE'
+  mode: ApiPromptType
 }
 
 export interface VersionMessage extends BaseMessage {
@@ -554,13 +554,13 @@ export interface WorkspaceStateMessage extends BaseMessage {
 
 export interface SelectedPresetOrGroupChangedMessage extends BaseMessage {
   command: 'SELECTED_PRESET_OR_GROUP_CHANGED'
-  mode: WebMode
+  mode: WebPromptType
   name?: string
 }
 
 export interface SelectedConfigurationChangedMessage extends BaseMessage {
   command: 'SELECTED_CONFIGURATION_CHANGED'
-  mode: ApiMode
+  mode: ApiPromptType
   id: string
 }
 
@@ -607,8 +607,8 @@ export interface CommitProcessCancelledMessage extends BaseMessage {
 
 export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
-  presets_collapsed_by_web_mode: { [mode in WebMode]?: boolean }
-  configurations_collapsed_by_api_mode: { [mode in ApiMode]?: boolean }
+  presets_collapsed_by_web_mode: { [mode in WebPromptType]?: boolean }
+  configurations_collapsed_by_api_mode: { [mode in ApiPromptType]?: boolean }
 }
 
 export type BackendMessage =
@@ -631,8 +631,8 @@ export type BackendMessage =
   | NewlyPickedOpenRouterModelMessage
   | NewlyPickedChatbotMessage
   | MainViewTypeMessage
-  | WebModeMessage
-  | ApiModeMessage
+  | WebPromptTypeMessage
+  | ApiPromptTypeMessage
   | VersionMessage
   | ContextFilesMessage
   | CanUndoChangedMessage
