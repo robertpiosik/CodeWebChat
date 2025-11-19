@@ -199,11 +199,25 @@ export const parse_multiple_files = (params: {
 
             // Avoid matching file paths that are part of a sentence.
             if (!(/[a-zA-Z]/.test(before) && /[a-zA-Z]/.test(after))) {
+              const is_markdown_header = line.trim().startsWith('#')
               let is_followed_by_code_block = false
               for (let j = i + 1; j < lines.length; j++) {
                 const next_line = lines[j].trim()
                 if (next_line.startsWith('```')) {
-                  is_followed_by_code_block = true
+                  if (is_markdown_header) {
+                    is_followed_by_code_block = true
+                  } else {
+                    let all_intermediate_lines_empty = true
+                    for (let k = i + 1; k < j; k++) {
+                      if (lines[k].trim() !== '') {
+                        all_intermediate_lines_empty = false
+                        break
+                      }
+                    }
+                    if (all_intermediate_lines_empty) {
+                      is_followed_by_code_block = true
+                    }
+                  }
                   break
                 }
               }
