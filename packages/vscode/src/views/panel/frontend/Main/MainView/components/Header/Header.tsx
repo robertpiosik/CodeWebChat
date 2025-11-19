@@ -79,8 +79,8 @@ export const Header: React.FC<Props> = (props) => {
           title="Change view"
         >
           {props.main_view_type == MAIN_VIEW_TYPES.WEB
-            ? 'New chat'
-            : 'API call'}
+            ? MAIN_VIEW_TYPES.WEB
+            : MAIN_VIEW_TYPES.API}
         </button>
       </div>
 

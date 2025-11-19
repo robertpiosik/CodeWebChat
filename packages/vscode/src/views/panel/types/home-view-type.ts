@@ -1,6 +1,6 @@
 export const MAIN_VIEW_TYPES = {
-  WEB: 'New chat',
-  API: 'API call'
+  WEB: 'CHATBOTS',
+  API: 'API CALLS'
 }
 
 export type MainViewType =

@@ -72,6 +72,15 @@
   gap: var(--padding-8px);
   width: 100%;
 
+  &__view-type {
+    display: flex;
+    gap: var(--padding-8px);
+    width: 100%;
+    > button {
+      flex: 1;
+    }
+  }
+
   &__buttons {
     display: flex;
     flex-direction: column;

@@ -1,6 +1,6 @@
 import styles from './Home.module.scss'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
-import { Enter } from '@ui/components/editor/panel/Enter'
+import { ViewTypeButton } from '@ui/components/editor/panel/ViewTypeButton'
 import { HomeLinkButton } from '@ui/components/editor/panel/HomeLinkButton'
 import cn from 'classnames'
 import { post_message } from '../utils/post_message'
@@ -9,8 +9,8 @@ import { FrontendMessage } from '@/views/panel/types/messages'
 type Props = {
   vscode: any
   is_active: boolean
-  on_new_chat: () => void
-  on_api_call: () => void
+  on_chatbots_click: () => void
+  on_api_calls_click: () => void
   version: string
 }
 
@@ -24,7 +24,7 @@ export const Home: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className={styles['header']}>
+      <div className={styles.header}>
         <div className={styles['header__left']}>
           <div className={styles['header__home']}>
             <span className="codicon codicon-home" />
@@ -46,17 +46,20 @@ export const Home: React.FC<Props> = (props) => {
       <Scrollable>
         <div className={styles.content}>
           <div className={styles.inner}>
+            {/* view type */}
+            <div className={styles['inner__view-type']}>
+              <ViewTypeButton
+                pre="Initialize"
+                label="Chatbots"
+                on_click={props.on_chatbots_click}
+              />
+              <ViewTypeButton
+                pre="Make"
+                label="API calls"
+                on_click={props.on_api_calls_click}
+              />
+            </div>
             <div className={styles['inner__buttons']}>
-              <Enter
-                label="Open View: New chat"
-                description="Send messages with chatbots"
-                on_click={props.on_new_chat}
-              />
-              <Enter
-                label="Open View: API call"
-                description="Use a model provider of choice"
-                on_click={props.on_api_call}
-              />
               <HomeLinkButton
                 url="https://codeweb.chat"
                 background_color="black"

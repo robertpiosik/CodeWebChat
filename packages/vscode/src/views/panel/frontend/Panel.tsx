@@ -233,14 +233,14 @@ export const Panel = () => {
               <Home
                 vscode={vscode}
                 is_active={active_view == 'home'}
-                on_new_chat={() => {
+                on_chatbots_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_main_view_type_change(MAIN_VIEW_TYPES.WEB)
                   handle_web_mode_change('edit-context')
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
-                on_api_call={() => {
+                on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_main_view_type_change(MAIN_VIEW_TYPES.API)

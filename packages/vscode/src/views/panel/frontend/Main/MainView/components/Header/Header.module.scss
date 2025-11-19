@@ -16,16 +16,19 @@
     }
 
     &__toggler {
-      font-weight: 600;
+      font-family: var(--font-family-accent);
+      font-size: var(--font-size-18px);
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 24px;
       border-radius: var(--border-radius-5px);
       --padding: var(--padding-6px);
-      padding: 0 var(--padding);
+      padding: var(--padding-1px) var(--padding) 0 var(--padding);
       margin: 0 calc(var(--padding) * -1);
-      height: 20px;
+      line-height: 1;
       white-space: nowrap;
+      letter-spacing: 1px;
 
       &:focus {
         outline: none;
@@ -64,7 +67,7 @@
       border-radius: var(--border-radius-5px);
 
       &:hover {
-        background-color: var(--vscode-toolbar-hoverBackground);
+        background-color: var(--vscode-list-hoverBackground);
       }
     }
   }
