@@ -2,8 +2,10 @@ import * as vscode from 'vscode'
 import { TEMPORARY_CHECKPOINT_STATE_KEY } from '../../../constants/state-keys'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
 import type { Checkpoint } from '../types'
+import { create_checkpoint } from './create-checkpoint'
 import { create_temporary_checkpoint } from './create-temporary-checkpoint'
 import { delete_checkpoint } from './delete-checkpoint'
+import { get_checkpoints } from './get-checkpoints'
 import { sync_workspace_from_dir } from './sync-workspace-from-dir'
 import { get_checkpoint_path, sync_directory } from '../utils'
 import { apply_git_diff } from '../utils/git-utils'
@@ -30,6 +32,18 @@ export const restore_checkpoint = async (params: {
     }
 
     if (!params.options?.skip_confirmation) {
+      const checkpoints = await get_checkpoints(params.context)
+      if (
+        checkpoints.length > 0 &&
+        checkpoints[0].title != 'Before checkpoint restored'
+      ) {
+        await create_checkpoint(
+          params.workspace_provider,
+          params.context,
+          'Before checkpoint restored'
+        )
+      }
+
       const old_temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
         TEMPORARY_CHECKPOINT_STATE_KEY
       )
