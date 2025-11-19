@@ -44,6 +44,8 @@ export const use_panel = (vscode: any) => {
     selected_history_item_created_at,
     set_selected_history_item_created_at
   ] = useState<number>()
+  const [preview_item_created_at, set_preview_item_created_at] =
+    useState<number>()
   const [response_history, set_response_history] = useState<
     ResponseHistoryItem[]
   >([])
@@ -139,6 +141,7 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
         set_items_to_review(message.items)
         set_raw_instructions(message.raw_instructions)
+        set_preview_item_created_at(message.created_at)
       } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
         set_items_to_review((current_items) => {
           const items = current_items ?? []
@@ -166,6 +169,7 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'RESPONSE_PREVIEW_FINISHED') {
         set_items_to_review(undefined)
         set_raw_instructions(undefined)
+        set_preview_item_created_at(undefined)
       } else if (message.command == 'WORKSPACE_STATE') {
         set_workspace_folder_count(message.folder_count)
       } else if (message.command == 'SHOW_PROGRESS') {
@@ -332,6 +336,7 @@ export const use_panel = (vscode: any) => {
     selected_history_item_created_at,
     set_selected_history_item_created_at,
     response_history,
+    preview_item_created_at,
     set_response_history,
     workspace_folder_count,
     is_connected,

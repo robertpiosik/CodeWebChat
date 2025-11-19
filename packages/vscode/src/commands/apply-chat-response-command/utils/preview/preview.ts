@@ -115,7 +115,8 @@ export const preview = async (params: {
       params.panel_provider.send_message({
         command: 'RESPONSE_PREVIEW_STARTED',
         items: items_for_preview,
-        raw_instructions: params.raw_instructions
+        raw_instructions: params.raw_instructions,
+        created_at: params.created_at
       })
     }
 

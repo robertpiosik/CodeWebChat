@@ -46,6 +46,7 @@ export const Panel = () => {
     selected_history_item_created_at,
     set_selected_history_item_created_at,
     response_history,
+    preview_item_created_at,
     set_response_history,
     workspace_folder_count,
     is_connected,
@@ -309,16 +310,18 @@ export const Panel = () => {
               footer_slot={
                 <UiResponsePreviewFooter
                   on_reject={() => {
-                    set_response_history((prev) =>
-                      prev.filter(
-                        (i) => i.created_at != selected_history_item_created_at
+                    if (preview_item_created_at) {
+                      set_response_history((prev) =>
+                        prev.filter(
+                          (i) => i.created_at != preview_item_created_at
+                        )
                       )
-                    )
+                    }
                     set_selected_history_item_created_at(undefined)
                     post_message(vscode, {
                       command: 'RESPONSE_PREVIEW',
                       files: [],
-                      created_at: selected_history_item_created_at
+                      created_at: preview_item_created_at
                     })
                   }}
                   on_accept={() => {
@@ -330,7 +333,7 @@ export const Panel = () => {
                     post_message(vscode, {
                       command: 'RESPONSE_PREVIEW',
                       files: accepted_files,
-                      created_at: selected_history_item_created_at
+                      created_at: preview_item_created_at
                     })
                   }}
                   is_accept_disabled={

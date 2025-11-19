@@ -540,6 +540,7 @@ export interface ResponsePreviewStartedMessage extends BaseMessage {
   command: 'RESPONSE_PREVIEW_STARTED'
   items: ItemInPreview[]
   raw_instructions?: string
+  created_at?: number
 }
 
 export interface ResponsePreviewFinishedMessage extends BaseMessage {
