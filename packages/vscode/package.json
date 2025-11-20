@@ -582,8 +582,8 @@
           "scope": "resource",
           "description": "Style of generated code blocks in \"Edit context\" mode.",
           "default": {
-            "whole": "Whenever proposing a new or updated file, show the path in a first-line comment of a Markdown Code Block. Please show me the proposed files in full because I have a disability which means I can't type and need to be able to just copy and paste.",
-            "truncated": "Whenever proposing a new or updated file, show the path in a first-line comment of a Markdown Code Block. Use ellipsis comments, e.g. \"// ...\", when appropriate.",
+            "whole": "Whenever showing a new or updated file, include the path in a first-line comment of a Markdown Code Block. Show them in full because I have a disability which means I can't type and need to be able to just copy and paste.",
+            "truncated": "Whenever showing a new or updated file, include the path in a first-line comment of a Markdown Code Block. Truncate with ellipsis comments, e.g. \"// ...\", when appropriate.",
             "diff": "Show the changes in the Unified Diff format (compatible with git apply)."
           },
           "properties": {
