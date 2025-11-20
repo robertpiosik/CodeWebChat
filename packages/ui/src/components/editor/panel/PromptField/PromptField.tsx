@@ -93,7 +93,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_submit,
     handle_key_down,
     is_history_enabled
-  } = use_handlers(props, input_ref)
+  } = use_handlers(props, input_ref) // No change to signature, logic moved inside
 
   const is_mac = useMemo(() => {
     if (typeof navigator == 'undefined') return false

@@ -1,5 +1,5 @@
-import { RefObject, useState, useEffect } from 'react'
-import { PromptFieldProps } from '../PromptField'
+import { RefObject, useState, useEffect, useRef } from 'react'
+import type { PromptFieldProps } from '../PromptField'
 import {
   get_caret_position_from_div,
   set_caret_position_for_div
@@ -8,6 +8,11 @@ import {
   map_display_pos_to_raw_pos,
   map_raw_pos_to_display_pos
 } from '../utils/position-mapping'
+
+type HistoryEntry = {
+  value: string
+  raw_caret_pos: number
+}
 
 const reconstruct_raw_value_from_node = (node: Node): string => {
   if (node.nodeType === Node.TEXT_NODE) {
@@ -83,8 +88,26 @@ export const use_handlers = (
 ) => {
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
-  const [undo_stack, set_undo_stack] = useState<string[]>([])
-  const [redo_stack, set_redo_stack] = useState<string[]>([])
+  const [undo_stack, set_undo_stack] = useState<HistoryEntry[]>([])
+  const [redo_stack, set_redo_stack] = useState<HistoryEntry[]>([])
+  const raw_caret_pos_ref = useRef(0)
+
+  useEffect(() => {
+    const on_selection_change = () => {
+      if (document.activeElement === input_ref.current && input_ref.current) {
+        const pos = get_caret_position_from_div(input_ref.current)
+        const raw_pos = map_display_pos_to_raw_pos(
+          pos,
+          props.value,
+          props.context_file_paths ?? []
+        )
+        raw_caret_pos_ref.current = raw_pos
+      }
+    }
+    document.addEventListener('selectionchange', on_selection_change)
+    return () =>
+      document.removeEventListener('selectionchange', on_selection_change)
+  }, [props.value, props.context_file_paths, input_ref])
 
   useEffect(() => {
     set_is_history_enabled(history_index >= 0 || !props.value)
@@ -92,7 +115,10 @@ export const use_handlers = (
 
   const update_value = (new_value: string, caret_pos?: number) => {
     if (new_value === props.value) return
-    set_undo_stack((prev) => [...prev, props.value])
+    set_undo_stack((prev) => [
+      ...prev,
+      { value: props.value, raw_caret_pos: raw_caret_pos_ref.current }
+    ])
     set_redo_stack([])
     props.on_change(new_value)
     if (caret_pos !== undefined) {
@@ -399,14 +425,17 @@ export const use_handlers = (
     if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() === 'z') {
       e.preventDefault()
       if (undo_stack.length > 0) {
-        const prev_value = undo_stack[undo_stack.length - 1]
+        const prev_entry = undo_stack[undo_stack.length - 1]
         set_undo_stack((prev) => prev.slice(0, -1))
-        set_redo_stack((prev) => [...prev, props.value])
-        props.on_change(prev_value)
+        set_redo_stack((prev) => [
+          ...prev,
+          { value: props.value, raw_caret_pos: raw_caret_pos_ref.current }
+        ])
+        props.on_change(prev_entry.value)
         set_caret_position_after_change(
           input_ref,
-          prev_value.length,
-          prev_value,
+          prev_entry.raw_caret_pos,
+          prev_entry.value,
           props.context_file_paths ?? []
         )
         set_history_index(-1)
@@ -419,14 +448,17 @@ export const use_handlers = (
     ) {
       e.preventDefault()
       if (redo_stack.length > 0) {
-        const next_value = redo_stack[redo_stack.length - 1]
+        const next_entry = redo_stack[redo_stack.length - 1]
         set_redo_stack((prev) => prev.slice(0, -1))
-        set_undo_stack((prev) => [...prev, props.value])
-        props.on_change(next_value)
+        set_undo_stack((prev) => [
+          ...prev,
+          { value: props.value, raw_caret_pos: raw_caret_pos_ref.current }
+        ])
+        props.on_change(next_entry.value)
         set_caret_position_after_change(
           input_ref,
-          next_value.length,
-          next_value,
+          next_entry.raw_caret_pos,
+          next_entry.value,
           props.context_file_paths ?? []
         )
         set_history_index(-1)
