@@ -57,19 +57,22 @@ export const Home: React.FC<Props> = (props) => {
         <div className={styles.content}>
           <div className={styles.inner}>
             {props.response_history.length > 0 && (
-              <UiResponses
-                response_history={props.response_history}
-                on_response_history_item_click={
-                  props.on_response_history_item_click
-                }
-                selected_history_item_created_at={
-                  props.selected_history_item_created_at
-                }
-                on_selected_history_item_change={
-                  props.on_selected_history_item_change
-                }
-              />
+              <div className={styles.inner__responses}>
+                <UiResponses
+                  response_history={props.response_history}
+                  on_response_history_item_click={
+                    props.on_response_history_item_click
+                  }
+                  selected_history_item_created_at={
+                    props.selected_history_item_created_at
+                  }
+                  on_selected_history_item_change={
+                    props.on_selected_history_item_change
+                  }
+                />{' '}
+              </div>
             )}
+
             <div className={styles.inner__mode}>
               <ModeButton
                 pre="Initialize"
@@ -82,6 +85,7 @@ export const Home: React.FC<Props> = (props) => {
                 on_click={props.on_api_calls_click}
               />
             </div>
+            <Separator height={12} />
             <div className={styles.inner__timeline}>
               <Timeline
                 items={props.checkpoints.map((c) => ({

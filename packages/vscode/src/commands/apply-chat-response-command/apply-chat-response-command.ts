@@ -251,6 +251,7 @@ export const apply_chat_response_command = (
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
+                await panel_provider.send_checkpoints()
               }
             }
 
