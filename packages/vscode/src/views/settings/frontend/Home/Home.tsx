@@ -172,7 +172,7 @@ export const Home: React.FC<Props> = (props) => {
 
   const nav_item_ids = NAV_ITEMS_CONFIG.filter(
     (item): item is Extract<NavConfigItem, { type: 'item' }> =>
-      item.type === 'item'
+      item.type == 'item'
   ).map((item) => item.id)
   const active_nav_item_id =
     nav_item_ids.filter((id) => stuck_sections.has(id)).pop() || nav_item_ids[0]

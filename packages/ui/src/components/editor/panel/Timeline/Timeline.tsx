@@ -17,8 +17,8 @@ export type TimelineItemProps = {
 
 type Props = {
   items: TimelineItemProps[]
-  on_toggle_starred?: (id: string | number) => void
-  on_label_click?: (id: string | number) => void
+  on_toggle_starred: (id: string | number) => void
+  on_label_click: (id: string | number) => void
 }
 
 export const Timeline: React.FC<Props> = ({
@@ -61,7 +61,8 @@ export const Timeline: React.FC<Props> = ({
           <div className={styles.item__content}>
             <div
               className={styles.item__content__label}
-              onClick={() => on_label_click?.(item.id)}
+              onClick={() => on_label_click(item.id)}
+              title="Restore checkpoint"
             >
               {item.label}
             </div>

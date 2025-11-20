@@ -85,7 +85,7 @@ export const Home: React.FC<Props> = (props) => {
                 on_click={props.on_api_calls_click}
               />
             </div>
-            <Separator height={12} />
+            <Separator height={16} />
             <div className={styles.inner__timeline}>
               <Timeline
                 items={props.checkpoints.map((c) => ({

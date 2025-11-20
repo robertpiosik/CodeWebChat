@@ -74,7 +74,11 @@ export const SingleItem = () => (
       backgroundColor: 'var(--vscode-sideBar-background)'
     }}
   >
-    <Timeline items={[initialItems[0]]} />
+    <Timeline
+      items={[initialItems[0]]}
+      on_toggle_starred={() => {}}
+      on_label_click={(id) => alert(`Restore checkpoint: ${id}`)}
+    />
   </div>
 )
 
@@ -94,6 +98,8 @@ export const NoDescription = () => (
           is_starred: false
         }
       ]}
+      on_toggle_starred={() => {}}
+      on_label_click={(id) => alert(`Restore checkpoint: ${id}`)}
     />
   </div>
 )
