@@ -22,31 +22,16 @@ export const PresetsSection = forwardRef<HTMLDivElement, Props>(
       )
     }, [props.gemini_user_id])
 
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        if (gemini_user_id_str == '') {
-          if (props.gemini_user_id !== null) {
-            props.on_gemini_user_id_change(null)
-          }
-          return
-        }
-
-        const num_id = parseInt(gemini_user_id_str, 10)
-        if (
-          !isNaN(num_id) &&
-          num_id >= 0 &&
-          props.gemini_user_id !== undefined &&
-          num_id != props.gemini_user_id
-        ) {
-          props.on_gemini_user_id_change(num_id)
-        }
-      }, 500)
-      return () => clearTimeout(handler)
-    }, [
-      gemini_user_id_str,
-      props.on_gemini_user_id_change,
-      props.gemini_user_id
-    ])
+    const handle_gemini_user_id_blur = () => {
+      if (gemini_user_id_str === '') {
+        props.on_gemini_user_id_change(null)
+        return
+      }
+      const num_id = parseInt(gemini_user_id_str, 10)
+      if (!isNaN(num_id) && num_id >= 0) {
+        props.on_gemini_user_id_change(num_id)
+      }
+    }
 
     return (
       <Section
@@ -64,6 +49,7 @@ export const PresetsSection = forwardRef<HTMLDivElement, Props>(
                 type="number"
                 value={gemini_user_id_str}
                 on_change={set_gemini_user_id_str}
+                on_blur={handle_gemini_user_id_blur}
                 max_width={60}
               />
             }

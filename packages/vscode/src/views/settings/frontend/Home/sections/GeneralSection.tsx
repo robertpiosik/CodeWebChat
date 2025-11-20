@@ -59,60 +59,23 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       }
     }, [props.edit_format_instructions])
 
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        const num_threshold = parseInt(context_size_warning_threshold, 10)
-        if (
-          !isNaN(num_threshold) &&
-          num_threshold >= 0 &&
-          props.context_size_warning_threshold !== undefined &&
-          num_threshold != props.context_size_warning_threshold
-        ) {
-          props.on_context_size_warning_threshold_change(num_threshold)
-        }
-      }, 500)
-      return () => clearTimeout(handler)
-    }, [
-      context_size_warning_threshold,
-      props.on_context_size_warning_threshold_change,
-      props.context_size_warning_threshold
-    ])
+    const handle_context_size_warning_threshold_blur = () => {
+      const num_threshold = parseInt(context_size_warning_threshold, 10)
+      if (!isNaN(num_threshold) && num_threshold >= 0) {
+        props.on_context_size_warning_threshold_change(num_threshold)
+      }
+    }
 
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        const num_hours = parseInt(checkpoint_lifespan_str, 10)
-        if (
-          !isNaN(num_hours) &&
-          num_hours > 0 &&
-          props.checkpoint_lifespan !== undefined &&
-          num_hours != props.checkpoint_lifespan
-        ) {
-          props.on_checkpoint_lifespan_change(num_hours)
-        }
-      }, 500)
-      return () => clearTimeout(handler)
-    }, [
-      checkpoint_lifespan_str,
-      props.on_checkpoint_lifespan_change,
-      props.checkpoint_lifespan
-    ])
+    const handle_checkpoint_lifespan_blur = () => {
+      const num_hours = parseInt(checkpoint_lifespan_str, 10)
+      if (!isNaN(num_hours) && num_hours > 0) {
+        props.on_checkpoint_lifespan_change(num_hours)
+      }
+    }
 
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        if (
-          props.edit_format_instructions &&
-          JSON.stringify(instructions) !==
-            JSON.stringify(props.edit_format_instructions)
-        ) {
-          props.on_edit_format_instructions_change(instructions)
-        }
-      }, 500)
-      return () => clearTimeout(handler)
-    }, [
-      instructions,
-      props.on_edit_format_instructions_change,
-      props.edit_format_instructions
-    ])
+    const handle_instructions_blur = () => {
+      props.on_edit_format_instructions_change(instructions)
+    }
 
     return (
       <Section
@@ -139,6 +102,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 type="number"
                 value={context_size_warning_threshold}
                 on_change={set_context_size_warning_threshold}
+                on_blur={handle_context_size_warning_threshold_blur}
                 max_width={100}
               />
             }
@@ -151,6 +115,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 type="number"
                 value={checkpoint_lifespan_str}
                 on_change={set_checkpoint_lifespan_str}
+                on_blur={handle_checkpoint_lifespan_blur}
                 max_width={100}
                 min={1}
               />
@@ -179,6 +144,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, whole: value }))
                 }
+                on_blur={handle_instructions_blur}
               />
             }
           />
@@ -192,6 +158,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, truncated: value }))
                 }
+                on_blur={handle_instructions_blur}
               />
             }
           />
@@ -205,6 +172,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, diff: value }))
                 }
+                on_blur={handle_instructions_blur}
               />
             }
           />

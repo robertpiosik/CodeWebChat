@@ -194,65 +194,16 @@ export const Home: React.FC<Props> = (props) => {
     set_edit_context_instructions(props.edit_context_system_instructions || '')
   }, [props.edit_context_system_instructions])
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (
-        props.commit_message_instructions !== undefined &&
-        commit_instructions !== props.commit_message_instructions
-      ) {
-        props.on_commit_instructions_change(commit_instructions)
-      }
-    }, 500)
-    return () => clearTimeout(handler)
-  }, [
-    commit_instructions,
-    props.on_commit_instructions_change,
-    props.commit_message_instructions
-  ])
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (commit_message_auto_accept_after_str == '') {
-        if (props.commit_message_auto_accept_after !== null) {
-          props.on_commit_message_auto_accept_after_change(null)
-        }
-        return
-      }
-
-      const num_seconds = parseInt(commit_message_auto_accept_after_str, 10)
-      if (
-        !isNaN(num_seconds) &&
-        num_seconds >= 0 &&
-        props.commit_message_auto_accept_after !== undefined &&
-        num_seconds != props.commit_message_auto_accept_after
-      ) {
-        props.on_commit_message_auto_accept_after_change(num_seconds)
-      }
-    }, 500)
-    return () => clearTimeout(handler)
-  }, [
-    commit_message_auto_accept_after_str,
-    props.on_commit_message_auto_accept_after_change,
-    props.commit_message_auto_accept_after
-  ])
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (
-        props.edit_context_system_instructions !== undefined &&
-        edit_context_instructions !== props.edit_context_system_instructions
-      ) {
-        props.on_edit_context_system_instructions_change(
-          edit_context_instructions
-        )
-      }
-    }, 500)
-    return () => clearTimeout(handler)
-  }, [
-    edit_context_instructions,
-    props.on_edit_context_system_instructions_change,
-    props.edit_context_system_instructions
-  ])
+  const handle_commit_message_auto_accept_after_blur = () => {
+    if (commit_message_auto_accept_after_str === '') {
+      props.on_commit_message_auto_accept_after_change(null)
+      return
+    }
+    const num_seconds = parseInt(commit_message_auto_accept_after_str, 10)
+    if (!isNaN(num_seconds) && num_seconds >= 0) {
+      props.on_commit_message_auto_accept_after_change(num_seconds)
+    }
+  }
 
   const handle_scroll_to_section = (item_id: NavItem) => {
     const section = section_refs.current[item_id]
@@ -372,6 +323,11 @@ export const Home: React.FC<Props> = (props) => {
                 <Textarea
                   value={edit_context_instructions}
                   on_change={set_edit_context_instructions}
+                  on_blur={() =>
+                    props.on_edit_context_system_instructions_change(
+                      edit_context_instructions
+                    )
+                  }
                 />
               }
             />
@@ -463,6 +419,9 @@ export const Home: React.FC<Props> = (props) => {
                 <Textarea
                   value={commit_instructions}
                   on_change={set_commit_instructions}
+                  on_blur={() =>
+                    props.on_commit_instructions_change(commit_instructions)
+                  }
                 />
               }
             />
@@ -474,6 +433,7 @@ export const Home: React.FC<Props> = (props) => {
                   type="number"
                   value={commit_message_auto_accept_after_str}
                   on_change={set_commit_message_auto_accept_after_str}
+                  on_blur={handle_commit_message_auto_accept_after_blur}
                   max_width={60}
                 />
               }

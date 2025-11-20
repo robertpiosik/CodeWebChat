@@ -8,6 +8,7 @@ type Props = {
   max_width?: number
   width?: number
   on_change: (value: string) => void
+  on_blur?: () => void
   on_key_down?: (e: React.KeyboardEvent<HTMLInputElement>) => void
   min?: number
   max?: number
@@ -34,13 +35,22 @@ export const Input: React.FC<Props> = (props) => {
     class_names.push(styles.invalid)
   }
 
+  const handle_key_down = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == 'Enter') {
+      e.preventDefault()
+      e.currentTarget.blur()
+    }
+    props.on_key_down?.(e)
+  }
+
   return (
     <input
       id={props.id}
       type={props.type || 'text'}
       value={props.value}
       onChange={(e) => props.on_change(e.target.value)}
-      onKeyDown={props.on_key_down}
+      onBlur={props.on_blur}
+      onKeyDown={handle_key_down}
       className={class_names.join(' ')}
       placeholder={props.placeholder}
       style={Object.keys(style).length > 0 ? style : undefined}
