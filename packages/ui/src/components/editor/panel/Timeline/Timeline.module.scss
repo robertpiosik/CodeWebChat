@@ -43,24 +43,19 @@
     cursor: pointer;
     transform: translateY(-2px);
     position: relative;
-
-    .codicon-star-full {
-      color: var(--vscode-list-focusHighlightForeground);
-    }
+    color: var(--vscode-button-background);
   }
 
   &__dot {
     width: 7px;
     height: 7px;
-    background-color: var(--vscode-foreground);
-    opacity: 0.5;
+    background-color: var(--vscode-button-background);
     border-radius: 50%;
   }
 
   &__star-hover {
     position: absolute;
     opacity: 0;
-    color: var(--vscode-foreground);
   }
 
   &__marker:hover {
@@ -76,8 +71,7 @@
   &__line {
     width: 1px;
     flex-grow: 1;
-    background-color: var(--vscode-foreground);
-    opacity: 0.2;
+    background-color: var(--cwc-border-color-dimmed);
   }
 
   &__content {
