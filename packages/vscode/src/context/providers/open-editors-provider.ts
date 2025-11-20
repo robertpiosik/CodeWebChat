@@ -382,9 +382,6 @@ export class OpenEditorsProvider
       }
     }
 
-    // Force a complete tree refresh by clearing the file token count cache
-    this._file_token_counts.clear()
-
     // Fire the event with undefined to force full tree refresh
     this._on_did_change_tree_data.fire(undefined)
 
