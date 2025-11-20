@@ -74,6 +74,7 @@ export const checkpoints_command = (
         quick_pick.title = 'Checkpoints'
         quick_pick.placeholder =
           'Select a checkpoint to restore or add a new one'
+        quick_pick.matchOnDetail = true
 
         const clear_all_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('trash'),
