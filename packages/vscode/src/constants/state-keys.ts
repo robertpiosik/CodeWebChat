@@ -30,6 +30,7 @@ export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'
 export const CHECKPOINTS_STATE_KEY = 'checkpoints'
 export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'
+export const CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY = 'checkpoint-operation-in-progress'
 
 export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
   'duplicate-workspace-context'

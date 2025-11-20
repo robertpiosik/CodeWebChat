@@ -1,7 +1,8 @@
 import * as vscode from 'vscode'
 import {
   CHECKPOINTS_STATE_KEY,
-  TEMPORARY_CHECKPOINT_STATE_KEY
+  TEMPORARY_CHECKPOINT_STATE_KEY,
+  CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
 } from '../../../constants/state-keys'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
 import type { Checkpoint } from '../types'
@@ -19,6 +20,7 @@ import {
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
@@ -28,6 +30,16 @@ export const create_checkpoint = async (
   description?: string
 ): Promise<Checkpoint | undefined> => {
   try {
+    const operation_in_progress = context.workspaceState.get<boolean>(
+      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
+    )
+    if (operation_in_progress) {
+      vscode.window.showWarningMessage(
+        dictionary.warning_message.CHECKPOINT_OPERATION_IN_PROGRESS
+      )
+      return undefined
+    }
+
     const old_temp_checkpoint = context.workspaceState.get<Checkpoint>(
       TEMPORARY_CHECKPOINT_STATE_KEY
     )
@@ -62,6 +74,10 @@ export const create_checkpoint = async (
     let new_checkpoint: Checkpoint | undefined
 
     const create_checkpoint_task = async () => {
+      await context.workspaceState.update(
+        CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+        true
+      )
       await vscode.workspace.saveAll()
       const checkpoint_dir_path = get_checkpoint_path(timestamp)
       const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
@@ -159,6 +175,10 @@ export const create_checkpoint = async (
       checkpoints.unshift(checkpoint_object)
       await context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
       await panel_provider.send_checkpoints()
+      await context.workspaceState.update(
+        CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+        false
+      )
       new_checkpoint = checkpoint_object
     }
 
@@ -178,6 +198,10 @@ export const create_checkpoint = async (
   } catch (err: any) {
     vscode.window.showErrorMessage(
       `Failed to create checkpoint: ${err.message}`
+    )
+    await context.workspaceState.update(
+      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+      false
     )
     return undefined
   }

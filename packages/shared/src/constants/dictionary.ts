@@ -80,6 +80,8 @@ export const dictionary = {
     TYPE_SOMETHING_TO_USE_GROUP: 'Type something to use this group',
     GROUP_HAS_NO_SELECTED_PRESETS:
       'The chosen group has no selected presets to run',
+    CHECKPOINT_OPERATION_IN_PROGRESS:
+      'Another checkpoint operation is currently in progress. Please wait for it to complete.',
     URL_OVERRIDE_DIFFERENT_DOMAIN: (preset_name: string) =>
       `URL override for preset "${preset_name}" was discarded because it uses a different domain`,
     CONTEXT_SIZE_WARNING: (threshold: string, percentage: number) =>

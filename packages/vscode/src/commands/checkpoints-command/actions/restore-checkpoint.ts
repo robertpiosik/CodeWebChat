@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as os from 'os'
 import { execSync } from 'child_process'
-import { TEMPORARY_CHECKPOINT_STATE_KEY } from '../../../constants/state-keys'
+import { TEMPORARY_CHECKPOINT_STATE_KEY, CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY } from '../../../constants/state-keys'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
 import type { Checkpoint } from '../types'
 import { create_checkpoint } from './create-checkpoint'
@@ -15,6 +15,7 @@ import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
 import { ongoing_review_cleanup_promise } from '../../apply-chat-response-command/utils/preview-handler'
+import { dictionary } from '@shared/constants/dictionary'
 
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
@@ -23,6 +24,16 @@ export const restore_checkpoint = async (params: {
   panel_provider: PanelProvider
   options?: { skip_confirmation?: boolean }
 }) => {
+  const operation_in_progress = params.context.workspaceState.get<boolean>(
+    CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
+  )
+  if (operation_in_progress) {
+    vscode.window.showWarningMessage(
+      dictionary.warning_message.CHECKPOINT_OPERATION_IN_PROGRESS
+    )
+    return
+  }
+
   const tab_groups = vscode.window.tabGroups.all
   const open_files: {
     uri: vscode.Uri
@@ -103,6 +114,10 @@ export const restore_checkpoint = async (params: {
   }
 
   try {
+    await params.context.workspaceState.update(
+      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+      true
+    )
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -358,6 +373,10 @@ export const restore_checkpoint = async (params: {
       vscode.window.showInformationMessage(message)
     }
   } catch (err: any) {
+    await params.context.workspaceState.update(
+      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+      false
+    )
     vscode.window.showErrorMessage(
       `Failed to restore checkpoint: ${err.message}`
     )
@@ -372,5 +391,10 @@ export const restore_checkpoint = async (params: {
         undefined
       )
     }
+  } finally {
+    await params.context.workspaceState.update(
+      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+      false
+    )
   }
 }
