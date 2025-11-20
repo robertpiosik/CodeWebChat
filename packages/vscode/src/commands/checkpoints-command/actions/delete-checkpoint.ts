@@ -3,10 +3,12 @@ import { CHECKPOINTS_STATE_KEY } from '../../../constants/state-keys'
 import type { Checkpoint } from '../types'
 import { get_checkpoint_path } from '../utils'
 import { Logger } from '@shared/utils/logger'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const delete_checkpoint = async (params: {
   context: vscode.ExtensionContext
   checkpoint_to_delete: Checkpoint
+  panel_provider: PanelProvider
 }) => {
   const checkpoints =
     params.context.workspaceState.get<Checkpoint[]>(
@@ -20,6 +22,7 @@ export const delete_checkpoint = async (params: {
     CHECKPOINTS_STATE_KEY,
     updated_checkpoints
   )
+  await params.panel_provider.send_checkpoints()
 
   try {
     const checkpoint_path = get_checkpoint_path(

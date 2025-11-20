@@ -5,6 +5,7 @@ import {
   FileProgress,
   FrontendMessage
 } from '../../types/messages'
+import { Checkpoint } from '../../types/messages'
 import { MainViewType } from '../../types/home-view-type'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { post_message } from '../utils/post_message'
@@ -49,6 +50,7 @@ export const use_panel = (vscode: any) => {
   const [response_history, set_response_history] = useState<
     ResponseHistoryItem[]
   >([])
+  const [checkpoints, set_checkpoints] = useState<Checkpoint[]>([])
   const [workspace_folder_count, set_workspace_folder_count] =
     useState<number>()
   const [is_connected, set_is_connected] = useState<boolean>()
@@ -132,6 +134,8 @@ export const use_panel = (vscode: any) => {
         set_configurations_collapsed_by_api_mode(
           message.configurations_collapsed_by_api_mode
         )
+      } else if (message.command === 'CHECKPOINTS') {
+        set_checkpoints(message.checkpoints)
       } else if (message.command == 'EDITOR_STATE_CHANGED') {
         set_has_active_editor(message.has_active_editor)
       } else if (message.command == 'EDITOR_SELECTION_CHANGED') {
@@ -219,7 +223,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_WORKSPACE_STATE' },
       { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
       { command: 'REQUEST_GIT_STATE' },
-      { command: 'GET_COLLAPSED_STATES' }
+      { command: 'GET_COLLAPSED_STATES' },
+      { command: 'GET_CHECKPOINTS' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -336,6 +341,7 @@ export const use_panel = (vscode: any) => {
     selected_history_item_created_at,
     set_selected_history_item_created_at,
     response_history,
+    checkpoints,
     preview_item_created_at,
     set_response_history,
     workspace_folder_count,

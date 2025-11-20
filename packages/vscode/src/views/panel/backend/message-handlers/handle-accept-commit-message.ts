@@ -32,6 +32,7 @@ export const handle_accept_commit_message = async (
     await create_checkpoint(
       panel_provider.workspace_provider,
       panel_provider.context,
+      panel_provider,
       title,
       description
     )

@@ -23,6 +23,7 @@ type Props = {
   response_history: ResponseHistoryItem[]
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
+  on_response_history_item_click: (item: ResponseHistoryItem) => void
   vscode: any
   on_preset_edit: (preset: Preset) => void
   on_show_home: () => void
@@ -614,16 +615,6 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
-  const handle_response_history_item_click = (item: ResponseHistoryItem) => {
-    post_message(props.vscode, {
-      command: 'APPLY_RESPONSE_FROM_HISTORY',
-      response: item.response,
-      raw_instructions: item.raw_instructions,
-      files: item.files,
-      created_at: item.created_at
-    })
-  }
-
   const instructions =
     current_mode == 'ask'
       ? props.ask_instructions
@@ -739,7 +730,7 @@ export const Main: React.FC<Props> = (props) => {
       chat_input_focus_and_select_key={props.chat_input_focus_and_select_key}
       chat_input_focus_key={props.chat_input_focus_key}
       response_history={props.response_history}
-      on_response_history_item_click={handle_response_history_item_click}
+      on_response_history_item_click={props.on_response_history_item_click}
       selected_history_item_created_at={props.selected_history_item_created_at}
       on_selected_history_item_change={props.on_selected_history_item_change}
       context_file_paths={props.context_file_paths}

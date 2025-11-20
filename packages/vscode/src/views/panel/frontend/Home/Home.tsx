@@ -1,10 +1,13 @@
 import styles from './Home.module.scss'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
-import { ViewTypeButton } from '@ui/components/editor/panel/ViewTypeButton'
-import { HomeLinkButton } from '@ui/components/editor/panel/HomeLinkButton'
+import { Timeline } from '@ui/components/editor/panel/Timeline'
+import { ModeButton } from '@ui/components/editor/panel/ModeButton'
 import cn from 'classnames'
 import { post_message } from '../utils/post_message'
-import { FrontendMessage } from '@/views/panel/types/messages'
+import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
+import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
+import { Separator } from '@ui/components/editor/panel/Separator'
 
 type Props = {
   vscode: any
@@ -12,6 +15,13 @@ type Props = {
   on_chatbots_click: () => void
   on_api_calls_click: () => void
   version: string
+  checkpoints: Checkpoint[]
+  on_toggle_checkpoint_starred: (timestamp: number) => void
+  on_restore_checkpoint: (timestamp: number) => void
+  response_history: ResponseHistoryItem[]
+  on_response_history_item_click: (item: ResponseHistoryItem) => void
+  selected_history_item_created_at?: number
+  on_selected_history_item_change: (created_at: number) => void
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -46,43 +56,47 @@ export const Home: React.FC<Props> = (props) => {
       <Scrollable>
         <div className={styles.content}>
           <div className={styles.inner}>
-            {/* view type */}
-            <div className={styles['inner__view-type']}>
-              <ViewTypeButton
+            {props.response_history.length > 0 && (
+              <UiResponses
+                response_history={props.response_history}
+                on_response_history_item_click={
+                  props.on_response_history_item_click
+                }
+                selected_history_item_created_at={
+                  props.selected_history_item_created_at
+                }
+                on_selected_history_item_change={
+                  props.on_selected_history_item_change
+                }
+              />
+            )}
+            <div className={styles.inner__mode}>
+              <ModeButton
                 pre="Initialize"
                 label="Chatbots"
                 on_click={props.on_chatbots_click}
               />
-              <ViewTypeButton
+              <ModeButton
                 pre="Make"
                 label="API calls"
                 on_click={props.on_api_calls_click}
               />
             </div>
-            <div className={styles['inner__buttons']}>
-              <HomeLinkButton
-                url="https://codeweb.chat"
-                background_color="black"
-                fill_color="white"
-                logo_icon="CODE_WEB_CHAT_LOGO"
-                text_icon="CODE_WEB_CHAT_TEXT"
-                label="Visit website"
-              />
-              <HomeLinkButton
-                url="https://coindrop.to/cwc"
-                background_color="#ffdd00"
-                fill_color="black"
-                text_icon="BUY_ME_A_COFFEE_TEXT"
-                logo_icon="BUY_ME_A_COFFEE_LOGO"
-                label="Donate"
-              />
-              <HomeLinkButton
-                url="https://discord.gg/KJySXsrSX5"
-                background_color="#5765f2"
-                fill_color="white"
-                logo_icon="DISCORD_LOGO"
-                text_icon="DISCORD_TEXT"
-                label="Get involved"
+            <div className={styles.inner__timeline}>
+              <Timeline
+                items={props.checkpoints.map((c) => ({
+                  id: c.timestamp,
+                  label: c.title,
+                  timestamp: c.timestamp,
+                  description: c.description,
+                  is_starred: c.is_starred
+                }))}
+                on_toggle_starred={(id) =>
+                  props.on_toggle_checkpoint_starred(id as number)
+                }
+                on_label_click={(id) =>
+                  props.on_restore_checkpoint(id as number)
+                }
               />
             </div>
           </div>

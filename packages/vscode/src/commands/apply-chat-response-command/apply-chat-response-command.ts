@@ -97,6 +97,7 @@ export const apply_chat_response_command = (
         before_checkpoint = await create_checkpoint(
           workspace_provider,
           context,
+          panel_provider,
           'Before response previewed',
           args?.raw_instructions
         )
@@ -265,6 +266,7 @@ export const apply_chat_response_command = (
         if (before_checkpoint) {
           delete_checkpoint({
             context,
+            panel_provider,
             checkpoint_to_delete: before_checkpoint
           })
         }

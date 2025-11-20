@@ -11,7 +11,7 @@ export interface Checkpoint {
   title: string
   description?: string
   is_temporary?: boolean
-  starred?: boolean
+  is_starred?: boolean
   git_data?: Record<string, GitCheckpointData> // folder name -> git data
   uses_git?: boolean
   response_history?: ResponseHistoryItem[]

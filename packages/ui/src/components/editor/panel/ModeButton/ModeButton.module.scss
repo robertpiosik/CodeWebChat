@@ -1,0 +1,47 @@
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-2px);
+  }
+  75% {
+    transform: translateY(0);
+  }
+}
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: var(--padding-24px) var(--padding-12px) var(--padding-24px)
+    var(--padding-12px);
+  border: 1px solid var(--vscode-toolbar-hoverBackground);
+  border-radius: var(--border-radius-10px);
+
+  &:hover {
+    background-color: var(--vscode-toolbar-hoverBackground);
+    border-color: transparent;
+
+    .button__label-char {
+      animation: wave 0.5s ease-in-out;
+    }
+  }
+
+  &__label {
+    font-family: var(--font-family-accent);
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: 1px;
+  }
+
+  &__label-char {
+    display: inline-block;
+    position: relative;
+  }
+
+  &__pre {
+    opacity: var(--dimmed-opacity);
+  }
+}

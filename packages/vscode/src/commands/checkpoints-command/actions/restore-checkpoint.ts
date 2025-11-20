@@ -58,6 +58,7 @@ export const restore_checkpoint = async (params: {
         await create_checkpoint(
           params.workspace_provider,
           params.context,
+          params.panel_provider,
           'Before checkpoint restored'
         )
       }
@@ -345,7 +346,8 @@ export const restore_checkpoint = async (params: {
         })
         await delete_checkpoint({
           context: params.context,
-          checkpoint_to_delete: temp_checkpoint
+          checkpoint_to_delete: temp_checkpoint,
+          panel_provider: params.panel_provider
         })
         await params.context.workspaceState.update(
           TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -362,7 +364,8 @@ export const restore_checkpoint = async (params: {
     if (temp_checkpoint) {
       await delete_checkpoint({
         context: params.context,
-        checkpoint_to_delete: temp_checkpoint
+        checkpoint_to_delete: temp_checkpoint,
+        panel_provider: params.panel_provider
       })
       await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,

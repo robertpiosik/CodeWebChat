@@ -43,7 +43,11 @@ export const checkpoints_command = (
         )
         return
       }
-      const checkpoint = await create_checkpoint(workspace_provider, context)
+      const checkpoint = await create_checkpoint(
+        workspace_provider,
+        context,
+        panel_provider
+      )
       if (checkpoint) {
         vscode.window.showInformationMessage('Checkpoint created successfully.')
       }
@@ -143,7 +147,7 @@ export const checkpoints_command = (
             ...visible_checkpoints.map((c, index) => {
               return {
                 id: c.timestamp.toString(),
-                label: c.starred ? `$(star-full) ${c.title}` : c.title,
+                label: c.is_starred ? `$(star-full) ${c.title}` : c.title,
                 description: dayjs(c.timestamp).fromNow(),
                 detail: c.description,
                 checkpoint: c,
@@ -151,9 +155,9 @@ export const checkpoints_command = (
                 buttons: [
                   {
                     iconPath: new vscode.ThemeIcon(
-                      c.starred ? 'star-full' : 'star-empty'
+                      c.is_starred ? 'star-full' : 'star-empty'
                     ),
-                    tooltip: c.starred ? 'Unstar' : 'Star'
+                    tooltip: c.is_starred ? 'Unstar' : 'Star'
                   },
                   ...(c.title == 'Created by user'
                     ? [
@@ -180,7 +184,7 @@ export const checkpoints_command = (
 
           if (selected.id == 'add-new') {
             quick_pick.hide()
-            await create_checkpoint(workspace_provider, context)
+            await create_checkpoint(workspace_provider, context, panel_provider)
             await show_quick_pick()
           } else if (selected.id == 'revert-last') {
             quick_pick.hide()
@@ -204,7 +208,8 @@ export const checkpoints_command = (
             // After reverting, delete the temp checkpoint and clear state.
             await delete_checkpoint({
               context,
-              checkpoint_to_delete: temp_checkpoint
+              checkpoint_to_delete: temp_checkpoint,
+              panel_provider
             })
             await context.workspaceState.update(
               TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -231,7 +236,7 @@ export const checkpoints_command = (
             )
 
             if (confirmation == 'Clear All') {
-              await clear_all_checkpoints(context)
+              await clear_all_checkpoints(context, panel_provider)
               vscode.window.showInformationMessage(
                 'All checkpoints have been cleared.'
               )
@@ -256,11 +261,12 @@ export const checkpoints_command = (
               (c) => c.timestamp == item.checkpoint?.timestamp
             )
             if (checkpoint_to_update) {
-              checkpoint_to_update.starred = !checkpoint_to_update.starred
+              checkpoint_to_update.is_starred = !checkpoint_to_update.is_starred
               await context.workspaceState.update(
                 CHECKPOINTS_STATE_KEY,
                 checkpoints
               )
+              panel_provider.send_checkpoints()
             }
             await refresh_items()
             const active_item = quick_pick.items.find(
@@ -293,6 +299,7 @@ export const checkpoints_command = (
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
+                panel_provider.send_checkpoints()
               }
             }
             await refresh_items()
@@ -332,6 +339,7 @@ export const checkpoints_command = (
               CHECKPOINTS_STATE_KEY,
               updated_checkpoints
             )
+            panel_provider.send_checkpoints()
             checkpoints = updated_checkpoints
             await refresh_items()
 
@@ -379,6 +387,7 @@ export const checkpoints_command = (
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
+                panel_provider.send_checkpoints()
                 notification_count++
                 vscode.window
                   .showInformationMessage('Checkpoint restored.')

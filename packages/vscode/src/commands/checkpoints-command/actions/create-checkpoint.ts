@@ -18,10 +18,12 @@ import {
 } from '../utils/git-utils'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext,
+  panel_provider: PanelProvider,
   title: string = 'Created by user',
   description?: string
 ): Promise<Checkpoint | undefined> => {
@@ -156,6 +158,7 @@ export const create_checkpoint = async (
 
       checkpoints.unshift(checkpoint_object)
       await context.workspaceState.update(CHECKPOINTS_STATE_KEY, checkpoints)
+      await panel_provider.send_checkpoints()
       new_checkpoint = checkpoint_object
     }
 

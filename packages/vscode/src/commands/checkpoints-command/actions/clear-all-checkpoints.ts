@@ -3,9 +3,11 @@ import { CHECKPOINTS_STATE_KEY } from '../../../constants/state-keys'
 import { get_checkpoint_path } from '../utils'
 import { get_checkpoints } from './get-checkpoints'
 import { Logger } from '@shared/utils/logger'
+import { PanelProvider } from '@/views/panel/backend/panel-provider'
 
 export const clear_all_checkpoints = async (
-  context: vscode.ExtensionContext
+  context: vscode.ExtensionContext,
+  panel_provider: PanelProvider
 ) => {
   const clear_task = async () => {
     const checkpoints = await get_checkpoints(context)
@@ -24,6 +26,7 @@ export const clear_all_checkpoints = async (
       }
     }
     await context.workspaceState.update(CHECKPOINTS_STATE_KEY, [])
+    await panel_provider.send_checkpoints()
   }
   await vscode.window.withProgress(
     {

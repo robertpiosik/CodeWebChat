@@ -13,6 +13,11 @@ import { token_count_emitter } from '@/context/context-initialization'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import {
+  get_checkpoints,
+  toggle_checkpoint_star,
+  restore_checkpoint
+} from '@/commands/checkpoints-command/actions'
+import {
   handle_copy_prompt,
   handle_send_prompt,
   handle_update_preset,
@@ -114,6 +119,19 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public commit_was_staged_by_script: boolean = false
   public response_history: ResponseHistoryItem[] = []
+
+  public async send_checkpoints() {
+    const checkpoints = await get_checkpoints(this.context)
+    this.send_message({
+      command: 'CHECKPOINTS',
+      checkpoints: checkpoints.map((c) => ({
+        timestamp: c.timestamp,
+        title: c.title,
+        description: c.description,
+        is_starred: c.is_starred
+      }))
+    })
+  }
 
   constructor(
     public readonly extension_uri: vscode.Uri,
@@ -392,7 +410,28 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     webview_view.webview.onDidReceiveMessage(
       async (message: FrontendMessage) => {
         try {
-          if (message.command == 'GET_HISTORY') {
+          if (message.command == 'GET_CHECKPOINTS') {
+            await this.send_checkpoints()
+          } else if (message.command == 'TOGGLE_CHECKPOINT_STAR') {
+            await toggle_checkpoint_star({
+              context: this.context,
+              timestamp: message.timestamp,
+              panel_provider: this
+            })
+          } else if (message.command == 'RESTORE_CHECKPOINT') {
+            const checkpoints = await get_checkpoints(this.context)
+            const checkpoint_to_restore = checkpoints.find(
+              (c) => c.timestamp == message.timestamp
+            )
+            if (checkpoint_to_restore) {
+              await restore_checkpoint({
+                checkpoint: checkpoint_to_restore,
+                workspace_provider: this.workspace_provider,
+                context: this.context,
+                panel_provider: this
+              })
+            }
+          } else if (message.command == 'GET_HISTORY') {
             handle_get_history(this)
           } else if (message.command == 'GET_RESPONSE_HISTORY') {
             this.send_message({

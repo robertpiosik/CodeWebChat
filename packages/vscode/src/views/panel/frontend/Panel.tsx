@@ -15,6 +15,7 @@ import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/pane
 import { use_panel } from './hooks/use-panel'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { LayoutContext } from './contexts/LayoutContext'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Layout } from './components/Layout/Layout'
 import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
 import { EditPresetFormFooter } from './components/edit-preset-form/EditPresetFormFooter'
@@ -46,6 +47,7 @@ export const Panel = () => {
     selected_history_item_created_at,
     set_selected_history_item_created_at,
     response_history,
+    checkpoints,
     preview_item_created_at,
     set_response_history,
     workspace_folder_count,
@@ -159,6 +161,16 @@ export const Panel = () => {
     })
   }
 
+  const handle_response_history_item_click = (item: ResponseHistoryItem) => {
+    post_message(vscode, {
+      command: 'APPLY_RESPONSE_FROM_HISTORY',
+      response: item.response,
+      raw_instructions: item.raw_instructions,
+      files: item.files,
+      created_at: item.created_at
+    })
+  }
+
   const layout_context_value = {
     is_apply_visible:
       active_view == 'main' && main_view_type == MAIN_VIEW_TYPES.WEB,
@@ -210,6 +222,9 @@ export const Panel = () => {
                 on_web_mode_change={handle_web_mode_change}
                 on_api_mode_change={handle_api_mode_change}
                 response_history={response_history}
+                on_response_history_item_click={
+                  handle_response_history_item_click
+                }
                 selected_history_item_created_at={
                   selected_history_item_created_at
                 }
@@ -253,6 +268,29 @@ export const Panel = () => {
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 version={version}
+                checkpoints={checkpoints}
+                response_history={response_history}
+                on_response_history_item_click={
+                  handle_response_history_item_click
+                }
+                selected_history_item_created_at={
+                  selected_history_item_created_at
+                }
+                on_selected_history_item_change={
+                  set_selected_history_item_created_at
+                }
+                on_toggle_checkpoint_starred={(timestamp: number) => {
+                  post_message(vscode, {
+                    command: 'TOGGLE_CHECKPOINT_STAR',
+                    timestamp: timestamp
+                  })
+                }}
+                on_restore_checkpoint={(timestamp: number) => {
+                  post_message(vscode, {
+                    command: 'RESTORE_CHECKPOINT',
+                    timestamp
+                  })
+                }}
               />
             </div>
           </Layout>

@@ -22,6 +22,13 @@ export type ApiToolConfiguration = {
   is_pinned?: boolean
 }
 
+export type Checkpoint = {
+  timestamp: number
+  title: string
+  description?: string
+  is_starred?: boolean
+}
+
 export type FileProgressStatus =
   | 'waiting'
   | 'thinking'
@@ -347,6 +354,20 @@ export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   mode: WebPromptType | ApiPromptType
 }
 
+export interface GetCheckpointsMessage extends BaseMessage {
+  command: 'GET_CHECKPOINTS'
+}
+
+export interface ToggleCheckpointStarMessage extends BaseMessage {
+  command: 'TOGGLE_CHECKPOINT_STAR'
+  timestamp: number
+}
+
+export interface RestoreCheckpointMessage extends BaseMessage {
+  command: 'RESTORE_CHECKPOINT'
+  timestamp: number
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -410,6 +431,9 @@ export type FrontendMessage =
   | ApplyResponseFromHistoryMessage
   | GetCollapsedStatesMessage
   | SaveComponentCollapsedStateMessage
+  | GetCheckpointsMessage
+  | ToggleCheckpointStarMessage
+  | RestoreCheckpointMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -611,6 +635,11 @@ export interface CollapsedStatesMessage extends BaseMessage {
   configurations_collapsed_by_api_mode: { [mode in ApiPromptType]?: boolean }
 }
 
+export interface CheckpointsMessage extends BaseMessage {
+  command: 'CHECKPOINTS'
+  checkpoints: Checkpoint[]
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -649,3 +678,4 @@ export type BackendMessage =
   | ShowCommitMessageModalMessage
   | CommitProcessCancelledMessage
   | CollapsedStatesMessage
+  | CheckpointsMessage
