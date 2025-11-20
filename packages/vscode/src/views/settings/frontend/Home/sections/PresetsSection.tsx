@@ -63,7 +63,7 @@ export const PresetsSection = forwardRef<HTMLDivElement, Props>(
               <Input
                 type="number"
                 value={gemini_user_id_str}
-                onChange={set_gemini_user_id_str}
+                on_change={set_gemini_user_id_str}
                 max_width={60}
               />
             }

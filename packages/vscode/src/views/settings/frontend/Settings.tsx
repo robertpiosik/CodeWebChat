@@ -32,6 +32,7 @@ export const Settings = () => {
       settings_hook.commit_message_auto_accept_after !== undefined &&
       settings_hook.context_size_warning_threshold !== undefined &&
       settings_hook.edit_format_instructions !== undefined &&
+      settings_hook.checkpoint_lifespan !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined
     )
@@ -69,6 +70,7 @@ export const Settings = () => {
         settings_hook.commit_message_auto_accept_after!
       }
       edit_format_instructions={settings_hook.edit_format_instructions!}
+      checkpoint_lifespan={settings_hook.checkpoint_lifespan!}
       gemini_user_id={settings_hook.gemini_user_id!}
       clear_checks_in_workspace_behavior={
         settings_hook.clear_checks_in_workspace_behavior!
@@ -94,6 +96,9 @@ export const Settings = () => {
       }
       on_edit_format_instructions_change={
         settings_hook.handle_edit_format_instructions_change
+      }
+      on_checkpoint_lifespan_change={
+        settings_hook.handle_checkpoint_lifespan_change
       }
       on_clear_checks_in_workspace_behavior_change={
         settings_hook.handle_clear_checks_in_workspace_behavior_change

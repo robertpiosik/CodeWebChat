@@ -209,6 +209,15 @@ export interface UpdateContextSizeWarningThresholdMessage {
   threshold: number
 }
 
+export interface GetCheckpointLifespanMessage {
+  command: 'GET_CHECKPOINT_LIFESPAN'
+}
+
+export interface UpdateCheckpointLifespanMessage {
+  command: 'UPDATE_CHECKPOINT_LIFESPAN'
+  hours: number
+}
+
 export interface GetGeminiUserIdMessage {
   command: 'GET_GEMINI_USER_ID'
 }
@@ -268,6 +277,8 @@ export type FrontendMessage =
   | SettingsUiReadyMessage
   | GetContextSizeWarningThresholdMessage
   | UpdateContextSizeWarningThresholdMessage
+  | GetCheckpointLifespanMessage
+  | UpdateCheckpointLifespanMessage
   | GetGeminiUserIdMessage
   | UpdateGeminiUserIdMessage
   | GetClearChecksInWorkspaceBehaviorMessage
@@ -322,6 +333,11 @@ export interface ContextSizeWarningThresholdMessage {
   threshold: number
 }
 
+export interface CheckpointLifespanMessage {
+  command: 'CHECKPOINT_LIFESPAN'
+  hours: number
+}
+
 export interface GeminiUserIdMessage {
   command: 'GEMINI_USER_ID'
   geminiUserId: number | null
@@ -348,6 +364,7 @@ export type BackendMessage =
   | EditContextSystemInstructionsMessage
   | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage
+  | CheckpointLifespanMessage
   | GeminiUserIdMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage

@@ -553,6 +553,13 @@
           "default": 60000,
           "description": "Threshold for the context size to show a warning."
         },
+        "codeWebChat.checkpointLifespan": {
+          "type": "number",
+          "scope": "resource",
+          "default": 48,
+          "description": "The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted.",
+          "minimum": 1
+        },
         "codeWebChat.clearChecksInWorkspaceBehavior": {
           "type": "string",
           "enum": [

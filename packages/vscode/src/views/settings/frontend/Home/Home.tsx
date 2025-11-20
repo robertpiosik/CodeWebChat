@@ -65,6 +65,7 @@ type Props = {
   commit_message_auto_accept_after: number | null
   context_size_warning_threshold: number
   gemini_user_id: number | null
+  checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
   clear_checks_in_workspace_behavior: 'ignore-open-editors' | 'uncheck-all'
 
@@ -81,6 +82,7 @@ type Props = {
     instructions: EditFormatInstructions
   ) => void
   on_edit_context_system_instructions_change: (instructions: string) => void
+  on_checkpoint_lifespan_change: (hours: number) => void
   on_gemini_user_id_change: (id: number | null) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
@@ -321,6 +323,10 @@ export const Home: React.FC<Props> = (props) => {
           on_edit_format_instructions_change={
             props.on_edit_format_instructions_change
           }
+          checkpoint_lifespan={props.checkpoint_lifespan}
+          on_checkpoint_lifespan_change={
+            props.on_checkpoint_lifespan_change
+          }
           on_open_editor_settings={props.on_open_editor_settings}
           on_stuck_change={general_on_stuck_change}
         />
@@ -467,7 +473,7 @@ export const Home: React.FC<Props> = (props) => {
                 <Input
                   type="number"
                   value={commit_message_auto_accept_after_str}
-                  onChange={set_commit_message_auto_accept_after_str}
+                  on_change={set_commit_message_auto_accept_after_str}
                   max_width={60}
                 />
               }

@@ -39,6 +39,9 @@ export const use_settings = (vscode: any) => {
   const [edit_format_instructions, set_edit_format_instructions] = useState<
     EditFormatInstructions | undefined
   >(undefined)
+  const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<
+    number | undefined
+  >(undefined)
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
@@ -59,6 +62,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_CHECKPOINT_LIFESPAN' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
   }, [vscode])
@@ -96,6 +100,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'EDIT_FORMAT_INSTRUCTIONS':
           set_edit_format_instructions(message.instructions)
+          break
+        case 'CHECKPOINT_LIFESPAN':
+          set_checkpoint_lifespan(message.hours)
           break
         case 'GEMINI_USER_ID':
           set_gemini_user_id(message.geminiUserId)
@@ -236,6 +243,12 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
+  const handle_checkpoint_lifespan_change = (hours: number) =>
+    post_message(vscode, {
+      command: 'UPDATE_CHECKPOINT_LIFESPAN',
+      hours
+    })
+
   const handle_gemini_user_id_change = (geminiUserId: number | null) =>
     post_message(vscode, {
       command: 'UPDATE_GEMINI_USER_ID',
@@ -266,6 +279,7 @@ export const use_settings = (vscode: any) => {
     edit_context_system_instructions,
     context_size_warning_threshold,
     edit_format_instructions,
+    checkpoint_lifespan,
     gemini_user_id,
     clear_checks_in_workspace_behavior,
     handle_reorder_providers,
@@ -285,6 +299,7 @@ export const use_settings = (vscode: any) => {
     handle_open_editor_settings,
     handle_context_size_warning_threshold_change,
     handle_edit_format_instructions_change,
+    handle_checkpoint_lifespan_change,
     handle_gemini_user_id_change,
     handle_clear_checks_in_workspace_behavior_change
   }

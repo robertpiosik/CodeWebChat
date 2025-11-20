@@ -36,7 +36,7 @@ export const Slider: React.FC<Props> = (props) => {
         max={props.max}
         step={0.05}
         value={value}
-        onChange={handleInputChange}
+        on_change={handleInputChange}
         width={60}
       />
       <input

@@ -254,6 +254,18 @@ export class SettingsProvider {
           case 'UPDATE_GEMINI_USER_ID':
             await handle_update_gemini_user_id(this, message)
             break
+          case 'GET_CHECKPOINT_LIFESPAN':
+            {
+              const config = vscode.workspace.getConfiguration('codeWebChat')
+              const hours = config.get<number>('checkpointLifespan', 48)
+              this.postMessage({ command: 'CHECKPOINT_LIFESPAN', hours })
+            }
+            break
+          case 'UPDATE_CHECKPOINT_LIFESPAN':
+            if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN')
+              await vscode.workspace.getConfiguration('codeWebChat').update('checkpointLifespan', message.hours, vscode.ConfigurationTarget.Global)
+
+            break
           case 'OPEN_EDITOR_SETTINGS':
             await vscode.commands.executeCommand(
               'workbench.action.openSettings'
@@ -279,6 +291,11 @@ export class SettingsProvider {
           void handle_get_commit_message_instructions(this)
           void handle_get_commit_message_auto_accept_after(this)
           void handle_get_clear_checks_in_workspace_behavior(this)
+          {
+            const config = vscode.workspace.getConfiguration('codeWebChat')
+            const hours = config.get<number>('checkpointLifespan', 48)
+            this.postMessage({ command: 'CHECKPOINT_LIFESPAN', hours })
+          }
           void handle_get_gemini_user_id(this)
         }
       })

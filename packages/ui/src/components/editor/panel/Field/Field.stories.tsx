@@ -14,7 +14,7 @@ export const TextInput = () => {
     <Field label="Username" html_for="username">
       <Input
         value={value}
-        onChange={set_value}
+        on_change={set_value}
         placeholder="Enter your username"
       />
     </Field>
@@ -30,7 +30,7 @@ export const WithInfo = () => {
       html_for="api-key"
       info="Your API key will be stored securely."
     >
-      <Input value={value} onChange={set_value} placeholder="Enter API key" />
+      <Input value={value} on_change={set_value} placeholder="Enter API key" />
     </Field>
   )
 }

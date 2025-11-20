@@ -17,6 +17,8 @@ const CLEAR_CHECKS_OPTIONS: Dropdown.Option<ClearChecksBehavior>[] = [
 
 type Props = {
   context_size_warning_threshold: number
+  checkpoint_lifespan: number
+  on_checkpoint_lifespan_change: (hours: number) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   edit_format_instructions: EditFormatInstructions
   on_context_size_warning_threshold_change: (threshold: number) => void
@@ -34,6 +36,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
   (props, ref) => {
     const [context_size_warning_threshold, set_context_size_warning_threshold] =
       useState('')
+    const [checkpoint_lifespan_str, set_checkpoint_lifespan_str] = useState('')
     const [instructions, set_instructions] = useState<EditFormatInstructions>({
       whole: '',
       truncated: '',
@@ -45,6 +48,10 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
         String(props.context_size_warning_threshold)
       )
     }, [props.context_size_warning_threshold])
+
+    useEffect(() => {
+      set_checkpoint_lifespan_str(String(props.checkpoint_lifespan))
+    }, [props.checkpoint_lifespan])
 
     useEffect(() => {
       if (props.edit_format_instructions) {
@@ -69,6 +76,25 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       context_size_warning_threshold,
       props.on_context_size_warning_threshold_change,
       props.context_size_warning_threshold
+    ])
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        const num_hours = parseInt(checkpoint_lifespan_str, 10)
+        if (
+          !isNaN(num_hours) &&
+          num_hours > 0 &&
+          props.checkpoint_lifespan !== undefined &&
+          num_hours != props.checkpoint_lifespan
+        ) {
+          props.on_checkpoint_lifespan_change(num_hours)
+        }
+      }, 500)
+      return () => clearTimeout(handler)
+    }, [
+      checkpoint_lifespan_str,
+      props.on_checkpoint_lifespan_change,
+      props.checkpoint_lifespan
     ])
 
     useEffect(() => {
@@ -112,8 +138,21 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               <Input
                 type="number"
                 value={context_size_warning_threshold}
-                onChange={set_context_size_warning_threshold}
+                on_change={set_context_size_warning_threshold}
                 max_width={100}
+              />
+            }
+          />
+          <Item
+            title="Checkpoint Lifespan"
+            description="The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted."
+            slot={
+              <Input
+                type="number"
+                value={checkpoint_lifespan_str}
+                on_change={set_checkpoint_lifespan_str}
+                max_width={100}
+                min={1}
               />
             }
           />

@@ -284,14 +284,14 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               id="custom-model"
               type="text"
               value={model || ''}
-              onChange={set_model}
+              on_change={set_model}
               placeholder="Enter model name"
             />
           </Field>
         )}
 
         <Field label="Name" html_for="name">
-          <Input id="name" type="text" value={name} onChange={set_name} />
+          <Input id="name" type="text" value={name} on_change={set_name} />
         </Field>
 
         {supports_port && (
@@ -311,12 +311,12 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               id="port"
               type="text"
               value={String(port ?? '')}
-              onChange={(value) => {
+              on_change={(value) => {
                 const num = parseInt(value, 10)
                 set_port(isNaN(num) ? undefined : num)
               }}
               placeholder="e.g. 3000"
-              onKeyDown={(e) =>
+              on_key_down={(e) =>
                 !/[0-9]/.test(e.key) &&
                 e.key != 'Backspace' &&
                 e.preventDefault()
@@ -335,7 +335,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               id="new-url"
               type="text"
               value={new_url || ''}
-              onChange={set_new_url}
+              on_change={set_new_url}
             />
           </Field>
         )}
@@ -413,12 +413,12 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 id="thinking-budget"
                 type="text"
                 value={String(thinking_budget ?? '')}
-                onChange={(value) => {
+                on_change={(value) => {
                   const num = parseInt(value, 10)
                   set_thinking_budget(isNaN(num) ? undefined : num)
                 }}
                 placeholder="e.g. 8000"
-                onKeyDown={(e) =>
+                on_key_down={(e) =>
                   !/[0-9]/.test(e.key) &&
                   e.key != 'Backspace' &&
                   e.preventDefault()

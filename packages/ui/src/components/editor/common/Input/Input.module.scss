@@ -15,3 +15,9 @@
     border-color: var(--vscode-focusBorder);
   }
 }
+
+.invalid {
+  border-color: var(--vscode-inputValidation-errorBorder) !important;
+  background: var(--vscode-inputValidation-errorBackground);
+  color: var(--vscode-errorForeground);
+}

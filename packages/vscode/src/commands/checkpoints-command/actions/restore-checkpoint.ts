@@ -24,10 +24,13 @@ export const restore_checkpoint = async (params: {
   panel_provider: PanelProvider
   options?: { skip_confirmation?: boolean }
 }) => {
-  const operation_in_progress = params.context.workspaceState.get<boolean>(
+  const operation_in_progress = params.context.workspaceState.get<number>(
     CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
   )
-  if (operation_in_progress) {
+  if (
+    operation_in_progress &&
+    Date.now() - operation_in_progress < 60 * 1000
+  ) {
     vscode.window.showWarningMessage(
       dictionary.warning_message.CHECKPOINT_OPERATION_IN_PROGRESS
     )
@@ -116,7 +119,7 @@ export const restore_checkpoint = async (params: {
   try {
     await params.context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-      true
+      Date.now()
     )
     await vscode.window.withProgress(
       {
@@ -345,6 +348,11 @@ export const restore_checkpoint = async (params: {
       }
     }
 
+    await params.context.workspaceState.update(
+      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+      undefined
+    )
+
     const message = params.options?.skip_confirmation
       ? 'Successfully reverted changes.'
       : `Checkpoint restored successfully.`
@@ -378,7 +386,7 @@ export const restore_checkpoint = async (params: {
   } catch (err: any) {
     await params.context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-      false
+      undefined
     )
     vscode.window.showErrorMessage(
       `Failed to restore checkpoint: ${err.message}`
@@ -394,10 +402,6 @@ export const restore_checkpoint = async (params: {
         undefined
       )
     }
-  } finally {
-    await params.context.workspaceState.update(
-      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-      false
-    )
   }
 }
+

@@ -9,7 +9,7 @@ export const Primary = () => {
   const [value, set_value] = useState('')
 
   return (
-    <Input value={value} onChange={set_value} placeholder="Enter text here" />
+    <Input value={value} on_change={set_value} placeholder="Enter text here" />
   )
 }
 
@@ -19,7 +19,7 @@ export const WithValue = () => {
   return (
     <Input
       value={value}
-      onChange={set_value}
+      on_change={set_value}
       placeholder="Will be ignored because value is set"
     />
   )
@@ -30,7 +30,7 @@ export const WithMaxWidth = () => {
   return (
     <Input
       value={value}
-      onChange={set_value}
+      on_change={set_value}
       placeholder="Max width is 200px"
       max_width={200}
     />
