@@ -5,6 +5,7 @@ import { sync_directory } from '../utils'
 export const sync_workspace_from_dir = async (params: {
   source_dir_uri: vscode.Uri
   workspace_provider: WorkspaceProvider
+  progress?: vscode.Progress<{ message?: string; increment?: number }>
 }) => {
   const workspace_folders = vscode.workspace.workspaceFolders!
 
@@ -24,7 +25,8 @@ export const sync_workspace_from_dir = async (params: {
           source_dir: source_folder_uri,
           dest_dir: folder.uri,
           root_path: folder.uri.fsPath,
-          workspace_provider: params.workspace_provider
+          workspace_provider: params.workspace_provider,
+          progress: params.progress
         })
       } else {
       }
@@ -34,7 +36,8 @@ export const sync_workspace_from_dir = async (params: {
       source_dir: params.source_dir_uri,
       dest_dir: workspace_folders[0].uri,
       root_path: workspace_folders[0].uri.fsPath,
-      workspace_provider: params.workspace_provider
+      workspace_provider: params.workspace_provider,
+      progress: params.progress
     })
   }
 }

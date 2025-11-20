@@ -126,7 +126,7 @@ export const restore_checkpoint = async (params: {
           : 'Restoring checkpoint...',
         cancellable: false
       },
-      async () => {
+      async (progress) => {
         const checkpoint_dir_path = get_checkpoint_path(
           params.checkpoint.timestamp
         )
@@ -235,7 +235,8 @@ export const restore_checkpoint = async (params: {
                   source_dir: temp_git_dir_uri,
                   dest_dir: folder.uri,
                   root_path: folder.uri.fsPath,
-                  workspace_provider: params.workspace_provider
+                  workspace_provider: params.workspace_provider,
+                  progress
                 })
               } catch (err) {
                 Logger.error({
@@ -265,7 +266,8 @@ export const restore_checkpoint = async (params: {
                   source_dir: source_folder_uri,
                   dest_dir: folder.uri,
                   root_path: folder.uri.fsPath,
-                  workspace_provider: params.workspace_provider
+                  workspace_provider: params.workspace_provider,
+                  progress
                 })
               } catch {}
             }
@@ -273,7 +275,8 @@ export const restore_checkpoint = async (params: {
         } else {
           await sync_workspace_from_dir({
             source_dir_uri: checkpoint_dir_uri,
-            workspace_provider: params.workspace_provider
+            workspace_provider: params.workspace_provider,
+            progress
           })
         }
       }

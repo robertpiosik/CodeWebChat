@@ -30,10 +30,13 @@ export const create_checkpoint = async (
   description?: string
 ): Promise<Checkpoint | undefined> => {
   try {
-    const operation_in_progress = context.workspaceState.get<boolean>(
+    const operation_in_progress = context.workspaceState.get<number>(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
     )
-    if (operation_in_progress) {
+    if (
+      operation_in_progress &&
+      Date.now() - operation_in_progress < 60 * 1000
+    ) {
       vscode.window.showWarningMessage(
         dictionary.warning_message.CHECKPOINT_OPERATION_IN_PROGRESS
       )
@@ -76,7 +79,7 @@ export const create_checkpoint = async (
     const create_checkpoint_task = async () => {
       await context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-        true
+        Date.now()
       )
       await vscode.workspace.saveAll()
       const checkpoint_dir_path = get_checkpoint_path(timestamp)
@@ -177,7 +180,7 @@ export const create_checkpoint = async (
       await panel_provider.send_checkpoints()
       await context.workspaceState.update(
         CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-        false
+        undefined
       )
       new_checkpoint = checkpoint_object
     }
@@ -201,7 +204,7 @@ export const create_checkpoint = async (
     )
     await context.workspaceState.update(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-      false
+      undefined
     )
     return undefined
   }
