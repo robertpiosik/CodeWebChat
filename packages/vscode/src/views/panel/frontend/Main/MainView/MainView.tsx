@@ -8,8 +8,8 @@ import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
 import {
-  MAIN_VIEW_TYPES,
-  MainViewType
+  MODE,
+  Mode
 } from '@/views/panel/types/home-view-type'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
@@ -75,8 +75,8 @@ type Props = {
   instructions: string
   set_instructions: (value: string) => void
   on_caret_position_change: (caret_position: number) => void
-  main_view_type: MainViewType
-  on_main_view_type_change: (value: MainViewType) => void
+  mode: Mode
+  on_mode_change: (value: Mode) => void
   on_edit_context_click: () => void
   on_edit_context_with_quick_pick_click: () => void
   on_code_completion_click: () => void
@@ -98,16 +98,16 @@ type Props = {
 }
 
 export const MainView: React.FC<Props> = (props) => {
-  const is_in_code_completions_mode =
-    (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
+  const is_in_code_completions_prompt_type =
+    (props.mode == MODE.WEB &&
       props.web_prompt_type == 'code-completions') ||
-    (props.main_view_type == MAIN_VIEW_TYPES.API &&
+    (props.mode == MODE.API &&
       props.api_prompt_type == 'code-completions')
 
   const show_edit_format_selector =
-    (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
+    (props.mode == MODE.WEB &&
       props.web_prompt_type == 'edit-context') ||
-    (props.main_view_type == MAIN_VIEW_TYPES.API &&
+    (props.mode == MODE.API &&
       props.api_prompt_type == 'edit-context')
 
   const handle_input_change = (value: string) => {
@@ -115,10 +115,10 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const handle_submit = async () => {
-    if (props.main_view_type == MAIN_VIEW_TYPES.WEB) {
+    if (props.mode == MODE.WEB) {
       props.initialize_chats({})
     } else {
-      if (is_in_code_completions_mode) {
+      if (is_in_code_completions_prompt_type) {
         props.on_code_completion_click()
       } else {
         props.on_edit_context_click()
@@ -127,10 +127,10 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const handle_submit_with_control = async () => {
-    if (props.main_view_type == MAIN_VIEW_TYPES.WEB) {
+    if (props.mode == MODE.WEB) {
       props.initialize_chats({ show_quick_pick: true })
     } else {
-      if (is_in_code_completions_mode) {
+      if (is_in_code_completions_prompt_type) {
         props.on_code_completion_with_quick_pick_click()
       } else {
         props.on_edit_context_with_quick_pick_click()
@@ -139,7 +139,7 @@ export const MainView: React.FC<Props> = (props) => {
   }
 
   const last_choice_button_title = use_last_choice_button_title({
-    main_view_type: props.main_view_type,
+    mode: props.mode,
     selected_preset_or_group_name: props.selected_preset_or_group_name,
     presets: props.presets,
     selected_configuration_id: props.selected_configuration_id,
@@ -147,9 +147,9 @@ export const MainView: React.FC<Props> = (props) => {
   })
 
   const scroll_to_top_key = `${props.scroll_reset_key}-${
-    props.main_view_type
+    props.mode
   }-${
-    props.main_view_type == MAIN_VIEW_TYPES.WEB
+    props.mode == MODE.WEB
       ? props.web_prompt_type
       : props.api_prompt_type
   }`
@@ -157,8 +157,8 @@ export const MainView: React.FC<Props> = (props) => {
   return (
     <>
       <Header
-        main_view_type={props.main_view_type}
-        on_main_view_type_change={props.on_main_view_type_change}
+        mode={props.mode}
+        on_mode_change={props.on_mode_change}
         on_show_home={props.on_show_home}
         web_prompt_type={props.web_prompt_type}
         on_web_mode_change={props.on_web_mode_change}
@@ -169,7 +169,7 @@ export const MainView: React.FC<Props> = (props) => {
       <Scrollable scroll_to_top_key={scroll_to_top_key}>
         <UiSeparator height={4} />
 
-        {!props.is_connected && props.main_view_type == MAIN_VIEW_TYPES.WEB && (
+        {!props.is_connected && props.mode == MODE.WEB && (
           <>
             <div className={styles['browser-extension-message']}>
               <UiBrowserExtensionMessage />
@@ -204,9 +204,9 @@ export const MainView: React.FC<Props> = (props) => {
             on_at_sign_click={props.on_at_sign_click}
             on_hash_sign_click={props.on_hash_sign_click}
             on_curly_braces_click={props.on_curly_braces_click}
-            is_web_view_type={props.main_view_type == MAIN_VIEW_TYPES.WEB}
+            is_web_mode={props.mode == MODE.WEB}
             is_connected={props.is_connected}
-            is_in_code_completions_mode={is_in_code_completions_mode}
+            is_in_code_completions_mode={is_in_code_completions_prompt_type}
             has_active_selection={props.has_active_selection}
             has_active_editor={props.has_active_editor}
             on_caret_position_change={props.on_caret_position_change}
@@ -217,12 +217,12 @@ export const MainView: React.FC<Props> = (props) => {
             last_choice_button_title={last_choice_button_title}
             show_edit_format_selector={show_edit_format_selector}
             edit_format={
-              props.main_view_type == MAIN_VIEW_TYPES.WEB
+              props.mode == MODE.WEB
                 ? props.chat_edit_format
                 : props.api_edit_format
             }
             on_edit_format_change={
-              props.main_view_type == MAIN_VIEW_TYPES.WEB
+              props.mode == MODE.WEB
                 ? props.on_chat_edit_format_change
                 : props.on_api_edit_format_change
             }
@@ -238,7 +238,7 @@ export const MainView: React.FC<Props> = (props) => {
           />
         </div>
 
-        {props.main_view_type == MAIN_VIEW_TYPES.WEB && (
+        {props.mode == MODE.WEB && (
           <>
             <UiSeparator height={8} />
             <UiPresets
@@ -277,7 +277,7 @@ export const MainView: React.FC<Props> = (props) => {
           </>
         )}
 
-        {props.main_view_type == MAIN_VIEW_TYPES.API && (
+        {props.mode == MODE.API && (
           <>
             <UiSeparator height={8} />
             <UiConfigurations

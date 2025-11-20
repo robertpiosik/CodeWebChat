@@ -45,7 +45,7 @@ import {
   handle_save_mode_web,
   handle_get_mode_api,
   handle_save_mode_api,
-  handle_get_main_view_type,
+  handle_get_mode,
   handle_get_version,
   handle_show_prompt_template_quick_pick,
   handle_get_api_tool_configurations,
@@ -91,7 +91,7 @@ import {
 } from '@/views/panel/backend/utils/preset-format-converters'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { MAIN_VIEW_TYPES, MainViewType } from '../types/home-view-type'
+import { MODE, Mode } from '../types/home-view-type'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
 import { Logger } from '@shared/utils/logger'
@@ -114,7 +114,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public chat_edit_format: EditFormat
   public api_edit_format: EditFormat
   public api_prompt_type: ApiPromptType
-  public main_view_type: MainViewType = MAIN_VIEW_TYPES.WEB
+  public mode: Mode = MODE.WEB
   public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public commit_was_staged_by_script: boolean = false
@@ -323,9 +323,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         event.document === vscode.window.activeTextEditor.document
       ) {
         if (
-          (this.main_view_type == MAIN_VIEW_TYPES.WEB &&
+          (this.mode == MODE.WEB &&
             this.web_prompt_type == 'code-completions') ||
-          (this.main_view_type == MAIN_VIEW_TYPES.API &&
+          (this.mode == MODE.API &&
             this.api_prompt_type == 'code-completions')
         ) {
           this.calculate_token_count()
@@ -336,7 +336,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public get_presets_config_key(): string {
     const mode =
-      this.main_view_type == MAIN_VIEW_TYPES.API
+      this.mode == MODE.API
         ? this.api_prompt_type
         : this.web_prompt_type
     switch (mode) {
@@ -564,11 +564,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_save_edit_format(this, message)
           } else if (message.command == 'CARET_POSITION_CHANGED') {
             this.caret_position = message.caret_position
-          } else if (message.command == 'SAVE_MAIN_VIEW_TYPE') {
-            this.main_view_type = message.view_type
+          } else if (message.command == 'SAVE_MODE') {
+            this.mode = message.mode
             this.calculate_token_count()
-          } else if (message.command == 'GET_MAIN_VIEW_TYPE') {
-            handle_get_main_view_type(this)
+          } else if (message.command == 'GET_MODE') {
+            handle_get_mode(this)
           } else if (message.command == 'GET_VERSION') {
             handle_get_version(this)
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
@@ -653,7 +653,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public calculate_token_count() {
     if (
-      this.main_view_type == MAIN_VIEW_TYPES.WEB &&
+      this.mode == MODE.WEB &&
       this.web_prompt_type == 'no-context'
     ) {
       this.send_message({
@@ -666,9 +666,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const active_editor = vscode.window.activeTextEditor
 
     const is_code_completions_mode =
-      (this.main_view_type == MAIN_VIEW_TYPES.WEB &&
+      (this.mode == MODE.WEB &&
         this.web_prompt_type == 'code-completions') ||
-      (this.main_view_type == MAIN_VIEW_TYPES.API &&
+      (this.mode == MODE.API &&
         this.api_prompt_type == 'code-completions')
 
     Promise.all([
@@ -960,16 +960,16 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const is_in_code_completions_mode =
-      (this.main_view_type == MAIN_VIEW_TYPES.WEB &&
+      (this.mode == MODE.WEB &&
         this.web_prompt_type == 'code-completions') ||
-      (this.main_view_type == MAIN_VIEW_TYPES.API &&
+      (this.mode == MODE.API &&
         this.api_prompt_type == 'code-completions')
 
     let current_instructions = ''
     let new_instructions = ''
     const mode: WebPromptType | ApiPromptType = is_in_code_completions_mode
       ? 'code-completions'
-      : this.main_view_type == MAIN_VIEW_TYPES.WEB
+      : this.mode == MODE.WEB
       ? this.web_prompt_type
       : this.api_prompt_type
 

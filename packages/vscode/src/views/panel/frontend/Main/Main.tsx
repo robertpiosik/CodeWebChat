@@ -3,8 +3,8 @@ import { MainView } from './MainView'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
 import {
-  MAIN_VIEW_TYPES,
-  MainViewType
+  MODE,
+  Mode
 } from '@/views/panel/types/home-view-type'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
@@ -36,10 +36,10 @@ type Props = {
     value: string,
     mode: 'ask' | 'edit-context' | 'no-context' | 'code-completions'
   ) => void
-  main_view_type: MainViewType
+  mode: Mode
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
-  on_main_view_type_change: (view_type: MainViewType) => void
+  on_mode_change: (mode: Mode) => void
   on_web_mode_change: (mode: WebPromptType) => void
   on_api_mode_change: (mode: ApiPromptType) => void
   has_active_editor: boolean
@@ -84,10 +84,8 @@ export const Main: React.FC<Props> = (props) => {
   >()
 
   const is_in_code_completions_mode =
-    (props.main_view_type == MAIN_VIEW_TYPES.WEB &&
-      props.web_prompt_type == 'code-completions') ||
-    (props.main_view_type == MAIN_VIEW_TYPES.API &&
-      props.api_prompt_type == 'code-completions')
+    (props.mode == MODE.WEB && props.web_prompt_type == 'code-completions') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'code-completions')
 
   useEffect(() => {
     const handle_message = async (event: MessageEvent) => {
@@ -172,31 +170,29 @@ export const Main: React.FC<Props> = (props) => {
     return () => window.removeEventListener('message', handle_message)
   }, [])
 
-  const current_mode =
-    props.main_view_type == MAIN_VIEW_TYPES.WEB
-      ? props.web_prompt_type
-      : props.api_prompt_type
+  const current_prompt_type =
+    props.mode == MODE.WEB ? props.web_prompt_type : props.api_prompt_type
 
   const update_chat_history = (instruction: string) => {
     if (!instruction.trim()) {
       return
     }
 
-    if (!current_mode) return
+    if (!current_prompt_type) return
 
     let history: string[] | undefined
     let set_history: React.Dispatch<React.SetStateAction<string[] | undefined>>
 
-    if (current_mode == 'ask') {
+    if (current_prompt_type == 'ask') {
       history = ask_history
       set_history = set_ask_history
-    } else if (current_mode == 'edit-context') {
+    } else if (current_prompt_type == 'edit-context') {
       history = edit_history
       set_history = set_edit_history
-    } else if (current_mode == 'no-context') {
+    } else if (current_prompt_type == 'no-context') {
       history = no_context_history
       set_history = set_no_context_history
-    } else if (current_mode == 'code-completions') {
+    } else if (current_prompt_type == 'code-completions') {
       history = code_completions_history
       set_history = set_code_completions_history
     } else {
@@ -213,7 +209,7 @@ export const Main: React.FC<Props> = (props) => {
       post_message(props.vscode, {
         command: 'SAVE_HISTORY',
         messages: new_history,
-        mode: current_mode
+        mode: current_prompt_type
       })
     }
   }
@@ -356,7 +352,7 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_presets_reorder = (reordered_presets: Preset[]) => {
     if (all_presets) {
-      set_all_presets({ ...all_presets, [current_mode]: reordered_presets })
+      set_all_presets({ ...all_presets, [current_prompt_type]: reordered_presets })
     }
 
     post_message(props.vscode, {
@@ -496,13 +492,9 @@ export const Main: React.FC<Props> = (props) => {
     if (is_in_code_completions_mode) {
       return props.code_completions_instructions
     }
-    const mode =
-      props.main_view_type == MAIN_VIEW_TYPES.WEB
-        ? props.web_prompt_type
-        : props.api_prompt_type
-    if (mode == 'ask') return props.ask_instructions
-    if (mode == 'edit-context') return props.edit_instructions
-    if (mode == 'no-context') return props.no_context_instructions
+    if (current_prompt_type == 'ask') return props.ask_instructions
+    if (current_prompt_type == 'edit-context') return props.edit_instructions
+    if (current_prompt_type == 'no-context') return props.no_context_instructions
     return ''
   }
 
@@ -616,28 +608,28 @@ export const Main: React.FC<Props> = (props) => {
   }
 
   const instructions =
-    current_mode == 'ask'
+    current_prompt_type == 'ask'
       ? props.ask_instructions
-      : current_mode == 'edit-context'
+      : current_prompt_type == 'edit-context'
       ? props.edit_instructions
-      : current_mode == 'no-context'
+      : current_prompt_type == 'no-context'
       ? props.no_context_instructions
-      : current_mode == 'code-completions'
+      : current_prompt_type == 'code-completions'
       ? props.code_completions_instructions
       : ''
 
   const set_instructions = (value: string) => {
-    props.set_instructions(value, current_mode)
+    props.set_instructions(value, current_prompt_type)
   }
 
   let current_history: string[] | undefined
-  if (current_mode == 'ask') {
+  if (current_prompt_type == 'ask') {
     current_history = ask_history
-  } else if (current_mode == 'edit-context') {
+  } else if (current_prompt_type == 'edit-context') {
     current_history = edit_history
-  } else if (current_mode == 'no-context') {
+  } else if (current_prompt_type == 'no-context') {
     current_history = no_context_history
-  } else if (current_mode == 'code-completions') {
+  } else if (current_prompt_type == 'code-completions') {
     current_history = code_completions_history
   }
 
@@ -663,7 +655,7 @@ export const Main: React.FC<Props> = (props) => {
     selected_preset_or_group_name_by_mode?.[props.web_prompt_type]
 
   const configurations_for_current_mode =
-    all_configurations && props.main_view_type == MAIN_VIEW_TYPES.API
+    all_configurations && props.mode == MODE.API
       ? all_configurations[props.api_prompt_type]
       : []
 
@@ -715,8 +707,8 @@ export const Main: React.FC<Props> = (props) => {
       instructions={instructions}
       set_instructions={set_instructions}
       on_caret_position_change={handle_caret_position_change}
-      main_view_type={props.main_view_type}
-      on_main_view_type_change={props.on_main_view_type_change}
+      mode={props.mode}
+      on_mode_change={props.on_mode_change}
       on_edit_context_click={handle_edit_context_click}
       on_edit_context_with_quick_pick_click={
         handle_edit_context_with_quick_pick_click

@@ -55,7 +55,7 @@ export type PromptFieldProps = {
   has_active_selection: boolean
   has_active_editor: boolean
   on_caret_position_change: (caret_position: number) => void
-  is_web_view_type: boolean
+  is_web_mode: boolean
   on_search_click: () => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
@@ -602,8 +602,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             )}
 
             <div className={styles['footer__right__submit']} ref={dropdown_ref}>
-              {(!props.is_web_view_type ||
-                (props.is_web_view_type && props.is_connected)) && (
+              {(!props.is_web_mode ||
+                (props.is_web_mode && props.is_connected)) && (
                 <>
                   <button
                     className={cn(
@@ -653,7 +653,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   )}
                 </>
               )}
-              {props.is_web_view_type && !props.is_connected && (
+              {props.is_web_mode && !props.is_connected && (
                 <button
                   className={cn(
                     styles['footer__right__submit__button'],

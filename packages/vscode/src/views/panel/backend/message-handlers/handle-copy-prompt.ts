@@ -9,7 +9,7 @@ import {
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
-import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
+import { MODE } from '@/views/panel/types/home-view-type'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_copy_prompt = async (params: {
@@ -35,9 +35,9 @@ export const handle_copy_prompt = async (params: {
   }
 
   const is_in_code_completions_mode =
-    (params.panel_provider.main_view_type == MAIN_VIEW_TYPES.WEB &&
+    (params.panel_provider.mode == MODE.WEB &&
       params.panel_provider.web_prompt_type == 'code-completions') ||
-    (params.panel_provider.main_view_type == MAIN_VIEW_TYPES.API &&
+    (params.panel_provider.mode == MODE.API &&
       params.panel_provider.api_prompt_type == 'code-completions')
 
   if (
@@ -139,7 +139,7 @@ export const handle_copy_prompt = async (params: {
 
     if (params.panel_provider.web_prompt_type == 'edit-context') {
       const edit_format =
-        params.panel_provider.main_view_type == MAIN_VIEW_TYPES.WEB
+        params.panel_provider.mode == MODE.WEB
           ? params.panel_provider.chat_edit_format
           : params.panel_provider.api_edit_format
       const all_instructions = vscode.workspace

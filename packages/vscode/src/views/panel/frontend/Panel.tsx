@@ -2,7 +2,7 @@ import { Main } from './Main'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
 import { EditPresetForm } from '@/views/panel/frontend/components/edit-preset-form/EditPresetForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/panel/TextButton'
-import { MAIN_VIEW_TYPES } from '../types/home-view-type'
+import { MODE } from '../types/home-view-type'
 import { Home } from './Home'
 import styles from './Panel.module.scss'
 import cn from 'classnames'
@@ -60,7 +60,7 @@ export const Panel = () => {
     has_active_editor,
     has_active_selection,
     code_completions_instructions,
-    main_view_type,
+    mode,
     web_prompt_type,
     api_prompt_type,
     chat_input_focus_key,
@@ -78,7 +78,7 @@ export const Panel = () => {
     handle_preview_preset,
     handle_web_mode_change,
     handle_api_mode_change,
-    handle_main_view_type_change,
+    handle_mode_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change
   } = use_panel(vscode)
@@ -89,7 +89,7 @@ export const Panel = () => {
     no_context_instructions === undefined ||
     !version ||
     code_completions_instructions === undefined ||
-    main_view_type === undefined ||
+    mode === undefined ||
     web_prompt_type === undefined ||
     is_connected === undefined ||
     api_prompt_type === undefined ||
@@ -114,20 +114,17 @@ export const Panel = () => {
   }
 
   const is_for_code_completions =
-    (main_view_type == MAIN_VIEW_TYPES.WEB &&
-      web_prompt_type == 'code-completions') ||
-    (main_view_type == MAIN_VIEW_TYPES.API &&
-      api_prompt_type == 'code-completions')
+    (mode == MODE.WEB && web_prompt_type == 'code-completions') ||
+    (mode == MODE.API && api_prompt_type == 'code-completions')
 
   const get_current_instructions = () => {
     if (is_for_code_completions) {
       return code_completions_instructions
     }
-    const mode =
-      main_view_type == MAIN_VIEW_TYPES.WEB ? web_prompt_type : api_prompt_type
-    if (mode == 'ask') return ask_instructions
-    if (mode == 'edit-context') return edit_instructions
-    if (mode == 'no-context') return no_context_instructions
+    const prompt_type = mode == MODE.WEB ? web_prompt_type : api_prompt_type
+    if (prompt_type == 'ask') return ask_instructions
+    if (prompt_type == 'edit-context') return edit_instructions
+    if (prompt_type == 'no-context') return no_context_instructions
     return ''
   }
 
@@ -172,8 +169,7 @@ export const Panel = () => {
   }
 
   const layout_context_value = {
-    is_apply_visible:
-      active_view == 'main' && main_view_type == MAIN_VIEW_TYPES.WEB,
+    is_apply_visible: active_view == 'main' && mode == MODE.WEB,
     is_undo_visible: active_view == 'main',
     can_undo,
     has_changes_to_commit,
@@ -213,10 +209,10 @@ export const Panel = () => {
                 no_context_instructions={no_context_instructions}
                 code_completions_instructions={code_completions_instructions}
                 set_instructions={handle_instructions_change}
-                main_view_type={main_view_type}
+                mode={mode}
                 web_prompt_type={web_prompt_type}
                 api_prompt_type={api_prompt_type}
-                on_main_view_type_change={handle_main_view_type_change}
+                on_mode_change={handle_mode_change}
                 has_active_editor={has_active_editor}
                 has_active_selection={has_active_selection}
                 on_web_mode_change={handle_web_mode_change}
@@ -256,14 +252,14 @@ export const Panel = () => {
                 on_chatbots_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
-                  handle_main_view_type_change(MAIN_VIEW_TYPES.WEB)
+                  handle_mode_change(MODE.WEB)
                   handle_web_mode_change('edit-context')
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
-                  handle_main_view_type_change(MAIN_VIEW_TYPES.API)
+                  handle_mode_change(MODE.API)
                   handle_api_mode_change('edit-context')
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}

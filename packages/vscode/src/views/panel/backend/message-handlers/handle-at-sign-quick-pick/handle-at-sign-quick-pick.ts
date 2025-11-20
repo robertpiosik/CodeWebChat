@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { MAIN_VIEW_TYPES } from '@/views/panel/types/home-view-type'
+import { MODE } from '@/views/panel/types/home-view-type'
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
@@ -123,7 +123,7 @@ export const handle_at_sign_quick_pick = async (
   let current_text = ''
 
   const mode =
-    panel_provider.main_view_type == MAIN_VIEW_TYPES.WEB
+    panel_provider.mode == MODE.WEB
       ? panel_provider.web_prompt_type
       : panel_provider.api_prompt_type
   if (mode == 'ask') {

@@ -1,21 +1,21 @@
 import { useMemo } from 'react'
 import {
-  MAIN_VIEW_TYPES,
-  MainViewType
+  MODE,
+  Mode
 } from '@/views/panel/types/home-view-type'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Preset } from '@shared/types/preset'
 
 export const use_last_choice_button_title = (params: {
-  main_view_type: MainViewType
+  mode: Mode
   selected_preset_or_group_name?: string
   presets: Preset[]
   selected_configuration_id?: string
   configurations: ApiToolConfiguration[]
 }): string | undefined => {
   return useMemo(() => {
-    if (params.main_view_type == MAIN_VIEW_TYPES.WEB) {
+    if (params.mode == MODE.WEB) {
       if (params.selected_preset_or_group_name) {
         if (params.selected_preset_or_group_name == 'Ungrouped') {
           return 'Ungrouped'
@@ -60,7 +60,7 @@ export const use_last_choice_button_title = (params: {
         }
       }
     } else {
-      // MAIN_VIEW_TYPES.API
+      // MODE.API
       if (params.selected_configuration_id !== undefined) {
         const configuration = params.configurations.find(
           (c) => c.id === params.selected_configuration_id
@@ -77,7 +77,7 @@ export const use_last_choice_button_title = (params: {
     }
     return undefined
   }, [
-    params.main_view_type,
+    params.mode,
     params.selected_preset_or_group_name,
     params.presets,
     params.selected_configuration_id,

@@ -2,7 +2,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Preset } from '@shared/types/preset'
-import { MainViewType } from './home-view-type'
+import { Mode } from './home-view-type'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { InstructionsPlacement } from '@/services/model-providers-manager'
 
@@ -186,13 +186,13 @@ export interface PickChatbotMessage extends BaseMessage {
   chatbot_id?: string
 }
 
-export interface SaveMainViewTypeMessage extends BaseMessage {
-  command: 'SAVE_MAIN_VIEW_TYPE'
-  view_type: MainViewType
+export interface SaveModeMessage extends BaseMessage {
+  command: 'SAVE_MODE'
+  mode: Mode
 }
 
-export interface GetMainViewTypeMessage extends BaseMessage {
-  command: 'GET_MAIN_VIEW_TYPE'
+export interface GetModeMessage extends BaseMessage {
+  command: 'GET_MODE'
 }
 
 export interface EditContextMessage extends BaseMessage {
@@ -398,8 +398,8 @@ export type FrontendMessage =
   | CaretPositionChangedWebviewMessage
   | PickOpenRouterModel
   | PickChatbotMessage
-  | SaveMainViewTypeMessage
-  | GetMainViewTypeMessage
+  | SaveModeMessage
+  | GetModeMessage
   | EditContextMessage
   | CancelApiRequestMessage
   | CodeCompletionMessage
@@ -530,9 +530,9 @@ export interface NewlyPickedChatbotMessage extends BaseMessage {
   chatbot_id: string
 }
 
-export interface MainViewTypeMessage extends BaseMessage {
-  command: 'MAIN_VIEW_TYPE'
-  view_type: MainViewType
+export interface ModeMessage extends BaseMessage {
+  command: 'MODE'
+  mode: Mode
 }
 
 export interface WebPromptTypeMessage extends BaseMessage {
@@ -659,7 +659,7 @@ export type BackendMessage =
   | PresetUpdatedMessage
   | NewlyPickedOpenRouterModelMessage
   | NewlyPickedChatbotMessage
-  | MainViewTypeMessage
+  | ModeMessage
   | WebPromptTypeMessage
   | ApiPromptTypeMessage
   | VersionMessage

@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import cn from 'classnames'
 import {
-  MAIN_VIEW_TYPES,
-  MainViewType
+  MODE,
+  Mode
 } from '@/views/panel/types/home-view-type'
 import { use_is_narrow_viewport } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -12,8 +12,8 @@ import styles from './Header.module.scss'
 import { api_mode_labels, web_mode_labels } from '../../modes'
 
 type Props = {
-  main_view_type: MainViewType
-  on_main_view_type_change: (value: MainViewType) => void
+  mode: Mode
+  on_mode_change: (value: Mode) => void
   on_show_home: () => void
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
@@ -31,10 +31,10 @@ export const Header: React.FC<Props> = (props) => {
   const header_left_ref = useRef<HTMLDivElement>(null)
 
   const handle_heading_click = () => {
-    if (props.main_view_type == MAIN_VIEW_TYPES.WEB) {
-      props.on_main_view_type_change(MAIN_VIEW_TYPES.API)
+    if (props.mode == MODE.WEB) {
+      props.on_mode_change(MODE.API)
     } else {
-      props.on_main_view_type_change(MAIN_VIEW_TYPES.WEB)
+      props.on_mode_change(MODE.WEB)
     }
   }
 
@@ -78,15 +78,13 @@ export const Header: React.FC<Props> = (props) => {
           onClick={handle_heading_click}
           title="Change mode"
         >
-          {props.main_view_type == MAIN_VIEW_TYPES.WEB
-            ? MAIN_VIEW_TYPES.WEB
-            : MAIN_VIEW_TYPES.API}
+          {props.mode == MODE.WEB ? MODE.WEB : MODE.API}
         </button>
       </div>
 
       <div className={styles.header__right}>
         <div className={styles.header__right__dropdown}>
-          {props.main_view_type == MAIN_VIEW_TYPES.WEB && (
+          {props.mode == MODE.WEB && (
             <UiDropdown
               options={Object.entries(web_mode_labels).map(
                 ([value, label]) => ({ value: value as WebPromptType, label })
@@ -98,7 +96,7 @@ export const Header: React.FC<Props> = (props) => {
               title="Change prompt type"
             />
           )}
-          {props.main_view_type == MAIN_VIEW_TYPES.API && (
+          {props.mode == MODE.API && (
             <UiDropdown
               options={Object.entries(api_mode_labels).map(
                 ([value, label]) => ({ value: value as ApiPromptType, label })

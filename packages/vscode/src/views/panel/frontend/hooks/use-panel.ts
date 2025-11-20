@@ -6,7 +6,7 @@ import {
   FrontendMessage
 } from '../../types/messages'
 import { Checkpoint } from '../../types/messages'
-import { MainViewType } from '../../types/home-view-type'
+import { Mode } from '../../types/home-view-type'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { post_message } from '../utils/post_message'
 import { ItemInPreview } from '@shared/types/file-in-preview'
@@ -69,10 +69,10 @@ export const use_panel = (vscode: any) => {
   >()
   const [has_active_selection, set_has_active_selection] = useState<
     boolean | undefined
-  >()
+>()
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
-  const [main_view_type, set_main_view_type] = useState<MainViewType>()
+  const [mode, set_mode] = useState<Mode>()
   const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
   const [api_prompt_type, set_api_mode] = useState<ApiPromptType>()
   const [chat_input_focus_key, set_chat_input_focus_key] = useState(0)
@@ -123,8 +123,8 @@ export const use_panel = (vscode: any) => {
         set_is_connected(message.connected)
       } else if (message.command == 'VERSION') {
         set_version(message.version)
-      } else if (message.command == 'MAIN_VIEW_TYPE') {
-        set_main_view_type(message.view_type)
+      } else if (message.command == 'MODE') {
+        set_mode(message.mode)
       } else if (message.command == 'WEB_PROMPT_TYPE') {
         set_web_mode(message.mode)
       } else if (message.command == 'API_PROMPT_TYPE') {
@@ -214,7 +214,7 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_INSTRUCTIONS' },
       { command: 'GET_RESPONSE_HISTORY' },
       { command: 'GET_VERSION' },
-      { command: 'GET_MAIN_VIEW_TYPE' },
+      { command: 'GET_MODE' },
       { command: 'GET_WEB_MODE' },
       { command: 'GET_API_MODE' },
       { command: 'GET_CONNECTION_STATUS' },
@@ -280,12 +280,12 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_main_view_type_change = (view_type: MainViewType) => {
-    set_main_view_type(view_type)
+  const handle_mode_change = (mode: Mode) => {
+    set_mode(mode)
     set_chat_input_focus_key((k) => k + 1)
     post_message(vscode, {
-      command: 'SAVE_MAIN_VIEW_TYPE',
-      view_type
+      command: 'SAVE_MODE',
+      mode
     })
   }
 
@@ -354,7 +354,7 @@ export const use_panel = (vscode: any) => {
     has_active_editor,
     has_active_selection,
     code_completions_instructions,
-    main_view_type,
+    mode,
     web_prompt_type,
     api_prompt_type,
     chat_input_focus_key,
@@ -376,7 +376,7 @@ export const use_panel = (vscode: any) => {
     handle_preview_preset,
     handle_web_mode_change,
     handle_api_mode_change,
-    handle_main_view_type_change,
+    handle_mode_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change
   }

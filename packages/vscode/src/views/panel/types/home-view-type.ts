@@ -1,7 +1,7 @@
-export const MAIN_VIEW_TYPES = {
+export const MODE = {
   WEB: 'CHATBOTS',
   API: 'API CALLS'
 }
 
-export type MainViewType =
-  (typeof MAIN_VIEW_TYPES)[keyof typeof MAIN_VIEW_TYPES]
+export type Mode =
+  (typeof MODE)[keyof typeof MODE]
