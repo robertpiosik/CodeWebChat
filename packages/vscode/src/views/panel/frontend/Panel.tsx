@@ -80,7 +80,8 @@ export const Panel = () => {
     handle_api_mode_change,
     handle_mode_change,
     handle_presets_collapsed_change,
-    handle_configurations_collapsed_change
+    handle_configurations_collapsed_change,
+    handle_remove_response_history_item
   } = use_panel(vscode)
 
   if (
@@ -227,6 +228,9 @@ export const Panel = () => {
                 on_selected_history_item_change={
                   set_selected_history_item_created_at
                 }
+                on_response_history_item_remove={
+                  handle_remove_response_history_item
+                }
                 chat_input_focus_and_select_key={
                   chat_input_focus_and_select_key
                 }
@@ -274,6 +278,9 @@ export const Panel = () => {
                 }
                 on_selected_history_item_change={
                   set_selected_history_item_created_at
+                }
+                on_response_history_item_remove={
+                  handle_remove_response_history_item
                 }
                 on_toggle_checkpoint_starred={(timestamp: number) => {
                   post_message(vscode, {

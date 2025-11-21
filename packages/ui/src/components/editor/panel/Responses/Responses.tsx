@@ -10,6 +10,7 @@ dayjs.extend(relativeTime)
 type Props = {
   response_history: ResponseHistoryItem[]
   on_response_history_item_click: (item: ResponseHistoryItem) => void
+  on_response_history_item_remove: (created_at: number) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
 }
@@ -65,6 +66,16 @@ export const Responses: React.FC<Props> = (props) => {
             <span className={styles['responses__item__date']}>
               {dayjs(item.created_at).fromNow()}
             </span>
+            <button
+              className={styles['responses__item__remove']}
+              onClick={(e) => {
+                e.stopPropagation()
+                props.on_response_history_item_remove(item.created_at)
+              }}
+              title="Reject"
+            >
+              <span className="codicon codicon-close" />
+            </button>
           </div>
         </button>
       ))}

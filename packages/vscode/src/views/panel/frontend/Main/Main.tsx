@@ -24,6 +24,7 @@ type Props = {
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
   on_response_history_item_click: (item: ResponseHistoryItem) => void
+  on_response_history_item_remove: (created_at: number) => void
   vscode: any
   on_preset_edit: (preset: Preset) => void
   on_show_home: () => void
@@ -725,6 +726,9 @@ export const Main: React.FC<Props> = (props) => {
       on_response_history_item_click={props.on_response_history_item_click}
       selected_history_item_created_at={props.selected_history_item_created_at}
       on_selected_history_item_change={props.on_selected_history_item_change}
+      on_response_history_item_remove={
+        props.on_response_history_item_remove
+      }
       context_file_paths={props.context_file_paths}
       presets_collapsed={props.presets_collapsed}
       on_presets_collapsed_change={props.on_presets_collapsed_change}

@@ -23,15 +23,24 @@
     gap: var(--padding-4px);
     padding: var(--padding-3px) var(--padding-8px);
     width: 100%;
+    position: relative;
+
+    & .responses__item__remove {
+      visibility: hidden;
+    }
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
+
+      & .responses__item__remove {
+        visibility: visible;
+      }
     }
 
     &--selected {
       background-color: var(--vscode-list-inactiveSelectionBackground);
       &:hover {
-        background-color: var(--vscode-list-inactiveSelectionBackground);
+        background-color: var(--vscode-list-hoverBackground);
       }
     }
 
@@ -68,6 +77,32 @@
       &--removed {
         color: var(--vscode-gitDecoration-deletedResourceForeground);
       }
+    }
+
+    &__remove {
+      position: absolute;
+      display: flex;
+      height: 100%;
+      align-items: center;
+      right: 4px;
+      background: linear-gradient(
+        to left,
+        var(--vscode-list-hoverBackground) 50%,
+        transparent
+      );
+      padding-left: 10px;
+
+      > span {
+        opacity: var(--dimmed-opacity);
+      }
+
+      &:hover > span {
+        opacity: 1;
+      }
+    }
+
+    &:hover &__remove {
+      visibility: visible;
     }
   }
 }

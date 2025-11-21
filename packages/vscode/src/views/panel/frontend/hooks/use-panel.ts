@@ -69,7 +69,7 @@ export const use_panel = (vscode: any) => {
   >()
   const [has_active_selection, set_has_active_selection] = useState<
     boolean | undefined
->()
+  >()
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
   const [mode, set_mode] = useState<Mode>()
@@ -106,6 +106,19 @@ export const use_panel = (vscode: any) => {
       instruction: value,
       mode: mode
     })
+  }
+
+  const handle_remove_response_history_item = (created_at?: number) => {
+    if (created_at) {
+      set_response_history((prev) =>
+        prev.filter((i) => i.created_at != created_at)
+      )
+      post_message(vscode, {
+        command: 'REMOVE_RESPONSE_HISTORY_ITEM',
+        created_at
+      })
+    }
+   
   }
 
   useEffect(() => {
@@ -378,6 +391,7 @@ export const use_panel = (vscode: any) => {
     handle_api_mode_change,
     handle_mode_change,
     handle_presets_collapsed_change,
-    handle_configurations_collapsed_change
+    handle_configurations_collapsed_change,
+    handle_remove_response_history_item
   }
 }

@@ -44,6 +44,9 @@ export const Primary = () => {
         console.log('selection changed', created_at)
         set_selected(created_at)
       }}
+      on_response_history_item_remove={(created_at) => {
+        console.log('remove item', created_at)
+      }}
     />
   )
 }

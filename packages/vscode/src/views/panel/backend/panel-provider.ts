@@ -556,6 +556,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_intelligent_update_file_in_preview(this, message)
           } else if (message.command == 'RESPONSE_PREVIEW') {
             await handle_response_preview(message)
+          } else if (message.command == 'REMOVE_RESPONSE_HISTORY_ITEM') {
+            this.response_history = this.response_history.filter(
+              (item) => item.created_at !== message.created_at
+            )
           } else if (message.command == 'GET_WORKSPACE_STATE') {
             handle_get_workspace_state(this)
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {

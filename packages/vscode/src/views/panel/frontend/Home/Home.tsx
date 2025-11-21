@@ -22,6 +22,7 @@ type Props = {
   on_response_history_item_click: (item: ResponseHistoryItem) => void
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
+  on_response_history_item_remove: (created_at: number) => void
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -68,6 +69,9 @@ export const Home: React.FC<Props> = (props) => {
                   }
                   on_selected_history_item_change={
                     props.on_selected_history_item_change
+                  }
+                  on_response_history_item_remove={
+                    props.on_response_history_item_remove
                   }
                 />{' '}
               </div>
