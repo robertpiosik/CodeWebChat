@@ -130,21 +130,6 @@ export const restore_checkpoint = async (params: {
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
       Date.now()
     )
-
-    if (params.checkpoint.checked_files) {
-      await params.context.workspaceState.update(
-        CONTEXT_CHECKED_PATHS_STATE_KEY,
-        params.checkpoint.checked_files
-      )
-      params.workspace_provider.load_checked_files_state()
-    }
-    if (params.checkpoint.checked_websites) {
-      await params.context.workspaceState.update(
-        CONTEXT_CHECKED_URLS_STATE_KEY,
-        params.checkpoint.checked_websites
-      )
-      params.websites_provider.load_checked_websites_state()
-    }
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -351,6 +336,21 @@ export const restore_checkpoint = async (params: {
           preview: false
         })
       } catch {}
+    }
+
+    if (params.checkpoint.checked_files) {
+      await params.context.workspaceState.update(
+        CONTEXT_CHECKED_PATHS_STATE_KEY,
+        params.checkpoint.checked_files
+      )
+      params.workspace_provider.load_checked_files_state()
+    }
+    if (params.checkpoint.checked_websites) {
+      await params.context.workspaceState.update(
+        CONTEXT_CHECKED_URLS_STATE_KEY,
+        params.checkpoint.checked_websites
+      )
+      params.websites_provider.load_checked_websites_state()
     }
 
     if (
