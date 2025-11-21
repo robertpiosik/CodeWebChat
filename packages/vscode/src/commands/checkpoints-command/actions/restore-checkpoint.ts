@@ -391,9 +391,9 @@ export const restore_checkpoint = async (params: {
           checkpoint: temp_checkpoint,
           workspace_provider: params.workspace_provider,
           context: params.context,
-          options: { skip_confirmation: true },
           panel_provider: params.panel_provider,
-          websites_provider: params.websites_provider
+          websites_provider: params.websites_provider,
+          options: { skip_confirmation: true }
         })
         await delete_checkpoint({
           context: params.context,

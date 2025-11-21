@@ -79,12 +79,12 @@ export async function activate(context: vscode.ExtensionContext) {
         context,
         panel_provider
       ),
-      ...checkpoints_command(
-        workspace_provider,
+      ...checkpoints_command({
         context,
+        workspace_provider,
+        websites_provider,
         panel_provider,
-        websites_provider
-      )
+      })
     )
   }
 

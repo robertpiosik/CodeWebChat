@@ -33,6 +33,7 @@ export const handle_accept_commit_message = async (
       panel_provider.workspace_provider,
       panel_provider.context,
       panel_provider,
+      panel_provider.websites_provider,
       title,
       description
     )

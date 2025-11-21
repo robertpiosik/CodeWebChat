@@ -98,6 +98,7 @@ export const apply_chat_response_command = (
           workspace_provider,
           context,
           panel_provider,
+          panel_provider.websites_provider,
           'Before response previewed',
           args?.raw_instructions
         )

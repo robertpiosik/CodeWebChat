@@ -22,12 +22,12 @@ dayjs.extend(relativeTime)
 
 export type { Checkpoint } from './types'
 
-export const checkpoints_command = (
-  workspace_provider: WorkspaceProvider,
-  context: vscode.ExtensionContext,
-  panel_provider: PanelProvider,
+export const checkpoints_command = (params: {
+  context: vscode.ExtensionContext
+  workspace_provider: WorkspaceProvider
   websites_provider: WebsitesProvider
-): vscode.Disposable[] => {
+  panel_provider: PanelProvider
+}): vscode.Disposable[] => {
   let activeDeleteOperation: {
     finalize: () => Promise<void>
     timestamp: number
@@ -46,10 +46,10 @@ export const checkpoints_command = (
         return
       }
       const checkpoint = await create_checkpoint(
-        workspace_provider,
-        context,
-        panel_provider,
-        websites_provider
+        params.workspace_provider,
+        params.context,
+        params.panel_provider,
+        params.websites_provider
       )
       if (checkpoint) {
         vscode.window.showInformationMessage('Checkpoint created successfully.')
@@ -89,9 +89,9 @@ export const checkpoints_command = (
 
         const refresh_items = async () => {
           quick_pick.busy = true
-          checkpoints = await get_checkpoints(context)
+          checkpoints = await get_checkpoints(params.context)
 
-          const temp_checkpoint = context.workspaceState.get<Checkpoint>(
+          const temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
             TEMPORARY_CHECKPOINT_STATE_KEY
           )
           let revert_item:
@@ -113,7 +113,7 @@ export const checkpoints_command = (
                 }
               } catch {
                 // file doesn't exist, so we can't revert. Clean up state.
-                await context.workspaceState.update(
+                await params.context.workspaceState.update(
                   TEMPORARY_CHECKPOINT_STATE_KEY,
                   undefined
                 )
@@ -189,17 +189,18 @@ export const checkpoints_command = (
           if (selected.id == 'add-new') {
             quick_pick.hide()
             await create_checkpoint(
-              workspace_provider,
-              context,
-              panel_provider,
-              websites_provider
+              params.workspace_provider,
+              params.context,
+              params.panel_provider,
+              params.websites_provider
             )
             await show_quick_pick()
           } else if (selected.id == 'revert-last') {
             quick_pick.hide()
-            const temp_checkpoint = context.workspaceState.get<Checkpoint>(
-              TEMPORARY_CHECKPOINT_STATE_KEY
-            )
+            const temp_checkpoint =
+              params.context.workspaceState.get<Checkpoint>(
+                TEMPORARY_CHECKPOINT_STATE_KEY
+              )
             if (!temp_checkpoint) {
               vscode.window.showErrorMessage(
                 'Could not find temporary checkpoint to revert.'
@@ -209,19 +210,19 @@ export const checkpoints_command = (
 
             await restore_checkpoint({
               checkpoint: temp_checkpoint,
-              workspace_provider,
-              context,
+              workspace_provider: params.workspace_provider,
+              context: params.context,
               options: { skip_confirmation: true },
-              panel_provider,
-              websites_provider
+              panel_provider: params.panel_provider,
+              websites_provider: params.websites_provider
             })
             // After reverting, delete the temp checkpoint and clear state.
             await delete_checkpoint({
-              context,
+              context: params.context,
               checkpoint_to_delete: temp_checkpoint,
-              panel_provider
+              panel_provider: params.panel_provider
             })
-            await context.workspaceState.update(
+            await params.context.workspaceState.update(
               TEMPORARY_CHECKPOINT_STATE_KEY,
               undefined
             )
@@ -229,10 +230,10 @@ export const checkpoints_command = (
             quick_pick.hide()
             await restore_checkpoint({
               checkpoint: selected.checkpoint,
-              workspace_provider,
-              context,
-              panel_provider,
-              websites_provider
+              workspace_provider: params.workspace_provider,
+              context: params.context,
+              panel_provider: params.panel_provider,
+              websites_provider: params.websites_provider
             })
           }
         })
@@ -247,12 +248,12 @@ export const checkpoints_command = (
             )
 
             if (confirmation == 'Clear All') {
-              await clear_all_checkpoints(context, panel_provider)
+              await clear_all_checkpoints(params.context, params.panel_provider)
               vscode.window.showInformationMessage(
                 'All checkpoints have been cleared.'
               )
             }
-            await context.workspaceState.update(
+            await params.context.workspaceState.update(
               TEMPORARY_CHECKPOINT_STATE_KEY,
               undefined
             )
@@ -273,11 +274,11 @@ export const checkpoints_command = (
             )
             if (checkpoint_to_update) {
               checkpoint_to_update.is_starred = !checkpoint_to_update.is_starred
-              await context.workspaceState.update(
+              await params.context.workspaceState.update(
                 CHECKPOINTS_STATE_KEY,
                 checkpoints
               )
-              panel_provider.send_checkpoints()
+              params.panel_provider.send_checkpoints()
             }
             await refresh_items()
             const active_item = quick_pick.items.find(
@@ -306,11 +307,11 @@ export const checkpoints_command = (
               )
               if (checkpoint_to_update) {
                 checkpoint_to_update.description = new_description
-                await context.workspaceState.update(
+                await params.context.workspaceState.update(
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
-                panel_provider.send_checkpoints()
+                params.panel_provider.send_checkpoints()
               }
             }
             await refresh_items()
@@ -346,11 +347,11 @@ export const checkpoints_command = (
             const updated_checkpoints = checkpoints.filter(
               (c) => c.timestamp !== deleted_checkpoint.timestamp
             )
-            await context.workspaceState.update(
+            await params.context.workspaceState.update(
               CHECKPOINTS_STATE_KEY,
               updated_checkpoints
             )
-            panel_provider.send_checkpoints()
+            params.panel_provider.send_checkpoints()
             checkpoints = updated_checkpoints
             await refresh_items()
 
@@ -394,11 +395,11 @@ export const checkpoints_command = (
                   0,
                   original_checkpoint_from_state
                 )
-                await context.workspaceState.update(
+                await params.context.workspaceState.update(
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
-                panel_provider.send_checkpoints()
+                params.panel_provider.send_checkpoints()
                 notification_count++
                 vscode.window
                   .showInformationMessage('Checkpoint restored.')

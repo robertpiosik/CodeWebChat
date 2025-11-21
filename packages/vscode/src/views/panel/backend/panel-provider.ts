@@ -428,7 +428,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
                 checkpoint: checkpoint_to_restore,
                 workspace_provider: this.workspace_provider,
                 context: this.context,
-                panel_provider: this
+                panel_provider: this,
+                websites_provider: this.websites_provider
               })
             }
           } else if (message.command == 'GET_HISTORY') {
