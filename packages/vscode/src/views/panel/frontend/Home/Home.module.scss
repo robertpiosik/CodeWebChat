@@ -84,14 +84,27 @@
 
   &__mode {
     display: flex;
-    gap: var(--padding-8px);
     width: 100%;
     position: relative;
     background-color: var(--vscode-sideBar-background);
     border-radius: var(--border-radius-10px);
+    border: 1px solid var(--vscode-toolbar-hoverBackground);
+    overflow: hidden;
 
     > button {
       flex: 1;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 1px;
+      height: 35px;
+      background-color: var(--vscode-toolbar-hoverBackground);
+      pointer-events: none;
     }
   }
 

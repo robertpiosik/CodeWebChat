@@ -10,6 +10,7 @@
     transform: translateY(0);
   }
 }
+
 .button {
   display: flex;
   align-items: center;
@@ -17,8 +18,6 @@
   flex-direction: column;
   padding: var(--padding-24px) var(--padding-12px) var(--padding-24px)
     var(--padding-12px);
-  border: 1px solid var(--vscode-toolbar-hoverBackground);
-  border-radius: var(--border-radius-10px);
 
   &:hover {
     background-color: var(--vscode-toolbar-hoverBackground);
