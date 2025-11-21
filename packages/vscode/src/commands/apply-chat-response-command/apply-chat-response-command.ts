@@ -24,9 +24,11 @@ let in_progress = false
 let placeholder_created_at_for_update: number | undefined
 
 export const apply_chat_response_command = (
-  context: vscode.ExtensionContext,
-  panel_provider: PanelProvider,
-  workspace_provider: WorkspaceProvider
+  params: {
+    context: vscode.ExtensionContext
+    panel_provider: PanelProvider
+    workspace_provider: WorkspaceProvider
+  }
 ) => {
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
@@ -61,7 +63,7 @@ export const apply_chat_response_command = (
 
       if (response_preview_promise_resolve) {
         // Previewing response...
-        const history = panel_provider.response_history
+        const history = params.panel_provider.response_history
 
         const new_item: ResponseHistoryItem = {
           response: chat_response,
@@ -70,7 +72,7 @@ export const apply_chat_response_command = (
         }
 
         history.push(new_item)
-        panel_provider.send_message({
+        params.panel_provider.send_message({
           command: 'RESPONSE_HISTORY',
           history
         })
@@ -95,10 +97,10 @@ export const apply_chat_response_command = (
       let before_checkpoint: Checkpoint | undefined
       try {
         before_checkpoint = await create_checkpoint(
-          workspace_provider,
-          context,
-          panel_provider,
-          panel_provider.websites_provider,
+          params.workspace_provider,
+          params.context,
+          params.panel_provider,
+          params.panel_provider.websites_provider,
           'Before response previewed',
           args?.raw_instructions
         )
@@ -109,8 +111,8 @@ export const apply_chat_response_command = (
         const review_data = await process_chat_response(
           args,
           chat_response,
-          context,
-          panel_provider
+          params.context,
+          params.panel_provider
         )
 
         if (review_data) {
@@ -179,7 +181,7 @@ export const apply_chat_response_command = (
                 is_checked: true
               })
             }
-            const history = panel_provider.response_history
+            const history = params.panel_provider.response_history
 
             if (placeholder_created_at_for_update) {
               const item_to_update = history.find(
@@ -216,18 +218,18 @@ export const apply_chat_response_command = (
               }
             }
 
-            panel_provider.send_message({
+            params.panel_provider.send_message({
               command: 'RESPONSE_HISTORY',
               history
             })
           }
 
-          const history_for_checkpoint = [...panel_provider.response_history]
+          const history_for_checkpoint = [...params.panel_provider.response_history]
           const changes_accepted = await preview_handler({
             original_states: review_data.original_states,
             chat_response: review_data.chat_response,
-            panel_provider,
-            context,
+            panel_provider: params.panel_provider,
+            context: params.context,
             original_editor_state: args?.original_editor_state,
             raw_instructions: args?.raw_instructions,
             created_at: created_at_for_preview
@@ -236,7 +238,7 @@ export const apply_chat_response_command = (
           if (changes_accepted) {
             if (before_checkpoint) {
               const checkpoints =
-                context.workspaceState.get<Checkpoint[]>(
+                params.context.workspaceState.get<Checkpoint[]>(
                   CHECKPOINTS_STATE_KEY,
                   []
                 ) ?? []
@@ -248,11 +250,11 @@ export const apply_chat_response_command = (
                 checkpoint_to_update.response_history = history_for_checkpoint
                 checkpoint_to_update.response_preview_item_created_at =
                   created_at_for_preview
-                await context.workspaceState.update(
+                await params.context.workspaceState.update(
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
                 )
-                await panel_provider.send_checkpoints()
+                await params.panel_provider.send_checkpoints()
               }
             }
 
@@ -267,8 +269,8 @@ export const apply_chat_response_command = (
         in_progress = false
         if (before_checkpoint) {
           delete_checkpoint({
-            context,
-            panel_provider,
+            context: params.context,
+            panel_provider: params.panel_provider,
             checkpoint_to_delete: before_checkpoint
           })
         }

@@ -1,10 +1,5 @@
 import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
-import {
-  get_git_repository,
-  prepare_staged_changes
-} from './utils/git-repository-utils'
-import { generate_commit_message_from_diff } from './views/panel/backend/message-handlers/handle-commit-changes/utils'
 import { PanelProvider } from './views/panel/backend/panel-provider'
 import { WebSocketManager } from './services/websocket-manager'
 import {
@@ -28,7 +23,8 @@ import {
   delete_command,
   save_context_command,
   reference_in_prompt_command,
-  open_url_command
+  open_url_command,
+  generate_commit_message_command
 } from './commands'
 import { SettingsProvider } from './views/settings/backend/settings-provider'
 
@@ -71,14 +67,18 @@ export async function activate(context: vscode.ExtensionContext) {
           }
         }
       ),
-      reference_in_prompt_command(panel_provider, workspace_provider),
-      apply_chat_response_command(context, panel_provider, workspace_provider),
-      ...code_completion_commands(
-        workspace_provider,
+      reference_in_prompt_command({ panel_provider, workspace_provider }),
+      apply_chat_response_command({
+        context,
+        panel_provider,
+        workspace_provider
+      }),
+      ...code_completion_commands({
+        file_tree_provider: workspace_provider,
         open_editors_provider,
         context,
         panel_provider
-      ),
+      }),
       ...checkpoints_command({
         context,
         workspace_provider,
@@ -115,29 +115,7 @@ export async function activate(context: vscode.ExtensionContext) {
       (section?: string) => {
         settings_provider.createOrShow(section)
       }
-    )
-  )
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'codeWebChat.generateCommitMessage',
-      async (source_control?: vscode.SourceControl) => {
-        const repository = get_git_repository(source_control)
-        if (!repository) return
-
-        const diff = await prepare_staged_changes(repository)
-
-        if (!diff) return
-
-        const commit_message = await generate_commit_message_from_diff({
-          context,
-          repository,
-          diff
-        })
-        if (commit_message) {
-          repository.inputBox.value = commit_message
-        }
-      }
-    )
+    ),
+    generate_commit_message_command(context)
   )
 }

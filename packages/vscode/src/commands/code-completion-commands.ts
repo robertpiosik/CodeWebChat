@@ -485,17 +485,19 @@ const perform_code_completion = async (params: {
 }
 
 export const code_completion_commands = (
-  file_tree_provider: any,
-  open_editors_provider: any,
-  context: vscode.ExtensionContext,
-  panel_provider: PanelProvider
+  params: {
+    file_tree_provider: any
+    open_editors_provider: any
+    context: vscode.ExtensionContext
+    panel_provider: PanelProvider
+  }
 ) => {
   return [
     vscode.commands.registerCommand('codeWebChat.codeCompletion', async () =>
       perform_code_completion({
-        file_tree_provider,
-        open_editors_provider,
-        context,
+        file_tree_provider: params.file_tree_provider,
+        open_editors_provider: params.open_editors_provider,
+        context: params.context,
         with_completion_instructions: false,
         show_quick_pick: false
       })
@@ -504,9 +506,9 @@ export const code_completion_commands = (
       'codeWebChat.codeCompletionWithInstructions',
       async () =>
         perform_code_completion({
-          file_tree_provider,
-          open_editors_provider,
-          context,
+          file_tree_provider: params.file_tree_provider,
+          open_editors_provider: params.open_editors_provider,
+          context: params.context,
           with_completion_instructions: true,
           show_quick_pick: false
         })
@@ -515,24 +517,24 @@ export const code_completion_commands = (
       'codeWebChat.codeCompletionUsing',
       async () =>
         perform_code_completion({
-          file_tree_provider,
-          open_editors_provider,
-          context,
+          file_tree_provider: params.file_tree_provider,
+          open_editors_provider: params.open_editors_provider,
+          context: params.context,
           with_completion_instructions: false,
           show_quick_pick: true,
-          panel_provider
+          panel_provider: params.panel_provider
         })
     ),
     vscode.commands.registerCommand(
       'codeWebChat.codeCompletionWithInstructionsUsing',
       async () =>
         perform_code_completion({
-          file_tree_provider,
-          open_editors_provider,
-          context,
+          file_tree_provider: params.file_tree_provider,
+          open_editors_provider: params.open_editors_provider,
+          context: params.context,
           with_completion_instructions: true,
           show_quick_pick: true,
-          panel_provider
+          panel_provider: params.panel_provider
         })
     )
   ]
