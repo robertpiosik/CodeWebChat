@@ -3,10 +3,6 @@ import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
 import { WebsitesProvider } from '@/context/providers/websites-provider'
-import {
-  ModelProvidersManager,
-  get_tool_config_id
-} from '@/services/model-providers-manager'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
@@ -31,6 +27,7 @@ import {
   handle_replace_presets,
   handle_get_connection_status,
   handle_get_history,
+  handle_apply_response_from_history,
   handle_save_history,
   handle_save_instructions,
   handle_get_instructions,
@@ -46,10 +43,12 @@ import {
   handle_get_mode_api,
   handle_save_mode_api,
   handle_get_mode,
+  handle_get_workspace_state,
   handle_get_version,
   handle_show_prompt_template_quick_pick,
   handle_get_api_tool_configurations,
   handle_reorder_api_tool_configurations,
+  handle_toggle_pinned_api_tool_configuration,
   handle_pick_open_router_model,
   handle_pick_chatbot,
   handle_focus_on_file_in_preview,
@@ -57,6 +56,7 @@ import {
   handle_show_diff,
   handle_toggle_file_in_preview,
   handle_intelligent_update_file_in_preview,
+  handle_response_preview,
   handle_commit_changes,
   handle_accept_commit_message,
   handle_cancel_commit_message,
@@ -93,7 +93,6 @@ import { OriginalFileState } from '@/commands/apply-chat-response-command/types/
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { MODE, Mode } from '../types/home-view-type'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { response_preview_promise_resolve } from '@/commands/apply-chat-response-command/utils/preview'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { CancelTokenSource } from 'axios'
@@ -492,15 +491,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'UNDO') {
             await handle_undo(this)
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
-            await vscode.commands.executeCommand(
-              'codeWebChat.applyChatResponse',
-              {
-                response: message.response,
-                raw_instructions: message.raw_instructions,
-                files_with_content: message.files,
-                created_at: message.created_at
-              }
-            )
+            await handle_apply_response_from_history(message)
           } else if (message.command == 'EXECUTE_COMMAND') {
             await vscode.commands.executeCommand(message.command_id)
           } else if (message.command == 'EDIT_CONTEXT') {
@@ -522,35 +513,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_get_api_tool_configurations(this)
           } else if (message.command == 'REORDER_API_TOOL_CONFIGURATIONS') {
             await handle_reorder_api_tool_configurations(this, message)
-          } else if (
-            message.command == 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
-          ) {
-            const { mode, configuration_id } = message
-            const providers_manager = new ModelProvidersManager(this.context)
-            let configs
-            if (mode === 'edit-context') {
-              configs = await providers_manager.get_edit_context_tool_configs()
-            } else if (mode === 'code-completions') {
-              configs =
-                await providers_manager.get_code_completions_tool_configs()
-            } else {
-              return
-            }
-
-            const config = configs.find(
-              (c) => get_tool_config_id(c) === configuration_id
-            )
-            if (!config) return
-
-            config.is_pinned = !config.is_pinned
-
-            if (mode === 'edit-context') {
-              await providers_manager.save_edit_context_tool_configs(configs)
-            } else if (mode === 'code-completions') {
-              await providers_manager.save_code_completions_tool_configs(
-                configs
-              )
-            }
+          } else if (message.command == 'TOGGLE_PINNED_API_TOOL_CONFIGURATION') {
+            await handle_toggle_pinned_api_tool_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_MODE') {
             await handle_save_mode_web(this, message.mode)
           } else if (message.command == 'GET_API_MODE') {
@@ -591,17 +555,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW') {
             await handle_intelligent_update_file_in_preview(this, message)
           } else if (message.command == 'RESPONSE_PREVIEW') {
-            if (response_preview_promise_resolve) {
-              response_preview_promise_resolve({
-                accepted_files: message.files,
-                created_at: message.created_at
-              })
-            }
+            await handle_response_preview(message)
           } else if (message.command == 'GET_WORKSPACE_STATE') {
-            this.send_message({
-              command: 'WORKSPACE_STATE',
-              folder_count: this.workspace_provider.getWorkspaceRoots().length
-            })
+            handle_get_workspace_state(this)
           } else if (message.command == 'PICK_OPEN_ROUTER_MODEL') {
             await handle_pick_open_router_model(this)
           } else if (message.command == 'PICK_CHATBOT') {

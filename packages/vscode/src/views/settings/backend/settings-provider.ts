@@ -31,6 +31,7 @@ import {
   handle_get_gemini_user_id,
   handle_get_intelligent_update_configurations,
   handle_get_model_providers,
+  handle_get_checkpoint_lifespan,
   handle_rename_model_provider,
   handle_reorder_code_completions_configurations,
   handle_reorder_commit_messages_configurations,
@@ -99,178 +100,123 @@ export class SettingsProvider {
 
     this._webview_panel.webview.onDidReceiveMessage(
       async (message: FrontendMessage) => {
-        switch (message.command) {
-          case 'SETTINGS_UI_READY':
-            if (this._pending_section_to_show) {
-              this.postMessage({
-                command: 'SHOW_SECTION',
-                section: this._pending_section_to_show
-              })
-              this._pending_section_to_show = undefined
-            }
-            break
-          case 'GET_MODEL_PROVIDERS':
-            await handle_get_model_providers(this)
-            break
-          case 'REORDER_MODEL_PROVIDERS':
-            await handle_reorder_model_providers(this, message)
-            break
-          case 'ADD_MODEL_PROVIDER':
-            await handle_add_model_provider(this)
-            break
-          case 'DELETE_MODEL_PROVIDER':
-            await handle_delete_model_provider(this, message)
-            break
-          case 'RENAME_MODEL_PROVIDER':
-            await handle_rename_model_provider(this, message)
-            break
-          case 'CHANGE_MODEL_PROVIDER_KEY':
-            await handle_change_model_provider_key(this, message)
-            break
-          case 'GET_CODE_COMPLETIONS_CONFIGURATIONS':
-            await handle_get_code_completions_configurations(this)
-            break
-          case 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS':
-            await handle_reorder_code_completions_configurations(this, message)
-            break
-          case 'DELETE_CODE_COMPLETIONS_CONFIGURATION':
-            await handle_delete_code_completions_configuration(this, message)
-            break
-          case 'ADD_CODE_COMPLETIONS_CONFIGURATION':
-            await handle_add_code_completions_configuration(this)
-            break
-          case 'EDIT_CODE_COMPLETIONS_CONFIGURATION':
-            await handle_edit_code_completions_configuration(this, message)
-            break
-          case 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION':
-            await handle_set_default_code_completions_configuration(
-              this,
-              message
-            )
-            break
-          case 'GET_EDIT_CONTEXT_CONFIGURATIONS':
-            await handle_get_edit_context_configurations(this)
-            break
-          case 'REORDER_EDIT_CONTEXT_CONFIGURATIONS':
-            await handle_reorder_edit_context_configurations(this, message)
-            break
-          case 'DELETE_EDIT_CONTEXT_CONFIGURATION':
-            await handle_delete_edit_context_configuration(this, message)
-            break
-          case 'ADD_EDIT_CONTEXT_CONFIGURATION':
-            await handle_add_edit_context_configuration(this)
-            break
-          case 'EDIT_EDIT_CONTEXT_CONFIGURATION':
-            await handle_edit_edit_context_configuration(this, message)
-            break
-          case 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS':
-            await handle_get_edit_context_system_instructions(this)
-            break
-          case 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS':
-            await handle_update_edit_context_system_instructions(message)
-            break
-          case 'GET_EDIT_FORMAT_INSTRUCTIONS':
-            await handle_get_edit_format_instructions(this)
-            break
-          case 'UPDATE_EDIT_FORMAT_INSTRUCTIONS':
-            await handle_update_edit_format_instructions(message)
-            break
-          case 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS':
-            await handle_get_intelligent_update_configurations(this)
-            break
-          case 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS':
-            await handle_reorder_intelligent_update_configurations(
-              this,
-              message
-            )
-            break
-          case 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION':
-            await handle_delete_intelligent_update_configuration(this, message)
-            break
-          case 'ADD_INTELLIGENT_UPDATE_CONFIGURATION':
-            await handle_add_intelligent_update_configuration(this)
-
-            break
-          case 'EDIT_INTELLIGENT_UPDATE_CONFIGURATION':
-            await handle_edit_intelligent_update_configuration(this, message)
-            break
-          case 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION':
-            await handle_set_default_intelligent_update_configuration(
-              this,
-              message
-            )
-            break
-          case 'GET_COMMIT_MESSAGES_CONFIGURATIONS':
-            await handle_get_commit_messages_configurations(this)
-            break
-          case 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS':
-            await handle_reorder_commit_messages_configurations(this, message)
-            break
-          case 'DELETE_COMMIT_MESSAGES_CONFIGURATION':
-            await handle_delete_commit_messages_configuration(this, message)
-            break
-          case 'ADD_COMMIT_MESSAGES_CONFIGURATION':
-            await handle_add_commit_messages_configuration(this)
-            break
-          case 'EDIT_COMMIT_MESSAGES_CONFIGURATION':
-            await handle_edit_commit_messages_configuration(this, message)
-            break
-          case 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION':
-            await handle_set_default_commit_messages_configuration(
-              this,
-              message
-            )
-            break
-          case 'GET_COMMIT_MESSAGE_INSTRUCTIONS':
-            await handle_get_commit_message_instructions(this)
-            break
-          case 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS':
-            await handle_update_commit_message_instructions(this, message)
-            break
-          case 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER':
-            await handle_get_commit_message_auto_accept_after(this)
-            break
-          case 'UPDATE_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER':
-            await handle_update_commit_message_auto_accept_after(message)
-            break
-          case 'GET_CONTEXT_SIZE_WARNING_THRESHOLD':
-            await handle_get_context_size_warning_threshold(this)
-            break
-          case 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD':
-            await handle_update_context_size_warning_threshold(this, message)
-            break
-          case 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
-            await handle_get_clear_checks_in_workspace_behavior(this)
-            break
-          case 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
-            await handle_update_clear_checks_in_workspace_behavior(
-              this,
-              message
-            )
-            break
-          case 'GET_GEMINI_USER_ID':
-            await handle_get_gemini_user_id(this)
-            break
-          case 'UPDATE_GEMINI_USER_ID':
-            await handle_update_gemini_user_id(this, message)
-            break
-          case 'GET_CHECKPOINT_LIFESPAN':
-            {
-              const config = vscode.workspace.getConfiguration('codeWebChat')
-              const hours = config.get<number>('checkpointLifespan', 48)
-              this.postMessage({ command: 'CHECKPOINT_LIFESPAN', hours })
-            }
-            break
-          case 'UPDATE_CHECKPOINT_LIFESPAN':
-            if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN')
-              await vscode.workspace.getConfiguration('codeWebChat').update('checkpointLifespan', message.hours, vscode.ConfigurationTarget.Global)
-
-            break
-          case 'OPEN_EDITOR_SETTINGS':
-            await vscode.commands.executeCommand(
-              'workbench.action.openSettings'
-            )
-            break
+        if (message.command == 'SETTINGS_UI_READY') {
+          if (this._pending_section_to_show) {
+            this.postMessage({
+              command: 'SHOW_SECTION',
+              section: this._pending_section_to_show
+            })
+            this._pending_section_to_show = undefined
+          }
+        } else if (message.command == 'GET_MODEL_PROVIDERS') {
+          await handle_get_model_providers(this)
+        } else if (message.command == 'REORDER_MODEL_PROVIDERS') {
+          await handle_reorder_model_providers(this, message)
+        } else if (message.command == 'ADD_MODEL_PROVIDER') {
+          await handle_add_model_provider(this)
+        } else if (message.command == 'DELETE_MODEL_PROVIDER') {
+          await handle_delete_model_provider(this, message)
+        } else if (message.command == 'RENAME_MODEL_PROVIDER') {
+          await handle_rename_model_provider(this, message)
+        } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
+          await handle_change_model_provider_key(this, message)
+        } else if (message.command == 'GET_CODE_COMPLETIONS_CONFIGURATIONS') {
+          await handle_get_code_completions_configurations(this)
+        } else if (message.command == 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS') {
+          await handle_reorder_code_completions_configurations(this, message)
+        } else if (message.command == 'DELETE_CODE_COMPLETIONS_CONFIGURATION') {
+          await handle_delete_code_completions_configuration(this, message)
+        } else if (message.command == 'ADD_CODE_COMPLETIONS_CONFIGURATION') {
+          await handle_add_code_completions_configuration(this)
+        } else if (message.command == 'EDIT_CODE_COMPLETIONS_CONFIGURATION') {
+          await handle_edit_code_completions_configuration(this, message)
+        } else if (message.command == 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION') {
+          await handle_set_default_code_completions_configuration(
+            this,
+            message
+          )
+        } else if (message.command == 'GET_EDIT_CONTEXT_CONFIGURATIONS') {
+          await handle_get_edit_context_configurations(this)
+        } else if (message.command == 'REORDER_EDIT_CONTEXT_CONFIGURATIONS') {
+          await handle_reorder_edit_context_configurations(this, message)
+        } else if (message.command == 'DELETE_EDIT_CONTEXT_CONFIGURATION') {
+          await handle_delete_edit_context_configuration(this, message)
+        } else if (message.command == 'ADD_EDIT_CONTEXT_CONFIGURATION') {
+          await handle_add_edit_context_configuration(this)
+        } else if (message.command == 'EDIT_EDIT_CONTEXT_CONFIGURATION') {
+          await handle_edit_edit_context_configuration(this, message)
+        } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
+          await handle_get_edit_context_system_instructions(this)
+        } else if (message.command == 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
+          await handle_update_edit_context_system_instructions(message)
+        } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
+          await handle_get_edit_format_instructions(this)
+        } else if (message.command == 'UPDATE_EDIT_FORMAT_INSTRUCTIONS') {
+          await handle_update_edit_format_instructions(message)
+        } else if (message.command == 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS') {
+          await handle_get_intelligent_update_configurations(this)
+        } else if (message.command == 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS') {
+          await handle_reorder_intelligent_update_configurations(
+            this,
+            message
+          )
+        } else if (message.command == 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION') {
+          await handle_delete_intelligent_update_configuration(this, message)
+        } else if (message.command == 'ADD_INTELLIGENT_UPDATE_CONFIGURATION') {
+          await handle_add_intelligent_update_configuration(this)
+        } else if (message.command == 'EDIT_INTELLIGENT_UPDATE_CONFIGURATION') {
+          await handle_edit_intelligent_update_configuration(this, message)
+        } else if (message.command == 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION') {
+          await handle_set_default_intelligent_update_configuration(
+            this,
+            message
+          )
+        } else if (message.command == 'GET_COMMIT_MESSAGES_CONFIGURATIONS') {
+          await handle_get_commit_messages_configurations(this)
+        } else if (message.command == 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS') {
+          await handle_reorder_commit_messages_configurations(this, message)
+        } else if (message.command == 'DELETE_COMMIT_MESSAGES_CONFIGURATION') {
+          await handle_delete_commit_messages_configuration(this, message)
+        } else if (message.command == 'ADD_COMMIT_MESSAGES_CONFIGURATION') {
+          await handle_add_commit_messages_configuration(this)
+        } else if (message.command == 'EDIT_COMMIT_MESSAGES_CONFIGURATION') {
+          await handle_edit_commit_messages_configuration(this, message)
+        } else if (message.command == 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION') {
+          await handle_set_default_commit_messages_configuration(
+            this,
+            message
+          )
+        } else if (message.command == 'GET_COMMIT_MESSAGE_INSTRUCTIONS') {
+          await handle_get_commit_message_instructions(this)
+        } else if (message.command == 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS') {
+          await handle_update_commit_message_instructions(this, message)
+        } else if (message.command == 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER') {
+          await handle_get_commit_message_auto_accept_after(this)
+        } else if (message.command == 'UPDATE_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER') {
+          await handle_update_commit_message_auto_accept_after(message)
+        } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
+          await handle_get_context_size_warning_threshold(this)
+        } else if (message.command == 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD') {
+          await handle_update_context_size_warning_threshold(this, message)
+        } else if (message.command == 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
+          await handle_get_clear_checks_in_workspace_behavior(this)
+        } else if (message.command == 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
+          await handle_update_clear_checks_in_workspace_behavior(
+            this,
+            message
+          )
+        } else if (message.command == 'GET_GEMINI_USER_ID') {
+          await handle_get_gemini_user_id(this)
+        } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
+          await handle_update_gemini_user_id(this, message)
+        } else if (message.command == 'GET_CHECKPOINT_LIFESPAN') {
+          await handle_get_checkpoint_lifespan(this)
+        } else if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN') {
+          await vscode.workspace.getConfiguration('codeWebChat').update('checkpointLifespan', message.hours, vscode.ConfigurationTarget.Global)
+        } else if (message.command == 'OPEN_EDITOR_SETTINGS') {
+          await vscode.commands.executeCommand(
+            'workbench.action.openSettings'
+          )
         }
       },
       null,
@@ -291,11 +237,7 @@ export class SettingsProvider {
           void handle_get_commit_message_instructions(this)
           void handle_get_commit_message_auto_accept_after(this)
           void handle_get_clear_checks_in_workspace_behavior(this)
-          {
-            const config = vscode.workspace.getConfiguration('codeWebChat')
-            const hours = config.get<number>('checkpointLifespan', 48)
-            this.postMessage({ command: 'CHECKPOINT_LIFESPAN', hours })
-          }
+          void handle_get_checkpoint_lifespan(this)
           void handle_get_gemini_user_id(this)
         }
       })
