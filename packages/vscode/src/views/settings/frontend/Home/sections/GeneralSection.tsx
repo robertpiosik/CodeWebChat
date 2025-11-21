@@ -109,7 +109,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
           <Item
             title="Checkpoint Lifespan"
-            description="The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted. All are cleared upon system reboot."
+            description="The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted."
             slot={
               <Input
                 type="number"
