@@ -25,6 +25,12 @@
         opacity: 0.3;
       }
     }
+
+    &--selecting {
+      .keyword {
+        pointer-events: none;
+      }
+    }
   }
 }
 

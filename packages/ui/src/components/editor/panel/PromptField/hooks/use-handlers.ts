@@ -25,28 +25,48 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
     switch (el.dataset.type) {
       case 'file-keyword': {
         const path = el.dataset.path
-        return path ? `\`${path}\`` : ''
+        if (!path) return ''
+        const filename = path.split('/').pop() || path
+        if (el.textContent === filename) {
+          return `\`${path}\``
+        }
+        break
       }
       case 'changes-keyword': {
         const branchName = el.dataset.branchName
-        return branchName ? `#Changes:${branchName}` : ''
+        if (!branchName) return ''
+        if (el.textContent === `Diff with ${branchName}`) {
+          return `#Changes:${branchName}`
+        }
+        break
       }
       case 'saved-context-keyword': {
         const contextType = el.dataset.contextType
         const contextName = el.dataset.contextName
-        return contextType && contextName
-          ? `#SavedContext:${contextType} "${contextName}"`
-          : ''
+        if (!contextType || !contextName) return ''
+        if (el.textContent === `Context "${contextName}"`) {
+          return `#SavedContext:${contextType} "${contextName}"`
+        }
+        break
       }
-      case 'selection-keyword':
-        return '#Selection'
+      case 'selection-keyword': {
+        if (el.textContent === 'Selection') {
+          return '#Selection'
+        }
+        break
+      }
       case 'commit-keyword': {
         const repo_name = el.dataset.repoName
         const commit_hash = el.dataset.commitHash
         const commit_message = el.dataset.commitMessage
-        return repo_name && commit_hash && commit_message !== undefined
-          ? `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
-          : ''
+        if (!repo_name || !commit_hash || commit_message === undefined) {
+          return ''
+        }
+        const short_hash = commit_hash.substring(0, 7)
+        if (el.textContent === short_hash) {
+          return `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
+        }
+        break
       }
     }
 
@@ -128,6 +148,173 @@ export const use_handlers = (
         new_value,
         props.context_file_paths ?? []
       )
+    }
+  }
+
+  const apply_keyword_deletion = (start_pos: number, end_pos: number) => {
+    let leading_part = props.value.substring(0, start_pos)
+    let trailing_part = props.value.substring(end_pos)
+
+    // Handle spacing
+    if (leading_part.endsWith(' ')) {
+      leading_part = leading_part.slice(0, -1)
+    } else if (trailing_part.startsWith(' ')) {
+      trailing_part = trailing_part.substring(1)
+    }
+
+    const new_value = leading_part + trailing_part
+    const new_raw_cursor_pos = leading_part.length
+    update_value(new_value, new_raw_cursor_pos)
+  }
+
+  const handle_keyword_deletion_by_click = (keyword_element: HTMLElement) => {
+    const keyword_type = keyword_element.dataset.type
+    switch (keyword_type) {
+      case 'file-keyword': {
+        const file_path = keyword_element.dataset.path
+        if (!file_path || !props.context_file_paths?.includes(file_path)) return
+
+        const search_pattern = `\`${file_path}\``
+        const start_index = props.value.indexOf(search_pattern)
+
+        if (start_index !== -1) {
+          apply_keyword_deletion(
+            start_index,
+            start_index + search_pattern.length
+          )
+        }
+        break
+      }
+      case 'changes-keyword': {
+        const branch_name = keyword_element.dataset.branchName
+        if (!branch_name) return
+
+        const search_pattern = `#Changes:${branch_name}`
+        const start_index = props.value.indexOf(search_pattern)
+
+        if (start_index !== -1) {
+          apply_keyword_deletion(
+            start_index,
+            start_index + search_pattern.length
+          )
+        }
+        break
+      }
+      case 'saved-context-keyword': {
+        const context_type = keyword_element.dataset.contextType
+        const context_name = keyword_element.dataset.contextName
+        if (!context_type || !context_name) return
+
+        const search_pattern = `#SavedContext:${context_type} "${context_name}"`
+        const start_index = props.value.indexOf(search_pattern)
+
+        if (start_index !== -1) {
+          apply_keyword_deletion(
+            start_index,
+            start_index + search_pattern.length
+          )
+        }
+        break
+      }
+      case 'selection-keyword': {
+        const search_pattern = '#Selection'
+        const start_index = props.value.indexOf(search_pattern)
+
+        if (start_index !== -1) {
+          apply_keyword_deletion(
+            start_index,
+            start_index + search_pattern.length
+          )
+        }
+        break
+      }
+      case 'commit-keyword': {
+        const repo_name = keyword_element.dataset.repoName
+        const commit_hash = keyword_element.dataset.commitHash
+        const commit_message = keyword_element.dataset.commitMessage
+        if (!repo_name || !commit_hash || commit_message === undefined) return
+
+        const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
+        const start_index = props.value.indexOf(search_pattern)
+
+        if (start_index !== -1) {
+          apply_keyword_deletion(
+            start_index,
+            start_index + search_pattern.length
+          )
+        }
+        break
+      }
+    }
+  }
+
+  const handle_copy = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed)
+      return
+
+    const range = selection.getRangeAt(0)
+    const input_element = input_ref.current
+    if (!input_element || !input_element.contains(range.startContainer)) return
+
+    e.preventDefault()
+
+    const pre_selection_range = document.createRange()
+    pre_selection_range.selectNodeContents(input_element)
+    pre_selection_range.setEnd(range.startContainer, range.startOffset)
+    const display_start = pre_selection_range.toString().length
+
+    pre_selection_range.setEnd(range.endContainer, range.endOffset)
+    const display_end = pre_selection_range.toString().length
+
+    const raw_start = map_display_pos_to_raw_pos(
+      display_start,
+      props.value,
+      props.context_file_paths ?? []
+    )
+    const raw_end = map_display_pos_to_raw_pos(
+      display_end,
+      props.value,
+      props.context_file_paths ?? []
+    )
+
+    const raw_text_slice = props.value.substring(raw_start, raw_end)
+    e.clipboardData.setData('text/plain', raw_text_slice)
+  }
+
+  const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement
+    const icon_element = target.closest('[data-role="keyword-icon"]')
+    const text_element = target.closest('[data-role="keyword-text"]')
+
+    if (icon_element) {
+      e.preventDefault()
+      e.stopPropagation()
+      const keyword_element = (
+        icon_element as HTMLElement
+      ).closest<HTMLElement>('[data-type]')
+      if (keyword_element) {
+        handle_keyword_deletion_by_click(keyword_element)
+      }
+    } else if (text_element) {
+      // Clicking on file name text should open the file
+      e.preventDefault()
+      e.stopPropagation()
+
+      const file_keyword_element = text_element.closest<HTMLElement>(
+        '[data-type="file-keyword"]'
+      )
+      if (file_keyword_element) {
+        const file_path = file_keyword_element.getAttribute('title')
+        if (file_path && props.on_go_to_file) {
+          props.on_go_to_file(file_path)
+        }
+      }
+
+      // Keep focus on input
+      if (input_ref.current) {
+        input_ref.current.focus()
+      }
     }
   }
 
@@ -499,6 +686,9 @@ export const use_handlers = (
     handle_submit,
     handle_key_down,
     is_history_enabled,
-    handle_clear
+    handle_clear,
+    handle_copy,
+    handle_input_click
   }
 }
+

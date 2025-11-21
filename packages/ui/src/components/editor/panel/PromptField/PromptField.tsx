@@ -1,10 +1,11 @@
-import { useRef, useEffect, useMemo, useState } from 'react'
+import { useRef, useEffect, useMemo, useState, useCallback } from 'react'
 import styles from './PromptField.module.scss'
 import cn from 'classnames'
 import { Icon } from '../../common/Icon'
 import { get_highlighted_text } from './utils/get-highlighted-text'
 import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
+import { use_drag_drop } from './hooks/use-drag-drop'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_narrow_viewport } from '@shared/hooks'
 import { search_paths } from '@shared/utils/search-paths'
@@ -79,6 +80,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [caret_position, set_caret_position] = useState(0)
   const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
+  const [is_text_selecting, set_is_text_selecting] = useState(false)
   const is_narrow_viewport = use_is_narrow_viewport(268)
   const {
     is_dropdown_open,
@@ -92,8 +94,43 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_input_change,
     handle_submit,
     handle_key_down,
-    is_history_enabled
-  } = use_handlers(props, input_ref) // No change to signature, logic moved inside
+    is_history_enabled,
+    handle_copy,
+    handle_input_click
+  } = use_handlers(props, input_ref)
+  const { handle_drag_start, handle_drag_over, handle_drop, handle_drag_end } =
+    use_drag_drop({
+      input_ref,
+      value: props.value,
+      context_file_paths: props.context_file_paths,
+      on_change: props.on_change
+    })
+
+  const mouse_down_pos_ref = useRef<{ x: number; y: number } | null>(null)
+
+  const handle_mouse_down = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    mouse_down_pos_ref.current = { x: e.clientX, y: e.clientY }
+
+    const handle_mouse_move = (move_e: MouseEvent) => {
+      if (mouse_down_pos_ref.current) {
+        const dx = Math.abs(move_e.clientX - mouse_down_pos_ref.current.x)
+        const dy = Math.abs(move_e.clientY - mouse_down_pos_ref.current.y)
+        if (dx >= 1 || dy >= 1) {
+          set_is_text_selecting(true)
+        }
+      }
+    }
+
+    const handle_mouse_up = () => {
+      set_is_text_selecting(false)
+      mouse_down_pos_ref.current = null
+      document.removeEventListener('mousemove', handle_mouse_move)
+      document.removeEventListener('mouseup', handle_mouse_up)
+    }
+
+    document.addEventListener('mousemove', handle_mouse_move)
+    document.addEventListener('mouseup', handle_mouse_up)
+  }, [])
 
   const is_mac = useMemo(() => {
     if (typeof navigator == 'undefined') return false
@@ -264,174 +301,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     is_history_enabled
   ])
 
-  const apply_deletion = (start_pos: number, end_pos: number) => {
-    let leading_part = props.value.substring(0, start_pos)
-    let trailing_part = props.value.substring(end_pos)
-
-    // Handle spacing
-    if (leading_part.endsWith(' ')) {
-      leading_part = leading_part.slice(0, -1)
-    } else if (trailing_part.startsWith(' ')) {
-      trailing_part = trailing_part.substring(1)
-    }
-
-    const new_value = leading_part + trailing_part
-    const new_raw_cursor_pos = leading_part.length
-    props.on_change(new_value)
-
-    setTimeout(() => {
-      if (input_ref.current) {
-        const display_pos = map_raw_pos_to_display_pos(
-          new_raw_cursor_pos,
-          new_value,
-          props.context_file_paths ?? []
-        )
-        set_caret_position_for_div(input_ref.current, display_pos)
-      }
-    }, 0)
-  }
-
-  const handle_keyword_deletion = (clicked_element: HTMLElement) => {
-    const input_element = input_ref.current
-    if (!input_element) return
-
-    // Find the keyword element
-    const keyword_element = clicked_element.closest(
-      `.${styles['keyword']}`
-    ) as HTMLElement
-
-    if (!keyword_element) return
-
-    // Check if it's a file keyword
-    if (keyword_element.classList.contains(styles['keyword--file'])) {
-      const file_path = keyword_element.getAttribute('title')
-      if (!file_path || !props.context_file_paths?.includes(file_path)) return
-
-      // Find this file path in the raw value
-      const search_pattern = `\`${file_path}\``
-      const start_index = props.value.indexOf(search_pattern)
-
-      if (start_index !== -1) {
-        apply_deletion(start_index, start_index + search_pattern.length)
-      }
-    }
-    // Check if it's a changes keyword
-    else if (keyword_element.classList.contains(styles['keyword--changes'])) {
-      const branch_name = keyword_element.dataset.branchName
-      if (!branch_name) return
-
-      const search_pattern = `#Changes:${branch_name}`
-      const start_index = props.value.indexOf(search_pattern)
-
-      if (start_index !== -1) {
-        apply_deletion(start_index, start_index + search_pattern.length)
-      }
-    }
-    // Check if it's a saved context keyword
-    else if (
-      keyword_element.classList.contains(styles['keyword--saved-context'])
-    ) {
-      const context_type = keyword_element.dataset.contextType
-      const context_name = keyword_element.dataset.contextName
-      if (!context_type || !context_name) return
-
-      const search_pattern = `#SavedContext:${context_type} "${context_name}"`
-      const start_index = props.value.indexOf(search_pattern)
-
-      if (start_index !== -1) {
-        apply_deletion(start_index, start_index + search_pattern.length)
-      }
-    }
-    // Check if it's a selection keyword
-    else if (keyword_element.classList.contains(styles['keyword--selection'])) {
-      const search_pattern = '#Selection'
-      const start_index = props.value.indexOf(search_pattern)
-
-      if (start_index !== -1) {
-        apply_deletion(start_index, start_index + search_pattern.length)
-      }
-    }
-    // Check if it's a commit keyword
-    else if (keyword_element.classList.contains(styles['keyword--commit'])) {
-      const repo_name = keyword_element.dataset.repoName
-      const commit_hash = keyword_element.dataset.commitHash
-      const commit_message = keyword_element.dataset.commitMessage
-      if (!repo_name || !commit_hash || commit_message === undefined) return
-
-      const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
-      const start_index = props.value.indexOf(search_pattern)
-
-      if (start_index !== -1) {
-        apply_deletion(start_index, start_index + search_pattern.length)
-      }
-    }
-  }
-
-  const handle_input_click = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement
-    const icon_element = target.closest(`.${styles['keyword__icon']}`)
-    const text_element = target.closest(`.${styles['keyword__text']}`)
-
-    if (icon_element) {
-      e.preventDefault()
-      e.stopPropagation()
-      handle_keyword_deletion(icon_element as HTMLElement)
-    } else if (text_element) {
-      // Clicking on file name text should open the file
-      e.preventDefault()
-      e.stopPropagation()
-
-      const file_keyword_element = text_element.closest<HTMLElement>(
-        `.${styles['keyword--file']}`
-      )
-      if (file_keyword_element) {
-        const file_path = file_keyword_element.getAttribute('title')
-        if (file_path && props.on_go_to_file) {
-          props.on_go_to_file(file_path)
-        }
-      }
-
-      // Keep focus on input
-      if (input_ref.current) {
-        input_ref.current.focus()
-      }
-    }
-  }
-
-  const handle_copy = (e: React.ClipboardEvent<HTMLDivElement>) => {
-    const selection = window.getSelection()
-    if (!selection || selection.rangeCount === 0 || selection.isCollapsed)
-      return
-
-    const range = selection.getRangeAt(0)
-    const input_element = input_ref.current
-    if (!input_element || !input_element.contains(range.startContainer)) return
-
-    e.preventDefault()
-
-    const pre_selection_range = document.createRange()
-    pre_selection_range.selectNodeContents(input_element)
-    pre_selection_range.setEnd(range.startContainer, range.startOffset)
-    const display_start = pre_selection_range.toString().length
-
-    pre_selection_range.setEnd(range.endContainer, range.endOffset)
-    const display_end = pre_selection_range.toString().length
-
-    const raw_start = map_display_pos_to_raw_pos(
-      display_start,
-      props.value,
-      props.context_file_paths ?? []
-    )
-    const raw_end = map_display_pos_to_raw_pos(
-      display_end,
-      props.value,
-      props.context_file_paths ?? []
-    )
-
-    const raw_text_slice = props.value.substring(raw_start, raw_end)
-    e.clipboardData.setData('text/plain', raw_text_slice)
-  }
-
   const has_no_context =
     !props.context_file_paths || props.context_file_paths.length == 0
 
@@ -453,7 +322,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         className={cn(styles.container__inner, {
           [styles['container__inner--disabled']]:
             props.is_in_code_completions_mode &&
-            (props.has_active_selection || !props.has_active_editor)
+            (props.has_active_selection || !props.has_active_editor),
+          [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={(e) => {
           if (e.key == 'f' && (e.ctrlKey || e.metaKey)) {
@@ -489,6 +359,11 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           onKeyDown={handle_key_down}
           onCopy={handle_copy}
           onClick={handle_input_click}
+          onMouseDown={handle_mouse_down}
+          onDragStart={handle_drag_start}
+          onDrop={handle_drop}
+          onDragOver={handle_drag_over}
+          onDragEnd={handle_drag_end}
           className={cn(styles.input, {
             [styles['input-with-tab-hint']]: show_tab_hint,
             [styles['input--empty']]: !props.value

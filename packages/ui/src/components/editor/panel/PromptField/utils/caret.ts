@@ -12,51 +12,63 @@ export const get_caret_position_from_div = (element: HTMLElement): number => {
 
 export const set_caret_position_for_div = (
   element: HTMLElement,
-  position: number
+  position: number,
+  end_position?: number
 ) => {
   const selection = window.getSelection()
   if (!selection) return
   const range = document.createRange()
-  let char_count = 0
-  let found = false
 
-  const find_text_node_and_offset = (node: Node) => {
-    if (found) return
-    if (node.nodeType == Node.TEXT_NODE) {
-      const text_node = node as Text
-      const next_char_count = char_count + text_node.length
-      if (position >= char_count && position <= next_char_count) {
-        range.setStart(node, position - char_count)
-        range.collapse(true)
-        found = true
-      } else {
-        char_count = next_char_count
-      }
-    } else {
-      if (
-        node.nodeType == Node.ELEMENT_NODE &&
-        (node as HTMLElement).getAttribute('contenteditable') == 'false'
-      ) {
-        const text_len = node.textContent?.length ?? 0
-        const next_char_count = char_count + text_len
-        if (position >= char_count && position <= next_char_count) {
-          range.setStartAfter(node)
-          range.collapse(true)
+  const find_boundary = (pos: number, is_start: boolean): boolean => {
+    let char_count = 0
+    let found = false
+
+    const find = (node: Node) => {
+      if (found) return
+      if (node.nodeType == Node.TEXT_NODE) {
+        const text_node = node as Text
+        const next_char_count = char_count + text_node.length
+        if (pos >= char_count && pos <= next_char_count) {
+          if (is_start) range.setStart(node, pos - char_count)
+          else range.setEnd(node, pos - char_count)
           found = true
         } else {
           char_count = next_char_count
         }
-        return // Do not iterate over children
-      }
-      for (let i = 0; i < node.childNodes.length; i++) {
-        find_text_node_and_offset(node.childNodes[i])
-        if (found) break
+      } else {
+        if (
+          node.nodeType == Node.ELEMENT_NODE &&
+          (node as HTMLElement).getAttribute('contenteditable') == 'false'
+        ) {
+          const text_len = node.textContent?.length ?? 0
+          const next_char_count = char_count + text_len
+          if (pos >= char_count && pos <= next_char_count) {
+            if (is_start) range.setStartAfter(node)
+            else range.setEndAfter(node)
+            found = true
+          } else {
+            char_count = next_char_count
+          }
+          return // Do not iterate over children
+        }
+        for (let i = 0; i < node.childNodes.length; i++) {
+          find(node.childNodes[i])
+          if (found) break
+        }
       }
     }
+    find(element)
+    return found
   }
 
-  find_text_node_and_offset(element)
-  if (found) {
+  const startFound = find_boundary(position, true)
+
+  if (startFound) {
+    if (end_position !== undefined && end_position !== position) {
+      find_boundary(end_position, false)
+    } else {
+      range.collapse(true)
+    }
     selection.removeAllRanges()
     selection.addRange(range)
   } else {

@@ -28,13 +28,13 @@ const process_text_part_for_files = (
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--file']
-          )}" contentEditable="false" data-type="file-keyword" data-path="${escape_html(
+          )}" data-type="file-keyword" data-path="${escape_html(
             file_path
           )}" title="${escape_html(file_path)}"><span class="${
             styles['keyword__icon']
-          }"></span><span class="${styles['keyword__text']}">${escape_html(
-            filename
-          )}</span></span>`
+          }" data-role="keyword-icon"></span><span class="${
+            styles['keyword__text']
+          }" data-role="keyword-text">${escape_html(filename)}</span></span>`
         }
         // If not a context file, return with backticks
         return `\`${escape_html(file_path)}\``
@@ -67,11 +67,15 @@ export const get_highlighted_text = (params: {
           return `<span class="${cn(
             styles['keyword'],
             styles['keyword--saved-context']
-          )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
+          )}" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
             context_name
-          )}"><span class="${styles['keyword__icon']}"></span><span class="${
+          )}"><span class="${
+            styles['keyword__icon']
+          }" data-role="keyword-icon"></span><span class="${
             styles['keyword__text']
-          }">Context "${escape_html(context_name)}"</span></span>`
+          }" data-role="keyword-text">Context "${escape_html(
+            context_name
+          )}"</span></span>`
         }
         return process_text_part_for_files(part, params.context_file_paths)
       })
@@ -94,18 +98,24 @@ export const get_highlighted_text = (params: {
         const title = !params.has_active_selection
           ? 'Missing text selection'
           : ''
-        return `<span class="${className}" contentEditable="false" data-type="selection-keyword" title="${title}"><span class="${styles['keyword__icon']}"></span><span class="${styles['keyword__text']}">Selection</span></span>`
+        return `<span class="${className}" data-type="selection-keyword" title="${title}"><span class="${
+          styles['keyword__icon']
+        }" data-role="keyword-icon"></span><span class="${
+          styles['keyword__text']
+        }" data-role="keyword-text">Selection</span></span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
         const branch_name = part.substring('#Changes:'.length)
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--changes']
-        )}" contentEditable="false" data-type="changes-keyword" data-branch-name="${escape_html(
+        )}" data-type="changes-keyword" data-branch-name="${escape_html(
           branch_name
-        )}"><span class="${styles['keyword__icon']}"></span><span class="${
+        )}"><span class="${
+          styles['keyword__icon']
+        }" data-role="keyword-icon"></span><span class="${
           styles['keyword__text']
-        }">Diff with ${escape_html(branch_name)}</span></span>`
+        }" data-role="keyword-text">Diff with ${escape_html(branch_name)}</span></span>`
       }
       const saved_context_match = part.match(
         /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
@@ -116,11 +126,13 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--saved-context']
-        )}" contentEditable="false" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
+        )}" data-type="saved-context-keyword" data-context-type="${context_type}" data-context-name="${escape_html(
           context_name
-        )}"><span class="${styles['keyword__icon']}"></span><span class="${
+        )}"><span class="${
+          styles['keyword__icon']
+        }" data-role="keyword-icon"></span><span class="${
           styles['keyword__text']
-        }">Context "${escape_html(context_name)}"</span></span>`
+        }" data-role="keyword-text">Context "${escape_html(context_name)}"</span></span>`
       }
       const commit_match = part.match(/^#Commit:([^:]+):([^\s"]+)\s+"([^"]*)"$/)
       if (part && commit_match) {
@@ -131,7 +143,7 @@ export const get_highlighted_text = (params: {
         return `<span class="${cn(
           styles['keyword'],
           styles['keyword--commit']
-        )}" contentEditable="false" data-type="commit-keyword" data-repo-name="${escape_html(
+        )}" data-type="commit-keyword" data-repo-name="${escape_html(
           repo_name
         )}" data-commit-hash="${escape_html(
           commit_hash
@@ -139,9 +151,9 @@ export const get_highlighted_text = (params: {
           commit_message
         )}" title="${escape_html(commit_message)}"><span class="${
           styles['keyword__icon']
-        }"></span><span class="${styles['keyword__text']}">${escape_html(
-          short_hash
-        )}</span></span>`
+        }" data-role="keyword-icon"></span><span class="${
+          styles['keyword__text']
+        }" data-role="keyword-text">${escape_html(short_hash)}</span></span>`
       }
 
       return process_text_part_for_files(part, params.context_file_paths)
