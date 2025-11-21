@@ -48,45 +48,43 @@ export async function activate(context: vscode.ExtensionContext) {
 
   await migrations()
 
-  if (workspace_provider && open_editors_provider && websites_provider) {
-    const panel_provider = new PanelProvider(
-      context.extensionUri,
-      workspace_provider,
-      open_editors_provider,
-      websites_provider,
-      context,
-      websocket_server_instance
-    )
-    context.subscriptions.push(
-      vscode.window.registerWebviewViewProvider(
-        'codeWebChatView',
-        panel_provider,
-        {
-          webviewOptions: {
-            retainContextWhenHidden: true
-          }
+  const panel_provider = new PanelProvider(
+    context.extensionUri,
+    workspace_provider,
+    open_editors_provider,
+    websites_provider,
+    context,
+    websocket_server_instance
+  )
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(
+      'codeWebChatView',
+      panel_provider,
+      {
+        webviewOptions: {
+          retainContextWhenHidden: true
         }
-      ),
-      reference_in_prompt_command({ panel_provider, workspace_provider }),
-      apply_chat_response_command({
-        context,
-        panel_provider,
-        workspace_provider
-      }),
-      ...code_completion_commands({
-        file_tree_provider: workspace_provider,
-        open_editors_provider,
-        context,
-        panel_provider
-      }),
-      ...checkpoints_command({
-        context,
-        workspace_provider,
-        websites_provider,
-        panel_provider,
-      })
-    )
-  }
+      }
+    ),
+    reference_in_prompt_command({ panel_provider, workspace_provider }),
+    apply_chat_response_command({
+      context,
+      panel_provider,
+      workspace_provider,
+    }),
+    ...code_completion_commands({
+      file_tree_provider: workspace_provider,
+      open_editors_provider,
+      context,
+      panel_provider
+    }),
+    ...checkpoints_command({
+      context,
+      workspace_provider,
+      websites_provider,
+      panel_provider,
+    })
+  )
 
   const settings_provider = new SettingsProvider(context.extensionUri, context)
 
