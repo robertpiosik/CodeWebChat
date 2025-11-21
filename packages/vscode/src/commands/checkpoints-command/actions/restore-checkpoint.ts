@@ -354,7 +354,7 @@ export const restore_checkpoint = async (params: {
     }
 
     if (
-      params.checkpoint.title == 'Accepted response preview' &&
+      params.checkpoint.title == 'Before response accepted' &&
       params.checkpoint.response_preview_item_created_at &&
       params.checkpoint.response_history
     ) {
