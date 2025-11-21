@@ -16,6 +16,7 @@ import {
 } from './actions'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from './utils'
+import { WebsitesProvider } from '@/context/providers/websites-provider'
 
 dayjs.extend(relativeTime)
 
@@ -24,7 +25,8 @@ export type { Checkpoint } from './types'
 export const checkpoints_command = (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext,
-  panel_provider: PanelProvider
+  panel_provider: PanelProvider,
+  websites_provider: WebsitesProvider
 ): vscode.Disposable[] => {
   let activeDeleteOperation: {
     finalize: () => Promise<void>
@@ -46,7 +48,8 @@ export const checkpoints_command = (
       const checkpoint = await create_checkpoint(
         workspace_provider,
         context,
-        panel_provider
+        panel_provider,
+        websites_provider
       )
       if (checkpoint) {
         vscode.window.showInformationMessage('Checkpoint created successfully.')
@@ -185,7 +188,12 @@ export const checkpoints_command = (
 
           if (selected.id == 'add-new') {
             quick_pick.hide()
-            await create_checkpoint(workspace_provider, context, panel_provider)
+            await create_checkpoint(
+              workspace_provider,
+              context,
+              panel_provider,
+              websites_provider
+            )
             await show_quick_pick()
           } else if (selected.id == 'revert-last') {
             quick_pick.hide()
@@ -204,7 +212,8 @@ export const checkpoints_command = (
               workspace_provider,
               context,
               options: { skip_confirmation: true },
-              panel_provider
+              panel_provider,
+              websites_provider
             })
             // After reverting, delete the temp checkpoint and clear state.
             await delete_checkpoint({
@@ -222,7 +231,8 @@ export const checkpoints_command = (
               checkpoint: selected.checkpoint,
               workspace_provider,
               context,
-              panel_provider
+              panel_provider,
+              websites_provider
             })
           }
         })

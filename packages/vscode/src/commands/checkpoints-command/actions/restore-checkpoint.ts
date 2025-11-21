@@ -2,8 +2,13 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as os from 'os'
 import { execSync } from 'child_process'
-import { TEMPORARY_CHECKPOINT_STATE_KEY, CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY } from '../../../constants/state-keys'
-import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import {
+  TEMPORARY_CHECKPOINT_STATE_KEY,
+  CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+  CONTEXT_CHECKED_PATHS_STATE_KEY,
+  CONTEXT_CHECKED_URLS_STATE_KEY
+} from '@/constants/state-keys'
+import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import type { Checkpoint } from '../types'
 import { create_checkpoint } from './create-checkpoint'
 import { create_temporary_checkpoint } from './create-temporary-checkpoint'
@@ -16,12 +21,14 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
 import { ongoing_review_cleanup_promise } from '../../apply-chat-response-command/utils/preview-handler'
 import { dictionary } from '@shared/constants/dictionary'
+import { WebsitesProvider } from '@/context/providers/websites-provider'
 
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
   workspace_provider: WorkspaceProvider
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
+  websites_provider: WebsitesProvider
   options?: { skip_confirmation?: boolean }
 }) => {
   const operation_in_progress = params.context.workspaceState.get<number>(
@@ -73,7 +80,8 @@ export const restore_checkpoint = async (params: {
           params.workspace_provider,
           params.context,
           params.panel_provider,
-          'Before checkpoint restored'
+          params.websites_provider,
+          'Before checkpoint restored',
         )
       }
 
@@ -98,7 +106,8 @@ export const restore_checkpoint = async (params: {
       }
 
       temp_checkpoint = await create_temporary_checkpoint(
-        params.workspace_provider
+        params.workspace_provider,
+        params.websites_provider
       )
       await params.context.workspaceState.update(
         TEMPORARY_CHECKPOINT_STATE_KEY,
@@ -121,6 +130,21 @@ export const restore_checkpoint = async (params: {
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
       Date.now()
     )
+
+    if (params.checkpoint.checked_files) {
+      await params.context.workspaceState.update(
+        CONTEXT_CHECKED_PATHS_STATE_KEY,
+        params.checkpoint.checked_files
+      )
+      params.workspace_provider.load_checked_files_state()
+    }
+    if (params.checkpoint.checked_websites) {
+      await params.context.workspaceState.update(
+        CONTEXT_CHECKED_URLS_STATE_KEY,
+        params.checkpoint.checked_websites
+      )
+      params.websites_provider.load_checked_websites_state()
+    }
     await vscode.window.withProgress(
       {
         location: vscode.ProgressLocation.Notification,
@@ -368,7 +392,8 @@ export const restore_checkpoint = async (params: {
           workspace_provider: params.workspace_provider,
           context: params.context,
           options: { skip_confirmation: true },
-          panel_provider: params.panel_provider
+          panel_provider: params.panel_provider,
+          websites_provider: params.websites_provider
         })
         await delete_checkpoint({
           context: params.context,

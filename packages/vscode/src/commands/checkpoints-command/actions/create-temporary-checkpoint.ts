@@ -9,9 +9,11 @@ import {
 } from '../utils/git-utils'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
+import { WebsitesProvider } from '@/context/providers/websites-provider'
 
 export const create_temporary_checkpoint = async (
-  workspace_provider: WorkspaceProvider
+  workspace_provider: WorkspaceProvider,
+  websites_provider: WebsitesProvider
 ): Promise<Checkpoint> => {
   await vscode.workspace.saveAll()
   const timestamp = Date.now()
@@ -98,7 +100,11 @@ export const create_temporary_checkpoint = async (
     title: '',
     is_temporary: true,
     uses_git,
-    git_data: Object.keys(git_data).length > 0 ? git_data : undefined
+    git_data: Object.keys(git_data).length > 0 ? git_data : undefined,
+    checked_files: workspace_provider.get_all_checked_paths(),
+    checked_websites: websites_provider
+      .get_checked_websites()
+      .map((w) => w.url)
   }
   return new_checkpoint
 }

@@ -21,6 +21,7 @@ import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
+import { WebsitesProvider } from '@/context/providers/websites-provider'
 
 const remove_old_checkpoints = async (
   checkpoints: Checkpoint[]
@@ -72,6 +73,7 @@ export const create_checkpoint = async (
   workspace_provider: WorkspaceProvider,
   context: vscode.ExtensionContext,
   panel_provider: PanelProvider,
+  websites_provider: WebsitesProvider,
   title: string = 'Created by user',
   description?: string
 ): Promise<Checkpoint | undefined> => {
@@ -221,7 +223,11 @@ export const create_checkpoint = async (
         timestamp,
         description: final_description,
         uses_git,
-        git_data: Object.keys(git_data).length > 0 ? git_data : undefined
+        git_data: Object.keys(git_data).length > 0 ? git_data : undefined,
+        checked_files: workspace_provider.get_all_checked_paths(),
+        checked_websites: websites_provider
+          .get_checked_websites()
+          .map((w) => w.url)
       }
 
       checkpoints.unshift(checkpoint_object)
