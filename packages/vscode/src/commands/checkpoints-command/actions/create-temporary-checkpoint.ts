@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
-import type { Checkpoint } from '../types'
+import type { Checkpoint, CheckpointTab } from '../types'
 import { copy_optimised_recursively, get_checkpoint_path } from '../utils'
 import {
   get_git_diff,
@@ -95,6 +95,21 @@ export const create_temporary_checkpoint = async (
     }
   }
 
+  const active_tabs: CheckpointTab[] = []
+  const tab_groups = vscode.window.tabGroups.all
+  for (const group of tab_groups) {
+    for (const tab of group.tabs) {
+      if (tab.input instanceof vscode.TabInputText) {
+        active_tabs.push({
+          uri: (tab.input as vscode.TabInputText).uri.toString(),
+          view_column: group.viewColumn,
+          is_active: tab.isActive,
+          is_group_active: group.isActive
+        })
+      }
+    }
+  }
+
   const new_checkpoint: Checkpoint = {
     timestamp,
     title: '',
@@ -104,7 +119,8 @@ export const create_temporary_checkpoint = async (
     checked_files: workspace_provider.get_all_checked_paths(),
     checked_websites: websites_provider
       .get_checked_websites()
-      .map((w) => w.url)
+      .map((w) => w.url),
+    active_tabs
   }
   return new_checkpoint
 }

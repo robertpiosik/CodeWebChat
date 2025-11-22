@@ -6,6 +6,13 @@ export interface GitCheckpointData {
   folder_name: string
 }
 
+export interface CheckpointTab {
+  uri: string
+  view_column: number
+  is_active: boolean
+  is_group_active: boolean
+}
+
 export interface Checkpoint {
   timestamp: number
   title: string
@@ -18,4 +25,5 @@ export interface Checkpoint {
   response_preview_item_created_at?: number
   checked_files?: string[]
   checked_websites?: string[]
+  active_tabs?: CheckpointTab[]
 }

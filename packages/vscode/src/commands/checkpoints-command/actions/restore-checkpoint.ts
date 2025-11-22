@@ -34,33 +34,40 @@ export const restore_checkpoint = async (params: {
   const operation_in_progress = params.context.workspaceState.get<number>(
     CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
   )
-  if (
-    operation_in_progress &&
-    Date.now() - operation_in_progress < 60 * 1000
-  ) {
+  if (operation_in_progress && Date.now() - operation_in_progress < 60 * 1000) {
     vscode.window.showWarningMessage(
       dictionary.warning_message.CHECKPOINT_OPERATION_IN_PROGRESS
     )
     return
   }
 
-  const tab_groups = vscode.window.tabGroups.all
-  const open_files: {
+  let open_files: {
     uri: vscode.Uri
     viewColumn: vscode.ViewColumn
     isActive: boolean
   }[] = []
-  for (const group of tab_groups) {
-    for (const tab of group.tabs) {
-      if (tab.input instanceof vscode.TabInputText) {
-        open_files.push({
-          uri: (tab.input as vscode.TabInputText).uri,
-          viewColumn: group.viewColumn,
-          isActive: tab.isActive && group.isActive
-        })
+
+  if (params.checkpoint.active_tabs) {
+    open_files = params.checkpoint.active_tabs.map((tab) => ({
+      uri: vscode.Uri.parse(tab.uri),
+      viewColumn: tab.view_column as vscode.ViewColumn,
+      isActive: tab.is_active && tab.is_group_active
+    }))
+  } else {
+    const tab_groups = vscode.window.tabGroups.all
+    for (const group of tab_groups) {
+      for (const tab of group.tabs) {
+        if (tab.input instanceof vscode.TabInputText) {
+          open_files.push({
+            uri: (tab.input as vscode.TabInputText).uri,
+            viewColumn: group.viewColumn,
+            isActive: tab.isActive && group.isActive
+          })
+        }
       }
     }
   }
+
   let temp_checkpoint: Checkpoint | undefined
   try {
     if (response_preview_promise_resolve) {
@@ -81,7 +88,7 @@ export const restore_checkpoint = async (params: {
           params.context,
           params.panel_provider,
           params.websites_provider,
-          'Before checkpoint restored',
+          'Before checkpoint restored'
         )
       }
 
@@ -429,4 +436,3 @@ export const restore_checkpoint = async (params: {
     }
   }
 }
-

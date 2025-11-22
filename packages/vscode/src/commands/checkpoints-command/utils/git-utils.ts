@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
-import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 export interface GitInfo {
   branch: string

@@ -5,7 +5,7 @@ import {
   CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
 } from '../../../constants/state-keys'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
-import type { Checkpoint } from '../types'
+import type { Checkpoint, CheckpointTab } from '../types'
 import { get_checkpoints } from './get-checkpoints'
 import {
   copy_optimised_recursively,
@@ -218,6 +218,21 @@ export const create_checkpoint = async (
         checkpoints
       )
 
+      const active_tabs: CheckpointTab[] = []
+      const tab_groups = vscode.window.tabGroups.all
+      for (const group of tab_groups) {
+        for (const tab of group.tabs) {
+          if (tab.input instanceof vscode.TabInputText) {
+            active_tabs.push({
+              uri: (tab.input as vscode.TabInputText).uri.toString(),
+              view_column: group.viewColumn,
+              is_active: tab.isActive,
+              is_group_active: group.isActive
+            })
+          }
+        }
+      }
+
       const checkpoint_object: Checkpoint = {
         title,
         timestamp,
@@ -227,7 +242,8 @@ export const create_checkpoint = async (
         checked_files: workspace_provider.get_all_checked_paths(),
         checked_websites: websites_provider
           .get_checked_websites()
-          .map((w) => w.url)
+          .map((w) => w.url),
+        active_tabs
       }
 
       checkpoints.unshift(checkpoint_object)
