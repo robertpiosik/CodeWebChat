@@ -243,6 +243,31 @@ export const parse_multiple_files = (params: {
           current_text_block += line + '\n'
         }
       } else {
+        // Check if this line is a plain file path followed by a code block
+        if (!last_seen_file_path_comment) {
+          const trimmed = line.trim()
+          // Check if it looks like a file path and if the next non-empty line is a code block
+          if (
+            trimmed &&
+            (trimmed.includes('/') || trimmed.includes('\\') || trimmed.includes('.')) &&
+            !trimmed.endsWith('.') &&
+            /^[a-zA-Z0-9_./@-]+$/.test(trimmed)
+          ) {
+            let is_followed_by_code_block = false
+            for (let j = i + 1; j < lines.length; j++) {
+              const next_line = lines[j].trim()
+              if (next_line.startsWith('```')) {
+                is_followed_by_code_block = true
+                break
+              } else if (next_line !== '') {
+                break
+              }
+            }
+            if (is_followed_by_code_block) {
+              last_seen_file_path_comment = trimmed
+            }
+          }
+        }
         if (!last_seen_file_path_comment) {
           current_text_block += line + '\n'
         }
