@@ -96,7 +96,7 @@
       }
     }
 
-    &__remove-wrapper {
+    &__remove {
       position: absolute;
       display: flex;
       height: 100%;
@@ -108,17 +108,17 @@
         transparent
       );
       padding-left: 10px;
-    }
 
-    &__remove {
-      display: flex;
+      &__button {
+        display: flex;
 
-      > span {
-        opacity: var(--dimmed-opacity);
-      }
+        > span {
+          opacity: var(--dimmed-opacity);
+        }
 
-      &:hover > span {
-        opacity: 1;
+        &:hover > span {
+          opacity: 1;
+        }
       }
     }
 

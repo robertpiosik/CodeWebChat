@@ -110,9 +110,9 @@ export const Responses: React.FC<Props> = (props) => {
               </span>
             </div>
           </div>
-          <div className={styles['responses__item__remove-wrapper']}>
+          <div className={styles['responses__item__remove']}>
             <button
-              className={styles['responses__item__remove']}
+              className={styles['responses__item__remove__button']}
               onClick={() => {
                 props.on_response_history_item_remove(item.created_at)
               }}
