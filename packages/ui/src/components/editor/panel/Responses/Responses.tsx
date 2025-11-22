@@ -35,7 +35,7 @@ export const Responses: React.FC<Props> = (props) => {
   return (
     <div className={styles.responses}>
       {props.response_history.map((item) => (
-        <button
+        <div
           key={item.created_at}
           className={cn(styles['responses__item'], {
             [styles['responses__item--selected']]:
@@ -43,49 +43,77 @@ export const Responses: React.FC<Props> = (props) => {
               props.selected_history_item_created_at == item.created_at
           })}
           title={item.raw_instructions}
-          onClick={() => {
-            props.on_response_history_item_click(item)
-            props.on_selected_history_item_change(item.created_at)
-          }}
         >
-          <div className={styles.responses__item__instructions}>
-            {item.lines_added === undefined &&
-              item.lines_removed === undefined && (
+          <div
+            role="button"
+            tabIndex={0}
+            className={styles.responses__item__content}
+            onClick={() => {
+              props.on_response_history_item_click(item)
+              props.on_selected_history_item_change(item.created_at)
+            }}
+            onKeyDown={(e) => {
+              if (e.key == 'Enter') {
+                e.preventDefault()
+                props.on_response_history_item_click(item)
+                props.on_selected_history_item_change(item.created_at)
+              }
+            }}
+          >
+            <div className={styles.responses__item__content__instructions}>
+              {item.lines_added === undefined &&
+                item.lines_removed === undefined && (
+                  <span
+                    className={`codicon codicon-circle-filled ${styles['responses__item__content__instructions__new-indicator']}`}
+                  />
+                )}
+              {item.raw_instructions ? (
+                <span>{item.raw_instructions}</span>
+              ) : (
                 <span
-                  className={`codicon codicon-circle-filled ${styles['responses__item__instructions__new-indicator']}`}
-                />
+                  className={
+                    styles[
+                      'responses__item__content__instructions__manual-entry'
+                    ]
+                  }
+                >
+                  Added manually
+                </span>
               )}
-            {item.raw_instructions ? (
-              <span>{item.raw_instructions}</span>
-            ) : (
-              <span
-                className={
-                  styles['responses__item__instructions__manual-entry']
-                }
-              >
-                Added manually
+            </div>
+            <div className={styles['responses__item__content__right']}>
+              {item.lines_added !== undefined &&
+                item.lines_removed !== undefined && (
+                  <div
+                    className={styles['responses__item__content__right__stats']}
+                  >
+                    <span
+                      className={
+                        styles['responses__item__content__right__stats__added']
+                      }
+                    >
+                      +{item.lines_added}
+                    </span>
+                    <span
+                      className={
+                        styles[
+                          'responses__item__content__right__stats__removed'
+                        ]
+                      }
+                    >
+                      -{item.lines_removed}
+                    </span>
+                  </div>
+                )}
+              <span className={styles['responses__item__content__right__date']}>
+                {dayjs(item.created_at).fromNow()}
               </span>
-            )}
+            </div>
           </div>
-          <div className={styles['responses__item__right']}>
-            {item.lines_added !== undefined &&
-              item.lines_removed !== undefined && (
-                <div className={styles['responses__item__stats']}>
-                  <span className={styles['responses__item__stats--added']}>
-                    +{item.lines_added}
-                  </span>
-                  <span className={styles['responses__item__stats--removed']}>
-                    -{item.lines_removed}
-                  </span>
-                </div>
-              )}
-            <span className={styles['responses__item__date']}>
-              {dayjs(item.created_at).fromNow()}
-            </span>
+          <div className={styles['responses__item__remove-wrapper']}>
             <button
               className={styles['responses__item__remove']}
-              onClick={(e) => {
-                e.stopPropagation()
+              onClick={() => {
                 props.on_response_history_item_remove(item.created_at)
               }}
               title="Reject"
@@ -93,7 +121,7 @@ export const Responses: React.FC<Props> = (props) => {
               <span className="codicon codicon-close" />
             </button>
           </div>
-        </button>
+        </div>
       ))}
     </div>
   )

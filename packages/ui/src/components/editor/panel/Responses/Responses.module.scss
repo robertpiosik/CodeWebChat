@@ -18,21 +18,17 @@
 
   &__item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
-    padding: 3px 8px;
-    width: 100%;
     position: relative;
+    width: 100%;
 
-    & .responses__item__remove {
+    & .responses__item__remove-wrapper {
       visibility: hidden;
     }
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
 
-      & .responses__item__remove {
+      & .responses__item__remove-wrapper {
         visibility: visible;
       }
     }
@@ -44,53 +40,63 @@
       }
     }
 
-    &__instructions {
-      text-align: left;
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      &__new-indicator {
-        transform: translateY(2px);
-        margin-left: -2px;
-        font-size: 12px !important;
-      }
-
-      &__manual-entry {
-        font-style: italic;
-        padding-right: 1px;
-      }
-    }
-
-    &__right {
+    &__content {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 4px;
-      flex-shrink: 0;
-      font-size: 11px;
-    }
+      padding: 3px 8px;
+      width: 100%;
+      cursor: pointer;
 
-    &__date {
-      flex-shrink: 0;
-      color: var(--vscode-descriptionForeground);
-    }
+      &__instructions {
+        text-align: left;
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
-    &__stats {
-      display: flex;
-      gap: 2px;
-      flex-shrink: 0;
+        &__new-indicator {
+          transform: translateY(2px);
+          margin-left: -2px;
+          font-size: 12px !important;
+        }
 
-      &--added {
-        color: var(--vscode-gitDecoration-addedResourceForeground);
+        &__manual-entry {
+          font-style: italic;
+          padding-right: 1px;
+        }
       }
 
-      &--removed {
-        color: var(--vscode-gitDecoration-deletedResourceForeground);
+      &__right {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+        font-size: 11px;
+
+        &__date {
+          flex-shrink: 0;
+          color: var(--vscode-descriptionForeground);
+        }
+
+        &__stats {
+          display: flex;
+          gap: 2px;
+          flex-shrink: 0;
+
+          &__added {
+            color: var(--vscode-gitDecoration-addedResourceForeground);
+          }
+
+          &__removed {
+            color: var(--vscode-gitDecoration-deletedResourceForeground);
+          }
+        }
       }
     }
 
-    &__remove {
+    &__remove-wrapper {
       position: absolute;
       display: flex;
       height: 100%;
@@ -98,10 +104,14 @@
       right: 4px;
       background: linear-gradient(
         to left,
-        var(--vscode-list-hoverBackground) 50%,
+        var(--vscode-list-hoverBackground) 56%,
         transparent
       );
       padding-left: 10px;
+    }
+
+    &__remove {
+      display: flex;
 
       > span {
         opacity: var(--dimmed-opacity);
@@ -112,7 +122,7 @@
       }
     }
 
-    &:hover &__remove {
+    &:hover &__remove-wrapper {
       visibility: visible;
     }
   }
