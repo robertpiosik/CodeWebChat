@@ -74,7 +74,11 @@ export const parse_multiple_files = (params: {
         }
 
         if (current_text_block.trim()) {
-          results.push({ type: 'text', content: current_text_block })
+          const content =
+            results.length == 0
+              ? current_text_block.trim()
+              : current_text_block.trimEnd()
+          results.push({ type: 'text', content })
         }
         current_text_block = ''
 
@@ -232,7 +236,11 @@ export const parse_multiple_files = (params: {
 
       if (extracted_filename) {
         if (current_text_block.trim()) {
-          results.push({ type: 'text', content: current_text_block.trim() })
+          const content =
+            results.length == 0
+              ? current_text_block.trim()
+              : current_text_block.trimEnd()
+          results.push({ type: 'text', content })
         }
         current_text_block = ''
         last_seen_file_path_comment = extracted_filename
@@ -421,13 +429,7 @@ export const parse_multiple_files = (params: {
             '```'
           ].join('\n')
 
-          const last_result =
-            results.length > 0 ? results[results.length - 1] : null
-          if (last_result && last_result.type == 'text') {
-            last_result.content += raw_code_block
-          } else {
-            results.push({ type: 'text', content: raw_code_block })
-          }
+          results.push({ type: 'text', content: raw_code_block })
         }
 
         current_file_name = ''
@@ -667,15 +669,31 @@ export const parse_multiple_files = (params: {
       }
     }
   } else if (state == 'TEXT' && current_text_block.trim()) {
-    results.push({ type: 'text', content: current_text_block.trim() })
+    const content =
+      results.length == 0
+        ? current_text_block.trim()
+        : current_text_block.trimEnd()
+    results.push({ type: 'text', content })
+  }
+
+  const merged_results: (FileItem | TextItem)[] = []
+  for (const result of results) {
+    if (merged_results.length > 0) {
+      const last = merged_results[merged_results.length - 1]
+      if (last.type == 'text' && result.type == 'text') {
+        last.content += '\n' + result.content
+        continue
+      }
+    }
+    merged_results.push(result)
   }
 
   // Trim text items at the end to ensure clean output
-  for (const result of results) {
+  for (const result of merged_results) {
     if (result.type == 'text') {
       result.content = result.content.trim()
     }
   }
 
-  return results
+  return merged_results
 }
