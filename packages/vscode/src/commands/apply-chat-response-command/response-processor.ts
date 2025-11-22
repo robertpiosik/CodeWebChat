@@ -452,8 +452,8 @@ export const process_chat_response = async (
     } else {
       let has_truncated_fragments = false
       if (
-        args?.edit_format === undefined || // Is undefined when invoked manually
-        args?.edit_format == 'truncated'
+        args?.edit_format === undefined ||
+        args?.edit_format == 'truncated' // Is undefined when invoked manually
       ) {
         has_truncated_fragments = check_for_truncated_fragments(files)
       }

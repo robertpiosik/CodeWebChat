@@ -476,8 +476,7 @@ export const apply_git_patch = async (
       undefined
 
     if (patch_info.is_renaming) {
-      // Skip git apply and fallbacks, renaming here is a base case
-      // where no content is changing, just paths. File is already copied.
+      // Skip git apply and fallbacks, renaming here is a base case where no content is changing, just paths. File is already copied.
       success = true
     }
 

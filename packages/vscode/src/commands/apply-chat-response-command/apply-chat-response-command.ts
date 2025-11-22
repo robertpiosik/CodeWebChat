@@ -23,13 +23,22 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 let in_progress = false
 let placeholder_created_at_for_update: number | undefined
 
-export const apply_chat_response_command = (
-  params: {
-    context: vscode.ExtensionContext
-    panel_provider: PanelProvider
-    workspace_provider: WorkspaceProvider
-  }
-) => {
+interface SavedEditorState {
+  uri: string
+  view_column: vscode.ViewColumn
+  is_active: boolean
+}
+
+interface SavedTabGroups {
+  editors: SavedEditorState[]
+  active_editor_uri?: string
+}
+
+export const apply_chat_response_command = (params: {
+  context: vscode.ExtensionContext
+  panel_provider: PanelProvider
+  workspace_provider: WorkspaceProvider
+}) => {
   return vscode.commands.registerCommand(
     'codeWebChat.applyChatResponse',
     async (args?: CommandArgs) => {
@@ -57,12 +66,10 @@ export const apply_chat_response_command = (
       }
 
       if (in_progress && !response_preview_promise_resolve) {
-        // Running intelligent update before response preview...
         return
       }
 
       if (response_preview_promise_resolve) {
-        // Previewing response...
         const history = params.panel_provider.response_history
 
         const new_item: ResponseHistoryItem = {
@@ -95,7 +102,28 @@ export const apply_chat_response_command = (
 
       in_progress = true
       let before_checkpoint: Checkpoint | undefined
+      let saved_tab_groups: SavedTabGroups | undefined
+
       try {
+        // Save current tab groups before entering preview
+        saved_tab_groups = {
+          editors: [],
+          active_editor_uri:
+            vscode.window.activeTextEditor?.document.uri.toString()
+        }
+
+        for (const tab_group of vscode.window.tabGroups.all) {
+          for (const tab of tab_group.tabs) {
+            if (tab.input instanceof vscode.TabInputText) {
+              saved_tab_groups.editors.push({
+                uri: tab.input.uri.toString(),
+                view_column: tab_group.viewColumn,
+                is_active: tab.isActive
+              })
+            }
+          }
+        }
+
         before_checkpoint = await create_checkpoint(
           params.workspace_provider,
           params.context,
@@ -224,7 +252,9 @@ export const apply_chat_response_command = (
             })
           }
 
-          const history_for_checkpoint = [...params.panel_provider.response_history]
+          const history_for_checkpoint = [
+            ...params.panel_provider.response_history
+          ]
           const changes_accepted = await preview_handler({
             original_states: review_data.original_states,
             chat_response: review_data.chat_response,
@@ -260,6 +290,11 @@ export const apply_chat_response_command = (
 
             before_checkpoint = undefined
           }
+
+          // Restore tab groups after preview ends
+          if (saved_tab_groups) {
+            await restore_tab_groups(saved_tab_groups)
+          }
         }
       } catch (err: any) {
         vscode.window.showErrorMessage(
@@ -277,4 +312,40 @@ export const apply_chat_response_command = (
       }
     }
   )
+}
+
+async function restore_tab_groups(saved_state: SavedTabGroups): Promise<void> {
+  try {
+    // Close all current tabs first
+    await vscode.commands.executeCommand('workbench.action.closeAllEditors')
+
+    // Reopen saved editors in their original view columns
+    for (const editor of saved_state.editors) {
+      try {
+        const uri = vscode.Uri.parse(editor.uri)
+        await vscode.window.showTextDocument(uri, {
+          viewColumn: editor.view_column,
+          preview: false,
+          preserveFocus: !editor.is_active
+        })
+      } catch (error) {
+        // File might have been deleted or is no longer accessible
+        console.error(`Failed to restore editor for ${editor.uri}:`, error)
+      }
+    }
+
+    // Restore active editor focus if it was saved
+    if (saved_state.active_editor_uri) {
+      try {
+        const active_uri = vscode.Uri.parse(saved_state.active_editor_uri)
+        await vscode.window.showTextDocument(active_uri, {
+          preserveFocus: false
+        })
+      } catch (error) {
+        console.error('Failed to restore active editor:', error)
+      }
+    }
+  } catch (error) {
+    console.error('Failed to restore tab groups:', error)
+  }
 }

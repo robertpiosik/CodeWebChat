@@ -47,11 +47,6 @@ export const process_diff = async (params: {
       message: 'File saved successfully'
     })
   } catch (error) {
-    // Logger.error({
-    //   function_name: 'process_diff',
-    //   message: 'Error saving file',
-    //   data: error
-    // })
     throw new Error('Failed to save file after applying diff patch')
   }
 }
@@ -259,17 +254,6 @@ export const apply_diff = (params: {
       if (!found) {
         search_replace_block.search_block_start_index = -2 // Not found
 
-        // Logger.error({
-        //   function_name: 'apply_diff',
-        //   message: `Search block not found: ${search_string}`
-        // })
-        // Logger.error({
-        //   function_name: 'apply_diff',
-        //   message: `search_replace_block: ${JSON.stringify(
-        //     search_replace_block
-        //   )}`
-        // })
-
         throw new Error(`Search block not found: ${search_string}`)
       }
     }
@@ -279,7 +263,7 @@ export const apply_diff = (params: {
     )
     valid_blocks.sort((a, b) => b.get_start_index() - a.get_start_index())
 
-    const result_lines = [...original_code_lines] // Operate on a copy
+    const result_lines = [...original_code_lines]
 
     for (const block of valid_blocks) {
       const start_index =
@@ -288,17 +272,9 @@ export const apply_diff = (params: {
       const replacement_content = block.replace_lines
 
       if (start_index < 0 || start_index > result_lines.length) {
-        // start_index can be == result_lines.length for appending
-        // Logger.error({
-        //   function_name: 'apply_diff',
-        //   message: `Invalid start index ${start_index} for block application. Max index: ${
-        //     result_lines.length - 1
-        //   }`
-        // })
         continue
       }
 
-      // Ensure search_count does not exceed available lines from start_index
       const actual_search_count = Math.min(
         search_count,
         result_lines.length - start_index

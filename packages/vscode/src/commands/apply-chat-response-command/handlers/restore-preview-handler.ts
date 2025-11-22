@@ -126,7 +126,6 @@ export const handle_restore_preview = async (
           }
         }
       } else if (file.content !== undefined) {
-        // Create or update
         if (file_exists) {
           try {
             const file_uri = vscode.Uri.file(safe_path)
@@ -166,7 +165,6 @@ export const handle_restore_preview = async (
             )
           }
         } else {
-          // New file
           const directory = path.dirname(safe_path)
           if (!fs.existsSync(directory)) {
             try {

@@ -87,11 +87,8 @@ export const handle_fast_replace = async (
       }
     }
 
-    // --- Application Phase ---
-    // Process all files that were deemed safe.
     const original_states: OriginalFileState[] = []
     for (const file of safe_files) {
-      // Changed from accepted_files to safe_files
       let workspace_root = default_workspace
       if (file.workspace_name && workspace_map.has(file.workspace_name)) {
         workspace_root = workspace_map.get(file.workspace_name)!
@@ -208,8 +205,8 @@ export const handle_fast_replace = async (
 
     Logger.info({
       function_name: 'handle_fast_replace',
-      message: 'Files replaced successfully', // Updated log message
-      data: { file_count: safe_files.length } // Changed from accepted_files to safe_files
+      message: 'Files replaced successfully',
+      data: { file_count: safe_files.length }
     })
     return { success: true, original_states }
   } catch (error: any) {

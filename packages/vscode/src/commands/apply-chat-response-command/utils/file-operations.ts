@@ -204,10 +204,8 @@ const relocate_file = async (params: {
       await vscode.commands.executeCommand('workbench.action.closeActiveEditor')
     }
 
-    // Move the file
     fs.renameSync(old_safe_path, new_safe_path)
 
-    // Clean up empty directory if needed
     await remove_directory_if_empty({
       dir_path: path.dirname(old_safe_path),
       workspace_root: params.workspace_root

@@ -109,7 +109,6 @@ export const setup_workspace_listeners = (
           file: changed_file_in_review.reviewable_file
         })
       } else {
-        // A file not in the review has been changed. Add it to the review.
         const doc = event.document
         if (doc.uri.scheme != 'file') return
         const workspace_folder = vscode.workspace.getWorkspaceFolder(doc.uri)
@@ -616,7 +615,6 @@ export const setup_workspace_listeners = (
     }
 
     if (!is_checked) {
-      // This is the unchecking logic
       // Before reverting, capture current content if file exists
       if (fs.existsSync(file_to_toggle.sanitized_path)) {
         const document = await vscode.workspace.openTextDocument(
@@ -644,7 +642,6 @@ export const setup_workspace_listeners = (
           Buffer.from(file_to_toggle.original_content, 'utf8')
         )
       }
-      // This is the checking logic
     } else {
       if (file_to_toggle.reviewable_file.is_deleted) {
         try {
