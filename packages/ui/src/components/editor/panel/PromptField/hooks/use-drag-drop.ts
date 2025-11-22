@@ -62,6 +62,19 @@ export const use_drag_drop = ({
 
   const handle_drag_over = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
+
+    if (!dragged_text_range_ref.current) {
+      return
+    }
+
+    const range = document.caretRangeFromPoint(e.clientX, e.clientY)
+    if (range && input_ref.current?.contains(range.startContainer)) {
+      const selection = window.getSelection()
+      if (selection) {
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
+    }
   }
 
   const handle_drop = (e: React.DragEvent<HTMLDivElement>) => {
