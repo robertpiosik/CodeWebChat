@@ -5,7 +5,7 @@
 
 .header {
   height: var(--list-item-height);
-  padding: 0 var(--padding-12px);
+  padding: 0 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -18,7 +18,7 @@
   &__left {
     display: flex;
     align-items: center;
-    gap: var(--padding-4px);
+    gap: 4px;
   }
 
   &__right {
@@ -27,7 +27,7 @@
 }
 
 .missing-config {
-  padding: var(--padding-2px) var(--padding-12px) 0 var(--padding-12px);
+  padding: 2px 12px 0 12px;
   font-weight: 500;
   font-style: italic;
 }
@@ -41,9 +41,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--padding-4px);
+    gap: 4px;
     height: var(--list-item-height);
-    padding: 0 var(--padding-12px);
+    padding: 0 12px;
 
     &:hover {
       background-color: var(--vscode-list-hoverBackground);
@@ -60,7 +60,7 @@
     &__left {
       display: flex;
       align-items: center;
-      gap: var(--padding-5px);
+      gap: 5px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -124,8 +124,7 @@
 
 .footer {
   display: flex;
-  padding: var(--padding-8px) var(--padding-12px) var(--padding-12px)
-    var(--padding-12px);
+  padding: 8px 12px 12px 12px;
 
   > button {
     flex: 1;

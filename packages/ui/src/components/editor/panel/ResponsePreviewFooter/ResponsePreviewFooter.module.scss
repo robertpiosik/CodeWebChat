@@ -1,7 +1,7 @@
 .container {
   display: flex;
   width: 100%;
-  gap: var(--padding-8px);
+  gap: 8px;
 
   > * {
     flex: 1;

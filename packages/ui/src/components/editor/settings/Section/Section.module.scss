@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--padding-16px);
+  gap: 16px;
 }
 
 .class_marker {
@@ -17,13 +17,11 @@
   top: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--padding-4px);
-  padding-top: calc(
-    var(--padding-60px) + var(--padding-4px)
-  ); // to align with the sidebar title
-  padding-bottom: var(--padding-10px);
-  padding-left: var(--padding-12px);
-  padding-right: var(--padding-12px);
+  gap: 4px;
+  padding-top: calc(60px + 4px); // to align with the sidebar title
+  padding-bottom: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
   background-color: var(--vscode-editor-background);
   transition: box-shadow var(--transition-duration-250)
     var(--transition-timing-function);
@@ -44,19 +42,19 @@
     top: 38px;
     background-color: var(--vscode-button-background);
     color: var(--vscode-button-foreground);
-    font-size: var(--font-size-12px);
-    border-radius: var(--border-radius-999px);
-    padding: var(--padding-2px) var(--padding-8px);
+    font-size: 12px;
+    border-radius: 999px;
+    padding: 2px 8px;
   }
 
   &__title {
     margin: 0;
-    font-size: var(--font-size-20px);
+    font-size: 20px;
     font-weight: 600;
   }
 
   &__subtitle {
     color: var(--cwc-text-secondary);
-    font-size: var(--font-size-14px);
+    font-size: 14px;
   }
 }

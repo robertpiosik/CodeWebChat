@@ -2,10 +2,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--padding-8px);
-  padding: 0 var(--padding-12px) 0 var(--padding-8px);
+  gap: 8px;
+  padding: 0 12px 0 8px;
   height: 34px;
-  border-radius: var(--padding-10px);
+  border-radius: 10px;
 
   &:hover {
     text-decoration: none;
@@ -23,7 +23,7 @@
 .right {
   display: flex;
   align-items: center;
-  gap: var(--padding-6px);
+  gap: 6px;
   overflow: hidden;
 
   > span:first-child {
@@ -40,7 +40,7 @@
 .left {
   display: flex;
   align-items: center;
-  gap: var(--padding-6px);
+  gap: 6px;
 
   svg {
     fill: currentColor;

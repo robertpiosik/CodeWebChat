@@ -1,28 +1,28 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding: var(--padding-4px) 0 var(--padding-12px) 0;
-  gap: var(--padding-8px);
+  padding: 4px 0 12px 0;
+  gap: 8px;
 }
 
 .info {
-  padding: var(--padding-4px) var(--padding-7px);
+  padding: 4px 7px;
   color: var(--vscode-descriptionForeground);
-  font-size: var(--padding-12px);
+  font-size: 12px;
   border: 1px solid var(--vscode-sideBarSectionHeader-border);
   opacity: var(--dimmed-opacity);
-  margin: 0 var(--padding-12px);
-  border-radius: var(--border-radius-8px);
+  margin: 0 12px;
+  border-radius: 8px;
 
   > span {
     vertical-align: middle;
-    font-size: var(--font-size-12px);
+    font-size: 12px;
   }
 }
 
 .instructions {
   position: relative;
-  margin: 0 var(--padding-12px);
+  margin: 0 12px;
   word-wrap: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -44,7 +44,7 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-4px);
+  gap: 4px;
 
   > div:first-child {
     margin-top: 0;
@@ -58,10 +58,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--padding-8px);
+    gap: 8px;
     border: 1px solid var(--cwc-border-color-dimmed);
-    padding: 0 var(--padding-8px);
-    margin: 0 var(--padding-12px);
+    padding: 0 8px;
+    margin: 0 12px;
     height: 34px;
     border-radius: 8px;
 
@@ -81,7 +81,7 @@
     &__left {
       display: flex;
       align-items: center;
-      gap: var(--padding-8px);
+      gap: 8px;
       overflow: hidden;
 
       &__label {
@@ -110,7 +110,7 @@
     &__right {
       display: flex;
       align-items: center;
-      gap: var(--padding-8px);
+      gap: 8px;
     }
 
     &__actions {

@@ -2,22 +2,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--padding-4px);
+  gap: 4px;
   width: 100%;
-  padding: var(--padding-3px) var(--padding-12px) var(--padding-4px)
-    var(--padding-12px);
+  padding: 3px 12px 4px 12px;
 
   &__left {
     display: flex;
     align-items: center;
-    gap: var(--padding-4px);
+    gap: 4px;
   }
 
   &__home {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--border-radius-5px);
+    border-radius: 5px;
     --size: 20px;
     width: var(--size);
     height: var(--size);
@@ -29,7 +28,7 @@
     align-items: center;
     height: 24px;
     font-family: var(--font-family-accent);
-    font-size: var(--font-size-18px);
+    font-size: 18px;
     line-height: 1;
     letter-spacing: 1px;
     padding-top: 1px;
@@ -39,13 +38,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--padding-4px);
+    gap: 4px;
     cursor: pointer;
     text-decoration: none;
     background: none;
     border: none;
-    border-radius: var(--border-radius-5px);
-    padding-left: var(--padding-5px);
+    border-radius: 5px;
+    padding-left: 5px;
 
     &:hover {
       background-color: var(--vscode-toolbar-hoverBackground);
@@ -68,9 +67,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: var(--padding-24px);
+  gap: 24px;
   height: 100%;
-  padding: var(--padding-4px) var(--padding-12px) 0 var(--padding-12px);
+  padding: 4px 12px 0 12px;
 }
 
 .inner {
@@ -87,7 +86,7 @@
     width: 100%;
     position: relative;
     background-color: var(--vscode-sideBar-background);
-    border-radius: var(--border-radius-10px);
+    border-radius: 10px;
     border: 1px solid var(--cwc-border-color);
     overflow: hidden;
 
@@ -111,7 +110,7 @@
   &__buttons {
     display: flex;
     flex-direction: column;
-    gap: var(--padding-6px);
+    gap: 6px;
     width: 100%;
   }
 }
@@ -121,17 +120,17 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: var(--padding-8px);
-  font-size: var(--font-size-12px);
+  gap: 8px;
+  font-size: 12px;
   user-select: text;
   width: 100%; // For easier text selection
-  padding-bottom: var(--padding-12px);
+  padding-bottom: 12px;
 
   &__links {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--padding-4px);
+    gap: 4px;
   }
 
   a:hover {

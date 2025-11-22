@@ -11,7 +11,7 @@ export const Primary = () => (
     header_slot={'header slot'}
     footer_slot={'footer slot'}
   >
-    <div style={{ padding: 'var(--padding-12px)' }}>
+    <div style={{ padding: '12px' }}>
       <p>
         This is a sample page content. Use the <strong>header_slot</strong> prop
         to inject custom elements (e.g., navigation, actions) into the header.

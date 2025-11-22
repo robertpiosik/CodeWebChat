@@ -2,8 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--padding-16px);
-  padding: var(--padding-12px);
+  gap: 16px;
+  padding: 12px;
 
   &--below {
     flex-direction: column;
@@ -17,7 +17,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  gap: var(--padding-2px);
+  gap: 2px;
 }
 
 .title {

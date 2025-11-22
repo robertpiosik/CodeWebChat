@@ -1,9 +1,9 @@
 .container {
   display: flex;
   align-items: center;
-  gap: var(--padding-8px);
-  padding: var(--padding-6px) var(--padding-8px);
-  border-radius: var(--border-radius-4px);
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
   color: var(--vscode-foreground);
   text-decoration: none;
   cursor: pointer;

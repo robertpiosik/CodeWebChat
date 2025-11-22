@@ -4,13 +4,13 @@
   z-index: -1; // Makes context menu of a preset appear above
   display: flex;
   justify-content: space-between;
-  gap: var(--padding-4px);
-  padding: var(--padding-8px) var(--padding-12px);
+  gap: 4px;
+  padding: 8px 12px;
   border-top: 1px solid var(--cwc-border-color-dimmed);
 
   > div {
     display: flex;
-    gap: var(--padding-6px);
+    gap: 6px;
   }
 
   &__icon-button {
@@ -19,7 +19,7 @@
     justify-content: center;
     height: var(--button-size);
     width: var(--button-size);
-    border-radius: var(--border-radius-4px);
+    border-radius: 4px;
 
     > svg {
       flex-shrink: 0;
@@ -56,10 +56,10 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    gap: var(--padding-4px);
+    gap: 4px;
     height: var(--button-size);
-    padding: 0 var(--padding-7px);
-    border-radius: var(--border-radius-4px);
+    padding: 0 7px;
+    border-radius: 4px;
     border: 1px solid var(--cwc-border-color);
 
     &:hover:not(:disabled) {
@@ -94,7 +94,7 @@
 
     &--no-shrink {
       @media (max-width: 293px) {
-        padding: 0 var(--padding-7px);
+        padding: 0 7px;
         width: auto;
         justify-content: initial;
       }

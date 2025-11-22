@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--border-radius-5px);
+  border-radius: 5px;
   --size: 20px;
   width: var(--size);
   height: var(--size);
@@ -22,8 +22,8 @@
   &.with-label {
     width: auto;
     justify-content: flex-start;
-    gap: var(--padding-4px);
-    padding-left: var(--padding-4px);
+    gap: 4px;
+    padding-left: 4px;
   }
 }
 

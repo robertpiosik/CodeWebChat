@@ -1,12 +1,12 @@
 .line {
   height: 1px;
   background-color: var(--vscode-settings-headerBorder);
-  margin: 0 var(--padding-8px);
+  margin: 0 8px;
 }
 
 .text {
   color: var(--vscode-textLink-foreground);
-  font-size: var(--padding-12px);
-  padding: 0 var(--padding-8px);
-  margin-top: var(--padding-8px);
+  font-size: 12px;
+  padding: 0 8px;
+  margin-top: 8px;
 }

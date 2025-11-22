@@ -1,11 +1,11 @@
 .container {
-  --padding: var(--padding-5px) 15px var(--padding-5px) var(--padding-7px);
+  --padding: 5px 15px 5px 7px;
   position: relative;
 
   &__inner {
     display: flex;
     flex-direction: column;
-    border-radius: var(--border-radius-10px);
+    border-radius: 10px;
     background-color: var(--vscode-input-background);
     cursor: text;
     border: 1px solid var(--cwc-border-color);
@@ -49,13 +49,12 @@
     display: flex;
     text-align: center;
     align-items: center;
-    padding: var(--padding-3px) var(--padding-10px) var(--padding-3px)
-      var(--padding-8px);
+    padding: 3px 10px 3px 8px;
     font-weight: 500;
     color: var(--vscode-activityWarningBadge-foreground);
     background-color: var(--vscode-activityWarningBadge-background);
-    border-radius: var(--border-radius-999px);
-    margin: 0 var(--padding-8px);
+    border-radius: 999px;
+    margin: 0 8px;
 
     &::before {
       content: '⚠';
@@ -119,12 +118,12 @@
     align-items: center;
     justify-content: center;
     color: var(--cwc-text-color);
-    font-size: var(--font-size-10px);
-    padding: 0 var(--padding-3px);
-    margin-left: var(--padding-2px);
+    font-size: 10px;
+    padding: 0 3px;
+    margin-left: 2px;
     font-weight: 500;
     border: 1px solid var(--cwc-border-color);
-    border-radius: var(--border-radius-5px);
+    border-radius: 5px;
     pointer-events: none;
     opacity: var(--dimmed-opacity);
   }
@@ -132,7 +131,7 @@
 
 .selection-keyword {
   background-color: var(--vscode-editor-selectionBackground);
-  border-radius: var(--border-radius-2px);
+  border-radius: 2px;
   padding: 0 0.6px;
 
   &--error {
@@ -141,13 +140,13 @@
 }
 
 .keyword {
-  font-size: var(--font-size-12px);
+  font-size: 12px;
   background-color: color-mix(
     in srgb,
     var(--vscode-charts-blue) 20%,
     transparent
   );
-  border-radius: var(--border-radius-4px);
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
   line-height: 1.2;
@@ -155,17 +154,17 @@
 
   &__icon {
     display: flex;
-    padding: 0 var(--padding-3px);
-    border-radius: var(--border-radius-4px);
+    padding: 0 3px;
+    border-radius: 4px;
     position: relative;
     z-index: 1;
     cursor: pointer;
 
     &::before {
       font-family: 'codicon';
-      font-size: var(--font-size-12px);
+      font-size: 12px;
       transition: none;
-      border-radius: var(--border-radius-4px);
+      border-radius: 4px;
     }
 
     &:hover {
@@ -178,9 +177,9 @@
   }
 
   &__text {
-    border-radius: var(--border-radius-4px);
-    padding-right: var(--padding-4px);
-    padding-left: var(--padding-4px);
+    border-radius: 4px;
+    padding-right: 4px;
+    padding-left: 4px;
     margin-left: -4px;
   }
 
@@ -244,8 +243,7 @@
   display: flex;
   bottom: 0;
   right: 0;
-  padding: var(--padding-6px) var(--padding-10px) var(--padding-6px)
-    var(--padding-6px);
+  padding: 6px 10px 6px 6px;
   justify-content: space-between;
   position: relative;
 
@@ -261,7 +259,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: var(--padding-4px);
+      gap: 4px;
       height: var(--size);
       width: var(--size);
       border-radius: 5px;
@@ -281,16 +279,16 @@
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: var(--padding-10px);
+    gap: 10px;
     pointer-events: none;
 
     &__edit-format {
       display: flex;
       align-items: center;
-      gap: var(--padding-6px);
+      gap: 6px;
 
       &__button {
-        font-size: var(--font-size-11px);
+        font-size: 11px;
         pointer-events: all;
         position: relative;
         font-weight: 500;
@@ -335,7 +333,7 @@
         justify-content: center;
         gap: 3px;
         height: 20px;
-        border-radius: var(--border-radius-5px);
+        border-radius: 5px;
         pointer-events: all;
 
         > svg {
@@ -361,7 +359,7 @@
         }
 
         &--submit {
-          padding: 0 var(--padding-2px);
+          padding: 0 2px;
         }
 
         &--chevron {
@@ -387,14 +385,14 @@
   position: absolute;
   z-index: 2;
   bottom: calc(100% - 2px);
-  font-size: var(--font-size-12px);
+  font-size: 12px;
   white-space: normal;
   max-width: calc(100vw - 50px);
   display: flex;
   align-items: center;
-  gap: var(--padding-4px);
-  padding: var(--padding-3px) var(--padding-6px);
-  border-radius: var(--border-radius-6px);
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: 6px;
   background-color: var(--vscode-quickInput-background);
   border: 1px solid var(--vscode-widget-border);
   box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);

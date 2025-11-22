@@ -1,7 +1,7 @@
 .container {
   display: flex;
   align-items: center;
-  gap: var(--padding-12px);
+  gap: 12px;
   width: 100%;
 
   &__slider {
@@ -21,7 +21,7 @@
         var(--vscode-dropdown-border) var(--value-percent)
       );
       height: 3px;
-      border-radius: var(--border-radius-999px);
+      border-radius: 999px;
     }
 
     &::-webkit-slider-thumb {

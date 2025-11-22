@@ -1,14 +1,14 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding-top: var(--padding-12px);
+  padding-top: 12px;
 }
 
 .toolbar {
   display: flex;
-  padding: 0 var(--padding-8px) var(--padding-8px) var(--padding-8px);
+  padding: 0 8px 8px 8px;
   align-items: center;
-  gap: var(--padding-8px);
+  gap: 8px;
 }
 
 .list {
@@ -37,9 +37,9 @@
   &__content {
     flex: 1;
     display: flex;
-    padding: 0 var(--padding-12px);
+    padding: 0 12px;
     overflow: hidden;
-    gap: var(--padding-8px);
+    gap: 8px;
 
     > div {
       white-space: nowrap;
@@ -68,8 +68,8 @@
 .col-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--padding-8px);
-  padding-right: var(--padding-8px);
+  gap: 8px;
+  padding-right: 8px;
 }
 
 .empty-message {

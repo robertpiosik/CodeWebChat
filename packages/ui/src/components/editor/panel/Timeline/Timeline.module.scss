@@ -18,7 +18,7 @@
   }
 
   &__time {
-    font-size: var(--font-size-11px);
+    font-size: 11px;
     color: var(--cwc-text-color-dimmed);
     white-space: nowrap;
     flex-shrink: 0;
@@ -82,7 +82,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--padding-2px);
+    gap: 2px;
     margin-bottom: 12px;
     overflow: hidden;
 

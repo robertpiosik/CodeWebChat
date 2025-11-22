@@ -1,13 +1,13 @@
 .container {
   display: flex;
   align-items: center;
-  gap: var(--padding-8px);
-  padding: 0 var(--padding-10px);
+  gap: 8px;
+  padding: 0 10px;
   color: var(--vscode-descriptionForeground);
 }
 
 .label {
-  font-size: var(--font-size-11px);
+  font-size: 11px;
   white-space: nowrap;
 }
 
@@ -15,14 +15,14 @@
   flex: 1;
   height: 3px;
   background-color: var(--vscode-dropdown-border);
-  border-radius: var(--border-radius-999px);
+  border-radius: 999px;
   overflow: hidden;
 
   &__progress {
     height: 100%;
     background-color: var(--vscode-focusBorder);
-    border-top-right-radius: var(--border-radius-999px);
-    border-bottom-right-radius: var(--border-radius-999px);
+    border-top-right-radius: 999px;
+    border-bottom-right-radius: 999px;
 
     &--warning {
       background-color: var(--vscode-editorWarning-foreground);

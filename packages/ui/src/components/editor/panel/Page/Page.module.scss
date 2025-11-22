@@ -10,8 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: var(--padding-5px) var(--padding-12px) var(--padding-6px)
-    var(--padding-12px);
+  margin: 5px 12px 6px 12px;
   position: relative;
   height: 20px;
 
@@ -20,13 +19,13 @@
     left: 50%;
     font-weight: 600;
     transform: translateX(-50%);
-    font-size: var(--font-size-14px);
+    font-size: 14px;
     white-space: nowrap;
   }
 }
 
 .footer {
-  gap: var(--padding-8px);
-  padding: var(--padding-12px);
+  gap: 8px;
+  padding: 12px;
   border-top: 1px solid var(--cwc-border-color-dimmed);
 }

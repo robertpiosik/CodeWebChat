@@ -1,16 +1,16 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--padding-10px);
+  gap: 10px;
 }
 
 .title {
-  font-size: var(--font-size-12px);
-  padding-left: var(--padding-12px);
+  font-size: 12px;
+  padding-left: 12px;
   color: var(--cwc-text-color-dimmed);
 }
 .container {
-  border-radius: var(--border-radius-10px);
+  border-radius: 10px;
   color: var(--vscode-sideBarTitle-foreground);
   background-color: var(--cwc-bg-tertiary);
 

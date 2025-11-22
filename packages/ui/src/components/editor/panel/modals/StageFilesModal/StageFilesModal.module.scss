@@ -6,7 +6,7 @@
   &__item {
     display: flex;
     align-items: center;
-    gap: var(--padding-6px);
+    gap: 6px;
     cursor: pointer;
     padding: 0 12px;
     height: var(--list-item-height);
@@ -35,8 +35,8 @@
     }
 
     &__path {
-      padding-left: var(--padding-6px);
-      font-size: var(--font-size-12px);
+      padding-left: 6px;
+      font-size: 12px;
       color: var(--vscode-descriptionForeground);
     }
 

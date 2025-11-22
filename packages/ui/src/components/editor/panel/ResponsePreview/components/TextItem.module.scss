@@ -4,12 +4,12 @@
 }
 
 .text {
-  margin: var(--padding-6px) var(--padding-12px);
+  margin: 6px 12px;
   word-wrap: break-word;
 
   > * {
     margin: 0;
-    font-size: var(--font-size-13px);
+    font-size: 13px;
   }
 
   > * + * {
@@ -23,7 +23,7 @@
 
   code {
     font-family: monospace;
-    font-size: var(--font-size-11px);
+    font-size: 11px;
     padding: 2px 4px;
     border-radius: 3px;
   }
@@ -36,7 +36,7 @@
   &__collapse > span {
     cursor: pointer;
     font-style: italic;
-    font-size: var(--font-size-12px);
+    font-size: 12px;
     color: var(--cwc-text-color-dimmed);
 
     &:hover {
@@ -48,8 +48,8 @@
 .header {
   display: flex;
   align-items: center;
-  margin: 0 var(--padding-12px);
-  padding-right: var(--padding-9px);
+  margin: 0 12px;
+  padding-right: 9px;
   position: relative;
   cursor: pointer;
 
@@ -69,7 +69,7 @@
   }
 
   &__tokens {
-    font-size: var(--font-size-12px);
+    font-size: 12px;
     color: var(--cwc-text-color-dimmed);
   }
 }

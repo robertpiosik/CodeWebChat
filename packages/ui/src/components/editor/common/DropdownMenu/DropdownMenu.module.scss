@@ -10,10 +10,10 @@
 
   &__inner {
     background-color: var(--vscode-quickInput-background);
-    border-radius: var(--border-radius-8px);
+    border-radius: 8px;
     border: 1px solid var(--vscode-widget-border);
     box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
-    padding: var(--padding-4px);
+    padding: 4px;
   }
 }
 
@@ -21,13 +21,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--padding-12px);
-  padding: 0 var(--padding-6px);
+  gap: 12px;
+  padding: 0 6px;
   height: 24px;
   cursor: pointer;
   color: var(--vscode-quickInput-foreground);
   white-space: nowrap;
-  border-radius: var(--border-radius-4px);
+  border-radius: 4px;
 
   &:hover,
   &[data-selected='true'] {
@@ -40,5 +40,5 @@
 
 .shortcut {
   color: var(--vscode-descriptionForeground);
-  font-size: var(--font-size-12px);
+  font-size: 12px;
 }
