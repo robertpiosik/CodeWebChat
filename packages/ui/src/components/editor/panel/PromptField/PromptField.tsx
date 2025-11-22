@@ -108,29 +108,32 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const mouse_down_pos_ref = useRef<{ x: number; y: number } | null>(null)
 
-  const handle_mouse_down = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    mouse_down_pos_ref.current = { x: e.clientX, y: e.clientY }
+  const handle_mouse_down = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      mouse_down_pos_ref.current = { x: e.clientX, y: e.clientY }
 
-    const handle_mouse_move = (move_e: MouseEvent) => {
-      if (mouse_down_pos_ref.current) {
-        const dx = Math.abs(move_e.clientX - mouse_down_pos_ref.current.x)
-        const dy = Math.abs(move_e.clientY - mouse_down_pos_ref.current.y)
-        if (dx >= 1 || dy >= 1) {
-          set_is_text_selecting(true)
+      const handle_mouse_move = (move_e: MouseEvent) => {
+        if (mouse_down_pos_ref.current) {
+          const dx = Math.abs(move_e.clientX - mouse_down_pos_ref.current.x)
+          const dy = Math.abs(move_e.clientY - mouse_down_pos_ref.current.y)
+          if (dx >= 1 || dy >= 1) {
+            set_is_text_selecting(true)
+          }
         }
       }
-    }
 
-    const handle_mouse_up = () => {
-      set_is_text_selecting(false)
-      mouse_down_pos_ref.current = null
-      document.removeEventListener('mousemove', handle_mouse_move)
-      document.removeEventListener('mouseup', handle_mouse_up)
-    }
+      const handle_mouse_up = () => {
+        set_is_text_selecting(false)
+        mouse_down_pos_ref.current = null
+        document.removeEventListener('mousemove', handle_mouse_move)
+        document.removeEventListener('mouseup', handle_mouse_up)
+      }
 
-    document.addEventListener('mousemove', handle_mouse_move)
-    document.addEventListener('mouseup', handle_mouse_up)
-  }, [])
+      document.addEventListener('mousemove', handle_mouse_move)
+      document.addEventListener('mouseup', handle_mouse_up)
+    },
+    []
+  )
 
   const is_mac = useMemo(() => {
     if (typeof navigator == 'undefined') return false
@@ -388,7 +391,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
         >
           {show_at_sign_tooltip && (
             <Tooltip
-              message={dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT}
+              message={dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT.replace(
+                '.',
+                ''
+              )}
               align="left"
               offset={8}
               is_warning
