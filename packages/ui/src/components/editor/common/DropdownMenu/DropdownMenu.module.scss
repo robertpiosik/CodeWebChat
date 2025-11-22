@@ -33,7 +33,7 @@
   &[data-selected='true'] {
     background-color: var(--vscode-list-activeSelectionBackground);
     & > span {
-      color: var(--vscode-menu-selectionForeground);
+      color: var(--vscode-list-activeSelectionForeground);
     }
   }
 }
