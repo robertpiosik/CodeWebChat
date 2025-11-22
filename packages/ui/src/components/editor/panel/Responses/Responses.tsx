@@ -48,9 +48,25 @@ export const Responses: React.FC<Props> = (props) => {
             props.on_selected_history_item_change(item.created_at)
           }}
         >
-          <span className={styles['responses__item__instruction']}>
-            {item.raw_instructions || 'Response without instructions'}
-          </span>
+          <div className={styles.responses__item__instructions}>
+            {item.lines_added === undefined &&
+              item.lines_removed === undefined && (
+                <span
+                  className={`codicon codicon-circle-filled ${styles['responses__item__instructions__new-indicator']}`}
+                />
+              )}
+            {item.raw_instructions ? (
+              <span>{item.raw_instructions}</span>
+            ) : (
+              <span
+                className={
+                  styles['responses__item__instructions__manual-entry']
+                }
+              >
+                Added manually
+              </span>
+            )}
+          </div>
           <div className={styles['responses__item__right']}>
             {item.lines_added !== undefined &&
               item.lines_removed !== undefined && (

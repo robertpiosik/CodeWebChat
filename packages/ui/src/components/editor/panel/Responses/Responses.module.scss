@@ -44,12 +44,23 @@
       }
     }
 
-    &__instruction {
+    &__instructions {
       text-align: left;
       font-size: var(--font-size-12px);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+
+      &__new-indicator {
+        transform: translateY(2px);
+        margin-left: -2px;
+        font-size: 12px !important;
+      }
+
+      &__manual-entry {
+        font-style: italic;
+        padding-right: 1px;
+      }
     }
 
     &__right {
