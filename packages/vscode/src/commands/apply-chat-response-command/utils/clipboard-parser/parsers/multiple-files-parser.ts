@@ -245,11 +245,18 @@ export const parse_multiple_files = (params: {
       } else {
         // Check if this line is a plain file path followed by a code block
         if (!last_seen_file_path_comment) {
-          const trimmed = line.trim()
+          let trimmed = line.trim()
+
+          if (trimmed.endsWith(':')) {
+            trimmed = trimmed.slice(0, -1)
+          }
+
           // Check if it looks like a file path and if the next non-empty line is a code block
           if (
             trimmed &&
-            (trimmed.includes('/') || trimmed.includes('\\') || trimmed.includes('.')) &&
+            (trimmed.includes('/') ||
+              trimmed.includes('\\') ||
+              trimmed.includes('.')) &&
             !trimmed.endsWith('.') &&
             /^[a-zA-Z0-9_./@-]+$/.test(trimmed)
           ) {

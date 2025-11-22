@@ -1,0 +1,4 @@
+src/hello-world.ts:
+```typescript
+console.log('Hello world!')
+```
