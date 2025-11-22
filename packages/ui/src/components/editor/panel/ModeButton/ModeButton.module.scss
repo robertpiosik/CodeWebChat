@@ -16,8 +16,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: var(--padding-24px) var(--padding-12px) var(--padding-24px)
-    var(--padding-12px);
+  padding: 0 var(--padding-12px);
+  height: 80px;
 
   &:hover {
     background-color: var(--vscode-toolbar-hoverBackground);
