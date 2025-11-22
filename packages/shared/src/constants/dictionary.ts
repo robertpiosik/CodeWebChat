@@ -14,6 +14,7 @@ export const dictionary = {
     CLIPBOARD_IS_EMPTY: 'Clipboard is empty',
     CLIPBOARD_CONTENT_APPLIED_SUCCESSFULLY:
       'Clipboard content applied successfully',
+    COPIED_TO_CLIPBOARD: 'Message copied to the clipboard',
     NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE:
       'No saved contexts remaining in the Workspace State',
     NO_SAVED_CONTEXTS_IN_JSON_FILE:

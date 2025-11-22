@@ -166,5 +166,7 @@ export const handle_copy_prompt = async (params: {
     return
   }
 
-  vscode.window.showInformationMessage('Prompt copied to clipboard!')
+  vscode.window.showInformationMessage(
+    dictionary.information_message.COPIED_TO_CLIPBOARD
+  )
 }

@@ -251,8 +251,7 @@ export const make_api_request = async (params: {
               : {})
           },
           cancelToken: params.cancellation_token,
-          responseType: 'stream',
-          timeout: 10000
+          responseType: 'stream'
         }
       )
 
