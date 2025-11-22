@@ -1,10 +1,5 @@
-The change is on line 415 where I modified:
+Lorem ipsum.
 ```typescript
-message={dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT}
+console.log('hello');
 ```
-to:
-```typescript
-message={dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT.replace('.', '')}
-```
-
-This removes the trailing period from the message when it's displayed in the tooltip, while keeping the original string unchanged in the dictionary.
+Lorem ipsum.

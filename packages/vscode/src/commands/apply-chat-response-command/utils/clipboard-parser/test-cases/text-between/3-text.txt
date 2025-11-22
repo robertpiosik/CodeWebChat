@@ -1,4 +1,5 @@
-Middle.
-```ts
-console.log('some inline code');
+Lorem ipsum.
+```typescript
+console.log('hello');
 ```
+Lorem ipsum.

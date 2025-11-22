@@ -1,36 +1,27 @@
-I have removed all comments from the provided files.
-
-The changes are:
-
-1.  **`daemon.ts`**: Removed numerous inline comments explaining steps like API calls, file downloads, directory preparation, and cleanup.
-2.  **`src/index.ts`**: Removed the comment explaining the aspect ratio check.
-3.  **`src/tasks/clean-from-people.ts`**: Removed the comment describing the file movement logic after running the tourist filter script.
-4.  **`src/tasks/stitch-dslr-images.ts`**: Removed comments explaining the purpose of checking for `project.pto` and the logic for replacing image path placeholders within the `.pto` file content.
-
-Here are the updated files:
+Lorem ipsum.
+```typescript
+console.log('hello');
+```
+Lorem ipsum.
 
 ```ts
 // src/lorem.ts
 console.log('lorem');
 ```
 
-Middle.
-```ts
-console.log('some inline code');
+Lorem ipsum.
+```typescript
+console.log('hello');
 ```
+Lorem ipsum.
 
 ```ts
 // src/ipsum.ts
 console.log('ipsum');
 ```
 
-The change is on line 415 where I modified:
+Lorem ipsum.
 ```typescript
-message={dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT}
+console.log('hello');
 ```
-to:
-```typescript
-message={dictionary.warning_message.NOTHING_SELECTED_IN_CONTEXT.replace('.', '')}
-```
-
-This removes the trailing period from the message when it's displayed in the tooltip, while keeping the original string unchanged in the dictionary.
+Lorem ipsum.
