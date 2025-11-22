@@ -108,6 +108,7 @@
         transparent
       );
       padding-left: 10px;
+      visibility: hidden;
 
       &__button {
         display: flex;
@@ -122,7 +123,7 @@
       }
     }
 
-    &:hover &__remove-wrapper {
+    &:hover &__remove {
       visibility: visible;
     }
   }
