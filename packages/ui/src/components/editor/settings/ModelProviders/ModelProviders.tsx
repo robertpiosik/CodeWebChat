@@ -16,7 +16,7 @@ export namespace ModelProviders {
     on_reorder: (providers: Provider[]) => void
     on_add_provider: () => void
     on_delete_provider: (provider_name: string) => void
-    on_rename_provider: (provider_name: string) => void
+    on_edit_provider: (provider_name: string) => void
     on_change_api_key: (provider_name: string) => void
   }
 }
@@ -45,8 +45,8 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
         {provider.type === 'custom' && (
           <IconButton
             codicon_icon="edit"
-            on_click={() => props.on_rename_provider(provider.name)}
-            title="Rename provider"
+            on_click={() => props.on_edit_provider(provider.name)}
+            title="Edit provider"
           />
         )}
         {!provider.baseUrl.includes('localhost') && (

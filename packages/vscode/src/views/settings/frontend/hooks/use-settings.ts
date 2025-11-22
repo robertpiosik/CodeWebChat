@@ -141,9 +141,9 @@ export const use_settings = (vscode: any) => {
     })
   }
 
-  const handle_rename_provider = (provider_name: string) => {
+  const handle_edit_provider = (provider_name: string) => {
     post_message(vscode, {
-      command: 'RENAME_MODEL_PROVIDER',
+      command: 'EDIT_CUSTOM_MODEL_PROVIDER',
       provider_name
     })
   }
@@ -285,7 +285,7 @@ export const use_settings = (vscode: any) => {
     handle_reorder_providers,
     handle_add_provider,
     handle_delete_provider,
-    handle_rename_provider,
+    handle_edit_provider,
     handle_change_api_key,
     handle_add_config,
     handle_reorder_configs,

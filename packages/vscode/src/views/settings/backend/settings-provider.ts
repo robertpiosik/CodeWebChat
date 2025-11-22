@@ -17,6 +17,7 @@ import {
   handle_delete_model_provider,
   handle_edit_code_completions_configuration,
   handle_edit_commit_messages_configuration,
+  handle_edit_custom_model_provider,
   handle_edit_edit_context_configuration,
   handle_edit_intelligent_update_configuration,
   handle_get_clear_checks_in_workspace_behavior,
@@ -32,7 +33,6 @@ import {
   handle_get_intelligent_update_configurations,
   handle_get_model_providers,
   handle_get_checkpoint_lifespan,
-  handle_rename_model_provider,
   handle_reorder_code_completions_configurations,
   handle_reorder_commit_messages_configurations,
   handle_reorder_edit_context_configurations,
@@ -116,13 +116,15 @@ export class SettingsProvider {
           await handle_add_model_provider(this)
         } else if (message.command == 'DELETE_MODEL_PROVIDER') {
           await handle_delete_model_provider(this, message)
-        } else if (message.command == 'RENAME_MODEL_PROVIDER') {
-          await handle_rename_model_provider(this, message)
+        } else if (message.command == 'EDIT_CUSTOM_MODEL_PROVIDER') {
+          await handle_edit_custom_model_provider(this, message)
         } else if (message.command == 'CHANGE_MODEL_PROVIDER_KEY') {
           await handle_change_model_provider_key(this, message)
         } else if (message.command == 'GET_CODE_COMPLETIONS_CONFIGURATIONS') {
           await handle_get_code_completions_configurations(this)
-        } else if (message.command == 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS') {
+        } else if (
+          message.command == 'REORDER_CODE_COMPLETIONS_CONFIGURATIONS'
+        ) {
           await handle_reorder_code_completions_configurations(this, message)
         } else if (message.command == 'DELETE_CODE_COMPLETIONS_CONFIGURATION') {
           await handle_delete_code_completions_configuration(this, message)
@@ -130,11 +132,10 @@ export class SettingsProvider {
           await handle_add_code_completions_configuration(this)
         } else if (message.command == 'EDIT_CODE_COMPLETIONS_CONFIGURATION') {
           await handle_edit_code_completions_configuration(this, message)
-        } else if (message.command == 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION') {
-          await handle_set_default_code_completions_configuration(
-            this,
-            message
-          )
+        } else if (
+          message.command == 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION'
+        ) {
+          await handle_set_default_code_completions_configuration(this, message)
         } else if (message.command == 'GET_EDIT_CONTEXT_CONFIGURATIONS') {
           await handle_get_edit_context_configurations(this)
         } else if (message.command == 'REORDER_EDIT_CONTEXT_CONFIGURATIONS') {
@@ -147,7 +148,9 @@ export class SettingsProvider {
           await handle_edit_edit_context_configuration(this, message)
         } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
           await handle_get_edit_context_system_instructions(this)
-        } else if (message.command == 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
+        } else if (
+          message.command == 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
+        ) {
           await handle_update_edit_context_system_instructions(message)
         } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
           await handle_get_edit_format_instructions(this)
@@ -155,25 +158,30 @@ export class SettingsProvider {
           await handle_update_edit_format_instructions(message)
         } else if (message.command == 'GET_INTELLIGENT_UPDATE_CONFIGURATIONS') {
           await handle_get_intelligent_update_configurations(this)
-        } else if (message.command == 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS') {
-          await handle_reorder_intelligent_update_configurations(
-            this,
-            message
-          )
-        } else if (message.command == 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION') {
+        } else if (
+          message.command == 'REORDER_INTELLIGENT_UPDATE_CONFIGURATIONS'
+        ) {
+          await handle_reorder_intelligent_update_configurations(this, message)
+        } else if (
+          message.command == 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION'
+        ) {
           await handle_delete_intelligent_update_configuration(this, message)
         } else if (message.command == 'ADD_INTELLIGENT_UPDATE_CONFIGURATION') {
           await handle_add_intelligent_update_configuration(this)
         } else if (message.command == 'EDIT_INTELLIGENT_UPDATE_CONFIGURATION') {
           await handle_edit_intelligent_update_configuration(this, message)
-        } else if (message.command == 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION') {
+        } else if (
+          message.command == 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION'
+        ) {
           await handle_set_default_intelligent_update_configuration(
             this,
             message
           )
         } else if (message.command == 'GET_COMMIT_MESSAGES_CONFIGURATIONS') {
           await handle_get_commit_messages_configurations(this)
-        } else if (message.command == 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS') {
+        } else if (
+          message.command == 'REORDER_COMMIT_MESSAGES_CONFIGURATIONS'
+        ) {
           await handle_reorder_commit_messages_configurations(this, message)
         } else if (message.command == 'DELETE_COMMIT_MESSAGES_CONFIGURATION') {
           await handle_delete_commit_messages_configuration(this, message)
@@ -181,30 +189,32 @@ export class SettingsProvider {
           await handle_add_commit_messages_configuration(this)
         } else if (message.command == 'EDIT_COMMIT_MESSAGES_CONFIGURATION') {
           await handle_edit_commit_messages_configuration(this, message)
-        } else if (message.command == 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION') {
-          await handle_set_default_commit_messages_configuration(
-            this,
-            message
-          )
+        } else if (
+          message.command == 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION'
+        ) {
+          await handle_set_default_commit_messages_configuration(this, message)
         } else if (message.command == 'GET_COMMIT_MESSAGE_INSTRUCTIONS') {
           await handle_get_commit_message_instructions(this)
         } else if (message.command == 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS') {
           await handle_update_commit_message_instructions(this, message)
         } else if (message.command == 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER') {
           await handle_get_commit_message_auto_accept_after(this)
-        } else if (message.command == 'UPDATE_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER') {
+        } else if (
+          message.command == 'UPDATE_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER'
+        ) {
           await handle_update_commit_message_auto_accept_after(message)
         } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
           await handle_get_context_size_warning_threshold(this)
         } else if (message.command == 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD') {
           await handle_update_context_size_warning_threshold(this, message)
-        } else if (message.command == 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
+        } else if (
+          message.command == 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
+        ) {
           await handle_get_clear_checks_in_workspace_behavior(this)
-        } else if (message.command == 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR') {
-          await handle_update_clear_checks_in_workspace_behavior(
-            this,
-            message
-          )
+        } else if (
+          message.command == 'UPDATE_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
+        ) {
+          await handle_update_clear_checks_in_workspace_behavior(this, message)
         } else if (message.command == 'GET_GEMINI_USER_ID') {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
@@ -212,11 +222,15 @@ export class SettingsProvider {
         } else if (message.command == 'GET_CHECKPOINT_LIFESPAN') {
           await handle_get_checkpoint_lifespan(this)
         } else if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN') {
-          await vscode.workspace.getConfiguration('codeWebChat').update('checkpointLifespan', message.hours, vscode.ConfigurationTarget.Global)
+          await vscode.workspace
+            .getConfiguration('codeWebChat')
+            .update(
+              'checkpointLifespan',
+              message.hours,
+              vscode.ConfigurationTarget.Global
+            )
         } else if (message.command == 'OPEN_EDITOR_SETTINGS') {
-          await vscode.commands.executeCommand(
-            'workbench.action.openSettings'
-          )
+          await vscode.commands.executeCommand('workbench.action.openSettings')
         }
       },
       null,

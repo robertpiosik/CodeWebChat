@@ -90,7 +90,7 @@ type Props = {
   on_open_editor_settings: () => void
   on_add_provider: () => void
   on_delete_provider: (provider_name: string) => void
-  on_rename_provider: (provider_name: string) => void
+  on_edit_provider: (provider_name: string) => void
   on_change_api_key: (provider_name: string) => void
   on_reorder_providers: (reordered_providers: ProviderForClient[]) => void
   on_add_config: (tool_name: string) => void
@@ -275,9 +275,7 @@ export const Home: React.FC<Props> = (props) => {
             props.on_edit_format_instructions_change
           }
           checkpoint_lifespan={props.checkpoint_lifespan}
-          on_checkpoint_lifespan_change={
-            props.on_checkpoint_lifespan_change
-          }
+          on_checkpoint_lifespan_change={props.on_checkpoint_lifespan_change}
           on_open_editor_settings={props.on_open_editor_settings}
           on_stuck_change={general_on_stuck_change}
         />
@@ -302,7 +300,7 @@ export const Home: React.FC<Props> = (props) => {
               }}
               on_add_provider={props.on_add_provider}
               on_delete_provider={props.on_delete_provider}
-              on_rename_provider={props.on_rename_provider}
+              on_edit_provider={props.on_edit_provider}
               on_change_api_key={props.on_change_api_key}
             />
           </Group>

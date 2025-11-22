@@ -108,7 +108,7 @@ export const Settings = () => {
       on_reorder_providers={settings_hook.handle_reorder_providers}
       on_add_provider={settings_hook.handle_add_provider}
       on_delete_provider={settings_hook.handle_delete_provider}
-      on_rename_provider={settings_hook.handle_rename_provider}
+      on_edit_provider={settings_hook.handle_edit_provider}
       on_change_api_key={settings_hook.handle_change_api_key}
       on_add_config={settings_hook.handle_add_config}
       on_reorder_configs={settings_hook.handle_reorder_configs}

@@ -39,8 +39,8 @@ export interface DeleteModelProviderMessage {
   provider_name: string
 }
 
-export interface RenameModelProviderMessage {
-  command: 'RENAME_MODEL_PROVIDER'
+export interface EditCustomModelProviderMessage {
+  command: 'EDIT_CUSTOM_MODEL_PROVIDER'
   provider_name: string
 }
 
@@ -241,7 +241,7 @@ export type FrontendMessage =
   | ReorderModelProvidersMessage
   | AddModelProviderMessage
   | DeleteModelProviderMessage
-  | RenameModelProviderMessage
+  | EditCustomModelProviderMessage
   | ChangeModelProviderKeyMessage
   | GetCodeCompletionsConfigurationsMessage
   | ReorderCodeCompletionsConfigurationsMessage
