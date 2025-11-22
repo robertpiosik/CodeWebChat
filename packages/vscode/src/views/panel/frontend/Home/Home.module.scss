@@ -88,7 +88,7 @@
     position: relative;
     background-color: var(--vscode-sideBar-background);
     border-radius: var(--border-radius-10px);
-    border: 1px solid var(--vscode-toolbar-hoverBackground);
+    border: 1px solid var(--cwc-border-color);
     overflow: hidden;
 
     > button {
@@ -103,7 +103,7 @@
       transform: translate(-50%, -50%);
       width: 1px;
       height: 35px;
-      background-color: var(--vscode-toolbar-hoverBackground);
+      background-color: var(--cwc-border-color-dimmed);
       pointer-events: none;
     }
   }
