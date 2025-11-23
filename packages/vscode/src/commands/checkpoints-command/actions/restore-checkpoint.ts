@@ -22,6 +22,7 @@ import { response_preview_promise_resolve } from '../../apply-chat-response-comm
 import { ongoing_review_cleanup_promise } from '../../apply-chat-response-command/utils/preview-handler'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebsitesProvider } from '@/context/providers/websites-provider'
+import { get_git_info } from '../utils/git-utils'
 
 export const restore_checkpoint = async (params: {
   checkpoint: Checkpoint
@@ -163,6 +164,118 @@ export const restore_checkpoint = async (params: {
           const git_info = params.checkpoint.git_data[folder_name]
 
           if (git_info) {
+            const current_git_info = await get_git_info(folder)
+            if (
+              current_git_info &&
+              current_git_info.commit_hash == git_info.commit_hash
+            ) {
+              // OPTIMIZED PATH: Same commit hash. Reject changes and apply diff.
+              try {
+                // Discard changes in tracked files
+                execSync(`git restore .`, {
+                  cwd: folder.uri.fsPath,
+                  stdio: 'pipe'
+                })
+                // Remove untracked files
+                execSync(`git clean -fd`, {
+                  cwd: folder.uri.fsPath,
+                  stdio: 'pipe'
+                })
+              } catch (error) {
+                Logger.warn({
+                  function_name: 'restore_checkpoint',
+                  message: `git restore/clean failed for ${folder.name}, falling back to checkout`,
+                  data: error
+                })
+                try {
+                  execSync(`git checkout .`, {
+                    cwd: folder.uri.fsPath,
+                    stdio: 'pipe'
+                  })
+                  execSync(`git clean -fd`, {
+                    cwd: folder.uri.fsPath,
+                    stdio: 'pipe'
+                  })
+                } catch (e) {
+                  Logger.error({
+                    function_name: 'restore_checkpoint',
+                    message: `Failed to reject changes for ${folder.name}`,
+                    data: e
+                  })
+                  throw new Error(
+                    `Failed to reject changes for ${folder.name}. Please ensure your git working directory is clean.`
+                  )
+                }
+              }
+
+              const diff_file_path = path.join(
+                checkpoint_dir_path,
+                `${folder_name}.diff`
+              )
+
+              let diff = ''
+              try {
+                const diff_content = await vscode.workspace.fs.readFile(
+                  vscode.Uri.file(diff_file_path)
+                )
+                diff = Buffer.from(diff_content).toString('utf8')
+              } catch (e) {
+                // diff file might not exist if there were no changes.
+              }
+
+              if (diff.trim().length > 0) {
+                const temp_diff_path = path.join(
+                  os.tmpdir(),
+                  `cwc-diff-${Date.now()}-${Math.random()
+                    .toString()
+                    .slice(2)}.diff`
+                )
+
+                await vscode.workspace.fs.writeFile(
+                  vscode.Uri.file(temp_diff_path),
+                  Buffer.from(diff, 'utf8')
+                )
+                try {
+                  execSync(
+                    `git apply --whitespace=nowarn "${temp_diff_path}"`,
+                    {
+                      cwd: folder.uri.fsPath,
+                      stdio: 'pipe'
+                    }
+                  )
+                } catch (e) {
+                  try {
+                    execSync(
+                      `git apply --reject --whitespace=nowarn "${temp_diff_path}"`,
+                      {
+                        cwd: folder.uri.fsPath,
+                        stdio: 'pipe'
+                      }
+                    )
+                    vscode.window.showWarningMessage(
+                      `Some changes for ${folder.name} could not be applied cleanly during checkpoint restore. Check for .rej files in your workspace.`
+                    )
+                  } catch (rejectErr) {
+                    Logger.error({
+                      function_name: 'restore_checkpoint',
+                      message: `Failed to apply git diff even with --reject for ${folder.name}`,
+                      data: rejectErr
+                    })
+                    throw new Error(
+                      `Failed to apply git diff for ${folder.name}`
+                    )
+                  }
+                } finally {
+                  try {
+                    await vscode.workspace.fs.delete(
+                      vscode.Uri.file(temp_diff_path)
+                    )
+                  } catch {}
+                }
+              }
+              continue // Continue to next folder
+            }
+
             const temp_git_clone_path = path.join(
               os.tmpdir(),
               `cwc-git-clone-${Date.now()}-${Math.random().toString().slice(2)}`
