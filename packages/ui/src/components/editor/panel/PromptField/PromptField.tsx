@@ -318,6 +318,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           [styles['container__inner--selecting']]: is_text_selecting
         })}
         onKeyDown={(e) => {
+          if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey) {
+            e.stopPropagation()
+            return
+          }
           if (e.key == 'f' && (e.ctrlKey || e.metaKey)) {
             e.stopPropagation()
             props.on_search_click()
