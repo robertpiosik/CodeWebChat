@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { ChatInitializedModal } from './ChatInitializedModal'
+import { AutoClosingModal } from './AutoClosingModal'
 
 export default {
-  component: ChatInitializedModal
+  component: AutoClosingModal
 }
 
 export const Default = () => {
@@ -13,7 +13,7 @@ export const Default = () => {
   }
 
   return visible ? (
-    <ChatInitializedModal
+    <AutoClosingModal
       title="Chat has been initialized in the connected browser"
       duration={3000}
       on_close={handle_close}

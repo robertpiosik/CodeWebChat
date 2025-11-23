@@ -29,7 +29,11 @@ export const restore_checkpoint = async (params: {
   context: vscode.ExtensionContext
   panel_provider: PanelProvider
   websites_provider: WebsitesProvider
-  options?: { skip_confirmation?: boolean }
+  options?: {
+    skip_confirmation?: boolean
+    use_native_progress?: boolean
+    show_auto_closing_modal_on_success?: boolean
+  }
 }) => {
   const operation_in_progress = params.context.workspaceState.get<number>(
     CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
@@ -137,169 +141,210 @@ export const restore_checkpoint = async (params: {
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
       Date.now()
     )
-    await vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: params.options?.skip_confirmation
-          ? 'Reverting...'
-          : 'Restoring checkpoint...',
-        cancellable: false
-      },
-      async (progress) => {
-        const checkpoint_dir_path = get_checkpoint_path(
-          params.checkpoint.timestamp
-        )
-        const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
 
-        if (params.checkpoint.uses_git && params.checkpoint.git_data) {
-          const workspace_folders = vscode.workspace.workspaceFolders!
+    const title = params.options?.skip_confirmation
+      ? 'Reverting...'
+      : 'Restoring checkpoint...'
 
-          for (const folder of workspace_folders) {
-            const folder_name = folder.name
-            const git_info = params.checkpoint.git_data[folder_name]
+    // This is the task that was inside withProgress
+    const restoration_task = async (
+      progress: vscode.Progress<{ message?: string; increment?: number }>
+    ) => {
+      const checkpoint_dir_path = get_checkpoint_path(
+        params.checkpoint.timestamp
+      )
+      const checkpoint_dir_uri = vscode.Uri.file(checkpoint_dir_path)
 
-            if (git_info) {
-              const temp_git_clone_path = path.join(
-                os.tmpdir(),
-                `cwc-git-clone-${Date.now()}-${Math.random()
-                  .toString()
-                  .slice(2)}`
+      if (params.checkpoint.uses_git && params.checkpoint.git_data) {
+        const workspace_folders = vscode.workspace.workspaceFolders!
+
+        for (const folder of workspace_folders) {
+          const folder_name = folder.name
+          const git_info = params.checkpoint.git_data[folder_name]
+
+          if (git_info) {
+            const temp_git_clone_path = path.join(
+              os.tmpdir(),
+              `cwc-git-clone-${Date.now()}-${Math.random().toString().slice(2)}`
+            )
+            const temp_git_dir_uri = vscode.Uri.file(temp_git_clone_path)
+
+            try {
+              await vscode.workspace.fs.createDirectory(temp_git_dir_uri)
+              // Clone from local repo to temp dir. This is fast and works offline.
+              execSync(`git clone "${folder.uri.fsPath}" .`, {
+                cwd: temp_git_clone_path,
+                stdio: 'pipe'
+              })
+
+              // Checkout the specific commit in the temp repo
+              execSync(`git checkout ${git_info.commit_hash}`, {
+                cwd: temp_git_clone_path,
+                stdio: 'pipe'
+              })
+
+              // Remove .git folder from the temporary clone to prevent it from being synced
+              await vscode.workspace.fs.delete(
+                vscode.Uri.file(path.join(temp_git_clone_path, '.git')),
+                { recursive: true }
               )
-              const temp_git_dir_uri = vscode.Uri.file(temp_git_clone_path)
 
+              const diff_file_path = path.join(
+                checkpoint_dir_path,
+                `${folder_name}.diff`
+              )
+
+              let diff = ''
               try {
-                await vscode.workspace.fs.createDirectory(temp_git_dir_uri)
-                // Clone from local repo to temp dir. This is fast and works offline.
-                execSync(`git clone "${folder.uri.fsPath}" .`, {
-                  cwd: temp_git_clone_path,
-                  stdio: 'pipe'
-                })
-
-                // Checkout the specific commit in the temp repo
-                execSync(`git checkout ${git_info.commit_hash}`, {
-                  cwd: temp_git_clone_path,
-                  stdio: 'pipe'
-                })
-
-                // Remove .git folder from the temporary clone to prevent it from being synced
-                await vscode.workspace.fs.delete(
-                  vscode.Uri.file(path.join(temp_git_clone_path, '.git')),
-                  { recursive: true }
+                const diff_content = await vscode.workspace.fs.readFile(
+                  vscode.Uri.file(diff_file_path)
                 )
+                diff = Buffer.from(diff_content).toString('utf8')
+              } catch (e) {
+                // diff file might not exist if there were no changes.
+              }
 
-                const diff_file_path = path.join(
-                  checkpoint_dir_path,
-                  `${folder_name}.diff`
+              if (diff.trim().length > 0) {
+                const temp_diff_path = path.join(
+                  temp_git_clone_path,
+                  'cwc.diff'
                 )
-
-                let diff = ''
+                await vscode.workspace.fs.writeFile(
+                  vscode.Uri.file(temp_diff_path),
+                  Buffer.from(diff, 'utf8')
+                )
                 try {
-                  const diff_content = await vscode.workspace.fs.readFile(
-                    vscode.Uri.file(diff_file_path)
+                  execSync(
+                    `git apply --whitespace=nowarn "${temp_diff_path}"`,
+                    {
+                      cwd: temp_git_clone_path,
+                      stdio: 'pipe'
+                    }
                   )
-                  diff = Buffer.from(diff_content).toString('utf8')
                 } catch (e) {
-                  // diff file might not exist if there were no changes.
-                }
-
-                if (diff.trim().length > 0) {
-                  const temp_diff_path = path.join(
-                    temp_git_clone_path,
-                    'cwc.diff'
-                  )
-                  await vscode.workspace.fs.writeFile(
-                    vscode.Uri.file(temp_diff_path),
-                    Buffer.from(diff, 'utf8')
-                  )
                   try {
                     execSync(
-                      `git apply --whitespace=nowarn "${temp_diff_path}"`,
+                      `git apply --reject --whitespace=nowarn "${temp_diff_path}"`,
                       {
                         cwd: temp_git_clone_path,
                         stdio: 'pipe'
                       }
                     )
-                  } catch (e) {
-                    try {
-                      execSync(
-                        `git apply --reject --whitespace=nowarn "${temp_diff_path}"`,
-                        {
-                          cwd: temp_git_clone_path,
-                          stdio: 'pipe'
-                        }
-                      )
-                      vscode.window.showWarningMessage(
-                        `Some changes for ${folder.name} could not be applied cleanly during checkpoint restore. Check for .rej files in your workspace.`
-                      )
-                    } catch (rejectErr) {
-                      Logger.error({
-                        function_name: 'restore_checkpoint',
-                        message: `Failed to apply git diff even with --reject for ${folder.name}`,
-                        data: rejectErr
-                      })
-                      throw new Error(
-                        `Failed to apply git diff for ${folder.name}`
-                      )
-                    }
-                  } finally {
-                    try {
-                      await vscode.workspace.fs.delete(
-                        vscode.Uri.file(temp_diff_path)
-                      )
-                    } catch {}
-                  }
-                }
-
-                await sync_directory({
-                  source_dir: temp_git_dir_uri,
-                  dest_dir: folder.uri,
-                  root_path: folder.uri.fsPath,
-                  workspace_provider: params.workspace_provider,
-                  progress
-                })
-              } catch (err) {
-                Logger.error({
-                  function_name: 'restore_checkpoint',
-                  message: `Error restoring git checkpoint for ${folder.name}`,
-                  data: err
-                })
-                throw err
-              } finally {
-                // cleanup temp dir
-                if (temp_git_dir_uri) {
-                  try {
-                    await vscode.workspace.fs.delete(temp_git_dir_uri, {
-                      recursive: true
+                    vscode.window.showWarningMessage(
+                      `Some changes for ${folder.name} could not be applied cleanly during checkpoint restore. Check for .rej files in your workspace.`
+                    )
+                  } catch (rejectErr) {
+                    Logger.error({
+                      function_name: 'restore_checkpoint',
+                      message: `Failed to apply git diff even with --reject for ${folder.name}`,
+                      data: rejectErr
                     })
+                    throw new Error(
+                      `Failed to apply git diff for ${folder.name}`
+                    )
+                  }
+                } finally {
+                  try {
+                    await vscode.workspace.fs.delete(
+                      vscode.Uri.file(temp_diff_path)
+                    )
                   } catch {}
                 }
               }
-            } else {
-              const source_folder_uri =
-                workspace_folders.length > 1
-                  ? vscode.Uri.joinPath(checkpoint_dir_uri, folder.name)
-                  : checkpoint_dir_uri
-              try {
-                await vscode.workspace.fs.stat(source_folder_uri)
-                await sync_directory({
-                  source_dir: source_folder_uri,
-                  dest_dir: folder.uri,
-                  root_path: folder.uri.fsPath,
-                  workspace_provider: params.workspace_provider,
-                  progress
-                })
-              } catch {}
+
+              await sync_directory({
+                source_dir: temp_git_dir_uri,
+                dest_dir: folder.uri,
+                root_path: folder.uri.fsPath,
+                workspace_provider: params.workspace_provider,
+                progress
+              })
+            } catch (err) {
+              Logger.error({
+                function_name: 'restore_checkpoint',
+                message: `Error restoring git checkpoint for ${folder.name}`,
+                data: err
+              })
+              throw err
+            } finally {
+              // cleanup temp dir
+              if (temp_git_dir_uri) {
+                try {
+                  await vscode.workspace.fs.delete(temp_git_dir_uri, {
+                    recursive: true
+                  })
+                } catch {}
+              }
             }
+          } else {
+            const source_folder_uri =
+              workspace_folders.length > 1
+                ? vscode.Uri.joinPath(checkpoint_dir_uri, folder.name)
+                : checkpoint_dir_uri
+            try {
+              await vscode.workspace.fs.stat(source_folder_uri)
+              await sync_directory({
+                source_dir: source_folder_uri,
+                dest_dir: folder.uri,
+                root_path: folder.uri.fsPath,
+                workspace_provider: params.workspace_provider,
+                progress
+              })
+            } catch {}
           }
-        } else {
-          await sync_workspace_from_dir({
-            source_dir_uri: checkpoint_dir_uri,
-            workspace_provider: params.workspace_provider,
-            progress
-          })
+        }
+      } else {
+        await sync_workspace_from_dir({
+          source_dir_uri: checkpoint_dir_uri,
+          workspace_provider: params.workspace_provider,
+          progress
+        })
+      }
+    }
+
+    if (params.options?.use_native_progress) {
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title,
+          cancellable: false
+        },
+        restoration_task
+      )
+    } else {
+      let current_progress = 0
+      params.panel_provider.send_message({
+        command: 'SHOW_PROGRESS',
+        title,
+        progress: current_progress,
+        cancellable: false,
+        show_elapsed_time: false
+      })
+      const progress: vscode.Progress<{
+        message?: string
+        increment?: number
+      }> = {
+        report: (value) => {
+          if (value.increment) {
+            current_progress += value.increment
+            params.panel_provider.send_message({
+              command: 'SHOW_PROGRESS',
+              title,
+              progress: Math.min(current_progress, 100),
+              cancellable: false,
+              show_elapsed_time: false
+            })
+          }
         }
       }
-    )
+      try {
+        await restoration_task(progress)
+      } finally {
+        params.panel_provider.send_message({
+          command: 'HIDE_PROGRESS'
+        })
+      }
+    }
 
     if (params.checkpoint.response_history) {
       params.panel_provider.response_history =
@@ -386,9 +431,14 @@ export const restore_checkpoint = async (params: {
 
     const message = params.options?.skip_confirmation
       ? 'Successfully reverted changes.'
-      : `Checkpoint restored successfully.`
+      : 'Checkpoint has been restored.'
 
-    if (temp_checkpoint) {
+    if (params.options?.show_auto_closing_modal_on_success) {
+      params.panel_provider.send_message({
+        command: 'SHOW_AUTO_CLOSING_MODAL',
+        title: message
+      })
+    } else if (temp_checkpoint) {
       const action = await vscode.window.showInformationMessage(
         message,
         'Revert'
@@ -400,7 +450,7 @@ export const restore_checkpoint = async (params: {
           context: params.context,
           panel_provider: params.panel_provider,
           websites_provider: params.websites_provider,
-          options: { skip_confirmation: true }
+          options: { skip_confirmation: true, use_native_progress: true }
         })
         await delete_checkpoint({
           context: params.context,

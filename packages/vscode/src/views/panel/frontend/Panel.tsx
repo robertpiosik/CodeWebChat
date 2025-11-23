@@ -9,7 +9,7 @@ import cn from 'classnames'
 import { post_message } from './utils/post_message'
 import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/panel/ResponsePreview'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
-import { ChatInitializedModal as UiChatInitializedModal } from '@ui/components/editor/panel/modals/ChatInitializedModal'
+import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
 import { use_panel } from './hooks/use-panel'
@@ -36,8 +36,8 @@ export const Panel = () => {
     raw_instructions,
     progress_state,
     set_progress_state,
-    chat_initialized_title,
-    set_chat_initialized_title,
+    auto_closing_modal_title,
+    set_auto_closing_modal_title,
     commit_message_to_review,
     set_commit_message_to_review,
     files_to_stage,
@@ -447,21 +447,26 @@ export const Panel = () => {
               progress={progress_state.progress}
               tokens_per_second={progress_state.tokens_per_second}
               files={progress_state.files}
-              on_cancel={() => {
-                set_progress_state(undefined)
-                post_message(vscode, { command: 'CANCEL_API_REQUEST' })
-              }}
+              show_elapsed_time={progress_state.show_elapsed_time}
+              on_cancel={
+                progress_state.cancellable
+                  ? () => {
+                      set_progress_state(undefined)
+                      post_message(vscode, { command: 'CANCEL_API_REQUEST' })
+                    }
+                  : undefined
+              }
             />
           </div>
         )}
 
-        {chat_initialized_title && (
+        {auto_closing_modal_title && (
           <div className={styles.slot}>
-            <UiChatInitializedModal
-              title={chat_initialized_title}
+            <UiAutoClosingModal
+              title={auto_closing_modal_title}
               duration={3000}
               on_close={() => {
-                set_chat_initialized_title(undefined)
+                set_auto_closing_modal_title(undefined)
               }}
             />
           </div>

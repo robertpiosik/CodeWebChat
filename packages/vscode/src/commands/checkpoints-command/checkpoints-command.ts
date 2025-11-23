@@ -212,7 +212,7 @@ export const checkpoints_command = (params: {
               checkpoint: temp_checkpoint,
               workspace_provider: params.workspace_provider,
               context: params.context,
-              options: { skip_confirmation: true },
+              options: { skip_confirmation: true, use_native_progress: true },
               panel_provider: params.panel_provider,
               websites_provider: params.websites_provider
             })
@@ -233,7 +233,8 @@ export const checkpoints_command = (params: {
               workspace_provider: params.workspace_provider,
               context: params.context,
               panel_provider: params.panel_provider,
-              websites_provider: params.websites_provider
+              websites_provider: params.websites_provider,
+              options: { use_native_progress: true }
             })
           }
         })

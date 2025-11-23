@@ -21,10 +21,11 @@ export type FileProgress = {
 
 type Props = {
   title: string
-  on_cancel: () => void
+  on_cancel?: () => void
   progress?: number
   tokens_per_second?: number
   files?: FileProgress[]
+  show_elapsed_time?: boolean
 }
 
 const format_tokens_per_second = (tps: number): string => {
@@ -51,27 +52,41 @@ const get_status_text = (status: FileProgressStatus): string => {
 }
 
 export const ProgressModal: React.FC<Props> = (props) => {
+  const [is_visible, set_is_visible] = useState(false)
   const [elapsed_time, set_elapsed_time] = useState(0)
 
   useEffect(() => {
-    set_elapsed_time(0)
-    const start_time = Date.now()
-    const timer = setInterval(() => {
-      set_elapsed_time((Date.now() - start_time) / 1000)
-    }, 100)
+    set_is_visible(false)
+    const visibility_timer = setTimeout(() => {
+      set_is_visible(true)
+    }, 1000)
 
-    return () => clearInterval(timer)
-  }, [props.title])
+    let elapsed_time_timer: NodeJS.Timeout | undefined
+    if (props.show_elapsed_time !== false) {
+      set_elapsed_time(0)
+      const start_time = Date.now()
+      elapsed_time_timer = setInterval(() => {
+        set_elapsed_time((Date.now() - start_time) / 1000)
+      }, 100)
+    }
 
-  return (
+    return () => {
+      clearTimeout(visibility_timer)
+      clearInterval(elapsed_time_timer)
+    }
+  }, [props.title, props.show_elapsed_time])
+
+  return is_visible ? (
     <Modal
       title={props.title}
       content_max_height={props.files ? 'calc(100vh - 150px)' : undefined}
       content_slot={
         <>
-          <div className={styles['elapsed-time']}>
-            {elapsed_time.toFixed(1)}s
-          </div>
+          {props.show_elapsed_time !== false && (
+            <div className={styles['elapsed-time']}>
+              {elapsed_time.toFixed(1)}s
+            </div>
+          )}
 
           {props.files ? (
             <div className={styles.content}>
@@ -161,7 +176,11 @@ export const ProgressModal: React.FC<Props> = (props) => {
           )}
         </>
       }
-      footer_slot={<Button on_click={props.on_cancel}>Cancel</Button>}
+      footer_slot={
+        props.on_cancel ? (
+          <Button on_click={props.on_cancel}>Cancel</Button>
+        ) : undefined
+      }
     />
-  )
+  ) : null
 }

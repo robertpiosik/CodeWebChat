@@ -604,14 +604,16 @@ export interface ShowProgressMessage extends BaseMessage {
   progress?: number
   tokens_per_second?: number
   files?: FileProgress[]
+  cancellable?: boolean
+  show_elapsed_time?: boolean
 }
 
 export interface HideProgressMessage extends BaseMessage {
   command: 'HIDE_PROGRESS'
 }
 
-export interface ShowChatInitializedMessage extends BaseMessage {
-  command: 'SHOW_CHAT_INITIALIZED'
+export interface ShowAutoClosingModalMessage extends BaseMessage {
+  command: 'SHOW_AUTO_CLOSING_MODAL'
   title: string
 }
 
@@ -678,7 +680,7 @@ export type BackendMessage =
   | SelectedConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
-  | ShowChatInitializedMessage
+  | ShowAutoClosingModalMessage
   | UpdateFileInReviewMessage
   | ShowStageFilesModalMessage
   | ShowCommitMessageModalMessage

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import styles from './ChatInitializedModal.module.scss'
+import styles from './AutoClosingModal.module.scss'
 import { Button } from '../../Button'
 import { Modal } from '../Modal'
 
@@ -9,7 +9,7 @@ type Props = {
   on_close: () => void
 }
 
-export const ChatInitializedModal: React.FC<Props> = (props) => {
+export const AutoClosingModal: React.FC<Props> = (props) => {
   const [is_filling, set_is_filling] = useState(false)
 
   useEffect(() => {

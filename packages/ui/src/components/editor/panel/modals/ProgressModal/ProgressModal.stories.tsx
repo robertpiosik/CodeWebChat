@@ -17,6 +17,10 @@ export const Indeterminate = () => {
   ) : null
 }
 
+export const NonCancellable = () => {
+  return <ProgressModal title="Restoring checkpoint..." progress={50} />
+}
+
 export const WithProgress = () => {
   const [visible, set_visible] = useState(true)
   const [progress, set_progress] = useState(0)

@@ -324,8 +324,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         if (
           (this.mode == MODE.WEB &&
             this.web_prompt_type == 'code-completions') ||
-          (this.mode == MODE.API &&
-            this.api_prompt_type == 'code-completions')
+          (this.mode == MODE.API && this.api_prompt_type == 'code-completions')
         ) {
           this.calculate_token_count()
         }
@@ -335,9 +334,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public get_presets_config_key(): string {
     const mode =
-      this.mode == MODE.API
-        ? this.api_prompt_type
-        : this.web_prompt_type
+      this.mode == MODE.API ? this.api_prompt_type : this.web_prompt_type
     switch (mode) {
       case 'ask':
         return 'chatPresetsForAskAboutContext'
@@ -428,7 +425,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
                 workspace_provider: this.workspace_provider,
                 context: this.context,
                 panel_provider: this,
-                websites_provider: this.websites_provider
+                websites_provider: this.websites_provider,
+                options: {
+                  show_auto_closing_modal_on_success: true
+                }
               })
             }
           } else if (message.command == 'GET_HISTORY') {
@@ -513,7 +513,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_get_api_tool_configurations(this)
           } else if (message.command == 'REORDER_API_TOOL_CONFIGURATIONS') {
             await handle_reorder_api_tool_configurations(this, message)
-          } else if (message.command == 'TOGGLE_PINNED_API_TOOL_CONFIGURATION') {
+          } else if (
+            message.command == 'TOGGLE_PINNED_API_TOOL_CONFIGURATION'
+          ) {
             await handle_toggle_pinned_api_tool_configuration(this, message)
           } else if (message.command == 'SAVE_WEB_MODE') {
             await handle_save_mode_web(this, message.mode)
@@ -613,10 +615,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   }
 
   public calculate_token_count() {
-    if (
-      this.mode == MODE.WEB &&
-      this.web_prompt_type == 'no-context'
-    ) {
+    if (this.mode == MODE.WEB && this.web_prompt_type == 'no-context') {
       this.send_message({
         command: 'TOKEN_COUNT_UPDATED',
         token_count: 0
@@ -627,10 +626,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const active_editor = vscode.window.activeTextEditor
 
     const is_code_completions_mode =
-      (this.mode == MODE.WEB &&
-        this.web_prompt_type == 'code-completions') ||
-      (this.mode == MODE.API &&
-        this.api_prompt_type == 'code-completions')
+      (this.mode == MODE.WEB && this.web_prompt_type == 'code-completions') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'code-completions')
 
     Promise.all([
       this.workspace_provider.get_checked_files_token_count({
@@ -921,10 +918,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {
     const is_in_code_completions_mode =
-      (this.mode == MODE.WEB &&
-        this.web_prompt_type == 'code-completions') ||
-      (this.mode == MODE.API &&
-        this.api_prompt_type == 'code-completions')
+      (this.mode == MODE.WEB && this.web_prompt_type == 'code-completions') ||
+      (this.mode == MODE.API && this.api_prompt_type == 'code-completions')
 
     let current_instructions = ''
     let new_instructions = ''

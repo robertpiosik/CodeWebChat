@@ -25,8 +25,10 @@ export const use_panel = (vscode: any) => {
     progress?: number
     tokens_per_second?: number
     files?: FileProgress[]
+    cancellable?: boolean
+    show_elapsed_time?: boolean
   }>()
-  const [chat_initialized_title, set_chat_initialized_title] = useState<
+  const [auto_closing_modal_title, set_auto_closing_modal_title] = useState<
     string | undefined
   >()
   const [commit_message_to_review, set_commit_message_to_review] = useState<
@@ -118,7 +120,6 @@ export const use_panel = (vscode: any) => {
         created_at
       })
     }
-   
   }
 
   useEffect(() => {
@@ -194,12 +195,14 @@ export const use_panel = (vscode: any) => {
           title: message.title,
           progress: message.progress,
           tokens_per_second: message.tokens_per_second,
-          files: message.files
+          files: message.files,
+          cancellable: message.cancellable ?? true,
+          show_elapsed_time: message.show_elapsed_time
         })
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)
-      } else if (message.command == 'SHOW_CHAT_INITIALIZED') {
-        set_chat_initialized_title(message.title)
+      } else if (message.command == 'SHOW_AUTO_CLOSING_MODAL') {
+        set_auto_closing_modal_title(message.title)
       } else if (message.command == 'FOCUS_PROMPT_FIELD') {
         set_chat_input_focus_key((k) => k + 1)
       } else if (message.command == 'SHOW_COMMIT_MESSAGE_MODAL') {
@@ -343,8 +346,8 @@ export const use_panel = (vscode: any) => {
     raw_instructions,
     progress_state,
     set_progress_state,
-    chat_initialized_title,
-    set_chat_initialized_title,
+    auto_closing_modal_title,
+    set_auto_closing_modal_title,
     commit_message_to_review,
     set_commit_message_to_review,
     files_to_stage,
