@@ -82,7 +82,7 @@ export const Header: React.FC<Props> = (props) => {
         <button
           className={styles['header__left__toggler']}
           onClick={handle_heading_click}
-          title={`Change mode (${is_mac ? '⌘+Esc' : 'Ctrl+Esc'})`}
+          title={`Change mode (${is_mac ? '⌘ Esc' : 'Ctrl+Esc'})`}
         >
           {props.mode == MODE.WEB ? MODE.WEB : MODE.API}
         </button>
@@ -99,7 +99,9 @@ export const Header: React.FC<Props> = (props) => {
               on_change={props.on_web_prompt_type_change}
               max_width={dropdown_max_width}
               info={is_narrow_viewport ? undefined : 'prompt type'}
-              title="Change prompt type (Shift+Alt)"
+              title={
+                is_mac ? 'Change prompt type (⇧⌥)' : 'Change prompt type (Shift+Alt)'
+              }
             />
           )}
           {props.mode == MODE.API && (
@@ -111,7 +113,9 @@ export const Header: React.FC<Props> = (props) => {
               on_change={props.on_api_prompt_type_change}
               max_width={dropdown_max_width}
               info={is_narrow_viewport ? undefined : 'prompt type'}
-              title="Change prompt type (Shift+Alt)"
+              title={
+                is_mac ? 'Change prompt type (⇧⌥)' : 'Change prompt type (Shift+Alt)'
+              }
             />
           )}
         </div>

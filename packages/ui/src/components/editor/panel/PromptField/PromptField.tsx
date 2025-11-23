@@ -510,12 +510,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       items={[
                         {
                           label: 'Select...',
-                          shortcut: `${mod_key}+${is_mac ? 'Return' : 'Enter'}`,
+                          shortcut: is_mac ? `${mod_key} Return` : `${mod_key}+Enter`,
                           on_click: handle_select_click
                         },
                         {
                           label: 'Copy prompt',
-                          shortcut: `${mod_key}+${is_mac ? 'Option' : 'Alt'}+C`,
+                          shortcut: is_mac ? `${mod_key}⌥C` : `${mod_key}+Alt+C`,
                           on_click: handle_copy_click
                         }
                       ]}
