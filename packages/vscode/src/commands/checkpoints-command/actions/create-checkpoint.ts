@@ -22,6 +22,7 @@ import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WebsitesProvider } from '@/context/providers/websites-provider'
+import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
 
 const remove_old_checkpoints = async (
   checkpoints: Checkpoint[]
@@ -244,6 +245,12 @@ export const create_checkpoint = async (
           .get_checked_websites()
           .map((w) => w.url),
         active_tabs
+      }
+
+      if (title == 'Created by user' && !response_preview_promise_resolve) {
+        checkpoint_object.response_history = [
+          ...panel_provider.response_history
+        ]
       }
 
       checkpoints.unshift(checkpoint_object)
