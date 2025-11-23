@@ -86,38 +86,17 @@ export const checkpoints_command = (params: {
 
         let notification_count = 0
         let checkpoints: Checkpoint[] = []
+        let temp_checkpoint_is_valid = false
 
-        const refresh_items = async () => {
-          quick_pick.busy = true
-          checkpoints = await get_checkpoints(params.context)
-
-          const temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
-            TEMPORARY_CHECKPOINT_STATE_KEY
-          )
+        const update_view = () => {
           let revert_item:
             | (vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint })
             | undefined
 
-          if (temp_checkpoint) {
-            const three_hours_in_ms = 3 * 60 * 60 * 1000
-            if (Date.now() - temp_checkpoint.timestamp < three_hours_in_ms) {
-              try {
-                const checkpoint_path = get_checkpoint_path(
-                  temp_checkpoint.timestamp
-                )
-                await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
-                revert_item = {
-                  id: 'revert-last',
-                  label: '$(discard) Revert last restored checkpoint',
-                  alwaysShow: true
-                }
-              } catch {
-                // file doesn't exist, so we can't revert. Clean up state.
-                await params.context.workspaceState.update(
-                  TEMPORARY_CHECKPOINT_STATE_KEY,
-                  undefined
-                )
-              }
+          if (temp_checkpoint_is_valid) {
+            revert_item = {
+              id: 'revert-last',
+              label: '$(discard) Revert last restored checkpoint'
             }
           }
 
@@ -133,13 +112,7 @@ export const checkpoints_command = (params: {
             return b.timestamp - a.timestamp
           })
 
-          quick_pick.items = [
-            {
-              id: 'add-new',
-              label: '$(add) New checkpoint...',
-              alwaysShow: true
-            },
-            ...(revert_item ? [revert_item] : []),
+          const checkpoint_items = [
             ...(visible_checkpoints.length > 0
               ? [
                   {
@@ -179,8 +152,53 @@ export const checkpoints_command = (params: {
               }
             })
           ]
+
+          if (quick_pick.value) {
+            quick_pick.items = checkpoint_items
+          } else {
+            quick_pick.items = [
+              {
+                id: 'add-new',
+                label: '$(add) New checkpoint...'
+              },
+              ...(revert_item ? [revert_item] : []),
+              ...checkpoint_items
+            ]
+          }
+        }
+
+        const refresh_and_update_view = async () => {
+          quick_pick.busy = true
+          checkpoints = await get_checkpoints(params.context)
+
+          const temp_checkpoint = params.context.workspaceState.get<Checkpoint>(
+            TEMPORARY_CHECKPOINT_STATE_KEY
+          )
+          temp_checkpoint_is_valid = false
+          if (temp_checkpoint) {
+            const three_hours_in_ms = 3 * 60 * 60 * 1000
+            if (Date.now() - temp_checkpoint.timestamp < three_hours_in_ms) {
+              try {
+                const checkpoint_path = get_checkpoint_path(
+                  temp_checkpoint.timestamp
+                )
+                await vscode.workspace.fs.stat(vscode.Uri.file(checkpoint_path))
+                temp_checkpoint_is_valid = true
+              } catch {
+                // file doesn't exist, so we can't revert. Clean up state.
+                await params.context.workspaceState.update(
+                  TEMPORARY_CHECKPOINT_STATE_KEY,
+                  undefined
+                )
+              }
+            }
+          }
+
+          update_view()
           quick_pick.busy = false
         }
+
+        quick_pick.onDidChangeValue(update_view)
 
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0]
@@ -194,7 +212,7 @@ export const checkpoints_command = (params: {
               params.panel_provider,
               params.websites_provider
             )
-            await show_quick_pick()
+            await refresh_and_update_view()
           } else if (selected.id == 'revert-last') {
             quick_pick.hide()
             const temp_checkpoint =
@@ -258,7 +276,7 @@ export const checkpoints_command = (params: {
               TEMPORARY_CHECKPOINT_STATE_KEY,
               undefined
             )
-            await show_quick_pick()
+            await refresh_and_update_view()
           }
         })
 
@@ -281,7 +299,7 @@ export const checkpoints_command = (params: {
               )
               params.panel_provider.send_checkpoints()
             }
-            await refresh_items()
+            await refresh_and_update_view()
             const active_item = quick_pick.items.find(
               (i) =>
                 (i as any).checkpoint?.timestamp === item.checkpoint?.timestamp
@@ -315,7 +333,7 @@ export const checkpoints_command = (params: {
                 params.panel_provider.send_checkpoints()
               }
             }
-            await refresh_items()
+            await refresh_and_update_view()
             if (new_description !== undefined) {
               const active_item = quick_pick.items.find(
                 (i) =>
@@ -354,7 +372,7 @@ export const checkpoints_command = (params: {
             )
             params.panel_provider.send_checkpoints()
             checkpoints = updated_checkpoints
-            await refresh_items()
+            update_view()
 
             const currentOperation = {
               timestamp: deleted_checkpoint.timestamp,
@@ -407,7 +425,7 @@ export const checkpoints_command = (params: {
                   .then(() => {
                     notification_count--
                   })
-                await refresh_items()
+                update_view()
               } else {
                 await currentOperation.finalize()
               }
@@ -434,7 +452,7 @@ export const checkpoints_command = (params: {
           }
           quick_pick.dispose()
         })
-        await refresh_items()
+        await refresh_and_update_view()
         quick_pick.show()
       }
 
