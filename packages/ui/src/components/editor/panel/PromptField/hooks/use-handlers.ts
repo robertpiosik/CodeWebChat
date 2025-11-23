@@ -27,16 +27,19 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const path = el.dataset.path
         if (!path) return ''
         const filename = path.split('/').pop() || path
-        if (el.textContent === filename) {
-          return `\`${path}\``
+        if (el.textContent?.startsWith(filename)) {
+          const extra = el.textContent.substring(filename.length)
+          return `\`${path}\`${extra}`
         }
         break
       }
       case 'changes-keyword': {
         const branchName = el.dataset.branchName
         if (!branchName) return ''
-        if (el.textContent === `Diff with ${branchName}`) {
-          return `#Changes:${branchName}`
+        const expected_text = `Diff with ${branchName}`
+        if (el.textContent?.startsWith(expected_text)) {
+          const extra = el.textContent.substring(expected_text.length)
+          return `#Changes:${branchName}${extra}`
         }
         break
       }
@@ -44,14 +47,18 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const contextType = el.dataset.contextType
         const contextName = el.dataset.contextName
         if (!contextType || !contextName) return ''
-        if (el.textContent === `Context "${contextName}"`) {
-          return `#SavedContext:${contextType} "${contextName}"`
+        const expected_text = `Context "${contextName}"`
+        if (el.textContent?.startsWith(expected_text)) {
+          const extra = el.textContent.substring(expected_text.length)
+          return `#SavedContext:${contextType} "${contextName}"${extra}`
         }
         break
       }
       case 'selection-keyword': {
-        if (el.textContent === 'Selection') {
-          return '#Selection'
+        const expected_text = 'Selection'
+        if (el.textContent?.startsWith(expected_text)) {
+          const extra = el.textContent.substring(expected_text.length)
+          return `#Selection${extra}`
         }
         break
       }
@@ -63,8 +70,9 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
           return ''
         }
         const short_hash = commit_hash.substring(0, 7)
-        if (el.textContent === short_hash) {
-          return `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
+        if (el.textContent?.startsWith(short_hash)) {
+          const extra = el.textContent.substring(short_hash.length)
+          return `#Commit:${repo_name}:${commit_hash} "${commit_message}"${extra}`
         }
         break
       }
@@ -541,19 +549,42 @@ export const use_handlers = (
     }
 
     const range = selection.getRangeAt(0)
+    const { startContainer, startOffset } = range
     let node_before_cursor: Node | null = null
 
     if (
-      range.startContainer.nodeType === Node.TEXT_NODE &&
-      range.startOffset === 0
+      startContainer.nodeType == Node.TEXT_NODE &&
+      startOffset == 0
     ) {
-      node_before_cursor = range.startContainer.previousSibling
+      node_before_cursor = startContainer.previousSibling
     } else if (
-      range.startContainer.nodeType === Node.ELEMENT_NODE &&
-      range.startOffset > 0
+      startContainer.nodeType == Node.ELEMENT_NODE &&
+      startOffset > 0
     ) {
-      node_before_cursor =
-        range.startContainer.childNodes[range.startOffset - 1]
+      node_before_cursor = startContainer.childNodes[startOffset - 1]
+    } else if (
+      startContainer.nodeType == Node.TEXT_NODE &&
+      startOffset == startContainer.textContent?.length
+    ) {
+      let parent = startContainer.parentElement
+      while (parent && parent !== input_ref.current) {
+        if (
+          parent.dataset.type == 'file-keyword' ||
+          parent.dataset.type == 'changes-keyword' ||
+          parent.dataset.type == 'selection-keyword' ||
+          parent.dataset.type == 'saved-context-keyword' ||
+          parent.dataset.type == 'commit-keyword'
+        ) {
+          const rangeAfter = document.createRange()
+          rangeAfter.selectNodeContents(parent)
+          rangeAfter.setStart(startContainer, startOffset)
+          if (rangeAfter.toString().trim() == '') {
+            node_before_cursor = parent
+            break
+          }
+        }
+        parent = parent.parentElement
+      }
     }
 
     if (
@@ -691,4 +722,3 @@ export const use_handlers = (
     handle_input_click
   }
 }
-
