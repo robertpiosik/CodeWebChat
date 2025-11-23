@@ -15,7 +15,7 @@ import {
   get_last_selected_preset_key
 } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
-import { MODE } from '@/views/panel/types/home-view-type'
+import { MODE } from '@/views/panel/types/main-view-mode'
 import { WebPromptType } from '@shared/types/prompt-types'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'

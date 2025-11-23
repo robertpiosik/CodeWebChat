@@ -6,7 +6,7 @@ import {
   FrontendMessage
 } from '../../types/messages'
 import { Checkpoint } from '../../types/messages'
-import { Mode } from '../../types/home-view-type'
+import { Mode, MODE } from '../../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { post_message } from '../utils/post_message'
 import { ItemInPreview } from '@shared/types/file-in-preview'
@@ -298,12 +298,25 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_mode_change = (mode: Mode) => {
-    set_mode(mode)
+  const handle_mode_change = (new_mode: Mode) => {
+    if (mode == new_mode) return
+
+    if (new_mode == MODE.API && web_prompt_type) {
+      if (
+        web_prompt_type == 'edit-context' ||
+        web_prompt_type == 'code-completions'
+      ) {
+        handle_api_prompt_type_change(web_prompt_type)
+      }
+    } else if (new_mode == MODE.WEB && api_prompt_type) {
+      handle_web_prompt_type_change(api_prompt_type)
+    }
+
+    set_mode(new_mode)
     set_chat_input_focus_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_MODE',
-      mode
+      mode: new_mode
     })
   }
 

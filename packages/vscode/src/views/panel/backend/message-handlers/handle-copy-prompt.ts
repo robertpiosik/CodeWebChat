@@ -9,7 +9,7 @@ import {
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
-import { MODE } from '@/views/panel/types/home-view-type'
+import { MODE } from '@/views/panel/types/main-view-mode'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_copy_prompt = async (params: {

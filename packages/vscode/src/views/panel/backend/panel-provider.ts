@@ -91,7 +91,7 @@ import {
 } from '@/views/panel/backend/utils/preset-format-converters'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { CHATBOTS } from '@shared/constants/chatbots'
-import { MODE, Mode } from '../types/home-view-type'
+import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Logger } from '@shared/utils/logger'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'

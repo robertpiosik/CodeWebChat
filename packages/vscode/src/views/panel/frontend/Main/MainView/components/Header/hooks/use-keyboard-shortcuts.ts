@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { use_is_mac } from '@shared/hooks'
-import { MODE, Mode } from '@/views/panel/types/home-view-type'
+import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { api_mode_labels, web_mode_labels } from '../../../modes'
 

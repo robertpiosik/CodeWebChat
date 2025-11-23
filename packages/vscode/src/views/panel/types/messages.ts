@@ -2,7 +2,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Preset } from '@shared/types/preset'
-import { Mode } from './home-view-type'
+import { Mode } from './main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { InstructionsPlacement } from '@/services/model-providers-manager'
 

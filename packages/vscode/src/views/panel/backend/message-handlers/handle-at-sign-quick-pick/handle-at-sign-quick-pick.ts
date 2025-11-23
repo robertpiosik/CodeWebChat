@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { MODE } from '@/views/panel/types/home-view-type'
+import { MODE } from '@/views/panel/types/main-view-mode'
 import * as vscode from 'vscode'
 import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'

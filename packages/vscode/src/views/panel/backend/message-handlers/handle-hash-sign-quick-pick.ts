@@ -1,5 +1,5 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { MODE } from '@/views/panel/types/home-view-type'
+import { MODE } from '@/views/panel/types/main-view-mode'
 import * as vscode from 'vscode'
 import { hash_sign_quick_pick } from '../utils/hash-sign-quick-pick'
 

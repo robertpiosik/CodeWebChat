@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { MODE } from '@/views/panel/types/home-view-type'
+import { MODE } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 
 type PromptTemplate = {

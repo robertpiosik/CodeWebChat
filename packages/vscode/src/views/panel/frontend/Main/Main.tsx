@@ -5,7 +5,7 @@ import { EditFormat } from '@shared/types/edit-format'
 import {
   MODE,
   Mode
-} from '@/views/panel/types/home-view-type'
+} from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   BackendMessage,
