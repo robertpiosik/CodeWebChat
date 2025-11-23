@@ -21,13 +21,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   padding: 0 6px;
   height: 24px;
   cursor: pointer;
   color: var(--vscode-quickInput-foreground);
   white-space: nowrap;
   border-radius: 4px;
+
+  &__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  }
 
   &:hover,
   &[data-selected='true'] {

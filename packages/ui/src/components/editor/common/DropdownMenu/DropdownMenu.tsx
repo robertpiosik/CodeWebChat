@@ -12,6 +12,7 @@ export namespace DropdownMenu {
   export type Props = {
     items: Item[]
     underline_non_selected_items?: boolean
+    max_width?: number | string
   }
 }
 
@@ -20,7 +21,7 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
     useState<boolean>(true)
 
   return (
-    <div className={styles.menu}>
+    <div className={styles.menu} style={{ maxWidth: props.max_width }}>
       <div className={styles.menu__inner}>
         {props.items.map((item, index) => {
           const is_selected = item.is_selected && is_preselection_respected
@@ -37,7 +38,7 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
                 set_is_preselection_respected(false)
               }}
             >
-              <span>
+              <span className={styles.item__label}>
                 {should_underline ? (
                   <>
                     <span className={styles.underlined}>

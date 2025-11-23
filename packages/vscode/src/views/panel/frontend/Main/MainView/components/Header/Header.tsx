@@ -92,12 +92,15 @@ export const Header: React.FC<Props> = (props) => {
         <div className={styles.header__right__dropdown}>
           {props.mode == MODE.WEB && (
             <UiDropdown
-              options={Object.entries(web_mode_labels).map(
-                ([value, label]) => ({ value: value as WebPromptType, label })
-              )}
+              options={Object.entries(web_mode_labels).map(([value, label]) => ({
+                value: value as WebPromptType,
+                label,
+                shortcut: `${is_mac ? '⇧⌥' : 'Shift+Alt+'}${label.charAt(0)}`,
+              }))}
               selected_value={props.web_prompt_type}
               on_change={props.on_web_prompt_type_change}
               max_width={dropdown_max_width}
+              menu_max_width="calc(100vw - 52px)"
               info={is_narrow_viewport ? undefined : 'prompt type'}
               title={
                 is_mac ? 'Change prompt type (⇧⌥)' : 'Change prompt type (Shift+Alt)'
@@ -106,12 +109,15 @@ export const Header: React.FC<Props> = (props) => {
           )}
           {props.mode == MODE.API && (
             <UiDropdown
-              options={Object.entries(api_mode_labels).map(
-                ([value, label]) => ({ value: value as ApiPromptType, label })
-              )}
+              options={Object.entries(api_mode_labels).map(([value, label]) => ({
+                value: value as ApiPromptType,
+                label,
+                shortcut: `${is_mac ? '⇧⌥' : 'Shift+Alt+'}${label.charAt(0)}`,
+              }))}
               selected_value={props.api_prompt_type}
               on_change={props.on_api_prompt_type_change}
               max_width={dropdown_max_width}
+              menu_max_width="calc(100vw - 60px)"
               info={is_narrow_viewport ? undefined : 'prompt type'}
               title={
                 is_mac ? 'Change prompt type (⇧⌥)' : 'Change prompt type (Shift+Alt)'

@@ -7,6 +7,7 @@ export namespace Dropdown {
   export type Option<T extends string> = {
     value: T
     label: string
+    shortcut?: string
   }
 
   export type Props<T extends string> = {
@@ -14,6 +15,7 @@ export namespace Dropdown {
     selected_value: T
     on_change: (value: T) => void
     max_width?: number
+    menu_max_width?: number | string
     info?: string
     title?: string
   }
@@ -158,9 +160,11 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
           items={props.options.map((option) => ({
             label: option.label,
             on_click: () => handle_select(option.value),
-            is_selected: just_opened && option.value == props.selected_value
+            is_selected: just_opened && option.value == props.selected_value,
+            shortcut: option.shortcut,
           }))}
           underline_non_selected_items={opened_by_shortcut.current}
+          max_width={props.menu_max_width}
         />
       )}
     </div>
