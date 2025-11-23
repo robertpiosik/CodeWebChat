@@ -307,11 +307,6 @@ const perform_code_completion = async (params: {
     endpoint_url = provider.base_url
   }
 
-  if (!provider.api_key) {
-    vscode.window.showErrorMessage(dictionary.error_message.API_KEY_MISSING)
-    return
-  }
-
   const editor = vscode.window.activeTextEditor
   if (editor) {
     if (!editor.selection.isEmpty) {
@@ -484,14 +479,12 @@ const perform_code_completion = async (params: {
   }
 }
 
-export const code_completion_commands = (
-  params: {
-    file_tree_provider: any
-    open_editors_provider: any
-    context: vscode.ExtensionContext
-    panel_provider: PanelProvider
-  }
-) => {
+export const code_completion_commands = (params: {
+  file_tree_provider: any
+  open_editors_provider: any
+  context: vscode.ExtensionContext
+  panel_provider: PanelProvider
+}) => {
   return [
     vscode.commands.registerCommand('codeWebChat.codeCompletion', async () =>
       perform_code_completion({

@@ -289,11 +289,6 @@ const perform_code_completion = async (params: {
     endpoint_url = provider.base_url
   }
 
-  if (!provider.api_key) {
-    vscode.window.showErrorMessage(dictionary.error_message.API_KEY_MISSING)
-    return
-  }
-
   const editor = vscode.window.activeTextEditor
   if (editor) {
     if (!editor.selection.isEmpty) {

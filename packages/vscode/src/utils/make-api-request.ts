@@ -61,7 +61,7 @@ const process_stream_chunk = async (
 
 export const make_api_request = async (params: {
   endpoint_url: string
-  api_key: string
+  api_key?: string
   body: any
   cancellation_token: any
   on_chunk?: StreamCallback
@@ -241,7 +241,9 @@ export const make_api_request = async (params: {
         request_body,
         {
           headers: {
-            ['Authorization']: `Bearer ${params.api_key}`,
+            ...(params.api_key
+              ? { ['Authorization']: `Bearer ${params.api_key}` }
+              : {}),
             ['Content-Type']: 'application/json',
             ...(params.endpoint_url == 'https://openrouter.ai/api/v1'
               ? {

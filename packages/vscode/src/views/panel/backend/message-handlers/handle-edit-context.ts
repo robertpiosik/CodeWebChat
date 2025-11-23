@@ -310,13 +310,6 @@ const perform_context_editing = async (params: {
 
     const { provider, config: edit_context_config } = config_result
 
-    if (!provider.api_key) {
-      vscode.window.showErrorMessage(dictionary.error_message.API_KEY_MISSING)
-      should_show_quick_pick = true
-      current_config_id = undefined
-      continue
-    }
-
     let endpoint_url = ''
     if (provider.type == 'built-in') {
       const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]

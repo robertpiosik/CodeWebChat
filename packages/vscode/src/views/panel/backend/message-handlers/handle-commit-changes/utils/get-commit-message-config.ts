@@ -179,13 +179,6 @@ export const get_commit_message_config = async (
     return null
   }
 
-  if (!provider.api_key) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.API_KEY_MISSING_FOR_PROVIDER
-    )
-    return null
-  }
-
   let endpoint_url = ''
   if (provider.type == 'built-in') {
     const provider_info = PROVIDERS[provider.name]

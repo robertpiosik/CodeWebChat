@@ -7,10 +7,7 @@ import { Preset } from '@shared/types/preset'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { EditFormat } from '@shared/types/edit-format'
-import {
-  MODE,
-  Mode
-} from '@/views/panel/types/home-view-type'
+import { MODE, Mode } from '@/views/panel/types/home-view-type'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { BrowserExtensionMessage as UiBrowserExtensionMessage } from '@ui/components/editor/panel/BrowserExtensionMessage'
@@ -100,16 +97,12 @@ type Props = {
 
 export const MainView: React.FC<Props> = (props) => {
   const is_in_code_completions_prompt_type =
-    (props.mode == MODE.WEB &&
-      props.web_prompt_type == 'code-completions') ||
-    (props.mode == MODE.API &&
-      props.api_prompt_type == 'code-completions')
+    (props.mode == MODE.WEB && props.web_prompt_type == 'code-completions') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'code-completions')
 
   const show_edit_format_selector =
-    (props.mode == MODE.WEB &&
-      props.web_prompt_type == 'edit-context') ||
-    (props.mode == MODE.API &&
-      props.api_prompt_type == 'edit-context')
+    (props.mode == MODE.WEB && props.web_prompt_type == 'edit-context') ||
+    (props.mode == MODE.API && props.api_prompt_type == 'edit-context')
 
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
@@ -147,14 +140,6 @@ export const MainView: React.FC<Props> = (props) => {
     configurations: props.configurations
   })
 
-  const scroll_to_top_key = `${props.scroll_reset_key}-${
-    props.mode
-  }-${
-    props.mode == MODE.WEB
-      ? props.web_prompt_type
-      : props.api_prompt_type
-  }`
-
   return (
     <>
       <Header
@@ -167,7 +152,7 @@ export const MainView: React.FC<Props> = (props) => {
         on_api_mode_change={props.on_api_mode_change}
         on_quick_action_click={props.on_quick_action_click}
       />
-      <Scrollable scroll_to_top_key={scroll_to_top_key}>
+      <Scrollable>
         <UiSeparator height={4} />
 
         {!props.is_connected && props.mode == MODE.WEB && (
