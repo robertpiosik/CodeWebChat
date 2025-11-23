@@ -23,18 +23,21 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
   const [is_open, set_is_open] = useState(false)
   const [just_opened, set_just_opened] = useState(false)
   const container_ref = useRef<HTMLDivElement>(null)
+  const opened_by_shortcut = useRef(false)
 
   const selected_option = props.options.find(
     (option) => option.value == props.selected_value
   )
 
   const handle_toggle = () => {
+    opened_by_shortcut.current = false
     set_is_open(!is_open)
     set_just_opened(!is_open)
   }
 
   const handle_select = (value: T) => {
     props.on_change(value)
+    opened_by_shortcut.current = false
     set_is_open(false)
     set_just_opened(false)
   }
@@ -63,6 +66,7 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
   }
 
   const handle_mouse_leave = () => {
+    opened_by_shortcut.current = false
     set_is_open(false)
     set_just_opened(false)
   }
@@ -73,6 +77,7 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
         container_ref.current &&
         !container_ref.current.contains(event.target as Node)
       ) {
+        opened_by_shortcut.current = false
         set_is_open(false)
         set_just_opened(false)
       }
@@ -83,6 +88,36 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
       document.removeEventListener('mousedown', handle_click_outside)
     }
   }, [])
+
+  useEffect(() => {
+    const handle_key_down = (event: KeyboardEvent) => {
+      if (event.altKey && event.shiftKey && !is_open) {
+        event.preventDefault()
+        set_is_open(true)
+        set_just_opened(true)
+        opened_by_shortcut.current = true
+      }
+    }
+
+    const handle_key_up = (event: KeyboardEvent) => {
+      if (
+        opened_by_shortcut.current &&
+        (event.key == 'Alt' || event.key == 'Shift')
+      ) {
+        set_is_open(false)
+        set_just_opened(false)
+        opened_by_shortcut.current = false
+      }
+    }
+
+    document.addEventListener('keydown', handle_key_down)
+    document.addEventListener('keyup', handle_key_up)
+
+    return () => {
+      document.removeEventListener('keydown', handle_key_down)
+      document.removeEventListener('keyup', handle_key_up)
+    }
+  }, [is_open])
 
   return (
     <div
@@ -125,6 +160,7 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
             on_click: () => handle_select(option.value),
             is_selected: just_opened && option.value == props.selected_value
           }))}
+          underline_non_selected_items={opened_by_shortcut.current}
         />
       )}
     </div>

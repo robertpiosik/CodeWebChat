@@ -53,8 +53,8 @@ type Props = {
   context_size_warning_threshold: number
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
-  on_web_mode_change: (mode: WebPromptType) => void
-  on_api_mode_change: (mode: ApiPromptType) => void
+  on_web_prompt_type_change: (prompt_type: WebPromptType) => void
+  on_api_prompt_type_change: (prompt_type: ApiPromptType) => void
   chat_edit_format: EditFormat
   api_edit_format: EditFormat
   on_chat_edit_format_change: (edit_format: EditFormat) => void
@@ -147,9 +147,9 @@ export const MainView: React.FC<Props> = (props) => {
         on_mode_change={props.on_mode_change}
         on_show_home={props.on_show_home}
         web_prompt_type={props.web_prompt_type}
-        on_web_mode_change={props.on_web_mode_change}
+        on_web_prompt_type_change={props.on_web_prompt_type_change}
         api_prompt_type={props.api_prompt_type}
-        on_api_mode_change={props.on_api_mode_change}
+        on_api_prompt_type_change={props.on_api_prompt_type_change}
         on_quick_action_click={props.on_quick_action_click}
       />
       <Scrollable>

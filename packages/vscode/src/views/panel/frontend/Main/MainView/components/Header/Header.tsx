@@ -1,15 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import cn from 'classnames'
-import {
-  MODE,
-  Mode
-} from '@/views/panel/types/home-view-type'
-import { use_is_narrow_viewport } from '@shared/hooks'
+import { MODE, Mode } from '@/views/panel/types/home-view-type'
+import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { Dropdown as UiDropdown } from '@ui/components/editor/panel/Dropdown'
 import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButton'
 import styles from './Header.module.scss'
 import { api_mode_labels, web_mode_labels } from '../../modes'
+import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 
 type Props = {
   mode: Mode
@@ -17,8 +15,8 @@ type Props = {
   on_show_home: () => void
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
-  on_web_mode_change: (mode: WebPromptType) => void
-  on_api_mode_change: (mode: ApiPromptType) => void
+  on_web_prompt_type_change: (mode: WebPromptType) => void
+  on_api_prompt_type_change: (mode: ApiPromptType) => void
   on_quick_action_click: (command: string) => void
 }
 
@@ -28,15 +26,23 @@ export const Header: React.FC<Props> = (props) => {
   >(undefined)
   const header_ref = useRef<HTMLDivElement>(null)
   const is_narrow_viewport = use_is_narrow_viewport(294)
+  const is_mac = use_is_mac()
   const header_left_ref = useRef<HTMLDivElement>(null)
 
-  const handle_heading_click = () => {
+  const handle_heading_click = useCallback(() => {
     if (props.mode == MODE.WEB) {
       props.on_mode_change(MODE.API)
     } else {
       props.on_mode_change(MODE.WEB)
     }
-  }
+  }, [props.mode, props.on_mode_change])
+
+  use_keyboard_shortcuts({
+    mode: props.mode,
+    handle_heading_click,
+    on_web_prompt_type_change: props.on_web_prompt_type_change,
+    on_api_prompt_type_change: props.on_api_prompt_type_change,
+  })
 
   const calculate_dropdown_max_width = () => {
     if (!header_ref.current || !header_left_ref.current) return
@@ -76,7 +82,7 @@ export const Header: React.FC<Props> = (props) => {
         <button
           className={styles['header__left__toggler']}
           onClick={handle_heading_click}
-          title="Change mode"
+          title={`Change mode (${is_mac ? '⌘+Esc' : 'Ctrl+Esc'})`}
         >
           {props.mode == MODE.WEB ? MODE.WEB : MODE.API}
         </button>
@@ -90,10 +96,10 @@ export const Header: React.FC<Props> = (props) => {
                 ([value, label]) => ({ value: value as WebPromptType, label })
               )}
               selected_value={props.web_prompt_type}
-              on_change={props.on_web_mode_change}
+              on_change={props.on_web_prompt_type_change}
               max_width={dropdown_max_width}
               info={is_narrow_viewport ? undefined : 'prompt type'}
-              title="Change prompt type"
+              title="Change prompt type (Shift+Alt)"
             />
           )}
           {props.mode == MODE.API && (
@@ -102,10 +108,10 @@ export const Header: React.FC<Props> = (props) => {
                 ([value, label]) => ({ value: value as ApiPromptType, label })
               )}
               selected_value={props.api_prompt_type}
-              on_change={props.on_api_mode_change}
+              on_change={props.on_api_prompt_type_change}
               max_width={dropdown_max_width}
               info={is_narrow_viewport ? undefined : 'prompt type'}
-              title="Change prompt type"
+              title="Change prompt type (Shift+Alt)"
             />
           )}
         </div>

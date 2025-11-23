@@ -76,8 +76,8 @@ export const Panel = () => {
     edit_preset_back_click_handler,
     edit_preset_save_handler,
     handle_preview_preset,
-    handle_web_mode_change,
-    handle_api_mode_change,
+    handle_web_prompt_type_change,
+    handle_api_prompt_type_change,
     handle_mode_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change,
@@ -216,8 +216,8 @@ export const Panel = () => {
                 on_mode_change={handle_mode_change}
                 has_active_editor={has_active_editor}
                 has_active_selection={has_active_selection}
-                on_web_mode_change={handle_web_mode_change}
-                on_api_mode_change={handle_api_mode_change}
+                on_web_prompt_type_change={handle_web_prompt_type_change}
+                on_api_prompt_type_change={handle_api_prompt_type_change}
                 response_history={response_history}
                 on_response_history_item_click={
                   handle_response_history_item_click
@@ -257,14 +257,14 @@ export const Panel = () => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_mode_change(MODE.WEB)
-                  handle_web_mode_change('edit-context')
+                  handle_web_prompt_type_change('edit-context')
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 on_api_calls_click={() => {
                   set_active_view('main')
                   set_main_view_scroll_reset_key((k) => k + 1)
                   handle_mode_change(MODE.API)
-                  handle_api_mode_change('edit-context')
+                  handle_api_prompt_type_change('edit-context')
                   set_chat_input_focus_and_select_key((k) => k + 1)
                 }}
                 version={version}

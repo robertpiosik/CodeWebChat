@@ -272,7 +272,7 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_web_mode_change = (new_mode: WebPromptType) => {
+  const handle_web_prompt_type_change = (new_mode: WebPromptType) => {
     set_web_mode(new_mode)
     set_chat_input_focus_and_select_key((k) => k + 1)
     post_message(vscode, {
@@ -284,7 +284,7 @@ export const use_panel = (vscode: any) => {
     })
   }
 
-  const handle_api_mode_change = (new_mode: ApiPromptType) => {
+  const handle_api_prompt_type_change = (new_mode: ApiPromptType) => {
     set_api_mode(new_mode)
     set_chat_input_focus_and_select_key((k) => k + 1)
     post_message(vscode, {
@@ -390,8 +390,8 @@ export const use_panel = (vscode: any) => {
     edit_preset_back_click_handler,
     edit_preset_save_handler,
     handle_preview_preset,
-    handle_web_mode_change,
-    handle_api_mode_change,
+    handle_web_prompt_type_change,
+    handle_api_prompt_type_change,
     handle_mode_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change,

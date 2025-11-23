@@ -7,7 +7,7 @@ import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { DropdownMenu } from '../../common/DropdownMenu'
-import { use_is_narrow_viewport } from '@shared/hooks'
+import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
 import { search_paths } from '@shared/utils/search-paths'
 import { get_display_text } from './utils/get-display-text'
 import {
@@ -135,19 +135,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     []
   )
 
-  const is_mac = useMemo(() => {
-    if (typeof navigator == 'undefined') return false
-    const any_nav = navigator as any
-    const uach_platform: string | undefined = any_nav?.userAgentData?.platform
-    if (typeof uach_platform == 'string') {
-      return uach_platform.toLowerCase().includes('mac')
-    }
-    if (typeof navigator.userAgent == 'string') {
-      return /mac/i.test(navigator.userAgent)
-    }
-    return false
-  }, [])
-  const mod_key = is_mac ? 'cmd' : 'ctrl'
+  const is_mac = use_is_mac()
+  const mod_key = is_mac ? '⌘' : 'Ctrl'
 
   const display_text = useMemo(() => {
     return get_display_text(props.value, props.context_file_paths ?? [])
@@ -521,12 +510,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       items={[
                         {
                           label: 'Select...',
-                          shortcut: `${mod_key}+${is_mac ? 'return' : 'enter'}`,
+                          shortcut: `${mod_key}+${is_mac ? 'Return' : 'Enter'}`,
                           on_click: handle_select_click
                         },
                         {
                           label: 'Copy prompt',
-                          shortcut: `${mod_key}+${is_mac ? 'option' : 'alt'}+c`,
+                          shortcut: `${mod_key}+${is_mac ? 'Option' : 'Alt'}+C`,
                           on_click: handle_copy_click
                         }
                       ]}

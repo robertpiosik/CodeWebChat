@@ -11,6 +11,7 @@ export namespace DropdownMenu {
 
   export type Props = {
     items: Item[]
+    underline_non_selected_items?: boolean
   }
 }
 
@@ -21,22 +22,39 @@ export const DropdownMenu: React.FC<DropdownMenu.Props> = (props) => {
   return (
     <div className={styles.menu}>
       <div className={styles.menu__inner}>
-        {props.items.map((item, index) => (
-          <div
-            key={index}
-            className={styles.item}
-            onClick={item.on_click}
-            data-selected={item.is_selected && is_preselection_respected}
-            onMouseEnter={() => {
-              set_is_preselection_respected(false)
-            }}
-          >
-            <span>{item.label}</span>
-            {item.shortcut && (
-              <span className={styles.shortcut}>{item.shortcut}</span>
-            )}
-          </div>
-        ))}
+        {props.items.map((item, index) => {
+          const is_selected = item.is_selected && is_preselection_respected
+          const should_underline =
+            props.underline_non_selected_items && !is_selected
+
+          return (
+            <div
+              key={index}
+              className={styles.item}
+              onClick={item.on_click}
+              data-selected={is_selected}
+              onMouseEnter={() => {
+                set_is_preselection_respected(false)
+              }}
+            >
+              <span>
+                {should_underline ? (
+                  <>
+                    <span className={styles.underlined}>
+                      {item.label.substring(0, 1)}
+                    </span>
+                    {item.label.substring(1)}
+                  </>
+                ) : (
+                  item.label
+                )}
+              </span>
+              {item.shortcut && (
+                <span className={styles.shortcut}>{item.shortcut}</span>
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )

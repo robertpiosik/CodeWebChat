@@ -6,7 +6,7 @@ export const code_completion_instructions_for_panel = (
   row: number,
   column: number
 ) =>
-  `Find correct replacement text for the <missing_text> symbol. Your response must begin with a code block containing the replacement text, followed by an explanation. The first line of the code block must be a comment containing: ${file_path} ${
+  `Find correct replacement text for the <missing_text> symbol. Your response must begin with a Markdown Code Block containing the replacement text, followed by an explanation. The first line of the Markdown Code Block must be a commented-out text: "${file_path}" ${
     row + 1
   }:${
     column + 1

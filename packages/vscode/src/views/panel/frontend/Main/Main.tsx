@@ -41,8 +41,8 @@ type Props = {
   web_prompt_type: WebPromptType
   api_prompt_type: ApiPromptType
   on_mode_change: (mode: Mode) => void
-  on_web_mode_change: (mode: WebPromptType) => void
-  on_api_mode_change: (mode: ApiPromptType) => void
+  on_web_prompt_type_change: (mode: WebPromptType) => void
+  on_api_prompt_type_change: (mode: ApiPromptType) => void
   has_active_editor: boolean
   has_active_selection: boolean
   chat_input_focus_and_select_key: number
@@ -687,8 +687,8 @@ export const Main: React.FC<Props> = (props) => {
       web_prompt_type={props.web_prompt_type}
       api_prompt_type={props.api_prompt_type}
       context_size_warning_threshold={props.context_size_warning_threshold}
-      on_web_mode_change={props.on_web_mode_change}
-      on_api_mode_change={props.on_api_mode_change}
+      on_web_prompt_type_change={props.on_web_prompt_type_change}
+      on_api_prompt_type_change={props.on_api_prompt_type_change}
       chat_edit_format={chat_edit_format}
       api_edit_format={api_edit_format}
       edit_format_instructions={edit_format_instructions}

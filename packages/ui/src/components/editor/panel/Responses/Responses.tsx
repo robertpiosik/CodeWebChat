@@ -73,11 +73,11 @@ export const Responses: React.FC<Props> = (props) => {
                 <span
                   className={
                     styles[
-                      'responses__item__content__instructions__manual-entry'
+                      'responses__item__content__instructions__no-instructions'
                     ]
                   }
                 >
-                  Added manually
+                  Response preview
                 </span>
               )}
             </div>
