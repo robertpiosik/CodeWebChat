@@ -427,7 +427,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
                 panel_provider: this,
                 websites_provider: this.websites_provider,
                 options: {
-                  show_auto_closing_modal_on_success: true
+                  show_auto_closing_modal_on_success: true,
                 }
               })
             }

@@ -27,6 +27,7 @@ export const use_panel = (vscode: any) => {
     files?: FileProgress[]
     cancellable?: boolean
     show_elapsed_time?: boolean
+    delay_visibility?: boolean
   }>()
   const [auto_closing_modal_title, set_auto_closing_modal_title] = useState<
     string | undefined
@@ -197,7 +198,8 @@ export const use_panel = (vscode: any) => {
           tokens_per_second: message.tokens_per_second,
           files: message.files,
           cancellable: message.cancellable ?? true,
-          show_elapsed_time: message.show_elapsed_time
+          show_elapsed_time: message.show_elapsed_time,
+          delay_visibility: message.delay_visibility
         })
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)

@@ -26,6 +26,7 @@ type Props = {
   tokens_per_second?: number
   files?: FileProgress[]
   show_elapsed_time?: boolean
+  delay_visibility?: boolean
 }
 
 const format_tokens_per_second = (tps: number): string => {
@@ -52,14 +53,19 @@ const get_status_text = (status: FileProgressStatus): string => {
 }
 
 export const ProgressModal: React.FC<Props> = (props) => {
-  const [is_visible, set_is_visible] = useState(false)
+  const [is_visible, set_is_visible] = useState(!props.delay_visibility)
   const [elapsed_time, set_elapsed_time] = useState(0)
 
   useEffect(() => {
-    set_is_visible(false)
-    const visibility_timer = setTimeout(() => {
+    let visibility_timer: NodeJS.Timeout | undefined
+    if (props.delay_visibility) {
+      set_is_visible(false)
+      visibility_timer = setTimeout(() => {
+        set_is_visible(true)
+      }, 1000)
+    } else {
       set_is_visible(true)
-    }, 1000)
+    }
 
     let elapsed_time_timer: NodeJS.Timeout | undefined
     if (props.show_elapsed_time !== false) {
@@ -74,7 +80,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
       clearTimeout(visibility_timer)
       clearInterval(elapsed_time_timer)
     }
-  }, [props.title, props.show_elapsed_time])
+  }, [props.show_elapsed_time, props.delay_visibility])
 
   return is_visible ? (
     <Modal

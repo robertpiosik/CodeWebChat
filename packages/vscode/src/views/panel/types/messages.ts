@@ -606,6 +606,7 @@ export interface ShowProgressMessage extends BaseMessage {
   files?: FileProgress[]
   cancellable?: boolean
   show_elapsed_time?: boolean
+  delay_visibility?: boolean
 }
 
 export interface HideProgressMessage extends BaseMessage {
