@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import axios from 'axios'
 import { SettingsProvider } from '@/views/settings/backend/settings-provider'
 import {
   ModelProvidersManager,
@@ -295,19 +296,19 @@ export const handle_edit_custom_model_provider = async (
       break
     }
 
-    if (selected_id === 'rename') {
+    if (selected_id == 'rename') {
       const new_name = await prompt_for_name()
       const trimmed_new_name = new_name.trim()
       if (trimmed_new_name && trimmed_new_name !== provider_to_edit.name) {
         provider_to_edit.name = trimmed_new_name
       }
-    } else if (selected_id === 'edit-url') {
+    } else if (selected_id == 'edit-url') {
       const new_url = await prompt_for_url()
       const normalized_new_url = normalize_base_url(new_url)
       if (normalized_new_url !== provider_to_edit.base_url) {
         provider_to_edit.base_url = normalized_new_url
       }
-    } else if (selected_id === 'change-key') {
+    } else if (selected_id == 'change-key') {
       if (!provider_to_edit.api_key) {
         // API key is not set, prompt for it directly
         const { value: new_key, accepted } = await prompt_for_key()
@@ -324,7 +325,7 @@ export const handle_edit_custom_model_provider = async (
             break // User escaped from change/clear, go to main menu
           }
 
-          if (action === 'change') {
+          if (action == 'change') {
             const current_api_key = provider_to_edit.api_key
             const { value: new_key, accepted } = await prompt_for_key()
             const trimmed_api_key = new_key.trim()
@@ -341,30 +342,30 @@ export const handle_edit_custom_model_provider = async (
             }
 
             if (
-              trimmed_api_key === '' &&
+              trimmed_api_key == '' &&
               current_api_key &&
-              current_api_key !== ''
+              current_api_key != ''
             ) {
               const confirmation = await vscode.window.showWarningMessage(
                 `Are you sure you want to clear the API key for ${provider_to_edit.name}? This action cannot be undone.`,
                 { modal: true },
                 'Clear API Key'
               )
-              if (confirmation !== 'Clear API Key') {
+              if (confirmation != 'Clear API Key') {
                 break // Don't clear, back to main menu
               }
             }
             provider_to_edit.api_key = trimmed_api_key
             break // Key changed, back to main menu
-          } else if (action === 'clear') {
-            if (provider_to_edit.api_key && provider_to_edit.api_key !== '') {
+          } else if (action == 'clear') {
+            if (provider_to_edit.api_key && provider_to_edit.api_key != '') {
               const confirmation = await vscode.window.showWarningMessage(
                 `Are you sure you want to clear the API key for ${provider_to_edit.name}? This action cannot be undone.`,
                 { modal: true },
                 'Clear API Key'
               )
 
-              if (confirmation === 'Clear API Key') {
+              if (confirmation == 'Clear API Key') {
                 provider_to_edit.api_key = ''
               }
             }
@@ -376,23 +377,40 @@ export const handle_edit_custom_model_provider = async (
   }
 
   if (
-    provider_to_edit.base_url !== original_provider.base_url &&
+    provider_to_edit.base_url != original_provider.base_url &&
     !provider_to_edit.base_url.endsWith('/v1')
   ) {
-    const add_v1_suffix = 'Add "/v1" suffix'
-    const choice = await vscode.window.showInformationMessage(
-      'The Base URL does not end with "/v1". Many OpenAI-compatible APIs require this. Would you like to add it?',
-      { modal: true },
-      add_v1_suffix
-    )
+    let should_ask_to_add_v1 = true
+    try {
+      const headers: { [key: string]: string } = {}
+      if (provider_to_edit.api_key) {
+        headers['Authorization'] = `Bearer ${provider_to_edit.api_key}`
+      }
+      await axios.get(`${provider_to_edit.base_url}/models`, {
+        timeout: 2000,
+        headers
+      })
+      should_ask_to_add_v1 = false
+    } catch (error) {
+      // If the request fails, we should ask the user to add /v1.
+    }
 
-    if (choice === add_v1_suffix) {
-      provider_to_edit.base_url = `${provider_to_edit.base_url}/v1`
+    if (should_ask_to_add_v1) {
+      const add_v1_suffix = 'Add "/v1" suffix'
+      const choice = await vscode.window.showInformationMessage(
+        'The Base URL does not end with "/v1". Many OpenAI-compatible APIs require this. Would you like to add it?',
+        { modal: true },
+        add_v1_suffix
+      )
+
+      if (choice == add_v1_suffix) {
+        provider_to_edit.base_url = `${provider_to_edit.base_url}/v1`
+      }
     }
   }
 
   const has_changed =
-    JSON.stringify(provider_to_edit) !== JSON.stringify(original_provider)
+    JSON.stringify(provider_to_edit) != JSON.stringify(original_provider)
 
   if (has_changed) {
     const providers = await providers_manager.get_providers()
@@ -402,7 +420,7 @@ export const handle_edit_custom_model_provider = async (
         : p
     )
     await providers_manager.save_providers(updated_providers)
-    if (provider_to_edit.name !== original_provider.name) {
+    if (provider_to_edit.name != original_provider.name) {
       await providers_manager.update_provider_name_in_configs({
         old_name: original_provider.name,
         new_name: provider_to_edit.name
