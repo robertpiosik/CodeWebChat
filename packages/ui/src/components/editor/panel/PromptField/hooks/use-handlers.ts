@@ -437,13 +437,16 @@ export const use_handlers = (
     set_history_index(-1)
 
     if (char_before_caret == '@') {
-      setTimeout(() => {
-        props.on_at_sign_click()
-      }, 150)
+      const is_at_start = caret_position == 1
+      const is_after_space =
+        caret_position > 1 &&
+        /\s/.test(new_display_value.charAt(caret_position - 2))
+
+      if (is_at_start || is_after_space) {
+          props.on_at_sign_click()
+      }
     } else if (char_before_caret == '#') {
-      setTimeout(() => {
         props.on_hash_sign_click()
-      }, 150)
     }
   }
 
