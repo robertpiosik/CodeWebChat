@@ -64,11 +64,9 @@ describe('cleanup_api_response', () => {
       expect(cleanup_api_response({ content })).toBe('')
     })
 
-    it('should not remove wrappers from the middle of the content', () => {
+    it('should extract content from a code block surrounded by text', () => {
       const content = 'Some text\n```\ncode\n```\nSome other text'
-      expect(cleanup_api_response({ content })).toBe(
-        'Some text\n```\ncode\n```\nSome other text'
-      )
+      expect(cleanup_api_response({ content })).toBe('code')
     })
   })
 
