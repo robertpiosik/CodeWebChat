@@ -31,7 +31,7 @@ export const handle_edit_custom_model_provider = async (
     return
   }
 
-  const provider_to_edit: CustomProvider = { ...original_provider }
+  let provider_to_edit: CustomProvider = { ...original_provider }
 
   const show_options_quick_pick = (): Promise<string | undefined> => {
     return new Promise((resolve) => {
@@ -59,6 +59,18 @@ export const handle_edit_custom_model_provider = async (
       quick_pick.items = items
       quick_pick.title = `Edit "${provider_to_edit.name}" Model Provider`
 
+      const redo_button: vscode.QuickInputButton = {
+        iconPath: new vscode.ThemeIcon('redo'),
+        tooltip: 'Cancel all changes'
+      }
+
+      const save_button: vscode.QuickInputButton = {
+        iconPath: new vscode.ThemeIcon('save'),
+        tooltip: 'Save changes'
+      }
+
+      quick_pick.buttons = [redo_button, save_button]
+
       let is_accepted = false
       const disposables: vscode.Disposable[] = []
 
@@ -68,6 +80,15 @@ export const handle_edit_custom_model_provider = async (
       }
 
       disposables.push(
+        quick_pick.onDidTriggerButton((button) => {
+          is_accepted = true
+          if (button === redo_button) {
+            resolve('redo')
+          } else if (button === save_button) {
+            resolve('save')
+          }
+          quick_pick.hide()
+        }),
         quick_pick.onDidAccept(() => {
           is_accepted = true
           const selected = quick_pick.selectedItems[0] as
@@ -96,8 +117,6 @@ export const handle_edit_custom_model_provider = async (
       input_box.value = provider_to_edit.name
       input_box.valueSelection = [0, input_box.value.length]
 
-      input_box.buttons = [vscode.QuickInputButtons.Back]
-
       let is_accepted = false
       const disposables: vscode.Disposable[] = []
 
@@ -107,13 +126,6 @@ export const handle_edit_custom_model_provider = async (
       }
 
       disposables.push(
-        input_box.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            is_accepted = true
-            resolve(input_box.value)
-            cleanup()
-          }
-        }),
         input_box.onDidAccept(async () => {
           const new_name = input_box.value
 
@@ -140,8 +152,8 @@ export const handle_edit_custom_model_provider = async (
         }),
         input_box.onDidHide(() => {
           if (!is_accepted) {
-            // Escaped, preserve value
-            resolve(input_box.value)
+            // Escaped, cancel changes
+            resolve(provider_to_edit.name)
             cleanup()
           }
         })
@@ -158,7 +170,6 @@ export const handle_edit_custom_model_provider = async (
       input_box.prompt = 'Enter the new base URL'
       input_box.value = provider_to_edit.base_url
       input_box.valueSelection = [0, input_box.value.length]
-      input_box.buttons = [vscode.QuickInputButtons.Back]
 
       let is_accepted = false
       const disposables: vscode.Disposable[] = []
@@ -169,13 +180,6 @@ export const handle_edit_custom_model_provider = async (
       }
 
       disposables.push(
-        input_box.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            is_accepted = true
-            resolve(input_box.value)
-            cleanup()
-          }
-        }),
         input_box.onDidAccept(async () => {
           is_accepted = true
           const new_base_url = input_box.value
@@ -184,61 +188,12 @@ export const handle_edit_custom_model_provider = async (
         }),
         input_box.onDidHide(() => {
           if (!is_accepted) {
-            resolve(input_box.value)
+            resolve(provider_to_edit.base_url)
             cleanup()
           }
         })
       )
       input_box.show()
-    })
-  }
-
-  const show_api_key_options_quick_pick = (): Promise<
-    'change' | 'clear' | undefined
-  > => {
-    return new Promise((resolve) => {
-      const items: (vscode.QuickPickItem & { id: 'change' | 'clear' })[] = [
-        { label: 'Change', id: 'change' },
-        { label: 'Clear', id: 'clear' }
-      ]
-
-      const quick_pick = vscode.window.createQuickPick()
-      quick_pick.items = items
-      quick_pick.title = 'API Key'
-      quick_pick.buttons = [vscode.QuickInputButtons.Back]
-
-      let is_accepted = false
-      const disposables: vscode.Disposable[] = []
-
-      const cleanup = () => {
-        disposables.forEach((d) => d.dispose())
-        quick_pick.dispose()
-      }
-
-      disposables.push(
-        quick_pick.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            is_accepted = true // prevent onDidHide from resolving again
-            resolve(undefined)
-            cleanup()
-          }
-        }),
-        quick_pick.onDidAccept(() => {
-          is_accepted = true
-          const selected = quick_pick.selectedItems[0] as
-            | (typeof items)[0]
-            | undefined
-          resolve(selected?.id)
-          quick_pick.hide()
-        }),
-        quick_pick.onDidHide(() => {
-          if (!is_accepted) {
-            resolve(undefined)
-          }
-          cleanup()
-        })
-      )
-      quick_pick.show()
     })
   }
 
@@ -254,7 +209,6 @@ export const handle_edit_custom_model_provider = async (
       input_box.placeholder = provider_to_edit.api_key
         ? `...${provider_to_edit.api_key.slice(-4)}`
         : 'No API key set'
-      input_box.buttons = [vscode.QuickInputButtons.Back]
 
       let is_accepted = false
       const disposables: vscode.Disposable[] = []
@@ -265,13 +219,6 @@ export const handle_edit_custom_model_provider = async (
       }
 
       disposables.push(
-        input_box.onDidTriggerButton((button) => {
-          if (button === vscode.QuickInputButtons.Back) {
-            is_accepted = true
-            resolve({ value: input_box.value, accepted: false })
-            cleanup()
-          }
-        }),
         input_box.onDidAccept(async () => {
           is_accepted = true
           resolve({ value: input_box.value, accepted: true })
@@ -292,8 +239,13 @@ export const handle_edit_custom_model_provider = async (
   while (true) {
     const selected_id = await show_options_quick_pick()
 
-    if (selected_id === undefined) {
+    if (selected_id === undefined || selected_id == 'save') {
       break
+    }
+
+    if (selected_id == 'redo') {
+      provider_to_edit = { ...original_provider }
+      continue
     }
 
     if (selected_id == 'rename') {
@@ -309,70 +261,26 @@ export const handle_edit_custom_model_provider = async (
         provider_to_edit.base_url = normalized_new_url
       }
     } else if (selected_id == 'change-key') {
-      if (!provider_to_edit.api_key) {
-        // API key is not set, prompt for it directly
-        const { value: new_key, accepted } = await prompt_for_key()
-        if (accepted || new_key) {
-          provider_to_edit.api_key = new_key.trim()
-        }
-      } else {
-        // API key is set, show change/clear options
-        // eslint-disable-next-line no-constant-condition
-        while (true) {
-          const action = await show_api_key_options_quick_pick()
-
-          if (action === undefined) {
-            break // User escaped from change/clear, go to main menu
-          }
-
-          if (action == 'change') {
-            const current_api_key = provider_to_edit.api_key
-            const { value: new_key, accepted } = await prompt_for_key()
-            const trimmed_api_key = new_key.trim()
-
-            if (!accepted) {
-              if (new_key && trimmed_api_key !== current_api_key) {
-                provider_to_edit.api_key = trimmed_api_key
-              }
-              continue // User cancelled from input, show change/clear again
-            }
-
-            if (trimmed_api_key === current_api_key) {
-              break // No change, back to main menu
-            }
-
-            if (
-              trimmed_api_key == '' &&
-              current_api_key &&
-              current_api_key != ''
-            ) {
-              const confirmation = await vscode.window.showWarningMessage(
-                `Are you sure you want to clear the API key for ${provider_to_edit.name}? This action cannot be undone.`,
-                { modal: true },
-                'Clear API Key'
-              )
-              if (confirmation != 'Clear API Key') {
-                break // Don't clear, back to main menu
-              }
-            }
-            provider_to_edit.api_key = trimmed_api_key
-            break // Key changed, back to main menu
-          } else if (action == 'clear') {
-            if (provider_to_edit.api_key && provider_to_edit.api_key != '') {
-              const confirmation = await vscode.window.showWarningMessage(
-                `Are you sure you want to clear the API key for ${provider_to_edit.name}? This action cannot be undone.`,
-                { modal: true },
-                'Clear API Key'
-              )
-
-              if (confirmation == 'Clear API Key') {
-                provider_to_edit.api_key = ''
-              }
-            }
-            break // Cleared or cancelled, back to main menu
-          }
+      const current_api_key = provider_to_edit.api_key
+      const { value: new_key, accepted } = await prompt_for_key()
+      if (!accepted) {
+        continue
+      }
+      const trimmed_api_key = new_key.trim()
+      if (trimmed_api_key === current_api_key) {
+        continue
+      }
+      if (trimmed_api_key === '' && current_api_key) {
+        const confirmation = await vscode.window.showWarningMessage(
+          `Are you sure you want to clear the API key for ${provider_to_edit.name}? This action cannot be undone.`,
+          { modal: true },
+          'Clear API Key'
+        )
+        if (confirmation !== 'Clear API Key') {
+          continue
         }
       }
+      provider_to_edit.api_key = trimmed_api_key
     }
   }
 
