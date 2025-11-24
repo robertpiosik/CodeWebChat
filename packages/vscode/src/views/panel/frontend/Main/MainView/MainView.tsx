@@ -97,25 +97,6 @@ type Props = {
 }
 
 export const MainView: React.FC<Props> = (props) => {
-  useEffect(() => {
-    const handle_key_down = (e: KeyboardEvent) => {
-      if (
-        e.key == 'Escape' &&
-        !e.metaKey &&
-        !e.ctrlKey &&
-        !e.altKey &&
-        !e.shiftKey
-      ) {
-        props.on_show_home()
-      }
-    }
-
-    window.addEventListener('keydown', handle_key_down)
-    return () => {
-      window.removeEventListener('keydown', handle_key_down)
-    }
-  }, [])
-
   const is_in_code_completions_prompt_type =
     (props.mode == MODE.WEB && props.web_prompt_type == 'code-completions') ||
     (props.mode == MODE.API && props.api_prompt_type == 'code-completions')

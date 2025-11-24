@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import {  useRef, useCallback } from 'react'
 import cn from 'classnames'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
@@ -21,13 +21,11 @@ type Props = {
 }
 
 export const Header: React.FC<Props> = (props) => {
-  const [dropdown_max_width, set_dropdown_max_width] = useState<
-    number | undefined
-  >(undefined)
   const header_ref = useRef<HTMLDivElement>(null)
   const is_narrow_viewport = use_is_narrow_viewport(294)
   const is_mac = use_is_mac()
   const header_left_ref = useRef<HTMLDivElement>(null)
+  const dropdown_container_ref = useRef<HTMLDivElement>(null)
 
   const handle_heading_click = useCallback(() => {
     if (props.mode == MODE.WEB) {
@@ -41,35 +39,9 @@ export const Header: React.FC<Props> = (props) => {
     mode: props.mode,
     handle_heading_click,
     on_web_prompt_type_change: props.on_web_prompt_type_change,
-    on_api_prompt_type_change: props.on_api_prompt_type_change
+    on_api_prompt_type_change: props.on_api_prompt_type_change,
+    on_show_home: props.on_show_home
   })
-
-  const calculate_dropdown_max_width = () => {
-    if (!header_ref.current || !header_left_ref.current) return
-
-    const header_width = header_ref.current.offsetWidth
-    const header_left_width = header_left_ref.current.offsetWidth
-    // header_width - left_width - (header padding) 24 - (gap between left/right) 12 - (gap in right) 8 - (settings button) 20
-    const calculated_width = header_width - header_left_width - 64
-    set_dropdown_max_width(calculated_width)
-  }
-
-  useEffect(() => {
-    if (!header_ref.current || !header_left_ref.current) return
-
-    const resize_observer = new ResizeObserver(() => {
-      calculate_dropdown_max_width()
-    })
-
-    resize_observer.observe(header_ref.current)
-    resize_observer.observe(header_left_ref.current)
-
-    calculate_dropdown_max_width()
-
-    return () => {
-      resize_observer.disconnect()
-    }
-  }, [])
 
   return (
     <div className={styles.header} ref={header_ref}>
@@ -82,14 +54,17 @@ export const Header: React.FC<Props> = (props) => {
         <button
           className={styles['header__left__toggler']}
           onClick={handle_heading_click}
-          title={`Change mode (${is_mac ? '⌘ Esc' : 'Ctrl+Esc'})`}
+          title={`Change mode (${is_mac ? '⌘Esc' : 'Ctrl+Esc'})`}
         >
           {props.mode == MODE.WEB ? MODE.WEB : MODE.API}
         </button>
       </div>
 
       <div className={styles.header__right}>
-        <div className={styles.header__right__dropdown}>
+        <div
+          className={styles.header__right__dropdown}
+          ref={dropdown_container_ref}
+        >
           {props.mode == MODE.WEB && (
             <UiDropdown
               options={Object.entries(web_mode_labels).map(
@@ -101,7 +76,6 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.web_prompt_type}
               on_change={props.on_web_prompt_type_change}
-              max_width={dropdown_max_width}
               menu_max_width="calc(100vw - 52px)"
               info={is_narrow_viewport ? undefined : 'prompt type'}
               title={
@@ -122,7 +96,6 @@ export const Header: React.FC<Props> = (props) => {
               )}
               selected_value={props.api_prompt_type}
               on_change={props.on_api_prompt_type_change}
-              max_width={dropdown_max_width}
               menu_max_width="calc(100vw - 60px)"
               info={is_narrow_viewport ? undefined : 'prompt type'}
               title={
