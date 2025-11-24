@@ -209,7 +209,6 @@ export interface CodeCompletionMessage extends BaseMessage {
 
 export interface ShowAtSignQuickPickMessage extends BaseMessage {
   command: 'SHOW_AT_SIGN_QUICK_PICK'
-  search_value?: string
   is_for_code_completions: boolean
 }
 
@@ -258,6 +257,10 @@ export interface TogglePinnedApiToolConfigurationMessage extends BaseMessage {
 
 export interface GetVersionMessage extends BaseMessage {
   command: 'GET_VERSION'
+}
+
+export interface RequestCurrentlyOpenFileTextMessage extends BaseMessage {
+  command: 'REQUEST_CURRENTLY_OPEN_FILE_TEXT'
 }
 
 export interface ResponsePreviewMessage extends BaseMessage {
@@ -418,6 +421,7 @@ export type FrontendMessage =
   | ReorderApiToolConfigurationsMessage
   | TogglePinnedApiToolConfigurationMessage
   | GetVersionMessage
+  | RequestCurrentlyOpenFileTextMessage
   | ResponsePreviewMessage
   | ToggleFileInReviewMessage
   | FocusOnFileInPreviewMessage
@@ -649,6 +653,11 @@ export interface CheckpointsMessage extends BaseMessage {
   checkpoints: Checkpoint[]
 }
 
+export interface CurrentlyOpenFileTextMessage extends BaseMessage {
+  command: 'CURRENTLY_OPEN_FILE_TEXT'
+  text?: string
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -688,3 +697,4 @@ export type BackendMessage =
   | CommitProcessCancelledMessage
   | CollapsedStatesMessage
   | CheckpointsMessage
+  | CurrentlyOpenFileTextMessage

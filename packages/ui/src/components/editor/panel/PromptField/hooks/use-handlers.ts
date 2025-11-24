@@ -8,15 +8,62 @@ import {
   map_display_pos_to_raw_pos,
   map_raw_pos_to_display_pos
 } from '../utils/position-mapping'
+import { search_paths } from '@shared/utils/search-paths'
 
 type HistoryEntry = {
   value: string
   raw_caret_pos: number
 }
 
+const should_show_file_match_hint = (
+  value: string,
+  caret_position: number,
+  context_file_paths: string[] | undefined
+): boolean => {
+  if (
+    !value ||
+    caret_position !== value.length ||
+    value.endsWith(' ') ||
+    value.endsWith('\n') ||
+    !context_file_paths
+  ) {
+    return false
+  }
+
+  // Check if cursor is at the end of a shortened filename
+  const text_before_cursor = value.substring(0, caret_position)
+  const filename_match = text_before_cursor.match(
+    /([^\s,;:!?`]*\.[^\s,;:!?`]+)$/
+  )
+
+  if (filename_match) {
+    const filename = filename_match[1]
+    const is_shortened_filename = context_file_paths.some(
+      (path) => path.endsWith('/' + filename) || path === filename
+    )
+    if (is_shortened_filename) {
+      return false
+    }
+  }
+
+  const last_word = value.trim().split(/\s+/).pop()
+
+  if (last_word && last_word.length >= 3) {
+    const matching_paths = search_paths({
+      paths: context_file_paths,
+      search_value: last_word
+    })
+    return matching_paths.length === 1
+  }
+
+  return false
+}
+
 const reconstruct_raw_value_from_node = (node: Node): string => {
-  if (node.nodeType === Node.TEXT_NODE) {
+  if (node.nodeType == Node.TEXT_NODE) {
     return node.textContent || ''
+  } else if ((node as HTMLElement).dataset?.type == 'ghost-text') {
+    return ''
   }
 
   if (node.nodeType === Node.ELEMENT_NODE) {
@@ -112,7 +159,9 @@ const set_caret_position_after_change = (
 
 export const use_handlers = (
   props: PromptFieldProps,
-  input_ref: RefObject<HTMLDivElement>
+  input_ref: RefObject<HTMLDivElement>,
+  ghost_text: string,
+  on_accept_ghost_text: () => void
 ) => {
   const [history_index, set_history_index] = useState(-1)
   const [is_history_enabled, set_is_history_enabled] = useState(!props.value)
@@ -333,23 +382,65 @@ export const use_handlers = (
 
   const handle_input_change = (e: React.FormEvent<HTMLDivElement>) => {
     const currentTarget = e.currentTarget
-    const new_value = reconstruct_raw_value_from_node(currentTarget)
+    const new_raw_value = reconstruct_raw_value_from_node(currentTarget)
 
-    if (new_value === props.value) {
+    if (new_raw_value === props.value) {
       return
     }
-    update_value(new_value)
-    set_history_index(-1)
 
     const new_display_value = currentTarget.textContent ?? ''
     const caret_position = get_caret_position_from_div(currentTarget)
     const char_before_caret = new_display_value.charAt(caret_position - 1)
 
-    if (char_before_caret === '@') {
+    if (char_before_caret == '\\') {
+      const display_value_before_backslash = new_display_value.substring(
+        0,
+        caret_position - 1
+      )
+      const show_hint = should_show_file_match_hint(
+        display_value_before_backslash,
+        caret_position - 1,
+        props.context_file_paths
+      )
+
+      if (show_hint) {
+        const last_word = display_value_before_backslash.trim().split(/\s+/).pop()
+        if (last_word) {
+          const matching_paths = search_paths({
+            paths: props.context_file_paths ?? [],
+            search_value: last_word
+          })
+          if (matching_paths.length === 1) {
+            const matched_path = matching_paths[0]
+            const old_raw_value = props.value
+
+            const last_word_in_raw_index = old_raw_value.lastIndexOf(last_word)
+            if (
+              last_word_in_raw_index !== -1 &&
+              old_raw_value.endsWith(last_word)
+            ) {
+              const value_before = old_raw_value.substring(
+                0,
+                last_word_in_raw_index
+              )
+              const final_new_value = `${value_before}\`${matched_path}\` `
+              update_value(final_new_value, final_new_value.length)
+              set_history_index(-1)
+              return
+            }
+          }
+        }
+      }
+    }
+
+    update_value(new_raw_value)
+    set_history_index(-1)
+
+    if (char_before_caret == '@') {
       setTimeout(() => {
         props.on_at_sign_click()
       }, 150)
-    } else if (char_before_caret === '#') {
+    } else if (char_before_caret == '#') {
       setTimeout(() => {
         props.on_hash_sign_click()
       }, 150)
@@ -519,22 +610,8 @@ export const use_handlers = (
 
   const handle_tab_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!input_ref.current) return
-
-    const value = e.currentTarget.textContent ?? ''
-    const selection_start = get_caret_position_from_div(input_ref.current)
-    const text_before_cursor = value.substring(0, selection_start)
-
-    if (selection_start === 0 || /\s$/.test(text_before_cursor)) {
-      e.preventDefault()
-      props.on_at_sign_click()
-      return
-    }
-
     e.preventDefault()
-    const match = text_before_cursor.match(/(\S+)$/)
-    if (match) {
-      props.on_at_sign_click(match[1])
-    }
+    props.on_at_sign_click()
   }
 
   const handle_backspace_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -684,6 +761,11 @@ export const use_handlers = (
       return
     }
     if (key == 'Tab' && !shiftKey) {
+      if (ghost_text) {
+        e.preventDefault()
+        on_accept_ghost_text()
+        return
+      }
       handle_tab_key(e)
       return
     }

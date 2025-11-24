@@ -6,7 +6,6 @@ import * as path from 'path'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 import { dictionary } from '@shared/constants/dictionary'
-import { search_paths } from '@shared/utils/search-paths'
 
 type QuickPickItem = {
   label: string
@@ -16,7 +15,6 @@ type QuickPickItem = {
 
 const at_sign_quick_pick = async (params: {
   workspace_provider: WorkspaceProvider
-  search_value?: string
 }): Promise<string | undefined> => {
   const checked_paths = params.workspace_provider.get_all_checked_paths()
   if (checked_paths.length == 0) {
@@ -58,31 +56,7 @@ const at_sign_quick_pick = async (params: {
       }
     })
 
-  let quick_pick_items_to_show = all_quick_pick_items
-
-  if (params.search_value) {
-    const paths = all_quick_pick_items.map((item) => item.fullPath)
-    const filtered_paths = search_paths({
-      paths,
-      search_value: params.search_value
-    })
-
-    if (filtered_paths.length == 1) {
-      return `\`${filtered_paths[0]}\` `
-    } else if (filtered_paths.length > 1) {
-      const filtered_paths_set = new Set(filtered_paths)
-      quick_pick_items_to_show = all_quick_pick_items.filter((item) =>
-        filtered_paths_set.has(item.fullPath)
-      )
-    } else {
-      vscode.window.showWarningMessage(
-        dictionary.warning_message.NO_RESULTS_FOR_SEARCH_SHOWING_ALL(
-          params.search_value
-        )
-      )
-    }
-  }
-
+  const quick_pick_items_to_show = all_quick_pick_items
   quick_pick_items_to_show.sort((a, b) => natural_sort(a.fullPath, b.fullPath))
 
   const selected_path_item = await vscode.window.showQuickPick(
@@ -100,23 +74,16 @@ const at_sign_quick_pick = async (params: {
 }
 
 export const handle_at_sign_quick_pick = async (
-  panel_provider: PanelProvider,
-  search_value?: string
+  panel_provider: PanelProvider
 ): Promise<void> => {
   const replacement = await at_sign_quick_pick({
-    workspace_provider: panel_provider.workspace_provider,
-    search_value: search_value
+    workspace_provider: panel_provider.workspace_provider
   })
 
   if (!replacement) {
     panel_provider.send_message({
       command: 'FOCUS_PROMPT_FIELD'
     })
-    return
-  }
-
-  if (search_value) {
-    panel_provider.add_text_at_cursor_position(replacement, search_value.length)
     return
   }
 

@@ -58,7 +58,7 @@ export type PromptFieldProps = {
   on_caret_position_change: (caret_position: number) => void
   is_web_mode: boolean
   on_search_click: () => void
-  on_at_sign_click: (search_value?: string) => void
+  on_at_sign_click: () => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
   caret_position_to_set?: number
@@ -71,6 +71,7 @@ export type PromptFieldProps = {
   on_edit_format_change?: (format: EditFormat) => void
   edit_format_instructions?: Record<EditFormat, string>
   context_file_paths?: string[]
+  currently_open_file_text?: string
   on_go_to_file?: (file_path: string) => void
 }
 
@@ -78,6 +79,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
   const [caret_position, set_caret_position] = useState(0)
+  const [ghost_text, set_ghost_text] = useState('')
   const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
@@ -97,7 +99,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     is_history_enabled,
     handle_copy,
     handle_input_click
-  } = use_handlers(props, input_ref)
+  } = use_handlers(props, input_ref, ghost_text, handle_accept_ghost_text)
   const { handle_drag_start, handle_drag_over, handle_drop, handle_drag_end } =
     use_drag_drop({
       input_ref,
@@ -107,6 +109,31 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     })
 
   const mouse_down_pos_ref = useRef<{ x: number; y: number } | null>(null)
+
+  function handle_accept_ghost_text() {
+    if (!ghost_text || !input_ref.current) return
+
+    const ghost_node = input_ref.current.querySelector(
+      'span[data-type="ghost-text"]'
+    )
+    if (ghost_node) {
+      const text_node = document.createTextNode(ghost_node.textContent || '')
+      ghost_node.parentNode?.replaceChild(text_node, ghost_node)
+
+      const selection = window.getSelection()
+      if (selection) {
+        const range = document.createRange()
+        range.setStartAfter(text_node)
+        range.collapse(true)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      }
+
+      input_ref.current.dispatchEvent(
+        new Event('input', { bubbles: true, cancelable: true })
+      )
+    }
+  }
 
   const handle_mouse_down = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -142,7 +169,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return get_display_text(props.value, props.context_file_paths ?? [])
   }, [props.value, props.context_file_paths])
 
-  const show_tab_hint = useMemo(() => {
+  const show_file_match_hint = useMemo(() => {
     const value = display_text
     if (
       !value ||
@@ -196,6 +223,66 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.has_active_selection,
     props.context_file_paths
   ])
+
+  const identifiers = useMemo(() => {
+    if (!props.currently_open_file_text) return new Set<string>()
+    const matches =
+      props.currently_open_file_text.match(/[a-zA-Z_][a-zA-Z0-9_]*/g)
+    if (!matches) return new Set<string>()
+    return new Set(matches.filter((id) => id.length >= 3))
+  }, [props.currently_open_file_text])
+
+  useEffect(() => {
+    if (!input_ref.current) {
+      set_ghost_text('')
+      return
+    }
+
+    const selection = window.getSelection()
+    if (!selection || selection.rangeCount === 0) {
+      set_ghost_text('')
+      return
+    }
+
+    const range = selection.getRangeAt(0)
+    if (!range.collapsed) {
+      set_ghost_text('')
+      return
+    }
+
+    const pre_caret_range = range.cloneRange()
+    pre_caret_range.selectNodeContents(input_ref.current)
+    pre_caret_range.setEnd(range.startContainer, range.startOffset)
+    const text_before_cursor = pre_caret_range.toString()
+
+    const last_word_match = text_before_cursor.match(/[\S]+$/)
+    if (!last_word_match) {
+      set_ghost_text('')
+      return
+    }
+
+    const last_word_with_prefix = last_word_match[0]
+    const word_start_match = last_word_with_prefix.match(/[a-zA-Z_]/)
+    if (!word_start_match) {
+      set_ghost_text('')
+      return
+    }
+    const last_word = last_word_with_prefix.substring(word_start_match.index ?? 0)
+
+    if (last_word.length < 2) {
+      set_ghost_text('')
+      return
+    }
+
+    for (const id of identifiers) {
+      if (id.startsWith(last_word) && id !== last_word) {
+        set_ghost_text(id.substring(last_word.length))
+        return
+      }
+    }
+
+    set_ghost_text('')
+  }, [props.value, caret_position, identifiers])
 
   useEffect(() => {
     const input_element = input_ref.current
@@ -272,6 +359,37 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return () =>
       document.removeEventListener('selectionchange', on_selection_change)
   }, [props.on_caret_position_change, props.value, props.context_file_paths])
+
+  useEffect(() => {
+    const input = input_ref.current
+    if (!input) return
+
+    const existing_ghost = input.querySelector('span[data-type="ghost-text"]')
+    if (existing_ghost) {
+      const parent = existing_ghost.parentNode
+      if (parent) {
+        parent.removeChild(existing_ghost)
+        parent.normalize()
+      }
+    }
+
+    if (ghost_text) {
+      const selection = window.getSelection()
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0)
+        if (range.collapsed) {
+          const span = document.createElement('span')
+          span.dataset.type = 'ghost-text'
+          span.textContent = ghost_text
+          span.style.color = 'var(--vscode-editorGhostText-foreground, #888)'
+          span.style.pointerEvents = 'none'
+
+          range.insertNode(span)
+          selection.collapse(range.startContainer, range.startOffset)
+        }
+      }
+    }
+  }, [ghost_text])
 
   const placeholder = useMemo(() => {
     const active_history = props.chat_history
@@ -361,7 +479,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           onDragOver={handle_drag_over}
           onDragEnd={handle_drag_end}
           className={cn(styles.input, {
-            [styles['input-with-tab-hint']]: show_tab_hint,
+            [styles['input-with-file-match-hint']]: show_file_match_hint,
             [styles['input--empty']]: !props.value
           })}
           data-placeholder={placeholder}

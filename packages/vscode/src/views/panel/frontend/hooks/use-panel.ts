@@ -75,6 +75,11 @@ export const use_panel = (vscode: any) => {
   >()
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
+  const [
+    currently_open_file_text,
+    set_currently_open_file_text
+  ] = useState<string | undefined>(undefined)
+    useState<string | undefined>(undefined)
   const [mode, set_mode] = useState<Mode>()
   const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
   const [api_prompt_type, set_api_mode] = useState<ApiPromptType>()
@@ -157,6 +162,8 @@ export const use_panel = (vscode: any) => {
         set_has_active_selection(message.has_selection)
       } else if (message.command == 'CONTEXT_FILES') {
         set_context_file_paths(message.file_paths)
+      } else if (message.command == 'CURRENTLY_OPEN_FILE_TEXT') {
+        set_currently_open_file_text(message.text)
       } else if (message.command == 'RESPONSE_PREVIEW_STARTED') {
         set_items_to_review(message.items)
         set_raw_instructions(message.raw_instructions)
@@ -242,7 +249,8 @@ export const use_panel = (vscode: any) => {
       { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' },
       { command: 'REQUEST_GIT_STATE' },
       { command: 'GET_COLLAPSED_STATES' },
-      { command: 'GET_CHECKPOINTS' }
+      { command: 'GET_CHECKPOINTS' },
+      { command: 'REQUEST_CURRENTLY_OPEN_FILE_TEXT' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 
@@ -385,6 +393,7 @@ export const use_panel = (vscode: any) => {
     has_active_editor,
     has_active_selection,
     code_completions_instructions,
+    currently_open_file_text,
     mode,
     web_prompt_type,
     api_prompt_type,

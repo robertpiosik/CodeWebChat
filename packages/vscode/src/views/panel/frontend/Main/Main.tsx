@@ -53,6 +53,7 @@ type Props = {
   on_presets_collapsed_change: (is_collapsed: boolean) => void
   configurations_collapsed: boolean
   on_configurations_collapsed_change: (is_collapsed: boolean) => void
+  currently_open_file_text?: string
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -547,11 +548,10 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_at_sign_click = (search_value?: string) => {
+  const handle_at_sign_click = () => {
     post_message(props.vscode, {
       command: 'SHOW_AT_SIGN_QUICK_PICK',
-      is_for_code_completions: is_in_code_completions_mode,
-      search_value
+      is_for_code_completions: is_in_code_completions_mode
     })
   }
 
@@ -737,6 +737,7 @@ export const Main: React.FC<Props> = (props) => {
         props.on_configurations_collapsed_change
       }
       on_go_to_file={handle_go_to_file}
+      currently_open_file_text={props.currently_open_file_text}
     />
   )
 }

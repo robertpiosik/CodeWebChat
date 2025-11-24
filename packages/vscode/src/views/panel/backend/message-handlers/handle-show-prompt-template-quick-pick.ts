@@ -138,14 +138,11 @@ export const handle_show_prompt_template_quick_pick = async (
       return [
         {
           label: NAME_LABEL,
-          description: template.name || 'Not set'
+          detail: template.name || 'Not set'
         },
         {
           label: TEMPLATE_LABEL,
-          description:
-            template.template.length > 50
-              ? template.template.substring(0, 50) + '...'
-              : template.template
+          detail: template.template
         }
       ]
     }

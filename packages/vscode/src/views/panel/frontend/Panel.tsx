@@ -60,6 +60,7 @@ export const Panel = () => {
     has_active_editor,
     has_active_selection,
     code_completions_instructions,
+    currently_open_file_text,
     mode,
     web_prompt_type,
     api_prompt_type,
@@ -243,6 +244,7 @@ export const Panel = () => {
                 on_configurations_collapsed_change={
                   handle_configurations_collapsed_change
                 }
+                currently_open_file_text={currently_open_file_text}
               />
             </div>
             <div

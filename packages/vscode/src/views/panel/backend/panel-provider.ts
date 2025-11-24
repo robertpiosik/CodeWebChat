@@ -132,6 +132,14 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     })
   }
 
+  public send_currently_open_file_text() {
+    const active_editor = vscode.window.activeTextEditor
+    this.send_message({
+      command: 'CURRENTLY_OPEN_FILE_TEXT',
+      text: active_editor ? active_editor.document.getText() : undefined
+    })
+  }
+
   constructor(
     public readonly extension_uri: vscode.Uri,
     public readonly workspace_provider: WorkspaceProvider,
@@ -277,6 +285,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           })
         }
       }
+      this.send_currently_open_file_text()
     }
 
     vscode.window.onDidChangeActiveTextEditor(() =>
@@ -328,6 +337,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         ) {
           this.calculate_token_count()
         }
+        this.send_currently_open_file_text()
       }
     })
   }
@@ -472,6 +482,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             this.calculate_token_count()
           } else if (message.command == 'GET_CONTEXT_SIZE_WARNING_THRESHOLD') {
             this._send_context_size_warning_threshold()
+          } else if (message.command == 'REQUEST_CURRENTLY_OPEN_FILE_TEXT') {
+            this.send_currently_open_file_text()
           } else if (message.command == 'REPLACE_PRESETS') {
             await handle_replace_presets(this, message)
           } else if (message.command == 'UPDATE_PRESET') {
@@ -539,7 +551,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'GET_VERSION') {
             handle_get_version(this)
           } else if (message.command == 'SHOW_AT_SIGN_QUICK_PICK') {
-            await handle_at_sign_quick_pick(this, message.search_value)
+            await handle_at_sign_quick_pick(this)
           } else if (message.command == 'SHOW_HASH_SIGN_QUICK_PICK') {
             await handle_hash_sign_quick_pick(
               this,
