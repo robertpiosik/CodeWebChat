@@ -246,8 +246,8 @@ export const handle_send_prompt = async (params: {
     command: 'SHOW_AUTO_CLOSING_MODAL',
     title:
       resolved_preset_names.length > 1
-        ? 'Chats have been initialized in the connected browser.'
-        : 'Chat has been initialized in the connected browser.'
+        ? 'Chats have been initialized in the connected browser'
+        : 'Chat has been initialized in the connected browser'
   })
 }
 
@@ -274,14 +274,14 @@ async function show_presets_in_group_quick_pick(params: {
 
   const presets_in_group: ConfigPresetFormat[] = []
 
-  if (group_name === 'Ungrouped') {
+  if (group_name == 'Ungrouped') {
     const first_group_index = presets.findIndex((p) => !p.chatbot)
     const ungrouped_presets =
-      first_group_index === -1 ? presets : presets.slice(0, first_group_index)
+      first_group_index == -1 ? presets : presets.slice(0, first_group_index)
     presets_in_group.push(...ungrouped_presets.filter((p) => p.chatbot))
   } else {
-    const group_index = presets.findIndex((p) => p.name === group_name)
-    if (group_index !== -1) {
+    const group_index = presets.findIndex((p) => p.name == group_name)
+    if (group_index != -1) {
       for (let i = group_index + 1; i < presets.length; i++) {
         const preset = presets[i]
         if (!preset.chatbot) break
@@ -479,13 +479,13 @@ async function show_preset_quick_pick(params: {
     context.workspaceState.get<string>(last_preset_key) ??
     context.globalState.get<string>(last_preset_key)
 
-  if (last_choice === 'Preset' && last_selected_preset) {
+  if (last_choice == 'Preset' && last_selected_preset) {
     const preset = presets.find((p) => p.name === last_selected_preset)
     if (preset && !preset.isPinned) {
       let group_name = 'Ungrouped'
       if (preset.chatbot) {
         const preset_index = presets.findIndex(
-          (p) => p.name === last_selected_preset
+          (p) => p.name == last_selected_preset
         )
         if (preset_index > -1) {
           for (let i = preset_index - 1; i >= 0; i--) {
@@ -754,7 +754,7 @@ async function show_preset_quick_pick(params: {
 
       if (selected.preset_name) {
         quick_pick.hide()
-        const preset = presets.find((p) => p.name === selected.preset_name)!
+        const preset = presets.find((p) => p.name == selected.preset_name)!
         if (params.get_is_preset_disabled(preset)) {
           if (
             !params.is_in_code_completions_mode &&
@@ -770,7 +770,7 @@ async function show_preset_quick_pick(params: {
         } else {
           let group_name = 'Ungrouped'
           const preset_index = presets.findIndex(
-            (p) => p.name === selected.preset_name
+            (p) => p.name == selected.preset_name
           )
           if (preset_index > -1) {
             for (let i = preset_index - 1; i >= 0; i--) {
