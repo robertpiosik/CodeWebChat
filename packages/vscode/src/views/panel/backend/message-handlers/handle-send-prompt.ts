@@ -295,7 +295,7 @@ async function show_presets_in_group_quick_pick(params: {
   >()
 
   const run_group_button: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('run-all-coverage'),
+    iconPath: new vscode.ThemeIcon('run-coverage'),
     tooltip: 'Run all selected presets'
   }
 
@@ -556,8 +556,8 @@ async function show_preset_quick_pick(params: {
     context.globalState.get<string>(last_group_key)
 
   const run_group_button: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('run-all-coverage'),
-    tooltip: 'Run all the selected presets'
+    iconPath: new vscode.ThemeIcon('run-coverage'),
+    tooltip: 'Run Selected Presets'
   }
 
   const run_without_submission_button: vscode.QuickInputButton = {
