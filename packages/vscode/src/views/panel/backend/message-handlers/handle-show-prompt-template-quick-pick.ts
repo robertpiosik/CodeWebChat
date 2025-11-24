@@ -77,6 +77,7 @@ export const handle_show_prompt_template_quick_pick = async (
     vscode.QuickPickItem & { template?: PromptTemplate; index?: number }
   >()
   templates_quick_pick.matchOnDetail = true
+  templates_quick_pick.title = 'Prompt Templates'
   templates_quick_pick.placeholder = 'Manage and use your prompt templates'
 
   const edit_button = {
@@ -331,8 +332,7 @@ export const handle_show_prompt_template_quick_pick = async (
         if (variables.length > 0) {
           for (const variable of variables) {
             const value = await vscode.window.showInputBox({
-              prompt: `Enter a value for the variable "${variable}"`,
-              placeHolder: variable
+              title: `Enter "${variable}" Variable`
             })
 
             if (value) {
