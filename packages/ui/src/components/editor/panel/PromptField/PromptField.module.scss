@@ -86,6 +86,10 @@
     color: var(--vscode-input-placeholderForeground);
     pointer-events: none;
   }
+
+  & [data-type='ghost-text']::before {
+    content: '\200B';
+  }
 }
 
 .clear-button {
