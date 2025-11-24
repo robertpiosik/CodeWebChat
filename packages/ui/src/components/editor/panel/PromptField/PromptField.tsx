@@ -83,6 +83,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
+  const [is_focused, set_is_focused] = useState(false)
   const is_narrow_viewport = use_is_narrow_viewport(268)
   const {
     is_dropdown_open,
@@ -233,7 +234,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   }, [props.currently_open_file_text])
 
   useEffect(() => {
-    if (!input_ref.current) {
+    if (!input_ref.current || !is_focused) {
       set_ghost_text('')
       return
     }
@@ -294,7 +295,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     }
 
     set_ghost_text('')
-  }, [props.value, caret_position, identifiers])
+  }, [props.value, caret_position, identifiers, is_focused])
 
   useEffect(() => {
     if (input_ref.current && input_ref.current.innerHTML !== highlighted_html) {
@@ -489,6 +490,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           onDrop={handle_drop}
           onDragOver={handle_drag_over}
           onDragEnd={handle_drag_end}
+          onFocus={() => set_is_focused(true)}
+          onBlur={() => set_is_focused(false)}
           className={cn(styles.input, {
             [styles['input-with-file-match-hint']]: show_file_match_hint,
             [styles['input--empty']]: !props.value
