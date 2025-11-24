@@ -20,13 +20,10 @@ export const cleanup_api_response = (params: { content: string }): string => {
   }
 
   const code_block_count = (content.match(/```/g) || []).length
-  if (code_block_count === 2) {
+  if (code_block_count == 2) {
     const match = content.match(/```[^\n]*\n([\s\S]*?)\s*```/)
-    if (match && typeof match[1] === 'string' && match.index !== undefined) {
-      const before_text = content.substring(0, match.index).trim()
-      if (before_text.endsWith(':')) {
-        content = match[1]
-      }
+    if (match && typeof match[1] == 'string' && match.index !== undefined) {
+      content = match[1]
     }
   }
 
