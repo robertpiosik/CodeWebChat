@@ -722,7 +722,7 @@ export const use_handlers = (
   }
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const { key, shiftKey } = e
+    const { key, shiftKey, altKey } = e
 
     // Handle arrow-right when ghost text is present
     if (key === 'ArrowRight' && ghost_text && !shiftKey) {
@@ -819,6 +819,37 @@ export const use_handlers = (
     }
 
     if (key == 'Backspace') {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault()
+        const raw_pos = raw_caret_pos_ref.current
+        if (raw_pos === 0) return
+
+        const value = props.value
+        let i = raw_pos - 1
+
+        // First, skip any whitespace characters before the cursor.
+        while (i >= 0 && /\s/.test(value[i])) {
+          i--
+        }
+
+        // Then, delete the word or symbol group before that.
+        if (i >= 0) {
+          const is_word_char = /\w/.test(value[i])
+          while (i >= 0) {
+            const current_is_word = /\w/.test(value[i])
+            if (/\s/.test(value[i]) || current_is_word !== is_word_char) {
+              break
+            }
+            i--
+          }
+        }
+
+        const new_start_pos = i + 1
+        const new_value =
+          value.substring(0, new_start_pos) + value.substring(raw_pos)
+        update_value(new_value, new_start_pos)
+        return
+      }
       handle_backspace_key(e)
       return
     }
