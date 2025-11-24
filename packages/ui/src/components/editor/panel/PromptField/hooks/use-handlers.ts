@@ -438,11 +438,14 @@ export const use_handlers = (
 
     if (char_before_caret == '@') {
       const is_at_start = caret_position == 1
-      const is_after_space =
-        caret_position > 1 &&
-        /\s/.test(new_display_value.charAt(caret_position - 2))
+      let is_after_non_word_char = false
+      if (caret_position > 1) {
+        const char_before_at = new_display_value.charAt(caret_position - 2)
+        // Check if the character before '@' is not a word character (a-z, A-Z, 0-9, _)
+        is_after_non_word_char = !/\w/.test(char_before_at)
+      }
 
-      if (is_at_start || is_after_space) {
+      if (is_at_start || is_after_non_word_char) {
           props.on_at_sign_click()
       }
     } else if (char_before_caret == '#') {

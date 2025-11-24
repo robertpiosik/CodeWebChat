@@ -266,11 +266,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     token_count_emitter.on('token-count-updated', () => {
       if (this._webview_view) {
         this.calculate_token_count()
+        this.send_context_files()
       }
     })
-    this.workspace_provider.onDidChangeCheckedFiles(() =>
-      this.send_context_files()
-    )
 
     this.context.subscriptions.push(this._config_listener)
 
@@ -622,7 +620,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         command: 'CAN_UNDO_CHANGED',
         can_undo: this._can_undo()
       })
-      this.send_context_files()
     }, 1000)
   }
 

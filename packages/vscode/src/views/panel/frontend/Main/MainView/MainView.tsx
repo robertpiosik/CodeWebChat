@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import styles from './MainView.module.scss'
 import { Configurations as UiConfigurations } from '@ui/components/editor/panel/Configurations'
 import { Presets as UiPresets } from '@ui/components/editor/panel/Presets'
