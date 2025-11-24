@@ -758,16 +758,7 @@ export const use_handlers = (
 
           if (is_before_ghost) {
             e.preventDefault()
-
-            // Remove ghost text by replacing with empty text node or just removing it
-            if (ghost_node.parentNode) {
-              ghost_node.parentNode.removeChild(ghost_node)
-            }
-
-            // Move caret one position to the right in the actual text
-            const current_pos = get_caret_position_from_div(input_ref.current)
-            set_caret_position_for_div(input_ref.current, current_pos + 1)
-
+            on_accept_ghost_text()
             return
           }
         }
