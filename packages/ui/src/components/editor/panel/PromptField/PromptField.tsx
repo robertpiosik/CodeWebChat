@@ -250,6 +250,18 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       return
     }
 
+    // Check if there's a character on the right side of the caret
+    const post_caret_range = range.cloneRange()
+    post_caret_range.selectNodeContents(input_ref.current)
+    post_caret_range.setStart(range.endContainer, range.endOffset)
+    const text_after_cursor = post_caret_range.toString()
+    
+    // Only allow ghost text if there's nothing after cursor or only whitespace
+    if (text_after_cursor.length > 0 && text_after_cursor[0].trim() !== '') {
+      set_ghost_text('')
+      return
+    }
+
     const pre_caret_range = range.cloneRange()
     pre_caret_range.selectNodeContents(input_ref.current)
     pre_caret_range.setEnd(range.startContainer, range.startOffset)
@@ -285,11 +297,10 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   }, [props.value, caret_position, identifiers])
 
   useEffect(() => {
-    const input_element = input_ref.current
-    if (input_element && input_element.innerHTML !== highlighted_html) {
-      const selection_start = get_caret_position_from_div(input_element)
-      input_element.innerHTML = highlighted_html
-      set_caret_position_for_div(input_element, selection_start)
+    if (input_ref.current && input_ref.current.innerHTML !== highlighted_html) {
+      const selection_start = get_caret_position_from_div(input_ref.current)
+      input_ref.current.innerHTML = highlighted_html
+      set_caret_position_for_div(input_ref.current, selection_start)
     }
   }, [highlighted_html])
 

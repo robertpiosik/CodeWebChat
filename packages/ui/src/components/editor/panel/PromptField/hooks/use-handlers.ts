@@ -717,6 +717,57 @@ export const use_handlers = (
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { key, shiftKey } = e
+
+    // Handle arrow-right when ghost text is present
+    if (key === 'ArrowRight' && ghost_text && !shiftKey) {
+      const selection = window.getSelection()
+      if (
+        selection &&
+        selection.rangeCount > 0 &&
+        selection.isCollapsed &&
+        input_ref.current
+      ) {
+        const range = selection.getRangeAt(0)
+        const ghost_node = input_ref.current.querySelector(
+          'span[data-type="ghost-text"]'
+        )
+
+        // Check if caret is right before the ghost text node
+        if (ghost_node) {
+          const { startContainer, startOffset } = range
+
+          // Check if we're at the position just before ghost text
+          let is_before_ghost = false
+
+          if (startContainer === ghost_node.previousSibling) {
+            // Caret is at the end of the text node before ghost
+            if (startContainer.nodeType === Node.TEXT_NODE) {
+              is_before_ghost = startOffset === startContainer.textContent?.length
+            }
+          } else if (startContainer === ghost_node.parentNode) {
+            // Caret is in the parent, check if it's right before ghost node
+            const ghost_index = Array.from(startContainer.childNodes).indexOf(ghost_node as ChildNode)
+            is_before_ghost = startOffset === ghost_index
+          }
+
+          if (is_before_ghost) {
+            e.preventDefault()
+
+            // Remove ghost text by replacing with empty text node or just removing it
+            if (ghost_node.parentNode) {
+              ghost_node.parentNode.removeChild(ghost_node)
+            }
+
+            // Move caret one position to the right in the actual text
+            const current_pos = get_caret_position_from_div(input_ref.current)
+            set_caret_position_for_div(input_ref.current, current_pos + 1)
+
+            return
+          }
+        }
+      }
+    }
+
     if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() === 'z') {
       e.preventDefault()
       if (undo_stack.length > 0) {
