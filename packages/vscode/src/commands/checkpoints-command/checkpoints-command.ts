@@ -52,7 +52,7 @@ export const checkpoints_command = (params: {
         params.websites_provider
       )
       if (checkpoint) {
-        vscode.window.showInformationMessage('Checkpoint created successfully.')
+        vscode.commands.executeCommand('codeWebChat.checkpoints')
       }
     }
   )
@@ -206,13 +206,15 @@ export const checkpoints_command = (params: {
 
           if (selected.id == 'add-new') {
             quick_pick.hide()
-            await create_checkpoint(
+            const checkpoint = await create_checkpoint(
               params.workspace_provider,
               params.context,
               params.panel_provider,
               params.websites_provider
             )
-            await refresh_and_update_view()
+            if (checkpoint) {
+              vscode.commands.executeCommand('codeWebChat.checkpoints')
+            }
           } else if (selected.id == 'revert-last') {
             quick_pick.hide()
             const temp_checkpoint =

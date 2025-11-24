@@ -106,7 +106,7 @@ export const handle_show_prompt_template_quick_pick = async (
     if (templates.length > 0) {
       if (!search_value) {
         items.push({
-          label: 'Recently used',
+          label: 'recently used',
           kind: vscode.QuickPickItemKind.Separator
         })
       }
