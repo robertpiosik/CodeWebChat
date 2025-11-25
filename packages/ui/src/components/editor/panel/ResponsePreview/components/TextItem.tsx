@@ -37,7 +37,7 @@ export const TextItem: FC<Props> = (props) => {
             header_ref.current && props.on_toggle(header_ref.current)
           }
         >
-          <ReactMarkdown disallowedElements={['hr']}>
+          <ReactMarkdown disallowedElements={['a', 'hr']}>
             {props.content}
           </ReactMarkdown>
           <div className={styles.text__collapse}>
