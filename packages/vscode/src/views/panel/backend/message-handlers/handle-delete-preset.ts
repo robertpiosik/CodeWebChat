@@ -9,20 +9,26 @@ export const handle_delete_preset = async (
   message: DeletePresetMessage,
   webview_view: vscode.WebviewView
 ): Promise<void> => {
-  const preset_name = message.name
+  const preset_index = message.index
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = panel_provider.get_presets_config_key()
   const current_presets =
     config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
-  const preset_index = current_presets.findIndex((p) => p.name == preset_name)
-  if (preset_index == -1) return
+  if (preset_index < 0 || preset_index >= current_presets.length) return
 
   const deleted_preset = current_presets[preset_index]
+  const is_separator =
+    !deleted_preset.chatbot &&
+    !deleted_preset.name &&
+    !deleted_preset.promptPrefix &&
+    !deleted_preset.promptSuffix
   const item_type = deleted_preset.chatbot ? 'preset' : 'group'
 
   let should_show_confirmation = true
-  if (item_type == 'group') {
+  if (is_separator) {
+    should_show_confirmation = false
+  } else if (item_type == 'group') {
     const next_preset = current_presets[preset_index + 1]
     const is_empty = !next_preset || !next_preset.chatbot
     const has_affixes =
@@ -33,6 +39,7 @@ export const handle_delete_preset = async (
   }
 
   if (should_show_confirmation) {
+    const preset_name = deleted_preset.name
     const is_unnamed = !preset_name || /^\(\d+\)$/.test(preset_name.trim())
     const display_preset_name = is_unnamed ? 'Unnamed' : preset_name
 
@@ -53,7 +60,8 @@ export const handle_delete_preset = async (
     }
   }
 
-  const updated_presets = current_presets.filter((p) => p.name != preset_name)
+  const updated_presets = [...current_presets]
+  updated_presets.splice(preset_index, 1)
 
   try {
     await config.update(

@@ -1,7 +1,7 @@
 import { CHATBOTS } from '../constants/chatbots'
 
 export type Preset = {
-  name: string
+  name?: string
   chatbot?: keyof typeof CHATBOTS
   prompt_prefix?: string
   prompt_suffix?: string

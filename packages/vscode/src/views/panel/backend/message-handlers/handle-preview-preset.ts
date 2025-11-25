@@ -72,7 +72,7 @@ export const handle_preview_preset = async (
   } else if (panel_provider.web_prompt_type != 'code-completions') {
     let instructions = apply_preset_affixes_to_instruction({
       instruction: current_instructions,
-      preset_name: message.preset.name,
+      preset_name: message.preset.name!,
       presets_config_key: panel_provider.get_presets_config_key(),
       override_affixes: {
         promptPrefix: message.preset.prompt_prefix,

@@ -28,9 +28,9 @@ export const use_last_choice_button_title = (params: {
               !preset.name || /^\(\d+\)$/.test(preset.name.trim())
             let display_name: string
             if (preset.chatbot) {
-              display_name = is_unnamed ? preset.chatbot : preset.name
+              display_name = is_unnamed ? preset.chatbot : preset.name!
             } else {
-              display_name = is_unnamed ? 'Unnamed group' : preset.name
+              display_name = is_unnamed ? 'Unnamed group' : preset.name!
             }
 
             const get_subtitle = (): string => {

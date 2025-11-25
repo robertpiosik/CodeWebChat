@@ -47,6 +47,20 @@
       }
     }
 
+    &--separator {
+      height: var(--list-item-height);
+
+      .presets__item__left {
+        flex: 1;
+        &::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: linear-gradient(to right, var(--cwc-border-color-dimmed), transparent);
+        }
+      }
+    }
+
     &--highlighted {
       background-color: var(--vscode-list-inactiveSelectionBackground);
     }

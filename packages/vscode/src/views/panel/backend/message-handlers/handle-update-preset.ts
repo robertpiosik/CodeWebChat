@@ -31,7 +31,7 @@ export const handle_update_preset = async (
     vscode.window.showErrorMessage(
       dictionary.error_message.COULD_NOT_UPDATE_ITEM_NOT_FOUND(
         item_type,
-        message.updating_preset.name
+        message.updating_preset.name!
       )
     )
     return
@@ -100,32 +100,34 @@ export const handle_update_preset = async (
   }
 
   const updated_ui_preset = { ...final_updated_preset }
-  let final_name = updated_ui_preset.name.trim()
+  if (updated_ui_preset.name) {
+    let final_name = updated_ui_preset.name.trim()
 
-  // --- Start uniqueness check ---
-  let is_unique = false
-  let copy_number = 0
-  const base_name = final_name
+    // --- Start uniqueness check ---
+    let is_unique = false
+    let copy_number = 0
+    const base_name = final_name
 
-  while (!is_unique) {
-    const name_to_check =
-      copy_number == 0 ? base_name : `${base_name} (${copy_number})`.trim()
+    while (!is_unique) {
+      const name_to_check =
+        copy_number == 0 ? base_name : `${base_name} (${copy_number})`.trim()
 
-    const conflict = current_presets.some(
-      (p, index) => index != preset_index && p.name == name_to_check
-    )
+      const conflict = current_presets.some(
+        (p, index) => index != preset_index && p.name == name_to_check
+      )
 
-    if (!conflict) {
-      final_name = name_to_check
-      is_unique = true
-    } else {
-      copy_number++
+      if (!conflict) {
+        final_name = name_to_check
+        is_unique = true
+      } else {
+        copy_number++
+      }
     }
-  }
-  // --- End uniqueness check ---
+    // --- End uniqueness check ---
 
-  if (final_name != updated_ui_preset.name) {
-    updated_ui_preset.name = final_name
+    if (final_name != updated_ui_preset.name) {
+      updated_ui_preset.name = final_name
+    }
   }
 
   const updated_presets = [...current_presets]

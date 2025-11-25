@@ -432,14 +432,25 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_create_separator = (options?: { create_on_index?: number }) => {
+    post_message(props.vscode, {
+      command: 'CREATE_SEPARATOR',
+      ...options
+    })
+  }
+
   const handle_create_group = (options?: {
     add_on_top?: boolean
     instant?: boolean
     create_on_index?: number
+    move_preset_with_name_after?: string
   }) => {
     post_message(props.vscode, {
       command: 'CREATE_GROUP',
-      ...options
+      add_on_top: options?.add_on_top,
+      instant: options?.instant,
+      create_on_index: options?.create_on_index,
+      move_preset_with_name_after: options?.move_preset_with_name_after
     })
   }
 
@@ -451,17 +462,17 @@ export const Main: React.FC<Props> = (props) => {
     if (preset) props.on_preset_edit(preset)
   }
 
-  const handle_preset_duplicate = (name: string) => {
+  const handle_preset_duplicate = (index: number) => {
     post_message(props.vscode, {
       command: 'DUPLICATE_PRESET',
-      name
+      index
     })
   }
 
-  const handle_preset_delete = (name: string) => {
+  const handle_preset_delete = (index: number) => {
     post_message(props.vscode, {
       command: 'DELETE_PRESET',
-      name
+      index
     })
   }
 
@@ -679,6 +690,7 @@ export const Main: React.FC<Props> = (props) => {
       presets={presets_for_current_mode}
       on_create_preset={handle_create_preset}
       on_create_group={handle_create_group}
+      on_create_separator={handle_create_separator}
       on_quick_action_click={handle_quick_action_click}
       has_active_editor={props.has_active_editor}
       has_active_selection={props.has_active_selection}

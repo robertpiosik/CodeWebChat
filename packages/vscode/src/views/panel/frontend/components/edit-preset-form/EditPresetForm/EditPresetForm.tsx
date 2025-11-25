@@ -291,7 +291,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         )}
 
         <Field label="Name" html_for="name">
-          <Input id="name" type="text" value={name} on_change={set_name} />
+          <Input id="name" type="text" value={name!} on_change={set_name} />
         </Field>
 
         {supports_port && (

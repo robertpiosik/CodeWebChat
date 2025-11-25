@@ -21,6 +21,7 @@ import {
   handle_duplicate_preset,
   handle_create_preset,
   handle_create_group,
+  handle_create_separator,
   handle_preview_preset,
   handle_save_edit_format,
   handle_show_history_quick_pick,
@@ -496,6 +497,11 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_create_group(this, {
               add_on_top: message.add_on_top,
               instant: message.instant,
+              create_on_index: message.create_on_index,
+              move_preset_with_name_after: message.move_preset_with_name_after
+            })
+          } else if (message.command == 'CREATE_SEPARATOR') {
+            await handle_create_separator(this, {
               create_on_index: message.create_on_index
             })
           } else if (message.command == 'UNDO') {

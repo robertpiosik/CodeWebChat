@@ -23,7 +23,7 @@ export const handle_create_group = async (
 
   let new_name = ''
   let copy_number = 0
-  while (current_presets.some((p) => p.name == new_name)) {
+  while (new_name === '' || current_presets.some((p) => p.name == new_name)) {
     new_name = `(${copy_number++})`
   }
 

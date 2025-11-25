@@ -10,6 +10,7 @@ const presets: Presets.Preset[] = [
     name: 'Gemini with Flash 2.0',
     chatbot: 'Gemini' as keyof typeof CHATBOTS
   },
+  {},
   {
     name: 'Code review with AI Studio',
     chatbot: 'AI Studio' as keyof typeof CHATBOTS
@@ -35,8 +36,12 @@ export const Primary = () => {
         console.log('on_presets_reorder', reordered)
       }
       on_preset_edit={(name) => console.log('on_preset_edit', name)}
-      on_preset_duplicate={(name) => console.log('on_preset_duplicate', name)}
-      on_preset_delete={(name) => console.log('on_preset_delete', name)}
+      on_preset_duplicate={(index) =>
+        console.log('on_preset_duplicate', index)
+      }
+      on_preset_delete={(index) => {
+        console.log('on_preset_delete', index)
+      }}
       on_toggle_selected_preset={(name) =>
         console.log('on_toggle_selected_preset', name)
       }
@@ -46,6 +51,7 @@ export const Primary = () => {
       selected_preset_name={undefined}
       is_collapsed={false}
       on_create_group={() => {}}
+      on_create_separator={() => {}}
       on_toggle_collapsed={() => {}}
       on_toggle_preset_pinned={() => {}}
     />

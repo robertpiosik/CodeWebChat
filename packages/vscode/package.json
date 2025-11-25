@@ -794,10 +794,7 @@
                 "type": "boolean",
                 "description": "Whether this preset is shown above the list."
               }
-            },
-            "required": [
-              "name"
-            ]
+            }
           }
         },
         "codeWebChat.chatPresetsForEditContext": {
@@ -990,10 +987,7 @@
                 "type": "boolean",
                 "description": "Whether this preset is shown above the list."
               }
-            },
-            "required": [
-              "name"
-            ]
+            }
           }
         },
         "codeWebChat.chatPresetsForCodeAtCursor": {
@@ -1156,10 +1150,7 @@
                 "type": "boolean",
                 "description": "Whether this preset is shown above the list."
               }
-            },
-            "required": [
-              "name"
-            ]
+            }
           }
         },
         "codeWebChat.chatPresetsForNoContext": {
@@ -1352,10 +1343,7 @@
                 "type": "boolean",
                 "description": "Whether this preset is shown above the list."
               }
-            },
-            "required": [
-              "name"
-            ]
+            }
           }
         },
         "codeWebChat.promptTemplatesForAskAboutContext": {

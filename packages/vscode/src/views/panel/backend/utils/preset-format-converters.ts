@@ -2,7 +2,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { Preset } from '@shared/types/preset'
 
 export type ConfigPresetFormat = {
-  name: string
+  name?: string
   chatbot?: keyof typeof CHATBOTS
   promptPrefix?: string
   promptSuffix?: string
@@ -45,7 +45,7 @@ export function config_preset_to_ui_format(
 
 export function ui_preset_to_config_format(preset: Preset): ConfigPresetFormat {
   return {
-    name: preset.name,
+    name: preset.name || undefined,
     chatbot: preset.chatbot,
     promptPrefix: preset.prompt_prefix,
     promptSuffix: preset.prompt_suffix,

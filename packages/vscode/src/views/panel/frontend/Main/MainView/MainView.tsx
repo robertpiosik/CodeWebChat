@@ -33,6 +33,7 @@ type Props = {
     instant?: boolean
     create_on_index?: number
   }) => void
+  on_create_separator: (options?: { create_on_index?: number }) => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
@@ -62,8 +63,8 @@ type Props = {
   edit_format_instructions: Record<EditFormat, string>
   on_presets_reorder: (reordered_presets: Preset[]) => void
   on_preset_edit: (preset_name: string) => void
-  on_preset_duplicate: (preset_name: string) => void
-  on_preset_delete: (preset_name: string) => void
+  on_preset_duplicate: (index: number) => void
+  on_preset_delete: (index: number) => void
   on_toggle_selected_preset: (name: string) => void
   on_toggle_preset_pinned: (name: string) => void
   on_toggle_group_collapsed: (name: string) => void
@@ -242,6 +243,7 @@ export const MainView: React.FC<Props> = (props) => {
               }
               presets={props.presets}
               on_create_group={props.on_create_group}
+              on_create_separator={props.on_create_separator}
               on_create_preset={props.on_create_preset}
               on_preset_click={(preset_name, without_submission) =>
                 props.initialize_chats({
