@@ -469,6 +469,20 @@ export const Main: React.FC<Props> = (props) => {
     })
   }
 
+  const handle_group_delete = (index: number) => {
+    post_message(props.vscode, {
+      command: 'DELETE_GROUP',
+      index
+    })
+  }
+
+  const handle_separator_delete = (index: number) => {
+    post_message(props.vscode, {
+      command: 'DELETE_SEPARATOR',
+      index
+    })
+  }
+
   const handle_preset_delete = (index: number) => {
     post_message(props.vscode, {
       command: 'DELETE_PRESET',
@@ -710,6 +724,8 @@ export const Main: React.FC<Props> = (props) => {
       on_preset_edit={handle_preset_edit}
       on_preset_duplicate={handle_preset_duplicate}
       on_preset_delete={handle_preset_delete}
+      on_group_delete={handle_group_delete}
+      on_separator_delete={handle_separator_delete}
       on_toggle_selected_preset={handle_toggle_selected_preset}
       on_toggle_preset_pinned={handle_toggle_preset_pinned}
       on_toggle_group_collapsed={handle_toggle_group_collapsed}

@@ -138,6 +138,16 @@ export interface DeletePresetMessage extends BaseMessage {
   index: number
 }
 
+export interface DeleteGroupMessage extends BaseMessage {
+  command: 'DELETE_GROUP'
+  index: number
+}
+
+export interface DeleteSeparatorMessage extends BaseMessage {
+  command: 'DELETE_SEPARATOR'
+  index: number
+}
+
 export interface DuplicatePresetMessage extends BaseMessage {
   command: 'DUPLICATE_PRESET'
   index: number
@@ -402,6 +412,8 @@ export type FrontendMessage =
   | GetContextSizeWarningThresholdMessage
   | UpdatePresetMessage
   | DeletePresetMessage
+  | DeleteGroupMessage
+  | DeleteSeparatorMessage
   | DuplicatePresetMessage
   | CreatePresetMessage
   | CreateGroupMessage

@@ -65,6 +65,8 @@ type Props = {
   on_preset_edit: (preset_name: string) => void
   on_preset_duplicate: (index: number) => void
   on_preset_delete: (index: number) => void
+  on_group_delete: (index: number) => void
+  on_separator_delete: (index: number) => void
   on_toggle_selected_preset: (name: string) => void
   on_toggle_preset_pinned: (name: string) => void
   on_toggle_group_collapsed: (name: string) => void
@@ -260,6 +262,8 @@ export const MainView: React.FC<Props> = (props) => {
               on_presets_reorder={props.on_presets_reorder}
               on_preset_duplicate={props.on_preset_duplicate}
               on_preset_delete={props.on_preset_delete}
+              on_group_delete={props.on_group_delete}
+              on_separator_delete={props.on_separator_delete}
               on_toggle_selected_preset={props.on_toggle_selected_preset}
               on_toggle_preset_pinned={props.on_toggle_preset_pinned}
               on_toggle_group_collapsed={props.on_toggle_group_collapsed}

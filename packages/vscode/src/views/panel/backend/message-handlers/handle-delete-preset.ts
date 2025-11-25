@@ -18,46 +18,25 @@ export const handle_delete_preset = async (
   if (preset_index < 0 || preset_index >= current_presets.length) return
 
   const deleted_preset = current_presets[preset_index]
-  const is_separator =
-    !deleted_preset.chatbot &&
-    !deleted_preset.name &&
-    !deleted_preset.promptPrefix &&
-    !deleted_preset.promptSuffix
-  const item_type = deleted_preset.chatbot ? 'preset' : 'group'
+  const item_type = 'preset'
 
-  let should_show_confirmation = true
-  if (is_separator) {
-    should_show_confirmation = false
-  } else if (item_type == 'group') {
-    const next_preset = current_presets[preset_index + 1]
-    const is_empty = !next_preset || !next_preset.chatbot
-    const has_affixes =
-      !!deleted_preset.promptPrefix || !!deleted_preset.promptSuffix
-    if (is_empty && !has_affixes) {
-      should_show_confirmation = false
-    }
-  }
+  const preset_name = deleted_preset.name
+  const is_unnamed = !preset_name || /^\(\d+\)$/.test(preset_name.trim())
+  const display_preset_name = is_unnamed ? 'Unnamed' : preset_name
 
-  if (should_show_confirmation) {
-    const preset_name = deleted_preset.name
-    const is_unnamed = !preset_name || /^\(\d+\)$/.test(preset_name.trim())
-    const display_preset_name = is_unnamed ? 'Unnamed' : preset_name
-
-    const delete_button = 'Delete'
-    const result = await vscode.window.showInformationMessage(
-      'Please confirm',
-      {
-        modal: true,
-        detail: is_unnamed
-          ? `Are you sure you want to delete this ${item_type}?`
-          : `Are you sure you want to delete ${item_type} "${display_preset_name}"?`
-      },
-      delete_button
-    )
-
-    if (result != delete_button) {
-      return
-    }
+  const delete_button = 'Delete'
+  const result = await vscode.window.showInformationMessage(
+    'Please confirm',
+    {
+      modal: true,
+      detail: is_unnamed
+        ? `Are you sure you want to delete this ${item_type}?`
+        : `Are you sure you want to delete ${item_type} "${display_preset_name}"?`
+    },
+    delete_button
+  )
+  if (result != delete_button) {
+    return
   }
 
   const updated_presets = [...current_presets]

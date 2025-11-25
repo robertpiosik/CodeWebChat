@@ -18,6 +18,8 @@ import {
   handle_send_prompt,
   handle_update_preset,
   handle_delete_preset,
+  handle_delete_group,
+  handle_delete_separator,
   handle_duplicate_preset,
   handle_create_preset,
   handle_create_group,
@@ -489,6 +491,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_update_preset(this, message, webview_view)
           } else if (message.command == 'DELETE_PRESET') {
             await handle_delete_preset(this, message, webview_view)
+          } else if (message.command == 'DELETE_GROUP') {
+            await handle_delete_group(this, message, webview_view)
+          } else if (message.command == 'DELETE_SEPARATOR') {
+            await handle_delete_separator(this, message, webview_view)
           } else if (message.command == 'DUPLICATE_PRESET') {
             await handle_duplicate_preset(this, message, webview_view)
           } else if (message.command == 'CREATE_PRESET') {

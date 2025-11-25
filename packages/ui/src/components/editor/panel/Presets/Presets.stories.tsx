@@ -42,6 +42,12 @@ export const Primary = () => {
       on_preset_delete={(index) => {
         console.log('on_preset_delete', index)
       }}
+      on_group_delete={(index) => {
+        console.log('on_group_delete', index)
+      }}
+      on_separator_delete={(index) => {
+        console.log('on_separator_delete', index)
+      }}
       on_toggle_selected_preset={(name) =>
         console.log('on_toggle_selected_preset', name)
       }
