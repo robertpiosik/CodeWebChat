@@ -10,9 +10,8 @@ import {
 } from '@/views/panel/backend/utils/replace-git-placeholders'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import {
-  get_last_group_or_preset_choice_state_key,
-  get_last_selected_group_state_key,
-  get_last_selected_preset_key
+  get_last_selected_preset_or_group_key,
+  get_recently_used_presets_or_groups_key
 } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
@@ -76,11 +75,22 @@ export const handle_send_prompt = async (params: {
   const resolved_preset_names = resolution.preset_names
 
   if (params.preset_name !== undefined || params.group_name) {
+    const name_to_save = params.preset_name ?? params.group_name!
     update_last_used_preset_or_group({
       panel_provider: params.panel_provider,
       preset_name: params.preset_name,
       group_name: params.group_name
     })
+    const recents_key = get_recently_used_presets_or_groups_key(
+      params.panel_provider.web_prompt_type
+    )
+    const recents =
+      params.panel_provider.context.globalState.get<string[]>(recents_key, []) ?? []
+    const new_recents = [
+      name_to_save,
+      ...recents.filter((r) => r != name_to_save)
+    ].slice(0, 10)
+    params.panel_provider.context.globalState.update(recents_key, new_recents)
   }
 
   await vscode.workspace.saveAll()
@@ -266,48 +276,73 @@ async function show_preset_quick_pick(params: {
   }
 
   const quick_pick = vscode.window.createQuickPick<
-    vscode.QuickPickItem & { preset_name?: string }
+    vscode.QuickPickItem & { preset_name?: string; group_name?: string }
   >()
 
-  const pinned_presets = presets.filter((p) => p.isPinned && p.chatbot)
+  const recents_key = get_recently_used_presets_or_groups_key(mode)
+  const recent_names = context.globalState.get<string[]>(recents_key, [])
 
-  if (pinned_presets.length == 0) {
+  if (recent_names.length == 0) {
     vscode.window.showWarningMessage(
-      dictionary.warning_message.NOTHING_IS_PINNED
+      'No recently used presets or groups. Use a preset or group once to see it here.'
     )
     return null
   }
 
-  const items = pinned_presets.map((preset) => {
-    const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
-    const chatbot_models = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
-      .models as any
-    const model = preset.model
-      ? chatbot_models[preset.model]?.label || preset.model
-      : ''
-    return {
-      label: `${is_unnamed ? preset.chatbot! : preset.name!}`,
-      preset_name: preset.name,
-      description: is_unnamed
-        ? model
-        : `${preset.chatbot}${model ? ` · ${model}` : ''}`,
-      buttons: [run_without_submission_button]
-    }
-  })
+  const items = recent_names
+    .map((name) => {
+      const item = presets.find((p) => p.name == name)
+
+      if (name == 'Ungrouped' || (item && !item.chatbot)) {
+        return { label: name, group_name: name, description: 'Group' }
+      }
+
+      if (item && item.chatbot) {
+        const preset = item
+        const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
+        const chatbot_models =
+          CHATBOTS[preset.chatbot as keyof typeof CHATBOTS].models as any
+        const model = preset.model
+          ? chatbot_models[preset.model]?.label || preset.model
+          : ''
+        return {
+          label: `${is_unnamed ? preset.chatbot! : preset.name!}`,
+          preset_name: preset.name,
+          description: is_unnamed
+            ? model
+            : `${preset.chatbot}${model ? ` · ${model}` : ''}`,
+          buttons: [run_without_submission_button]
+        }
+      }
+      return null
+    })
+    .filter((i): i is NonNullable<typeof i> => i !== null)
 
   quick_pick.items = items
-  quick_pick.placeholder = 'Search pinned presets by name'
-  quick_pick.title = 'Select Pinned Preset'
+  if (items.length == 0) {
+    vscode.window.showWarningMessage(
+      'No recently used presets or groups. Use a preset or group once to see it here.'
+    )
+    return null
+  }
+  quick_pick.placeholder = 'Search recently used presets and groups'
+  quick_pick.title = 'Select Recently Used Preset or Group'
   quick_pick.matchOnDescription = true
 
-  const last_preset_key = get_last_selected_preset_key(mode)
-  const last_selected_preset =
-    context.workspaceState.get<string>(last_preset_key) ??
-    context.globalState.get<string>(last_preset_key)
+  const last_selected_key = get_last_selected_preset_or_group_key(mode)
+  const last_selected_name =
+    context.workspaceState.get<string>(last_selected_key) ??
+    context.globalState.get<string>(last_selected_key)
 
-  if (last_selected_preset) {
+  let last_selected_preset_name: string | undefined
+  if (last_selected_name) {
+    const item = presets.find((p) => p.name === last_selected_name)
+    if (item && item.chatbot) last_selected_preset_name = last_selected_name
+  }
+
+  if (last_selected_preset_name) {
     const last_item = quick_pick.items.find(
-      (item) => item.preset_name === last_selected_preset
+      (item) => item.preset_name === last_selected_preset_name
     )
     if (last_item) quick_pick.activeItems = [last_item]
   }
@@ -364,7 +399,7 @@ async function show_preset_quick_pick(params: {
       }
 
       if (selected.preset_name) {
-        const preset = presets.find((p) => p.name === selected.preset_name)!
+        const preset = presets.find((p) => p.name == selected.preset_name)!
         if (params.get_is_preset_disabled(preset)) {
           if (
             !params.is_in_code_completions_mode &&
@@ -395,11 +430,55 @@ async function show_preset_quick_pick(params: {
             preset_name: selected.preset_name,
             group_name: group_name
           })
+          const name_to_save = selected.preset_name
+          const recents_key = get_recently_used_presets_or_groups_key(mode)
+          const recents =
+            context.globalState.get<string[]>(recents_key, []) ?? []
+          const newRecents = [
+            name_to_save,
+            ...recents.filter((r) => r != name_to_save)
+          ].slice(0, 10)
+          context.globalState.update(recents_key, newRecents)
           do_resolve({ preset_names: [selected.preset_name] })
+        }
+      } else if (selected.group_name) {
+        quick_pick.hide()
+        const group_name = selected.group_name
+        const default_presets_in_group: ConfigPresetFormat[] = []
+
+        if (group_name == 'Ungrouped') {
+          for (const preset of presets) {
+            if (!preset.chatbot) break
+            if (preset.isSelected) default_presets_in_group.push(preset)
+          }
+        } else {
+          const group_index = presets.findIndex((p) => p.name == group_name)
+          if (group_index != -1) {
+            for (let i = group_index + 1; i < presets.length; i++) {
+              const preset = presets[i]
+              if (!preset.chatbot) break
+              else if (preset.isSelected) default_presets_in_group.push(preset)
+            }
+          }
+        }
+
+        const runnable_presets = default_presets_in_group.filter(
+          (preset) => !params.get_is_preset_disabled(preset)
+        )
+        const preset_names = runnable_presets.map((p) => p.name!).filter(Boolean)
+
+        if (preset_names.length > 0) {
+          update_last_used_preset_or_group({ panel_provider, group_name })
+          const recents_key = get_recently_used_presets_or_groups_key(mode)
+          const recents =
+            context.globalState.get<string[]>(recents_key, []) ?? []
+          const newRecents = [group_name, ...recents.filter((r) => r !== group_name)].slice(0, 10)
+          context.globalState.update(recents_key, newRecents)
+          do_resolve({ preset_names })
         }
       } else {
         quick_pick.hide()
-        do_resolve(null)
+        do_resolve({ preset_names: [] })
       }
     })
 
@@ -421,19 +500,10 @@ async function resolve_presets(params: {
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
 }): Promise<{ preset_names: string[]; without_submission?: boolean }> {
-  const last_group_or_preset_choice_state_key =
-    get_last_group_or_preset_choice_state_key(
+  const last_selected_preset_or_group_key =
+    get_last_selected_preset_or_group_key(
       params.panel_provider.web_prompt_type
     )
-  const last_selected_preset_key = get_last_selected_preset_key(
-    params.panel_provider.web_prompt_type
-  )
-  const last_selected_group_state_key = get_last_selected_group_state_key(
-    params.panel_provider.web_prompt_type
-  )
-
-  const PRESET = 'Preset'
-  const GROUP = 'Group'
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.panel_provider.get_presets_config_key()
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
@@ -572,72 +642,69 @@ async function resolve_presets(params: {
     params.group_name === undefined
   ) {
     // Try to use last selection if "Send" button is clicked without specific preset/group
-    const last_choice =
+    const last_selected_name =
       params.context.workspaceState.get<string>(
-        last_group_or_preset_choice_state_key
+        last_selected_preset_or_group_key
       ) ??
       params.context.globalState.get<string>(
-        last_group_or_preset_choice_state_key
+        last_selected_preset_or_group_key
       )
 
-    if (last_choice == PRESET) {
-      const last_preset_name =
-        params.context.workspaceState.get<string>(last_selected_preset_key) ??
-        params.context.globalState.get<string>(last_selected_preset_key)
-
-      if (last_preset_name !== undefined) {
-        const preset = all_presets.find((p) => p.name === last_preset_name)
-        if (preset && preset.chatbot) {
-          if (get_is_preset_disabled(preset)) {
-            if (
-              !is_in_code_completions_mode &&
-              !current_instructions &&
-              !preset.promptPrefix &&
-              !preset.promptSuffix
-            ) {
-              vscode.window.showWarningMessage(
-                dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
-              )
+    if (last_selected_name) {
+      if (last_selected_name === 'Ungrouped') {
+        const first_group_index = all_presets.findIndex((p) => !p.chatbot)
+        const relevant_presets =
+          first_group_index == -1
+            ? all_presets
+            : all_presets.slice(0, first_group_index)
+        const preset_names = relevant_presets
+          .filter((p) => p.isSelected && !get_is_preset_disabled(p))
+          .map((p) => p.name)
+          .filter((name): name is string => !!name)
+        if (preset_names.length > 0) return { preset_names }
+      } else {
+        const item = all_presets.find((p) => p.name === last_selected_name)
+        if (item) {
+          if (item.chatbot) {
+            // It's a preset
+            if (get_is_preset_disabled(item)) {
+              if (
+                !is_in_code_completions_mode &&
+                !current_instructions &&
+                !item.promptPrefix &&
+                !item.promptSuffix
+              ) {
+                vscode.window.showWarningMessage(
+                  dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
+                )
+              }
+              return { preset_names: [] }
+            } else {
+              return { preset_names: [last_selected_name] }
             }
-            return { preset_names: [] }
           } else {
-            return { preset_names: [last_preset_name] }
-          }
-        }
-      }
-    } else if (last_choice == GROUP) {
-      const last_group =
-        params.context.workspaceState.get<string>(
-          last_selected_group_state_key
-        ) ??
-        params.context.globalState.get<string>(last_selected_group_state_key)
-      if (last_group) {
-        if (last_group == 'Ungrouped') {
-          const first_group_index = all_presets.findIndex((p) => !p.chatbot)
-          const relevant_presets =
-            first_group_index == -1
-              ? all_presets
-              : all_presets.slice(0, first_group_index)
-          const preset_names = relevant_presets
-            .filter((p) => p.isSelected && !get_is_preset_disabled(p))
-            .map((p) => p.name)
-            .filter((name): name is string => !!name)
-          if (preset_names.length > 0) return { preset_names }
-        } else {
-          const group_index = all_presets.findIndex((p) => p.name == last_group)
-          const preset_names: string[] = []
-          if (group_index != -1) {
-            for (let i = group_index + 1; i < all_presets.length; i++) {
-              const preset = all_presets[i]
-              if (!preset.chatbot) {
-                break // next group
-              }
-              if (preset.isSelected && preset.name && !get_is_preset_disabled(preset)) {
-                preset_names.push(preset.name)
+            // It's a group
+            const group_index = all_presets.findIndex(
+              (p) => p.name == last_selected_name
+            )
+            const preset_names: string[] = []
+            if (group_index != -1) {
+              for (let i = group_index + 1; i < all_presets.length; i++) {
+                const preset = all_presets[i]
+                if (!preset.chatbot) {
+                  break // next group
+                }
+                if (
+                  preset.isSelected &&
+                  preset.name &&
+                  !get_is_preset_disabled(preset)
+                ) {
+                  preset_names.push(preset.name)
+                }
               }
             }
+            if (preset_names.length > 0) return { preset_names }
           }
-          if (preset_names.length > 0) return { preset_names }
         }
       }
     }

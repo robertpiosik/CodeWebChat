@@ -61,15 +61,11 @@ export const get_configurations_collapsed_state_key = (
   api_prompt_type: string
 ) => `configurations-collapsed-${api_prompt_type}`
 
-export const get_last_group_or_preset_choice_state_key = (
-  web_prompt_type: string
-) => `last-group-or-preset-choice-${web_prompt_type}`
+export const get_last_selected_preset_or_group_key = (web_prompt_type: string) =>
+  `last-selected-preset-or-group-${web_prompt_type}`
 
-export const get_last_selected_preset_key = (web_prompt_type: string) =>
-  `last-selected-preset-${web_prompt_type}`
-
-export const get_last_selected_group_state_key = (web_prompt_type: string) =>
-  `last-selected-group-${web_prompt_type}`
+export const get_recently_used_presets_or_groups_key = (web_prompt_type: string) =>
+  `recently-used-presets-or-groups-${web_prompt_type}`
 
 export type DuplicateWorkspaceContext = {
   checked_files: string[]

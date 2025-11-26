@@ -115,7 +115,7 @@ export const dictionary = {
       `No results for "${search_value}" in the selected context.`,
     NO_MODEL_PROVIDERS_CONFIGURED:
       'No model providers configured. Please add a model provider first on the "Model Providers" page.',
-    NOTHING_IS_PINNED: 'Nothing is pinned.'
+    SELECT_PRESET_FROM_LIST: 'Select preset from the list.'
   },
 
   error_message: {

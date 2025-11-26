@@ -79,9 +79,7 @@ import {
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   get_configurations_collapsed_state_key,
-  get_last_group_or_preset_choice_state_key,
-  get_last_selected_group_state_key,
-  get_last_selected_preset_key,
+  get_last_selected_preset_or_group_key,
   LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
@@ -742,44 +740,25 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         web_modes.map((mode) => {
           const presets_for_mode = all_presets[mode]
           let selected_name: string | undefined = undefined
-          const choice_key = get_last_group_or_preset_choice_state_key(mode)
-          const last_choice =
-            this.context.workspaceState.get<string>(choice_key) ??
-            this.context.globalState.get<string>(choice_key)
-          if (last_choice == 'Preset') {
-            const preset_key = get_last_selected_preset_key(mode)
-            const last_preset =
-              this.context.workspaceState.get<string>(preset_key) ??
-              this.context.globalState.get<string>(preset_key)
-            if (
-              last_preset &&
-              presets_for_mode.some((p) => p.chatbot && p.name === last_preset)
-            ) {
-              selected_name = last_preset
-            }
-          } else if (last_choice == 'Group') {
-            const group_key = get_last_selected_group_state_key(mode)
-            const last_group =
-              this.context.workspaceState.get<string>(group_key) ??
-              this.context.globalState.get<string>(group_key)
-            if (last_group) {
-              if (last_group === 'Ungrouped') {
-                const first_group_index = presets_for_mode.findIndex(
-                  (p) => !p.chatbot
-                )
-                if (
-                  first_group_index > 0 ||
-                  (first_group_index === -1 && presets_for_mode.length > 0)
-                ) {
-                  selected_name = last_group
-                }
-              } else if (
-                presets_for_mode.some(
-                  (p) => !p.chatbot && p.name === last_group
-                )
+          const key = get_last_selected_preset_or_group_key(mode)
+          const last_selected =
+            this.context.workspaceState.get<string>(key) ??
+            this.context.globalState.get<string>(key)
+          if (last_selected) {
+            if (last_selected === 'Ungrouped') {
+              const first_group_index = presets_for_mode.findIndex(
+                (p) => !p.chatbot
+              )
+              if (
+                first_group_index > 0 ||
+                (first_group_index === -1 && presets_for_mode.length > 0)
               ) {
-                selected_name = last_group
+                selected_name = last_selected
               }
+            } else if (
+              presets_for_mode.some((p) => p.name === last_selected)
+            ) {
+              selected_name = last_selected
             }
           }
           return [mode, selected_name]
