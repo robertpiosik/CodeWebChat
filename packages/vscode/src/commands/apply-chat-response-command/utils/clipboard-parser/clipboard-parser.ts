@@ -91,10 +91,12 @@ export const parse_response = (params: {
 
   const hunk_header_regex = /^(@@\s+-\d+(?:,\d+)?\s+\+\d+(?:,\d+)?\s+@@)/m
   const diff_header_regex = /^---\s+.+\n\+\+\+\s+.+/m
+  const git_diff_header_regex = /^diff --git /m
 
   if (
     hunk_header_regex.test(processed_response) ||
-    diff_header_regex.test(processed_response)
+    diff_header_regex.test(processed_response) ||
+    git_diff_header_regex.test(processed_response)
   ) {
     const patches_or_text = extract_diffs({
       clipboard_text: processed_response,

@@ -455,9 +455,7 @@ const extract_all_code_block_patches = (params: {
         const { from_path, to_path } = extract_paths_from_lines(block_lines)
         if (!from_path && !to_path) {
           block_lines.unshift(
-            is_new_file_from_hint
-              ? '--- /dev/null'
-              : `--- a/${file_path_hint}`,
+            is_new_file_from_hint ? '--- /dev/null' : `--- a/${file_path_hint}`,
             `+++ b/${file_path_hint}`
           )
         }
@@ -858,6 +856,12 @@ const format_hunk_headers = (lines: string[]): string[] => {
       formatted_lines.push(hunk_match[1])
       if (hunk_match[2].length > 0) {
         formatted_lines.push(hunk_match[2])
+      }
+    } else if (line.startsWith('@@') && !hunk_match) {
+      const context = line.substring(2).trim()
+      formatted_lines.push('@@ -0,0 +0,0 @@')
+      if (context) {
+        formatted_lines.push(' ' + context)
       }
     } else {
       formatted_lines.push(line)

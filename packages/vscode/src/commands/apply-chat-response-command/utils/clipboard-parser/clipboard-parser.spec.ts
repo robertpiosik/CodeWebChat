@@ -1275,5 +1275,21 @@ describe('clipboard-parser', () => {
         content: load_test_case_file(test_case, '1-file.txt')
       })
     })
+
+    it('parses diff with broken hunk header after git header', () => {
+      const test_case = 'diff-git-broken-hunk-header'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
   })
 })

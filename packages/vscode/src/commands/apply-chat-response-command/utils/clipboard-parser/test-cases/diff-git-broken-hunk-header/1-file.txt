@@ -1,0 +1,6 @@
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -0,0 +0,0 @@
+ console.log("hello")
+-console.log("old message")
++console.log("new message")
