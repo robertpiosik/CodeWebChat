@@ -21,8 +21,6 @@ export const LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY =
   'lastSelectedCommitMessagesConfigId'
 export const LAST_SELECTED_INTELLIGENT_UPDATE_CONFIG_ID_STATE_KEY =
   'lastSelectedIntelligentUpdateConfigId'
-export const LAST_CHOSEN_COMMAND_BY_VIEW_TYPE_STATE_KEY =
-  'lastChosenCommandByViewType'
 export const LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
   'last-context-merge-replace-option'
 export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
