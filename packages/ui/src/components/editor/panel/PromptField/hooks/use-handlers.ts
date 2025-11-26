@@ -15,6 +15,31 @@ type HistoryEntry = {
   raw_caret_pos: number
 }
 
+const getKeywordRanges = (
+  text: string,
+  context_file_paths: string[]
+): { start: number; end: number }[] => {
+  const ranges: { start: number; end: number }[] = []
+  // This regex is a combination of all keyword types
+  const regex =
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#Commit:[^:]+:[^\s"]+\s+"[^"]*")/g
+
+  let match
+  while ((match = regex.exec(text)) !== null) {
+    const file_path = match[1]
+
+    if (file_path) {
+      // Only treat file paths as keywords if they are in the context
+      if (context_file_paths.includes(file_path)) {
+        ranges.push({ start: match.index, end: match.index + match[0].length })
+      }
+    } else {
+      ranges.push({ start: match.index, end: match.index + match[0].length })
+    }
+  }
+  return ranges
+}
+
 const should_show_file_match_hint = (
   value: string,
   caret_position: number,
@@ -760,6 +785,104 @@ export const use_handlers = (
             return
           }
         }
+      }
+    }
+
+    if ((e.ctrlKey || e.metaKey) && !shiftKey) {
+      if (key == 'ArrowLeft') {
+        e.preventDefault()
+        const raw_pos = raw_caret_pos_ref.current
+        if (raw_pos === 0) return
+
+        const { value, context_file_paths = [] } = props
+        let i = raw_pos - 1
+
+        // First, skip any whitespace characters before the cursor.
+        while (i >= 0 && /\s/.test(value[i])) {
+          i--
+        }
+        if (i < 0) {
+          set_caret_position_after_change(input_ref, 0, value, context_file_paths)
+          return
+        }
+
+        const keyword_ranges = getKeywordRanges(value, context_file_paths)
+        let new_raw_pos: number | undefined
+
+        // Check if cursor is within a keyword; if so, jump to its start.
+        for (const range of keyword_ranges) {
+          if (i >= range.start && i < range.end) {
+            new_raw_pos = range.start
+            break
+          }
+        }
+
+        if (new_raw_pos === undefined) {
+          // Default word-jump behavior.
+          const is_word_char = /\w/.test(value[i])
+          while (i >= 0) {
+            const current_is_word = /\w/.test(value[i])
+            if (/\s/.test(value[i]) || current_is_word !== is_word_char) {
+              break
+            }
+            i--
+          }
+          new_raw_pos = i + 1
+        }
+
+        set_caret_position_after_change(
+          input_ref,
+          new_raw_pos,
+          value,
+          context_file_paths
+        )
+        return
+      }
+
+      if (key == 'ArrowRight') {
+        e.preventDefault()
+        const { value, context_file_paths = [] } = props
+        const raw_pos = raw_caret_pos_ref.current
+        if (raw_pos === value.length) return
+
+        let i = raw_pos
+
+        // Skip any whitespace characters after the cursor.
+        while (i < value.length && /\s/.test(value[i])) {
+          i++
+        }
+
+        const keyword_ranges = getKeywordRanges(value, context_file_paths)
+        let new_raw_pos: number | undefined
+
+        // Check if cursor is within a keyword; if so, jump to its end.
+        for (const range of keyword_ranges) {
+          if (i >= range.start && i < range.end) {
+            new_raw_pos = range.end
+            break
+          }
+        }
+
+        if (new_raw_pos === undefined) {
+          // Default word-jump behavior.
+          const is_word_char = /\w/.test(value[i])
+          while (i < value.length) {
+            const current_is_word = /\w/.test(value[i])
+            if (/\s/.test(value[i]) || current_is_word !== is_word_char) {
+              break
+            }
+            i++
+          }
+          new_raw_pos = i
+        }
+
+        set_caret_position_after_change(
+          input_ref,
+          new_raw_pos,
+          value,
+          context_file_paths
+        )
+        return
       }
     }
 
