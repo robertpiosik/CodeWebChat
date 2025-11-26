@@ -426,9 +426,10 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_create_preset = () => {
+  const handle_create_preset = (options?: { add_on_top?: boolean }) => {
     post_message(props.vscode, {
-      command: 'CREATE_PRESET'
+      command: 'CREATE_PRESET',
+      add_on_top: options?.add_on_top
     })
   }
 

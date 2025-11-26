@@ -1,4 +1,4 @@
-import { Button as UiButton } from '@ui/components/editor/panel/Button'
+import { Button as UiButton } from '@ui/components/editor/common/Button'
 import styles from './EditPresetFormFooter.module.scss'
 
 type Props = {

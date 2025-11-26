@@ -4,6 +4,7 @@ import { Checkbox } from '../../common/Checkbox'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../../common/Icon'
+import { Button } from '../../common/Button'
 import { CHATBOTS } from '@shared/constants/chatbots'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
@@ -54,8 +55,8 @@ export namespace Presets {
     has_context: boolean
     presets: Preset[]
     on_preset_click: (preset_name: string, without_submission?: boolean) => void
-    on_group_click: (group_name: string, without_submission?: boolean) => void
-    on_create_preset: () => void
+    on_group_click: (group_name: string, without_submission?: boolean) => void;
+    on_create_preset: (options?: { add_on_top?: boolean }) => void
     on_create_group: (options?: {
       add_on_top?: boolean
       instant?: boolean
@@ -296,7 +297,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             codicon_icon="add"
             on_click={(e) => {
               e.stopPropagation()
-              props.on_create_preset()
+              props.on_create_preset({ add_on_top: true })
             }}
             title="Add New Preset"
           />
@@ -932,6 +933,11 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 )
               })}
             </ReactSortable>
+          </div>
+          <div className={styles.footer}>
+            <Button on_click={() => props.on_create_preset()}>
+              Add New Preset
+            </Button>
           </div>
         </>
       )}

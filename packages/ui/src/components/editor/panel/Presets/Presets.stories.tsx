@@ -26,7 +26,7 @@ export const Primary = () => {
       is_in_code_completions_mode={false}
       has_context={true}
       presets={presets}
-      on_create_preset={() => console.log('on_create_preset')}
+      on_create_preset={(options) => console.log('on_create_preset', options)}
       on_preset_click={(name) => {
         console.log('on_preset_click', name)
       }}

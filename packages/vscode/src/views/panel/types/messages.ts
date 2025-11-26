@@ -155,6 +155,7 @@ export interface DuplicatePresetMessage extends BaseMessage {
 
 export interface CreatePresetMessage extends BaseMessage {
   command: 'CREATE_PRESET'
+  add_on_top?: boolean
 }
 
 export interface CreateGroupMessage extends BaseMessage {

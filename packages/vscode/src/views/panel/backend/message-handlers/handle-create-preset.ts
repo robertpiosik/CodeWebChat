@@ -6,9 +6,11 @@ import {
   config_preset_to_ui_format,
   ConfigPresetFormat
 } from '@/views/panel/backend/utils/preset-format-converters'
+import { CreatePresetMessage } from '@/views/panel/types/messages'
 
 export const handle_create_preset = async (
-  panel_provider: PanelProvider
+  panel_provider: PanelProvider,
+  message: CreatePresetMessage
 ): Promise<void> => {
   const config = vscode.workspace.getConfiguration('codeWebChat')
 
@@ -16,11 +18,11 @@ export const handle_create_preset = async (
   const current_presets =
     config.get<ConfigPresetFormat[]>(presets_config_key, []) || []
 
-  let new_name = ''
   let copy_number = 0
-  while (current_presets.some((p) => p.name == new_name)) {
+  let new_name: string
+  do {
     new_name = `(${copy_number++})`
-  }
+  } while (current_presets.some((p) => p.name == new_name))
 
   const new_preset: ConfigPresetFormat = {
     name: new_name,
@@ -30,7 +32,9 @@ export const handle_create_preset = async (
     systemInstructions: CHATBOTS['AI Studio'].default_system_instructions
   }
 
-  const updated_presets = [new_preset, ...current_presets]
+  const updated_presets = message.add_on_top
+    ? [new_preset, ...current_presets]
+    : [...current_presets, new_preset]
 
   try {
     panel_provider.send_message({

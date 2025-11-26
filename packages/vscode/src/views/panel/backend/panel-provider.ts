@@ -498,7 +498,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           } else if (message.command == 'DUPLICATE_PRESET') {
             await handle_duplicate_preset(this, message, webview_view)
           } else if (message.command == 'CREATE_PRESET') {
-            await handle_create_preset(this)
+            await handle_create_preset(this, message)
           } else if (message.command == 'CREATE_GROUP') {
             await handle_create_group(this, {
               add_on_top: message.add_on_top,
