@@ -78,6 +78,9 @@ export type PromptFieldProps = {
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
   const container_ref = useRef<HTMLDivElement>(null)
+  const ghost_text_debounce_timer_ref = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null)
   const [caret_position, set_caret_position] = useState(0)
   const [ghost_text, set_ghost_text] = useState('')
   const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
@@ -234,68 +237,76 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   }, [props.currently_open_file_text])
 
   useEffect(() => {
-    if (!input_ref.current || !is_focused) {
-      set_ghost_text('')
-      return
+    // Reset timer on any change
+    if (ghost_text_debounce_timer_ref.current) {
+      clearTimeout(ghost_text_debounce_timer_ref.current)
+      ghost_text_debounce_timer_ref.current = null
     }
 
-    const selection = window.getSelection()
-    if (!selection || selection.rangeCount === 0) {
-      set_ghost_text('')
-      return
-    }
+    // Calculate potential ghost text
+    let potential_ghost_text = ''
 
-    const range = selection.getRangeAt(0)
-    if (!range.collapsed) {
-      set_ghost_text('')
-      return
-    }
+    if (input_ref.current && is_focused) {
+      const selection = window.getSelection()
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0)
+        if (range.collapsed) {
+          // Check if there's a character on the right side of the caret
+          const post_caret_range = range.cloneRange()
+          post_caret_range.selectNodeContents(input_ref.current)
+          post_caret_range.setStart(range.endContainer, range.endOffset)
+          const text_after_cursor = post_caret_range.toString()
 
-    // Check if there's a character on the right side of the caret
-    const post_caret_range = range.cloneRange()
-    post_caret_range.selectNodeContents(input_ref.current)
-    post_caret_range.setStart(range.endContainer, range.endOffset)
-    const text_after_cursor = post_caret_range.toString()
-    
-    // Only allow ghost text if there's nothing after cursor or only whitespace
-    if (text_after_cursor.length > 0 && text_after_cursor[0].trim() !== '') {
-      set_ghost_text('')
-      return
-    }
+          // Only allow ghost text if there's nothing after cursor or only whitespace
+          if (text_after_cursor.trim() === '') {
+            const pre_caret_range = range.cloneRange()
+            pre_caret_range.selectNodeContents(input_ref.current)
+            pre_caret_range.setEnd(range.startContainer, range.startOffset)
+            const text_before_cursor = pre_caret_range.toString()
+            const last_word_match = text_before_cursor.match(/[\S]+$/)
 
-    const pre_caret_range = range.cloneRange()
-    pre_caret_range.selectNodeContents(input_ref.current)
-    pre_caret_range.setEnd(range.startContainer, range.startOffset)
-    const text_before_cursor = pre_caret_range.toString()
-
-    const last_word_match = text_before_cursor.match(/[\S]+$/)
-    if (!last_word_match) {
-      set_ghost_text('')
-      return
-    }
-
-    const last_word_with_prefix = last_word_match[0]
-    const word_start_match = last_word_with_prefix.match(/[a-zA-Z_]/)
-    if (!word_start_match) {
-      set_ghost_text('')
-      return
-    }
-    const last_word = last_word_with_prefix.substring(word_start_match.index ?? 0)
-
-    if (last_word.length < 2) {
-      set_ghost_text('')
-      return
-    }
-
-    for (const id of identifiers) {
-      if (id.startsWith(last_word) && id !== last_word) {
-        set_ghost_text(id.substring(last_word.length))
-        return
+            if (last_word_match) {
+              const last_word_with_prefix = last_word_match[0]
+              const word_start_match =
+                last_word_with_prefix.match(/[a-zA-Z_]/)
+              if (word_start_match) {
+                const last_word = last_word_with_prefix.substring(
+                  word_start_match.index ?? 0
+                )
+                if (last_word.length >= 2) {
+                  for (const id of identifiers) {
+                    if (id.startsWith(last_word) && id !== last_word) {
+                      potential_ghost_text = id.substring(last_word.length)
+                      break
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
 
-    set_ghost_text('')
-  }, [props.value, caret_position, identifiers, is_focused])
+    // Apply debounce logic
+    if (potential_ghost_text) {
+      if (ghost_text) {
+        set_ghost_text(potential_ghost_text)
+      } else {
+        ghost_text_debounce_timer_ref.current = setTimeout(() => {
+          set_ghost_text(potential_ghost_text)
+        }, 500)
+      }
+    } else {
+      set_ghost_text('')
+    }
+
+    return () => {
+      if (ghost_text_debounce_timer_ref.current) {
+        clearTimeout(ghost_text_debounce_timer_ref.current)
+      }
+    }
+  }, [props.value, caret_position, identifiers, is_focused, ghost_text])
 
   useEffect(() => {
     if (input_ref.current && input_ref.current.innerHTML !== highlighted_html) {
