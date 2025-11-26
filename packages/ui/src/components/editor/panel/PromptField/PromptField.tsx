@@ -5,6 +5,7 @@ import { Icon } from '../../common/Icon'
 import { get_highlighted_text } from './utils/get-highlighted-text'
 import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
+import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
@@ -77,12 +78,7 @@ export type PromptFieldProps = {
 
 export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const input_ref = useRef<HTMLDivElement>(null)
-  const container_ref = useRef<HTMLDivElement>(null)
-  const ghost_text_debounce_timer_ref = useRef<ReturnType<
-    typeof setTimeout
-  > | null>(null)
   const [caret_position, set_caret_position] = useState(0)
-  const [ghost_text, set_ghost_text] = useState('')
   const [show_at_sign_tooltip, set_show_at_sign_tooltip] = useState(false)
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
@@ -95,6 +91,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     handle_copy_click,
     handle_select_click
   } = use_dropdown(props)
+  const { ghost_text, handle_accept_ghost_text } = use_ghost_text({
+    value: props.value,
+    input_ref,
+    is_focused,
+    currently_open_file_text: props.currently_open_file_text,
+    caret_position
+  })
   const {
     handle_clear,
     handle_input_change,
@@ -113,31 +116,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     })
 
   const mouse_down_pos_ref = useRef<{ x: number; y: number } | null>(null)
-
-  function handle_accept_ghost_text() {
-    if (!ghost_text || !input_ref.current) return
-
-    const ghost_node = input_ref.current.querySelector(
-      'span[data-type="ghost-text"]'
-    )
-    if (ghost_node) {
-      const text_node = document.createTextNode(ghost_node.textContent || '')
-      ghost_node.parentNode?.replaceChild(text_node, ghost_node)
-
-      const selection = window.getSelection()
-      if (selection) {
-        const range = document.createRange()
-        range.setStartAfter(text_node)
-        range.collapse(true)
-        selection.removeAllRanges()
-        selection.addRange(range)
-      }
-
-      input_ref.current.dispatchEvent(
-        new Event('input', { bubbles: true, cancelable: true })
-      )
-    }
-  }
 
   const handle_mouse_down = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -228,86 +206,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     props.context_file_paths
   ])
 
-  const identifiers = useMemo(() => {
-    if (!props.currently_open_file_text) return new Set<string>()
-    const matches =
-      props.currently_open_file_text.match(/[a-zA-Z_][a-zA-Z0-9_]*/g)
-    if (!matches) return new Set<string>()
-    return new Set(matches.filter((id) => id.length >= 3))
-  }, [props.currently_open_file_text])
-
-  useEffect(() => {
-    // Reset timer on any change
-    if (ghost_text_debounce_timer_ref.current) {
-      clearTimeout(ghost_text_debounce_timer_ref.current)
-      ghost_text_debounce_timer_ref.current = null
-    }
-
-    // Calculate potential ghost text
-    let potential_ghost_text = ''
-
-    if (input_ref.current && is_focused) {
-      const selection = window.getSelection()
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0)
-        if (range.collapsed) {
-          // Check if there's a character on the right side of the caret
-          const post_caret_range = range.cloneRange()
-          post_caret_range.selectNodeContents(input_ref.current)
-          post_caret_range.setStart(range.endContainer, range.endOffset)
-          const text_after_cursor = post_caret_range.toString()
-
-          // Only allow ghost text if there's nothing after cursor or only whitespace
-          if (text_after_cursor.trim() === '') {
-            const pre_caret_range = range.cloneRange()
-            pre_caret_range.selectNodeContents(input_ref.current)
-            pre_caret_range.setEnd(range.startContainer, range.startOffset)
-            const text_before_cursor = pre_caret_range.toString()
-            const last_word_match = text_before_cursor.match(/[\S]+$/)
-
-            if (last_word_match) {
-              const last_word_with_prefix = last_word_match[0]
-              const word_start_match =
-                last_word_with_prefix.match(/[a-zA-Z_]/)
-              if (word_start_match) {
-                const last_word = last_word_with_prefix.substring(
-                  word_start_match.index ?? 0
-                )
-                if (last_word.length >= 2) {
-                  for (const id of identifiers) {
-                    if (id.startsWith(last_word) && id !== last_word) {
-                      potential_ghost_text = id.substring(last_word.length)
-                      break
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    // Apply debounce logic
-    if (potential_ghost_text) {
-      if (ghost_text) {
-        set_ghost_text(potential_ghost_text)
-      } else {
-        ghost_text_debounce_timer_ref.current = setTimeout(() => {
-          set_ghost_text(potential_ghost_text)
-        }, 500)
-      }
-    } else {
-      set_ghost_text('')
-    }
-
-    return () => {
-      if (ghost_text_debounce_timer_ref.current) {
-        clearTimeout(ghost_text_debounce_timer_ref.current)
-      }
-    }
-  }, [props.value, caret_position, identifiers, is_focused, ghost_text])
-
   useEffect(() => {
     if (input_ref.current && input_ref.current.innerHTML !== highlighted_html) {
       const selection_start = get_caret_position_from_div(input_ref.current)
@@ -383,37 +281,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
       document.removeEventListener('selectionchange', on_selection_change)
   }, [props.on_caret_position_change, props.value, props.context_file_paths])
 
-  useEffect(() => {
-    const input = input_ref.current
-    if (!input) return
-
-    const existing_ghost = input.querySelector('span[data-type="ghost-text"]')
-    if (existing_ghost) {
-      const parent = existing_ghost.parentNode
-      if (parent) {
-        parent.removeChild(existing_ghost)
-        parent.normalize()
-      }
-    }
-
-    if (ghost_text) {
-      const selection = window.getSelection()
-      if (selection && selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0)
-        if (range.collapsed) {
-          const span = document.createElement('span')
-          span.dataset.type = 'ghost-text'
-          span.textContent = ghost_text
-          span.style.color = 'var(--vscode-editorGhostText-foreground, #888)'
-          span.style.pointerEvents = 'none'
-
-          range.insertNode(span)
-          selection.collapse(range.startContainer, range.startOffset)
-        }
-      }
-    }
-  }, [ghost_text])
-
   const placeholder = useMemo(() => {
     const active_history = props.chat_history
 
@@ -475,7 +342,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             }
           }
         }}
-        ref={container_ref}
         onClick={() => input_ref.current?.focus()}
       >
         {props.value && (

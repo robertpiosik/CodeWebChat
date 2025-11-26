@@ -39,7 +39,6 @@ const process_text_part_for_files = (
         // If not a context file, return with backticks
         return `\`${escape_html(file_path)}\``
       }
-      // part at even index is regular text
       return escape_html(part)
     })
     .join('')

@@ -746,12 +746,10 @@ export const use_handlers = (
           let is_before_ghost = false
 
           if (startContainer === ghost_node.previousSibling) {
-            // Caret is at the end of the text node before ghost
             if (startContainer.nodeType === Node.TEXT_NODE) {
               is_before_ghost = startOffset === startContainer.textContent?.length
             }
           } else if (startContainer === ghost_node.parentNode) {
-            // Caret is in the parent, check if it's right before ghost node
             const ghost_index = Array.from(startContainer.childNodes).indexOf(ghost_node as ChildNode)
             is_before_ghost = startOffset === ghost_index
           }
