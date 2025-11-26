@@ -1,3 +1,4 @@
+// packages/vscode/src/commands/apply-chat-response-command/utils/clipboard-parser/extract-diff-patches/extract-diffs.ts
 import { Logger } from '@shared/utils/logger'
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import { extract_workspace_and_path } from '../clipboard-parser'
@@ -709,9 +710,10 @@ const build_patch_content = (params: {
       line.startsWith('@@')
     )
 
-    if (hunk_start_idx > 0) {
+    if (hunk_start_idx >= 0) {
       const header_lines = patch_lines.slice(0, hunk_start_idx)
       const body_lines = patch_lines.slice(hunk_start_idx)
+      const formatted_body_lines = format_hunk_headers(body_lines)
 
       let from_line: string | undefined
       let to_line: string | undefined
@@ -728,7 +730,7 @@ const build_patch_content = (params: {
       if (from_line) final_header.push(from_line)
       if (to_line) final_header.push(to_line)
 
-      patch_lines = [...final_header, ...body_lines]
+      patch_lines = [...final_header, ...formatted_body_lines]
     }
 
     patch_content = patch_lines
