@@ -498,46 +498,47 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 }
 
                 // Handle normal preset/group reordering
-                if (props.on_presets_reorder) {
-                  const new_visible_presets = new_state
-                    .filter(
-                      (item) =>
-                        item.id !== UNGROUPED_ID &&
-                        item.id !== TRAILING_GROUP_ID &&
-                        item.id !== TRAILING_SEPARATOR_ID
+                const new_visible_presets = new_state
+                  .filter(
+                    (item) =>
+                      item.id !== UNGROUPED_ID &&
+                      item.id !== TRAILING_GROUP_ID &&
+                      item.id !== TRAILING_SEPARATOR_ID
+                  )
+                  .map(({ id, ...preset }) => preset) as Presets.Preset[]
+
+                const reordered_presets: Presets.Preset[] = []
+
+                for (const preset of new_visible_presets) {
+                  reordered_presets.push(preset)
+
+                  if (!preset.chatbot && preset.is_collapsed) {
+                    // It's a collapsed group. Find its children in original list and add them.
+                    const original_index = props.presets.findIndex(
+                      (p) => p.name == preset.name
                     )
-                    .map(({ id, ...preset }) => preset) as Presets.Preset[]
 
-                  const reordered_presets: Presets.Preset[] = []
-
-                  for (const preset of new_visible_presets) {
-                    reordered_presets.push(preset)
-
-                    if (!preset.chatbot && preset.is_collapsed) {
-                      // It's a collapsed group. Find its children in original list and add them.
-                      const original_index = props.presets.findIndex(
-                        (p) => p.name === preset.name
-                      )
-
-                      if (original_index !== -1) {
-                        for (
-                          let i = original_index + 1;
-                          i < props.presets.length;
-                          i++
+                    if (original_index != -1) {
+                      for (
+                        let i = original_index + 1;
+                        i < props.presets.length;
+                        i++
+                      ) {
+                        const child_candidate = props.presets[i]
+                        if (
+                          ((child_candidate.chatbot && child_candidate.name) ||
+                            !child_candidate.name) &&
+                          props.presets[i - 1].name
                         ) {
-                          const child_candidate = props.presets[i]
-                          if (child_candidate.chatbot && child_candidate.name) {
-                            reordered_presets.push(child_candidate)
-                          } else {
-                            // next group or separator found
-                            break
-                          }
+                          reordered_presets.push(child_candidate)
+                        } else {
+                          break
                         }
                       }
                     }
                   }
-                  props.on_presets_reorder(reordered_presets)
                 }
+                props.on_presets_reorder(reordered_presets)
               }}
               animation={150}
               handle={`.${styles.presets__item__left__drag_handle}`}
@@ -788,7 +789,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
                 return (
                   <div
-                    key={preset.name}
+                    key={preset.id}
                     className={cn(styles.presets__item, {
                       [styles['presets__item--highlighted']]:
                         props.selected_preset_name == preset.name
