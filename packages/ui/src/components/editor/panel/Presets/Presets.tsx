@@ -310,7 +310,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               list={sortable_list}
               setList={(new_state) => {
                 const ungrouped_item = new_state.find(
-                  (item) => item.id === UNGROUPED_ID
+                  (item) => item.id == UNGROUPED_ID
                 )
                 const ungrouped_was_moved = ungrouped_item
                   ? new_state[0].id !== UNGROUPED_ID
@@ -319,10 +319,10 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 // Handle ungrouped item drag
                 if (ungrouped_item && ungrouped_was_moved) {
                   const ungrouped_item_index = new_state.findIndex(
-                    (item) => item.id === UNGROUPED_ID
+                    (item) => item.id == UNGROUPED_ID
                   )
                   const new_state_without_ungrouped = new_state.filter(
-                    (item) => item.id !== UNGROUPED_ID
+                    (item) => item.id != UNGROUPED_ID
                   )
 
                   // Determine where to insert the new group
@@ -337,11 +337,11 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
                     if (preset_at_drop_location) {
                       target_full_index = props.presets.findIndex(
-                        (p) => p.name === preset_at_drop_location.name
+                        (p) => p.name == preset_at_drop_location.name
                       )
 
                       // Fallback if preset not found
-                      if (target_full_index === -1) {
+                      if (target_full_index == -1) {
                         target_full_index = props.presets.length
                       }
                     } else {
@@ -362,23 +362,23 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
                 // Handle trailing separator item drag
                 const trailing_separator_item = new_state.find(
-                  (item) => item.id === TRAILING_SEPARATOR_ID
+                  (item) => item.id == TRAILING_SEPARATOR_ID
                 )
                 const trailing_separator_was_moved =
                   trailing_separator_item &&
                   sortable_list.findIndex(
-                    (item) => item.id === TRAILING_SEPARATOR_ID
-                  ) !==
+                    (item) => item.id == TRAILING_SEPARATOR_ID
+                  ) !=
                     new_state.findIndex(
-                      (item) => item.id === TRAILING_SEPARATOR_ID
+                      (item) => item.id == TRAILING_SEPARATOR_ID
                     )
 
                 if (trailing_separator_item && trailing_separator_was_moved) {
                   const trailing_separator_item_index = new_state.findIndex(
-                    (item) => item.id === TRAILING_SEPARATOR_ID
+                    (item) => item.id == TRAILING_SEPARATOR_ID
                   )
                   const new_state_without_trailing_separator = new_state.filter(
-                    (item) => item.id !== TRAILING_SEPARATOR_ID
+                    (item) => item.id != TRAILING_SEPARATOR_ID
                   )
 
                   // Determine where to insert the new separator
@@ -395,16 +395,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       ]
 
                     if (preset_at_drop_location) {
-                      if (preset_at_drop_location.id === UNGROUPED_ID) {
+                      if (preset_at_drop_location.id == UNGROUPED_ID) {
                         target_full_index = 0
                       } else {
                         target_full_index = props.presets.findIndex(
-                          (p) => p.name === preset_at_drop_location.name
+                          (p) => p.name == preset_at_drop_location.name
                         )
                       }
 
                       // Fallback if preset not found
-                      if (target_full_index === -1) {
+                      if (target_full_index == -1) {
                         target_full_index = props.presets.length
                       }
                     } else {
@@ -423,18 +423,18 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
                 // Handle trailing group item drag
                 const trailing_group_item = new_state.find(
-                  (item) => item.id === TRAILING_GROUP_ID
+                  (item) => item.id == TRAILING_GROUP_ID
                 )
                 const trailing_group_was_moved =
                   trailing_group_item &&
                   sortable_list.findIndex(
-                    (item) => item.id === TRAILING_GROUP_ID
+                    (item) => item.id == TRAILING_GROUP_ID
                   ) !==
-                    new_state.findIndex((item) => item.id === TRAILING_GROUP_ID)
+                    new_state.findIndex((item) => item.id == TRAILING_GROUP_ID)
 
                 if (trailing_group_item && trailing_group_was_moved) {
                   const trailing_group_item_index = new_state.findIndex(
-                    (item) => item.id === TRAILING_GROUP_ID
+                    (item) => item.id == TRAILING_GROUP_ID
                   )
                   const item_after_tg = new_state[trailing_group_item_index + 1]
                   const item_after_that =
@@ -443,7 +443,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   // A preset was dragged to the end to create a new group
                   if (
                     item_after_tg?.chatbot &&
-                    item_after_that?.id === TRAILING_SEPARATOR_ID
+                    item_after_that?.id == TRAILING_SEPARATOR_ID
                   ) {
                     props.on_create_group({
                       instant: true,
@@ -470,16 +470,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       ]
 
                     if (preset_at_drop_location) {
-                      if (preset_at_drop_location.id === UNGROUPED_ID) {
+                      if (preset_at_drop_location.id == UNGROUPED_ID) {
                         target_full_index = 0
                       } else {
                         target_full_index = props.presets.findIndex(
-                          (p) => p.name === preset_at_drop_location.name
+                          (p) => p.name == preset_at_drop_location.name
                         )
                       }
 
                       // Fallback if preset not found
-                      if (target_full_index === -1) {
+                      if (target_full_index == -1) {
                         target_full_index = props.presets.length
                       }
                     } else {
@@ -545,7 +545,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               handle={`.${styles.presets__item__left__drag_handle}`}
             >
               {sortable_list.map((preset) => {
-                if (preset.id === TRAILING_SEPARATOR_ID) {
+                if (preset.id == TRAILING_SEPARATOR_ID) {
                   return (
                     <div
                       key={TRAILING_SEPARATOR_ID}

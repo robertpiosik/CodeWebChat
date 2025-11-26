@@ -32,9 +32,20 @@ export const handle_create_preset = async (
     systemInstructions: CHATBOTS['AI Studio'].default_system_instructions
   }
 
-  const updated_presets = message.add_on_top
-    ? [new_preset, ...current_presets]
-    : [...current_presets, new_preset]
+  let updated_presets: ConfigPresetFormat[]
+  if (message.add_on_top) {
+    updated_presets = [new_preset, ...current_presets]
+  } else {
+    const last_group_or_separator = [...current_presets]
+      .reverse()
+      .find((p) => (!p.chatbot && p.name) || !p.name)
+
+    if (last_group_or_separator?.name && !last_group_or_separator.chatbot) {
+      updated_presets = [...current_presets, {}, new_preset]
+    } else {
+      updated_presets = [...current_presets, new_preset]
+    }
+  }
 
   try {
     panel_provider.send_message({
