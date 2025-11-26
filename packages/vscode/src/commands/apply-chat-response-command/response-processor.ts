@@ -18,7 +18,10 @@ import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { update_undo_button_state } from './utils/state-manager'
-import { check_if_all_files_new } from './utils/file-checks'
+import {
+  check_if_all_files_new,
+  check_for_conflict_markers
+} from './utils/file-checks'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -457,14 +460,23 @@ export const process_chat_response = async (
       ) {
         has_truncated_fragments = check_for_truncated_fragments(files)
       }
+      const has_conflict_markers = check_for_conflict_markers(files)
 
-      if (has_truncated_fragments) {
+      if (has_truncated_fragments || has_conflict_markers) {
         selected_mode_label = 'Intelligent update'
-        Logger.info({
-          function_name: 'process_chat_response',
-          message:
-            'Auto-selecting intelligent update mode due to detected truncated fragments'
-        })
+        if (has_conflict_markers) {
+          Logger.info({
+            function_name: 'process_chat_response',
+            message:
+              'Auto-selecting intelligent update mode due to detected conflict markers'
+          })
+        } else {
+          Logger.info({
+            function_name: 'process_chat_response',
+            message:
+              'Auto-selecting intelligent update mode due to detected truncated fragments'
+          })
+        }
       } else {
         selected_mode_label = 'Fast replace'
         Logger.info({
