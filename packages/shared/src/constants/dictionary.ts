@@ -114,7 +114,8 @@ export const dictionary = {
     NO_RESULTS_FOR_SEARCH_SHOWING_ALL: (search_value: string) =>
       `No results for "${search_value}" in the selected context.`,
     NO_MODEL_PROVIDERS_CONFIGURED:
-      'No model providers configured. Please add a model provider first on the "Model Providers" page.'
+      'No model providers configured. Please add a model provider first on the "Model Providers" page.',
+    NOTHING_IS_PINNED: 'Nothing is pinned.'
   },
 
   error_message: {
