@@ -109,9 +109,11 @@
       );
       padding-left: 10px;
       visibility: hidden;
+      pointer-events: none;
 
       &__button {
         display: flex;
+        pointer-events: all;
 
         > span {
           opacity: var(--dimmed-opacity);
