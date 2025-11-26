@@ -40,7 +40,6 @@ export const TextItem: FC<Props> = (props) => {
         ref={header_ref}
         className={styles.header}
         onClick={() => props.on_toggle(header_ref.current!)}
-        title={props.content}
       >
         <IconButton
           codicon_icon={props.is_expanded ? 'chevron-down' : 'chevron-right'}
