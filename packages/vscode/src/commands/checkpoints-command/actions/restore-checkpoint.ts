@@ -520,6 +520,11 @@ export const restore_checkpoint = async (params: {
       params.websites_provider.load_checked_websites_state()
     }
 
+    await params.context.workspaceState.update(
+      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+      undefined
+    )
+
     if (
       params.checkpoint.title == 'Before response accepted' &&
       params.checkpoint.response_preview_item_created_at &&
@@ -538,11 +543,6 @@ export const restore_checkpoint = async (params: {
         })
       }
     }
-
-    await params.context.workspaceState.update(
-      CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
-      undefined
-    )
 
     const message = params.options?.skip_confirmation
       ? 'Successfully reverted changes.'

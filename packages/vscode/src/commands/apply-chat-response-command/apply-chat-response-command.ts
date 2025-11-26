@@ -5,6 +5,7 @@ import {
   delete_checkpoint
 } from '../checkpoints-command/actions'
 import { FileInPreview } from '@shared/types/file-in-preview'
+import { get_checkpoint_path } from '../checkpoints-command/utils'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
@@ -272,14 +273,34 @@ export const apply_chat_response_command = (params: {
                   CHECKPOINTS_STATE_KEY,
                   []
                 ) ?? []
-              const checkpoint_to_update = checkpoints.find(
+              const checkpoint_index = checkpoints.findIndex(
                 (c) => c.timestamp == before_checkpoint!.timestamp
               )
-              if (checkpoint_to_update) {
+              if (checkpoint_index != -1) {
+                const checkpoint_to_update = checkpoints[checkpoint_index]
+                const old_timestamp = checkpoint_to_update.timestamp
+                const new_timestamp = Date.now()
+                const old_path = get_checkpoint_path(old_timestamp)
+                const new_path = get_checkpoint_path(new_timestamp)
+                try {
+                  await vscode.workspace.fs.rename(
+                    vscode.Uri.file(old_path),
+                    vscode.Uri.file(new_path)
+                  )
+                  checkpoint_to_update.timestamp = new_timestamp
+                } catch (err) {
+                  console.error(
+                    `Failed to rename checkpoint directory for timestamp update:`,
+                    err
+                  )
+                }
                 checkpoint_to_update.title = 'Before response accepted'
                 checkpoint_to_update.response_history = history_for_checkpoint
                 checkpoint_to_update.response_preview_item_created_at =
                   created_at_for_preview
+
+                checkpoints.sort((a, b) => b.timestamp - a.timestamp)
+
                 await params.context.workspaceState.update(
                   CHECKPOINTS_STATE_KEY,
                   checkpoints

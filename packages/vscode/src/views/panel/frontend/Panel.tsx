@@ -197,7 +197,7 @@ export const Panel = () => {
                 on_preset_edit={(preset) => {
                   post_message(vscode, {
                     command: 'UPDATE_LAST_USED_PRESET',
-                    preset_name: preset.name
+                    preset_name: preset.name!
                   })
                   set_updating_preset(preset)
                   set_updated_preset(preset)
