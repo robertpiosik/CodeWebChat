@@ -391,17 +391,62 @@ const extract_all_code_block_patches = (params: {
     const block = code_blocks[i]
     if (block.type == 'diff' || block.type == 'patch') {
       let file_path_hint: string | undefined
+      let is_new_file_from_hint = false
       if (i > 0) {
         const prev_block_lines = lines.slice(
           code_blocks[i - 1].start + 1,
           code_blocks[i - 1].end
         )
-        const xml_path_regex = /<file\s+path=["']([^"']+)["']/
+        const xml_path_regex = /<file\s+path=["']([^"']+)["']([^>]*)>/
         const non_empty_lines = prev_block_lines.filter((l) => l.trim() != '')
         if (non_empty_lines.length === 1) {
           const match = non_empty_lines[0].match(xml_path_regex)
           if (match && match[1]) {
             file_path_hint = match[1]
+            const attributes = match[2] || ''
+            if (/\snew\b/.test(attributes)) {
+              is_new_file_from_hint = true
+            }
+          }
+        }
+      }
+
+      if (!file_path_hint && block.start > 0) {
+        for (let j = block.start - 1; j >= Math.max(0, block.start - 5); j--) {
+          const prev_line = lines[j].trim()
+          if (!prev_line) continue
+
+          let extracted = extract_path_from_line_of_code(prev_line)
+
+          if (!extracted) {
+            let potential_path = prev_line
+            if (potential_path.endsWith(':')) {
+              potential_path = potential_path.slice(0, -1).trim()
+            }
+            if (
+              potential_path &&
+              (potential_path.includes('/') ||
+                potential_path.includes('\\') ||
+                potential_path.includes('.')) &&
+              !potential_path.endsWith('.') &&
+              /^[a-zA-Z0-9_./@-]+$/.test(potential_path)
+            ) {
+              extracted = potential_path
+            }
+          }
+
+          if (extracted) {
+            let all_intermediate_lines_empty = true
+            for (let k = j + 1; k < block.start; k++) {
+              if (lines[k].trim() !== '') {
+                all_intermediate_lines_empty = false
+                break
+              }
+            }
+            if (all_intermediate_lines_empty) {
+              file_path_hint = extracted
+              break
+            }
           }
         }
       }
@@ -409,7 +454,12 @@ const extract_all_code_block_patches = (params: {
       if (file_path_hint) {
         const { from_path, to_path } = extract_paths_from_lines(block_lines)
         if (!from_path && !to_path) {
-          block_lines.unshift(`--- /dev/null`, `+++ b/${file_path_hint}`)
+          block_lines.unshift(
+            is_new_file_from_hint
+              ? '--- /dev/null'
+              : `--- a/${file_path_hint}`,
+            `+++ b/${file_path_hint}`
+          )
         }
       }
       const parsed_patches = parse_multiple_raw_patches({
@@ -456,7 +506,24 @@ const extract_all_code_block_patches = (params: {
     }
 
     if (block.type == 'diff' || block.type == 'patch') {
-      items.push(...(diff_block_patches.get(block.start) || []))
+      const patches = diff_block_patches.get(block.start) || []
+      if (patches.length > 0) {
+        const last_item = items.length > 0 ? items[items.length - 1] : undefined
+        if (last_item && last_item.type == 'text') {
+          let potential_path = last_item.content.trim()
+          if (potential_path.endsWith(':')) {
+            potential_path = potential_path.slice(0, -1).trim()
+          }
+          const { relative_path } = extract_workspace_and_path({
+            raw_file_path: potential_path,
+            is_single_root_folder_workspace: params.is_single_root
+          })
+          if (relative_path == patches[0].file_path) {
+            items.pop()
+          }
+        }
+      }
+      items.push(...patches)
     } else {
       // Check if this block was a hint for the next block.
       if (i < code_blocks.length - 1) {
