@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styles from './StageFilesModal.module.scss'
-import { Button } from '../../Button'
+import { Button } from '../../../common/Button'
 import { Modal } from '../Modal'
 import { Checkbox } from '../../../common/Checkbox'
 import { IconButton } from '../../IconButton/IconButton'

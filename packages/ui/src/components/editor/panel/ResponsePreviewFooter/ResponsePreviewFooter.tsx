@@ -1,4 +1,4 @@
-import { Button } from '../Button'
+import { Button } from '../../common/Button'
 import styles from './ResponsePreviewFooter.module.scss'
 
 type Props = {

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Button } from '../../Button'
+import { Button } from '../../../common/Button'
 import { Modal } from '../Modal'
 import { Textarea } from '../../../common/Textarea'
 import { use_commit_timer } from './hooks/use-commit-timer'

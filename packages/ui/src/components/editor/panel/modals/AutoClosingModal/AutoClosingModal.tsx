@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import styles from './AutoClosingModal.module.scss'
-import { Button } from '../../Button'
+import { Button } from '../../../common/Button'
 import { Modal } from '../Modal'
 
 type Props = {
