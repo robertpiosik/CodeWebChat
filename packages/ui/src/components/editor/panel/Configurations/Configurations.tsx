@@ -3,6 +3,7 @@ import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { IconButton } from '../IconButton/IconButton'
+import { Button } from '../../common/Button'
 
 export namespace Configurations {
   export type Configuration = {
@@ -147,6 +148,11 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
                 render_configuration_item(i, false)
               )}
             </ReactSortable>
+          </div>
+          <div className={styles.footer}>
+            <Button on_click={() => props.on_manage_configurations()}>
+              Edit Configurations
+            </Button>
           </div>
         </>
       )}
