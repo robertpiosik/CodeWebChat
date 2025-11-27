@@ -290,7 +290,7 @@ export const checkpoints_command = (params: {
 
               if (
                 last_full_hour !== null &&
-                last_full_hour !== current_full_hour
+                last_full_hour != current_full_hour
               ) {
                 log_lines.push('')
               }
@@ -298,8 +298,8 @@ export const checkpoints_command = (params: {
               const date = date_obj.format('YYYY-MM-DD HH:mm')
               const padded_title = c.title.padEnd(longest_title_length, ' ')
               log_lines.push(
-                `[${date} ${time_zone}] | ${padded_title} | ${
-                  c.description ? c.description : ''
+                `[${date} ${time_zone}] ${padded_title} ${
+                  c.description ? `"${c.description}"` : ''
                 }`
               )
               last_full_hour = current_full_hour
