@@ -1,0 +1,2 @@
+const a = 1;
+<think>I should write some code.</think>

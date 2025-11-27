@@ -1,0 +1,4 @@
+<think>
+I should write some code.
+</think>
+const a = 1;

@@ -1,0 +1,3 @@
+<file path="test.ts">
+const a = 1;
+</file>

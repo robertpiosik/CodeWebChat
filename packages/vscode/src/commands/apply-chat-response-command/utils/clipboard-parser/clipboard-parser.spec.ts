@@ -22,10 +22,12 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
       expect(result[1]).toMatchObject({
+        type: 'file',
         file_path: 'src/utils.py',
         content: load_test_case_file(test_case, '2-file.txt')
       })
@@ -41,6 +43,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/hello.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -56,6 +59,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -71,6 +75,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -86,6 +91,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -101,6 +107,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -116,6 +123,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -131,6 +139,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -146,6 +155,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -161,6 +171,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'README.md',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -176,10 +187,12 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/hello-world.html',
         content: load_test_case_file(test_case, '1-file.txt')
       })
       expect(result[1]).toMatchObject({
+        type: 'file',
         file_path: 'src/lorem.css',
         content: load_test_case_file(test_case, '2-file.txt')
       })
@@ -195,6 +208,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         workspace_name: 'frontend',
         content: load_test_case_file(test_case, '1-file.txt')
@@ -210,7 +224,10 @@ describe('clipboard-parser', () => {
       })
 
       expect(result).toHaveLength(1)
-      expect(result[0]).toHaveProperty('file_path', 'frontend/src/index.ts')
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'frontend/src/index.ts'
+      })
     })
 
     it('merges content when the same file path appears in multiple code blocks', () => {
@@ -223,6 +240,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -238,10 +256,12 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
       expect(result[1]).toMatchObject({
+        type: 'file',
         file_path: 'src/utils.py',
         content: load_test_case_file(test_case, '2-file.txt')
       })
@@ -257,10 +277,12 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
       expect(result[1]).toMatchObject({
+        type: 'file',
         file_path: 'src/utils.py',
         content: load_test_case_file(test_case, '2-file.txt')
       })
@@ -276,6 +298,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/utils.py',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -291,6 +314,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.js',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -306,6 +330,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.js',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -321,6 +346,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/test.md',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -336,6 +362,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/lorem.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -351,6 +378,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/main.js',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -366,10 +394,12 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/lorem.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
       expect(result[1]).toMatchObject({
+        type: 'file',
         file_path: 'src/ipsum.ts',
         content: load_test_case_file(test_case, '2-file.txt')
       })
@@ -385,10 +415,12 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/lorem.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
       expect(result[1]).toMatchObject({
+        type: 'file',
         file_path: 'src/ipsum.ts',
         content: load_test_case_file(test_case, '2-file.txt')
       })
@@ -404,6 +436,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.php',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -419,6 +452,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -434,6 +468,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.js',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -449,6 +484,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.js',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -464,6 +500,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/hello-world.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -479,6 +516,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/index.js',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -494,6 +532,7 @@ describe('clipboard-parser', () => {
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
+        type: 'file',
         file_path: 'src/hello-world.ts',
         content: load_test_case_file(test_case, '1-file.txt')
       })
@@ -513,6 +552,7 @@ describe('clipboard-parser', () => {
         content: load_test_case_file(test_case, '1-text.txt')
       })
       expect(result[1]).toMatchObject({
+        type: 'file',
         file_path: 'src/hello-world.ts',
         content: load_test_case_file(test_case, '2-file.txt')
       })
@@ -530,6 +570,7 @@ describe('clipboard-parser', () => {
 
       expect(result).not.toBeNull()
       if (result) {
+        expect(result.type).toBe('file')
         expect(result.file_path).toBe('src/index.ts')
         expect(result.content).toBe(
           load_test_case_file(test_case, '1-file.txt')
@@ -550,6 +591,7 @@ describe('clipboard-parser', () => {
 
       expect(result).not.toBeNull()
       if (result) {
+        expect(result.type).toBe('file')
         expect(result.file_path).toBe('src/index.ts')
         expect(result.content).toBe(
           load_test_case_file(test_case, '1-file.txt')

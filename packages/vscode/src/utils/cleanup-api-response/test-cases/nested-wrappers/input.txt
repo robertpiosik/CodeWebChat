@@ -1,0 +1,7 @@
+```typescript
+<file path="test.ts">
+<![CDATA[
+console.log("hello");
+]]>
+</file>
+```
