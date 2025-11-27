@@ -299,7 +299,9 @@ export const checkpoints_command = (params: {
               const padded_title = c.title.padEnd(longest_title_length, ' ')
               log_lines.push(
                 `[${date} ${time_zone}] ${padded_title} ${
-                  c.description ? `"${c.description}"` : ''
+                  c.description
+                    ? `> ${c.description.replace(/\n/g, '\\n')}`
+                    : ''
                 }`
               )
               last_full_hour = current_full_hour
