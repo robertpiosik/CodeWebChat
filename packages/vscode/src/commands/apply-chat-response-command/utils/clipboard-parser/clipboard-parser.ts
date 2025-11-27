@@ -54,7 +54,7 @@ export const extract_workspace_and_path = (params: {
 
 export const has_real_code = (content: string): boolean => {
   if (content.trim() == '') {
-    return true
+    return false
   }
   const lines = content.split('\n')
   const non_comment_lines = lines.filter((line) => {

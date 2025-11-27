@@ -1,3 +1,4 @@
+// packages/vscode/src/commands/apply-chat-response-command/utils/clipboard-parser/parsers/multiple-files-parser.ts
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import {
   FileItem,
@@ -354,14 +355,31 @@ export const parse_multiple_files = (params: {
           is_markdown_container_block = true
         }
       } else if (
-        trimmed_line == '```' &&
-        backtick_nesting_level == 1 &&
-        ((current_content.trim() == '' &&
+        trimmed_line === '```' &&
+        backtick_nesting_level === 1 &&
+        current_content.trim() === '' &&
+        i > 0 &&
+        lines[i - 1].trim() !== '' &&
+        (extract_path_from_line_of_code(lines[i - 1]) === null ||
+          (i + 1 < lines.length && lines[i + 1].trim() !== '')) &&
+        (() => {
+          for (let j = i + 1; j < lines.length; j++) {
+            const next_line = lines[j].trim()
+            if (next_line) return true
+          }
+          return false
+        })()
+      ) {
+        backtick_nesting_level++
+      } else if (
+        trimmed_line === '```' &&
+        backtick_nesting_level === 1 &&
+        (current_language === 'markdown' || current_language === 'md') &&
+        ((current_content.trim() === '' &&
           i > 0 &&
           lines[i - 1].trim() !== '') ||
-          ((current_language == 'markdown' || current_language == 'md') &&
-            i > 0 &&
-            (lines[i - 1].trim() == '' ||
+          (i > 0 &&
+            (lines[i - 1].trim() === '' ||
               (current_file_name.endsWith('.md') &&
                 lines[i - 1].trim().endsWith('```'))))) &&
         (() => {
@@ -372,9 +390,7 @@ export const parse_multiple_files = (params: {
           return false
         })()
       ) {
-        if (current_language == 'markdown' || current_language === 'md') {
-          is_markdown_container_block = true
-        }
+        is_markdown_container_block = true
         backtick_nesting_level++
       } else if (trimmed_line.endsWith('```')) {
         backtick_nesting_level--

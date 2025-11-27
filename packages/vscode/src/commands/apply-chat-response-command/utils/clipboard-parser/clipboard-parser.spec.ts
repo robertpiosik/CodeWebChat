@@ -39,14 +39,10 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result).toHaveLength(2)
+      expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
-        file_path: 'src/index.ts',
-        content: load_test_case_file(test_case, '1-file.txt')
-      })
-      expect(result[1]).toMatchObject({
         file_path: 'src/hello.ts',
-        content: load_test_case_file(test_case, '2-file.txt')
+        content: load_test_case_file(test_case, '1-file.txt')
       })
     })
 
@@ -500,6 +496,25 @@ describe('clipboard-parser', () => {
       expect(result[0]).toMatchObject({
         file_path: 'src/hello-world.ts',
         content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
+    it('handles path duplicated in empty code block', () => {
+      const test_case = 'path-duplicated-in-empty-code-block'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        file_path: 'src/hello-world.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
       })
     })
   })

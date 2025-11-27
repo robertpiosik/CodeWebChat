@@ -1,0 +1,10 @@
+```typescript
+// src/hello-world.ts
+```
+
+Test
+
+```typescript
+// src/hello-world.ts
+console.log('Hello world!')
+```
