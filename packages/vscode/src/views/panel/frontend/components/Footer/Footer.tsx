@@ -6,8 +6,6 @@ import { LayoutContext } from '../../contexts/LayoutContext'
 
 export const Footer: React.FC = () => {
   const {
-    is_apply_visible,
-    is_undo_visible,
     can_undo,
     has_changes_to_commit,
     on_apply_click,
@@ -83,40 +81,34 @@ export const Footer: React.FC = () => {
         </div>
 
         <div>
-          {is_apply_visible && (
-            <button
+          <button
+            className={cn(
+              styles['footer__action-button'],
+              styles['footer__action-button--no-shrink']
+            )}
+            onClick={handle_apply_click}
+            title={'Integrate copied chat response or a single code block'}
+            disabled={is_apply_disabled_temporarily}
+          >
+            Apply
+          </button>
+          <button
+            className={styles['footer__action-button']}
+            onClick={on_undo_click}
+            title={
+              'Restore saved state of the codebase after chat/API response integration'
+            }
+            disabled={!can_undo}
+          >
+            <span className={styles['footer__action-button__text']}>Undo</span>
+            <span
               className={cn(
-                styles['footer__action-button'],
-                styles['footer__action-button--no-shrink']
+                styles['footer__action-button__icon'],
+                'codicon',
+                'codicon-redo'
               )}
-              onClick={handle_apply_click}
-              title={'Integrate copied chat response or a single code block'}
-              disabled={is_apply_disabled_temporarily}
-            >
-              Apply
-            </button>
-          )}
-          {is_undo_visible && (
-            <button
-              className={styles['footer__action-button']}
-              onClick={on_undo_click}
-              title={
-                'Restore saved state of the codebase after chat/API response integration'
-              }
-              disabled={!can_undo}
-            >
-              <span className={styles['footer__action-button__text']}>
-                Undo
-              </span>
-              <span
-                className={cn(
-                  styles['footer__action-button__icon'],
-                  'codicon',
-                  'codicon-redo'
-                )}
-              />
-            </button>
-          )}
+            />
+          </button>
           <button
             className={styles['footer__action-button']}
             onClick={handle_commit_click}

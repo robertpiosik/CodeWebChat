@@ -171,8 +171,6 @@ export const Panel = () => {
   }
 
   const layout_context_value = {
-    is_apply_visible: active_view == 'main' && mode == MODE.WEB,
-    is_undo_visible: active_view == 'main',
     can_undo,
     has_changes_to_commit,
     on_apply_click: handle_apply_click,
