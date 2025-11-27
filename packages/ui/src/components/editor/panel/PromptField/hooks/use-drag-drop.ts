@@ -34,7 +34,6 @@ export const use_drag_drop = ({
     const input_element = input_ref.current
     if (!input_element || !input_element.contains(range.startContainer)) return
 
-    // Calculate display positions
     const pre_selection_range = document.createRange()
     pre_selection_range.selectNodeContents(input_element)
     pre_selection_range.setEnd(range.startContainer, range.startOffset)
@@ -43,7 +42,6 @@ export const use_drag_drop = ({
     pre_selection_range.setEnd(range.endContainer, range.endOffset)
     const display_end = pre_selection_range.toString().length
 
-    // Map to raw positions
     const raw_start = map_display_pos_to_raw_pos(
       display_start,
       value,
@@ -89,7 +87,6 @@ export const use_drag_drop = ({
     const dragged_range = dragged_text_range_ref.current
     dragged_text_range_ref.current = null
 
-    // Find drop position
     const range = document.caretRangeFromPoint(e.clientX, e.clientY)
     if (!range) return
 

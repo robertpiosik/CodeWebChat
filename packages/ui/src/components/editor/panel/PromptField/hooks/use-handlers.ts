@@ -8,7 +8,7 @@ import {
   map_display_pos_to_raw_pos,
   map_raw_pos_to_display_pos
 } from '../utils/position-mapping'
-import { search_paths } from '@shared/utils/search-paths'
+import { get_file_match_hint_data } from '../utils/get-file-match-hint-data'
 
 type HistoryEntry = {
   value: string
@@ -38,50 +38,6 @@ const getKeywordRanges = (
     }
   }
   return ranges
-}
-
-const should_show_file_match_hint = (
-  value: string,
-  caret_position: number,
-  context_file_paths: string[] | undefined
-): boolean => {
-  if (
-    !value ||
-    caret_position !== value.length ||
-    value.endsWith(' ') ||
-    value.endsWith('\n') ||
-    !context_file_paths
-  ) {
-    return false
-  }
-
-  // Check if cursor is at the end of a shortened filename
-  const text_before_cursor = value.substring(0, caret_position)
-  const filename_match = text_before_cursor.match(
-    /([^\s,;:!?`]*\.[^\s,;:!?`]+)$/
-  )
-
-  if (filename_match) {
-    const filename = filename_match[1]
-    const is_shortened_filename = context_file_paths.some(
-      (path) => path.endsWith('/' + filename) || path === filename
-    )
-    if (is_shortened_filename) {
-      return false
-    }
-  }
-
-  const last_word = value.trim().split(/\s+/).pop()
-
-  if (last_word && last_word.length >= 3) {
-    const matching_paths = search_paths({
-      paths: context_file_paths,
-      search_value: last_word
-    })
-    return matching_paths.length === 1
-  }
-
-  return false
 }
 
 const reconstruct_raw_value_from_node = (node: Node): string => {
@@ -239,7 +195,6 @@ export const use_handlers = (
     let leading_part = props.value.substring(0, start_pos)
     let trailing_part = props.value.substring(end_pos)
 
-    // Handle spacing
     if (leading_part.endsWith(' ')) {
       leading_part = leading_part.slice(0, -1)
     } else if (trailing_part.startsWith(' ')) {
@@ -424,38 +379,29 @@ export const use_handlers = (
         0,
         caret_position - 1
       )
-      const show_hint = should_show_file_match_hint(
+      const hint_data = get_file_match_hint_data(
         display_value_before_backslash,
         caret_position - 1,
         props.context_file_paths
       )
 
-      if (show_hint) {
-        const last_word = display_value_before_backslash.trim().split(/\s+/).pop()
-        if (last_word) {
-          const matching_paths = search_paths({
-            paths: props.context_file_paths ?? [],
-            search_value: last_word
-          })
-          if (matching_paths.length === 1) {
-            const matched_path = matching_paths[0]
-            const old_raw_value = props.value
+      if (hint_data) {
+        const { word: last_word, path: matched_path } = hint_data
+        const old_raw_value = props.value
 
-            const last_word_in_raw_index = old_raw_value.lastIndexOf(last_word)
-            if (
-              last_word_in_raw_index !== -1 &&
-              old_raw_value.endsWith(last_word)
-            ) {
-              const value_before = old_raw_value.substring(
-                0,
-                last_word_in_raw_index
-              )
-              const final_new_value = `${value_before}\`${matched_path}\` `
-              update_value(final_new_value, final_new_value.length)
-              set_history_index(-1)
-              return
-            }
-          }
+        const last_word_in_raw_index = old_raw_value.lastIndexOf(last_word)
+        if (
+          last_word_in_raw_index !== -1 &&
+          old_raw_value.endsWith(last_word)
+        ) {
+          const value_before = old_raw_value.substring(
+            0,
+            last_word_in_raw_index
+          )
+          const final_new_value = `${value_before}\`${matched_path}\` `
+          update_value(final_new_value, final_new_value.length)
+          set_history_index(-1)
+          return
         }
       }
     }
@@ -468,15 +414,14 @@ export const use_handlers = (
       let is_after_non_word_char = false
       if (caret_position > 1) {
         const char_before_at = new_display_value.charAt(caret_position - 2)
-        // Check if the character before '@' is not a word character (a-z, A-Z, 0-9, _)
         is_after_non_word_char = !/\w/.test(char_before_at)
       }
 
       if (is_at_start || is_after_non_word_char) {
-          props.on_at_sign_click()
+        props.on_at_sign_click()
       }
     } else if (char_before_caret == '#') {
-        props.on_hash_sign_click()
+      props.on_hash_sign_click()
     }
   }
 
@@ -641,12 +586,6 @@ export const use_handlers = (
     return false
   }
 
-  const handle_tab_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!input_ref.current) return
-    e.preventDefault()
-    props.on_at_sign_click()
-  }
-
   const handle_backspace_key = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const selection = window.getSelection()
     if (
@@ -662,10 +601,7 @@ export const use_handlers = (
     const { startContainer, startOffset } = range
     let node_before_cursor: Node | null = null
 
-    if (
-      startContainer.nodeType == Node.TEXT_NODE &&
-      startOffset == 0
-    ) {
+    if (startContainer.nodeType == Node.TEXT_NODE && startOffset == 0) {
       node_before_cursor = startContainer.previousSibling
     } else if (
       startContainer.nodeType == Node.ELEMENT_NODE &&
@@ -769,15 +705,17 @@ export const use_handlers = (
         if (ghost_node) {
           const { startContainer, startOffset } = range
 
-          // Check if we're at the position just before ghost text
           let is_before_ghost = false
 
           if (startContainer === ghost_node.previousSibling) {
             if (startContainer.nodeType === Node.TEXT_NODE) {
-              is_before_ghost = startOffset === startContainer.textContent?.length
+              is_before_ghost =
+                startOffset === startContainer.textContent?.length
             }
           } else if (startContainer === ghost_node.parentNode) {
-            const ghost_index = Array.from(startContainer.childNodes).indexOf(ghost_node as ChildNode)
+            const ghost_index = Array.from(startContainer.childNodes).indexOf(
+              ghost_node as ChildNode
+            )
             is_before_ghost = startOffset === ghost_index
           }
 
@@ -799,12 +737,16 @@ export const use_handlers = (
         const { value, context_file_paths = [] } = props
         let i = raw_pos - 1
 
-        // First, skip any whitespace characters before the cursor.
         while (i >= 0 && /\s/.test(value[i])) {
           i--
         }
         if (i < 0) {
-          set_caret_position_after_change(input_ref, 0, value, context_file_paths)
+          set_caret_position_after_change(
+            input_ref,
+            0,
+            value,
+            context_file_paths
+          )
           return
         }
 
@@ -849,7 +791,6 @@ export const use_handlers = (
 
         let i = raw_pos
 
-        // Skip any whitespace characters after the cursor.
         while (i < value.length && /\s/.test(value[i])) {
           i++
         }
@@ -935,9 +876,7 @@ export const use_handlers = (
       if (ghost_text) {
         e.preventDefault()
         on_accept_ghost_text()
-        return
       }
-      handle_tab_key(e)
       return
     }
 
@@ -950,7 +889,6 @@ export const use_handlers = (
         const value = props.value
         let i = raw_pos - 1
 
-        // First, skip any whitespace characters before the cursor.
         while (i >= 0 && /\s/.test(value[i])) {
           i--
         }
