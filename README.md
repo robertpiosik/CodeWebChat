@@ -6,12 +6,12 @@ AI coding without agents. Guide the model to production-grade code with context,
 
 Works with VS Code, and forks like Cursor, Windsurf, and VSCodium.
 
-✅ **Send prompts anywhere**
+✅ **Send messages anywhere**
 
 - Chatbots—_ChatGPT, Claude, Gemini, AI Studio, Qwen, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
-✅ **Apply responses**—sophisticated markdown parser for multi-file changes integration \
+✅ **Apply responses**—changes integration in whole, truncated and diff edit formats \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
 🔒️ **Total privacy**—operates 100% on your local machine \
