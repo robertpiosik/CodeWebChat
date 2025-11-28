@@ -85,11 +85,6 @@ export const checkpoints_command = (params: {
           tooltip: 'Delete all checkpoints'
         }
 
-        const copy_button: vscode.QuickInputButton = {
-          iconPath: new vscode.ThemeIcon('copy'),
-          tooltip: 'Copy checkpoints as logs'
-        }
-
         let notification_count = 0
         let checkpoints: Checkpoint[] = []
         let temp_checkpoint_is_valid = false
@@ -109,7 +104,7 @@ export const checkpoints_command = (params: {
           const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
 
           if (visible_checkpoints.length > 0) {
-            quick_pick.buttons = [copy_button, clear_all_button]
+            quick_pick.buttons = [clear_all_button]
           } else {
             quick_pick.buttons = []
           }
@@ -266,55 +261,6 @@ export const checkpoints_command = (params: {
         })
 
         quick_pick.onDidTriggerButton(async (button) => {
-          if (button === copy_button) {
-            const visible_checkpoints = checkpoints
-              .filter((c) => !c.is_temporary)
-              .sort((a, b) => a.timestamp - b.timestamp)
-
-            if (visible_checkpoints.length == 0) {
-              return
-            }
-
-            const longest_title_length = Math.max(
-              ...visible_checkpoints.map((c) => c.title.length)
-            )
-
-            const time_zone = Intl.DateTimeFormat().resolvedOptions().timeZone
-
-            const log_lines: string[] = []
-            let last_full_hour: string | null = null
-
-            for (const c of visible_checkpoints) {
-              const date_obj = dayjs(c.timestamp)
-              const current_full_hour = date_obj.format('YYYY-MM-DD HH')
-
-              if (
-                last_full_hour !== null &&
-                last_full_hour != current_full_hour
-              ) {
-                log_lines.push('')
-              }
-
-              const date = date_obj.format('YYYY-MM-DD HH:mm')
-              const padded_title = c.title.padEnd(longest_title_length, ' ')
-              log_lines.push(
-                `[${date} ${time_zone}] ${padded_title} ${
-                  c.description
-                    ? `> ${c.description.replace(/\n/g, '\\n')}`
-                    : ''
-                }`
-              )
-              last_full_hour = current_full_hour
-            }
-
-            const log_string = log_lines.join('\n')
-            await vscode.env.clipboard.writeText(log_string)
-            vscode.window.showInformationMessage(
-              dictionary.information_message.CHECKPOINTS_COPIED_TO_CLIPBOARD
-            )
-            return
-          }
-
           if (button === clear_all_button) {
             quick_pick.hide()
             const confirmation = await vscode.window.showWarningMessage(
