@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "CWC is a free and open-source AI coding tool.",
+  "description": "Initialize free chatbots with CWC",
   "version": "1.601.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
