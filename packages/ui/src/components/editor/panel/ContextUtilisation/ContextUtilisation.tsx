@@ -15,6 +15,7 @@ const format_tokens = (tokens: number): string => {
 }
 
 export const ContextUtilisation: React.FC<Props> = (props) => {
+  console.log('xxx',props)
   const is_above_threshold =
     props.current_context_size > props.context_size_warning_threshold
   const progress = Math.min(
@@ -42,7 +43,10 @@ export const ContextUtilisation: React.FC<Props> = (props) => {
     const formatted_remaining_tokens = format_tokens(remaining_tokens)
     title_text = `${formatted_remaining_tokens} tokens remaining until threshold warning (change in settings)`
   } else {
-    title_text = `Context of size ${formatted_current_size} tokens exceeds threshold by ${formatted_threshold} tokens`
+    const exceeded_by =
+      props.current_context_size - props.context_size_warning_threshold
+    const formatted_exceeded_by = format_tokens(exceeded_by)
+    title_text = `Threshold of ${formatted_threshold} tokens is exceeded by ${formatted_exceeded_by} tokens`
   }
 
   return (
