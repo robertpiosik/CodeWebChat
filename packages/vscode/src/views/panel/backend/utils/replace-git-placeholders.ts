@@ -10,7 +10,8 @@ import { dictionary } from '@shared/constants/dictionary'
 const build_changes_xml = (
   diff: string,
   cwd: string,
-  workspace_provider: WorkspaceProvider
+  workspace_provider: WorkspaceProvider,
+  is_no_context_web_mode?: boolean
 ): string => {
   // Split diff into per-file sections. Each section starts with 'diff --git '.
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
@@ -52,7 +53,7 @@ const build_changes_xml = (
       changes_content += `<diff>\n<![CDATA[\n${full_file_diff}\n]]>\n</diff>\n`
 
       const absolute_path = path.join(cwd, file_path)
-      if (checked_files.has(absolute_path)) {
+      if (!is_no_context_web_mode && checked_files.has(absolute_path)) {
         const workspace_root =
           workspace_provider.get_workspace_root_for_file(absolute_path)
         let display_path: string
@@ -101,7 +102,8 @@ const build_changes_xml = (
 export const replace_changes_placeholder = async (params: {
   instruction: string
   after_context?: boolean
-  workspace_provider: WorkspaceProvider
+  workspace_provider: WorkspaceProvider,
+  is_no_context_web_mode?: boolean
 }): Promise<string> => {
   const matches = params.instruction.match(
     /#Changes:([^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?)/
@@ -181,7 +183,8 @@ export const replace_changes_placeholder = async (params: {
       const replacement_text = build_changes_xml(
         diff,
         target_folder.uri.fsPath,
-        params.workspace_provider
+        params.workspace_provider,
+        params.is_no_context_web_mode
       )
       return params.instruction.replace(
         new RegExp(`#Changes:${branch_spec}`, 'g'),
@@ -249,7 +252,8 @@ export const replace_changes_placeholder = async (params: {
       const replacement_text = build_changes_xml(
         diff,
         repository.rootUri.fsPath,
-        params.workspace_provider
+        params.workspace_provider,
+        params.is_no_context_web_mode
       )
       return params.instruction.replace(
         new RegExp(`#Changes:${branch_name}`, 'g'),

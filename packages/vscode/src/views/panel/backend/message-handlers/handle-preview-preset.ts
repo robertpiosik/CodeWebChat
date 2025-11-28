@@ -10,6 +10,7 @@ import {
 } from '@/views/panel/backend/utils/replace-git-placeholders'
 import { Preset } from '@shared/types/preset'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
+import { MODE } from '@/views/panel/types/main-view-mode'
 import { dictionary } from '@shared/constants/dictionary'
 
 export const handle_preview_preset = async (
@@ -98,9 +99,14 @@ export const handle_preview_preset = async (
     let post_context_instructions = instructions
 
     if (pre_context_instructions.includes('#Changes:')) {
+      const is_no_context_web_mode =
+        panel_provider.mode == MODE.WEB &&
+        panel_provider.web_prompt_type == 'no-context'
+
       pre_context_instructions = await replace_changes_placeholder({
         instruction: pre_context_instructions,
-        workspace_provider: panel_provider.workspace_provider
+        workspace_provider: panel_provider.workspace_provider,
+        is_no_context_web_mode
       })
       post_context_instructions = await replace_changes_placeholder({
         instruction: post_context_instructions,

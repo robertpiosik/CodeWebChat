@@ -179,9 +179,14 @@ export const handle_send_prompt = async (params: {
         let pre_context_instructions = instructions
         let post_context_instructions = instructions
         if (pre_context_instructions.includes('#Changes:')) {
+          const is_no_context_web_mode =
+            params.panel_provider.mode == MODE.WEB &&
+            params.panel_provider.web_prompt_type == 'no-context'
+
           pre_context_instructions = await replace_changes_placeholder({
             instruction: pre_context_instructions,
-            workspace_provider: params.panel_provider.workspace_provider
+            workspace_provider: params.panel_provider.workspace_provider,
+            is_no_context_web_mode
           })
           post_context_instructions = await replace_changes_placeholder({
             instruction: post_context_instructions,
