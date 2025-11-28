@@ -435,7 +435,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               }}
               onMouseLeave={() => set_show_at_sign_tooltip(false)}
               className={cn(styles['footer__left__button'])}
-              title="Reference file"
+              title="Reference File"
             >
               <Icon variant="AT_SIGN" />
             </button>
@@ -443,7 +443,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
               <button
                 onClick={props.on_hash_sign_click}
                 className={cn(styles['footer__left__button'])}
-                title="Insert symbol"
+                title="Insert Symbol"
               >
                 <Icon variant="HASH_SIGN" />
               </button>
@@ -451,7 +451,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             <button
               onClick={props.on_curly_braces_click}
               className={cn(styles['footer__left__button'])}
-              title="Prompt templates"
+              title="Prompt Templates"
             >
               <Icon variant="CURLY_BRACES" />
             </button>
