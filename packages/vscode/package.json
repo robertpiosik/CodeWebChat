@@ -1,7 +1,7 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Initialize free chatbots with CWC",
+  "description": "CWC initializes chatbots and makes API calls",
   "version": "1.601.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",

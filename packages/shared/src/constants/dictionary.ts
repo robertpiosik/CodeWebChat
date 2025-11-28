@@ -152,8 +152,6 @@ export const dictionary = {
       'Another checkpoint operation is currently in progress. Please wait for it to complete.',
     URL_OVERRIDE_DIFFERENT_DOMAIN: (preset_name: string) =>
       `URL override for preset "${preset_name}" was discarded because it uses a different domain.`,
-    CONTEXT_SIZE_WARNING: (threshold: string, percentage: number) =>
-      `Context exceeds threshold of ${threshold} tokens by ${percentage}%. Excessive context size affects accuracy and cost-efficiency.`,
     COULD_NOT_DELETE_CHECKPOINT_FILES: (message: string) =>
       `Could not delete checkpoint files: ${message}`,
     FAILED_TO_CREATE_FILE: (file_path: string) =>

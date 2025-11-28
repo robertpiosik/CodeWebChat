@@ -97,8 +97,6 @@ export const context_initialization = async (
 }> => {
   await restore_duplicated_workspace_context(context)
 
-  let was_above_threshold = false
-
   const workspace_folders = vscode.workspace.workspaceFolders ?? []
 
   let workspace_view: vscode.TreeView<FileItem>
@@ -135,39 +133,7 @@ export const context_initialization = async (
       }
       context_view.badge = undefined
     }
-
-    let websites_token_count = 0
-    if (websites_provider) {
-      websites_token_count =
-        websites_provider.get_checked_websites_token_count()
-    }
     token_count_emitter.emit('token-count-updated')
-
-    const total_token_count = context_token_count + websites_token_count
-    const config = vscode.workspace.getConfiguration('codeWebChat')
-    const threshold = config.get<number>('contextSizeWarningThreshold')
-
-    if (threshold && threshold > 0) {
-      const is_above_threshold = total_token_count > threshold
-      if (is_above_threshold && !was_above_threshold) {
-        const percentage_over = Math.round(
-          ((total_token_count - threshold) / threshold) * 100
-        )
-        const formatted_threshold =
-          threshold >= 1000
-            ? `${Math.round(threshold / 1000)}K`
-            : `${threshold}`
-        vscode.window.showWarningMessage(
-          dictionary.warning_message.CONTEXT_SIZE_WARNING(
-            formatted_threshold,
-            percentage_over
-          )
-        )
-      }
-      was_above_threshold = is_above_threshold
-    } else {
-      was_above_threshold = false
-    }
   }
 
   const shared_state = SharedFileState.get_instance()
