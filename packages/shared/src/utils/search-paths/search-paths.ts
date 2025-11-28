@@ -82,7 +82,7 @@ export const search_paths = (params: {
   if (!params.search_value) {
     return params.paths
   }
-  if (/[/\\\.]$/.test(params.search_value)) {
+  if (/[/\\]$/.test(params.search_value)) {
     return []
   }
 
@@ -95,13 +95,17 @@ export const search_paths = (params: {
       return { path: path_item, score: 0 }
     }
 
-    if (/[^a-z0-9]/.test(search_lower)) {
+    if (/[^a-z0-9.]/.test(search_lower)) {
       return { path: path_item, score: -1 }
     }
 
+    const fuzzy_query = search_lower.replace(/\./g, '')
+    if (fuzzy_query.length === 0) {
+      return { path: path_item, score: -1 }
+    }
     const parts = get_path_parts(path_item)
     const score = get_match_score({
-      query: search_lower,
+      query: fuzzy_query,
       parts,
       part_idx: 0,
       memo: {}

@@ -55,6 +55,37 @@ describe('search_paths', () => {
     expect(result[0]).toBe('src/routes/HomePage.tsx')
   })
 
+  it('should find "src/routes/HomePage.tsx" with query "page.tsx"', () => {
+    const result = search_paths({ paths, search_value: 'page.tsx' })
+    expect(result).toHaveLength(1)
+    expect(result[0]).toBe('src/routes/HomePage.tsx')
+  })
+
+  it('should find "src/routes/HomePage.tsx" with query "rout."', () => {
+    const result = search_paths({ paths, search_value: 'rout.' })
+    expect(result).toHaveLength(1)
+    expect(result[0]).toBe('src/routes/HomePage.tsx')
+  })
+
+  it('should find "src/routes/HomePage.tsx" with query "pag."', () => {
+    const result = search_paths({ paths, search_value: 'pag.' })
+    expect(result).toHaveLength(1)
+    expect(result[0]).toBe('src/routes/HomePage.tsx')
+  })
+
+  it('should find "src/routes/HomePage.tsx" with query "hom."', () => {
+    const result = search_paths({ paths, search_value: 'hom.' })
+    expect(result).toHaveLength(1)
+    expect(result[0]).toBe('src/routes/HomePage.tsx')
+  })
+
+ 
+
+
+
+  
+
+
   it('should not find "src/routes/HomePage.tsx" with query "src-page"', () => {
     const result = search_paths({ paths, search_value: 'src-page' })
     expect(result).toHaveLength(0)
@@ -62,11 +93,6 @@ describe('search_paths', () => {
 
   it('should not find "src/routes/HomePage.tsx" with query "pagesrc"', () => {
     const result = search_paths({ paths, search_value: 'pagesrc' })
-    expect(result).toHaveLength(0)
-  })
-
-  it('should not find "src/routes/HomePage.tsx" with query "page."', () => {
-    const result = search_paths({ paths, search_value: 'page.' })
     expect(result).toHaveLength(0)
   })
 

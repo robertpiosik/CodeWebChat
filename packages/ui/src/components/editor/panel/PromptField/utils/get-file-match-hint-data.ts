@@ -34,18 +34,12 @@ export const get_file_match_hint_data = (
   const last_word = value.trim().split(/\s+/).pop()
 
   if (last_word && last_word.length >= 3) {
-    const search_value = last_word.endsWith('.')
-      ? last_word.slice(0, -1)
-      : last_word
-
-    if (search_value.length >= 3) {
-      const matching_paths = search_paths({
-        paths: context_file_paths,
-        search_value: search_value
-      })
-      if (matching_paths.length === 1) {
-        return { word: last_word, path: matching_paths[0] }
-      }
+    const matching_paths = search_paths({
+      paths: context_file_paths,
+      search_value: last_word
+    })
+    if (matching_paths.length == 1) {
+      return { word: last_word, path: matching_paths[0] }
     }
   }
 
