@@ -76,8 +76,6 @@ export const use_drag_drop = ({
   }
 
   const handle_drop = (e: React.DragEvent<HTMLDivElement>) => {
-    // Check for internal drag. If it is, handle it.
-    // If not, let the browser handle it. It will fire 'onInput'.
     if (!dragged_text_range_ref.current) {
       return
     }

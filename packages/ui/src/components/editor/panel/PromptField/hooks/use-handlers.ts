@@ -163,6 +163,7 @@ export const use_handlers = (
   const [undo_stack, set_undo_stack] = useState<HistoryEntry[]>([])
   const [redo_stack, set_redo_stack] = useState<HistoryEntry[]>([])
   const raw_caret_pos_ref = useRef(0)
+  const has_modified_current_entry_ref = useRef(false)
 
   useEffect(() => {
     const on_selection_change = () => {
@@ -178,7 +179,11 @@ export const use_handlers = (
 
         const is_at_end =
           raw_pos == props.value.length && !!selection?.isCollapsed
-        set_is_history_enabled(is_at_end)
+
+        // Only enable history if at end AND haven't modified the current entry
+        const is_history_check_enabled =
+          is_at_end && !has_modified_current_entry_ref.current
+        set_is_history_enabled(is_history_check_enabled)
       }
     }
     document.addEventListener('selectionchange', on_selection_change)
@@ -189,6 +194,8 @@ export const use_handlers = (
 
   const update_value = (new_value: string, caret_pos?: number) => {
     if (new_value === props.value) return
+    // Mark that we've modified the current entry (not from history navigation)
+    has_modified_current_entry_ref.current = true
     set_undo_stack((prev) => [
       ...prev,
       { value: props.value, raw_caret_pos: raw_caret_pos_ref.current }
@@ -367,7 +374,6 @@ export const use_handlers = (
         handle_keyword_deletion_by_click(keyword_element)
       }
     } else if (text_element) {
-      // Clicking on file name text should open the file
       e.preventDefault()
       e.stopPropagation()
 
@@ -381,7 +387,6 @@ export const use_handlers = (
         }
       }
 
-      // Keep focus on input
       if (input_ref.current) {
         input_ref.current.focus()
       }
@@ -390,6 +395,7 @@ export const use_handlers = (
 
   const handle_clear = () => {
     update_value('')
+    has_modified_current_entry_ref.current = false
     set_history_index(-1)
   }
 
@@ -438,6 +444,7 @@ export const use_handlers = (
     }
 
     update_value(new_raw_value)
+    has_modified_current_entry_ref.current = true
     set_history_index(-1)
 
     if (char_before_caret == '@') {
@@ -702,6 +709,8 @@ export const use_handlers = (
 
     const update_and_set_caret = (value: string) => {
       update_value(value, value.length)
+      // Reset the modification flag when navigating history
+      has_modified_current_entry_ref.current = false
     }
 
     if (e.key === 'ArrowUp') {
@@ -716,6 +725,7 @@ export const use_handlers = (
         set_history_index(new_index)
         update_and_set_caret(active_history[new_index])
       } else if (history_index === 0) {
+        has_modified_current_entry_ref.current = false
         set_history_index(-1)
         update_and_set_caret('')
       }
@@ -893,6 +903,7 @@ export const use_handlers = (
           props.context_file_paths ?? []
         )
         set_history_index(-1)
+        has_modified_current_entry_ref.current = true
       }
       return
     }
@@ -916,6 +927,7 @@ export const use_handlers = (
           props.context_file_paths ?? []
         )
         set_history_index(-1)
+        has_modified_current_entry_ref.current = true
       }
       return
     }
