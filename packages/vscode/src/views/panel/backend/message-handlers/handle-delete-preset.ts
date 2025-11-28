@@ -26,12 +26,15 @@ export const handle_delete_preset = async (
 
   const delete_button = 'Delete'
   const result = await vscode.window.showInformationMessage(
-    'Please confirm',
+    dictionary.information_message.PLEASE_CONFIRM,
     {
       modal: true,
       detail: is_unnamed
-        ? `Are you sure you want to delete this ${item_type}?`
-        : `Are you sure you want to delete ${item_type} "${display_preset_name}"?`
+        ? dictionary.warning_message.CONFIRM_DELETE_ITEM(item_type)
+        : dictionary.warning_message.CONFIRM_DELETE_NAMED_ITEM(
+            item_type,
+            display_preset_name
+          )
     },
     delete_button
   )

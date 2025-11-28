@@ -29,7 +29,7 @@ const get_code_completion_config = async (
 
   if (code_completions_configs.length == 0) {
     vscode.commands.executeCommand('codeWebChat.settings')
-    vscode.window.showInformationMessage(
+    vscode.window.showInformationMessage( // NOSONAR
       dictionary.information_message.NO_CODE_COMPLETIONS_CONFIGURATIONS_FOUND
     )
     return

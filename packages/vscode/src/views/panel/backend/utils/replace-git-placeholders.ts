@@ -5,6 +5,7 @@ import * as path from 'path'
 import { get_git_repository } from '@/utils/git-repository-utils'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { Logger } from '@shared/utils/logger'
+import { dictionary } from '@shared/constants/dictionary'
 
 const build_changes_xml = (
   diff: string,
@@ -125,7 +126,9 @@ export const replace_changes_placeholder = async (params: {
 
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders) {
-      vscode.window.showErrorMessage('No workspace folders found.')
+      vscode.window.showErrorMessage(
+        dictionary.error_message.NO_WORKSPACE_FOLDERS_FOUND
+      )
       return params.instruction.replace(
         new RegExp(`#Changes:${branch_spec}`, 'g'),
         ''
@@ -136,8 +139,8 @@ export const replace_changes_placeholder = async (params: {
       (folder) => folder.name == folder_name
     )
     if (!target_folder) {
-      vscode.window.showErrorMessage(
-        `Workspace folder "${folder_name}" not found.`
+      vscode.window.showErrorMessage( // NOSONAR
+        dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
       )
       return params.instruction.replace(
         new RegExp(`#Changes:${branch_spec}`, 'g'),
@@ -163,8 +166,11 @@ export const replace_changes_placeholder = async (params: {
       }).toString()
 
       if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage(
-          `No changes found between current branch and ${branch_name} in ${folder_name}.`
+        vscode.window.showInformationMessage( // NOSONAR
+          dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES_IN_FOLDER(
+            branch_name,
+            folder_name
+          )
         )
         return params.instruction.replace(
           new RegExp(`#Changes:${branch_spec}`, 'g'),
@@ -182,8 +188,11 @@ export const replace_changes_placeholder = async (params: {
         replacement_text
       )
     } catch (error) {
-      vscode.window.showErrorMessage(
-        `Failed to get changes from branch ${branch_name} in ${folder_name}. Make sure the branch exists.`
+      vscode.window.showErrorMessage( // NOSONAR
+        dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH_IN_FOLDER(
+          branch_name,
+          folder_name
+        )
       )
       Logger.error({
         function_name: 'replace_changes_placeholder',
@@ -199,7 +208,9 @@ export const replace_changes_placeholder = async (params: {
     const branch_name = branch_spec
     const repository = get_git_repository()
     if (!repository) {
-      vscode.window.showErrorMessage('No Git repository found.')
+      vscode.window.showErrorMessage(
+        dictionary.error_message.NO_GIT_REPOSITORY_FOUND
+      )
       return params.instruction.replace(
         new RegExp(`#Changes:${branch_name}`, 'g'),
         ''
@@ -224,8 +235,10 @@ export const replace_changes_placeholder = async (params: {
       }).toString()
 
       if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage(
-          `No changes found between current branch and ${branch_name}.`
+        vscode.window.showInformationMessage( // NOSONAR
+          dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES(
+            branch_name
+          )
         )
         return params.instruction.replace(
           new RegExp(`#Changes:${branch_name}`, 'g'),
@@ -243,8 +256,10 @@ export const replace_changes_placeholder = async (params: {
         replacement_text
       )
     } catch (error) {
-      vscode.window.showErrorMessage(
-        `Failed to get changes from branch ${branch_name}. Make sure the branch exists.`
+      vscode.window.showErrorMessage( // NOSONAR
+        dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH(
+          branch_name
+        )
       )
       Logger.error({
         function_name: 'replace_changes_placeholder',
@@ -366,8 +381,8 @@ export const replace_commit_placeholder = async (params: {
       (folder) => folder.name === folder_name
     )
     if (!target_folder) {
-      vscode.window.showErrorMessage(
-        `Workspace folder "${folder_name}" not found.`
+      vscode.window.showErrorMessage( // NOSONAR
+        dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
       )
       result_instruction = result_instruction.replace(full_match, '')
       continue
@@ -380,8 +395,8 @@ export const replace_commit_placeholder = async (params: {
       }).toString()
 
       if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage(
-          `Commit ${commit_hash} seems empty.`
+        vscode.window.showInformationMessage( // NOSONAR
+          dictionary.information_message.COMMIT_SEEMS_EMPTY(commit_hash)
         )
         result_instruction = result_instruction.replace(full_match, '')
         continue
@@ -398,8 +413,8 @@ export const replace_commit_placeholder = async (params: {
         replacement_text
       )
     } catch (error) {
-      vscode.window.showErrorMessage(
-        `Failed to get diff for commit ${commit_hash}.`
+      vscode.window.showErrorMessage( // NOSONAR
+        dictionary.error_message.FAILED_TO_GET_DIFF_FOR_COMMIT(commit_hash)
       )
       Logger.error({
         function_name: 'replace_commit_placeholder',
@@ -457,8 +472,8 @@ export const replace_context_at_commit_placeholder = async (params: {
     )
 
     if (!target_folder) {
-      vscode.window.showErrorMessage(
-        `Workspace folder "${folder_name}" not found.`
+      vscode.window.showErrorMessage( // NOSONAR
+        dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
       )
       result_instruction = result_instruction.replace(full_match, '')
       continue
@@ -470,11 +485,11 @@ export const replace_context_at_commit_placeholder = async (params: {
     )
 
     if (files_in_repo.length == 0) {
-      vscode.window.showInformationMessage(
-        `No checked files in the "${folder_name}" repository for commit ${commit_hash.substring(
-          0,
-          7
-        )}.`
+      vscode.window.showInformationMessage( // NOSONAR
+        dictionary.information_message.NO_CHECKED_FILES_IN_REPO_FOR_COMMIT(
+          folder_name,
+          commit_hash.substring(0, 7)
+        )
       )
     }
 
@@ -521,11 +536,11 @@ export const replace_context_at_commit_placeholder = async (params: {
     }
 
     if (files_in_repo.length > 0 && files_content.length === 0) {
-      vscode.window.showInformationMessage(
-        `All checked files in "${folder_name}" are unchanged since commit ${commit_hash.substring(
-          0,
-          7
-        )}.`
+      vscode.window.showInformationMessage( // NOSONAR
+        dictionary.information_message.ALL_CHECKED_FILES_UNCAHNGED_SINCE_COMMIT(
+          folder_name,
+          commit_hash.substring(0, 7)
+        )
       )
     }
 

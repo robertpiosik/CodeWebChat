@@ -72,8 +72,8 @@ export const initial_select_model = async (
       error instanceof Error &&
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
-      vscode.window.showInformationMessage(
-        `The '/models' route was not found for ${provider.name}. This might mean the provider does not support listing models.`,
+      vscode.window.showInformationMessage( // NOSONAR
+        dictionary.information_message.MODELS_ROUTE_NOT_FOUND(provider.name),
         { modal: true }
       )
     } else {
@@ -168,7 +168,9 @@ export const edit_model_for_config = async (
       }
     } else {
       vscode.window.showWarningMessage(
-        `No models found for ${config.provider_name}. You can enter model name manually.`
+        dictionary.warning_message.NO_MODELS_FOUND_MANUAL_ENTRY(
+          config.provider_name
+        )
       )
     }
   } catch (error) {
@@ -177,12 +179,14 @@ export const edit_model_for_config = async (
       message: 'Failed to fetch models',
       data: error
     })
-    if (
+    if ( // NOSONAR
       error instanceof Error &&
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
-      vscode.window.showInformationMessage(
-        `The '/models' route was not found for ${config.provider_name}. This might mean the provider does not support listing models. You can enter model name manually.`,
+      vscode.window.showInformationMessage( // NOSONAR
+        dictionary.information_message.MODELS_ROUTE_NOT_FOUND_MANUAL_ENTRY(
+          config.provider_name
+        ),
         { modal: true }
       )
     } else {

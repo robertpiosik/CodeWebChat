@@ -16,6 +16,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import { handle_get_history } from './handle-get-history'
+import { dictionary } from '@shared/constants/dictionary'
 
 dayjs.extend(relativeTime)
 
@@ -65,8 +66,8 @@ export const handle_show_history_quick_pick = async (
   pinned_history.sort((a, b) => b.createdAt - a.createdAt)
 
   if (!history.length && !pinned_history.length) {
-    vscode.window.showInformationMessage(
-      'No history to show for the current mode.',
+    vscode.window.showInformationMessage( // NOSONAR
+      dictionary.information_message.NO_HISTORY_FOR_MODE,
       { modal: true }
     )
     return
@@ -252,8 +253,8 @@ export const handle_show_history_quick_pick = async (
 
       if (updated_history.length == 0 && updated_pinned_history.length == 0) {
         quick_pick.hide()
-        vscode.window.showInformationMessage(
-          'No history to show for the current mode.',
+        vscode.window.showInformationMessage( // NOSONAR
+          dictionary.information_message.NO_HISTORY_FOR_MODE,
           { modal: true }
         )
         return

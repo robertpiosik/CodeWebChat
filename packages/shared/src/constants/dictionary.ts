@@ -6,6 +6,12 @@ export const dictionary = {
   },
 
   information_message: {
+    ALL_CHECKPOINTS_CLEARED: 'All checkpoints have been cleared.',
+    ALL_CHECKED_FILES_UNCAHNGED_SINCE_COMMIT: (
+      folder_name: string,
+      commit_hash: string
+    ) =>
+      `All checked files in "${folder_name}" are unchanged since commit ${commit_hash}.`,
     NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND:
       'No "Intelligent Update" configurations found. Please add one in the settings.',
     NO_SAFE_FILE_PATHS_REMAINING:
@@ -17,10 +23,19 @@ export const dictionary = {
     COPIED_TO_CLIPBOARD: 'Message copied to the clipboard.',
     CHECKPOINTS_COPIED_TO_CLIPBOARD:
       'Checkpoints copied to clipboard as logs.',
+    CHECKPOINT_DELETED: (from_now: string) =>
+      `Checkpoint from ${from_now} deleted.`,
+    CHECKPOINT_RESTORED: 'Checkpoint restored.',
     NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE:
       'No saved contexts remaining in the Workspace State.',
     NO_SAVED_CONTEXTS_IN_JSON_FILE:
       'No saved contexts remaining in the JSON file.',
+    COMMIT_SEEMS_EMPTY: (commit_hash: string) =>
+      `Commit ${commit_hash} seems empty.`,
+    CONFIRM_SAVE_CHANGES_TO_ITEM: (item_type: string) =>
+      `Save changes to the ${item_type}?`,
+    COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED:
+      'Could not undo. Another checkpoint was deleted.',
     NO_FILE_PATHS_FOUND_IN_CLIPBOARD: 'No file paths found in the clipboard.',
     NO_MATCHING_FILES_FOUND_FOR_CLIPBOARD_PATHS:
       'No matching files found in workspace for the paths in clipboard.',
@@ -38,12 +53,62 @@ export const dictionary = {
       'No files selected for commit message generation.',
     COMMIT_MESSAGE_GENERATION_CANCELLED: 'Commit message generation cancelled.',
     NO_CHANGES_TO_COMMIT: 'No changes to commit.',
+    MODELS_ROUTE_NOT_FOUND: (provider_name: string) =>
+      `The '/models' route was not found for ${provider_name}. This might mean the provider does not support listing models.`,
+    MODELS_ROUTE_NOT_FOUND_MANUAL_ENTRY: (provider_name: string) =>
+      `The '/models' route was not found for ${provider_name}. This might mean the provider does not support listing models. You can enter model name manually.`,
+    NAMED_TEMPLATE_DELETED: (template_name: string) =>
+      `Template "${template_name}" has been deleted.`,
+    NO_CHANGES_FOUND_BETWEEN_BRANCHES: (branch_name: string) =>
+      `No changes found between current branch and ${branch_name}.`,
+    NO_CHANGES_FOUND_BETWEEN_BRANCHES_IN_FOLDER: (
+      branch_name: string,
+      folder_name: string
+    ) =>
+      `No changes found between current branch and ${branch_name} in ${folder_name}.`,
+    NO_CHECKED_FILES_IN_REPO_FOR_COMMIT: (
+      folder_name: string,
+      commit_hash: string
+    ) =>
+      `No checked files in the "${folder_name}" repository for commit ${commit_hash}.`,
     NO_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION:
       'No default "Intelligent Update" configuration found. Please set one as default in the settings.',
     NO_EDIT_CONTEXT_CONFIGURATIONS_FOUND:
       'No "Edit Context" configurations found. Please add one in the settings.',
     PRESET_PREVIEW_SENT_TO_BROWSER:
-      'Preset preview sent to the connected browser.'
+      'Preset preview sent to the connected browser.',
+    DELETED_CONTEXT_FROM_ALL_ROOTS: (context_name: string) =>
+      `Deleted context "${context_name}" from all workspace roots`,
+    NO_HISTORY_FOR_MODE: 'No history to show for the current mode.',
+    NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER:
+      'No text selected for #Selection placeholder.',
+    PLEASE_CONFIRM: 'Please confirm',
+    RESTORED_CONTEXT: (context_name: string) =>
+      `Restored context "${context_name}".`,
+    NO_GIT_REPOSITORY_FOUND_IN_WORKSPACE:
+      'No Git repository found in the workspace.',
+    NO_UNSTAGED_FILES_FOUND: 'No unstaged files found.',
+    NO_ACTIONABLE_UNSTAGED_FILES_FOUND:
+      'No actionable unstaged files found (e.g. only deletions).',
+    SELECTED_FILES: (count: number) =>
+      `Selected ${count} file${count == 1 ? '' : 's'}.`,
+    DELETED_CONTEXT_FROM_WORKSPACE_STATE: (context_name: string) =>
+      `Deleted context "${context_name}" from workspace state`,
+    CONTEXT_SAVED_TO_JSON: (context_name: string, workspaces: string) =>
+      `Context "${context_name}" saved to ${workspaces}.`,
+    CONTEXT_SAVED_TO_WORKSPACE_STATE: (context_name: string) =>
+      `Context "${context_name}" saved to the workspace state successfully.`,
+    FILES_REMAIN_CHECKED: (count: number) =>
+      `${count} file${count == 1 ? '' : 's'} remain${
+        count == 1 ? 's' : ''
+      } checked.`,
+    CRUNCHING_TOKEN_COUNTS: 'Please wait, crunching token counts...',
+    TEMPLATE_RESTORED: 'Template has been restored.',
+    UNNAMED_TEMPLATE_DELETED: 'Unnamed template has been deleted.',
+    UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST: (item_type: string) =>
+      `If you don't save, updates to the ${item_type} will be lost.`,
+    BASE_URL_DOES_NOT_END_WITH_V1:
+      'The Base URL does not end with "/v1". Many OpenAI-compatible APIs require this. Would you like to add it?'
   },
 
   warning_message: {
@@ -89,6 +154,8 @@ export const dictionary = {
       `URL override for preset "${preset_name}" was discarded because it uses a different domain.`,
     CONTEXT_SIZE_WARNING: (threshold: string, percentage: number) =>
       `Context exceeds threshold of ${threshold} tokens by ${percentage}%. Excessive context size affects accuracy and cost-efficiency.`,
+    COULD_NOT_DELETE_CHECKPOINT_FILES: (message: string) =>
+      `Could not delete checkpoint files: ${message}`,
     FAILED_TO_CREATE_FILE: (file_path: string) =>
       `Failed to create file: ${file_path}.`,
     FAILED_TO_APPLY_CHANGES_TO_FILE: (file_path: string) =>
@@ -101,10 +168,22 @@ export const dictionary = {
       `Could not undo file: ${file_path}. It might have been closed or deleted.`,
     NO_VALID_PATHS_IN_CONTEXT: (context_name: string) =>
       `No valid paths found in context "${context_name}".`,
+    CONFIRM_CLEAR_ALL_CHECKPOINTS:
+      'Are you sure you want to clear all checkpoints? This operation cannot be undone.',
+    CONFIRM_CLEAR_API_KEY: (provider_name: string) =>
+      `Are you sure you want to clear the API key for ${provider_name}? This action cannot be undone.`,
     CONFIRM_DELETE_CONTEXT: (context_name: string) =>
       `Are you sure you want to delete context "${context_name}"?`,
-    CONFIRM_DELETE_ITEM: (item_type: 'file' | 'folder') =>
+    CONFIRM_DELETE_ITEM: (item_type: 'file' | 'folder' | 'group' | 'preset') =>
       `Are you sure you want to delete this ${item_type}?`,
+    CONFIRM_DELETE_NAMED_ITEM: (item_type: string, name: string) =>
+      `Are you sure you want to delete ${item_type} "${name}"?`,
+    CONTEXT_WITH_IDENTICAL_PATHS_EXISTS: (context_name: string) =>
+      `A context with identical paths already exists in workspace state: "${context_name}"`,
+    CONFIRM_OVERWRITE_CONTEXT: (context_name: string) =>
+      `A context named "${context_name}" already exists. Overwrite?`,
+    CONFIRM_OVERWRITE_CONTEXT_IN_WORKSPACE_STATE: (context_name: string) =>
+      `A context named "${context_name}" already exists in Workspace State. Overwrite?`,
     SAVED_CONTEXT_NOT_FOUND: (name: string, source: string) =>
       `Saved context "${name}" from ${source} not found.`,
     CONFIRM_DELETE_CONFIGURATION: (model: string, provider: string) =>
@@ -164,6 +243,8 @@ export const dictionary = {
     FAILED_TO_COMMIT_CHANGES: 'Failed to commit changes.',
     ERROR_COMMITTING_CHANGES:
       'Error committing changes. See console for details.',
+    FAILED_TO_SELECT_UNSTAGED_FILES: (message: string) =>
+      `Failed to select unstaged files: ${message}.`,
     FAILED_TO_DELETE: (message: string) => `Failed to delete: ${message}.`,
     ERROR_GENERATING_COMMIT_MESSAGE:
       'Error generating commit message. See console for details.',
@@ -205,6 +286,8 @@ export const dictionary = {
     API_KEY_MISSING_FOR_PROVIDER:
       'API key is missing for the selected provider. Please add it in the Settings tab.',
     FAILED_TO_GENERATE_COMMIT_MESSAGE: 'Failed to generate commit message.',
+    CHECKPOINTS_ONLY_IN_WORKSPACE:
+      'Checkpoints can only be used in a workspace.',
     GIT_EXTENSION_NOT_FOUND: 'Git extension not found.',
     NO_GIT_REPOSITORY_FOUND: 'No Git repository found.',
     REPOSITORY_NOT_FOUND: 'Repository not found.',
@@ -229,10 +312,15 @@ export const dictionary = {
       `Failed to duplicate preset: ${error}.`,
     WORKSPACE_NOT_FOUND_FOR_FILE: (file_path: string) =>
       `Workspace not found for file: ${file_path}.`,
+    WORKSPACE_FOLDER_NOT_FOUND: (folder_name: string) =>
+      `Workspace folder "${folder_name}" not found.`,
     COULD_NOT_OPEN_FILE: (file_path: string) =>
       `Could not open file: ${file_path}.`,
     API_PROVIDER_FOR_DEFAULT_CONFIG_NOT_FOUND:
       'API provider for the default API tool configuration was not found.',
+    COULD_NOT_FIND_TEMP_CHECKPOINT_TO_REVERT:
+      'Could not find temporary checkpoint to revert.',
+    COULD_NOT_GET_GIT_API: 'Could not get Git API.',
     INTELLIGENT_UPDATE_CONTEXT_NOT_FOUND:
       'Could not find the context for intelligent update. Please apply the changes again.',
     ORIGINAL_STATE_FOR_FILE_NOT_FOUND: (file_name: string) =>
@@ -243,6 +331,15 @@ export const dictionary = {
       `Intelligent update failed for ${file_name}: ${message}.`,
     FAILED_TO_FETCH_OPEN_ROUTER_MODELS:
       'Failed to fetch Open Router models. Please check your connection.',
+    FAILED_TO_GET_CHANGES_FROM_BRANCH: (branch_name: string) =>
+      `Failed to get changes from branch ${branch_name}. Make sure the branch exists.`,
+    FAILED_TO_GET_CHANGES_FROM_BRANCH_IN_FOLDER: (
+      branch_name: string,
+      folder_name: string
+    ) =>
+      `Failed to get changes from branch ${branch_name} in ${folder_name}. Make sure the branch exists.`,
+    FAILED_TO_GET_DIFF_FOR_COMMIT: (commit_hash: string) =>
+      `Failed to get diff for commit ${commit_hash}.`,
     COULD_NOT_UPDATE_ITEM_NOT_FOUND: (item_type: string, name: string) =>
       `Could not update ${item_type}: Original ${item_type} "${name}" not found.`,
     ERROR_HANDLING_MESSAGE: (message: string) =>

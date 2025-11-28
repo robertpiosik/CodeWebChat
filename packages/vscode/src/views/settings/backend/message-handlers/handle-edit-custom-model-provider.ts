@@ -272,7 +272,7 @@ export const handle_edit_custom_model_provider = async (
       }
       if (trimmed_api_key === '' && current_api_key) {
         const confirmation = await vscode.window.showWarningMessage(
-          `Are you sure you want to clear the API key for ${provider_to_edit.name}? This action cannot be undone.`,
+          dictionary.warning_message.CONFIRM_CLEAR_API_KEY(provider_to_edit.name),
           { modal: true },
           'Clear API Key'
         )
@@ -306,7 +306,7 @@ export const handle_edit_custom_model_provider = async (
     if (should_ask_to_add_v1) {
       const add_v1_suffix = 'Add "/v1" suffix'
       const choice = await vscode.window.showInformationMessage(
-        'The Base URL does not end with "/v1". Many OpenAI-compatible APIs require this. Would you like to add it?',
+        dictionary.information_message.BASE_URL_DOES_NOT_END_WITH_V1,
         { modal: true },
         add_v1_suffix
       )

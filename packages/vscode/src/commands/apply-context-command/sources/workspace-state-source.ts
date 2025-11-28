@@ -207,7 +207,9 @@ export async function handle_workspace_state_source(
 
             is_showing_dialog = true
             const choice = await vscode.window.showInformationMessage(
-              `Deleted context "${deleted_context_name}" from workspace state`,
+              dictionary.information_message.DELETED_CONTEXT_FROM_WORKSPACE_STATE(
+                deleted_context_name
+              ),
               'Undo'
             )
             is_showing_dialog = false
@@ -218,8 +220,10 @@ export async function handle_workspace_state_source(
                 SAVED_CONTEXTS_STATE_KEY,
                 internal_contexts
               )
-              vscode.window.showInformationMessage(
-                `Restored context "${deleted_context_name}".`
+              vscode.window.showInformationMessage( // NOSONAR
+                dictionary.information_message.RESTORED_CONTEXT(
+                  deleted_context_name
+                )
               )
               quick_pick.items = create_quick_pick_items(internal_contexts)
             }

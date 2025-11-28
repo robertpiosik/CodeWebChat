@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../../../utils/display-token-count'
 
@@ -11,18 +12,22 @@ export async function handle_unstaged_files_source(
   try {
     const git_extension = vscode.extensions.getExtension('vscode.git')?.exports
     if (!git_extension) {
-      vscode.window.showErrorMessage('Git extension is not available.')
+      vscode.window.showErrorMessage(
+        dictionary.error_message.GIT_EXTENSION_NOT_FOUND
+      )
       return
     }
     const git_api = git_extension.getAPI(1)
     if (!git_api) {
-      vscode.window.showErrorMessage('Could not get Git API.')
+      vscode.window.showErrorMessage(
+        dictionary.error_message.COULD_NOT_GET_GIT_API
+      )
       return
     }
 
     if (git_api.repositories.length === 0) {
       vscode.window.showInformationMessage(
-        'No Git repository found in the workspace.'
+        dictionary.information_message.NO_GIT_REPOSITORY_FOUND_IN_WORKSPACE
       )
       return
     }
@@ -35,7 +40,9 @@ export async function handle_unstaged_files_source(
     }
 
     if (unstaged_file_paths.length === 0) {
-      vscode.window.showInformationMessage('No unstaged files found.')
+      vscode.window.showInformationMessage(
+        dictionary.information_message.NO_UNSTAGED_FILES_FOUND
+      )
       return
     }
 
@@ -49,7 +56,7 @@ export async function handle_unstaged_files_source(
 
     if (existing_unstaged_files.length == 0) {
       vscode.window.showInformationMessage(
-        'No actionable unstaged files found (e.g. only deletions).'
+        dictionary.information_message.NO_ACTIONABLE_UNSTAGED_FILES_FOUND
       )
       return
     }
@@ -97,15 +104,13 @@ export async function handle_unstaged_files_source(
 
     await workspace_provider.set_checked_files(selected_paths)
     vscode.window.showInformationMessage(
-      `Selected ${selected_paths.length} file${
-        selected_paths.length == 1 ? '' : 's'
-      }.`
+      dictionary.information_message.SELECTED_FILES(selected_paths.length)
     )
   } catch (error) {
     vscode.window.showErrorMessage(
-      `Failed to select unstaged files: ${
+      dictionary.error_message.FAILED_TO_SELECT_UNSTAGED_FILES(
         error instanceof Error ? error.message : String(error)
-      }`
+      )
     )
     Logger.error({
       function_name: 'apply_context_command:unstaged',

@@ -468,7 +468,7 @@ export function save_context_command(
 
                 if (existing_context_names.includes(context_name)) {
                   const overwrite = await vscode.window.showWarningMessage(
-                    `A context named "${context_name}" already exists. Overwrite?`,
+                    dictionary.warning_message.CONFIRM_OVERWRITE_CONTEXT(context_name),
                     { modal: true },
                     'Overwrite'
                   )
@@ -549,9 +549,10 @@ export function save_context_command(
             })
 
             vscode.window.showInformationMessage(
-              `Context "${context_name}" saved to ${affected_workspaces.join(
-                ', '
-              )}.`
+              dictionary.information_message.CONTEXT_SAVED_TO_JSON(
+                context_name,
+                affected_workspaces.join(', ')
+              )
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(
@@ -570,7 +571,7 @@ export function save_context_command(
             for (const existingContext of saved_contexts) {
               if (are_paths_equal(existingContext.paths, all_prefixed_paths)) {
                 vscode.window.showWarningMessage(
-                  `A context with identical paths already exists in workspace state: "${existingContext.name}"`
+                  dictionary.warning_message.CONTEXT_WITH_IDENTICAL_PATHS_EXISTS(existingContext.name)
                 )
                 return
               }
@@ -637,7 +638,7 @@ export function save_context_command(
 
               if (existing_context_names.includes(context_name)) {
                 const overwrite = await vscode.window.showWarningMessage(
-                  `A context named "${context_name}" already exists in Workspace State. Overwrite?`,
+                  dictionary.warning_message.CONFIRM_OVERWRITE_CONTEXT_IN_WORKSPACE_STATE(context_name),
                   { modal: true },
                   'Overwrite'
                 )
@@ -684,7 +685,9 @@ export function save_context_command(
               updated_contexts
             )
             vscode.window.showInformationMessage(
-              `Context "${context_name}" saved to the workspace state successfully.`
+              dictionary.information_message.CONTEXT_SAVED_TO_WORKSPACE_STATE(
+                context_name
+              )
             )
           } catch (error: any) {
             vscode.window.showErrorMessage(

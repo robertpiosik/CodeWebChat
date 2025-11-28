@@ -42,7 +42,7 @@ export const checkpoints_command = (params: {
         vscode.workspace.workspaceFolders.length == 0
       ) {
         vscode.window.showErrorMessage(
-          'Checkpoints can only be used in a workspace.'
+          dictionary.error_message.CHECKPOINTS_ONLY_IN_WORKSPACE
         )
         return
       }
@@ -66,7 +66,7 @@ export const checkpoints_command = (params: {
         vscode.workspace.workspaceFolders.length == 0
       ) {
         vscode.window.showErrorMessage(
-          'Checkpoints can only be used in a workspace.'
+          dictionary.error_message.CHECKPOINTS_ONLY_IN_WORKSPACE
         )
         return
       }
@@ -228,8 +228,8 @@ export const checkpoints_command = (params: {
                 TEMPORARY_CHECKPOINT_STATE_KEY
               )
             if (!temp_checkpoint) {
-              vscode.window.showErrorMessage(
-                'Could not find temporary checkpoint to revert.'
+              vscode.window.showErrorMessage( // NOSONAR
+                dictionary.error_message.COULD_NOT_FIND_TEMP_CHECKPOINT_TO_REVERT
               )
               return
             }
@@ -318,15 +318,15 @@ export const checkpoints_command = (params: {
           if (button === clear_all_button) {
             quick_pick.hide()
             const confirmation = await vscode.window.showWarningMessage(
-              'Are you sure you want to clear all checkpoints? This operation cannot be undone.',
+              dictionary.warning_message.CONFIRM_CLEAR_ALL_CHECKPOINTS,
               { modal: true },
               'Clear All'
             )
 
             if (confirmation == 'Clear All') {
               await clear_all_checkpoints(params.context, params.panel_provider)
-              vscode.window.showInformationMessage(
-                'All checkpoints have been cleared.'
+              vscode.window.showInformationMessage( // NOSONAR
+                dictionary.information_message.ALL_CHECKPOINTS_CLEARED
               )
             }
             await params.context.workspaceState.update(
@@ -444,7 +444,7 @@ export const checkpoints_command = (params: {
                   )
                 } catch (error: any) {
                   vscode.window.showWarningMessage(
-                    `Could not delete checkpoint files: ${error.message}`
+                    dictionary.warning_message.COULD_NOT_DELETE_CHECKPOINT_FILES(error.message)
                   )
                 }
               }
@@ -453,9 +453,9 @@ export const checkpoints_command = (params: {
 
             notification_count++
             const choice = await vscode.window.showInformationMessage(
-              `Checkpoint from ${dayjs(
-                deleted_checkpoint.timestamp
-              ).fromNow()} deleted.`,
+              dictionary.information_message.CHECKPOINT_DELETED(
+                dayjs(deleted_checkpoint.timestamp).fromNow()
+              ),
               'Undo'
             )
             notification_count--
@@ -478,7 +478,7 @@ export const checkpoints_command = (params: {
                 params.panel_provider.send_checkpoints()
                 notification_count++
                 vscode.window
-                  .showInformationMessage('Checkpoint restored.')
+                  .showInformationMessage(dictionary.information_message.CHECKPOINT_RESTORED)
                   .then(() => {
                     notification_count--
                   })
@@ -490,9 +490,7 @@ export const checkpoints_command = (params: {
             } else if (choice === 'Undo') {
               notification_count++
               vscode.window
-                .showInformationMessage(
-                  'Could not undo. Another checkpoint was deleted.'
-                )
+                .showInformationMessage(dictionary.information_message.COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED)
                 .then(() => {
                   notification_count--
                 })

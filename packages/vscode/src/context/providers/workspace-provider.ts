@@ -5,6 +5,7 @@ import ignore, { Ignore } from 'ignore'
 import { CONTEXT_CHECKED_PATHS_STATE_KEY } from '../../constants/state-keys'
 import { IGNORE_PATTERNS } from '../../constants/ignore-patterns'
 import { natural_sort } from '../../utils/natural-sort'
+import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@/utils/display-token-count'
 
@@ -107,7 +108,7 @@ export class WorkspaceProvider
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: 'Please wait, crunching token counts...',
+          title: dictionary.information_message.CRUNCHING_TOKEN_COUNTS,
           cancellable: false
         },
         async (_progress) => {
@@ -443,10 +444,10 @@ export class WorkspaceProvider
 
       if (checked_open_files.length > 0) {
         vscode.window
-          .showInformationMessage(
-            `${checked_open_files.length} file${
-              checked_open_files.length == 1 ? '' : 's'
-            } remain${checked_open_files.length == 1 ? 's' : ''} checked.`,
+          .showInformationMessage( // NOSONAR
+            dictionary.information_message.FILES_REMAIN_CHECKED(
+              checked_open_files.length
+            ),
             'Clear open editors'
           )
           .then((selection) => {

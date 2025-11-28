@@ -78,10 +78,13 @@ export const handle_update_preset = async (
     const save_changes_button = 'Save'
     const discard_changes = 'Discard changes'
     const result = await vscode.window.showInformationMessage(
-      `Save changes to the ${item_type}?`,
+      dictionary.information_message.CONFIRM_SAVE_CHANGES_TO_ITEM(item_type),
       {
         modal: true,
-        detail: `If you don't save, updates to the ${item_type} will be lost.`
+        detail:
+          dictionary.information_message.UNSAVED_CHANGES_TO_ITEM_WILL_BE_LOST(
+            item_type
+          )
       },
       save_changes_button,
       discard_changes

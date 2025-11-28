@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
+import { dictionary } from '@shared/constants/dictionary'
 
 type PromptTemplate = {
   name?: string
@@ -426,13 +427,15 @@ export const handle_show_prompt_template_quick_pick = async (
         // Handle undo asynchronously without blocking the UI
         const undo_button_text = 'Undo'
         notification_count++
-        const deletion_message = is_unnamed
-          ? `Unnamed template has been deleted.`
-          : `Template "${template_name}" has been deleted.`
+        const deletion_message = is_unnamed // NOSONAR
+          ? dictionary.information_message.UNNAMED_TEMPLATE_DELETED
+          : dictionary.information_message.NAMED_TEMPLATE_DELETED(
+              template_name
+            )
 
         vscode.window
           .showInformationMessage(deletion_message, undo_button_text)
-          .then(async (undo_result) => {
+          .then(async (undo_result) => { // NOSONAR
             // Dialog is gone
             notification_count--
             if (undo_result === undo_button_text && deleted_template) {
@@ -449,7 +452,9 @@ export const handle_show_prompt_template_quick_pick = async (
 
               notification_count++
               vscode.window
-                .showInformationMessage('Template has been restored.')
+                .showInformationMessage(
+                  dictionary.information_message.TEMPLATE_RESTORED
+                )
                 .then(() => {
                   notification_count--
                 })
