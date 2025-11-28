@@ -11,7 +11,7 @@ CWC is a free AI coding extension for VS Code, Cursor, and others.
 
 ✅ **Apply responses**—changes integration in whole, truncated and diff edit formats \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
-❤️ **Free and open-source**—released under the GPL-3.0 license \
+❤️ **Open-source**—released under the GPL-3.0 license \
 🔒️ **Total privacy**—operates 100% on your local machine \
 👥 **Community driven**—join our [Discord server](https://discord.com/invite/KJySXsrSX5) and get involved!
 
