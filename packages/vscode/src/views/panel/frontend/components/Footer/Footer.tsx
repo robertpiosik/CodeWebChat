@@ -63,7 +63,7 @@ export const Footer: React.FC = () => {
               styles['footer__icon-button'],
               styles['footer__icon-button--buy-me-a-coffee']
             )}
-            href="https://coindrop.to/cwc"
+            href="https://coindrop.to/robertpiosik"
             title="Donate"
           >
             <Icon variant="BUY_ME_A_COFFEE_LOGO" />
