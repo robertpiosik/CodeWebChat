@@ -9,6 +9,7 @@ import { SavedContext } from '@/types/context'
 const selection_label = '$(list-flat) Selection'
 const changes_label = '$(git-pull-request-draft) Changes'
 const commit_label = '$(git-commit) Commit'
+const context_at_commit_label = '$(history) Context at commit'
 const saved_context_label = '$(checklist) Saved context'
 
 const handle_selection_item = async (): Promise<string> => {
@@ -97,9 +98,9 @@ const handle_changes_item = async (): Promise<
   }
 }
 
-const handle_commit_item = async (): Promise<
-  string | 'continue' | undefined
-> => {
+const handle_commit_item = async (
+  symbol: 'Commit' | 'ContextAtCommit'
+): Promise<string | 'continue' | undefined> => {
   try {
     const workspace_folders = vscode.workspace.workspaceFolders
     if (!workspace_folders || workspace_folders.length == 0) {
@@ -153,7 +154,7 @@ const handle_commit_item = async (): Promise<
       return 'continue'
     }
 
-    const log_output = execSync('git log --pretty=format:"%H%n%s" -n 50', {
+    const log_output = execSync('git log --pretty=format:"%H%n%s%n%cr" -n 50', {
       encoding: 'utf-8',
       cwd: selected_folder.uri.fsPath
     })
@@ -167,20 +168,22 @@ const handle_commit_item = async (): Promise<
 
     const commits_raw = log_output.trim().split('\n')
     const commit_items: vscode.QuickPickItem[] = []
-    for (let i = 0; i < commits_raw.length; i += 2) {
+    for (let i = 0; i < commits_raw.length; i += 3) {
       const hash = commits_raw[i]
       const message = commits_raw[i + 1] || ''
+      const date = commits_raw[i + 2] || ''
       if (hash) {
-        commit_items.push({ label: hash, detail: message })
+        commit_items.push({ label: hash, detail: message, description: date })
       }
     }
 
     const selected_commit = await vscode.window.showQuickPick(commit_items, {
-      placeHolder: 'Select a commit to reference'
+      placeHolder: 'Select a commit to reference',
+      matchOnDetail: true
     })
 
     if (selected_commit) {
-      return `#Commit:${selected_folder.name}:${selected_commit.label} "${selected_commit.detail}" `
+      return `#${symbol}:${selected_folder.name}:${selected_commit.label} "${selected_commit.detail}" `
     } else {
       return 'continue'
     }
@@ -305,8 +308,12 @@ export const hash_sign_quick_pick = async (params: {
       description: 'Diff from a specific commit'
     },
     {
+      label: context_at_commit_label,
+      description: 'Archive of the selected files'
+    },
+    {
       label: saved_context_label,
-      description: 'XML-formatted files'
+      description: 'Files from the workspace'
     }
   ]
 
@@ -361,7 +368,10 @@ export const hash_sign_quick_pick = async (params: {
         result = await handle_changes_item()
         break
       case commit_label:
-        result = await handle_commit_item()
+        result = await handle_commit_item('Commit')
+        break
+      case context_at_commit_label:
+        result = await handle_commit_item('ContextAtCommit')
         break
       case saved_context_label:
         result = await handle_saved_context_item(params.context)

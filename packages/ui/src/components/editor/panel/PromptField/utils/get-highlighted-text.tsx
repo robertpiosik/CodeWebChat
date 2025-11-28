@@ -81,7 +81,8 @@ export const get_highlighted_text = (params: {
       .join('')
   }
 
-  const commit_regex_part = '#Commit:[^:]+:[^\\s"]+\\s+"[^"]*"'
+  const commit_regex_part =
+    '#(?:Commit|ContextAtCommit):[^:]+:[^\\s"]+\\s+"[^"]*"'
   const regex = new RegExp(
     `(#Selection|#Changes:[^\\s,;:!?]+|${saved_context_regex_part}|${commit_regex_part})`,
     'g'
@@ -133,16 +134,19 @@ export const get_highlighted_text = (params: {
           styles['keyword__text']
         }" data-role="keyword-text">Context "${escape_html(context_name)}"</span></span>`
       }
-      const commit_match = part.match(/^#Commit:([^:]+):([^\s"]+)\s+"([^"]*)"$/)
+      const commit_match = part.match(
+        /^#(Commit|ContextAtCommit):([^:]+):([^\s"]+)\s+"([^"]*)"$/
+      )
       if (part && commit_match) {
-        const repo_name = commit_match[1]
-        const commit_hash = commit_match[2]
-        const commit_message = commit_match[3]
+        const symbol = commit_match[1]
+        const repo_name = commit_match[2]
+        const commit_hash = commit_match[3]
+        const commit_message = commit_match[4]
         const short_hash = commit_hash.substring(0, 7)
         return `<span class="${cn(
           styles['keyword'],
-          styles['keyword--commit']
-        )}" data-type="commit-keyword" data-repo-name="${escape_html(
+          styles[`keyword--${symbol.toLowerCase()}`]
+        )}" data-type="${symbol.toLowerCase()}-keyword" data-repo-name="${escape_html(
           repo_name
         )}" data-commit-hash="${escape_html(
           commit_hash

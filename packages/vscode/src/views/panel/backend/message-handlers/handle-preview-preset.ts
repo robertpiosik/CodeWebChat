@@ -5,7 +5,7 @@ import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import {
-  replace_changes_placeholder,
+  replace_changes_placeholder, replace_context_at_commit_placeholder,
   replace_commit_placeholder
 } from '@/views/panel/backend/utils/replace-git-placeholders'
 import { Preset } from '@shared/types/preset'
@@ -116,6 +116,18 @@ export const handle_preview_preset = async (
       post_context_instructions = await replace_commit_placeholder({
         instruction: post_context_instructions,
         after_context: true
+      })
+    }
+
+    if (pre_context_instructions.includes('#ContextAtCommit:')) {
+      pre_context_instructions = await replace_context_at_commit_placeholder({
+        instruction: pre_context_instructions,
+        workspace_provider: panel_provider.workspace_provider
+      })
+      post_context_instructions = await replace_context_at_commit_placeholder({
+        instruction: post_context_instructions,
+        after_context: true,
+        workspace_provider: panel_provider.workspace_provider
       })
     }
 

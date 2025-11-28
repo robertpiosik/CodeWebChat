@@ -22,7 +22,7 @@ const getKeywordRanges = (
   const ranges: { start: number; end: number }[] = []
   // This regex is a combination of all keyword types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#Commit:[^:]+:[^\s"]+\s+"[^"]*")/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"[^"]*")/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -101,6 +101,20 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         if (el.textContent?.startsWith(short_hash)) {
           const extra = el.textContent.substring(short_hash.length)
           return `#Commit:${repo_name}:${commit_hash} "${commit_message}"${extra}`
+        }
+        break
+      }
+      case 'contextatcommit-keyword': {
+        const repo_name = el.dataset.repoName
+        const commit_hash = el.dataset.commitHash
+        const commit_message = el.dataset.commitMessage
+        if (!repo_name || !commit_hash || commit_message === undefined) {
+          return ''
+        }
+        const short_hash = commit_hash.substring(0, 7)
+        if (el.textContent?.startsWith(short_hash)) {
+          const extra = el.textContent.substring(short_hash.length)
+          return `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message}"${extra}`
         }
         break
       }
@@ -274,6 +288,23 @@ export const use_handlers = (
         if (!repo_name || !commit_hash || commit_message === undefined) return
 
         const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
+        const start_index = props.value.indexOf(search_pattern)
+
+        if (start_index !== -1) {
+          apply_keyword_deletion(
+            start_index,
+            start_index + search_pattern.length
+          )
+        }
+        break
+      }
+      case 'contextatcommit-keyword': {
+        const repo_name = keyword_element.dataset.repoName
+        const commit_hash = keyword_element.dataset.commitHash
+        const commit_message = keyword_element.dataset.commitMessage
+        if (!repo_name || !commit_hash || commit_message === undefined) return
+
+        const search_pattern = `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message}"`
         const start_index = props.value.indexOf(search_pattern)
 
         if (start_index !== -1) {
@@ -538,7 +569,9 @@ export const use_handlers = (
     context_file_paths: string[]
   ): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
-    const match = text_before_cursor.match(/#Commit:[^:]+:[^\s"]+\s+"[^"]*"$/)
+    const match = text_before_cursor.match(
+      /#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"[^"]*"$/
+    )
 
     if (match) {
       const start_of_match = raw_pos - match[0].length
@@ -563,23 +596,26 @@ export const use_handlers = (
       context_file_paths
     )
 
-    if (el.dataset.type === 'file-keyword') {
+    if (el.dataset.type == 'file-keyword') {
       return handle_file_keyword_deletion(raw_pos, context_file_paths)
     }
 
-    if (el.dataset.type === 'changes-keyword') {
+    if (el.dataset.type == 'changes-keyword') {
       return handle_changes_keyword_deletion(raw_pos, context_file_paths)
     }
 
-    if (el.dataset.type === 'saved-context-keyword') {
+    if (el.dataset.type == 'saved-context-keyword') {
       return handle_saved_context_keyword_deletion(raw_pos, context_file_paths)
     }
 
-    if (el.dataset.type === 'selection-keyword') {
+    if (el.dataset.type == 'selection-keyword') {
       return handle_selection_keyword_deletion(raw_pos, context_file_paths)
     }
 
-    if (el.dataset.type === 'commit-keyword') {
+    if (
+      el.dataset.type == 'commit-keyword' ||
+      el.dataset.type == 'contextatcommit-keyword'
+    ) {
       return handle_commit_keyword_deletion(raw_pos, context_file_paths)
     }
 
@@ -619,7 +655,8 @@ export const use_handlers = (
           parent.dataset.type == 'changes-keyword' ||
           parent.dataset.type == 'selection-keyword' ||
           parent.dataset.type == 'saved-context-keyword' ||
-          parent.dataset.type == 'commit-keyword'
+          parent.dataset.type == 'commit-keyword' ||
+          parent.dataset.type == 'contextatcommit-keyword'
         ) {
           const rangeAfter = document.createRange()
           rangeAfter.selectNodeContents(parent)
@@ -639,11 +676,12 @@ export const use_handlers = (
     ) {
       const el = node_before_cursor as HTMLElement
       if (
-        el.dataset.type === 'file-keyword' ||
-        el.dataset.type === 'changes-keyword' ||
-        el.dataset.type === 'selection-keyword' ||
-        el.dataset.type === 'saved-context-keyword' ||
-        el.dataset.type === 'commit-keyword'
+        el.dataset.type == 'file-keyword' ||
+        el.dataset.type == 'changes-keyword' ||
+        el.dataset.type == 'selection-keyword' ||
+        el.dataset.type == 'saved-context-keyword' ||
+        el.dataset.type == 'commit-keyword' ||
+        el.dataset.type == 'contextatcommit-keyword'
       ) {
         const display_pos = get_caret_position_from_div(input_ref.current)
         if (handle_keyword_deletion_by_backspace(el, display_pos)) {

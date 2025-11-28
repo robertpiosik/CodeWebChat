@@ -17,7 +17,8 @@ import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/model-providers-manager'
 import {
   replace_changes_placeholder,
-  replace_commit_placeholder
+  replace_commit_placeholder,
+  replace_context_at_commit_placeholder
 } from '@/views/panel/backend/utils/replace-git-placeholders'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
@@ -260,11 +261,32 @@ const perform_context_editing = async (params: {
       instruction: pre_context_instructions,
       workspace_provider: params.file_tree_provider
     })
+    post_context_instructions = await replace_changes_placeholder({
+      instruction: post_context_instructions,
+      after_context: true,
+      workspace_provider: params.file_tree_provider
+    })
   }
 
   if (pre_context_instructions.includes('#Commit:')) {
     pre_context_instructions = await replace_commit_placeholder({
       instruction: pre_context_instructions
+    })
+    post_context_instructions = await replace_commit_placeholder({
+      instruction: post_context_instructions,
+      after_context: true
+    })
+  }
+
+  if (pre_context_instructions.includes('#ContextAtCommit:')) {
+    pre_context_instructions = await replace_context_at_commit_placeholder({
+      instruction: pre_context_instructions,
+      workspace_provider: params.file_tree_provider
+    })
+    post_context_instructions = await replace_context_at_commit_placeholder({
+      instruction: post_context_instructions,
+      after_context: true,
+      workspace_provider: params.file_tree_provider
     })
   }
 

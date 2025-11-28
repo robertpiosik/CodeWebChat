@@ -4,7 +4,8 @@ import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
 import {
   replace_changes_placeholder,
-  replace_commit_placeholder
+  replace_commit_placeholder,
+  replace_context_at_commit_placeholder
 } from '@/views/panel/backend/utils/replace-git-placeholders'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
@@ -120,6 +121,18 @@ export const handle_copy_prompt = async (params: {
       post_context_instructions = await replace_commit_placeholder({
         instruction: post_context_instructions,
         after_context: true
+      })
+    }
+
+    if (instructions.includes('#ContextAtCommit:')) {
+      pre_context_instructions = await replace_context_at_commit_placeholder({
+        instruction: pre_context_instructions,
+        workspace_provider: params.panel_provider.workspace_provider
+      })
+      post_context_instructions = await replace_context_at_commit_placeholder({
+        instruction: post_context_instructions,
+        after_context: true,
+        workspace_provider: params.panel_provider.workspace_provider
       })
     }
 
