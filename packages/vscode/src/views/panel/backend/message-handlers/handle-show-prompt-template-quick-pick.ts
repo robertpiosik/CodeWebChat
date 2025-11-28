@@ -131,31 +131,37 @@ export const handle_show_prompt_template_quick_pick = async (
 
   const edit_template = async (
     template: PromptTemplate,
-    index: number
-  ): Promise<boolean> => {
+    title: string
+  ): Promise<{
+    updated_template: PromptTemplate | null
+    cancelled_entirely: boolean
+  }> => {
     const NAME_LABEL = 'Name'
     const TEMPLATE_LABEL = 'Template'
 
-    const create_edit_options = () => {
+    const create_edit_options = (current_template: PromptTemplate) => {
+     
+
       return [
         {
           label: NAME_LABEL,
-          detail: template.name || 'Not set'
+          detail: current_template.name
         },
         {
           label: TEMPLATE_LABEL,
-          detail: template.template
+          description: !current_template.template? 'required' : undefined,
+          detail: current_template.template
         }
       ]
     }
 
     const edit_quick_pick = vscode.window.createQuickPick()
-    edit_quick_pick.items = create_edit_options()
-    edit_quick_pick.title = 'Edit Template'
+    edit_quick_pick.items = create_edit_options(template)
+    edit_quick_pick.title = title
     edit_quick_pick.placeholder = 'Select what to edit'
     edit_quick_pick.buttons = [vscode.QuickInputButtons.Back]
 
-    return new Promise<boolean>((resolve) => {
+    return new Promise((resolve) => {
       let is_accepted = false
       let did_trigger_back = false
       const edit_disposables: vscode.Disposable[] = []
@@ -165,7 +171,7 @@ export const handle_show_prompt_template_quick_pick = async (
           if (button === vscode.QuickInputButtons.Back) {
             did_trigger_back = true
             edit_quick_pick.hide()
-            resolve(false) // User clicked 'Back', do not cancel the main quick pick
+            resolve({ updated_template: template, cancelled_entirely: false })
           }
         }),
         edit_quick_pick.onDidAccept(async () => {
@@ -173,7 +179,7 @@ export const handle_show_prompt_template_quick_pick = async (
           const selected = edit_quick_pick.selectedItems[0]
           if (!selected) {
             edit_quick_pick.hide()
-            resolve(false) // User cancelled, do not cancel the main quick pick
+            resolve({ updated_template: template, cancelled_entirely: false })
             return
           }
 
@@ -195,20 +201,11 @@ export const handle_show_prompt_template_quick_pick = async (
                 delete updated_template.name
               }
 
-              prompt_templates[index] = updated_template
-              await config.update(
-                prompt_templates_key,
-                prompt_templates,
-                vscode.ConfigurationTarget.Global
-              )
               next_template_state = updated_template
             }
 
-            const should_cancel_entirely = await edit_template(
-              next_template_state,
-              index
-            )
-            resolve(should_cancel_entirely)
+            const result = await edit_template(next_template_state, title)
+            resolve(result)
           } else if (selected.label == TEMPLATE_LABEL) {
             const new_template_text = await vscode.window.showInputBox({
               prompt: 'Enter the prompt template',
@@ -223,30 +220,20 @@ export const handle_show_prompt_template_quick_pick = async (
                 ...template,
                 template: new_template_text.trim()
               }
-              prompt_templates[index] = updated_template
-              await config.update(
-                prompt_templates_key,
-                prompt_templates,
-                vscode.ConfigurationTarget.Global
-              )
               next_template_state = updated_template
             }
 
-            const should_cancel_entirely = await edit_template(
-              next_template_state,
-              index
-            )
-            resolve(should_cancel_entirely)
+            const result = await edit_template(next_template_state, title)
+            resolve(result)
           }
         }),
         edit_quick_pick.onDidHide(() => {
           if (!is_accepted && !did_trigger_back) {
-            resolve(false) // If quick pick is hidden without accepting (e.g. Escape), treat as 'Back'
+            resolve({ updated_template: template, cancelled_entirely: false })
           }
           edit_disposables.forEach((d) => d.dispose())
         })
       )
-
       edit_quick_pick.show()
     })
   }
@@ -267,30 +254,30 @@ export const handle_show_prompt_template_quick_pick = async (
 
       if (selected_template.label == ADD_NEW_TEMPLATE_LABEL) {
         is_editing_template = true
-        const template_text = await vscode.window.showInputBox({
-          prompt: 'Enter the prompt template',
-          placeHolder:
-            'E.g., Rewrite {function name} without redundant comments'
-        })
-        if (template_text !== undefined && template_text.trim()) {
-          const new_template: PromptTemplate = {
-            template: template_text.trim()
-          }
-          prompt_templates = [...prompt_templates, new_template]
-
-          await config.update(
-            prompt_templates_key,
-            prompt_templates,
-            vscode.ConfigurationTarget.Global
-          )
-        }
-        templates_quick_pick.items = create_template_items(
-          prompt_templates,
-          templates_quick_pick.value
+        const { updated_template, cancelled_entirely } = await edit_template(
+          { template: '' },
+          'New Template'
         )
-        is_editing_template = false
-        if (!is_disposed) {
-          templates_quick_pick.show()
+
+        if (cancelled_entirely) {
+          templates_quick_pick.hide()
+          is_disposed = true
+        } else {
+          if (updated_template?.template.trim()) {
+            prompt_templates.unshift(updated_template)
+            await config.update(
+              prompt_templates_key,
+              prompt_templates,
+              vscode.ConfigurationTarget.Global
+            )
+          }
+          templates_quick_pick.items = create_template_items(
+            prompt_templates,
+            templates_quick_pick.value
+          )
+          if (!is_disposed) {
+            templates_quick_pick.show()
+          }
         }
       } else if (
         'template' in selected_template &&
@@ -374,16 +361,24 @@ export const handle_show_prompt_template_quick_pick = async (
 
       if (event.button === edit_button) {
         is_editing_template = true
-        const user_cancelled_entirely = await edit_template(
+        const { updated_template, cancelled_entirely } = await edit_template(
           item.template,
-          item.index
+          'Edit Template'
         )
 
-        if (user_cancelled_entirely) {
-          // User cancelled editing completely (e.g., pressed Escape on the edit quick pick or an input box)
+        if (cancelled_entirely) {
           templates_quick_pick.hide()
           is_disposed = true
         } else {
+          if (updated_template) {
+            prompt_templates[item.index] = updated_template
+            await config.update(
+              prompt_templates_key,
+              prompt_templates,
+              vscode.ConfigurationTarget.Global
+            )
+          }
+
           // User clicked 'Back' from the edit quick pick, or successfully edited and returned to it.
           // We need to re-show the main templates_quick_pick.
           templates_quick_pick.items = create_template_items(
@@ -427,7 +422,7 @@ export const handle_show_prompt_template_quick_pick = async (
         // Handle undo asynchronously without blocking the UI
         const undo_button_text = 'Undo'
         notification_count++
-        const deletion_message = is_unnamed // NOSONAR
+        const deletion_message = is_unnamed
           ? dictionary.information_message.UNNAMED_TEMPLATE_DELETED
           : dictionary.information_message.NAMED_TEMPLATE_DELETED(
               template_name
@@ -435,8 +430,7 @@ export const handle_show_prompt_template_quick_pick = async (
 
         vscode.window
           .showInformationMessage(deletion_message, undo_button_text)
-          .then(async (undo_result) => { // NOSONAR
-            // Dialog is gone
+          .then(async (undo_result) => {
             notification_count--
             if (undo_result === undo_button_text && deleted_template) {
               prompt_templates.splice(original_index, 0, deleted_template)
