@@ -59,17 +59,14 @@ export const handle_preview_preset = async (
     const relative_path = active_path!.replace(workspace_folder + '/', '')
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
-    const chat_code_completion_instructions = config.get<string>(
-      'chatCodeCompletionsInstructions'
-    )
+    const system_instructions =
+      config.get<string>('chatCodeCompletionsInstructions') || ''
 
-    const instructions = `${chat_code_completion_instructions}${
-      current_instructions
-        ? ` Follow instructions: ${current_instructions}`
-        : ''
-    }`
+    const missing_text_tag = current_instructions
+      ? `<missing_text>${current_instructions}</missing_text>`
+      : '<missing_text>'
 
-    text_to_send = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing_text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
+    text_to_send = `${system_instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`
   } else if (panel_provider.web_prompt_type != 'code-completions') {
     let instructions = apply_preset_affixes_to_instruction({
       instruction: current_instructions,

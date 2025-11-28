@@ -72,13 +72,16 @@ export const handle_copy_prompt = async (params: {
     const workspace_folder = vscode.workspace.workspaceFolders?.[0].uri.fsPath
     const relative_path = active_path.replace(workspace_folder + '/', '')
 
-    const instructions = `${code_completion_instructions_for_panel(
+    const system_instructions = code_completion_instructions_for_panel(
       relative_path,
       position.line,
       position.character
-    )}${final_instruction ? ` Follow instructions: ${final_instruction}` : ''}`
+    )
+    const missing_text_tag = final_instruction
+      ? `<missing_text>${final_instruction}</missing_text>`
+      : '<missing_text>'
 
-    const text = `${instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}<missing_text>${text_after_cursor}\n]]>\n</file>\n</files>\n${instructions}`
+    const text = `${system_instructions}\n<files>\n${context_text}<file path="${relative_path}">\n<![CDATA[\n${text_before_cursor}${missing_text_tag}${text_after_cursor}\n]]>\n</file>\n</files>\n${system_instructions}`
 
     vscode.env.clipboard.writeText(text.trim())
   } else if (!is_in_code_completions_mode) {
