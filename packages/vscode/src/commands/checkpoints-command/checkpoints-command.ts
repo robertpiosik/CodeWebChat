@@ -269,7 +269,7 @@ export const checkpoints_command = (params: {
           if (button === copy_button) {
             const visible_checkpoints = checkpoints
               .filter((c) => !c.is_temporary)
-              .sort((a, b) => b.timestamp - a.timestamp)
+              .sort((a, b) => a.timestamp - b.timestamp)
 
             if (visible_checkpoints.length == 0) {
               return
