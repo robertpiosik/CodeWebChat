@@ -766,11 +766,20 @@ export const use_handlers = (
       }
     }
 
+    if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() == 'c') {
+      const selection = window.getSelection()
+      if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+        e.preventDefault()
+        props.on_copy()
+        return
+      }
+    }
+
     if ((e.ctrlKey || e.metaKey) && !shiftKey) {
       if (key == 'ArrowLeft') {
         e.preventDefault()
         const raw_pos = raw_caret_pos_ref.current
-        if (raw_pos === 0) return
+        if (raw_pos == 0) return
 
         const { value, context_file_paths = [] } = props
         let i = raw_pos - 1
@@ -804,7 +813,7 @@ export const use_handlers = (
           const is_word_char = /\w/.test(value[i])
           while (i >= 0) {
             const current_is_word = /\w/.test(value[i])
-            if (/\s/.test(value[i]) || current_is_word !== is_word_char) {
+            if (/\s/.test(value[i]) || current_is_word != is_word_char) {
               break
             }
             i--
@@ -825,7 +834,7 @@ export const use_handlers = (
         e.preventDefault()
         const { value, context_file_paths = [] } = props
         const raw_pos = raw_caret_pos_ref.current
-        if (raw_pos === value.length) return
+        if (raw_pos == value.length) return
 
         let i = raw_pos
 
@@ -867,7 +876,7 @@ export const use_handlers = (
       }
     }
 
-    if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() === 'z') {
+    if ((e.ctrlKey || e.metaKey) && !shiftKey && key.toLowerCase() == 'z') {
       e.preventDefault()
       if (undo_stack.length > 0) {
         const prev_entry = undo_stack[undo_stack.length - 1]
@@ -888,8 +897,8 @@ export const use_handlers = (
       return
     }
     if (
-      ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'y') ||
-      ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() === 'z')
+      ((e.ctrlKey || e.metaKey) && key.toLowerCase() == 'y') ||
+      ((e.ctrlKey || e.metaKey) && shiftKey && key.toLowerCase() == 'z')
     ) {
       e.preventDefault()
       if (redo_stack.length > 0) {

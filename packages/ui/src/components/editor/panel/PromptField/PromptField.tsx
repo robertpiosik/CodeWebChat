@@ -84,7 +84,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
   const [show_file_match_hint, set_show_file_match_hint] = useState(false)
-  const file_match_hint_timer_ref = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const file_match_hint_timer_ref = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null)
   const has_shown_hint_once_ref = useRef(false)
   const last_matching_word_ref = useRef<string | null>(null)
 
@@ -150,7 +152,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   )
 
   const is_mac = use_is_mac()
-  const mod_key = is_mac ? '⌘' : 'Ctrl'
 
   const display_text = useMemo(() => {
     return get_display_text(props.value, props.context_file_paths ?? [])
@@ -529,12 +530,12 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                       items={[
                         {
                           label: 'Select...',
-                          shortcut: is_mac ? `${mod_key} Return` : `${mod_key}+Enter`,
+                          shortcut: is_mac ? '⌘ Return' : 'Ctrl+Enter',
                           on_click: handle_select_click
                         },
                         {
                           label: 'Copy prompt',
-                          shortcut: is_mac ? `${mod_key}⌥C` : `${mod_key}+Alt+C`,
+                          shortcut: is_mac ? '⌘ C' : 'Ctrl+C',
                           on_click: handle_copy_click
                         }
                       ]}
