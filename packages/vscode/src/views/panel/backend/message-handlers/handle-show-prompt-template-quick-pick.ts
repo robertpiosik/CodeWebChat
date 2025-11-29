@@ -140,8 +140,6 @@ export const handle_show_prompt_template_quick_pick = async (
     const TEMPLATE_LABEL = 'Template'
 
     const create_edit_options = (current_template: PromptTemplate) => {
-     
-
       return [
         {
           label: NAME_LABEL,
@@ -149,7 +147,7 @@ export const handle_show_prompt_template_quick_pick = async (
         },
         {
           label: TEMPLATE_LABEL,
-          description: !current_template.template? 'required' : undefined,
+          description: !current_template.template ? 'required' : undefined,
           detail: current_template.template
         }
       ]
@@ -187,6 +185,7 @@ export const handle_show_prompt_template_quick_pick = async (
 
           if (selected.label == NAME_LABEL) {
             const new_name = await vscode.window.showInputBox({
+              title,
               prompt: 'Enter an optional name for the template',
               value: template.name,
               placeHolder: 'Leave empty to remove name'
@@ -208,6 +207,7 @@ export const handle_show_prompt_template_quick_pick = async (
             resolve(result)
           } else if (selected.label == TEMPLATE_LABEL) {
             const new_template_text = await vscode.window.showInputBox({
+              title,
               prompt: 'Enter the prompt template',
               value: template.template,
               placeHolder:
