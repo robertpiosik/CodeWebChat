@@ -15,7 +15,6 @@ const format_tokens = (tokens: number): string => {
 }
 
 export const ContextUtilisation: React.FC<Props> = (props) => {
-  console.log('xxx',props)
   const is_above_threshold =
     props.current_context_size > props.context_size_warning_threshold
   const progress = Math.min(

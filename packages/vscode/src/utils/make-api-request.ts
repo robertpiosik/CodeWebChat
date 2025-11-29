@@ -324,7 +324,6 @@ export const make_api_request = async (params: {
                   function_name: 'make_api_request',
                   message:
                     'Detected closing tag without opening tag, stripped content before </think>',
-                  data: { thoughts: 'xxx' }
                 })
               }
             }
