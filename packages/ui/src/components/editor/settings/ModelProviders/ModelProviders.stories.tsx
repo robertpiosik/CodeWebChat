@@ -43,7 +43,7 @@ export const Default = () => {
         }}
         on_add_provider={() => console.log('Add provider clicked')}
         on_delete_provider={(name) => console.log('Delete provider', name)}
-        on_rename_provider={(name) => console.log('Rename provider', name)}
+        on_edit_provider={(name) => console.log('Edit provider', name)}
         on_change_api_key={(name) => console.log('Change API key for', name)}
       />
     </div>
@@ -63,7 +63,7 @@ export const Empty = () => {
         on_reorder={(reordered) => console.log('reordered', reordered)}
         on_add_provider={() => console.log('Add provider clicked')}
         on_delete_provider={(name) => console.log('Delete provider', name)}
-        on_rename_provider={(name) => console.log('Rename provider', name)}
+        on_edit_provider={(name) => console.log('Edit provider', name)}
         on_change_api_key={(name) => console.log('Change API key for', name)}
       />
     </div>
