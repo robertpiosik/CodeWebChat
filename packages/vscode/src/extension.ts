@@ -26,6 +26,11 @@ import {
   open_url_command,
   generate_commit_message_command
 } from './commands'
+import {
+  get_checkpoints,
+  remove_old_checkpoints
+} from './commands/checkpoints-command/actions'
+import { CHECKPOINTS_STATE_KEY } from './constants/state-keys'
 import { SettingsProvider } from './views/settings/backend/settings-provider'
 
 // Store WebSocketServer instance at module level
@@ -47,6 +52,14 @@ export async function activate(context: vscode.ExtensionContext) {
   }
 
   await migrations()
+
+  const startup_tasks = async () => {
+    const valid_checkpoints = await get_checkpoints(context)
+    const kept_checkpoints = await remove_old_checkpoints(valid_checkpoints)
+    await context.workspaceState.update(CHECKPOINTS_STATE_KEY, kept_checkpoints)
+  }
+  // Run startup tasks without blocking extension activation
+  startup_tasks()
 
   const panel_provider = new PanelProvider(
     context.extensionUri,
