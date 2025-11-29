@@ -239,12 +239,10 @@ export async function handle_json_file_source(
             input_box.title = 'Rename Context'
             input_box.prompt = 'Enter new name for context'
             input_box.value = item.context.name
-            input_box.buttons = [vscode.QuickInputButtons.Back]
 
             const new_name = await new Promise<string | undefined | 'back'>(
               (resolve) => {
                 let accepted = false
-                let back_triggered = false
                 const disposables: vscode.Disposable[] = []
 
                 const validate = (value: string): boolean => {
@@ -275,15 +273,8 @@ export async function handle_json_file_source(
                     resolve(input_box.value.trim())
                     input_box.hide()
                   }),
-                  input_box.onDidTriggerButton((button) => {
-                    if (button === vscode.QuickInputButtons.Back) {
-                      back_triggered = true
-                      resolve('back')
-                      input_box.hide()
-                    }
-                  }),
                   input_box.onDidHide(() => {
-                    if (!accepted && !back_triggered) {
+                    if (!accepted) {
                       resolve(undefined)
                     }
                     disposables.forEach((d) => d.dispose())

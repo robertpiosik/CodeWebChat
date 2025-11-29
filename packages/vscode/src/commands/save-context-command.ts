@@ -45,13 +45,9 @@ async function ask_for_new_context_name(
   input_box.title = 'New Entry'
   input_box.prompt = PROMPT_ENTER_CONTEXT_NAME
   input_box.placeholder = PLACEHOLDER_CONTEXT_NAME
-  if (with_back_button) {
-    input_box.buttons = [vscode.QuickInputButtons.Back]
-  }
 
   return new Promise((resolve) => {
     let accepted = false
-    let back_triggered = false
     const disposables: vscode.Disposable[] = []
 
     disposables.push(
@@ -65,15 +61,8 @@ async function ask_for_new_context_name(
         resolve(value)
         input_box.hide()
       }),
-      input_box.onDidTriggerButton((button) => {
-        if (with_back_button && button === vscode.QuickInputButtons.Back) {
-          back_triggered = true
-          resolve('back')
-          input_box.hide()
-        }
-      }),
       input_box.onDidHide(() => {
-        if (!accepted && !back_triggered) {
+        if (!accepted) {
           if (with_back_button) {
             resolve('back')
           } else {
