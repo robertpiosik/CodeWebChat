@@ -1,0 +1,23 @@
+.option {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+
+  input {
+    margin: 0;
+  }
+
+  &.disabled {
+    cursor: default;
+
+    span {
+      opacity: var(--disabled-opacity);
+    }
+  }
+}
+
+.disabled_reason {
+  font-size: 11px;
+  color: var(--cwc-text-color-dimmed);
+}

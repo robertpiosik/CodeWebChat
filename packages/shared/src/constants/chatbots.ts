@@ -1,16 +1,15 @@
-type Chatbots = {
-  [name: string]: {
+type Chatbot = {
     url: string
-    supports_custom_temperature: boolean
-    supports_custom_top_p: boolean
-    supports_system_instructions: boolean
-    supports_user_provided_model: boolean
-    supports_user_provided_port: boolean
-    supports_reasoning_effort: boolean
-    supports_thinking_budget: boolean
-    supports_url_override: boolean
+    supports_custom_temperature?: boolean
+    supports_system_instructions?: boolean
+    supports_user_provided_model?: boolean
+    supports_user_provided_port?: boolean
+    supports_reasoning_effort?: boolean
+    supports_thinking_budget?: boolean
+    supports_url_override?: boolean
+    url_override_label?: string
     default_system_instructions: string
-    default_top_p: number
+    default_top_p?: number
     supported_options: {
       [option: string]: string
     }
@@ -22,19 +21,13 @@ type Chatbots = {
       }
     }
   }
-}
 
 export const CHATBOTS = {
   'AI Studio': {
     url: 'https://aistudio.google.com/prompts/new_chat',
     supports_custom_temperature: true,
-    supports_custom_top_p: true,
     supports_system_instructions: true,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
     supports_thinking_budget: true,
-    supports_url_override: false,
     default_system_instructions: "You're a helpful coding assistant.",
     default_top_p: 0.95,
     supported_options: {
@@ -67,59 +60,34 @@ export const CHATBOTS = {
         label: 'Gemini 2.5 Flash-Lite'
       }
     }
-  },
+  } as Chatbot,
   ChatGPT: {
     url: 'https://chatgpt.com/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
     supports_url_override: true,
+    url_override_label: 'Project URL',
     default_system_instructions: '',
     supported_options: {
       temporary: 'Temporary',
       thinking: 'Thinking (free plans)'
     },
-    default_top_p: 0,
     models: {}
-  },
+  } as Chatbot,
   Claude: {
     url: 'https://claude.ai/new',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {
       'incognito-chat': 'Incognito chat'
     },
-    default_top_p: 0,
     models: {
       'sonnet-4-5': { label: 'Sonnet 4.5' },
       'haiku-4-5': { label: 'Haiku 4.5' },
       'opus-4-1': { label: 'Opus 4.1' }
     }
-  },
+  } as Chatbot,
   Copilot: {
     url: 'https://copilot.microsoft.com/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
-    default_top_p: 0,
     models: {
       'quick-response': { label: 'Quick response' },
       'think-deeper': { label: 'Think Deeper' },
@@ -127,68 +95,32 @@ export const CHATBOTS = {
       'smart-gpt-5': { label: 'Smart (GPT-5)' },
       search: { label: 'Search' }
     }
-  },
+  } as Chatbot,
   DeepSeek: {
     url: 'https://chat.deepseek.com/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
-    default_top_p: 0,
     models: {}
-  },
+  } as Chatbot,
   Doubao: {
     url: 'https://www.doubao.com/chat/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: { 'deep-thinking': 'Deep Thinking' },
-    default_top_p: 0,
     models: {}
-  },
+  } as Chatbot,
   Gemini: {
     url: 'https://gemini.google.com/app',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     supported_options: { 'temporary-chat': 'Temporary chat' },
     default_system_instructions: '',
-    default_top_p: 0,
     models: {
       fast: { label: 'Fast' },
       thinking: { label: 'Thinking' }
     }
-  },
+  } as Chatbot,
   'GitHub Copilot': {
     url: 'https://github.com/copilot',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
-    default_top_p: 0,
     models: {
       'gpt-5-mini': { label: 'GPT-5 mini' },
       'o3-mini': { label: 'o3-mini' },
@@ -205,35 +137,18 @@ export const CHATBOTS = {
       'claude-sonnet-3.7-thinking': { label: 'Claude Sonnet 3.7 Thinking' },
       'claude-opus-4': { label: 'Claude Opus 4' }
     }
-  },
+  } as Chatbot,
   HuggingChat: {
     url: 'https://huggingface.co/chat/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
     supports_user_provided_model: true,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
-    default_top_p: 0,
     models: {}
-  },
+  } as Chatbot,
   Grok: {
     url: 'https://grok.com/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: { private: 'Private' },
-    default_top_p: 0,
     models: {
       auto: { label: 'Auto' },
       fast: { label: 'Fast' },
@@ -241,55 +156,28 @@ export const CHATBOTS = {
       'grok-4-fast': { label: 'Grok 4 Fast' },
       heavy: { label: 'Heavy' }
     }
-  },
+  } as Chatbot,
   Kimi: {
     url: 'https://www.kimi.com/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
-    default_top_p: 0,
     models: {}
-  },
+  } as Chatbot,
   Minimax: {
     url: 'https://agent.minimax.io/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
-    default_top_p: 0,
     models: {}
-  },
+  } as Chatbot,
   Mistral: {
     url: 'https://chat.mistral.ai/chat',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {
       incognito: 'Incognito mode',
       think: 'Think'
     },
-    default_top_p: 0,
     models: {}
-  },
+  } as Chatbot,
   // Not supported until they fix code blocks in copied chat responses
   // Meta: {
   //   url: 'https://www.meta.ai/',
@@ -307,69 +195,44 @@ export const CHATBOTS = {
   'Open WebUI': {
     url: 'http://openwebui/',
     supports_custom_temperature: true,
-    supports_custom_top_p: true,
     supports_system_instructions: true,
     supports_user_provided_model: true,
     supports_user_provided_port: true,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {},
     default_top_p: 0.9,
     models: {}
-  },
+  } as Chatbot,
   OpenRouter: {
     url: 'https://openrouter.ai/chat',
     supports_custom_temperature: true,
-    supports_custom_top_p: true,
     supports_system_instructions: true,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
     supports_reasoning_effort: true,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {
       'disable-reasoning': 'Disable reasoning (for hybrid models)'
     },
     default_top_p: 1,
     models: {}
-  },
+  } as Chatbot,
   Perplexity: {
     url: 'https://www.perplexity.ai/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
     supports_url_override: true,
+    url_override_label: 'Space URL',
     default_system_instructions: '',
     supported_options: {
       search: 'Search'
     },
-    default_top_p: 0,
     models: {}
-  },
+  } as Chatbot,
   Qwen: {
     url: 'https://chat.qwen.ai/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {
       thinking: 'Thinking',
       search: 'Search',
       temporary: 'Temporary'
     },
-    default_top_p: 0,
     models: {
       'qwen3-max': { label: 'Qwen3-Max' },
       'qwen3-vl-235b-a22b': { label: 'Qwen3-VL-235B-A22B' },
@@ -380,20 +243,11 @@ export const CHATBOTS = {
       'qwen3-30b-a3b-2507': { label: 'Qwen3-30B-A3B-2507' },
       'qwen3-coder-flash': { label: 'Qwen3-Coder-Flash' }
     }
-  },
+  } as Chatbot,
   Together: {
     url: 'https://chat.together.ai/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {},
-    default_top_p: 0,
     models: {
       'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
       'deepseek-v3-0324': { label: 'DeepSeek V3 (0324)' },
@@ -404,40 +258,22 @@ export const CHATBOTS = {
       'glm-4.5-air': { label: 'GLM-4.5-Air' },
       'llama-4-maverick': { label: 'Llama 4 Maverick' }
     }
-  },
+  } as Chatbot,
   Yuanbao: {
     url: 'https://yuanbao.tencent.com/chat',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
-    default_top_p: 0,
     models: {
       deepseek: { label: 'DeepSeek' },
       hunyuan: { label: 'Hunyuan' }
     }
-  },
+  } as Chatbot,
   'Z.AI': {
     url: 'https://chat.z.ai/',
-    supports_custom_temperature: false,
-    supports_custom_top_p: false,
-    supports_system_instructions: false,
-    supports_user_provided_model: false,
-    supports_user_provided_port: false,
-    supports_reasoning_effort: false,
-    supports_thinking_budget: false,
-    supports_url_override: false,
     default_system_instructions: '',
     supported_options: {
       'deep-think': 'Deep Think'
     },
-    default_top_p: 0,
     models: {}
-  }
-} satisfies Chatbots
+  } as Chatbot,
+}

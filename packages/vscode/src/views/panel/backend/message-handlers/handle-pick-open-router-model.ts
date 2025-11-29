@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
+import { Logger } from '@shared/utils/logger'
 import axios from 'axios'
 
 export const handle_pick_open_router_model = async (
@@ -17,8 +18,8 @@ export const handle_pick_open_router_model = async (
     }))
 
     const selected = await vscode.window.showQuickPick(items, {
-      title: 'Select Open Router Model',
-      placeHolder: 'Choose a model from Open Router'
+      title: 'Select Model',
+      placeHolder: 'Choose a model'
     })
 
     if (selected) {
@@ -28,7 +29,11 @@ export const handle_pick_open_router_model = async (
       })
     }
   } catch (error) {
-    console.error('Error fetching Open Router models:', error)
+    Logger.error({
+      function_name: 'handle_pick_open_router_model',
+      message: 'Error fetching Open Router models',
+      data: error
+    })
     vscode.window.showErrorMessage(
       dictionary.error_message.FAILED_TO_FETCH_OPEN_ROUTER_MODELS
     )

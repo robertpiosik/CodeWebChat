@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import cn from 'classnames'
+import { useChatgpt } from '../chatbot-hooks'
 import styles from './EditPresetForm.module.scss'
 import dropdown_styles from '@ui/components/editor/common/Dropdown/Dropdown.module.scss'
 import { Preset } from '@shared/types/preset'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Field } from '@ui/components/editor/panel/Field'
 import { Slider } from '@ui/components/editor/panel/Slider'
-import { Checkbox } from '@ui/components/editor/common/Checkbox'
 import { Input } from '@ui/components/editor/common/Input'
 import { Textarea } from '@ui/components/editor/common/Textarea'
 import { Dropdown } from '@ui/components/editor/common/Dropdown'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
+import { Options } from '../chatbot-overrides/options'
 
 type Props = {
   preset: Preset
@@ -78,8 +79,10 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     }
   }, [model_info])
 
+  useChatgpt({ chatbot, new_url, set_options })
+
   const supports_temperature = chatbot_config?.supports_custom_temperature
-  const supports_top_p = chatbot_config?.supports_custom_top_p
+  const supports_top_p = chatbot_config?.default_top_p !== undefined
   const supports_thinking_budget = chatbot_config?.supports_thinking_budget
   const supports_reasoning_effort =
     chatbot_config?.supports_reasoning_effort ||
@@ -90,7 +93,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const supports_url_override = chatbot_config?.supports_url_override
   const supports_user_provided_model =
     chatbot_config?.supports_user_provided_model
-  const supported_options = chatbot_config?.supported_options || {}
 
   useEffect(() => {
     if (chatbot) {
@@ -100,7 +102,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         ...(prompt_prefix ? { prompt_prefix } : {}),
         ...(prompt_suffix ? { prompt_suffix } : {}),
         ...(temperature !== undefined ? { temperature } : {}),
-        ...(top_p !== CHATBOTS[chatbot].default_top_p ? { top_p } : {}),
+        ...(!supports_top_p || top_p !== chatbot_config.default_top_p
+          ? { top_p }
+          : {}),
         ...(thinking_budget !== undefined ? { thinking_budget } : {}),
         ...(reasoning_effort ? { reasoning_effort } : {}),
         ...(model ? { model } : {}),
@@ -133,16 +137,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     prompt_suffix,
     options
   ])
-
-  let url_override_label = 'New URL'
-  let url_override_info = 'Enter link of a project, space, etc.'
-  if (chatbot == 'ChatGPT') {
-    url_override_label = 'Project URL'
-    url_override_info = 'Enter link of a project'
-  } else if (chatbot == 'Perplexity') {
-    url_override_label = 'Space URL'
-    url_override_info = 'Enter link of a space'
-  }
 
   const handle_chatbot_change = (new_chatbot: keyof typeof CHATBOTS) => {
     set_chatbot(new_chatbot)
@@ -327,9 +321,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
         {supports_url_override && (
           <Field
-            label={url_override_label}
+            label={chatbot_config?.url_override_label || 'URL override'}
             html_for="new-url"
-            info={url_override_info}
           >
             <Input
               id="new-url"
@@ -358,25 +351,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           </Field>
         )}
 
-        {Object.keys(supported_options).length > 0 && (
-          <Field label="Options">
-            <div className={styles.options}>
-              {Object.entries(supported_options).map(([key, label]) => {
-                const model_info = model ? (models as any)[model] : undefined
-                if (model_info?.disabled_options?.includes(key)) return null
-                return (
-                  <label key={key} className={styles.options__item}>
-                    <Checkbox
-                      checked={options.includes(key)}
-                      on_change={() => handle_option_toggle(key)}
-                    />
-                    {label as any}
-                  </label>
-                )
-              })}
-            </div>
-          </Field>
-        )}
+        <Options
+          chatbot={chatbot}
+          model={model}
+          options={options}
+          new_url={new_url}
+          on_option_toggle={handle_option_toggle}
+        />
 
         {supports_temperature && (
           <Field
