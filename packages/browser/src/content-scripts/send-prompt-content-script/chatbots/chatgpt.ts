@@ -59,7 +59,7 @@ export const chatgpt: Chatbot = {
           await new Promise((resolve) => {
             const check_for_param = () => {
               if (window.location.search.includes('temporary-chat=true')) {
-                resolve(null)
+                setTimeout(() => resolve(null), 250)
               } else {
                 setTimeout(check_for_param, 100)
               }
@@ -95,6 +95,7 @@ export const chatgpt: Chatbot = {
             )
             if (path_element) {
               ;(item as HTMLElement).click()
+              await new Promise((resolve) => setTimeout(resolve, 250))
               found = true
               break
             }
