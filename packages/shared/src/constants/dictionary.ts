@@ -21,8 +21,7 @@ export const dictionary = {
     CLIPBOARD_CONTENT_APPLIED_SUCCESSFULLY:
       'Clipboard content applied successfully.',
     COPIED_TO_CLIPBOARD: 'Message copied to the clipboard.',
-    CHECKPOINTS_COPIED_TO_CLIPBOARD:
-      'Checkpoints copied to clipboard as logs.',
+    CHECKPOINTS_COPIED_TO_CLIPBOARD: 'Checkpoints copied to clipboard as logs.',
     CHECKPOINT_DELETED: (from_now: string) =>
       `Checkpoint from ${from_now} deleted.`,
     CHECKPOINT_RESTORED: 'Checkpoint restored.',
@@ -94,10 +93,7 @@ export const dictionary = {
       `Selected ${count} file${count == 1 ? '' : 's'}.`,
     DELETED_CONTEXT_FROM_WORKSPACE_STATE: (context_name: string) =>
       `Deleted context "${context_name}" from workspace state`,
-    CONTEXT_SAVED_TO_JSON: (context_name: string, workspaces: string) =>
-      `Context "${context_name}" saved to ${workspaces}.`,
-    CONTEXT_SAVED_TO_WORKSPACE_STATE: (context_name: string) =>
-      `Context "${context_name}" saved to the workspace state successfully.`,
+    CONTEXT_SAVED_SUCCESSFULLY: 'Context saved successfully.',
     FILES_REMAIN_CHECKED: (count: number) =>
       `${count} file${count == 1 ? '' : 's'} remain${
         count == 1 ? 's' : ''

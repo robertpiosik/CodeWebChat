@@ -129,31 +129,70 @@ export async function handle_workspace_state_source(
 
           if (event.button === edit_button) {
             is_showing_dialog = true
-            const new_name = await vscode.window.showInputBox({
-              prompt: 'Enter new name for context',
-              value: item.context.name,
-              validateInput: (value) => {
-                if (!value.trim()) {
-                  return 'Name cannot be empty'
+            const input_box = vscode.window.createInputBox()
+            input_box.title = 'Rename Context'
+            input_box.prompt = 'Enter new name for context'
+            input_box.value = item.context.name
+            input_box.buttons = [vscode.QuickInputButtons.Back]
+
+            const new_name = await new Promise<string | undefined | 'back'>(
+              (resolve) => {
+                let accepted = false
+                let back_triggered = false
+                const disposables: vscode.Disposable[] = []
+
+                const validate = (value: string): boolean => {
+                  const trimmed_value = value.trim()
+                  if (!trimmed_value) {
+                    input_box.validationMessage = 'Name cannot be empty'
+                    return false
+                  }
+
+                  const duplicate = internal_contexts.find(
+                    (c) =>
+                      c.name === trimmed_value && c.name !== item.context.name
+                  )
+                  if (duplicate) {
+                    input_box.validationMessage =
+                      'A context with this name already exists'
+                    return false
+                  }
+                  input_box.validationMessage = ''
+                  return true
                 }
 
-                const duplicate = internal_contexts.find(
-                  (c) => c.name == value.trim() && c.name != item.context.name
+                disposables.push(
+                  input_box.onDidChangeValue(validate),
+                  input_box.onDidAccept(() => {
+                    if (!validate(input_box.value)) return
+                    accepted = true
+                    resolve(input_box.value.trim())
+                    input_box.hide()
+                  }),
+                  input_box.onDidTriggerButton((button) => {
+                    if (button === vscode.QuickInputButtons.Back) {
+                      back_triggered = true
+                      resolve('back')
+                      input_box.hide()
+                    }
+                  }),
+                  input_box.onDidHide(() => {
+                    if (!accepted && !back_triggered) {
+                      resolve(undefined)
+                    }
+                    disposables.forEach((d) => d.dispose())
+                    input_box.dispose()
+                  })
                 )
-
-                if (duplicate) {
-                  return 'A context with this name already exists'
-                }
-
-                return null
+                input_box.show()
               }
-            })
+            )
             is_showing_dialog = false
 
             let name_to_highlight = item.context.name
 
-            if (new_name?.trim()) {
-              const trimmed_name = new_name.trim()
+            if (new_name && new_name !== 'back') {
+              const trimmed_name = new_name
               let context_updated = false
 
               if (trimmed_name != item.context.name) {

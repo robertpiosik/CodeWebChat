@@ -12,10 +12,84 @@ import { dictionary } from '@shared/constants/dictionary'
 const PROMPT_ENTER_CONTEXT_NAME = 'Enter a name for this context'
 const PLACEHOLDER_CONTEXT_NAME = 'e.g., Backend API Context'
 const VALIDATION_CONTEXT_NAME_EMPTY = 'Context name cannot be empty.'
-const LABEL_BACK = '$(arrow-left) Back'
-const LABEL_NEW_SAVED_CONTEXT = '$(add) New saved context...'
+const LABEL_NEW_SAVED_CONTEXT = '$(add) New entry...'
 const PLACEHOLDER_SELECT_OR_CREATE_CONTEXT =
   'Select existing context to overwrite or create a new one'
+
+async function save_contexts_to_file(
+  contexts: SavedContext[],
+  file_path: string
+): Promise<void> {
+  try {
+    const dir_path = path.dirname(file_path)
+    if (!fs.existsSync(dir_path)) {
+      fs.mkdirSync(dir_path, { recursive: true })
+    }
+
+    if (contexts.length == 0) {
+      if (fs.existsSync(file_path)) {
+        fs.unlinkSync(file_path)
+      }
+    } else {
+      fs.writeFileSync(file_path, JSON.stringify(contexts, null, 2), 'utf8')
+    }
+  } catch (error: any) {
+    throw new Error(`Failed to save contexts to file: ${error.message}`)
+  }
+}
+
+async function ask_for_new_context_name(
+  with_back_button: boolean
+): Promise<string | 'back' | undefined> {
+  const input_box = vscode.window.createInputBox()
+  input_box.title = 'New Entry'
+  input_box.prompt = PROMPT_ENTER_CONTEXT_NAME
+  input_box.placeholder = PLACEHOLDER_CONTEXT_NAME
+  if (with_back_button) {
+    input_box.buttons = [vscode.QuickInputButtons.Back]
+  }
+
+  return new Promise((resolve) => {
+    let accepted = false
+    let back_triggered = false
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      input_box.onDidAccept(() => {
+        const value = input_box.value.trim()
+        if (value.length == 0) {
+          input_box.validationMessage = VALIDATION_CONTEXT_NAME_EMPTY
+          return
+        }
+        accepted = true
+        resolve(value)
+        input_box.hide()
+      }),
+      input_box.onDidTriggerButton((button) => {
+        if (with_back_button && button === vscode.QuickInputButtons.Back) {
+          back_triggered = true
+          resolve('back')
+          input_box.hide()
+        }
+      }),
+      input_box.onDidHide(() => {
+        if (!accepted && !back_triggered) {
+          if (with_back_button) {
+            resolve('back')
+          } else {
+            resolve(undefined) // Esc pressed
+          }
+        }
+        disposables.forEach((d) => d.dispose())
+        input_box.dispose()
+      }),
+      input_box.onDidChangeValue(() => {
+        input_box.validationMessage = ''
+      })
+    )
+    input_box.show()
+  })
+}
 
 function condense_paths(
   paths: string[],
@@ -293,7 +367,7 @@ export function save_context_command(
               if (full_path.startsWith(prefix)) {
                 if (full_path.length > prefix.length) {
                   return full_path.substring(prefix.length)
-                } else if (full_path.length === prefix.length) {
+                } else if (full_path.length == prefix.length) {
                   // Should ideally not happen if paths are like "WorkspaceName:."
                   return '.'
                 }
@@ -345,12 +419,13 @@ export function save_context_command(
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { value: 'internal' | 'file' }
         >()
+        quick_pick.title = 'Save Context'
         quick_pick.items = quick_pick_storage_options
         quick_pick.placeholder = 'Where do you want to save this context?'
 
         if (last_save_location) {
           const active_item = quick_pick_storage_options.find(
-            (opt) => opt.value === last_save_location
+            (opt) => opt.value == last_save_location
           )
           if (active_item) {
             quick_pick.activeItems = [active_item]
@@ -388,172 +463,313 @@ export function save_context_command(
 
         if (save_location == 'file') {
           try {
-            let context_name: string | undefined
-
-            const all_contexts_map = await load_all_contexts()
-            const existing_context_names = Array.from(all_contexts_map.keys())
-
-            if (existing_context_names.length == 0) {
-              context_name = await vscode.window.showInputBox({
-                prompt: PROMPT_ENTER_CONTEXT_NAME,
-                placeHolder: PLACEHOLDER_CONTEXT_NAME,
-                validateInput: (value) =>
-                  value.trim().length > 0 ? null : VALIDATION_CONTEXT_NAME_EMPTY
-              })
-
-              if (!context_name) {
-                return
-              }
-            } else {
-              const quick_pick_items = [
-                { label: LABEL_BACK },
-                { label: LABEL_NEW_SAVED_CONTEXT },
-                { label: '', kind: vscode.QuickPickItemKind.Separator },
-                ...existing_context_names.map((name) => {
-                  const context_info = all_contexts_map.get(name)!
-                  const roots_with_context = context_info.contexts.map(
-                    (c) => (c as any)._root
-                  )
-                  const workspace_names = roots_with_context.map((root) => {
-                    const folder = workspace_folders.find(
-                      (f) => f.uri.fsPath === root
-                    )
-                    return folder?.name || path.basename(root)
-                  })
-
-                  const total_paths = context_info.contexts.reduce(
-                    (sum, c) => sum + c.paths.length,
-                    0
-                  )
-
-                  return {
-                    label: name,
-                    description:
-                      workspace_names.length > 1
-                        ? `${total_paths} paths · ${workspace_names.join(', ')}`
-                        : `${total_paths} paths`
-                  }
-                })
-              ]
-
-              const selected_item = await vscode.window.showQuickPick(
-                quick_pick_items,
-                {
-                  placeHolder: PLACEHOLDER_SELECT_OR_CREATE_CONTEXT
-                }
+            let context_selection_done = false
+            while (!context_selection_done) {
+              let all_contexts_map = await load_all_contexts()
+              const existing_context_names = Array.from(
+                all_contexts_map.keys()
               )
 
-              if (!selected_item) {
-                return
-              }
+              let context_name: string | undefined
+              let is_new_entry = false
 
-              if (selected_item.label === LABEL_BACK) {
-                show_storage_selection = true
-                continue
-              }
+              if (existing_context_names.length == 0) {
+                const name_result = await ask_for_new_context_name(true)
+                if (name_result == 'back') {
+                  show_storage_selection = true
+                  break
+                }
+                if (!name_result) {
+                  return
+                }
+                context_name = name_result
+                is_new_entry = true
+              } else {
+                const delete_button = {
+                  iconPath: new vscode.ThemeIcon('trash'),
+                  tooltip: 'Delete'
+                }
 
-              if (selected_item.label == LABEL_NEW_SAVED_CONTEXT) {
-                context_name = await vscode.window.showInputBox({
-                  prompt: PROMPT_ENTER_CONTEXT_NAME,
-                  placeHolder: PLACEHOLDER_CONTEXT_NAME,
-                  validateInput: (value) =>
-                    value.trim().length > 0
-                      ? null
-                      : VALIDATION_CONTEXT_NAME_EMPTY
+                const create_quick_pick_items = (
+                  contextsMap: typeof all_contexts_map
+                ) => {
+                  const names = Array.from(contextsMap.keys())
+                  return [
+                    { label: LABEL_NEW_SAVED_CONTEXT },
+                    { label: '', kind: vscode.QuickPickItemKind.Separator },
+                    ...names.map((name) => {
+                      const context_info = contextsMap.get(name)!
+                      const roots_with_context = context_info.contexts.map(
+                        (c) => (c as any)._root
+                      )
+                      const workspace_names = roots_with_context.map((root) => {
+                        const folder = workspace_folders.find(
+                          (f) => f.uri.fsPath == root
+                        )
+                        return folder?.name || path.basename(root)
+                      })
+
+                      const total_paths = context_info.contexts.reduce(
+                        (sum, c) => sum + c.paths.length,
+                        0
+                      )
+
+                      return {
+                        label: name,
+                        description:
+                          workspace_names.length > 1
+                            ? `${total_paths} paths · ${workspace_names.join(
+                                ', '
+                              )}`
+                            : `${total_paths} paths`,
+                        buttons: [delete_button]
+                      }
+                    })
+                  ]
+                }
+
+                const quick_pick_contexts = vscode.window.createQuickPick()
+                quick_pick_contexts.items =
+                  create_quick_pick_items(all_contexts_map)
+                quick_pick_contexts.placeholder =
+                  PLACEHOLDER_SELECT_OR_CREATE_CONTEXT
+                quick_pick_contexts.title = 'Save Context'
+                quick_pick_contexts.buttons = [vscode.QuickInputButtons.Back]
+
+                let is_showing_dialog = false
+                const selected_item = await new Promise<
+                  vscode.QuickPickItem | 'back' | undefined
+                >((resolve) => {
+                  let is_accepted = false
+                  let did_trigger_back = false
+                  const disposables: vscode.Disposable[] = []
+
+                  disposables.push(
+                    quick_pick_contexts.onDidChangeValue((value) => {
+                      if (value) {
+                        quick_pick_contexts.items =
+                          create_quick_pick_items(all_contexts_map).slice(2)
+                      } else {
+                        quick_pick_contexts.items =
+                          create_quick_pick_items(all_contexts_map)
+                      }
+                    }),
+                    quick_pick_contexts.onDidTriggerButton((button) => {
+                      if (button === vscode.QuickInputButtons.Back) {
+                        did_trigger_back = true
+                        quick_pick_contexts.hide()
+                        resolve('back')
+                      }
+                    }),
+                    quick_pick_contexts.onDidTriggerItemButton(
+                      async (event) => {
+                        const deleted_context_name = event.item.label
+                        const context_info =
+                          all_contexts_map.get(deleted_context_name)
+                        if (!context_info) return
+
+                        const roots = context_info.contexts.map(
+                          (c) => (c as any)._root
+                        )
+                        const unique_roots = [...new Set(roots)]
+                        const original_file_contents = new Map<string, string>()
+
+                        for (const root of unique_roots) {
+                          const file_path = get_contexts_file_path(root)
+                          if (fs.existsSync(file_path)) {
+                            original_file_contents.set(
+                              file_path,
+                              fs.readFileSync(file_path, 'utf8')
+                            )
+                          }
+                        }
+
+                        for (const root of unique_roots) {
+                          const file_path = get_contexts_file_path(root)
+                          try {
+                            if (fs.existsSync(file_path)) {
+                              const content = fs.readFileSync(file_path, 'utf8')
+                              let root_contexts = JSON.parse(content)
+                              if (!Array.isArray(root_contexts))
+                                root_contexts = []
+                              root_contexts = root_contexts.filter(
+                                (c: SavedContext) =>
+                                  c.name !== deleted_context_name
+                              )
+                              await save_contexts_to_file(
+                                root_contexts,
+                                file_path
+                              )
+                            }
+                          } catch (error: any) {
+                            vscode.window.showErrorMessage(
+                              dictionary.error_message.ERROR_DELETING_CONTEXT_FROM_FILE(
+                                error.message
+                              )
+                            )
+                          }
+                        }
+
+                        all_contexts_map = await load_all_contexts()
+                        quick_pick_contexts.items =
+                          create_quick_pick_items(all_contexts_map)
+
+                        is_showing_dialog = true
+                        const choice = await vscode.window.showInformationMessage(
+                          dictionary.information_message.DELETED_CONTEXT_FROM_ALL_ROOTS(
+                            deleted_context_name
+                          ),
+                          'Undo'
+                        )
+                        is_showing_dialog = false
+
+                        if (choice == 'Undo') {
+                          for (const [
+                            file_path,
+                            content
+                          ] of original_file_contents.entries()) {
+                            try {
+                              fs.writeFileSync(file_path, content, 'utf8')
+                            } catch (error: any) {
+                              vscode.window.showErrorMessage(
+                                dictionary.error_message.FAILED_TO_UNDO_CHANGES(
+                                  `Failed to restore context in ${file_path}: ${error.message}`
+                                )
+                              )
+                            }
+                          }
+                          all_contexts_map = await load_all_contexts()
+                          quick_pick_contexts.items =
+                            create_quick_pick_items(all_contexts_map)
+                          vscode.window.showInformationMessage(
+                            dictionary.information_message.RESTORED_CONTEXT(
+                              deleted_context_name
+                            )
+                          )
+                        }
+                        quick_pick_contexts.show()
+                      }
+                    ),
+                    quick_pick_contexts.onDidAccept(() => {
+                      is_accepted = true
+                      resolve(quick_pick_contexts.selectedItems[0])
+                      quick_pick_contexts.hide()
+                    }),
+                    quick_pick_contexts.onDidHide(() => {
+                      if (is_showing_dialog) return
+                      if (!is_accepted && !did_trigger_back) {
+                        resolve('back')
+                      }
+                      disposables.forEach((d) => d.dispose())
+                      quick_pick_contexts.dispose()
+                    })
+                  )
+                  quick_pick_contexts.show()
                 })
 
-                if (!context_name) {
+                if (!selected_item) {
                   return
                 }
 
-                if (existing_context_names.includes(context_name)) {
-                  const overwrite = await vscode.window.showWarningMessage(
-                    dictionary.warning_message.CONFIRM_OVERWRITE_CONTEXT(context_name),
-                    { modal: true },
-                    'Overwrite'
-                  )
+                if (selected_item == 'back') {
+                  show_storage_selection = true
+                  break // break from while loop
+                }
 
-                  if (overwrite != 'Overwrite') {
+                if (selected_item.label == LABEL_NEW_SAVED_CONTEXT) {
+                  const name_result = await ask_for_new_context_name(true)
+                  if (name_result == 'back') {
+                    continue // re-show quick_pick_contexts
+                  }
+                  if (!name_result) {
                     return
                   }
-                }
-              } else {
-                context_name = selected_item.label
-              }
-            }
+                  context_name = name_result
 
-            if (!context_name) {
-              vscode.window.showErrorMessage(
-                dictionary.error_message.CONTEXT_NAME_NOT_PROVIDED
-              )
-              return
-            }
+                  if (existing_context_names.includes(context_name)) {
+                    const overwrite = await vscode.window.showWarningMessage(
+                      dictionary.warning_message.CONFIRM_OVERWRITE_CONTEXT(
+                        context_name
+                      ),
+                      { modal: true },
+                      'Overwrite'
+                    )
 
-            for (const [
-              root,
-              relative_paths
-            ] of contextsByWorkspace.entries()) {
-              const contexts_file_path = get_contexts_file_path(root)
-              const vscode_dir = path.dirname(contexts_file_path)
-
-              if (!fs.existsSync(vscode_dir)) {
-                fs.mkdirSync(vscode_dir, { recursive: true })
-              }
-
-              let file_contexts: SavedContext[] = []
-              if (fs.existsSync(contexts_file_path)) {
-                try {
-                  const content = fs.readFileSync(contexts_file_path, 'utf8')
-                  if (content.trim().length > 0) {
-                    file_contexts = JSON.parse(content)
-                    if (!Array.isArray(file_contexts)) {
-                      file_contexts = []
+                    if (overwrite != 'Overwrite') {
+                      continue // re-show quick pick
                     }
                   }
-                } catch (error) {
-                  file_contexts = []
+                  is_new_entry = true
+                } else {
+                  context_name = selected_item.label
                 }
               }
 
-              const new_context: SavedContext = {
-                name: context_name,
-                paths: relative_paths
+              if (!context_name) {
+                if (show_storage_selection) break
+                continue
               }
 
-              const existing_index = file_contexts.findIndex(
-                (ctx) => ctx.name == context_name
+              for (const [
+                root,
+                relative_paths
+              ] of contextsByWorkspace.entries()) {
+                const contexts_file_path = get_contexts_file_path(root)
+                const vscode_dir = path.dirname(contexts_file_path)
+
+                if (!fs.existsSync(vscode_dir)) {
+                  fs.mkdirSync(vscode_dir, { recursive: true })
+                }
+
+                let file_contexts: SavedContext[] = []
+                if (fs.existsSync(contexts_file_path)) {
+                  try {
+                    const content = fs.readFileSync(contexts_file_path, 'utf8')
+                    if (content.trim().length > 0) {
+                      file_contexts = JSON.parse(content)
+                      if (!Array.isArray(file_contexts)) {
+                        file_contexts = []
+                      }
+                    }
+                  } catch (error) {
+                    file_contexts = []
+                  }
+                }
+
+                const new_context: SavedContext = {
+                  name: context_name,
+                  paths: relative_paths
+                }
+
+                const existing_index = file_contexts.findIndex(
+                  (ctx) => ctx.name == context_name
+                )
+
+                if (existing_index != -1) {
+                  file_contexts[existing_index] = new_context
+                } else {
+                  file_contexts.push(new_context)
+                }
+
+                file_contexts.sort((a, b) => a.name.localeCompare(b.name))
+
+                fs.writeFileSync(
+                  contexts_file_path,
+                  JSON.stringify(file_contexts, null, 2),
+                  'utf8'
+                )
+              }
+              vscode.window.showInformationMessage(
+                dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
               )
 
-              if (existing_index != -1) {
-                file_contexts[existing_index] = new_context
+              if (is_new_entry) {
+                continue
               } else {
-                file_contexts.push(new_context)
+                context_selection_done = true
               }
-
-              file_contexts.sort((a, b) => a.name.localeCompare(b.name))
-
-              fs.writeFileSync(
-                contexts_file_path,
-                JSON.stringify(file_contexts, null, 2),
-                'utf8'
-              )
             }
-
-            const affected_workspaces = Array.from(
-              contextsByWorkspace.keys()
-            ).map((root) => {
-              const folder = workspace_folders.find(
-                (f) => f.uri.fsPath === root
-              )
-              return folder?.name || path.basename(root)
-            })
-
-            vscode.window.showInformationMessage(
-              dictionary.information_message.CONTEXT_SAVED_TO_JSON(
-                context_name,
-                affected_workspaces.join(', ')
-              )
-            )
+            if (show_storage_selection) continue
           } catch (error: any) {
             vscode.window.showErrorMessage(
               dictionary.error_message.ERROR_SAVING_CONTEXT_TO_FILE(
@@ -562,140 +778,240 @@ export function save_context_command(
             )
           }
         } else {
-          const saved_contexts: SavedContext[] = extContext.workspaceState.get(
+          for (const existingContext of extContext.workspaceState.get(
             SAVED_CONTEXTS_STATE_KEY,
             []
-          )
-
-          if (saved_contexts.length > 0) {
-            for (const existingContext of saved_contexts) {
-              if (are_paths_equal(existingContext.paths, all_prefixed_paths)) {
-                vscode.window.showWarningMessage(
-                  dictionary.warning_message.CONTEXT_WITH_IDENTICAL_PATHS_EXISTS(existingContext.name)
+          ) as SavedContext[]) {
+            if (are_paths_equal(existingContext.paths, all_prefixed_paths)) {
+              vscode.window.showWarningMessage(
+                dictionary.warning_message.CONTEXT_WITH_IDENTICAL_PATHS_EXISTS(
+                  existingContext.name
                 )
-                return
-              }
+              )
+              return
             }
           }
 
-          let context_name: string | undefined
+          let context_selection_done = false
+          while (!context_selection_done) {
+            let saved_contexts: SavedContext[] =
+              extContext.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, [])
 
-          if (saved_contexts.length == 0) {
-            context_name = await vscode.window.showInputBox({
-              prompt: PROMPT_ENTER_CONTEXT_NAME,
-              placeHolder: PLACEHOLDER_CONTEXT_NAME,
-              validateInput: (value) =>
-                value.trim().length > 0 ? null : VALIDATION_CONTEXT_NAME_EMPTY
-            })
+            let context_name: string | undefined
+            let is_new_entry = false
+
+            if (saved_contexts.length == 0) {
+              const name_result = await ask_for_new_context_name(true)
+              if (name_result == 'back') {
+                show_storage_selection = true
+                break
+              }
+              if (!name_result) {
+                return
+              }
+              context_name = name_result
+              is_new_entry = true
+            } else {
+              const existing_context_names = saved_contexts.map(
+                (context) => context.name
+              )
+              const delete_button = {
+                iconPath: new vscode.ThemeIcon('trash'),
+                tooltip: 'Delete'
+              }
+
+              const create_quick_pick_items = (contexts: SavedContext[]) => [
+                { label: LABEL_NEW_SAVED_CONTEXT },
+                { label: '', kind: vscode.QuickPickItemKind.Separator },
+                ...contexts.map((context) => ({
+                  label: context.name,
+                  description: `${context.paths.length} ${
+                    context.paths.length > 1 ? 'paths' : 'path'
+                  }`,
+                  buttons: [delete_button]
+                }))
+              ]
+
+              const quick_pick_contexts = vscode.window.createQuickPick()
+              quick_pick_contexts.items = create_quick_pick_items(saved_contexts)
+              quick_pick_contexts.placeholder =
+                PLACEHOLDER_SELECT_OR_CREATE_CONTEXT
+              quick_pick_contexts.title = 'Save Context'
+              quick_pick_contexts.buttons = [vscode.QuickInputButtons.Back]
+              let is_showing_dialog = false
+              const selected_item = await new Promise<
+                vscode.QuickPickItem | 'back' | undefined
+              >((resolve) => {
+                let is_accepted = false
+                let did_trigger_back = false
+                const disposables: vscode.Disposable[] = []
+
+                disposables.push(
+                  quick_pick_contexts.onDidChangeValue((value) => {
+                    if (value) {
+                      quick_pick_contexts.items =
+                        create_quick_pick_items(saved_contexts).slice(2)
+                    } else {
+                      quick_pick_contexts.items =
+                        create_quick_pick_items(saved_contexts)
+                    }
+                  }),
+                  quick_pick_contexts.onDidTriggerButton((button) => {
+                    if (button === vscode.QuickInputButtons.Back) {
+                      did_trigger_back = true
+                      quick_pick_contexts.hide()
+                      resolve('back')
+                    }
+                  }),
+                  quick_pick_contexts.onDidTriggerItemButton(async (event) => {
+                    const deleted_context_name = event.item.label
+                    const original_contexts = [...saved_contexts]
+                    const updated_contexts = saved_contexts.filter(
+                      (c) => c.name !== deleted_context_name
+                    )
+
+                    await extContext.workspaceState.update(
+                      SAVED_CONTEXTS_STATE_KEY,
+                      updated_contexts
+                    )
+                    saved_contexts =
+                      extContext.workspaceState.get(
+                        SAVED_CONTEXTS_STATE_KEY,
+                        []
+                      ) || []
+                    quick_pick_contexts.items =
+                      create_quick_pick_items(saved_contexts)
+
+                    is_showing_dialog = true
+                    const choice = await vscode.window.showInformationMessage(
+                      dictionary.information_message.DELETED_CONTEXT_FROM_WORKSPACE_STATE(
+                        deleted_context_name
+                      ),
+                      'Undo'
+                    )
+                    is_showing_dialog = false
+
+                    if (choice == 'Undo') {
+                      await extContext.workspaceState.update(
+                        SAVED_CONTEXTS_STATE_KEY,
+                        original_contexts
+                      )
+                      saved_contexts =
+                        extContext.workspaceState.get(
+                          SAVED_CONTEXTS_STATE_KEY,
+                          []
+                        ) || []
+                      vscode.window.showInformationMessage(
+                        dictionary.information_message.RESTORED_CONTEXT(
+                          deleted_context_name
+                        )
+                      )
+                      quick_pick_contexts.items =
+                        create_quick_pick_items(saved_contexts)
+                    }
+                    quick_pick_contexts.show()
+                  }),
+                  quick_pick_contexts.onDidAccept(() => {
+                    is_accepted = true
+                    resolve(quick_pick_contexts.selectedItems[0])
+                    quick_pick_contexts.hide()
+                  }),
+                  quick_pick_contexts.onDidHide(() => {
+                    if (is_showing_dialog) return
+                    if (!is_accepted && !did_trigger_back) {
+                      resolve('back')
+                    }
+                    disposables.forEach((d) => d.dispose())
+                    quick_pick_contexts.dispose()
+                  })
+                )
+                quick_pick_contexts.show()
+              })
+
+              if (!selected_item) {
+                return
+              }
+
+              if (selected_item == 'back') {
+                show_storage_selection = true
+                break // break from while loop
+              }
+
+              if (selected_item.label == LABEL_NEW_SAVED_CONTEXT) {
+                const name_result = await ask_for_new_context_name(true)
+
+                if (name_result == 'back') {
+                  continue // re-show quick_pick_contexts
+                }
+                if (!name_result) {
+                  return
+                }
+                context_name = name_result
+
+                if (existing_context_names.includes(context_name)) {
+                  const overwrite = await vscode.window.showWarningMessage(
+                    dictionary.warning_message.CONFIRM_OVERWRITE_CONTEXT_IN_WORKSPACE_STATE(
+                      context_name
+                    ),
+                    { modal: true },
+                    'Overwrite'
+                  )
+                  if (overwrite != 'Overwrite') {
+                    continue // re-show quick pick
+                  }
+                }
+                is_new_entry = true
+              } else {
+                context_name = selected_item.label
+              }
+            }
 
             if (!context_name) {
-              return
-            }
-          } else {
-            const existing_context_names = saved_contexts.map(
-              (context) => context.name
-            )
-
-            const quick_pick_items = [
-              { label: LABEL_BACK },
-              { label: LABEL_NEW_SAVED_CONTEXT },
-              { label: '', kind: vscode.QuickPickItemKind.Separator },
-              ...saved_contexts.map((context) => ({
-                label: context.name,
-                description: `${context.paths.length} ${
-                  context.paths.length > 1 ? 'paths' : 'path'
-                }`
-              }))
-            ]
-
-            const selected_item = await vscode.window.showQuickPick(
-              quick_pick_items,
-              {
-                placeHolder: PLACEHOLDER_SELECT_OR_CREATE_CONTEXT
-              }
-            )
-
-            if (!selected_item) {
-              return
-            }
-
-            if (selected_item.label === LABEL_BACK) {
-              show_storage_selection = true
+              if (show_storage_selection) break
               continue
             }
 
-            if (selected_item.label == LABEL_NEW_SAVED_CONTEXT) {
-              context_name = await vscode.window.showInputBox({
-                prompt: PROMPT_ENTER_CONTEXT_NAME,
-                placeHolder: PLACEHOLDER_CONTEXT_NAME,
-                validateInput: (value) =>
-                  value.trim().length > 0 ? null : VALIDATION_CONTEXT_NAME_EMPTY
-              })
+            const new_context: SavedContext = {
+              name: context_name,
+              paths: all_prefixed_paths
+            }
 
-              if (!context_name) {
-                return
-              }
+            const existing_index = saved_contexts.findIndex(
+              (ctx) => ctx.name == context_name
+            )
 
-              if (existing_context_names.includes(context_name)) {
-                const overwrite = await vscode.window.showWarningMessage(
-                  dictionary.warning_message.CONFIRM_OVERWRITE_CONTEXT_IN_WORKSPACE_STATE(context_name),
-                  { modal: true },
-                  'Overwrite'
-                )
-                if (overwrite != 'Overwrite') {
-                  return
-                }
-              }
+            const updated_contexts = [...saved_contexts]
+
+            if (existing_index != -1) {
+              updated_contexts[existing_index] = new_context
             } else {
-              context_name = selected_item.label
+              updated_contexts.push(new_context)
+            }
+
+            updated_contexts.sort((a, b) => a.name.localeCompare(b.name))
+
+            try {
+              await extContext.workspaceState.update(
+                SAVED_CONTEXTS_STATE_KEY,
+                updated_contexts
+              )
+              vscode.window.showInformationMessage(
+                dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
+              )
+            } catch (error: any) {
+              vscode.window.showErrorMessage(
+                dictionary.error_message.ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE(
+                  error.message
+                )
+              )
+            }
+            if (is_new_entry) {
+              continue
+            } else {
+              context_selection_done = true
             }
           }
-
-          if (!context_name) {
-            // This case should ideally not be reached if user didn't cancel,
-            // but added for safety.
-            vscode.window.showErrorMessage(
-              dictionary.error_message.CONTEXT_NAME_NOT_PROVIDED
-            )
-            return
-          }
-
-          const new_context: SavedContext = {
-            name: context_name,
-            paths: all_prefixed_paths
-          }
-
-          const existing_index = saved_contexts.findIndex(
-            (ctx) => ctx.name == context_name
-          )
-
-          const updated_contexts = [...saved_contexts]
-
-          if (existing_index != -1) {
-            updated_contexts[existing_index] = new_context
-          } else {
-            updated_contexts.push(new_context)
-          }
-
-          updated_contexts.sort((a, b) => a.name.localeCompare(b.name))
-
-          try {
-            await extContext.workspaceState.update(
-              SAVED_CONTEXTS_STATE_KEY,
-              updated_contexts
-            )
-            vscode.window.showInformationMessage(
-              dictionary.information_message.CONTEXT_SAVED_TO_WORKSPACE_STATE(
-                context_name
-              )
-            )
-          } catch (error: any) {
-            vscode.window.showErrorMessage(
-              dictionary.error_message.ERROR_SAVING_CONTEXT_TO_WORKSPACE_STATE(
-                error.message
-              )
-            )
-          }
+          if (show_storage_selection) continue
         }
       }
     }
