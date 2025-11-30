@@ -277,8 +277,6 @@ export const parse_multiple_files = (params: {
               if (next_line.startsWith('```')) {
                 is_followed_by_code_block = true
                 break
-              } else if (next_line !== '') {
-                break
               }
             }
             if (is_followed_by_code_block) {
