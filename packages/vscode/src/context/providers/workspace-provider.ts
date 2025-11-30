@@ -1311,6 +1311,7 @@ export class WorkspaceProvider
     }
 
     this.user_ignore.add(IGNORE_PATTERNS)
+    this.user_ignore.add('node_modules')
 
     // Clear token caches since exclusions have changed
     this.file_token_counts.clear()
