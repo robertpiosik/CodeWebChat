@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import * as vscode from 'vscode'
 import * as crypto from 'crypto'
 import * as path from 'path'
 import * as os from 'os'
@@ -34,7 +35,10 @@ export const prepare_files_from_original_states = async (params: {
     let current_content = ''
     try {
       if (fs.existsSync(sanitized_file_path)) {
-        current_content = fs.readFileSync(sanitized_file_path, 'utf8')
+        const document = await vscode.workspace.openTextDocument(
+          sanitized_file_path
+        )
+        current_content = document.getText()
       }
     } catch (error) {
       continue

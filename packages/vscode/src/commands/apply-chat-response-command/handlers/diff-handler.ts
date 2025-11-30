@@ -119,7 +119,8 @@ export const store_original_file_states = async (
 
     if (fs.existsSync(safe_path)) {
       try {
-        const content = fs.readFileSync(safe_path, 'utf8')
+        const document = await vscode.workspace.openTextDocument(safe_path)
+        const content = document.getText()
         original_states.push({
           file_path,
           content,
@@ -238,7 +239,8 @@ async function process_modified_files(
     }
 
     if (fs.existsSync(safe_path)) {
-      if (fs.readFileSync(safe_path, 'utf8').trim() == '') {
+      const document = await vscode.workspace.openTextDocument(safe_path)
+      if (document.getText().trim() == '') {
         try {
           const uri = vscode.Uri.file(safe_path)
           const text_editors = vscode.window.visibleTextEditors.filter(

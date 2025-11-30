@@ -178,7 +178,10 @@ export const apply_chat_response_command = (params: {
               let current_content = ''
               try {
                 if (fs.existsSync(sanitized_file_path)) {
-                  current_content = fs.readFileSync(sanitized_file_path, 'utf8')
+                  const document = await vscode.workspace.openTextDocument(
+                    sanitized_file_path
+                  )
+                  current_content = document.getText()
                 }
               } catch (error) {
                 continue

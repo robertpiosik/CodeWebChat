@@ -65,7 +65,8 @@ export const handle_restore_preview = async (
     let original_content = ''
     if (file_exists) {
       try {
-        original_content = fs.readFileSync(safe_path, 'utf8')
+        const document = await vscode.workspace.openTextDocument(safe_path)
+        original_content = document.getText()
       } catch (e) {
         Logger.warn({
           function_name: 'handle_restore_review',

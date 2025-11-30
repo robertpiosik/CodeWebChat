@@ -130,7 +130,8 @@ export const setup_workspace_listeners = (
           is_new = true
         } else {
           try {
-            original_content = fs.readFileSync(doc.uri.fsPath, 'utf8')
+            const contentBytes = await vscode.workspace.fs.readFile(doc.uri)
+            original_content = Buffer.from(contentBytes).toString('utf8')
           } catch (e) {
             is_new = true // File on disk does not exist, but buffer does.
           }
@@ -280,7 +281,7 @@ export const setup_workspace_listeners = (
     }
   })
 
-  const file_created_listener = vscode.workspace.onDidCreateFiles((event) => {
+  const file_created_listener = vscode.workspace.onDidCreateFiles(async (event) => {
     for (const uri of event.files) {
       if (uri.scheme !== 'file') continue
 
@@ -295,7 +296,8 @@ export const setup_workspace_listeners = (
       // Read the content of the newly created file (may be empty)
       let new_content = ''
       try {
-        new_content = fs.readFileSync(uri.fsPath, 'utf8')
+        const doc = await vscode.workspace.openTextDocument(uri)
+        new_content = doc.getText()
       } catch (e) {
         new_content = ''
       }
@@ -361,7 +363,7 @@ export const setup_workspace_listeners = (
     }
   })
 
-  const file_renamed_listener = vscode.workspace.onDidRenameFiles((event) => {
+  const file_renamed_listener = vscode.workspace.onDidRenameFiles(async (event) => {
     for (const { oldUri, newUri } of event.files) {
       if (oldUri.scheme !== 'file' || newUri.scheme !== 'file') continue
 
@@ -396,7 +398,8 @@ export const setup_workspace_listeners = (
       // Read new file content (post-rename)
       let new_content = ''
       try {
-        new_content = fs.readFileSync(newUri.fsPath, 'utf8')
+        const doc = await vscode.workspace.openTextDocument(newUri)
+        new_content = doc.getText()
       } catch {
         new_content = ''
       }
