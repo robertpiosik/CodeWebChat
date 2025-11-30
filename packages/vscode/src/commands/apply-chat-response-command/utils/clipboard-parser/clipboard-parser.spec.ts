@@ -558,6 +558,73 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('extracts file path from backticks when there are no intermediate lines before code block', () => {
+      const test_case = 'path-in-backticks-no-intermediate-empty-lines'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/main.py',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
+    it('extracts file path from backticks when there are only empty intermediate lines before code block', () => {
+      const test_case = 'path-in-backticks-with-intermediate-empty-lines'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/main.py',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
+    it('does not extract file path from backticks when there is intermediate text before code block', () => {
+      const test_case = 'path-in-backticks-with-intermediate-text'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt').trim()
+      })
+    })
+
+    it('extracts file path from commented backticks even with intermediate text before code block', () => {
+      const test_case = 'path-in-backticks-comment-with-intermediate-text'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'file',
+        file_path: 'src/main.py',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
+    })
+
     it('handles path duplicated in empty code block', () => {
       const test_case = 'path-duplicated-in-empty-code-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

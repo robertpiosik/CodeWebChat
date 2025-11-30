@@ -1,5 +1,4 @@
-
-// `src/hello-world.ts`
+### New File: `src/hello-world.ts`
 
 This new file
 
