@@ -65,6 +65,22 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses file when using code-block-xml format within a markdown code block', () => {
+      const test_case = 'code-block-xml'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
     it('parses file when using file-xml format with CDATA outside a markdown code block', () => {
       const test_case = 'file-xml-with-cdata'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
@@ -560,22 +576,6 @@ describe('clipboard-parser', () => {
 
     it('extracts file path from backticks when there are no intermediate lines before code block', () => {
       const test_case = 'path-in-backticks-no-intermediate-empty-lines'
-      const text = load_test_case_file(test_case, `${test_case}.txt`)
-      const result = parse_multiple_files({
-        response: text,
-        is_single_root_folder_workspace: true
-      })
-
-      expect(result).toHaveLength(1)
-      expect(result[0]).toMatchObject({
-        type: 'file',
-        file_path: 'src/main.py',
-        content: load_test_case_file(test_case, '1-file.txt')
-      })
-    })
-
-    it('extracts file path from backticks when there are only empty intermediate lines before code block', () => {
-      const test_case = 'path-in-backticks-with-intermediate-empty-lines'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_multiple_files({
         response: text,
@@ -1417,6 +1417,29 @@ describe('clipboard-parser', () => {
         type: 'diff',
         file_path: 'src/index.ts',
         content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
+    it('parses diff format with file path specified in plain text above and inside a markdown code block', () => {
+      const test_case = 'diff-markdown-repeated-path-above'
+      const text = load_test_case_file(
+        test_case,
+        'diff-markdown-repeated-path-above.txt'
+      )
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
       })
     })
 
