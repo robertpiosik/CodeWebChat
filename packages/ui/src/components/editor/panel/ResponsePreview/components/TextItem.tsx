@@ -24,12 +24,17 @@ export const TextItem: FC<Props> = (props) => {
 
   const handle_mouse_move = () => {
     mouse_moved.current = true
-
-   
   }
 
   const handle_mouse_up = () => {
-    if (!mouse_moved.current && !has_selection.current) {
+    const selection = window.getSelection()
+    const has_selection_now =
+      (selection && selection.toString().length > 0) || false
+
+    if (
+      (!mouse_moved.current && !has_selection.current) ||
+      (mouse_moved.current && !has_selection_now)
+    ) {
       props.on_toggle(header_ref.current!)
     }
   }
