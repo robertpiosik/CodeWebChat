@@ -196,12 +196,19 @@ export const parse_multiple_files = (params: {
 
             // Avoid matching file paths that are part of a sentence.
             if (!(/[a-zA-Z]/.test(before) && /[a-zA-Z]/.test(after))) {
-              const is_markdown_header = line.trim().startsWith('#')
+              const trimmed_line = line.trim()
+              const is_comment_or_header =
+                trimmed_line.startsWith('#') ||
+                trimmed_line.startsWith('//') ||
+                trimmed_line.startsWith('/*') ||
+                trimmed_line.startsWith('*') ||
+                trimmed_line.startsWith('--') ||
+                trimmed_line.startsWith('<!--')
               let is_followed_by_code_block = false
               for (let j = i + 1; j < lines.length; j++) {
                 const next_line = lines[j].trim()
                 if (next_line.startsWith('```')) {
-                  if (is_markdown_header) {
+                  if (is_comment_or_header) {
                     is_followed_by_code_block = true
                   } else {
                     let all_intermediate_lines_empty = true
