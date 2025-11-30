@@ -239,6 +239,7 @@ export const parse_multiple_files = (params: {
         last_seen_file_path_comment = extracted_filename
       } else {
         // Check if this line is a plain file path followed by a code block
+        let is_lone_path_on_this_line = false
         if (!last_seen_file_path_comment) {
           let trimmed = line.trim()
 
@@ -275,10 +276,11 @@ export const parse_multiple_files = (params: {
             }
             if (is_followed_by_code_block) {
               last_seen_file_path_comment = trimmed
+              is_lone_path_on_this_line = true
             }
           }
         }
-        if (!last_seen_file_path_comment) {
+        if (!is_lone_path_on_this_line) {
           current_text_block += line + '\n'
         }
       }
