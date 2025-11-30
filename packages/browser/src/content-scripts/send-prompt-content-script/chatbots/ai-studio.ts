@@ -107,19 +107,18 @@ export const ai_studio: Chatbot = {
         function_name: 'set_options',
         log_message: 'Thinking toggle not found'
       })
-      return
-    }
-
-    if (
-      options.includes('disable-thinking') &&
-      supported_options?.['disable-thinking']
-    ) {
-      if (thinking_toggle.getAttribute('aria-checked') == 'true') {
-        thinking_toggle.click()
-      }
     } else {
-      if (thinking_toggle?.getAttribute('aria-checked') == 'false') {
-        thinking_toggle.click()
+      if (
+        options.includes('disable-thinking') &&
+        supported_options?.['disable-thinking']
+      ) {
+        if (thinking_toggle.getAttribute('aria-checked') == 'true') {
+          thinking_toggle.click()
+        }
+      } else {
+        if (thinking_toggle?.getAttribute('aria-checked') == 'false') {
+          thinking_toggle.click()
+        }
       }
     }
 
