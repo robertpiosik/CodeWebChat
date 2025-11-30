@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-Super fast AI coding for VS Code, Cursor, and others. Free, open-source, and privacy-first.
+Superfast AI coding for VS Code, Cursor, and others. Free, open-source, and privacy-first.
 
 ✅ **Send messages anywhere**
 
@@ -20,7 +20,7 @@ Super fast AI coding for VS Code, Cursor, and others. Free, open-source, and pri
 
 👨‍⚖️ **Respect to chatbots' Terms of Use**
 
-Code Web Chat helps you use your favorite coding web tools like ChatGPT's canvas. The idea to initialize chatbots is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
+Code Web Chat helps you use your favorite coding web tools like ChatGPT's projects. The idea to initialize chatbots is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
 
 🧐 **The limitations of LLMs**
 
