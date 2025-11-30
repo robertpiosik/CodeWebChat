@@ -10,7 +10,7 @@ export const grok: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('textarea')) {
+        if (document.querySelector('.is-empty')) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -62,7 +62,7 @@ export const grok: Chatbot = {
     model_selector_button.dispatchEvent(
       new PointerEvent('pointerdown', { bubbles: true })
     )
-    await new Promise((r) => requestAnimationFrame(r))
+    await new Promise((r) => setTimeout(r, 150))
 
     const dropdown = document.querySelector(
       'div[data-radix-popper-content-wrapper]'

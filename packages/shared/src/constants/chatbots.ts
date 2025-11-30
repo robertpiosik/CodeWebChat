@@ -110,19 +110,15 @@ export const CHATBOTS = {
     url: 'https://github.com/copilot',
     models: {
       'gpt-5-mini': { label: 'GPT-5 mini' },
-      'o3-mini': { label: 'o3-mini' },
-      'gemini-2.0-flash': { label: 'Gemini 2.0 Flash' },
-      'o4-mini': { label: 'o4-mini' },
+      'grok-code-fast-1': { label: 'Grok Code Fast 1' },
       'gpt-4.1': { label: 'GPT-4.1' },
       'gpt-4o': { label: 'GPT-4o' },
-      'claude-sonnet-3.5': { label: 'Claude Sonnet 3.5' },
-      'claude-sonnet-3.7': { label: 'Claude Sonnet 3.7' },
-      'claude-sonnet-4': { label: 'Claude Sonnet 4' },
-      'gemini-2.5-pro': { label: 'Gemini 2.5 Pro' },
-      o3: { label: 'o3' },
+      'claude-haiku-4.5': { label: 'Claude Haiku 4.5' },
       'gpt-5': { label: 'GPT-5' },
-      'claude-sonnet-3.7-thinking': { label: 'Claude Sonnet 3.7 Thinking' },
-      'claude-opus-4': { label: 'Claude Opus 4' }
+      'claude-sonnet-4': { label: 'Claude Sonnet 4' },
+      'claude-sonnet-4.5': { label: 'Claude Sonnet 4.5' },
+      'claude-opus-4.1': { label: 'Claude Opus 4.1' },
+      'gemini-2.5-pro': { label: 'Gemini 2.5 Pro' }
     }
   } as Chatbot,
   HuggingChat: {
@@ -136,7 +132,7 @@ export const CHATBOTS = {
       auto: { label: 'Auto' },
       fast: { label: 'Fast' },
       expert: { label: 'Expert' },
-      'grok-4-fast': { label: 'Grok 4 Fast' },
+      'grok-4-1': { label: 'Grok 4.1' },
       heavy: { label: 'Heavy' }
     }
   } as Chatbot,

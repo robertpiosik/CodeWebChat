@@ -33,9 +33,8 @@ export const github_copilot: Chatbot = {
       return
     }
 
-    const model_label_to_find = CHATBOTS['GitHub Copilot'].models?.[
-      model
-    ]?.label
+    const model_label_to_find =
+      CHATBOTS['GitHub Copilot'].models?.[model]?.label
     if (!model_label_to_find) return
 
     if (model_selector_button.textContent?.includes(model_label_to_find)) {
@@ -43,17 +42,16 @@ export const github_copilot: Chatbot = {
     }
 
     model_selector_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
+    await new Promise((resolve) => setTimeout(resolve, 150))
 
     const options_container = document.querySelector(
-      'div[data-variant="anchored"][data-width-medium]'
+      'div[data-component="AnchoredOverlay"][data-width-medium]'
     )
     if (!options_container) {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model options container not found'
       })
-      // click again to close
       model_selector_button.click()
       return
     }
