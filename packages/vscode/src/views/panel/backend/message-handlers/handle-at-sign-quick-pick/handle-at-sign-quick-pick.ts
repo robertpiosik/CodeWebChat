@@ -62,8 +62,9 @@ const at_sign_quick_pick = async (params: {
   const selected_path_item = await vscode.window.showQuickPick(
     quick_pick_items_to_show,
     {
-      placeHolder: 'Select a path to place in the input field',
-      matchOnDescription: true
+      placeHolder: 'Select a path to place in the prompt field',
+      matchOnDescription: true,
+      title: 'Reference File'
     }
   )
 
