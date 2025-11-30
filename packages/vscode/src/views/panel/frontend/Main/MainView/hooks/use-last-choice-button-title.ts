@@ -39,7 +39,7 @@ export const use_last_choice_button_title = (params: {
                 return model || ''
               }
               const model_display_name = model
-                ? (CHATBOTS[chatbot].models as any)[model]?.label || model
+                ? CHATBOTS[chatbot].models?.[model]?.label || model
                 : null
               if (is_unnamed) {
                 return model_display_name || ''

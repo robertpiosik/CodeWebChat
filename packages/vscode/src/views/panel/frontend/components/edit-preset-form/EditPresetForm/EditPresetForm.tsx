@@ -62,7 +62,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const models = useMemo(() => chatbot_config?.models || {}, [chatbot_config])
   const model_info = useMemo(
     () =>
-      chatbot && model ? (CHATBOTS[chatbot].models as any)[model] : undefined,
+      chatbot && model ? CHATBOTS[chatbot].models?.[model] : undefined,
     [chatbot, model]
   )
 

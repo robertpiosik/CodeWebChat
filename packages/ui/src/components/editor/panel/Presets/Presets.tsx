@@ -182,7 +182,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
               const model_display_name =
                 model && chatbot
-                  ? (CHATBOTS[chatbot].models as any)[model]?.label || model
+                  ? CHATBOTS[chatbot].models?.[model]?.label || model
                   : null
 
               if (is_unnamed) {
@@ -774,7 +774,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   }
 
                   const model_display_name = model
-                    ? (CHATBOTS[chatbot].models as any)[model]?.label || model
+                    ? CHATBOTS[chatbot].models?.[model]?.label || model
                     : null
 
                   if (is_unnamed) {

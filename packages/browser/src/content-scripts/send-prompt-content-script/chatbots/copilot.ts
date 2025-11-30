@@ -33,7 +33,7 @@ export const copilot: Chatbot = {
       return
     }
 
-    const model_label_to_find = (CHATBOTS['Copilot'].models as any)[model]
+    const model_label_to_find = CHATBOTS['Copilot'].models?.[model]
       ?.label
     if (!model_label_to_find) return
 

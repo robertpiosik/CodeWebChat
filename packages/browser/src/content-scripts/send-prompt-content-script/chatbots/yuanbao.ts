@@ -43,7 +43,7 @@ export const yuanbao: Chatbot = {
       ) as HTMLDivElement
       if (
         model_name_element?.textContent ==
-        (CHATBOTS['Yuanbao'].models as any)[model]?.label
+        CHATBOTS['Yuanbao'].models?.[model]?.label
       ) {
         button.click()
         break

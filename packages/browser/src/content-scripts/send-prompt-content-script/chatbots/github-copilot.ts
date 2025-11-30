@@ -33,7 +33,7 @@ export const github_copilot: Chatbot = {
       return
     }
 
-    const model_label_to_find = (CHATBOTS['GitHub Copilot'].models as any)[
+    const model_label_to_find = CHATBOTS['GitHub Copilot'].models?.[
       model
     ]?.label
     if (!model_label_to_find) return

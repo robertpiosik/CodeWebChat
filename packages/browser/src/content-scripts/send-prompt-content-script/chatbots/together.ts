@@ -22,7 +22,7 @@ export const together: Chatbot = {
   set_model: async (model?: string) => {
     if (!model) return
 
-    const model_label_to_find = (CHATBOTS['Together'].models as any)[model]
+    const model_label_to_find = CHATBOTS['Together'].models?.[model]
       ?.label
     if (!model_label_to_find) return
 

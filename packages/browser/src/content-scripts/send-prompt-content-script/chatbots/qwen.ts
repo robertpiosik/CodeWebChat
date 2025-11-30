@@ -44,7 +44,7 @@ export const qwen: Chatbot = {
 
     if (
       model_selector_button.textContent?.trim() ==
-      (CHATBOTS['Qwen'].models as any)[model]?.label
+      CHATBOTS['Qwen'].models?.[model]?.label
     ) {
       return
     }
@@ -73,7 +73,7 @@ export const qwen: Chatbot = {
       if (
         model_name_element &&
         model_name_element.textContent ===
-          (CHATBOTS['Qwen'].models as any)[model]?.label
+          CHATBOTS['Qwen'].models?.[model]?.label
       ) {
         button.click()
         break

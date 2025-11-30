@@ -32,7 +32,7 @@ export const claude: Chatbot = {
       return
     }
 
-    const model_name_to_find = (CHATBOTS['Claude'].models as any)[model]?.label
+    const model_name_to_find = CHATBOTS['Claude'].models?.[model]?.label
     if (!model_name_to_find) {
       report_initialization_error({
         function_name: 'set_model',

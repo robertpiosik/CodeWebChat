@@ -20,7 +20,11 @@ export const gemini: Chatbot = {
     })
   },
   set_model: async (model?: string) => {
-    if (model && CHATBOTS['Gemini'].models && model in CHATBOTS['Gemini'].models) {
+    if (
+      model &&
+      CHATBOTS['Gemini'].models &&
+      model in CHATBOTS['Gemini'].models
+    ) {
       const model_selector_trigger = document.querySelector(
         'bard-mode-switcher button'
       ) as HTMLButtonElement
@@ -32,7 +36,7 @@ export const gemini: Chatbot = {
         return
       }
 
-      const model_label = (CHATBOTS['Gemini'].models as any)[model].label
+      const model_label = CHATBOTS['Gemini'].models[model].label
       if (model_selector_trigger.textContent == model_label) {
         return
       }
@@ -50,16 +54,24 @@ export const gemini: Chatbot = {
         return
       }
       const model_options = Array.from(menu_content.querySelectorAll('button'))
+      const target_data_test_id = model_label.toLowerCase()
+      let found = false
       for (const option of model_options) {
-        const name_element = option.querySelector(
-          '.title-and-description > span:first-child'
-        )
-        if (name_element && name_element.textContent?.trim() == model_label) {
-          ;(option as HTMLElement).click()
-          await new Promise((r) => requestAnimationFrame(r))
+        if (
+          option.getAttribute('data-test-id')?.includes(target_data_test_id)
+        ) {
+          option.click()
+          found = true
           break
         }
       }
+      if (!found) {
+        report_initialization_error({
+          function_name: 'set_model',
+          log_message: `Model option for "${model_label}" not found`
+        })
+      }
+      await new Promise((r) => requestAnimationFrame(r))
     }
   },
   set_options: async (options?: string[]) => {

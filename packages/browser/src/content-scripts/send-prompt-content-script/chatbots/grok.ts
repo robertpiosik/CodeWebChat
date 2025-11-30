@@ -52,7 +52,7 @@ export const grok: Chatbot = {
       return
     }
 
-    const model_label_to_find = (CHATBOTS['Grok'].models as any)[model]?.label
+    const model_label_to_find = CHATBOTS['Grok'].models?.[model]?.label
     if (!model_label_to_find) return
 
     if (model_selector_button.textContent?.includes(model_label_to_find)) {
