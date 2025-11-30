@@ -23,7 +23,7 @@ export const copilot: Chatbot = {
     if (!model) return
 
     const model_selector_button = document.querySelector(
-      'button[data-testid="composer-chat-mode-quick-button"]'
+      'button[data-testid="composer-chat-mode-smart-button"]'
     ) as HTMLButtonElement
     if (!model_selector_button) {
       report_initialization_error({

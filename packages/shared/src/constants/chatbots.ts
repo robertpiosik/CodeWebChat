@@ -84,10 +84,9 @@ export const CHATBOTS = {
   Copilot: {
     url: 'https://copilot.microsoft.com/',
     models: {
+      'smart-gpt-5': { label: 'Smart (GPT-5)' },
       'quick-response': { label: 'Quick response' },
       'think-deeper': { label: 'Think Deeper' },
-      'study-and-learn': { label: 'Study and learn' },
-      'smart-gpt-5': { label: 'Smart (GPT-5)' },
       search: { label: 'Search' }
     }
   } as Chatbot,
