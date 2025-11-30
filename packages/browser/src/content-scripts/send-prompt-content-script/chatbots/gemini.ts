@@ -20,7 +20,7 @@ export const gemini: Chatbot = {
     })
   },
   set_model: async (model?: string) => {
-    if (model && model in CHATBOTS['Gemini'].models) {
+    if (model && CHATBOTS['Gemini'].models && model in CHATBOTS['Gemini'].models) {
       const model_selector_trigger = document.querySelector(
         'bard-mode-switcher button'
       ) as HTMLButtonElement
@@ -67,7 +67,7 @@ export const gemini: Chatbot = {
     const supported_options = CHATBOTS['Gemini'].supported_options
     if (
       options.includes('temporary-chat') &&
-      supported_options['temporary-chat']
+      supported_options?.['temporary-chat']
     ) {
       const temp_chat_button_selector =
         'button[data-test-id="temp-chat-button"]'

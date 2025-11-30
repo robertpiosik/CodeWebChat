@@ -17,7 +17,7 @@ export const qwen: Chatbot = {
         if (
           model_selector_button &&
           model_selector_button.textContent &&
-          Object.values(CHATBOTS['Qwen'].models)
+          Object.values(CHATBOTS['Qwen'].models ?? {})
             .map((model) => model.label)
             .includes(model_selector_button.textContent.trim())
         ) {
@@ -85,7 +85,7 @@ export const qwen: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['Qwen'].supported_options
     for (const option of options) {
-      if (option == 'thinking' && supported_options['thinking']) {
+      if (option == 'thinking' && supported_options?.['thinking']) {
         const buttons = document.querySelectorAll(
           '.chat-message-input button.chat-input-feature-btn'
         ) as NodeListOf<HTMLButtonElement>
@@ -94,7 +94,7 @@ export const qwen: Chatbot = {
             button.click()
           }
         }
-      } else if (option == 'search' && supported_options['search']) {
+      } else if (option == 'search' && supported_options?.['search']) {
         const search_button = document.querySelector(
           'button.websearch_button'
         ) as HTMLButtonElement
@@ -106,7 +106,7 @@ export const qwen: Chatbot = {
           return
         }
         search_button.click()
-      } else if (option == 'temporary' && supported_options['temporary']) {
+      } else if (option == 'temporary' && supported_options?.['temporary']) {
         const model_selector_button = document.querySelector(
           'button#model-selector-0-button'
         ) as HTMLElement

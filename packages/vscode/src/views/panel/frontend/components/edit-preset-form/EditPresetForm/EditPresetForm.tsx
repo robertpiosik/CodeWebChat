@@ -140,7 +140,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
 
   const handle_chatbot_change = (new_chatbot: keyof typeof CHATBOTS) => {
     set_chatbot(new_chatbot)
-    set_model(Object.keys(CHATBOTS[new_chatbot].models)[0] || undefined)
+    set_model(Object.keys(CHATBOTS[new_chatbot].models ?? {})[0] || undefined)
     set_port(undefined)
     set_new_url(undefined)
     set_temperature(

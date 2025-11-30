@@ -42,7 +42,7 @@ export const chatgpt: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['ChatGPT'].supported_options
     for (const option of options) {
-      if (option == 'temporary' && supported_options['temporary']) {
+      if (option == 'temporary' && supported_options?.['temporary']) {
         const buttons = document.querySelectorAll('button')
         let found = false
         for (const item of Array.from(buttons)) {
@@ -73,7 +73,7 @@ export const chatgpt: Chatbot = {
             // Don't show alert because temporary mode doesn't work in projects (url override)
           })
         }
-      } else if (option == 'thinking' && supported_options['thinking']) {
+      } else if (option == 'thinking' && supported_options?.['thinking']) {
         const plus_button = document.querySelector(
           'button[data-testid="composer-plus-btn"]'
         ) as HTMLButtonElement

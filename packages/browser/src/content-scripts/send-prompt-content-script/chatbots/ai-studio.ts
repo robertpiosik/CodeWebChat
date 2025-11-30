@@ -112,7 +112,7 @@ export const ai_studio: Chatbot = {
 
     if (
       options.includes('disable-thinking') &&
-      supported_options['disable-thinking']
+      supported_options?.['disable-thinking']
     ) {
       if (thinking_toggle.getAttribute('aria-checked') == 'true') {
         thinking_toggle.click()
@@ -123,13 +123,13 @@ export const ai_studio: Chatbot = {
       }
     }
 
-    if (options.includes('hide-panel') && supported_options['hide-panel']) {
+    if (options.includes('hide-panel') && supported_options?.['hide-panel']) {
       sessionStorage.setItem('should-hide-panel', 'true')
     }
 
     if (
       options.includes('temporary-chat') &&
-      supported_options['temporary-chat']
+      supported_options?.['temporary-chat']
     ) {
       const temp_toggle = document.querySelector(
         'ms-incognito-mode-toggle > button'
@@ -146,7 +146,7 @@ export const ai_studio: Chatbot = {
       }
     }
 
-    if (supported_options['grounding-with-google-search']) {
+    if (supported_options?.['grounding-with-google-search']) {
       const grounding_button = document.querySelector(
         'div[data-test-id="searchAsAToolTooltip"] button'
       ) as HTMLElement
@@ -164,7 +164,7 @@ export const ai_studio: Chatbot = {
       }
     }
 
-    if (options.includes('url-context') && supported_options['url-context']) {
+    if (options.includes('url-context') && supported_options?.['url-context']) {
       const url_context_button = document.querySelector(
         'div[data-test-id="browseAsAToolTooltip"] button'
       ) as HTMLElement

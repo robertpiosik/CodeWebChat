@@ -55,7 +55,7 @@ export const yuanbao: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['Yuanbao'].supported_options
 
-    if (supported_options['deep-think']) {
+    if (supported_options?.['deep-think']) {
       const deep_think_button = document.querySelector(
         'button[dt-button-id="deep_think"]'
       ) as HTMLButtonElement
@@ -73,7 +73,7 @@ export const yuanbao: Chatbot = {
       }
     }
 
-    if (supported_options['search']) {
+    if (supported_options?.['search']) {
       const search_button = document.querySelector(
         'button[dt-button-id="online_search"]'
       ) as HTMLButtonElement

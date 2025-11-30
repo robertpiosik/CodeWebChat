@@ -23,7 +23,7 @@ export const grok: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['Grok'].supported_options
     for (const option of options) {
-      if (option == 'private' && supported_options['private']) {
+      if (option == 'private' && supported_options?.['private']) {
         const private_link = document.querySelector(
           'a[href="/c#private"]'
         ) as HTMLAnchorElement

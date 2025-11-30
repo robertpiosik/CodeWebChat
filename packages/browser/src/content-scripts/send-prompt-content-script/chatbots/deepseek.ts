@@ -69,11 +69,11 @@ export const deepseek: Chatbot = {
 
     await new Promise((r) => requestAnimationFrame(r))
 
-    const supported_options = CHATBOTS.DeepSeek.supported_options || {}
+    const supported_options = CHATBOTS.DeepSeek.supported_options
     for (const option of options) {
-      if (option === 'deep-think' && supported_options['deep-think']) {
+      if (option === 'deep-think' && supported_options?.['deep-think']) {
         deep_think_button.click()
-      } else if (option === 'search' && supported_options.search) {
+      } else if (option === 'search' && supported_options?.search) {
         search_button.click()
       }
     }

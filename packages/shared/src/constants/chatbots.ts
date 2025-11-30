@@ -8,12 +8,12 @@ type Chatbot = {
     supports_thinking_budget?: boolean
     supports_url_override?: boolean
     url_override_label?: string
-    default_system_instructions: string
+    default_system_instructions?: string
     default_top_p?: number
-    supported_options: {
+    supported_options?: {
       [option: string]: string
     }
-    models: {
+    models?: {
       [model: string]: {
         label: string
         disabled_options?: string[]
@@ -65,29 +65,24 @@ export const CHATBOTS = {
     url: 'https://chatgpt.com/',
     supports_url_override: true,
     url_override_label: 'Project URL',
-    default_system_instructions: '',
     supported_options: {
       temporary: 'Temporary',
       thinking: 'Thinking (free plans)'
-    },
-    models: {}
+    }
   } as Chatbot,
   Claude: {
     url: 'https://claude.ai/new',
-    default_system_instructions: '',
     supported_options: {
       'incognito-chat': 'Incognito chat'
     },
     models: {
       'sonnet-4-5': { label: 'Sonnet 4.5' },
       'haiku-4-5': { label: 'Haiku 4.5' },
-      'opus-4-1': { label: 'Opus 4.1' }
+      'opus-4-5': { label: 'Opus 4.5' }
     }
   } as Chatbot,
   Copilot: {
     url: 'https://copilot.microsoft.com/',
-    default_system_instructions: '',
-    supported_options: {},
     models: {
       'quick-response': { label: 'Quick response' },
       'think-deeper': { label: 'Think Deeper' },
@@ -98,20 +93,15 @@ export const CHATBOTS = {
   } as Chatbot,
   DeepSeek: {
     url: 'https://chat.deepseek.com/',
-    default_system_instructions: '',
-    supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
-    models: {}
+    supported_options: { 'deep-think': 'DeepThink', search: 'Search' }
   } as Chatbot,
   Doubao: {
     url: 'https://www.doubao.com/chat/',
-    default_system_instructions: '',
-    supported_options: { 'deep-thinking': 'Deep Thinking' },
-    models: {}
+    supported_options: { 'deep-thinking': 'Deep Thinking' }
   } as Chatbot,
   Gemini: {
     url: 'https://gemini.google.com/app',
     supported_options: { 'temporary-chat': 'Temporary chat' },
-    default_system_instructions: '',
     models: {
       fast: { label: 'Fast' },
       thinking: { label: 'Thinking' }
@@ -119,8 +109,6 @@ export const CHATBOTS = {
   } as Chatbot,
   'GitHub Copilot': {
     url: 'https://github.com/copilot',
-    default_system_instructions: '',
-    supported_options: {},
     models: {
       'gpt-5-mini': { label: 'GPT-5 mini' },
       'o3-mini': { label: 'o3-mini' },
@@ -140,14 +128,10 @@ export const CHATBOTS = {
   } as Chatbot,
   HuggingChat: {
     url: 'https://huggingface.co/chat/',
-    supports_user_provided_model: true,
-    default_system_instructions: '',
-    supported_options: {},
-    models: {}
+    supports_user_provided_model: true
   } as Chatbot,
   Grok: {
     url: 'https://grok.com/',
-    default_system_instructions: '',
     supported_options: { private: 'Private' },
     models: {
       auto: { label: 'Auto' },
@@ -158,25 +142,17 @@ export const CHATBOTS = {
     }
   } as Chatbot,
   Kimi: {
-    url: 'https://www.kimi.com/',
-    default_system_instructions: '',
-    supported_options: {},
-    models: {}
+    url: 'https://www.kimi.com/'
   } as Chatbot,
   Minimax: {
-    url: 'https://agent.minimax.io/',
-    default_system_instructions: '',
-    supported_options: {},
-    models: {}
+    url: 'https://agent.minimax.io/'
   } as Chatbot,
   Mistral: {
     url: 'https://chat.mistral.ai/chat',
-    default_system_instructions: '',
     supported_options: {
       incognito: 'Incognito mode',
       think: 'Think'
-    },
-    models: {}
+    }
   } as Chatbot,
   // Not supported until they fix code blocks in copied chat responses
   // Meta: {
@@ -199,9 +175,7 @@ export const CHATBOTS = {
     supports_user_provided_model: true,
     supports_user_provided_port: true,
     default_system_instructions: "You're a helpful coding assistant.",
-    supported_options: {},
-    default_top_p: 0.9,
-    models: {}
+    default_top_p: 0.9
   } as Chatbot,
   OpenRouter: {
     url: 'https://openrouter.ai/chat',
@@ -212,22 +186,18 @@ export const CHATBOTS = {
     supported_options: {
       'disable-reasoning': 'Disable reasoning (for hybrid models)'
     },
-    default_top_p: 1,
-    models: {}
+    default_top_p: 1
   } as Chatbot,
   Perplexity: {
     url: 'https://www.perplexity.ai/',
     supports_url_override: true,
     url_override_label: 'Space URL',
-    default_system_instructions: '',
     supported_options: {
       search: 'Search'
-    },
-    models: {}
+    }
   } as Chatbot,
   Qwen: {
     url: 'https://chat.qwen.ai/',
-    default_system_instructions: '',
     supported_options: {
       thinking: 'Thinking',
       search: 'Search',
@@ -246,8 +216,6 @@ export const CHATBOTS = {
   } as Chatbot,
   Together: {
     url: 'https://chat.together.ai/',
-    default_system_instructions: '',
-    supported_options: {},
     models: {
       'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
       'deepseek-v3-0324': { label: 'DeepSeek V3 (0324)' },
@@ -261,7 +229,6 @@ export const CHATBOTS = {
   } as Chatbot,
   Yuanbao: {
     url: 'https://yuanbao.tencent.com/chat',
-    default_system_instructions: '',
     supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
     models: {
       deepseek: { label: 'DeepSeek' },
@@ -270,10 +237,8 @@ export const CHATBOTS = {
   } as Chatbot,
   'Z.AI': {
     url: 'https://chat.z.ai/',
-    default_system_instructions: '',
     supported_options: {
       'deep-think': 'Deep Think'
-    },
-    models: {}
+    }
   } as Chatbot,
 }

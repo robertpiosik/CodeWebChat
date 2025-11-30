@@ -27,7 +27,7 @@ export const handle_create_preset = async (
   const new_preset: ConfigPresetFormat = {
     name: new_name,
     chatbot: 'AI Studio',
-    model: Object.keys(CHATBOTS['AI Studio'].models)[0],
+    model: Object.keys(CHATBOTS['AI Studio'].models ?? {})[0],
     temperature: 0.5,
     systemInstructions: CHATBOTS['AI Studio'].default_system_instructions
   }
