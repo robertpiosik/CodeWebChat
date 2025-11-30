@@ -10,7 +10,7 @@ Super fast AI coding for VS Code, Cursor, and others. Free, open-source, and pri
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Apply responses**—changes integration in whole, truncated and diff edit formats \
-✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
+✅ **Fully featured**—code completions, commit messages, checkpoints, and more
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
