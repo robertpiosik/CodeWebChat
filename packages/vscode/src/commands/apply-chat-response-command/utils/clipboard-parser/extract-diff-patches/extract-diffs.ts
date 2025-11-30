@@ -1,4 +1,3 @@
-// packages/vscode/src/commands/apply-chat-response-command/utils/clipboard-parser/extract-diff-patches/extract-diffs.ts
 import { Logger } from '@shared/utils/logger'
 import { extract_path_from_line_of_code } from '@shared/utils/extract-path-from-line-of-code'
 import { extract_workspace_and_path } from '../clipboard-parser'
@@ -592,6 +591,22 @@ const extract_all_code_block_patches = (params: {
           if (!prev_line) continue
 
           let extracted = extract_path_from_line_of_code(prev_line)
+          if (!extracted) {
+            const xml_match = prev_line.match(/^<[^>]+>([^<]+)<\/[^>]+>$/)
+            if (xml_match && xml_match[1]) {
+              const potential_path = xml_match[1].trim()
+              if (
+                potential_path &&
+                (potential_path.includes('/') ||
+                  potential_path.includes('\\') ||
+                  potential_path.includes('.')) &&
+                !potential_path.includes(' ')
+              ) {
+                extracted = potential_path
+              }
+            }
+          }
+
           if (!extracted) {
             const match = prev_line.match(/`([^`]+)`/)
             if (match && match[1]) {

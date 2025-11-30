@@ -1,26 +1,26 @@
 type Chatbot = {
-    url: string
-    supports_custom_temperature?: boolean
-    supports_system_instructions?: boolean
-    supports_user_provided_model?: boolean
-    supports_user_provided_port?: boolean
-    supports_reasoning_effort?: boolean
-    supports_thinking_budget?: boolean
-    supports_url_override?: boolean
-    url_override_label?: string
-    default_system_instructions?: string
-    default_top_p?: number
-    supported_options?: {
-      [option: string]: string
-    }
-    models?: {
-      [model: string]: {
-        label: string
-        disabled_options?: string[]
-        supported_reasoning_efforts?: string[]
-      }
+  url: string
+  supports_custom_temperature?: boolean
+  supports_system_instructions?: boolean
+  supports_user_provided_model?: boolean
+  supports_user_provided_port?: boolean
+  supports_reasoning_effort?: boolean
+  supports_thinking_budget?: boolean
+  supports_url_override?: boolean
+  url_override_label?: string
+  default_system_instructions?: string
+  default_top_p?: number
+  supported_options?: {
+    [option: string]: string
+  }
+  models?: {
+    [model: string]: {
+      label: string
+      disabled_options?: string[]
+      supported_reasoning_efforts?: string[]
     }
   }
+}
 
 export const CHATBOTS = {
   'AI Studio': {
@@ -121,10 +121,6 @@ export const CHATBOTS = {
       'gemini-2.5-pro': { label: 'Gemini 2.5 Pro' }
     }
   } as Chatbot,
-  HuggingChat: {
-    url: 'https://huggingface.co/chat/',
-    supports_user_provided_model: true
-  } as Chatbot,
   Grok: {
     url: 'https://grok.com/',
     supported_options: { private: 'Private' },
@@ -136,8 +132,15 @@ export const CHATBOTS = {
       heavy: { label: 'Heavy' }
     }
   } as Chatbot,
+  HuggingChat: {
+    url: 'https://huggingface.co/chat/',
+    supports_user_provided_model: true
+  } as Chatbot,
   Kimi: {
     url: 'https://www.kimi.com/'
+  } as Chatbot,
+  LMArena: {
+    url: 'https://lmarena.ai/'
   } as Chatbot,
   Minimax: {
     url: 'https://agent.minimax.io/'
@@ -235,5 +238,5 @@ export const CHATBOTS = {
     supported_options: {
       'deep-think': 'Deep Think'
     }
-  } as Chatbot,
+  } as Chatbot
 }

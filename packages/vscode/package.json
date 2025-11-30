@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Superfast AI coding (CWC)",
-  "version": "1.610.0",
+  "version": "1.611.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -582,9 +582,9 @@
           "scope": "resource",
           "description": "Style of generated code blocks in \"Edit context\" mode.",
           "default": {
-            "whole": "Whenever showing a new or updated file, include a brief explanation of changes and its path. Print files in full because I have a disability which means I can't type and need to be able to just copy and paste.",
-            "truncated": "Whenever showing a new or updated file, include a brief explanation of changes and its path. Unchanged parts should be truncated with ellipsis comments, e.g. \"// ...\".",
-            "diff": "Whenever showing a new or updated file, include a brief explanation of changes. Print files in the Unified Diff format (that's compatible with the git apply command)."
+            "whole": "Whenever showing a new or updated file, include a brief explanation of changes, the path and a Markdown Code Block with full contents—because I have a disability which means I can't type and need to be able to just copy and paste.",
+            "truncated": "Whenever showing a new or updated file, include a brief explanation of changes, the path and a Markdown Code Block with truncated contents—unchanged parts should be replaced by ellipsis comments, e.g. \"// ...\".",
+            "diff": "Whenever showing a new or updated file, include a brief explanation of changes, and print them in the Unified Diff format (that's compatible with the git apply command)."
           },
           "properties": {
             "whole": {

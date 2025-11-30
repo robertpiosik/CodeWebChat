@@ -1239,6 +1239,31 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses a mix of a new file from an XML tag heading and code block, and a separate diff block', () => {
+      const test_case = 'diff-mix-new-file-from-xml-tag-heading-and-diff'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(3)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.html',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
+      expect(result[2]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '3-file.txt')
+      })
+    })
+
     it('parses multiple files with text between the markdown code blocks', () => {
       const test_case = 'text-between'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
