@@ -538,6 +538,22 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses file path from bolded text above a code block', () => {
+      const test_case = 'path-above-code-block-bold'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/hello-world.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
     it('handles path duplicated in empty code block', () => {
       const test_case = 'path-duplicated-in-empty-code-block'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

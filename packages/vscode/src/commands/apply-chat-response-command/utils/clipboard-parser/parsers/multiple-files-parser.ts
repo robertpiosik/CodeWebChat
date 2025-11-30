@@ -255,6 +255,14 @@ export const parse_multiple_files = (params: {
         if (!last_seen_file_path_comment) {
           let trimmed = line.trim()
 
+          const markdown_markers = ['***', '**', '*']
+          for (const marker of markdown_markers) {
+            if (trimmed.startsWith(marker) && trimmed.endsWith(marker)) {
+              trimmed = trimmed.slice(marker.length, -marker.length)
+              break
+            }
+          }
+
           if (trimmed.endsWith(':')) {
             trimmed = trimmed.slice(0, -1)
           }
