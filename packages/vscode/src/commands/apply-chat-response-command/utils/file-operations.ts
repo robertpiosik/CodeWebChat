@@ -1,10 +1,19 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import * as fs from 'fs'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
+
+// Helper to replace fs.existsSync with a non-throwing async version
+async function uri_exists(uri: vscode.Uri): Promise<boolean> {
+  try {
+    await vscode.workspace.fs.stat(uri)
+    return true
+  } catch {
+    return false
+  }
+}
 
 export const remove_directory_if_empty = async (params: {
   dir_path: string
@@ -22,22 +31,23 @@ export const remove_directory_if_empty = async (params: {
   }
 
   try {
-    if (
-      fs.existsSync(normalized_dir) &&
-      fs.lstatSync(normalized_dir).isDirectory()
-    ) {
-      const files = fs.readdirSync(normalized_dir)
-      if (files.length == 0) {
-        fs.rmdirSync(normalized_dir)
-        Logger.info({
-          function_name: 'remove_directory_if_empty',
-          message: 'Removed empty directory',
-          data: { dir_path: normalized_dir }
-        })
-        await remove_directory_if_empty({
-          dir_path: path.dirname(normalized_dir),
-          workspace_root: params.workspace_root
-        })
+    const dir_uri = vscode.Uri.file(normalized_dir)
+    if (await uri_exists(dir_uri)) {
+      const stat = await vscode.workspace.fs.stat(dir_uri)
+      if (stat.type === vscode.FileType.Directory) {
+        const files = await vscode.workspace.fs.readDirectory(dir_uri)
+        if (files.length == 0) {
+          await vscode.workspace.fs.delete(dir_uri)
+          Logger.info({
+            function_name: 'remove_directory_if_empty',
+            message: 'Removed empty directory',
+            data: { dir_path: normalized_dir }
+          })
+          await remove_directory_if_empty({
+            dir_path: path.dirname(normalized_dir),
+            workspace_root: params.workspace_root
+          })
+        }
       }
     }
   } catch (error) {
@@ -106,31 +116,37 @@ export const create_file_if_needed = async (params: {
     })
     return false
   }
+  const file_uri = vscode.Uri.file(safe_path)
+  const directory_uri = vscode.Uri.file(path.dirname(safe_path))
 
-  const directory = path.dirname(safe_path)
-  if (!fs.existsSync(directory)) {
+  if (!(await uri_exists(directory_uri))) {
     try {
-      fs.mkdirSync(directory, { recursive: true })
+      await vscode.workspace.fs.createDirectory(directory_uri)
       Logger.info({
         function_name: 'create_file_if_needed',
         message: 'Directory created',
-        data: directory
+        data: directory_uri.fsPath
       })
     } catch (error) {
       Logger.error({
         function_name: 'create_file_if_needed',
         message: 'Failed to create directory',
-        data: { directory, error }
+        data: { directory: directory_uri.fsPath, error }
       })
       vscode.window.showErrorMessage(
-        dictionary.error_message.FAILED_TO_CREATE_DIRECTORY(directory)
+        dictionary.error_message.FAILED_TO_CREATE_DIRECTORY(
+          directory_uri.fsPath
+        )
       )
       return false
     }
   }
 
   try {
-    fs.writeFileSync(safe_path, params.content)
+    await vscode.workspace.fs.writeFile(
+      file_uri,
+      Buffer.from(params.content, 'utf8')
+    )
     Logger.info({
       function_name: 'create_file_if_needed',
       message: 'File created',
@@ -176,7 +192,8 @@ const relocate_file = async (params: {
       return false
     }
 
-    if (!fs.existsSync(old_safe_path)) {
+    const old_uri = vscode.Uri.file(old_safe_path)
+    if (!(await uri_exists(old_uri))) {
       Logger.warn({
         function_name: 'relocate_file',
         message: 'Source file does not exist for relocation',
@@ -186,13 +203,13 @@ const relocate_file = async (params: {
     }
 
     // Create directory for new path if needed
-    const new_dir = path.dirname(new_safe_path)
-    if (!fs.existsSync(new_dir)) {
-      fs.mkdirSync(new_dir, { recursive: true })
+    const new_uri = vscode.Uri.file(new_safe_path)
+    const new_dir_uri = vscode.Uri.file(path.dirname(new_safe_path))
+    if (!(await uri_exists(new_dir_uri))) {
+      await vscode.workspace.fs.createDirectory(new_dir_uri)
     }
 
     // Close any open editors for the old file
-    const old_uri = vscode.Uri.file(old_safe_path)
     const text_editors = vscode.window.visibleTextEditors.filter(
       (editor) => editor.document.uri.toString() == old_uri.toString()
     )
@@ -204,7 +221,7 @@ const relocate_file = async (params: {
       await vscode.commands.executeCommand('workbench.action.closeActiveEditor')
     }
 
-    fs.renameSync(old_safe_path, new_safe_path)
+    await vscode.workspace.fs.rename(old_uri, new_uri, { overwrite: true })
 
     await remove_directory_if_empty({
       dir_path: path.dirname(old_safe_path),
@@ -323,13 +340,13 @@ export const undo_files = async (params: {
         console.error(`Cannot undo file with unsafe path: ${state.file_path}`)
         continue // Skip this file
       }
+      let file_uri = vscode.Uri.file(safe_path)
 
       if (state.is_new && !state.file_path_to_restore) {
-        if (fs.existsSync(safe_path)) {
+        if (await uri_exists(file_uri)) {
           // Close any open editors for this file before deleting
-          const uri = vscode.Uri.file(safe_path)
           const text_editors = vscode.window.visibleTextEditors.filter(
-            (editor) => editor.document.uri.toString() === uri.toString()
+            (editor) => editor.document.uri.toString() === file_uri.toString()
           )
 
           // Close all tabs for this file across all editor groups
@@ -361,7 +378,7 @@ export const undo_files = async (params: {
           }
 
           try {
-            fs.unlinkSync(safe_path)
+            await vscode.workspace.fs.delete(file_uri)
             Logger.info({
               function_name: 'undo_files',
               message: 'New file deleted',
@@ -384,7 +401,7 @@ export const undo_files = async (params: {
         }
       } else {
         if (state.file_path_to_restore) {
-          if (safe_path && fs.existsSync(safe_path)) {
+          if (safe_path && (await uri_exists(vscode.Uri.file(safe_path)))) {
             await relocate_file({
               old_path: state.file_path,
               new_path: state.file_path_to_restore,
@@ -397,15 +414,20 @@ export const undo_files = async (params: {
           )
         }
         if (!safe_path) continue
+        file_uri = vscode.Uri.file(safe_path)
         // For existing files that were modified, restore original content.
         // This also handles files that were deleted (by recreating them).
-        if (!fs.existsSync(safe_path)) {
+        if (!(await uri_exists(file_uri))) {
           try {
-            const dir = path.dirname(safe_path)
-            if (!fs.existsSync(dir)) {
-              fs.mkdirSync(dir, { recursive: true })
+            const dir_uri = vscode.Uri.file(path.dirname(safe_path))
+            if (!(await uri_exists(dir_uri))) {
+              await vscode.workspace.fs.createDirectory(dir_uri)
             }
-            fs.writeFileSync(safe_path, state.content)
+            await vscode.workspace.fs.writeFile(
+              file_uri,
+              Buffer.from(state.content, 'utf8')
+            )
+
             Logger.info({
               function_name: 'undo_files',
               message: 'Recreated deleted file.',
@@ -449,7 +471,10 @@ export const undo_files = async (params: {
 
               await document.save()
             } else {
-              fs.writeFileSync(safe_path, state.content)
+              await vscode.workspace.fs.writeFile(
+                file_uri,
+                Buffer.from(state.content, 'utf8')
+              )
             }
             Logger.info({
               function_name: 'undo_files',
