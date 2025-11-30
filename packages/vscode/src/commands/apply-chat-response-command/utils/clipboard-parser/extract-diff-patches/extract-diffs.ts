@@ -643,15 +643,71 @@ const extract_all_code_block_patches = (params: {
       })
 
       if (patch) {
-        const last_item = items.length > 0 ? items[items.length - 1] : undefined
-        if (
-          file_path_hint &&
-          last_item &&
-          last_item.type == 'text' &&
-          (last_item.content.trim() == file_path_hint ||
-            last_item.content.trim() == `\`${file_path_hint}\``)
-        ) {
-          items.pop()
+        const last_item =
+          items.length > 0 ? items[items.length - 1] : undefined
+        if (last_item && last_item.type == 'text') {
+          const content_lines = last_item.content.split('\n')
+          let last_non_empty_line_index = -1
+          let last_non_empty_line = ''
+          for (let i = content_lines.length - 1; i >= 0; i--) {
+            if (content_lines[i].trim() !== '') {
+              last_non_empty_line_index = i
+              last_non_empty_line = content_lines[i].trim()
+              break
+            }
+          }
+
+          if (last_non_empty_line) {
+            let extracted = extract_path_from_line_of_code(last_non_empty_line)
+            if (!extracted) {
+              const xml_match =
+                last_non_empty_line.match(/^<[^>]+>([^<]+)<\/[^>]+>$/)
+              if (xml_match && xml_match[1]) {
+                const potential_path = xml_match[1].trim()
+                if (
+                  potential_path &&
+                  (potential_path.includes('/') ||
+                    potential_path.includes('\\') ||
+                    potential_path.includes('.')) &&
+                  !potential_path.includes(' ')
+                ) {
+                  extracted = potential_path
+                }
+              }
+            }
+            if (!extracted) {
+              const match = last_non_empty_line.match(/`([^`]+)`/)
+              if (match && match[1]) {
+                const potential_path = match[1]
+                if (
+                  potential_path.includes('/') ||
+                  potential_path.includes('\\') ||
+                  potential_path.includes('.')
+                ) {
+                  extracted = potential_path
+                }
+              }
+            }
+
+            if (extracted) {
+              const { relative_path } = extract_workspace_and_path({
+                raw_file_path: extracted,
+                is_single_root_folder_workspace: params.is_single_root
+              })
+              if (relative_path === patch.file_path) {
+                const new_content = content_lines
+                  .slice(0, last_non_empty_line_index)
+                  .join('\n')
+                  .trim()
+
+                if (new_content) {
+                  last_item.content = new_content
+                } else {
+                  items.pop()
+                }
+              }
+            }
+          }
         }
 
         const file_key = `${patch.workspace_name || ''}:${patch.file_path}`

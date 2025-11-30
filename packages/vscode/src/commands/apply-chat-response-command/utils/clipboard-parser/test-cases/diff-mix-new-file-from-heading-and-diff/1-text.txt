@@ -1,1 +1,1 @@
-### New file: `src/lorem.html`
+Lorem ipsum.

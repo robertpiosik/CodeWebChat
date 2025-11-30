@@ -1,1 +1,1 @@
-<summary>src/lorem.html</summary>
+Lorem ipsum.

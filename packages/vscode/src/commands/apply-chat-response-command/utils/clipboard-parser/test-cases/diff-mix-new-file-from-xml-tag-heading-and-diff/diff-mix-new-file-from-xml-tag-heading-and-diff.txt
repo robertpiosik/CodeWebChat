@@ -1,3 +1,5 @@
+Lorem ipsum.
+
 <summary>src/lorem.html</summary>
 
 ```html
