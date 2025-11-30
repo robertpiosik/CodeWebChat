@@ -24,7 +24,6 @@ const normalize_header_line = (params: {
 }): string => {
   const processed_line = params.line
     .replace(/\s+\d{4}-\d{2}-\d{2}.*$/, '')
-    .replace(/\t.*$/, '')
 
   if (processed_line.startsWith('--- ')) {
     let path_part = processed_line.substring(4).trim()

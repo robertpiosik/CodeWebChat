@@ -8,15 +8,14 @@ import {
 const extract_path_and_position = (
   line: string
 ): { path: string; line: number; character: number } | null => {
-  const path_pos_regex =
-    /(?:\/\/|#|--|<!--)\s*"?([^"<>\s?*|:]+)"?\s+(\d+):(\d+)|(?:\/\*)\s*"?([^"<>\s?*|:]+)"?\s+(\d+):(\d+)|\*\s*"?([^"<>\s?*|:]+)"?\s+(\d+):(\d+)/
+  const path_pos_regex = /\/\/\s*"?([^"<>\s?*|:]+)"?\s+(\d+):(\d+)/
 
   const match = line.match(path_pos_regex)
 
   if (match) {
-    const path = match[1] || match[4] || match[7]
-    const line_num_str = match[2] || match[5] || match[8]
-    const char_num_str = match[3] || match[6] || match[9]
+    const path = match[1]
+    const line_num_str = match[2]
+    const char_num_str = match[3]
 
     if (path && line_num_str && char_num_str) {
       return {

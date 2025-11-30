@@ -64,13 +64,6 @@ export const parse_multiple_files = (params: {
 
         if (!extracted_filename) {
           current_text_block += before_backticks
-        } else {
-          // A filename was extracted. Only add to text block if there's other text.
-          const trimmed = before_backticks.trim()
-          // If it doesn't start with a known comment marker, assume it's text.
-          if (!/^\s*(<!--|#|\/\/|\/\*|--)/.test(trimmed)) {
-            current_text_block += before_backticks
-          }
         }
 
         if (current_text_block.trim()) {
@@ -244,12 +237,6 @@ export const parse_multiple_files = (params: {
         }
         current_text_block = ''
         last_seen_file_path_comment = extracted_filename
-
-        const trimmed = line.trim()
-        // If it doesn't start with a known comment marker, assume it's text.
-        if (!/^\s*(<!--|#|\/\/|\/\*|--)/.test(trimmed)) {
-          current_text_block += line + '\n'
-        }
       } else {
         // Check if this line is a plain file path followed by a code block
         if (!last_seen_file_path_comment) {
