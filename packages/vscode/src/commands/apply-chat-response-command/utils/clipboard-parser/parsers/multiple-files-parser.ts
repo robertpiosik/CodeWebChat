@@ -17,6 +17,78 @@ const extract_file_path_from_xml = (
   return null
 }
 
+const extract_and_set_workspace_path = (params: {
+  raw_file_path: string
+  is_single_root_folder_workspace: boolean
+}): { workspace_name: string | undefined; relative_path: string } => {
+  const { workspace_name, relative_path } = extract_workspace_and_path({
+    raw_file_path: params.raw_file_path,
+    is_single_root_folder_workspace: params.is_single_root_folder_workspace
+  })
+  return { workspace_name, relative_path }
+}
+
+const strip_markdown_code_block = (content: string): string => {
+  const trimmed = content.trim()
+  const lines = trimmed.split('\n')
+
+  if (
+    lines.length >= 2 &&
+    lines[0].trim().startsWith('```') &&
+    lines[lines.length - 1].trim() === '```'
+  ) {
+    return lines.slice(1, -1).join('\n')
+  }
+
+  return trimmed
+}
+
+const create_or_update_file_item = (params: {
+  file_name: string
+  content: string
+  workspace_name: string | undefined
+  file_ref_map: Map<string, FileItem>
+  results: (FileItem | TextItem)[]
+}): void => {
+  const { file_name, content, workspace_name, file_ref_map, results } = params
+
+  if (!file_name || !has_real_code(content)) {
+    return
+  }
+
+  const file_key = `${workspace_name || ''}:${file_name}`
+
+  if (file_ref_map.has(file_key)) {
+    const existing_file = file_ref_map.get(file_key)!
+    existing_file.content = content
+  } else {
+    const new_file: FileItem = {
+      type: 'file' as const,
+      file_path: file_name,
+      content: content,
+      workspace_name: workspace_name
+    }
+    file_ref_map.set(file_key, new_file)
+    results.push(new_file)
+  }
+}
+
+const flush_text_block = (params: {
+  text_block: string
+  results: (FileItem | TextItem)[]
+}): void => {
+  const { text_block, results } = params
+
+  if (!text_block.trim()) {
+    return
+  }
+
+  const content =
+    results.length == 0 ? text_block.trim() : text_block.trimEnd()
+
+  results.push({ type: 'text', content })
+}
+
 export const parse_multiple_files = (params: {
   response: string
   is_single_root_folder_workspace: boolean
@@ -66,13 +138,10 @@ export const parse_multiple_files = (params: {
           current_text_block += before_backticks
         }
 
-        if (current_text_block.trim()) {
-          const content =
-            results.length == 0
-              ? current_text_block.trim()
-              : current_text_block.trimEnd()
-          results.push({ type: 'text', content })
-        }
+        flush_text_block({
+          text_block: current_text_block,
+          results
+        })
         current_text_block = ''
 
         const after_backticks = line.substring(backtick_index + 3).trim()
@@ -121,7 +190,7 @@ export const parse_multiple_files = (params: {
         current_workspace_name = undefined
         current_file_name = ''
         if (last_seen_file_path_comment) {
-          const { workspace_name, relative_path } = extract_workspace_and_path({
+          const { workspace_name, relative_path } = extract_and_set_workspace_path({
             raw_file_path: last_seen_file_path_comment,
             is_single_root_folder_workspace:
               params.is_single_root_folder_workspace
@@ -142,15 +211,16 @@ export const parse_multiple_files = (params: {
       } else if (line.trim().startsWith('<')) {
         const xml_info = extract_file_path_from_xml(line)
         if (xml_info) {
-          if (current_text_block.trim()) {
-            results.push({ type: 'text', content: current_text_block.trim() })
-          }
+          flush_text_block({
+            text_block: current_text_block,
+            results
+          })
           current_text_block = ''
 
           state = 'CONTENT'
           current_xml_tag = xml_info.tagName
           top_level_xml_file_mode = true
-          const { workspace_name, relative_path } = extract_workspace_and_path({
+          const { workspace_name, relative_path } = extract_and_set_workspace_path({
             raw_file_path: xml_info.path,
             is_single_root_folder_workspace:
               params.is_single_root_folder_workspace
@@ -235,13 +305,10 @@ export const parse_multiple_files = (params: {
       }
 
       if (extracted_filename) {
-        if (current_text_block.trim()) {
-          const content =
-            results.length == 0
-              ? current_text_block.trim()
-              : current_text_block.trimEnd()
-          results.push({ type: 'text', content })
-        }
+        flush_text_block({
+          text_block: current_text_block,
+          results
+        })
         current_text_block = ''
         last_seen_file_path_comment = extracted_filename
       } else {
@@ -292,36 +359,17 @@ export const parse_multiple_files = (params: {
     } else if (state == 'CONTENT') {
       if (top_level_xml_file_mode) {
         if (line.trim().startsWith(`</${current_xml_tag}>`)) {
-          let final_content = current_content.trim()
-          const content_lines = final_content.split('\n')
-          if (
-            content_lines.length >= 2 &&
-            content_lines[0].trim().startsWith('```') &&
-            content_lines[content_lines.length - 1].trim() == '```'
-          ) {
-            final_content = content_lines.slice(1, -1).join('\n')
-          }
+          const final_content = strip_markdown_code_block(current_content)
 
           state = 'TEXT'
 
-          if (current_file_name && has_real_code(final_content)) {
-            const file_key = `${
-              current_workspace_name || ''
-            }:${current_file_name}`
-            if (file_ref_map.has(file_key)) {
-              const existing_file = file_ref_map.get(file_key)!
-              existing_file.content = final_content
-            } else {
-              const new_file = {
-                type: 'file' as const,
-                file_path: current_file_name,
-                content: final_content,
-                workspace_name: current_workspace_name
-              }
-              file_ref_map.set(file_key, new_file)
-              results.push(new_file)
-            }
-          }
+          create_or_update_file_item({
+            file_name: current_file_name,
+            content: final_content,
+            workspace_name: current_workspace_name,
+            file_ref_map,
+            results
+          })
 
           current_file_name = ''
           current_content = ''
@@ -334,7 +382,34 @@ export const parse_multiple_files = (params: {
         } else if (in_cdata && line.trim().includes(']]>')) {
           in_cdata = false
         } else {
-          current_content += (current_content ? '\n' : '') + line
+          const trimmed_current_content = current_content.trim()
+          if (
+            trimmed_current_content.startsWith('```') &&
+            trimmed_current_content.endsWith('```') &&
+            line.trim() !== ''
+          ) {
+            const final_content = strip_markdown_code_block(trimmed_current_content)
+
+            state = 'TEXT'
+
+            create_or_update_file_item({
+              file_name: current_file_name,
+              content: final_content,
+              workspace_name: current_workspace_name,
+              file_ref_map,
+              results
+            })
+
+            current_file_name = ''
+            current_content = ''
+            current_workspace_name = undefined
+            top_level_xml_file_mode = false
+            in_cdata = false
+            current_xml_tag = null
+            i-- // Reprocess current line in TEXT mode
+          } else {
+            current_content += (current_content ? '\n' : '') + line
+          }
         }
         continue
       }
@@ -422,24 +497,15 @@ export const parse_multiple_files = (params: {
 
         const cleaned_content = current_content
 
-        if (current_file_name && has_real_code(cleaned_content)) {
-          const file_key = `${
-            current_workspace_name || ''
-          }:${current_file_name}`
-          if (file_ref_map.has(file_key)) {
-            const existing_file = file_ref_map.get(file_key)!
-            existing_file.content = cleaned_content
-          } else {
-            const new_file = {
-              type: 'file' as const,
-              file_path: current_file_name,
-              content: cleaned_content,
-              workspace_name: current_workspace_name
-            }
-            file_ref_map.set(file_key, new_file)
-            results.push(new_file)
-          }
-        } else if (!current_file_name) {
+        create_or_update_file_item({
+          file_name: current_file_name,
+          content: cleaned_content,
+          workspace_name: current_workspace_name,
+          file_ref_map,
+          results
+        })
+
+        if (!current_file_name) {
           const raw_code_block = [
             `\`\`\`${current_language}`,
             current_content,
@@ -463,7 +529,7 @@ export const parse_multiple_files = (params: {
           const xml_info = extract_file_path_from_xml(line)
           if (xml_info) {
             const { workspace_name, relative_path } =
-              extract_workspace_and_path({
+              extract_and_set_workspace_path({
                 raw_file_path: xml_info.path,
                 is_single_root_folder_workspace:
                   params.is_single_root_folder_workspace
@@ -501,7 +567,7 @@ export const parse_multiple_files = (params: {
 
           if (extracted_filename) {
             const { workspace_name, relative_path } =
-              extract_workspace_and_path({
+              extract_and_set_workspace_path({
                 raw_file_path: extracted_filename,
                 is_single_root_folder_workspace:
                   params.is_single_root_folder_workspace
@@ -550,30 +616,19 @@ export const parse_multiple_files = (params: {
             if (current_language == 'markdown' || current_language == 'md') {
               if (current_file_name) {
                 const cleaned_content = current_content.trim()
-                if (has_real_code(cleaned_content)) {
-                  const file_key = `${
-                    current_workspace_name || ''
-                  }:${current_file_name}`
-                  if (file_ref_map.has(file_key)) {
-                    const existing_file = file_ref_map.get(file_key)!
-                    existing_file.content = cleaned_content
-                  } else {
-                    const new_file = {
-                      type: 'file' as const,
-                      file_path: current_file_name,
-                      content: cleaned_content,
-                      workspace_name: current_workspace_name
-                    }
-                    file_ref_map.set(file_key, new_file)
-                    results.push(new_file)
-                  }
-                }
+                create_or_update_file_item({
+                  file_name: current_file_name,
+                  content: cleaned_content,
+                  workspace_name: current_workspace_name,
+                  file_ref_map,
+                  results
+                })
               }
               current_content = ''
             }
 
             const { workspace_name, relative_path } =
-              extract_workspace_and_path({
+              extract_and_set_workspace_path({
                 raw_file_path: extracted_filename,
                 is_single_root_folder_workspace:
                   params.is_single_root_folder_workspace
@@ -656,41 +711,21 @@ export const parse_multiple_files = (params: {
     let cleaned_content = current_content
 
     if (top_level_xml_file_mode) {
-      const final_content = current_content.trim()
-      const content_lines = final_content.split('\n')
-      if (
-        content_lines.length >= 2 &&
-        content_lines[0].trim().startsWith('```') &&
-        content_lines[content_lines.length - 1].trim() == '```'
-      ) {
-        cleaned_content = content_lines.slice(1, -1).join('\n')
-      } else {
-        cleaned_content = final_content
-      }
+      cleaned_content = strip_markdown_code_block(current_content)
     }
 
-    if (current_file_name && has_real_code(cleaned_content)) {
-      const file_key = `${current_workspace_name || ''}:${current_file_name}`
-      if (file_ref_map.has(file_key)) {
-        const existing_file = file_ref_map.get(file_key)!
-        existing_file.content = cleaned_content
-      } else {
-        const new_file = {
-          type: 'file' as const,
-          file_path: current_file_name,
-          content: cleaned_content,
-          workspace_name: current_workspace_name
-        }
-        file_ref_map.set(file_key, new_file)
-        results.push(new_file)
-      }
-    }
+    create_or_update_file_item({
+      file_name: current_file_name,
+      content: cleaned_content,
+      workspace_name: current_workspace_name,
+      file_ref_map,
+      results
+    })
   } else if (state == 'TEXT' && current_text_block.trim()) {
-    const content =
-      results.length == 0
-        ? current_text_block.trim()
-        : current_text_block.trimEnd()
-    results.push({ type: 'text', content })
+    flush_text_block({
+      text_block: current_text_block,
+      results
+    })
   }
 
   const merged_results: (FileItem | TextItem)[] = []
@@ -705,7 +740,6 @@ export const parse_multiple_files = (params: {
     merged_results.push(result)
   }
 
-  // Trim text items at the end to ensure clean output
   for (const result of merged_results) {
     if (result.type == 'text') {
       result.content = result.content.trim()

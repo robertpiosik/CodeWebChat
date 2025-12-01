@@ -161,6 +161,30 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses file when file-xml content is wrapped in its own markdown code block but the file tag is not closed', () => {
+      const test_case = 'file-xml-inner-code-block-unclosed'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(3)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'file',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
+      expect(result[2]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '3-text.txt')
+      })
+    })
+
     it('parses file when file path is in an HTML-style comment inside a code block', () => {
       const test_case = 'html-comment-style'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
