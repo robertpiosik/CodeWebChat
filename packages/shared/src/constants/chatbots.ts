@@ -8,6 +8,7 @@ type Chatbot = {
   supports_thinking_budget?: boolean
   supports_url_override?: boolean
   url_override_label?: string
+  url_override_disabled_options?: string[]
   default_system_instructions?: string
   default_top_p?: number
   supported_options?: {
@@ -65,6 +66,7 @@ export const CHATBOTS = {
     url: 'https://chatgpt.com/',
     supports_url_override: true,
     url_override_label: 'Project URL',
+    url_override_disabled_options: ['temporary'],
     supported_options: {
       temporary: 'Temporary',
       thinking: 'Thinking (free plans)'
@@ -151,6 +153,7 @@ export const CHATBOTS = {
     url: 'https://chat.mistral.ai/chat',
     supports_url_override: true,
     url_override_label: 'Project URL',
+    url_override_disabled_options: ['incognito'],
     supported_options: {
       incognito: 'Incognito mode',
       think: 'Think'

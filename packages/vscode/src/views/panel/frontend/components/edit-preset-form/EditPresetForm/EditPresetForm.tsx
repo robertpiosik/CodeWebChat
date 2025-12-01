@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import cn from 'classnames'
-import { useChatgpt } from '../chatbot-hooks'
 import styles from './EditPresetForm.module.scss'
 import dropdown_styles from '@ui/components/editor/common/Dropdown/Dropdown.module.scss'
 import { Preset } from '@shared/types/preset'
@@ -11,8 +10,8 @@ import { Input } from '@ui/components/editor/common/Input'
 import { Textarea } from '@ui/components/editor/common/Textarea'
 import { Dropdown } from '@ui/components/editor/common/Dropdown'
 import { BackendMessage } from '@/views/panel/types/messages'
+import { PresetOption } from '@ui/components/editor/panel/PresetOption'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
-import { Options } from '../chatbot-overrides/options'
 
 type Props = {
   preset: Preset
@@ -81,7 +80,18 @@ export const EditPresetForm: React.FC<Props> = (props) => {
     }
   }, [model_info])
 
-  useChatgpt({ chatbot, new_url, set_options })
+  useEffect(() => {
+    if (!chatbot) return
+    const chatbot_config = CHATBOTS[chatbot]
+
+    if (new_url && chatbot_config.url_override_disabled_options) {
+      set_options((prev) =>
+        prev.filter(
+          (o) => !chatbot_config.url_override_disabled_options!.includes(o)
+        )
+      )
+    }
+  }, [chatbot, new_url])
 
   const supports_temperature = chatbot_config?.supports_custom_temperature
   const supports_top_p = chatbot_config?.default_top_p !== undefined
@@ -353,13 +363,43 @@ export const EditPresetForm: React.FC<Props> = (props) => {
           </Field>
         )}
 
-        <Options
-          chatbot={chatbot}
-          model={model}
-          options={options}
-          new_url={new_url}
-          on_option_toggle={handle_option_toggle}
-        />
+        {chatbot &&
+          Object.keys(chatbot_config?.supported_options || {}).length > 0 && (
+            <Field label="Options">
+              <div className={styles.options}>
+                {Object.entries(chatbot_config!.supported_options!).map(
+                  ([key, label]) => {
+                    const is_disabled_by_url_override =
+                      !!new_url &&
+                      chatbot_config!.url_override_disabled_options?.includes(
+                        key
+                      )
+
+                    if (model_info?.disabled_options?.includes(key)) {
+                      return null
+                    }
+                    return (
+                      <PresetOption
+                        key={key}
+                        label={label as string}
+                        checked={options.includes(key)}
+                        on_change={() => handle_option_toggle(key)}
+                        disabled={is_disabled_by_url_override}
+                        disabled_reason={
+                          is_disabled_by_url_override
+                            ? `Not supported with ${
+                                chatbot_config!.url_override_label ||
+                                'Custom URL'
+                              }`
+                            : undefined
+                        }
+                      />
+                    )
+                  }
+                )}
+              </div>
+            </Field>
+          )}
 
         {supports_temperature && (
           <Field
