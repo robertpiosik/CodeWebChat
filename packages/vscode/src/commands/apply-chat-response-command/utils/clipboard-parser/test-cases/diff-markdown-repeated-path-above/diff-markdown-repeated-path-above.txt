@@ -1,6 +1,8 @@
 Lorem ipsum.
 
-# `src/index.ts`:
+### `src/index.ts`
+
+Lorem ipsum.
 
 ```diff
 --- a/src/index.ts

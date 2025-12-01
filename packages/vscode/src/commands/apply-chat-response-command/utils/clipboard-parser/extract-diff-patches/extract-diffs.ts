@@ -421,6 +421,11 @@ const extract_all_code_block_patches = (params: {
             if (potential_path.endsWith(':')) {
               potential_path = potential_path.slice(0, -1).trim()
             }
+            const backtick_match = potential_path.match(/`([^`]+)`/)
+            if (backtick_match && backtick_match[1]) {
+              potential_path = backtick_match[1]
+            }
+
             if (
               potential_path &&
               (potential_path.includes('/') ||
@@ -507,21 +512,16 @@ const extract_all_code_block_patches = (params: {
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
         if (last_item && last_item.type == 'text') {
           const content_lines = last_item.content.split('\n')
-          let last_non_empty_line_index = -1
-          let last_non_empty_line = ''
-          for (let i = content_lines.length - 1; i >= 0; i--) {
-            if (content_lines[i].trim() !== '') {
-              last_non_empty_line_index = i
-              last_non_empty_line = content_lines[i].trim()
-              break
-            }
-          }
+          let path_line_index = -1
 
-          if (last_non_empty_line) {
-            let extracted = extract_path_from_line_of_code(last_non_empty_line)
+          for (let i = content_lines.length - 1; i >= 0; i--) {
+            const line = content_lines[i].trim()
+            if (line == '') continue
+
+            let extracted = extract_path_from_line_of_code(line)
 
             if (!extracted) {
-              let potential_path = last_non_empty_line
+              let potential_path = line
               if (potential_path.endsWith(':')) {
                 potential_path = potential_path.slice(0, -1).trim()
               }
@@ -548,20 +548,38 @@ const extract_all_code_block_patches = (params: {
                 is_single_root_folder_workspace: params.is_single_root
               })
               if (relative_path === patches[0].file_path) {
-                const new_content = content_lines
-                  .slice(0, last_non_empty_line_index)
-                  .join('\n')
-                  .trim()
-
-                if (new_content) {
-                  last_item.content = new_content
-                } else {
-                  items.pop()
-                }
+                path_line_index = i
+                break
               }
             }
           }
+
+          if (path_line_index > -1) {
+            const new_content_lines_without_path = content_lines.filter(
+              (_, index) => index !== path_line_index
+            )
+
+            const collapsed_lines: string[] = []
+            for (const line of new_content_lines_without_path) {
+              if (
+                line.trim() == '' &&
+                collapsed_lines.length > 0 &&
+                collapsed_lines[collapsed_lines.length - 1].trim() === ''
+              ) {
+                continue
+              }
+              collapsed_lines.push(line)
+            }
+            const new_content = collapsed_lines.join('\n').trim()
+
+            if (new_content) {
+              last_item.content = new_content
+            } else {
+              items.pop()
+            }
+          }
         }
+
       }
       items.push(...patches)
     } else {
