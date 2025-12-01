@@ -17,18 +17,191 @@ type TextBlock = {
 
 export type DiffOrTextBlock = Diff | TextBlock
 
+const normalize_path = (path: string): string => {
+  return path.replace(/\\/g, '/')
+}
+
+const strip_quotes = (path: string): string => {
+  if (path.startsWith('"') && path.endsWith('"')) {
+    return path.substring(1, path.length - 1)
+  }
+  return path
+}
+
+const is_valid_file_path = (potential_path: string): boolean => {
+  return (
+    !potential_path.endsWith('/') &&
+    !potential_path.endsWith('\\') &&
+    (potential_path.includes('.') || potential_path.includes('/')) &&
+    !potential_path.includes(' ') &&
+    /[a-zA-Z0-9]/.test(potential_path)
+  )
+}
+
+const extract_path_from_potential_string = (line: string) => {
+  let extracted = extract_path_from_line_of_code(line)
+
+  if (!extracted) {
+    let potential_path = line
+    if (potential_path.endsWith(':')) {
+      potential_path = potential_path.slice(0, -1).trim()
+    }
+    const backtick_match = potential_path.match(/`([^`]+)`/)
+    if (backtick_match && backtick_match[1]) {
+      potential_path = backtick_match[1]
+    }
+
+    if (
+      potential_path &&
+      (potential_path.includes('/') ||
+        potential_path.includes('\\') ||
+        potential_path.includes('.')) &&
+      !potential_path.endsWith('.') &&
+      /^[a-zA-Z0-9_./@-]+$/.test(potential_path)
+    ) {
+      extracted = potential_path
+    }
+  }
+
+  return extracted
+}
+
+const extract_path_with_xml_fallback = (line: string) => {
+  let extracted = extract_path_from_line_of_code(line)
+
+  if (!extracted) {
+    const xml_match = line.match(/^<[^>]+>([^<]+)<\/[^>]+>$/)
+    if (xml_match && xml_match[1]) {
+      const potential_path = xml_match[1].trim()
+      if (
+        potential_path &&
+        (potential_path.includes('/') ||
+          potential_path.includes('\\') ||
+          potential_path.includes('.')) &&
+        !potential_path.includes(' ')
+      ) {
+        extracted = potential_path
+      }
+    }
+  }
+
+  if (!extracted) {
+    const match = line.match(/`([^`]+)`/)
+    if (match && match[1]) {
+      const potential_path = match[1]
+      if (
+        potential_path.includes('/') ||
+        potential_path.includes('\\') ||
+        potential_path.includes('.')
+      ) {
+        extracted = potential_path
+      }
+    }
+  }
+
+  return extracted
+}
+
+const find_file_path_before_block = (params: {
+  lines: string[]
+  block_start: number
+  is_single_root: boolean
+  max_lines_back?: number
+}): { file_path?: string; workspace_name?: string } => {
+  const max_back = params.max_lines_back || 5
+
+  for (
+    let j = params.block_start - 1;
+    j >= Math.max(0, params.block_start - max_back);
+    j--
+  ) {
+    const prev_line = params.lines[j].trim()
+    if (!prev_line) continue
+
+    const extracted = extract_path_with_xml_fallback(prev_line)
+
+    if (extracted) {
+      if (extracted.endsWith('/') || extracted.endsWith('\\')) {
+        continue
+      }
+
+      let all_intermediate_lines_empty = true
+      for (let k = j + 1; k < params.block_start; k++) {
+        if (params.lines[k].trim() !== '') {
+          all_intermediate_lines_empty = false
+          break
+        }
+      }
+
+      if (all_intermediate_lines_empty) {
+        const { workspace_name } = extract_workspace_and_path({
+          raw_file_path: extracted,
+          is_single_root_folder_workspace: params.is_single_root
+        })
+        return { file_path: extracted, workspace_name }
+      }
+    }
+  }
+
+  return {}
+}
+
+const remove_path_line_from_text_block = (params: {
+  text_item: TextBlock
+  target_file_path: string
+  is_single_root: boolean
+}): void => {
+  const content_lines = params.text_item.content.split('\n')
+  let path_line_index = -1
+
+  for (let i = content_lines.length - 1; i >= 0; i--) {
+    const line = content_lines[i].trim()
+    if (line == '') continue
+
+    const extracted = extract_path_from_potential_string(line)
+
+    if (extracted) {
+      const { relative_path } = extract_workspace_and_path({
+        raw_file_path: extracted,
+        is_single_root_folder_workspace: params.is_single_root
+      })
+      if (relative_path === params.target_file_path) {
+        path_line_index = i
+        break
+      }
+    }
+  }
+
+  if (path_line_index > -1) {
+    const new_content_lines = content_lines.filter(
+      (_, index) => index !== path_line_index
+    )
+
+    const collapsed_lines: string[] = []
+    for (const line of new_content_lines) {
+      if (
+        line.trim() == '' &&
+        collapsed_lines.length > 0 &&
+        collapsed_lines[collapsed_lines.length - 1].trim() === ''
+      ) {
+        continue
+      }
+      collapsed_lines.push(line)
+    }
+    const new_content = collapsed_lines.join('\n').trim()
+
+    params.text_item.content = new_content
+  }
+}
+
 const normalize_header_line = (params: {
   line: string
   is_single_root: boolean
 }): string => {
-  const processed_line = params.line
-    .replace(/\s+\d{4}-\d{2}-\d{2}.*$/, '')
+  const processed_line = params.line.replace(/\s+\d{4}-\d{2}-\d{2}.*$/, '')
 
   if (processed_line.startsWith('--- ')) {
-    let path_part = processed_line.substring(4).trim()
-    if (path_part.startsWith('"') && path_part.endsWith('"')) {
-      path_part = path_part.substring(1, path_part.length - 1)
-    }
+    let path_part = strip_quotes(processed_line.substring(4).trim())
     if (path_part.startsWith('a/')) {
       path_part = path_part.substring(2)
     }
@@ -46,10 +219,7 @@ const normalize_header_line = (params: {
   }
 
   if (processed_line.startsWith('+++ ')) {
-    let path_part = processed_line.substring(4).trim()
-    if (path_part.startsWith('"') && path_part.endsWith('"')) {
-      path_part = path_part.substring(1, path_part.length - 1)
-    }
+    let path_part = strip_quotes(processed_line.substring(4).trim())
     if (path_part.startsWith('b/')) {
       path_part = path_part.substring(2)
     }
@@ -178,7 +348,7 @@ const convert_code_block_to_new_file_diff = (params: {
 
   if (xml_match && xml_match[1] && xml_match[2]) {
     const xml_tag_name = xml_match[1]
-    const potential_path = xml_match[2].replace(/\\/g, '/')
+    const potential_path = normalize_path(xml_match[2])
     if (potential_path.endsWith('/')) {
       // This is a directory, not a file.
       return null
@@ -232,13 +402,7 @@ const convert_code_block_to_new_file_diff = (params: {
       if (match && match[1]) {
         const potential_path = match[1]
 
-        if (
-          !potential_path.endsWith('/') &&
-          !potential_path.endsWith('\\') &&
-          (potential_path.includes('.') || potential_path.includes('/')) &&
-          !potential_path.includes(' ') &&
-          /[a-zA-Z0-9]/.test(potential_path)
-        ) {
+        if (is_valid_file_path(potential_path)) {
           const rest_of_line = line
             .substring(line.indexOf(potential_path) + potential_path.length)
             .trim()
@@ -248,7 +412,7 @@ const convert_code_block_to_new_file_diff = (params: {
           )
 
           if (is_just_path_and_location) {
-            file_path = potential_path.replace(/\\/g, '/') // normalize backslashes
+            file_path = normalize_path(potential_path)
             path_line_index = i
             break // Found it, stop searching.
           }
@@ -380,8 +544,6 @@ const extract_all_code_block_patches = (params: {
   code_blocks.sort((a, b) => a.start - b.start)
 
   // First, identify all files that have explicit diff blocks.
-  // This is to avoid creating a "new file" patch from a regular code block
-  // if a proper diff for that same file exists elsewhere.
   const files_with_diffs = new Set<string>()
   const diff_block_patches = new Map<number, Diff[]>()
 
@@ -409,50 +571,15 @@ const extract_all_code_block_patches = (params: {
         }
       }
 
-      if (!file_path_hint && block.start > 0) {
-        for (let j = block.start - 1; j >= Math.max(0, block.start - 5); j--) {
-          const prev_line = lines[j].trim()
-          if (!prev_line) continue
-
-          let extracted = extract_path_from_line_of_code(prev_line)
-
-          if (!extracted) {
-            let potential_path = prev_line
-            if (potential_path.endsWith(':')) {
-              potential_path = potential_path.slice(0, -1).trim()
-            }
-            const backtick_match = potential_path.match(/`([^`]+)`/)
-            if (backtick_match && backtick_match[1]) {
-              potential_path = backtick_match[1]
-            }
-
-            if (
-              potential_path &&
-              (potential_path.includes('/') ||
-                potential_path.includes('\\') ||
-                potential_path.includes('.')) &&
-              !potential_path.endsWith('.') &&
-              /^[a-zA-Z0-9_./@-]+$/.test(potential_path)
-            ) {
-              extracted = potential_path
-            }
-          }
-
-          if (extracted) {
-            let all_intermediate_lines_empty = true
-            for (let k = j + 1; k < block.start; k++) {
-              if (lines[k].trim() !== '') {
-                all_intermediate_lines_empty = false
-                break
-              }
-            }
-            if (all_intermediate_lines_empty) {
-              file_path_hint = extracted
-              break
-            }
-          }
-        }
+      if (!file_path_hint) {
+        const hint_result = find_file_path_before_block({
+          lines,
+          block_start: block.start,
+          is_single_root: params.is_single_root
+        })
+        file_path_hint = hint_result.file_path
       }
+
       const block_lines = lines.slice(block.start + 1, block.end)
       if (file_path_hint) {
         const { from_path, to_path } = extract_paths_from_lines(block_lines)
@@ -511,75 +638,16 @@ const extract_all_code_block_patches = (params: {
       if (patches.length > 0) {
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
         if (last_item && last_item.type == 'text') {
-          const content_lines = last_item.content.split('\n')
-          let path_line_index = -1
+          remove_path_line_from_text_block({
+            text_item: last_item,
+            target_file_path: patches[0].file_path,
+            is_single_root: params.is_single_root
+          })
 
-          for (let i = content_lines.length - 1; i >= 0; i--) {
-            const line = content_lines[i].trim()
-            if (line == '') continue
-
-            let extracted = extract_path_from_line_of_code(line)
-
-            if (!extracted) {
-              let potential_path = line
-              if (potential_path.endsWith(':')) {
-                potential_path = potential_path.slice(0, -1).trim()
-              }
-              const backtick_match = potential_path.match(/`([^`]+)`/)
-              if (backtick_match && backtick_match[1]) {
-                potential_path = backtick_match[1]
-              }
-
-              if (
-                potential_path &&
-                (potential_path.includes('/') ||
-                  potential_path.includes('\\') ||
-                  potential_path.includes('.')) &&
-                !potential_path.endsWith('.') &&
-                /^[a-zA-Z0-9_./@-]+$/.test(potential_path)
-              ) {
-                extracted = potential_path
-              }
-            }
-
-            if (extracted) {
-              const { relative_path } = extract_workspace_and_path({
-                raw_file_path: extracted,
-                is_single_root_folder_workspace: params.is_single_root
-              })
-              if (relative_path === patches[0].file_path) {
-                path_line_index = i
-                break
-              }
-            }
-          }
-
-          if (path_line_index > -1) {
-            const new_content_lines_without_path = content_lines.filter(
-              (_, index) => index !== path_line_index
-            )
-
-            const collapsed_lines: string[] = []
-            for (const line of new_content_lines_without_path) {
-              if (
-                line.trim() == '' &&
-                collapsed_lines.length > 0 &&
-                collapsed_lines[collapsed_lines.length - 1].trim() === ''
-              ) {
-                continue
-              }
-              collapsed_lines.push(line)
-            }
-            const new_content = collapsed_lines.join('\n').trim()
-
-            if (new_content) {
-              last_item.content = new_content
-            } else {
-              items.pop()
-            }
+          if (!last_item.content) {
+            items.pop()
           }
         }
-
       }
       items.push(...patches)
     } else {
@@ -601,68 +669,20 @@ const extract_all_code_block_patches = (params: {
       }
 
       // Check if there's a comment line before the code block with a file path
-      let file_path_hint: string | undefined
-      let workspace_hint: string | undefined
-      if (block.start > 0) {
-        for (let j = block.start - 1; j >= Math.max(0, block.start - 5); j--) {
-          const prev_line = lines[j].trim()
-          if (!prev_line) continue
+      const hint_result = find_file_path_before_block({
+        lines,
+        block_start: block.start,
+        is_single_root: params.is_single_root
+      })
 
-          let extracted = extract_path_from_line_of_code(prev_line)
-          if (!extracted) {
-            const xml_match = prev_line.match(/^<[^>]+>([^<]+)<\/[^>]+>$/)
-            if (xml_match && xml_match[1]) {
-              const potential_path = xml_match[1].trim()
-              if (
-                potential_path &&
-                (potential_path.includes('/') ||
-                  potential_path.includes('\\') ||
-                  potential_path.includes('.')) &&
-                !potential_path.includes(' ')
-              ) {
-                extracted = potential_path
-              }
-            }
-          }
-
-          if (!extracted) {
-            const match = prev_line.match(/`([^`]+)`/)
-            if (match && match[1]) {
-              const potential_path = match[1]
-              if (
-                potential_path.includes('/') ||
-                potential_path.includes('\\') ||
-                potential_path.includes('.')
-              ) {
-                extracted = potential_path
-              }
-            }
-          }
-
-          if (extracted) {
-            if (extracted.endsWith('/') || extracted.endsWith('\\')) {
-              continue
-            }
-
-            file_path_hint = extracted
-            const { workspace_name } = extract_workspace_and_path({
-              raw_file_path: extracted,
-              is_single_root_folder_workspace: params.is_single_root
-            })
-            workspace_hint = workspace_name
-            break
-          }
-        }
-      }
       const patch = convert_code_block_to_new_file_diff({
         lines: block_lines,
         is_single_root: params.is_single_root,
-        file_path_hint
+        file_path_hint: hint_result.file_path
       })
 
       if (patch) {
-        const last_item =
-          items.length > 0 ? items[items.length - 1] : undefined
+        const last_item = items.length > 0 ? items[items.length - 1] : undefined
         if (last_item && last_item.type == 'text') {
           const content_lines = last_item.content.split('\n')
           let last_non_empty_line_index = -1
@@ -676,36 +696,8 @@ const extract_all_code_block_patches = (params: {
           }
 
           if (last_non_empty_line) {
-            let extracted = extract_path_from_line_of_code(last_non_empty_line)
-            if (!extracted) {
-              const xml_match =
-                last_non_empty_line.match(/^<[^>]+>([^<]+)<\/[^>]+>$/)
-              if (xml_match && xml_match[1]) {
-                const potential_path = xml_match[1].trim()
-                if (
-                  potential_path &&
-                  (potential_path.includes('/') ||
-                    potential_path.includes('\\') ||
-                    potential_path.includes('.')) &&
-                  !potential_path.includes(' ')
-                ) {
-                  extracted = potential_path
-                }
-              }
-            }
-            if (!extracted) {
-              const match = last_non_empty_line.match(/`([^`]+)`/)
-              if (match && match[1]) {
-                const potential_path = match[1]
-                if (
-                  potential_path.includes('/') ||
-                  potential_path.includes('\\') ||
-                  potential_path.includes('.')
-                ) {
-                  extracted = potential_path
-                }
-              }
-            }
+            const extracted =
+              extract_path_with_xml_fallback(last_non_empty_line)
 
             if (extracted) {
               const { relative_path } = extract_workspace_and_path({
@@ -731,8 +723,8 @@ const extract_all_code_block_patches = (params: {
         const file_key = `${patch.workspace_name || ''}:${patch.file_path}`
 
         if (!files_with_diffs.has(file_key)) {
-          if (workspace_hint && !patch.workspace_name) {
-            patch.workspace_name = workspace_hint
+          if (hint_result.workspace_name && !patch.workspace_name) {
+            patch.workspace_name = hint_result.workspace_name
           }
           items.push(patch)
         }
