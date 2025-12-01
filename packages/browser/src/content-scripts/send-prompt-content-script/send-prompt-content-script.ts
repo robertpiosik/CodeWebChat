@@ -18,6 +18,7 @@ import {
   yuanbao,
   doubao,
   kimi,
+  lmarena,
   together,
   github_copilot,
   hugging_chat,
@@ -71,6 +72,9 @@ const is_yuanbao = current_url.startsWith(yuanbao_url)
 const hugging_chat_url = 'https://huggingface.co/chat/'
 const is_hugging_chat = current_url.startsWith(hugging_chat_url)
 
+const lmarena_url = 'https://lmarena.ai/'
+const is_lmarena = current_url.startsWith(lmarena_url)
+
 const minimax_url = 'https://agent.minimax.io/'
 const is_minimax = current_url.startsWith(minimax_url)
 
@@ -113,6 +117,8 @@ if (is_ai_studio) {
   chatbot = claude
 } else if (is_hugging_chat) {
   chatbot = hugging_chat
+} else if (is_lmarena) {
+  chatbot = lmarena
 } else if (is_minimax) {
   chatbot = minimax
 } else if (is_mistral) {
@@ -159,7 +165,8 @@ export const get_textarea_element = () => {
     [z_ai_url]: 'textarea',
     [github_copilot_url]: 'textarea',
     [hugging_chat_url]: 'textarea',
-    [minimax_url]: 'textarea'
+    [minimax_url]: 'textarea',
+    [lmarena_url]: 'textarea'
   } as any
 
   // Find the appropriate selector based on the URL without the hash

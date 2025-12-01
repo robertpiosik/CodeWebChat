@@ -655,38 +655,42 @@
             },
             {
               "name": "(11)",
-              "chatbot": "Minimax"
+              "chatbot": "LMArena"
             },
             {
               "name": "(12)",
-              "chatbot": "Mistral"
+              "chatbot": "Minimax"
             },
             {
               "name": "(13)",
-              "chatbot": "Open WebUI"
+              "chatbot": "Mistral"
             },
             {
               "name": "(14)",
-              "chatbot": "OpenRouter"
+              "chatbot": "Open WebUI"
             },
             {
               "name": "(15)",
-              "chatbot": "Perplexity"
+              "chatbot": "OpenRouter"
             },
             {
               "name": "(16)",
-              "chatbot": "Qwen"
+              "chatbot": "Perplexity"
             },
             {
               "name": "(17)",
-              "chatbot": "Together"
+              "chatbot": "Qwen"
             },
             {
               "name": "(18)",
-              "chatbot": "Yuanbao"
+              "chatbot": "Together"
             },
             {
               "name": "(19)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(20)",
               "chatbot": "Z.AI"
             }
           ],
@@ -712,6 +716,7 @@
                   "Grok",
                   "HuggingChat",
                   "Kimi",
+                  "LMArena",
                   "Minimax",
                   "Mistral",
                   "Open WebUI",
@@ -848,38 +853,42 @@
             },
             {
               "name": "(11)",
-              "chatbot": "Minimax"
+              "chatbot": "LMArena"
             },
             {
               "name": "(12)",
-              "chatbot": "Mistral"
+              "chatbot": "Minimax"
             },
             {
               "name": "(13)",
-              "chatbot": "Open WebUI"
+              "chatbot": "Mistral"
             },
             {
               "name": "(14)",
-              "chatbot": "OpenRouter"
+              "chatbot": "Open WebUI"
             },
             {
               "name": "(15)",
-              "chatbot": "Perplexity"
+              "chatbot": "OpenRouter"
             },
             {
               "name": "(16)",
-              "chatbot": "Qwen"
+              "chatbot": "Perplexity"
             },
             {
               "name": "(17)",
-              "chatbot": "Together"
+              "chatbot": "Qwen"
             },
             {
               "name": "(18)",
-              "chatbot": "Yuanbao"
+              "chatbot": "Together"
             },
             {
               "name": "(19)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(20)",
               "chatbot": "Z.AI"
             }
           ],
@@ -905,6 +914,7 @@
                   "Grok",
                   "HuggingChat",
                   "Kimi",
+                  "LMArena",
                   "Minimax",
                   "Mistral",
                   "Open WebUI",
@@ -1041,38 +1051,42 @@
             },
             {
               "name": "(11)",
-              "chatbot": "Minimax"
+              "chatbot": "LMArena"
             },
             {
               "name": "(12)",
-              "chatbot": "Mistral"
+              "chatbot": "Minimax"
             },
             {
               "name": "(13)",
-              "chatbot": "Open WebUI"
+              "chatbot": "Mistral"
             },
             {
               "name": "(14)",
-              "chatbot": "OpenRouter"
+              "chatbot": "Open WebUI"
             },
             {
               "name": "(15)",
-              "chatbot": "Perplexity"
+              "chatbot": "OpenRouter"
             },
             {
               "name": "(16)",
-              "chatbot": "Qwen"
+              "chatbot": "Perplexity"
             },
             {
               "name": "(17)",
-              "chatbot": "Together"
+              "chatbot": "Qwen"
             },
             {
               "name": "(18)",
-              "chatbot": "Yuanbao"
+              "chatbot": "Together"
             },
             {
               "name": "(19)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(20)",
               "chatbot": "Z.AI"
             }
           ],
@@ -1098,6 +1112,7 @@
                   "Grok",
                   "HuggingChat",
                   "Kimi",
+                  "LMArena",
                   "Minimax",
                   "Mistral",
                   "Open WebUI",
@@ -1204,38 +1219,42 @@
             },
             {
               "name": "(11)",
-              "chatbot": "Minimax"
+              "chatbot": "LMArena"
             },
             {
               "name": "(12)",
-              "chatbot": "Mistral"
+              "chatbot": "Minimax"
             },
             {
               "name": "(13)",
-              "chatbot": "Open WebUI"
+              "chatbot": "Mistral"
             },
             {
               "name": "(14)",
-              "chatbot": "OpenRouter"
+              "chatbot": "Open WebUI"
             },
             {
               "name": "(15)",
-              "chatbot": "Perplexity"
+              "chatbot": "OpenRouter"
             },
             {
               "name": "(16)",
-              "chatbot": "Qwen"
+              "chatbot": "Perplexity"
             },
             {
               "name": "(17)",
-              "chatbot": "Together"
+              "chatbot": "Qwen"
             },
             {
               "name": "(18)",
-              "chatbot": "Yuanbao"
+              "chatbot": "Together"
             },
             {
               "name": "(19)",
+              "chatbot": "Yuanbao"
+            },
+            {
+              "name": "(20)",
               "chatbot": "Z.AI"
             }
           ],
@@ -1261,6 +1280,7 @@
                   "Grok",
                   "HuggingChat",
                   "Kimi",
+                  "LMArena",
                   "Minimax",
                   "Mistral",
                   "Open WebUI",

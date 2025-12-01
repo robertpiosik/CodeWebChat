@@ -1,6 +1,6 @@
 export const apply_chat_response_button_style = (button: HTMLButtonElement) => {
   button.style.margin = '4px 8px'
-  button.style.padding = '7px 11px'
+  button.style.padding = '6px 9px'
   button.style.borderRadius = '999px'
   button.style.backgroundColor = '#fbb100'
   button.style.cursor = 'pointer'
@@ -10,7 +10,7 @@ export const apply_chat_response_button_style = (button: HTMLButtonElement) => {
 
   const svg = button.querySelector('svg')
   if (svg) {
-    svg.style.height = '14px'
+    svg.style.height = '13px'
   }
 }
 
