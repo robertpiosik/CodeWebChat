@@ -610,7 +610,6 @@
             {
               "name": "(0)",
               "chatbot": "AI Studio",
-              "temperature": 0.5,
               "systemInstructions": "You're a helpful coding assistant."
             },
             {
