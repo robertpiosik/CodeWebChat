@@ -40,10 +40,18 @@ export const use_keyboard_shortcuts = ({
       }
     }
 
+    const handle_mouse_up = (event: MouseEvent) => {
+      if (event.button == 3) {
+        on_show_home()
+      }
+    }
+
     window.addEventListener('keydown', handle_key_down)
+    window.addEventListener('mouseup', handle_mouse_up)
 
     return () => {
       window.removeEventListener('keydown', handle_key_down)
+      window.removeEventListener('mouseup', handle_mouse_up)
     }
   }, [is_mac, handle_heading_click, on_show_home])
 
