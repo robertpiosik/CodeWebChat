@@ -5,7 +5,8 @@ import { replace_selection_placeholder } from '@/views/panel/backend/utils/repla
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import {
-  replace_changes_placeholder, replace_context_at_commit_placeholder,
+  replace_changes_placeholder,
+  replace_context_at_commit_placeholder,
   replace_commit_placeholder
 } from '@/views/panel/backend/utils/replace-git-placeholders'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
@@ -85,7 +86,10 @@ export const handle_send_prompt = async (params: {
       params.panel_provider.web_prompt_type
     )
     const recents =
-      params.panel_provider.context.globalState.get<string[]>(recents_key, []) ?? []
+      params.panel_provider.context.globalState.get<string[]>(
+        recents_key,
+        []
+      ) ?? []
     const new_recents = [
       name_to_save,
       ...recents.filter((r) => r != name_to_save)
@@ -206,19 +210,17 @@ export const handle_send_prompt = async (params: {
         }
 
         if (pre_context_instructions.includes('#ContextAtCommit:')) {
-          pre_context_instructions = await replace_context_at_commit_placeholder(
-            {
+          pre_context_instructions =
+            await replace_context_at_commit_placeholder({
               instruction: pre_context_instructions,
               workspace_provider: params.panel_provider.workspace_provider
-            }
-          )
-          post_context_instructions = await replace_context_at_commit_placeholder(
-            {
+            })
+          post_context_instructions =
+            await replace_context_at_commit_placeholder({
               instruction: post_context_instructions,
               after_context: true,
               workspace_provider: params.panel_provider.workspace_provider
-            }
-          )
+            })
         }
         if (pre_context_instructions.includes('#SavedContext:')) {
           pre_context_instructions = await replace_saved_context_placeholder({
@@ -320,8 +322,8 @@ async function show_preset_quick_pick(params: {
       if (item && item.chatbot) {
         const preset = item
         const is_unnamed = !preset.name || /^\(\d+\)$/.test(preset.name.trim())
-        const chatbot_models =
-          CHATBOTS[preset.chatbot as keyof typeof CHATBOTS].models as any
+        const chatbot_models = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
+          .models as any
         const model = preset.model
           ? chatbot_models[preset.model]?.label || preset.model
           : ''
@@ -485,14 +487,19 @@ async function show_preset_quick_pick(params: {
         const runnable_presets = default_presets_in_group.filter(
           (preset) => !params.get_is_preset_disabled(preset)
         )
-        const preset_names = runnable_presets.map((p) => p.name!).filter(Boolean)
+        const preset_names = runnable_presets
+          .map((p) => p.name!)
+          .filter(Boolean)
 
         if (preset_names.length > 0) {
           update_last_used_preset_or_group({ panel_provider, group_name })
           const recents_key = get_recently_used_presets_or_groups_key(mode)
           const recents =
             context.globalState.get<string[]>(recents_key, []) ?? []
-          const newRecents = [group_name, ...recents.filter((r) => r !== group_name)].slice(0, 10)
+          const newRecents = [
+            group_name,
+            ...recents.filter((r) => r !== group_name)
+          ].slice(0, 10)
           context.globalState.update(recents_key, newRecents)
           do_resolve({ preset_names })
         }
@@ -521,9 +528,7 @@ async function resolve_presets(params: {
   context: vscode.ExtensionContext
 }): Promise<{ preset_names: string[]; without_submission?: boolean }> {
   const last_selected_preset_or_group_key =
-    get_last_selected_preset_or_group_key(
-      params.panel_provider.web_prompt_type
-    )
+    get_last_selected_preset_or_group_key(params.panel_provider.web_prompt_type)
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.panel_provider.get_presets_config_key()
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
@@ -666,9 +671,7 @@ async function resolve_presets(params: {
       params.context.workspaceState.get<string>(
         last_selected_preset_or_group_key
       ) ??
-      params.context.globalState.get<string>(
-        last_selected_preset_or_group_key
-      )
+      params.context.globalState.get<string>(last_selected_preset_or_group_key)
 
     if (last_selected_name) {
       if (last_selected_name === 'Ungrouped') {

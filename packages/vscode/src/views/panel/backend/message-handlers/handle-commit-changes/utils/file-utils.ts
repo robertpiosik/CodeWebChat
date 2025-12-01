@@ -38,22 +38,34 @@ export const collect_affected_files_with_metadata = async (params: {
     let content = ''
     let is_large_file = false
     try {
-      const stats = await fs.promises.stat(file_path)
-      if (stats.size > 100 * 1024) {
-        is_large_file = true
-        content = `File content omitted due to large size (${(
-          stats.size / 1024
-        ).toFixed(2)} KB).`
-      } else {
-        content = await fs.promises.readFile(file_path, 'utf8')
+      content = await params.repository.show('HEAD', relative_path)
+    } catch (show_error) {
+      // If `show` fails, it's likely a new file. Fallback to reading from disk.
+      try {
+        const stats = await fs.promises.stat(file_path)
+        if (stats.size > 100 * 1024) {
+          is_large_file = true
+          content = `File content omitted due to large size (${(
+            stats.size / 1024
+          ).toFixed(2)} KB).`
+        } else {
+          content = await fs.promises.readFile(file_path, 'utf8')
+        }
+      } catch (read_error) {
+        Logger.warn({
+          function_name: 'collect_affected_files_with_metadata',
+          message: `Could not read file content for ${relative_path}`,
+          data: { show_error, read_error }
+        })
+        content = `Could not read file content.`
       }
-    } catch (read_error) {
-      Logger.warn({
-        function_name: 'collect_affected_files_with_metadata',
-        message: `Could not read file content for ${relative_path}`,
-        data: read_error
-      })
-      content = `Could not read file content.`
+    }
+
+    if (!is_large_file && content.length > 100 * 1024) {
+      is_large_file = true
+      content = `File content omitted due to large size (${(
+        content.length / 1024
+      ).toFixed(2)} KB).`
     }
 
     // Simple token estimation: 1 token per 4 characters

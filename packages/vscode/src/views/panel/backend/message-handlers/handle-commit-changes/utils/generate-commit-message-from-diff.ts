@@ -6,10 +6,7 @@ import {
   CommitMessageConfig
 } from './get-commit-message-config'
 import { collect_affected_files_with_metadata } from './file-utils'
-import {
-  build_files_content,
-  build_commit_message_prompt
-} from './prompt-utils'
+import { build_commit_message_prompt } from './prompt-utils'
 import axios from 'axios'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
@@ -188,10 +185,9 @@ export const generate_commit_message_from_diff = async (params: {
     repository: params.repository
   })
 
-  const affected_files = build_files_content(affected_files_data)
   const message = build_commit_message_prompt(
     commit_message_prompt!,
-    affected_files,
+    affected_files_data,
     params.diff
   )
 

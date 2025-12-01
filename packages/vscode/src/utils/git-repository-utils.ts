@@ -13,6 +13,7 @@ export interface GitRepository {
   inputBox: {
     value: string
   }
+  show: (ref: string, path: string) => Promise<string>
 }
 
 export function get_git_repository(
