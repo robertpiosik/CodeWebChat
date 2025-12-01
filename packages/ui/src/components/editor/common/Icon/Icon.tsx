@@ -18,6 +18,7 @@ import Grok from '../../../../assets/icons/grok.svg'
 import HashSign from '../../../../assets/icons/hash-sign.svg'
 import HuggingChat from '../../../../assets/icons/hugging-chat.svg'
 import Kimi from '../../../../assets/icons/kimi.svg'
+import LMArena from '../../../../assets/icons/lmarena.svg'
 import Meta from '../../../../assets/icons/meta.svg'
 import Minimax from '../../../../assets/icons/minimax.svg'
 import Mistral from '../../../../assets/icons/mistral.svg'
@@ -52,6 +53,7 @@ export namespace Icon {
     | 'HASH_SIGN'
     | 'HUGGING_CHAT'
     | 'KIMI'
+    | 'LMARENA'
     | 'META'
     | 'MINIMAX'
     | 'MISTRAL'
@@ -132,6 +134,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'KIMI':
       icon = <Kimi />
+      break
+    case 'LMARENA':
+      icon = <LMArena />
       break
     case 'META':
       icon = <Meta />
