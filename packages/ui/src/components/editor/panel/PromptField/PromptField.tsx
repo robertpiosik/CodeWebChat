@@ -289,17 +289,15 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   }, [props.on_caret_position_change, props.value, props.context_file_paths])
 
   const placeholder = useMemo(() => {
-    const active_history = props.chat_history
-
     if (props.is_in_code_completions_mode) {
-      if (active_history.length > 0 && is_history_enabled) {
+      if (props.chat_history.length > 0 && is_history_enabled) {
         return 'Completion instructions (⇅ for history)'
       } else {
         return 'Completion instructions'
       }
     }
 
-    return active_history.length > 0 && is_history_enabled
+    return props.chat_history.length > 0 && is_history_enabled
       ? 'Type something (⇅ for history)'
       : 'Type something'
   }, [

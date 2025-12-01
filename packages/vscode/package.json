@@ -582,9 +582,9 @@
           "scope": "resource",
           "description": "Style of generated code blocks in \"Edit context\" mode.",
           "default": {
-            "whole": "Whenever showing a new or updated file, include a brief explanation of changes, the path and a Markdown Code Block with full contents—because I have a disability which means I can't type and need to be able to just copy and paste.",
-            "truncated": "Whenever showing a new or updated file, include a brief explanation of changes, the path and a Markdown Code Block with truncated contents—unchanged parts should be replaced by ellipsis comments, e.g. \"// ...\".",
-            "diff": "Whenever showing a new or updated file, include a brief explanation of changes, and print them in the Unified Diff format (that's compatible with the git apply command)."
+            "whole": "Whenever showing a new or updated file, print the path and a Markdown Code Block with file's full contents. I have a disability which means I can't type and need to be able to just copy and paste. Briefly explain your reasoning, when you deem appropriate.",
+            "truncated": "Whenever showing a new or updated file, print the path and a Markdown Code Block with truncated contents. To save space, unchanged parts should be replaced by ellipsis comments, e.g. \"// ...\". Briefly explain your reasoning, when you deem appropriate.",
+            "diff": "Whenever showing a new or updated file, use the the Unified Diff format (that's compatible with the git apply command). Each diff should be placed in a Markdown Code Block. Briefly explain your reasoning, when you deem appropriate."
           },
           "properties": {
             "whole": {

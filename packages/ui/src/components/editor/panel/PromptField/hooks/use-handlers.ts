@@ -194,8 +194,6 @@ export const use_handlers = (
 
   const update_value = (new_value: string, caret_pos?: number) => {
     if (new_value === props.value) return
-    // Mark that we've modified the current entry (not from history navigation)
-    has_modified_current_entry_ref.current = true
     set_undo_stack((prev) => [
       ...prev,
       { value: props.value, raw_caret_pos: raw_caret_pos_ref.current }
@@ -224,6 +222,7 @@ export const use_handlers = (
 
     const new_value = leading_part + trailing_part
     const new_raw_cursor_pos = leading_part.length
+    has_modified_current_entry_ref.current = new_value !== ''
     update_value(new_value, new_raw_cursor_pos)
   }
 
@@ -394,8 +393,8 @@ export const use_handlers = (
   }
 
   const handle_clear = () => {
-    update_value('')
     has_modified_current_entry_ref.current = false
+    update_value('')
     set_history_index(-1)
   }
 
@@ -436,6 +435,7 @@ export const use_handlers = (
             last_word_in_raw_index
           )
           const final_new_value = `${value_before}\`${matched_path}\` `
+          has_modified_current_entry_ref.current = true
           update_value(final_new_value, final_new_value.length)
           set_history_index(-1)
           return
@@ -443,9 +443,8 @@ export const use_handlers = (
       }
     }
 
+    has_modified_current_entry_ref.current = new_raw_value !== ''
     update_value(new_raw_value)
-    has_modified_current_entry_ref.current = true
-    set_history_index(-1)
 
     if (char_before_caret == '@') {
       const is_at_start = caret_position == 1
@@ -461,6 +460,8 @@ export const use_handlers = (
     } else if (char_before_caret == '#') {
       props.on_hash_sign_click()
     }
+
+    set_history_index(-1)
   }
 
   const handle_submit = (
@@ -708,9 +709,9 @@ export const use_handlers = (
     e.preventDefault()
 
     const update_and_set_caret = (value: string) => {
-      update_value(value, value.length)
       // Reset the modification flag when navigating history
       has_modified_current_entry_ref.current = false
+      update_value(value, value.length)
     }
 
     if (e.key === 'ArrowUp') {
@@ -725,7 +726,6 @@ export const use_handlers = (
         set_history_index(new_index)
         update_and_set_caret(active_history[new_index])
       } else if (history_index === 0) {
-        has_modified_current_entry_ref.current = false
         set_history_index(-1)
         update_and_set_caret('')
       }
@@ -967,6 +967,7 @@ export const use_handlers = (
         const new_start_pos = i + 1
         const new_value =
           value.substring(0, new_start_pos) + value.substring(raw_pos)
+        has_modified_current_entry_ref.current = new_value !== ''
         update_value(new_value, new_start_pos)
         return
       }
