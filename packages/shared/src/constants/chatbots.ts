@@ -108,6 +108,8 @@ export const CHATBOTS = {
   } as Chatbot,
   'GitHub Copilot': {
     url: 'https://github.com/copilot',
+    supports_url_override: true,
+    url_override_label: 'Space URL',
     models: {
       'gpt-5-mini': { label: 'GPT-5 mini' },
       'grok-code-fast-1': { label: 'Grok Code Fast 1' },
@@ -147,6 +149,8 @@ export const CHATBOTS = {
   } as Chatbot,
   Mistral: {
     url: 'https://chat.mistral.ai/chat',
+    supports_url_override: true,
+    url_override_label: 'Project URL',
     supported_options: {
       incognito: 'Incognito mode',
       think: 'Think'
