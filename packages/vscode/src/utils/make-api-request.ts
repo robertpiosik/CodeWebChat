@@ -59,6 +59,13 @@ const process_stream_chunk = async (
   }
 }
 
+class StreamAbortError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'StreamAbortError'
+  }
+}
+
 export const make_api_request = async (params: {
   endpoint_url: string
   api_key?: string
@@ -118,8 +125,8 @@ export const make_api_request = async (params: {
     params.on_thinking_chunk(chunk)
   }
 
-  const MAX_RETRIES = 3
-  const RETRY_DELAYS = [2000, 5000, 10000]
+  const MAX_RETRIES = 5
+  const RETRY_DELAYS = [1000, 2000, 3000, 4000, 5000]
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     try {
@@ -261,6 +268,8 @@ export const make_api_request = async (params: {
       response.data.setEncoding('utf8')
 
       return new Promise((resolve, reject) => {
+        let stream_closed = false
+
         response.data.on('data', async (chunk: string) => {
           const { updated_buffer, new_content } = await process_stream_chunk(
             chunk,
@@ -282,6 +291,8 @@ export const make_api_request = async (params: {
         })
 
         response.data.on('end', () => {
+          stream_closed = true
+
           if (buffer.trim()) {
             try {
               const trimmed_line = buffer.trim()
@@ -346,29 +357,53 @@ export const make_api_request = async (params: {
         })
 
         response.data.on('error', (error: Error) => {
-          Logger.error({
-            function_name: 'make_api_request',
-            message: 'Stream error',
-            data: error
-          })
-          reject(error)
+          if (!stream_closed) {
+            Logger.error({
+              function_name: 'make_api_request',
+              message: 'Stream error',
+              data: error
+            })
+            // Convert stream errors to a retryable error type
+            reject(new StreamAbortError(error.message))
+          }
+        })
+
+        // Handle abort events specifically
+        response.data.on('aborted', () => {
+          if (!stream_closed) {
+            Logger.warn({
+              function_name: 'make_api_request',
+              message: 'Stream aborted',
+            })
+            reject(new StreamAbortError('Stream was aborted'))
+          }
         })
       })
     } catch (error) {
-      if (
-        axios.isAxiosError(error) &&
-        (error.response?.status == 503 ||
-          error.code == 'ECONNRESET' ||
-          error.code == 'ECONNABORTED') &&
-        attempt < MAX_RETRIES
-      ) {
+      // Check if it's a retryable error
+      const is_retryable_error =
+        (axios.isAxiosError(error) &&
+          (error.response?.status == 503 ||
+            error.code == 'ECONNRESET' ||
+            error.code == 'ECONNABORTED')) ||
+        error instanceof StreamAbortError
+
+      if (is_retryable_error && attempt < MAX_RETRIES) {
         const delay = RETRY_DELAYS[attempt]
-        const reason =
-          error.response?.status == 503
-            ? 'status 503'
-            : error.code == 'ECONNABORTED'
-            ? 'a timeout'
-            : 'a socket hang up (ECONNRESET)'
+        let reason = 'an unknown error'
+        
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status == 503) {
+            reason = 'status 503'
+          } else if (error.code == 'ECONNABORTED') {
+            reason = 'a timeout'
+          } else if (error.code == 'ECONNRESET') {
+            reason = 'a socket hang up (ECONNRESET)'
+          }
+        } else if (error instanceof StreamAbortError) {
+          reason = 'stream abortion'
+        }
+
         Logger.warn({
           function_name: 'make_api_request',
           message: `API request failed with ${reason}. Retrying in ${
