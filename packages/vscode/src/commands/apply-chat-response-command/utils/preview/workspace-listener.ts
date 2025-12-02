@@ -8,6 +8,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { PreparedFile, ReviewableFile } from './types'
 import { get_diff_stats } from './diff-utils'
 import { remove_directory_if_empty } from '../file-operations'
+import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { create_temp_files_with_original_content } from './temp-file-manager'
 
 export let toggle_file_review_state:
@@ -17,6 +18,50 @@ export let toggle_file_review_state:
       is_checked: boolean
     }) => Promise<void>)
   | undefined
+
+const recalculate_history_item_totals = (item: ResponseHistoryItem) => {
+  if (!item.files) {
+    item.lines_added = 0
+    item.lines_removed = 0
+    return
+  }
+  item.lines_added = item.files
+    .filter((f) => f.is_checked)
+    .reduce((sum, f) => sum + f.lines_added, 0)
+  item.lines_removed = item.files
+    .filter((f) => f.is_checked)
+    .reduce((sum, f) => sum + f.lines_removed, 0)
+}
+
+const update_response_history = (
+  panel_provider: PanelProvider,
+  created_at: number | undefined,
+  updated_file: ReviewableFile
+) => {
+  if (!created_at) return
+
+  const history = panel_provider.response_history
+  const item_to_update = history.find((i) => i.created_at === created_at)
+  if (item_to_update) {
+    if (!item_to_update.files) {
+      item_to_update.files = []
+    }
+    const file_in_history_index = item_to_update.files.findIndex(
+      (f) =>
+        f.file_path === updated_file.file_path &&
+        f.workspace_name === updated_file.workspace_name
+    )
+
+    if (file_in_history_index !== -1) {
+      item_to_update.files[file_in_history_index] = updated_file
+    } else {
+      item_to_update.files.push(updated_file)
+    }
+
+    recalculate_history_item_totals(item_to_update)
+    panel_provider.send_message({ command: 'RESPONSE_HISTORY', history })
+  }
+}
 
 export const setup_workspace_listeners = (
   prepared_files: PreparedFile[],
@@ -69,40 +114,11 @@ export const setup_workspace_listeners = (
           changed_file_in_review.reviewable_file.content = new_content
         }
 
-        if (created_at) {
-          const history = panel_provider.response_history
-          const item_to_update = history.find(
-            (i) => i.created_at === created_at
-          )
-          if (item_to_update && item_to_update.files) {
-            const file_in_history = item_to_update.files.find(
-              (f) =>
-                f.file_path ==
-                  changed_file_in_review.reviewable_file.file_path &&
-                f.workspace_name ==
-                  changed_file_in_review.reviewable_file.workspace_name
-            )
-            if (file_in_history) {
-              if (changed_file_in_review.reviewable_file.is_checked) {
-                file_in_history.content = new_content
-              }
-              file_in_history.lines_added = diff_stats.lines_added
-              file_in_history.lines_removed = diff_stats.lines_removed
-              let total_lines_added = 0
-              let total_lines_removed = 0
-              item_to_update.files.forEach((f) => {
-                total_lines_added += f.lines_added
-                total_lines_removed += f.lines_removed
-              })
-              item_to_update.lines_added = total_lines_added
-              item_to_update.lines_removed = total_lines_removed
-              panel_provider.send_message({
-                command: 'RESPONSE_HISTORY',
-                history
-              })
-            }
-          }
-        }
+        update_response_history(
+          panel_provider,
+          created_at,
+          changed_file_in_review.reviewable_file
+        )
 
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
@@ -182,6 +198,11 @@ export const setup_workspace_listeners = (
         original_states.push(new_original_state)
         prepared_files.push(new_prepared_file)
         create_temp_files_with_original_content([new_prepared_file])
+        update_response_history(
+          panel_provider,
+          created_at,
+          new_prepared_file.reviewable_file
+        )
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: new_prepared_file.reviewable_file
@@ -258,6 +279,11 @@ export const setup_workspace_listeners = (
         original_states.push(new_original_state)
         prepared_files.push(new_prepared_file)
         create_temp_files_with_original_content([new_prepared_file])
+        update_response_history(
+          panel_provider,
+          created_at,
+          new_prepared_file.reviewable_file
+        )
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: new_prepared_file.reviewable_file
@@ -273,6 +299,11 @@ export const setup_workspace_listeners = (
           diff_stats.lines_added
         deleted_file_in_review.reviewable_file.lines_removed =
           diff_stats.lines_removed
+        update_response_history(
+          panel_provider,
+          created_at,
+          deleted_file_in_review.reviewable_file
+        )
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: deleted_file_in_review.reviewable_file
@@ -355,6 +386,11 @@ export const setup_workspace_listeners = (
       // Create temp file with the original (empty) content for diff view
       create_temp_files_with_original_content([new_prepared_file])
 
+      update_response_history(
+        panel_provider,
+        created_at,
+        new_prepared_file.reviewable_file
+      )
       // Notify the panel to include this file in the review UI
       panel_provider.send_message({
         command: 'UPDATE_FILE_IN_REVIEW',
@@ -470,10 +506,20 @@ export const setup_workspace_listeners = (
         })
 
         // Notify UI
+        update_response_history(
+          panel_provider,
+          created_at,
+          existing.reviewable_file
+        )
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: existing.reviewable_file
         })
+        update_response_history(
+          panel_provider,
+          created_at,
+          deleted_prepared.reviewable_file
+        )
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: deleted_prepared.reviewable_file
@@ -565,10 +611,20 @@ export const setup_workspace_listeners = (
         ])
 
         // Notify UI
+        update_response_history(
+          panel_provider,
+          created_at,
+          created_reviewable
+        )
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: created_reviewable
         })
+        update_response_history(
+          panel_provider,
+          created_at,
+          deleted_reviewable
+        )
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
           file: deleted_reviewable
@@ -602,6 +658,7 @@ export const setup_workspace_listeners = (
         )
         if (file_in_history) {
           file_in_history.is_checked = is_checked
+          recalculate_history_item_totals(item_to_update)
           panel_provider.send_message({ command: 'RESPONSE_HISTORY', history })
         }
       }
