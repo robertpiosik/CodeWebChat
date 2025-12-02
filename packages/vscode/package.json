@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "Superfast AI coding (CWC)",
-  "version": "1.620.0",
+  "version": "1.621.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -33,18 +33,14 @@
   ],
   "keywords": [
     "ai",
-    "vibe-coding",
-    "ai-assistance",
-    "refactoring",
-    "autocomplete",
-    "commit-messages",
+    "assistant",
     "chat",
     "chatgpt",
-    "gemini",
     "claude",
     "deepseek",
-    "qwen",
-    "mistral"
+    "gemini",
+    "mistral",
+    "qwen"
   ],
   "main": "out/extension.js",
   "activationEvents": [],
@@ -582,9 +578,9 @@
           "scope": "resource",
           "description": "Style of generated code blocks in \"Edit context\" mode.",
           "default": {
-            "whole": "Whenever showing a new or updated file: provide a brief explanation, use markdown heading for its path, and markdown code block for its full contents—as I have a disability which means I can't type and need to be able to just copy and paste.",
-            "truncated": "Whenever showing a new or updated file: provide a brief explanation, use markdown heading for its path, and markdown code block for its truncated contents—as a space saving measure (unchanged parts should be hidden behind ellipsis comments, e.g. \"// ...\").",
-            "diff": "Whenever showing a new or updated file: provide a brief explanation, and use unified diff within markdown code block."
+            "whole": "Whenever showing a new or updated file: provide brief explanations, then print full path in a heading, and a markdown code block with its full contents—as I have a disability which means I can't type and need to be able to just copy and paste.",
+            "truncated": "Whenever showing a new or updated file: provide brief explanations, then print full path in a heading, and a markdown code block with its truncated contents—as a space saving measure (unchanged parts should be hidden behind ellipsis comments, e.g. \"// ...\").",
+            "diff": "Whenever showing a new or updated file: provide brief explanations, then print unified diff within markdown code block."
           },
           "properties": {
             "whole": {
@@ -611,92 +607,92 @@
               "name": "Popular"
             },
             {
-              "name": "ChatGPT",
+              "name": "(1)",
               "chatbot": "ChatGPT"
             },
             {
-              "name": "Claude",
+              "name": "(2)",
               "chatbot": "Claude"
             },
             {
-              "name": "Gemini",
+              "name": "(3)",
               "chatbot": "Gemini"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "DeepSeek"
             },
             {},
             {
               "name": "Others"
             },
             {
-              "name": "AI Studio",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "Copilot",
+              "name": "(7)",
               "chatbot": "Copilot"
             },
             {
-              "name": "DeepSeek",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "Doubao",
+              "name": "(8)",
               "chatbot": "Doubao"
             },
             {
-              "name": "GitHub Copilot",
+              "name": "(9)",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "Grok",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "HuggingChat",
+              "name": "(10)",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "Kimi",
+              "name": "(11)",
               "chatbot": "Kimi"
             },
             {
-              "name": "LMArena",
+              "name": "(12)",
               "chatbot": "LMArena"
             },
             {
-              "name": "Minimax",
+              "name": "(13)",
               "chatbot": "Minimax"
             },
             {
-              "name": "Mistral",
+              "name": "(14)",
               "chatbot": "Mistral"
             },
             {
-              "name": "Open WebUI",
+              "name": "(15)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "OpenRouter",
+              "name": "(16)",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "Perplexity",
+              "name": "(17)",
               "chatbot": "Perplexity"
             },
             {
-              "name": "Qwen",
+              "name": "(18)",
               "chatbot": "Qwen"
             },
             {
-              "name": "Together",
+              "name": "(19)",
               "chatbot": "Together"
             },
             {
-              "name": "Yuanbao",
+              "name": "(20)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "Z.AI",
+              "name": "(21)",
               "chatbot": "Z.AI"
             },
             {}
@@ -726,8 +722,8 @@
                   "LMArena",
                   "Minimax",
                   "Mistral",
-                  "Open WebUI",
                   "OpenRouter",
+                  "Open WebUI",
                   "Perplexity",
                   "Qwen",
                   "Together",
@@ -816,92 +812,92 @@
               "name": "Popular"
             },
             {
-              "name": "ChatGPT",
+              "name": "(1)",
               "chatbot": "ChatGPT"
             },
             {
-              "name": "Claude",
+              "name": "(2)",
               "chatbot": "Claude"
             },
             {
-              "name": "Gemini",
+              "name": "(3)",
               "chatbot": "Gemini"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "DeepSeek"
             },
             {},
             {
               "name": "Others"
             },
             {
-              "name": "AI Studio",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "Copilot",
+              "name": "(7)",
               "chatbot": "Copilot"
             },
             {
-              "name": "DeepSeek",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "Doubao",
+              "name": "(8)",
               "chatbot": "Doubao"
             },
             {
-              "name": "GitHub Copilot",
+              "name": "(9)",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "Grok",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "HuggingChat",
+              "name": "(10)",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "Kimi",
+              "name": "(11)",
               "chatbot": "Kimi"
             },
             {
-              "name": "LMArena",
+              "name": "(12)",
               "chatbot": "LMArena"
             },
             {
-              "name": "Minimax",
+              "name": "(13)",
               "chatbot": "Minimax"
             },
             {
-              "name": "Mistral",
+              "name": "(14)",
               "chatbot": "Mistral"
             },
             {
-              "name": "Open WebUI",
+              "name": "(15)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "OpenRouter",
+              "name": "(16)",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "Perplexity",
+              "name": "(17)",
               "chatbot": "Perplexity"
             },
             {
-              "name": "Qwen",
+              "name": "(18)",
               "chatbot": "Qwen"
             },
             {
-              "name": "Together",
+              "name": "(19)",
               "chatbot": "Together"
             },
             {
-              "name": "Yuanbao",
+              "name": "(20)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "Z.AI",
+              "name": "(21)",
               "chatbot": "Z.AI"
             },
             {}
@@ -931,8 +927,8 @@
                   "LMArena",
                   "Minimax",
                   "Mistral",
-                  "Open WebUI",
                   "OpenRouter",
+                  "Open WebUI",
                   "Perplexity",
                   "Qwen",
                   "Together",
@@ -1021,92 +1017,92 @@
               "name": "Popular"
             },
             {
-              "name": "ChatGPT",
+              "name": "(1)",
               "chatbot": "ChatGPT"
             },
             {
-              "name": "Claude",
+              "name": "(2)",
               "chatbot": "Claude"
             },
             {
-              "name": "Gemini",
+              "name": "(3)",
               "chatbot": "Gemini"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "DeepSeek"
             },
             {},
             {
               "name": "Others"
             },
             {
-              "name": "AI Studio",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "Copilot",
+              "name": "(7)",
               "chatbot": "Copilot"
             },
             {
-              "name": "DeepSeek",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "Doubao",
+              "name": "(8)",
               "chatbot": "Doubao"
             },
             {
-              "name": "GitHub Copilot",
+              "name": "(9)",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "Grok",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "HuggingChat",
+              "name": "(10)",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "Kimi",
+              "name": "(11)",
               "chatbot": "Kimi"
             },
             {
-              "name": "LMArena",
+              "name": "(12)",
               "chatbot": "LMArena"
             },
             {
-              "name": "Minimax",
+              "name": "(13)",
               "chatbot": "Minimax"
             },
             {
-              "name": "Mistral",
+              "name": "(14)",
               "chatbot": "Mistral"
             },
             {
-              "name": "Open WebUI",
+              "name": "(15)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "OpenRouter",
+              "name": "(16)",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "Perplexity",
+              "name": "(17)",
               "chatbot": "Perplexity"
             },
             {
-              "name": "Qwen",
+              "name": "(18)",
               "chatbot": "Qwen"
             },
             {
-              "name": "Together",
+              "name": "(19)",
               "chatbot": "Together"
             },
             {
-              "name": "Yuanbao",
+              "name": "(20)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "Z.AI",
+              "name": "(21)",
               "chatbot": "Z.AI"
             },
             {}
@@ -1136,8 +1132,8 @@
                   "LMArena",
                   "Minimax",
                   "Mistral",
-                  "Open WebUI",
                   "OpenRouter",
+                  "Open WebUI",
                   "Perplexity",
                   "Qwen",
                   "Together",
@@ -1196,92 +1192,92 @@
               "name": "Popular"
             },
             {
-              "name": "ChatGPT",
+              "name": "(1)",
               "chatbot": "ChatGPT"
             },
             {
-              "name": "Claude",
+              "name": "(2)",
               "chatbot": "Claude"
             },
             {
-              "name": "Gemini",
+              "name": "(3)",
               "chatbot": "Gemini"
+            },
+            {
+              "name": "(4)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
+            },
+            {
+              "name": "(5)",
+              "chatbot": "Grok"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "DeepSeek"
             },
             {},
             {
               "name": "Others"
             },
             {
-              "name": "AI Studio",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "Copilot",
+              "name": "(7)",
               "chatbot": "Copilot"
             },
             {
-              "name": "DeepSeek",
-              "chatbot": "DeepSeek"
-            },
-            {
-              "name": "Doubao",
+              "name": "(8)",
               "chatbot": "Doubao"
             },
             {
-              "name": "GitHub Copilot",
+              "name": "(9)",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "Grok",
-              "chatbot": "Grok"
-            },
-            {
-              "name": "HuggingChat",
+              "name": "(10)",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "Kimi",
+              "name": "(11)",
               "chatbot": "Kimi"
             },
             {
-              "name": "LMArena",
+              "name": "(12)",
               "chatbot": "LMArena"
             },
             {
-              "name": "Minimax",
+              "name": "(13)",
               "chatbot": "Minimax"
             },
             {
-              "name": "Mistral",
+              "name": "(14)",
               "chatbot": "Mistral"
             },
             {
-              "name": "Open WebUI",
+              "name": "(15)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "OpenRouter",
+              "name": "(16)",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "Perplexity",
+              "name": "(17)",
               "chatbot": "Perplexity"
             },
             {
-              "name": "Qwen",
+              "name": "(18)",
               "chatbot": "Qwen"
             },
             {
-              "name": "Together",
+              "name": "(19)",
               "chatbot": "Together"
             },
             {
-              "name": "Yuanbao",
+              "name": "(20)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "Z.AI",
+              "name": "(21)",
               "chatbot": "Z.AI"
             },
             {}
@@ -1311,8 +1307,8 @@
                   "LMArena",
                   "Minimax",
                   "Mistral",
-                  "Open WebUI",
                   "OpenRouter",
+                  "Open WebUI",
                   "Perplexity",
                   "Qwen",
                   "Together",
