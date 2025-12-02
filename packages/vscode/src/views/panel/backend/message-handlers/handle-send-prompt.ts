@@ -306,7 +306,7 @@ async function show_preset_quick_pick(params: {
 
   if (recent_names.length == 0) {
     vscode.window.showWarningMessage(
-      'No recently used presets or groups. Use a preset or group once to see it here.'
+      'No recently used presets or groups.'
     )
     return null
   }
@@ -343,7 +343,7 @@ async function show_preset_quick_pick(params: {
   quick_pick.items = items
   if (items.length == 0) {
     vscode.window.showWarningMessage(
-      'No recently used presets or groups. Use a preset or group once to see it here.'
+      'No recently used presets or groups.'
     )
     return null
   }

@@ -1,3 +1,0 @@
-```typescript
-console.log("hello")
-```

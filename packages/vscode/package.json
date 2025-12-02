@@ -608,90 +608,98 @@
           "type": "array",
           "default": [
             {
-              "name": "(0)",
+              "name": "Popular"
+            },
+            {
+              "name": "ChatGPT",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "Claude",
+              "chatbot": "Claude"
+            },
+            {
+              "name": "Gemini",
+              "chatbot": "Gemini"
+            },
+            {},
+            {
+              "name": "Others"
+            },
+            {
+              "name": "AI Studio",
               "chatbot": "AI Studio",
               "systemInstructions": "You're a helpful coding assistant."
             },
             {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
+              "name": "Copilot",
               "chatbot": "Copilot"
             },
             {
-              "name": "(4)",
+              "name": "DeepSeek",
               "chatbot": "DeepSeek"
             },
             {
-              "name": "(5)",
+              "name": "Doubao",
               "chatbot": "Doubao"
             },
             {
-              "name": "(6)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(7)",
+              "name": "GitHub Copilot",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "(8)",
+              "name": "Grok",
               "chatbot": "Grok"
             },
             {
-              "name": "(9)",
+              "name": "HuggingChat",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "(10)",
+              "name": "Kimi",
               "chatbot": "Kimi"
             },
             {
-              "name": "(11)",
+              "name": "LMArena",
               "chatbot": "LMArena"
             },
             {
-              "name": "(12)",
+              "name": "Minimax",
               "chatbot": "Minimax"
             },
             {
-              "name": "(13)",
+              "name": "Mistral",
               "chatbot": "Mistral"
             },
             {
-              "name": "(14)",
+              "name": "Open WebUI",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(15)",
+              "name": "OpenRouter",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "(16)",
+              "name": "Perplexity",
               "chatbot": "Perplexity"
             },
             {
-              "name": "(17)",
+              "name": "Qwen",
               "chatbot": "Qwen"
             },
             {
-              "name": "(18)",
+              "name": "Together",
               "chatbot": "Together"
             },
             {
-              "name": "(19)",
+              "name": "Yuanbao",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(20)",
+              "name": "Z.AI",
               "chatbot": "Z.AI"
-            }
+            },
+            {}
           ],
           "description": "Preset is a general or task specific web chat configuration.",
           "items": {
@@ -805,90 +813,98 @@
           "type": "array",
           "default": [
             {
-              "name": "(0)",
+              "name": "Popular"
+            },
+            {
+              "name": "ChatGPT",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "Claude",
+              "chatbot": "Claude"
+            },
+            {
+              "name": "Gemini",
+              "chatbot": "Gemini"
+            },
+            {},
+            {
+              "name": "Others"
+            },
+            {
+              "name": "AI Studio",
               "chatbot": "AI Studio",
               "systemInstructions": "You're a helpful coding assistant."
             },
             {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
+              "name": "Copilot",
               "chatbot": "Copilot"
             },
             {
-              "name": "(4)",
+              "name": "DeepSeek",
               "chatbot": "DeepSeek"
             },
             {
-              "name": "(5)",
+              "name": "Doubao",
               "chatbot": "Doubao"
             },
             {
-              "name": "(6)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(7)",
+              "name": "GitHub Copilot",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "(8)",
+              "name": "Grok",
               "chatbot": "Grok"
             },
             {
-              "name": "(9)",
+              "name": "HuggingChat",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "(10)",
+              "name": "Kimi",
               "chatbot": "Kimi"
             },
             {
-              "name": "(11)",
+              "name": "LMArena",
               "chatbot": "LMArena"
             },
             {
-              "name": "(12)",
+              "name": "Minimax",
               "chatbot": "Minimax"
             },
             {
-              "name": "(13)",
+              "name": "Mistral",
               "chatbot": "Mistral"
             },
             {
-              "name": "(14)",
+              "name": "Open WebUI",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(15)",
+              "name": "OpenRouter",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "(16)",
+              "name": "Perplexity",
               "chatbot": "Perplexity"
             },
             {
-              "name": "(17)",
+              "name": "Qwen",
               "chatbot": "Qwen"
             },
             {
-              "name": "(18)",
+              "name": "Together",
               "chatbot": "Together"
             },
             {
-              "name": "(19)",
+              "name": "Yuanbao",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(20)",
+              "name": "Z.AI",
               "chatbot": "Z.AI"
-            }
+            },
+            {}
           ],
           "description": "Preset is a general or task specific web chat configuration.",
           "items": {
@@ -1002,90 +1018,98 @@
           "type": "array",
           "default": [
             {
-              "name": "(0)",
+              "name": "Popular"
+            },
+            {
+              "name": "ChatGPT",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "Claude",
+              "chatbot": "Claude"
+            },
+            {
+              "name": "Gemini",
+              "chatbot": "Gemini"
+            },
+            {},
+            {
+              "name": "Others"
+            },
+            {
+              "name": "AI Studio",
               "chatbot": "AI Studio",
               "systemInstructions": "You're a helpful coding assistant."
             },
             {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
+              "name": "Copilot",
               "chatbot": "Copilot"
             },
             {
-              "name": "(4)",
+              "name": "DeepSeek",
               "chatbot": "DeepSeek"
             },
             {
-              "name": "(5)",
+              "name": "Doubao",
               "chatbot": "Doubao"
             },
             {
-              "name": "(6)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(7)",
+              "name": "GitHub Copilot",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "(8)",
+              "name": "Grok",
               "chatbot": "Grok"
             },
             {
-              "name": "(9)",
+              "name": "HuggingChat",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "(10)",
+              "name": "Kimi",
               "chatbot": "Kimi"
             },
             {
-              "name": "(11)",
+              "name": "LMArena",
               "chatbot": "LMArena"
             },
             {
-              "name": "(12)",
+              "name": "Minimax",
               "chatbot": "Minimax"
             },
             {
-              "name": "(13)",
+              "name": "Mistral",
               "chatbot": "Mistral"
             },
             {
-              "name": "(14)",
+              "name": "Open WebUI",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(15)",
+              "name": "OpenRouter",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "(16)",
+              "name": "Perplexity",
               "chatbot": "Perplexity"
             },
             {
-              "name": "(17)",
+              "name": "Qwen",
               "chatbot": "Qwen"
             },
             {
-              "name": "(18)",
+              "name": "Together",
               "chatbot": "Together"
             },
             {
-              "name": "(19)",
+              "name": "Yuanbao",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(20)",
+              "name": "Z.AI",
               "chatbot": "Z.AI"
-            }
+            },
+            {}
           ],
           "description": "Preset is a general or task specific web chat configuration.",
           "items": {
@@ -1169,90 +1193,98 @@
           "type": "array",
           "default": [
             {
-              "name": "(0)",
+              "name": "Popular"
+            },
+            {
+              "name": "ChatGPT",
+              "chatbot": "ChatGPT"
+            },
+            {
+              "name": "Claude",
+              "chatbot": "Claude"
+            },
+            {
+              "name": "Gemini",
+              "chatbot": "Gemini"
+            },
+            {},
+            {
+              "name": "Others"
+            },
+            {
+              "name": "AI Studio",
               "chatbot": "AI Studio",
               "systemInstructions": "You're a helpful coding assistant."
             },
             {
-              "name": "(1)",
-              "chatbot": "ChatGPT"
-            },
-            {
-              "name": "(2)",
-              "chatbot": "Claude"
-            },
-            {
-              "name": "(3)",
+              "name": "Copilot",
               "chatbot": "Copilot"
             },
             {
-              "name": "(4)",
+              "name": "DeepSeek",
               "chatbot": "DeepSeek"
             },
             {
-              "name": "(5)",
+              "name": "Doubao",
               "chatbot": "Doubao"
             },
             {
-              "name": "(6)",
-              "chatbot": "Gemini"
-            },
-            {
-              "name": "(7)",
+              "name": "GitHub Copilot",
               "chatbot": "GitHub Copilot"
             },
             {
-              "name": "(8)",
+              "name": "Grok",
               "chatbot": "Grok"
             },
             {
-              "name": "(9)",
+              "name": "HuggingChat",
               "chatbot": "HuggingChat"
             },
             {
-              "name": "(10)",
+              "name": "Kimi",
               "chatbot": "Kimi"
             },
             {
-              "name": "(11)",
+              "name": "LMArena",
               "chatbot": "LMArena"
             },
             {
-              "name": "(12)",
+              "name": "Minimax",
               "chatbot": "Minimax"
             },
             {
-              "name": "(13)",
+              "name": "Mistral",
               "chatbot": "Mistral"
             },
             {
-              "name": "(14)",
+              "name": "Open WebUI",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(15)",
+              "name": "OpenRouter",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "(16)",
+              "name": "Perplexity",
               "chatbot": "Perplexity"
             },
             {
-              "name": "(17)",
+              "name": "Qwen",
               "chatbot": "Qwen"
             },
             {
-              "name": "(18)",
+              "name": "Together",
               "chatbot": "Together"
             },
             {
-              "name": "(19)",
+              "name": "Yuanbao",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(20)",
+              "name": "Z.AI",
               "chatbot": "Z.AI"
-            }
+            },
+            {}
           ],
           "description": "Preset is a general or task specific web chat configuration.",
           "items": {
