@@ -336,7 +336,7 @@ const convert_code_block_to_new_file_diff = (params: {
   // Regex to find file path. It can be commented or not.
   // It handles paths with slashes, backslashes, dots, alphanumerics, underscores, and hyphens.
   const path_regex = /(?:(?:\/\/|#|--|<!--)\s*)?([\w./\\-]+)/
-  const xml_path_regex = /<(\w+)\s+path=["']([^"']+)["']/
+  const xml_path_regex = /<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
 
   let file_path: string | undefined = params.file_path_hint
   let path_line_index = -1
@@ -346,9 +346,9 @@ const convert_code_block_to_new_file_diff = (params: {
   const first_line = params.lines.length > 0 ? params.lines[0].trim() : ''
   const xml_match = first_line.match(xml_path_regex)
 
-  if (xml_match && xml_match[1] && xml_match[2]) {
+  if (xml_match && xml_match[1] && (xml_match[2] || xml_match[3])) {
     const xml_tag_name = xml_match[1]
-    const potential_path = normalize_path(xml_match[2])
+    const potential_path = normalize_path(xml_match[2] || xml_match[3])
     if (potential_path.endsWith('/')) {
       // This is a directory, not a file.
       return null
@@ -446,8 +446,11 @@ const convert_code_block_to_new_file_diff = (params: {
       raw_file_path: file_path,
       is_single_root_folder_workspace: params.is_single_root
     })
+
+    const is_new_file = first_real_content_line.trim().startsWith('@@ -0,0')
+
     const patch_content = [
-      `--- a/${relative_path}`,
+      is_new_file ? '--- /dev/null' : `--- a/${relative_path}`,
       `+++ b/${relative_path}`,
       ...content_lines
     ].join('\n')
@@ -557,7 +560,7 @@ const extract_all_code_block_patches = (params: {
           code_blocks[i - 1].start + 1,
           code_blocks[i - 1].end
         )
-        const xml_path_regex = /<file\s+path=["']([^"']+)["']([^>]*)>/
+        const xml_path_regex = /<[\w-]+\s+path=["']([^"']+)["']([^>]*)>/
         const non_empty_lines = prev_block_lines.filter((l) => l.trim() != '')
         if (non_empty_lines.length === 1) {
           const match = non_empty_lines[0].match(xml_path_regex)
@@ -655,7 +658,7 @@ const extract_all_code_block_patches = (params: {
       if (i < code_blocks.length - 1) {
         const next_block = code_blocks[i + 1]
         if (next_block.type === 'diff' || next_block.type === 'patch') {
-          const xml_path_regex = /<file\s+path=["']([^"']+)["']/
+          const xml_path_regex = /<[\w-]+\s+path=["']([^"']+)["']/
           const non_empty_lines = block_lines.filter((l) => l.trim() !== '')
           if (non_empty_lines.length === 1) {
             const match = non_empty_lines[0].match(xml_path_regex)
@@ -826,6 +829,28 @@ export const extract_diffs = (params: {
       is_single_root: params.is_single_root
     })
   } else {
+    const xml_file_tag_start_regex = /^\s*<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
+    const start_match =
+      lines.length > 0 ? lines[0].trim().match(xml_file_tag_start_regex) : null
+
+    if (start_match) {
+      const tag_name = start_match[1]
+      const xml_file_tag_end_regex = new RegExp(`^\\s*<\\/${tag_name}>`)
+      if (
+        lines.length >= 2 &&
+        xml_file_tag_end_regex.test(lines[lines.length - 1].trim()) &&
+        lines.some((l) => l.trim().startsWith('@@'))
+      ) {
+        const result = convert_code_block_to_new_file_diff({
+          lines: lines,
+          is_single_root: params.is_single_root
+        })
+        if (result) {
+          return [result]
+        }
+      }
+    }
+
     return parse_multiple_raw_patches({
       all_lines: lines,
       is_single_root: params.is_single_root

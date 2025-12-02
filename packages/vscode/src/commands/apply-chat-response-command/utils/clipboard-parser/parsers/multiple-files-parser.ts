@@ -115,6 +115,7 @@ export const parse_multiple_files = (params: {
   let is_markdown_container_block = false
   let current_language = ''
   let current_xml_tag: string | null = null
+  let current_file_name_was_comment = false
 
   const lines = params.response.split('\n')
 
@@ -199,6 +200,7 @@ export const parse_multiple_files = (params: {
           if (workspace_name) {
             current_workspace_name = workspace_name
           }
+          current_file_name_was_comment = false
         }
         last_seen_file_path_comment = null
         current_content = ''
@@ -418,6 +420,25 @@ export const parse_multiple_files = (params: {
 
       if (trimmed_line.startsWith('```') && trimmed_line !== '```') {
         if (
+          backtick_nesting_level === 1 &&
+          current_file_name &&
+          current_content.trim() === '' &&
+          !current_file_name_was_comment &&
+          !xml_file_mode
+        ) {
+          state = 'TEXT'
+          last_seen_file_path_comment = current_file_name
+          current_file_name = ''
+          current_content = ''
+          is_first_content_line = false
+          current_workspace_name = undefined
+          xml_file_mode = false
+          in_cdata = false
+          i--
+          continue
+        }
+
+        if (
           backtick_nesting_level == 1 &&
           (current_language == 'markdown' || current_language == 'md')
         ) {
@@ -474,7 +495,8 @@ export const parse_multiple_files = (params: {
           backtick_nesting_level === 1 &&
           current_file_name &&
           i + 1 < lines.length &&
-          lines[i + 1].trim() !== ''
+          lines[i + 1].trim() !== '' &&
+          !lines[i + 1].trim().startsWith('```')
         ) {
           should_close = false
         }
@@ -557,6 +579,7 @@ export const parse_multiple_files = (params: {
             xml_file_mode = true
             current_xml_tag = xml_info.tagName
             is_first_content_line = false
+            current_file_name_was_comment = true
             continue
           }
         }
@@ -594,6 +617,7 @@ export const parse_multiple_files = (params: {
             }
 
             is_first_content_line = false
+            current_file_name_was_comment = true
             continue
           }
 
@@ -650,6 +674,7 @@ export const parse_multiple_files = (params: {
                   params.is_single_root_folder_workspace
               })
             current_file_name = relative_path
+            current_file_name_was_comment = is_comment
             if (
               backtick_nesting_level > 1 &&
               (current_language == 'markdown' || current_language == 'md')

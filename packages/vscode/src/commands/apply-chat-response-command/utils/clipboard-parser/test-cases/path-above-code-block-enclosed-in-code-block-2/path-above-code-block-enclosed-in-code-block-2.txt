@@ -1,0 +1,8 @@
+Lorem ipsum.
+
+```typescript
+src/hello-world.ts
+```
+```typescript
+console.log('Hello world!')
+```
