@@ -84,6 +84,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - Grok
 - HuggingChat
 - Kimi
+- LMArena
 - Minimax
 - Mistral
 - Open WebUI
@@ -92,7 +93,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - Qwen
 - Together
 - Yuanbao
-- Z
+- Z AI
 
 > [!TIP]
 > With the browser extension you can include markdown-parsed websites in context. Go to target website, click the extension's icon in the browser's toolbar and click _Enable for context_.
