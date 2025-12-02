@@ -436,8 +436,7 @@ export const parse_multiple_files = (params: {
         current_content.trim() === '' &&
         i > 0 &&
         lines[i - 1].trim() !== '' &&
-        (extract_path_from_line_of_code(lines[i - 1]) === null ||
-          (i + 1 < lines.length && lines[i + 1].trim() !== '')) &&
+        lines[i - 1].trim().startsWith('```') &&
         (() => {
           for (let j = i + 1; j < lines.length; j++) {
             const next_line = lines[j].trim()
@@ -469,12 +468,25 @@ export const parse_multiple_files = (params: {
         is_markdown_container_block = true
         backtick_nesting_level++
       } else if (trimmed_line.endsWith('```')) {
-        backtick_nesting_level--
+        let should_close = true
         if (
-          backtick_nesting_level == 1 &&
-          (current_language == 'markdown' || current_language == 'md')
+          trimmed_line === '```' &&
+          backtick_nesting_level === 1 &&
+          current_file_name &&
+          i + 1 < lines.length &&
+          lines[i + 1].trim() !== ''
         ) {
-          is_first_content_line = true
+          should_close = false
+        }
+
+        if (should_close) {
+          backtick_nesting_level--
+          if (
+            backtick_nesting_level == 1 &&
+            (current_language == 'markdown' || current_language == 'md')
+          ) {
+            is_first_content_line = true
+          }
         }
       }
 
@@ -513,6 +525,10 @@ export const parse_multiple_files = (params: {
           ].join('\n')
 
           results.push({ type: 'text', content: raw_code_block })
+        }
+
+        if (current_file_name && !current_content.trim()) {
+          last_seen_file_path_comment = current_file_name
         }
 
         current_file_name = ''
