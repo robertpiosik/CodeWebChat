@@ -582,9 +582,9 @@
           "scope": "resource",
           "description": "Style of generated code blocks in \"Edit context\" mode.",
           "default": {
-            "whole": "Whenever showing a new or updated file, print the path and a Markdown Code Block with file's full contents—as I have a disability which means I can't type and need to be able to just copy and paste. Provide brief explanations around code blocks, when you deem appropriate.",
-            "truncated": "Whenever showing a new or updated file, print the path and a Markdown Code Block with truncated file's contents. To save space, unchanged parts should be hidden behind ellipsis comments, e.g. \"// ...\". Provide brief explanations around code blocks, when you deem appropriate.",
-            "diff": "Whenever showing a new or updated file, use the the unified diff (unidiff) format, within a Markdown Code Block. Provide brief explanations around code blocks, when you deem appropriate."
+            "whole": "Whenever showing a new or updated file, print its path and a Markdown Code Block with file's full contents—as I have a disability which means I can't type and need to be able to just copy and paste. Provide brief explanations, when you deem appropriate.",
+            "truncated": "Whenever showing a new or updated file, print its path and a Markdown Code Block with truncated file's contents. To save space, unchanged parts should be hidden behind ellipsis comments, e.g. \"// ...\". Provide brief explanations, when you deem appropriate.",
+            "diff": "Whenever showing a new or updated file, use the the unified diff (unidiff) format, within a Markdown Code Block. Provide brief explanations, when you deem appropriate."
           },
           "properties": {
             "whole": {
