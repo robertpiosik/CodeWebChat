@@ -213,9 +213,7 @@ export const ai_studio: Chatbot = {
     thinking_level_setting.click()
     await new Promise((r) => requestAnimationFrame(r))
 
-    const options_container = document.querySelector(
-      '.cdk-overlay-container div[role="listbox"]'
-    )
+    const options_container = document.querySelector('div[role="listbox"]')
     if (!options_container) {
       report_initialization_error({
         function_name: 'set_reasoning_effort',
