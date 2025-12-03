@@ -20,6 +20,11 @@ import { WebPromptType } from '@shared/types/prompt-types'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
+import {
+  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE
+} from '@/constants/edit-format-instructions'
 
 export const handle_send_prompt = async (params: {
   panel_provider: PanelProvider
@@ -237,11 +242,19 @@ export const handle_send_prompt = async (params: {
         }
 
         if (params.panel_provider.web_prompt_type == 'edit-context') {
-          const all_instructions = vscode.workspace
-            .getConfiguration('codeWebChat')
-            .get<{ [key: string]: string }>('editFormatInstructions')
+          const config = vscode.workspace.getConfiguration('codeWebChat')
+          const instructions_key = {
+            whole: 'editFormatInstructionsWhole',
+            truncated: 'editFormatInstructionsTruncated',
+            diff: 'editFormatInstructionsDiff'
+          }[params.panel_provider.chat_edit_format]
+          const default_instructions = {
+            whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
+            truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+            diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
+          }[params.panel_provider.chat_edit_format]
           const edit_format_instructions =
-            all_instructions?.[params.panel_provider.chat_edit_format]
+            config.get<string>(instructions_key) || default_instructions
           if (edit_format_instructions) {
             const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
             pre_context_instructions += `\n${system_instructions}`
@@ -305,9 +318,7 @@ async function show_preset_quick_pick(params: {
   const recent_names = context.globalState.get<string[]>(recents_key, [])
 
   if (recent_names.length == 0) {
-    vscode.window.showWarningMessage(
-      'No recently used presets or groups.'
-    )
+    vscode.window.showWarningMessage('No recently used presets or groups.')
     return null
   }
 
@@ -342,9 +353,7 @@ async function show_preset_quick_pick(params: {
 
   quick_pick.items = items
   if (items.length == 0) {
-    vscode.window.showWarningMessage(
-      'No recently used presets or groups.'
-    )
+    vscode.window.showWarningMessage('No recently used presets or groups.')
     return null
   }
   quick_pick.placeholder = 'Search recently used presets and groups'

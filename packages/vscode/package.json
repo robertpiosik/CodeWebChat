@@ -573,26 +573,20 @@
             "description": "A glob pattern."
           }
         },
-        "codeWebChat.editFormatInstructions": {
-          "type": "object",
+        "codeWebChat.editFormatInstructionsWhole": {
+          "type": "string",
           "scope": "resource",
-          "description": "Style of generated code blocks in \"Edit context\" mode.",
-          "default": {
-            "whole": "Whenever showing a new or updated file, provide brief explanation, then print path in a markdown heading (e.g. ### New file `src/index.ts`, ### Updated file: `src/index.ts`), followed by a markdown code block with full contents—as I have a disability which means I can't type and need to be able to just copy and paste.",
-            "truncated": "Whenever showing a new or updated file, provide brief explanation, then print path in a markdown heading (e.g. ### New file: `src/index.ts`, ### Updated file: `src/index.ts`), followed by a markdown code block with truncated contents—as a space saving measure unchanged parts should be hidden behind ellipsis comments, e.g. \"// ...\".",
-            "diff": "Whenever showing a new or updated file, provide brief explanation and print the Unified Diff within a markdown code block. Example: \nThe count variable has been incremented.\n```diff\n--- a/file.py\n+++ b/file.py\n@@ -2,1 +2,1 @@\n-count = 10\n+count = 20\n```"
-          },
-          "properties": {
-            "whole": {
-              "type": "string"
-            },
-            "truncated": {
-              "type": "string"
-            },
-            "diff": {
-              "type": "string"
-            }
-          }
+          "description": "Instructions for 'whole' file format in the \"Edit context\" prompt type."
+        },
+        "codeWebChat.editFormatInstructionsTruncated": {
+          "type": "string",
+          "scope": "resource",
+          "description": "Instructions for 'truncated' file format in the \"Edit context\" prompt type."
+        },
+        "codeWebChat.editFormatInstructionsDiff": {
+          "type": "string",
+          "scope": "resource",
+          "description": "Instructions for 'diff' file format in the \"Edit context\" prompt type."
         },
         "codeWebChat.editContextSystemInstructions": {
           "type": "string",

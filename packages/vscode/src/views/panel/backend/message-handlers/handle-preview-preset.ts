@@ -5,13 +5,19 @@ import { FilesCollector } from '@/utils/files-collector'
 import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import {
-  replace_changes_placeholder, replace_context_at_commit_placeholder,
+  replace_changes_placeholder,
+  replace_context_at_commit_placeholder,
   replace_commit_placeholder
 } from '@/views/panel/backend/utils/replace-git-placeholders'
 import { Preset } from '@shared/types/preset'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { dictionary } from '@shared/constants/dictionary'
+import {
+  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE
+} from '@/constants/edit-format-instructions'
 
 export const handle_preview_preset = async (
   panel_provider: PanelProvider,
@@ -149,11 +155,19 @@ export const handle_preview_preset = async (
     }
 
     if (panel_provider.web_prompt_type == 'edit-context') {
-      const all_instructions = vscode.workspace
-        .getConfiguration('codeWebChat')
-        .get<{ [key: string]: string }>('editFormatInstructions')
+      const config = vscode.workspace.getConfiguration('codeWebChat')
+      const instructions_key = {
+        whole: 'editFormatInstructionsWhole',
+        truncated: 'editFormatInstructionsTruncated',
+        diff: 'editFormatInstructionsDiff'
+      }[panel_provider.chat_edit_format]
+      const default_instructions = {
+        whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
+        truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+        diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
+      }[panel_provider.chat_edit_format]
       const edit_format_instructions =
-        all_instructions?.[panel_provider.chat_edit_format]
+        config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
         const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
         pre_context_instructions += `\n${system_instructions}`

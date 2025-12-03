@@ -152,7 +152,9 @@ export class SettingsProvider {
           message.command == 'UPDATE_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS'
         ) {
           await handle_update_edit_context_system_instructions(message)
-        } else if (message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS') {
+        } else if (
+          message.command == 'GET_EDIT_FORMAT_INSTRUCTIONS'
+        ) {
           await handle_get_edit_format_instructions(this)
         } else if (message.command == 'UPDATE_EDIT_FORMAT_INSTRUCTIONS') {
           await handle_update_edit_format_instructions(message)

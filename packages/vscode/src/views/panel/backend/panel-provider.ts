@@ -241,7 +241,15 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           this.send_presets_to_webview(this._webview_view.webview)
         }
 
-        if (event.affectsConfiguration('codeWebChat.editFormatInstructions')) {
+        if (
+          event.affectsConfiguration(
+            'codeWebChat.editFormatInstructionsWhole'
+          ) ||
+          event.affectsConfiguration(
+            'codeWebChat.editFormatInstructionsTruncated'
+          ) ||
+          event.affectsConfiguration('codeWebChat.editFormatInstructionsDiff')
+        ) {
           handle_get_edit_format_instructions(this)
         }
 

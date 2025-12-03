@@ -26,6 +26,11 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
+import {
+  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE
+} from '@/constants/edit-format-instructions'
 
 const get_edit_context_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -360,11 +365,21 @@ const perform_context_editing = async (params: {
       ) ??
       params.context.globalState.get<EditFormat>(API_EDIT_FORMAT_STATE_KEY) ??
       'whole'
-    const all_instructions = vscode.workspace
-      .getConfiguration('codeWebChat')
-      .get<{ [key in EditFormat]: string }>('editFormatInstructions')
-    const edit_format_instructions = all_instructions?.[edit_format] ?? ''
-
+    const config = vscode.workspace.getConfiguration('codeWebChat')
+    const instructions_key = {
+      whole: 'editFormatInstructionsWhole',
+      truncated: 'editFormatInstructionsTruncated',
+      diff: 'editFormatInstructionsDiff'
+    }[edit_format]
+    const default_instructions = {
+      whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
+      truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+      diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
+    }[edit_format]
+    const edit_format_instructions = config.get<string>(
+      instructions_key,
+      
+    )||default_instructions
     let loop_pre_context_instructions = pre_context_instructions
     let loop_post_context_instructions = post_context_instructions
 
