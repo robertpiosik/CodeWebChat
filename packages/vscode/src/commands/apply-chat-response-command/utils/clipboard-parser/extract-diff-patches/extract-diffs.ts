@@ -172,7 +172,9 @@ const remove_path_line_from_text_block = (params: {
         is_single_root_folder_workspace: params.is_single_root
       })
       if (relative_path === params.target_file_path) {
-        path_line_index = i
+        if (line.startsWith('###')) {
+          path_line_index = i
+        }
         break
       }
     }
@@ -638,11 +640,11 @@ const extract_all_code_block_patches = (params: {
     }
 
     const text_before = lines.slice(last_block_end + 1, block.start).join('\n')
-    if (text_before.trim()) {
-      items.push({ type: 'text', content: text_before.trim() })
-    }
 
     if (block.type == 'diff' || block.type == 'patch') {
+      if (text_before.trim()) {
+        items.push({ type: 'text', content: text_before.trim() })
+      }
       const patches = diff_block_patches.get(block.start) || []
       if (patches.length > 0) {
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
@@ -659,6 +661,7 @@ const extract_all_code_block_patches = (params: {
         }
       }
       items.push(...patches)
+      last_block_end = block.end
     } else {
       // Check if this block was a hint for the next block.
       if (i < code_blocks.length - 1) {
@@ -670,6 +673,9 @@ const extract_all_code_block_patches = (params: {
             const match = non_empty_lines[0].match(xml_path_regex)
             if (match && match[1]) {
               // This was a hint for the next block, so we should skip processing it as a file content block.
+              if (text_before.trim()) {
+                items.push({ type: 'text', content: text_before.trim() })
+              }
               last_block_end = block.end
               continue
             }
@@ -691,35 +697,35 @@ const extract_all_code_block_patches = (params: {
       })
 
       if (patch) {
-        const last_item = items.length > 0 ? items[items.length - 1] : undefined
-        if (last_item && last_item.type == 'text') {
-          remove_path_line_from_text_block({
-            text_item: last_item,
-            target_file_path: patch.file_path,
-            is_single_root: params.is_single_root
-          })
-
-          if (!last_item.content) {
-            items.pop()
-          }
-        }
-
         const file_key = `${patch.workspace_name || ''}:${patch.file_path}`
-
         if (!files_with_diffs.has(file_key)) {
+          if (text_before.trim()) {
+            items.push({ type: 'text', content: text_before.trim() })
+          }
+          const last_item =
+            items.length > 0 ? items[items.length - 1] : undefined
+          if (last_item && last_item.type == 'text') {
+            remove_path_line_from_text_block({
+              text_item: last_item,
+              target_file_path: patch.file_path,
+              is_single_root: params.is_single_root
+            })
+
+            if (!last_item.content) {
+              items.pop()
+            }
+          }
+
           if (hint_result.workspace_name && !patch.workspace_name) {
             patch.workspace_name = hint_result.workspace_name
           }
           items.push(patch)
-        }
-      } else {
-        const block_content = lines.slice(block.start, block.end + 1).join('\n')
-        if (block_lines.join('').trim()) {
-          items.push({ type: 'text', content: block_content })
+          last_block_end = block.end
         }
       }
+      // If it's not a diff, patch, or hint, it's just a regular code block.
+      // We don't do anything here, so it gets included in the next text block.
     }
-    last_block_end = block.end
   }
 
   if (last_block_end < lines.length - 1) {

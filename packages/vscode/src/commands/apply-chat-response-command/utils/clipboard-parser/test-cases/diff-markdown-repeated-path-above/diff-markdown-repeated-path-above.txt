@@ -1,4 +1,7 @@
 Lorem ipsum.
+```bash
+pnpm add -D prettier
+```
 
 ### `src/index.ts`
 
