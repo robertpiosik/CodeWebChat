@@ -131,12 +131,22 @@ export const apply_diff = (params: {
     let replace_chunks = []
 
     let inside_replace_block = false
+    let has_context_lines = false
+    
     for (let i = 0; i < patch_lines_normalized.length; i++) {
       const line = patch_lines_normalized[i]
       const line_original = patch_lines_original[i]
 
       if (line.startsWith('@@')) {
         if (search_chunks.length > 0 || replace_chunks.length > 0) {
+          // Validate that the hunk has context before adding it
+          if (!has_context_lines && search_chunks.length === 0 && replace_chunks.length > 0) {
+            throw new Error(
+              'Zero-context hunk detected: hunks with only additions and no context lines cannot be reliably applied. ' +
+              'The diff must include surrounding unchanged lines for proper placement.'
+            )
+          }
+          
           search_replace_blocks.push(
             new SearchBlock(search_chunks, replace_chunks, -1)
           )
@@ -144,6 +154,7 @@ export const apply_diff = (params: {
         search_chunks = []
         replace_chunks = []
         inside_replace_block = false
+        has_context_lines = false
       }
 
       if (line.startsWith('-') || line.startsWith('~')) {
@@ -158,6 +169,7 @@ export const apply_diff = (params: {
 
           search_chunks = []
           replace_chunks = []
+          has_context_lines = false
         }
 
         if (line.startsWith('--')) {
@@ -173,8 +185,10 @@ export const apply_diff = (params: {
         // Also replace unchanged lines
         if (line.startsWith('~nnn')) {
           replace_chunks.push(line_original.replace(/^~nnn/, '') + '\n')
+          has_context_lines = true
         } else if (line.startsWith('~')) {
           replace_chunks.push(line_original.replace(/^~/, '') + '\n')
+          has_context_lines = true
         }
 
         continue
@@ -202,6 +216,14 @@ export const apply_diff = (params: {
       }
 
       if (search_chunks.length != 0 || replace_chunks.length != 0) {
+        // Final validation for zero-context hunks
+        if (!has_context_lines && search_chunks.length === 0 && replace_chunks.length > 0) {
+          throw new Error(
+            'Zero-context hunk detected: hunks with only additions and no context lines cannot be reliably applied. ' +
+            'The diff must include surrounding unchanged lines for proper placement.'
+          )
+        }
+        
         // This is crucial for diffs that only have deletions
         search_replace_blocks.push(
           new SearchBlock(search_chunks, replace_chunks, -1)
