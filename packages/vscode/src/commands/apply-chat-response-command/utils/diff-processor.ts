@@ -132,7 +132,7 @@ export const apply_diff = (params: {
 
     let inside_replace_block = false
     let has_context_lines = false
-    
+
     for (let i = 0; i < patch_lines_normalized.length; i++) {
       const line = patch_lines_normalized[i]
       const line_original = patch_lines_original[i]
@@ -140,13 +140,17 @@ export const apply_diff = (params: {
       if (line.startsWith('@@')) {
         if (search_chunks.length > 0 || replace_chunks.length > 0) {
           // Validate that the hunk has context before adding it
-          if (!has_context_lines && search_chunks.length === 0 && replace_chunks.length > 0) {
+          if (
+            !has_context_lines &&
+            search_chunks.length === 0 &&
+            replace_chunks.length > 0
+          ) {
             throw new Error(
               'Zero-context hunk detected: hunks with only additions and no context lines cannot be reliably applied. ' +
-              'The diff must include surrounding unchanged lines for proper placement.'
+                'The diff must include surrounding unchanged lines for proper placement.'
             )
           }
-          
+
           search_replace_blocks.push(
             new SearchBlock(search_chunks, replace_chunks, -1)
           )
@@ -217,13 +221,17 @@ export const apply_diff = (params: {
 
       if (search_chunks.length != 0 || replace_chunks.length != 0) {
         // Final validation for zero-context hunks
-        if (!has_context_lines && search_chunks.length === 0 && replace_chunks.length > 0) {
+        if (
+          !has_context_lines &&
+          search_chunks.length === 0 &&
+          replace_chunks.length > 0
+        ) {
           throw new Error(
             'Zero-context hunk detected: hunks with only additions and no context lines cannot be reliably applied. ' +
-            'The diff must include surrounding unchanged lines for proper placement.'
+              'The diff must include surrounding unchanged lines for proper placement.'
           )
         }
-        
+
         // This is crucial for diffs that only have deletions
         search_replace_blocks.push(
           new SearchBlock(search_chunks, replace_chunks, -1)

@@ -352,7 +352,10 @@ export const handle_show_prompt_template_quick_pick = async (
       }
     }),
     templates_quick_pick.onDidChangeValue((value) => {
-      templates_quick_pick.items = create_template_items(prompt_templates, value)
+      templates_quick_pick.items = create_template_items(
+        prompt_templates,
+        value
+      )
     }),
     templates_quick_pick.onDidTriggerItemButton(async (event) => {
       const item = event.item as vscode.QuickPickItem & {
@@ -425,9 +428,7 @@ export const handle_show_prompt_template_quick_pick = async (
         notification_count++
         const deletion_message = is_unnamed
           ? dictionary.information_message.UNNAMED_TEMPLATE_DELETED
-          : dictionary.information_message.NAMED_TEMPLATE_DELETED(
-              template_name
-            )
+          : dictionary.information_message.NAMED_TEMPLATE_DELETED(template_name)
 
         vscode.window
           .showInformationMessage(deletion_message, undo_button_text)

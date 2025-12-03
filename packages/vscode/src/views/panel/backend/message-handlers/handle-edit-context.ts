@@ -376,10 +376,8 @@ const perform_context_editing = async (params: {
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
       diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
     }[edit_format]
-    const edit_format_instructions = config.get<string>(
-      instructions_key,
-      
-    )||default_instructions
+    const edit_format_instructions =
+      config.get<string>(instructions_key) || default_instructions
     let loop_pre_context_instructions = pre_context_instructions
     let loop_post_context_instructions = post_context_instructions
 

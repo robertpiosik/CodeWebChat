@@ -33,8 +33,7 @@ export const copilot: Chatbot = {
       return
     }
 
-    const model_label_to_find = CHATBOTS['Copilot'].models?.[model]
-      ?.label
+    const model_label_to_find = CHATBOTS['Copilot'].models?.[model]?.label
     if (!model_label_to_find) return
 
     // The current model text is inside the button

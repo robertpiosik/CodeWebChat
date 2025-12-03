@@ -11,4 +11,3 @@ export const handle_save_mode = async (
     mode: message.mode
   })
 }
-

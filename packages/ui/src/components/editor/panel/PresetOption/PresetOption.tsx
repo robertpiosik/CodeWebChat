@@ -25,11 +25,7 @@ export const PresetOption: FC<Props> = ({
         className={`${styles.option} ${disabled ? styles.disabled : ''}`}
         title={title}
       >
-        <Checkbox
-          checked={checked}
-          on_change={on_change}
-          disabled={disabled}
-        />
+        <Checkbox checked={checked} on_change={on_change} disabled={disabled} />
         <span>{label}</span>
       </label>
       {disabled && disabled_reason && (

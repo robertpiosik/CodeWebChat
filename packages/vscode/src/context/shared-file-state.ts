@@ -100,9 +100,10 @@ export class SharedFileState {
         const open_editor_paths_set = new Set(open_editor_paths)
 
         // Preserve checked state for files that are not open in editors
-        const preserved_workspace_checked_files = workspace_checked_files.filter(
-          (file) => !open_editor_paths_set.has(file)
-        )
+        const preserved_workspace_checked_files =
+          workspace_checked_files.filter(
+            (file) => !open_editor_paths_set.has(file)
+          )
 
         // Combine with checked files from open editors
         const new_workspace_checked_files = [

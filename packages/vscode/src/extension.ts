@@ -83,7 +83,7 @@ export async function activate(context: vscode.ExtensionContext) {
     apply_chat_response_command({
       context,
       panel_provider,
-      workspace_provider,
+      workspace_provider
     }),
     ...code_completion_commands({
       file_tree_provider: workspace_provider,
@@ -95,7 +95,7 @@ export async function activate(context: vscode.ExtensionContext) {
       context,
       workspace_provider,
       websites_provider,
-      panel_provider,
+      panel_provider
     })
   )
 

@@ -75,11 +75,10 @@ export const use_panel = (vscode: any) => {
   >()
   const [code_completions_instructions, set_code_completions_instructions] =
     useState<string | undefined>(undefined)
-  const [
-    currently_open_file_text,
-    set_currently_open_file_text
-  ] = useState<string | undefined>(undefined)
-    useState<string | undefined>(undefined)
+  const [currently_open_file_text, set_currently_open_file_text] = useState<
+    string | undefined
+  >(undefined)
+  useState<string | undefined>(undefined)
   const [mode, set_mode] = useState<Mode>()
   const [web_prompt_type, set_web_mode] = useState<WebPromptType>()
   const [api_prompt_type, set_api_mode] = useState<ApiPromptType>()

@@ -312,326 +312,332 @@ export const setup_workspace_listeners = (
     }
   })
 
-  const file_created_listener = vscode.workspace.onDidCreateFiles(async (event) => {
-    for (const uri of event.files) {
-      if (uri.scheme !== 'file') continue
+  const file_created_listener = vscode.workspace.onDidCreateFiles(
+    async (event) => {
+      for (const uri of event.files) {
+        if (uri.scheme !== 'file') continue
 
-      const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
-      if (!workspace_folder) continue
+        const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
+        if (!workspace_folder) continue
 
-      // Avoid duplicates if already tracked
-      if (prepared_files.some((pf) => pf.sanitized_path === uri.fsPath)) {
-        continue
-      }
-
-      // Read the content of the newly created file (may be empty)
-      let new_content = ''
-      try {
-        const doc = await vscode.workspace.openTextDocument(uri)
-        new_content = doc.getText()
-      } catch (e) {
-        new_content = ''
-      }
-
-      const relative_path = vscode.workspace
-        .asRelativePath(uri, false)
-        .replace(/\\/g, '/')
-
-      const original_content = ''
-      const is_new = true
-
-      const new_original_state: OriginalFileState = {
-        file_path: relative_path,
-        content: original_content,
-        is_new: is_new,
-        workspace_name: workspace_folder.name
-      }
-
-      const diff_stats = get_diff_stats({
-        original_content: original_content,
-        new_content: new_content
-      })
-
-      const sanitized_file_path = uri.fsPath
-      const hash = crypto
-        .createHash('md5')
-        .update(sanitized_file_path)
-        .digest('hex')
-      const temp_filename = `cwc-${hash}.tmp`
-      const temp_file_path = path.join(os.tmpdir(), temp_filename)
-
-      const reviewable_file: ReviewableFile = {
-        type: 'file',
-        file_path: relative_path,
-        content: new_content,
-        workspace_name: workspace_folder.name,
-        is_new: true,
-        is_deleted: false,
-        lines_added: diff_stats.lines_added,
-        lines_removed: diff_stats.lines_removed,
-        is_checked: true
-      }
-
-      const new_prepared_file: PreparedFile = {
-        reviewable_file,
-        sanitized_path: sanitized_file_path,
-        original_content: original_content,
-        temp_file_path,
-        file_exists: false
-      }
-
-      original_states.push(new_original_state)
-      prepared_files.push(new_prepared_file)
-
-      // Create temp file with the original (empty) content for diff view
-      create_temp_files_with_original_content([new_prepared_file])
-
-      update_response_history(
-        panel_provider,
-        created_at,
-        new_prepared_file.reviewable_file
-      )
-      // Notify the panel to include this file in the review UI
-      panel_provider.send_message({
-        command: 'UPDATE_FILE_IN_REVIEW',
-        file: new_prepared_file.reviewable_file
-      })
-    }
-  })
-
-  const file_renamed_listener = vscode.workspace.onDidRenameFiles(async (event) => {
-    for (const { oldUri, newUri } of event.files) {
-      if (oldUri.scheme !== 'file' || newUri.scheme !== 'file') continue
-
-      // Skip directories (best effort)
-      try {
-        const stat = fs.statSync(newUri.fsPath)
-        if (stat.isDirectory()) {
-          continue
-        }
-      } catch {
-        // If stat fails, proceed as file rename
-      }
-
-      const old_workspace_folder = vscode.workspace.getWorkspaceFolder(oldUri)
-      const new_workspace_folder = vscode.workspace.getWorkspaceFolder(newUri)
-      if (!new_workspace_folder) {
-        continue
-      }
-
-      const old_relative = vscode.workspace
-        .asRelativePath(oldUri, false)
-        .replace(/\\/g, '/')
-      const new_relative = vscode.workspace
-        .asRelativePath(newUri, false)
-        .replace(/\\/g, '/')
-
-      // Find existing tracked file by old path
-      const existing = prepared_files.find(
-        (pf) => pf.sanitized_path == oldUri.fsPath
-      )
-
-      // Read new file content (post-rename)
-      let new_content = ''
-      try {
-        const doc = await vscode.workspace.openTextDocument(newUri)
-        new_content = doc.getText()
-      } catch {
-        new_content = ''
-      }
-
-      if (existing) {
-        // Update existing entry to point to the new path
-        existing.sanitized_path = newUri.fsPath
-        existing.reviewable_file.file_path = new_relative
-        existing.reviewable_file.workspace_name = new_workspace_folder.name
-        existing.reviewable_file.is_new = true
-        existing.reviewable_file.is_deleted = false
-        existing.reviewable_file.content = new_content
-
-        const diff_stats_updated = get_diff_stats({
-          original_content: existing.original_content,
-          new_content
-        })
-        existing.reviewable_file.lines_added = diff_stats_updated.lines_added
-        existing.reviewable_file.lines_removed =
-          diff_stats_updated.lines_removed
-
-        // Also add a synthetic "deleted" entry for the old path so UI shows delete+create
-        // Use the original content we already have for accurate stats and restoration
-        const oldSanitized = oldUri.fsPath
-        const oldHash = crypto
-          .createHash('md5')
-          .update(oldSanitized)
-          .digest('hex')
-        const oldTemp = path.join(os.tmpdir(), `cwc-${oldHash}.tmp`)
-
-        const deleted_diff_stats = get_diff_stats({
-          original_content: existing.original_content,
-          new_content: ''
-        })
-
-        const deleted_reviewable: ReviewableFile = {
-          type: 'file',
-          file_path: old_relative,
-          content: '',
-          workspace_name:
-            old_workspace_folder?.name ??
-            existing.reviewable_file.workspace_name,
-          is_new: false,
-          is_deleted: true,
-          lines_added: deleted_diff_stats.lines_added,
-          lines_removed: deleted_diff_stats.lines_removed,
-          is_checked: true
-        }
-
-        const deleted_prepared: PreparedFile = {
-          reviewable_file: deleted_reviewable,
-          sanitized_path: oldSanitized,
-          original_content: existing.original_content,
-          temp_file_path: oldTemp,
-          file_exists: false
-        }
-
-        prepared_files.push(deleted_prepared)
-        create_temp_files_with_original_content([deleted_prepared])
-
-        // Track state for downstream consumers (rename grouping)
-        original_states.push({
-          file_path: new_relative,
-          content: existing.original_content,
-          is_new: true,
-          workspace_name: new_workspace_folder.name,
-          file_path_to_restore: old_relative
-        })
-
-        // Notify UI
-        update_response_history(
-          panel_provider,
-          created_at,
-          existing.reviewable_file
-        )
-        panel_provider.send_message({
-          command: 'UPDATE_FILE_IN_REVIEW',
-          file: existing.reviewable_file
-        })
-        update_response_history(
-          panel_provider,
-          created_at,
-          deleted_prepared.reviewable_file
-        )
-        panel_provider.send_message({
-          command: 'UPDATE_FILE_IN_REVIEW',
-          file: deleted_prepared.reviewable_file
-        })
-      } else {
-        // Not previously tracked: treat rename as delete (old) + create (new)
-        if (prepared_files.some((pf) => pf.sanitized_path === newUri.fsPath)) {
+        // Avoid duplicates if already tracked
+        if (prepared_files.some((pf) => pf.sanitized_path === uri.fsPath)) {
           continue
         }
 
-        // New entry for the new path (as created)
-        const newSanitized = newUri.fsPath
-        const newHash = crypto
-          .createHash('md5')
-          .update(newSanitized)
-          .digest('hex')
-        const newTemp = path.join(os.tmpdir(), `cwc-${newHash}.tmp`)
+        // Read the content of the newly created file (may be empty)
+        let new_content = ''
+        try {
+          const doc = await vscode.workspace.openTextDocument(uri)
+          new_content = doc.getText()
+        } catch (e) {
+          new_content = ''
+        }
 
-        const create_diff_stats = get_diff_stats({
-          original_content: '',
-          new_content
+        const relative_path = vscode.workspace
+          .asRelativePath(uri, false)
+          .replace(/\\/g, '/')
+
+        const original_content = ''
+        const is_new = true
+
+        const new_original_state: OriginalFileState = {
+          file_path: relative_path,
+          content: original_content,
+          is_new: is_new,
+          workspace_name: workspace_folder.name
+        }
+
+        const diff_stats = get_diff_stats({
+          original_content: original_content,
+          new_content: new_content
         })
 
-        const created_reviewable: ReviewableFile = {
+        const sanitized_file_path = uri.fsPath
+        const hash = crypto
+          .createHash('md5')
+          .update(sanitized_file_path)
+          .digest('hex')
+        const temp_filename = `cwc-${hash}.tmp`
+        const temp_file_path = path.join(os.tmpdir(), temp_filename)
+
+        const reviewable_file: ReviewableFile = {
           type: 'file',
-          file_path: new_relative,
+          file_path: relative_path,
           content: new_content,
-          workspace_name: new_workspace_folder.name,
+          workspace_name: workspace_folder.name,
           is_new: true,
           is_deleted: false,
-          lines_added: create_diff_stats.lines_added,
-          lines_removed: create_diff_stats.lines_removed,
+          lines_added: diff_stats.lines_added,
+          lines_removed: diff_stats.lines_removed,
           is_checked: true
         }
 
-        const created_prepared: PreparedFile = {
-          reviewable_file: created_reviewable,
-          sanitized_path: newSanitized,
-          original_content: '',
-          temp_file_path: newTemp,
+        const new_prepared_file: PreparedFile = {
+          reviewable_file,
+          sanitized_path: sanitized_file_path,
+          original_content: original_content,
+          temp_file_path,
           file_exists: false
         }
 
-        const oldSanitized = oldUri.fsPath
-        const oldHash = crypto
-          .createHash('md5')
-          .update(oldSanitized)
-          .digest('hex')
-        const oldTemp = path.join(os.tmpdir(), `cwc-${oldHash}.tmp`)
+        original_states.push(new_original_state)
+        prepared_files.push(new_prepared_file)
 
-        const deleted_diff_stats = get_diff_stats({
-          original_content: new_content,
-          new_content: ''
-        })
+        // Create temp file with the original (empty) content for diff view
+        create_temp_files_with_original_content([new_prepared_file])
 
-        const deleted_reviewable: ReviewableFile = {
-          type: 'file',
-          file_path: old_relative,
-          content: '',
-          workspace_name:
-            old_workspace_folder?.name ?? new_workspace_folder.name,
-          is_new: false,
-          is_deleted: true,
-          lines_added: deleted_diff_stats.lines_added,
-          lines_removed: deleted_diff_stats.lines_removed,
-          is_checked: true
-        }
-
-        const deleted_prepared: PreparedFile = {
-          reviewable_file: deleted_reviewable,
-          sanitized_path: oldSanitized,
-          original_content: new_content,
-          temp_file_path: oldTemp,
-          file_exists: false
-        }
-
-        original_states.push({
-          file_path: new_relative,
-          content: new_content,
-          is_new: true,
-          workspace_name: new_workspace_folder.name,
-          file_path_to_restore: old_relative
-        })
-        prepared_files.push(created_prepared, deleted_prepared)
-
-        create_temp_files_with_original_content([
-          created_prepared,
-          deleted_prepared
-        ])
-
-        // Notify UI
         update_response_history(
           panel_provider,
           created_at,
-          created_reviewable
+          new_prepared_file.reviewable_file
         )
+        // Notify the panel to include this file in the review UI
         panel_provider.send_message({
           command: 'UPDATE_FILE_IN_REVIEW',
-          file: created_reviewable
-        })
-        update_response_history(
-          panel_provider,
-          created_at,
-          deleted_reviewable
-        )
-        panel_provider.send_message({
-          command: 'UPDATE_FILE_IN_REVIEW',
-          file: deleted_reviewable
+          file: new_prepared_file.reviewable_file
         })
       }
     }
-  })
+  )
+
+  const file_renamed_listener = vscode.workspace.onDidRenameFiles(
+    async (event) => {
+      for (const { oldUri, newUri } of event.files) {
+        if (oldUri.scheme !== 'file' || newUri.scheme !== 'file') continue
+
+        // Skip directories (best effort)
+        try {
+          const stat = fs.statSync(newUri.fsPath)
+          if (stat.isDirectory()) {
+            continue
+          }
+        } catch {
+          // If stat fails, proceed as file rename
+        }
+
+        const old_workspace_folder = vscode.workspace.getWorkspaceFolder(oldUri)
+        const new_workspace_folder = vscode.workspace.getWorkspaceFolder(newUri)
+        if (!new_workspace_folder) {
+          continue
+        }
+
+        const old_relative = vscode.workspace
+          .asRelativePath(oldUri, false)
+          .replace(/\\/g, '/')
+        const new_relative = vscode.workspace
+          .asRelativePath(newUri, false)
+          .replace(/\\/g, '/')
+
+        // Find existing tracked file by old path
+        const existing = prepared_files.find(
+          (pf) => pf.sanitized_path == oldUri.fsPath
+        )
+
+        // Read new file content (post-rename)
+        let new_content = ''
+        try {
+          const doc = await vscode.workspace.openTextDocument(newUri)
+          new_content = doc.getText()
+        } catch {
+          new_content = ''
+        }
+
+        if (existing) {
+          // Update existing entry to point to the new path
+          existing.sanitized_path = newUri.fsPath
+          existing.reviewable_file.file_path = new_relative
+          existing.reviewable_file.workspace_name = new_workspace_folder.name
+          existing.reviewable_file.is_new = true
+          existing.reviewable_file.is_deleted = false
+          existing.reviewable_file.content = new_content
+
+          const diff_stats_updated = get_diff_stats({
+            original_content: existing.original_content,
+            new_content
+          })
+          existing.reviewable_file.lines_added = diff_stats_updated.lines_added
+          existing.reviewable_file.lines_removed =
+            diff_stats_updated.lines_removed
+
+          // Also add a synthetic "deleted" entry for the old path so UI shows delete+create
+          // Use the original content we already have for accurate stats and restoration
+          const oldSanitized = oldUri.fsPath
+          const oldHash = crypto
+            .createHash('md5')
+            .update(oldSanitized)
+            .digest('hex')
+          const oldTemp = path.join(os.tmpdir(), `cwc-${oldHash}.tmp`)
+
+          const deleted_diff_stats = get_diff_stats({
+            original_content: existing.original_content,
+            new_content: ''
+          })
+
+          const deleted_reviewable: ReviewableFile = {
+            type: 'file',
+            file_path: old_relative,
+            content: '',
+            workspace_name:
+              old_workspace_folder?.name ??
+              existing.reviewable_file.workspace_name,
+            is_new: false,
+            is_deleted: true,
+            lines_added: deleted_diff_stats.lines_added,
+            lines_removed: deleted_diff_stats.lines_removed,
+            is_checked: true
+          }
+
+          const deleted_prepared: PreparedFile = {
+            reviewable_file: deleted_reviewable,
+            sanitized_path: oldSanitized,
+            original_content: existing.original_content,
+            temp_file_path: oldTemp,
+            file_exists: false
+          }
+
+          prepared_files.push(deleted_prepared)
+          create_temp_files_with_original_content([deleted_prepared])
+
+          // Track state for downstream consumers (rename grouping)
+          original_states.push({
+            file_path: new_relative,
+            content: existing.original_content,
+            is_new: true,
+            workspace_name: new_workspace_folder.name,
+            file_path_to_restore: old_relative
+          })
+
+          // Notify UI
+          update_response_history(
+            panel_provider,
+            created_at,
+            existing.reviewable_file
+          )
+          panel_provider.send_message({
+            command: 'UPDATE_FILE_IN_REVIEW',
+            file: existing.reviewable_file
+          })
+          update_response_history(
+            panel_provider,
+            created_at,
+            deleted_prepared.reviewable_file
+          )
+          panel_provider.send_message({
+            command: 'UPDATE_FILE_IN_REVIEW',
+            file: deleted_prepared.reviewable_file
+          })
+        } else {
+          // Not previously tracked: treat rename as delete (old) + create (new)
+          if (
+            prepared_files.some((pf) => pf.sanitized_path === newUri.fsPath)
+          ) {
+            continue
+          }
+
+          // New entry for the new path (as created)
+          const newSanitized = newUri.fsPath
+          const newHash = crypto
+            .createHash('md5')
+            .update(newSanitized)
+            .digest('hex')
+          const newTemp = path.join(os.tmpdir(), `cwc-${newHash}.tmp`)
+
+          const create_diff_stats = get_diff_stats({
+            original_content: '',
+            new_content
+          })
+
+          const created_reviewable: ReviewableFile = {
+            type: 'file',
+            file_path: new_relative,
+            content: new_content,
+            workspace_name: new_workspace_folder.name,
+            is_new: true,
+            is_deleted: false,
+            lines_added: create_diff_stats.lines_added,
+            lines_removed: create_diff_stats.lines_removed,
+            is_checked: true
+          }
+
+          const created_prepared: PreparedFile = {
+            reviewable_file: created_reviewable,
+            sanitized_path: newSanitized,
+            original_content: '',
+            temp_file_path: newTemp,
+            file_exists: false
+          }
+
+          const oldSanitized = oldUri.fsPath
+          const oldHash = crypto
+            .createHash('md5')
+            .update(oldSanitized)
+            .digest('hex')
+          const oldTemp = path.join(os.tmpdir(), `cwc-${oldHash}.tmp`)
+
+          const deleted_diff_stats = get_diff_stats({
+            original_content: new_content,
+            new_content: ''
+          })
+
+          const deleted_reviewable: ReviewableFile = {
+            type: 'file',
+            file_path: old_relative,
+            content: '',
+            workspace_name:
+              old_workspace_folder?.name ?? new_workspace_folder.name,
+            is_new: false,
+            is_deleted: true,
+            lines_added: deleted_diff_stats.lines_added,
+            lines_removed: deleted_diff_stats.lines_removed,
+            is_checked: true
+          }
+
+          const deleted_prepared: PreparedFile = {
+            reviewable_file: deleted_reviewable,
+            sanitized_path: oldSanitized,
+            original_content: new_content,
+            temp_file_path: oldTemp,
+            file_exists: false
+          }
+
+          original_states.push({
+            file_path: new_relative,
+            content: new_content,
+            is_new: true,
+            workspace_name: new_workspace_folder.name,
+            file_path_to_restore: old_relative
+          })
+          prepared_files.push(created_prepared, deleted_prepared)
+
+          create_temp_files_with_original_content([
+            created_prepared,
+            deleted_prepared
+          ])
+
+          // Notify UI
+          update_response_history(
+            panel_provider,
+            created_at,
+            created_reviewable
+          )
+          panel_provider.send_message({
+            command: 'UPDATE_FILE_IN_REVIEW',
+            file: created_reviewable
+          })
+          update_response_history(
+            panel_provider,
+            created_at,
+            deleted_reviewable
+          )
+          panel_provider.send_message({
+            command: 'UPDATE_FILE_IN_REVIEW',
+            file: deleted_reviewable
+          })
+        }
+      }
+    }
+  )
 
   toggle_file_review_state = async ({
     file_path,

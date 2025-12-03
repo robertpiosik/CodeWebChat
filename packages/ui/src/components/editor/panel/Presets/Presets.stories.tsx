@@ -36,9 +36,7 @@ export const Primary = () => {
         console.log('on_presets_reorder', reordered)
       }
       on_preset_edit={(name) => console.log('on_preset_edit', name)}
-      on_preset_duplicate={(index) =>
-        console.log('on_preset_duplicate', index)
-      }
+      on_preset_duplicate={(index) => console.log('on_preset_duplicate', index)}
       on_preset_delete={(index) => {
         console.log('on_preset_delete', index)
       }}

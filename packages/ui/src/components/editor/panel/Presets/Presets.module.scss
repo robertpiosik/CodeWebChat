@@ -56,7 +56,11 @@
           content: '';
           flex: 1;
           height: 1px;
-          background: linear-gradient(to right, var(--cwc-border-color-dimmed), transparent);
+          background: linear-gradient(
+            to right,
+            var(--cwc-border-color-dimmed),
+            transparent
+          );
         }
       }
     }

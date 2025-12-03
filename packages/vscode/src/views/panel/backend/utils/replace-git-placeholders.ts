@@ -102,7 +102,7 @@ const build_changes_xml = (
 export const replace_changes_placeholder = async (params: {
   instruction: string
   after_context?: boolean
-  workspace_provider: WorkspaceProvider,
+  workspace_provider: WorkspaceProvider
   is_no_context_web_mode?: boolean
 }): Promise<string> => {
   const matches = params.instruction.match(
@@ -141,7 +141,8 @@ export const replace_changes_placeholder = async (params: {
       (folder) => folder.name == folder_name
     )
     if (!target_folder) {
-      vscode.window.showErrorMessage( // NOSONAR
+      vscode.window.showErrorMessage(
+        // NOSONAR
         dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
       )
       return params.instruction.replace(
@@ -168,7 +169,8 @@ export const replace_changes_placeholder = async (params: {
       }).toString()
 
       if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage( // NOSONAR
+        vscode.window.showInformationMessage(
+          // NOSONAR
           dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES_IN_FOLDER(
             branch_name,
             folder_name
@@ -191,7 +193,8 @@ export const replace_changes_placeholder = async (params: {
         replacement_text
       )
     } catch (error) {
-      vscode.window.showErrorMessage( // NOSONAR
+      vscode.window.showErrorMessage(
+        // NOSONAR
         dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH_IN_FOLDER(
           branch_name,
           folder_name
@@ -238,7 +241,8 @@ export const replace_changes_placeholder = async (params: {
       }).toString()
 
       if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage( // NOSONAR
+        vscode.window.showInformationMessage(
+          // NOSONAR
           dictionary.information_message.NO_CHANGES_FOUND_BETWEEN_BRANCHES(
             branch_name
           )
@@ -260,10 +264,9 @@ export const replace_changes_placeholder = async (params: {
         replacement_text
       )
     } catch (error) {
-      vscode.window.showErrorMessage( // NOSONAR
-        dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH(
-          branch_name
-        )
+      vscode.window.showErrorMessage(
+        // NOSONAR
+        dictionary.error_message.FAILED_TO_GET_CHANGES_FROM_BRANCH(branch_name)
       )
       Logger.error({
         function_name: 'replace_changes_placeholder',
@@ -385,7 +388,8 @@ export const replace_commit_placeholder = async (params: {
       (folder) => folder.name === folder_name
     )
     if (!target_folder) {
-      vscode.window.showErrorMessage( // NOSONAR
+      vscode.window.showErrorMessage(
+        // NOSONAR
         dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
       )
       result_instruction = result_instruction.replace(full_match, '')
@@ -399,7 +403,8 @@ export const replace_commit_placeholder = async (params: {
       }).toString()
 
       if (!diff || diff.length == 0) {
-        vscode.window.showInformationMessage( // NOSONAR
+        vscode.window.showInformationMessage(
+          // NOSONAR
           dictionary.information_message.COMMIT_SEEMS_EMPTY(commit_hash)
         )
         result_instruction = result_instruction.replace(full_match, '')
@@ -417,7 +422,8 @@ export const replace_commit_placeholder = async (params: {
         replacement_text
       )
     } catch (error) {
-      vscode.window.showErrorMessage( // NOSONAR
+      vscode.window.showErrorMessage(
+        // NOSONAR
         dictionary.error_message.FAILED_TO_GET_DIFF_FOR_COMMIT(commit_hash)
       )
       Logger.error({
@@ -476,7 +482,8 @@ export const replace_context_at_commit_placeholder = async (params: {
     )
 
     if (!target_folder) {
-      vscode.window.showErrorMessage( // NOSONAR
+      vscode.window.showErrorMessage(
+        // NOSONAR
         dictionary.error_message.WORKSPACE_FOLDER_NOT_FOUND(folder_name)
       )
       result_instruction = result_instruction.replace(full_match, '')
@@ -489,7 +496,8 @@ export const replace_context_at_commit_placeholder = async (params: {
     )
 
     if (files_in_repo.length == 0) {
-      vscode.window.showInformationMessage( // NOSONAR
+      vscode.window.showInformationMessage(
+        // NOSONAR
         dictionary.information_message.NO_CHECKED_FILES_IN_REPO_FOR_COMMIT(
           folder_name,
           commit_hash.substring(0, 7)
@@ -540,7 +548,8 @@ export const replace_context_at_commit_placeholder = async (params: {
     }
 
     if (files_in_repo.length > 0 && files_content.length === 0) {
-      vscode.window.showInformationMessage( // NOSONAR
+      vscode.window.showInformationMessage(
+        // NOSONAR
         dictionary.information_message.ALL_CHECKED_FILES_UNCAHNGED_SINCE_COMMIT(
           folder_name,
           commit_hash.substring(0, 7)

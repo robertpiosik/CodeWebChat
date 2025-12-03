@@ -3,5 +3,4 @@ export const MODE = {
   API: 'API CALLS'
 }
 
-export type Mode =
-  (typeof MODE)[keyof typeof MODE]
+export type Mode = (typeof MODE)[keyof typeof MODE]

@@ -1,8 +1,5 @@
 import { useMemo } from 'react'
-import {
-  MODE,
-  Mode
-} from '@/views/panel/types/main-view-mode'
+import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiToolConfiguration } from '@/views/panel/types/messages'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { Preset } from '@shared/types/preset'

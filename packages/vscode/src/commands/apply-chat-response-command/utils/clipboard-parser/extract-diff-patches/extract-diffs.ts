@@ -810,7 +810,8 @@ export const extract_diffs = (params: {
       is_single_root: params.is_single_root
     })
   } else {
-    const xml_file_tag_start_regex = /^\s*<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
+    const xml_file_tag_start_regex =
+      /^\s*<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
     const start_match =
       lines.length > 0 ? lines[0].trim().match(xml_file_tag_start_regex) : null
 

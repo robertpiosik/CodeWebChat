@@ -59,4 +59,3 @@ export const build_commit_message_prompt = (
 
   return `${commit_message_prompt}\n${changes_xml}\n${commit_message_prompt}`
 }
-

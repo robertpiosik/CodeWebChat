@@ -83,8 +83,7 @@ const flush_text_block = (params: {
     return
   }
 
-  const content =
-    results.length == 0 ? text_block.trim() : text_block.trimEnd()
+  const content = results.length == 0 ? text_block.trim() : text_block.trimEnd()
 
   results.push({ type: 'text', content })
 }
@@ -191,11 +190,12 @@ export const parse_multiple_files = (params: {
         current_workspace_name = undefined
         current_file_name = ''
         if (last_seen_file_path_comment) {
-          const { workspace_name, relative_path } = extract_and_set_workspace_path({
-            raw_file_path: last_seen_file_path_comment,
-            is_single_root_folder_workspace:
-              params.is_single_root_folder_workspace
-          })
+          const { workspace_name, relative_path } =
+            extract_and_set_workspace_path({
+              raw_file_path: last_seen_file_path_comment,
+              is_single_root_folder_workspace:
+                params.is_single_root_folder_workspace
+            })
           current_file_name = relative_path
           if (workspace_name) {
             current_workspace_name = workspace_name
@@ -222,11 +222,12 @@ export const parse_multiple_files = (params: {
           state = 'CONTENT'
           current_xml_tag = xml_info.tagName
           top_level_xml_file_mode = true
-          const { workspace_name, relative_path } = extract_and_set_workspace_path({
-            raw_file_path: xml_info.path,
-            is_single_root_folder_workspace:
-              params.is_single_root_folder_workspace
-          })
+          const { workspace_name, relative_path } =
+            extract_and_set_workspace_path({
+              raw_file_path: xml_info.path,
+              is_single_root_folder_workspace:
+                params.is_single_root_folder_workspace
+            })
           current_file_name = relative_path
           if (workspace_name) {
             current_workspace_name = workspace_name
@@ -390,7 +391,9 @@ export const parse_multiple_files = (params: {
             trimmed_current_content.endsWith('```') &&
             line.trim() !== ''
           ) {
-            const final_content = strip_markdown_code_block(trimmed_current_content)
+            const final_content = strip_markdown_code_block(
+              trimmed_current_content
+            )
 
             state = 'TEXT'
 

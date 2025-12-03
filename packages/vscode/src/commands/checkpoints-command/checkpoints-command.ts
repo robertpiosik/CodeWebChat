@@ -223,8 +223,10 @@ export const checkpoints_command = (params: {
                 TEMPORARY_CHECKPOINT_STATE_KEY
               )
             if (!temp_checkpoint) {
-              vscode.window.showErrorMessage( // NOSONAR
-                dictionary.error_message.COULD_NOT_FIND_TEMP_CHECKPOINT_TO_REVERT
+              vscode.window.showErrorMessage(
+                // NOSONAR
+                dictionary.error_message
+                  .COULD_NOT_FIND_TEMP_CHECKPOINT_TO_REVERT
               )
               return
             }
@@ -271,7 +273,8 @@ export const checkpoints_command = (params: {
 
             if (confirmation == 'Clear All') {
               await clear_all_checkpoints(params.context, params.panel_provider)
-              vscode.window.showInformationMessage( // NOSONAR
+              vscode.window.showInformationMessage(
+                // NOSONAR
                 dictionary.information_message.ALL_CHECKPOINTS_CLEARED
               )
             }
@@ -390,7 +393,9 @@ export const checkpoints_command = (params: {
                   )
                 } catch (error: any) {
                   vscode.window.showWarningMessage(
-                    dictionary.warning_message.COULD_NOT_DELETE_CHECKPOINT_FILES(error.message)
+                    dictionary.warning_message.COULD_NOT_DELETE_CHECKPOINT_FILES(
+                      error.message
+                    )
                   )
                 }
               }
@@ -424,7 +429,9 @@ export const checkpoints_command = (params: {
                 params.panel_provider.send_checkpoints()
                 notification_count++
                 vscode.window
-                  .showInformationMessage(dictionary.information_message.CHECKPOINT_RESTORED)
+                  .showInformationMessage(
+                    dictionary.information_message.CHECKPOINT_RESTORED
+                  )
                   .then(() => {
                     notification_count--
                   })
@@ -436,7 +443,10 @@ export const checkpoints_command = (params: {
             } else if (choice === 'Undo') {
               notification_count++
               vscode.window
-                .showInformationMessage(dictionary.information_message.COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED)
+                .showInformationMessage(
+                  dictionary.information_message
+                    .COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED
+                )
                 .then(() => {
                   notification_count--
                 })

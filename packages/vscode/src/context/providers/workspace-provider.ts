@@ -444,7 +444,8 @@ export class WorkspaceProvider
 
       if (checked_open_files.length > 0) {
         vscode.window
-          .showInformationMessage( // NOSONAR
+          .showInformationMessage(
+            // NOSONAR
             dictionary.information_message.FILES_REMAIN_CHECKED(
               checked_open_files.length
             ),

@@ -1,4 +1,4 @@
-import {  useRef, useCallback } from 'react'
+import { useRef, useCallback } from 'react'
 import cn from 'classnames'
 import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'

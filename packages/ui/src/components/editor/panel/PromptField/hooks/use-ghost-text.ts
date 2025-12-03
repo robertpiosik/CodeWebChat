@@ -46,8 +46,7 @@ export const use_ghost_text = ({
 
   const identifiers = useMemo(() => {
     if (!currently_open_file_text) return new Set<string>()
-    const matches =
-      currently_open_file_text.match(/[a-zA-Z_][a-zA-Z0-9_]*/g)
+    const matches = currently_open_file_text.match(/[a-zA-Z_][a-zA-Z0-9_]*/g)
     if (!matches) return new Set<string>()
     return new Set(matches.filter((id) => id.length >= 3))
   }, [currently_open_file_text])
@@ -79,8 +78,7 @@ export const use_ghost_text = ({
 
             if (last_word_match) {
               const last_word_with_prefix = last_word_match[0]
-              const word_start_match =
-                last_word_with_prefix.match(/[a-zA-Z_]/)
+              const word_start_match = last_word_with_prefix.match(/[a-zA-Z_]/)
               if (word_start_match) {
                 const last_word = last_word_with_prefix.substring(
                   word_start_match.index ?? 0

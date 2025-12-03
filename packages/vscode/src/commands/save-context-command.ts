@@ -455,9 +455,7 @@ export function save_context_command(
             let context_selection_done = false
             while (!context_selection_done) {
               let all_contexts_map = await load_all_contexts()
-              const existing_context_names = Array.from(
-                all_contexts_map.keys()
-              )
+              const existing_context_names = Array.from(all_contexts_map.keys())
 
               let context_name: string | undefined
               let is_new_entry = false
@@ -604,12 +602,13 @@ export function save_context_command(
                           create_quick_pick_items(all_contexts_map)
 
                         is_showing_dialog = true
-                        const choice = await vscode.window.showInformationMessage(
-                          dictionary.information_message.DELETED_CONTEXT_FROM_ALL_ROOTS(
-                            deleted_context_name
-                          ),
-                          'Undo'
-                        )
+                        const choice =
+                          await vscode.window.showInformationMessage(
+                            dictionary.information_message.DELETED_CONTEXT_FROM_ALL_ROOTS(
+                              deleted_context_name
+                            ),
+                            'Undo'
+                          )
                         is_showing_dialog = false
 
                         if (choice == 'Undo') {
@@ -783,8 +782,10 @@ export function save_context_command(
 
           let context_selection_done = false
           while (!context_selection_done) {
-            let saved_contexts: SavedContext[] =
-              extContext.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, [])
+            let saved_contexts: SavedContext[] = extContext.workspaceState.get(
+              SAVED_CONTEXTS_STATE_KEY,
+              []
+            )
 
             let context_name: string | undefined
             let is_new_entry = false
@@ -822,7 +823,8 @@ export function save_context_command(
               ]
 
               const quick_pick_contexts = vscode.window.createQuickPick()
-              quick_pick_contexts.items = create_quick_pick_items(saved_contexts)
+              quick_pick_contexts.items =
+                create_quick_pick_items(saved_contexts)
               quick_pick_contexts.placeholder =
                 PLACEHOLDER_SELECT_OR_CREATE_CONTEXT
               quick_pick_contexts.title = 'Save Context'

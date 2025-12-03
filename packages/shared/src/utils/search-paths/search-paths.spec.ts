@@ -79,13 +79,6 @@ describe('search_paths', () => {
     expect(result[0]).toBe('src/routes/HomePage.tsx')
   })
 
- 
-
-
-
-  
-
-
   it('should not find "src/routes/HomePage.tsx" with query "src-page"', () => {
     const result = search_paths({ paths, search_value: 'src-page' })
     expect(result).toHaveLength(0)

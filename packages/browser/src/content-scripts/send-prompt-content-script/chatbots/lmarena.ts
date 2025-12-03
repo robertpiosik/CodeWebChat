@@ -37,14 +37,14 @@ export const lmarena: Chatbot = {
           }
           copy_button.click()
         },
-        insert_button: (f, b) =>
-          f.insertBefore(b, f.children[0])
+        insert_button: (f, b) => f.insertBefore(b, f.children[0])
       })
     }
 
     observe_for_responses({
       chatbot_name: 'LMArena',
-      is_generating: () => !!document.querySelector('canvas[data-sentry-component="Loading"]'),
+      is_generating: () =>
+        !!document.querySelector('canvas[data-sentry-component="Loading"]'),
       footer_selector: 'div[data-sentry-component="MessageActions"]',
       add_buttons
     })

@@ -72,7 +72,8 @@ export const initial_select_model = async (
       error instanceof Error &&
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
-      vscode.window.showInformationMessage( // NOSONAR
+      vscode.window.showInformationMessage(
+        // NOSONAR
         dictionary.information_message.MODELS_ROUTE_NOT_FOUND(provider.name),
         { modal: true }
       )
@@ -179,11 +180,13 @@ export const edit_model_for_config = async (
       message: 'Failed to fetch models',
       data: error
     })
-    if ( // NOSONAR
+    if (
+      // NOSONAR
       error instanceof Error &&
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
-      vscode.window.showInformationMessage( // NOSONAR
+      vscode.window.showInformationMessage(
+        // NOSONAR
         dictionary.information_message.MODELS_ROUTE_NOT_FOUND_MANUAL_ENTRY(
           config.provider_name
         ),

@@ -9,7 +9,8 @@ export const replace_selection_placeholder = (instruction: string): string => {
   const active_editor = vscode.window.activeTextEditor
   if (!active_editor || active_editor.selection.isEmpty) {
     // If no selection, just return the original instruction
-    vscode.window.showInformationMessage( // NOSONAR
+    vscode.window.showInformationMessage(
+      // NOSONAR
       dictionary.information_message.NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER
     )
     return instruction.replace(/#Selection/g, '')

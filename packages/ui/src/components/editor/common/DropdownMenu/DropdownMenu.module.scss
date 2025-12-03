@@ -30,10 +30,9 @@
   border-radius: 4px;
 
   &__label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &:hover,

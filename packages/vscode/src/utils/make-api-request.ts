@@ -334,7 +334,7 @@ export const make_api_request = async (params: {
                 Logger.info({
                   function_name: 'make_api_request',
                   message:
-                    'Detected closing tag without opening tag, stripped content before </think>',
+                    'Detected closing tag without opening tag, stripped content before </think>'
                 })
               }
             }
@@ -373,7 +373,7 @@ export const make_api_request = async (params: {
           if (!stream_closed) {
             Logger.warn({
               function_name: 'make_api_request',
-              message: 'Stream aborted',
+              message: 'Stream aborted'
             })
             reject(new StreamAbortError('Stream was aborted'))
           }
@@ -391,7 +391,7 @@ export const make_api_request = async (params: {
       if (is_retryable_error && attempt < MAX_RETRIES) {
         const delay = RETRY_DELAYS[attempt]
         let reason = 'an unknown error'
-        
+
         if (axios.isAxiosError(error)) {
           if (error.response?.status == 503) {
             reason = 'status 503'

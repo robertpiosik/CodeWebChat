@@ -28,7 +28,8 @@ export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'
 export const CHECKPOINTS_STATE_KEY = 'checkpoints'
 export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'
-export const CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY = 'checkpoint-operation-in-progress'
+export const CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY =
+  'checkpoint-operation-in-progress'
 
 export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
   'duplicate-workspace-context'
@@ -61,11 +62,13 @@ export const get_configurations_collapsed_state_key = (
   api_prompt_type: string
 ) => `configurations-collapsed-${api_prompt_type}`
 
-export const get_last_selected_preset_or_group_key = (web_prompt_type: string) =>
-  `last-selected-preset-or-group-${web_prompt_type}`
+export const get_last_selected_preset_or_group_key = (
+  web_prompt_type: string
+) => `last-selected-preset-or-group-${web_prompt_type}`
 
-export const get_recently_used_presets_or_groups_key = (web_prompt_type: string) =>
-  `recently-used-presets-or-groups-${web_prompt_type}`
+export const get_recently_used_presets_or_groups_key = (
+  web_prompt_type: string
+) => `recently-used-presets-or-groups-${web_prompt_type}`
 
 export type DuplicateWorkspaceContext = {
   checked_files: string[]

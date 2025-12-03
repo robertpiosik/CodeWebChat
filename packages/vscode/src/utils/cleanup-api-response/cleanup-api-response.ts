@@ -33,7 +33,9 @@ export const cleanup_api_response = (params: { content: string }): string => {
     if (before || after) {
       const end_of_first_line = content.indexOf('\n', first_backticks)
       if (end_of_first_line > -1 && end_of_first_line < last_backticks) {
-        content = content.substring(end_of_first_line + 1, last_backticks).trimEnd()
+        content = content
+          .substring(end_of_first_line + 1, last_backticks)
+          .trimEnd()
       }
     }
   }

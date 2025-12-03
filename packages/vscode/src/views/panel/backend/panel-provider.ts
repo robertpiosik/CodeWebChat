@@ -444,7 +444,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
                 panel_provider: this,
                 websites_provider: this.websites_provider,
                 options: {
-                  show_auto_closing_modal_on_success: true,
+                  show_auto_closing_modal_on_success: true
                 }
               })
             }
@@ -763,9 +763,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               ) {
                 selected_name = last_selected
               }
-            } else if (
-              presets_for_mode.some((p) => p.name === last_selected)
-            ) {
+            } else if (presets_for_mode.some((p) => p.name === last_selected)) {
               selected_name = last_selected
             }
           }

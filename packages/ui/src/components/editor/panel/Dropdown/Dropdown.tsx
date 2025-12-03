@@ -161,7 +161,7 @@ export const Dropdown = <T extends string>(props: Dropdown.Props<T>) => {
             label: option.label,
             on_click: () => handle_select(option.value),
             is_selected: just_opened && option.value == props.selected_value,
-            shortcut: option.shortcut,
+            shortcut: option.shortcut
           }))}
           underline_non_selected_items={opened_by_shortcut.current}
           max_width={props.menu_max_width}

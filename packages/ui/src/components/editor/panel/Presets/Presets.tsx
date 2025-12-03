@@ -56,7 +56,7 @@ export namespace Presets {
     has_context: boolean
     presets: Preset[]
     on_preset_click: (preset_name: string, without_submission?: boolean) => void
-    on_group_click: (group_name: string, without_submission?: boolean) => void;
+    on_group_click: (group_name: string, without_submission?: boolean) => void
     on_create_preset: (options?: { add_on_top?: boolean }) => void
     on_create_group: (options?: {
       add_on_top?: boolean

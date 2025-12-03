@@ -179,10 +179,8 @@ export const handle_copy_prompt = async (params: {
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
       }[edit_format]
-      const edit_format_instructions = config.get<string>(
-        instructions_key,
-        
-      ) ||default_instructions
+      const edit_format_instructions =
+        config.get<string>(instructions_key) || default_instructions
       if (edit_format_instructions) {
         const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
         pre_context_instructions += `\n${system_instructions}`

@@ -98,11 +98,7 @@ export const get_highlighted_text = (params: {
         const title = !params.has_active_selection
           ? 'Missing text selection'
           : ''
-        return `<span class="${className}" data-type="selection-keyword" title="${title}"><span class="${
-          styles['keyword__icon']
-        }" data-role="keyword-icon"></span><span class="${
-          styles['keyword__text']
-        }" data-role="keyword-text">Selection</span></span>`
+        return `<span class="${className}" data-type="selection-keyword" title="${title}"><span class="${styles['keyword__icon']}" data-role="keyword-icon"></span><span class="${styles['keyword__text']}" data-role="keyword-text">Selection</span></span>`
       }
       if (part && /^#Changes:[^\s,;:!?]+$/.test(part)) {
         const branch_name = part.substring('#Changes:'.length)
@@ -115,7 +111,9 @@ export const get_highlighted_text = (params: {
           styles['keyword__icon']
         }" data-role="keyword-icon"></span><span class="${
           styles['keyword__text']
-        }" data-role="keyword-text">Diff with ${escape_html(branch_name)}</span></span>`
+        }" data-role="keyword-text">Diff with ${escape_html(
+          branch_name
+        )}</span></span>`
       }
       const saved_context_match = part.match(
         /^#SavedContext:(WorkspaceState|JSON)\s+"([^"]+)"$/
@@ -132,7 +130,9 @@ export const get_highlighted_text = (params: {
           styles['keyword__icon']
         }" data-role="keyword-icon"></span><span class="${
           styles['keyword__text']
-        }" data-role="keyword-text">Context "${escape_html(context_name)}"</span></span>`
+        }" data-role="keyword-text">Context "${escape_html(
+          context_name
+        )}"</span></span>`
       }
       const commit_match = part.match(
         /^#(Commit|ContextAtCommit):([^:]+):([^\s"]+)\s+"([^"]*)"$/

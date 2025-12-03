@@ -412,7 +412,9 @@ export async function handle_json_file_source(
                 }
               } catch (error: any) {
                 vscode.window.showErrorMessage(
-                  dictionary.error_message.ERROR_DELETING_CONTEXT_FROM_FILE(error.message)
+                  dictionary.error_message.ERROR_DELETING_CONTEXT_FROM_FILE(
+                    error.message
+                  )
                 )
               }
             }

@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 import { MainView } from './MainView'
 import { Preset } from '@shared/types/preset'
 import { EditFormat } from '@shared/types/edit-format'
-import {
-  MODE,
-  Mode
-} from '@/views/panel/types/main-view-mode'
+import { MODE, Mode } from '@/views/panel/types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
 import {
   BackendMessage,
@@ -354,7 +351,10 @@ export const Main: React.FC<Props> = (props) => {
 
   const handle_presets_reorder = (reordered_presets: Preset[]) => {
     if (all_presets) {
-      set_all_presets({ ...all_presets, [current_prompt_type]: reordered_presets })
+      set_all_presets({
+        ...all_presets,
+        [current_prompt_type]: reordered_presets
+      })
     }
 
     post_message(props.vscode, {
@@ -522,7 +522,8 @@ export const Main: React.FC<Props> = (props) => {
     }
     if (current_prompt_type == 'ask') return props.ask_instructions
     if (current_prompt_type == 'edit-context') return props.edit_instructions
-    if (current_prompt_type == 'no-context') return props.no_context_instructions
+    if (current_prompt_type == 'no-context')
+      return props.no_context_instructions
     return ''
   }
 
@@ -755,9 +756,7 @@ export const Main: React.FC<Props> = (props) => {
       on_response_history_item_click={props.on_response_history_item_click}
       selected_history_item_created_at={props.selected_history_item_created_at}
       on_selected_history_item_change={props.on_selected_history_item_change}
-      on_response_history_item_remove={
-        props.on_response_history_item_remove
-      }
+      on_response_history_item_remove={props.on_response_history_item_remove}
       context_file_paths={props.context_file_paths}
       presets_collapsed={props.presets_collapsed}
       on_presets_collapsed_change={props.on_presets_collapsed_change}
