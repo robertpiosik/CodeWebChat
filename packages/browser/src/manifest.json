@@ -26,7 +26,7 @@
       "matches": [
         "https://aistudio.google.com/prompts/new_chat*",
         "https://chatgpt.com/*",
-        "https://claude.ai/new",
+        "https://claude.ai/*",
         "https://copilot.microsoft.com/",
         "https://chat.deepseek.com/",
         "https://www.doubao.com/chat/",

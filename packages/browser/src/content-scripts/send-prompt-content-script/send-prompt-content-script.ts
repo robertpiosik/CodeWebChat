@@ -54,7 +54,7 @@ const is_copilot = current_url.startsWith(copilot_url)
 const github_copilot_url = 'https://github.com/copilot'
 const is_github_copilot = current_url.startsWith(github_copilot_url)
 
-const claude_url = 'https://claude.ai/new'
+const claude_url = 'https://claude.ai/'
 const is_claude = current_url.startsWith(claude_url)
 
 const deepseek_url = 'https://chat.deepseek.com/'

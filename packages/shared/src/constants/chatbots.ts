@@ -74,6 +74,9 @@ export const CHATBOTS = {
   } as Chatbot,
   Claude: {
     url: 'https://claude.ai/new',
+    supports_url_override: true,
+    url_override_label: 'Project URL',
+    url_override_disabled_options: ['incognito-chat'],
     supported_options: {
       'incognito-chat': 'Incognito chat'
     },
