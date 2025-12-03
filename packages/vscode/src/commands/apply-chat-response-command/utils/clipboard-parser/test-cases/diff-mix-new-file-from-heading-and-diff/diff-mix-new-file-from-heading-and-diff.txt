@@ -1,6 +1,8 @@
 Lorem ipsum.
 
-### New file: `src/lorem.html`
+### New file: `src/lorem.html` (Nuovo File)
+
+Lorem ipsum.
 
 ```html
 <div>lorem ipsum</div>

@@ -42,6 +42,22 @@ const extract_path_from_potential_string = (line: string) => {
   let extracted = extract_path_from_line_of_code(line)
 
   if (!extracted) {
+    const xml_match = line.match(/^<[^>]+>([^<]+)<\/[^>]+>$/)
+    if (xml_match && xml_match[1]) {
+      const potential_path = xml_match[1].trim()
+      if (
+        potential_path &&
+        (potential_path.includes('/') ||
+          potential_path.includes('\\') ||
+          potential_path.includes('.')) &&
+        !potential_path.includes(' ')
+      ) {
+        extracted = potential_path
+      }
+    }
+  }
+
+  if (!extracted) {
     let potential_path = line
     if (potential_path.endsWith(':')) {
       potential_path = potential_path.slice(0, -1).trim()
@@ -125,21 +141,11 @@ const find_file_path_before_block = (params: {
         continue
       }
 
-      let all_intermediate_lines_empty = true
-      for (let k = j + 1; k < params.block_start; k++) {
-        if (params.lines[k].trim() !== '') {
-          all_intermediate_lines_empty = false
-          break
-        }
-      }
-
-      if (all_intermediate_lines_empty) {
-        const { workspace_name } = extract_workspace_and_path({
-          raw_file_path: extracted,
-          is_single_root_folder_workspace: params.is_single_root
-        })
-        return { file_path: extracted, workspace_name }
-      }
+      const { workspace_name } = extract_workspace_and_path({
+        raw_file_path: extracted,
+        is_single_root_folder_workspace: params.is_single_root
+      })
+      return { file_path: extracted, workspace_name }
     }
   }
 
@@ -687,39 +693,14 @@ const extract_all_code_block_patches = (params: {
       if (patch) {
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
         if (last_item && last_item.type == 'text') {
-          const content_lines = last_item.content.split('\n')
-          let last_non_empty_line_index = -1
-          let last_non_empty_line = ''
-          for (let i = content_lines.length - 1; i >= 0; i--) {
-            if (content_lines[i].trim() !== '') {
-              last_non_empty_line_index = i
-              last_non_empty_line = content_lines[i].trim()
-              break
-            }
-          }
+          remove_path_line_from_text_block({
+            text_item: last_item,
+            target_file_path: patch.file_path,
+            is_single_root: params.is_single_root
+          })
 
-          if (last_non_empty_line) {
-            const extracted =
-              extract_path_with_xml_fallback(last_non_empty_line)
-
-            if (extracted) {
-              const { relative_path } = extract_workspace_and_path({
-                raw_file_path: extracted,
-                is_single_root_folder_workspace: params.is_single_root
-              })
-              if (relative_path === patch.file_path) {
-                const new_content = content_lines
-                  .slice(0, last_non_empty_line_index)
-                  .join('\n')
-                  .trim()
-
-                if (new_content) {
-                  last_item.content = new_content
-                } else {
-                  items.pop()
-                }
-              }
-            }
+          if (!last_item.content) {
+            items.pop()
           }
         }
 
