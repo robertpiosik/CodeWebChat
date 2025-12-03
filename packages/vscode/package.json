@@ -580,7 +580,7 @@
           "default": {
             "whole": "Whenever showing a new or updated file, provide brief explanation, then print path in a markdown heading (e.g. ### File: `src/index.ts`), followed by a markdown code block with full contents—as I have a disability which means I can't type and need to be able to just copy and paste.",
             "truncated": "Whenever showing a new or updated file, provide brief explanation, then print path in a markdown heading (e.g. ### File: `src/index.ts`), followed by a markdown code block with truncated contents—as a space saving measure (unchanged parts should be hidden behind ellipsis comments, e.g. \"// ...\").",
-            "diff": "Whenever showing a new or updated file, provide brief explanation and print the Unified Diff within a markdown code block. Example: \n[brief explanation]\n```diff\n--- a/file.py\n+++ b/file.py\n@@ -2,1 +2,1 @@\n-old_value = 10\n+new_value = 20\n```"
+            "diff": "Whenever showing a new or updated file, provide brief explanation and print the Unified Diff within a markdown code block. Example: \nValue has been changed from 10 to 20.\n```diff\n--- a/file.py\n+++ b/file.py\n@@ -2,1 +2,1 @@\n-value = 10\n+value = 20\n```"
           },
           "properties": {
             "whole": {
