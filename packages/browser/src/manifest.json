@@ -33,7 +33,7 @@
         "https://gemini.google.com/app",
         "https://gemini.google.com/u/*/app",
         "https://github.com/copilot/*",
-        "https://grok.com/",
+        "https://grok.com/*",
         "https://huggingface.co/chat/",
         "https://lmarena.ai/",
         "https://www.kimi.com/",

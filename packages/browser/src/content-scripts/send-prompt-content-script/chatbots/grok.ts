@@ -18,6 +18,7 @@ export const grok: Chatbot = {
       }
       check_for_element()
     })
+    await new Promise((r) => setTimeout(r, 500))
   },
   set_options: async (options?: string[]) => {
     if (!options) return
@@ -41,10 +42,10 @@ export const grok: Chatbot = {
   set_model: async (model?: string) => {
     if (!model) return
 
-    const model_selector_button = document.querySelector(
+    const model_selector_buttons = document.querySelectorAll(
       'button[id="model-select-trigger"]'
-    ) as HTMLButtonElement
-    if (!model_selector_button) {
+    ) as NodeListOf<HTMLButtonElement>
+    if (!model_selector_buttons || model_selector_buttons.length == 0) {
       report_initialization_error({
         function_name: 'set_model',
         log_message: 'Model selector button not found'
@@ -52,10 +53,12 @@ export const grok: Chatbot = {
       return
     }
 
+    const model_selector_button =
+      model_selector_buttons[model_selector_buttons.length - 1]
     const model_label_to_find = CHATBOTS['Grok'].models?.[model]?.label
     if (!model_label_to_find) return
 
-    if (model_selector_button.textContent?.includes(model_label_to_find)) {
+    if (model_selector_button.textContent == model_label_to_find) {
       return
     }
 
@@ -64,9 +67,10 @@ export const grok: Chatbot = {
     )
     await new Promise((r) => setTimeout(r, 150))
 
-    const dropdown = document.querySelector(
+    const dropdowns = document.querySelectorAll(
       'div[data-radix-popper-content-wrapper]'
-    ) as HTMLDivElement
+    ) as NodeListOf<HTMLDivElement>
+    const dropdown = dropdowns[dropdowns.length - 1]
     if (!dropdown) {
       report_initialization_error({
         function_name: 'set_model',

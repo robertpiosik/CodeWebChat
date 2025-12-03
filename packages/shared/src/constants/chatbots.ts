@@ -127,6 +127,9 @@ export const CHATBOTS = {
   } as Chatbot,
   Grok: {
     url: 'https://grok.com/',
+    supports_url_override: true,
+    url_override_label: 'Project URL',
+    url_override_disabled_options: ['private'],
     supported_options: { private: 'Private' },
     models: {
       auto: { label: 'Auto' },
