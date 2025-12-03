@@ -130,7 +130,7 @@ export const perplexity: Chatbot = {
       chatbot_name: 'Perplexity',
       is_generating: () =>
         !!document.querySelector(
-          'path[d="M17 4h-10a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3z"]'
+          'button[data-testid="stop-generating-response-button"]'
         ),
       footer_selector:
         '.max-w-threadContentWidth > .relative > div > div > div > div > div + div > div + div',
