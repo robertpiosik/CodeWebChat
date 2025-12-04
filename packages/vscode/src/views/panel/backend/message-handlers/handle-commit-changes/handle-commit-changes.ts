@@ -142,13 +142,12 @@ export const handle_proceed_with_commit = async (
   }
 
   try {
-    // Convert relative paths to absolute URIs
-    const uris_to_stage = files_to_stage.map(
-      (file_path) => vscode.Uri.joinPath(repository.rootUri, file_path).fsPath
-    )
+    const file_args = files_to_stage
+      .map((file) => `"${file.replace(/"/g, '\\"')}"`)
+      .join(' ')
+    execSync(`git add -- ${file_args}`, { cwd: repository.rootUri.fsPath })
 
-    await repository.add(uris_to_stage)
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await repository.status()
     await proceed_with_commit_generation(panel_provider, repository, true)
   } catch (error) {
     panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })

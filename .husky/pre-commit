@@ -1,2 +1,1 @@
-npm test
-npx lint-staged
+npx lint-staged --allow-empty

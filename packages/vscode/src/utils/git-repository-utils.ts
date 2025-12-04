@@ -71,11 +71,15 @@ export async function prepare_staged_changes(
     staged_changes.length === 0 &&
     repository.state.workingTreeChanges.length > 0
   ) {
-    const uris_to_stage = repository.state.workingTreeChanges.map(
+    const files_to_stage = repository.state.workingTreeChanges.map(
       (change: any) => change.uri.fsPath
     )
-    await repository.add(uris_to_stage)
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    const file_args = files_to_stage
+      .map((file: string) => `"${file.replace(/"/g, '\\"')}"`)
+      .join(' ')
+    execSync(`git add -- ${file_args}`, {
+      cwd: repository.rootUri.fsPath
+    })
     await repository.status()
   }
 
