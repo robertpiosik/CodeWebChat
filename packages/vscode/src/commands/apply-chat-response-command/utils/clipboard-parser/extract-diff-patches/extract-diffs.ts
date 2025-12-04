@@ -554,6 +554,44 @@ const extract_all_code_block_patches = (params: {
 
   code_blocks.sort((a, b) => a.start - b.start)
 
+  const xml_blocks: typeof code_blocks = []
+  const xml_file_tag_start_regex =
+    /^\s*<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
+  let in_xml_block = false
+  let xml_start = -1
+  let xml_tag_name = ''
+  for (let i = 0; i < lines.length; i++) {
+    const trimmed_line = lines[i].trim()
+
+    const is_inside_markdown_block = code_blocks.some(
+      (b) => i >= b.start && i < b.end
+    )
+    if (is_inside_markdown_block) continue
+
+    if (!in_xml_block) {
+      const match = trimmed_line.match(xml_file_tag_start_regex)
+      if (match) {
+        in_xml_block = true
+        xml_start = i
+        xml_tag_name = match[1]
+      }
+    } else {
+      const xml_file_tag_end_regex = new RegExp(`^\\s*<\\/${xml_tag_name}>`)
+      if (xml_file_tag_end_regex.test(trimmed_line)) {
+        xml_blocks.push({ start: xml_start, end: i, type: 'xml_file' })
+        in_xml_block = false
+      }
+    }
+  }
+  if (in_xml_block) {
+    xml_blocks.push({
+      start: xml_start,
+      end: lines.length - 1,
+      type: 'xml_file'
+    })
+  }
+  code_blocks.push(...xml_blocks)
+  code_blocks.sort((a, b) => a.start - b.start)
   // First, identify all files that have explicit diff blocks.
   const files_with_diffs = new Set<string>()
   const diff_block_patches = new Map<number, Diff[]>()
@@ -620,7 +658,10 @@ const extract_all_code_block_patches = (params: {
   // Process each found code block in order of appearance.
   for (let i = 0; i < code_blocks.length; i++) {
     const block = code_blocks[i]
-    const block_lines = lines.slice(block.start + 1, block.end)
+    const block_lines =
+      block.type == 'xml_file'
+        ? lines.slice(block.start, block.end + 1)
+        : lines.slice(block.start + 1, block.end)
 
     if (block.type != 'diff' && block.type != 'patch') {
       const has_truncation_comment = block_lines.some((line) => {
@@ -639,7 +680,13 @@ const extract_all_code_block_patches = (params: {
       }
     }
 
-    const text_before = lines.slice(last_block_end + 1, block.start).join('\n')
+    const text_before = lines
+      .slice(last_block_end + 1, block.start)
+      .filter((line) => {
+        const trimmed = line.trim()
+        return trimmed != '<files>' && trimmed != '</files>'
+      })
+      .join('\n')
 
     if (block.type == 'diff' || block.type == 'patch') {
       if (text_before.trim()) {
@@ -729,7 +776,13 @@ const extract_all_code_block_patches = (params: {
   }
 
   if (last_block_end < lines.length - 1) {
-    const text_after = lines.slice(last_block_end + 1).join('\n')
+    const text_after = lines
+      .slice(last_block_end + 1)
+      .filter((line) => {
+        const trimmed = line.trim()
+        return trimmed != '<files>' && trimmed != '</files>'
+      })
+      .join('\n')
     if (text_after.trim()) {
       items.push({ type: 'text', content: text_after.trim() })
     }
@@ -810,40 +863,23 @@ export const extract_diffs = (params: {
     code_block_regex.test(line.trim())
   )
 
-  if (uses_code_blocks) {
+  const xml_file_tag_start_regex =
+    /^\s*<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
+  const uses_xml_blocks = lines.some((line) =>
+    xml_file_tag_start_regex.test(line.trim())
+  )
+
+  if (uses_code_blocks || uses_xml_blocks) {
     return extract_all_code_block_patches({
       normalized_text,
       is_single_root: params.is_single_root
     })
-  } else {
-    const xml_file_tag_start_regex =
-      /^\s*<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
-    const start_match =
-      lines.length > 0 ? lines[0].trim().match(xml_file_tag_start_regex) : null
-
-    if (start_match) {
-      const tag_name = start_match[1]
-      const xml_file_tag_end_regex = new RegExp(`^\\s*<\\/${tag_name}>`)
-      if (
-        lines.length >= 2 &&
-        xml_file_tag_end_regex.test(lines[lines.length - 1].trim()) &&
-        lines.some((l) => l.trim().startsWith('@@'))
-      ) {
-        const result = convert_code_block_to_new_file_diff({
-          lines: lines,
-          is_single_root: params.is_single_root
-        })
-        if (result) {
-          return [result]
-        }
-      }
-    }
-
-    return parse_multiple_raw_patches({
-      all_lines: lines,
-      is_single_root: params.is_single_root
-    })
   }
+
+  return parse_multiple_raw_patches({
+    all_lines: lines,
+    is_single_root: params.is_single_root
+  })
 }
 
 export const extract_paths_from_lines = (

@@ -1,0 +1,4 @@
+--- /dev/null
++++ b/src/lorem.html
+@@ -0,0 +1,1 @@
++<div>lorem ipsum</div>

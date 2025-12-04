@@ -1236,8 +1236,29 @@ describe('clipboard-parser', () => {
       })
     })
 
-    it('parses a mix of a new file in file-xml format and a diff in a diff block', () => {
-      const test_case = 'diff-mix-new-file-xml-and-diff'
+    it('parses a mix of a new file in file-xml format and a diff in a diff block variant-1', () => {
+      const test_case = 'diff-mix-new-file-xml-and-diff-variant-1'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/lorem.html',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/ipsum.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
+    })
+
+    it('parses a mix of a new file in file-xml format and a diff in a diff block variant-2', () => {
+      const test_case = 'diff-mix-new-file-xml-and-diff-variant-2'
       const text = load_test_case_file(test_case, `${test_case}.txt`)
       const result = parse_response({
         response: text,
