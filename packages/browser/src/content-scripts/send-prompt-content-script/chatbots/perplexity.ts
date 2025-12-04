@@ -214,7 +214,7 @@ export const perplexity: Chatbot = {
           'button[data-testid="stop-generating-response-button"]'
         ),
       footer_selector:
-        '.max-w-threadContentWidth > .relative > div > div > div > div > div + div > div + div',
+        '.max-w-threadContentWidth > .relative > div > div > div > div > div + div > div',
       add_buttons
     })
   }
