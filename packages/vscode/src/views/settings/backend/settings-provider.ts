@@ -218,7 +218,7 @@ export class SettingsProvider {
         } else if (message.command == 'GET_GEMINI_USER_ID') {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
-          await handle_update_gemini_user_id(this, message)
+          await handle_update_gemini_user_id(message)
         } else if (message.command == 'GET_CHECKPOINT_LIFESPAN') {
           await handle_get_checkpoint_lifespan(this)
         } else if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN') {
