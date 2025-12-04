@@ -1,2 +1,2 @@
-echo "Formatting files before commit..."
+npm test
 npx lint-staged
