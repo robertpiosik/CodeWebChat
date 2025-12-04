@@ -64,9 +64,8 @@ export async function handle_unstaged_files_source(
     const workspace_roots = workspace_provider.getWorkspaceRoots()
     const quick_pick_items = await Promise.all(
       existing_unstaged_files.map(async (file_path) => {
-        const token_count = await workspace_provider.calculate_file_tokens(
-          file_path
-        )
+        const token_count =
+          await workspace_provider.calculate_file_tokens(file_path)
 
         const formatted_token_count = display_token_count(token_count)
 

@@ -142,9 +142,9 @@ export const ProgressModal: React.FC<Props> = (props) => {
                               file.status == 'done'
                                 ? 100
                                 : file.status == 'receiving' &&
-                                  file.progress !== undefined
-                                ? file.progress
-                                : 0
+                                    file.progress !== undefined
+                                  ? file.progress
+                                  : 0
                             }%`
                           }}
                         />

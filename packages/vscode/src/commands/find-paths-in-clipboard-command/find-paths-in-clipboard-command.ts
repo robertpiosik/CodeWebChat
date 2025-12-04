@@ -97,9 +97,8 @@ export function find_paths_in_clipboard_command(
 
         const quick_pick_items = await Promise.all(
           existing_paths.map(async (file_path) => {
-            const token_count = await workspace_provider.calculate_file_tokens(
-              file_path
-            )
+            const token_count =
+              await workspace_provider.calculate_file_tokens(file_path)
             const formatted_token_count = display_token_count(token_count)
             return {
               label: path.basename(file_path),

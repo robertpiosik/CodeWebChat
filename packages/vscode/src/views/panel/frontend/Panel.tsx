@@ -316,16 +316,16 @@ export const Panel = () => {
                       !is_connected
                         ? 'Unable to preview when not connected'
                         : web_prompt_type == 'code-completions' &&
-                          !has_active_editor
-                        ? 'Cannot preview in code completion mode without an active editor'
-                        : web_prompt_type == 'code-completions' &&
-                          has_active_selection
-                        ? 'Unable to work with text selection'
-                        : !has_affixes &&
-                          !has_instructions &&
-                          web_prompt_type != 'code-completions'
-                        ? 'Enter instructions or affixes to preview'
-                        : ''
+                            !has_active_editor
+                          ? 'Cannot preview in code completion mode without an active editor'
+                          : web_prompt_type == 'code-completions' &&
+                              has_active_selection
+                            ? 'Unable to work with text selection'
+                            : !has_affixes &&
+                                !has_instructions &&
+                                web_prompt_type != 'code-completions'
+                              ? 'Enter instructions or affixes to preview'
+                              : ''
                     }
                   >
                     Preview

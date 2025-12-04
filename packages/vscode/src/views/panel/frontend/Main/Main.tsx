@@ -639,12 +639,12 @@ export const Main: React.FC<Props> = (props) => {
     current_prompt_type == 'ask'
       ? props.ask_instructions
       : current_prompt_type == 'edit-context'
-      ? props.edit_instructions
-      : current_prompt_type == 'no-context'
-      ? props.no_context_instructions
-      : current_prompt_type == 'code-completions'
-      ? props.code_completions_instructions
-      : ''
+        ? props.edit_instructions
+        : current_prompt_type == 'no-context'
+          ? props.no_context_instructions
+          : current_prompt_type == 'code-completions'
+            ? props.code_completions_instructions
+            : ''
 
   const set_instructions = (value: string) => {
     props.set_instructions(value, current_prompt_type)

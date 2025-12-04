@@ -109,9 +109,8 @@ export const handle_add_intelligent_update_configuration = async (
         break
       }
       case 'Max Concurrency': {
-        const new_concurrency = await edit_max_concurrency_for_config(
-          config_to_add
-        )
+        const new_concurrency =
+          await edit_max_concurrency_for_config(config_to_add)
         if (new_concurrency !== undefined) {
           config_to_add.max_concurrency = new_concurrency as any
         }

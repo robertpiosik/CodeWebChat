@@ -151,10 +151,12 @@
   );
   --cwc-box-shadow-sm: 0 2px 8px 0px var(--cwc-shadow-secondary);
   --cwc-box-shadow-md: 0 0 8px 2px var(--cwc-shadow-primary);
-  --cwc-box-shadow-lg: 0 0 4px 0 hsla(0, 0%, 100%, 0.05) inset,
+  --cwc-box-shadow-lg:
+    0 0 4px 0 hsla(0, 0%, 100%, 0.05) inset,
     0 0 3px 0 var(--cwc-shadow-secondary),
     0 16px 24px 0 var(--cwc-shadow-tertiary);
-  --cwc-box-shadow-xl: 0 0 4px 0 hsla(0, 0%, 100%, 0.05) inset,
+  --cwc-box-shadow-xl:
+    0 0 4px 0 hsla(0, 0%, 100%, 0.05) inset,
     0 0 6px 8px var(--cwc-shadow-secondary),
     0 24px 16px 6px var(--cwc-shadow-tertiary);
   --cwc-shadow-workbench: 0 0 8px 2px

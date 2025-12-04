@@ -614,9 +614,8 @@ export class WorkspaceProvider
       const name = this.workspace_names[i]
 
       const total_tokens = await this._calculate_directory_tokens(root)
-      const selected_tokens = await this._calculate_directory_selected_tokens(
-        root
-      )
+      const selected_tokens =
+        await this._calculate_directory_selected_tokens(root)
 
       items.push(
         new FileItem(
@@ -816,9 +815,8 @@ export class WorkspaceProvider
           if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {
             selected_tokens += await this._calculate_directory_tokens(full_path)
           } else if (this.partially_checked_dirs.has(full_path)) {
-            selected_tokens += await this._calculate_directory_selected_tokens(
-              full_path
-            )
+            selected_tokens +=
+              await this._calculate_directory_selected_tokens(full_path)
           }
         } else {
           if (checkbox_state === vscode.TreeItemCheckboxState.Checked) {

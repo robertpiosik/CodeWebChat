@@ -404,10 +404,10 @@ export const use_panel = (vscode: any) => {
     can_undo,
     context_file_paths,
     presets_collapsed: web_prompt_type
-      ? presets_collapsed_by_web_mode[web_prompt_type] ?? false
+      ? (presets_collapsed_by_web_mode[web_prompt_type] ?? false)
       : false,
     configurations_collapsed: api_prompt_type
-      ? configurations_collapsed_by_api_mode[api_prompt_type] ?? false
+      ? (configurations_collapsed_by_api_mode[api_prompt_type] ?? false)
       : false,
     handle_instructions_change,
     edit_preset_back_click_handler,

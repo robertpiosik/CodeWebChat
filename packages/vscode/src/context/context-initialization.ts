@@ -266,9 +266,8 @@ export const context_initialization = async (
         for (const file_path of checked_files) {
           try {
             const file_uri = vscode.Uri.file(file_path)
-            const content_uint8_array = await vscode.workspace.fs.readFile(
-              file_uri
-            )
+            const content_uint8_array =
+              await vscode.workspace.fs.readFile(file_uri)
             const content = new TextDecoder().decode(content_uint8_array)
 
             let display_path: string

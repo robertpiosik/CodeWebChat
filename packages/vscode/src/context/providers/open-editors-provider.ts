@@ -283,9 +283,8 @@ export class OpenEditorsProvider
         description = path.basename(workspace_root)
       }
 
-      const token_count = await this.workspace_provider.calculate_file_tokens(
-        file_path
-      )
+      const token_count =
+        await this.workspace_provider.calculate_file_tokens(file_path)
 
       const item = new FileItem(
         file_name,

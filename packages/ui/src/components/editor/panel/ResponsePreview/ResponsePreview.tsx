@@ -189,9 +189,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                             file.diff_fallback_method == 'recount'
                               ? ' (fallback used: git apply with --recount flag)'
                               : file.diff_fallback_method ==
-                                'search_and_replace'
-                              ? ' (fallback used: search and replace matching fragments)'
-                              : ''
+                                  'search_and_replace'
+                                ? ' (fallback used: search and replace matching fragments)'
+                                : ''
                           }`}
                           on_click={(e) => {
                             e.stopPropagation()

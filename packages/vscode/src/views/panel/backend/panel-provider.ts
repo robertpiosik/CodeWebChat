@@ -932,8 +932,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     const mode: WebPromptType | ApiPromptType = is_in_code_completions_mode
       ? 'code-completions'
       : this.mode == MODE.WEB
-      ? this.web_prompt_type
-      : this.api_prompt_type
+        ? this.web_prompt_type
+        : this.api_prompt_type
 
     switch (mode) {
       case 'ask':
