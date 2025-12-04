@@ -312,10 +312,8 @@ export const apply_chat_response_command = (params: {
             }
 
             before_checkpoint = undefined
-          }
-
-          // Restore tab groups after preview ends
-          if (saved_tab_groups) {
+          } else if (saved_tab_groups) {
+            // Restore tab groups when preview gets rejected
             await restore_tab_groups(saved_tab_groups)
           }
         }
