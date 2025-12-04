@@ -19,7 +19,8 @@ export const mistral: Chatbot = {
     })
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
 
     if (

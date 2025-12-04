@@ -20,7 +20,8 @@ export const yuanbao: Chatbot = {
     })
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
-  set_model: async (model?: string) => {
+  set_model: async (chat) => {
+    const model = chat.model
     if (!model) return
     const model_selector_button = document.querySelector(
       'button[dt-button-id="model_switch"]'
@@ -51,7 +52,8 @@ export const yuanbao: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
     const supported_options = CHATBOTS['Yuanbao'].supported_options
 

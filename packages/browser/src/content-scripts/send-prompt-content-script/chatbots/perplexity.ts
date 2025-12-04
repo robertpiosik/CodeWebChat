@@ -1,4 +1,5 @@
 import { Chatbot } from '../types/chatbot'
+import { CHATBOTS } from '@shared/constants/chatbots'
 import {
   add_apply_response_button,
   observe_for_responses
@@ -26,7 +27,87 @@ export const perplexity: Chatbot = {
       ;(document.querySelector('[contenteditable="true"]') as any)?.click()
     }
   },
-  set_options: async (options?: string[]) => {
+  set_model: async (chat) => {
+    const model = chat.model
+    if (!model) return
+
+    const model_button = document
+      .querySelector('button[data-testid="sources-switcher-button"]')
+      ?.closest('div')
+      ?.querySelector(':scope > div button') as HTMLButtonElement
+    if (!model_button) {
+      report_initialization_error({
+        function_name: 'set_model',
+        log_message: 'Model selector button not found'
+      })
+      return
+    }
+
+    const model_label_to_find = CHATBOTS['Perplexity'].models?.[model]?.label
+    if (!model_label_to_find) {
+      report_initialization_error({
+        function_name: 'set_model',
+        log_message: `Model "${model}" not found in config`
+      })
+      return
+    }
+
+    model_button.click()
+    await new Promise((r) => requestAnimationFrame(r))
+
+    const menu = document.querySelector(
+      'div[data-type="portal"] div[role="menu"]'
+    )
+    if (!menu) {
+      report_initialization_error({
+        function_name: 'set_model',
+        log_message: 'Model selector menu not found'
+      })
+      model_button.click()
+      return
+    }
+
+    const menu_items = menu.querySelectorAll('div[role="menuitem"]')
+    let found = false
+    for (const item of Array.from(menu_items)) {
+      if (item.textContent?.trim() == model_label_to_find) {
+        ;(item as HTMLElement).click()
+        found = true
+        break
+      }
+    }
+
+    if (!found) {
+      report_initialization_error({
+        function_name: 'set_model',
+        log_message: `Model option "${model_label_to_find}" not found`
+      })
+    }
+
+    const options = chat.options
+    const should_enable_reasoning =
+      options?.includes('with-reasoning') &&
+      !CHATBOTS['Perplexity'].models?.[model]?.disabled_options?.includes(
+        'with-reasoning'
+      )
+
+    const switch_button = menu.querySelector(
+      'button[role="switch"]'
+    ) as HTMLElement
+
+    if (switch_button) {
+      const is_checked = switch_button.getAttribute('aria-checked') == 'true'
+      if (!!should_enable_reasoning != is_checked) {
+        switch_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
+      }
+    }
+
+    model_button.click()
+    await new Promise((r) => requestAnimationFrame(r))
+  },
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
 
     if (options.includes('search')) {

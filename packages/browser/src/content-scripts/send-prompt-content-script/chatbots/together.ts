@@ -19,7 +19,8 @@ export const together: Chatbot = {
       check_for_element()
     })
   },
-  set_model: async (model?: string) => {
+  set_model: async (chat) => {
+    const model = chat.model
     if (!model) return
 
     const model_label_to_find = CHATBOTS['Together'].models?.[model]?.label

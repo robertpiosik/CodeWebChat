@@ -19,7 +19,8 @@ export const copilot: Chatbot = {
       check_for_element()
     })
   },
-  set_model: async (model?: string) => {
+  set_model: async (chat) => {
+    const model = chat.model
     if (!model) return
 
     const model_selector_button = document.querySelector(

@@ -29,7 +29,8 @@ export const ai_studio: Chatbot = {
       check_for_element()
     })
   },
-  enter_system_instructions: async (system_instructions?: string) => {
+  enter_system_instructions: async (chat) => {
+    const system_instructions = chat.system_instructions
     if (!system_instructions) return
     await open_panel()
     const system_instructions_button = document.querySelector(
@@ -84,7 +85,8 @@ export const ai_studio: Chatbot = {
     close_button.click()
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
     const settings_items = Array.from(
       document.querySelectorAll('div.settings-item')
@@ -178,7 +180,8 @@ export const ai_studio: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_temperature: async (temperature?: number) => {
+  set_temperature: async (chat) => {
+    const temperature = chat.temperature
     if (temperature === undefined) return
     const temperature_element = document.querySelector(
       'ms-prompt-run-settings div[data-test-id="temperatureSliderContainer"] input[type=number]'
@@ -193,7 +196,8 @@ export const ai_studio: Chatbot = {
     temperature_element.value = temperature.toString()
     temperature_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
-  set_reasoning_effort: async (reasoning_effort?: string) => {
+  set_reasoning_effort: async (chat) => {
+    const reasoning_effort = chat.reasoning_effort
     if (!reasoning_effort) return
 
     await open_panel()
@@ -239,7 +243,8 @@ export const ai_studio: Chatbot = {
 
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_thinking_budget: async (thinking_budget?: number) => {
+  set_thinking_budget: async (chat) => {
+    const thinking_budget = chat.thinking_budget
     if (thinking_budget === undefined) {
       const thinking_toggle = document.querySelector(
         'mat-slide-toggle[data-test-toggle="enable-thinking"] button'
@@ -306,7 +311,8 @@ export const ai_studio: Chatbot = {
       budget_input.dispatchEvent(new Event('change', { bubbles: true }))
     }
   },
-  set_top_p: async (top_p?: number) => {
+  set_top_p: async (chat) => {
+    const top_p = chat.top_p
     if (top_p === undefined) return
     const settings_items = Array.from(
       document.querySelectorAll('div.settings-item')

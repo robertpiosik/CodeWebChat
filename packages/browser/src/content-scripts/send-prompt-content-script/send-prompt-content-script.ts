@@ -243,25 +243,25 @@ const initialize_chat = async (params: {
   without_submission?: boolean
 }) => {
   if (chatbot?.set_model) {
-    await chatbot.set_model(params.chat.model)
+    await chatbot.set_model(params.chat)
   }
   if (chatbot?.enter_system_instructions) {
-    await chatbot.enter_system_instructions(params.chat.system_instructions)
+    await chatbot.enter_system_instructions(params.chat)
   }
   if (chatbot?.set_temperature) {
-    await chatbot.set_temperature(params.chat.temperature)
+    await chatbot.set_temperature(params.chat)
   }
   if (chatbot?.set_top_p) {
-    await chatbot.set_top_p(params.chat.top_p)
+    await chatbot.set_top_p(params.chat)
   }
   if (chatbot?.set_thinking_budget) {
-    await chatbot.set_thinking_budget(params.chat.thinking_budget)
+    await chatbot.set_thinking_budget(params.chat)
   }
   if (chatbot?.set_reasoning_effort) {
-    await chatbot.set_reasoning_effort(params.chat.reasoning_effort)
+    await chatbot.set_reasoning_effort(params.chat)
   }
   if (chatbot?.set_options) {
-    await chatbot.set_options(params.chat.options || [])
+    await chatbot.set_options(params.chat)
   }
   if (chatbot?.enter_message_and_send) {
     await chatbot.enter_message_and_send({

@@ -7,7 +7,8 @@ import {
 import { report_initialization_error } from '../utils/report-initialization-error'
 
 export const deepseek: Chatbot = {
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
 
     const deep_think_button = Array.from(

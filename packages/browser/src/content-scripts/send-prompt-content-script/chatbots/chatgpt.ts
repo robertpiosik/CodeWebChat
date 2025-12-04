@@ -38,7 +38,8 @@ export const chatgpt: Chatbot = {
       })
     }
   },
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
     const supported_options = CHATBOTS['ChatGPT'].supported_options
     for (const option of options) {

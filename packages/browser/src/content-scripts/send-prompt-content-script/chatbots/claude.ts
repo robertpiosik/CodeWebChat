@@ -19,7 +19,8 @@ export const claude: Chatbot = {
       check_for_element()
     })
   },
-  set_model: async (model?: string) => {
+  set_model: async (chat) => {
+    const model = chat.model
     if (!model) return
     const model_selector_button = document.querySelector(
       'button[data-testid="model-selector-dropdown"]'
@@ -70,7 +71,8 @@ export const claude: Chatbot = {
     }
     await new Promise((r) => requestAnimationFrame(r))
   },
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
     const supported_options = CHATBOTS['Claude'].supported_options
     if (

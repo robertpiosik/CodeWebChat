@@ -19,7 +19,8 @@ export const gemini: Chatbot = {
       check_for_element()
     })
   },
-  set_model: async (model?: string) => {
+  set_model: async (chat) => {
+    const model = chat.model
     if (
       model &&
       CHATBOTS['Gemini'].models &&
@@ -74,7 +75,8 @@ export const gemini: Chatbot = {
       await new Promise((r) => requestAnimationFrame(r))
     }
   },
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
     const supported_options = CHATBOTS['Gemini'].supported_options
     if (

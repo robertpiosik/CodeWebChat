@@ -9,7 +9,8 @@ export const hugging_chat: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
-  set_model: async (model?: string) => {
+  set_model: async (chat) => {
+    const model = chat.model
     if (!model) return
 
     const model_picker_button = document.querySelector(

@@ -57,7 +57,8 @@ export const openrouter: Chatbot = {
     })
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
-  enter_system_instructions: async (system_instructions?: string) => {
+  enter_system_instructions: async (chat) => {
+    const system_instructions = chat.system_instructions
     if (!system_instructions) return
     if (!(await show_options_modal('enter_system_instructions'))) return
     const textarea = document.querySelector(
@@ -91,7 +92,8 @@ export const openrouter: Chatbot = {
     textarea.blur()
     await close_options_modal('enter_system_instructions')
   },
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
     if (!(await show_options_modal('set_options'))) return
     const reasoning_toggle = document.querySelector(
@@ -109,7 +111,8 @@ export const openrouter: Chatbot = {
 
     await close_options_modal('set_options')
   },
-  set_temperature: async (temperature?: number) => {
+  set_temperature: async (chat) => {
+    const temperature = chat.temperature
     if (temperature === undefined) return
     if (!(await show_options_modal('set_temperature'))) return
     const sampling_parameters_button = Array.from(
@@ -157,7 +160,8 @@ export const openrouter: Chatbot = {
     temperature_input.blur()
     await close_options_modal('set_temperature')
   },
-  set_top_p: async (top_p?: number) => {
+  set_top_p: async (chat) => {
+    const top_p = chat.top_p
     if (top_p === undefined) return
     if (!(await show_options_modal('set_top_p'))) return
     const sampling_parameters_button = Array.from(
@@ -203,7 +207,8 @@ export const openrouter: Chatbot = {
     top_p_input.blur()
     await close_options_modal('set_top_p')
   },
-  set_reasoning_effort: async (reasoning_effort?: string) => {
+  set_reasoning_effort: async (chat) => {
+    const reasoning_effort = chat.reasoning_effort
     if (!reasoning_effort) return
     if (!(await show_options_modal('set_reasoning_effort'))) return
     const dialog = document.querySelector('div[role="dialog"]')

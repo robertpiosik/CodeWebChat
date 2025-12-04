@@ -18,7 +18,8 @@ export const z_ai: Chatbot = {
       check_for_element()
     })
   },
-  set_options: async (options?: string[]) => {
+  set_options: async (chat) => {
+    const options = chat.options
     if (!options) return
 
     const deep_think_button = document.querySelector(
