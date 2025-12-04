@@ -67,7 +67,6 @@ export const handle_show_history_quick_pick = async (
 
   if (!history.length && !pinned_history.length) {
     vscode.window.showInformationMessage(
-      // NOSONAR
       dictionary.information_message.NO_HISTORY_FOR_MODE,
       { modal: true }
     )
@@ -255,7 +254,6 @@ export const handle_show_history_quick_pick = async (
       if (updated_history.length == 0 && updated_pinned_history.length == 0) {
         quick_pick.hide()
         vscode.window.showInformationMessage(
-          // NOSONAR
           dictionary.information_message.NO_HISTORY_FOR_MODE,
           { modal: true }
         )

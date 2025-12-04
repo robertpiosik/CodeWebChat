@@ -73,7 +73,6 @@ export const initial_select_model = async (
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        // NOSONAR
         dictionary.information_message.MODELS_ROUTE_NOT_FOUND(provider.name),
         { modal: true }
       )
@@ -181,12 +180,10 @@ export const edit_model_for_config = async (
       data: error
     })
     if (
-      // NOSONAR
       error instanceof Error &&
       error.message == MODELS_ROUTE_NOT_FOUND_ERROR
     ) {
       vscode.window.showInformationMessage(
-        // NOSONAR
         dictionary.information_message.MODELS_ROUTE_NOT_FOUND_MANUAL_ENTRY(
           config.provider_name
         ),

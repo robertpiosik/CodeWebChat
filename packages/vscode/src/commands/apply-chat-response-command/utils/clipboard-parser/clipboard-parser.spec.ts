@@ -792,7 +792,7 @@ describe('clipboard-parser', () => {
         file_path: 'src/index.ts',
         line: 25,
         character: 5,
-        content: 'console.log("completion");'
+        content: load_test_case_file(test_case, '1-file.txt')
       })
     })
 
@@ -814,11 +814,11 @@ describe('clipboard-parser', () => {
         file_path: 'src/index.ts',
         line: 25,
         character: 5,
-        content: 'console.log("completion");'
+        content: load_test_case_file(test_case, '2-file.txt')
       })
       expect(result[2]).toMatchObject({
         type: 'text',
-        content: load_test_case_file(test_case, '2-text.txt')
+        content: load_test_case_file(test_case, '3-text.txt')
       })
     })
 

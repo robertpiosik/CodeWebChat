@@ -224,7 +224,6 @@ export const checkpoints_command = (params: {
               )
             if (!temp_checkpoint) {
               vscode.window.showErrorMessage(
-                // NOSONAR
                 dictionary.error_message
                   .COULD_NOT_FIND_TEMP_CHECKPOINT_TO_REVERT
               )
@@ -274,7 +273,6 @@ export const checkpoints_command = (params: {
             if (confirmation == 'Clear All') {
               await clear_all_checkpoints(params.context, params.panel_provider)
               vscode.window.showInformationMessage(
-                // NOSONAR
                 dictionary.information_message.ALL_CHECKPOINTS_CLEARED
               )
             }

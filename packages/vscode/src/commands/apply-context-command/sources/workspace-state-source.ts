@@ -251,7 +251,6 @@ export async function handle_workspace_state_source(
                 internal_contexts
               )
               vscode.window.showInformationMessage(
-                // NOSONAR
                 dictionary.information_message.RESTORED_CONTEXT(
                   deleted_context_name
                 )

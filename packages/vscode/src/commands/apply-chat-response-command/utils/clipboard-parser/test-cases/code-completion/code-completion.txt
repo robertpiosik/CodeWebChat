@@ -1,4 +1,5 @@
+### Code completion: `src/index.ts` (25:5)
+
 ```typescript
-// src/index.ts 25:5
 console.log("completion");
 ```

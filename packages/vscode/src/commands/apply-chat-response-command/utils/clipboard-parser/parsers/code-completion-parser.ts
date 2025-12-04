@@ -8,7 +8,8 @@ import {
 const extract_path_and_position = (
   line: string
 ): { path: string; line: number; character: number } | null => {
-  const path_pos_regex = /\/\/\s*"?([^"<>\s?*|:]+)"?\s+(\d+):(\d+)/
+  const path_pos_regex =
+    /###\s+Code completion:\s+`?([^`]+)`?\s+\((\d+):(\d+)\)/
 
   const match = line.match(path_pos_regex)
 
@@ -57,15 +58,25 @@ export const parse_code_completion = (params: {
     code_block_end_index = lines.length - 1
   }
 
-  const first_line_of_block = lines[code_block_start_index + 1]
-  const completion_info = extract_path_and_position(first_line_of_block)
+  let header_index = -1
+  let completion_info = null
+
+  for (let k = code_block_start_index - 1; k >= 0; k--) {
+    if (lines[k].trim() === '') continue
+    const info = extract_path_and_position(lines[k])
+    if (info) {
+      header_index = k
+      completion_info = info
+    }
+    break
+  }
 
   if (!completion_info) {
     return null
   }
 
   const results: (CompletionItem | TextItem)[] = []
-  const text_before = lines.slice(0, code_block_start_index).join('\n').trim()
+  const text_before = lines.slice(0, header_index).join('\n').trim()
   if (text_before) {
     results.push({ type: 'text', content: text_before })
   }
@@ -76,7 +87,7 @@ export const parse_code_completion = (params: {
   })
 
   const content_lines = lines.slice(
-    code_block_start_index + 2,
+    code_block_start_index + 1,
     code_block_end_index
   )
 
