@@ -1,0 +1,22 @@
+.header {
+  height: var(--list-item-height);
+  padding: 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__right {
+    display: flex;
+  }
+}

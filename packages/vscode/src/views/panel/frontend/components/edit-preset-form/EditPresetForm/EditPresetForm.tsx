@@ -12,6 +12,7 @@ import { Dropdown } from '@ui/components/editor/common/Dropdown'
 import { BackendMessage } from '@/views/panel/types/messages'
 import { PresetOption } from '@ui/components/editor/panel/PresetOption'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
+import { Fieldset } from '@ui/components/editor/panel/Fieldset'
 
 type Props = {
   preset: Preset
@@ -31,7 +32,11 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const suffix_ref = useRef<HTMLTextAreaElement>(null)
 
   const [chatbot, set_chatbot] = useState(props.preset.chatbot)
-  const [name, set_name] = useState(props.preset.name)
+  const [name, set_name] = useState(
+    props.preset.name && /^\(\d+\)$/.test(props.preset.name)
+      ? ''
+      : props.preset.name
+  )
   const [temperature, set_temperature] = useState(props.preset.temperature)
   const [top_p, set_top_p] = useState(props.preset.top_p)
   const [thinking_budget, set_thinking_budget] = useState(
@@ -56,6 +61,9 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   const [active_field, set_active_field] = useState<
     'prompt_prefix' | 'prompt_suffix' | null
   >(null)
+  const [is_prompt_template_collapsed, set_is_prompt_template_collapsed] =
+    useState(true)
+  const [is_sampling_collapsed, set_is_sampling_collapsed] = useState(true)
 
   const chatbot_config = chatbot ? CHATBOTS[chatbot] : undefined
   const models = useMemo(() => chatbot_config?.models || {}, [chatbot_config])
@@ -231,216 +239,98 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   return (
     <Scrollable>
       <div className={styles.form}>
-        {chatbot && (
-          <Field label="Chatbot" html_for="chatbot">
-            <button
-              className={dropdown_styles.button}
-              onClick={(e) => {
-                e.stopPropagation()
-                props.pick_chatbot(chatbot)
-              }}
-            >
-              <span>{chatbot}</span>
-              <span
-                className={cn(
-                  'codicon codicon-chevron-down',
-                  dropdown_styles.chevron
-                )}
-              />
-            </button>
-          </Field>
-        )}
-
-        {Object.keys(models).length > 0 && model && (
-          <Field label="Model" html_for="model">
-            <Dropdown
-              options={Object.entries(models).map(([value, model_data]) => ({
-                value,
-                label: (model_data as any).label
-              }))}
-              value={model}
-              onChange={set_model}
-            />
-          </Field>
-        )}
-
-        {chatbot == 'OpenRouter' && (
-          <Field label="Model" html_for="open-router-model">
-            <button
-              className={dropdown_styles.button}
-              onClick={(e) => {
-                e.stopPropagation()
-                props.pick_open_router_model()
-              }}
-            >
-              <span>{model || 'Select model'}</span>
-              <span
-                className={cn(
-                  'codicon codicon-chevron-down',
-                  dropdown_styles.chevron
-                )}
-              />
-            </button>
-          </Field>
-        )}
-
-        {supports_user_provided_model && (
-          <Field label="Model" html_for="custom-model">
-            <Input
-              id="custom-model"
-              type="text"
-              value={model || ''}
-              on_change={set_model}
-              placeholder="Enter model name"
-            />
-          </Field>
-        )}
-
-        <Field label="Name" html_for="name">
-          <Input id="name" type="text" value={name!} on_change={set_name} />
-        </Field>
-
-        {supports_port && (
-          <Field
-            label="Port"
-            html_for="port"
-            info={
-              chatbot == 'Open WebUI' && (
-                <>
-                  Used for localhost. For networked instances leave empty and
-                  setup a proxy server for <code>http://openwebui/</code>.
-                </>
-              )
-            }
-          >
-            <Input
-              id="port"
-              type="text"
-              value={String(port ?? '')}
-              on_change={(value) => {
-                const num = parseInt(value, 10)
-                set_port(isNaN(num) ? undefined : num)
-              }}
-              placeholder="e.g. 3000"
-              on_key_down={(e) =>
-                !/[0-9]/.test(e.key) &&
-                e.key != 'Backspace' &&
-                e.preventDefault()
-              }
-            />
-          </Field>
-        )}
-
-        {supports_url_override && (
-          <Field
-            label={chatbot_config?.url_override_label || 'URL override'}
-            html_for="new-url"
-          >
-            <Input
-              id="new-url"
-              type="text"
-              value={new_url || ''}
-              on_change={set_new_url}
-            />
-          </Field>
-        )}
-
-        {supports_reasoning_effort && (
-          <Field
-            label="Reasoning Effort"
-            html_for="reasoning-effort"
-            info={`Controls the amount of thought the model puts into its response before answering.${
-              chatbot == 'OpenRouter' ? ' Requires supporting model.' : ''
-            }`}
-          >
-            <Dropdown
-              options={reasoning_effort_options}
-              value={reasoning_effort || '—'}
-              onChange={(value) => {
-                set_reasoning_effort(value == '—' ? undefined : value)
-              }}
-            />
-          </Field>
-        )}
-
-        {chatbot &&
-          Object.keys(chatbot_config?.supported_options || {}).length > 0 && (
-            <Field label="Options">
-              <div className={styles.options}>
-                {Object.entries(chatbot_config!.supported_options!).map(
-                  ([key, label]) => {
-                    const is_disabled_by_url_override =
-                      !!new_url &&
-                      chatbot_config!.url_override_disabled_options?.includes(
-                        key
-                      )
-
-                    if (model_info?.disabled_options?.includes(key)) {
-                      return null
-                    }
-                    return (
-                      <PresetOption
-                        key={key}
-                        label={label as string}
-                        checked={options.includes(key)}
-                        on_change={() => handle_option_toggle(key)}
-                        disabled={is_disabled_by_url_override}
-                        disabled_reason={
-                          is_disabled_by_url_override
-                            ? `Not supported with ${
-                                chatbot_config!.url_override_label ||
-                                'Custom URL'
-                              }`
-                            : undefined
-                        }
-                      />
-                    )
-                  }
-                )}
-              </div>
+        <Fieldset label="Settings">
+          {chatbot && (
+            <Field label="Chatbot" html_for="chatbot">
+              <button
+                className={dropdown_styles.button}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  props.pick_chatbot(chatbot)
+                }}
+              >
+                <span>{chatbot}</span>
+                <span
+                  className={cn(
+                    'codicon codicon-chevron-down',
+                    dropdown_styles.chevron
+                  )}
+                />
+              </button>
             </Field>
           )}
 
-        {supports_temperature && (
-          <Field
-            label="Temperature"
-            title="This setting influences the variety in the model's responses. Lower values lead to more predictable and typical responses, while higher values encourage more diverse and less common responses. At 0, the model always gives the same response for a given input."
-          >
-            <Slider
-              value={temperature || 0.5}
-              onChange={set_temperature}
-              min={0}
-              max={2}
-            />
-          </Field>
-        )}
+          {Object.keys(models).length > 0 && model && (
+            <Field label="Model" html_for="model">
+              <Dropdown
+                options={Object.entries(models).map(([value, model_data]) => ({
+                  value,
+                  label: (model_data as any).label
+                }))}
+                value={model}
+                onChange={set_model}
+              />
+            </Field>
+          )}
 
-        {supports_top_p && (
-          <Field
-            label="Top P"
-            title="This setting limits the model's choices to a percentage of likely tokens: only the top tokens whose probabilities add up to P. A lower value makes the model's responses more predictable, while the default setting allows for a full range of token choices. Think of it like a dynamic Top-K."
-          >
-            <Slider
-              value={top_p || (chatbot && CHATBOTS[chatbot].default_top_p)!}
-              onChange={set_top_p}
-              min={0}
-              max={1}
-            />
-          </Field>
-        )}
+          {chatbot == 'OpenRouter' && (
+            <Field label="Model" html_for="open-router-model">
+              <button
+                className={dropdown_styles.button}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  props.pick_open_router_model()
+                }}
+              >
+                <span>{model || 'Select model'}</span>
+                <span
+                  className={cn(
+                    'codicon codicon-chevron-down',
+                    dropdown_styles.chevron
+                  )}
+                />
+              </button>
+            </Field>
+          )}
 
-        {supports_thinking_budget &&
-          !supports_reasoning_effort && ( // Additional check for AI Studio
-            <Field label="Thinking Budget" html_for="thinking-budget">
+          {supports_user_provided_model && (
+            <Field label="Model" html_for="custom-model">
               <Input
-                id="thinking-budget"
+                id="custom-model"
                 type="text"
-                value={String(thinking_budget ?? '')}
+                value={model || ''}
+                on_change={set_model}
+                placeholder="Enter model name"
+              />
+            </Field>
+          )}
+
+          <Field label="Name" html_for="name">
+            <Input id="name" type="text" value={name!} on_change={set_name} />
+          </Field>
+
+          {supports_port && (
+            <Field
+              label="Port"
+              html_for="port"
+              info={
+                chatbot == 'Open WebUI' && (
+                  <>
+                    Used for localhost. For networked instances leave empty and
+                    setup a proxy server for <code>http://openwebui/</code>.
+                  </>
+                )
+              }
+            >
+              <Input
+                id="port"
+                type="text"
+                value={String(port ?? '')}
                 on_change={(value) => {
                   const num = parseInt(value, 10)
-                  set_thinking_budget(isNaN(num) ? undefined : num)
+                  set_port(isNaN(num) ? undefined : num)
                 }}
-                placeholder="e.g. 8000"
+                placeholder="e.g. 3000"
                 on_key_down={(e) =>
                   !/[0-9]/.test(e.key) &&
                   e.key != 'Backspace' &&
@@ -450,22 +340,158 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             </Field>
           )}
 
-        {supports_system_instructions && (
-          <Field
-            label="System Instructions"
-            html_for="instructions"
-            info="Optional tone and style instructions for the model"
+          {supports_url_override && (
+            <Field
+              label={chatbot_config?.url_override_label || 'URL override'}
+              html_for="new-url"
+            >
+              <Input
+                id="new-url"
+                type="text"
+                value={new_url || ''}
+                on_change={set_new_url}
+              />
+            </Field>
+          )}
+
+          {supports_reasoning_effort && (
+            <Field
+              label="Reasoning Effort"
+              html_for="reasoning-effort"
+              info={`Controls the amount of thought the model puts into its response before answering.${
+                chatbot == 'OpenRouter' ? ' Requires supporting model.' : ''
+              }`}
+            >
+              <Dropdown
+                options={reasoning_effort_options}
+                value={reasoning_effort || '—'}
+                onChange={(value) => {
+                  set_reasoning_effort(value == '—' ? undefined : value)
+                }}
+              />
+            </Field>
+          )}
+
+          {chatbot &&
+            Object.keys(chatbot_config?.supported_options || {}).length > 0 && (
+              <Field label="Options">
+                <div className={styles.options}>
+                  {Object.entries(chatbot_config!.supported_options!).map(
+                    ([key, label]) => {
+                      const is_disabled_by_url_override =
+                        !!new_url &&
+                        chatbot_config!.url_override_disabled_options?.includes(
+                          key
+                        )
+
+                      if (model_info?.disabled_options?.includes(key)) {
+                        return null
+                      }
+                      return (
+                        <PresetOption
+                          key={key}
+                          label={label as string}
+                          checked={options.includes(key)}
+                          on_change={() => handle_option_toggle(key)}
+                          disabled={is_disabled_by_url_override}
+                          disabled_reason={
+                            is_disabled_by_url_override
+                              ? `Not supported with ${
+                                  chatbot_config!.url_override_label ||
+                                  'Custom URL'
+                                }`
+                              : undefined
+                          }
+                        />
+                      )
+                    }
+                  )}
+                </div>
+              </Field>
+            )}
+
+          {supports_thinking_budget &&
+            !supports_reasoning_effort && ( // Additional check for AI Studio
+              <Field label="Thinking Budget" html_for="thinking-budget">
+                <Input
+                  id="thinking-budget"
+                  type="text"
+                  value={String(thinking_budget ?? '')}
+                  on_change={(value) => {
+                    const num = parseInt(value, 10)
+                    set_thinking_budget(isNaN(num) ? undefined : num)
+                  }}
+                  placeholder="e.g. 8000"
+                  on_key_down={(e) =>
+                    !/[0-9]/.test(e.key) &&
+                    e.key != 'Backspace' &&
+                    e.preventDefault()
+                  }
+                />
+              </Field>
+            )}
+
+          {supports_system_instructions && (
+            <Field
+              label="System Instructions"
+              html_for="instructions"
+              info="Optional tone and style instructions for the model"
+            >
+              <Textarea
+                id="instructions"
+                value={system_instructions || ''}
+                on_change={set_system_instructions}
+                min_rows={2}
+              />
+            </Field>
+          )}
+        </Fieldset>
+
+        {(supports_temperature || supports_top_p) && (
+          <Fieldset
+            label="Sampling parameters"
+            is_collapsed={is_sampling_collapsed}
+            on_toggle_collapsed={() =>
+              set_is_sampling_collapsed(!is_sampling_collapsed)
+            }
           >
-            <Textarea
-              id="instructions"
-              value={system_instructions || ''}
-              on_change={set_system_instructions}
-              min_rows={2}
-            />
-          </Field>
+            {supports_temperature && (
+              <Field
+                label="Temperature"
+                title="This setting influences the variety in the model's responses. Lower values lead to more predictable and typical responses, while higher values encourage more diverse and less common responses. At 0, the model always gives the same response for a given input."
+              >
+                <Slider
+                  value={temperature || 0.5}
+                  onChange={set_temperature}
+                  min={0}
+                  max={2}
+                />
+              </Field>
+            )}
+
+            {supports_top_p && (
+              <Field
+                label="Top P"
+                title="This setting limits the model's choices to a percentage of likely tokens: only the top tokens whose probabilities add up to P. A lower value makes the model's responses more predictable, while the default setting allows for a full range of token choices. Think of it like a dynamic Top-K."
+              >
+                <Slider
+                  value={top_p || (chatbot && CHATBOTS[chatbot].default_top_p)!}
+                  onChange={set_top_p}
+                  min={0}
+                  max={1}
+                />
+              </Field>
+            )}
+          </Fieldset>
         )}
 
-        <>
+        <Fieldset
+          label="Template"
+          is_collapsed={is_prompt_template_collapsed}
+          on_toggle_collapsed={() =>
+            set_is_prompt_template_collapsed(!is_prompt_template_collapsed)
+          }
+        >
           <Field
             label={chatbot ? 'Prompt Prefix' : 'Group Prefix'}
             html_for="prefix"
@@ -509,7 +535,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               min_rows={2}
             />
           </Field>
-        </>
+        </Fieldset>
       </div>
     </Scrollable>
   )

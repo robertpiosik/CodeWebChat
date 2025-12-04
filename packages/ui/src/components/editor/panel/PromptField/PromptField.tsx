@@ -478,7 +478,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           ]]: props.edit_format == format
                         }
                       )}
-                      title={`"${props.edit_format_instructions?.[format]}"`}
+                      title={`${props.edit_format_instructions?.[format]}`}
                       onClick={() => props.on_edit_format_change?.(format)}
                       data-text={button_text}
                     >

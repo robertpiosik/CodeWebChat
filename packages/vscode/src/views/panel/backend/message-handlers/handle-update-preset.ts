@@ -39,7 +39,7 @@ export const handle_update_preset = async (
 
   const are_presets_equal = (a: Preset, b: Preset): boolean => {
     return (
-      a.name == b.name &&
+      (a.name == b.name || !b.name) &&
       a.chatbot == b.chatbot &&
       a.prompt_prefix == b.prompt_prefix &&
       a.prompt_suffix == b.prompt_suffix &&
@@ -103,6 +103,25 @@ export const handle_update_preset = async (
   }
 
   const updated_ui_preset = { ...final_updated_preset }
+  if (
+    item_type == 'preset' &&
+    (!updated_ui_preset.name || !updated_ui_preset.name.trim())
+  ) {
+    let counter = 1
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const candidate = `(${counter})`
+      const conflict = current_presets.some(
+        (p, index) => index != preset_index && p.name == candidate
+      )
+      if (!conflict) {
+        updated_ui_preset.name = candidate
+        break
+      }
+      counter++
+    }
+  }
+
   if (updated_ui_preset.name) {
     let final_name = updated_ui_preset.name.trim()
 

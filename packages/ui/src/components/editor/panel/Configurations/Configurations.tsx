@@ -4,6 +4,7 @@ import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { IconButton } from '../IconButton/IconButton'
 import { Button } from '../../common/Button'
+import { ListHeader } from '../ListHeader'
 
 export namespace Configurations {
   export type Configuration = {
@@ -105,21 +106,13 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
           {pinned_configurations.map((i) => render_configuration_item(i, true))}
         </div>
       )}
-      <div
-        className={styles.header}
-        onClick={() => props.on_toggle_collapsed(!props.is_collapsed)}
-        role="button"
-      >
-        <div className={styles.header__left}>
-          <span
-            className={cn('codicon', {
-              'codicon-chevron-down': !props.is_collapsed,
-              'codicon-chevron-right': props.is_collapsed
-            })}
-          />
-          <span>Configurations</span>
-        </div>
-        <div className={styles.header__right}>
+      <ListHeader
+        title="Configurations"
+        is_collapsed={props.is_collapsed}
+        on_toggle_collapsed={() =>
+          props.on_toggle_collapsed(!props.is_collapsed)
+        }
+        actions={
           <IconButton
             codicon_icon="edit"
             on_click={(e) => {
@@ -128,8 +121,8 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
             }}
             title="Edit Configurations"
           />
-        </div>
-      </div>
+        }
+      />
       {!props.is_collapsed && (
         <>
           <div className={styles.configurations}>

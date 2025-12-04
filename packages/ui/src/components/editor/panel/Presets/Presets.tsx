@@ -6,6 +6,7 @@ import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../../common/Icon'
 import { Button } from '../../common/Button'
 import { CHATBOTS } from '@shared/constants/chatbots'
+import { ListHeader } from '../ListHeader'
 
 export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'AI Studio': 'AI_STUDIO',
@@ -279,21 +280,13 @@ export const Presets: React.FC<Presets.Props> = (props) => {
           })}
         </div>
       )}
-      <div
-        className={styles.header}
-        onClick={() => props.on_toggle_collapsed(!props.is_collapsed)}
-        role="button"
-      >
-        <div className={styles.header__left}>
-          <span
-            className={cn('codicon', {
-              'codicon-chevron-down': !props.is_collapsed,
-              'codicon-chevron-right': props.is_collapsed
-            })}
-          />
-          <span>Presets</span>
-        </div>
-        <div className={styles.header__right}>
+      <ListHeader
+        title="Presets"
+        is_collapsed={props.is_collapsed}
+        on_toggle_collapsed={() =>
+          props.on_toggle_collapsed(!props.is_collapsed)
+        }
+        actions={
           <IconButton
             codicon_icon="add"
             on_click={(e) => {
@@ -302,8 +295,8 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             }}
             title="Add New Preset"
           />
-        </div>
-      </div>
+        }
+      />
       {!props.is_collapsed && (
         <>
           <div className={styles.presets}>
