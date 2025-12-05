@@ -8,7 +8,7 @@ import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator } from '@ui/components/editor/panel/Separator'
-import { use_translation } from '@/views/panel/frontend/hooks/use-translation'
+import { use_translation } from '@/i18n/use-translation'
 
 type Props = {
   vscode: any

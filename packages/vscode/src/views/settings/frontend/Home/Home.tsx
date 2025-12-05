@@ -16,6 +16,7 @@ import {
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
 import { PresetsSection } from './sections/PresetsSection'
+import { use_translation, TranslationKey } from '@/i18n/use-translation'
 
 type NavItem =
   | 'general'
@@ -27,30 +28,42 @@ type NavItem =
   | 'commit-messages'
 
 type NavConfigItem =
-  | { type: 'item'; id: NavItem; label: string }
-  | { type: 'divider'; text?: string }
+  | { type: 'item'; id: NavItem; label: TranslationKey }
+  | { type: 'divider'; text?: TranslationKey }
 
 const NAV_ITEMS_CONFIG: NavConfigItem[] = [
   {
     type: 'item',
     id: 'general',
-    label: 'General'
+    label: 'settings.sidebar.general'
   },
   {
     type: 'item',
     id: 'presets',
-    label: 'Presets'
+    label: 'settings.sidebar.presets'
   },
   {
     type: 'item',
     id: 'model-providers',
-    label: 'Model Providers'
+    label: 'settings.sidebar.model-providers'
   },
-  { type: 'divider', text: 'API Tools' },
-  { type: 'item', id: 'edit-context', label: 'Edit Context' },
-  { type: 'item', id: 'code-completions', label: 'Code Completions' },
-  { type: 'item', id: 'intelligent-update', label: 'Intelligent Update' },
-  { type: 'item', id: 'commit-messages', label: 'Commit Messages' }
+  { type: 'divider', text: 'settings.sidebar.api-tools' },
+  { type: 'item', id: 'edit-context', label: 'settings.sidebar.edit-context' },
+  {
+    type: 'item',
+    id: 'code-completions',
+    label: 'settings.sidebar.code-completions'
+  },
+  {
+    type: 'item',
+    id: 'intelligent-update',
+    label: 'settings.sidebar.intelligent-update'
+  },
+  {
+    type: 'item',
+    id: 'commit-messages',
+    label: 'settings.sidebar.commit-messages'
+  }
 ]
 
 type Props = {
@@ -106,6 +119,8 @@ type Props = {
 }
 
 export const Home: React.FC<Props> = (props) => {
+  const { t } = use_translation()
+
   const scroll_container_ref = useRef<HTMLDivElement>(null)
   const section_refs = useRef<Record<NavItem, HTMLDivElement | null>>({
     general: null,
@@ -241,17 +256,22 @@ export const Home: React.FC<Props> = (props) => {
     <div style={{ height: '100vh' }}>
       <Layout
         ref={scroll_container_ref}
-        title="Settings"
+        title={t('settings.sidebar.settings')}
         sidebar={NAV_ITEMS_CONFIG.map((item, i) => {
           if (item.type == 'divider') {
-            return <NavigationDivider key={i} text={item.text} />
+            return (
+              <NavigationDivider
+                key={i}
+                text={item.text ? t(item.text) : undefined}
+              />
+            )
           }
 
           return (
             <NavigationItem
               key={i}
               href={`#${item.id}`}
-              label={item.label}
+              label={t(item.label)}
               is_active={item.id === active_nav_item_id}
               on_click={(e) => handle_nav_click(e, item.id)}
             />

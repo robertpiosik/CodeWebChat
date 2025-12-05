@@ -8,7 +8,7 @@ import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButt
 import styles from './Header.module.scss'
 import { api_mode_labels, web_mode_labels } from '../../modes'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
-import { use_translation } from '@/views/panel/frontend/hooks/use-translation'
+import { use_translation } from '@/i18n/use-translation'
 
 type Props = {
   mode: Mode

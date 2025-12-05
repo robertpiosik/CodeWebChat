@@ -2,7 +2,15 @@ export const translations = {
   en: {
     'panel.header.settings': 'Settings',
     'panel.header.prompt-type': 'Prompt type',
-    'settings.sidebar.settings': 'Settings'
+    'settings.sidebar.settings': 'Settings',
+    'settings.sidebar.general': 'General',
+    'settings.sidebar.presets': 'Presets',
+    'settings.sidebar.model-providers': 'Model Providers',
+    'settings.sidebar.api-tools': 'API Tools',
+    'settings.sidebar.edit-context': 'Edit Context',
+    'settings.sidebar.code-completions': 'Code Completions',
+    'settings.sidebar.intelligent-update': 'Intelligent Update',
+    'settings.sidebar.commit-messages': 'Commit Messages'
   },
   pl: {
     'panel.header.settings': 'Ustawienia',

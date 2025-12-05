@@ -897,29 +897,27 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this.extension_uri, 'out', 'view.css')
     )
 
-    return `
-      <!DOCTYPE html>
-      <html lang="${vscode.env.language}">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="${style_uri}">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
-        <script>
-          window.resources_uri = "${resources_uri}";
-        </script>
-        <style>
-          body { overflow: hidden; }
-        </style>
-      </head>
-      <body>
-        <div id="root"></div>
-        <script src="${script_uri}"></script>
-      </body>
-      </html>
-    `
+    return `<!DOCTYPE html>
+<html lang="${vscode.env.language}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="${style_uri}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+  <script>
+    window.resources_uri = "${resources_uri}";
+  </script>
+  <style>
+    body { overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="${script_uri}"></script>
+</body>
+</html>`
   }
 
   public add_text_at_cursor_position(text: string, chars_to_remove_before = 0) {

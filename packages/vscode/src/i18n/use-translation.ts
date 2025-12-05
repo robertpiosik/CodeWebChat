@@ -1,6 +1,6 @@
 import { translations } from '@/i18n/translations'
 
-type TranslationKey = keyof (typeof translations)['en']
+export type TranslationKey = keyof (typeof translations)['en']
 
 export const use_translation = () => {
   let lang = document.documentElement.lang || 'en'
