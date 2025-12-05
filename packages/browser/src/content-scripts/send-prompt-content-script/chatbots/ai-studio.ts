@@ -3,6 +3,7 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { show_response_ready_notification } from '../utils/show-response-ready-notification'
 import { add_apply_response_button } from '../utils/add-apply-response-button'
 import { report_initialization_error } from '../utils/report-initialization-error'
+import { default_system_instructions } from '../constants/default-system-instructions'
 
 export const ai_studio: Chatbot = {
   wait_until_ready: async () => {
@@ -30,8 +31,8 @@ export const ai_studio: Chatbot = {
     })
   },
   enter_system_instructions: async (chat) => {
-    const system_instructions = chat.system_instructions
-    if (!system_instructions) return
+    const system_instructions =
+      chat.system_instructions || default_system_instructions
     await open_panel()
     const system_instructions_button = document.querySelector(
       'button[data-test-system-instructions-card]'

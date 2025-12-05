@@ -4,6 +4,7 @@ import {
   observe_for_responses
 } from '../utils/add-apply-response-button'
 import { report_initialization_error } from '../utils/report-initialization-error'
+import { default_system_instructions } from '../constants/default-system-instructions'
 
 const show_options_modal = async (function_name: string) => {
   const options_button = Array.from(
@@ -58,7 +59,8 @@ export const openrouter: Chatbot = {
     await new Promise((resolve) => setTimeout(resolve, 500))
   },
   enter_system_instructions: async (chat) => {
-    const system_instructions = chat.system_instructions
+    const system_instructions =
+      chat.system_instructions || default_system_instructions
     if (!system_instructions) return
     if (!(await show_options_modal('enter_system_instructions'))) return
     const textarea = document.querySelector(

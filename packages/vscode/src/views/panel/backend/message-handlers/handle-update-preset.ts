@@ -39,7 +39,7 @@ export const handle_update_preset = async (
 
   const are_presets_equal = (a: Preset, b: Preset): boolean => {
     return (
-      (a.name == b.name || !b.name) &&
+      a.name == b.name &&
       a.chatbot == b.chatbot &&
       a.prompt_prefix == b.prompt_prefix &&
       a.prompt_suffix == b.prompt_suffix &&
