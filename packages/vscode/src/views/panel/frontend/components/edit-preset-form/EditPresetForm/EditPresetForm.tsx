@@ -300,17 +300,13 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             </Field>
           )}
 
-          <Field
-            label="Name"
-            html_for="name"
-            info="Leave empty to use the selected chatbot name."
-          >
+          <Field label="Name" html_for="name">
             <Input
               id="name"
               type="text"
               value={name && /^\(\d+\)$/.test(name) ? '' : name!}
               on_change={set_name}
-              placeholder={chatbot}
+              placeholder={chatbot || 'Group'}
             />
           </Field>
 
