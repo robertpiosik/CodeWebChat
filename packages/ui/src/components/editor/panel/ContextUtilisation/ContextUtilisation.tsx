@@ -4,6 +4,7 @@ import cn from 'classnames'
 type Props = {
   current_context_size: number
   context_size_warning_threshold: number
+  is_context_disabled?: boolean
 }
 
 const format_tokens = (tokens: number): string => {
@@ -15,6 +16,17 @@ const format_tokens = (tokens: number): string => {
 }
 
 export const ContextUtilisation: React.FC<Props> = (props) => {
+  if (props.is_context_disabled) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.bar} />
+        <span className={styles.label} style={{ fontStyle: 'italic' }}>
+          Context disabled
+        </span>
+      </div>
+    )
+  }
+
   const is_above_threshold =
     props.current_context_size > props.context_size_warning_threshold
   const progress = Math.min(

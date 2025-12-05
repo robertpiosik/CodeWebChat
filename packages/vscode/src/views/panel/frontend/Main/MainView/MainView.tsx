@@ -108,6 +108,9 @@ export const MainView: React.FC<Props> = (props) => {
     (props.mode == MODE.WEB && props.web_prompt_type == 'edit-context') ||
     (props.mode == MODE.API && props.api_prompt_type == 'edit-context')
 
+  const is_in_no_context_prompt_type =
+    props.mode == MODE.WEB && props.web_prompt_type == 'no-context'
+
   const handle_input_change = (value: string) => {
     props.set_instructions(value)
   }
@@ -229,6 +232,7 @@ export const MainView: React.FC<Props> = (props) => {
             context_size_warning_threshold={
               props.context_size_warning_threshold
             }
+            is_context_disabled={is_in_no_context_prompt_type}
           />
         </div>
 
