@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "Superfast AI coding (CWC)",
-  "version": "1.633.0",
+  "description": "CWC is a superfast AI coding",
+  "version": "1.634.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
