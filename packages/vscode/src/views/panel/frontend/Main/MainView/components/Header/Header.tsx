@@ -8,6 +8,7 @@ import { IconButton as UiIconButton } from '@ui/components/editor/panel/IconButt
 import styles from './Header.module.scss'
 import { api_mode_labels, web_mode_labels } from '../../modes'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
+import { use_translation } from '@/views/panel/frontend/hooks/use-translation'
 
 type Props = {
   mode: Mode
@@ -21,6 +22,7 @@ type Props = {
 }
 
 export const Header: React.FC<Props> = (props) => {
+  const { t } = use_translation()
   const header_ref = useRef<HTMLDivElement>(null)
   const is_narrow_viewport = use_is_narrow_viewport(294)
   const is_mac = use_is_mac()
@@ -77,7 +79,9 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.web_prompt_type}
               on_change={props.on_web_prompt_type_change}
               menu_max_width="calc(100vw - 52px)"
-              info={is_narrow_viewport ? undefined : 'prompt type'}
+              info={
+                is_narrow_viewport ? undefined : t('panel.header.prompt-type')
+              }
               title={
                 is_mac
                   ? 'Change prompt type (⇧⌥)'
@@ -97,7 +101,9 @@ export const Header: React.FC<Props> = (props) => {
               selected_value={props.api_prompt_type}
               on_change={props.on_api_prompt_type_change}
               menu_max_width="calc(100vw - 60px)"
-              info={is_narrow_viewport ? undefined : 'prompt type'}
+              info={
+                is_narrow_viewport ? undefined : t('panel.header.prompt-type')
+              }
               title={
                 is_mac
                   ? 'Change prompt type (⇧⌥)'

@@ -144,6 +144,8 @@ export const dictionary = {
     TYPE_SOMETHING_TO_USE_GROUP: 'Type something to use this group.',
     GROUP_HAS_NO_SELECTED_PRESETS:
       'The chosen group has no selected presets to run.',
+    NO_RECENTLY_USED_PRESETS_OR_GROUPS:
+      'No recently used presets or groups. Select from the list below.',
     CHECKPOINT_OPERATION_IN_PROGRESS:
       'Another checkpoint operation is currently in progress. Please wait for it to complete.',
     URL_OVERRIDE_DIFFERENT_DOMAIN: (preset_name: string) =>

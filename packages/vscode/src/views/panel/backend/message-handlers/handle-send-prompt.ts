@@ -318,7 +318,9 @@ async function show_preset_quick_pick(params: {
   const recent_names = context.globalState.get<string[]>(recents_key, [])
 
   if (recent_names.length == 0) {
-    vscode.window.showWarningMessage('No recently used presets or groups.')
+    vscode.window.showWarningMessage(
+      dictionary.warning_message.NO_RECENTLY_USED_PRESETS_OR_GROUPS
+    )
     return null
   }
 
@@ -353,7 +355,9 @@ async function show_preset_quick_pick(params: {
 
   quick_pick.items = items
   if (items.length == 0) {
-    vscode.window.showWarningMessage('No recently used presets or groups.')
+    vscode.window.showWarningMessage(
+      dictionary.warning_message.NO_RECENTLY_USED_PRESETS_OR_GROUPS
+    )
     return null
   }
   quick_pick.placeholder = 'Search recently used presets and groups'

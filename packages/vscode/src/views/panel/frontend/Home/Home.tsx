@@ -8,6 +8,7 @@ import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator } from '@ui/components/editor/panel/Separator'
+import { use_translation } from '@/views/panel/frontend/hooks/use-translation'
 
 type Props = {
   vscode: any
@@ -26,6 +27,8 @@ type Props = {
 }
 
 export const Home: React.FC<Props> = (props) => {
+  const { t } = use_translation()
+
   const handle_settings_click = () => {
     post_message(props.vscode, {
       command: 'EXECUTE_COMMAND',
@@ -45,9 +48,9 @@ export const Home: React.FC<Props> = (props) => {
         <button
           className={styles['header__settings']}
           onClick={handle_settings_click}
-          title="Settings"
+          title={t('panel.header.settings')}
         >
-          <span>Settings</span>
+          <span>{t('panel.header.settings')}</span>
           <span className={styles['header__settings__icon-wrapper']}>
             <span className={cn('codicon', 'codicon-settings-gear')} />
           </span>

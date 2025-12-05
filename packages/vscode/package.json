@@ -102,7 +102,7 @@
     "commands": [
       {
         "command": "codeWebChat.copyContext",
-        "title": "Copy Context",
+        "title": "%codeWebChat.copyContext.title%",
         "category": "Code Web Chat",
         "icon": "$(copy)"
       },
@@ -132,7 +132,7 @@
       },
       {
         "command": "codeWebChat.applyContext",
-        "title": "Apply Context",
+        "title": "%codeWebChat.applyContext.title%",
         "category": "Code Web Chat",
         "icon": "$(checklist)"
       },
@@ -144,7 +144,7 @@
       },
       {
         "command": "codeWebChat.findPathsInClipboard",
-        "title": "Find Paths in Clipboard",
+        "title": "%codeWebChat.findPathsInClipboard.title%",
         "category": "Code Web Chat"
       },
       {
@@ -217,7 +217,7 @@
       },
       {
         "command": "codeWebChat.applyChatResponse",
-        "title": "Apply Chat Response",
+        "title": "%codeWebChat.applyChatResponse.title%",
         "category": "Code Web Chat"
       },
       {
@@ -261,7 +261,7 @@
       },
       {
         "command": "codeWebChat.checkpoints",
-        "title": "Checkpoints",
+        "title": "%codeWebChat.checkpoints.title%",
         "category": "Code Web Chat",
         "icon": "$(history)"
       },
