@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
 import cn from 'classnames'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
+import { use_periodic_re_render } from '../../../../hooks/use-periodic-re-render'
 import styles from './Responses.module.scss'
 
 dayjs.extend(relativeTime)
@@ -17,16 +17,7 @@ type Props = {
 
 export const Responses: React.FC<Props> = (props) => {
   // Re-render every minute to update the relative time of the history responses.
-  const [, set_now] = useState(Date.now())
-  useEffect(() => {
-    const interval = setInterval(() => {
-      set_now(Date.now())
-    }, 60 * 1000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
+  use_periodic_re_render(60 * 1000)
 
   if (props.response_history.length == 0) {
     return null

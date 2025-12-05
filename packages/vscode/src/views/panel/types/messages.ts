@@ -378,6 +378,10 @@ export interface GetCheckpointsMessage extends BaseMessage {
   command: 'GET_CHECKPOINTS'
 }
 
+export interface CreateCheckpointMessage extends BaseMessage {
+  command: 'CREATE_CHECKPOINT'
+}
+
 export interface ToggleCheckpointStarMessage extends BaseMessage {
   command: 'TOGGLE_CHECKPOINT_STAR'
   timestamp: number
@@ -461,6 +465,7 @@ export type FrontendMessage =
   | GetCollapsedStatesMessage
   | SaveComponentCollapsedStateMessage
   | GetCheckpointsMessage
+  | CreateCheckpointMessage
   | ToggleCheckpointStarMessage
   | RestoreCheckpointMessage
   | RemoveResponseHistoryItemMessage

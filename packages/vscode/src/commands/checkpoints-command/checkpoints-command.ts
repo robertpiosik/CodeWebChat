@@ -29,7 +29,7 @@ export const checkpoints_command = (params: {
   websites_provider: WebsitesProvider
   panel_provider: PanelProvider
 }): vscode.Disposable[] => {
-  let activeDeleteOperation: {
+  let active_delete_operation: {
     finalize: () => Promise<void>
     timestamp: number
   } | null = null
@@ -53,14 +53,16 @@ export const checkpoints_command = (params: {
         params.websites_provider
       )
       if (checkpoint) {
-        vscode.commands.executeCommand('codeWebChat.checkpoints')
+        vscode.commands.executeCommand('codeWebChat.checkpoints', {
+          highlight_checkpoint: checkpoint
+        })
       }
     }
   )
 
   const checkpoints_command = vscode.commands.registerCommand(
     'codeWebChat.checkpoints',
-    async () => {
+    async (args?: { highlight_checkpoint?: Checkpoint }) => {
       if (
         !vscode.workspace.workspaceFolders ||
         vscode.workspace.workspaceFolders.length == 0
@@ -72,6 +74,7 @@ export const checkpoints_command = (params: {
       }
 
       const show_quick_pick = async () => {
+        let checkpoint_to_highlight = args?.highlight_checkpoint
         const quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { id?: string; checkpoint?: Checkpoint }
         >()
@@ -196,6 +199,17 @@ export const checkpoints_command = (params: {
           }
 
           update_view()
+          if (checkpoint_to_highlight) {
+            const item = quick_pick.items.find(
+              (i) =>
+                (i as any).checkpoint?.timestamp ===
+                checkpoint_to_highlight?.timestamp
+            )
+            if (item) {
+              quick_pick.activeItems = [item]
+              checkpoint_to_highlight = undefined
+            }
+          }
           quick_pick.busy = false
         }
 
@@ -214,7 +228,9 @@ export const checkpoints_command = (params: {
               params.websites_provider
             )
             if (checkpoint) {
-              vscode.commands.executeCommand('codeWebChat.checkpoints')
+              vscode.commands.executeCommand('codeWebChat.checkpoints', {
+                highlight_checkpoint: checkpoint
+              })
             }
           } else if (selected.id == 'revert-last') {
             quick_pick.hide()
@@ -271,6 +287,7 @@ export const checkpoints_command = (params: {
             )
 
             if (confirmation == 'Clear All') {
+              active_delete_operation = null
               await clear_all_checkpoints(params.context, params.panel_provider)
               vscode.window.showInformationMessage(
                 dictionary.information_message.ALL_CHECKPOINTS_CLEARED
@@ -318,6 +335,7 @@ export const checkpoints_command = (params: {
           if (e.button.tooltip == 'Edit Description') {
             notification_count++
             const new_description = await vscode.window.showInputBox({
+              title: 'Description',
               prompt: 'Enter a description for the checkpoint',
               value: item.checkpoint.description || '',
               placeHolder: 'e.g. Before refactoring the main component'
@@ -353,8 +371,8 @@ export const checkpoints_command = (params: {
           }
 
           if (e.button.tooltip == 'Delete') {
-            if (activeDeleteOperation) {
-              await activeDeleteOperation.finalize()
+            if (active_delete_operation) {
+              await active_delete_operation.finalize()
             }
 
             const deleted_checkpoint = item.checkpoint
@@ -398,7 +416,7 @@ export const checkpoints_command = (params: {
                 }
               }
             }
-            activeDeleteOperation = currentOperation
+            active_delete_operation = currentOperation
 
             notification_count++
             const choice = await vscode.window.showInformationMessage(
@@ -410,16 +428,22 @@ export const checkpoints_command = (params: {
             notification_count--
 
             if (
-              activeDeleteOperation &&
-              activeDeleteOperation.timestamp === currentOperation.timestamp
+              active_delete_operation &&
+              active_delete_operation.timestamp === currentOperation.timestamp
             ) {
               if (choice == 'Undo') {
                 // Restore to state and UI
-                checkpoints.splice(
-                  real_index_in_state,
-                  0,
-                  original_checkpoint_from_state
-                )
+                const current_checkpoints =
+                  params.context.workspaceState.get<Checkpoint[]>(
+                    CHECKPOINTS_STATE_KEY,
+                    []
+                  ) ?? []
+
+                current_checkpoints.push(original_checkpoint_from_state)
+                current_checkpoints.sort((a, b) => b.timestamp - a.timestamp)
+
+                checkpoints = current_checkpoints
+
                 await params.context.workspaceState.update(
                   CHECKPOINTS_STATE_KEY,
                   checkpoints
@@ -434,10 +458,20 @@ export const checkpoints_command = (params: {
                     notification_count--
                   })
                 update_view()
+                const restored_item = quick_pick.items.find(
+                  (i) =>
+                    (i as any).checkpoint?.timestamp ==
+                    original_checkpoint_from_state.timestamp
+                )
+                if (restored_item) {
+                  quick_pick.activeItems = [restored_item]
+                }
+                quick_pick.show()
               } else {
                 await currentOperation.finalize()
+                quick_pick.dispose()
               }
-              activeDeleteOperation = null
+              active_delete_operation = null
             } else if (choice === 'Undo') {
               notification_count++
               vscode.window
@@ -448,9 +482,9 @@ export const checkpoints_command = (params: {
                 .then(() => {
                   notification_count--
                 })
+              quick_pick.show()
             }
 
-            quick_pick.show()
             return
           }
         })

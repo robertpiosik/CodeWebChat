@@ -18,6 +18,7 @@ import {
   handle_send_prompt,
   handle_update_preset,
   handle_delete_preset,
+  handle_create_checkpoint,
   handle_delete_group,
   handle_delete_separator,
   handle_duplicate_preset,
@@ -425,6 +426,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         try {
           if (message.command == 'GET_CHECKPOINTS') {
             await this.send_checkpoints()
+          } else if (message.command == 'CREATE_CHECKPOINT') {
+            await handle_create_checkpoint(this)
           } else if (message.command == 'TOGGLE_CHECKPOINT_STAR') {
             await toggle_checkpoint_star({
               context: this.context,

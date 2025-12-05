@@ -3,6 +3,7 @@ import cn from 'classnames'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
+import { use_periodic_re_render } from '../../../../hooks/use-periodic-re-render'
 
 dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
@@ -19,15 +20,36 @@ type Props = {
   items: TimelineItemProps[]
   on_toggle_starred: (id: string | number) => void
   on_label_click: (id: string | number) => void
+  on_create_click?: () => void
 }
 
 export const Timeline: React.FC<Props> = ({
   items,
   on_toggle_starred,
-  on_label_click
+  on_label_click,
+  on_create_click
 }) => {
+  // Re-render every minute to update the relative time of the timeline items.
+  use_periodic_re_render(60 * 1000)
+
   return (
     <div className={styles.timeline}>
+      {on_create_click && (
+        <div className={styles.item}>
+          <div className={styles.item__time} />
+          <div className={styles.item__connector}>
+            <div className={styles.item__line} />
+          </div>
+          <div className={styles.item__content}>
+            <div
+              className={styles.item__content__label}
+              onClick={on_create_click}
+            >
+              New checkpoint...
+            </div>
+          </div>
+        </div>
+      )}
       {items.map((item) => (
         <div key={item.id} className={styles.item}>
           <div

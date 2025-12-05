@@ -36,6 +36,12 @@ export const Home: React.FC<Props> = (props) => {
     } as FrontendMessage)
   }
 
+  const handle_create_checkpoint_click = () => {
+    post_message(props.vscode, {
+      command: 'CREATE_CHECKPOINT'
+    } as FrontendMessage)
+  }
+
   return (
     <>
       <div className={styles.header}>
@@ -108,6 +114,7 @@ export const Home: React.FC<Props> = (props) => {
                 on_label_click={(id) =>
                   props.on_restore_checkpoint(id as number)
                 }
+                on_create_click={handle_create_checkpoint_click}
               />
             </div>
           </div>

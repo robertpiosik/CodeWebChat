@@ -1,6 +1,7 @@
 export * from './handle-copy-prompt'
 export * from './handle-apply-response-from-history'
 export * from './handle-create-preset'
+export * from './handle-create-checkpoint'
 export * from './handle-create-group'
 export * from './handle-create-separator'
 export * from './handle-delete-preset'
