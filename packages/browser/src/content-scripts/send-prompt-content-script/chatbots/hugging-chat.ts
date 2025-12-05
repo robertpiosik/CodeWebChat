@@ -24,6 +24,10 @@ export const hugging_chat: Chatbot = {
       return
     }
 
+    if (model_picker_button.textContent.trim() == `Model: ${model}`) {
+      return
+    }
+
     model_picker_button.click()
     await new Promise((r) => requestAnimationFrame(r))
 
@@ -47,6 +51,21 @@ export const hugging_chat: Chatbot = {
       return
     }
 
+    if (window.innerWidth < 768) {
+      const back_button = document
+        .querySelector('path[d="M10 16L20 6l1.4 1.4l-8.6 8.6l8.6 8.6L20 26z"]')
+        ?.closest('button')
+      if (back_button) {
+        ;(back_button as HTMLElement).click()
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      } else {
+        report_initialization_error({
+          function_name: 'hugging_chat.set_model',
+          log_message: 'Back button not found on small screen'
+        })
+      }
+    }
+
     const model_button = dialog.querySelector(
       `button[data-model-id="${model}"]`
     ) as HTMLButtonElement
@@ -65,7 +84,7 @@ export const hugging_chat: Chatbot = {
     }
 
     model_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
+    await new Promise((resolve) => setTimeout(resolve, 250))
 
     const activate_button = dialog.querySelector(
       'button[name="Activate model"]'
@@ -80,7 +99,7 @@ export const hugging_chat: Chatbot = {
     }
 
     activate_button.click()
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 250))
   },
   inject_apply_response_button: (
     client_id: number,
