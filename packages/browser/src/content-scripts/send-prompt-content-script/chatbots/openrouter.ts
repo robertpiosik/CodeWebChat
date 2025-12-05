@@ -305,10 +305,7 @@ export const openrouter: Chatbot = {
 
     observe_for_responses({
       chatbot_name: 'OpenRouter',
-      is_generating: () =>
-        !!document.querySelector(
-          'path[d="M4.5 7.5a3 3 0 0 1 3-3h9a3 3 0 0 1 3 3v9a3 3 0 0 1-3-3h-9a3 3 0 0 1-3-3v-9Z"]'
-        ),
+      is_generating: () => !!document.querySelector('.animate-spin'),
       footer_selector: 'div[data-message-id] > div > div:last-child > div',
       add_buttons
     })
