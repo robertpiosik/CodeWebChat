@@ -16,7 +16,7 @@ import {
 } from '@/views/settings/types/messages'
 import { GeneralSection } from './sections/GeneralSection'
 import { PresetsSection } from './sections/PresetsSection'
-import { use_translation, TranslationKey } from '@/i18n/use-translation'
+import { use_translation, TranslationKey } from '@/views/i18n/use-translation'
 
 type NavItem =
   | 'general'
