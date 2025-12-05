@@ -59,21 +59,57 @@ export function new_folder_command() {
         return
       }
 
-      try {
-        const new_folder_path = create_safe_path(parent_path, folder_name)
+      const is_file_like =
+        folder_name.startsWith('.') || path.basename(folder_name).includes('.')
 
-        if (!new_folder_path) {
+      try {
+        const target_path = create_safe_path(parent_path, folder_name)
+
+        if (!target_path) {
           vscode.window.showErrorMessage(
-            dictionary.error_message.INVALID_FOLDER_NAME(folder_name)
+            is_file_like
+              ? dictionary.error_message.INVALID_FILE_NAME(folder_name)
+              : dictionary.error_message.INVALID_FOLDER_NAME(folder_name)
           )
           return
         }
 
+        if (is_file_like) {
+          const fileUri = vscode.Uri.file(target_path)
+
+          try {
+            await vscode.workspace.fs.stat(fileUri)
+            vscode.window.showErrorMessage(
+              dictionary.error_message.FILE_ALREADY_EXISTS(
+                path.basename(target_path)
+              )
+            )
+            return
+          } catch {}
+
+          const directory = path.dirname(target_path)
+          await vscode.workspace.fs.createDirectory(vscode.Uri.file(directory))
+
+          const edit = new vscode.WorkspaceEdit()
+          edit.createFile(fileUri, {
+            overwrite: false,
+            contents: new Uint8Array()
+          })
+          const applied = await vscode.workspace.applyEdit(edit)
+          if (!applied) {
+            throw new Error('Failed to apply create file edit')
+          }
+
+          const document = await vscode.workspace.openTextDocument(fileUri)
+          await vscode.window.showTextDocument(document, { preview: false })
+          return
+        }
+
         try {
-          await vscode.workspace.fs.stat(vscode.Uri.file(new_folder_path))
+          await vscode.workspace.fs.stat(vscode.Uri.file(target_path))
           vscode.window.showErrorMessage(
             dictionary.error_message.FOLDER_ALREADY_EXISTS(
-              path.basename(new_folder_path)
+              path.basename(target_path)
             )
           )
           return
@@ -81,13 +117,17 @@ export function new_folder_command() {
           // Folder doesn't exist, which is what we want
         }
 
-        await vscode.workspace.fs.createDirectory(
-          vscode.Uri.file(new_folder_path)
-        )
+        await vscode.workspace.fs.createDirectory(vscode.Uri.file(target_path))
       } catch (error: any) {
-        vscode.window.showErrorMessage(
-          dictionary.error_message.FAILED_TO_CREATE_FOLDER(error.message)
-        )
+        if (is_file_like) {
+          vscode.window.showErrorMessage(
+            dictionary.error_message.FAILED_TO_CREATE_FILE(error.message)
+          )
+        } else {
+          vscode.window.showErrorMessage(
+            dictionary.error_message.FAILED_TO_CREATE_FOLDER(error.message)
+          )
+        }
       }
     }
   )
