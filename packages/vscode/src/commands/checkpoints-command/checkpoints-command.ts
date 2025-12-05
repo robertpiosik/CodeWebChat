@@ -12,7 +12,8 @@ import {
   clear_all_checkpoints,
   delete_checkpoint,
   get_checkpoints,
-  restore_checkpoint
+  restore_checkpoint,
+  toggle_checkpoint_star
 } from './actions'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from './utils'
@@ -309,17 +310,12 @@ export const checkpoints_command = (params: {
           if (!item.checkpoint) return
 
           if (e.button.tooltip == 'Star' || e.button.tooltip == 'Unstar') {
-            const checkpoint_to_update = checkpoints.find(
-              (c) => c.timestamp == item.checkpoint?.timestamp
-            )
-            if (checkpoint_to_update) {
-              checkpoint_to_update.is_starred = !checkpoint_to_update.is_starred
-              await params.context.workspaceState.update(
-                CHECKPOINTS_STATE_KEY,
-                checkpoints
-              )
-              params.panel_provider.send_checkpoints()
-            }
+            await toggle_checkpoint_star({
+              context: params.context,
+              timestamp: item.checkpoint.timestamp,
+              panel_provider: params.panel_provider
+            })
+
             await refresh_and_update_view()
             const active_item = quick_pick.items.find(
               (i) =>
