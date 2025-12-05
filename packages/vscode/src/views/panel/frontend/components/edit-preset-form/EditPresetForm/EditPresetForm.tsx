@@ -366,8 +366,8 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             <Field
               label="Reasoning Effort"
               html_for="reasoning-effort"
-              info={`Controls the amount of thought the model puts into its response before answering.${
-                chatbot == 'OpenRouter' ? ' Requires supporting model.' : ''
+              info={`Controls how much the model thinks.${
+                chatbot == 'OpenRouter' ? ' Requires reasoning model.' : ''
               }`}
             >
               <Dropdown
