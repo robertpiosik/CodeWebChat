@@ -18,9 +18,9 @@ Superfast AI coding for VS Code, Cursor, and others. Free, open-source, and priv
 
 ## Introduction
 
-👨‍⚖️ **Respect to chatbots' Terms of Use**
+👨‍⚖️ **Chatbot initializations with respect to TOS**
 
-Code Web Chat helps you use your favorite coding web tools like ChatGPT's projects. The idea to initialize chatbots is borrowed from [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) and because there is no further automation once the prompt is sent, by using CWC you're not violating their Terms of Use. Contributors should not submit pull requests implementing further chat automations of any kind, as these will be kindly rejected.
+CWC lets you use your favorite chatbot's projects/spaces feature for coding. The idea of submitting messages was inspired by [Firefox](https://support.mozilla.org/en-US/kb/ai-chatbot) (thank you!) and is supported by many out of the box via URL search param `?q=`, therefore this is standard practice. Because chatbot's Terms of Service prohibit automated output extraction, the tool never does that—a click on _APPLY RESPONSE_ button is required, and it's an alias for the default Copy button with a signal to CWC to read the clipboard.
 
 🧐 **The limitations of LLMs**
 
