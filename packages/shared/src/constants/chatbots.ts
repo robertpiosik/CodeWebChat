@@ -1,16 +1,17 @@
 type Chatbot = {
   url: string
   supports_custom_temperature?: boolean
+  supports_custom_top_p?: boolean
   supports_system_instructions?: boolean
   supports_user_provided_model?: boolean
   supports_user_provided_port?: boolean
   supports_reasoning_effort?: boolean
+  supported_reasoning_efforts?: string[]
   supports_thinking_budget?: boolean
   supports_url_override?: boolean
   url_override_label?: string
   url_override_disabled_options?: string[]
   default_system_instructions?: string
-  default_top_p?: number
   supported_options?: {
     [option: string]: string
   }
@@ -27,10 +28,10 @@ export const CHATBOTS = {
   'AI Studio': {
     url: 'https://aistudio.google.com/prompts/new_chat',
     supports_custom_temperature: true,
+    supports_custom_top_p: true,
     supports_system_instructions: true,
     supports_thinking_budget: true,
     default_system_instructions: "You're a helpful coding assistant.",
-    default_top_p: 0.95,
     supported_options: {
       'temporary-chat': 'Temporary chat',
       'hide-panel': 'Hide panel',
@@ -182,22 +183,23 @@ export const CHATBOTS = {
   'Open WebUI': {
     url: 'http://openwebui/',
     supports_custom_temperature: true,
+    supports_custom_top_p: true,
     supports_system_instructions: true,
     supports_user_provided_model: true,
     supports_user_provided_port: true,
-    default_system_instructions: "You're a helpful coding assistant.",
-    default_top_p: 0.9
+    default_system_instructions: "You're a helpful coding assistant."
   } as Chatbot,
   OpenRouter: {
     url: 'https://openrouter.ai/chat',
     supports_custom_temperature: true,
+    supports_custom_top_p: true,
     supports_system_instructions: true,
     supports_reasoning_effort: true,
+    supported_reasoning_efforts: ['high', 'medium', 'low', 'minimal'],
     default_system_instructions: "You're a helpful coding assistant.",
     supported_options: {
       'disable-reasoning': 'Disable reasoning (for hybrid models)'
-    },
-    default_top_p: 1
+    }
   } as Chatbot,
   Perplexity: {
     url: 'https://www.perplexity.ai/',

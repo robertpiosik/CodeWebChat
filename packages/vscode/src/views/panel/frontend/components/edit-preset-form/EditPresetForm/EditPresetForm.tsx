@@ -99,7 +99,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   }, [chatbot, new_url])
 
   const supports_temperature = chatbot_config?.supports_custom_temperature
-  const supports_top_p = chatbot_config?.default_top_p !== undefined
+  const supports_top_p = chatbot_config?.supports_custom_top_p
   const supports_thinking_budget = chatbot_config?.supports_thinking_budget
   const supports_reasoning_effort =
     chatbot_config?.supports_reasoning_effort ||
@@ -118,10 +118,10 @@ export const EditPresetForm: React.FC<Props> = (props) => {
         chatbot,
         ...(prompt_prefix ? { prompt_prefix } : {}),
         ...(prompt_suffix ? { prompt_suffix } : {}),
-        ...(temperature !== undefined ? { temperature } : {}),
-        ...(!supports_top_p || top_p !== chatbot_config.default_top_p
-          ? { top_p }
+        ...(temperature !== undefined && temperature != 1
+          ? { temperature }
           : {}),
+        ...(top_p !== undefined && top_p != 0.95 ? { top_p } : {}),
         ...(thinking_budget !== undefined ? { thinking_budget } : {}),
         ...(reasoning_effort ? { reasoning_effort } : {}),
         ...(model ? { model } : {}),
@@ -207,23 +207,21 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   }
 
   const reasoning_effort_options = useMemo(() => {
-    if (model_info?.supported_reasoning_efforts) {
+    const supported_efforts =
+      chatbot_config?.supported_reasoning_efforts ||
+      model_info?.supported_reasoning_efforts
+
+    if (supported_efforts) {
       return [
         { value: '—', label: '—' },
-        ...model_info.supported_reasoning_efforts.map((effort: string) => {
+        ...supported_efforts.map((effort: string) => {
           const capitalized = effort.charAt(0).toUpperCase() + effort.slice(1)
           return { value: effort, label: capitalized }
         })
       ]
     }
-    return [
-      { value: '—', label: '—' },
-      { value: 'High', label: 'High' },
-      { value: 'Medium', label: 'Medium' },
-      { value: 'Low', label: 'Low' },
-      { value: 'Minimal', label: 'Minimal' }
-    ]
-  }, [model_info])
+    return [{ value: '—', label: '—' }]
+  }, [chatbot_config, model_info])
 
   useEffect(() => {
     if (
@@ -367,7 +365,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               label="Reasoning Effort"
               html_for="reasoning-effort"
               info={`Controls how much the model thinks.${
-                chatbot == 'OpenRouter' ? ' Requires reasoning model.' : ''
+                chatbot == 'OpenRouter' ? ' Requires a reasoning model.' : ''
               }`}
             >
               <Dropdown
@@ -480,7 +478,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 info="Influences response variety. Lower values are more predictable; higher values are more diverse."
               >
                 <Slider
-                  value={temperature || 0.5}
+                  value={temperature ?? 1}
                   onChange={set_temperature}
                   min={0}
                   max={2}
@@ -494,7 +492,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
                 info="Limits token choices to cumulative probability P. Lower values make responses more predictable."
               >
                 <Slider
-                  value={top_p || (chatbot && CHATBOTS[chatbot].default_top_p)!}
+                  value={top_p ?? 0.95}
                   onChange={set_top_p}
                   min={0}
                   max={1}
