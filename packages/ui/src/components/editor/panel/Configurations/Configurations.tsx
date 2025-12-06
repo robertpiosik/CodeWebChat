@@ -134,7 +134,6 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
                 }
               }}
               animation={150}
-              handle={`.${styles.configurations__item__left__drag_handle}`}
               disabled={!props.on_reorder}
             >
               {props.configurations.map((i) =>

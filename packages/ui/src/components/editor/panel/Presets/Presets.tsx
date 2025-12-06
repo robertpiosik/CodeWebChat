@@ -32,7 +32,6 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'Z.AI': 'Z_AI'
 }
 
-const UNGROUPED_ID = '__ungrouped_drag_handle__'
 const TRAILING_GROUP_ID = '__trailing_group_drag_handle__'
 const TRAILING_SEPARATOR_ID = '__trailing_separator_drag_handle__'
 
@@ -91,26 +90,6 @@ const with_ids = (
 }
 
 export const Presets: React.FC<Presets.Props> = (props) => {
-  const { ungrouped_selected_count, ungrouped_preset_count } = (() => {
-    let selected_count = 0
-    let preset_count = 0
-    if (props.presets[0]?.chatbot !== undefined) {
-      for (const p of props.presets) {
-        if (!p.chatbot) {
-          break
-        }
-        preset_count++
-        if (p.is_selected) {
-          selected_count++
-        }
-      }
-    }
-    return {
-      ungrouped_selected_count: selected_count,
-      ungrouped_preset_count: preset_count
-    }
-  })()
-
   const pinned_presets = props.presets.filter((p) => p.is_pinned && p.chatbot)
 
   const get_visible_presets = (
@@ -136,16 +115,27 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     return visible_presets
   }
 
+  const is_preset_in_group = (original_index: number | undefined): boolean => {
+    if (original_index === undefined || original_index === 0) {
+      return false
+    }
+    for (let i = original_index - 1; i >= 0; i--) {
+      const p = props.presets[i]
+      // group header
+      if (!p.chatbot && p.name) {
+        return true
+      }
+      // separator
+      if (!p.chatbot && !p.name) {
+        return false
+      }
+    }
+    return false
+  }
+
   const sortable_list = (() => {
     let list: (Presets.Preset & { id: string; original_index?: number })[] =
       with_ids(get_visible_presets(props.presets))
-    if (props.presets[0]?.chatbot !== undefined) {
-      const ungrouped_item: Presets.Preset & { id: string } = {
-        name: 'Ungrouped',
-        id: UNGROUPED_ID
-      }
-      list = [ungrouped_item, ...list]
-    }
     const last_preset = props.presets[props.presets.length - 1]
     // A group is a preset without a `chatbot` property
     const is_last_item_a_group =
@@ -208,6 +198,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                   props.on_preset_click(preset.name!)
                 }}
                 role="button"
+                title="Initialize"
               >
                 <div className={styles.presets__item__left}>
                   <div className={styles.presets__item__left__icon}>
@@ -302,57 +293,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             <ReactSortable
               list={sortable_list}
               setList={(new_state) => {
-                const ungrouped_item = new_state.find(
-                  (item) => item.id == UNGROUPED_ID
-                )
-                const ungrouped_was_moved = ungrouped_item
-                  ? new_state[0].id !== UNGROUPED_ID
-                  : false
-
-                // Handle ungrouped item drag
-                if (ungrouped_item && ungrouped_was_moved) {
-                  const ungrouped_item_index = new_state.findIndex(
-                    (item) => item.id == UNGROUPED_ID
-                  )
-                  const new_state_without_ungrouped = new_state.filter(
-                    (item) => item.id != UNGROUPED_ID
-                  )
-
-                  // Determine where to insert the new group
-                  let target_full_index: number
-
-                  if (
-                    ungrouped_item_index < new_state_without_ungrouped.length
-                  ) {
-                    // Dropped between items - find the preset at or after this position
-                    const preset_at_drop_location =
-                      new_state_without_ungrouped[ungrouped_item_index]
-
-                    if (preset_at_drop_location) {
-                      target_full_index = props.presets.findIndex(
-                        (p) => p.name == preset_at_drop_location.name
-                      )
-
-                      // Fallback if preset not found
-                      if (target_full_index == -1) {
-                        target_full_index = props.presets.length
-                      }
-                    } else {
-                      target_full_index = props.presets.length
-                    }
-                  } else {
-                    // Dropped at the end
-                    target_full_index = props.presets.length
-                  }
-
-                  // Create group at calculated position
-                  props.on_create_group({
-                    create_on_index: target_full_index,
-                    instant: true
-                  })
-                  return
-                }
-
                 // Handle trailing separator item drag
                 const trailing_separator_item = new_state.find(
                   (item) => item.id == TRAILING_SEPARATOR_ID
@@ -388,13 +328,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       ]
 
                     if (preset_at_drop_location) {
-                      if (preset_at_drop_location.id == UNGROUPED_ID) {
-                        target_full_index = 0
-                      } else {
-                        target_full_index = props.presets.findIndex(
-                          (p) => p.name == preset_at_drop_location.name
-                        )
-                      }
+                      target_full_index = props.presets.findIndex(
+                        (p) => p.name == preset_at_drop_location.name
+                      )
 
                       // Fallback if preset not found
                       if (target_full_index == -1) {
@@ -463,13 +399,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       ]
 
                     if (preset_at_drop_location) {
-                      if (preset_at_drop_location.id == UNGROUPED_ID) {
-                        target_full_index = 0
-                      } else {
-                        target_full_index = props.presets.findIndex(
-                          (p) => p.name == preset_at_drop_location.name
-                        )
-                      }
+                      target_full_index = props.presets.findIndex(
+                        (p) => p.name == preset_at_drop_location.name
+                      )
 
                       // Fallback if preset not found
                       if (target_full_index == -1) {
@@ -495,7 +427,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 const new_visible_presets = new_state
                   .filter(
                     (item) =>
-                      item.id !== UNGROUPED_ID &&
                       item.id !== TRAILING_GROUP_ID &&
                       item.id !== TRAILING_SEPARATOR_ID
                   )
@@ -535,7 +466,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 props.on_presets_reorder(reordered_presets)
               }}
               animation={150}
-              handle={`.${styles.presets__item__left__drag_handle}`}
             >
               {sortable_list.map((preset) => {
                 if (preset.id == TRAILING_SEPARATOR_ID) {
@@ -592,87 +522,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_separator_delete(preset.original_index!)
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )
-                }
-
-                if (preset.id == UNGROUPED_ID) {
-                  return (
-                    <div
-                      key={UNGROUPED_ID}
-                      className={cn(styles.presets__item, {
-                        [styles['presets__item--ungrouped']]: true,
-                        [styles['presets__item--highlighted']]:
-                          props.selected_preset_name == 'Ungrouped'
-                      })}
-                      onClick={() => {
-                        props.on_create_group({
-                          add_on_top: true,
-                          instant: true
-                        })
-                      }}
-                      role="button"
-                    >
-                      <div className={styles.presets__item__left}>
-                        <div
-                          className={styles.presets__item__left__drag_handle}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                          }}
-                        >
-                          <span className="codicon codicon-gripper" />
-                        </div>
-                        <div
-                          className={
-                            styles['presets__item__left__collapse-icon']
-                          }
-                        >
-                          <span
-                            className={cn('codicon', {
-                              'codicon-chevron-down': true
-                            })}
-                          />
-                        </div>
-                        <div className={styles.presets__item__left__text}>
-                          <span>Ungrouped</span>
-                          {props.is_collapsed && (
-                            <span>
-                              {`${ungrouped_preset_count} ${
-                                ungrouped_preset_count == 1
-                                  ? 'preset'
-                                  : 'presets'
-                              }${
-                                ungrouped_selected_count > 0
-                                  ? ` · ${ungrouped_selected_count} selected`
-                                  : ''
-                              }`}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div
-                        className={styles.presets__item__right}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                        }}
-                      >
-                        <IconButton
-                          codicon_icon="run-coverage"
-                          title="Run Selected Presets"
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_group_click('Ungrouped')
-                          }}
-                        />
-                        <IconButton
-                          codicon_icon="edit"
-                          title="Edit"
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_create_group({ add_on_top: true })
                           }}
                         />
                       </div>
@@ -796,6 +645,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       }
                     }}
                     role="button"
+                    title="Initialize"
                   >
                     <div className={styles.presets__item__left}>
                       <div
@@ -808,16 +658,20 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       </div>
                       {preset.chatbot && (
                         <Checkbox
-                          checked={!!preset.is_selected}
+                          checked={
+                            !!preset.is_selected &&
+                            is_preset_in_group(preset.original_index)
+                          }
                           on_change={() =>
                             props.on_toggle_selected_preset(preset.name!)
                           }
                           on_click={(e) => e.stopPropagation()}
                           title={
-                            preset.is_selected
-                              ? 'Unset as selected'
-                              : 'Set as selected'
+                            !is_preset_in_group(preset.original_index)
+                              ? 'Place in a group to select'
+                              : ''
                           }
+                          disabled={!is_preset_in_group(preset.original_index)}
                         />
                       )}
                       {preset.chatbot && (
