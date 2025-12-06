@@ -61,7 +61,7 @@ export const Default = () => {
       <Timeline
         items={items}
         on_toggle_starred={handle_toggle_starred}
-        on_label_click={(id) => alert(`Restore checkpoint: ${id}`)}
+        on_item_click={(id) => alert(`Restore checkpoint: ${id}`)}
       />
     </div>
   )
@@ -77,7 +77,7 @@ export const SingleItem = () => (
     <Timeline
       items={[initialItems[0]]}
       on_toggle_starred={() => {}}
-      on_label_click={(id) => alert(`Restore checkpoint: ${id}`)}
+      on_item_click={(id) => alert(`Restore checkpoint: ${id}`)}
     />
   </div>
 )
@@ -99,7 +99,7 @@ export const NoDescription = () => (
         }
       ]}
       on_toggle_starred={() => {}}
-      on_label_click={(id) => alert(`Restore checkpoint: ${id}`)}
+      on_item_click={(id) => alert(`Restore checkpoint: ${id}`)}
     />
   </div>
 )

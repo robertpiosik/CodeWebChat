@@ -8,7 +8,10 @@ import { Checkpoint, FrontendMessage } from '@/views/panel/types/messages'
 import { Responses as UiResponses } from '@ui/components/editor/panel/Responses'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator } from '@ui/components/editor/panel/Separator'
+import { ListHeader } from '@ui/components/editor/panel/ListHeader'
 import { use_translation } from '@/views/i18n/use-translation'
+import { useState } from 'react'
+import { IconButton } from '@ui/components/editor/panel/IconButton'
 
 type Props = {
   vscode: any
@@ -28,6 +31,7 @@ type Props = {
 
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
+  const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
 
   const handle_settings_click = () => {
     post_message(props.vscode, {
@@ -98,8 +102,25 @@ export const Home: React.FC<Props> = (props) => {
                 on_click={props.on_api_calls_click}
               />
             </div>
-            <Separator height={16} />
-            <div className={styles.inner__timeline}>
+            <Separator height={8} />
+            <ListHeader
+              title="Timeline"
+              is_collapsed={is_timeline_collapsed}
+              on_toggle_collapsed={() =>
+                set_is_timeline_collapsed(!is_timeline_collapsed)
+              }
+              actions={
+                <IconButton
+                  codicon_icon="add"
+                  title="New checkpoint"
+                  on_click={(e) => {
+                    e.stopPropagation()
+                    handle_create_checkpoint_click()
+                  }}
+                />
+              }
+            />
+            {!is_timeline_collapsed && (
               <Timeline
                 items={props.checkpoints.map((c) => ({
                   id: c.timestamp,
@@ -109,14 +130,11 @@ export const Home: React.FC<Props> = (props) => {
                   is_starred: c.is_starred
                 }))}
                 on_toggle_starred={(id) =>
-                  props.on_toggle_checkpoint_starred(id as number)
+                  props.on_toggle_checkpoint_starred(id)
                 }
-                on_label_click={(id) =>
-                  props.on_restore_checkpoint(id as number)
-                }
-                on_create_click={handle_create_checkpoint_click}
+                on_item_click={(id) => props.on_restore_checkpoint(id)}
               />
-            </div>
+            )}
           </div>
 
           <div className={styles.bottom}>

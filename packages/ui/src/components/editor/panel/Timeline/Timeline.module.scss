@@ -6,9 +6,19 @@
 .item {
   display: flex;
   position: relative;
+  padding: 0 12px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+
+    .item__actions {
+      display: flex;
+    }
+  }
 
   &:last-child {
-    .timelineItem__line {
+    .item__line {
       display: none;
     }
 
@@ -21,11 +31,11 @@
     font-size: 11px;
     color: var(--cwc-text-color-dimmed);
     white-space: nowrap;
-    flex-shrink: 0;
     width: 26vw;
     text-align: right;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-top: 2px;
   }
 
   &__connector {
@@ -43,9 +53,6 @@
     align-items: center;
     justify-content: center;
     z-index: 1;
-    background-color: var(--vscode-sideBar-background);
-    cursor: pointer;
-    transform: translateY(-2px);
     position: relative;
     color: var(--vscode-button-background);
   }
@@ -57,19 +64,9 @@
     border-radius: 50%;
   }
 
-  &__star-hover {
-    position: absolute;
-    opacity: 0;
-  }
-
-  &__marker:hover {
-    .item__dot {
-      opacity: 0;
-    }
-
-    .item__star-hover {
-      opacity: 1;
-    }
+  &__star-prefix {
+    margin-right: 4px;
+    vertical-align: text-bottom;
   }
 
   &__line {
@@ -82,15 +79,24 @@
   &__content {
     position: relative;
     display: flex;
+    flex: 1;
+    min-width: 0;
     flex-direction: column;
     gap: 2px;
-    margin-bottom: 12px;
+    padding: 1px 0;
     overflow: hidden;
 
-    &__label {
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
+    &__title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 20px;
+
+      > span:first-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
 
@@ -102,6 +108,14 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
       word-wrap: break-word;
+      margin-bottom: 12px;
     }
+  }
+
+  &__actions {
+    display: none;
+    align-items: center;
+    margin-left: 8px;
+    flex-shrink: 0;
   }
 }

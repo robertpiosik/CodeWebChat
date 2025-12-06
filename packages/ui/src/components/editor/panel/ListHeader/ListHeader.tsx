@@ -26,7 +26,7 @@ export const ListHeader: React.FC<ListHeader.Props> = (props) => {
         />
         <span>{props.title}</span>
       </div>
-      {props.actions && (
+      {props.actions && !props.is_collapsed && (
         <div className={styles.header__right}>{props.actions}</div>
       )}
     </div>
