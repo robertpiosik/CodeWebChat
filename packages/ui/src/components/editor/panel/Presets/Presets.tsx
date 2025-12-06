@@ -23,7 +23,6 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   Minimax: 'MINIMAX',
   Mistral: 'MISTRAL',
   LMArena: 'LMARENA',
-  // Meta: 'META',
   'Open WebUI': 'OPEN_WEBUI',
   OpenRouter: 'OPENROUTER',
   Perplexity: 'PERPLEXITY',

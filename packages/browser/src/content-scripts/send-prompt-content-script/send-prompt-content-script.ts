@@ -8,7 +8,6 @@ import {
   chatgpt,
   copilot,
   claude,
-  meta,
   mistral,
   open_webui,
   deepseek,
@@ -78,9 +77,6 @@ const is_lmarena = current_url.startsWith(lmarena_url)
 const minimax_url = 'https://agent.minimax.io/'
 const is_minimax = current_url.startsWith(minimax_url)
 
-const meta_url = 'https://www.meta.ai/'
-const is_meta = current_url.startsWith(meta_url)
-
 const grok_url = 'https://grok.com/'
 const is_grok = current_url.startsWith(grok_url)
 
@@ -145,8 +141,6 @@ if (is_ai_studio) {
   chatbot = together
 } else if (is_z_ai) {
   chatbot = z_ai
-} else if (is_meta) {
-  chatbot = meta
 }
 
 export const get_textarea_element = () => {
