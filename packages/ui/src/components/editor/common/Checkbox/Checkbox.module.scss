@@ -1,9 +1,9 @@
 .checkbox {
   appearance: none;
-
-  height: 16px;
-  width: 16px;
+  height: 15px;
+  width: 15px;
   background-color: var(--vscode-checkbox-background);
+  color: var(--vscode-checkbox-foreground);
   border: 1px solid var(--vscode-checkbox-border);
   border-radius: 3px;
   position: relative;
@@ -20,19 +20,13 @@
     cursor: default;
   }
 
-  &:checked {
-    border-color: var(--vscode-inputOption-activeBorder);
-    color: var(--vscode-inputOption-activeForeground);
-    background-color: var(--vscode-inputOption-activeBackground);
-
-    &::before {
-      font-family: 'codicon';
-      content: '\eab2';
-      font-size: 13px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+  &:checked::before {
+    font-family: 'codicon';
+    content: '\eab2';
+    font-size: 13px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
