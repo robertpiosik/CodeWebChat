@@ -11,16 +11,10 @@ export const qwen: Chatbot = {
     await new Promise((resolve) => {
       const check_for_element = () => {
         const model_selector_button = document.querySelector(
-          'button#model-selector-0-button'
+          '.ant-dropdown-trigger'
         ) as HTMLElement
 
-        if (
-          model_selector_button &&
-          model_selector_button.textContent &&
-          Object.values(CHATBOTS['Qwen'].models ?? {})
-            .map((model) => model.label)
-            .includes(model_selector_button.textContent.trim())
-        ) {
+        if (model_selector_button) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -28,12 +22,13 @@ export const qwen: Chatbot = {
       }
       check_for_element()
     })
+    await new Promise((resolve) => setTimeout(resolve, 500))
   },
   set_model: async (chat) => {
     const model = chat.model
     if (!model) return
     const model_selector_button = document.querySelector(
-      'button#model-selector-0-button'
+      '.header-left .ant-dropdown-trigger'
     ) as HTMLElement
     if (!model_selector_button) {
       report_initialization_error({
@@ -52,8 +47,9 @@ export const qwen: Chatbot = {
 
     model_selector_button.click()
     await new Promise((r) => requestAnimationFrame(r))
+
     const expand_more = document.querySelector(
-      'div[aria-labelledby="model-selector-0-button"] div.expand-more'
+      '[class*="index-module__model-selector-view-more__"]'
     ) as HTMLElement
     if (expand_more) {
       expand_more.click()
@@ -66,14 +62,15 @@ export const qwen: Chatbot = {
       return
     }
     const model_buttons = document.querySelectorAll(
-      'div[aria-labelledby="model-selector-0-button"] button[aria-label="model-item"]'
+      '[class*="index-module__model-selector-dropdown-menu-item___"]'
     ) as NodeListOf<HTMLButtonElement>
     for (const button of Array.from(model_buttons)) {
-      const model_name_element = (button.querySelector('div.text-sm') ||
-        button.querySelector('div.text-15')) as HTMLDivElement
+      const model_name_element = (button.querySelector(
+        '[class*="index-module__model-name-text___"]'
+      ) || button.querySelector('div.text-15')) as HTMLDivElement
       if (
         model_name_element &&
-        model_name_element.textContent ===
+        model_name_element.textContent ==
           CHATBOTS['Qwen'].models?.[model]?.label
       ) {
         button.click()
@@ -139,45 +136,47 @@ export const qwen: Chatbot = {
     }
   },
   enter_message_and_send: async (params) => {
-    let instructions = params.message
-    if (params.message.includes('<files>')) {
-      instructions = params.message.split('<files>')[0].trim()
-      const context = params.message
-        .split('<files>')[1]
-        .split('</files>')[0]
-        .trim()
+    const instructions = params.message
+    // Commented out because doesn't work anymore
+    // if (params.message.includes('<files>')) {
+    //   instructions = params.message.split('<files>')[0].trim()
+    //   const context = params.message
+    //     .split('<files>')[1]
+    //     .split('</files>')[0]
+    //     .trim()
 
-      // Upload file
-      const file_input = document.querySelector(
-        'input#filesUpload'
-      ) as HTMLInputElement
-      if (!file_input) {
-        report_initialization_error({
-          function_name: 'enter_message_and_send',
-          log_message: 'File input not found'
-        })
-        return
-      }
-      const blob = new Blob([`<files>\n${context}\n</files>`], {
-        type: 'text/plain'
-      })
-      const file = new File([blob], 'files.txt', { type: 'text/plain' })
-      const data_transfer = new DataTransfer()
-      data_transfer.items.add(file)
-      file_input.files = data_transfer.files
-      file_input.dispatchEvent(new Event('change', { bubbles: true }))
-      await new Promise((r) => requestAnimationFrame(r))
-      await new Promise((resolve) => {
-        const check_for_element = () => {
-          if (document.querySelector('i.icontxt1')) {
-            resolve(null)
-          } else {
-            setTimeout(check_for_element, 100)
-          }
-        }
-        check_for_element()
-      })
-    }
+    //   // Upload file
+    //   const file_input = document.querySelector(
+    //     'input#filesUpload'
+    //   ) as HTMLInputElement
+    //   if (!file_input) {
+    //     report_initialization_error({
+    //       function_name: 'enter_message_and_send',
+    //       log_message: 'File input not found'
+    //     })
+    //     return
+    //   }
+    //   const blob = new Blob([`<files>\n${context}\n</files>`], {
+    //     type: 'text/plain'
+    //   })
+    //   const file = new File([blob], 'files.txt', { type: 'text/plain' })
+    //   const data_transfer = new DataTransfer()
+    //   data_transfer.items.add(file)
+    //   file_input.files = data_transfer.files
+    //   file_input.dispatchEvent(new Event('change', { bubbles: true }))
+    //   file_input.dispatchEvent(new Event('input', { bubbles: true }))
+    //   await new Promise((r) => requestAnimationFrame(r))
+    //   await new Promise((resolve) => {
+    //     const check_for_element = () => {
+    //       if (document.querySelector('i.icontxt1')) {
+    //         resolve(null)
+    //       } else {
+    //         setTimeout(check_for_element, 100)
+    //       }
+    //     }
+    //     check_for_element()
+    //   })
+    // }
 
     // Enter instructions
     const input_element = document.querySelector(
@@ -199,7 +198,7 @@ export const qwen: Chatbot = {
 
     // Submit
     const submit_button = document.querySelector(
-      'button#send-message-button'
+      'button.send-button'
     ) as HTMLButtonElement
     if (!submit_button) {
       report_initialization_error({
@@ -222,13 +221,11 @@ export const qwen: Chatbot = {
         edit_format,
         footer,
         get_chat_turn: (f) =>
-          f.parentElement?.parentElement?.querySelector(
-            '#response-content-container'
-          ) as HTMLElement,
+          f.closest('.chat-response-message') as HTMLElement,
         get_code_from_block: (b) => b.querySelector('.cm-line')?.textContent,
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button.copy-response-button'
+            'div.qwen-chat-package-comp-new-action-control-container-copy'
           ) as HTMLElement
           if (!copy_button) {
             report_initialization_error({
@@ -253,8 +250,8 @@ export const qwen: Chatbot = {
 
     observe_for_responses({
       chatbot_name: 'Qwen',
-      is_generating: () => !!document.querySelector('i.icon-StopIcon'),
-      footer_selector: '.message-footer-buttons',
+      is_generating: () => !document.querySelector('.send-button.disabled'),
+      footer_selector: '.qwen-chat-package-comp-new-action-control-icons',
       add_buttons
     })
   }
