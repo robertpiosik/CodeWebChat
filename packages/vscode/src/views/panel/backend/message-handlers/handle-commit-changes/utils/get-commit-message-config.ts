@@ -31,60 +31,36 @@ export const get_commit_message_config = async (
   if (!commit_message_config) {
     const configs =
       await api_providers_manager.get_commit_messages_tool_configs()
+
+    if (configs.length == 0) {
+      vscode.commands.executeCommand('codeWebChat.settings')
+      vscode.window.showInformationMessage(
+        dictionary.information_message.NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND
+      )
+      return null
+    }
+
     if (configs.length == 1) {
       commit_message_config = configs[0]
     } else if (configs.length > 1) {
-      const set_default_button = {
-        iconPath: new vscode.ThemeIcon('star'),
-        tooltip: 'Set as default'
-      }
-
-      const unset_default_button = {
-        iconPath: new vscode.ThemeIcon('star-full'),
-        tooltip: 'Unset default'
-      }
-
-      const create_items = async () => {
-        const default_config =
-          await api_providers_manager.get_default_commit_messages_config()
-
-        return configs.map((config, index) => {
-          const buttons = []
-
-          const is_default =
-            default_config &&
-            default_config.provider_name == config.provider_name &&
-            default_config.model == config.model &&
-            default_config.temperature == config.temperature &&
-            default_config.reasoning_effort == config.reasoning_effort
-
-          if (is_default) {
-            buttons.push(unset_default_button)
-          } else {
-            buttons.push(set_default_button)
-          }
-
-          const description_parts = [config.provider_name]
-          if (config.reasoning_effort) {
-            description_parts.push(`${config.reasoning_effort}`)
-          }
-          if (config.temperature != DEFAULT_TEMPERATURE['commit-messages']) {
-            description_parts.push(`${config.temperature}`)
-          }
-
-          return {
-            label: is_default ? `$(pass-filled) ${config.model}` : config.model,
-            description: description_parts.join(' · '),
-            config,
-            index,
-            id: get_tool_config_id(config),
-            buttons
-          }
-        })
-      }
-
       const quick_pick = vscode.window.createQuickPick()
-      quick_pick.items = await create_items()
+      quick_pick.items = configs.map((config, index) => {
+        const description_parts = [config.provider_name]
+        if (config.reasoning_effort) {
+          description_parts.push(`${config.reasoning_effort}`)
+        }
+        if (config.temperature != DEFAULT_TEMPERATURE['commit-messages']) {
+          description_parts.push(`${config.temperature}`)
+        }
+
+        return {
+          label: config.model,
+          description: description_parts.join(' · '),
+          config,
+          index,
+          id: get_tool_config_id(config)
+        }
+      })
       quick_pick.placeholder = 'Select configuration for commit message'
       quick_pick.matchOnDescription = true
 
@@ -108,23 +84,6 @@ export const get_commit_message_config = async (
       commit_message_config = await new Promise<
         CommitMessageConfig | undefined
       >((resolve) => {
-        quick_pick.onDidTriggerItemButton(async (event) => {
-          const item = event.item as any
-          const button = event.button
-          const index = item.index
-
-          if (button === set_default_button) {
-            await api_providers_manager.set_default_commit_messages_config(
-              configs[index]
-            )
-          } else if (button === unset_default_button) {
-            await api_providers_manager.set_default_commit_messages_config(
-              null as any
-            )
-          }
-          quick_pick.items = await create_items()
-        })
-
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()
@@ -157,10 +116,6 @@ export const get_commit_message_config = async (
   }
 
   if (!commit_message_config) {
-    vscode.commands.executeCommand('codeWebChat.settings')
-    vscode.window.showInformationMessage(
-      dictionary.information_message.NO_COMMIT_MESSAGES_CONFIGURATIONS_FOUND
-    )
     return null
   }
 

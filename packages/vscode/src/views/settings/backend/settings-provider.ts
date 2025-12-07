@@ -196,7 +196,7 @@ export class SettingsProvider {
         } else if (message.command == 'GET_COMMIT_MESSAGE_INSTRUCTIONS') {
           await handle_get_commit_message_instructions(this)
         } else if (message.command == 'UPDATE_COMMIT_MESSAGE_INSTRUCTIONS') {
-          await handle_update_commit_message_instructions(this, message)
+          await handle_update_commit_message_instructions(message)
         } else if (message.command == 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER') {
           await handle_get_commit_message_auto_accept_after(this)
         } else if (

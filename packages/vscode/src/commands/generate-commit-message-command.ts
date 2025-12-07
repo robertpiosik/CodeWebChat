@@ -14,6 +14,9 @@ export function generate_commit_message_command(
       const repository = get_git_repository(source_control)
       if (!repository) return
 
+      await repository.status()
+      const was_empty_stage = (repository.state.indexChanges || []).length === 0
+
       const diff = await prepare_staged_changes(repository)
 
       if (!diff) return
@@ -25,6 +28,8 @@ export function generate_commit_message_command(
       })
       if (commit_message) {
         repository.inputBox.value = commit_message
+      } else if (was_empty_stage) {
+        await vscode.commands.executeCommand('git.unstageAll')
       }
     }
   )

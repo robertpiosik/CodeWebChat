@@ -19,6 +19,9 @@ async function proceed_with_commit_generation(
   try {
     const api_config = await get_commit_message_config(panel_provider.context)
     if (!api_config) {
+      if (was_empty_stage) {
+        await vscode.commands.executeCommand('git.unstageAll')
+      }
       panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       return
     }
@@ -31,6 +34,9 @@ async function proceed_with_commit_generation(
       vscode.window.showInformationMessage(
         dictionary.information_message.NO_CHANGES_TO_COMMIT
       )
+      if (was_empty_stage) {
+        await vscode.commands.executeCommand('git.unstageAll')
+      }
       panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       return
     }

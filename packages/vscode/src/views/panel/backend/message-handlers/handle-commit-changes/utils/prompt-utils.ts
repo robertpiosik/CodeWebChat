@@ -1,4 +1,6 @@
 import { FileData } from './file-utils'
+import * as vscode from 'vscode'
+import { commit_message_instructions } from '@/constants/instructions'
 
 export const strip_wrapping_quotes = (text: string): string => {
   const trimmed = text.trim()
@@ -13,11 +15,18 @@ export const strip_wrapping_quotes = (text: string): string => {
   return trimmed
 }
 
+const get_commit_message_instructions = (): string => {
+  const config = vscode.workspace.getConfiguration('codeWebChat')
+  const instructions = config.get<string>('commitMessageInstructions')
+  return instructions || commit_message_instructions
+}
+
 export const build_commit_message_prompt = (
-  commit_message_prompt: string,
   affected_files_data: FileData[],
   diff: string
 ): string => {
+  const commit_message_prompt = get_commit_message_instructions()
+
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
 
   let changes_content = ''
@@ -44,18 +53,15 @@ export const build_commit_message_prompt = (
 
     if (file_path) {
       const file_data = affected_files_data.find(
-        (f) => f.relative_path === file_path
+        (f) => f.relative_path == file_path
       )
-      changes_content += `<change path="${file_path}">\n`
-      changes_content += `<diff>\n<![CDATA[\n${full_file_diff}\n]]>\n</diff>\n`
+      changes_content += `\n### File: \`${file_path}\`\n\n`
       if (file_data) {
-        changes_content += `<file>\n<![CDATA[\n${file_data.content}\n]]>\n</file>\n`
+        changes_content += `The original state of the file for reference:\n<![CDATA[\n${file_data.content}\n]]>\n`
       }
-      changes_content += `</change>\n`
+      changes_content += `**New changes:**\n<![CDATA[\n${full_file_diff}\n]]>\n`
     }
   }
 
-  const changes_xml = `<changes>\n${changes_content}</changes>`
-
-  return `${commit_message_prompt}\n${changes_xml}\n${commit_message_prompt}`
+  return `${commit_message_prompt}\n${changes_content}\n${commit_message_prompt}`
 }

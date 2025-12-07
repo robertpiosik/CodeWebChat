@@ -536,8 +536,7 @@
         "codeWebChat.commitMessageInstructions": {
           "type": "string",
           "scope": "resource",
-          "description": "Style and conventions (e.g. Conventional Commits, gitmoji) for generated commit messages.",
-          "default": "Write a brief and precise summary for the changes, limited to a single sentence, if possible and nothing else. Use an imperative tone to ensure clarity and focus on the primary change or purpose."
+          "description": "Style and conventions (e.g. Conventional Commits, gitmoji) for generated commit messages."
         },
         "codeWebChat.commitMessageAutoAcceptAfter": {
           "type": "number",

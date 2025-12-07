@@ -173,9 +173,6 @@ export const generate_commit_message_from_diff = async (params: {
   }
   panel_provider?: PanelProvider
 }): Promise<string | null> => {
-  const config = vscode.workspace.getConfiguration('codeWebChat')
-  const commit_message_prompt = config.get<string>('commitMessageInstructions')
-
   // Use provided config or get it if not provided (for backward compatibility)
   const resolved_api_config =
     params.api_config || (await get_commit_message_config(params.context))
@@ -185,11 +182,7 @@ export const generate_commit_message_from_diff = async (params: {
     repository: params.repository
   })
 
-  const message = build_commit_message_prompt(
-    commit_message_prompt!,
-    affected_files_data,
-    params.diff
-  )
+  const message = build_commit_message_prompt(affected_files_data, params.diff)
 
   return await generate_commit_message_with_api({
     endpoint_url: resolved_api_config.endpoint_url,
