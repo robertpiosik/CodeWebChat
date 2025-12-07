@@ -13,6 +13,7 @@
   border-radius: 10px;
   color: var(--vscode-sideBarTitle-foreground);
   background-color: var(--cwc-bg-tertiary);
+  overflow: hidden;
 
   > div {
     border-top: 1px solid var(--cwc-border-color-dimmed);
