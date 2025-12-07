@@ -615,20 +615,20 @@
             },
             {
               "name": "(4)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(5)",
               "chatbot": "Grok"
             },
             {
-              "name": "(6)",
+              "name": "(5)",
               "chatbot": "DeepSeek"
             },
             {},
             {
               "name": "Others"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "(7)",
@@ -820,20 +820,20 @@
             },
             {
               "name": "(4)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(5)",
               "chatbot": "Grok"
             },
             {
-              "name": "(6)",
+              "name": "(5)",
               "chatbot": "DeepSeek"
             },
             {},
             {
               "name": "Others"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "(7)",
@@ -1025,20 +1025,20 @@
             },
             {
               "name": "(4)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(5)",
               "chatbot": "Grok"
             },
             {
-              "name": "(6)",
+              "name": "(5)",
               "chatbot": "DeepSeek"
             },
             {},
             {
               "name": "Others"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "(7)",
@@ -1200,20 +1200,20 @@
             },
             {
               "name": "(4)",
-              "chatbot": "AI Studio",
-              "systemInstructions": "You're a helpful coding assistant."
-            },
-            {
-              "name": "(5)",
               "chatbot": "Grok"
             },
             {
-              "name": "(6)",
+              "name": "(5)",
               "chatbot": "DeepSeek"
             },
             {},
             {
               "name": "Others"
+            },
+            {
+              "name": "(6)",
+              "chatbot": "AI Studio",
+              "systemInstructions": "You're a helpful coding assistant."
             },
             {
               "name": "(7)",
