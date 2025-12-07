@@ -668,7 +668,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           on_click={(e) => e.stopPropagation()}
                           title={
                             !is_preset_in_group(preset.original_index)
-                              ? 'Place in a group to select'
+                              ? 'Place in a group to select for multi-run'
                               : ''
                           }
                           disabled={!is_preset_in_group(preset.original_index)}
