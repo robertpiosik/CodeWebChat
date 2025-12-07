@@ -19,7 +19,6 @@ import {
   map_raw_pos_to_display_pos
 } from './utils/position-mapping'
 import { dictionary } from '@shared/constants/dictionary'
-import { get_file_match_hint_data } from './utils/get-file-match-hint-data'
 
 const Tooltip: React.FC<{
   message: string
@@ -83,12 +82,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
-  const [show_file_match_hint, set_show_file_match_hint] = useState(false)
-  const file_match_hint_timer_ref = useRef<ReturnType<
-    typeof setTimeout
-  > | null>(null)
-  const has_shown_hint_once_ref = useRef(false)
-  const last_matching_word_ref = useRef<string | null>(null)
 
   const is_narrow_viewport = use_is_narrow_viewport(268)
   const {
@@ -156,48 +149,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const display_text = useMemo(() => {
     return get_display_text(props.value, props.context_file_paths ?? [])
   }, [props.value, props.context_file_paths])
-
-  const should_show_hint = useMemo(() => {
-    const hint_data = get_file_match_hint_data(
-      display_text,
-      caret_position,
-      props.context_file_paths
-    )
-    return hint_data ? hint_data.word : false
-  }, [display_text, caret_position, props.context_file_paths])
-
-  useEffect(() => {
-    if (file_match_hint_timer_ref.current) {
-      clearTimeout(file_match_hint_timer_ref.current)
-      file_match_hint_timer_ref.current = null
-    }
-
-    if (should_show_hint) {
-      const matching_word = should_show_hint as string
-      const is_same_word = matching_word === last_matching_word_ref.current
-      if (has_shown_hint_once_ref.current && is_same_word) {
-        set_show_file_match_hint(true)
-      } else {
-        file_match_hint_timer_ref.current = setTimeout(() => {
-          set_show_file_match_hint(true)
-          has_shown_hint_once_ref.current = true
-          last_matching_word_ref.current = matching_word
-        }, 300)
-      }
-    } else {
-      set_show_file_match_hint(false)
-      if (last_matching_word_ref.current !== null) {
-        has_shown_hint_once_ref.current = false
-        last_matching_word_ref.current = null
-      }
-    }
-
-    return () => {
-      if (file_match_hint_timer_ref.current) {
-        clearTimeout(file_match_hint_timer_ref.current)
-      }
-    }
-  }, [should_show_hint])
 
   const highlighted_html = useMemo(() => {
     return get_highlighted_text({
@@ -375,7 +326,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           onFocus={() => set_is_focused(true)}
           onBlur={() => set_is_focused(false)}
           className={cn(styles.input, {
-            [styles['input-with-file-match-hint']]: show_file_match_hint,
             [styles['input--empty']]: !props.value
           })}
           data-placeholder={placeholder}

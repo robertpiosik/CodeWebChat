@@ -8,7 +8,6 @@ import {
   map_display_pos_to_raw_pos,
   map_raw_pos_to_display_pos
 } from '../utils/position-mapping'
-import { get_file_match_hint_data } from '../utils/get-file-match-hint-data'
 
 type HistoryEntry = {
   value: string
@@ -409,39 +408,6 @@ export const use_handlers = (
     const new_display_value = currentTarget.textContent ?? ''
     const caret_position = get_caret_position_from_div(currentTarget)
     const char_before_caret = new_display_value.charAt(caret_position - 1)
-
-    if (char_before_caret == '\\') {
-      const display_value_before_backslash = new_display_value.substring(
-        0,
-        caret_position - 1
-      )
-      const hint_data = get_file_match_hint_data(
-        display_value_before_backslash,
-        caret_position - 1,
-        props.context_file_paths
-      )
-
-      if (hint_data) {
-        const { word: last_word, path: matched_path } = hint_data
-        const old_raw_value = props.value
-
-        const last_word_in_raw_index = old_raw_value.lastIndexOf(last_word)
-        if (
-          last_word_in_raw_index !== -1 &&
-          old_raw_value.endsWith(last_word)
-        ) {
-          const value_before = old_raw_value.substring(
-            0,
-            last_word_in_raw_index
-          )
-          const final_new_value = `${value_before}\`${matched_path}\` `
-          has_modified_current_entry_ref.current = true
-          update_value(final_new_value, final_new_value.length)
-          set_history_index(-1)
-          return
-        }
-      }
-    }
 
     has_modified_current_entry_ref.current = new_raw_value !== ''
     update_value(new_raw_value)

@@ -115,25 +115,6 @@
   }
 }
 
-.input-with-file-match-hint {
-  &::after {
-    content: '\\';
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--cwc-text-color);
-    font-size: 10px;
-    padding: 0 3px;
-    margin-left: 2px;
-    transform: translateY(-1px);
-    font-weight: 500;
-    border: 1px solid var(--cwc-border-color);
-    border-radius: 5px;
-    pointer-events: none;
-    opacity: var(--dimmed-opacity);
-  }
-}
-
 .selection-keyword {
   background-color: var(--vscode-editor-selectionBackground);
   border-radius: 2px;
