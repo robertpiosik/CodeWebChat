@@ -19,6 +19,9 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Layout } from './components/Layout/Layout'
 import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
 import { EditPresetFormFooter } from './components/edit-preset-form/EditPresetFormFooter'
+import { Donations } from '@ui/components/editor/panel/Donations/Donations'
+import { use_latest_donations } from './hooks/latest-donations'
+import { DonationsFooter } from './components/donations/DonationsFooter'
 
 const vscode = acquireVsCodeApi()
 
@@ -84,6 +87,9 @@ export const Panel = () => {
     handle_configurations_collapsed_change,
     handle_remove_response_history_item
   } = use_panel(vscode)
+
+  const { viewing_donations, set_viewing_donations, ...donations_state } =
+    use_latest_donations()
 
   if (
     ask_instructions === undefined ||
@@ -183,7 +189,7 @@ export const Panel = () => {
     <LayoutContext.Provider value={layout_context_value}>
       <div className={styles.container}>
         <div className={styles.slot}>
-          <Layout>
+          <Layout on_donate_click={() => set_viewing_donations(true)}>
             <div
               className={cn(styles.content, {
                 [styles['content--hidden']]: active_view != 'main'
@@ -343,6 +349,28 @@ export const Panel = () => {
                   post_message(vscode, { command: 'PICK_CHATBOT', chatbot_id })
                 }}
                 on_at_sign_in_affix={() => {}}
+              />
+            </UiPage>
+          </div>
+        )}
+
+        {viewing_donations && (
+          <div className={styles.slot}>
+            <UiPage
+              title="Recent Donations"
+              on_back_click={() => set_viewing_donations(false)}
+              footer_slot={
+                <DonationsFooter
+                  on_close={() => set_viewing_donations(false)}
+                />
+              }
+            >
+              <Donations
+                donations={donations_state.donations}
+                is_fetching={donations_state.is_fetching}
+                is_revalidating={donations_state.is_revalidating}
+                on_fetch_next_page={donations_state.on_fetch_next_page}
+                has_more={donations_state.has_more}
               />
             </UiPage>
           </div>

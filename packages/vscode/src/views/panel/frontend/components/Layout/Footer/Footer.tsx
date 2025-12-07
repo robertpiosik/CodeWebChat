@@ -2,9 +2,13 @@ import { useState, useEffect, useContext } from 'react'
 import cn from 'classnames'
 import { Icon } from '@ui/components/editor/common/Icon'
 import styles from './Footer.module.scss'
-import { LayoutContext } from '../../contexts/LayoutContext'
+import { LayoutContext } from '../../../contexts/LayoutContext'
 
-export const Footer: React.FC = () => {
+type Props = {
+  on_donate_click: () => void
+}
+
+export const Footer: React.FC<Props> = ({ on_donate_click }) => {
   const {
     can_undo,
     has_changes_to_commit,
@@ -63,7 +67,11 @@ export const Footer: React.FC = () => {
               styles['footer__icon-button'],
               styles['footer__icon-button--buy-me-a-coffee']
             )}
-            href="https://coindrop.to/robertpiosik"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault()
+              on_donate_click()
+            }}
             title="Donate"
           >
             <Icon variant="BUY_ME_A_COFFEE_LOGO" />

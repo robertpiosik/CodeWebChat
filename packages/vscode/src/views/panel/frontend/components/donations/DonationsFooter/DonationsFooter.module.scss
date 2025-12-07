@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  gap: 8px;
+
+  > * {
+    flex: 1;
+
+    &:nth-child(2) {
+      background-color: #f7d600;
+      color: black;
+
+      &:hover {
+        background-color: #ffe433;
+      }
+    }
+  }
+}

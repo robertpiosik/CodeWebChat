@@ -112,7 +112,7 @@ export const Home: React.FC<Props> = (props) => {
               actions={
                 <IconButton
                   codicon_icon="add"
-                  title="New checkpoint"
+                  title="New Checkpoint"
                   on_click={(e) => {
                     e.stopPropagation()
                     handle_create_checkpoint_click()

@@ -8,6 +8,7 @@
   padding: 4px 16px;
   font-family: system-ui, sans-serif;
   border: none;
+  text-decoration: none;
   border-radius: 4px;
   cursor: pointer;
   background-color: var(--vscode-button-background);
@@ -15,9 +16,10 @@
 
   &:hover {
     background-color: var(--vscode-button-hoverBackground);
+    text-decoration: none;
   }
 
-  &:focus {
+  &:focus-visible {
     outline-offset: 2px;
     outline: 1px solid var(--vscode-focusBorder);
   }

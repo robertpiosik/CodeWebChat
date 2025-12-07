@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import styles from './Page.module.scss'
 import { IconButton } from '../IconButton'
 
@@ -10,6 +11,19 @@ type Props = {
 }
 
 export const Page: React.FC<Props> = (props) => {
+  useEffect(() => {
+    const handle_mouse_up = (event: MouseEvent) => {
+      if (event.button == 3 && props.on_back_click) {
+        props.on_back_click()
+      }
+    }
+
+    window.addEventListener('mouseup', handle_mouse_up)
+    return () => {
+      window.removeEventListener('mouseup', handle_mouse_up)
+    }
+  }, [props.on_back_click])
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>

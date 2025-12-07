@@ -182,8 +182,8 @@ importers:
         specifier: ^7.6.20
         version: 7.6.20(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.34.9)(typescript@5.8.2)(vite@6.2.0(@types/node@20.17.11)(jiti@2.4.2)(lightningcss@1.29.2)(sass-embedded@1.89.2)(sass@1.86.1)(terser@5.37.0)(yaml@2.7.0))
       '@vscode/codicons':
-        specifier: ^0.0.36
-        version: 0.0.36
+        specifier: ^0.0.43
+        version: 0.0.43
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -252,8 +252,8 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.3)
       '@vscode/codicons':
-        specifier: ^0.0.36
-        version: 0.0.36
+        specifier: ^0.0.43
+        version: 0.0.43
       axios:
         specifier: ^1.10.0
         version: 1.10.0
@@ -3520,11 +3520,11 @@ packages:
     peerDependencies:
       vite: ^4.1.0-beta.0
 
-  '@vscode/codicons@0.0.36':
-    resolution: {integrity: sha512-wsNOvNMMJ2BY8rC2N2MNBG7yOowV3ov8KlvUE/AiVUlHKTfWsw3OgAOQduX7h0Un6GssKD3aoTVH+TF3DSQwKQ==}
-
   '@vscode/codicons@0.0.40':
     resolution: {integrity: sha512-R8sEDXthD86JHsk3xERrMcTN6sMovbk1AXYB5/tGoEYCE8DWwya6al5VLrAmQYXC1bQhUHIfHALj8ijQUs11cQ==}
+
+  '@vscode/codicons@0.0.43':
+    resolution: {integrity: sha512-8sf8WOBoZkyUi8ogCm5ycHJJGhwOEG3E9b64+JIx+m6bCExdkc30VwCwr94cXUU1opmRD0CTCWLcN46I8WLJIg==}
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -14171,9 +14171,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vscode/codicons@0.0.36': {}
-
   '@vscode/codicons@0.0.40': {}
+
+  '@vscode/codicons@0.0.43': {}
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:

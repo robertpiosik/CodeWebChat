@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 12px 12px 12px;
+}
+
+.donations {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &--revalidating {
+    opacity: var(--dimmed-opacity);
+  }
+
+  &__donation {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    user-select: text;
+
+    &__header {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      position: relative;
+      padding-left: 6px;
+      border-left: 2px solid #ffdd00;
+    }
+
+    &__note {
+      background-color: var(--vscode-list-hoverBackground);
+      padding: 5px 8px;
+      border-radius: 8px;
+    }
+  }
+}
+
+.skeleton {
+  background-color: var(--vscode-list-hoverBackground);
+  border-radius: 4px;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}

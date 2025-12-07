@@ -3,7 +3,8 @@ import styles from './Button.module.scss'
 import cn from 'classnames'
 
 type Props = {
-  on_click: () => void
+  on_click?: () => void
+  url?: string
   disabled?: boolean
   children?: React.ReactNode
   codicon?: string
@@ -14,7 +15,7 @@ type Props = {
 }
 
 export const Button: FC<Props> = (props) => {
-  const button_ref = useRef<HTMLButtonElement>(null)
+  const button_ref = useRef<HTMLButtonElement | HTMLAnchorElement>(null)
 
   useEffect(() => {
     if (props.is_focused) {
@@ -22,21 +23,43 @@ export const Button: FC<Props> = (props) => {
     }
   }, [props.is_focused])
 
-  return (
-    <button
-      ref={button_ref}
-      className={cn(styles.button, {
-        [styles['button--secondary']]: props.is_secondary,
-        [styles['button--small']]: props.is_small
-      })}
-      onClick={props.on_click}
-      disabled={props.disabled}
-      title={props.title}
-    >
+  const className = cn(styles.button, {
+    [styles['button--secondary']]: props.is_secondary,
+    [styles['button--small']]: props.is_small
+  })
+
+  const children = (
+    <>
       {props.codicon && (
         <span className={cn('codicon', `codicon-${props.codicon}`)} />
       )}
       {props.children}
+    </>
+  )
+
+  if (props.url) {
+    return (
+      <a
+        ref={button_ref as React.RefObject<HTMLAnchorElement>}
+        className={className}
+        href={props.url}
+        onClick={props.on_click}
+        title={props.title}
+      >
+        {children}
+      </a>
+    )
+  }
+
+  return (
+    <button
+      ref={button_ref as React.RefObject<HTMLButtonElement>}
+      className={className}
+      onClick={props.on_click}
+      disabled={props.disabled}
+      title={props.title}
+    >
+      {children}
     </button>
   )
 }
