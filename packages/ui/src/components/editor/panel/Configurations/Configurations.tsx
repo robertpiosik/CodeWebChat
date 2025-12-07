@@ -66,15 +66,14 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
         role="button"
       >
         <div className={styles.configurations__item__left}>
-          <div
-            className={cn(styles.configurations__item__left__drag_handle, {
-              [styles['configurations__item__left__drag_handle--disabled']]:
-                is_dragging_disabled
-            })}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <span className="codicon codicon-gripper" />
-          </div>
+          {!is_dragging_disabled && (
+            <div
+              className={styles.configurations__item__left__drag_handle}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="codicon codicon-gripper" />
+            </div>
+          )}
           <div className={styles.configurations__item__left__text}>
             <span>{configuration.model}</span>
             <span>{description}</span>

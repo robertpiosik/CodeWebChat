@@ -105,8 +105,10 @@ export const Donations: React.FC<DonationsProps> = (props) => {
     <Scrollable>
       <div className={styles.container}>
         <div>
-          Hi there! If you enjoy using Code Web Chat, buying a $3 coffee is a
+          Hi there! If you enjoy using Code Web Chat, buying a $3 "coffee" is a
           great way to show your support for the project.
+          <br />
+          Thank you for choosing to donate.
         </div>
         <div>
           {props.is_fetching ? (
