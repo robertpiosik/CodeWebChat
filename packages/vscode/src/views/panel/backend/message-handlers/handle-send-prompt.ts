@@ -361,7 +361,7 @@ async function show_preset_quick_pick(params: {
     return null
   }
   quick_pick.placeholder = 'Search recently used presets and groups'
-  quick_pick.title = 'Select Recently Used Preset or Group'
+  quick_pick.title = 'Recently Used Presets and Groups'
   quick_pick.matchOnDescription = true
 
   const last_selected_key = get_last_selected_preset_or_group_key(mode)
@@ -371,13 +371,13 @@ async function show_preset_quick_pick(params: {
 
   let last_selected_preset_name: string | undefined
   if (last_selected_name) {
-    const item = presets.find((p) => p.name === last_selected_name)
+    const item = presets.find((p) => p.name == last_selected_name)
     if (item && item.chatbot) last_selected_preset_name = last_selected_name
   }
 
   if (last_selected_preset_name) {
     const last_item = quick_pick.items.find(
-      (item) => item.preset_name === last_selected_preset_name
+      (item) => item.preset_name == last_selected_preset_name
     )
     if (last_item) quick_pick.activeItems = [last_item]
   }
@@ -402,7 +402,7 @@ async function show_preset_quick_pick(params: {
       }
       if (item.preset_name && e.button === run_without_submission_button) {
         quick_pick.hide()
-        const preset = presets.find((p) => p.name === item.preset_name)!
+        const preset = presets.find((p) => p.name == item.preset_name)!
         if (params.get_is_preset_disabled(preset)) {
           if (
             !params.is_in_code_completions_mode &&
