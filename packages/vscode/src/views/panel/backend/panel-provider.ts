@@ -68,7 +68,8 @@ import {
   handle_get_collapsed_states,
   handle_manage_configurations,
   handle_save_component_collapsed_state,
-  handle_undo
+  handle_undo,
+  handle_delete_checkpoint
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -119,6 +120,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public api_call_cancel_token_source: CancelTokenSource | null = null
   public commit_was_staged_by_script: boolean = false
   public response_history: ResponseHistoryItem[] = []
+  public active_checkpoint_delete_operation: {
+    finalize: () => Promise<void>
+    timestamp: number
+  } | null = null
 
   public async send_checkpoints() {
     const checkpoints = await get_checkpoints(this.context)
@@ -457,6 +462,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               description: message.description,
               panel_provider: this
             })
+          } else if (message.command == 'DELETE_CHECKPOINT') {
+            await handle_delete_checkpoint(this, message)
           } else if (message.command == 'GET_HISTORY') {
             handle_get_history(this)
           } else if (message.command == 'GET_RESPONSE_HISTORY') {

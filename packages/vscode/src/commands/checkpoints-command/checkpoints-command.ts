@@ -13,7 +13,9 @@ import {
   delete_checkpoint,
   get_checkpoints,
   restore_checkpoint,
-  toggle_checkpoint_star
+  toggle_checkpoint_star,
+  ActiveDeleteOperation,
+  delete_checkpoint_with_undo
 } from './actions'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from './utils'
@@ -30,10 +32,7 @@ export const checkpoints_command = (params: {
   websites_provider: WebsitesProvider
   panel_provider: PanelProvider
 }): vscode.Disposable[] => {
-  let active_delete_operation: {
-    finalize: () => Promise<void>
-    timestamp: number
-  } | null = null
+  let active_delete_operation: ActiveDeleteOperation | null = null
 
   const create_new_checkpoint_command = vscode.commands.registerCommand(
     'codeWebChat.createNewCheckpoint',
@@ -367,120 +366,38 @@ export const checkpoints_command = (params: {
           }
 
           if (e.button.tooltip == 'Delete') {
-            if (active_delete_operation) {
-              await active_delete_operation.finalize()
-            }
-
-            const deleted_checkpoint = item.checkpoint
-            const real_index_in_state = checkpoints.findIndex(
-              (c) => c.timestamp == deleted_checkpoint.timestamp
-            )
-            if (real_index_in_state == -1) return
-
-            const original_checkpoint_from_state =
-              checkpoints[real_index_in_state]
-
-            // Optimistically remove from state and update UI
-            const updated_checkpoints = checkpoints.filter(
-              (c) => c.timestamp !== deleted_checkpoint.timestamp
-            )
-            await params.context.workspaceState.update(
-              CHECKPOINTS_STATE_KEY,
-              updated_checkpoints
-            )
-            params.panel_provider.send_checkpoints()
-            checkpoints = updated_checkpoints
-            update_view()
-
-            const currentOperation = {
-              timestamp: deleted_checkpoint.timestamp,
-              finalize: async () => {
-                try {
-                  const checkpoint_path = get_checkpoint_path(
-                    deleted_checkpoint.timestamp
-                  )
-                  await vscode.workspace.fs.delete(
-                    vscode.Uri.file(checkpoint_path),
-                    { recursive: true }
-                  )
-                } catch (error: any) {
-                  vscode.window.showWarningMessage(
-                    dictionary.warning_message.COULD_NOT_DELETE_CHECKPOINT_FILES(
-                      error.message
-                    )
-                  )
-                }
-              }
-            }
-            active_delete_operation = currentOperation
-
-            notification_count++
-            const choice = await vscode.window.showInformationMessage(
-              dictionary.information_message.CHECKPOINT_DELETED(
-                dayjs(deleted_checkpoint.timestamp).fromNow()
-              ),
-              'Undo'
-            )
-            notification_count--
-
-            if (
-              active_delete_operation &&
-              active_delete_operation.timestamp === currentOperation.timestamp
-            ) {
-              if (choice == 'Undo') {
-                // Restore to state and UI
-                const current_checkpoints =
-                  params.context.workspaceState.get<Checkpoint[]>(
-                    CHECKPOINTS_STATE_KEY,
-                    []
-                  ) ?? []
-
-                current_checkpoints.push(original_checkpoint_from_state)
-                current_checkpoints.sort((a, b) => b.timestamp - a.timestamp)
-
-                checkpoints = current_checkpoints
-
-                await params.context.workspaceState.update(
-                  CHECKPOINTS_STATE_KEY,
-                  checkpoints
-                )
-                params.panel_provider.send_checkpoints()
-                notification_count++
-                vscode.window
-                  .showInformationMessage(
-                    dictionary.information_message.CHECKPOINT_RESTORED
-                  )
-                  .then(() => {
-                    notification_count--
-                  })
+            const was_restored = await delete_checkpoint_with_undo({
+              context: params.context,
+              checkpoint: item.checkpoint,
+              panel_provider: params.panel_provider,
+              get_active_operation: () => active_delete_operation,
+              set_active_operation: (op) => (active_delete_operation = op),
+              on_did_update_checkpoints: (updated) => {
+                checkpoints = updated
                 update_view()
-                const restored_item = quick_pick.items.find(
-                  (i) =>
-                    (i as any).checkpoint?.timestamp ==
-                    original_checkpoint_from_state.timestamp
-                )
-                if (restored_item) {
-                  quick_pick.activeItems = [restored_item]
+                // If restoring, we might want to highlight the restored item
+                if (updated.length > checkpoints.length) {
+                  // Heuristic: if count increased, likely restored
+                  const restored_item = quick_pick.items.find(
+                    (i) =>
+                      (i as any).checkpoint?.timestamp ==
+                      item.checkpoint?.timestamp
+                  )
+                  if (restored_item) {
+                    quick_pick.activeItems = [restored_item]
+                  }
                 }
                 quick_pick.show()
-              } else {
-                await currentOperation.finalize()
-                quick_pick.dispose()
-              }
-              active_delete_operation = null
-            } else if (choice === 'Undo') {
-              notification_count++
-              vscode.window
-                .showInformationMessage(
-                  dictionary.information_message
-                    .COULD_NOT_UNDO_ANOTHER_CHECKPOINT_DELETED
-                )
-                .then(() => {
-                  notification_count--
-                })
+              },
+              on_before_show_message: () => notification_count++,
+              on_after_show_message: () => notification_count--
+            })
+
+            if (!was_restored) {
+              quick_pick.dispose()
+            } else {
               quick_pick.show()
             }
-
             return
           }
         })

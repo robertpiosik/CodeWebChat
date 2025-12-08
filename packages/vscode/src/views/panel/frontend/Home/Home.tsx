@@ -28,6 +28,7 @@ type Props = {
   on_selected_history_item_change: (created_at: number) => void
   on_response_history_item_remove: (created_at: number) => void
   on_edit_checkpoint_description: (timestamp: number) => void
+  on_delete_checkpoint: (timestamp: number) => void
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -136,6 +137,7 @@ export const Home: React.FC<Props> = (props) => {
                 }
                 on_item_click={(id) => props.on_restore_checkpoint(id)}
                 on_edit={props.on_edit_checkpoint_description}
+                on_delete={props.on_delete_checkpoint}
               />
             )}
           </div>

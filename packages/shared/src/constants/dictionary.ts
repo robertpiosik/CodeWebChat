@@ -22,8 +22,7 @@ export const dictionary = {
       'Clipboard content applied successfully.',
     COPIED_TO_CLIPBOARD: 'Message copied to the clipboard.',
     CHECKPOINTS_COPIED_TO_CLIPBOARD: 'Checkpoints copied to clipboard as logs.',
-    CHECKPOINT_DELETED: (from_now: string) =>
-      `Checkpoint from ${from_now} deleted.`,
+    CHECKPOINT_DELETED: 'Checkpoint deleted.',
     CHECKPOINT_RESTORED: 'Checkpoint restored.',
     NO_SAVED_CONTEXTS_IN_WORKSPACE_STATE:
       'No saved contexts remaining in the Workspace State.',

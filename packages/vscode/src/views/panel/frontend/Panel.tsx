@@ -317,6 +317,12 @@ export const Panel = () => {
                     })
                   }
                 }}
+                on_delete_checkpoint={(timestamp) => {
+                  post_message(vscode, {
+                    command: 'DELETE_CHECKPOINT',
+                    timestamp
+                  })
+                }}
               />
             </div>
           </Layout>
