@@ -443,30 +443,16 @@ export const Main: React.FC<Props> = (props) => {
     if (preset) props.on_preset_edit(preset)
   }
 
-  const handle_preset_duplicate = (index: number) => {
+  const handle_duplicate_preset_group_or_separator = (index: number) => {
     post_message(props.vscode, {
-      command: 'DUPLICATE_PRESET',
+      command: 'DUPLICATE_PRESET_GROUP_OR_SEPARATOR',
       index
     })
   }
 
-  const handle_group_delete = (index: number) => {
+  const handle_delete_preset_group_or_separator = (index: number) => {
     post_message(props.vscode, {
-      command: 'DELETE_GROUP',
-      index
-    })
-  }
-
-  const handle_separator_delete = (index: number) => {
-    post_message(props.vscode, {
-      command: 'DELETE_SEPARATOR',
-      index
-    })
-  }
-
-  const handle_preset_delete = (index: number) => {
-    post_message(props.vscode, {
-      command: 'DELETE_PRESET',
+      command: 'DELETE_PRESET_GROUP_OR_SEPARATOR',
       index
     })
   }
@@ -704,10 +690,12 @@ export const Main: React.FC<Props> = (props) => {
       on_api_edit_format_change={handle_api_edit_format_change}
       on_presets_reorder={handle_presets_reorder}
       on_preset_edit={handle_preset_edit}
-      on_preset_duplicate={handle_preset_duplicate}
-      on_preset_delete={handle_preset_delete}
-      on_group_delete={handle_group_delete}
-      on_separator_delete={handle_separator_delete}
+      on_duplicate_preset_group_or_separator={
+        handle_duplicate_preset_group_or_separator
+      }
+      on_delete_preset_group_or_separator={
+        handle_delete_preset_group_or_separator
+      }
       on_toggle_selected_preset={handle_toggle_selected_preset}
       on_toggle_preset_pinned={handle_toggle_preset_pinned}
       on_toggle_group_collapsed={handle_toggle_group_collapsed}

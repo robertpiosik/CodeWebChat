@@ -133,23 +133,13 @@ export interface UpdatePresetMessage extends BaseMessage {
   origin: 'back_button' | 'save_button'
 }
 
-export interface DeletePresetMessage extends BaseMessage {
-  command: 'DELETE_PRESET'
+export interface DeletePresetGroupOrSeparatorMessage extends BaseMessage {
+  command: 'DELETE_PRESET_GROUP_OR_SEPARATOR'
   index: number
 }
 
-export interface DeleteGroupMessage extends BaseMessage {
-  command: 'DELETE_GROUP'
-  index: number
-}
-
-export interface DeleteSeparatorMessage extends BaseMessage {
-  command: 'DELETE_SEPARATOR'
-  index: number
-}
-
-export interface DuplicatePresetMessage extends BaseMessage {
-  command: 'DUPLICATE_PRESET'
+export interface DuplicatePresetGroupOrSeparatorMessage extends BaseMessage {
+  command: 'DUPLICATE_PRESET_GROUP_OR_SEPARATOR'
   index: number
 }
 
@@ -418,10 +408,8 @@ export type FrontendMessage =
   | GetCurrentTokenCountMessage
   | GetContextSizeWarningThresholdMessage
   | UpdatePresetMessage
-  | DeletePresetMessage
-  | DeleteGroupMessage
-  | DeleteSeparatorMessage
-  | DuplicatePresetMessage
+  | DeletePresetGroupOrSeparatorMessage
+  | DuplicatePresetGroupOrSeparatorMessage
   | CreatePresetGroupOrSeparatorMessage
   | ExecuteCommandMessage
   | ShowHistoryQuickPickMessage
