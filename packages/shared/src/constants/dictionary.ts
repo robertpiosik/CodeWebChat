@@ -81,6 +81,7 @@ export const dictionary = {
     NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER:
       'No text selected for #Selection placeholder.',
     PLEASE_CONFIRM: 'Please confirm',
+    NOTHING_TO_DELETE: 'Nothing to delete.',
     RESTORED_CONTEXT: (context_name: string) =>
       `Restored context "${context_name}".`,
     NO_GIT_REPOSITORY_FOUND_IN_WORKSPACE:

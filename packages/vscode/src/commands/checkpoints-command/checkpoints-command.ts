@@ -106,11 +106,7 @@ export const checkpoints_command = (params: {
 
           const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
 
-          if (visible_checkpoints.length > 0) {
-            quick_pick.buttons = [clear_all_button]
-          } else {
-            quick_pick.buttons = []
-          }
+          quick_pick.buttons = [clear_all_button]
 
           visible_checkpoints.sort((a, b) => {
             return b.timestamp - a.timestamp
@@ -280,6 +276,19 @@ export const checkpoints_command = (params: {
         quick_pick.onDidTriggerButton(async (button) => {
           if (button === clear_all_button) {
             quick_pick.hide()
+
+            const temp_checkpoint =
+              params.context.workspaceState.get<Checkpoint>(
+                TEMPORARY_CHECKPOINT_STATE_KEY
+              )
+            if (checkpoints.length === 0 && !temp_checkpoint) {
+              vscode.window.showInformationMessage(
+                dictionary.information_message.NOTHING_TO_DELETE
+              )
+              quick_pick.show()
+              return
+            }
+
             const confirmation = await vscode.window.showWarningMessage(
               dictionary.warning_message.CONFIRM_CLEAR_ALL_CHECKPOINTS,
               { modal: true },
@@ -293,10 +302,6 @@ export const checkpoints_command = (params: {
                 dictionary.information_message.ALL_CHECKPOINTS_CLEARED
               )
             }
-            await params.context.workspaceState.update(
-              TEMPORARY_CHECKPOINT_STATE_KEY,
-              undefined
-            )
             await refresh_and_update_view()
           }
         })

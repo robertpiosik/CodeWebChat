@@ -20,6 +20,7 @@ import {
   handle_update_preset,
   handle_delete_preset,
   handle_create_checkpoint,
+  handle_clear_all_checkpoints,
   handle_delete_group,
   handle_delete_separator,
   handle_duplicate_preset,
@@ -464,6 +465,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             })
           } else if (message.command == 'DELETE_CHECKPOINT') {
             await handle_delete_checkpoint(this, message)
+          } else if (message.command == 'CLEAR_ALL_CHECKPOINTS') {
+            await handle_clear_all_checkpoints(this)
           } else if (message.command == 'GET_HISTORY') {
             handle_get_history(this)
           } else if (message.command == 'GET_RESPONSE_HISTORY') {

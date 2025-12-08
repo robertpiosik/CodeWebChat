@@ -395,6 +395,10 @@ export interface DeleteCheckpointMessage extends BaseMessage {
   timestamp: number
 }
 
+export interface ClearAllCheckpointsMessage extends BaseMessage {
+  command: 'CLEAR_ALL_CHECKPOINTS'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -467,6 +471,7 @@ export type FrontendMessage =
   | RemoveResponseHistoryItemMessage
   | UpdateCheckpointDescriptionMessage
   | DeleteCheckpointMessage
+  | ClearAllCheckpointsMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {

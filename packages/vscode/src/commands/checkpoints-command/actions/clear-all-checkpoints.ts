@@ -1,9 +1,13 @@
 import * as vscode from 'vscode'
-import { CHECKPOINTS_STATE_KEY } from '../../../constants/state-keys'
+import {
+  CHECKPOINTS_STATE_KEY,
+  TEMPORARY_CHECKPOINT_STATE_KEY
+} from '../../../constants/state-keys'
 import { get_checkpoint_path } from '../utils'
 import { get_checkpoints } from './get-checkpoints'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
+import type { Checkpoint } from '../types'
 
 export const clear_all_checkpoints = async (
   context: vscode.ExtensionContext,
@@ -25,6 +29,27 @@ export const clear_all_checkpoints = async (
         })
       }
     }
+    const temp_checkpoint = context.workspaceState.get<Checkpoint>(
+      TEMPORARY_CHECKPOINT_STATE_KEY
+    )
+    if (temp_checkpoint) {
+      try {
+        const checkpoint_path = get_checkpoint_path(temp_checkpoint.timestamp)
+        await vscode.workspace.fs.delete(vscode.Uri.file(checkpoint_path), {
+          recursive: true
+        })
+      } catch (error) {
+        Logger.warn({
+          function_name: 'clear_all_checkpoints',
+          message: 'Could not delete temporary checkpoint file',
+          data: error
+        })
+      }
+    }
+    await context.workspaceState.update(
+      TEMPORARY_CHECKPOINT_STATE_KEY,
+      undefined
+    )
     await context.workspaceState.update(CHECKPOINTS_STATE_KEY, [])
     await panel_provider.send_checkpoints()
   }

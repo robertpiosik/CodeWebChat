@@ -48,6 +48,12 @@ export const Home: React.FC<Props> = (props) => {
     } as FrontendMessage)
   }
 
+  const handle_delete_all_checkpoints_click = () => {
+    post_message(props.vscode, {
+      command: 'CLEAR_ALL_CHECKPOINTS'
+    } as FrontendMessage)
+  }
+
   return (
     <>
       <div className={styles.header}>
@@ -112,14 +118,24 @@ export const Home: React.FC<Props> = (props) => {
                 set_is_timeline_collapsed(!is_timeline_collapsed)
               }
               actions={
-                <IconButton
-                  codicon_icon="add"
-                  title="New Checkpoint"
-                  on_click={(e) => {
-                    e.stopPropagation()
-                    handle_create_checkpoint_click()
-                  }}
-                />
+                <>
+                  <IconButton
+                    codicon_icon="add"
+                    title="New Checkpoint"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      handle_create_checkpoint_click()
+                    }}
+                  />
+                  <IconButton
+                    codicon_icon="trash"
+                    title="Delete all checkpoints"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      handle_delete_all_checkpoints_click()
+                    }}
+                  />
+                </>
               }
             />
             {!is_timeline_collapsed && (
