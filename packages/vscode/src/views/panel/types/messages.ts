@@ -153,22 +153,9 @@ export interface DuplicatePresetMessage extends BaseMessage {
   index: number
 }
 
-export interface CreatePresetMessage extends BaseMessage {
-  command: 'CREATE_PRESET'
-  add_on_top?: boolean
-}
-
-export interface CreateGroupMessage extends BaseMessage {
-  command: 'CREATE_GROUP'
-  add_on_top?: boolean
-  instant?: boolean
-  create_on_index?: number
-  move_preset_with_name_after?: string
-}
-
-export interface CreateSeparatorMessage extends BaseMessage {
-  command: 'CREATE_SEPARATOR'
-  create_on_index?: number
+export interface CreatePresetGroupOrSeparatorMessage extends BaseMessage {
+  command: 'CREATE_PRESET_GROUP_OR_SEPARATOR'
+  placement?: 'top' | 'bottom'
 }
 
 export interface ExecuteCommandMessage extends BaseMessage {
@@ -420,9 +407,7 @@ export type FrontendMessage =
   | DeleteGroupMessage
   | DeleteSeparatorMessage
   | DuplicatePresetMessage
-  | CreatePresetMessage
-  | CreateGroupMessage
-  | CreateSeparatorMessage
+  | CreatePresetGroupOrSeparatorMessage
   | ExecuteCommandMessage
   | ShowHistoryQuickPickMessage
   | ShowPromptTemplateQuickPickMessage

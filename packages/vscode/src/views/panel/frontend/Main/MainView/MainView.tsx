@@ -27,13 +27,9 @@ type Props = {
   copy_to_clipboard: (preset_name?: string) => void
   on_show_home: () => void
   on_search_click: () => void
-  on_create_preset: () => void
-  on_create_group: (options?: {
-    add_on_top?: boolean
-    instant?: boolean
-    create_on_index?: number
+  on_create_preset_group_or_separator: (options?: {
+    placement?: 'top' | 'bottom'
   }) => void
-  on_create_separator: (options?: { create_on_index?: number }) => void
   on_at_sign_click: (search_value?: string) => void
   on_hash_sign_click: () => void
   on_curly_braces_click: () => void
@@ -248,9 +244,9 @@ export const MainView: React.FC<Props> = (props) => {
                 props.web_prompt_type == 'code-completions'
               }
               presets={props.presets}
-              on_create_group={props.on_create_group}
-              on_create_separator={props.on_create_separator}
-              on_create_preset={props.on_create_preset}
+              on_create_preset_group_or_separator={
+                props.on_create_preset_group_or_separator
+              }
               on_preset_click={(preset_name, without_submission) =>
                 props.initialize_chats({
                   preset_name,

@@ -426,32 +426,12 @@ export const Main: React.FC<Props> = (props) => {
     }
   }
 
-  const handle_create_preset = (options?: { add_on_top?: boolean }) => {
-    post_message(props.vscode, {
-      command: 'CREATE_PRESET',
-      add_on_top: options?.add_on_top
-    })
-  }
-
-  const handle_create_separator = (options?: { create_on_index?: number }) => {
-    post_message(props.vscode, {
-      command: 'CREATE_SEPARATOR',
-      ...options
-    })
-  }
-
-  const handle_create_group = (options?: {
-    add_on_top?: boolean
-    instant?: boolean
-    create_on_index?: number
-    move_preset_with_name_after?: string
+  const handle_create_preset_group_or_separator = (options?: {
+    placement?: 'top' | 'bottom'
   }) => {
     post_message(props.vscode, {
-      command: 'CREATE_GROUP',
-      add_on_top: options?.add_on_top,
-      instant: options?.instant,
-      create_on_index: options?.create_on_index,
-      move_preset_with_name_after: options?.move_preset_with_name_after
+      command: 'CREATE_PRESET_GROUP_OR_SEPARATOR',
+      placement: options?.placement
     })
   }
 
@@ -704,9 +684,9 @@ export const Main: React.FC<Props> = (props) => {
       on_curly_braces_click={handle_curly_braces_click}
       is_connected={props.is_connected}
       presets={presets_for_current_mode}
-      on_create_preset={handle_create_preset}
-      on_create_group={handle_create_group}
-      on_create_separator={handle_create_separator}
+      on_create_preset_group_or_separator={
+        handle_create_preset_group_or_separator
+      }
       on_quick_action_click={handle_quick_action_click}
       has_active_editor={props.has_active_editor}
       has_active_selection={props.has_active_selection}

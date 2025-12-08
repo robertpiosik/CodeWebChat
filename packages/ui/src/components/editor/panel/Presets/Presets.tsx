@@ -32,9 +32,6 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   'Z.AI': 'Z_AI'
 }
 
-const TRAILING_GROUP_ID = '__trailing_group_drag_handle__'
-const TRAILING_SEPARATOR_ID = '__trailing_separator_drag_handle__'
-
 export namespace Presets {
   export type Preset = {
     name?: string
@@ -56,14 +53,9 @@ export namespace Presets {
     presets: Preset[]
     on_preset_click: (preset_name: string, without_submission?: boolean) => void
     on_group_click: (group_name: string, without_submission?: boolean) => void
-    on_create_preset: (options?: { add_on_top?: boolean }) => void
-    on_create_group: (options?: {
-      add_on_top?: boolean
-      instant?: boolean
-      create_on_index?: number
-      move_preset_with_name_after?: string
+    on_create_preset_group_or_separator: (options?: {
+      placement?: 'top' | 'bottom'
     }) => void
-    on_create_separator: (options?: { create_on_index?: number }) => void
     on_preset_copy: (name: string) => void
     on_presets_reorder: (reordered_presets: Preset[]) => void
     on_preset_edit: (name: string) => void
@@ -133,27 +125,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     return false
   }
 
-  const sortable_list = (() => {
-    let list: (Presets.Preset & { id: string; original_index?: number })[] =
-      with_ids(get_visible_presets(props.presets))
-    const last_preset = props.presets[props.presets.length - 1]
-    // A group is a preset without a `chatbot` property
-    const is_last_item_a_group =
-      last_preset && last_preset.name && !last_preset.chatbot
-    if (!is_last_item_a_group) {
-      const trailing_group_item: Presets.Preset & { id: string } = {
-        name: 'Group',
-        id: TRAILING_GROUP_ID
-      }
-      list = [...list, trailing_group_item]
-    }
-    const trailing_separator_item: Presets.Preset & { id: string } = {
-      id: TRAILING_SEPARATOR_ID
-    }
-    list = [...list, trailing_separator_item]
-
-    return list
-  })()
+  const sortable_list = with_ids(get_visible_presets(props.presets))
 
   return (
     <div className={styles.container}>
@@ -281,9 +253,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             codicon_icon="add"
             on_click={(e) => {
               e.stopPropagation()
-              props.on_create_preset({ add_on_top: true })
+              props.on_create_preset_group_or_separator({ placement: 'top' })
             }}
-            title="Add New Preset"
+            title="Create New..."
           />
         }
       />
@@ -293,144 +265,10 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             <ReactSortable
               list={sortable_list}
               setList={(new_state) => {
-                // Handle trailing separator item drag
-                const trailing_separator_item = new_state.find(
-                  (item) => item.id == TRAILING_SEPARATOR_ID
-                )
-                const trailing_separator_was_moved =
-                  trailing_separator_item &&
-                  sortable_list.findIndex(
-                    (item) => item.id == TRAILING_SEPARATOR_ID
-                  ) !=
-                    new_state.findIndex(
-                      (item) => item.id == TRAILING_SEPARATOR_ID
-                    )
-
-                if (trailing_separator_item && trailing_separator_was_moved) {
-                  const trailing_separator_item_index = new_state.findIndex(
-                    (item) => item.id == TRAILING_SEPARATOR_ID
-                  )
-                  const new_state_without_trailing_separator = new_state.filter(
-                    (item) => item.id != TRAILING_SEPARATOR_ID
-                  )
-
-                  // Determine where to insert the new separator
-                  let target_full_index: number
-
-                  if (
-                    trailing_separator_item_index <
-                    new_state_without_trailing_separator.length
-                  ) {
-                    // Dropped between items - find the preset at or after this position
-                    const preset_at_drop_location =
-                      new_state_without_trailing_separator[
-                        trailing_separator_item_index
-                      ]
-
-                    if (preset_at_drop_location) {
-                      target_full_index = props.presets.findIndex(
-                        (p) => p.name == preset_at_drop_location.name
-                      )
-
-                      // Fallback if preset not found
-                      if (target_full_index == -1) {
-                        target_full_index = props.presets.length
-                      }
-                    } else {
-                      target_full_index = props.presets.length
-                    }
-                  } else {
-                    // Dropped at the end
-                    target_full_index = props.presets.length
-                  }
-
-                  props.on_create_separator({
-                    create_on_index: target_full_index
-                  })
-                  return
-                }
-
-                // Handle trailing group item drag
-                const trailing_group_item = new_state.find(
-                  (item) => item.id == TRAILING_GROUP_ID
-                )
-                const trailing_group_was_moved =
-                  trailing_group_item &&
-                  sortable_list.findIndex(
-                    (item) => item.id == TRAILING_GROUP_ID
-                  ) !==
-                    new_state.findIndex((item) => item.id == TRAILING_GROUP_ID)
-
-                if (trailing_group_item && trailing_group_was_moved) {
-                  const trailing_group_item_index = new_state.findIndex(
-                    (item) => item.id == TRAILING_GROUP_ID
-                  )
-                  const item_after_tg = new_state[trailing_group_item_index + 1]
-                  const item_after_that =
-                    new_state[trailing_group_item_index + 2]
-
-                  // A preset was dragged to the end to create a new group
-                  if (
-                    item_after_tg?.chatbot &&
-                    item_after_that?.id == TRAILING_SEPARATOR_ID
-                  ) {
-                    props.on_create_group({
-                      instant: true,
-                      move_preset_with_name_after: item_after_tg.name
-                    })
-                    return
-                  }
-
-                  const new_state_without_trailing_group = new_state.filter(
-                    (item) => item.id !== TRAILING_GROUP_ID
-                  )
-
-                  // Determine where to insert the new group
-                  let target_full_index: number
-
-                  if (
-                    trailing_group_item_index <
-                    new_state_without_trailing_group.length
-                  ) {
-                    // Dropped between items - find the preset at or after this position
-                    const preset_at_drop_location =
-                      new_state_without_trailing_group[
-                        trailing_group_item_index
-                      ]
-
-                    if (preset_at_drop_location) {
-                      target_full_index = props.presets.findIndex(
-                        (p) => p.name == preset_at_drop_location.name
-                      )
-
-                      // Fallback if preset not found
-                      if (target_full_index == -1) {
-                        target_full_index = props.presets.length
-                      }
-                    } else {
-                      target_full_index = props.presets.length
-                    }
-                  } else {
-                    // Dropped at the end
-                    target_full_index = props.presets.length
-                  }
-
-                  // Create group at calculated position
-                  props.on_create_group({
-                    create_on_index: target_full_index,
-                    instant: true
-                  })
-                  return
-                }
-
                 // Handle normal preset/group reordering
-                const new_visible_presets = new_state
-                  .filter(
-                    (item) =>
-                      item.id !== TRAILING_GROUP_ID &&
-                      item.id !== TRAILING_SEPARATOR_ID
-                  )
-                  .map(({ id, ...preset }) => preset) as Presets.Preset[]
+                const new_visible_presets = new_state.map(
+                  ({ id, ...preset }) => preset
+                ) as Presets.Preset[]
 
                 const reordered_presets: Presets.Preset[] = []
 
@@ -468,26 +306,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               animation={150}
             >
               {sortable_list.map((preset) => {
-                if (preset.id == TRAILING_SEPARATOR_ID) {
-                  return (
-                    <div
-                      key={TRAILING_SEPARATOR_ID}
-                      className={cn(
-                        styles.presets__item,
-                        styles['presets__item--separator']
-                      )}
-                    >
-                      <div className={styles.presets__item__left}>
-                        <div
-                          className={styles.presets__item__left__drag_handle}
-                        >
-                          <span className="codicon codicon-gripper" />
-                        </div>
-                      </div>
-                    </div>
-                  )
-                }
-
                 if (!preset.chatbot && !preset.name) {
                   return (
                     <div
@@ -524,40 +342,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                             props.on_separator_delete(preset.original_index!)
                           }}
                         />
-                      </div>
-                    </div>
-                  )
-                }
-
-                if (preset.id == TRAILING_GROUP_ID) {
-                  return (
-                    <div
-                      key={TRAILING_GROUP_ID}
-                      className={cn(
-                        styles.presets__item,
-                        styles['presets__item--ungrouped']
-                      )}
-                    >
-                      <div className={styles.presets__item__left}>
-                        <div
-                          className={styles.presets__item__left__drag_handle}
-                        >
-                          <span className="codicon codicon-gripper" />
-                        </div>
-                        <div
-                          className={
-                            styles['presets__item__left__collapse-icon']
-                          }
-                        >
-                          <span
-                            className={cn('codicon', {
-                              'codicon-dash': true
-                            })}
-                          />
-                        </div>
-                        <div className={styles.presets__item__left__text}>
-                          Group
-                        </div>
                       </div>
                     </div>
                   )
@@ -782,8 +566,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             </ReactSortable>
           </div>
           <div className={styles.footer}>
-            <Button on_click={() => props.on_create_preset()}>
-              Add New Preset
+            <Button
+              on_click={() =>
+                props.on_create_preset_group_or_separator({
+                  placement: 'bottom'
+                })
+              }
+            >
+              Create New...
             </Button>
           </div>
         </>

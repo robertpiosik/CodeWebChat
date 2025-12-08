@@ -22,9 +22,7 @@ import {
   handle_delete_group,
   handle_delete_separator,
   handle_duplicate_preset,
-  handle_create_preset,
-  handle_create_group,
-  handle_create_separator,
+  handle_create_preset_group_or_separator,
   handle_preview_preset,
   handle_save_edit_format,
   handle_show_history_quick_pick,
@@ -506,19 +504,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_delete_separator(this, message, webview_view)
           } else if (message.command == 'DUPLICATE_PRESET') {
             await handle_duplicate_preset(this, message, webview_view)
-          } else if (message.command == 'CREATE_PRESET') {
-            await handle_create_preset(this, message)
-          } else if (message.command == 'CREATE_GROUP') {
-            await handle_create_group(this, {
-              add_on_top: message.add_on_top,
-              instant: message.instant,
-              create_on_index: message.create_on_index,
-              move_preset_with_name_after: message.move_preset_with_name_after
-            })
-          } else if (message.command == 'CREATE_SEPARATOR') {
-            await handle_create_separator(this, {
-              create_on_index: message.create_on_index
-            })
+          } else if (message.command == 'CREATE_PRESET_GROUP_OR_SEPARATOR') {
+            await handle_create_preset_group_or_separator(this, message)
           } else if (message.command == 'UNDO') {
             await handle_undo(this)
           } else if (message.command == 'APPLY_RESPONSE_FROM_HISTORY') {
