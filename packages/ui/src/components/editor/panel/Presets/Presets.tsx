@@ -136,7 +136,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
 
             const display_name: string = is_unnamed
               ? preset.chatbot!
-              : preset.name!
+              : preset.name!.replace(/ \(\d+\)$/, '')
 
             const get_subtitle = (): string => {
               const { chatbot, model } = preset
