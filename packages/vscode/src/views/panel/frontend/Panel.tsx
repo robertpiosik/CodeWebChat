@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Main } from './Main'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
 import { EditPresetForm } from '@/views/panel/frontend/components/edit-preset-form/EditPresetForm'
@@ -12,6 +13,7 @@ import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/mo
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
+import { EditCheckpointDescriptionModal as UiEditCheckpointDescriptionModal } from '@ui/components/editor/panel/modals/EditCheckpointDescriptionModal'
 import { use_panel } from './hooks/use-panel'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { LayoutContext } from './contexts/LayoutContext'
@@ -87,6 +89,10 @@ export const Panel = () => {
     handle_configurations_collapsed_change,
     handle_remove_response_history_item
   } = use_panel(vscode)
+
+  const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
+    { timestamp: number; description: string } | undefined
+  >(undefined)
 
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_latest_donations()
@@ -300,6 +306,17 @@ export const Panel = () => {
                     timestamp
                   })
                 }}
+                on_edit_checkpoint_description={(timestamp) => {
+                  const checkpoint = checkpoints.find(
+                    (c) => c.timestamp == timestamp
+                  )
+                  if (checkpoint) {
+                    set_checkpoint_to_edit({
+                      timestamp: checkpoint.timestamp,
+                      description: checkpoint.description || ''
+                    })
+                  }
+                }}
               />
             </div>
           </Layout>
@@ -497,6 +514,23 @@ export const Panel = () => {
               on_close={() => {
                 set_auto_closing_modal_title(undefined)
               }}
+            />
+          </div>
+        )}
+
+        {checkpoint_to_edit && (
+          <div className={styles.slot}>
+            <UiEditCheckpointDescriptionModal
+              description={checkpoint_to_edit.description}
+              on_save={(description) => {
+                post_message(vscode, {
+                  command: 'UPDATE_CHECKPOINT_DESCRIPTION',
+                  timestamp: checkpoint_to_edit.timestamp,
+                  description
+                })
+                set_checkpoint_to_edit(undefined)
+              }}
+              on_cancel={() => set_checkpoint_to_edit(undefined)}
             />
           </div>
         )}

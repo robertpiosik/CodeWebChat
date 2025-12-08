@@ -15,6 +15,7 @@ export type TimelineItemProps = {
   label: string
   description?: string
   is_starred?: boolean
+  can_edit?: boolean
 }
 
 type Props = {
@@ -78,7 +79,7 @@ export const Timeline: React.FC<Props> = ({
                     on_toggle_starred?.(item.id)
                   }}
                 />
-                {on_edit && (
+                {on_edit && item.can_edit && (
                   <IconButton
                     codicon_icon="edit"
                     title="Edit description"

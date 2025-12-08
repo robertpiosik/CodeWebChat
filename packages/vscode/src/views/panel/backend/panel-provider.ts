@@ -11,7 +11,8 @@ import { EditFormat } from '@shared/types/edit-format'
 import {
   get_checkpoints,
   toggle_checkpoint_star,
-  restore_checkpoint
+  restore_checkpoint,
+  update_checkpoint_description
 } from '@/commands/checkpoints-command/actions'
 import {
   handle_copy_prompt,
@@ -449,6 +450,13 @@ export class PanelProvider implements vscode.WebviewViewProvider {
                 }
               })
             }
+          } else if (message.command == 'UPDATE_CHECKPOINT_DESCRIPTION') {
+            await update_checkpoint_description({
+              context: this.context,
+              timestamp: message.timestamp,
+              description: message.description,
+              panel_provider: this
+            })
           } else if (message.command == 'GET_HISTORY') {
             handle_get_history(this)
           } else if (message.command == 'GET_RESPONSE_HISTORY') {

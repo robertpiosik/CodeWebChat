@@ -27,6 +27,7 @@ type Props = {
   selected_history_item_created_at?: number
   on_selected_history_item_change: (created_at: number) => void
   on_response_history_item_remove: (created_at: number) => void
+  on_edit_checkpoint_description: (timestamp: number) => void
 }
 
 export const Home: React.FC<Props> = (props) => {
@@ -127,12 +128,14 @@ export const Home: React.FC<Props> = (props) => {
                   label: c.title,
                   timestamp: c.timestamp,
                   description: c.description,
-                  is_starred: c.is_starred
+                  is_starred: c.is_starred,
+                  can_edit: c.title == 'Created by user'
                 }))}
                 on_toggle_starred={(id) =>
                   props.on_toggle_checkpoint_starred(id)
                 }
                 on_item_click={(id) => props.on_restore_checkpoint(id)}
+                on_edit={props.on_edit_checkpoint_description}
               />
             )}
           </div>

@@ -384,6 +384,12 @@ export interface RemoveResponseHistoryItemMessage extends BaseMessage {
   created_at: number
 }
 
+export interface UpdateCheckpointDescriptionMessage extends BaseMessage {
+  command: 'UPDATE_CHECKPOINT_DESCRIPTION'
+  timestamp: number
+  description: string
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -454,6 +460,7 @@ export type FrontendMessage =
   | ToggleCheckpointStarMessage
   | RestoreCheckpointMessage
   | RemoveResponseHistoryItemMessage
+  | UpdateCheckpointDescriptionMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
