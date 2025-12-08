@@ -9,7 +9,8 @@ export const handle_update_commit_message_instructions = async (
     .getConfiguration('codeWebChat')
     .update(
       'commitMessageInstructions',
-      message.instructions == commit_message_instructions
+      message.instructions == '' ||
+        message.instructions == commit_message_instructions
         ? undefined
         : message.instructions,
       vscode.ConfigurationTarget.Global
