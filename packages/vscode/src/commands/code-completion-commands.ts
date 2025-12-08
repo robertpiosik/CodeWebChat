@@ -82,21 +82,28 @@ const get_code_completion_config = async (
         (c) => get_tool_config_id(c) === config_id
       ) || null
   } else if (!show_quick_pick) {
-    const last_selected_id =
-      context.workspaceState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-      ) ??
-      context.globalState.get<string>(
-        LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
-      )
-    if (last_selected_id) {
-      selected_config =
-        code_completions_configs.find(
-          (c) => get_tool_config_id(c) === last_selected_id
-        ) || null
-    }
-    if (!selected_config && code_completions_configs.length > 0) {
-      selected_config = code_completions_configs[0]
+    const default_config =
+      await api_providers_manager.get_default_code_completions_config()
+
+    if (default_config) {
+      selected_config = default_config
+    } else {
+      const last_selected_id =
+        context.workspaceState.get<string>(
+          LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+        ) ??
+        context.globalState.get<string>(
+          LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY
+        )
+      if (last_selected_id) {
+        selected_config =
+          code_completions_configs.find(
+            (c) => get_tool_config_id(c) === last_selected_id
+          ) || null
+      }
+      if (!selected_config && code_completions_configs.length > 0) {
+        selected_config = code_completions_configs[0]
+      }
     }
   }
 
