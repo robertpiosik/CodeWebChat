@@ -354,7 +354,9 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                 let display_name: string
                 if (preset.chatbot) {
                   // Preset (has chatbot)
-                  display_name = is_unnamed ? preset.chatbot : preset.name!
+                  display_name = is_unnamed
+                    ? preset.chatbot
+                    : preset.name!.replace(/ \(\d+\)$/, '')
                 } else {
                   // Group (no chatbot)
                   display_name = is_unnamed
