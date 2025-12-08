@@ -2,7 +2,7 @@
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
   "description": "CWC is a superfast AI coding",
-  "version": "1.642.0",
+  "version": "1.643.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
@@ -530,30 +530,25 @@
             "integer",
             "null"
           ],
-          "default": null,
-          "description": "Run Gemini chatbot as non-default user. Check URL for ID, e.g. gemini.google.com/u/2/app -> 2."
+          "default": null
         },
         "codeWebChat.commitMessageInstructions": {
           "type": "string",
-          "scope": "resource",
-          "description": "Style and conventions (e.g. Conventional Commits, gitmoji) for generated commit messages."
+          "scope": "resource"
         },
         "codeWebChat.commitMessageAutoAcceptAfter": {
           "type": "number",
           "scope": "resource",
-          "default": 5,
-          "description": "Automatically accept the generated commit message after a specified number of seconds."
+          "default": 5
         },
         "codeWebChat.contextSizeWarningThreshold": {
           "type": "number",
-          "default": 60000,
-          "description": "Threshold for the context size to show a warning."
+          "default": 60000
         },
         "codeWebChat.checkpointLifespan": {
           "type": "number",
           "scope": "resource",
           "default": 48,
-          "description": "The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted.",
           "minimum": 1
         },
         "codeWebChat.clearChecksInWorkspaceBehavior": {
@@ -562,36 +557,29 @@
             "ignore-open-editors",
             "uncheck-all"
           ],
-          "default": "ignore-open-editors",
-          "description": "Controls the behavior of the 'Clear Checks' action in the Workspace view."
+          "default": "ignore-open-editors"
         },
         "codeWebChat.ignorePatterns": {
           "type": "array",
-          "description": "List of glob patterns to ignore files and folders in the context.",
           "items": {
-            "type": "string",
-            "description": "A glob pattern."
+            "type": "string"
           }
         },
         "codeWebChat.editFormatInstructionsWhole": {
           "type": "string",
-          "scope": "resource",
-          "description": "Instructions for 'whole' file format in the \"Edit context\" prompt type."
+          "scope": "resource"
         },
         "codeWebChat.editFormatInstructionsTruncated": {
           "type": "string",
-          "scope": "resource",
-          "description": "Instructions for 'truncated' file format in the \"Edit context\" prompt type."
+          "scope": "resource"
         },
         "codeWebChat.editFormatInstructionsDiff": {
           "type": "string",
-          "scope": "resource",
-          "description": "Instructions for 'diff' file format in the \"Edit context\" prompt type."
+          "scope": "resource"
         },
         "codeWebChat.editContextSystemInstructions": {
           "type": "string",
           "scope": "resource",
-          "description": "System instructions for the Edit Context API tool.",
           "default": "You're a helpful coding assistant. Don't explain changes in inline comments."
         },
         "codeWebChat.chatPresetsForAskAboutContext": {
@@ -691,40 +679,14 @@
             },
             {}
           ],
-          "description": "Preset is a general or task specific web chat configuration.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string",
-                "description": "Name of the preset."
+                "type": "string"
               },
               "chatbot": {
-                "type": "string",
-                "enum": [
-                  "AI Studio",
-                  "ChatGPT",
-                  "Claude",
-                  "Copilot",
-                  "DeepSeek",
-                  "Doubao",
-                  "Gemini",
-                  "GitHub Copilot",
-                  "Grok",
-                  "HuggingChat",
-                  "Kimi",
-                  "LMArena",
-                  "Minimax",
-                  "Mistral",
-                  "OpenRouter",
-                  "Open WebUI",
-                  "Perplexity",
-                  "Qwen",
-                  "Together",
-                  "Yuanbao",
-                  "Z.AI"
-                ],
-                "description": "Choose among supported chatbots."
+                "type": "string"
               },
               "promptPrefix": {
                 "type": "string",
@@ -738,8 +700,7 @@
                   "Help diagnose this error:",
                   "Generate commit message based on changes:",
                   "Write tests for:"
-                ],
-                "description": "Prefix prepended to all prompts sent with this chat."
+                ]
               },
               "promptSuffix": {
                 "type": "string",
@@ -753,48 +714,37 @@
                   "Suggest any alternative approaches.",
                   "Identify potential drawbacks.",
                   "Ask for clarifications if needed before proceeding."
-                ],
-                "description": "Suffix appended to all prompts sent with this chat."
+                ]
               },
               "model": {
-                "type": "string",
-                "description": "Model to use."
+                "type": "string"
               },
               "options": {
                 "type": "array",
-                "description": "Options to enable, e.g. canvas.",
                 "items": {
-                  "type": "string",
-                  "description": "Option name."
+                  "type": "string"
                 }
               },
               "temperature": {
-                "type": "number",
-                "description": "Temperature to use."
+                "type": "number"
               },
               "topP": {
-                "type": "number",
-                "description": "Top P setting to use."
+                "type": "number"
               },
               "systemInstructions": {
-                "type": "string",
-                "description": "System instructions to use."
+                "type": "string"
               },
               "port": {
-                "type": "number",
-                "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+                "type": "number"
               },
               "isSelected": {
-                "type": "boolean",
-                "description": "Whether this preset is selected when initializing a new chat."
+                "type": "boolean"
               },
               "isCollapsed": {
-                "type": "boolean",
-                "description": "Whether this group is collapsed."
+                "type": "boolean"
               },
               "isPinned": {
-                "type": "boolean",
-                "description": "Whether this preset is shown above the list."
+                "type": "boolean"
               }
             }
           }
@@ -896,40 +846,14 @@
             },
             {}
           ],
-          "description": "Preset is a general or task specific web chat configuration.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string",
-                "description": "Name of the preset."
+                "type": "string"
               },
               "chatbot": {
-                "type": "string",
-                "enum": [
-                  "AI Studio",
-                  "ChatGPT",
-                  "Claude",
-                  "Copilot",
-                  "DeepSeek",
-                  "Doubao",
-                  "Gemini",
-                  "GitHub Copilot",
-                  "Grok",
-                  "HuggingChat",
-                  "Kimi",
-                  "LMArena",
-                  "Minimax",
-                  "Mistral",
-                  "OpenRouter",
-                  "Open WebUI",
-                  "Perplexity",
-                  "Qwen",
-                  "Together",
-                  "Yuanbao",
-                  "Z.AI"
-                ],
-                "description": "Choose among supported chatbots."
+                "type": "string"
               },
               "promptPrefix": {
                 "type": "string",
@@ -943,8 +867,7 @@
                   "Help diagnose this error:",
                   "Generate commit message based on changes:",
                   "Write tests for:"
-                ],
-                "description": "Prefix prepended to all prompts sent with this chat."
+                ]
               },
               "promptSuffix": {
                 "type": "string",
@@ -958,48 +881,37 @@
                   "Suggest any alternative approaches.",
                   "Identify potential drawbacks.",
                   "Ask for clarifications if needed before proceeding."
-                ],
-                "description": "Suffix appended to all prompts sent with this chat."
+                ]
               },
               "model": {
-                "type": "string",
-                "description": "Model to use."
+                "type": "string"
               },
               "options": {
                 "type": "array",
-                "description": "Options to enable, e.g. canvas.",
                 "items": {
-                  "type": "string",
-                  "description": "Option name."
+                  "type": "string"
                 }
               },
               "temperature": {
-                "type": "number",
-                "description": "Temperature to use."
+                "type": "number"
               },
               "topP": {
-                "type": "number",
-                "description": "Top P setting to use."
+                "type": "number"
               },
               "systemInstructions": {
-                "type": "string",
-                "description": "System instructions to use."
+                "type": "string"
               },
               "port": {
-                "type": "number",
-                "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+                "type": "number"
               },
               "isSelected": {
-                "type": "boolean",
-                "description": "Whether this preset is selected when initializing a new chat."
+                "type": "boolean"
               },
               "isCollapsed": {
-                "type": "boolean",
-                "description": "Whether this group is collapsed."
+                "type": "boolean"
               },
               "isPinned": {
-                "type": "boolean",
-                "description": "Whether this preset is shown above the list."
+                "type": "boolean"
               }
             }
           }
@@ -1101,80 +1013,44 @@
             },
             {}
           ],
-          "description": "Preset is a general or task specific web chat configuration.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string",
-                "description": "Name of the preset."
+                "type": "string"
               },
               "chatbot": {
-                "type": "string",
-                "enum": [
-                  "AI Studio",
-                  "ChatGPT",
-                  "Claude",
-                  "Copilot",
-                  "DeepSeek",
-                  "Doubao",
-                  "Gemini",
-                  "GitHub Copilot",
-                  "Grok",
-                  "HuggingChat",
-                  "Kimi",
-                  "LMArena",
-                  "Minimax",
-                  "Mistral",
-                  "OpenRouter",
-                  "Open WebUI",
-                  "Perplexity",
-                  "Qwen",
-                  "Together",
-                  "Yuanbao",
-                  "Z.AI"
-                ],
-                "description": "Choose among supported chatbots."
+                "type": "string"
               },
               "model": {
-                "type": "string",
-                "description": "Model to use."
+                "type": "string"
               },
               "options": {
                 "type": "array",
-                "description": "Options to enable, e.g. canvas.",
                 "items": {
-                  "type": "string",
-                  "description": "Option name."
+                  "type": "string"
                 }
               },
               "temperature": {
-                "type": "number",
-                "description": "Temperature to use."
+                "type": "number"
               },
               "topP": {
-                "type": "number",
-                "description": "Top P setting to use."
+                "type": "number"
               },
               "systemInstructions": {
-                "type": "string",
-                "description": "System instructions to use."
+                "type": "string"
               },
               "port": {
-                "type": "number",
-                "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+                "type": "number"
               },
               "isSelected": {
-                "type": "boolean",
-                "description": "Whether this preset is selected when initializing a new chat."
+                "type": "boolean"
               },
               "isCollapsed": {
-                "type": "boolean",
-                "description": "Whether this group is collapsed."
+                "type": "boolean"
               },
               "isPinned": {
-                "type": "boolean",
-                "description": "Whether this preset is shown above the list."
+                "type": "boolean"
               }
             }
           }
@@ -1276,40 +1152,14 @@
             },
             {}
           ],
-          "description": "Preset is a general or task specific web chat configuration.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string",
-                "description": "Name of the preset."
+                "type": "string"
               },
               "chatbot": {
-                "type": "string",
-                "enum": [
-                  "AI Studio",
-                  "ChatGPT",
-                  "Claude",
-                  "Copilot",
-                  "DeepSeek",
-                  "Doubao",
-                  "Gemini",
-                  "GitHub Copilot",
-                  "Grok",
-                  "HuggingChat",
-                  "Kimi",
-                  "LMArena",
-                  "Minimax",
-                  "Mistral",
-                  "OpenRouter",
-                  "Open WebUI",
-                  "Perplexity",
-                  "Qwen",
-                  "Together",
-                  "Yuanbao",
-                  "Z.AI"
-                ],
-                "description": "Choose among supported chatbots."
+                "type": "string"
               },
               "promptPrefix": {
                 "type": "string",
@@ -1323,8 +1173,7 @@
                   "Help diagnose this error:",
                   "Generate commit message based on changes:",
                   "Write tests for:"
-                ],
-                "description": "Prefix prepended to all prompts sent with this chat."
+                ]
               },
               "promptSuffix": {
                 "type": "string",
@@ -1338,48 +1187,37 @@
                   "Suggest any alternative approaches.",
                   "Identify potential drawbacks.",
                   "Ask for clarifications if needed before proceeding."
-                ],
-                "description": "Suffix appended to all prompts sent with this chat."
+                ]
               },
               "model": {
-                "type": "string",
-                "description": "Model to use."
+                "type": "string"
               },
               "options": {
                 "type": "array",
-                "description": "Options to enable, e.g. canvas.",
                 "items": {
-                  "type": "string",
-                  "description": "Option name."
+                  "type": "string"
                 }
               },
               "temperature": {
-                "type": "number",
-                "description": "Temperature to use."
+                "type": "number"
               },
               "topP": {
-                "type": "number",
-                "description": "Top P setting to use."
+                "type": "number"
               },
               "systemInstructions": {
-                "type": "string",
-                "description": "System instructions to use."
+                "type": "string"
               },
               "port": {
-                "type": "number",
-                "description": "Open WebUI only. Port for 'localhost', if your instance is networked, remove this param and proxy it to `http://openwebui/` with nginx."
+                "type": "number"
               },
               "isSelected": {
-                "type": "boolean",
-                "description": "Whether this preset is selected when initializing a new chat."
+                "type": "boolean"
               },
               "isCollapsed": {
-                "type": "boolean",
-                "description": "Whether this group is collapsed."
+                "type": "boolean"
               },
               "isPinned": {
-                "type": "boolean",
-                "description": "Whether this preset is shown above the list."
+                "type": "boolean"
               }
             }
           }
@@ -1387,17 +1225,14 @@
         "codeWebChat.promptTemplatesForAskAboutContext": {
           "type": "array",
           "default": [],
-          "description": "Prompt templates for 'Ask about context' mode.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string",
-                "description": "Name of the prompt template."
+                "type": "string"
               },
               "template": {
-                "type": "string",
-                "description": "The prompt template."
+                "type": "string"
               }
             },
             "required": [
@@ -1408,17 +1243,14 @@
         "codeWebChat.promptTemplatesForEditContext": {
           "type": "array",
           "default": [],
-          "description": "Prompt templates for 'Edit context' mode.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string",
-                "description": "Name of the prompt template."
+                "type": "string"
               },
               "template": {
-                "type": "string",
-                "description": "The prompt template."
+                "type": "string"
               }
             },
             "required": [
@@ -1429,17 +1261,14 @@
         "codeWebChat.promptTemplatesForCodeAtCursor": {
           "type": "array",
           "default": [],
-          "description": "Prompt templates for \"Code at cursor\" mode.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string",
-                "description": "Name of the prompt template."
+                "type": "string"
               },
               "template": {
-                "type": "string",
-                "description": "The prompt template."
+                "type": "string"
               }
             },
             "required": [
@@ -1450,17 +1279,14 @@
         "codeWebChat.promptTemplatesForNoContext": {
           "type": "array",
           "default": [],
-          "description": "Prompt templates for 'No context' mode.",
           "items": {
             "type": "object",
             "properties": {
               "name": {
-                "type": "string",
-                "description": "Name of the prompt template."
+                "type": "string"
               },
               "template": {
-                "type": "string",
-                "description": "The prompt template."
+                "type": "string"
               }
             },
             "required": [
@@ -1470,7 +1296,6 @@
         },
         "codeWebChat.modelProviders": {
           "type": "array",
-          "description": "Configuration for AI model providers. API keys are stored separately in secret storage.",
           "default": [],
           "items": {
             "oneOf": [
@@ -1480,12 +1305,10 @@
                 "properties": {
                   "type": {
                     "type": "string",
-                    "description": "Type of provider.",
                     "const": "built-in"
                   },
                   "name": {
-                    "type": "string",
-                    "description": "Name of the built-in provider."
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -1499,16 +1322,13 @@
                 "properties": {
                   "type": {
                     "type": "string",
-                    "description": "Type of provider.",
                     "const": "custom"
                   },
                   "name": {
-                    "type": "string",
-                    "description": "A unique name for the custom provider."
+                    "type": "string"
                   },
                   "baseUrl": {
-                    "type": "string",
-                    "description": "The base URL of the API endpoint for the custom provider."
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -1523,22 +1343,18 @@
         "codeWebChat.configurationsForCodeCompletions": {
           "type": "array",
           "scope": "resource",
-          "description": "Configurations for the Code Completions tool.",
           "default": [],
           "items": {
             "type": "object",
             "properties": {
               "providerName": {
-                "type": "string",
-                "description": "Name of the model provider to use (must be defined in modelProviders)."
+                "type": "string"
               },
               "model": {
-                "type": "string",
-                "description": "The model to use."
+                "type": "string"
               },
               "temperature": {
-                "type": "number",
-                "description": "The temperature for the model."
+                "type": "number"
               },
               "reasoningEffort": {
                 "type": "string",
@@ -1547,16 +1363,13 @@
                   "low",
                   "medium",
                   "high"
-                ],
-                "description": "The reasoning effort for the model."
+                ]
               },
               "isDefault": {
-                "type": "boolean",
-                "description": "Whether this is the default configuration for this tool."
+                "type": "boolean"
               },
               "isPinned": {
-                "type": "boolean",
-                "description": "Whether this configuration is shown above the list."
+                "type": "boolean"
               }
             },
             "required": [
@@ -1568,22 +1381,18 @@
         "codeWebChat.configurationsForEditContext": {
           "type": "array",
           "scope": "resource",
-          "description": "Configurations for the Edit Context tool.",
           "default": [],
           "items": {
             "type": "object",
             "properties": {
               "providerName": {
-                "type": "string",
-                "description": "Name of the model provider to use (must be defined in modelProviders)."
+                "type": "string"
               },
               "model": {
-                "type": "string",
-                "description": "The model to use."
+                "type": "string"
               },
               "temperature": {
-                "type": "number",
-                "description": "The temperature for the model."
+                "type": "number"
               },
               "reasoningEffort": {
                 "type": "string",
@@ -1592,20 +1401,17 @@
                   "low",
                   "medium",
                   "high"
-                ],
-                "description": "The reasoning effort for the model."
+                ]
               },
               "instructionsPlacement": {
                 "type": "string",
                 "enum": [
                   "above-and-below",
                   "below-only"
-                ],
-                "description": "Placement of instructions relative to the code context."
+                ]
               },
               "isPinned": {
-                "type": "boolean",
-                "description": "Whether this configuration is shown above the list."
+                "type": "boolean"
               }
             },
             "required": [
@@ -1617,22 +1423,18 @@
         "codeWebChat.configurationsForIntelligentUpdate": {
           "type": "array",
           "scope": "resource",
-          "description": "Configurations for the Intelligent Update tool.",
           "default": [],
           "items": {
             "type": "object",
             "properties": {
               "providerName": {
-                "type": "string",
-                "description": "Name of the model provider to use (must be defined in modelProviders)."
+                "type": "string"
               },
               "model": {
-                "type": "string",
-                "description": "The model to use."
+                "type": "string"
               },
               "temperature": {
-                "type": "number",
-                "description": "The temperature for the model."
+                "type": "number"
               },
               "reasoningEffort": {
                 "type": "string",
@@ -1641,20 +1443,16 @@
                   "low",
                   "medium",
                   "high"
-                ],
-                "description": "The reasoning effort for the model."
+                ]
               },
               "isDefault": {
-                "type": "boolean",
-                "description": "Whether this is the default configuration for this tool."
+                "type": "boolean"
               },
               "maxConcurrency": {
-                "type": "number",
-                "description": "Maximum number of concurrent requests."
+                "type": "number"
               },
               "isPinned": {
-                "type": "boolean",
-                "description": "Whether this configuration is shown above the list."
+                "type": "boolean"
               }
             },
             "required": [
@@ -1666,22 +1464,18 @@
         "codeWebChat.configurationsForCommitMessages": {
           "type": "array",
           "scope": "resource",
-          "description": "Configurations for the Commit Messages tool.",
           "default": [],
           "items": {
             "type": "object",
             "properties": {
               "providerName": {
-                "type": "string",
-                "description": "Name of the model provider to use (must be defined in modelProviders)."
+                "type": "string"
               },
               "model": {
-                "type": "string",
-                "description": "The model to use."
+                "type": "string"
               },
               "temperature": {
-                "type": "number",
-                "description": "The temperature for the model."
+                "type": "number"
               },
               "reasoningEffort": {
                 "type": "string",
@@ -1690,16 +1484,13 @@
                   "low",
                   "medium",
                   "high"
-                ],
-                "description": "The reasoning effort for the model."
+                ]
               },
               "isDefault": {
-                "type": "boolean",
-                "description": "Whether this is the default configuration for this tool."
+                "type": "boolean"
               },
               "isPinned": {
-                "type": "boolean",
-                "description": "Whether this configuration is shown above the list."
+                "type": "boolean"
               }
             },
             "required": [
