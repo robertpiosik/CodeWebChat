@@ -215,12 +215,17 @@ export const edit_model_for_config = async (
   return undefined
 }
 
-export const edit_temperature_for_config = async (config: ToolConfig) => {
+export const edit_temperature_for_config = async (
+  config: ToolConfig
+): Promise<number | null | undefined> => {
   const new_temp_str = await vscode.window.showInputBox({
     title: 'Edit Temperature',
-    value: String(config.temperature),
-    prompt: 'Enter a value between 0 and 2',
+    value: config.temperature?.toString() ?? '',
+    prompt: 'Enter a value between 0 and 2. Leave empty to unset.',
     validateInput: (value) => {
+      if (value.trim() === '') {
+        return null
+      }
       const num = parseFloat(value)
       if (isNaN(num) || num < 0 || num > 2) {
         return 'Please enter a number between 0 and 2.'
@@ -228,21 +233,25 @@ export const edit_temperature_for_config = async (config: ToolConfig) => {
       return null
     }
   })
-  if (new_temp_str !== undefined) return parseFloat(new_temp_str)
-  return undefined
+  if (new_temp_str === undefined) return undefined
+  if (new_temp_str.trim() === '') return null
+  return parseFloat(new_temp_str)
 }
 
 export const edit_reasoning_effort_for_config = async () => {
-  const effort_options: ('auto' | 'low' | 'medium' | 'high')[] = [
-    'auto',
-    'low',
-    'medium',
-    'high'
+  const effort_options: vscode.QuickPickItem[] = [
+    { label: 'Unset', description: 'Remove reasoning effort configuration' },
+    { label: 'low' },
+    { label: 'medium' },
+    { label: 'high' }
   ]
   const selected_effort = await vscode.window.showQuickPick(effort_options, {
     title: 'Select Reasoning Effort'
   })
-  return selected_effort
+
+  if (!selected_effort) return undefined
+  if (selected_effort.label == 'Unset') return null
+  return selected_effort.label
 }
 
 export const edit_instructions_placement_for_config = async () => {

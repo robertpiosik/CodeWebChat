@@ -8,7 +8,6 @@ import {
 import { make_api_request } from '@/utils/make-api-request'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
-import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import {
   API_EDIT_FORMAT_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY
@@ -94,7 +93,7 @@ const get_edit_context_config = async (
     const create_items = async () => {
       return edit_context_configs.map((config: ToolConfig, index) => {
         const description_parts = [config.provider_name]
-        if (config.temperature != DEFAULT_TEMPERATURE['edit-context']) {
+        if (config.temperature != null) {
           description_parts.push(`${config.temperature}`)
         }
         if (config.reasoning_effort) {

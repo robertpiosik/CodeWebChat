@@ -11,7 +11,6 @@ import { Logger } from '@shared/utils/logger'
 import he from 'he'
 import { PROVIDERS } from '@shared/constants/providers'
 import { LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
-import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { ToolConfig } from '@/services/model-providers-manager'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
@@ -105,7 +104,7 @@ const get_code_completion_config = async (
     const create_items = () => {
       return code_completions_configs.map((config: ToolConfig, index) => {
         const description_parts = [config.provider_name]
-        if (config.temperature != DEFAULT_TEMPERATURE['code-completions']) {
+        if (config.temperature != null) {
           description_parts.push(`${config.temperature}`)
         }
         if (config.reasoning_effort) {

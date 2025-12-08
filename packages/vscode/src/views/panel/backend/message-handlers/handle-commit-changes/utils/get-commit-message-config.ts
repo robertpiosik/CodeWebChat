@@ -7,13 +7,12 @@ import {
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { PROVIDERS } from '@shared/constants/providers'
-import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import { LAST_SELECTED_COMMIT_MESSAGES_CONFIG_ID_STATE_KEY } from '@/constants/state-keys'
 
 export interface CommitMessageConfig {
   provider_name: string
   model: string
-  temperature: number
+  temperature?: number
   reasoning_effort?: ReasoningEffort
 }
 
@@ -49,7 +48,7 @@ export const get_commit_message_config = async (
         if (config.reasoning_effort) {
           description_parts.push(`${config.reasoning_effort}`)
         }
-        if (config.temperature != DEFAULT_TEMPERATURE['commit-messages']) {
+        if (config.temperature != null) {
           description_parts.push(`${config.temperature}`)
         }
 
@@ -73,7 +72,7 @@ export const get_commit_message_config = async (
         )
       const last_selected_item = (
         quick_pick.items as (vscode.QuickPickItem & { id: string })[]
-      ).find((item) => item.id === last_selected_id)
+      ).find((item) => item.id == last_selected_id)
 
       if (last_selected_item) {
         quick_pick.activeItems = [last_selected_item]

@@ -5,13 +5,10 @@ import {
   get_tool_config_id
 } from '@/services/model-providers-manager'
 import { ConfigurationForClient } from '@/views/settings/types/messages'
-import { SupportedTool, DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
-
-const TOOL: SupportedTool = 'intelligent-update'
 
 const create_description = (config: ToolConfig): string => {
   const description_parts = [config.provider_name]
-  if (config.temperature != DEFAULT_TEMPERATURE[TOOL]) {
+  if (config.temperature != null) {
     description_parts.push(`${config.temperature}`)
   }
   if (config.reasoning_effort) {

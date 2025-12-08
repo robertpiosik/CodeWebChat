@@ -1,5 +1,4 @@
 import styles from './Configurations.module.scss'
-import { DEFAULT_TEMPERATURE } from '@shared/constants/api-tools'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { IconButton } from '../IconButton/IconButton'
@@ -41,10 +40,7 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     if (configuration.reasoning_effort) {
       description_parts.push(`${configuration.reasoning_effort}`)
     }
-    if (
-      configuration.temperature &&
-      configuration.temperature != DEFAULT_TEMPERATURE[props.api_prompt_type]
-    ) {
+    if (configuration.temperature != null) {
       description_parts.push(`${configuration.temperature}`)
     }
     if (configuration.cache_enabled) {

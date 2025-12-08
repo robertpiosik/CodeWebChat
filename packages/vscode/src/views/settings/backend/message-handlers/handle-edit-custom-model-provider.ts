@@ -31,7 +31,7 @@ export const handle_edit_custom_model_provider = async (
     return
   }
 
-  let provider_to_edit: CustomProvider = { ...original_provider }
+  const provider_to_edit: CustomProvider = { ...original_provider }
 
   const show_options_quick_pick = (): Promise<string | undefined> => {
     return new Promise((resolve) => {
@@ -58,18 +58,7 @@ export const handle_edit_custom_model_provider = async (
       const quick_pick = vscode.window.createQuickPick()
       quick_pick.items = items
       quick_pick.title = `Edit "${provider_to_edit.name}" Model Provider`
-
-      const redo_button: vscode.QuickInputButton = {
-        iconPath: new vscode.ThemeIcon('redo'),
-        tooltip: 'Cancel all changes'
-      }
-
-      const save_button: vscode.QuickInputButton = {
-        iconPath: new vscode.ThemeIcon('save'),
-        tooltip: 'Save changes'
-      }
-
-      quick_pick.buttons = [redo_button, save_button]
+      quick_pick.placeholder = 'Select a property to edit'
 
       let is_accepted = false
       const disposables: vscode.Disposable[] = []
@@ -80,15 +69,6 @@ export const handle_edit_custom_model_provider = async (
       }
 
       disposables.push(
-        quick_pick.onDidTriggerButton((button) => {
-          is_accepted = true
-          if (button === redo_button) {
-            resolve('redo')
-          } else if (button === save_button) {
-            resolve('save')
-          }
-          quick_pick.hide()
-        }),
         quick_pick.onDidAccept(() => {
           is_accepted = true
           const selected = quick_pick.selectedItems[0] as
@@ -239,13 +219,8 @@ export const handle_edit_custom_model_provider = async (
   while (true) {
     const selected_id = await show_options_quick_pick()
 
-    if (selected_id === undefined || selected_id == 'save') {
+    if (selected_id === undefined) {
       break
-    }
-
-    if (selected_id == 'redo') {
-      provider_to_edit = { ...original_provider }
-      continue
     }
 
     if (selected_id == 'rename') {

@@ -25,7 +25,7 @@ export type ToolConfig = {
   provider_type: string
   provider_name: string
   model: string
-  temperature: number
+  temperature?: number
   reasoning_effort?: ReasoningEffort
   max_concurrency?: number
   instructions_placement?: InstructionsPlacement
@@ -179,7 +179,7 @@ export class ModelProvidersManager {
           provider_name: sc.providerName,
           provider_type: provider?.type || '',
           model: sc.model,
-          temperature: sc.temperature ?? 1.0,
+          temperature: sc.temperature,
           reasoning_effort: sc.reasoningEffort,
           max_concurrency: sc.maxConcurrency,
           instructions_placement: sc.instructionsPlacement,
@@ -234,7 +234,7 @@ export class ModelProvidersManager {
     return (
       settings_config.providerName === tool_config.provider_name &&
       settings_config.model === tool_config.model &&
-      (settings_config.temperature ?? 1.0) === tool_config.temperature &&
+      settings_config.temperature === tool_config.temperature &&
       (settings_config.reasoningEffort ?? undefined) ===
         (tool_config.reasoning_effort ?? undefined) &&
       (settings_config.maxConcurrency ?? undefined) ===
@@ -272,7 +272,7 @@ export class ModelProvidersManager {
         provider_name: default_config_from_settings.providerName,
         provider_type: provider?.type || '',
         model: default_config_from_settings.model,
-        temperature: default_config_from_settings.temperature ?? 1.0,
+        temperature: default_config_from_settings.temperature,
         reasoning_effort: default_config_from_settings.reasoningEffort,
         max_concurrency: default_config_from_settings.maxConcurrency,
         instructions_placement:

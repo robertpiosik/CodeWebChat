@@ -4,10 +4,6 @@ import {
   FrontendMessage
 } from '@/views/settings/types/messages'
 import {
-  handle_add_code_completions_configuration,
-  handle_add_commit_messages_configuration,
-  handle_add_edit_context_configuration,
-  handle_add_intelligent_update_configuration,
   handle_add_model_provider,
   handle_change_model_provider_key,
   handle_delete_code_completions_configuration,
@@ -15,11 +11,7 @@ import {
   handle_delete_edit_context_configuration,
   handle_delete_intelligent_update_configuration,
   handle_delete_model_provider,
-  handle_edit_code_completions_configuration,
-  handle_edit_commit_messages_configuration,
   handle_edit_custom_model_provider,
-  handle_edit_edit_context_configuration,
-  handle_edit_intelligent_update_configuration,
   handle_get_clear_checks_in_workspace_behavior,
   handle_get_code_completions_configurations,
   handle_get_commit_message_instructions,
@@ -41,6 +33,10 @@ import {
   handle_set_default_code_completions_configuration,
   handle_set_default_commit_messages_configuration,
   handle_set_default_intelligent_update_configuration,
+  handle_upsert_code_completions_configuration,
+  handle_upsert_commit_messages_configuration,
+  handle_upsert_edit_context_configuration,
+  handle_upsert_intelligent_update_configuration,
   handle_update_clear_checks_in_workspace_behavior,
   handle_update_commit_message_instructions,
   handle_update_commit_message_auto_accept_after,
@@ -129,9 +125,9 @@ export class SettingsProvider {
         } else if (message.command == 'DELETE_CODE_COMPLETIONS_CONFIGURATION') {
           await handle_delete_code_completions_configuration(this, message)
         } else if (message.command == 'ADD_CODE_COMPLETIONS_CONFIGURATION') {
-          await handle_add_code_completions_configuration(this)
+          await handle_upsert_code_completions_configuration(this)
         } else if (message.command == 'EDIT_CODE_COMPLETIONS_CONFIGURATION') {
-          await handle_edit_code_completions_configuration(this, message)
+          await handle_upsert_code_completions_configuration(this, message)
         } else if (
           message.command == 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION'
         ) {
@@ -143,9 +139,9 @@ export class SettingsProvider {
         } else if (message.command == 'DELETE_EDIT_CONTEXT_CONFIGURATION') {
           await handle_delete_edit_context_configuration(this, message)
         } else if (message.command == 'ADD_EDIT_CONTEXT_CONFIGURATION') {
-          await handle_add_edit_context_configuration(this)
+          await handle_upsert_edit_context_configuration(this)
         } else if (message.command == 'EDIT_EDIT_CONTEXT_CONFIGURATION') {
-          await handle_edit_edit_context_configuration(this, message)
+          await handle_upsert_edit_context_configuration(this, message)
         } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
           await handle_get_edit_context_system_instructions(this)
         } else if (
@@ -167,9 +163,9 @@ export class SettingsProvider {
         ) {
           await handle_delete_intelligent_update_configuration(this, message)
         } else if (message.command == 'ADD_INTELLIGENT_UPDATE_CONFIGURATION') {
-          await handle_add_intelligent_update_configuration(this)
+          await handle_upsert_intelligent_update_configuration(this)
         } else if (message.command == 'EDIT_INTELLIGENT_UPDATE_CONFIGURATION') {
-          await handle_edit_intelligent_update_configuration(this, message)
+          await handle_upsert_intelligent_update_configuration(this, message)
         } else if (
           message.command == 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION'
         ) {
@@ -186,9 +182,9 @@ export class SettingsProvider {
         } else if (message.command == 'DELETE_COMMIT_MESSAGES_CONFIGURATION') {
           await handle_delete_commit_messages_configuration(this, message)
         } else if (message.command == 'ADD_COMMIT_MESSAGES_CONFIGURATION') {
-          await handle_add_commit_messages_configuration(this)
+          await handle_upsert_commit_messages_configuration(this)
         } else if (message.command == 'EDIT_COMMIT_MESSAGES_CONFIGURATION') {
-          await handle_edit_commit_messages_configuration(this, message)
+          await handle_upsert_commit_messages_configuration(this, message)
         } else if (
           message.command == 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION'
         ) {
