@@ -44,7 +44,7 @@ Constructed message is simple and focuses the model's whole attention on the tas
 ```
 Implement a subtract function.
 <system>
-Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
+Whenever showing a new, updated, renamed or deleted file, provide brief explanation, then...
 </system>
 <files>
 <file path="src/calculator.ts">
@@ -55,7 +55,7 @@ export const addNumbers = (a: number, b: number) => a + b;
 </files>
 Implement a subtract function.
 <system>
-Whenever proposing a new or updated file use the Markdown Code Block syntax. Each code block should be a diff patch. Don't use XML for files.
+Whenever showing a new, updated, renamed or deleted file, provide brief explanation, then...
 </system>
 ```
 
