@@ -196,7 +196,6 @@ export const CHATBOTS = {
       search: 'Search'
     },
     models: {
-      sonar: { label: 'Sonar', disabled_options: ['with-reasoning'] },
       'gpt-5.1': { label: 'GPT-5.1' },
       'claude-opus-4.5': { label: 'Claude Opus 4.5' },
       'gemini-3-pro': {

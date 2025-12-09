@@ -31,10 +31,9 @@ export const perplexity: Chatbot = {
     const model = chat.model
     if (!model) return
 
-    const model_button = document
-      .querySelector('button[data-testid="sources-switcher-button"]')
-      ?.closest('div')
-      ?.querySelector(':scope > div button') as HTMLButtonElement
+    const model_button = document.querySelector(
+      'input[multiple] + button + div button'
+    ) as HTMLButtonElement
     if (!model_button) {
       report_initialization_error({
         function_name: 'set_model',
@@ -55,23 +54,23 @@ export const perplexity: Chatbot = {
     model_button.click()
     await new Promise((r) => requestAnimationFrame(r))
 
-    const menu = document.querySelector(
+    let dropdown = document.querySelector(
       'div[data-type="portal"] div[role="menu"]'
     )
-    if (!menu) {
+    if (!dropdown) {
       report_initialization_error({
         function_name: 'set_model',
-        log_message: 'Model selector menu not found'
+        log_message: 'Model selector dropdown not found'
       })
-      model_button.click()
       return
     }
 
-    const menu_items = menu.querySelectorAll('div[role="menuitem"]')
+    const menu_items = dropdown.querySelectorAll('div[role="menuitem"]')
     let found = false
     for (const item of Array.from(menu_items)) {
-      if (item.textContent?.trim() == model_label_to_find) {
+      if (item.textContent?.includes(model_label_to_find)) {
         ;(item as HTMLElement).click()
+        await new Promise((r) => requestAnimationFrame(r))
         found = true
         break
       }
@@ -91,7 +90,12 @@ export const perplexity: Chatbot = {
         'with-reasoning'
       )
 
-    const switch_button = menu.querySelector(
+    // Reassign because the dropdown re-rendered
+    dropdown = document.querySelector(
+      'div[data-type="portal"] div[role="menu"]'
+    )!
+
+    const switch_button = dropdown.querySelector(
       'button[role="switch"]'
     ) as HTMLElement
 
@@ -108,15 +112,14 @@ export const perplexity: Chatbot = {
   },
   set_options: async (chat) => {
     const options = chat.options
-    if (!options) return
 
-    if (options.includes('search')) {
+    if (options && options.includes('search')) {
       // Enabled by default
       return
     }
 
     const switcher_button = document.querySelector(
-      'button[data-testid="sources-switcher-button"]'
+      'input[multiple] + button'
     ) as HTMLButtonElement
     if (!switcher_button) {
       report_initialization_error({
@@ -126,11 +129,13 @@ export const perplexity: Chatbot = {
       return
     }
 
-    switcher_button.click()
+    switcher_button.dispatchEvent(
+      new PointerEvent('pointerdown', { bubbles: true })
+    )
     await new Promise((r) => requestAnimationFrame(r))
 
     const web_toggle = document.querySelector(
-      'div[data-testid="source-toggle-web"]'
+      'div[data-testid="sources-menu-suggested-sources"] > div button'
     ) as HTMLElement
     if (web_toggle) {
       web_toggle.click()
@@ -214,7 +219,7 @@ export const perplexity: Chatbot = {
           'button[data-testid="stop-generating-response-button"]'
         ),
       footer_selector:
-        '.max-w-threadContentWidth > .relative > div > div > div > div > div + div > div',
+        '.relative.font-sans + div > div.items-center:first-child',
       add_buttons
     })
   }
