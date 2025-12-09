@@ -158,6 +158,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             slot={
               <Textarea
                 value={instructions.whole}
+                min_rows={3}
+                max_rows_when_not_focused={3}
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, whole: value }))
                 }
@@ -172,6 +174,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             slot={
               <Textarea
                 value={instructions.truncated}
+                min_rows={3}
+                max_rows_when_not_focused={3}
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, truncated: value }))
                 }
@@ -186,6 +190,8 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             slot={
               <Textarea
                 value={instructions.diff}
+                min_rows={3}
+                max_rows_when_not_focused={3}
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, diff: value }))
                 }
