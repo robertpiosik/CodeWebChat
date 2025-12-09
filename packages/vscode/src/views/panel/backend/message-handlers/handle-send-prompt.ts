@@ -307,7 +307,7 @@ async function show_preset_quick_pick(params: {
 
   const run_without_submission_button: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon('file-media'),
-    tooltip: 'Run and pause for media upload'
+    tooltip: 'Upload media before submitting message'
   }
 
   const quick_pick = vscode.window.createQuickPick<
