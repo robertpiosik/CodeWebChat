@@ -252,7 +252,7 @@ export const openrouter: Chatbot = {
       const options = dropdown.querySelectorAll('div[role="option"]')
       let found = false
       for (const option of Array.from(options)) {
-        if (option.textContent == reasoning_effort) {
+        if (option.textContent.toLowerCase() == reasoning_effort) {
           ;(option as HTMLElement).click()
           found = true
           break
