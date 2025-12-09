@@ -85,7 +85,6 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 - HuggingChat
 - Kimi
 - LMArena
-- Minimax
 - Mistral
 - Open WebUI
 - OpenRouter

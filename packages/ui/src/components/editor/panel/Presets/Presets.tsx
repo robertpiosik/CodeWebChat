@@ -20,7 +20,6 @@ export const chatbot_to_icon: Record<keyof typeof CHATBOTS, Icon.Variant> = {
   Grok: 'GROK',
   HuggingChat: 'HUGGING_CHAT',
   Kimi: 'KIMI',
-  Minimax: 'MINIMAX',
   Mistral: 'MISTRAL',
   LMArena: 'LMARENA',
   'Open WebUI': 'OPEN_WEBUI',

@@ -643,38 +643,34 @@
             },
             {
               "name": "(13)",
-              "chatbot": "Minimax"
-            },
-            {
-              "name": "(14)",
               "chatbot": "Mistral"
             },
             {
-              "name": "(15)",
+              "name": "(14)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(16)",
+              "name": "(15)",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "(17)",
+              "name": "(16)",
               "chatbot": "Perplexity"
             },
             {
-              "name": "(18)",
+              "name": "(17)",
               "chatbot": "Qwen"
             },
             {
-              "name": "(19)",
+              "name": "(18)",
               "chatbot": "Together"
             },
             {
-              "name": "(20)",
+              "name": "(19)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(21)",
+              "name": "(20)",
               "chatbot": "Z.AI"
             },
             {}
@@ -810,38 +806,34 @@
             },
             {
               "name": "(13)",
-              "chatbot": "Minimax"
-            },
-            {
-              "name": "(14)",
               "chatbot": "Mistral"
             },
             {
-              "name": "(15)",
+              "name": "(14)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(16)",
+              "name": "(15)",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "(17)",
+              "name": "(16)",
               "chatbot": "Perplexity"
             },
             {
-              "name": "(18)",
+              "name": "(17)",
               "chatbot": "Qwen"
             },
             {
-              "name": "(19)",
+              "name": "(18)",
               "chatbot": "Together"
             },
             {
-              "name": "(20)",
+              "name": "(19)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(21)",
+              "name": "(20)",
               "chatbot": "Z.AI"
             },
             {}
@@ -977,38 +969,34 @@
             },
             {
               "name": "(13)",
-              "chatbot": "Minimax"
-            },
-            {
-              "name": "(14)",
               "chatbot": "Mistral"
             },
             {
-              "name": "(15)",
+              "name": "(14)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(16)",
+              "name": "(15)",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "(17)",
+              "name": "(16)",
               "chatbot": "Perplexity"
             },
             {
-              "name": "(18)",
+              "name": "(17)",
               "chatbot": "Qwen"
             },
             {
-              "name": "(19)",
+              "name": "(18)",
               "chatbot": "Together"
             },
             {
-              "name": "(20)",
+              "name": "(19)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(21)",
+              "name": "(20)",
               "chatbot": "Z.AI"
             },
             {}
@@ -1116,38 +1104,34 @@
             },
             {
               "name": "(13)",
-              "chatbot": "Minimax"
-            },
-            {
-              "name": "(14)",
               "chatbot": "Mistral"
             },
             {
-              "name": "(15)",
+              "name": "(14)",
               "chatbot": "Open WebUI"
             },
             {
-              "name": "(16)",
+              "name": "(15)",
               "chatbot": "OpenRouter"
             },
             {
-              "name": "(17)",
+              "name": "(16)",
               "chatbot": "Perplexity"
             },
             {
-              "name": "(18)",
+              "name": "(17)",
               "chatbot": "Qwen"
             },
             {
-              "name": "(19)",
+              "name": "(18)",
               "chatbot": "Together"
             },
             {
-              "name": "(20)",
+              "name": "(19)",
               "chatbot": "Yuanbao"
             },
             {
-              "name": "(21)",
+              "name": "(20)",
               "chatbot": "Z.AI"
             },
             {}

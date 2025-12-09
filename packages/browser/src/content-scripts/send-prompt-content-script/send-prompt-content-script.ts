@@ -21,7 +21,6 @@ import {
   together,
   github_copilot,
   hugging_chat,
-  minimax,
   perplexity,
   z_ai
 } from './chatbots'
@@ -74,9 +73,6 @@ const is_hugging_chat = current_url.startsWith(hugging_chat_url)
 const lmarena_url = 'https://lmarena.ai/'
 const is_lmarena = current_url.startsWith(lmarena_url)
 
-const minimax_url = 'https://agent.minimax.io/'
-const is_minimax = current_url.startsWith(minimax_url)
-
 const grok_url = 'https://grok.com/'
 const is_grok = current_url.startsWith(grok_url)
 
@@ -115,8 +111,6 @@ if (is_ai_studio) {
   chatbot = hugging_chat
 } else if (is_lmarena) {
   chatbot = lmarena
-} else if (is_minimax) {
-  chatbot = minimax
 } else if (is_mistral) {
   chatbot = mistral
 } else if (is_open_webui) {
@@ -159,7 +153,6 @@ export const get_textarea_element = () => {
     [z_ai_url]: 'textarea',
     [github_copilot_url]: 'textarea',
     [hugging_chat_url]: 'textarea',
-    [minimax_url]: 'textarea',
     [lmarena_url]: 'textarea'
   } as any
 

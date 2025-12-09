@@ -153,9 +153,6 @@ export const CHATBOTS = {
   LMArena: {
     url: 'https://lmarena.ai/'
   } as Chatbot,
-  Minimax: {
-    url: 'https://agent.minimax.io/'
-  } as Chatbot,
   Mistral: {
     url: 'https://chat.mistral.ai/chat',
     supports_url_override: true,
