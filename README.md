@@ -53,10 +53,10 @@ export const addNumbers = (a: number, b: number) => a + b;
 ]]>
 </file>
 </files>
-Implement a subtract function.
 <system>
 Whenever showing a new, updated, renamed or deleted file, provide brief explanation, then...
 </system>
+Implement a subtract function.
 ```
 
 > [!NOTE]
