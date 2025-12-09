@@ -258,7 +258,7 @@ export const handle_send_prompt = async (params: {
           if (edit_format_instructions) {
             const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
             pre_context_instructions += `\n${system_instructions}`
-            post_context_instructions += `\n${system_instructions}`
+            post_context_instructions = `${system_instructions}\n${post_context_instructions}`
           }
         }
 

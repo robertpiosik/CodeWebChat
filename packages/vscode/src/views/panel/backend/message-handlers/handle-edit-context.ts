@@ -383,7 +383,7 @@ const perform_context_editing = async (params: {
     if (edit_format_instructions) {
       const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
       loop_pre_context_instructions += `\n${system_instructions}`
-      loop_post_context_instructions += `\n${system_instructions}`
+      loop_post_context_instructions = `${system_instructions}\n${loop_post_context_instructions}`
     }
 
     // Use instructions placement setting to determine message structure
