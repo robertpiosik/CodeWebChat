@@ -61,9 +61,7 @@ export const TextItem: FC<Props> = (props) => {
           onMouseMove={handle_mouse_move}
           onMouseUp={handle_mouse_up}
         >
-          <ReactMarkdown disallowedElements={['a', 'hr']}>
-            {props.content}
-          </ReactMarkdown>
+          <ReactMarkdown>{props.content}</ReactMarkdown>
           <div
             className={styles.text__collapse}
             onClick={() => {
