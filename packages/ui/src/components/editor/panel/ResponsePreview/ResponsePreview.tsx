@@ -174,7 +174,7 @@ export const ResponsePreview: FC<Props> = (props) => {
 
                       <span>
                         {props.has_multiple_workspaces && file.workspace_name
-                          ? `${file.workspace_name}/`
+                          ? `${file.workspace_name}${dir_path ? '/' : ''}`
                           : ''}
                         {dir_path}
                       </span>
