@@ -22,7 +22,7 @@ export const Page: React.FC<Props> = (props) => {
     return () => {
       window.removeEventListener('mouseup', handle_mouse_up)
     }
-  }, [props.on_back_click])
+  }, [])
 
   return (
     <div className={styles.container}>

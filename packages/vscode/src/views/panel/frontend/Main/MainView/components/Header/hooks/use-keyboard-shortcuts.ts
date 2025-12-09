@@ -10,6 +10,7 @@ type UseKeyboardShortcutsParams = {
   on_web_prompt_type_change: (mode: WebPromptType) => void
   on_api_prompt_type_change: (mode: ApiPromptType) => void
   on_show_home: () => void
+  is_disabled: boolean
 }
 
 export const use_keyboard_shortcuts = ({
@@ -17,12 +18,15 @@ export const use_keyboard_shortcuts = ({
   handle_heading_click,
   on_web_prompt_type_change,
   on_api_prompt_type_change,
-  on_show_home
+  on_show_home,
+  is_disabled
 }: UseKeyboardShortcutsParams) => {
   const is_mac = use_is_mac()
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
+      if (is_disabled) return
+
       if (
         event.key == 'Escape' &&
         !event.metaKey &&
@@ -41,6 +45,8 @@ export const use_keyboard_shortcuts = ({
     }
 
     const handle_mouse_up = (event: MouseEvent) => {
+      if (is_disabled) return
+
       if (event.button == 3) {
         on_show_home()
       }
@@ -53,10 +59,12 @@ export const use_keyboard_shortcuts = ({
       window.removeEventListener('keydown', handle_key_down)
       window.removeEventListener('mouseup', handle_mouse_up)
     }
-  }, [is_mac, handle_heading_click, on_show_home])
+  }, [is_disabled, on_show_home, is_mac, handle_heading_click])
 
   useEffect(() => {
     const handle_key_down = (event: KeyboardEvent) => {
+      if (is_disabled) return
+
       if (!event.altKey || !event.shiftKey || event.metaKey || event.ctrlKey) {
         return
       }
@@ -91,5 +99,5 @@ export const use_keyboard_shortcuts = ({
     return () => {
       window.removeEventListener('keydown', handle_key_down)
     }
-  }, [mode, on_web_prompt_type_change, on_api_prompt_type_change])
+  }, [mode, on_web_prompt_type_change, on_api_prompt_type_change, is_disabled])
 }

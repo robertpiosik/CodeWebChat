@@ -191,6 +191,8 @@ export const Panel = () => {
     commit_button_enabling_trigger_count
   }
 
+  const are_keyboard_shortcuts_disabled = !!updating_preset || !!items_to_review
+
   return (
     <LayoutContext.Provider value={layout_context_value}>
       <div className={styles.container}>
@@ -203,6 +205,9 @@ export const Panel = () => {
             >
               <Main
                 scroll_reset_key={main_view_scroll_reset_key}
+                are_keyboard_shortcuts_disabled={
+                  are_keyboard_shortcuts_disabled
+                }
                 vscode={vscode}
                 on_preset_edit={(preset) => {
                   post_message(vscode, {

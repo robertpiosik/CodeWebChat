@@ -51,6 +51,7 @@ type Props = {
   configurations_collapsed: boolean
   on_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
+  are_keyboard_shortcuts_disabled: boolean
 }
 
 export const Main: React.FC<Props> = (props) => {
@@ -734,6 +735,7 @@ export const Main: React.FC<Props> = (props) => {
       }
       on_go_to_file={handle_go_to_file}
       currently_open_file_text={props.currently_open_file_text}
+      are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
     />
   )
 }

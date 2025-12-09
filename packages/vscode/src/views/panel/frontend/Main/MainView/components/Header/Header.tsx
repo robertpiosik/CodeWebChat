@@ -19,6 +19,7 @@ type Props = {
   on_web_prompt_type_change: (mode: WebPromptType) => void
   on_api_prompt_type_change: (mode: ApiPromptType) => void
   on_quick_action_click: (command: string) => void
+  are_keyboard_shortcuts_disabled: boolean
 }
 
 export const Header: React.FC<Props> = (props) => {
@@ -42,7 +43,8 @@ export const Header: React.FC<Props> = (props) => {
     handle_heading_click,
     on_web_prompt_type_change: props.on_web_prompt_type_change,
     on_api_prompt_type_change: props.on_api_prompt_type_change,
-    on_show_home: props.on_show_home
+    on_show_home: props.on_show_home,
+    is_disabled: props.are_keyboard_shortcuts_disabled
   })
 
   return (

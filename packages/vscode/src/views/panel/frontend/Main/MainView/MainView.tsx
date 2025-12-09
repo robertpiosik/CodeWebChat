@@ -91,6 +91,7 @@ type Props = {
   on_configurations_collapsed_change: (is_collapsed: boolean) => void
   currently_open_file_text?: string
   on_go_to_file: (file_path: string) => void
+  are_keyboard_shortcuts_disabled: boolean
 }
 
 export const MainView: React.FC<Props> = (props) => {
@@ -152,6 +153,7 @@ export const MainView: React.FC<Props> = (props) => {
         api_prompt_type={props.api_prompt_type}
         on_api_prompt_type_change={props.on_api_prompt_type_change}
         on_quick_action_click={props.on_quick_action_click}
+        are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
       />
       <Scrollable>
         <UiSeparator height={4} />
