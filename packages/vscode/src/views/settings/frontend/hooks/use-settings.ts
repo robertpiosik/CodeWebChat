@@ -39,6 +39,10 @@ export const use_settings = (vscode: any) => {
   const [edit_format_instructions, set_edit_format_instructions] = useState<
     EditFormatInstructions | undefined
   >(undefined)
+  const [
+    are_automatic_checkpoints_disabled,
+    set_are_automatic_checkpoints_disabled
+  ] = useState<boolean | undefined>(undefined)
   const [checkpoint_lifespan, set_checkpoint_lifespan] = useState<
     number | undefined
   >(undefined)
@@ -62,6 +66,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_COMMIT_MESSAGE_AUTO_ACCEPT_AFTER' })
     post_message(vscode, { command: 'GET_CONTEXT_SIZE_WARNING_THRESHOLD' })
     post_message(vscode, { command: 'GET_EDIT_FORMAT_INSTRUCTIONS' })
+    post_message(vscode, { command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED' })
     post_message(vscode, { command: 'GET_CHECKPOINT_LIFESPAN' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
@@ -100,6 +105,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'EDIT_FORMAT_INSTRUCTIONS':
           set_edit_format_instructions(message.instructions)
+          break
+        case 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED':
+          set_are_automatic_checkpoints_disabled(message.disabled)
           break
         case 'CHECKPOINT_LIFESPAN':
           set_checkpoint_lifespan(message.hours)
@@ -243,6 +251,12 @@ export const use_settings = (vscode: any) => {
       instructions
     })
 
+  const handle_automatic_checkpoints_toggle = (disabled: boolean) =>
+    post_message(vscode, {
+      command: 'UPDATE_ARE_AUTOMATIC_CHECKPOINTS_DISABLED',
+      disabled
+    })
+
   const handle_checkpoint_lifespan_change = (hours: number) =>
     post_message(vscode, {
       command: 'UPDATE_CHECKPOINT_LIFESPAN',
@@ -279,6 +293,7 @@ export const use_settings = (vscode: any) => {
     edit_context_system_instructions,
     context_size_warning_threshold,
     edit_format_instructions,
+    are_automatic_checkpoints_disabled,
     checkpoint_lifespan,
     gemini_user_id,
     clear_checks_in_workspace_behavior,
@@ -299,6 +314,7 @@ export const use_settings = (vscode: any) => {
     handle_open_editor_settings,
     handle_context_size_warning_threshold_change,
     handle_edit_format_instructions_change,
+    handle_automatic_checkpoints_toggle,
     handle_checkpoint_lifespan_change,
     handle_gemini_user_id_change,
     handle_clear_checks_in_workspace_behavior_change

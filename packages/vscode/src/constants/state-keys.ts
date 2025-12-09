@@ -26,10 +26,13 @@ export const LAST_CONTEXT_MERGE_REPLACE_OPTION_STATE_KEY =
 export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
   'last-refactor-instruction-source'
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'
+
 export const CHECKPOINTS_STATE_KEY = 'checkpoints'
 export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'
 export const CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY =
   'checkpoint-operation-in-progress'
+export const ARE_AUTOMATIC_CHECKPOINTS_DISABLED_STATE_KEY =
+  'are_automatic_checkpoints_disabled'
 
 export const DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY =
   'duplicate-workspace-context'

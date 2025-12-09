@@ -13,6 +13,7 @@ import {
   handle_delete_model_provider,
   handle_edit_custom_model_provider,
   handle_get_clear_checks_in_workspace_behavior,
+  handle_get_are_automatic_checkpoints_disabled,
   handle_get_code_completions_configurations,
   handle_get_commit_message_instructions,
   handle_get_commit_message_auto_accept_after,
@@ -38,6 +39,7 @@ import {
   handle_upsert_edit_context_configuration,
   handle_upsert_intelligent_update_configuration,
   handle_update_clear_checks_in_workspace_behavior,
+  handle_update_are_automatic_checkpoints_disabled,
   handle_update_commit_message_instructions,
   handle_update_commit_message_auto_accept_after,
   handle_update_context_size_warning_threshold,
@@ -217,6 +219,18 @@ export class SettingsProvider {
           await handle_update_gemini_user_id(message)
         } else if (message.command == 'GET_CHECKPOINT_LIFESPAN') {
           await handle_get_checkpoint_lifespan(this)
+        } else if (
+          message.command == 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
+        ) {
+          await handle_get_are_automatic_checkpoints_disabled(this)
+        } else if (
+          message.command == 'UPDATE_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
+        ) {
+          await handle_update_are_automatic_checkpoints_disabled(
+            message,
+            this.context
+          )
+          await handle_get_are_automatic_checkpoints_disabled(this)
         } else if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN') {
           await vscode.workspace
             .getConfiguration('codeWebChat')
@@ -247,6 +261,7 @@ export class SettingsProvider {
           void handle_get_commit_message_instructions(this)
           void handle_get_commit_message_auto_accept_after(this)
           void handle_get_clear_checks_in_workspace_behavior(this)
+          void handle_get_are_automatic_checkpoints_disabled(this)
           void handle_get_checkpoint_lifespan(this)
           void handle_get_gemini_user_id(this)
         }

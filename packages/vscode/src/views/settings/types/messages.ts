@@ -209,6 +209,15 @@ export interface UpdateContextSizeWarningThresholdMessage {
   threshold: number
 }
 
+export interface GetAreAutomaticCheckpointsDisabledMessage {
+  command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
+}
+
+export interface UpdateAreAutomaticCheckpointsDisabledMessage {
+  command: 'UPDATE_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
+  disabled: boolean
+}
+
 export interface GetCheckpointLifespanMessage {
   command: 'GET_CHECKPOINT_LIFESPAN'
 }
@@ -277,6 +286,8 @@ export type FrontendMessage =
   | SettingsUiReadyMessage
   | GetContextSizeWarningThresholdMessage
   | UpdateContextSizeWarningThresholdMessage
+  | GetAreAutomaticCheckpointsDisabledMessage
+  | UpdateAreAutomaticCheckpointsDisabledMessage
   | GetCheckpointLifespanMessage
   | UpdateCheckpointLifespanMessage
   | GetGeminiUserIdMessage
@@ -333,6 +344,11 @@ export interface ContextSizeWarningThresholdMessage {
   threshold: number
 }
 
+export interface AreAutomaticCheckpointsDisabledMessage {
+  command: 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
+  disabled: boolean
+}
+
 export interface CheckpointLifespanMessage {
   command: 'CHECKPOINT_LIFESPAN'
   hours: number
@@ -364,6 +380,7 @@ export type BackendMessage =
   | EditContextSystemInstructionsMessage
   | EditFormatInstructionsMessage
   | ContextSizeWarningThresholdMessage
+  | AreAutomaticCheckpointsDisabledMessage
   | CheckpointLifespanMessage
   | GeminiUserIdMessage
   | ClearChecksInWorkspaceBehaviorMessage

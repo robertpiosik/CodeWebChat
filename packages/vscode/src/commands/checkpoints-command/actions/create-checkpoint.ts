@@ -2,7 +2,8 @@ import * as vscode from 'vscode'
 import {
   CHECKPOINTS_STATE_KEY,
   TEMPORARY_CHECKPOINT_STATE_KEY,
-  CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
+  CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY,
+  ARE_AUTOMATIC_CHECKPOINTS_DISABLED_STATE_KEY
 } from '../../../constants/state-keys'
 import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
 import type { Checkpoint, CheckpointTab } from '../types'
@@ -34,6 +35,22 @@ export const create_checkpoint = async (
   description?: string
 ): Promise<Checkpoint | undefined> => {
   try {
+    const are_automatic_checkpoints_disabled =
+      context.workspaceState.get<boolean>(
+        ARE_AUTOMATIC_CHECKPOINTS_DISABLED_STATE_KEY
+      ) ?? false
+
+    const is_automatic_checkpoint = title !== 'Created by user'
+
+    if (are_automatic_checkpoints_disabled && is_automatic_checkpoint) {
+      Logger.info({
+        function_name: 'create_checkpoint',
+        message: 'Automatic checkpoint creation is disabled. Skipping.',
+        data: { title }
+      })
+      return undefined
+    }
+
     const operation_in_progress = context.workspaceState.get<number>(
       CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
     )

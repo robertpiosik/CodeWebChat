@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react'
 import { Input } from '@ui/components/editor/common/Input'
+import { Toggler } from '@ui/components/editor/common/Toggler'
 import { Dropdown } from '@ui/components/editor/common/Dropdown'
 import { Item } from '@ui/components/editor/settings/Item'
 import { Group } from '@ui/components/editor/settings/Group/Group'
@@ -17,7 +18,9 @@ const CLEAR_CHECKS_OPTIONS: Dropdown.Option<ClearChecksBehavior>[] = [
 
 type Props = {
   context_size_warning_threshold: number
+  are_automatic_checkpoints_disabled: boolean
   checkpoint_lifespan: number
+  on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number) => void
   clear_checks_in_workspace_behavior: ClearChecksBehavior
   edit_format_instructions: EditFormatInstructions
@@ -104,6 +107,18 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_change={set_context_size_warning_threshold}
                 on_blur={handle_context_size_warning_threshold_blur}
                 max_width={100}
+              />
+            }
+          />
+          <Item
+            title="Automatic Checkpoints"
+            description="A checkpoint will be created whenever a response is accepted or changes commited."
+            slot={
+              <Toggler
+                is_on={!props.are_automatic_checkpoints_disabled}
+                on_toggle={(is_on) =>
+                  props.on_automatic_checkpoints_toggle(!is_on)
+                }
               />
             }
           />
