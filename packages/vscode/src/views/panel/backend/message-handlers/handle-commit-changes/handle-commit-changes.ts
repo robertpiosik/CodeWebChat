@@ -112,12 +112,14 @@ export const handle_commit_changes = async (
     await proceed_with_commit_generation(panel_provider, repository, false)
   } else if (repository.state.workingTreeChanges.length > 0) {
     const unstaged_files = repository.state.workingTreeChanges.map(
-      (change: any) =>
-        path.relative(repository.rootUri.fsPath, change.uri.fsPath)
+      (change: any) => ({
+        path: path.relative(repository.rootUri.fsPath, change.uri.fsPath),
+        status: change.status
+      })
     )
 
     if (unstaged_files.length == 1) {
-      await handle_proceed_with_commit(panel_provider, unstaged_files)
+      await handle_proceed_with_commit(panel_provider, [unstaged_files[0].path])
     } else {
       panel_provider.send_message({
         command: 'SHOW_STAGE_FILES_MODAL',

@@ -6,8 +6,12 @@ import { Checkbox } from '../../../common/Checkbox'
 import { IconButton } from '../../IconButton/IconButton'
 import cn from 'classnames'
 
+const UNTRACKED_STATUS = 7
+const DELETED_STATUS = 6
+const MODIFIED_STATUS = 5
+
 type Props = {
-  files: string[]
+  files: { path: string; status: number }[]
   on_stage: (files_to_stage: string[]) => void
   on_cancel: () => void
   on_go_to_file: (file: string) => void
@@ -15,7 +19,10 @@ type Props = {
 }
 
 export const StageFilesModal: React.FC<Props> = (props) => {
-  const [selected_files, set_selected_files] = useState<string[]>(props.files)
+  console.log('xxx', props.files)
+  const [selected_files, set_selected_files] = useState<string[]>(
+    props.files.map((f) => f.path)
+  )
 
   const handle_toggle_file = (file: string, is_checked: boolean) => {
     if (is_checked) {
@@ -27,7 +34,7 @@ export const StageFilesModal: React.FC<Props> = (props) => {
 
   const handle_toggle_select_all = (is_checked: boolean) => {
     if (is_checked) {
-      set_selected_files(props.files)
+      set_selected_files(props.files.map((f) => f.path))
     } else {
       set_selected_files([])
     }
@@ -59,7 +66,8 @@ export const StageFilesModal: React.FC<Props> = (props) => {
             />
             <div className={styles.files__item__details}>Select all</div>
           </label>
-          {props.files.map((file) => {
+          {props.files.map((file_item) => {
+            const file = file_item.path
             const last_slash_index = file.lastIndexOf('/')
             const filename =
               last_slash_index == -1
@@ -76,29 +84,44 @@ export const StageFilesModal: React.FC<Props> = (props) => {
                     handle_toggle_file(file, is_checked)
                   }
                 />
-                <div className={styles.files__item__details} title={file}>
+                <div
+                  className={cn(styles.files__item__details, {
+                    [styles['files__item__details--new']]:
+                      file_item.status == UNTRACKED_STATUS,
+                    [styles['files__item__details--modified']]:
+                      file_item.status == MODIFIED_STATUS,
+                    [styles['files__item__details--deleted']]:
+                      file_item.status == DELETED_STATUS
+                  })}
+                  title={file}
+                >
                   <span>{filename}</span>
                   {dir_path && (
                     <span className={styles.files__item__path}>{dir_path}</span>
                   )}
                 </div>
                 <div className={styles.files__item__actions}>
-                  <IconButton
-                    codicon_icon="diff-single"
-                    title="Show Diff"
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      props.on_show_diff(file)
-                    }}
-                  />
-                  <IconButton
-                    codicon_icon="go-to-file"
-                    title="Go To File"
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      props.on_go_to_file(file)
-                    }}
-                  />
+                  {file_item.status != UNTRACKED_STATUS &&
+                    file_item.status != DELETED_STATUS && (
+                      <IconButton
+                        codicon_icon="diff-single"
+                        title="Show Diff"
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          props.on_show_diff(file)
+                        }}
+                      />
+                    )}
+                  {file_item.status != DELETED_STATUS && (
+                    <IconButton
+                      codicon_icon="go-to-file"
+                      title="Go To File"
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        props.on_go_to_file(file)
+                      }}
+                    />
+                  )}
                 </div>
               </label>
             )

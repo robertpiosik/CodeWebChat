@@ -29,6 +29,19 @@
       white-space: nowrap;
       text-overflow: ellipsis;
 
+      &--new {
+        color: var(--vscode-gitDecoration-untrackedResourceForeground);
+      }
+
+      &--modified {
+        color: var(--vscode-gitDecoration-modifiedResourceForeground);
+      }
+
+      &--deleted {
+        text-decoration: line-through;
+        color: var(--vscode-gitDecoration-deletedResourceForeground);
+      }
+
       > strong {
         font-weight: 500;
       }

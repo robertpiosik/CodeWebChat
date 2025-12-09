@@ -645,7 +645,7 @@ export interface UpdateFileInReviewMessage extends BaseMessage {
 
 export interface ShowStageFilesModalMessage extends BaseMessage {
   command: 'SHOW_STAGE_FILES_MODAL'
-  files: string[]
+  files: { path: string; status: number }[]
 }
 
 export interface ShowCommitMessageModalMessage extends BaseMessage {

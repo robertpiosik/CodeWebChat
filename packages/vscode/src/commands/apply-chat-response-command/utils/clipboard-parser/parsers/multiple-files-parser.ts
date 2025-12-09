@@ -52,7 +52,7 @@ const create_or_update_file_item = (params: {
 }): void => {
   const { file_name, content, workspace_name, file_ref_map, results } = params
 
-  if (!file_name || !has_real_code(content)) {
+  if (!file_name) {
     return
   }
 
@@ -60,7 +60,17 @@ const create_or_update_file_item = (params: {
 
   if (file_ref_map.has(file_key)) {
     const existing_file = file_ref_map.get(file_key)!
+    const had_content_before = has_real_code(existing_file.content)
     existing_file.content = content
+    const has_content_now = has_real_code(content)
+
+    if (!had_content_before && has_content_now) {
+      const index = results.indexOf(existing_file)
+      if (index > -1) {
+        results.splice(index, 1)
+        results.push(existing_file)
+      }
+    }
   } else {
     const new_file: FileItem = {
       type: 'file' as const,
@@ -236,6 +246,31 @@ export const parse_multiple_files = (params: {
           last_seen_file_path_comment = null
           continue
         }
+      }
+
+      const deleted_file_match = line
+        .trim()
+        .match(/^###\s+Deleted file:\s*`([^`]+)`$/i)
+      if (deleted_file_match && deleted_file_match[1]) {
+        flush_text_block({
+          text_block: current_text_block,
+          results
+        })
+        current_text_block = ''
+        const { workspace_name, relative_path } =
+          extract_and_set_workspace_path({
+            raw_file_path: deleted_file_match[1],
+            is_single_root_folder_workspace:
+              params.is_single_root_folder_workspace
+          })
+        create_or_update_file_item({
+          file_name: relative_path,
+          content: '',
+          workspace_name,
+          file_ref_map,
+          results
+        })
+        continue
       }
 
       let extracted_filename = extract_path_from_line_of_code(line)

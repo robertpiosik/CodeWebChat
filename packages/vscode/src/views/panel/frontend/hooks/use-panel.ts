@@ -39,7 +39,8 @@ export const use_panel = (vscode: any) => {
       }
     | undefined
   >()
-  const [files_to_stage, set_files_to_stage] = useState<string[]>()
+  const [files_to_stage, set_files_to_stage] =
+    useState<{ path: string; status: number }[]>()
   const [
     commit_button_enabling_trigger_count,
     set_commit_button_enabling_trigger_count

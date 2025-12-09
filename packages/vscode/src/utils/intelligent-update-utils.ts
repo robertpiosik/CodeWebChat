@@ -196,7 +196,7 @@ export const process_file = async (params: {
   api_key: string
   provider: any
   model: string
-  temperature: number
+  temperature?: number
   reasoning_effort?: ReasoningEffort
   file_path: string
   file_content: string
