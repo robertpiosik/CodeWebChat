@@ -551,6 +551,11 @@
           "default": 48,
           "minimum": 1
         },
+        "codeWebChat.areAutomaticCheckpointsDisabled": {
+          "type": "boolean",
+          "scope": "resource",
+          "default": false
+        },
         "codeWebChat.clearChecksInWorkspaceBehavior": {
           "type": "string",
           "enum": [

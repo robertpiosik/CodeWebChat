@@ -1,13 +1,12 @@
 import { SettingsProvider } from '../settings-provider'
-import { ARE_AUTOMATIC_CHECKPOINTS_DISABLED_STATE_KEY } from '@/constants/state-keys'
+import * as vscode from 'vscode'
 
 export async function handle_get_are_automatic_checkpoints_disabled(
   settings_provider: SettingsProvider
 ) {
-  const disabled =
-    settings_provider.context.workspaceState.get<boolean>(
-      ARE_AUTOMATIC_CHECKPOINTS_DISABLED_STATE_KEY
-    ) ?? false
+  const disabled = vscode.workspace
+    .getConfiguration('codeWebChat')
+    .get<boolean>('areAutomaticCheckpointsDisabled', false)
 
   settings_provider.postMessage({
     command: 'ARE_AUTOMATIC_CHECKPOINTS_DISABLED',

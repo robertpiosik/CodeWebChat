@@ -226,11 +226,7 @@ export class SettingsProvider {
         } else if (
           message.command == 'UPDATE_ARE_AUTOMATIC_CHECKPOINTS_DISABLED'
         ) {
-          await handle_update_are_automatic_checkpoints_disabled(
-            message,
-            this.context
-          )
-          await handle_get_are_automatic_checkpoints_disabled(this)
+          await handle_update_are_automatic_checkpoints_disabled(message)
         } else if (message.command == 'UPDATE_CHECKPOINT_LIFESPAN') {
           await vscode.workspace
             .getConfiguration('codeWebChat')

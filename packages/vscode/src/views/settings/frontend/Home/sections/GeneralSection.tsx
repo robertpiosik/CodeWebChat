@@ -111,6 +111,19 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
+            title="Clear Checks in Workspace Behavior"
+            description="Behavior of the 'Clear Checks' button in the Workspace view."
+            slot={
+              <Dropdown
+                options={CLEAR_CHECKS_OPTIONS}
+                value={props.clear_checks_in_workspace_behavior}
+                onChange={props.on_clear_checks_in_workspace_behavior_change}
+              />
+            }
+          />
+        </Group>
+        <Group title="Checkpoints">
+          <Item
             title="Automatic Checkpoints"
             description="A checkpoint will be created whenever a response is accepted or changes commited."
             slot={
@@ -133,17 +146,6 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 on_blur={handle_checkpoint_lifespan_blur}
                 max_width={100}
                 min={1}
-              />
-            }
-          />
-          <Item
-            title="Clear Checks in Workspace Behavior"
-            description="Behavior of the 'Clear Checks' button in the Workspace view."
-            slot={
-              <Dropdown
-                options={CLEAR_CHECKS_OPTIONS}
-                value={props.clear_checks_in_workspace_behavior}
-                onChange={props.on_clear_checks_in_workspace_behavior_change}
               />
             }
           />
