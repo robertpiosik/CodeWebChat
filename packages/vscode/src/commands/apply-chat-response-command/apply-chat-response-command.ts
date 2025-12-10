@@ -134,9 +134,6 @@ export const apply_chat_response_command = (params: {
           args?.raw_instructions
         )
 
-        if (!before_checkpoint) {
-          return
-        }
         const review_data = await process_chat_response(
           args,
           chat_response,
