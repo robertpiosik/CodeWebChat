@@ -4,6 +4,7 @@
 
   > * {
     flex: 1;
+    white-space: nowrap;
 
     &:nth-child(2) {
       background-color: #f7d600;

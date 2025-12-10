@@ -1,11 +1,34 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 4px 12px 12px 12px;
+  padding-top: 4px;
+}
+
+.wallets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  padding: 4px 12px 4px 12px;
+
+  &__wallet {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    span {
+      word-break: break-all;
+      opacity: var(--dimmed-opacity);
+      user-select: text;
+    }
+  }
 }
 
 .donations {
+  padding: 4px 12px 12px 12px;
+}
+
+.donations__inner {
   display: flex;
   flex-direction: column;
   gap: 8px;

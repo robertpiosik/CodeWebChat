@@ -15,7 +15,7 @@ export const DonationsFooter: React.FC<Props> = (props) => {
         url="https://buymeacoffee.com/robertpiosik"
         title="https://buymeacoffee.com/robertpiosik"
       >
-        Donate ↗
+        Buy Me A Coffee ↗
       </UiButton>
     </div>
   )

@@ -385,7 +385,7 @@ export const Panel = () => {
         {viewing_donations && (
           <div className={styles.slot}>
             <UiPage
-              title="Recent Donations"
+              title="Donations"
               on_back_click={() => set_viewing_donations(false)}
               footer_slot={
                 <DonationsFooter

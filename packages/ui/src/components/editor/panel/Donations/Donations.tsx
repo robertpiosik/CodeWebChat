@@ -1,7 +1,8 @@
 import styles from './Donations.module.scss'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { Scrollable } from '../Scrollable'
+import { ListHeader } from '../ListHeader/ListHeader'
 
 const get_href_from_url_like_string = (text: string): string | null => {
   if (/\s/.test(text)) {
@@ -82,6 +83,8 @@ export type DonationsProps = {
 
 export const Donations: React.FC<DonationsProps> = (props) => {
   const observer_target = useRef<HTMLDivElement>(null)
+  const [is_wallets_collapsed, set_is_wallets_collapsed] = useState(true)
+  const [is_donations_collapsed, set_is_donations_collapsed] = useState(false)
 
   useEffect(() => {
     if (!observer_target.current) return
@@ -104,80 +107,112 @@ export const Donations: React.FC<DonationsProps> = (props) => {
   return (
     <Scrollable>
       <div className={styles.container}>
-        <div>
-          Hi there! If you enjoy using Code Web Chat, buying a $3 "coffee" is a
-          great way to show your support for the project.
-          <br />
-          Thank you for choosing to donate.
-        </div>
-        <div>
-          {props.is_fetching ? (
-            <>
-              <div className={styles.donations__donation}>
+        <ListHeader
+          title="Crypto wallets"
+          is_collapsed={is_wallets_collapsed}
+          on_toggle_collapsed={() => set_is_wallets_collapsed((v) => !v)}
+        />
+        {!is_wallets_collapsed && (
+          <div className={styles.wallets}>
+            <div className={styles.wallets__wallet}>
+              <strong>Bitcoin</strong>
+              <span>bc1qfzajl0fc4347knr6n5hhuk52ufr4sau04su5te</span>
+            </div>
+            <div className={styles.wallets__wallet}>
+              <strong>Ethereum</strong>
+              <span>0x532eA8CA70aBfbA6bfE35e6B3b7b301b175Cf86D</span>
+            </div>
+            <div className={styles.wallets__wallet}>
+              <strong>Monero</strong>
+              <span>
+                84whVjApZJtSeRb2eEbZ1pJ7yuBoGoWHGA4JuiFvdXVBXnaRYyQ3S4kTEuzgKjpxyr3nxn1XHt9yWTRqZ3XGfY35L4yDm6R
+              </span>
+            </div>
+          </div>
+        )}
+        <ListHeader
+          title="Recent coffees"
+          is_collapsed={is_donations_collapsed}
+          on_toggle_collapsed={() => set_is_donations_collapsed((v) => !v)}
+        />
+        {!is_donations_collapsed && (
+          <div className={styles.donations}>
+            {props.is_fetching ? (
+              <>
+                <div className={styles.donations__inner__donation}>
+                  <div
+                    className={styles.skeleton}
+                    style={{ width: '50%', height: '14px' }}
+                  />
+                  <div className={styles.skeleton} style={{ height: '30px' }} />
+                </div>
+                <div className={styles.donations__inner__donation}>
+                  <div
+                    className={styles.skeleton}
+                    style={{ width: '70%', height: '14px' }}
+                  />
+                  <div className={styles.skeleton} style={{ height: '30px' }} />
+                </div>
+                <div className={styles.donations__inner__donation}>
+                  <div
+                    className={styles.skeleton}
+                    style={{ width: '40%', height: '14px' }}
+                  />
+                  <div className={styles.skeleton} style={{ height: '30px' }} />
+                </div>
+              </>
+            ) : (
+              <>
                 <div
-                  className={styles.skeleton}
-                  style={{ width: '50%', height: '14px' }}
-                />
-                <div className={styles.skeleton} style={{ height: '30px' }} />
-              </div>
-              <div className={styles.donations__donation}>
-                <div
-                  className={styles.skeleton}
-                  style={{ width: '70%', height: '14px' }}
-                />
-                <div className={styles.skeleton} style={{ height: '30px' }} />
-              </div>
-              <div className={styles.donations__donation}>
-                <div
-                  className={styles.skeleton}
-                  style={{ width: '40%', height: '14px' }}
-                />
-                <div className={styles.skeleton} style={{ height: '30px' }} />
-              </div>
-            </>
-          ) : (
-            <>
-              <div
-                className={cn(styles.donations, {
-                  [styles['donations--revalidating']]: props.is_revalidating
-                })}
-              >
-                {props.donations?.map((donation, index) => (
-                  <div className={styles.donations__donation} key={index}>
-                    {(() => {
-                      const { username, href, after_text } =
-                        parse_support_message(donation.support_message)
-                      const title = `${username} ${after_text}`
-                      return (
+                  className={cn(styles.donations__inner, {
+                    [styles['donations__inner--revalidating']]:
+                      props.is_revalidating
+                  })}
+                >
+                  {props.donations?.map((donation, index) => (
+                    <div
+                      className={styles.donations__inner__donation}
+                      key={index}
+                    >
+                      {(() => {
+                        const { username, href, after_text } =
+                          parse_support_message(donation.support_message)
+                        const title = `${username} ${after_text}`
+                        return (
+                          <div
+                            className={
+                              styles.donations__inner__donation__header
+                            }
+                            title={title}
+                          >
+                            <strong>
+                              {href ? (
+                                <a href={href} target="_blank" rel="nofollow">
+                                  {username}
+                                </a>
+                              ) : (
+                                username
+                              )}
+                            </strong>{' '}
+                            {after_text}
+                          </div>
+                        )
+                      })()}
+                      {donation.support_note && (
                         <div
-                          className={styles.donations__donation__header}
-                          title={title}
+                          className={styles.donations__inner__donation__note}
                         >
-                          <strong>
-                            {href ? (
-                              <a href={href} target="_blank" rel="nofollow">
-                                {username}
-                              </a>
-                            ) : (
-                              username
-                            )}
-                          </strong>{' '}
-                          {after_text}
+                          {donation.support_note}
                         </div>
-                      )
-                    })()}
-                    {donation.support_note && (
-                      <div className={styles.donations__donation__note}>
-                        {donation.support_note}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              {props.has_more && <div ref={observer_target} />}
-            </>
-          )}
-        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {props.has_more && <div ref={observer_target} />}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </Scrollable>
   )
