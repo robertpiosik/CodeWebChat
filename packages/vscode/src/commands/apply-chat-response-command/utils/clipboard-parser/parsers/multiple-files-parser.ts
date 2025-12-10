@@ -121,6 +121,7 @@ export const parse_multiple_files = (params: {
   let in_cdata = false
   let backtick_nesting_level = 0
   let last_seen_file_path_comment: string | null = null
+  let last_seen_file_path_was_header = false
   let is_markdown_container_block = false
   let current_language = ''
   let current_xml_tag: string | null = null
@@ -142,6 +143,7 @@ export const parse_multiple_files = (params: {
 
         if (extracted_filename) {
           last_seen_file_path_comment = extracted_filename
+          last_seen_file_path_was_header = false
         }
 
         if (!extracted_filename) {
@@ -164,6 +166,7 @@ export const parse_multiple_files = (params: {
             const path = name_match[1] || name_match[2] || name_match[3]
             if (path) {
               last_seen_file_path_comment = path
+              last_seen_file_path_was_header = false
             }
           } else {
             const parts = after_backticks.split(':')
@@ -175,6 +178,7 @@ export const parse_multiple_files = (params: {
                 potential_path.includes('.')
               ) {
                 last_seen_file_path_comment = potential_path
+                last_seen_file_path_was_header = false
               }
             } else {
               let extracted_filename: string | null = null
@@ -190,6 +194,7 @@ export const parse_multiple_files = (params: {
               }
               if (extracted_filename) {
                 last_seen_file_path_comment = extracted_filename
+                last_seen_file_path_was_header = false
               }
             }
           }
@@ -274,7 +279,24 @@ export const parse_multiple_files = (params: {
       }
 
       let extracted_filename = extract_path_from_line_of_code(line)
+      const is_header_line = line.trim().startsWith('###')
+
       if (!extracted_filename) {
+        if (is_header_line) {
+          const header_content = line.trim().replace(/^###\s+/, '')
+          const cleaned = header_content.replace(/^[`*]+|[`*]+$/g, '')
+          const extracted = extract_path_from_line_of_code(cleaned)
+          if (extracted) {
+            extracted_filename = extracted
+          } else if (
+            (cleaned.includes('/') ||
+              cleaned.includes('.') ||
+              cleaned.includes('\\')) &&
+            !cleaned.includes(' ')
+          ) {
+            extracted_filename = cleaned
+          }
+        }
         const trimmed = line.trim()
         if (trimmed.startsWith('<!--') && trimmed.endsWith('-->')) {
           const potential_path = trimmed.slice(4, -3).trim()
@@ -343,12 +365,17 @@ export const parse_multiple_files = (params: {
       }
 
       if (extracted_filename) {
-        flush_text_block({
-          text_block: current_text_block,
-          results
-        })
-        current_text_block = ''
-        last_seen_file_path_comment = extracted_filename
+        if (last_seen_file_path_was_header && !is_header_line) {
+          current_text_block += line + '\n'
+        } else {
+          flush_text_block({
+            text_block: current_text_block,
+            results
+          })
+          current_text_block = ''
+          last_seen_file_path_comment = extracted_filename
+          last_seen_file_path_was_header = is_header_line
+        }
       } else {
         // Check if this line is a plain file path followed by a code block
         let is_lone_path_on_this_line = false
@@ -386,6 +413,7 @@ export const parse_multiple_files = (params: {
             }
             if (is_followed_by_code_block) {
               last_seen_file_path_comment = trimmed
+              last_seen_file_path_was_header = false
               is_lone_path_on_this_line = true
             }
           }
@@ -589,6 +617,7 @@ export const parse_multiple_files = (params: {
 
         if (current_file_name && !current_content.trim()) {
           last_seen_file_path_comment = current_file_name
+          last_seen_file_path_was_header = false
         }
 
         current_file_name = ''

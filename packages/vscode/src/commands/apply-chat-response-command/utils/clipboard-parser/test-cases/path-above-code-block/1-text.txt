@@ -1,1 +1,1 @@
-This new file
+Lorem ipsum `src/welcome.ts`.

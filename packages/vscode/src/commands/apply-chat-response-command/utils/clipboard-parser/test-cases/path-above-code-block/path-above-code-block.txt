@@ -1,6 +1,6 @@
-**src/hello-world.ts**
+### **src/hello-world.ts**
 
-This new file
+Lorem ipsum `src/welcome.ts`.
 
 ```typescript
 console.log('Hello world!')
