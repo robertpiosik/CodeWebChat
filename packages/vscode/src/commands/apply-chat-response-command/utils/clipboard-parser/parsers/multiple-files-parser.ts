@@ -253,6 +253,38 @@ export const parse_multiple_files = (params: {
         }
       }
 
+      const renamed_file_match = line
+        .trim()
+        .match(/^###\s+Renamed file:\s*`([^`]+)`.*?`([^`]+)`/i)
+      if (
+        renamed_file_match &&
+        renamed_file_match[1] &&
+        renamed_file_match[2]
+      ) {
+        flush_text_block({
+          text_block: current_text_block,
+          results
+        })
+        current_text_block = ''
+        const { workspace_name, relative_path } =
+          extract_and_set_workspace_path({
+            raw_file_path: renamed_file_match[1],
+            is_single_root_folder_workspace:
+              params.is_single_root_folder_workspace
+          })
+        create_or_update_file_item({
+          file_name: relative_path,
+          content: '',
+          workspace_name,
+          file_ref_map,
+          results
+        })
+
+        last_seen_file_path_comment = renamed_file_match[2]
+        last_seen_file_path_was_header = true
+        continue
+      }
+
       const deleted_file_match = line
         .trim()
         .match(/^###\s+Deleted file:\s*`([^`]+)`$/i)
