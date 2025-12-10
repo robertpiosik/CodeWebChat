@@ -1582,6 +1582,29 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses diff format with file path in heading, with intermediate text before the code block', () => {
+      const test_case = 'diff-markdown-path-above-with-text-containing-path'
+      const text = load_test_case_file(
+        test_case,
+        'diff-markdown-path-above-with-text-containing-path.txt'
+      )
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: load_test_case_file(test_case, '1-text.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
+    })
+
     it('parses diff with broken hunk header after git header', () => {
       const test_case = 'diff-git-broken-hunk-header'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

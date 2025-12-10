@@ -125,6 +125,7 @@ const find_file_path_before_block = (params: {
   max_lines_back?: number
 }): { file_path?: string; workspace_name?: string } => {
   const max_back = params.max_lines_back || 5
+  let candidate: { file_path?: string; workspace_name?: string } | undefined
 
   for (
     let j = params.block_start - 1;
@@ -145,11 +146,19 @@ const find_file_path_before_block = (params: {
         raw_file_path: extracted,
         is_single_root_folder_workspace: params.is_single_root
       })
-      return { file_path: extracted, workspace_name }
+
+      // If we find a heading with a path, it takes precedence over anything below it
+      if (prev_line.startsWith('###')) {
+        return { file_path: extracted, workspace_name }
+      }
+
+      if (!candidate) {
+        candidate = { file_path: extracted, workspace_name }
+      }
     }
   }
 
-  return {}
+  return candidate || {}
 }
 
 const remove_path_line_from_text_block = (params: {
@@ -266,7 +275,6 @@ const process_collected_patch_lines = (params: {
     !is_new_file &&
     !is_deleted_file
 
-  // For new files, file_path is to_path. For deleted files or renamed files, it's from_path.
   const file_path = from_path && from_path != '/dev/null' ? from_path : to_path
 
   if (!file_path || file_path == '/dev/null') {
@@ -341,8 +349,6 @@ const convert_code_block_to_new_file_diff = (params: {
     return null
   }
 
-  // Regex to find file path. It can be commented or not.
-  // It handles paths with slashes, backslashes, dots, alphanumerics, underscores, and hyphens.
   const path_regex = /(?:(?:\/\/|#|--|<!--)\s*)?([\w./\\-]+)/
   const xml_path_regex = /<([\w-]+)\s+path=(?:["']([^"']+)["']|([^>\s]+))/
 
@@ -350,7 +356,6 @@ const convert_code_block_to_new_file_diff = (params: {
   let path_line_index = -1
   let content_lines: string[] = []
 
-  // Check for XML path format
   const first_line = params.lines.length > 0 ? params.lines[0].trim() : ''
   const xml_match = first_line.match(xml_path_regex)
 
@@ -358,7 +363,6 @@ const convert_code_block_to_new_file_diff = (params: {
     const xml_tag_name = xml_match[1]
     const potential_path = normalize_path(xml_match[2] || xml_match[3])
     if (potential_path.endsWith('/')) {
-      // This is a directory, not a file.
       return null
     }
     file_path = potential_path
@@ -398,11 +402,9 @@ const convert_code_block_to_new_file_diff = (params: {
         content_lines = inner_lines
       }
     } else {
-      // malformed, maybe path is on first line, and content follows
       content_lines = params.lines.slice(1)
     }
   } else {
-    // Look for a file path in the first few lines of the code block
     for (let i = 0; i < Math.min(params.lines.length, 5); i++) {
       const line = params.lines[i].trim()
       const match = line.match(path_regex)
@@ -422,7 +424,7 @@ const convert_code_block_to_new_file_diff = (params: {
           if (is_just_path_and_location) {
             file_path = normalize_path(potential_path)
             path_line_index = i
-            break // Found it, stop searching.
+            break
           }
         }
       }
@@ -592,7 +594,6 @@ const extract_all_code_block_patches = (params: {
   }
   code_blocks.push(...xml_blocks)
   code_blocks.sort((a, b) => a.start - b.start)
-  // First, identify all files that have explicit diff blocks.
   const files_with_diffs = new Set<string>()
   const diff_block_patches = new Map<number, Diff[]>()
 
@@ -655,7 +656,6 @@ const extract_all_code_block_patches = (params: {
 
   let last_block_end = -1
 
-  // Process each found code block in order of appearance.
   for (let i = 0; i < code_blocks.length; i++) {
     const block = code_blocks[i]
     const block_lines =
@@ -710,7 +710,6 @@ const extract_all_code_block_patches = (params: {
       items.push(...patches)
       last_block_end = block.end
     } else {
-      // Check if this block was a hint for the next block.
       if (i < code_blocks.length - 1) {
         const next_block = code_blocks[i + 1]
         if (next_block.type === 'diff' || next_block.type === 'patch') {
@@ -719,7 +718,6 @@ const extract_all_code_block_patches = (params: {
           if (non_empty_lines.length === 1) {
             const match = non_empty_lines[0].match(xml_path_regex)
             if (match && match[1]) {
-              // This was a hint for the next block, so we should skip processing it as a file content block.
               if (text_before.trim()) {
                 items.push({ type: 'text', content: text_before.trim() })
               }
@@ -730,7 +728,6 @@ const extract_all_code_block_patches = (params: {
         }
       }
 
-      // Check if there's a comment line before the code block with a file path
       const hint_result = find_file_path_before_block({
         lines,
         block_start: block.start,
@@ -770,8 +767,6 @@ const extract_all_code_block_patches = (params: {
           last_block_end = block.end
         }
       }
-      // If it's not a diff, patch, or hint, it's just a regular code block.
-      // We don't do anything here, so it gets included in the next text block.
     }
   }
 
