@@ -12,6 +12,22 @@ describe('clipboard-parser', () => {
   }
 
   describe('parse_multiple_files', () => {
+    it("_temp test case that doesn't fail when files are empty", () => {
+      const test_case = '_temp'
+      const text = load_test_case_file(test_case, 'temp.txt')
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'README.md',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+    })
+
     it('parses multiple files when file paths are in comments at the start of code blocks', () => {
       const test_case = 'comment-filename'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

@@ -684,7 +684,11 @@ export const parse_multiple_files = (params: {
           }
         }
 
-        if (is_first_content_line && !xml_file_mode) {
+        if (
+          is_first_content_line &&
+          !xml_file_mode &&
+          !last_seen_file_path_was_header
+        ) {
           const trimmed_line = line.trim()
           let extracted_filename: string | null = null
 
