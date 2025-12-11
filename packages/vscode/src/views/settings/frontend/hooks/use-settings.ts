@@ -4,7 +4,8 @@ import {
   EditFormatInstructions,
   ConfigurationForClient,
   ProviderForClient,
-  FrontendMessage
+  FrontendMessage,
+  ToolType
 } from '@/views/settings/types/messages'
 import { post_message } from '../utils/post-message'
 
@@ -164,9 +165,11 @@ export const use_settings = (vscode: any) => {
   }
 
   const handle_add_config = (tool_name: string) => {
+    const tool_type = tool_name.toLowerCase().replace(/_/g, '-') as ToolType
     post_message(vscode, {
-      command: `ADD_${tool_name}_CONFIGURATION`
-    } as FrontendMessage)
+      command: 'UPSERT_CONFIGURATION',
+      tool_type
+    })
   }
 
   const handle_reorder_configs = (
@@ -180,10 +183,12 @@ export const use_settings = (vscode: any) => {
   }
 
   const handle_edit_config = (tool_name: string, configuration_id: string) => {
+    const tool_type = tool_name.toLowerCase().replace(/_/g, '-') as ToolType
     post_message(vscode, {
-      command: `EDIT_${tool_name}_CONFIGURATION`,
+      command: 'UPSERT_CONFIGURATION',
+      tool_type,
       configuration_id
-    } as FrontendMessage)
+    })
   }
 
   const handle_delete_config = (

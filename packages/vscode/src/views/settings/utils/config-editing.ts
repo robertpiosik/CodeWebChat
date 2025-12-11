@@ -26,7 +26,7 @@ export const initial_select_provider = async (
 
   const provider_items = providers.map((p) => ({ label: p.name, provider: p }))
   const selected = await vscode.window.showQuickPick(provider_items, {
-    title: 'Select a Provider'
+    title: 'Model Providers'
   })
 
   return selected?.provider
@@ -55,12 +55,37 @@ export const initial_select_model = async (
         description: model.name ? model.id : undefined,
         detail: model.description
       }))
-      const selected = await vscode.window.showQuickPick(model_items, {
-        title: 'Select Model',
-        placeHolder: 'Choose an AI model'
+
+      return await new Promise<string | undefined>((resolve) => {
+        const quick_pick = vscode.window.createQuickPick()
+        quick_pick.items = model_items
+        quick_pick.title = 'Models'
+        quick_pick.placeholder = 'Choose an AI model'
+        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+        let accepted = false
+        const disposables: vscode.Disposable[] = []
+
+        disposables.push(
+          quick_pick.onDidAccept(() => {
+            accepted = true
+            const selected = quick_pick.selectedItems[0]
+            resolve(selected.description || selected.label)
+            quick_pick.hide()
+          }),
+          quick_pick.onDidTriggerButton((button) => {
+            if (button === vscode.QuickInputButtons.Back) {
+              quick_pick.hide()
+            }
+          }),
+          quick_pick.onDidHide(() => {
+            if (!accepted) resolve(undefined)
+            disposables.forEach((d) => d.dispose())
+            quick_pick.dispose()
+          })
+        )
+        quick_pick.show()
       })
-      if (selected) return selected.description || selected.label
-      return // User cancelled
     }
   } catch (error) {
     Logger.error({
@@ -102,7 +127,7 @@ export const edit_provider_for_config = async (
   }))
   const selected_provider_item = await vscode.window.showQuickPick(
     provider_items,
-    { title: 'Select a Provider' }
+    { title: 'Model Providers' }
   )
   if (selected_provider_item) {
     return {
@@ -159,7 +184,7 @@ export const edit_model_for_config = async (
       }))
       const selected_model_item = await vscode.window.showQuickPick(
         model_items,
-        { title: 'Select Model', placeHolder: 'Choose an AI model' }
+        { title: 'Models', placeHolder: 'Choose a model' }
       )
       if (selected_model_item) {
         new_model_value =

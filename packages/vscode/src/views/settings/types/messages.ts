@@ -20,6 +20,12 @@ export type EditFormatInstructions = {
   diff: string
 }
 
+export type ToolType =
+  | 'code-completions'
+  | 'commit-messages'
+  | 'edit-context'
+  | 'intelligent-update'
+
 // === FROM FRONTEND TO BACKEND ===
 export interface GetModelProvidersMessage {
   command: 'GET_MODEL_PROVIDERS'
@@ -58,18 +64,9 @@ export interface ReorderCodeCompletionsConfigurationsMessage {
   configurations: ConfigurationForClient[]
 }
 
-export interface EditCodeCompletionsConfigurationMessage {
-  command: 'EDIT_CODE_COMPLETIONS_CONFIGURATION'
-  configuration_id: string
-}
-
 export interface DeleteCodeCompletionsConfigurationMessage {
   command: 'DELETE_CODE_COMPLETIONS_CONFIGURATION'
   configuration_id: string
-}
-
-export interface AddCodeCompletionsConfigurationMessage {
-  command: 'ADD_CODE_COMPLETIONS_CONFIGURATION'
 }
 
 export interface SetDefaultCodeCompletionsConfigurationMessage {
@@ -86,18 +83,9 @@ export interface ReorderEditContextConfigurationsMessage {
   configurations: ConfigurationForClient[]
 }
 
-export interface EditEditContextConfigurationMessage {
-  command: 'EDIT_EDIT_CONTEXT_CONFIGURATION'
-  configuration_id: string
-}
-
 export interface DeleteEditContextConfigurationMessage {
   command: 'DELETE_EDIT_CONTEXT_CONFIGURATION'
   configuration_id: string
-}
-
-export interface AddEditContextConfigurationMessage {
-  command: 'ADD_EDIT_CONTEXT_CONFIGURATION'
 }
 
 export interface GetIntelligentUpdateConfigurationsMessage {
@@ -109,18 +97,9 @@ export interface ReorderIntelligentUpdateConfigurationsMessage {
   configurations: ConfigurationForClient[]
 }
 
-export interface EditIntelligentUpdateConfigurationMessage {
-  command: 'EDIT_INTELLIGENT_UPDATE_CONFIGURATION'
-  configuration_id: string
-}
-
 export interface DeleteIntelligentUpdateConfigurationMessage {
   command: 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION'
   configuration_id: string
-}
-
-export interface AddIntelligentUpdateConfigurationMessage {
-  command: 'ADD_INTELLIGENT_UPDATE_CONFIGURATION'
 }
 
 export interface SetDefaultIntelligentUpdateConfigurationMessage {
@@ -137,18 +116,9 @@ export interface ReorderCommitMessagesConfigurationsMessage {
   configurations: ConfigurationForClient[]
 }
 
-export interface EditCommitMessagesConfigurationMessage {
-  command: 'EDIT_COMMIT_MESSAGES_CONFIGURATION'
-  configuration_id: string
-}
-
 export interface DeleteCommitMessagesConfigurationMessage {
   command: 'DELETE_COMMIT_MESSAGES_CONFIGURATION'
   configuration_id: string
-}
-
-export interface AddCommitMessagesConfigurationMessage {
-  command: 'ADD_COMMIT_MESSAGES_CONFIGURATION'
 }
 
 export interface SetDefaultCommitMessagesConfigurationMessage {
@@ -245,6 +215,12 @@ export interface UpdateClearChecksInWorkspaceBehaviorMessage {
   value: 'ignore-open-editors' | 'uncheck-all'
 }
 
+export interface UpsertConfigurationMessage {
+  command: 'UPSERT_CONFIGURATION'
+  tool_type: ToolType
+  configuration_id?: string
+}
+
 export type FrontendMessage =
   | GetModelProvidersMessage
   | ReorderModelProvidersMessage
@@ -254,26 +230,18 @@ export type FrontendMessage =
   | ChangeModelProviderKeyMessage
   | GetCodeCompletionsConfigurationsMessage
   | ReorderCodeCompletionsConfigurationsMessage
-  | EditCodeCompletionsConfigurationMessage
   | DeleteCodeCompletionsConfigurationMessage
-  | AddCodeCompletionsConfigurationMessage
   | SetDefaultCodeCompletionsConfigurationMessage
   | GetEditContextConfigurationsMessage
   | ReorderEditContextConfigurationsMessage
-  | EditEditContextConfigurationMessage
   | DeleteEditContextConfigurationMessage
-  | AddEditContextConfigurationMessage
   | GetIntelligentUpdateConfigurationsMessage
   | ReorderIntelligentUpdateConfigurationsMessage
-  | EditIntelligentUpdateConfigurationMessage
   | DeleteIntelligentUpdateConfigurationMessage
-  | AddIntelligentUpdateConfigurationMessage
   | SetDefaultIntelligentUpdateConfigurationMessage
   | GetCommitMessagesConfigurationsMessage
   | ReorderCommitMessagesConfigurationsMessage
-  | EditCommitMessagesConfigurationMessage
   | DeleteCommitMessagesConfigurationMessage
-  | AddCommitMessagesConfigurationMessage
   | SetDefaultCommitMessagesConfigurationMessage
   | GetCommitMessageInstructionsMessage
   | UpdateCommitMessageInstructionsMessage
@@ -294,6 +262,7 @@ export type FrontendMessage =
   | UpdateGeminiUserIdMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
+  | UpsertConfigurationMessage
   | OpenEditorSettingsMessage
 
 // === FROM BACKEND TO FRONTEND ===

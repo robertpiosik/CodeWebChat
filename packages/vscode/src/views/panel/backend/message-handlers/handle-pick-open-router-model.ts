@@ -18,7 +18,7 @@ export const handle_pick_open_router_model = async (
     }))
 
     const selected = await vscode.window.showQuickPick(items, {
-      title: 'Select Model',
+      title: 'Models',
       placeHolder: 'Choose a model'
     })
 

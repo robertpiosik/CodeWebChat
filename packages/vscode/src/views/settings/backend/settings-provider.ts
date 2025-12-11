@@ -34,10 +34,6 @@ import {
   handle_set_default_code_completions_configuration,
   handle_set_default_commit_messages_configuration,
   handle_set_default_intelligent_update_configuration,
-  handle_upsert_code_completions_configuration,
-  handle_upsert_commit_messages_configuration,
-  handle_upsert_edit_context_configuration,
-  handle_upsert_intelligent_update_configuration,
   handle_update_clear_checks_in_workspace_behavior,
   handle_update_are_automatic_checkpoints_disabled,
   handle_update_commit_message_instructions,
@@ -45,7 +41,8 @@ import {
   handle_update_context_size_warning_threshold,
   handle_update_edit_context_system_instructions,
   handle_update_edit_format_instructions,
-  handle_update_gemini_user_id
+  handle_update_gemini_user_id,
+  handle_upsert_configuration
 } from './message-handlers'
 
 export class SettingsProvider {
@@ -126,10 +123,6 @@ export class SettingsProvider {
           await handle_reorder_code_completions_configurations(this, message)
         } else if (message.command == 'DELETE_CODE_COMPLETIONS_CONFIGURATION') {
           await handle_delete_code_completions_configuration(this, message)
-        } else if (message.command == 'ADD_CODE_COMPLETIONS_CONFIGURATION') {
-          await handle_upsert_code_completions_configuration(this)
-        } else if (message.command == 'EDIT_CODE_COMPLETIONS_CONFIGURATION') {
-          await handle_upsert_code_completions_configuration(this, message)
         } else if (
           message.command == 'SET_DEFAULT_CODE_COMPLETIONS_CONFIGURATION'
         ) {
@@ -140,10 +133,6 @@ export class SettingsProvider {
           await handle_reorder_edit_context_configurations(this, message)
         } else if (message.command == 'DELETE_EDIT_CONTEXT_CONFIGURATION') {
           await handle_delete_edit_context_configuration(this, message)
-        } else if (message.command == 'ADD_EDIT_CONTEXT_CONFIGURATION') {
-          await handle_upsert_edit_context_configuration(this)
-        } else if (message.command == 'EDIT_EDIT_CONTEXT_CONFIGURATION') {
-          await handle_upsert_edit_context_configuration(this, message)
         } else if (message.command == 'GET_EDIT_CONTEXT_SYSTEM_INSTRUCTIONS') {
           await handle_get_edit_context_system_instructions(this)
         } else if (
@@ -164,10 +153,6 @@ export class SettingsProvider {
           message.command == 'DELETE_INTELLIGENT_UPDATE_CONFIGURATION'
         ) {
           await handle_delete_intelligent_update_configuration(this, message)
-        } else if (message.command == 'ADD_INTELLIGENT_UPDATE_CONFIGURATION') {
-          await handle_upsert_intelligent_update_configuration(this)
-        } else if (message.command == 'EDIT_INTELLIGENT_UPDATE_CONFIGURATION') {
-          await handle_upsert_intelligent_update_configuration(this, message)
         } else if (
           message.command == 'SET_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION'
         ) {
@@ -183,10 +168,6 @@ export class SettingsProvider {
           await handle_reorder_commit_messages_configurations(this, message)
         } else if (message.command == 'DELETE_COMMIT_MESSAGES_CONFIGURATION') {
           await handle_delete_commit_messages_configuration(this, message)
-        } else if (message.command == 'ADD_COMMIT_MESSAGES_CONFIGURATION') {
-          await handle_upsert_commit_messages_configuration(this)
-        } else if (message.command == 'EDIT_COMMIT_MESSAGES_CONFIGURATION') {
-          await handle_upsert_commit_messages_configuration(this, message)
         } else if (
           message.command == 'SET_DEFAULT_COMMIT_MESSAGES_CONFIGURATION'
         ) {
@@ -237,6 +218,8 @@ export class SettingsProvider {
             )
         } else if (message.command == 'OPEN_EDITOR_SETTINGS') {
           await vscode.commands.executeCommand('workbench.action.openSettings')
+        } else if (message.command == 'UPSERT_CONFIGURATION') {
+          await handle_upsert_configuration(this, message)
         }
       },
       null,
