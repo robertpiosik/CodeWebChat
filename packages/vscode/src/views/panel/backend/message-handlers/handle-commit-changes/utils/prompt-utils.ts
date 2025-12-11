@@ -57,9 +57,9 @@ export const build_commit_message_prompt = (
       )
       changes_content += `\n### File: \`${file_path}\`\n\n`
       if (file_data) {
-        changes_content += `The original state of the file for reference:\n<![CDATA[\n${file_data.content}\n]]>\n`
+        changes_content += `The original state of the file for reference:\n\n<![CDATA[\n${file_data.content}\n]]>\n\n`
       }
-      changes_content += `**New changes:**\n<![CDATA[\n${full_file_diff}\n]]>\n`
+      changes_content += `**New changes:**\n\n<![CDATA[\n${full_file_diff}\n]]>\n`
     }
   }
 
