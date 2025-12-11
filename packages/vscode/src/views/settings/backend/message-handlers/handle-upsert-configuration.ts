@@ -116,12 +116,15 @@ export const handle_upsert_configuration = async (
   }
 
   const updated_config = config_to_edit
+  const starting_config = { ...updated_config }
 
-  // Editing loop
   // eslint-disable-next-line no-constant-condition
   while (true) {
+    const has_changes =
+      JSON.stringify(updated_config) !== JSON.stringify(starting_config)
+
     const items: vscode.QuickPickItem[] = [
-      { label: 'Provider', detail: updated_config.provider_name },
+      { label: 'Model Provider', detail: updated_config.provider_name },
       { label: 'Model', detail: updated_config.model },
       { label: 'Advanced', detail: advanced_details }
     ]
@@ -135,11 +138,17 @@ export const handle_upsert_configuration = async (
           : 'Create New Configuration'
         quick_pick.placeholder =
           'Select a property to edit, or press Esc to save'
-        const closeButton: vscode.QuickInputButton = {
+        const close_button: vscode.QuickInputButton = {
           iconPath: new vscode.ThemeIcon('close'),
           tooltip: 'Save and Close'
         }
-        quick_pick.buttons = [closeButton]
+        const redo_button: vscode.QuickInputButton = {
+          iconPath: new vscode.ThemeIcon('redo'),
+          tooltip: 'Reset Changes'
+        }
+        quick_pick.buttons = has_changes
+          ? [redo_button, close_button]
+          : [close_button]
         let accepted = false
         const disposables: vscode.Disposable[] = []
 
@@ -150,8 +159,22 @@ export const handle_upsert_configuration = async (
             quick_pick.hide()
           }),
           quick_pick.onDidTriggerButton((button) => {
-            if (button === closeButton) {
+            if (button === close_button) {
               quick_pick.hide()
+            } else if (button === redo_button) {
+              Object.keys(updated_config).forEach(
+                (key) => delete (updated_config as any)[key]
+              )
+              Object.assign(updated_config, starting_config)
+              quick_pick.items = [
+                {
+                  label: 'Model Provider',
+                  detail: updated_config.provider_name
+                },
+                { label: 'Model', detail: updated_config.model },
+                { label: 'Advanced', detail: advanced_details }
+              ]
+              quick_pick.buttons = [close_button]
             }
           }),
           quick_pick.onDidHide(() => {
@@ -170,7 +193,7 @@ export const handle_upsert_configuration = async (
 
     const selected_option = selected_item.label
 
-    if (selected_option === 'Provider') {
+    if (selected_option === 'Model Provider') {
       const new_provider = await edit_provider_for_config(providers_manager)
       if (new_provider) {
         updated_config.provider_name = new_provider.provider_name

@@ -25,10 +25,36 @@ export const initial_select_provider = async (
   }
 
   const provider_items = providers.map((p) => ({ label: p.name, provider: p }))
-  const selected = await vscode.window.showQuickPick(provider_items, {
-    title: 'Model Providers'
-  })
+  const selected = await new Promise<(typeof provider_items)[0] | undefined>(
+    (resolve) => {
+      const quick_pick =
+        vscode.window.createQuickPick<(typeof provider_items)[0]>()
+      quick_pick.items = provider_items
+      quick_pick.title = 'Model Providers'
+      quick_pick.buttons = [vscode.QuickInputButtons.Back]
+      let accepted = false
+      const disposables: vscode.Disposable[] = []
 
+      disposables.push(
+        quick_pick.onDidAccept(() => {
+          accepted = true
+          resolve(quick_pick.selectedItems[0])
+          quick_pick.hide()
+        }),
+        quick_pick.onDidTriggerButton((button) => {
+          if (button === vscode.QuickInputButtons.Back) {
+            quick_pick.hide()
+          }
+        }),
+        quick_pick.onDidHide(() => {
+          if (!accepted) resolve(undefined)
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+        })
+      )
+      quick_pick.show()
+    }
+  )
   return selected?.provider
 }
 
@@ -125,10 +151,37 @@ export const edit_provider_for_config = async (
     detail: p.type,
     provider: p
   }))
-  const selected_provider_item = await vscode.window.showQuickPick(
-    provider_items,
-    { title: 'Model Providers' }
-  )
+  const selected_provider_item = await new Promise<
+    (typeof provider_items)[0] | undefined
+  >((resolve) => {
+    const quick_pick =
+      vscode.window.createQuickPick<(typeof provider_items)[0]>()
+    quick_pick.items = provider_items
+    quick_pick.title = 'Model Providers'
+    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    let accepted = false
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      quick_pick.onDidAccept(() => {
+        accepted = true
+        resolve(quick_pick.selectedItems[0])
+        quick_pick.hide()
+      }),
+      quick_pick.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
+          quick_pick.hide()
+        }
+      }),
+      quick_pick.onDidHide(() => {
+        if (!accepted) resolve(undefined)
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+      })
+    )
+    quick_pick.show()
+  })
+
   if (selected_provider_item) {
     return {
       provider_name: selected_provider_item.provider.name,
@@ -167,9 +220,6 @@ export const edit_model_for_config = async (
     return undefined
   }
 
-  let new_model_value: string | undefined
-  let model_selected = false
-
   try {
     const models = await model_fetcher.get_models({
       base_url,
@@ -182,15 +232,43 @@ export const edit_model_for_config = async (
         description: model.name ? model.id : undefined,
         detail: model.description
       }))
-      const selected_model_item = await vscode.window.showQuickPick(
-        model_items,
-        { title: 'Models', placeHolder: 'Choose a model' }
-      )
+      const selected_model_item = await new Promise<
+        (typeof model_items)[0] | undefined
+      >((resolve) => {
+        const quick_pick =
+          vscode.window.createQuickPick<(typeof model_items)[0]>()
+        quick_pick.items = model_items
+        quick_pick.title = 'Models'
+        quick_pick.placeholder = 'Choose a model'
+        quick_pick.buttons = [vscode.QuickInputButtons.Back]
+        let accepted = false
+        const disposables: vscode.Disposable[] = []
+
+        disposables.push(
+          quick_pick.onDidAccept(() => {
+            accepted = true
+            resolve(quick_pick.selectedItems[0])
+            quick_pick.hide()
+          }),
+          quick_pick.onDidTriggerButton((button) => {
+            if (button === vscode.QuickInputButtons.Back) {
+              quick_pick.hide()
+            }
+          }),
+          quick_pick.onDidHide(() => {
+            if (!accepted) resolve(undefined)
+            disposables.forEach((d) => d.dispose())
+            quick_pick.dispose()
+          })
+        )
+        quick_pick.show()
+      })
       if (selected_model_item) {
-        new_model_value =
+        return (
           selected_model_item.description || selected_model_item.label
-        model_selected = true
+        ).trim()
       }
+      return undefined
     } else {
       vscode.window.showWarningMessage(
         dictionary.warning_message.NO_MODELS_FOUND_MANUAL_ENTRY(
@@ -223,19 +301,13 @@ export const edit_model_for_config = async (
     }
   }
 
-  if (!model_selected) {
-    const new_model_input = await vscode.window.showInputBox({
-      title: 'Enter Model Name',
-      value: config.model,
-      prompt: `Enter a model name (ID)`
-    })
-    if (new_model_input !== undefined) {
-      new_model_value = new_model_input
-    }
-  }
-
-  if (new_model_value !== undefined) {
-    return new_model_value.trim()
+  const new_model_input = await vscode.window.showInputBox({
+    title: 'Enter Model Name',
+    value: config.model,
+    prompt: `Enter a model name (ID)`
+  })
+  if (new_model_input !== undefined) {
+    return new_model_input.trim()
   }
   return undefined
 }
