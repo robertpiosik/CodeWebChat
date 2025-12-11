@@ -379,6 +379,15 @@ export const make_api_request = async (params: {
         })
       })
     } catch (error) {
+      if (params.cancellation_token?.reason) {
+        Logger.info({
+          function_name: 'make_api_request',
+          message: 'Request canceled',
+          data: params.cancellation_token.reason
+        })
+        throw params.cancellation_token.reason
+      }
+
       // Check if it's a retryable error
       const is_retryable_error =
         (axios.isAxiosError(error) &&
