@@ -2,24 +2,36 @@
   display: flex;
   flex-direction: column;
   padding-top: 4px;
+  gap: 8px;
 }
 
 .wallets {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-
-  padding: 4px 12px 4px 12px;
+  margin: 0 12px;
 
   &__wallet {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
 
-    span {
-      word-break: break-all;
-      opacity: var(--dimmed-opacity);
-      user-select: text;
+    &__right {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    &__hash {
+      font-size: 11px;
+      color: var(--cwc-text-color-dimmed);
+      text-align: right;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }

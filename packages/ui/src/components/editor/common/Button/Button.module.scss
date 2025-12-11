@@ -13,6 +13,7 @@
   cursor: pointer;
   background-color: var(--vscode-button-background);
   color: var(--vscode-button-foreground);
+  white-space: nowrap;
 
   &:hover {
     background-color: var(--vscode-button-hoverBackground);
@@ -49,8 +50,8 @@
   }
 
   &--small {
-    min-height: 24px;
-    font-size: 12px;
-    padding: 2px 8px;
+    min-height: unset;
+    font-size: 11px;
+    padding: 2px 5px;
   }
 }

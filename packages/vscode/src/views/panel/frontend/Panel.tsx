@@ -10,6 +10,7 @@ import cn from 'classnames'
 import { post_message } from './utils/post_message'
 import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/panel/ResponsePreview'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
+import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
 import { StageFilesModal as UiStageFilesModal } from '@ui/components/editor/panel/modals/StageFilesModal'
@@ -93,6 +94,10 @@ export const Panel = () => {
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
     { timestamp: number; description: string } | undefined
   >(undefined)
+  const [active_qr_wallet, set_active_qr_wallet] = useState<{
+    name: string
+    address: string
+  }>()
 
   const { viewing_donations, set_viewing_donations, ...donations_state } =
     use_latest_donations()
@@ -399,6 +404,7 @@ export const Panel = () => {
                 is_revalidating={donations_state.is_revalidating}
                 on_fetch_next_page={donations_state.on_fetch_next_page}
                 has_more={donations_state.has_more}
+                on_show_qr_code={set_active_qr_wallet}
               />
             </UiPage>
           </div>
@@ -511,6 +517,16 @@ export const Panel = () => {
                     }
                   : undefined
               }
+            />
+          </div>
+        )}
+
+        {active_qr_wallet && (
+          <div className={styles.slot}>
+            <UiQRCodeModal
+              title={active_qr_wallet.name}
+              value={active_qr_wallet.address}
+              on_close={() => set_active_qr_wallet(undefined)}
             />
           </div>
         )}

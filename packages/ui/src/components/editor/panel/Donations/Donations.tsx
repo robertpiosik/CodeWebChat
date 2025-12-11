@@ -2,7 +2,8 @@ import styles from './Donations.module.scss'
 import { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { Scrollable } from '../Scrollable'
-import { ListHeader } from '../ListHeader/ListHeader'
+import { Button } from '../../common/Button/Button'
+import { Fieldset } from '../Fieldset'
 
 const get_href_from_url_like_string = (text: string): string | null => {
   if (/\s/.test(text)) {
@@ -62,7 +63,6 @@ const parse_support_message = (
     return { username, href, after_text }
   }
 
-  // Fallback for when no tags are found
   const username = message.trim()
   const href = get_href_from_url_like_string(username)
   return { username: href ? username : message, href, after_text: '' }
@@ -79,12 +79,12 @@ export type DonationsProps = {
   is_revalidating?: boolean
   on_fetch_next_page: () => void
   has_more?: boolean
+  on_show_qr_code: (wallet: { name: string; address: string }) => void
 }
 
 export const Donations: React.FC<DonationsProps> = (props) => {
   const observer_target = useRef<HTMLDivElement>(null)
-  const [is_wallets_collapsed, set_is_wallets_collapsed] = useState(true)
-  const [is_donations_collapsed, set_is_donations_collapsed] = useState(false)
+  const [is_wallets_collapsed, set_wallets_collapsed] = useState(true)
 
   useEffect(() => {
     if (!observer_target.current) return
@@ -104,38 +104,53 @@ export const Donations: React.FC<DonationsProps> = (props) => {
     return () => observer.unobserve(target)
   }, [props.on_fetch_next_page])
 
+  const wallets = [
+    {
+      name: 'Bitcoin',
+      address: 'bc1qfzajl0fc4347knr6n5hhuk52ufr4sau04su5te'
+    },
+    {
+      name: 'Ethereum',
+      address: '0x532eA8CA70aBfbA6bfE35e6B3b7b301b175Cf86D'
+    },
+    {
+      name: 'Monero',
+      address:
+        '84whVjApZJtSeRb2eEbZ1pJ7yuBoGoWHGA4JuiFvdXVBXnaRYyQ3S4kTEuzgKjpxyr3nxn1XHt9yWTRqZ3XGfY35L4yDm6R'
+    }
+  ]
+
   return (
-    <Scrollable>
-      <div className={styles.container}>
-        <ListHeader
-          title="Crypto wallets"
-          is_collapsed={is_wallets_collapsed}
-          on_toggle_collapsed={() => set_is_wallets_collapsed((v) => !v)}
-        />
-        {!is_wallets_collapsed && (
+    <>
+      <Scrollable>
+        <div className={styles.container}>
           <div className={styles.wallets}>
-            <div className={styles.wallets__wallet}>
-              <strong>Bitcoin</strong>
-              <span>bc1qfzajl0fc4347knr6n5hhuk52ufr4sau04su5te</span>
-            </div>
-            <div className={styles.wallets__wallet}>
-              <strong>Ethereum</strong>
-              <span>0x532eA8CA70aBfbA6bfE35e6B3b7b301b175Cf86D</span>
-            </div>
-            <div className={styles.wallets__wallet}>
-              <strong>Monero</strong>
-              <span>
-                84whVjApZJtSeRb2eEbZ1pJ7yuBoGoWHGA4JuiFvdXVBXnaRYyQ3S4kTEuzgKjpxyr3nxn1XHt9yWTRqZ3XGfY35L4yDm6R
-              </span>
-            </div>
+            <Fieldset
+              is_collapsed={is_wallets_collapsed}
+              label="Crypto wallets"
+              on_toggle_collapsed={() =>
+                set_wallets_collapsed(!is_wallets_collapsed)
+              }
+            >
+              {wallets.map((wallet) => (
+                <div className={styles.wallets__wallet} key={wallet.name}>
+                  <strong>{wallet.name}</strong>
+                  <div className={styles.wallets__wallet__right}>
+                    <span className={styles.wallets__wallet__hash}>
+                      {wallet.address}
+                    </span>
+                    <Button
+                      is_small
+                      on_click={() => props.on_show_qr_code(wallet)}
+                    >
+                      Show QR
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </Fieldset>
           </div>
-        )}
-        <ListHeader
-          title="Recent coffees"
-          is_collapsed={is_donations_collapsed}
-          on_toggle_collapsed={() => set_is_donations_collapsed((v) => !v)}
-        />
-        {!is_donations_collapsed && (
+
           <div className={styles.donations}>
             {props.is_fetching ? (
               <>
@@ -202,7 +217,14 @@ export const Donations: React.FC<DonationsProps> = (props) => {
                         <div
                           className={styles.donations__inner__donation__note}
                         >
-                          {donation.support_note}
+                          {donation.support_note
+                            .split(/<br\s*\/?>/i)
+                            .map((line, i, arr) => (
+                              <span key={i}>
+                                {line}
+                                {i < arr.length - 1 && <br />}
+                              </span>
+                            ))}
                         </div>
                       )}
                     </div>
@@ -212,8 +234,8 @@ export const Donations: React.FC<DonationsProps> = (props) => {
               </>
             )}
           </div>
-        )}
-      </div>
-    </Scrollable>
+        </div>
+      </Scrollable>
+    </>
   )
 }

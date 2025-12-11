@@ -28,6 +28,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^10.1.0",
+    "react-qr-code": "^2.0.18",
     "react-sortablejs": "^6.1.4",
     "react-textarea-autosize": "^8.5.9",
     "simplebar-react": "^3.3.1",

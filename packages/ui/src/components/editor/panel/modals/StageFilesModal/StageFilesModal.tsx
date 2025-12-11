@@ -19,7 +19,6 @@ type Props = {
 }
 
 export const StageFilesModal: React.FC<Props> = (props) => {
-  console.log('xxx', props.files)
   const [selected_files, set_selected_files] = useState<string[]>(
     props.files.map((f) => f.path)
   )
