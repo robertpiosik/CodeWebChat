@@ -663,23 +663,6 @@ const extract_all_code_block_patches = (params: {
         ? lines.slice(block.start, block.end + 1)
         : lines.slice(block.start + 1, block.end)
 
-    if (block.type != 'diff' && block.type != 'patch') {
-      const has_truncation_comment = block_lines.some((line) => {
-        const trimmed = line.trim()
-        return (
-          trimmed.startsWith('// ...') ||
-          trimmed.startsWith('# ...') ||
-          trimmed.startsWith('/* ...') ||
-          trimmed.startsWith('* ...') ||
-          trimmed.startsWith('-- ...') ||
-          trimmed.startsWith('<!-- ...')
-        )
-      })
-      if (has_truncation_comment) {
-        continue
-      }
-    }
-
     const text_before = lines
       .slice(last_block_end + 1, block.start)
       .filter((line) => {

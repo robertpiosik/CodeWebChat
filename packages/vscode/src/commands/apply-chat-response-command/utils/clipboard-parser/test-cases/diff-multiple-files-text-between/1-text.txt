@@ -1,6 +1,1 @@
-Lorem ipsum `src/index.ts`
-
-```ts
-console.log();
-// ...
-```
+Top.
