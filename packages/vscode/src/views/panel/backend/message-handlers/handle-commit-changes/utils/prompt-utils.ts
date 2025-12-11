@@ -43,12 +43,17 @@ export const build_commit_message_prompt = (
       ? new_path_line.substring('+++ b/'.length)
       : undefined
 
+    let final_diff_content = full_file_diff
+
     let file_path: string | undefined
 
     if (new_path && new_path != '/dev/null') {
       file_path = new_path
     } else if (old_path && old_path != '/dev/null') {
       file_path = old_path
+      // Shorten diff of a deleted file
+      const split_diff = full_file_diff.split('+++ /dev/null')
+      final_diff_content = split_diff[0] + '+++ /dev/null'
     }
 
     if (file_path) {
@@ -59,7 +64,7 @@ export const build_commit_message_prompt = (
       if (file_data) {
         changes_content += `The original state of the file for reference:\n\n<![CDATA[\n${file_data.content}\n]]>\n\n`
       }
-      changes_content += `**New changes:**\n\n<![CDATA[\n${full_file_diff}\n]]>\n`
+      changes_content += `**New changes:**\n\n<![CDATA[\n${final_diff_content}\n]]>\n`
     }
   }
 
