@@ -87,7 +87,9 @@ export const get_intelligent_update_config = async (
     const quick_pick = vscode.window.createQuickPick()
     const items = await create_items()
     quick_pick.items = items
-    quick_pick.placeholder = 'Select intelligent update configuration'
+    quick_pick.title = 'Configuration'
+    quick_pick.placeholder =
+      'Select the Intelligent Update API tool configuration'
     quick_pick.matchOnDescription = true
 
     const last_selected_id =
