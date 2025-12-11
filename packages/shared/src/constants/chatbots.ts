@@ -193,7 +193,7 @@ export const CHATBOTS = {
       search: 'Search'
     },
     models: {
-      'gpt-5.1': { label: 'GPT-5.1' },
+      'gpt-5.2': { label: 'GPT-5.2' },
       'claude-opus-4.5': { label: 'Claude Opus 4.5' },
       'gemini-3-pro': {
         label: 'Gemini 3 Pro',
