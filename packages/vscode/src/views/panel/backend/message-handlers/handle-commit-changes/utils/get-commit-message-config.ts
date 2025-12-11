@@ -60,6 +60,7 @@ export const get_commit_message_config = async (
           id: get_tool_config_id(config)
         }
       })
+      quick_pick.title = 'Configurations'
       quick_pick.placeholder = 'Select configuration for commit message'
       quick_pick.matchOnDescription = true
 
