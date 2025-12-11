@@ -734,6 +734,26 @@ describe('clipboard-parser', () => {
         content: load_test_case_file(test_case, '2-file.txt')
       })
     })
+
+    it('parses text that appears immediately after a closing code block', () => {
+      const test_case = 'text-below-code-block'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/hello-world.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'text',
+        content: 'Lorem ipsum.'
+      })
+    })
   })
 
   describe('parse_file_content_only', () => {

@@ -590,6 +590,7 @@ export const parse_multiple_files = (params: {
           trimmed_line === '```' &&
           backtick_nesting_level === 1 &&
           current_file_name &&
+          current_content.trim() === '' &&
           i + 1 < lines.length &&
           lines[i + 1].trim() !== '' &&
           !lines[i + 1].trim().startsWith('```')
@@ -605,6 +606,8 @@ export const parse_multiple_files = (params: {
           ) {
             is_first_content_line = true
           }
+        } else {
+          backtick_nesting_level++
         }
       }
 
