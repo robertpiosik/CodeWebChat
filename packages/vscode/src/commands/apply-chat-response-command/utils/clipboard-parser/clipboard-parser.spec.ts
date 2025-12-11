@@ -1369,6 +1369,27 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses diff and deletion via header', () => {
+      const test_case = 'diff-deletion-via-header'
+      const text = load_test_case_file(test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/old.ts',
+        content: load_test_case_file(test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file(test_case, '2-file.txt')
+      })
+    })
+
     it('parses a mix of a new file from heading and code block, and a separate diff block', () => {
       const test_case = 'diff-mix-new-file-from-heading-and-diff'
       const text = load_test_case_file(test_case, `${test_case}.txt`)

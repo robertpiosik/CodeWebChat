@@ -494,6 +494,52 @@ const convert_code_block_to_new_file_diff = (params: {
   }
 }
 
+const process_text_for_deleted_files = (params: {
+  lines: string[]
+  is_single_root: boolean
+}): DiffOrTextBlock[] => {
+  const items: DiffOrTextBlock[] = []
+  let current_text_lines: string[] = []
+
+  const deleted_file_header_regex = /^###\s+Deleted file:\s*`([^`]+)`/
+
+  for (const line of params.lines) {
+    const trimmed_line = line.trim()
+    if (trimmed_line === '<files>' || trimmed_line === '</files>') {
+      continue
+    }
+    const match = trimmed_line.match(deleted_file_header_regex)
+
+    if (match && match[1]) {
+      const text_content = current_text_lines.join('\n').trim()
+      if (text_content) {
+        items.push({ type: 'text', content: text_content })
+      }
+      current_text_lines = []
+
+      const raw_file_path = normalize_path(match[1])
+      const { workspace_name, relative_path } = extract_workspace_and_path({
+        raw_file_path,
+        is_single_root_folder_workspace: params.is_single_root
+      })
+      const content = `--- a/${relative_path}\n+++ /dev/null\n@@ +0,0 +0,0 @@\n`
+      items.push({
+        type: 'diff',
+        file_path: relative_path,
+        workspace_name,
+        content
+      })
+    } else {
+      current_text_lines.push(line)
+    }
+  }
+  const text_content = current_text_lines.join('\n').trim()
+  if (text_content) {
+    items.push({ type: 'text', content: text_content })
+  }
+  return items
+}
+
 const extract_all_code_block_patches = (params: {
   normalized_text: string
   is_single_root: boolean
@@ -663,18 +709,15 @@ const extract_all_code_block_patches = (params: {
         ? lines.slice(block.start, block.end + 1)
         : lines.slice(block.start + 1, block.end)
 
-    const text_before = lines
-      .slice(last_block_end + 1, block.start)
-      .filter((line) => {
-        const trimmed = line.trim()
-        return trimmed != '<files>' && trimmed != '</files>'
-      })
-      .join('\n')
-
     if (block.type == 'diff' || block.type == 'patch') {
-      if (text_before.trim()) {
-        items.push({ type: 'text', content: text_before.trim() })
-      }
+      const text_before_lines = lines.slice(last_block_end + 1, block.start)
+      items.push(
+        ...process_text_for_deleted_files({
+          lines: text_before_lines,
+          is_single_root: params.is_single_root
+        })
+      )
+
       const patches = diff_block_patches.get(block.start) || []
       if (patches.length > 0) {
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
@@ -695,15 +738,22 @@ const extract_all_code_block_patches = (params: {
     } else {
       if (i < code_blocks.length - 1) {
         const next_block = code_blocks[i + 1]
-        if (next_block.type === 'diff' || next_block.type === 'patch') {
+        if (next_block.type == 'diff' || next_block.type == 'patch') {
           const xml_path_regex = /<[\w-]+\s+path=["']([^"']+)["']/
-          const non_empty_lines = block_lines.filter((l) => l.trim() !== '')
-          if (non_empty_lines.length === 1) {
+          const non_empty_lines = block_lines.filter((l) => l.trim() != '')
+          if (non_empty_lines.length == 1) {
             const match = non_empty_lines[0].match(xml_path_regex)
             if (match && match[1]) {
-              if (text_before.trim()) {
-                items.push({ type: 'text', content: text_before.trim() })
-              }
+              const text_before_lines = lines.slice(
+                last_block_end + 1,
+                block.start
+              )
+              items.push(
+                ...process_text_for_deleted_files({
+                  lines: text_before_lines,
+                  is_single_root: params.is_single_root
+                })
+              )
               last_block_end = block.end
               continue
             }
@@ -726,9 +776,14 @@ const extract_all_code_block_patches = (params: {
       if (patch) {
         const file_key = `${patch.workspace_name || ''}:${patch.file_path}`
         if (!files_with_diffs.has(file_key)) {
-          if (text_before.trim()) {
-            items.push({ type: 'text', content: text_before.trim() })
-          }
+          const text_before_lines = lines.slice(last_block_end + 1, block.start)
+          items.push(
+            ...process_text_for_deleted_files({
+              lines: text_before_lines,
+              is_single_root: params.is_single_root
+            })
+          )
+
           const last_item =
             items.length > 0 ? items[items.length - 1] : undefined
           if (last_item && last_item.type == 'text') {
@@ -754,16 +809,13 @@ const extract_all_code_block_patches = (params: {
   }
 
   if (last_block_end < lines.length - 1) {
-    const text_after = lines
-      .slice(last_block_end + 1)
-      .filter((line) => {
-        const trimmed = line.trim()
-        return trimmed != '<files>' && trimmed != '</files>'
+    const remaining_lines = lines.slice(last_block_end + 1)
+    items.push(
+      ...process_text_for_deleted_files({
+        lines: remaining_lines,
+        is_single_root: params.is_single_root
       })
-      .join('\n')
-    if (text_after.trim()) {
-      items.push({ type: 'text', content: text_after.trim() })
-    }
+    )
   }
 
   return items
