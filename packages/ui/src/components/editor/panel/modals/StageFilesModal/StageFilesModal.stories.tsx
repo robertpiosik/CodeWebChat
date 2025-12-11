@@ -6,11 +6,11 @@ export default {
 }
 
 const mock_files = [
-  'packages/ui/src/components/Button.tsx',
-  'packages/ui/src/components/Modal.tsx',
-  'packages/vscode/src/utils/helpers.ts',
-  'packages/shared/src/index.ts',
-  'README.md'
+  { path: 'packages/ui/src/components/Button.tsx', status: 7 }, // Untracked
+  { path: 'packages/ui/src/components/Modal.tsx', status: 5 }, // Modified
+  { path: 'packages/vscode/src/utils/helpers.ts', status: 6 }, // Deleted
+  { path: 'packages/shared/src/index.ts', status: 5 }, // Modified
+  { path: 'README.md', status: 7 } // Untracked
 ]
 
 export const Default = () => {

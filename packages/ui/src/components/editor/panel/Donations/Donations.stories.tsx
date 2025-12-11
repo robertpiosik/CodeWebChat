@@ -25,6 +25,7 @@ export const Default = () => {
     <Donations
       donations={sample_donations}
       is_fetching={false}
+      on_show_qr_code={(wallet) => console.log('Show QR code', wallet)}
       is_revalidating={false}
       on_fetch_next_page={() => console.log('Fetching next page…')}
       has_more={false}
@@ -36,6 +37,7 @@ export const Loading = () => {
   return (
     <Donations
       is_fetching={true}
+      on_show_qr_code={(wallet) => console.log('Show QR code', wallet)}
       is_revalidating={false}
       on_fetch_next_page={() => console.log('Fetching next page…')}
       has_more={false}
@@ -47,6 +49,7 @@ export const Revalidating = () => {
   return (
     <Donations
       donations={sample_donations}
+      on_show_qr_code={(wallet) => console.log('Show QR code', wallet)}
       is_fetching={false}
       is_revalidating={true}
       on_fetch_next_page={() => console.log('Fetching next page…')}
