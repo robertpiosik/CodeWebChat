@@ -152,7 +152,7 @@ export const claude: Chatbot = {
         raw_instructions,
         edit_format,
         footer,
-        get_chat_turn: (f) => f.closest('div[data-is-streaming="false"]'),
+        get_chat_turn: (f) => f.closest('.group'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
             'button[data-testid="action-bar-copy"]'
@@ -166,14 +166,14 @@ export const claude: Chatbot = {
           }
           copy_button.click()
         },
-        insert_button: (f, b) => f.insertBefore(b, f.children[0])
+        insert_button: (f, b) =>
+          f.insertBefore(b, f.children[f.children.length])
       })
     }
 
     const stop_button_selector =
       'path[d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm40-112v56a12,12,0,0,1-12,12H100a12,12,0,0,1-12-12V100a12,12,0,0,1,12-12h56A12,12,0,0,1,168,100Z"]'
-    const footer_selector =
-      'div[data-is-streaming="false"] > div:nth-child(2) > div > div'
+    const footer_selector = 'div[data-is-streaming="false"] + div > div > div'
 
     observe_for_responses({
       chatbot_name: 'Claude',

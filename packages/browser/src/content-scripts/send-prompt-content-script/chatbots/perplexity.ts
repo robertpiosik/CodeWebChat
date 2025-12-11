@@ -197,7 +197,7 @@ export const perplexity: Chatbot = {
         get_chat_turn: (f) => f.closest('.max-w-threadContentWidth'),
         perform_copy: (f) => {
           const copy_button = f.querySelector(
-            'button:nth-child(4)'
+            'button:nth-child(3)'
           ) as HTMLButtonElement
           if (!copy_button) {
             report_initialization_error({
@@ -208,7 +208,8 @@ export const perplexity: Chatbot = {
           }
           copy_button.click()
         },
-        insert_button: (f, b) => f.insertBefore(b, f.children[0])
+        insert_button: (f, b) =>
+          f.insertBefore(b, f.children[f.children.length])
       })
     }
 
