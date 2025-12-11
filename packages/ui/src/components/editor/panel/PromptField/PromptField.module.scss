@@ -105,9 +105,11 @@
   cursor: pointer;
   color: var(--vscode-icon-foreground);
   opacity: var(--dimmed-opacity);
+  line-height: 0;
 
   &::before {
     font-size: 13px !important;
+    line-height: 1;
   }
 
   &:hover {
