@@ -7,9 +7,8 @@ export type FileInPreview = {
   is_deleted?: boolean
   lines_added: number
   lines_removed: number
-  is_fallback?: boolean
   is_replaced?: boolean
-  diff_fallback_method?: 'recount' | 'search_and_replace'
+  diff_application_method?: 'recount' | 'search_and_replace'
   content?: string
 }
 

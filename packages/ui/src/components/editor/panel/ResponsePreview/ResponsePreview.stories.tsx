@@ -45,16 +45,14 @@ const files_using_fallbacks = [
   {
     type: 'file',
     file_path: 'src/complex-logic.js',
-    is_fallback: true,
-    diff_fallback_method: 'recount',
+    diff_application_method: 'recount',
     lines_added: 15,
     lines_removed: 12
   },
   {
     type: 'file',
     file_path: 'src/aggressive-fallback.css',
-    is_fallback: true,
-    diff_fallback_method: 'search_and_replace',
+    diff_application_method: 'search_and_replace',
     lines_added: 8,
     lines_removed: 3
   }

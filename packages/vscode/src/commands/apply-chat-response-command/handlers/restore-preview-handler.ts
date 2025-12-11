@@ -83,9 +83,8 @@ export const handle_restore_preview = async (
       workspace_name: file.workspace_name,
       is_deleted: file.is_deleted,
       is_checked: file.is_checked,
-      is_fallback: file.is_fallback,
       is_replaced: file.is_replaced,
-      diff_fallback_method: file.diff_fallback_method
+      diff_application_method: file.diff_application_method
     })
 
     if (file.is_checked !== false) {

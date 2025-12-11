@@ -202,9 +202,8 @@ export const apply_chat_response_command = (params: {
                 is_deleted,
                 lines_added: diff_stats.lines_added,
                 lines_removed: diff_stats.lines_removed,
-                is_fallback: state.is_fallback,
                 is_replaced: state.is_replaced,
-                diff_fallback_method: state.diff_fallback_method,
+                diff_application_method: state.diff_application_method,
                 content: current_content,
                 is_checked: true
               })

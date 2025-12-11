@@ -72,7 +72,9 @@ export const ResponsePreview: FC<Props> = (props) => {
   const files_in_preview = props.items.filter(
     (i) => 'file_path' in i
   ) as FileInPreview[]
-  const fallback_count = files_in_preview.filter((f) => f.is_fallback).length
+  const aggressive_fallback_count = files_in_preview.filter(
+    (f) => f.diff_application_method == 'search_and_replace'
+  ).length
 
   const get_instructions_font_size_class = (text: string): string => {
     const length = text.length
@@ -105,13 +107,13 @@ export const ResponsePreview: FC<Props> = (props) => {
             {props.raw_instructions}
           </div>
         )}
-        {fallback_count > 0 && (
+        {aggressive_fallback_count > 0 && (
           <div className={styles.info}>
             {files_in_preview.length > 1
-              ? `${fallback_count} of ${files_in_preview.length} files`
+              ? `${aggressive_fallback_count} of ${files_in_preview.length} files`
               : 'The file'}{' '}
-            required a fallback diff integration method, which may lead to
-            inaccuracies. Looks off? Click{' '}
+            required an aggressive fallback diff integration method, which may
+            lead to inaccuracies. Looks off? Click{' '}
             <span className="codicon codicon-sparkle" /> action to fix a file
             with the Intelligent Update API tool.
           </div>
@@ -142,7 +144,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                   }}
                   role="button"
                   title={`${file.file_path}${
-                    file.diff_fallback_method == 'search_and_replace'
+                    file.diff_application_method == 'search_and_replace'
                       ? '\nUsed aggressive fallback method. Call Intelligent Update API tool, if needed.'
                       : ''
                   }`}
@@ -167,7 +169,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                       })}
                     >
                       <span>
-                        {file.diff_fallback_method == 'search_and_replace' &&
+                        {file.diff_application_method == 'search_and_replace' &&
                           '⚠ '}
                         {file_name}
                       </span>
@@ -182,13 +184,13 @@ export const ResponsePreview: FC<Props> = (props) => {
                   </div>
                   <div className={styles.list__file__right}>
                     <div className={styles['list__file__actions']}>
-                      {(file.is_fallback || file.is_replaced) && (
+                      {(file.diff_application_method || file.is_replaced) && (
                         <IconButton
                           codicon_icon="sparkle"
                           title={`Call Intelligent Update API tool${
-                            file.diff_fallback_method == 'recount'
+                            file.diff_application_method == 'recount'
                               ? ' (fallback used: git apply with --recount flag)'
-                              : file.diff_fallback_method ==
+                              : file.diff_application_method ==
                                   'search_and_replace'
                                 ? ' (fallback used: search and replace matching fragments)'
                                 : ''

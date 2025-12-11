@@ -291,7 +291,7 @@ const handle_new_file_patch = async (
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
-  diff_fallback_method?: 'recount' | 'search_and_replace'
+  diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
   const file_paths = extract_file_paths_from_patch(patch_content)
   if (file_paths.length != 1) {
@@ -366,7 +366,7 @@ const handle_deleted_file_patch = async (
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
-  diff_fallback_method?: 'recount' | 'search_and_replace'
+  diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
   const file_paths = extract_file_paths_from_patch(patch_content)
   if (file_paths.length != 1) {
@@ -435,7 +435,7 @@ export const apply_git_patch = async (
 ): Promise<{
   success: boolean
   original_states?: OriginalFileState[]
-  diff_fallback_method?: 'recount' | 'search_and_replace'
+  diff_application_method?: 'recount' | 'search_and_replace'
 }> => {
   const patch_info = parse_patch_header(patch_content, workspace_path)
 
@@ -474,7 +474,7 @@ export const apply_git_patch = async (
 
     let last_error: any = null
     let success = false
-    let diff_fallback_method: 'recount' | 'search_and_replace' | undefined =
+    let diff_application_method: 'recount' | 'search_and_replace' | undefined =
       undefined
 
     if (patch_info.is_renaming) {
@@ -482,47 +482,25 @@ export const apply_git_patch = async (
       success = true
     }
 
-    // Attempt 1: Standard git apply
+    // Attempt 1: git apply with --recount
     if (!success) {
-      try {
-        await execAsync(
-          `git apply --whitespace=fix --ignore-whitespace "${temp_file}"`,
-          { cwd: workspace_path }
-        )
-        success = true
-        Logger.info({
-          function_name: 'apply_git_patch',
-          message: 'Patch applied successfully with standard git apply.'
-        })
-      } catch (error) {
-        last_error = error
-      }
-    }
-
-    // Attempt 2: git apply with --recount
-    if (!success) {
-      Logger.warn({
-        function_name: 'apply_git_patch',
-        message: 'Standard git apply failed, trying with --recount.',
-        data: { error: last_error }
-      })
       try {
         await execAsync(
           `git apply --whitespace=fix --ignore-whitespace --recount "${temp_file}"`,
           { cwd: workspace_path }
         )
         success = true
-        diff_fallback_method = 'recount'
+        diff_application_method = 'recount'
         Logger.info({
           function_name: 'apply_git_patch',
-          message: 'Patch applied successfully with --recount fallback.'
+          message: 'Patch applied successfully with --recount.'
         })
       } catch (error) {
         last_error = error
       }
     }
 
-    // Attempt 3: Custom diff processor
+    // Attempt 2: Custom diff processor
     if (!success) {
       Logger.warn({
         function_name: 'apply_git_patch',
@@ -538,7 +516,7 @@ export const apply_git_patch = async (
           diff_path_patch: temp_file
         })
         success = true
-        diff_fallback_method = 'search_and_replace'
+        diff_application_method = 'search_and_replace'
         Logger.info({
           function_name: 'apply_git_patch',
           message: 'Patch applied successfully with custom processor fallback.'
@@ -555,7 +533,7 @@ export const apply_git_patch = async (
       return {
         success: true,
         original_states: original_states,
-        diff_fallback_method
+        diff_application_method
       }
     } else {
       // All methods failed, throw the last logged error to be handled by the outer catch

@@ -6,8 +6,7 @@ export type OriginalFileState = {
   cursor_offset?: number
   new_file_path?: string
   file_path_to_restore?: string
-  is_fallback?: boolean
-  diff_fallback_method?: 'recount' | 'search_and_replace'
+  diff_application_method?: 'recount' | 'search_and_replace'
   is_replaced?: boolean
   is_deleted?: boolean
   is_checked?: boolean

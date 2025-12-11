@@ -197,7 +197,7 @@ export const process_chat_response = async (
     const applied_patches: {
       patch: Diff
       original_states: OriginalFileState[]
-      diff_fallback_method?: 'recount' | 'search_and_replace'
+      diff_application_method?: 'recount' | 'search_and_replace'
     }[] = []
     let any_patch_used_fallback = false
 
@@ -214,10 +214,9 @@ export const process_chat_response = async (
       const result = await apply_git_patch(patch.content, workspace_path)
 
       if (result.success) {
-        if (result.diff_fallback_method && result.original_states) {
+        if (result.diff_application_method && result.original_states) {
           for (const state of result.original_states) {
-            state.is_fallback = true
-            state.diff_fallback_method = result.diff_fallback_method
+            state.diff_application_method = result.diff_application_method
           }
         }
         success_count++
@@ -228,10 +227,10 @@ export const process_chat_response = async (
           applied_patches.push({
             patch,
             original_states: result.original_states,
-            diff_fallback_method: result.diff_fallback_method
+            diff_application_method: result.diff_application_method
           })
         }
-        if (result.diff_fallback_method) {
+        if (result.diff_application_method) {
           any_patch_used_fallback = true
         }
       } else {
@@ -343,10 +342,10 @@ export const process_chat_response = async (
       if (any_patch_used_fallback) {
         ;(async () => {
           const fallback_patches_count = applied_patches.filter(
-            (p) => p.diff_fallback_method
+            (p) => p.diff_application_method
           ).length
           const fallback_files = applied_patches
-            .filter((p) => p.diff_fallback_method)
+            .filter((p) => p.diff_application_method)
             .map((p) => p.patch.file_path)
 
           Logger.info({
