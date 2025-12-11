@@ -38,35 +38,8 @@ export const get_intelligent_update_config = async (
   }
 
   if (!selected_config || show_quick_pick) {
-    const set_default_button = {
-      iconPath: new vscode.ThemeIcon('star'),
-      tooltip: 'Set as default'
-    }
-
-    const unset_default_button = {
-      iconPath: new vscode.ThemeIcon('star-full'),
-      tooltip: 'Unset default'
-    }
-
     const create_items = async () => {
-      const default_config =
-        await api_providers_manager.get_default_intelligent_update_config()
-
       return intelligent_update_configs.map((config, index) => {
-        const buttons = []
-
-        const is_default =
-          default_config &&
-          default_config.provider_type == config.provider_type &&
-          default_config.provider_name == config.provider_name &&
-          default_config.model == config.model
-
-        if (is_default) {
-          buttons.push(unset_default_button)
-        } else {
-          buttons.push(set_default_button)
-        }
-
         return {
           label: config.model,
           description: `${
@@ -78,8 +51,7 @@ export const get_intelligent_update_config = async (
           }`,
           config,
           index,
-          id: get_tool_config_id(config),
-          buttons
+          id: get_tool_config_id(config)
         }
       })
     }
@@ -87,7 +59,7 @@ export const get_intelligent_update_config = async (
     const quick_pick = vscode.window.createQuickPick()
     const items = await create_items()
     quick_pick.items = items
-    quick_pick.title = 'Configuration'
+    quick_pick.title = 'Configurations'
     quick_pick.placeholder =
       'Select the Intelligent Update API tool configuration'
     quick_pick.matchOnDescription = true
@@ -109,24 +81,6 @@ export const get_intelligent_update_config = async (
 
     return new Promise<{ provider: any; config: ToolConfig } | undefined>(
       (resolve) => {
-        quick_pick.onDidTriggerItemButton(async (event) => {
-          const item = event.item as any
-          const button = event.button
-          const index = item.index
-
-          if (button === set_default_button) {
-            await api_providers_manager.set_default_intelligent_update_config(
-              intelligent_update_configs[index]
-            )
-            quick_pick.items = await create_items()
-          } else if (button === unset_default_button) {
-            await api_providers_manager.set_default_intelligent_update_config(
-              null as any
-            )
-            quick_pick.items = await create_items()
-          }
-        })
-
         quick_pick.onDidAccept(async () => {
           const selected = quick_pick.selectedItems[0] as any
           quick_pick.hide()

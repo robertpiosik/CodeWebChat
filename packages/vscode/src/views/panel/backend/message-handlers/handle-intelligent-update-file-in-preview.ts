@@ -11,52 +11,13 @@ import { Logger } from '@shared/utils/logger'
 import { parse_response } from '@/commands/apply-chat-response-command/utils/clipboard-parser'
 import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { PROVIDERS } from '@shared/constants/providers'
-import { process_file } from '@/utils/intelligent-update-utils'
+import {
+  get_intelligent_update_config,
+  process_file
+} from '@/utils/intelligent-update-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { dictionary } from '@shared/constants/dictionary'
 import axios from 'axios'
-
-const get_default_intelligent_update_config = async (
-  api_providers_manager: ModelProvidersManager
-): Promise<{ provider: any; config: any } | undefined> => {
-  const intelligent_update_configs =
-    await api_providers_manager.get_intelligent_update_tool_configs()
-
-  if (intelligent_update_configs.length == 0) {
-    vscode.commands.executeCommand('codeWebChat.settings')
-    vscode.window.showInformationMessage(
-      dictionary.information_message.NO_INTELLIGENT_UPDATE_CONFIGURATIONS_FOUND
-    )
-    return
-  }
-
-  const selected_config =
-    await api_providers_manager.get_default_intelligent_update_config()
-
-  if (!selected_config) {
-    vscode.commands.executeCommand('codeWebChat.settings')
-    vscode.window.showInformationMessage(
-      dictionary.information_message.NO_DEFAULT_INTELLIGENT_UPDATE_CONFIGURATION
-    )
-    return
-  }
-
-  const provider = await api_providers_manager.get_provider(
-    selected_config.provider_name
-  )
-
-  if (!provider) {
-    vscode.window.showErrorMessage(
-      dictionary.error_message.API_PROVIDER_FOR_DEFAULT_CONFIG_NOT_FOUND
-    )
-    return
-  }
-
-  return {
-    provider,
-    config: selected_config
-  }
-}
 
 export const handle_intelligent_update_file_in_preview = async (
   panel_provider: PanelProvider,
@@ -131,8 +92,10 @@ export const handle_intelligent_update_file_in_preview = async (
   const api_providers_manager = new ModelProvidersManager(
     panel_provider.context
   )
-  const config_result = await get_default_intelligent_update_config(
-    api_providers_manager
+  const config_result = await get_intelligent_update_config(
+    api_providers_manager,
+    false,
+    panel_provider.context
   )
   if (!config_result) return
 
