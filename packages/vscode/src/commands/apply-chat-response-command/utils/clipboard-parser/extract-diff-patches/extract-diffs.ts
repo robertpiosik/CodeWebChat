@@ -818,6 +818,13 @@ const extract_all_code_block_patches = (params: {
     )
   }
 
+  if (items.length > 0) {
+    const last_item = items[items.length - 1]
+    if (last_item.type == 'text' && last_item.content.trim() == '```') {
+      items.pop()
+    }
+  }
+
   return items
 }
 
