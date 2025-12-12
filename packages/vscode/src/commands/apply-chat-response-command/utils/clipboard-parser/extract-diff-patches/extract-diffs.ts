@@ -711,14 +711,26 @@ const extract_all_code_block_patches = (params: {
 
     if (block.type == 'diff' || block.type == 'patch') {
       const text_before_lines = lines.slice(last_block_end + 1, block.start)
-      items.push(
-        ...process_text_for_deleted_files({
-          lines: text_before_lines,
-          is_single_root: params.is_single_root
-        })
-      )
+      const preceding_items = process_text_for_deleted_files({
+        lines: text_before_lines,
+        is_single_root: params.is_single_root
+      })
+      items.push(...preceding_items)
 
-      const patches = diff_block_patches.get(block.start) || []
+      let patches = diff_block_patches.get(block.start) || []
+
+      if (patches.length > 0) {
+        patches = patches.filter((p) => {
+          const is_redundant = preceding_items.some(
+            (item) =>
+              item.type == 'diff' &&
+              item.file_path == p.file_path &&
+              item.workspace_name == p.workspace_name
+          )
+          return !is_redundant
+        })
+      }
+
       if (patches.length > 0) {
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
         if (last_item && last_item.type == 'text') {

@@ -120,7 +120,7 @@ export const preview = async (params: {
       })
     }
 
-    if (prepared_files.length === 0) {
+    if (prepared_files.length == 0) {
       return null
     }
 
