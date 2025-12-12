@@ -10,6 +10,7 @@ type Props = {
   codicon?: string
   title?: string
   is_secondary?: boolean
+  is_danger?: boolean
   is_focused?: boolean
   is_small?: boolean
 }
@@ -25,7 +26,8 @@ export const Button: FC<Props> = (props) => {
 
   const className = cn(styles.button, {
     [styles['button--secondary']]: props.is_secondary,
-    [styles['button--small']]: props.is_small
+    [styles['button--small']]: props.is_small,
+    [styles['button--danger']]: props.is_danger
   })
 
   const children = (

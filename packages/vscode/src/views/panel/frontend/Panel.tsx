@@ -419,6 +419,12 @@ export const Panel = () => {
               }}
               footer_slot={
                 <UiResponsePreviewFooter
+                  on_back={() => {
+                    post_message(vscode, {
+                      command: 'RESPONSE_PREVIEW',
+                      files: []
+                    })
+                  }}
                   on_reject={() => {
                     if (preview_item_created_at) {
                       set_response_history((prev) =>
