@@ -268,7 +268,15 @@ export const context_initialization = async (
             const file_uri = vscode.Uri.file(file_path)
             const content_uint8_array =
               await vscode.workspace.fs.readFile(file_uri)
-            const content = new TextDecoder().decode(content_uint8_array)
+            let content = new TextDecoder().decode(content_uint8_array)
+
+            const range = workspace_provider.get_range(file_path)
+            if (range) {
+              content = workspace_provider.apply_range_to_content(
+                content,
+                range
+              )
+            }
 
             let display_path: string
             const workspace_folder =

@@ -24,7 +24,8 @@ import {
   save_context_command,
   reference_in_prompt_command,
   open_url_command,
-  generate_commit_message_command
+  generate_commit_message_command,
+  set_range_command
 } from './commands'
 import {
   get_checkpoints,
@@ -111,6 +112,7 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
+    set_range_command(),
     find_paths_in_clipboard_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, websites_provider, context),
     open_url_command({

@@ -280,6 +280,11 @@
         "title": "Generate Commit Message with CWC",
         "category": "Code Web Chat",
         "icon": "$(sparkle)"
+      },
+      {
+        "command": "codeWebChat.setRange",
+        "title": "Set Range",
+        "category": "Code Web Chat"
       }
     ],
     "menus": {
@@ -366,6 +371,10 @@
         },
         {
           "command": "codeWebChat.generateCommitMessage",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.setRange",
           "when": "false"
         }
       ],
@@ -495,6 +504,11 @@
           "group": "1_modification@3"
         },
         {
+          "command": "codeWebChat.setRange",
+          "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
+          "group": "1_modification@4"
+        },
+        {
           "command": "codeWebChat.newFile",
           "when": "view == codeWebChatViewWorkspace && viewItem == directory",
           "group": "1_creation@1"
@@ -518,6 +532,11 @@
           "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
           "group": "1_modification@3"
+        },
+        {
+          "command": "codeWebChat.setRange",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
+          "group": "1_modification@4"
         }
       ]
     },

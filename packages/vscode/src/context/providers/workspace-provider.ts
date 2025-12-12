@@ -26,10 +26,13 @@ export class WorkspaceProvider
   private combined_gitignore = ignore()
   private user_ignore: Ignore = ignore()
   private watcher: vscode.FileSystemWatcher
+  private ranges_watcher: vscode.FileSystemWatcher
   private gitignore_watcher: vscode.FileSystemWatcher
   private file_token_counts: Map<string, number> = new Map()
   private directory_token_counts: Map<string, number> = new Map()
   private directory_selected_token_counts: Map<string, number> = new Map()
+  private file_ranges: Map<string, string> = new Map()
+
   private config_change_handler: vscode.Disposable
   private _on_did_change_checked_files = new vscode.EventEmitter<void>()
   readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
@@ -41,6 +44,7 @@ export class WorkspaceProvider
   private partially_checked_dirs: Set<string> = new Set()
   private file_workspace_map: Map<string, string> = new Map()
   public gitignore_initialization: Promise<void>
+  public ranges_initialization: Promise<void>
 
   constructor(
     workspace_folders: vscode.WorkspaceFolder[],
@@ -80,6 +84,14 @@ export class WorkspaceProvider
     })
 
     this.gitignore_initialization = this._load_all_gitignore_files()
+    this.ranges_watcher = vscode.workspace.createFileSystemWatcher(
+      '**/.vscode/ranges.json'
+    )
+    this.ranges_watcher.onDidCreate(() => this._load_all_ranges_files())
+    this.ranges_watcher.onDidChange(() => this._load_all_ranges_files())
+    this.ranges_watcher.onDidDelete(() => this._load_all_ranges_files())
+
+    this.ranges_initialization = this._load_all_ranges_files()
   }
 
   private async _save_checked_files_state(): Promise<void> {
@@ -177,6 +189,7 @@ export class WorkspaceProvider
 
   public dispose(): void {
     this.watcher.dispose()
+    this.ranges_watcher.dispose()
     this.gitignore_watcher.dispose()
     this.config_change_handler.dispose()
     this._on_did_change_checked_files.dispose()
@@ -497,6 +510,11 @@ export class WorkspaceProvider
       display_description = formatted_total ?? ''
     }
 
+    if (!element.isDirectory && element.range) {
+      display_description += `${
+        display_description ? ' · ' : ''
+      }${element.range}`
+    }
     const trimmed_description = display_description.trim()
     element.description =
       trimmed_description == '' ? undefined : trimmed_description
@@ -535,6 +553,7 @@ export class WorkspaceProvider
 
   public async getChildren(element?: FileItem): Promise<FileItem[]> {
     await this.gitignore_initialization
+    await this.ranges_initialization
 
     if (element) {
       const dir_path = element.resourceUri.fsPath
@@ -569,6 +588,7 @@ export class WorkspaceProvider
 
   public async getContextViewChildren(element?: FileItem): Promise<FileItem[]> {
     await this.gitignore_initialization
+    await this.ranges_initialization
 
     if (element) {
       const dir_path = element.resourceUri.fsPath
@@ -629,7 +649,8 @@ export class WorkspaceProvider
           total_tokens,
           selected_tokens,
           undefined,
-          true // Is workspace root
+          true, // Is workspace root
+          undefined
         )
       )
       if (context_view) {
@@ -639,6 +660,66 @@ export class WorkspaceProvider
     }
     return items
   }
+  private async _load_all_ranges_files(): Promise<void> {
+    this.file_ranges.clear()
+    for (const workspace_root of this.workspace_roots) {
+      const ranges_file_path = path.join(
+        workspace_root,
+        '.vscode',
+        'ranges.json'
+      )
+      try {
+        const content = await fs.promises.readFile(ranges_file_path, 'utf-8')
+        const ranges = JSON.parse(content) as Record<string, string>
+        for (const [relativePath, range] of Object.entries(ranges)) {
+          const absolutePath = path.join(workspace_root, relativePath)
+          this.file_ranges.set(absolutePath, range)
+        }
+      } catch (e) {
+        if ((e as NodeJS.ErrnoException).code !== 'ENOENT') {
+          console.error(`Error loading ranges from ${ranges_file_path}`, e)
+        }
+      }
+    }
+    this.file_token_counts.clear()
+    this.directory_token_counts.clear()
+    this.directory_selected_token_counts.clear()
+    this.refresh()
+  }
+
+  public get_range(filePath: string): string | undefined {
+    return this.file_ranges.get(filePath)
+  }
+
+  public apply_range_to_content(content: string, range_string: string): string {
+    const lines = content.split(/\r?\n/)
+    const total_lines = lines.length
+    const included_lines = new Set<number>()
+
+    const parts = range_string.trim().split(/\s+/)
+    for (const part of parts) {
+      const match = part.match(/^(\d+)?-(\d+)?$/)
+      if (!match) continue
+
+      const [, start_str, end_str] = match
+      let start = start_str ? parseInt(start_str, 10) : 1
+      let end = end_str ? parseInt(end_str, 10) : total_lines
+
+      if (start < 1) start = 1
+      if (end > total_lines) end = total_lines
+
+      for (let i = start; i <= end; i++) {
+        included_lines.add(i)
+      }
+    }
+
+    if (included_lines.size == 0) {
+      return ''
+    }
+
+    const sorted_indices = Array.from(included_lines).sort((a, b) => a - b)
+    return sorted_indices.map((i) => lines[i - 1]).join('\n')
+  }
 
   public async calculate_file_tokens(file_path: string): Promise<number> {
     if (this.file_token_counts.has(file_path)) {
@@ -647,7 +728,13 @@ export class WorkspaceProvider
 
     try {
       const workspace_root = this.get_workspace_root_for_file(file_path)
-      const content = await fs.promises.readFile(file_path, 'utf8')
+      let content = await fs.promises.readFile(file_path, 'utf8')
+
+      const range = this.get_range(file_path)
+      if (range) {
+        content = this.apply_range_to_content(content, range)
+      }
+
       let content_xml = ''
 
       if (!workspace_root) {
@@ -948,6 +1035,8 @@ export class WorkspaceProvider
           ? await this._calculate_directory_selected_tokens(full_path)
           : undefined
 
+        const range = this.file_ranges.get(full_path)
+
         const item = new FileItem(
           entry.name,
           uri,
@@ -960,7 +1049,9 @@ export class WorkspaceProvider
           false,
           token_count,
           selected_token_count,
-          undefined
+          undefined,
+          false,
+          range
         )
 
         if (context_view) {
@@ -1504,7 +1595,8 @@ export class FileItem extends vscode.TreeItem {
     public tokenCount?: number,
     public selectedTokenCount?: number,
     description?: string,
-    public isWorkspaceRoot: boolean = false
+    public isWorkspaceRoot: boolean = false,
+    public range?: string
   ) {
     super(label, collapsibleState)
     this.tooltip = this.resourceUri.fsPath
@@ -1517,6 +1609,7 @@ export class FileItem extends vscode.TreeItem {
       this.contextValue = 'directory'
     } else {
       this.iconPath = new vscode.ThemeIcon('file')
+      this.contextValue = 'file'
       // Use custom command instead of vscode.open
       this.command = {
         command: 'codeWebChat.openFileFromWorkspace',

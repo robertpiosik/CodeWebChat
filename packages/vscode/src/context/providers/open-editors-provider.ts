@@ -21,6 +21,7 @@ export class OpenEditorsProvider
   private _file_token_counts: Map<string, number> = new Map()
   private _tab_change_handler: vscode.Disposable
   private _file_change_watcher: vscode.Disposable
+  private _workspace_change_handler: vscode.Disposable
   private _initialized: boolean = false
   private _opened_from_workspace_view: Set<string> = new Set()
   private _non_preview_files: Set<string> = new Set()
@@ -38,6 +39,9 @@ export class OpenEditorsProvider
     this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
     this._shared_state = SharedFileState.get_instance()
     this.workspace_provider = workspace_provider
+
+    this._workspace_change_handler =
+      this.workspace_provider.onDidChangeTreeData(() => this.refresh())
 
     this._update_preview_tabs_state()
 
@@ -147,6 +151,7 @@ export class OpenEditorsProvider
   }
 
   dispose(): void {
+    this._workspace_change_handler.dispose()
     this._tab_change_handler.dispose()
     this._file_change_watcher.dispose()
     this._config_change_handler.dispose()
@@ -196,14 +201,27 @@ export class OpenEditorsProvider
 
     const token_count = element.tokenCount
 
+    let final_description = element.description || '' // relative path
+
+    const prefix_parts: string[] = []
     if (token_count !== undefined) {
-      const formatted_token_count = display_token_count(token_count)
-      if (element.description) {
-        element.description = `${formatted_token_count} · ${element.description}`
+      prefix_parts.push(display_token_count(token_count))
+    }
+    if (element.range) {
+      prefix_parts.push(element.range)
+    }
+
+    const prefix = prefix_parts.join(' · ')
+
+    if (prefix) {
+      if (final_description) {
+        final_description = `${prefix} · ${final_description}`
       } else {
-        element.description = formatted_token_count
+        final_description = prefix
       }
     }
+
+    element.description = final_description
 
     return element
   }
@@ -283,6 +301,7 @@ export class OpenEditorsProvider
         description = path.basename(workspace_root)
       }
 
+      const range = this.workspace_provider.get_range(file_path)
       const token_count =
         await this.workspace_provider.calculate_file_tokens(file_path)
 
@@ -296,7 +315,9 @@ export class OpenEditorsProvider
         true,
         token_count,
         undefined, // selectedTokenCount is undefined for open editor files
-        description
+        description,
+        false,
+        range
       )
 
       items.push(item)

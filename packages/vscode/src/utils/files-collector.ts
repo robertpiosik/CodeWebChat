@@ -72,7 +72,15 @@ export class FilesCollector {
 
         if (stats.isDirectory()) continue
 
-        const content = fs.readFileSync(file_path, 'utf8')
+        let content = fs.readFileSync(file_path, 'utf8')
+
+        const range = this.workspace_provider.get_range(file_path)
+        if (range) {
+          content = this.workspace_provider.apply_range_to_content(
+            content,
+            range
+          )
+        }
 
         const workspace_root = this._get_workspace_root_for_file(file_path)
 
