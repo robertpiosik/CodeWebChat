@@ -34,15 +34,17 @@ export const show_diff_with_actions = async (
 
   const title = path.basename(prepared_file.reviewable_file.file_path)
 
-  await vscode.commands.executeCommand(
-    'vscode.diff',
-    left_doc_uri,
-    right_doc_uri,
-    title,
-    {
-      preview: false
-    }
-  )
+  if (!prepared_file.reviewable_file.is_deleted) {
+    await vscode.commands.executeCommand(
+      'vscode.diff',
+      left_doc_uri,
+      right_doc_uri,
+      title,
+      {
+        preview: false
+      }
+    )
+  }
 
   return new Promise<CodeReviewResult>((resolve) => {
     response_preview_promise_resolve = async (decision) => {
