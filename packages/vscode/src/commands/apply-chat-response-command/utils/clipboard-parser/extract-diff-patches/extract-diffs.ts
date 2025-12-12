@@ -640,7 +640,6 @@ const extract_all_code_block_patches = (params: {
   }
   code_blocks.push(...xml_blocks)
   code_blocks.sort((a, b) => a.start - b.start)
-  const files_with_diffs = new Set<string>()
   const diff_block_patches = new Map<number, Diff[]>()
 
   for (let i = 0; i < code_blocks.length; i++) {
@@ -692,10 +691,6 @@ const extract_all_code_block_patches = (params: {
       })
       if (parsed_patches.length > 0) {
         diff_block_patches.set(block.start, parsed_patches)
-        for (const p of parsed_patches) {
-          const file_key = `${p.workspace_name || ''}:${p.file_path}`
-          files_with_diffs.add(file_key)
-        }
       }
     }
   }
@@ -717,19 +712,7 @@ const extract_all_code_block_patches = (params: {
       })
       items.push(...preceding_items)
 
-      let patches = diff_block_patches.get(block.start) || []
-
-      if (patches.length > 0) {
-        patches = patches.filter((p) => {
-          const is_redundant = preceding_items.some(
-            (item) =>
-              item.type == 'diff' &&
-              item.file_path == p.file_path &&
-              item.workspace_name == p.workspace_name
-          )
-          return !is_redundant
-        })
-      }
+      const patches = diff_block_patches.get(block.start) || []
 
       if (patches.length > 0) {
         const last_item = items.length > 0 ? items[items.length - 1] : undefined
@@ -786,36 +769,32 @@ const extract_all_code_block_patches = (params: {
       })
 
       if (patch) {
-        const file_key = `${patch.workspace_name || ''}:${patch.file_path}`
-        if (!files_with_diffs.has(file_key)) {
-          const text_before_lines = lines.slice(last_block_end + 1, block.start)
-          items.push(
-            ...process_text_for_deleted_files({
-              lines: text_before_lines,
-              is_single_root: params.is_single_root
-            })
-          )
+        const text_before_lines = lines.slice(last_block_end + 1, block.start)
+        items.push(
+          ...process_text_for_deleted_files({
+            lines: text_before_lines,
+            is_single_root: params.is_single_root
+          })
+        )
 
-          const last_item =
-            items.length > 0 ? items[items.length - 1] : undefined
-          if (last_item && last_item.type == 'text') {
-            remove_path_line_from_text_block({
-              text_item: last_item,
-              target_file_path: patch.file_path,
-              is_single_root: params.is_single_root
-            })
+        const last_item = items.length > 0 ? items[items.length - 1] : undefined
+        if (last_item && last_item.type == 'text') {
+          remove_path_line_from_text_block({
+            text_item: last_item,
+            target_file_path: patch.file_path,
+            is_single_root: params.is_single_root
+          })
 
-            if (!last_item.content) {
-              items.pop()
-            }
+          if (!last_item.content) {
+            items.pop()
           }
-
-          if (hint_result.workspace_name && !patch.workspace_name) {
-            patch.workspace_name = hint_result.workspace_name
-          }
-          items.push(patch)
-          last_block_end = block.end
         }
+
+        if (hint_result.workspace_name && !patch.workspace_name) {
+          patch.workspace_name = hint_result.workspace_name
+        }
+        items.push(patch)
+        last_block_end = block.end
       }
     }
   }
@@ -900,6 +879,27 @@ const parse_multiple_raw_patches = (params: {
   return patches
 }
 
+const filter_last_diff_per_file = (
+  items: DiffOrTextBlock[]
+): DiffOrTextBlock[] => {
+  const seen_files = new Set<string>()
+  const result: DiffOrTextBlock[] = []
+
+  for (let i = items.length - 1; i >= 0; i--) {
+    const item = items[i]
+    if (item.type === 'diff') {
+      const file_key = `${item.workspace_name || ''}:${item.file_path}`
+      if (!seen_files.has(file_key)) {
+        seen_files.add(file_key)
+        result.unshift(item)
+      }
+    } else {
+      result.unshift(item)
+    }
+  }
+  return result
+}
+
 export const extract_diffs = (params: {
   clipboard_text: string
   is_single_root: boolean
@@ -918,17 +918,19 @@ export const extract_diffs = (params: {
     xml_file_tag_start_regex.test(line.trim())
   )
 
+  let items: DiffOrTextBlock[]
   if (uses_code_blocks || uses_xml_blocks) {
-    return extract_all_code_block_patches({
+    items = extract_all_code_block_patches({
       normalized_text,
       is_single_root: params.is_single_root
     })
+  } else {
+    items = parse_multiple_raw_patches({
+      all_lines: lines,
+      is_single_root: params.is_single_root
+    })
   }
-
-  return parse_multiple_raw_patches({
-    all_lines: lines,
-    is_single_root: params.is_single_root
-  })
+  return filter_last_diff_per_file(items)
 }
 
 export const extract_paths_from_lines = (
