@@ -2,7 +2,10 @@ import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
 import ignore, { Ignore } from 'ignore'
-import { CONTEXT_CHECKED_PATHS_STATE_KEY } from '../../constants/state-keys'
+import {
+  CONTEXT_CHECKED_PATHS_STATE_KEY,
+  RANGES_STATE_KEY
+} from '../../constants/state-keys'
 import { IGNORE_PATTERNS } from '../../constants/ignore-patterns'
 import { natural_sort } from '../../utils/natural-sort'
 import { dictionary } from '@shared/constants/dictionary'
@@ -87,11 +90,11 @@ export class WorkspaceProvider
     this.ranges_watcher = vscode.workspace.createFileSystemWatcher(
       '**/.vscode/ranges.json'
     )
-    this.ranges_watcher.onDidCreate(() => this._load_all_ranges_files())
-    this.ranges_watcher.onDidChange(() => this._load_all_ranges_files())
-    this.ranges_watcher.onDidDelete(() => this._load_all_ranges_files())
+    this.ranges_watcher.onDidCreate(() => this.load_all_ranges())
+    this.ranges_watcher.onDidChange(() => this.load_all_ranges())
+    this.ranges_watcher.onDidDelete(() => this.load_all_ranges())
 
-    this.ranges_initialization = this._load_all_ranges_files()
+    this.ranges_initialization = this.load_all_ranges()
   }
 
   private async _save_checked_files_state(): Promise<void> {
@@ -660,7 +663,7 @@ export class WorkspaceProvider
     }
     return items
   }
-  private async _load_all_ranges_files(): Promise<void> {
+  public async load_all_ranges(): Promise<void> {
     this.file_ranges.clear()
     for (const workspace_root of this.workspace_roots) {
       const ranges_file_path = path.join(
@@ -681,10 +684,50 @@ export class WorkspaceProvider
         }
       }
     }
+
+    // Load from state
+    const state_ranges = this.context.workspaceState.get<
+      Record<string, string>
+    >(RANGES_STATE_KEY, {})
+    for (const [key, range] of Object.entries(state_ranges)) {
+      const resolved_path = this._resolve_state_path(key)
+      if (resolved_path && fs.existsSync(resolved_path)) {
+        this.file_ranges.set(resolved_path, range)
+      }
+    }
+
     this.file_token_counts.clear()
     this.directory_token_counts.clear()
     this.directory_selected_token_counts.clear()
     this.refresh()
+  }
+
+  private _resolve_state_path(key: string): string | undefined {
+    // If single root, assume relative path
+    if (this.workspace_roots.length === 1) {
+      return path.join(this.workspace_roots[0], key)
+    }
+
+    // Multi-root: expect "Name:path"
+    const parts = key.split(':')
+    if (parts.length > 1) {
+      const name = parts[0]
+      const rel_path = parts.slice(1).join(':')
+      const index = this.workspace_names.indexOf(name)
+      if (index !== -1) {
+        return path.join(this.workspace_roots[index], rel_path)
+      }
+    }
+
+    // Fallback: try to find the file in any root (legacy or if logic changes)
+    for (const root of this.workspace_roots) {
+      const abs = path.join(root, key)
+      if (fs.existsSync(abs)) {
+        return abs
+      }
+    }
+
+    return undefined
   }
 
   public get_range(filePath: string): string | undefined {

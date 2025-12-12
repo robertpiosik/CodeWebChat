@@ -112,7 +112,7 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
-    set_range_command(),
+    set_range_command(workspace_provider, context),
     find_paths_in_clipboard_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, websites_provider, context),
     open_url_command({

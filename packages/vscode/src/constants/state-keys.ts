@@ -6,6 +6,8 @@ export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
 export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'lastSaveLocation'
+export const RANGES_STATE_KEY = 'ranges'
+export const LAST_RANGE_SAVE_LOCATION_STATE_KEY = 'last-range-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
 export const LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY =
   'last-selected-workspace-context-name'
