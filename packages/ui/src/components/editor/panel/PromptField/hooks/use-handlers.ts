@@ -21,7 +21,7 @@ const getKeywordRanges = (
   const ranges: { start: number; end: number }[] = []
   // This regex is a combination of all keyword types
   const regex =
-    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"[^"]*")/g
+    /`([^\s`]*\.[^\s`]+)`|(#Changes:[^\s,;:!?]+)|(#Selection)|(#SavedContext:(?:WorkspaceState|JSON)\s+"[^"]+")|(#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*")/g
 
   let match
   while ((match = regex.exec(text)) !== null) {
@@ -48,15 +48,21 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
 
   if (node.nodeType === Node.ELEMENT_NODE) {
     const el = node as HTMLElement
+    let inner_content = ''
+    for (const child of Array.from(el.childNodes)) {
+      inner_content += reconstruct_raw_value_from_node(child)
+    }
 
     switch (el.dataset.type) {
       case 'file-keyword': {
         const path = el.dataset.path
         if (!path) return ''
         const filename = path.split('/').pop() || path
-        if (el.textContent?.startsWith(filename)) {
-          const extra = el.textContent.substring(filename.length)
-          return `\`${path}\`${extra}`
+        const index = inner_content.indexOf(filename)
+        if (index !== -1) {
+          const prefix = inner_content.substring(0, index)
+          const suffix = inner_content.substring(index + filename.length)
+          return `${prefix}\`${path}\`${suffix}`
         }
         break
       }
@@ -64,9 +70,11 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const branchName = el.dataset.branchName
         if (!branchName) return ''
         const expected_text = `Diff with ${branchName}`
-        if (el.textContent?.startsWith(expected_text)) {
-          const extra = el.textContent.substring(expected_text.length)
-          return `#Changes:${branchName}${extra}`
+        const index = inner_content.indexOf(expected_text)
+        if (index !== -1) {
+          const prefix = inner_content.substring(0, index)
+          const suffix = inner_content.substring(index + expected_text.length)
+          return `${prefix}#Changes:${branchName}${suffix}`
         }
         break
       }
@@ -75,17 +83,21 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
         const contextName = el.dataset.contextName
         if (!contextType || !contextName) return ''
         const expected_text = `Context "${contextName}"`
-        if (el.textContent?.startsWith(expected_text)) {
-          const extra = el.textContent.substring(expected_text.length)
-          return `#SavedContext:${contextType} "${contextName}"${extra}`
+        const index = inner_content.indexOf(expected_text)
+        if (index !== -1) {
+          const prefix = inner_content.substring(0, index)
+          const suffix = inner_content.substring(index + expected_text.length)
+          return `${prefix}#SavedContext:${contextType} "${contextName}"${suffix}`
         }
         break
       }
       case 'selection-keyword': {
         const expected_text = 'Selection'
-        if (el.textContent?.startsWith(expected_text)) {
-          const extra = el.textContent.substring(expected_text.length)
-          return `#Selection${extra}`
+        const index = inner_content.indexOf(expected_text)
+        if (index !== -1) {
+          const prefix = inner_content.substring(0, index)
+          const suffix = inner_content.substring(index + expected_text.length)
+          return `${prefix}#Selection${suffix}`
         }
         break
       }
@@ -97,9 +109,14 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
           return ''
         }
         const short_hash = commit_hash.substring(0, 7)
-        if (el.textContent?.startsWith(short_hash)) {
-          const extra = el.textContent.substring(short_hash.length)
-          return `#Commit:${repo_name}:${commit_hash} "${commit_message}"${extra}`
+        const index = inner_content.indexOf(short_hash)
+        if (index !== -1) {
+          const prefix = inner_content.substring(0, index)
+          const suffix = inner_content.substring(index + short_hash.length)
+          return `${prefix}#Commit:${repo_name}:${commit_hash} "${commit_message.replace(
+            /"/g,
+            '\\"'
+          )}"${suffix}`
         }
         break
       }
@@ -111,23 +128,20 @@ const reconstruct_raw_value_from_node = (node: Node): string => {
           return ''
         }
         const short_hash = commit_hash.substring(0, 7)
-        if (el.textContent?.startsWith(short_hash)) {
-          const extra = el.textContent.substring(short_hash.length)
-          return `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message}"${extra}`
+        const index = inner_content.indexOf(short_hash)
+        if (index !== -1) {
+          const prefix = inner_content.substring(0, index)
+          const suffix = inner_content.substring(index + short_hash.length)
+          return `${prefix}#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(
+            /"/g,
+            '\\"'
+          )}"${suffix}`
         }
         break
       }
     }
 
-    if (el.childNodes.length > 0) {
-      let content = ''
-      for (const child of Array.from(el.childNodes)) {
-        content += reconstruct_raw_value_from_node(child)
-      }
-      return content
-    }
-
-    return el.textContent || ''
+    return inner_content
   }
 
   return ''
@@ -292,7 +306,7 @@ export const use_handlers = (
         const commit_message = keyword_element.dataset.commitMessage
         if (!repo_name || !commit_hash || commit_message === undefined) return
 
-        const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message}"`
+        const search_pattern = `#Commit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
         const start_index = props.value.indexOf(search_pattern)
 
         if (start_index !== -1) {
@@ -309,7 +323,7 @@ export const use_handlers = (
         const commit_message = keyword_element.dataset.commitMessage
         if (!repo_name || !commit_hash || commit_message === undefined) return
 
-        const search_pattern = `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message}"`
+        const search_pattern = `#ContextAtCommit:${repo_name}:${commit_hash} "${commit_message.replace(/"/g, '\\"')}"`
         const start_index = props.value.indexOf(search_pattern)
 
         if (start_index !== -1) {
@@ -544,7 +558,7 @@ export const use_handlers = (
   ): boolean => {
     const text_before_cursor = props.value.substring(0, raw_pos)
     const match = text_before_cursor.match(
-      /#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"[^"]*"$/
+      /#(?:Commit|ContextAtCommit):[^:]+:[^\s"]+\s+"(?:\\.|[^"\\])*"$/
     )
 
     if (match) {
