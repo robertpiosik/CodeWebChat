@@ -83,6 +83,54 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
 
+  const [is_alt_pressed, set_is_alt_pressed] = useState(false)
+
+  useEffect(() => {
+    const handle_key_down = (e: KeyboardEvent) => {
+      if (e.key == 'Alt') set_is_alt_pressed(true)
+
+      if (
+        e.altKey &&
+        !e.shiftKey &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        props.show_edit_format_selector &&
+        props.on_edit_format_change
+      ) {
+        let format: EditFormat | undefined
+        switch (e.code) {
+          case 'KeyW':
+            format = 'whole'
+            break
+          case 'KeyT':
+            format = 'truncated'
+            break
+          case 'KeyD':
+            format = 'diff'
+            break
+        }
+        if (format) {
+          e.preventDefault()
+          props.on_edit_format_change(format)
+        }
+      }
+    }
+    const handle_key_up = (e: KeyboardEvent) => {
+      if (e.key == 'Alt') set_is_alt_pressed(false)
+    }
+    const handle_blur = () => {
+      set_is_alt_pressed(false)
+    }
+    window.addEventListener('keydown', handle_key_down)
+    window.addEventListener('keyup', handle_key_up)
+    window.addEventListener('blur', handle_blur)
+    return () => {
+      window.removeEventListener('keydown', handle_key_down)
+      window.removeEventListener('keyup', handle_key_up)
+      window.removeEventListener('blur', handle_blur)
+    }
+  }, [props.show_edit_format_selector, props.on_edit_format_change])
+
   const is_narrow_viewport = use_is_narrow_viewport(268)
   const {
     is_dropdown_open,
@@ -145,10 +193,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   )
 
   const is_mac = use_is_mac()
-
-  const display_text = useMemo(() => {
-    return get_display_text(props.value, props.context_file_paths ?? [])
-  }, [props.value, props.context_file_paths])
 
   const highlighted_html = useMemo(() => {
     return get_highlighted_text({
@@ -259,6 +303,15 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
 
   const has_no_context =
     !props.context_file_paths || props.context_file_paths.length == 0
+
+  const edit_format_shortcuts: Record<EditFormat, string> = useMemo(() => {
+    const modifier = is_mac ? '⌥' : 'Alt+'
+    return {
+      whole: `(${modifier}W)`,
+      truncated: `(${modifier}T)`,
+      diff: `(${modifier}D)`
+    }
+  }, [is_mac])
 
   return (
     <div className={styles.container}>
@@ -417,6 +470,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                   const button_text = is_narrow_viewport
                     ? format.charAt(0).toUpperCase()
                     : format
+                  const is_selected = props.edit_format == format
+                  const should_underline = is_alt_pressed && !is_selected
+
                   return (
                     <button
                       key={format}
@@ -425,14 +481,37 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         {
                           [styles[
                             'footer__right__edit-format__button--selected'
-                          ]]: props.edit_format == format
+                          ]]: is_selected
                         }
                       )}
-                      title={`${props.edit_format_instructions?.[format]}`}
+                      title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}\n\n${
+                        props.edit_format_instructions?.[format]
+                      }`}
                       onClick={() => props.on_edit_format_change?.(format)}
-                      data-text={button_text}
                     >
-                      {button_text}
+                      <span
+                        className={
+                          styles['footer__right__edit-format__button__spacer']
+                        }
+                      >
+                        {button_text}
+                      </span>
+                      <span
+                        className={
+                          styles['footer__right__edit-format__button__text']
+                        }
+                      >
+                        {should_underline ? (
+                          <>
+                            <span className={styles['underlined']}>
+                              {button_text.charAt(0)}
+                            </span>
+                            {button_text.substring(1)}
+                          </>
+                        ) : (
+                          button_text
+                        )}
+                      </span>
                     </button>
                   )
                 })}

@@ -287,32 +287,35 @@
         font-size: 11px;
         pointer-events: all;
         position: relative;
-        font-weight: 500;
-        color: transparent;
+        color: var(--vscode-foreground);
 
-        &::before {
-          content: attr(data-text);
+        &__spacer {
+          visibility: hidden;
+          font-weight: 500;
+          white-space: nowrap;
+        }
+
+        &__text {
           position: absolute;
           left: 0;
           top: 0;
           width: 100%;
           height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           font-weight: normal;
-          color: var(--vscode-foreground);
           opacity: 0.5;
+          white-space: nowrap;
         }
 
-        &:hover {
-          &::before {
-            opacity: 1;
-          }
+        &:hover &__text {
+          opacity: 1;
         }
 
-        &--selected {
-          &::before {
-            font-weight: 500;
-            opacity: 1;
-          }
+        &--selected &__text {
+          font-weight: 500;
+          opacity: 1;
         }
       }
     }
@@ -424,4 +427,8 @@
       right: var(--tooltip-offset);
     }
   }
+}
+
+.underlined {
+  text-decoration: underline;
 }

@@ -699,7 +699,7 @@ export const use_handlers = (
   }
 
   const handle_key_down = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const { key, shiftKey, altKey } = e
+    const { key, shiftKey } = e
 
     // Handle arrow-right when ghost text is present
     if (key === 'ArrowRight' && ghost_text && !shiftKey) {
