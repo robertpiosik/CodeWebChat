@@ -13,6 +13,8 @@ import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
   CONTEXT_CHECKED_URLS_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
+  SAVED_CONTEXTS_STATE_KEY,
+  RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
 import { ContextProvider } from './providers/context-provider'
@@ -61,6 +63,18 @@ const restore_duplicated_workspace_context = async (
           CONTEXT_CHECKED_URLS_STATE_KEY,
           duplicated_context.checked_websites
         )
+        if (duplicated_context.ranges) {
+          await context.workspaceState.update(
+            RANGES_STATE_KEY,
+            duplicated_context.ranges
+          )
+        }
+        if (duplicated_context.saved_contexts) {
+          await context.workspaceState.update(
+            SAVED_CONTEXTS_STATE_KEY,
+            duplicated_context.saved_contexts
+          )
+        }
         if (duplicated_context.open_editors) {
           for (const editor_info of duplicated_context.open_editors) {
             try {

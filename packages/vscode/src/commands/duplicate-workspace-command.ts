@@ -5,8 +5,11 @@ import {
   API_EDIT_FORMAT_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
+  SAVED_CONTEXTS_STATE_KEY,
+  RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
+import { SavedContext } from '@/types/context'
 
 export function duplicate_workspace_command(
   workspace_provider: WorkspaceProvider,
@@ -39,12 +42,19 @@ export function duplicate_workspace_command(
         }
       }
 
+      const ranges =
+        context.workspaceState.get<Record<string, string>>(RANGES_STATE_KEY)
+      const saved_contexts = context.workspaceState.get<SavedContext[]>(
+        SAVED_CONTEXTS_STATE_KEY
+      )
       const context_to_save: DuplicateWorkspaceContext = {
         checked_files,
         checked_websites,
         workspace_root_folders,
         timestamp: Date.now(),
-        open_editors
+        open_editors,
+        ranges,
+        saved_contexts
       }
 
       const api_edit_format = context.workspaceState.get(
