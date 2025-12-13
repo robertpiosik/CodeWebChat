@@ -411,6 +411,9 @@ export function save_context_command(
         quick_pick.title = 'Save Context'
         quick_pick.items = quick_pick_storage_options
         quick_pick.placeholder = 'Where do you want to save this context?'
+        quick_pick.buttons = [
+          { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+        ]
 
         if (last_save_location) {
           const active_item = quick_pick_storage_options.find(
@@ -425,17 +428,24 @@ export function save_context_command(
           (vscode.QuickPickItem & { value: 'internal' | 'file' }) | undefined
         >((resolve) => {
           let is_accepted = false
-          quick_pick.onDidAccept(() => {
-            is_accepted = true
-            resolve(quick_pick.selectedItems[0])
-            quick_pick.hide()
-          })
-          quick_pick.onDidHide(() => {
-            if (!is_accepted) {
-              resolve(undefined)
-            }
-            quick_pick.dispose()
-          })
+          const disposables: vscode.Disposable[] = []
+          disposables.push(
+            quick_pick.onDidTriggerButton((_button) => {
+              quick_pick.hide()
+            }),
+            quick_pick.onDidAccept(() => {
+              is_accepted = true
+              resolve(quick_pick.selectedItems[0])
+              quick_pick.hide()
+            }),
+            quick_pick.onDidHide(() => {
+              if (!is_accepted) {
+                resolve(undefined)
+              }
+              disposables.forEach((d) => d.dispose())
+              quick_pick.dispose()
+            })
+          )
           quick_pick.show()
         })
 

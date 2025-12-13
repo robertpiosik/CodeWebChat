@@ -80,6 +80,9 @@ export const handle_show_prompt_template_quick_pick = async (
   templates_quick_pick.matchOnDetail = true
   templates_quick_pick.title = 'Prompt Templates'
   templates_quick_pick.placeholder = 'Manage and use your prompt templates'
+  templates_quick_pick.buttons = [
+    { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+  ]
 
   const edit_button = {
     iconPath: new vscode.ThemeIcon('edit'),
@@ -246,6 +249,9 @@ export const handle_show_prompt_template_quick_pick = async (
   let is_template_accepted = false
 
   disposables.push(
+    templates_quick_pick.onDidTriggerButton((_button) => {
+      templates_quick_pick.hide()
+    }),
     templates_quick_pick.onDidAccept(async () => {
       const [selected_template] = templates_quick_pick.selectedItems
       if (!selected_template) {

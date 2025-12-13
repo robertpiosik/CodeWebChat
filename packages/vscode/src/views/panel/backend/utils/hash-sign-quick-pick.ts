@@ -81,15 +81,48 @@ const handle_changes_item = async (): Promise<
       }
     }
 
-    const selected_branch = await vscode.window.showQuickPick(branch_items, {
-      placeHolder: 'Select branch to compare with'
+    const quick_pick = vscode.window.createQuickPick()
+    quick_pick.items = branch_items
+    quick_pick.placeholder = 'Select branch to compare with'
+    quick_pick.title = 'Branches'
+    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+    const selected_branch = await new Promise<
+      vscode.QuickPickItem | 'back' | undefined
+    >((resolve) => {
+      let is_accepted = false
+      let did_trigger_back = false
+      const disposables: vscode.Disposable[] = []
+
+      disposables.push(
+        quick_pick.onDidTriggerButton((button) => {
+          if (button === vscode.QuickInputButtons.Back) {
+            did_trigger_back = true
+            quick_pick.hide()
+            resolve('back')
+          }
+        }),
+        quick_pick.onDidAccept(() => {
+          is_accepted = true
+          resolve(quick_pick.selectedItems[0])
+          quick_pick.hide()
+        }),
+        quick_pick.onDidHide(() => {
+          if (!is_accepted && !did_trigger_back) {
+            resolve(undefined) // Esc
+          }
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+        })
+      )
+      quick_pick.show()
     })
 
-    if (selected_branch) {
+    if (selected_branch && selected_branch !== 'back') {
       return `#Changes:${selected_branch.label} `
-    } else {
-      return 'continue'
     }
+
+    return 'continue'
   } catch (error) {
     vscode.window.showErrorMessage(
       dictionary.error_message.FAILED_TO_GET_GIT_BRANCHES
@@ -138,15 +171,47 @@ const handle_commit_item = async (
       const folder_items = git_folders.map((folder) => ({
         label: folder.name
       }))
-      const picked_folder = await vscode.window.showQuickPick(folder_items, {
-        placeHolder: 'Select a repository'
+      const quick_pick = vscode.window.createQuickPick()
+      quick_pick.items = folder_items
+      quick_pick.placeholder = 'Select a repository'
+      quick_pick.title = 'Repositories'
+      quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+      const picked_folder = await new Promise<
+        vscode.QuickPickItem | 'back' | undefined
+      >((resolve) => {
+        let is_accepted = false
+        let did_trigger_back = false
+        const disposables: vscode.Disposable[] = []
+
+        disposables.push(
+          quick_pick.onDidTriggerButton((button) => {
+            if (button === vscode.QuickInputButtons.Back) {
+              did_trigger_back = true
+              quick_pick.hide()
+              resolve('back')
+            }
+          }),
+          quick_pick.onDidAccept(() => {
+            is_accepted = true
+            resolve(quick_pick.selectedItems[0])
+            quick_pick.hide()
+          }),
+          quick_pick.onDidHide(() => {
+            if (!is_accepted && !did_trigger_back) {
+              resolve(undefined) // Esc
+            }
+            disposables.forEach((d) => d.dispose())
+            quick_pick.dispose()
+          })
+        )
+        quick_pick.show()
       })
 
-      if (!picked_folder) {
-        return 'continue'
-      }
+      if (!picked_folder || picked_folder === 'back') return 'continue'
+
       selected_folder = git_folders.find(
-        (folder) => folder.name == picked_folder.label
+        (folder) => folder.name === picked_folder.label
       )
     }
 
@@ -177,16 +242,48 @@ const handle_commit_item = async (
       }
     }
 
-    const selected_commit = await vscode.window.showQuickPick(commit_items, {
-      placeHolder: 'Select a commit to reference',
-      matchOnDetail: true
+    const quick_pick = vscode.window.createQuickPick()
+    quick_pick.items = commit_items
+    quick_pick.placeholder = 'Select a commit to reference'
+    quick_pick.title = 'Commits'
+    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+    quick_pick.matchOnDetail = true
+
+    const selected_commit = await new Promise<
+      vscode.QuickPickItem | 'back' | undefined
+    >((resolve) => {
+      let is_accepted = false
+      let did_trigger_back = false
+      const disposables: vscode.Disposable[] = []
+
+      disposables.push(
+        quick_pick.onDidTriggerButton((button) => {
+          if (button === vscode.QuickInputButtons.Back) {
+            did_trigger_back = true
+            quick_pick.hide()
+            resolve('back')
+          }
+        }),
+        quick_pick.onDidAccept(() => {
+          is_accepted = true
+          resolve(quick_pick.selectedItems[0])
+          quick_pick.hide()
+        }),
+        quick_pick.onDidHide(() => {
+          if (!is_accepted && !did_trigger_back) {
+            resolve(undefined) // Esc
+          }
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+        })
+      )
+      quick_pick.show()
     })
 
-    if (selected_commit) {
+    if (selected_commit && selected_commit !== 'back') {
       return `#${symbol}:${selected_folder.name}:${selected_commit.label} "${selected_commit.detail}" `
-    } else {
-      return 'continue'
     }
+    return 'continue'
   } catch (error) {
     vscode.window.showErrorMessage(
       'Failed to get git commits. Please ensure git is installed.'
@@ -261,14 +358,54 @@ const handle_saved_context_item = async (
     return undefined
   }
 
-  const source =
-    source_options.length > 1
-      ? (
-          await vscode.window.showQuickPick(source_options, {
-            placeHolder: 'Select context source'
-          })
-        )?.value
-      : source_options[0].value
+  let source: 'WorkspaceState' | 'JSON' | undefined
+  if (source_options.length > 1) {
+    const quick_pick = vscode.window.createQuickPick<
+      vscode.QuickPickItem & { value: 'WorkspaceState' | 'JSON' }
+    >()
+    quick_pick.items = source_options
+    quick_pick.placeholder = 'Select context source'
+    quick_pick.title = 'Context Sources'
+    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+    const selection = await new Promise<
+      | (vscode.QuickPickItem & { value: 'WorkspaceState' | 'JSON' })
+      | 'back'
+      | undefined
+    >((resolve) => {
+      let is_accepted = false
+      let did_trigger_back = false
+      const disposables: vscode.Disposable[] = []
+
+      disposables.push(
+        quick_pick.onDidTriggerButton((button) => {
+          if (button === vscode.QuickInputButtons.Back) {
+            did_trigger_back = true
+            quick_pick.hide()
+            resolve('back')
+          }
+        }),
+        quick_pick.onDidAccept(() => {
+          is_accepted = true
+          resolve(quick_pick.selectedItems[0])
+          quick_pick.hide()
+        }),
+        quick_pick.onDidHide(() => {
+          if (!is_accepted && !did_trigger_back) {
+            resolve(undefined) // Esc
+          }
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+        })
+      )
+      quick_pick.show()
+    })
+
+    if (!selection || selection === 'back') return 'continue'
+    source = selection.value
+  } else {
+    source = source_options[0].value
+  }
 
   if (!source) return 'continue'
 
@@ -280,11 +417,44 @@ const handle_saved_context_item = async (
     description: `${ctx.paths.length} path${ctx.paths.length == 1 ? '' : 's'}`
   }))
 
-  const selected_context = await vscode.window.showQuickPick(context_items, {
-    placeHolder: 'Select a saved context'
+  const quick_pick = vscode.window.createQuickPick()
+  quick_pick.items = context_items
+  quick_pick.placeholder = 'Select a saved context'
+  quick_pick.title = 'Saved Contexts'
+  quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+  const selected_context = await new Promise<
+    vscode.QuickPickItem | 'back' | undefined
+  >((resolve) => {
+    let is_accepted = false
+    let did_trigger_back = false
+    const disposables: vscode.Disposable[] = []
+
+    disposables.push(
+      quick_pick.onDidTriggerButton((button) => {
+        if (button === vscode.QuickInputButtons.Back) {
+          did_trigger_back = true
+          quick_pick.hide()
+          resolve('back')
+        }
+      }),
+      quick_pick.onDidAccept(() => {
+        is_accepted = true
+        resolve(quick_pick.selectedItems[0])
+        quick_pick.hide()
+      }),
+      quick_pick.onDidHide(() => {
+        if (!is_accepted && !did_trigger_back) {
+          resolve(undefined) // Esc
+        }
+        disposables.forEach((d) => d.dispose())
+        quick_pick.dispose()
+      })
+    )
+    quick_pick.show()
   })
 
-  if (selected_context) {
+  if (selected_context && selected_context !== 'back') {
     return `#SavedContext:${source} "${selected_context.label}" `
   }
   return 'continue'
@@ -309,7 +479,7 @@ export const hash_sign_quick_pick = async (params: {
     },
     {
       label: context_at_commit_label,
-      description: 'Archive of the selected files'
+      description: 'Older versions of currently selected files'
     },
     {
       label: saved_context_label,
@@ -329,6 +499,10 @@ export const hash_sign_quick_pick = async (params: {
     quick_pick.items = items
     quick_pick.placeholder = 'Select symbol to insert'
     quick_pick.matchOnDescription = true
+    quick_pick.title = 'Symbols'
+    quick_pick.buttons = [
+      { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+    ]
 
     if (last_selected_item) {
       quick_pick.activeItems = [last_selected_item]
@@ -337,6 +511,9 @@ export const hash_sign_quick_pick = async (params: {
     const selected = await new Promise<vscode.QuickPickItem | undefined>(
       (resolve) => {
         let is_accepted = false
+        quick_pick.onDidTriggerButton(() => {
+          quick_pick.hide()
+        })
         quick_pick.onDidAccept(() => {
           is_accepted = true
           resolve(quick_pick.selectedItems[0])

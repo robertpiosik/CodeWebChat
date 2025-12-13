@@ -59,12 +59,38 @@ const at_sign_quick_pick = async (params: {
   const quick_pick_items_to_show = all_quick_pick_items
   quick_pick_items_to_show.sort((a, b) => natural_sort(a.fullPath, b.fullPath))
 
-  const selected_path_item = await vscode.window.showQuickPick(
-    quick_pick_items_to_show,
-    {
-      placeHolder: 'Select a path to place in the prompt field',
-      matchOnDescription: true,
-      title: 'Reference File'
+  const quick_pick = vscode.window.createQuickPick<QuickPickItem>()
+  quick_pick.items = quick_pick_items_to_show
+  quick_pick.placeholder = 'Select a path to place in the prompt field'
+  quick_pick.matchOnDescription = true
+  quick_pick.title = 'Reference File'
+  quick_pick.buttons = [
+    { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+  ]
+
+  const selected_path_item = await new Promise<QuickPickItem | undefined>(
+    (resolve) => {
+      let is_accepted = false
+      const disposables: vscode.Disposable[] = []
+
+      disposables.push(
+        quick_pick.onDidTriggerButton((_button) => {
+          quick_pick.hide()
+        }),
+        quick_pick.onDidAccept(() => {
+          is_accepted = true
+          resolve(quick_pick.selectedItems[0])
+          quick_pick.hide()
+        }),
+        quick_pick.onDidHide(() => {
+          if (!is_accepted) {
+            resolve(undefined)
+          }
+          disposables.forEach((d) => d.dispose())
+          quick_pick.dispose()
+        })
+      )
+      quick_pick.show()
     }
   )
 

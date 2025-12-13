@@ -81,6 +81,9 @@ export function apply_context_command(
         main_quick_pick.title = 'Select Context Source'
         main_quick_pick.items = final_quick_pick_options
         main_quick_pick.placeholder = 'Select option'
+        main_quick_pick.buttons = [
+          { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+        ]
         if (last_main_selection_value) {
           const active_item = final_quick_pick_options.find(
             (opt) => opt.value === last_main_selection_value
@@ -97,17 +100,24 @@ export function apply_context_command(
           | undefined
         >((resolve) => {
           let is_accepted = false
-          main_quick_pick.onDidAccept(() => {
-            is_accepted = true
-            resolve(main_quick_pick.selectedItems[0])
-            main_quick_pick.hide()
-          })
-          main_quick_pick.onDidHide(() => {
-            if (!is_accepted) {
-              resolve(undefined)
-            }
-            main_quick_pick.dispose()
-          })
+          const disposables: vscode.Disposable[] = []
+          disposables.push(
+            main_quick_pick.onDidTriggerButton((_button) => {
+              main_quick_pick.hide()
+            }),
+            main_quick_pick.onDidAccept(() => {
+              is_accepted = true
+              resolve(main_quick_pick.selectedItems[0])
+              main_quick_pick.hide()
+            }),
+            main_quick_pick.onDidHide(() => {
+              if (!is_accepted) {
+                resolve(undefined)
+              }
+              disposables.forEach((d) => d.dispose())
+              main_quick_pick.dispose()
+            })
+          )
           main_quick_pick.show()
         })
 
