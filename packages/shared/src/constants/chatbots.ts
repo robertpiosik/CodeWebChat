@@ -107,6 +107,8 @@ export const CHATBOTS = {
   Gemini: {
     url: 'https://gemini.google.com/app',
     supported_options: { 'temporary-chat': 'Temporary chat' },
+    supports_url_override: true,
+    url_override_label: 'Gem URL',
     models: {
       fast: { label: 'Fast' },
       thinking: { label: 'Thinking' }
