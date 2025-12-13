@@ -143,11 +143,6 @@
     outline: none;
   }
 
-  &:disabled {
-    opacity: var(--disabled-opacity);
-    cursor: default;
-  }
-
   &::before {
     font-family: 'codicon';
     content: '\eab2';
@@ -156,7 +151,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: var(--disabled-opacity);
+    opacity: 0.3;
   }
 
   &:checked::before {
