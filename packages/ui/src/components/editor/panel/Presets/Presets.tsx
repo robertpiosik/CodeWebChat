@@ -1,6 +1,5 @@
 import styles from './Presets.module.scss'
 import { IconButton } from '../IconButton/IconButton'
-import { Checkbox } from '../../common/Checkbox'
 import cn from 'classnames'
 import { ReactSortable } from 'react-sortablejs'
 import { Icon } from '../../common/Icon'
@@ -449,12 +448,14 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                         )}
                       {preset.chatbot &&
                         preset_indices_in_group.has(preset.original_index) && (
-                          <Checkbox
+                          <input
+                            type="checkbox"
+                            className={styles.checkbox}
                             checked={!!preset.is_selected}
-                            on_change={() =>
+                            onChange={() =>
                               props.on_toggle_selected_preset(preset.name!)
                             }
-                            on_click={(e) => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
                           />
                         )}
                       {preset.chatbot && (
