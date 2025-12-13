@@ -6,7 +6,7 @@ Superfast AI coding for VS Code, Cursor, and others. Free, open-source, and priv
 
 ✅ **Send messages anywhere**
 
-- Chatbots—_ChatGPT, Claude, Gemini, AI Studio, Qwen, etc._
+- Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Apply responses**—changes integration in whole, truncated and diff edit formats \
