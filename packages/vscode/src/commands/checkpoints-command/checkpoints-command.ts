@@ -88,6 +88,11 @@ export const checkpoints_command = (params: {
           tooltip: 'Delete all checkpoints'
         }
 
+        const close_button: vscode.QuickInputButton = {
+          iconPath: new vscode.ThemeIcon('close'),
+          tooltip: 'Close'
+        }
+
         let notification_count = 0
         let checkpoints: Checkpoint[] = []
         let temp_checkpoint_is_valid = false
@@ -106,7 +111,7 @@ export const checkpoints_command = (params: {
 
           const visible_checkpoints = checkpoints.filter((c) => !c.is_temporary)
 
-          quick_pick.buttons = [clear_all_button]
+          quick_pick.buttons = [clear_all_button, close_button]
 
           visible_checkpoints.sort((a, b) => {
             return b.timestamp - a.timestamp
@@ -274,6 +279,11 @@ export const checkpoints_command = (params: {
         })
 
         quick_pick.onDidTriggerButton(async (button) => {
+          if (button === close_button) {
+            quick_pick.hide()
+            return
+          }
+
           if (button === clear_all_button) {
             quick_pick.hide()
 
