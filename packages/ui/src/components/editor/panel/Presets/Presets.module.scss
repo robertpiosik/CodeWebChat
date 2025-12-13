@@ -32,6 +32,7 @@
           content: '';
           flex: 1;
           height: 1px;
+          margin-left: 4px;
           background: linear-gradient(
             to right,
             var(--cwc-border-color-dimmed),
@@ -74,7 +75,7 @@
 
       &__indent-guide {
         flex-shrink: 0;
-        background-color: var(--vscode-tree-indentGuidesStroke);
+        background-color: var(--vscode-tree-inactiveIndentGuidesStroke);
         height: 100%;
         width: 1px;
         margin-right: 1px;
