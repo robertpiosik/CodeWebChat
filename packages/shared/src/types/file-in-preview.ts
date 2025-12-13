@@ -3,8 +3,7 @@ export type FileInPreview = {
   file_path: string
   is_checked: boolean
   workspace_name?: string
-  is_new?: boolean
-  is_deleted?: boolean
+  file_state?: 'new' | 'deleted'
   lines_added: number
   lines_removed: number
   is_replaced?: boolean

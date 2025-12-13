@@ -163,9 +163,10 @@ export const ResponsePreview: FC<Props> = (props) => {
                     />
                     <div
                       className={cn(styles['list__file__left__label'], {
-                        [styles['list__file__left__label--new']]: file.is_new,
+                        [styles['list__file__left__label--new']]:
+                          file.file_state == 'new',
                         [styles['list__file__left__label--deleted']]:
-                          file.is_deleted
+                          file.file_state == 'deleted'
                       })}
                     >
                       <span>
@@ -217,7 +218,7 @@ export const ResponsePreview: FC<Props> = (props) => {
                         }}
                       />
                     </div>
-                    {!file.is_deleted && (
+                    {file.file_state != 'deleted' && (
                       <div className={styles['list__file__line-numbers']}>
                         <span
                           className={styles['list__file__line-numbers__added']}

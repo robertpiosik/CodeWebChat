@@ -79,16 +79,20 @@ export const handle_restore_preview = async (
     original_states.push({
       file_path: file.file_path,
       content: original_content,
-      is_new: !file_exists,
       workspace_name: file.workspace_name,
-      is_deleted: file.is_deleted,
+      file_state:
+        file.file_state == 'deleted'
+          ? 'deleted'
+          : !file_exists
+            ? 'new'
+            : file.file_state,
       is_checked: file.is_checked,
       is_replaced: file.is_replaced,
       diff_application_method: file.diff_application_method
     })
 
     if (file.is_checked !== false) {
-      if (file.is_deleted) {
+      if (file.file_state == 'deleted') {
         if (file_exists) {
           try {
             const tabs_to_close: vscode.Tab[] = []

@@ -203,7 +203,6 @@ export const handle_intelligent_update = async (params: {
         original_states.push({
           file_path: file.file_path,
           content: current_content,
-          is_new: false,
           workspace_name: file.workspace_name
         })
       } catch (error) {
@@ -219,7 +218,7 @@ export const handle_intelligent_update = async (params: {
       original_states.push({
         file_path: file.file_path,
         content: '',
-        is_new: true,
+        file_state: 'new',
         workspace_name: file.workspace_name
       })
     }
@@ -270,7 +269,7 @@ export const handle_intelligent_update = async (params: {
             (s) =>
               s.file_path == file.file_path &&
               s.workspace_name == file.workspace_name &&
-              !s.is_new
+              s.file_state != 'new'
           )
           const original_content_for_api = original_state
             ? original_state.content

@@ -124,7 +124,6 @@ export const store_original_file_states = async (
         original_states.push({
           file_path,
           content,
-          is_new: false,
           workspace_name: path.basename(workspace_path)
         })
       } catch (error) {
@@ -138,7 +137,7 @@ export const store_original_file_states = async (
       original_states.push({
         file_path,
         content: '',
-        is_new: true,
+        file_state: 'new',
         workspace_name: path.basename(workspace_path)
       })
     }

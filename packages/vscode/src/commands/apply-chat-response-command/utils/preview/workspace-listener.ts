@@ -156,7 +156,7 @@ export const setup_workspace_listeners = (
         const new_original_state: OriginalFileState = {
           file_path: relative_path,
           content: original_content,
-          is_new: is_new,
+          file_state: is_new ? 'new' : undefined,
           workspace_name: workspace_folder.name
         }
 
@@ -173,15 +173,14 @@ export const setup_workspace_listeners = (
         const temp_filename = `cwc-${hash}.tmp`
         const temp_file_path = path.join(os.tmpdir(), temp_filename)
         const is_deleted =
-          !is_new && new_content == '' && original_content != ''
+          !is_new && new_content === '' && original_content !== ''
 
         const reviewable_file: ReviewableFile = {
           type: 'file',
           file_path: relative_path,
           content: new_content,
           workspace_name: workspace_folder.name,
-          is_new: is_new,
-          is_deleted: is_deleted,
+          file_state: is_deleted ? 'deleted' : is_new ? 'new' : undefined,
           lines_added: diff_stats.lines_added,
           lines_removed: diff_stats.lines_removed,
           is_checked: true
@@ -239,7 +238,6 @@ export const setup_workspace_listeners = (
         const new_original_state: OriginalFileState = {
           file_path: relative_path,
           content: original_content_for_undo,
-          is_new: false,
           workspace_name: workspace_folder.name
         }
 
@@ -261,8 +259,7 @@ export const setup_workspace_listeners = (
           file_path: relative_path,
           content: new_content,
           workspace_name: workspace_folder.name,
-          is_new: false,
-          is_deleted: true,
+          file_state: 'deleted',
           lines_added: diff_stats.lines_added,
           lines_removed: diff_stats.lines_removed,
           is_checked: true
@@ -289,7 +286,7 @@ export const setup_workspace_listeners = (
           file: new_prepared_file.reviewable_file
         })
       } else {
-        deleted_file_in_review.reviewable_file.is_deleted = true
+        deleted_file_in_review.reviewable_file.file_state = 'deleted'
         deleted_file_in_review.reviewable_file.content = ''
         const diff_stats = get_diff_stats({
           original_content: deleted_file_in_review.original_content,
@@ -344,7 +341,7 @@ export const setup_workspace_listeners = (
         const new_original_state: OriginalFileState = {
           file_path: relative_path,
           content: original_content,
-          is_new: is_new,
+          file_state: is_new ? 'new' : undefined,
           workspace_name: workspace_folder.name
         }
 
@@ -366,8 +363,7 @@ export const setup_workspace_listeners = (
           file_path: relative_path,
           content: new_content,
           workspace_name: workspace_folder.name,
-          is_new: true,
-          is_deleted: false,
+          file_state: 'new',
           lines_added: diff_stats.lines_added,
           lines_removed: diff_stats.lines_removed,
           is_checked: true
@@ -448,8 +444,7 @@ export const setup_workspace_listeners = (
           existing.sanitized_path = newUri.fsPath
           existing.reviewable_file.file_path = new_relative
           existing.reviewable_file.workspace_name = new_workspace_folder.name
-          existing.reviewable_file.is_new = true
-          existing.reviewable_file.is_deleted = false
+          existing.reviewable_file.file_state = 'new'
           existing.reviewable_file.content = new_content
 
           const diff_stats_updated = get_diff_stats({
@@ -481,8 +476,7 @@ export const setup_workspace_listeners = (
             workspace_name:
               old_workspace_folder?.name ??
               existing.reviewable_file.workspace_name,
-            is_new: false,
-            is_deleted: true,
+            file_state: 'deleted',
             lines_added: deleted_diff_stats.lines_added,
             lines_removed: deleted_diff_stats.lines_removed,
             is_checked: true
@@ -503,7 +497,7 @@ export const setup_workspace_listeners = (
           original_states.push({
             file_path: new_relative,
             content: existing.original_content,
-            is_new: true,
+            file_state: 'new',
             workspace_name: new_workspace_folder.name,
             file_path_to_restore: old_relative
           })
@@ -553,8 +547,7 @@ export const setup_workspace_listeners = (
             file_path: new_relative,
             content: new_content,
             workspace_name: new_workspace_folder.name,
-            is_new: true,
-            is_deleted: false,
+            file_state: 'new',
             lines_added: create_diff_stats.lines_added,
             lines_removed: create_diff_stats.lines_removed,
             is_checked: true
@@ -586,8 +579,7 @@ export const setup_workspace_listeners = (
             content: '',
             workspace_name:
               old_workspace_folder?.name ?? new_workspace_folder.name,
-            is_new: false,
-            is_deleted: true,
+            file_state: 'deleted',
             lines_added: deleted_diff_stats.lines_added,
             lines_removed: deleted_diff_stats.lines_removed,
             is_checked: true
@@ -604,7 +596,7 @@ export const setup_workspace_listeners = (
           original_states.push({
             file_path: new_relative,
             content: new_content,
-            is_new: true,
+            file_state: 'new',
             workspace_name: new_workspace_folder.name,
             file_path_to_restore: old_relative
           })
@@ -690,7 +682,7 @@ export const setup_workspace_listeners = (
         file_to_toggle.content_to_restore = current_content
       }
 
-      if (file_to_toggle.reviewable_file.is_new) {
+      if (file_to_toggle.reviewable_file.file_state === 'new') {
         try {
           if (fs.existsSync(file_to_toggle.sanitized_path)) {
             await vscode.workspace.fs.delete(
@@ -709,7 +701,7 @@ export const setup_workspace_listeners = (
         )
       }
     } else {
-      if (file_to_toggle.reviewable_file.is_deleted) {
+      if (file_to_toggle.reviewable_file.file_state === 'deleted') {
         try {
           if (fs.existsSync(file_to_toggle.sanitized_path)) {
             await vscode.workspace.fs.delete(

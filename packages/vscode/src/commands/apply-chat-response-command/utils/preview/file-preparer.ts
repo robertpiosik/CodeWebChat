@@ -61,16 +61,21 @@ export const prepare_files_from_original_states = async (params: {
       new_content: new_content_for_diff
     })
     const is_deleted =
-      state.is_deleted ||
-      (!state.is_new && current_content == '' && state.content != '')
+      state.file_state == 'deleted' ||
+      (state.file_state != 'new' &&
+        current_content == '' &&
+        state.content != '')
 
     const reviewable_file: ReviewableFile = {
       type: 'file',
       file_path: state.file_path,
       content: current_content,
       workspace_name: state.workspace_name,
-      is_new: state.is_new || !!state.file_path_to_restore,
-      is_deleted,
+      file_state: is_deleted
+        ? 'deleted'
+        : state.file_state == 'new' || !!state.file_path_to_restore
+          ? 'new'
+          : undefined,
       lines_added: diff_stats.lines_added,
       lines_removed: diff_stats.lines_removed,
       is_replaced: state.is_replaced,
@@ -83,7 +88,7 @@ export const prepare_files_from_original_states = async (params: {
       sanitized_path: sanitized_file_path,
       original_content: state.content,
       temp_file_path,
-      file_exists: !state.is_new
+      file_exists: state.file_state !== 'new'
     })
 
     if (state.file_path_to_restore) {
@@ -117,8 +122,7 @@ export const prepare_files_from_original_states = async (params: {
         file_path: state.file_path_to_restore,
         content: restored_current_content,
         workspace_name: state.workspace_name,
-        is_new: false,
-        is_deleted: true,
+        file_state: 'deleted',
         lines_added: restored_diff_stats.lines_added,
         lines_removed: restored_diff_stats.lines_removed,
         is_checked: state.is_checked ?? true

@@ -110,9 +110,8 @@ export const handle_fast_replace = async (
             original_states.push({
               file_path: file.file_path,
               content: original_content,
-              is_new: false,
               workspace_name: file.workspace_name,
-              is_deleted: true
+              file_state: 'deleted'
             })
 
             const tabs_to_close: vscode.Tab[] = []
@@ -148,7 +147,6 @@ export const handle_fast_replace = async (
             original_states.push({
               file_path: file.file_path,
               content: original_content,
-              is_new: false,
               workspace_name: file.workspace_name
             })
             const editor = await vscode.window.showTextDocument(document)
@@ -180,7 +178,7 @@ export const handle_fast_replace = async (
           original_states.push({
             file_path: file.file_path,
             content: '',
-            is_new: true,
+            file_state: 'new',
             workspace_name: file.workspace_name
           })
           if (file.content == '') {

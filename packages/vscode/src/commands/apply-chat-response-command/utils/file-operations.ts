@@ -342,7 +342,7 @@ export const undo_files = async (params: {
       }
       let file_uri = vscode.Uri.file(safe_path)
 
-      if (state.is_new && !state.file_path_to_restore) {
+      if (state.file_state == 'new' && !state.file_path_to_restore) {
         if (await uri_exists(file_uri)) {
           // Close any open editors for this file before deleting
           const text_editors = vscode.window.visibleTextEditors.filter(

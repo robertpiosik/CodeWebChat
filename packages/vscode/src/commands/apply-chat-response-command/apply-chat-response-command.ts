@@ -192,14 +192,20 @@ export const apply_chat_response_command = (params: {
               total_lines_removed += diff_stats.lines_removed
 
               const is_deleted =
-                !state.is_new && current_content === '' && state.content !== ''
+                state.file_state != 'new' &&
+                current_content == '' &&
+                state.content != ''
 
               files_for_history.push({
                 type: 'file',
                 file_path: state.file_path,
                 workspace_name: state.workspace_name,
-                is_new: state.is_new,
-                is_deleted,
+                file_state:
+                  state.file_state == 'new'
+                    ? 'new'
+                    : is_deleted
+                      ? 'deleted'
+                      : undefined,
                 lines_added: diff_stats.lines_added,
                 lines_removed: diff_stats.lines_removed,
                 is_replaced: state.is_replaced,
