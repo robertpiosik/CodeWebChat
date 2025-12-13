@@ -72,6 +72,15 @@
         }
       }
 
+      &__indent-guide {
+        flex-shrink: 0;
+        background-color: var(--vscode-tree-indentGuidesStroke);
+        height: 100%;
+        width: 1px;
+        margin-right: 11px;
+        margin-left: 4px;
+      }
+
       &__icon {
         display: flex;
 

@@ -104,23 +104,19 @@ export const Presets: React.FC<Presets.Props> = (props) => {
     return visible_presets
   }
 
-  const is_preset_in_group = (original_index: number | undefined): boolean => {
-    if (original_index === undefined || original_index === 0) {
-      return false
-    }
-    for (let i = original_index - 1; i >= 0; i--) {
-      const p = props.presets[i]
-      // group header
-      if (!p.chatbot && p.name) {
-        return true
+  const preset_indices_in_group = new Set<number>()
+  let current_group_active = false
+  props.presets.forEach((p, index) => {
+    if (!p.chatbot) {
+      if (p.name) {
+        current_group_active = true
+      } else {
+        current_group_active = false
       }
-      // separator
-      if (!p.chatbot && !p.name) {
-        return false
-      }
+    } else if (current_group_active) {
+      preset_indices_in_group.add(index)
     }
-    return false
-  }
+  })
 
   const sortable_list = with_ids(get_visible_presets(props.presets))
 
@@ -443,24 +439,24 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                       >
                         <span className="codicon codicon-gripper" />
                       </div>
-                      {preset.chatbot && (
-                        <Checkbox
-                          checked={
-                            !!preset.is_selected &&
-                            is_preset_in_group(preset.original_index)
-                          }
-                          on_change={() =>
-                            props.on_toggle_selected_preset(preset.name!)
-                          }
-                          on_click={(e) => e.stopPropagation()}
-                          title={
-                            !is_preset_in_group(preset.original_index)
-                              ? 'Place in a group to select for multi-run'
-                              : ''
-                          }
-                          disabled={!is_preset_in_group(preset.original_index)}
-                        />
-                      )}
+                      {preset.chatbot &&
+                        preset_indices_in_group.has(preset.original_index) && (
+                          <div
+                            className={
+                              styles['presets__item__left__indent-guide']
+                            }
+                          />
+                        )}
+                      {preset.chatbot &&
+                        preset_indices_in_group.has(preset.original_index) && (
+                          <Checkbox
+                            checked={!!preset.is_selected}
+                            on_change={() =>
+                              props.on_toggle_selected_preset(preset.name!)
+                            }
+                            on_click={(e) => e.stopPropagation()}
+                          />
+                        )}
                       {preset.chatbot && (
                         <div className={styles.presets__item__left__icon}>
                           <Icon variant={chatbot_to_icon[preset.chatbot]} />
