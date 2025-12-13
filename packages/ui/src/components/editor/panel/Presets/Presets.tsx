@@ -456,6 +456,7 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                               props.on_toggle_selected_preset(preset.name!)
                             }
                             onClick={(e) => e.stopPropagation()}
+                            title="Select for multi-initialization"
                           />
                         )}
                       {preset.chatbot && (
