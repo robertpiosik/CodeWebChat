@@ -3,6 +3,7 @@ import cn from 'classnames'
 import { Icon } from '@ui/components/editor/common/Icon'
 import styles from './Footer.module.scss'
 import { LayoutContext } from '../../../contexts/LayoutContext'
+import { use_compacting } from './use-compacting'
 
 type Props = {
   on_donate_click: () => void
@@ -22,6 +23,8 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
     useState(false)
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
+
+  const { container_ref, left_ref, right_ref, compact_step } = use_compacting()
 
   useEffect(() => {
     set_is_commit_disabled_temporarily(false)
@@ -50,18 +53,8 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
 
   return (
     <>
-      <div className={styles.footer}>
-        <div>
-          <a
-            className={cn(
-              styles['footer__icon-button'],
-              styles['footer__icon-button--cwc']
-            )}
-            href="https://codeweb.chat"
-            title="Visit website"
-          >
-            <Icon variant="CODE_WEB_CHAT_LOGO" />
-          </a>
+      <div className={styles.footer} ref={container_ref}>
+        <div ref={left_ref}>
           <a
             className={cn(
               styles['footer__icon-button'],
@@ -88,20 +81,28 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
           </a>
         </div>
 
-        <div>
+        <div ref={right_ref}>
           <button
-            className={cn(
-              styles['footer__action-button'],
-              styles['footer__action-button--no-shrink']
-            )}
+            className={cn(styles['footer__action-button'], {
+              [styles['footer__action-button--compact']]: compact_step >= 3
+            })}
             onClick={handle_apply_click}
             title={'Integrate copied chat response or a single code block'}
             disabled={is_apply_disabled_temporarily}
           >
-            Apply
+            <span className={styles['footer__action-button__text']}>Apply</span>
+            <span
+              className={cn(
+                styles['footer__action-button__icon'],
+                'codicon',
+                'codicon-check'
+              )}
+            />
           </button>
           <button
-            className={styles['footer__action-button']}
+            className={cn(styles['footer__action-button'], {
+              [styles['footer__action-button--compact']]: compact_step >= 2
+            })}
             onClick={on_undo_click}
             title={
               'Restore saved state of the codebase after chat/API response integration'
@@ -118,7 +119,9 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
             />
           </button>
           <button
-            className={styles['footer__action-button']}
+            className={cn(styles['footer__action-button'], {
+              [styles['footer__action-button--compact']]: compact_step >= 1
+            })}
             onClick={handle_commit_click}
             title={
               has_changes_to_commit && !is_commit_disabled_temporarily

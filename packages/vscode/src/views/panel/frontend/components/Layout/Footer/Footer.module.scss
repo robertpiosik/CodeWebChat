@@ -1,4 +1,5 @@
 .footer {
+  $self: &;
   --button-size: 24px;
   position: relative;
   z-index: -1; // Makes context menu of a preset appear above
@@ -53,6 +54,8 @@
   }
 
   &__action-button {
+    $btn: &;
+
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -72,32 +75,22 @@
 
     &__text {
       display: inline;
+      #{$btn}--compact & {
+        display: none;
+      }
     }
 
     &__icon {
       display: none !important;
-    }
-
-    @media (max-width: 293px) {
-      padding: 0;
-      width: var(--button-size);
-      justify-content: center;
-
-      &__text {
-        display: none;
-      }
-
-      &__icon {
+      #{$btn}--compact & {
         display: inline !important;
       }
     }
 
-    &--no-shrink {
-      @media (max-width: 293px) {
-        padding: 0 7px;
-        width: auto;
-        justify-content: initial;
-      }
+    &--compact {
+      padding: 0;
+      width: var(--button-size);
+      justify-content: center;
     }
   }
 }
