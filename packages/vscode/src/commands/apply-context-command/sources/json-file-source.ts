@@ -8,6 +8,8 @@ import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_saved_context } from '../utils'
 
+let active_deletion_timestamp: number | undefined
+
 async function save_contexts_to_file(
   contexts: SavedContext[],
   file_path: string
@@ -171,7 +173,7 @@ export async function handle_json_file_source(
       }
     }
 
-    let is_showing_dialog = false
+    let active_dialog_count = 0
     let go_back_after_delete = false
     const quick_pick_promise = new Promise<
       | 'back'
@@ -209,7 +211,7 @@ export async function handle_json_file_source(
         }),
 
         quick_pick.onDidHide(() => {
-          if (is_showing_dialog) {
+          if (active_dialog_count > 0) {
             return
           }
           if (go_back_after_delete) {
@@ -233,7 +235,7 @@ export async function handle_json_file_source(
           )
 
           if (event.button === edit_button) {
-            is_showing_dialog = true
+            active_dialog_count++
 
             const input_box = vscode.window.createInputBox()
             input_box.title = 'Rename Context'
@@ -284,7 +286,7 @@ export async function handle_json_file_source(
                 input_box.show()
               }
             )
-            is_showing_dialog = false
+            active_dialog_count--
 
             let name_to_highlight = item.context.name
 
@@ -374,6 +376,8 @@ export async function handle_json_file_source(
           }
 
           if (event.button === delete_button) {
+            const current_timestamp = Date.now()
+            active_deletion_timestamp = current_timestamp
             const deleted_context_name = item.context.name
 
             const roots = context_to_roots.get(deleted_context_name) || []
@@ -424,14 +428,22 @@ export async function handle_json_file_source(
             context_to_roots = reloaded.context_to_roots
             quick_pick.items = create_quick_pick_items(file_contexts)
 
-            is_showing_dialog = true
+            active_dialog_count++
             const choice = await vscode.window.showInformationMessage(
-              dictionary.information_message.DELETED_CONTEXT_FROM_ALL_ROOTS(
-                deleted_context_name
-              ),
+              dictionary.information_message.DELETED_CONTEXT_FROM_ALL_ROOTS,
               'Undo'
             )
-            is_showing_dialog = false
+            active_dialog_count--
+
+            if (active_deletion_timestamp !== current_timestamp) {
+              if (choice === 'Undo') {
+                vscode.window.showInformationMessage(
+                  'Could not undo as another context was deleted.'
+                )
+              }
+              quick_pick.show()
+              return
+            }
 
             if (choice == 'Undo') {
               let success = true

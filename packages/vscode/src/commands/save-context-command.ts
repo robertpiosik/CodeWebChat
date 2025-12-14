@@ -533,7 +533,7 @@ export function save_context_command(
                 quick_pick_contexts.title = 'Save Context'
                 quick_pick_contexts.buttons = [vscode.QuickInputButtons.Back]
 
-                let is_showing_dialog = false
+                let active_dialogs_count = 0
                 const selected_item = await new Promise<
                   vscode.QuickPickItem | 'back' | undefined
                 >((resolve) => {
@@ -611,15 +611,14 @@ export function save_context_command(
                         quick_pick_contexts.items =
                           create_quick_pick_items(all_contexts_map)
 
-                        is_showing_dialog = true
+                        active_dialogs_count++
                         const choice =
                           await vscode.window.showInformationMessage(
-                            dictionary.information_message.DELETED_CONTEXT_FROM_ALL_ROOTS(
-                              deleted_context_name
-                            ),
+                            dictionary.information_message
+                              .DELETED_CONTEXT_FROM_ALL_ROOTS,
                             'Undo'
                           )
-                        is_showing_dialog = false
+                        active_dialogs_count--
 
                         if (choice == 'Undo') {
                           for (const [
@@ -654,7 +653,7 @@ export function save_context_command(
                       quick_pick_contexts.hide()
                     }),
                     quick_pick_contexts.onDidHide(() => {
-                      if (is_showing_dialog) return
+                      if (active_dialogs_count > 0) return
                       if (!is_accepted && !did_trigger_back) {
                         resolve('back')
                       }
@@ -782,11 +781,10 @@ export function save_context_command(
           ) as SavedContext[]) {
             if (are_paths_equal(existingContext.paths, all_prefixed_paths)) {
               vscode.window.showWarningMessage(
-                dictionary.warning_message.CONTEXT_WITH_IDENTICAL_PATHS_EXISTS(
+                dictionary.warning_message.CONTEXT_ALREADY_SAVED(
                   existingContext.name
                 )
               )
-              return
             }
           }
 
@@ -839,7 +837,7 @@ export function save_context_command(
                 PLACEHOLDER_SELECT_OR_CREATE_CONTEXT
               quick_pick_contexts.title = 'Save Context'
               quick_pick_contexts.buttons = [vscode.QuickInputButtons.Back]
-              let is_showing_dialog = false
+              let active_dialogs_count = 0
               const selected_item = await new Promise<
                 vscode.QuickPickItem | 'back' | undefined
               >((resolve) => {
@@ -883,14 +881,13 @@ export function save_context_command(
                     quick_pick_contexts.items =
                       create_quick_pick_items(saved_contexts)
 
-                    is_showing_dialog = true
+                    active_dialogs_count++
                     const choice = await vscode.window.showInformationMessage(
-                      dictionary.information_message.DELETED_CONTEXT_FROM_WORKSPACE_STATE(
-                        deleted_context_name
-                      ),
+                      dictionary.information_message
+                        .DELETED_CONTEXT_FROM_WORKSPACE_STATE,
                       'Undo'
                     )
-                    is_showing_dialog = false
+                    active_dialogs_count--
 
                     if (choice == 'Undo') {
                       await extContext.workspaceState.update(
@@ -918,7 +915,7 @@ export function save_context_command(
                     quick_pick_contexts.hide()
                   }),
                   quick_pick_contexts.onDidHide(() => {
-                    if (is_showing_dialog) return
+                    if (active_dialogs_count > 0) return
                     if (!is_accepted && !did_trigger_back) {
                       resolve('back')
                     }

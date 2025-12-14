@@ -75,8 +75,7 @@ export const dictionary = {
       'No "Edit Context" configurations found. Please add one in the settings.',
     PRESET_PREVIEW_SENT_TO_BROWSER:
       'Preset preview sent to the connected browser.',
-    DELETED_CONTEXT_FROM_ALL_ROOTS: (context_name: string) =>
-      `Deleted context "${context_name}" from all workspace roots`,
+    DELETED_CONTEXT_FROM_ALL_ROOTS: 'Deleted context.',
     NO_HISTORY_FOR_MODE: 'No history to show for the current mode.',
     NO_TEXT_SELECTED_FOR_SELECTION_PLACEHOLDER:
       'No text selected for #Selection placeholder.',
@@ -91,8 +90,7 @@ export const dictionary = {
       'No actionable unstaged files found (e.g. only deletions).',
     SELECTED_FILES: (count: number) =>
       `Selected ${count} file${count == 1 ? '' : 's'}.`,
-    DELETED_CONTEXT_FROM_WORKSPACE_STATE: (context_name: string) =>
-      `Deleted context "${context_name}" from workspace state`,
+    DELETED_CONTEXT_FROM_WORKSPACE_STATE: 'Deleted context.',
     CONTEXT_SAVED_SUCCESSFULLY: 'Context saved successfully.',
     FILES_REMAIN_CHECKED: (count: number) =>
       `${count} file${count == 1 ? '' : 's'} remain${
@@ -174,8 +172,8 @@ export const dictionary = {
       `Are you sure you want to delete this ${item_type}?`,
     CONFIRM_DELETE_NAMED_ITEM: (item_type: string, name: string) =>
       `Are you sure you want to delete ${item_type} "${name}"?`,
-    CONTEXT_WITH_IDENTICAL_PATHS_EXISTS: (context_name: string) =>
-      `A context with identical paths already exists in workspace state: "${context_name}"`,
+    CONTEXT_ALREADY_SAVED: (context_name: string) =>
+      `Context already saved: "${context_name}"`,
     CONFIRM_OVERWRITE_CONTEXT: (context_name: string) =>
       `A context named "${context_name}" already exists. Overwrite?`,
     CONFIRM_OVERWRITE_CONTEXT_IN_WORKSPACE_STATE: (context_name: string) =>
