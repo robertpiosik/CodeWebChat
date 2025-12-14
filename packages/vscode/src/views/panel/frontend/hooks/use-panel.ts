@@ -168,6 +168,9 @@ export const use_panel = (vscode: any) => {
         set_items_to_review(message.items)
         set_raw_instructions(message.raw_instructions)
         set_preview_item_created_at(message.created_at)
+        if (message.created_at) {
+          set_selected_history_item_created_at(message.created_at)
+        }
       } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
         set_items_to_review((current_items) => {
           const items = current_items ?? []

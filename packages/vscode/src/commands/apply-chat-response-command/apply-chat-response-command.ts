@@ -183,8 +183,10 @@ export const apply_chat_response_command = (params: {
                 continue
               }
 
+              const is_rename = !!state.file_path_to_restore
+
               const diff_stats = get_diff_stats({
-                original_content: state.content,
+                original_content: is_rename ? '' : state.content,
                 new_content: current_content
               })
 
@@ -201,7 +203,7 @@ export const apply_chat_response_command = (params: {
                 file_path: state.file_path,
                 workspace_name: state.workspace_name,
                 file_state:
-                  state.file_state == 'new'
+                  state.file_state == 'new' || is_rename
                     ? 'new'
                     : is_deleted
                       ? 'deleted'
@@ -213,6 +215,27 @@ export const apply_chat_response_command = (params: {
                 content: current_content,
                 is_checked: true
               })
+
+              if (state.file_path_to_restore) {
+                const deleted_diff_stats = get_diff_stats({
+                  original_content: state.content,
+                  new_content: ''
+                })
+
+                total_lines_removed += deleted_diff_stats.lines_removed
+
+                files_for_history.push({
+                  type: 'file',
+                  file_path: state.file_path_to_restore,
+                  workspace_name: state.workspace_name,
+                  file_state: 'deleted',
+                  lines_added: 0,
+                  lines_removed: deleted_diff_stats.lines_removed,
+                  is_replaced: false,
+                  content: '',
+                  is_checked: true
+                })
+              }
             }
             const history = params.panel_provider.response_history
 

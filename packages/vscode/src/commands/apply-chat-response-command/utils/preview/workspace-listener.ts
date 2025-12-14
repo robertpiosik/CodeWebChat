@@ -447,8 +447,12 @@ export const setup_workspace_listeners = (
           existing.reviewable_file.file_state = 'new'
           existing.reviewable_file.content = new_content
 
+          const old_original_content = existing.original_content
+          existing.original_content = ''
+          fs.writeFileSync(existing.temp_file_path, '')
+
           const diff_stats_updated = get_diff_stats({
-            original_content: existing.original_content,
+            original_content: '',
             new_content
           })
           existing.reviewable_file.lines_added = diff_stats_updated.lines_added
@@ -465,7 +469,7 @@ export const setup_workspace_listeners = (
           const oldTemp = path.join(os.tmpdir(), `cwc-${oldHash}.tmp`)
 
           const deleted_diff_stats = get_diff_stats({
-            original_content: existing.original_content,
+            original_content: old_original_content,
             new_content: ''
           })
 
@@ -485,7 +489,7 @@ export const setup_workspace_listeners = (
           const deleted_prepared: PreparedFile = {
             reviewable_file: deleted_reviewable,
             sanitized_path: oldSanitized,
-            original_content: existing.original_content,
+            original_content: old_original_content,
             temp_file_path: oldTemp,
             file_exists: false
           }
@@ -496,7 +500,7 @@ export const setup_workspace_listeners = (
           // Track state for downstream consumers (rename grouping)
           original_states.push({
             file_path: new_relative,
-            content: existing.original_content,
+            content: old_original_content,
             file_state: 'new',
             workspace_name: new_workspace_folder.name,
             file_path_to_restore: old_relative

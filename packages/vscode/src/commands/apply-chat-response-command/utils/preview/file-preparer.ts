@@ -56,8 +56,12 @@ export const prepare_files_from_original_states = async (params: {
     const temp_filename = `cwc-preview-${hash}.tmp`
     const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
+    const original_content_for_diff = state.file_path_to_restore
+      ? ''
+      : state.content
+
     const diff_stats = get_diff_stats({
-      original_content: state.content,
+      original_content: original_content_for_diff,
       new_content: new_content_for_diff
     })
     const is_deleted =
@@ -86,7 +90,7 @@ export const prepare_files_from_original_states = async (params: {
     prepared_files.push({
       reviewable_file,
       sanitized_path: sanitized_file_path,
-      original_content: state.content,
+      original_content: original_content_for_diff,
       temp_file_path,
       file_exists: state.file_state !== 'new'
     })

@@ -218,13 +218,15 @@ export const ResponsePreview: FC<Props> = (props) => {
                         }}
                       />
                     </div>
-                    {file.file_state != 'deleted' && (
-                      <div className={styles['list__file__line-numbers']}>
+                    <div className={styles['list__file__line-numbers']}>
+                      {file.file_state != 'deleted' && (
                         <span
                           className={styles['list__file__line-numbers__added']}
                         >
                           +{file.lines_added}
                         </span>
+                      )}
+                      {file.file_state != 'new' && (
                         <span
                           className={
                             styles['list__file__line-numbers__removed']
@@ -232,8 +234,8 @@ export const ResponsePreview: FC<Props> = (props) => {
                         >
                           -{file.lines_removed}
                         </span>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               )
