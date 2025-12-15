@@ -43,6 +43,76 @@ const strip_markdown_code_block = (content: string): string => {
   return trimmed
 }
 
+const process_conflict_markers = (content: string): string => {
+  const lines = content.split('\n')
+  const result_lines: string[] = []
+
+  let i = 0
+  while (i < lines.length) {
+    const line = lines[i]
+    const startMatch = line.match(/^<<<<<<<\s*(.*)$/)
+
+    if (startMatch) {
+      const labelStart = startMatch[1]
+      let j = i + 1
+      let middleIndex = -1
+      let endIndex = -1
+      let labelEnd = ''
+
+      while (j < lines.length) {
+        if (lines[j].match(/^=======\s*$/)) {
+          middleIndex = j
+        } else if (lines[j].match(/^>>>>>>>\s*(.*)$/)) {
+          endIndex = j
+          labelEnd = lines[j].match(/^>>>>>>>\s*(.*)$/)![1]
+          break
+        }
+        j++
+      }
+
+      if (middleIndex !== -1 && endIndex !== -1) {
+        const leftContentLines = lines.slice(i + 1, middleIndex)
+        const rightContentLines = lines.slice(middleIndex + 1, endIndex)
+
+        const splitByDots = (blockLines: string[]) => {
+          const parts: string[][] = []
+          let currentPart: string[] = []
+          for (const l of blockLines) {
+            if (l.trim() === '...') {
+              parts.push(currentPart)
+              currentPart = []
+            } else {
+              currentPart.push(l)
+            }
+          }
+          parts.push(currentPart)
+          return parts
+        }
+
+        const leftParts = splitByDots(leftContentLines)
+        const rightParts = splitByDots(rightContentLines)
+
+        if (leftParts.length > 1 && leftParts.length === rightParts.length) {
+          for (let k = 0; k < leftParts.length; k++) {
+            result_lines.push(`<<<<<<< ${labelStart}`)
+            result_lines.push(...leftParts[k])
+            result_lines.push(`=======`)
+            result_lines.push(...rightParts[k])
+            result_lines.push(`>>>>>>> ${labelEnd}`)
+          }
+          i = endIndex + 1
+          continue
+        }
+      }
+    }
+
+    result_lines.push(line)
+    i++
+  }
+
+  return result_lines.join('\n')
+}
+
 const create_or_update_file_item = (params: {
   file_name: string
   content: string
@@ -66,6 +136,8 @@ const create_or_update_file_item = (params: {
     return
   }
 
+  const processed_content = process_conflict_markers(content)
+
   const file_key = `${workspace_name || ''}:${file_name}`
 
   if (file_ref_map.has(file_key)) {
@@ -73,9 +145,9 @@ const create_or_update_file_item = (params: {
     const had_content_before = has_real_code(existing_file.content)
 
     if (mode === 'append') {
-      existing_file.content = existing_file.content + '\n' + content
+      existing_file.content = existing_file.content + '\n' + processed_content
     } else {
-      existing_file.content = content
+      existing_file.content = processed_content
     }
 
     if (renamed_from) {
@@ -95,7 +167,7 @@ const create_or_update_file_item = (params: {
     const new_file: FileItem = {
       type: 'file' as const,
       file_path: file_name,
-      content: content,
+      content: processed_content,
       workspace_name: workspace_name,
       renamed_from
     }
@@ -125,6 +197,11 @@ export const parse_multiple_files = (params: {
 }): (FileItem | TextItem)[] => {
   const file_content_result = parse_file_content_only(params)
   if (file_content_result) {
+    if (file_content_result.type === 'file') {
+      file_content_result.content = process_conflict_markers(
+        file_content_result.content
+      )
+    }
     return [file_content_result]
   }
 
