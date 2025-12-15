@@ -345,8 +345,8 @@ export const context_initialization = async (
       register_workspace_view_handlers(workspace_view)
       context.subscriptions.push(workspace_view)
     }),
-    vscode.commands.registerCommand('codeWebChat.clearChecks', () => {
-      workspace_provider!.clear_checks()
+    vscode.commands.registerCommand('codeWebChat.clearChecks', async () => {
+      await workspace_provider!.clear_checks()
     }),
     vscode.commands.registerCommand('codeWebChat.checkAll', async () => {
       await workspace_provider!.check_all()

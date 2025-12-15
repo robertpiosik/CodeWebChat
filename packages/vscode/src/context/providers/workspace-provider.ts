@@ -410,7 +410,7 @@ export class WorkspaceProvider
       this.refresh_timeout = null
     }, 1000) // Debounce refresh to handle bulk file changes like builds
   }
-  public clear_checks(): void {
+  public async clear_checks(): Promise<void> {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const clear_checks_in_workspace_behavior = config.get<string>(
       'clearChecksInWorkspaceBehavior'
@@ -447,15 +447,25 @@ export class WorkspaceProvider
       this.partially_checked_dirs.clear()
       this.directory_selected_token_counts.clear()
 
+      const dirs_to_update = new Set<string>()
+
       for (const file_path of open_files) {
         if (this.checked_items.has(file_path)) {
           let dir_path = path.dirname(file_path)
           const workspace_root = this.get_workspace_root_for_file(file_path)
           while (workspace_root && dir_path.startsWith(workspace_root)) {
-            this._update_parent_state(dir_path)
+            dirs_to_update.add(dir_path)
             dir_path = path.dirname(dir_path)
           }
         }
+      }
+
+      const sorted_dirs = Array.from(dirs_to_update).sort(
+        (a, b) => b.length - a.length
+      )
+
+      for (const dir_path of sorted_dirs) {
+        await this._update_parent_state(dir_path)
       }
 
       if (checked_open_files.length > 0) {
