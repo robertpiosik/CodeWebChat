@@ -10,7 +10,7 @@ import { dictionary } from '@shared/constants/dictionary'
 type QuickPickItem = {
   label: string
   description: string
-  fullPath: string
+  full_path: string
 }
 
 const at_sign_quick_pick = async (params: {
@@ -52,12 +52,14 @@ const at_sign_quick_pick = async (params: {
       return {
         label: filename,
         description: dir_path == '.' ? '' : dir_path,
-        fullPath: normalized_path
+        full_path: normalized_path
       }
     })
 
   const quick_pick_items_to_show = all_quick_pick_items
-  quick_pick_items_to_show.sort((a, b) => natural_sort(a.fullPath, b.fullPath))
+  quick_pick_items_to_show.sort((a, b) =>
+    natural_sort(a.full_path, b.full_path)
+  )
 
   const quick_pick = vscode.window.createQuickPick<QuickPickItem>()
   quick_pick.items = quick_pick_items_to_show
@@ -95,7 +97,7 @@ const at_sign_quick_pick = async (params: {
   )
 
   if (selected_path_item) {
-    return `\`${selected_path_item.fullPath}\` `
+    return `\`${selected_path_item.full_path}\` `
   }
   return
 }

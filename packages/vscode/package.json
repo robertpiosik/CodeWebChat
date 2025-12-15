@@ -216,6 +216,18 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.addFileToContext",
+        "title": "Add File to Context",
+        "category": "Code Web Chat",
+        "icon": "$(add)"
+      },
+      {
+        "command": "codeWebChat.removeFileFromContext",
+        "title": "Remove File from Context",
+        "category": "Code Web Chat",
+        "icon": "$(remove)"
+      },
+      {
         "command": "codeWebChat.applyChatResponse",
         "title": "%codeWebChat.applyChatResponse.title%",
         "category": "Code Web Chat"

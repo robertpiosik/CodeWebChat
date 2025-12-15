@@ -9,6 +9,8 @@ import {
 } from './migrations'
 import {
   apply_chat_response_command,
+  add_file_to_context_command,
+  remove_file_from_context_command,
   code_completion_commands,
   close_editor_command,
   find_paths_in_clipboard_command,
@@ -112,6 +114,8 @@ export async function activate(context: vscode.ExtensionContext) {
     rename_command(),
     delete_command(),
     save_context_command(workspace_provider, context),
+    add_file_to_context_command(workspace_provider),
+    remove_file_from_context_command(workspace_provider),
     set_range_command(workspace_provider, context),
     find_paths_in_clipboard_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, websites_provider, context),
