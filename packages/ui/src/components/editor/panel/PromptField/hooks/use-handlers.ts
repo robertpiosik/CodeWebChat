@@ -438,7 +438,15 @@ export const use_handlers = (
         props.on_at_sign_click()
       }
     } else if (char_before_caret == '#') {
-      props.on_hash_sign_click()
+      let is_after_hash = false
+      if (caret_position > 1) {
+        const char_before_hash = new_display_value.charAt(caret_position - 2)
+        is_after_hash = char_before_hash == '#'
+      }
+
+      if (!is_after_hash) {
+        props.on_hash_sign_click()
+      }
     }
 
     set_history_index(-1)
