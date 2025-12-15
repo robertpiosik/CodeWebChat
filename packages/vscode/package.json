@@ -1,8 +1,8 @@
 {
   "name": "gemini-coder",
   "displayName": "Code Web Chat",
-  "description": "CWC is a context-first AI coding",
-  "version": "1.662.0",
+  "description": "CWC, the context-first AI coding",
+  "version": "1.663.0",
   "scripts": {
     "build": "npx vsce package --no-dependencies",
     "vscode:prepublish": "rimraf out && npm run compile",
