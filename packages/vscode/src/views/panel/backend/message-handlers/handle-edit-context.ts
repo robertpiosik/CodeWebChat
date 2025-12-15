@@ -28,7 +28,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_COMPARED,
+  EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
   EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 
@@ -370,13 +370,13 @@ const perform_context_editing = async (params: {
       whole: 'editFormatInstructionsWhole',
       truncated: 'editFormatInstructionsTruncated',
       diff: 'editFormatInstructionsDiff',
-      compared: 'editFormatInstructionsCompared'
+      'before-after': 'editFormatInstructionsBeforeAfter'
     }[edit_format]
     const default_instructions = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
       diff: EDIT_FORMAT_INSTRUCTIONS_DIFF,
-      compared: EDIT_FORMAT_INSTRUCTIONS_COMPARED
+      'before-after': EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER
     }[edit_format]
     const edit_format_instructions =
       config.get<string>(instructions_key) || default_instructions

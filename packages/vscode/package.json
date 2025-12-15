@@ -597,7 +597,7 @@
           "type": "string",
           "scope": "resource"
         },
-        "codeWebChat.editFormatInstructionsCompared": {
+        "codeWebChat.editFormatInstructionsBeforeAfter": {
           "type": "string",
           "scope": "resource"
         },

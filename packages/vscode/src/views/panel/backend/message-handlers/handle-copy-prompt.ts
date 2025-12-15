@@ -13,10 +13,10 @@ import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixe
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  EDIT_FORMAT_INSTRUCTIONS_COMPARED,
-  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_WHOLE
+  EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+  EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 
 export const handle_copy_prompt = async (params: {
@@ -173,14 +173,14 @@ export const handle_copy_prompt = async (params: {
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',
         truncated: 'editFormatInstructionsTruncated',
-        compared: 'editFormatInstructionsCompared',
+        'before-after': 'editFormatInstructionsBeforeAfter',
         diff: 'editFormatInstructionsDiff'
       }[edit_format]
       const default_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-        diff: EDIT_FORMAT_INSTRUCTIONS_DIFF,
-        compared: EDIT_FORMAT_INSTRUCTIONS_COMPARED
+        'before-after': EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
+        diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
       }[edit_format]
       const edit_format_instructions =
         config.get<string>(instructions_key) || default_instructions

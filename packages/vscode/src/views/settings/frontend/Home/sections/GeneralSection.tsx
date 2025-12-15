@@ -43,7 +43,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     const [instructions, set_instructions] = useState<EditFormatInstructions>({
       whole: '',
       truncated: '',
-      compared: '',
+      before_after: '',
       diff: ''
     })
 
@@ -185,16 +185,16 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             }
           />
           <Item
-            title="Compared"
-            description="Instructions for generating code in 'compared' edit format."
+            title="Before and After"
+            description="Instructions for generating code in 'before-after' edit format."
             slot_placement="below"
             slot={
               <Textarea
-                value={instructions.compared}
+                value={instructions.before_after}
                 min_rows={3}
                 max_rows_when_not_focused={3}
                 on_change={(value) =>
-                  set_instructions((prev) => ({ ...prev, compared: value }))
+                  set_instructions((prev) => ({ ...prev, before_after: value }))
                 }
                 on_blur={handle_instructions_blur}
               />

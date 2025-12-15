@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import { UpdateEditFormatInstructionsMessage } from '@/views/settings/types/messages'
 import {
-  EDIT_FORMAT_INSTRUCTIONS_COMPARED,
+  EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER,
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
@@ -27,10 +27,10 @@ export const handle_update_edit_format_instructions = async (
       vscode.ConfigurationTarget.Global
     ),
     config.update(
-      'editFormatInstructionsCompared',
-      message.instructions.compared == EDIT_FORMAT_INSTRUCTIONS_COMPARED
+      'editFormatInstructionsBeforeAfter',
+      message.instructions.before_after == EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER
         ? undefined
-        : message.instructions.compared,
+        : message.instructions.before_after,
       vscode.ConfigurationTarget.Global
     ),
     config.update(

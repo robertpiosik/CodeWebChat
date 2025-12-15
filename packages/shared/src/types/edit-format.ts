@@ -1,1 +1,1 @@
-export type EditFormat = 'whole' | 'truncated' | 'compared' | 'diff'
+export type EditFormat = 'whole' | 'truncated' | 'before-after' | 'diff'

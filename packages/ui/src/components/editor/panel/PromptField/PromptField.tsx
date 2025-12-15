@@ -41,7 +41,7 @@ const Tooltip: React.FC<{
   </div>
 )
 
-export type EditFormat = 'whole' | 'truncated' | 'diff' | 'compared'
+export type EditFormat = 'whole' | 'truncated' | 'diff' | 'before-after'
 
 export type PromptFieldProps = {
   value: string
@@ -104,8 +104,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           case 'KeyT':
             format = 'truncated'
             break
-          case 'KeyC':
-            format = 'compared'
+          case 'KeyB':
+            format = 'before-after'
             break
           case 'KeyD':
             format = 'diff'
@@ -311,7 +311,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return {
       whole: `(${modifier}W)`,
       truncated: `(${modifier}T)`,
-      compared: `(${modifier}C)`,
+      'before-after': `(${modifier}B)`,
       diff: `(${modifier}D)`
     }
   }, [is_mac])
@@ -469,11 +469,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           >
             {props.show_edit_format_selector && (
               <div className={styles['footer__right__edit-format']}>
-                {(['whole', 'truncated', 'compared', 'diff'] as const).map(
+                {(['whole', 'truncated', 'before-after', 'diff'] as const).map(
                   (format) => {
                     const button_text = is_narrow_viewport
                       ? format.charAt(0).toUpperCase()
-                      : format
+                      : format == 'before-after'
+                        ? 'before/after'
+                        : format
                     const is_selected = props.edit_format == format
                     const should_underline = is_alt_pressed && !is_selected
 
