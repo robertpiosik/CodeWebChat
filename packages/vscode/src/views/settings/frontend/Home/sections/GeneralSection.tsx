@@ -186,7 +186,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           />
           <Item
             title="Before and After"
-            description="Instructions for generating code in 'before-after' edit format."
+            description="Instructions for generating code in 'before/after' edit format."
             slot_placement="below"
             slot={
               <Textarea

@@ -7,6 +7,7 @@ import { use_handlers } from './hooks/use-handlers'
 import { use_dropdown } from './hooks/use-dropdown'
 import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
+import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
 import {
@@ -81,59 +82,13 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
-
-  const [is_alt_pressed, set_is_alt_pressed] = useState(false)
-
-  useEffect(() => {
-    const handle_key_down = (e: KeyboardEvent) => {
-      if (e.key == 'Alt') set_is_alt_pressed(true)
-
-      if (
-        e.altKey &&
-        !e.shiftKey &&
-        !e.ctrlKey &&
-        !e.metaKey &&
-        props.show_edit_format_selector &&
-        props.on_edit_format_change
-      ) {
-        let format: EditFormat | undefined
-        switch (e.code) {
-          case 'KeyW':
-            format = 'whole'
-            break
-          case 'KeyT':
-            format = 'truncated'
-            break
-          case 'KeyB':
-            format = 'before-after'
-            break
-          case 'KeyD':
-            format = 'diff'
-            break
-        }
-        if (format) {
-          e.preventDefault()
-          props.on_edit_format_change(format)
-        }
-      }
-    }
-    const handle_key_up = (e: KeyboardEvent) => {
-      if (e.key == 'Alt') set_is_alt_pressed(false)
-    }
-    const handle_blur = () => {
-      set_is_alt_pressed(false)
-    }
-    window.addEventListener('keydown', handle_key_down)
-    window.addEventListener('keyup', handle_key_up)
-    window.addEventListener('blur', handle_blur)
-    return () => {
-      window.removeEventListener('keydown', handle_key_down)
-      window.removeEventListener('keyup', handle_key_up)
-      window.removeEventListener('blur', handle_blur)
-    }
-  }, [props.show_edit_format_selector, props.on_edit_format_change])
-
-  const is_narrow_viewport = use_is_narrow_viewport(268)
+  const is_narrow_viewport = use_is_narrow_viewport(330)
+  const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts({
+    show_edit_format_selector: props.show_edit_format_selector,
+    on_edit_format_change: props.on_edit_format_change,
+    on_search_click: props.on_search_click,
+    on_copy: props.on_copy
+  })
   const {
     is_dropdown_open,
     toggle_dropdown,
@@ -337,23 +292,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             (props.has_active_selection || !props.has_active_editor),
           [styles['container__inner--selecting']]: is_text_selecting
         })}
-        onKeyDown={(e) => {
-          if (e.key == 'Escape' && !e.ctrlKey && !e.metaKey) {
-            e.stopPropagation()
-            return
-          }
-          if (e.key == 'f' && (e.ctrlKey || e.metaKey)) {
-            e.stopPropagation()
-            props.on_search_click()
-          }
-          if (e.key == 'c' && e.altKey && (e.ctrlKey || e.metaKey)) {
-            if (props.on_copy) {
-              e.stopPropagation()
-              e.preventDefault()
-              props.on_copy()
-            }
-          }
-        }}
+        onKeyDown={handle_container_key_down}
         onClick={() => input_ref.current?.focus()}
       >
         {props.value && (
@@ -472,7 +411,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 {(['whole', 'truncated', 'before-after', 'diff'] as const).map(
                   (format) => {
                     const button_text = is_narrow_viewport
-                      ? format.charAt(0).toUpperCase()
+                      ? format == 'before-after'
+                        ? 'B/A'
+                        : format.charAt(0).toUpperCase()
                       : format == 'before-after'
                         ? 'before/after'
                         : format
@@ -490,7 +431,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                             ]]: is_selected
                           }
                         )}
-                        title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}\n\n${
+                        title={`Edit format instructions '${
+                          format == 'before-after' ? 'before/after' : format
+                        }' to include with the prompt ${edit_format_shortcuts[format]}\n\n${
                           props.edit_format_instructions?.[format]
                         }`}
                         onClick={() => props.on_edit_format_change?.(format)}
