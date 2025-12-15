@@ -6,6 +6,7 @@ export interface FileItem {
   file_path: string
   content: string
   workspace_name?: string
+  renamed_from?: string
 }
 
 export interface DiffItem {

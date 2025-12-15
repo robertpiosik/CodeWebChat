@@ -43,6 +43,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
     const [instructions, set_instructions] = useState<EditFormatInstructions>({
       whole: '',
       truncated: '',
+      compared: '',
       diff: ''
     })
 
@@ -178,6 +179,22 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
                 max_rows_when_not_focused={3}
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, truncated: value }))
+                }
+                on_blur={handle_instructions_blur}
+              />
+            }
+          />
+          <Item
+            title="Compared"
+            description="Instructions for generating code in 'compared' edit format."
+            slot_placement="below"
+            slot={
+              <Textarea
+                value={instructions.compared}
+                min_rows={3}
+                max_rows_when_not_focused={3}
+                on_change={(value) =>
+                  set_instructions((prev) => ({ ...prev, compared: value }))
                 }
                 on_blur={handle_instructions_blur}
               />

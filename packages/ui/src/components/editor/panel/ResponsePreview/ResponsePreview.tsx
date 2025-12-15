@@ -185,7 +185,9 @@ export const ResponsePreview: FC<Props> = (props) => {
                   </div>
                   <div className={styles.list__file__right}>
                     <div className={styles['list__file__actions']}>
-                      {(file.diff_application_method || file.is_replaced) && (
+                      {(file.diff_application_method ||
+                        file.is_replaced ||
+                        file.is_edited_by_conflict_markers) && (
                         <IconButton
                           codicon_icon="sparkle"
                           title={`Call Intelligent Update API tool${

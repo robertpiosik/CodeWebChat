@@ -597,6 +597,10 @@
           "type": "string",
           "scope": "resource"
         },
+        "codeWebChat.editFormatInstructionsCompared": {
+          "type": "string",
+          "scope": "resource"
+        },
         "codeWebChat.editFormatInstructionsDiff": {
           "type": "string",
           "scope": "resource"

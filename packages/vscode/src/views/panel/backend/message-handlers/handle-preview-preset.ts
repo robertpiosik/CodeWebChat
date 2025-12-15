@@ -14,9 +14,10 @@ import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixe
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_WHOLE
+  EDIT_FORMAT_INSTRUCTIONS_COMPARED,
+  EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 
 export const handle_preview_preset = async (
@@ -159,11 +160,13 @@ export const handle_preview_preset = async (
       const instructions_key = {
         whole: 'editFormatInstructionsWhole',
         truncated: 'editFormatInstructionsTruncated',
+        compared: 'editFormatInstructionsCompared',
         diff: 'editFormatInstructionsDiff'
       }[panel_provider.chat_edit_format]
       const default_instructions = {
         whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
         truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+        compared: EDIT_FORMAT_INSTRUCTIONS_COMPARED,
         diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
       }[panel_provider.chat_edit_format]
       const edit_format_instructions =

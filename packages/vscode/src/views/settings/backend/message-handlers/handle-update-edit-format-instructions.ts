@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { UpdateEditFormatInstructionsMessage } from '@/views/settings/types/messages'
 import {
+  EDIT_FORMAT_INSTRUCTIONS_COMPARED,
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
@@ -13,21 +14,28 @@ export const handle_update_edit_format_instructions = async (
   await Promise.all([
     config.update(
       'editFormatInstructionsWhole',
-      message.instructions.whole === EDIT_FORMAT_INSTRUCTIONS_WHOLE
+      message.instructions.whole == EDIT_FORMAT_INSTRUCTIONS_WHOLE
         ? undefined
         : message.instructions.whole,
       vscode.ConfigurationTarget.Global
     ),
     config.update(
       'editFormatInstructionsTruncated',
-      message.instructions.truncated === EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
+      message.instructions.truncated == EDIT_FORMAT_INSTRUCTIONS_TRUNCATED
         ? undefined
         : message.instructions.truncated,
       vscode.ConfigurationTarget.Global
     ),
     config.update(
+      'editFormatInstructionsCompared',
+      message.instructions.compared == EDIT_FORMAT_INSTRUCTIONS_COMPARED
+        ? undefined
+        : message.instructions.compared,
+      vscode.ConfigurationTarget.Global
+    ),
+    config.update(
       'editFormatInstructionsDiff',
-      message.instructions.diff === EDIT_FORMAT_INSTRUCTIONS_DIFF
+      message.instructions.diff == EDIT_FORMAT_INSTRUCTIONS_DIFF
         ? undefined
         : message.instructions.diff,
       vscode.ConfigurationTarget.Global

@@ -2,6 +2,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { EditFormat } from '@shared/types/edit-format'
 import {
+  EDIT_FORMAT_INSTRUCTIONS_COMPARED,
   EDIT_FORMAT_INSTRUCTIONS_DIFF,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
   EDIT_FORMAT_INSTRUCTIONS_WHOLE
@@ -18,6 +19,9 @@ export const handle_get_edit_format_instructions = (
     truncated:
       config.get('editFormatInstructionsTruncated') ||
       EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+    compared:
+      config.get('editFormatInstructionsCompared') ||
+      EDIT_FORMAT_INSTRUCTIONS_COMPARED,
     diff:
       config.get('editFormatInstructionsDiff') || EDIT_FORMAT_INSTRUCTIONS_DIFF
   }

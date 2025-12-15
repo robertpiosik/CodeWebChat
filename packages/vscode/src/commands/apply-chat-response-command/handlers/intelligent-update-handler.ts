@@ -7,7 +7,10 @@ import { sanitize_file_name, create_safe_path } from '@/utils/path-sanitizer'
 import { Logger } from '@shared/utils/logger'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { ToolConfig } from '@/services/model-providers-manager'
-import { create_file_if_needed } from '../utils/file-operations'
+import {
+  create_file_if_needed,
+  remove_directory_if_empty
+} from '../utils/file-operations'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { process_file } from '@/utils/intelligent-update-utils'
@@ -165,6 +168,7 @@ export const handle_intelligent_update = async (params: {
     isNew: boolean
     filePath: string
     workspaceName?: string
+    renamedFrom?: string
   }[] = []
   let api_calls_succeeded = false
   const max_concurrency = params.config.max_concurrency ?? 10
@@ -215,12 +219,41 @@ export const handle_intelligent_update = async (params: {
     }
 
     for (const file of new_files) {
-      original_states.push({
-        file_path: file.file_path,
-        content: '',
-        file_state: 'new',
-        workspace_name: file.workspace_name
-      })
+      let workspace_root = default_workspace_path!
+      if (file.workspace_name && workspace_map.has(file.workspace_name)) {
+        workspace_root = workspace_map.get(file.workspace_name)!
+      }
+
+      let rename_source_content: string | undefined
+      if (file.renamed_from) {
+        const safe_rename_path = create_safe_path(
+          workspace_root,
+          sanitize_file_name(file.renamed_from)
+        )
+        if (safe_rename_path && fs.existsSync(safe_rename_path)) {
+          try {
+            rename_source_content = fs.readFileSync(safe_rename_path, 'utf8')
+          } catch (e) {
+            // Ignore
+          }
+        }
+      }
+
+      if (rename_source_content !== undefined) {
+        original_states.push({
+          file_path: file.file_path,
+          content: rename_source_content,
+          workspace_name: file.workspace_name,
+          file_path_to_restore: file.renamed_from
+        })
+      } else {
+        original_states.push({
+          file_path: file.file_path,
+          content: '',
+          file_state: 'new',
+          workspace_name: file.workspace_name
+        })
+      }
     }
 
     // Process all files in parallel batches
@@ -249,8 +282,33 @@ export const handle_intelligent_update = async (params: {
         }
 
         const file_exists = fs.existsSync(safe_path)
+        let rename_source_path: string | undefined
+        let original_content_for_api = ''
+        let document: vscode.TextDocument | null = null
 
-        if (!file_exists) {
+        if (file_exists) {
+          const file_uri = vscode.Uri.file(safe_path)
+          document = await vscode.workspace.openTextDocument(file_uri)
+          original_content_for_api = document.getText()
+        } else if (file.renamed_from) {
+          const safe_rename_path = create_safe_path(
+            workspace_root,
+            sanitize_file_name(file.renamed_from)
+          )
+          if (safe_rename_path && fs.existsSync(safe_rename_path)) {
+            rename_source_path = safe_rename_path
+            try {
+              original_content_for_api = fs.readFileSync(
+                safe_rename_path,
+                'utf8'
+              )
+            } catch (e) {
+              // Ignore
+            }
+          }
+        }
+
+        if (!file_exists && !rename_source_path) {
           return {
             document: null,
             content: file.content,
@@ -261,19 +319,15 @@ export const handle_intelligent_update = async (params: {
         }
 
         try {
-          const file_uri = vscode.Uri.file(safe_path)
-          const document = await vscode.workspace.openTextDocument(file_uri)
-          const document_text = document.getText()
-
           const original_state = original_states.find(
             (s) =>
               s.file_path == file.file_path &&
               s.workspace_name == file.workspace_name &&
               s.file_state != 'new'
           )
-          const original_content_for_api = original_state
-            ? original_state.content
-            : document_text
+          if (original_state) {
+            original_content_for_api = original_state.content
+          }
 
           if (file_progress_index != -1) {
             file_progress_list[file_progress_index].status = 'thinking'
@@ -347,9 +401,10 @@ export const handle_intelligent_update = async (params: {
           return {
             document,
             content: final_content,
-            isNew: false,
+            isNew: !file_exists,
             filePath: file.file_path,
-            workspaceName: file.workspace_name
+            workspaceName: file.workspace_name,
+            renamedFrom: rename_source_path
           }
         } catch (error: any) {
           if (axios.isCancel(error) || error.message == 'Operation cancelled') {
@@ -415,6 +470,38 @@ export const handle_intelligent_update = async (params: {
           dictionary.warning_message.SKIPPING_INVALID_PATH(change.filePath)
         )
         continue
+      }
+
+      if (change.renamedFrom) {
+        try {
+          const tabs_to_close: vscode.Tab[] = []
+          for (const tab_group of vscode.window.tabGroups.all) {
+            tabs_to_close.push(
+              ...tab_group.tabs.filter((tab) => {
+                const tab_uri = (tab.input as any)?.uri as
+                  | vscode.Uri
+                  | undefined
+                return tab_uri && tab_uri.fsPath === change.renamedFrom
+              })
+            )
+          }
+
+          if (tabs_to_close.length > 0) {
+            await vscode.window.tabGroups.close(tabs_to_close)
+          }
+
+          await vscode.workspace.fs.delete(vscode.Uri.file(change.renamedFrom))
+          await remove_directory_if_empty({
+            dir_path: path.dirname(change.renamedFrom),
+            workspace_root
+          })
+        } catch (error) {
+          Logger.error({
+            function_name: 'handle_intelligent_update',
+            message: 'Failed to delete renamed source file',
+            data: { error, path: change.renamedFrom }
+          })
+        }
       }
 
       if (change.isNew) {

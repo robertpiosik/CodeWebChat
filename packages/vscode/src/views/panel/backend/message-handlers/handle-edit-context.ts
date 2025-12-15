@@ -26,9 +26,10 @@ import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_WHOLE
+  EDIT_FORMAT_INSTRUCTIONS_COMPARED,
+  EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 
 const get_edit_context_config = async (
@@ -368,12 +369,14 @@ const perform_context_editing = async (params: {
     const instructions_key = {
       whole: 'editFormatInstructionsWhole',
       truncated: 'editFormatInstructionsTruncated',
-      diff: 'editFormatInstructionsDiff'
+      diff: 'editFormatInstructionsDiff',
+      compared: 'editFormatInstructionsCompared'
     }[edit_format]
     const default_instructions = {
       whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
       truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-      diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
+      diff: EDIT_FORMAT_INSTRUCTIONS_DIFF,
+      compared: EDIT_FORMAT_INSTRUCTIONS_COMPARED
     }[edit_format]
     const edit_format_instructions =
       config.get<string>(instructions_key) || default_instructions

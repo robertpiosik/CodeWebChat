@@ -40,7 +40,7 @@ Updated the greeting text.
    print(GREETING)
 \`\`\``
 
-export const EDIT_FORMAT_INSTRUCTIONS_MERGE_CONFLICT = `${intro}, followed by a markdown code block showing the original and updated code with Git-style merge conflict markers. Example:
+export const EDIT_FORMAT_INSTRUCTIONS_COMPARED = `${intro}, followed by a markdown code block showing the original and updated code with Git-style merge conflict markers. Example:
 Updated the greeting text.
 
 ### Updated file: \`src/hello.py\`
@@ -51,7 +51,4 @@ GREETING = "Welcome everyone!"
 =======
 GREETING = "Hello, World!"
 >>>>>>> UPDATED
-
-def show_greeting():
-  print(GREETING)
 \`\`\``

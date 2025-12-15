@@ -112,7 +112,6 @@ export const preview = async (params: {
     }
 
     if (params.panel_provider) {
-      console.log('xxx', items_for_preview)
       params.panel_provider.send_message({
         command: 'RESPONSE_PREVIEW_STARTED',
         items: items_for_preview,

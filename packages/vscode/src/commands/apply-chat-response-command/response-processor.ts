@@ -22,6 +22,7 @@ import {
   check_if_all_files_new,
   check_for_conflict_markers
 } from './utils/file-checks'
+import { handle_conflict_markers } from './handlers/conflict-markers-handler'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -162,7 +163,6 @@ export const process_chat_response = async (
       }
     ]
   }
-
   if (clipboard_items.some((item) => item.type == 'diff')) {
     const patches = clipboard_items.filter(
       (item): item is DiffItem => item.type == 'diff'
@@ -440,18 +440,22 @@ export const process_chat_response = async (
       return null
     }
 
-    let selected_mode_label: 'Fast replace' | 'Intelligent update' | undefined =
-      undefined
+    let selected_mode_label:
+      | 'Fast replace'
+      | 'Intelligent update'
+      | 'Conflict markers'
+      | undefined = undefined
 
-    const all_files_new = await check_if_all_files_new(files)
+    const has_conflict_markers = check_for_conflict_markers(files)
 
-    if (all_files_new) {
-      selected_mode_label = 'Fast replace'
+    if (has_conflict_markers) {
+      selected_mode_label = 'Conflict markers'
       Logger.info({
         function_name: 'process_chat_response',
-        message: 'All files are new - automatically selecting fast replace mode'
+        message: 'Selecting conflict markers mode.'
       })
     } else {
+      const all_files_new = await check_if_all_files_new(files)
       let has_truncated_fragments = false
       if (
         args?.edit_format === undefined ||
@@ -459,17 +463,17 @@ export const process_chat_response = async (
       ) {
         has_truncated_fragments = check_for_truncated_fragments(files)
       }
-      const has_conflict_markers = check_for_conflict_markers(files)
 
-      if (has_truncated_fragments || has_conflict_markers) {
+      if (all_files_new && !has_truncated_fragments) {
+        selected_mode_label = 'Fast replace'
+        Logger.info({
+          function_name: 'process_chat_response',
+          message:
+            'All files are new - automatically selecting fast replace mode'
+        })
+      } else if (has_truncated_fragments) {
         selected_mode_label = 'Intelligent update'
-        if (has_conflict_markers) {
-          Logger.info({
-            function_name: 'process_chat_response',
-            message:
-              'Auto-selecting intelligent update mode due to detected conflict markers'
-          })
-        } else {
+        {
           Logger.info({
             function_name: 'process_chat_response',
             message:
@@ -500,6 +504,108 @@ export const process_chat_response = async (
       Logger.info({
         function_name: 'process_chat_response',
         message: 'Fast replace handler finished.',
+        data: { success: result.success }
+      })
+    } else if (selected_mode_label == 'Conflict markers') {
+      const result = await handle_conflict_markers(files)
+
+      let successful_states = result.original_states || []
+      const failed_files: FileItem[] = result.failed_files || []
+
+      if (failed_files.length > 0) {
+        const api_providers_manager = new ModelProvidersManager(context)
+        const config_result = await get_intelligent_update_config(
+          api_providers_manager,
+          false,
+          context
+        )
+
+        if (config_result) {
+          const { provider, config: intelligent_update_config } = config_result
+          let endpoint_url = ''
+          if (provider.type == 'built-in') {
+            const provider_info =
+              PROVIDERS[provider.name as keyof typeof PROVIDERS]
+            endpoint_url = provider_info.base_url
+          } else {
+            endpoint_url = provider.base_url
+          }
+
+          const failed_files_as_code_blocks = failed_files
+            .map((file) => {
+              const file_path_with_workspace = file.workspace_name
+                ? `${file.workspace_name}/${file.file_path}`
+                : file.file_path
+              return `\`\`\`\n// ${file_path_with_workspace}\n${file.content}\n\`\`\``
+            })
+            .join('\n')
+
+          try {
+            const intelligent_update_states = await handle_intelligent_update({
+              endpoint_url,
+              api_key: provider.api_key,
+              config: intelligent_update_config,
+              chat_response: failed_files_as_code_blocks,
+              context: context,
+              is_single_root_folder_workspace,
+              panel_provider
+            })
+
+            if (intelligent_update_states) {
+              successful_states = [
+                ...successful_states,
+                ...intelligent_update_states
+              ]
+            } else {
+              if (successful_states.length > 0) {
+                await undo_files({ original_states: successful_states })
+                update_undo_button_state({
+                  context,
+                  panel_provider,
+                  states: null
+                })
+                successful_states = []
+              }
+            }
+          } catch (error) {
+            Logger.error({
+              function_name: 'process_chat_response',
+              message: 'Error during intelligent update of failed files'
+            })
+
+            const response = await vscode.window.showErrorMessage(
+              dictionary.error_message
+                .ERROR_DURING_INTELLIGENT_UPDATE_FIX_ATTEMPT,
+              'Keep changes',
+              'Undo'
+            )
+
+            if (response == 'Undo' && successful_states.length > 0) {
+              await undo_files({ original_states: successful_states })
+              update_undo_button_state({
+                context,
+                panel_provider,
+                states: null
+              })
+              successful_states = []
+            }
+          }
+        } else {
+          if (successful_states.length > 0) {
+            await undo_files({ original_states: successful_states })
+            update_undo_button_state({ context, panel_provider, states: null })
+            successful_states = []
+          }
+        }
+      }
+
+      if (successful_states.length > 0) {
+        final_original_states = successful_states
+        operation_success = true
+      }
+      Logger.info({
+        function_name: 'process_chat_response',
+        message: 'Conflict markers handler finished.',
         data: { success: result.success }
       })
     } else if (selected_mode_label == 'Intelligent update') {

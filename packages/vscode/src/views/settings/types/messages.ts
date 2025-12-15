@@ -17,6 +17,7 @@ export type ConfigurationForClient = {
 export type EditFormatInstructions = {
   whole: string
   truncated: string
+  compared: string
   diff: string
 }
 

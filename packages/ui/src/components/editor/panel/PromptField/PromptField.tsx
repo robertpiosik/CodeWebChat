@@ -9,7 +9,6 @@ import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
-import { get_display_text } from './utils/get-display-text'
 import {
   get_caret_position_from_div,
   set_caret_position_for_div
@@ -42,7 +41,7 @@ const Tooltip: React.FC<{
   </div>
 )
 
-export type EditFormat = 'whole' | 'truncated' | 'diff'
+export type EditFormat = 'whole' | 'truncated' | 'diff' | 'compared'
 
 export type PromptFieldProps = {
   value: string
@@ -104,6 +103,9 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             break
           case 'KeyT':
             format = 'truncated'
+            break
+          case 'KeyC':
+            format = 'compared'
             break
           case 'KeyD':
             format = 'diff'
@@ -309,6 +311,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     return {
       whole: `(${modifier}W)`,
       truncated: `(${modifier}T)`,
+      compared: `(${modifier}C)`,
       diff: `(${modifier}D)`
     }
   }, [is_mac])
@@ -466,55 +469,57 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
           >
             {props.show_edit_format_selector && (
               <div className={styles['footer__right__edit-format']}>
-                {(['whole', 'truncated', 'diff'] as const).map((format) => {
-                  const button_text = is_narrow_viewport
-                    ? format.charAt(0).toUpperCase()
-                    : format
-                  const is_selected = props.edit_format == format
-                  const should_underline = is_alt_pressed && !is_selected
+                {(['whole', 'truncated', 'compared', 'diff'] as const).map(
+                  (format) => {
+                    const button_text = is_narrow_viewport
+                      ? format.charAt(0).toUpperCase()
+                      : format
+                    const is_selected = props.edit_format == format
+                    const should_underline = is_alt_pressed && !is_selected
 
-                  return (
-                    <button
-                      key={format}
-                      className={cn(
-                        styles['footer__right__edit-format__button'],
-                        {
-                          [styles[
-                            'footer__right__edit-format__button--selected'
-                          ]]: is_selected
-                        }
-                      )}
-                      title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}\n\n${
-                        props.edit_format_instructions?.[format]
-                      }`}
-                      onClick={() => props.on_edit_format_change?.(format)}
-                    >
-                      <span
-                        className={
-                          styles['footer__right__edit-format__button__spacer']
-                        }
-                      >
-                        {button_text}
-                      </span>
-                      <span
-                        className={
-                          styles['footer__right__edit-format__button__text']
-                        }
-                      >
-                        {should_underline ? (
-                          <>
-                            <span className={styles['underlined']}>
-                              {button_text.charAt(0)}
-                            </span>
-                            {button_text.substring(1)}
-                          </>
-                        ) : (
-                          button_text
+                    return (
+                      <button
+                        key={format}
+                        className={cn(
+                          styles['footer__right__edit-format__button'],
+                          {
+                            [styles[
+                              'footer__right__edit-format__button--selected'
+                            ]]: is_selected
+                          }
                         )}
-                      </span>
-                    </button>
-                  )
-                })}
+                        title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}\n\n${
+                          props.edit_format_instructions?.[format]
+                        }`}
+                        onClick={() => props.on_edit_format_change?.(format)}
+                      >
+                        <span
+                          className={
+                            styles['footer__right__edit-format__button__spacer']
+                          }
+                        >
+                          {button_text}
+                        </span>
+                        <span
+                          className={
+                            styles['footer__right__edit-format__button__text']
+                          }
+                        >
+                          {should_underline ? (
+                            <>
+                              <span className={styles['underlined']}>
+                                {button_text.charAt(0)}
+                              </span>
+                              {button_text.substring(1)}
+                            </>
+                          ) : (
+                            button_text
+                          )}
+                        </span>
+                      </button>
+                    )
+                  }
+                )}
               </div>
             )}
 

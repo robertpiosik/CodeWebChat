@@ -379,6 +379,26 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('merges content when merge conflicts are split across separate code blocks', () => {
+      const test_case = 'merge-conflicts-in-separate-code-blocks'
+      const text = load_test_case_file(
+        'standard',
+        test_case,
+        `${test_case}.txt`
+      )
+      const result = parse_multiple_files({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/index.ts',
+        content: load_test_case_file('standard', test_case, '1-file.txt')
+      })
+    })
+
     it('parses file paths that use backslashes as separators', () => {
       const test_case = 'backslash-paths'
       const text = load_test_case_file(
@@ -715,16 +735,12 @@ describe('clipboard-parser', () => {
         is_single_root_folder_workspace: true
       })
 
-      expect(result).toHaveLength(2)
+      expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
         type: 'file',
-        file_path: 'src/welcome.ts',
-        content: load_test_case_file('standard', test_case, '1-file.txt')
-      })
-      expect(result[1]).toMatchObject({
-        type: 'file',
         file_path: 'src/hello-world.ts',
-        content: load_test_case_file('standard', test_case, '2-file.txt')
+        renamed_from: 'src/welcome.ts',
+        content: load_test_case_file('standard', test_case, '1-file.txt')
       })
     })
 

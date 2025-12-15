@@ -21,9 +21,10 @@ import { CHATBOTS } from '@shared/constants/chatbots'
 import { update_last_used_preset_or_group } from './update-last-used-preset-or-group'
 import { dictionary } from '@shared/constants/dictionary'
 import {
-  EDIT_FORMAT_INSTRUCTIONS_DIFF,
+  EDIT_FORMAT_INSTRUCTIONS_WHOLE,
   EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
-  EDIT_FORMAT_INSTRUCTIONS_WHOLE
+  EDIT_FORMAT_INSTRUCTIONS_COMPARED,
+  EDIT_FORMAT_INSTRUCTIONS_DIFF
 } from '@/constants/edit-format-instructions'
 
 export const handle_send_prompt = async (params: {
@@ -246,11 +247,13 @@ export const handle_send_prompt = async (params: {
           const instructions_key = {
             whole: 'editFormatInstructionsWhole',
             truncated: 'editFormatInstructionsTruncated',
+            compared: 'editFormatInstructionsCompared',
             diff: 'editFormatInstructionsDiff'
           }[params.panel_provider.chat_edit_format]
           const default_instructions = {
             whole: EDIT_FORMAT_INSTRUCTIONS_WHOLE,
             truncated: EDIT_FORMAT_INSTRUCTIONS_TRUNCATED,
+            compared: EDIT_FORMAT_INSTRUCTIONS_COMPARED,
             diff: EDIT_FORMAT_INSTRUCTIONS_DIFF
           }[params.panel_provider.chat_edit_format]
           const edit_format_instructions =

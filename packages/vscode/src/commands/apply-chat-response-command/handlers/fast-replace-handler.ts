@@ -99,6 +99,91 @@ export const handle_fast_replace = async (
 
       if (!safe_path) continue
 
+      let rename_source_path: string | undefined
+      let rename_source_content: string | undefined
+
+      if (file.renamed_from) {
+        const sanitized_rename_path = sanitize_file_name(file.renamed_from)
+        const safe_rename_path = create_safe_path(
+          workspace_root,
+          sanitized_rename_path
+        )
+        if (safe_rename_path && fs.existsSync(safe_rename_path)) {
+          rename_source_path = safe_rename_path
+          try {
+            const document =
+              await vscode.workspace.openTextDocument(safe_rename_path)
+            rename_source_content = document.getText()
+          } catch (e) {
+            Logger.warn({
+              function_name: 'handle_fast_replace',
+              message: 'Failed to read rename source file',
+              data: safe_rename_path
+            })
+          }
+        }
+      }
+
+      if (rename_source_path && rename_source_content !== undefined) {
+        try {
+          const tabs_to_close: vscode.Tab[] = []
+          for (const tab_group of vscode.window.tabGroups.all) {
+            tabs_to_close.push(
+              ...tab_group.tabs.filter((tab) => {
+                const tab_uri = (tab.input as any)?.uri as
+                  | vscode.Uri
+                  | undefined
+                return tab_uri && tab_uri.fsPath === rename_source_path
+              })
+            )
+          }
+
+          if (tabs_to_close.length > 0) {
+            await vscode.window.tabGroups.close(tabs_to_close)
+          }
+
+          await vscode.workspace.fs.delete(vscode.Uri.file(rename_source_path))
+          await remove_directory_if_empty({
+            dir_path: path.dirname(rename_source_path),
+            workspace_root
+          })
+
+          const directory = path.dirname(safe_path)
+          if (!fs.existsSync(directory)) {
+            await fs.promises.mkdir(directory, { recursive: true })
+          }
+          await vscode.workspace.fs.writeFile(
+            vscode.Uri.file(safe_path),
+            Buffer.from(file.content, 'utf8')
+          )
+
+          const document = await vscode.workspace.openTextDocument(safe_path)
+          await vscode.window.showTextDocument(document, { preview: false })
+
+          original_states.push({
+            file_path: file.file_path,
+            content: rename_source_content,
+            workspace_name: file.workspace_name,
+            file_path_to_restore: file.renamed_from
+          })
+
+          continue
+        } catch (error: any) {
+          Logger.error({
+            function_name: 'handle_fast_replace',
+            message: 'Error handling rename',
+            data: { error, file_path: file.file_path }
+          })
+          vscode.window.showErrorMessage(
+            dictionary.error_message.ERROR_PROCESSING_FILE(
+              file.file_path,
+              error.message || 'Unknown error'
+            )
+          )
+          continue
+        }
+      }
+
       const file_exists = fs.existsSync(safe_path)
 
       try {

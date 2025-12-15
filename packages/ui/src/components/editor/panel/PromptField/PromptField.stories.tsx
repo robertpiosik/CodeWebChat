@@ -206,6 +206,7 @@ export const WithEditFormatSelector = () => {
       edit_format_instructions={{
         whole: 'Use the whole...',
         truncated: 'Use truncated...',
+        compared: 'Use compared...',
         diff: 'Use diff...'
       }}
       context_file_paths={[]}
