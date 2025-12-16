@@ -264,7 +264,12 @@
       },
       {
         "command": "codeWebChat.delete",
-        "title": "Delete"
+        "title": "Delete",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "codeWebChat.checkParentFolder",
+        "title": "Check Parent Folder"
       },
       {
         "command": "codeWebChat.referenceInPrompt",
@@ -356,6 +361,10 @@
         },
         {
           "command": "codeWebChat.delete",
+          "when": "false"
+        },
+        {
+          "command": "codeWebChat.checkParentFolder",
           "when": "false"
         },
         {
@@ -520,19 +529,24 @@
           "group": "1_modification@2"
         },
         {
-          "command": "codeWebChat.referenceInPrompt",
+          "command": "codeWebChat.checkParentFolder",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "1_modification@3"
         },
         {
-          "command": "codeWebChat.revealInExplorer",
+          "command": "codeWebChat.referenceInPrompt",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "1_modification@4"
         },
         {
-          "command": "codeWebChat.setRange",
+          "command": "codeWebChat.revealInExplorer",
           "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
           "group": "1_modification@5"
+        },
+        {
+          "command": "codeWebChat.setRange",
+          "when": "view == codeWebChatViewOpenEditors && viewItem == openEditor",
+          "group": "1_modification@6"
         },
         {
           "command": "codeWebChat.newFile",

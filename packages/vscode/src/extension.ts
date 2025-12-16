@@ -27,7 +27,8 @@ import {
   reference_in_prompt_command,
   open_url_command,
   generate_commit_message_command,
-  set_range_command
+  set_range_command,
+  check_parent_folder_command
 } from './commands'
 import {
   get_checkpoints,
@@ -117,6 +118,7 @@ export async function activate(context: vscode.ExtensionContext) {
     add_file_to_context_command(workspace_provider),
     remove_file_from_context_command(workspace_provider),
     set_range_command(workspace_provider, context),
+    check_parent_folder_command(workspace_provider),
     find_paths_in_clipboard_command(workspace_provider),
     duplicate_workspace_command(workspace_provider, websites_provider, context),
     open_url_command({
