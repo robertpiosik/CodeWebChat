@@ -21,6 +21,54 @@ export const add_file_to_context_command = (
         return
       }
 
+      let roots_to_index = workspace_roots
+
+      if (workspace_roots.length > 1) {
+        const items: vscode.QuickPickItem[] = workspace_roots.map((root) => ({
+          label: workspace_provider.get_workspace_name(root),
+          description: root
+        }))
+
+        const selected = await new Promise<vscode.QuickPickItem | undefined>(
+          (resolve) => {
+            const quick_pick = vscode.window.createQuickPick()
+            quick_pick.items = items
+            quick_pick.placeholder = 'Select a workspace folder to browse files'
+            quick_pick.title = 'Workspace Folders'
+            quick_pick.buttons = [
+              {
+                iconPath: new vscode.ThemeIcon('close'),
+                tooltip: 'Close'
+              }
+            ]
+
+            quick_pick.onDidTriggerButton((button) => {
+              if (button.tooltip == 'Close') {
+                quick_pick.hide()
+              }
+            })
+
+            quick_pick.onDidAccept(() => {
+              resolve(quick_pick.selectedItems[0])
+              quick_pick.hide()
+            })
+
+            quick_pick.onDidHide(() => {
+              resolve(undefined)
+              quick_pick.dispose()
+            })
+
+            quick_pick.show()
+          }
+        )
+
+        if (!selected || !selected.description) {
+          return
+        }
+
+        roots_to_index = [selected.description]
+      }
+
       const quick_pick = vscode.window.createQuickPick<FileQuickPickItem>()
       quick_pick.title = 'Workspace Files'
       quick_pick.placeholder = 'Select a file to add to context'
@@ -156,7 +204,7 @@ export const add_file_to_context_command = (
 
       try {
         const all_files: string[] = []
-        for (const root of workspace_roots) {
+        for (const root of roots_to_index) {
           const files = await workspace_provider.find_all_files(root)
           all_files.push(...files)
         }
@@ -177,7 +225,7 @@ export const add_file_to_context_command = (
             directory = ''
           }
 
-          if (workspace_roots.length > 1 && workspace_root) {
+          if (roots_to_index.length > 1 && workspace_root) {
             const workspace_name =
               workspace_provider.get_workspace_name(workspace_root)
             directory = directory

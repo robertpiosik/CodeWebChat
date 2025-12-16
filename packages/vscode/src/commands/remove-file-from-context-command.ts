@@ -23,6 +23,76 @@ export const remove_file_from_context_command = (
         return
       }
 
+      const workspace_roots = workspace_provider.getWorkspaceRoots()
+      let files_to_show = current_checked
+      let show_workspace_prefix = workspace_roots.length > 1
+
+      if (workspace_roots.length > 1) {
+        const roots_with_checked_files = new Map<string, string[]>()
+
+        for (const file_path of current_checked) {
+          const root = workspace_provider.get_workspace_root_for_file(file_path)
+          if (root) {
+            if (!roots_with_checked_files.has(root)) {
+              roots_with_checked_files.set(root, [])
+            }
+            roots_with_checked_files.get(root)!.push(file_path)
+          }
+        }
+
+        const eligible_roots = Array.from(roots_with_checked_files.keys())
+
+        if (eligible_roots.length > 1) {
+          const items: vscode.QuickPickItem[] = eligible_roots
+            .map((root) => ({
+              label: workspace_provider.get_workspace_name(root),
+              description: root
+            }))
+            .sort((a, b) => natural_sort(a.label, b.label))
+
+          const selected = await new Promise<vscode.QuickPickItem | undefined>(
+            (resolve) => {
+              const quick_pick = vscode.window.createQuickPick()
+              quick_pick.items = items
+              quick_pick.placeholder =
+                'Select a workspace folder to remove files from'
+              quick_pick.title = 'Workspace Folders'
+              quick_pick.buttons = [
+                {
+                  iconPath: new vscode.ThemeIcon('close'),
+                  tooltip: 'Close'
+                }
+              ]
+
+              quick_pick.onDidTriggerButton((button) => {
+                if (button.tooltip == 'Close') {
+                  quick_pick.hide()
+                }
+              })
+
+              quick_pick.onDidAccept(() => {
+                resolve(quick_pick.selectedItems[0])
+                quick_pick.hide()
+              })
+
+              quick_pick.onDidHide(() => {
+                resolve(undefined)
+                quick_pick.dispose()
+              })
+
+              quick_pick.show()
+            }
+          )
+
+          if (!selected || !selected.description) {
+            return
+          }
+
+          files_to_show = roots_with_checked_files.get(selected.description)!
+          show_workspace_prefix = false
+        }
+      }
+
       const quick_pick = vscode.window.createQuickPick<FileQuickPickItem>()
       quick_pick.title = 'Context Files'
       quick_pick.placeholder = 'Select a file to remove from context'
@@ -156,9 +226,7 @@ export const remove_file_from_context_command = (
         }
       })
 
-      const workspace_roots = workspace_provider.getWorkspaceRoots()
-
-      const items: FileQuickPickItem[] = current_checked.map((file_path) => {
+      const items: FileQuickPickItem[] = files_to_show.map((file_path) => {
         const workspace_root =
           workspace_provider.get_workspace_root_for_file(file_path)
 
@@ -174,7 +242,7 @@ export const remove_file_from_context_command = (
           directory = ''
         }
 
-        if (workspace_roots.length > 1 && workspace_root) {
+        if (show_workspace_prefix && workspace_root) {
           const workspace_name =
             workspace_provider.get_workspace_name(workspace_root)
           directory = directory
