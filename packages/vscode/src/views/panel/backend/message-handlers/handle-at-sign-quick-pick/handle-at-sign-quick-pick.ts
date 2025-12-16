@@ -26,12 +26,19 @@ const add_to_context_if_needed = async (
 const browse_all_files = async (
   workspace_provider: WorkspaceProvider,
   workspace_roots: string[],
-  format_path: (p: string) => string
+  format_path: (p: string) => string,
+  show_back_button: boolean = true
 ): Promise<QuickPickItem | 'back' | undefined> => {
   const quick_pick = vscode.window.createQuickPick<QuickPickItem>()
   quick_pick.placeholder = 'Select a file'
   quick_pick.title = 'All Files'
-  quick_pick.buttons = [vscode.QuickInputButtons.Back]
+  if (show_back_button) {
+    quick_pick.buttons = [vscode.QuickInputButtons.Back]
+  } else {
+    quick_pick.buttons = [
+      { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
+    ]
+  }
   quick_pick.matchOnDescription = true
   quick_pick.busy = true
   quick_pick.show()
@@ -72,8 +79,8 @@ const browse_all_files = async (
     quick_pick.onDidTriggerButton((button) => {
       if (button === vscode.QuickInputButtons.Back) {
         resolve('back')
-        quick_pick.hide()
       }
+      quick_pick.hide()
     })
 
     quick_pick.onDidAccept(() => {
@@ -112,7 +119,8 @@ const at_sign_quick_pick = async (params: {
     const browsed_item = await browse_all_files(
       params.workspace_provider,
       workspace_roots,
-      format_path
+      format_path,
+      false
     )
     if (browsed_item && browsed_item !== 'back') {
       await add_to_context_if_needed(
@@ -222,7 +230,8 @@ const at_sign_quick_pick = async (params: {
       const browsed_item = await browse_all_files(
         params.workspace_provider,
         workspace_roots,
-        format_path
+        format_path,
+        true
       )
       if (browsed_item === 'back') {
         continue // Go back to the main quick pick
