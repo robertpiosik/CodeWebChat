@@ -379,7 +379,7 @@ export const EditPresetForm: React.FC<Props> = (props) => {
               <Field
                 label="Thinking Budget"
                 html_for="thinking-budget"
-                info="Search for allowd min-max values."
+                info="Search for allowed min-max values."
               >
                 <Input
                   id="thinking-budget"

@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useRef, useState, useMemo } from 'react'
 import { FileInPreview, ItemInPreview } from '@shared/types/file-in-preview'
 import cn from 'classnames'
 import styles from './ResponsePreview.module.scss'
@@ -69,12 +69,18 @@ export const ResponsePreview: FC<Props> = (props) => {
     })
   }
 
-  const files_in_preview = props.items.filter(
-    (i) => 'file_path' in i
-  ) as FileInPreview[]
-  const aggressive_fallback_count = files_in_preview.filter(
-    (f) => f.diff_application_method == 'search_and_replace'
-  ).length
+  const files_in_preview = useMemo(
+    () => props.items.filter((i) => 'file_path' in i) as FileInPreview[],
+    [props.items]
+  )
+
+  const aggressive_fallback_count = useMemo(
+    () =>
+      files_in_preview.filter(
+        (f) => f.diff_application_method == 'search_and_replace'
+      ).length,
+    [files_in_preview]
+  )
 
   const get_instructions_font_size_class = (text: string): string => {
     const length = text.length
