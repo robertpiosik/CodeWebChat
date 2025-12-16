@@ -372,9 +372,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                 }
               }}
               onClick={() => {
-                if (!has_no_context) {
-                  props.on_at_sign_click()
-                }
+                props.on_at_sign_click()
               }}
               onMouseLeave={() => set_show_at_sign_tooltip(false)}
               className={cn(styles['footer__left__button'])}

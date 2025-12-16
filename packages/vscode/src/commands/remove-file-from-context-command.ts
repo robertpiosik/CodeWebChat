@@ -24,13 +24,33 @@ export const remove_file_from_context_command = (
       }
 
       const quick_pick = vscode.window.createQuickPick<FileQuickPickItem>()
+      quick_pick.title = 'Context Files'
       quick_pick.placeholder = 'Select a file to remove from context'
       quick_pick.matchOnDescription = true
+      quick_pick.buttons = [
+        {
+          iconPath: new vscode.ThemeIcon('close'),
+          tooltip: 'Close'
+        }
+      ]
       quick_pick.show()
+
+      quick_pick.onDidTriggerButton((button) => {
+        if (button.tooltip == 'Close') {
+          quick_pick.hide()
+        }
+      })
+
+      let is_showing_folder_quick_pick = false
+      let file_items_cache: FileQuickPickItem[] = []
+
+      let parent_folder_source_full_path: string | undefined
 
       quick_pick.onDidTriggerItemButton(async (e) => {
         const item = e.item
         if (e.button.tooltip == 'Remove Parent Folder from Context') {
+          parent_folder_source_full_path = item.full_path
+
           const workspace_root = workspace_provider.get_workspace_root_for_file(
             item.full_path
           )
@@ -61,16 +81,27 @@ export const remove_file_from_context_command = (
             label: string
             full_path: string
           }>()
+          folder_quick_pick.title = 'Parent Folders'
           folder_quick_pick.placeholder =
             'Select a folder to remove from context'
           folder_quick_pick.items = folders.map((f) => ({
             label: f.label,
             full_path: f.full_path
           }))
+          folder_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+          let folder_accepted = false
+
+          folder_quick_pick.onDidTriggerButton((button) => {
+            if (button === vscode.QuickInputButtons.Back) {
+              folder_quick_pick.hide()
+            }
+          })
 
           folder_quick_pick.onDidAccept(async () => {
             const selected = folder_quick_pick.selectedItems[0]
             if (selected) {
+              folder_accepted = true
               const file_item = new FileItem(
                 path.basename(selected.full_path),
                 vscode.Uri.file(selected.full_path),
@@ -97,8 +128,30 @@ export const remove_file_from_context_command = (
 
           folder_quick_pick.onDidHide(() => {
             folder_quick_pick.dispose()
+            is_showing_folder_quick_pick = false
+
+            if (!folder_accepted) {
+              if (file_items_cache.length > 0) {
+                quick_pick.items = file_items_cache
+              }
+              quick_pick.show()
+
+              const source_item = parent_folder_source_full_path
+                ? file_items_cache.find(
+                    (i) => i.full_path === parent_folder_source_full_path
+                  )
+                : undefined
+
+              if (source_item) {
+                setTimeout(() => {
+                  quick_pick.activeItems = [source_item]
+                }, 0)
+              }
+            }
           })
 
+          is_showing_folder_quick_pick = true
+          quick_pick.hide()
           folder_quick_pick.show()
         }
       })
@@ -115,6 +168,8 @@ export const remove_file_from_context_command = (
 
         const filename = path.basename(relative_path)
         let directory = path.dirname(relative_path)
+        const has_parent_folder = directory != '.'
+
         if (directory == '.') {
           directory = ''
         }
@@ -131,12 +186,14 @@ export const remove_file_from_context_command = (
           label: filename,
           description: directory,
           full_path: file_path,
-          buttons: [
-            {
-              iconPath: new vscode.ThemeIcon('folder'),
-              tooltip: 'Remove Parent Folder from Context'
-            }
-          ]
+          buttons: has_parent_folder
+            ? [
+                {
+                  iconPath: new vscode.ThemeIcon('folder'),
+                  tooltip: 'Remove Parent Folder from Context'
+                }
+              ]
+            : []
         }
       })
 
@@ -146,6 +203,7 @@ export const remove_file_from_context_command = (
         return natural_sort(a.description || '', b.description || '')
       })
 
+      file_items_cache = items
       quick_pick.items = items
 
       quick_pick.onDidAccept(async () => {
@@ -160,6 +218,9 @@ export const remove_file_from_context_command = (
       })
 
       quick_pick.onDidHide(() => {
+        if (is_showing_folder_quick_pick) {
+          return
+        }
         quick_pick.dispose()
       })
     }
