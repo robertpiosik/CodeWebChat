@@ -347,7 +347,7 @@ export const ai_studio: Chatbot = {
   },
   enter_message_and_send: async (params) => {
     const input_element = document.querySelector(
-      'ms-autosize-textarea > textarea'
+      'textarea[formcontrolname="promptText"]'
     ) as HTMLTextAreaElement
     if (!input_element) {
       report_initialization_error({
