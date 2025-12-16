@@ -11,7 +11,7 @@ export function generate_commit_message_command(
   return vscode.commands.registerCommand(
     'codeWebChat.generateCommitMessage',
     async (source_control?: vscode.SourceControl) => {
-      const repository = get_git_repository(source_control)
+      const repository = await get_git_repository(source_control)
       if (!repository) return
 
       await repository.status()
