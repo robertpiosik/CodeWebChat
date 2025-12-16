@@ -11,6 +11,33 @@ import * as path from 'path'
 import { execSync } from 'child_process'
 import { handle_accept_commit_message } from '../handle-accept-commit-message'
 
+function unstage_changes(repository: GitRepository) {
+  let has_commits = false
+  try {
+    execSync('git rev-parse HEAD', {
+      cwd: repository.rootUri.fsPath,
+      stdio: 'ignore'
+    })
+    has_commits = true
+  } catch (e) {
+    has_commits = false
+  }
+
+  try {
+    if (has_commits) {
+      execSync('git reset', { cwd: repository.rootUri.fsPath })
+    } else {
+      execSync('git rm --cached -r .', { cwd: repository.rootUri.fsPath })
+    }
+  } catch (error) {
+    Logger.error({
+      function_name: 'unstage_changes',
+      message: 'Failed to unstage changes',
+      data: error
+    })
+  }
+}
+
 async function proceed_with_commit_generation(
   panel_provider: PanelProvider,
   repository: GitRepository,
@@ -20,7 +47,7 @@ async function proceed_with_commit_generation(
     const api_config = await get_commit_message_config(panel_provider.context)
     if (!api_config) {
       if (was_empty_stage) {
-        await vscode.commands.executeCommand('git.unstageAll')
+        unstage_changes(repository)
       }
       panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       return
@@ -35,7 +62,7 @@ async function proceed_with_commit_generation(
         dictionary.information_message.NO_CHANGES_TO_COMMIT
       )
       if (was_empty_stage) {
-        await vscode.commands.executeCommand('git.unstageAll')
+        unstage_changes(repository)
       }
       panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       return
@@ -55,7 +82,7 @@ async function proceed_with_commit_generation(
 
     if (!commit_message) {
       if (panel_provider.commit_was_staged_by_script) {
-        await vscode.commands.executeCommand('git.unstageAll')
+        unstage_changes(repository)
       }
       panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
       panel_provider.commit_was_staged_by_script = false
@@ -79,7 +106,7 @@ async function proceed_with_commit_generation(
     }
   } catch (error) {
     if (panel_provider.commit_was_staged_by_script) {
-      await vscode.commands.executeCommand('git.unstageAll')
+      unstage_changes(repository)
     }
     panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     panel_provider.commit_was_staged_by_script = false
@@ -99,11 +126,13 @@ export const handle_commit_changes = async (
 ): Promise<void> => {
   await vscode.workspace.saveAll()
 
-  const repository = get_git_repository()
+  const repository = await get_git_repository()
   if (!repository) {
     panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     return
   }
+
+  ;(panel_provider as any)._selected_repository = repository
 
   await repository.status()
 
@@ -138,12 +167,15 @@ export const handle_proceed_with_commit = async (
   panel_provider: PanelProvider,
   files_to_stage: string[]
 ): Promise<void> => {
-  const repository = get_git_repository()
+  const repository: GitRepository | undefined = (panel_provider as any)
+    ._selected_repository
   if (!repository) {
+    vscode.window.showErrorMessage(
+      'No repository selected for committing changes.'
+    )
     panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     return
   }
-
   if (files_to_stage.length === 0) {
     panel_provider.send_message({ command: 'COMMIT_PROCESS_CANCELLED' })
     return

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { dictionary } from '@shared/constants/dictionary'
+import * as path from 'path'
 
 export interface GitRepository {
   rootUri: vscode.Uri
@@ -16,9 +17,9 @@ export interface GitRepository {
   show: (ref: string, path: string) => Promise<string>
 }
 
-export function get_git_repository(
+export async function get_git_repository(
   source_control?: vscode.SourceControl
-): GitRepository | null {
+): Promise<GitRepository | null> {
   const git_extension = vscode.extensions.getExtension('vscode.git')
   if (!git_extension) {
     vscode.window.showErrorMessage(
@@ -28,7 +29,7 @@ export function get_git_repository(
   }
 
   const git_api = git_extension.exports.getAPI(1)
-  const repositories = git_api.repositories
+  const repositories: GitRepository[] = git_api.repositories
 
   if (!repositories || repositories.length === 0) {
     vscode.window.showErrorMessage(
@@ -37,28 +38,52 @@ export function get_git_repository(
     return null
   }
 
-  let repository
-
-  // If source_control is provided and has rootUri, find matching repository
   if (source_control?.rootUri) {
-    repository = repositories.find(
-      (repo: any) =>
-        repo.rootUri.toString() === source_control.rootUri!.toString()
+    const repository = repositories.find(
+      (repo) => repo.rootUri.toString() === source_control.rootUri!.toString()
     )
-  }
-
-  // If no repository found or source_control not provided, use first repository
-  if (!repository) {
-    repository = repositories[0]
-    if (!repository) {
-      vscode.window.showErrorMessage(
-        dictionary.error_message.REPOSITORY_NOT_FOUND
-      )
-      return null
+    if (repository) {
+      return repository
     }
   }
 
-  return repository
+  if (repositories.length === 1) {
+    return repositories[0]
+  }
+
+  const repositories_with_changes = repositories.filter(
+    (repo) =>
+      repo.state.indexChanges.length > 0 ||
+      repo.state.workingTreeChanges.length > 0
+  )
+
+  const repositories_to_show =
+    repositories_with_changes.length > 0
+      ? repositories_with_changes
+      : repositories
+
+  if (repositories_to_show.length === 1) {
+    return repositories_to_show[0]
+  }
+
+  const picks = repositories_to_show.map((repo) => {
+    const folder = vscode.workspace.getWorkspaceFolder(repo.rootUri)
+    return {
+      label: folder ? folder.name : path.basename(repo.rootUri.fsPath),
+      description: repo.rootUri.fsPath,
+      repository: repo
+    }
+  })
+
+  const selected = await vscode.window.showQuickPick(picks, {
+    placeHolder: 'Select a repository to generate the commit message for'
+  })
+
+  if (!selected) {
+    return null
+  }
+
+  return selected.repository
 }
 
 export async function prepare_staged_changes(
