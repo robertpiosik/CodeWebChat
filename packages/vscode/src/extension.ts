@@ -133,6 +133,17 @@ export async function activate(context: vscode.ExtensionContext) {
         settings_provider.createOrShow(section)
       }
     ),
-    generate_commit_message_command(context)
+    generate_commit_message_command(context),
+    vscode.commands.registerCommand(
+      'codeWebChat.revealInExplorer',
+      async (item: any) => {
+        if (item && item.resourceUri) {
+          await vscode.commands.executeCommand(
+            'revealInExplorer',
+            item.resourceUri
+          )
+        }
+      }
+    )
   )
 }
