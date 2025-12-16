@@ -88,10 +88,10 @@ export const Popup: React.FC = () => {
     }
   }
 
-  const remove_saved_page = async (url: string) => {
-    const success = await websites_store_hook.delete_website(url)
+  const remove_saved_page = async (url_to_remove: string) => {
+    const success = await websites_store_hook.delete_website(url_to_remove)
     if (success) {
-      if (url == url) {
+      if (url_to_remove == url) {
         set_is_saved(false)
       }
       await load_saved_websites()
