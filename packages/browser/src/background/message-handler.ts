@@ -1,6 +1,5 @@
 import {
   WebSocketMessage,
-  InitializeChatsMessage,
   InitializeChatMessage,
   ApplyChatResponseMessage
 } from '@shared/types/websocket-message'
@@ -11,9 +10,7 @@ import { GetTabDataResponse } from '@/types/responses'
 import { image_url_to_base64 } from '@/utils/image-url-to-base64'
 
 interface ChatQueueItem {
-  message: InitializeChatsMessage
-  remaining_chats: number
-  current_index: number
+  message: InitializeChatMessage
   timeout_id?: number
 }
 
@@ -24,9 +21,7 @@ let is_processing = false
 const CHAT_INITIALIZATION_TIMEOUT = 10000
 
 export const handle_messages = (message: WebSocketMessage) => {
-  if (message.action == 'initialize-chats') {
-    handle_initialize_chats_message(message as InitializeChatsMessage)
-  } else if (message.action == 'initialize-chat') {
+  if (message.action == 'initialize-chat') {
     handle_initialize_chat_message(message as InitializeChatMessage)
   }
 }
@@ -68,45 +63,39 @@ const process_next_chat = async () => {
     current_queue_item.timeout_id = undefined
   }
 
-  if (
-    current_queue_item.current_index >= current_queue_item.message.chats.length
-  ) {
-    chat_queue.shift()
-
-    if (chat_queue.length > 0) {
-      chat_queue[0].current_index = 0
-      await process_next_chat()
-    } else {
-      is_processing = false
-    }
-    return
-  }
-
-  const current_chat =
-    current_queue_item.message.chats[current_queue_item.current_index]
+  const current_chat_message = current_queue_item.message
 
   const batch_id = await generate_alphanumeric_id('chat-init')
 
   await browser.storage.local.set({
     [`chat-init:${batch_id}`]: {
-      text: current_queue_item.message.text,
-      current_chat: current_chat,
-      client_id: current_queue_item.message.client_id,
-      without_submission: current_queue_item.message.without_submission,
-      raw_instructions: current_queue_item.message.raw_instructions,
-      mode: current_queue_item.message.mode
+      text: current_chat_message.text,
+      current_chat: {
+        url: current_chat_message.url,
+        model: current_chat_message.model,
+        temperature: current_chat_message.temperature,
+        reasoning_effort: current_chat_message.reasoning_effort,
+        thinking_budget: current_chat_message.thinking_budget,
+        top_p: current_chat_message.top_p,
+        system_instructions: current_chat_message.system_instructions,
+        options: current_chat_message.options
+      },
+      client_id: current_chat_message.client_id,
+      without_submission: current_chat_message.without_submission,
+      raw_instructions: current_chat_message.raw_instructions,
+      mode: current_chat_message.mode
     }
   })
 
   // OpenRouter is a special case, in model handling via search params
-  if (current_chat.url == 'https://openrouter.ai/chat') {
+  if (current_chat_message.url == 'https://openrouter.ai/chat') {
     // https://openrouter.ai/chat?models=openrouter/quasar-alpha
     const search_params = new URLSearchParams()
-    if (current_chat.model) {
-      search_params.set('models', current_chat.model)
+    if (current_chat_message.model) {
+      search_params.set('models', current_chat_message.model)
     }
     const open_router_url = `${
-      current_chat.url
+      current_chat_message.url
     }?${search_params.toString()}#cwc-${batch_id}`
     browser.tabs.create({
       url: open_router_url,
@@ -114,19 +103,17 @@ const process_next_chat = async () => {
     })
   } else {
     browser.tabs.create({
-      url: `${current_chat.url}#cwc-${batch_id}`,
+      url: `${current_chat_message.url}#cwc-${batch_id}`,
       active: true
     })
   }
 
-  current_queue_item.current_index++
-
   // Set a timeout to automatically proceed if no confirmation is received
   current_queue_item.timeout_id = setTimeout(() => {
     console.warn(
-      `Chat initialization timeout for ${current_chat.url}. Moving to next chat.`
+      `Chat initialization timeout for ${current_chat_message.url}. Moving to next chat.`
     )
-    current_queue_item.remaining_chats--
+    chat_queue.shift()
     process_next_chat()
   }, CHAT_INITIALIZATION_TIMEOUT) as unknown as number
 }
@@ -138,57 +125,19 @@ const start_processing = async () => {
   }
 }
 
-// Will be deprecated
-const handle_initialize_chats_message = async (
-  message: InitializeChatsMessage
-) => {
-  if (message.chats && message.chats.length > 0) {
-    chat_queue.push({
-      message,
-      remaining_chats: message.chats.length,
-      current_index: 0
-    })
-
-    await start_processing()
-  }
-}
-
 const handle_initialize_chat_message = async (
   message: InitializeChatMessage
 ) => {
-  const chat_config = {
-    url: message.url,
-    model: message.model,
-    temperature: message.temperature,
-    reasoning_effort: message.reasoning_effort,
-    thinking_budget: message.thinking_budget,
-    top_p: message.top_p,
-    system_instructions: message.system_instructions,
-    options: message.options
-  }
-
-  const chats_message: InitializeChatsMessage = {
-    action: 'initialize-chats',
-    text: message.text,
-    chats: [chat_config],
-    client_id: message.client_id,
-    without_submission: message.without_submission,
-    raw_instructions: message.raw_instructions,
-    edit_format: message.edit_format,
-    mode: message.mode
-  }
-
-  handle_initialize_chats_message(chats_message)
+  chat_queue.push({ message })
+  await start_processing()
 }
 
 const handle_chat_initialized = async () => {
   if (chat_queue.length > 0) {
     if (chat_queue[0].timeout_id) {
       clearTimeout(chat_queue[0].timeout_id)
-      chat_queue[0].timeout_id = undefined
     }
-
-    chat_queue[0].remaining_chats--
+    chat_queue.shift()
     await process_next_chat()
   }
 }

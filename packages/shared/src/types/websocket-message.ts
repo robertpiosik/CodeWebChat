@@ -9,18 +9,6 @@ export type Chat = {
   options?: string[]
 }
 
-// Deprecated, used by browser clients older than 1.2.0
-export type InitializeChatsMessage = {
-  action: 'initialize-chats'
-  text: string
-  chats: Chat[]
-  client_id: number // Client ID to identify which editor sent this message
-  without_submission?: boolean
-  raw_instructions?: string
-  edit_format?: string
-  mode?: any
-}
-
 export type InitializeChatMessage = {
   action: 'initialize-chat'
   text: string
@@ -69,7 +57,6 @@ export type ClientIdAssignmentMessage = {
 }
 
 export type WebSocketMessage =
-  | InitializeChatsMessage
   | InitializeChatMessage
   | UpdateSavedWebsitesMessage
   | BrowserConnectionStatusMessage

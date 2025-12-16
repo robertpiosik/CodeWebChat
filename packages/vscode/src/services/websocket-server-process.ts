@@ -171,35 +171,7 @@ class WebSocketServer {
         this.current_browser_client &&
         this.current_browser_client.ws.readyState === WebSocket.OPEN
       ) {
-        const browser_version = this.current_browser_client.version
-        const needs_legacy_format = this._is_version_lower_than(
-          browser_version,
-          '1.2.0'
-        )
-
-        if (needs_legacy_format) {
-          // Convert InitializeChatMessage to InitializeChatsMessage for older clients
-          const legacy_message = {
-            action: 'initialize-chats',
-            text: msg_data.text,
-            chats: [
-              {
-                url: msg_data.url,
-                model: msg_data.model,
-                temperature: msg_data.temperature,
-                top_p: msg_data.top_p,
-                thinking_budget: msg_data.thinking_budget,
-                reasoning_effort: msg_data.reasoning_effort,
-                system_instructions: msg_data.system_instructions,
-                options: msg_data.options
-              }
-            ],
-            client_id: msg_data.client_id
-          }
-          this.current_browser_client.ws.send(JSON.stringify(legacy_message))
-        } else {
-          this.current_browser_client.ws.send(msg_string)
-        }
+        this.current_browser_client.ws.send(msg_string)
       }
     } else if (msg_data.action == 'update-saved-websites') {
       this.saved_websites = msg_data.websites
@@ -332,24 +304,6 @@ class WebSocketServer {
       const p2 = parts2[i] || 0
       if (p1 > p2) return true
       if (p1 < p2) return false
-    }
-    return false
-  }
-
-  private _is_version_lower_than(
-    version: string,
-    target_version: string
-  ): boolean {
-    if (version === 'unknown') return true // Assume older version if unknown
-
-    const parts1 = version.split('.').map(Number)
-    const parts2 = target_version.split('.').map(Number)
-
-    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
-      const p1 = parts1[i] || 0
-      const p2 = parts2[i] || 0
-      if (p1 < p2) return true
-      if (p1 > p2) return false
     }
     return false
   }
