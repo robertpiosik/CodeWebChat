@@ -355,15 +355,21 @@ export class WorkspaceProvider
     const parent_dir = path.dirname(created_file_path)
     const relative_path = path.relative(workspace_root, created_file_path)
 
+    let is_directory = false
+    try {
+      is_directory = fs.statSync(created_file_path).isDirectory()
+    } catch {
+      // Ignore if file was deleted quickly
+    }
+
     if (
-      !this.is_excluded(relative_path) &&
+      !this.is_excluded(is_directory ? relative_path + '/' : relative_path) &&
       !this.is_ignored_by_patterns(created_file_path)
     ) {
       this.checked_items.set(
         created_file_path,
         vscode.TreeItemCheckboxState.Checked
       )
-      const is_directory = fs.statSync(created_file_path).isDirectory()
 
       if (is_directory) {
         await this._update_directory_check_state(
@@ -575,7 +581,12 @@ export class WorkspaceProvider
         const workspace_root = this.get_workspace_root_for_file(dir_path)
         if (workspace_root) {
           const relative_path = path.relative(workspace_root, dir_path)
-          if (this.is_excluded(relative_path)) {
+          // Ensure we check directory exclusions with a trailing slash
+          if (
+            this.is_excluded(
+              relative_path ? relative_path + '/' : relative_path
+            )
+          ) {
             return []
           }
         }
@@ -609,7 +620,11 @@ export class WorkspaceProvider
         const workspace_root = this.get_workspace_root_for_file(dir_path)
         if (workspace_root) {
           const relative_path = path.relative(workspace_root, dir_path)
-          if (this.is_excluded(relative_path)) {
+          if (
+            this.is_excluded(
+              relative_path ? relative_path + '/' : relative_path
+            )
+          ) {
             return []
           }
         }
@@ -832,7 +847,11 @@ export class WorkspaceProvider
       }
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
-      if (this.is_excluded(relative_dir_path)) {
+      if (
+        this.is_excluded(
+          relative_dir_path ? relative_dir_path + '/' : relative_dir_path
+        )
+      ) {
         this.directory_token_counts.set(dir_path, 0)
         return 0
       }
@@ -846,7 +865,11 @@ export class WorkspaceProvider
         const full_path = path.join(dir_path, entry.name)
         const relative_path = path.relative(workspace_root, full_path)
 
-        if (this.is_excluded(relative_path)) {
+        if (
+          this.is_excluded(
+            entry.isDirectory() ? relative_path + '/' : relative_path
+          )
+        ) {
           continue
         }
 
@@ -916,7 +939,11 @@ export class WorkspaceProvider
       }
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
-      if (this.is_excluded(relative_dir_path)) {
+      if (
+        this.is_excluded(
+          relative_dir_path ? relative_dir_path + '/' : relative_dir_path
+        )
+      ) {
         this.directory_selected_token_counts.set(dir_path, 0)
         return 0
       }
@@ -929,7 +956,9 @@ export class WorkspaceProvider
         const relative_path = path.relative(workspace_root, full_path)
 
         if (
-          this.is_excluded(relative_path) ||
+          this.is_excluded(
+            entry.isDirectory() ? relative_path + '/' : relative_path
+          ) ||
           this.is_ignored_by_patterns(full_path)
         ) {
           continue
@@ -989,7 +1018,9 @@ export class WorkspaceProvider
       const relative_dir_path = path.relative(workspace_root, dir_path)
       if (
         dir_path !== workspace_root && // Don't exclude workspace roots
-        this.is_excluded(relative_dir_path)
+        this.is_excluded(
+          relative_dir_path ? relative_dir_path + '/' : relative_dir_path
+        )
       ) {
         return []
       }
@@ -1034,7 +1065,9 @@ export class WorkspaceProvider
           }
         }
 
-        const is_excluded = this.is_excluded(relative_path)
+        const is_excluded = this.is_excluded(
+          entry.isDirectory() ? relative_path + '/' : relative_path
+        )
         if (is_excluded) {
           continue
         }
@@ -1163,7 +1196,11 @@ export class WorkspaceProvider
       if (!workspace_root) return
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
-      if (this.is_excluded(relative_dir_path)) {
+      if (
+        this.is_excluded(
+          relative_dir_path ? relative_dir_path + '/' : relative_dir_path
+        )
+      ) {
         // If directory is excluded, ensure it's unchecked
         this.checked_items.set(dir_path, vscode.TreeItemCheckboxState.Unchecked)
         this.partially_checked_dirs.delete(dir_path)
@@ -1183,7 +1220,9 @@ export class WorkspaceProvider
         const relative_path = path.relative(workspace_root, sibling_path)
 
         if (
-          this.is_excluded(relative_path) ||
+          this.is_excluded(
+            entry.isDirectory() ? relative_path + '/' : relative_path
+          ) ||
           this.is_ignored_by_patterns(sibling_path)
         ) {
           continue
@@ -1254,7 +1293,12 @@ export class WorkspaceProvider
       this.directory_selected_token_counts.delete(dir_path)
 
       const relative_dir_path = path.relative(workspace_root, dir_path)
-      if (this.is_excluded(relative_dir_path) || parent_is_excluded) {
+      if (
+        this.is_excluded(
+          relative_dir_path ? relative_dir_path + '/' : relative_dir_path
+        ) ||
+        parent_is_excluded
+      ) {
         return
       }
 
@@ -1272,7 +1316,9 @@ export class WorkspaceProvider
         const relative_path = path.relative(workspace_root, full_path)
 
         if (
-          this.is_excluded(relative_path) ||
+          this.is_excluded(
+            entry.isDirectory() ? relative_path + '/' : relative_path
+          ) ||
           this.is_ignored_by_patterns(full_path)
         ) {
           continue
@@ -1346,11 +1392,17 @@ export class WorkspaceProvider
       const workspace_root = this.get_workspace_root_for_file(file_path)
       if (!workspace_root) continue
 
-      const relative_path = path.relative(workspace_root, file_path)
-      if (this.is_excluded(relative_path)) continue
-
       const stats = fs.lstatSync(file_path)
-      if (stats.isDirectory()) {
+      const is_directory = stats.isDirectory()
+
+      const relative_path = path.relative(workspace_root, file_path)
+      if (
+        this.is_excluded(is_directory ? relative_path + '/' : relative_path)
+      ) {
+        continue
+      }
+
+      if (is_directory) {
         this.checked_items.set(file_path, vscode.TreeItemCheckboxState.Checked)
         await this._update_directory_check_state(
           file_path,
@@ -1560,7 +1612,9 @@ export class WorkspaceProvider
       const relative_dir_path = path.relative(workspace_root, dir_path)
       if (
         dir_path !== workspace_root && // Don't exclude the root itself
-        this.is_excluded(relative_dir_path)
+        this.is_excluded(
+          relative_dir_path ? relative_dir_path + '/' : relative_dir_path
+        )
       ) {
         return
       }
@@ -1574,7 +1628,11 @@ export class WorkspaceProvider
           const full_path = path.join(dir_path, entry.name)
           const relative_path = path.relative(workspace_root, full_path)
 
-          if (this.is_excluded(relative_path)) {
+          if (
+            this.is_excluded(
+              entry.isDirectory() ? relative_path + '/' : relative_path
+            )
+          ) {
             continue
           }
 
