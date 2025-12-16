@@ -172,7 +172,7 @@ export const perplexity: Chatbot = {
     if (params.without_submission) return
 
     const submit_button = document.querySelector(
-      'button[data-testid="submit-button"]'
+      'button.bg-super'
     ) as HTMLButtonElement
     if (!submit_button) {
       report_initialization_error({
