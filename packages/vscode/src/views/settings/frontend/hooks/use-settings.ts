@@ -242,6 +242,9 @@ export const use_settings = (vscode: any) => {
   const handle_open_editor_settings = () =>
     post_message(vscode, { command: 'OPEN_EDITOR_SETTINGS' })
 
+  const handle_open_ignore_patterns_settings = () =>
+    post_message(vscode, { command: 'OPEN_IGNORE_PATTERNS_SETTINGS' })
+
   const handle_context_size_warning_threshold_change = (threshold: number) =>
     post_message(vscode, {
       command: 'UPDATE_CONTEXT_SIZE_WARNING_THRESHOLD',
@@ -317,6 +320,7 @@ export const use_settings = (vscode: any) => {
     handle_commit_message_auto_accept_after_change,
     handle_edit_context_system_instructions_change,
     handle_open_editor_settings,
+    handle_open_ignore_patterns_settings,
     handle_context_size_warning_threshold_change,
     handle_edit_format_instructions_change,
     handle_automatic_checkpoints_toggle,

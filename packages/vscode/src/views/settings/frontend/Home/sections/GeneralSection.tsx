@@ -32,6 +32,7 @@ type Props = {
     instructions: EditFormatInstructions
   ) => void
   on_open_editor_settings: () => void
+  on_open_ignore_patterns_settings: () => void
   on_stuck_change: (is_stuck: boolean) => void
 }
 
@@ -95,6 +96,15 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
             slot={
               <TextButton on_click={props.on_open_editor_settings}>
                 Open Editor Settings
+              </TextButton>
+            }
+          />
+          <Item
+            title="Ignore patterns"
+            description="Glob patterns that you don't want to place in .gitignore files."
+            slot={
+              <TextButton on_click={props.on_open_ignore_patterns_settings}>
+                Open settings file
               </TextButton>
             }
           />

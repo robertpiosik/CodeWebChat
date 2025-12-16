@@ -103,6 +103,7 @@ type Props = {
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
   on_open_editor_settings: () => void
+  on_open_ignore_patterns_settings: () => void
   on_add_provider: () => void
   on_delete_provider: (provider_name: string) => void
   on_edit_provider: (provider_name: string) => void
@@ -305,6 +306,9 @@ export const Home: React.FC<Props> = (props) => {
           checkpoint_lifespan={props.checkpoint_lifespan}
           on_checkpoint_lifespan_change={props.on_checkpoint_lifespan_change}
           on_open_editor_settings={props.on_open_editor_settings}
+          on_open_ignore_patterns_settings={
+            props.on_open_ignore_patterns_settings
+          }
           on_stuck_change={general_on_stuck_change}
         />
         <PresetsSection

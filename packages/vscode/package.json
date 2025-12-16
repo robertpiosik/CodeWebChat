@@ -616,6 +616,7 @@
         },
         "codeWebChat.ignorePatterns": {
           "type": "array",
+          "scope": "resource",
           "items": {
             "type": "string"
           }

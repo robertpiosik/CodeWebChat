@@ -42,7 +42,8 @@ import {
   handle_update_edit_context_system_instructions,
   handle_update_edit_format_instructions,
   handle_update_gemini_user_id,
-  handle_upsert_configuration
+  handle_upsert_configuration,
+  handle_open_ignore_patterns_settings
 } from './message-handlers'
 
 export class SettingsProvider {
@@ -218,6 +219,8 @@ export class SettingsProvider {
             )
         } else if (message.command == 'OPEN_EDITOR_SETTINGS') {
           await vscode.commands.executeCommand('workbench.action.openSettings')
+        } else if (message.command == 'OPEN_IGNORE_PATTERNS_SETTINGS') {
+          await handle_open_ignore_patterns_settings()
         } else if (message.command == 'UPSERT_CONFIGURATION') {
           await handle_upsert_configuration(this, message)
         }

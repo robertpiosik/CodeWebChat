@@ -112,6 +112,9 @@ export const Settings = () => {
       }
       on_gemini_user_id_change={settings_hook.handle_gemini_user_id_change}
       on_open_editor_settings={settings_hook.handle_open_editor_settings}
+      on_open_ignore_patterns_settings={
+        settings_hook.handle_open_ignore_patterns_settings
+      }
       on_reorder_providers={settings_hook.handle_reorder_providers}
       on_add_provider={settings_hook.handle_add_provider}
       on_delete_provider={settings_hook.handle_delete_provider}
