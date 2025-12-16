@@ -20,7 +20,6 @@
   bottom: 0;
   background-color: var(--vscode-input-background);
   border: 1px solid var(--cwc-border-color);
-  -webkit-transition: 0.4s;
   transition: 0.4s;
   border-radius: 20px;
 }
@@ -33,21 +32,16 @@
   left: 3px;
   bottom: 3px;
   background-color: var(--vscode-input-foreground);
-  -webkit-transition: 0.4s;
   transition: 0.4s;
   border-radius: 50%;
 }
 
 input:checked + .slider {
   background-color: var(--vscode-button-background);
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px var(--vscode-focusBorder);
+  border-color: transparent;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(16px);
-  -ms-transform: translateX(16px);
   transform: translateX(16px);
+  background-color: var(--vscode-button-foreground);
 }
