@@ -209,7 +209,7 @@ export const replace_changes_placeholder = async (params: {
     }
   } else {
     const branch_name = branch_spec
-    const repository = get_git_repository()
+    const repository = await get_git_repository()
     if (!repository) {
       vscode.window.showErrorMessage(
         dictionary.error_message.NO_GIT_REPOSITORY_FOUND

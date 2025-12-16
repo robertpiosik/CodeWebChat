@@ -2,7 +2,7 @@ import * as vscode from 'vscode'
 import { execSync } from 'child_process'
 import { Logger } from '@shared/utils/logger'
 import { LAST_APPLIED_CHANGES_STATE_KEY } from '@/constants/state-keys'
-import { get_git_repository } from '@/utils/git-repository-utils'
+import { get_git_repository, GitRepository } from '@/utils/git-repository-utils'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { create_checkpoint } from '@/commands/checkpoints-command/actions'
@@ -11,7 +11,12 @@ export const handle_accept_commit_message = async (
   panel_provider: PanelProvider,
   commit_message: string
 ): Promise<void> => {
-  const repository = get_git_repository()
+  let repository: GitRepository | null | undefined = (panel_provider as any)
+    ._selected_repository
+
+  if (!repository) {
+    repository = await get_git_repository()
+  }
   if (!repository) return
 
   try {
