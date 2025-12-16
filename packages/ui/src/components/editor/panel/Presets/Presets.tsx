@@ -297,14 +297,24 @@ export const Presets: React.FC<Presets.Props> = (props) => {
               }}
               animation={150}
             >
-              {sortable_list.map((preset) => {
+              {sortable_list.map((preset, index) => {
                 if (!preset.chatbot && !preset.name) {
+                  const is_previous_in_group =
+                    index > 0 &&
+                    preset_indices_in_group.has(
+                      sortable_list[index - 1].original_index
+                    )
+
                   return (
                     <div
                       key={preset.id}
                       className={cn(
                         styles.presets__item,
-                        styles['presets__item--separator']
+                        styles['presets__item--separator'],
+                        {
+                          [styles['presets__item--separator--ending']]:
+                            is_previous_in_group
+                        }
                       )}
                     >
                       <div className={styles.presets__item__left}>

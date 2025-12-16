@@ -28,6 +28,7 @@
 
       .presets__item__left {
         flex: 1;
+        position: relative;
         &::after {
           content: '';
           flex: 1;
@@ -35,9 +36,24 @@
           margin-left: 4px;
           background: linear-gradient(
             to right,
-            var(--cwc-border-color-dimmed),
+            var(--vscode-tree-inactiveIndentGuidesStroke),
             transparent
           );
+        }
+      }
+
+      &--ending {
+        .presets__item__left::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 26px;
+          width: 1px;
+          height: 6px;
+          background-color: var(--vscode-tree-inactiveIndentGuidesStroke);
+        }
+        .presets__item__left::after {
+          margin-bottom: 9px;
         }
       }
     }
