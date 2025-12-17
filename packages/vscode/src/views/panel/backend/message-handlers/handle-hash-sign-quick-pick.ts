@@ -484,7 +484,7 @@ const hash_sign_quick_pick = async (params: {
     },
     {
       label: context_at_commit_label,
-      description: 'Older versions of currently selected files'
+      description: 'Older versions of the currently selected files'
     },
     {
       label: saved_context_label,
