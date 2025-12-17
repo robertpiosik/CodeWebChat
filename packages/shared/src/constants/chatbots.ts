@@ -101,7 +101,8 @@ export const CHATBOTS = {
     url_override_label: 'Gem URL',
     models: {
       fast: { label: 'Fast' },
-      thinking: { label: 'Thinking' }
+      thinking: { label: 'Thinking' },
+      pro: { label: 'Pro' }
     }
   } as Chatbot,
   'GitHub Copilot': {
