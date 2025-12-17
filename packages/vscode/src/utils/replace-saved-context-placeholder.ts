@@ -168,14 +168,21 @@ export const replace_saved_context_placeholder = async (params: {
       }
 
       replacement_text = context_text
-        ? `\n<files name="${name}">\n${context_text}</files>\n`
+        ? `\n<files name="${name}">\n${context_text}</files>`
         : ''
     }
     replacements.set(full_match, replacement_text)
   }
 
   for (const [placeholder, replacement] of replacements.entries()) {
-    result_instruction = result_instruction.replaceAll(placeholder, replacement)
+    const escaped_placeholder = placeholder.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      '\\$&'
+    )
+    result_instruction = result_instruction.replace(
+      new RegExp(`\\s*${escaped_placeholder}\\s*`, 'g'),
+      replacement
+    )
   }
 
   return result_instruction

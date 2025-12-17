@@ -19,7 +19,7 @@ export const replace_selection_placeholder = (instruction: string): string => {
   const document = active_editor.document
   const current_file_path = vscode.workspace.asRelativePath(document.uri)
 
-  const replacement_text = `\n<fragment path="${current_file_path}">\n<![CDATA[\n${selected_text}\n]]>\n</fragment>\n`
+  const replacement_text = `\n<fragment path="${current_file_path}">\n<![CDATA[\n${selected_text}\n]]>\n</fragment>`
 
   return instruction.replace(/\s*#Selection\s*/g, replacement_text)
 }

@@ -7,21 +7,19 @@ import { WorkspaceProvider } from '@/context/providers/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 
-const build_changes_xml = (
+const build_changes_markdown = (
   diff: string,
   cwd: string,
-  workspace_provider: WorkspaceProvider,
-  is_no_context_web_mode?: boolean
+  diff_base: string,
+  branch_name: string
 ): string => {
   // Split diff into per-file sections. Each section starts with 'diff --git '.
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
-
   if (file_diffs.length == 0) {
     return ''
   }
 
   let changes_content = ''
-  const checked_files = new Set(workspace_provider.get_checked_files())
 
   for (const file_diff_content of file_diffs) {
     const full_file_diff = 'diff --git ' + file_diff_content
@@ -49,52 +47,37 @@ const build_changes_xml = (
     }
 
     if (file_path) {
-      changes_content += `<change path="${file_path}">\n`
-      changes_content += `<diff>\n<![CDATA[\n${full_file_diff}\n]]>\n</diff>\n`
+      changes_content += `\n\n### File: \`${file_path}\`\n\n`
 
-      const absolute_path = path.join(cwd, file_path)
-      if (!is_no_context_web_mode && checked_files.has(absolute_path)) {
-        const workspace_root =
-          workspace_provider.get_workspace_root_for_file(absolute_path)
-        let display_path: string
-        if (workspace_root) {
-          const relative_path = path
-            .relative(workspace_root, absolute_path)
-            .replace(/\\/g, '/')
-          if (workspace_provider.getWorkspaceRoots().length > 1) {
-            const workspace_name =
-              workspace_provider.get_workspace_name(workspace_root)
-            display_path = `${workspace_name}/${relative_path}`
-          } else {
-            display_path = relative_path
-          }
-        } else {
-          display_path = file_path.replace(/\\/g, '/')
-        }
-        changes_content += `<file path="${display_path}" />\n`
-      } else {
-        let file_content = ''
+      let file_content = ''
+      try {
+        // Get the file content from the git revision we're diffing against.
+        file_content = execSync(`git show ${diff_base}:"./${file_path}"`, {
+          cwd,
+          encoding: 'utf-8',
+          stdio: ['pipe', 'pipe', 'ignore'] // Prevent git errors from crashing (e.g., file not on branch)
+        })
+      } catch (e) {
+        // File likely did not exist on the branch (i.e., it's a new file).
+        // In this case, the original content is correctly an empty string.
         if (!is_deleted) {
-          try {
-            file_content = fs.readFileSync(absolute_path, 'utf-8')
-          } catch (e) {
-            if ((e as NodeJS.ErrnoException).code !== 'ENOENT') {
-              Logger.error({
-                function_name: 'build_changes_xml',
-                message: `Could not read file for diff: ${absolute_path}`,
-                data: e
-              })
-            }
-          }
+          Logger.warn({
+            function_name: 'build_changes_markdown',
+            message: `Could not get file content from git base ${diff_base} for path ${file_path}. Assuming it's a new file.`,
+            data: e
+          })
         }
-        changes_content += `<file>\n<![CDATA[\n${file_content}\n]]>\n</file>\n`
       }
-      changes_content += `</change>\n`
+      if (file_content) {
+        const lang = path.extname(file_path).slice(1)
+        changes_content += `The original state of the file for reference:\n\n\`\`\`${lang}\n${file_content}\n\`\`\`\n\n`
+      }
+      changes_content += `**New changes:**\n\n\`\`\`diff\n${full_file_diff}\`\`\`\n`
     }
   }
 
   if (changes_content) {
-    return `\n<changes>\n${changes_content}</changes>\n`
+    return `\n\n# Changes against ${branch_name} branch${changes_content}\n---\n\n`
   }
   return ''
 }
@@ -115,9 +98,16 @@ export const replace_changes_symbol = async (params: {
   const branch_spec = matches[1]
 
   if (params.after_context) {
+    let branch_name = branch_spec
+    const multi_root_match = branch_spec.match(/^([^/]+)\/(.+)$/)
+
+    if (multi_root_match) {
+      branch_name = multi_root_match[2]
+    }
+
     return params.instruction.replace(
       new RegExp(`#Changes:${branch_spec}`, 'g'),
-      '<changes/>'
+      `(Changes against ${branch_name} branch)`
     )
   }
 
@@ -151,18 +141,24 @@ export const replace_changes_symbol = async (params: {
     }
 
     try {
-      // Get current branch name
       const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
         cwd: target_folder.uri.fsPath
       })
         .toString()
         .trim()
 
-      // If comparing to same branch, use merge-base to show changes since branch point
-      const diff_command =
-        current_branch == branch_name
-          ? `git diff $(git merge-base HEAD origin/${branch_name})`
-          : `git diff ${branch_name}`
+      let diff_base: string
+      if (current_branch == branch_name) {
+        // If comparing to same branch, use merge-base to show changes since branch point
+        diff_base = execSync(`git merge-base HEAD origin/${branch_name}`, {
+          cwd: target_folder.uri.fsPath
+        })
+          .toString()
+          .trim()
+      } else {
+        diff_base = branch_name
+      }
+      const diff_command = `git diff ${diff_base}`
       const diff = execSync(diff_command, {
         cwd: target_folder.uri.fsPath
       }).toString()
@@ -180,14 +176,14 @@ export const replace_changes_symbol = async (params: {
         )
       }
 
-      const replacement_text = build_changes_xml(
+      const replacement_text = build_changes_markdown(
         diff,
         target_folder.uri.fsPath,
-        params.workspace_provider,
-        params.is_no_context_web_mode
+        diff_base,
+        branch_name
       )
       return params.instruction.replace(
-        new RegExp(`#Changes:${branch_spec}`, 'g'),
+        new RegExp(`\\s*#Changes:${branch_spec}\\s*`, 'g'),
         replacement_text
       )
     } catch (error) {
@@ -221,18 +217,24 @@ export const replace_changes_symbol = async (params: {
     }
 
     try {
-      // Get current branch name
       const current_branch = execSync('git rev-parse --abbrev-ref HEAD', {
         cwd: repository.rootUri.fsPath
       })
         .toString()
         .trim()
 
-      // If comparing to same branch, use merge-base to show changes since branch point
-      const diff_command =
-        current_branch == branch_name
-          ? `git diff $(git merge-base HEAD origin/${branch_name})`
-          : `git diff ${branch_name}`
+      let diff_base: string
+      if (current_branch == branch_name) {
+        // If comparing to same branch, use merge-base to show changes since branch point
+        diff_base = execSync(`git merge-base HEAD origin/${branch_name}`, {
+          cwd: repository.rootUri.fsPath
+        })
+          .toString()
+          .trim()
+      } else {
+        diff_base = branch_name
+      }
+      const diff_command = `git diff ${diff_base}`
       const diff = execSync(diff_command, {
         cwd: repository.rootUri.fsPath
       }).toString()
@@ -249,14 +251,14 @@ export const replace_changes_symbol = async (params: {
         )
       }
 
-      const replacement_text = build_changes_xml(
+      const replacement_text = build_changes_markdown(
         diff,
         repository.rootUri.fsPath,
-        params.workspace_provider,
-        params.is_no_context_web_mode
+        diff_base,
+        branch_name
       )
       return params.instruction.replace(
-        new RegExp(`#Changes:${branch_name}`, 'g'),
+        new RegExp(`\\s*#Changes:${branch_name}\\s*`, 'g'),
         replacement_text
       )
     } catch (error) {
@@ -276,7 +278,7 @@ export const replace_changes_symbol = async (params: {
   }
 }
 
-const build_commit_changes_xml = (
+const build_commit_changes_markdown = (
   diff: string,
   cwd: string,
   commit_hash: string,
@@ -325,25 +327,27 @@ const build_commit_changes_xml = (
           })
         } catch (e) {
           Logger.error({
-            function_name: 'build_commit_changes_xml',
+            function_name: 'build_commit_changes_markdown',
             message: `Could not read file for diff from commit: ${file_path}`,
             data: e
           })
         }
       }
 
-      changes_content += `<change path="${file_path}">\n`
-      changes_content += `<diff>\n<![CDATA[\n${full_file_diff}\n]]>\n</diff>\n`
-      changes_content += `<file>\n<![CDATA[\n${file_content}\n]]>\n</file>\n`
-      changes_content += `</change>\n`
+      changes_content += `### File: \`${file_path}\`\n\n`
+      changes_content += `**Changes:**\n\n\`\`\`diff\n${full_file_diff}\`\`\`\n`
+      if (file_content) {
+        const lang = path.extname(file_path).slice(1)
+        changes_content += `\nFull file for reference:\n\n\`\`\`${lang}\n${file_content}\n\`\`\`\n`
+      }
     }
   }
 
   if (changes_content) {
-    const message_attribute = commit_message
-      ? ` message="${commit_message.replace(/"/g, '&quot;')}"`
+    const message_section = commit_message
+      ? `**Message:** ${commit_message}\n\n`
       : ''
-    return `\n<commit${message_attribute}>\n<changes>\n${changes_content}</changes>\n</commit>\n`
+    return `\n\n# Commit\n\n${message_section}${changes_content}\n---\n\n`
   }
   return ''
 }
@@ -356,11 +360,9 @@ export const replace_commit_symbol = async (params: {
   if (params.after_context) {
     return params.instruction.replace(
       regex,
-      (_match, _folder, _hash, message) => {
-        const message_attr = message
-          ? ` message="${message.replace(/"/g, '&quot;')}"`
-          : ''
-        return `<commit${message_attr}/>`
+      (_match, _folder_name, _commit_hash, commit_message) => {
+        if (commit_message) return `(Commit: ${commit_message})`
+        return '(Commit)'
       }
     )
   }
@@ -404,14 +406,16 @@ export const replace_commit_symbol = async (params: {
         continue
       }
 
-      const replacement_text = build_commit_changes_xml(
+      const replacement_text = build_commit_changes_markdown(
         diff,
         target_folder.uri.fsPath,
         commit_hash,
         commit_message
       )
       result_instruction = result_instruction.replace(
-        full_match,
+        new RegExp(
+          `\\s*${full_match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`
+        ),
         replacement_text
       )
     } catch (error) {
