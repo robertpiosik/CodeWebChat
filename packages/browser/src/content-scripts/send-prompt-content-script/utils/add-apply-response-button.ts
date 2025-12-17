@@ -84,7 +84,7 @@ export function observe_for_responses(params: ResponseObserverParams) {
     })
   })
 
-  observer.observe(document.body, {
+  observer.observe(document.documentElement, {
     childList: true,
     subtree: true,
     characterData: true

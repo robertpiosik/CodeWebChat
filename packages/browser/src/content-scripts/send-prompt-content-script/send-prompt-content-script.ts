@@ -184,64 +184,94 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
 }
 
 const main = async () => {
-  if (!is_cwc_hash) return
+  const session_data_key = 'cwc-session-data'
 
-  // Remove the hash from the URL to avoid reloading the content script if the page is refreshed
-  history.replaceState(
-    null,
-    '',
-    window.location.pathname + window.location.search
-  )
-
-  // Get the message using the batch ID from the hash
-  const storage_key = `chat-init:${batch_id}`
-  const storage = await browser.storage.local.get(storage_key)
-  const stored_data = storage[storage_key] as {
-    text: string
-    current_chat: Chat
-    client_id: number
-    raw_instructions?: string
-    edit_format?: string
-    mode?: 'ask' | 'edit-context' | 'code-completions' | 'no-context'
-  }
-
-  if (!stored_data) {
-    console.error('Chat initialization data not found for batch ID:', batch_id)
-    return
-  }
-
-  // Now directly use the current_chat instead of searching for it
-  const message_text = stored_data.text
-  const current_chat = stored_data.current_chat
-
-  if (!current_chat) {
-    console.error('Chat configuration not found')
-    return
-  }
-
-  if (chatbot?.wait_until_ready) {
-    await chatbot.wait_until_ready()
-  }
-
-  await initialize_chat({
-    message: message_text,
-    chat: current_chat
-  })
-
-  // Clean up the storage entry after using it
-  await browser.storage.local.remove(storage_key)
-
-  if (
-    chatbot?.inject_apply_response_button &&
-    (!stored_data.mode ||
-      stored_data.mode == 'edit-context' ||
-      stored_data.mode == 'code-completions')
-  ) {
-    chatbot.inject_apply_response_button(
-      stored_data.client_id,
-      stored_data.raw_instructions,
-      stored_data.edit_format
+  if (is_cwc_hash) {
+    // Remove the hash from the URL to avoid reloading the content script if the page is refreshed
+    history.replaceState(
+      null,
+      '',
+      window.location.pathname + window.location.search
     )
+
+    // Get the message using the batch ID from the hash
+    const storage_key = `chat-init:${batch_id}`
+    const storage = await browser.storage.local.get(storage_key)
+    const stored_data = storage[storage_key] as {
+      text: string
+      current_chat: Chat
+      client_id: number
+      raw_instructions?: string
+      edit_format?: string
+      mode?: 'ask' | 'edit-context' | 'code-completions' | 'no-context'
+    }
+
+    if (!stored_data) {
+      console.error(
+        'Chat initialization data not found for batch ID:',
+        batch_id
+      )
+      return
+    }
+
+    // Now directly use the current_chat instead of searching for it
+    const message_text = stored_data.text
+    const current_chat = stored_data.current_chat
+
+    if (!current_chat) {
+      console.error('Chat configuration not found')
+      return
+    }
+
+    if (chatbot?.wait_until_ready) {
+      await chatbot.wait_until_ready()
+    }
+
+    await initialize_chat({
+      message: message_text,
+      chat: current_chat
+    })
+
+    // Clean up the storage entry after using it
+    await browser.storage.local.remove(storage_key)
+
+    if (
+      chatbot?.inject_apply_response_button &&
+      (stored_data.mode == 'edit-context' ||
+        stored_data.mode == 'code-completions')
+    ) {
+      sessionStorage.setItem(
+        session_data_key,
+        JSON.stringify({
+          client_id: stored_data.client_id,
+          raw_instructions: stored_data.raw_instructions,
+          edit_format: stored_data.edit_format
+        })
+      )
+      chatbot.inject_apply_response_button(
+        stored_data.client_id,
+        stored_data.raw_instructions,
+        stored_data.edit_format
+      )
+    } else {
+      sessionStorage.removeItem(session_data_key)
+    }
+  } else {
+    const session_data_str = sessionStorage.getItem(session_data_key)
+    if (session_data_str && chatbot) {
+      try {
+        const session_data = JSON.parse(session_data_str)
+        if (chatbot.inject_apply_response_button) {
+          chatbot.inject_apply_response_button(
+            session_data.client_id,
+            session_data.raw_instructions,
+            session_data.edit_format
+          )
+        }
+      } catch (e) {
+        console.error('Failed to parse CWC session data', e)
+      }
+    }
   }
 }
 

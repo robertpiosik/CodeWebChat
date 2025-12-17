@@ -322,7 +322,11 @@ async function show_preset_quick_pick(params: {
       const item = presets.find((p) => p.name == name)
 
       if (item && !item.chatbot) {
-        return { label: name, group_name: name, description: 'Group' }
+        return {
+          label: name.replace(/\s*\(\d+\)$/, ''),
+          group_name: name,
+          description: 'Group'
+        }
       }
 
       if (item && item.chatbot) {
@@ -334,7 +338,11 @@ async function show_preset_quick_pick(params: {
           ? chatbot_models[preset.model]?.label || preset.model
           : ''
         return {
-          label: `${is_unnamed ? preset.chatbot! : preset.name!}`,
+          label: `${
+            is_unnamed
+              ? preset.chatbot!
+              : preset.name!.replace(/\s*\(\d+\)$/, '')
+          }`,
           preset_name: preset.name,
           description: is_unnamed
             ? model

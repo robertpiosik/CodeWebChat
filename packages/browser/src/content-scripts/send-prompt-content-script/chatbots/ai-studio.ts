@@ -446,7 +446,7 @@ export const ai_studio: Chatbot = {
       }, 100)
     })
 
-    observer.observe(document.body, {
+    observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
       characterData: true
