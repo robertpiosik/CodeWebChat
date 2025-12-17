@@ -45,7 +45,7 @@ export const check_parent_folder_command = (
 
       const selected = await vscode.window.showQuickPick(folders, {
         placeHolder: 'Select a parent folder to check',
-        title: 'Check Parent Folder'
+        title: 'Parent Folders'
       })
 
       if (selected) {

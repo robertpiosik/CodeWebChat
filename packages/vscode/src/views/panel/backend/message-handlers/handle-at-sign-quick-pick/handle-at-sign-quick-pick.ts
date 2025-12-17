@@ -181,7 +181,7 @@ const at_sign_quick_pick = async (params: {
     quick_pick.items = quick_pick_items_to_show
     quick_pick.placeholder = 'Select a path to place in the prompt field'
     quick_pick.matchOnDescription = true
-    quick_pick.title = 'Reference File'
+    quick_pick.title = 'Workspace Files'
     quick_pick.buttons = [
       { iconPath: new vscode.ThemeIcon('close'), tooltip: 'Close' }
     ]
