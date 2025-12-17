@@ -1,12 +1,12 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import * as vscode from 'vscode'
 import { FilesCollector } from '@/utils/files-collector'
-import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
+import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-symbol'
 import {
-  replace_changes_placeholder,
-  replace_commit_placeholder,
-  replace_context_at_commit_placeholder
-} from '@/views/panel/backend/utils/replace-git-placeholders'
+  replace_changes_symbol,
+  replace_commit_symbol,
+  replace_context_at_commit_symbol
+} from '@/views/panel/backend/utils/replace-git-symbols'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
@@ -116,12 +116,12 @@ export const handle_copy_prompt = async (params: {
         params.panel_provider.mode == MODE.WEB &&
         params.panel_provider.web_prompt_type == 'no-context'
 
-      pre_context_instructions = await replace_changes_placeholder({
+      pre_context_instructions = await replace_changes_symbol({
         instruction: pre_context_instructions,
         workspace_provider: params.panel_provider.workspace_provider,
         is_no_context_web_mode
       })
-      post_context_instructions = await replace_changes_placeholder({
+      post_context_instructions = await replace_changes_symbol({
         instruction: post_context_instructions,
         after_context: true,
         workspace_provider: params.panel_provider.workspace_provider
@@ -129,21 +129,21 @@ export const handle_copy_prompt = async (params: {
     }
 
     if (instructions.includes('#Commit:')) {
-      pre_context_instructions = await replace_commit_placeholder({
+      pre_context_instructions = await replace_commit_symbol({
         instruction: pre_context_instructions
       })
-      post_context_instructions = await replace_commit_placeholder({
+      post_context_instructions = await replace_commit_symbol({
         instruction: post_context_instructions,
         after_context: true
       })
     }
 
     if (instructions.includes('#ContextAtCommit:')) {
-      pre_context_instructions = await replace_context_at_commit_placeholder({
+      pre_context_instructions = await replace_context_at_commit_symbol({
         instruction: pre_context_instructions,
         workspace_provider: params.panel_provider.workspace_provider
       })
-      post_context_instructions = await replace_context_at_commit_placeholder({
+      post_context_instructions = await replace_context_at_commit_symbol({
         instruction: post_context_instructions,
         after_context: true,
         workspace_provider: params.panel_provider.workspace_provider

@@ -99,7 +99,7 @@ const build_changes_xml = (
   return ''
 }
 
-export const replace_changes_placeholder = async (params: {
+export const replace_changes_symbol = async (params: {
   instruction: string
   after_context?: boolean
   workspace_provider: WorkspaceProvider
@@ -348,7 +348,7 @@ const build_commit_changes_xml = (
   return ''
 }
 
-export const replace_commit_placeholder = async (params: {
+export const replace_commit_symbol = async (params: {
   instruction: string
   after_context?: boolean
 }): Promise<string> => {
@@ -446,7 +446,7 @@ const build_context_at_commit_xml = (
   return `\n<archive>\n${files_xml}</archive>\n`
 }
 
-export const replace_context_at_commit_placeholder = async (params: {
+export const replace_context_at_commit_symbol = async (params: {
   instruction: string
   after_context?: boolean
   workspace_provider: WorkspaceProvider

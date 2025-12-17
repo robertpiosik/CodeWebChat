@@ -15,12 +15,12 @@ import {
 import { EditFormat } from '@shared/types/edit-format'
 import { ToolConfig } from '@/services/model-providers-manager'
 import {
-  replace_changes_placeholder,
-  replace_commit_placeholder,
-  replace_context_at_commit_placeholder
-} from '@/views/panel/backend/utils/replace-git-placeholders'
+  replace_changes_symbol,
+  replace_commit_symbol,
+  replace_context_at_commit_symbol
+} from '@/views/panel/backend/utils/replace-git-symbols'
 import { replace_saved_context_placeholder } from '@/utils/replace-saved-context-placeholder'
-import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-placeholder'
+import { replace_selection_placeholder } from '@/views/panel/backend/utils/replace-selection-symbol'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { EditContextMessage } from '@/views/panel/types/messages'
@@ -262,11 +262,11 @@ const perform_context_editing = async (params: {
   let post_context_instructions = instructions
 
   if (pre_context_instructions.includes('#Changes:')) {
-    pre_context_instructions = await replace_changes_placeholder({
+    pre_context_instructions = await replace_changes_symbol({
       instruction: pre_context_instructions,
       workspace_provider: params.file_tree_provider
     })
-    post_context_instructions = await replace_changes_placeholder({
+    post_context_instructions = await replace_changes_symbol({
       instruction: post_context_instructions,
       after_context: true,
       workspace_provider: params.file_tree_provider
@@ -274,21 +274,21 @@ const perform_context_editing = async (params: {
   }
 
   if (pre_context_instructions.includes('#Commit:')) {
-    pre_context_instructions = await replace_commit_placeholder({
+    pre_context_instructions = await replace_commit_symbol({
       instruction: pre_context_instructions
     })
-    post_context_instructions = await replace_commit_placeholder({
+    post_context_instructions = await replace_commit_symbol({
       instruction: post_context_instructions,
       after_context: true
     })
   }
 
   if (pre_context_instructions.includes('#ContextAtCommit:')) {
-    pre_context_instructions = await replace_context_at_commit_placeholder({
+    pre_context_instructions = await replace_context_at_commit_symbol({
       instruction: pre_context_instructions,
       workspace_provider: params.file_tree_provider
     })
-    post_context_instructions = await replace_context_at_commit_placeholder({
+    post_context_instructions = await replace_context_at_commit_symbol({
       instruction: post_context_instructions,
       after_context: true,
       workspace_provider: params.file_tree_provider
