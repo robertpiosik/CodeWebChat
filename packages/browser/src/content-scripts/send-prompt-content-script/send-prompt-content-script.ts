@@ -165,7 +165,6 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
     })
   }
 
-  window.dispatchEvent(new CustomEvent('cwc-chat-initialized'))
   // User may send by pressing enter
   await new Promise<void>((resolve) => {
     const handle_key_press = (e: KeyboardEvent) => {
