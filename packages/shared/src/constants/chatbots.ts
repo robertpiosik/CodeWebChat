@@ -45,21 +45,17 @@ export const CHATBOTS = {
         disabled_options: ['disable-thinking'],
         supported_reasoning_efforts: ['high', 'low']
       },
+      'gemini-3-flash-preview': {
+        label: 'Gemini 3 Flash Preview',
+        disabled_options: ['disable-thinking'],
+        supported_reasoning_efforts: ['high', 'Medium', 'Low', 'Minimal']
+      },
       'gemini-2.5-pro': {
         label: 'Gemini 2.5 Pro',
         disabled_options: ['disable-thinking']
       },
-      'gemini-flash-latest': {
-        label: 'Gemini Flash Latest'
-      },
-      'gemini-flash-lite-latest': {
-        label: 'Gemini Flash-Lite Latest'
-      },
       'gemini-2.5-flash': {
         label: 'Gemini 2.5 Flash'
-      },
-      'gemini-2.5-flash-lite': {
-        label: 'Gemini 2.5 Flash-Lite'
       }
     }
   } as Chatbot,
