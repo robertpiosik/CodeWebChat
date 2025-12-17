@@ -116,6 +116,21 @@ export const chatgpt: Chatbot = {
       }
     }
   },
+  enter_message: async (params) => {
+    const input_element = document.querySelector(
+      'div#prompt-textarea'
+    ) as HTMLTextAreaElement
+    if (!input_element) {
+      report_initialization_error({
+        function_name: 'enter_message',
+        log_message: 'Message input textarea not found for ChatGPT'
+      })
+      return
+    }
+    input_element.innerText = params.message
+    input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.dispatchEvent(new Event('change', { bubbles: true }))
+  },
   inject_apply_response_button: (
     client_id: number,
     raw_instructions?: string,

@@ -18,13 +18,13 @@ export const kimi: Chatbot = {
       check_for_element()
     })
   },
-  enter_message_and_send: async (params) => {
+  enter_message: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
     if (!input_element) {
       report_initialization_error({
-        function_name: 'kimi.enter_message_and_send',
+        function_name: 'kimi.enter_message',
         log_message: 'Message input element not found'
       })
       return
@@ -38,30 +38,6 @@ export const kimi: Chatbot = {
         data: params.message
       })
     )
-
-    if (params.without_submission) return
-
-    await new Promise<void>((resolve) => {
-      const check_button_state = () => {
-        const send_button_container = document.querySelector(
-          '.send-button-container'
-        )
-        const send_button = document.querySelector(
-          'div.send-button'
-        ) as HTMLElement
-
-        if (
-          send_button &&
-          !send_button_container?.classList.contains('disabled')
-        ) {
-          send_button.click()
-          resolve()
-        } else {
-          setTimeout(check_button_state, 100)
-        }
-      }
-      check_button_state()
-    })
   },
   inject_apply_response_button: (
     client_id: number,

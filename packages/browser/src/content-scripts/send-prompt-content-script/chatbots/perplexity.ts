@@ -146,13 +146,13 @@ export const perplexity: Chatbot = {
       })
     }
   },
-  enter_message_and_send: async (params) => {
+  enter_message: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
     if (!input_element) {
       report_initialization_error({
-        function_name: 'enter_message_and_send',
+        function_name: 'enter_message',
         log_message: 'Message input not found'
       })
       return
@@ -166,22 +166,6 @@ export const perplexity: Chatbot = {
         data: params.message
       })
     )
-
-    await new Promise((r) => requestAnimationFrame(r))
-
-    if (params.without_submission) return
-
-    const submit_button = document.querySelector(
-      'button.bg-super'
-    ) as HTMLButtonElement
-    if (!submit_button) {
-      report_initialization_error({
-        function_name: 'enter_message_and_send',
-        log_message: 'Submit button not found'
-      })
-      return
-    }
-    submit_button.click()
   },
   inject_apply_response_button: (
     client_id: number,

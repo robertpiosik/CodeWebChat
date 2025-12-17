@@ -81,13 +81,13 @@ export const github_copilot: Chatbot = {
 
     await new Promise((r) => requestAnimationFrame(r))
   },
-  enter_message_and_send: async (params) => {
+  enter_message: async (params) => {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
     if (!input_element) {
       report_initialization_error({
-        function_name: 'enter_message_and_send',
+        function_name: 'enter_message',
         log_message: 'Message input textarea not found for GitHub Copilot'
       })
       return
@@ -95,19 +95,7 @@ export const github_copilot: Chatbot = {
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
-    await new Promise((r) => requestAnimationFrame(r))
-
-    if (params.without_submission) return
-
-    const enter_event = new KeyboardEvent('keydown', {
-      key: 'Enter',
-      code: 'Enter',
-      keyCode: 13,
-      which: 13,
-      bubbles: true,
-      cancelable: true
-    })
-    input_element.dispatchEvent(enter_event)
+    input_element.focus()
   },
   inject_apply_response_button: (
     client_id: number,

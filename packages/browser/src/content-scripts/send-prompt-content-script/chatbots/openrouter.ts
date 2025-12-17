@@ -269,6 +269,22 @@ export const openrouter: Chatbot = {
 
     await close_options_modal('set_reasoning_effort')
   },
+  enter_message: async (params) => {
+    const input_element = document.querySelector(
+      'textarea'
+    ) as HTMLTextAreaElement
+    if (!input_element) {
+      report_initialization_error({
+        function_name: 'openrouter.enter_message',
+        log_message: 'Message input textarea not found'
+      })
+      return
+    }
+    input_element.value = params.message
+    input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.dispatchEvent(new Event('change', { bubbles: true }))
+    input_element.focus()
+  },
   inject_apply_response_button: (
     client_id: number,
     raw_instructions?: string,

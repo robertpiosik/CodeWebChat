@@ -171,64 +171,7 @@ export const get_textarea_element = () => {
   return active_element
 }
 
-const enter_message_and_send = async (params: {
-  input_element: HTMLElement | null
-  message: string
-  without_submission?: boolean
-}) => {
-  if (params.input_element && params.input_element.isContentEditable) {
-    params.input_element.innerText = params.message
-    params.input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    params.input_element.dispatchEvent(new Event('change', { bubbles: true }))
-    await new Promise((r) => requestAnimationFrame(r))
-
-    if (params.without_submission) return
-
-    const form = params.input_element.closest('form')
-    if (form) {
-      form.requestSubmit()
-    } else {
-      const enter_event = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        code: 'Enter',
-        keyCode: 13,
-        which: 13,
-        bubbles: true
-      })
-      params.input_element.dispatchEvent(enter_event)
-    }
-  } else if (
-    params.input_element &&
-    params.input_element.tagName == 'TEXTAREA'
-  ) {
-    ;(params.input_element as HTMLTextAreaElement).value = params.message
-    params.input_element.dispatchEvent(new Event('input', { bubbles: true }))
-    params.input_element.dispatchEvent(new Event('change', { bubbles: true }))
-    await new Promise((r) => requestAnimationFrame(r))
-
-    if (params.without_submission) return
-
-    const form = params.input_element.closest('form')
-    if (form) {
-      form.requestSubmit()
-    } else {
-      const enter_event = new KeyboardEvent('keydown', {
-        key: 'Enter',
-        code: 'Enter',
-        keyCode: 13,
-        which: 13,
-        bubbles: true
-      })
-      params.input_element.dispatchEvent(enter_event)
-    }
-  }
-}
-
-const initialize_chat = async (params: {
-  message: string
-  chat: Chat
-  without_submission?: boolean
-}) => {
+const initialize_chat = async (params: { message: string; chat: Chat }) => {
   if (chatbot?.set_model) {
     await chatbot.set_model(params.chat)
   }
@@ -250,16 +193,9 @@ const initialize_chat = async (params: {
   if (chatbot?.set_options) {
     await chatbot.set_options(params.chat)
   }
-  if (chatbot?.enter_message_and_send) {
-    await chatbot.enter_message_and_send({
-      message: params.message,
-      without_submission: params.without_submission
-    })
-  } else {
-    await enter_message_and_send({
-      input_element: get_textarea_element(),
-      message: params.message,
-      without_submission: params.without_submission
+  if (chatbot?.enter_message) {
+    await chatbot.enter_message({
+      message: params.message
     })
   }
 
@@ -286,7 +222,6 @@ const main = async () => {
     text: string
     current_chat: Chat
     client_id: number
-    without_submission?: boolean
     raw_instructions?: string
     edit_format?: string
     mode?: 'ask' | 'edit-context' | 'code-completions' | 'no-context'
@@ -312,8 +247,7 @@ const main = async () => {
 
   await initialize_chat({
     message: message_text,
-    chat: current_chat,
-    without_submission: stored_data.without_submission
+    chat: current_chat
   })
 
   // Clean up the storage entry after using it

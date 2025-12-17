@@ -135,79 +135,21 @@ export const qwen: Chatbot = {
       }
     }
   },
-  enter_message_and_send: async (params) => {
-    const instructions = params.message
-    // Commented out because doesn't work anymore
-    // if (params.message.includes('<files>')) {
-    //   instructions = params.message.split('<files>')[0].trim()
-    //   const context = params.message
-    //     .split('<files>')[1]
-    //     .split('</files>')[0]
-    //     .trim()
-
-    //   // Upload file
-    //   const file_input = document.querySelector(
-    //     'input#filesUpload'
-    //   ) as HTMLInputElement
-    //   if (!file_input) {
-    //     report_initialization_error({
-    //       function_name: 'enter_message_and_send',
-    //       log_message: 'File input not found'
-    //     })
-    //     return
-    //   }
-    //   const blob = new Blob([`<files>\n${context}\n</files>`], {
-    //     type: 'text/plain'
-    //   })
-    //   const file = new File([blob], 'files.txt', { type: 'text/plain' })
-    //   const data_transfer = new DataTransfer()
-    //   data_transfer.items.add(file)
-    //   file_input.files = data_transfer.files
-    //   file_input.dispatchEvent(new Event('change', { bubbles: true }))
-    //   file_input.dispatchEvent(new Event('input', { bubbles: true }))
-    //   await new Promise((r) => requestAnimationFrame(r))
-    //   await new Promise((resolve) => {
-    //     const check_for_element = () => {
-    //       if (document.querySelector('i.icontxt1')) {
-    //         resolve(null)
-    //       } else {
-    //         setTimeout(check_for_element, 100)
-    //       }
-    //     }
-    //     check_for_element()
-    //   })
-    // }
-
-    // Enter instructions
+  enter_message: async (params) => {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
     if (!input_element) {
       report_initialization_error({
-        function_name: 'enter_message_and_send',
+        function_name: 'enter_message',
         log_message: 'Message input textarea not found'
       })
       return
     }
-    input_element.value = instructions
+    input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
-    await new Promise((r) => requestAnimationFrame(r))
-
-    if (params.without_submission) return
-
-    // Submit
-    const submit_button = document.querySelector(
-      'button.send-button'
-    ) as HTMLButtonElement
-    if (!submit_button) {
-      report_initialization_error({
-        function_name: 'enter_message_and_send',
-        log_message: 'Send button not found'
-      })
-      return
-    }
-    submit_button.click()
+    input_element.focus()
   },
   inject_apply_response_button: (
     client_id: number,

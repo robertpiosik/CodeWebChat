@@ -345,13 +345,13 @@ export const ai_studio: Chatbot = {
     top_p_element.value = top_p.toString()
     top_p_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
-  enter_message_and_send: async (params) => {
+  enter_message: async (params) => {
     const input_element = document.querySelector(
       'textarea[formcontrolname="promptText"]'
     ) as HTMLTextAreaElement
     if (!input_element) {
       report_initialization_error({
-        function_name: 'enter_message_and_send',
+        function_name: 'enter_message',
         log_message: 'Message input textarea not found'
       })
       return
@@ -376,20 +376,6 @@ export const ai_studio: Chatbot = {
     })
 
     await close_panel()
-
-    if (params.without_submission) return
-
-    const send_button = document.querySelector(
-      'ms-run-button > button'
-    ) as HTMLElement
-    if (!send_button) {
-      report_initialization_error({
-        function_name: 'enter_message_and_send',
-        log_message: 'Send button not found'
-      })
-      return
-    }
-    send_button.click()
   },
   inject_apply_response_button: (
     client_id: number,

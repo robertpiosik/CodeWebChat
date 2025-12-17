@@ -32,7 +32,6 @@ export const handle_send_prompt = async (params: {
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean
-  without_submission?: boolean
 }): Promise<void> => {
   if (
     params.panel_provider.mode === MODE.WEB &&
@@ -159,9 +158,7 @@ export const handle_send_prompt = async (params: {
 
     params.panel_provider.websocket_server_instance.initialize_chats({
       chats,
-      presets_config_key: params.panel_provider.get_presets_config_key(),
-      without_submission:
-        params.without_submission || resolution.without_submission
+      presets_config_key: params.panel_provider.get_presets_config_key()
     })
   } else {
     const editor = vscode.window.activeTextEditor
@@ -282,9 +279,7 @@ export const handle_send_prompt = async (params: {
 
     params.panel_provider.websocket_server_instance.initialize_chats({
       chats,
-      presets_config_key: params.panel_provider.get_presets_config_key(),
-      without_submission:
-        params.without_submission || resolution.without_submission
+      presets_config_key: params.panel_provider.get_presets_config_key()
     })
   }
 
@@ -305,13 +300,8 @@ async function show_preset_quick_pick(params: {
   get_is_preset_disabled: (preset: ConfigPresetFormat) => boolean
   is_in_code_completions_mode: boolean
   current_instructions: string
-}): Promise<{ preset_names: string[]; without_submission?: boolean } | null> {
+}): Promise<{ preset_names: string[] } | null> {
   const { presets, context, mode, panel_provider } = params
-
-  const run_without_submission_button: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon('file-media'),
-    tooltip: 'Run and pause for media upload'
-  }
 
   const quick_pick = vscode.window.createQuickPick<
     vscode.QuickPickItem & { preset_name?: string; group_name?: string }
@@ -348,8 +338,7 @@ async function show_preset_quick_pick(params: {
           preset_name: preset.name,
           description: is_unnamed
             ? model
-            : `${preset.chatbot}${model ? ` · ${model}` : ''}`,
-          buttons: [run_without_submission_button]
+            : `${preset.chatbot}${model ? ` · ${model}` : ''}`
         }
       }
       return null
@@ -385,47 +374,14 @@ async function show_preset_quick_pick(params: {
     if (last_item) quick_pick.activeItems = [last_item]
   }
 
-  return new Promise<{
-    preset_names: string[]
-    without_submission?: boolean
-  } | null>((resolve) => {
+  return new Promise<{ preset_names: string[] } | null>((resolve) => {
     const disposables: vscode.Disposable[] = []
     let resolved = false
-    const do_resolve = (
-      value: { preset_names: string[]; without_submission?: boolean } | null
-    ) => {
+    const do_resolve = (value: { preset_names: string[] } | null) => {
       if (resolved) return
       resolved = true
       resolve(value)
     }
-
-    quick_pick.onDidTriggerItemButton(async (e) => {
-      const item = e.item as any & {
-        preset_name?: string
-      }
-      if (item.preset_name && e.button === run_without_submission_button) {
-        quick_pick.hide()
-        const preset = presets.find((p) => p.name == item.preset_name)!
-        if (params.get_is_preset_disabled(preset)) {
-          if (
-            !params.is_in_code_completions_mode &&
-            !params.current_instructions &&
-            !preset.promptPrefix &&
-            !preset.promptSuffix
-          ) {
-            vscode.window.showWarningMessage(
-              dictionary.warning_message.TYPE_SOMETHING_TO_USE_PRESET
-            )
-          }
-          do_resolve(null)
-        } else {
-          do_resolve({
-            preset_names: [item.preset_name],
-            without_submission: true
-          })
-        }
-      }
-    })
 
     quick_pick.onDidAccept(async () => {
       const selected = quick_pick.selectedItems[0] as any
@@ -535,7 +491,7 @@ async function resolve_presets(params: {
   group_name?: string
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
-}): Promise<{ preset_names: string[]; without_submission?: boolean }> {
+}): Promise<{ preset_names: string[] }> {
   const last_selected_preset_or_group_key =
     get_last_selected_preset_or_group_key(params.panel_provider.web_prompt_type)
   const config = vscode.workspace.getConfiguration('codeWebChat')

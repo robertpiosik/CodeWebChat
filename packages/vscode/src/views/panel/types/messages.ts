@@ -87,7 +87,6 @@ export interface SendPromptMessage extends BaseMessage {
   preset_name?: string
   group_name?: string
   show_quick_pick?: boolean
-  without_submission?: boolean
 }
 
 export interface CopyPromptMessage extends BaseMessage {

@@ -19,74 +19,13 @@ export const copilot: Chatbot = {
       check_for_element()
     })
   },
-  set_model: async (chat) => {
-    const model = chat.model
-    if (!model) return
-
-    const model_selector_button = document.querySelector(
-      'button[data-testid="composer-chat-mode-smart-button"]'
-    ) as HTMLButtonElement
-    if (!model_selector_button) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model selector button not found'
-      })
-      return
-    }
-
-    const model_label_to_find = CHATBOTS['Copilot'].models?.[model]?.label
-    if (!model_label_to_find) return
-
-    // The current model text is inside the button
-    if (model_selector_button.textContent?.includes(model_label_to_find)) {
-      return
-    }
-
-    model_selector_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
-
-    const options_container = document.querySelector('div[id="popoverPortal"]')
-    if (!options_container) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model options container not found'
-      })
-      // click again to close
-      model_selector_button.click()
-      return
-    }
-
-    const options = options_container.querySelectorAll(
-      'button[role="menuitem"]'
-    )
-
-    let found = false
-    for (const option of Array.from(options)) {
-      if (option.textContent?.includes(model_label_to_find)) {
-        ;(option as HTMLElement).click()
-        found = true
-        break
-      }
-    }
-
-    if (!found) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: `Model option "${model_label_to_find}" not found`
-      })
-      // click again to close dropdown
-      model_selector_button.click()
-    }
-
-    await new Promise((r) => requestAnimationFrame(r))
-  },
-  enter_message_and_send: async (params) => {
+  enter_message: async (params) => {
     const input_element = document.querySelector(
       'textarea'
     ) as HTMLTextAreaElement
     if (!input_element) {
       report_initialization_error({
-        function_name: 'enter_message_and_send',
+        function_name: 'enter_message',
         log_message: 'Message input textarea not found for Copilot'
       })
       return
@@ -94,22 +33,6 @@ export const copilot: Chatbot = {
     input_element.value = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
-    await new Promise((r) => requestAnimationFrame(r))
-
-    if (params.without_submission) return
-
-    const send_button = document.querySelector(
-      'button[data-testid="submit-button"]'
-    ) as HTMLElement
-
-    if (!send_button || send_button.hasAttribute('disabled')) {
-      report_initialization_error({
-        function_name: 'enter_message_and_send',
-        log_message: 'Send button not found or disabled for Copilot'
-      })
-      return
-    }
-    send_button.click()
   },
   inject_apply_response_button: (
     client_id: number,

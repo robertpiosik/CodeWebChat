@@ -10,7 +10,13 @@ export const claude: Chatbot = {
   wait_until_ready: async () => {
     await new Promise((resolve) => {
       const check_for_element = () => {
-        if (document.querySelector('body[style="pointer-events: auto;"]')) {
+        if (
+          (
+            document.querySelector(
+              'main > div > div:last-child'
+            ) as HTMLDivElement
+          ).textContent
+        ) {
           resolve(null)
         } else {
           setTimeout(check_for_element, 100)
@@ -105,14 +111,14 @@ export const claude: Chatbot = {
       }
     }
   },
-  enter_message_and_send: async (params) => {
+  enter_message: async (params) => {
     const input_element = document.querySelector(
       'div[contenteditable=true]'
     ) as HTMLElement
 
     if (!input_element) {
       report_initialization_error({
-        function_name: 'enter_message_and_send',
+        function_name: 'enter_message',
         log_message: 'Message input not found'
       })
       return
@@ -121,25 +127,6 @@ export const claude: Chatbot = {
     input_element.innerText = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
-    await new Promise((r) => setTimeout(r, 500))
-
-    if (params.without_submission) return
-
-    const submit_button = Array.from(
-      document.querySelectorAll('fieldset button')
-    ).find((button) =>
-      button.querySelector(
-        'path[d="M208.49,120.49a12,12,0,0,1-17,0L140,69V216a12,12,0,0,1-24,0V69L64.49,120.49a12,12,0,0,1-17-17l72-72a12,12,0,0,1,17,0l72,72A12,12,0,0,1,208.49,120.49Z"]'
-      )
-    ) as HTMLButtonElement
-    if (!submit_button) {
-      report_initialization_error({
-        function_name: 'enter_message_and_send',
-        log_message: 'Submit button not found'
-      })
-      return
-    }
-    submit_button.click()
   },
   inject_apply_response_button: (
     client_id: number,

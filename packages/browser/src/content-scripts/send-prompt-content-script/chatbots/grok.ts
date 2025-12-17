@@ -88,7 +88,24 @@ export const grok: Chatbot = {
         break
       }
     }
-    await new Promise((r) => requestAnimationFrame(r))
+    await new Promise((r) => setTimeout(r, 250))
+  },
+  enter_message: async (params) => {
+    const input_element = document.querySelector(
+      'div[contenteditable="true"]'
+    ) as HTMLElement
+    if (!input_element) {
+      report_initialization_error({
+        function_name: 'grok.enter_message',
+        log_message: 'Message input not found'
+      })
+      return
+    }
+
+    input_element.textContent = params.message
+    input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.dispatchEvent(new Event('change', { bubbles: true }))
+    input_element.focus()
   },
   inject_apply_response_button: (
     client_id: number,

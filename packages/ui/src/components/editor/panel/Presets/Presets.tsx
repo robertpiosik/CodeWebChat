@@ -49,8 +49,8 @@ export namespace Presets {
     is_in_code_completions_mode: boolean
     has_context: boolean
     presets: Preset[]
-    on_preset_click: (preset_name: string, without_submission?: boolean) => void
-    on_group_click: (group_name: string, without_submission?: boolean) => void
+    on_preset_click: (preset_name: string) => void
+    on_group_click: (group_name: string) => void
     on_create_preset_group_or_separator: (options?: {
       placement?: 'top' | 'bottom'
     }) => void
@@ -194,14 +194,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                     on_click={(e) => {
                       e.stopPropagation()
                       props.on_toggle_preset_pinned(preset.name!)
-                    }}
-                  />
-                  <IconButton
-                    codicon_icon="file-media"
-                    title="Run and pause for media upload"
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      props.on_preset_click(preset.name!, true)
                     }}
                   />
                   <IconButton
@@ -529,16 +521,6 @@ export const Presets: React.FC<Presets.Props> = (props) => {
                           on_click={(e) => {
                             e.stopPropagation()
                             props.on_toggle_preset_pinned(preset.name!)
-                          }}
-                        />
-                      )}
-                      {preset.chatbot && (
-                        <IconButton
-                          codicon_icon="file-media"
-                          title="Run and pause for media upload"
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            props.on_preset_click(preset.name!, true)
                           }}
                         />
                       )}

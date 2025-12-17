@@ -22,7 +22,6 @@ type Props = {
     preset_name?: string
     group_name?: string
     show_quick_pick?: boolean
-    without_submission?: boolean
   }) => void
   copy_to_clipboard: (preset_name?: string) => void
   on_show_home: () => void
@@ -247,15 +246,14 @@ export const MainView: React.FC<Props> = (props) => {
               on_create_preset_group_or_separator={
                 props.on_create_preset_group_or_separator
               }
-              on_preset_click={(preset_name, without_submission) =>
+              on_preset_click={(preset_name) =>
                 props.initialize_chats({
                   preset_name,
-                  show_quick_pick: false,
-                  without_submission
+                  show_quick_pick: false
                 })
               }
-              on_group_click={(group_name, without_submission) =>
-                props.initialize_chats({ group_name, without_submission })
+              on_group_click={(group_name) =>
+                props.initialize_chats({ group_name })
               }
               on_preset_copy={props.copy_to_clipboard}
               on_preset_edit={props.on_preset_edit}

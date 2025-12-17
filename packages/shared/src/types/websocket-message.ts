@@ -21,7 +21,6 @@ export type InitializeChatMessage = {
   top_p?: number
   system_instructions?: string
   options?: string[]
-  without_submission?: boolean
   raw_instructions?: string
   edit_format?: string
   mode?: any

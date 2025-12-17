@@ -9,11 +9,11 @@ import { report_initialization_error } from '../utils/report-initialization-erro
 export const deepseek: Chatbot = {
   set_options: async (chat) => {
     const deep_think_button = Array.from(
-      document.querySelectorAll('button')
+      document.querySelectorAll('div[role="button"]')
     ).find(
       (button) =>
         button.textContent == 'DeepThink' || button.textContent == '深度思考'
-    )
+    ) as HTMLButtonElement
     if (!deep_think_button) {
       report_initialization_error({
         function_name: 'set_options',
@@ -22,10 +22,12 @@ export const deepseek: Chatbot = {
       return
     }
 
-    const search_button = Array.from(document.querySelectorAll('button')).find(
+    const search_button = Array.from(
+      document.querySelectorAll('div[role="button"]')
+    ).find(
       (button) =>
         button.textContent == 'Search' || button.textContent == '联网搜索'
-    )
+    ) as HTMLButtonElement
     if (!search_button) {
       report_initialization_error({
         function_name: 'set_options',
@@ -65,6 +67,21 @@ export const deepseek: Chatbot = {
       }
     }
     await new Promise((r) => requestAnimationFrame(r))
+  },
+  enter_message: async (params) => {
+    const input_element = document.querySelector(
+      'textarea'
+    ) as HTMLTextAreaElement
+    if (!input_element) {
+      report_initialization_error({
+        function_name: 'deepseek.enter_message',
+        log_message: 'Message input textarea not found'
+      })
+      return
+    }
+    input_element.value = params.message
+    input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
   inject_apply_response_button: (
     client_id: number,

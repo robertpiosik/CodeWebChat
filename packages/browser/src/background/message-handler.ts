@@ -81,7 +81,6 @@ const process_next_chat = async () => {
         options: current_chat_message.options
       },
       client_id: current_chat_message.client_id,
-      without_submission: current_chat_message.without_submission,
       raw_instructions: current_chat_message.raw_instructions,
       mode: current_chat_message.mode
     }

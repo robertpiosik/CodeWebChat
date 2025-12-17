@@ -20,7 +20,6 @@ export const z_ai: Chatbot = {
   },
   set_options: async (chat) => {
     const options = chat.options
-    if (!options) return
 
     const deep_think_button = document.querySelector(
       'button[data-autothink]'
@@ -33,13 +32,28 @@ export const z_ai: Chatbot = {
       return
     }
 
-    const should_be_on = options.includes('deep-think')
+    const should_be_on = options?.includes('deep-think') || false
     const is_on = deep_think_button.getAttribute('data-autothink') == 'true'
 
     if (should_be_on != is_on) {
       deep_think_button.click()
       await new Promise((r) => requestAnimationFrame(r))
     }
+  },
+  enter_message: async (params) => {
+    const input_element = document.querySelector(
+      'textarea'
+    ) as HTMLTextAreaElement
+    if (!input_element) {
+      report_initialization_error({
+        function_name: 'z_ai.enter_message',
+        log_message: 'Message input textarea not found'
+      })
+      return
+    }
+    input_element.value = params.message
+    input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.dispatchEvent(new Event('change', { bubbles: true }))
   },
   inject_apply_response_button: (
     client_id: number,

@@ -88,13 +88,7 @@ export const CHATBOTS = {
     }
   } as Chatbot,
   Copilot: {
-    url: 'https://copilot.microsoft.com/',
-    models: {
-      'smart-gpt-5': { label: 'Smart (GPT-5)' },
-      'quick-response': { label: 'Quick response' },
-      'think-deeper': { label: 'Think Deeper' },
-      search: { label: 'Search' }
-    }
+    url: 'https://copilot.microsoft.com/'
   } as Chatbot,
   DeepSeek: {
     url: 'https://chat.deepseek.com/',

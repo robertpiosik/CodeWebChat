@@ -270,7 +270,6 @@ export class WebSocketManager {
       mode: any
     }>
     presets_config_key: string
-    without_submission?: boolean
   }): Promise<void> {
     if (!this.has_connected_browsers) {
       throw new Error('Does not have connected browsers.')
@@ -336,7 +335,6 @@ export class WebSocketManager {
         system_instructions: preset.systemInstructions,
         options: preset.options,
         client_id: this.client_id || 0, // 0 is a temporary fallback and should be removed few weeks from 28.03.25
-        without_submission: params.without_submission,
         raw_instructions: chat.raw_instructions,
         edit_format: chat.edit_format,
         mode: chat.mode

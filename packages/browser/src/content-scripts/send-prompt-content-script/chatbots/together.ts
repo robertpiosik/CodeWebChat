@@ -41,9 +41,7 @@ export const together: Chatbot = {
       return
     }
 
-    model_selector_button.dispatchEvent(
-      new PointerEvent('pointerdown', { bubbles: true })
-    )
+    model_selector_button.click()
     await new Promise((r) => requestAnimationFrame(r))
 
     const models_dropdown = document.querySelector(
@@ -65,6 +63,22 @@ export const together: Chatbot = {
       }
     }
     await new Promise((r) => requestAnimationFrame(r))
+  },
+  enter_message: async (params) => {
+    const input_element = document.querySelector(
+      'textarea'
+    ) as HTMLTextAreaElement
+    if (!input_element) {
+      report_initialization_error({
+        function_name: 'together.enter_message',
+        log_message: 'Message input textarea not found'
+      })
+      return
+    }
+    input_element.value = params.message
+    input_element.dispatchEvent(new Event('input', { bubbles: true }))
+    input_element.dispatchEvent(new Event('change', { bubbles: true }))
+    input_element.focus()
   },
   inject_apply_response_button: (
     client_id: number,
@@ -91,8 +105,7 @@ export const together: Chatbot = {
           }
           copy_button.click()
         },
-        insert_button: (f, b) =>
-          f.insertBefore(b, f.children[f.children.length])
+        insert_button: (f, b) => f.insertBefore(b, f.children[4])
       })
     }
 
