@@ -137,40 +137,6 @@ if (is_ai_studio) {
   chatbot = z_ai
 }
 
-export const get_textarea_element = () => {
-  const chatbot_selectors = {
-    [ai_studio_url]: 'textarea',
-    [gemini_url]: 'div[contenteditable="true"]',
-    [openrouter_url]: 'textarea',
-    [chatgpt_url]: 'div#prompt-textarea',
-    [copilot_url]: 'textarea',
-    [grok_url]: 'div[contenteditable="true"]',
-    [deepseek_url]: 'textarea',
-    [mistral_url]: 'div[contenteditable="true"]',
-    [yuanbao_url]: 'div[contenteditable="true"]',
-    [doubao_url]: 'textarea',
-    [together_url]: 'textarea',
-    [z_ai_url]: 'textarea',
-    [github_copilot_url]: 'textarea',
-    [hugging_chat_url]: 'textarea',
-    [lmarena_url]: 'textarea'
-  } as any
-
-  // Find the appropriate selector based on the URL without the hash
-  let selector = null
-  for (const [url, sel] of Object.entries(chatbot_selectors)) {
-    if (current_url.split('#')[0].split('?')[0].startsWith(url)) {
-      selector = sel
-      break
-    }
-  }
-
-  const active_element = selector
-    ? (document.querySelector(selector as string) as HTMLElement)
-    : (document.activeElement as HTMLElement)
-  return active_element
-}
-
 const initialize_chat = async (params: { message: string; chat: Chat }) => {
   if (chatbot?.set_model) {
     await chatbot.set_model(params.chat)
@@ -199,6 +165,18 @@ const initialize_chat = async (params: { message: string; chat: Chat }) => {
     })
   }
 
+  window.dispatchEvent(new CustomEvent('cwc-chat-initialized'))
+  // User may send by pressing enter
+  await new Promise<void>((resolve) => {
+    const handle_key_press = (e: KeyboardEvent) => {
+      if (e.key == 'Enter') {
+        document.removeEventListener('keydown', handle_key_press)
+        resolve()
+      }
+    }
+    document.addEventListener('keydown', handle_key_press)
+    setTimeout(resolve, 2000)
+  })
   // Process next chat from the queue
   browser.runtime.sendMessage<Message>({
     action: 'chat-initialized'
