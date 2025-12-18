@@ -22,14 +22,15 @@ import { dictionary } from '@shared/constants/dictionary'
 
 const Tooltip: React.FC<{
   message: string
-  align: 'left' | 'right'
+  align: 'left' | 'right' | 'center'
   is_warning?: boolean
-  offset: number
+  offset?: number
 }> = (params) => (
   <div
     className={cn(styles.tooltip, {
       [styles['tooltip--align-left']]: params.align == 'left',
       [styles['tooltip--align-right']]: params.align == 'right',
+      [styles['tooltip--align-center']]: params.align == 'center',
       [styles['tooltip--warning']]: params.is_warning
     })}
     style={
@@ -82,6 +83,8 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [show_submit_tooltip, set_show_submit_tooltip] = useState(false)
   const [is_text_selecting, set_is_text_selecting] = useState(false)
   const [is_focused, set_is_focused] = useState(false)
+  const [hovered_edit_format, set_hovered_edit_format] =
+    useState<EditFormat | null>(null)
   const is_narrow_viewport = use_is_narrow_viewport(330)
   const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts({
     show_edit_format_selector: props.show_edit_format_selector,
@@ -435,7 +438,21 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                           props.edit_format_instructions?.[format]
                         }`}
                         onClick={() => props.on_edit_format_change?.(format)}
+                        onMouseEnter={() => set_hovered_edit_format(format)}
+                        onMouseLeave={() => set_hovered_edit_format(null)}
                       >
+                        {is_narrow_viewport &&
+                          hovered_edit_format == format && (
+                            <Tooltip
+                              message={
+                                format == 'before-after'
+                                  ? 'Before and After'
+                                  : format.charAt(0).toUpperCase() +
+                                    format.slice(1)
+                              }
+                              align="center"
+                            />
+                          )}
                         <span
                           className={
                             styles['footer__right__edit-format__button__spacer']

@@ -325,6 +325,11 @@
       align-items: center;
       pointer-events: all;
       position: relative;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: var(--vscode-toolbar-hoverBackground);
+      }
 
       &__button {
         display: flex;
@@ -383,7 +388,8 @@
 .tooltip {
   position: absolute;
   z-index: 2;
-  bottom: calc(100% - 2px);
+  top: 0;
+  transform: translateY(calc(-100% + 1px));
   font-size: 12px;
   white-space: normal;
   max-width: calc(100vw - 50px);
@@ -425,6 +431,16 @@
     right: 2px;
     &::after {
       right: var(--tooltip-offset);
+    }
+  }
+
+  &--align-center {
+    left: 50%;
+    transform: translateX(-50%) translateY(calc(-100% - 4px));
+    white-space: nowrap;
+    &::after {
+      left: 50%;
+      margin-left: -5px;
     }
   }
 }
