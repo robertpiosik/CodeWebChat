@@ -95,7 +95,6 @@ export const handle_conflict_markers = async (
         }
       }
 
-      // Case 0: Rename operation (with or without markers)
       if (rename_source_path && rename_source_content !== undefined) {
         try {
           let new_content = rename_source_content
@@ -132,7 +131,7 @@ export const handle_conflict_markers = async (
             workspace_root
           })
 
-          if (new_content.trim() === '') {
+          if (new_content.trim() == '') {
             original_states.push({
               file_path: file.file_path,
               content: rename_source_content,
@@ -161,9 +160,7 @@ export const handle_conflict_markers = async (
         } catch (error) {
           failed_files.push(file)
         }
-      }
-      // Case 1: Existing file with conflict markers (The core "Compared" logic)
-      else if (file_exists && has_markers) {
+      } else if (file_exists && has_markers) {
         try {
           const document = await vscode.workspace.openTextDocument(safe_path)
           const original_content = document.getText()
@@ -172,7 +169,7 @@ export const handle_conflict_markers = async (
             file.content
           )
 
-          if (current_content.trim() === '') {
+          if (current_content.trim() == '') {
             const tabs_to_close: vscode.Tab[] = []
             for (const tab_group of vscode.window.tabGroups.all) {
               tabs_to_close.push(
@@ -231,9 +228,7 @@ export const handle_conflict_markers = async (
           })
           failed_files.push(file)
         }
-      }
-      // Case 2: New file (regardless of markers, usually won't have them)
-      else if (!file_exists) {
+      } else if (!file_exists) {
         if (file.content == '') {
           original_states.push({
             file_path: file.file_path,
@@ -250,17 +245,12 @@ export const handle_conflict_markers = async (
             await fs.promises.mkdir(directory, { recursive: true })
           }
 
-          // For new files, if markers exist, we probably just want the "UPDATED" part,
-          // but typically new files shouldn't have conflicts compared to "empty".
-          // We'll write content as is, assuming LLM provided full content for new file.
-          // If it used markers relative to empty string, it's weird, but parse_compared_content
-          // would reduce it to just the new content if search text is empty.
           let content_to_write = file.content
           if (has_markers) {
             const segments = parse_conflict_segments(file.content)
             content_to_write = segments
               .map((s) =>
-                s.type === 'common'
+                s.type == 'common'
                   ? s.lines.join('\n')
                   : s.updated_lines.join('\n')
               )
@@ -281,14 +271,12 @@ export const handle_conflict_markers = async (
         } catch (error) {
           failed_files.push(file)
         }
-      }
-      // Case 3: Existing file but NO markers (Fallback to Fast Replace behavior)
-      else if (file_exists && !has_markers) {
+      } else if (file_exists && !has_markers) {
         try {
           const document = await vscode.workspace.openTextDocument(safe_path)
           const original_content = document.getText()
 
-          if (file.content.trim() === '') {
+          if (file.content.trim() == '') {
             const tabs_to_close: vscode.Tab[] = []
             for (const tab_group of vscode.window.tabGroups.all) {
               tabs_to_close.push(
@@ -382,7 +370,7 @@ function parse_conflict_segments(content: string): Segment[] {
 
   for (const line of lines) {
     if (line.trim().startsWith('<<<<<<<')) {
-      if (state === 'NORMAL') {
+      if (state == 'NORMAL') {
         if (current_lines.length > 0) {
           segments.push({ type: 'common', lines: [...current_lines] })
           current_lines = []
@@ -391,17 +379,16 @@ function parse_conflict_segments(content: string): Segment[] {
         original_buffer = []
         updated_buffer = []
       } else {
-        // Nested or malformed? Treat as content of current state
-        if (state === 'ORIGINAL') original_buffer.push(line)
-        if (state === 'UPDATED') updated_buffer.push(line)
+        if (state == 'ORIGINAL') original_buffer.push(line)
+        if (state == 'UPDATED') updated_buffer.push(line)
       }
       continue
     }
 
     if (line.trim().startsWith('=======')) {
-      if (state === 'ORIGINAL') {
+      if (state == 'ORIGINAL') {
         state = 'UPDATED'
-      } else if (state === 'NORMAL') {
+      } else if (state == 'NORMAL') {
         current_lines.push(line)
       } else {
         updated_buffer.push(line)
@@ -410,7 +397,7 @@ function parse_conflict_segments(content: string): Segment[] {
     }
 
     if (line.trim().startsWith('>>>>>>>')) {
-      if (state === 'UPDATED') {
+      if (state == 'UPDATED') {
         segments.push({
           type: 'conflict',
           original_lines: original_buffer,
@@ -419,7 +406,7 @@ function parse_conflict_segments(content: string): Segment[] {
         state = 'NORMAL'
         original_buffer = []
         updated_buffer = []
-      } else if (state === 'ORIGINAL') {
+      } else if (state == 'ORIGINAL') {
         segments.push({
           type: 'conflict',
           original_lines: original_buffer,
@@ -434,16 +421,16 @@ function parse_conflict_segments(content: string): Segment[] {
       continue
     }
 
-    if (state === 'NORMAL') {
+    if (state == 'NORMAL') {
       current_lines.push(line)
-    } else if (state === 'ORIGINAL') {
+    } else if (state == 'ORIGINAL') {
       original_buffer.push(line)
-    } else if (state === 'UPDATED') {
+    } else if (state == 'UPDATED') {
       updated_buffer.push(line)
     }
   }
 
-  if (state === 'NORMAL' && current_lines.length > 0) {
+  if (state == 'NORMAL' && current_lines.length > 0) {
     segments.push({ type: 'common', lines: current_lines })
   }
 
@@ -459,12 +446,12 @@ function apply_conflict_markers_to_content(
 
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i]
-    if (segment.type === 'conflict') {
+    if (segment.type == 'conflict') {
       const prev = i > 0 ? segments[i - 1] : undefined
       const next = i < segments.length - 1 ? segments[i + 1] : undefined
 
-      const context_before = prev && prev.type === 'common' ? prev.lines : []
-      const context_after = next && next.type === 'common' ? next.lines : []
+      const context_before = prev && prev.type == 'common' ? prev.lines : []
+      const context_after = next && next.type == 'common' ? next.lines : []
 
       const clean = (lines: string[]) =>
         lines.filter((l) => {
@@ -486,7 +473,6 @@ function apply_conflict_markers_to_content(
         ...after_clean
       ].join('\n')
 
-      // We generate a patch where context is maximized so apply_diff has enough info to fuzzy match
       const patch = createTwoFilesPatch(
         'a',
         'b',
