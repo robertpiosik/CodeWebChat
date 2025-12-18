@@ -34,7 +34,7 @@ export const show_diff_with_actions = async (
 
   const title = path.basename(prepared_file.reviewable_file.file_path)
 
-  if (!prepared_file.reviewable_file.is_deleted) {
+  if (prepared_file.reviewable_file.file_state !== 'deleted') {
     await vscode.commands.executeCommand(
       'vscode.diff',
       left_doc_uri,

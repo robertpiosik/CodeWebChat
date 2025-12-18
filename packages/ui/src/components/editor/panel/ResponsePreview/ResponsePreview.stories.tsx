@@ -31,14 +31,14 @@ const files_using_fallbacks = [
   {
     type: 'file',
     file_path: 'src/new-feature.ts',
-    is_new: true,
+    file_state: 'new',
     lines_added: 50,
     lines_removed: 0
   },
   {
     type: 'file',
     file_path: 'src/old-component.tsx',
-    is_deleted: true,
+    file_state: 'deleted',
     lines_added: 0,
     lines_removed: 100
   },
