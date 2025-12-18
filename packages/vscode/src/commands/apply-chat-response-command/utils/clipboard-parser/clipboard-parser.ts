@@ -97,7 +97,9 @@ export const parse_response = (params: {
   if (
     hunk_header_regex.test(processed_response) ||
     diff_header_regex.test(processed_response) ||
-    git_diff_header_regex.test(processed_response)
+    git_diff_header_regex.test(processed_response) ||
+    processed_response.includes('```diff') ||
+    processed_response.includes('```patch')
   ) {
     const patches_or_text = extract_diffs({
       clipboard_text: processed_response,

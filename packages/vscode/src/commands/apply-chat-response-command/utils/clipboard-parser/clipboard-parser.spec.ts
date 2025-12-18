@@ -1999,6 +1999,21 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses diff format when the file path is specified in a markdown heading above a diff block that lacks hunk headers', () => {
+      const test_case = 'diff-markdown-path-above-no-hunk-header'
+      const text = load_test_case_file('diffs', test_case, `${test_case}.txt`)
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'diff',
+        file_path: 'src/index.ts',
+        content: load_test_case_file('diffs', test_case, '1-file.txt')
+      })
+    })
+
     it('parses diff format with redundant closing backticks', () => {
       const test_case = 'diff-markdown-redundant-closing-backticks'
       const text = load_test_case_file(

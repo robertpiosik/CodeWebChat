@@ -1020,6 +1020,28 @@ const build_patch_content = (params: {
       if (to_line) final_header.push(to_line)
 
       patch_lines = [...final_header, ...formatted_body_lines]
+    } else {
+      const content_start_index = patch_lines.findIndex(
+        (line) =>
+          !line.startsWith('--- ') &&
+          !line.startsWith('+++ ') &&
+          !line.startsWith('diff --git')
+      )
+
+      if (content_start_index !== -1) {
+        const header_lines = patch_lines.slice(0, content_start_index)
+        const content_lines = patch_lines.slice(content_start_index)
+        const is_new_file_content =
+          content_lines.length > 0 &&
+          content_lines.every(
+            (line) => line.startsWith('+') || line.trim() === ''
+          )
+
+        if (is_new_file_content) {
+          const hunk_header = `@@ -0,0 +1,${content_lines.length} @@`
+          patch_lines = [...header_lines, hunk_header, ...content_lines]
+        }
+      }
     }
 
     patch_content = patch_lines
@@ -1052,7 +1074,18 @@ const build_patch_content = (params: {
               is_single_root_folder_workspace: false
             }).relative_path
           : params.file_path
-      patch_content = `--- a/${relative_file_path}\n+++ b/${relative_file_path}`
+      const content_lines = params.lines
+      const is_new_file =
+        content_lines.length > 0 &&
+        content_lines.every((l) => l.startsWith('+') || l.trim() === '')
+
+      let body = params.lines.join('\n')
+      if (is_new_file) {
+        const hunk_header = `@@ -0,0 +1,${content_lines.length} @@`
+        body = `${hunk_header}\n${body}`
+      }
+
+      patch_content = `--- a/${relative_file_path}\n+++ b/${relative_file_path}\n${body}`
     } else {
       const patch_body_lines = params.lines.slice(content_start_index)
       const formatted_patch_body_lines = format_hunk_headers(patch_body_lines)
