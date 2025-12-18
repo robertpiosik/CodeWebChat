@@ -139,18 +139,6 @@ export const apply_diff = (params: {
 
       if (line.startsWith('@@')) {
         if (search_chunks.length > 0 || replace_chunks.length > 0) {
-          // Validate that the hunk has context before adding it
-          if (
-            !has_context_lines &&
-            search_chunks.length === 0 &&
-            replace_chunks.length > 0
-          ) {
-            throw new Error(
-              'Zero-context hunk detected: hunks with only additions and no context lines cannot be reliably applied. ' +
-                'The diff must include surrounding unchanged lines for proper placement.'
-            )
-          }
-
           search_replace_blocks.push(
             new SearchBlock(search_chunks, replace_chunks, -1)
           )
@@ -220,18 +208,6 @@ export const apply_diff = (params: {
       }
 
       if (search_chunks.length != 0 || replace_chunks.length != 0) {
-        // Final validation for zero-context hunks
-        if (
-          !has_context_lines &&
-          search_chunks.length === 0 &&
-          replace_chunks.length > 0
-        ) {
-          throw new Error(
-            'Zero-context hunk detected: hunks with only additions and no context lines cannot be reliably applied. ' +
-              'The diff must include surrounding unchanged lines for proper placement.'
-          )
-        }
-
         // This is crucial for diffs that only have deletions
         search_replace_blocks.push(
           new SearchBlock(search_chunks, replace_chunks, -1)
