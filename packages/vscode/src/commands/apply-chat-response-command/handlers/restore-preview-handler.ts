@@ -87,8 +87,6 @@ export const handle_restore_preview = async (
             ? 'new'
             : file.file_state,
       is_checked: file.is_checked,
-      is_replaced: file.is_replaced,
-      is_edited_by_conflict_markers: file.is_edited_by_conflict_markers,
       diff_application_method: file.diff_application_method
     })
 

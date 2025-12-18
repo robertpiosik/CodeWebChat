@@ -19,6 +19,10 @@ import { FileInPreview } from '@shared/types/file-in-preview'
 import { update_undo_button_state } from './utils/state-manager'
 import { check_for_conflict_markers } from './utils/file-checks'
 import { handle_conflict_markers } from './handlers/conflict-markers-handler'
+import {
+  handle_truncated_edit,
+  is_truncation_line
+} from './handlers/truncated-handler'
 
 export type PreviewData = {
   original_states: OriginalFileState[]
@@ -29,7 +33,6 @@ export type CommandArgs = {
   response?: string
   raw_instructions?: string
   edit_format?: string
-  suppress_fast_replace_inaccuracies_dialog?: boolean
   original_editor_state?: {
     file_path: string
     position: { line: number; character: number }
@@ -148,7 +151,6 @@ export const process_chat_response = async (
         }
       }
     }
-    args.suppress_fast_replace_inaccuracies_dialog = true
 
     clipboard_items = [
       {
@@ -440,15 +442,25 @@ export const process_chat_response = async (
       | 'Fast replace'
       | 'Intelligent update'
       | 'Conflict markers'
+      | 'Truncated'
       | undefined = undefined
 
     const has_conflict_markers = check_for_conflict_markers(files)
+    const has_truncation_markers = files.some((f) =>
+      f.content.split('\n').some((line) => is_truncation_line(line))
+    )
 
     if (has_conflict_markers) {
       selected_mode_label = 'Conflict markers'
       Logger.info({
         function_name: 'process_chat_response',
         message: 'Selecting conflict markers mode.'
+      })
+    } else if (has_truncation_markers) {
+      selected_mode_label = 'Truncated'
+      Logger.info({
+        function_name: 'process_chat_response',
+        message: 'Selecting truncated edit mode.'
       })
     } else {
       selected_mode_label = 'Fast replace'
@@ -460,15 +472,50 @@ export const process_chat_response = async (
     if (selected_mode_label == 'Fast replace') {
       const result = await handle_fast_replace(files)
       if (result.success && result.original_states) {
-        if (!args?.suppress_fast_replace_inaccuracies_dialog) {
-          result.original_states.forEach((s) => (s.is_replaced = true))
-        }
         final_original_states = result.original_states
         operation_success = true
       }
       Logger.info({
         function_name: 'process_chat_response',
         message: 'Fast replace handler finished.',
+        data: { success: result.success }
+      })
+    } else if (selected_mode_label == 'Truncated') {
+      const result = await handle_truncated_edit(files)
+      let successful_states = result.original_states || []
+      const failed_files = result.failed_files || []
+
+      // Fallback for failed files in truncated mode (e.g. new files, or complex merges)
+      if (failed_files.length > 0) {
+        const fallback_result =
+          await handle_failed_files_with_intelligent_update(
+            failed_files,
+            context,
+            panel_provider
+          )
+        if (fallback_result) {
+          successful_states = [...successful_states, ...fallback_result]
+        } else if (successful_states.length > 0) {
+          // If fallback failed but some files succeeded, undo the successful ones to maintain consistency?
+          // Or just proceed with partial success.
+          // Current logic matches conflict markers handler: undo if total success isn't reached via fallback.
+          await undo_files({ original_states: successful_states })
+          update_undo_button_state({
+            context,
+            panel_provider,
+            states: null
+          })
+          successful_states = []
+        }
+      }
+
+      if (successful_states.length > 0) {
+        final_original_states = successful_states
+        operation_success = true
+      }
+      Logger.info({
+        function_name: 'process_chat_response',
+        message: 'Truncated handler finished.',
         data: { success: result.success }
       })
     } else if (selected_mode_label == 'Conflict markers') {
@@ -478,89 +525,18 @@ export const process_chat_response = async (
       const failed_files: FileItem[] = result.failed_files || []
 
       if (failed_files.length > 0) {
-        const api_providers_manager = new ModelProvidersManager(context)
-        const config_result = await get_intelligent_update_config(
-          api_providers_manager,
-          false,
-          context
-        )
-
-        if (config_result) {
-          const { provider, config: intelligent_update_config } = config_result
-          let endpoint_url = ''
-          if (provider.type == 'built-in') {
-            const provider_info =
-              PROVIDERS[provider.name as keyof typeof PROVIDERS]
-            endpoint_url = provider_info.base_url
-          } else {
-            endpoint_url = provider.base_url
-          }
-
-          const failed_files_as_code_blocks = failed_files
-            .map((file) => {
-              const file_path_with_workspace = file.workspace_name
-                ? `${file.workspace_name}/${file.file_path}`
-                : file.file_path
-              return `\`\`\`\n// ${file_path_with_workspace}\n${file.content}\n\`\`\``
-            })
-            .join('\n')
-
-          try {
-            const intelligent_update_states = await handle_intelligent_update({
-              endpoint_url,
-              api_key: provider.api_key,
-              config: intelligent_update_config,
-              chat_response: failed_files_as_code_blocks,
-              context: context,
-              is_single_root_folder_workspace,
-              panel_provider
-            })
-
-            if (intelligent_update_states) {
-              successful_states = [
-                ...successful_states,
-                ...intelligent_update_states
-              ]
-            } else {
-              if (successful_states.length > 0) {
-                await undo_files({ original_states: successful_states })
-                update_undo_button_state({
-                  context,
-                  panel_provider,
-                  states: null
-                })
-                successful_states = []
-              }
-            }
-          } catch (error) {
-            Logger.error({
-              function_name: 'process_chat_response',
-              message: 'Error during intelligent update of failed files'
-            })
-
-            const response = await vscode.window.showErrorMessage(
-              dictionary.error_message
-                .ERROR_DURING_INTELLIGENT_UPDATE_FIX_ATTEMPT,
-              'Keep changes',
-              'Undo'
-            )
-
-            if (response == 'Undo' && successful_states.length > 0) {
-              await undo_files({ original_states: successful_states })
-              update_undo_button_state({
-                context,
-                panel_provider,
-                states: null
-              })
-              successful_states = []
-            }
-          }
-        } else {
-          if (successful_states.length > 0) {
-            await undo_files({ original_states: successful_states })
-            update_undo_button_state({ context, panel_provider, states: null })
-            successful_states = []
-          }
+        const fallback_result =
+          await handle_failed_files_with_intelligent_update(
+            failed_files,
+            context,
+            panel_provider
+          )
+        if (fallback_result) {
+          successful_states = [...successful_states, ...fallback_result]
+        } else if (successful_states.length > 0) {
+          await undo_files({ original_states: successful_states })
+          update_undo_button_state({ context, panel_provider, states: null })
+          successful_states = []
         }
       }
 
@@ -653,4 +629,63 @@ export const process_chat_response = async (
     })
     return null
   }
+}
+
+async function handle_failed_files_with_intelligent_update(
+  failed_files: FileItem[],
+  context: vscode.ExtensionContext,
+  panel_provider: PanelProvider
+): Promise<OriginalFileState[] | null> {
+  const api_providers_manager = new ModelProvidersManager(context)
+  const config_result = await get_intelligent_update_config(
+    api_providers_manager,
+    false,
+    context
+  )
+
+  if (config_result) {
+    const { provider, config: intelligent_update_config } = config_result
+    let endpoint_url = ''
+    if (provider.type == 'built-in') {
+      const provider_info = PROVIDERS[provider.name as keyof typeof PROVIDERS]
+      endpoint_url = provider_info.base_url
+    } else {
+      endpoint_url = provider.base_url
+    }
+
+    const failed_files_as_code_blocks = failed_files
+      .map((file) => {
+        const file_path_with_workspace = file.workspace_name
+          ? `${file.workspace_name}/${file.file_path}`
+          : file.file_path
+        return `\`\`\`\n// ${file_path_with_workspace}\n${file.content}\n\`\`\``
+      })
+      .join('\n')
+
+    try {
+      return await handle_intelligent_update({
+        endpoint_url,
+        api_key: provider.api_key,
+        config: intelligent_update_config,
+        chat_response: failed_files_as_code_blocks,
+        context: context,
+        is_single_root_folder_workspace:
+          vscode.workspace.workspaceFolders?.length === 1,
+        panel_provider
+      })
+    } catch (error) {
+      Logger.error({
+        function_name: 'handle_failed_files_with_intelligent_update',
+        message: 'Error during intelligent update of failed files',
+        data: error
+      })
+      const response = await vscode.window.showErrorMessage(
+        dictionary.error_message.ERROR_DURING_INTELLIGENT_UPDATE_FIX_ATTEMPT,
+        'Keep changes',
+        'Undo'
+      )
+      if (response === 'Keep changes') return [] // Return empty to signify no restoration needed, but no new states
+    }
+  }
+  return null
 }

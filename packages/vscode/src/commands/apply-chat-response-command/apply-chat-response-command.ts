@@ -210,9 +210,6 @@ export const apply_chat_response_command = (params: {
                       : undefined,
                 lines_added: diff_stats.lines_added,
                 lines_removed: diff_stats.lines_removed,
-                is_replaced: state.is_replaced,
-                is_edited_by_conflict_markers:
-                  state.is_edited_by_conflict_markers,
                 diff_application_method: state.diff_application_method,
                 content: current_content,
                 is_checked: true
@@ -233,7 +230,6 @@ export const apply_chat_response_command = (params: {
                   file_state: 'deleted',
                   lines_added: 0,
                   lines_removed: deleted_diff_stats.lines_removed,
-                  is_replaced: false,
                   content: '',
                   is_checked: true
                 })

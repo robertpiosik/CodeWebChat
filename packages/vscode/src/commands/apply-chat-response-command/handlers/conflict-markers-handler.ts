@@ -153,8 +153,7 @@ export const handle_conflict_markers = async (
               file_path: file.file_path,
               content: rename_source_content,
               workspace_name: file.workspace_name,
-              file_path_to_restore: file.renamed_from,
-              is_edited_by_conflict_markers: has_markers ? true : undefined
+              file_path_to_restore: file.renamed_from
             })
           }
         } catch (error) {
@@ -196,7 +195,6 @@ export const handle_conflict_markers = async (
               file_path: file.file_path,
               content: original_content,
               workspace_name: file.workspace_name,
-              is_edited_by_conflict_markers: true,
               file_state: 'deleted'
             })
           } else {
@@ -210,8 +208,7 @@ export const handle_conflict_markers = async (
             original_states.push({
               file_path: file.file_path,
               content: original_content,
-              workspace_name: file.workspace_name,
-              is_edited_by_conflict_markers: true
+              workspace_name: file.workspace_name
             })
           }
 
@@ -265,8 +262,7 @@ export const handle_conflict_markers = async (
             file_path: file.file_path,
             content: '',
             file_state: 'new',
-            workspace_name: file.workspace_name,
-            is_edited_by_conflict_markers: has_markers ? true : undefined
+            workspace_name: file.workspace_name
           })
         } catch (error) {
           failed_files.push(file)

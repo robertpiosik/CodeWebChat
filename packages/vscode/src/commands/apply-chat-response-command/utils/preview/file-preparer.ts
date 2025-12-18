@@ -82,8 +82,6 @@ export const prepare_files_from_original_states = async (params: {
           : undefined,
       lines_added: diff_stats.lines_added,
       lines_removed: diff_stats.lines_removed,
-      is_replaced: state.is_replaced,
-      is_edited_by_conflict_markers: state.is_edited_by_conflict_markers,
       diff_application_method: state.diff_application_method,
       is_checked: state.is_checked ?? true
     }

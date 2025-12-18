@@ -6,8 +6,6 @@ export type OriginalFileState = {
   new_file_path?: string
   file_path_to_restore?: string
   diff_application_method?: 'recount' | 'search_and_replace'
-  is_replaced?: boolean
-  is_edited_by_conflict_markers?: boolean
   file_state?: 'new' | 'deleted'
   is_checked?: boolean
   ai_content?: string

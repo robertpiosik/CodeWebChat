@@ -191,29 +191,25 @@ export const ResponsePreview: FC<Props> = (props) => {
                   </div>
                   <div className={styles.list__file__right}>
                     <div className={styles['list__file__actions']}>
-                      {(file.diff_application_method ||
-                        file.is_replaced ||
-                        file.is_edited_by_conflict_markers) && (
-                        <IconButton
-                          codicon_icon="sparkle"
-                          title={`Call Intelligent Update API tool${
-                            file.diff_application_method == 'recount'
-                              ? ' (fallback used: git apply with --recount flag)'
-                              : file.diff_application_method ==
-                                  'search_and_replace'
-                                ? ' (fallback used: search and replace matching fragments)'
-                                : ''
-                          }`}
-                          on_click={(e) => {
-                            e.stopPropagation()
-                            set_last_clicked_file_index(index)
-                            props.on_intelligent_update({
-                              file_path: file.file_path,
-                              workspace_name: file.workspace_name
-                            })
-                          }}
-                        />
-                      )}
+                      <IconButton
+                        codicon_icon="sparkle"
+                        title={`Call Intelligent Update API tool${
+                          file.diff_application_method == 'recount'
+                            ? ' (fallback used: git apply with --recount flag)'
+                            : file.diff_application_method ==
+                                'search_and_replace'
+                              ? ' (fallback used: search and replace matching fragments)'
+                              : ''
+                        }`}
+                        on_click={(e) => {
+                          e.stopPropagation()
+                          set_last_clicked_file_index(index)
+                          props.on_intelligent_update({
+                            file_path: file.file_path,
+                            workspace_name: file.workspace_name
+                          })
+                        }}
+                      />
                       <IconButton
                         codicon_icon="go-to-file"
                         title="Go To File"
