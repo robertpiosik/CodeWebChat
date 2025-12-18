@@ -1,0 +1,59 @@
+.tooltip {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  transform: translateY(calc(-100% + 1px));
+  font-size: 12px;
+  white-space: normal;
+  max-width: calc(100vw - 50px);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background-color: var(--vscode-quickInput-background);
+  border: 1px solid var(--vscode-widget-border);
+  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+  pointer-events: none;
+
+  &--warning {
+    &::before {
+      font-family: 'codicon';
+      content: '\ea6c';
+      color: var(--vscode-problemsWarningIcon-foreground);
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--vscode-quickInput-background);
+    filter: drop-shadow(0 1px 0.5px var(--vscode-widget-border));
+  }
+
+  &--align-left {
+    left: 2px;
+    &::after {
+      left: var(--tooltip-offset);
+    }
+  }
+  &--align-right {
+    right: 2px;
+    &::after {
+      right: var(--tooltip-offset);
+    }
+  }
+
+  &--align-center {
+    left: 50%;
+    transform: translateX(-50%) translateY(calc(-100% - 4px));
+    white-space: nowrap;
+    &::after {
+      left: 50%;
+      margin-left: -5px;
+    }
+  }
+}

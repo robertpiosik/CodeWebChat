@@ -19,29 +19,7 @@ import {
   map_raw_pos_to_display_pos
 } from './utils/position-mapping'
 import { dictionary } from '@shared/constants/dictionary'
-
-const Tooltip: React.FC<{
-  message: string
-  align: 'left' | 'right' | 'center'
-  is_warning?: boolean
-  offset?: number
-}> = (params) => (
-  <div
-    className={cn(styles.tooltip, {
-      [styles['tooltip--align-left']]: params.align == 'left',
-      [styles['tooltip--align-right']]: params.align == 'right',
-      [styles['tooltip--align-center']]: params.align == 'center',
-      [styles['tooltip--warning']]: params.is_warning
-    })}
-    style={
-      params.offset !== undefined
-        ? ({ '--tooltip-offset': `${params.offset}px` } as React.CSSProperties)
-        : undefined
-    }
-  >
-    {params.message}
-  </div>
-)
+import { Tooltip } from './components'
 
 export type EditFormat = 'whole' | 'truncated' | 'diff' | 'before-after'
 
