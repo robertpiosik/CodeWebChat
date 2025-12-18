@@ -1,13 +1,11 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import { createTwoFilesPatch } from 'diff'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { create_safe_path, sanitize_file_name } from '@/utils/path-sanitizer'
 import { FileItem } from '../utils/clipboard-parser'
 import { OriginalFileState } from '../types/original-file-state'
-import { apply_diff } from '../utils/diff-processor'
 import { remove_directory_if_empty } from '../utils/file-operations'
 
 type Segment =
@@ -439,6 +437,7 @@ function apply_conflict_markers_to_content(
 ): string {
   let current_content = original_content
   const segments = parse_conflict_segments(markers_content)
+  let cursor = 0
 
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i]
@@ -449,40 +448,47 @@ function apply_conflict_markers_to_content(
       const context_before = prev && prev.type == 'common' ? prev.lines : []
       const context_after = next && next.type == 'common' ? next.lines : []
 
-      const clean = (lines: string[]) =>
-        lines.filter((l) => {
-          const t = l.trim()
-          return t !== '...' && t !== '…'
-        })
-
-      const before_clean = clean(context_before)
-      const after_clean = clean(context_after)
-
-      const search_text = [
-        ...before_clean,
+      const search_lines = [
+        ...context_before,
         ...segment.original_lines,
-        ...after_clean
-      ].join('\n')
-      const replace_text = [
-        ...before_clean,
+        ...context_after
+      ]
+      const search_text = search_lines.join('\n')
+
+      const replace_lines = [
+        ...context_before,
         ...segment.updated_lines,
-        ...after_clean
-      ].join('\n')
+        ...context_after
+      ]
+      const replace_text = replace_lines.join('\n')
 
-      const patch = createTwoFilesPatch(
-        'a',
-        'b',
-        search_text,
-        replace_text,
-        undefined,
-        undefined,
-        { context: Number.MAX_SAFE_INTEGER }
-      )
+      const index = current_content.indexOf(search_text, cursor)
 
-      current_content = apply_diff({
-        original_code: current_content,
-        diff_patch: patch
-      })
+      if (index === -1) {
+        throw new Error(
+          `Could not find content to replace for conflict marker. Context:\n${search_text.slice(0, 100)}...`
+        )
+      }
+
+      current_content =
+        current_content.slice(0, index) +
+        replace_text +
+        current_content.slice(index + search_text.length)
+
+      // Advance cursor to skip the replaced part, but ensure we are positioned
+      // to match the 'context_after' which serves as 'context_before' for the next segment.
+      const unique_replaced_lines = [
+        ...context_before,
+        ...segment.updated_lines
+      ]
+      const unique_replaced_text = unique_replaced_lines.join('\n')
+
+      let advance = unique_replaced_text.length
+      if (context_after.length > 0 && unique_replaced_lines.length > 0) {
+        advance += 1 // Account for newline joining unique part and context_after
+      }
+
+      cursor = index + advance
     }
   }
   return current_content
