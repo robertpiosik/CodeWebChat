@@ -13,15 +13,11 @@ import { ModelProvidersManager } from '@/services/model-providers-manager'
 import { get_intelligent_update_config } from '@/utils/intelligent-update-utils'
 import { PROVIDERS } from '@shared/constants/providers'
 import { handle_intelligent_update } from './handlers/intelligent-update-handler'
-import { check_for_truncated_fragments } from '@/utils/check-for-truncated-fragments'
 import { handle_fast_replace } from './handlers/fast-replace-handler'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { FileInPreview } from '@shared/types/file-in-preview'
 import { update_undo_button_state } from './utils/state-manager'
-import {
-  check_if_all_files_new,
-  check_for_conflict_markers
-} from './utils/file-checks'
+import { check_for_conflict_markers } from './utils/file-checks'
 import { handle_conflict_markers } from './handlers/conflict-markers-handler'
 
 export type PreviewData = {
@@ -455,38 +451,7 @@ export const process_chat_response = async (
         message: 'Selecting conflict markers mode.'
       })
     } else {
-      const all_files_new = await check_if_all_files_new(files)
-      let has_truncated_fragments = false
-      if (
-        args?.edit_format === undefined ||
-        args?.edit_format == 'truncated' // Is undefined when invoked manually
-      ) {
-        has_truncated_fragments = check_for_truncated_fragments(files)
-      }
-
-      if (all_files_new && !has_truncated_fragments) {
-        selected_mode_label = 'Fast replace'
-        Logger.info({
-          function_name: 'process_chat_response',
-          message:
-            'All files are new - automatically selecting fast replace mode'
-        })
-      } else if (has_truncated_fragments) {
-        selected_mode_label = 'Intelligent update'
-        {
-          Logger.info({
-            function_name: 'process_chat_response',
-            message:
-              'Auto-selecting intelligent update mode due to detected truncated fragments'
-          })
-        }
-      } else {
-        selected_mode_label = 'Fast replace'
-        Logger.info({
-          function_name: 'process_chat_response',
-          message: 'Defaulting to Fast replace mode'
-        })
-      }
+      selected_mode_label = 'Fast replace'
     }
 
     let final_original_states: OriginalFileState[] | null = null
