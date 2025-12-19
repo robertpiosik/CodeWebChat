@@ -230,7 +230,13 @@ function process_truncated_content(
     }
   }
 
-  return output_lines.join('\n')
+  const result = output_lines.join('\n')
+
+  if (original_text.endsWith('\n') && !result.endsWith('\n')) {
+    return result + '\n'
+  }
+
+  return result
 }
 
 function find_line_sequence(
