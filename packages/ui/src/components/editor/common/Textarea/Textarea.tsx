@@ -18,7 +18,7 @@ type Props = {
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
   (props, ref) => {
-    const [is_focused, set_is_focused] = useState(!!props.autofocus)
+    const [has_been_focused, set_has_been_focused] = useState(!!props.autofocus)
     const internal_ref = React.useRef<HTMLTextAreaElement | null>(null)
 
     const set_ref = React.useCallback(
@@ -52,16 +52,15 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
     }
 
     const handle_focus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-      set_is_focused(true)
+      set_has_been_focused(true)
       props.onFocus?.(e)
     }
 
     const handle_blur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
-      set_is_focused(false)
       props.on_blur?.()
     }
 
-    const max_rows = is_focused
+    const max_rows = has_been_focused
       ? props.max_rows
       : (props.max_rows_when_not_focused ?? props.max_rows)
 
