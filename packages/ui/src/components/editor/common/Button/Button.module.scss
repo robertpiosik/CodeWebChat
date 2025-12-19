@@ -13,6 +13,7 @@
   background-color: var(--vscode-button-background);
   color: var(--vscode-button-foreground);
   white-space: nowrap;
+  padding: 0 10px;
 
   &:hover {
     background-color: var(--vscode-button-hoverBackground);
