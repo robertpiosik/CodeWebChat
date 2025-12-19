@@ -282,6 +282,12 @@
         "category": "Code Web Chat"
       },
       {
+        "command": "codeWebChat.findInFolder",
+        "title": "Find in Folder...",
+        "category": "Code Web Chat",
+        "icon": "$(search)"
+      },
+      {
         "command": "codeWebChat.checkpoints",
         "title": "%codeWebChat.checkpoints.title%",
         "category": "Code Web Chat",
@@ -574,14 +580,19 @@
           "group": "1_modification@3"
         },
         {
+          "command": "codeWebChat.findInFolder",
+          "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && (viewItem == directory || viewItem == workspaceRoot || viewItem == contextDirectory || viewItem == contextWorkspaceRoot)",
+          "group": "1_modification@4"
+        },
+        {
           "command": "codeWebChat.revealInExplorer",
           "when": "view == codeWebChatViewWorkspace || view == codeWebChatViewContext",
-          "group": "1_modification@4"
+          "group": "1_modification@5"
         },
         {
           "command": "codeWebChat.setRange",
           "when": "(view == codeWebChatViewWorkspace || view == codeWebChatViewContext) && viewItem == file",
-          "group": "1_modification@5"
+          "group": "1_modification@6"
         }
       ]
     },

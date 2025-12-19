@@ -146,6 +146,18 @@ export async function activate(context: vscode.ExtensionContext) {
           )
         }
       }
+    ),
+    vscode.commands.registerCommand(
+      'codeWebChat.findInFolder',
+      async (item: any) => {
+        if (item && item.resourceUri) {
+          await vscode.commands.executeCommand('workbench.action.findInFiles', {
+            query: '',
+            filesToInclude: item.resourceUri.fsPath,
+            triggerSearch: false
+          })
+        }
+      }
     )
   )
 }
