@@ -410,9 +410,7 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                             ]]: is_selected
                           }
                         )}
-                        title={`Edit format instructions '${
-                          format == 'before-after' ? 'before/after' : format
-                        }' to include with the prompt ${edit_format_shortcuts[format]}\n\n${
+                        title={`Edit format instructions to include with the prompt ${edit_format_shortcuts[format]}\n\n${
                           props.edit_format_instructions?.[format]
                         }`}
                         onClick={() => props.on_edit_format_change?.(format)}
