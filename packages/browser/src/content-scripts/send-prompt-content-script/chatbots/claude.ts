@@ -11,11 +11,9 @@ export const claude: Chatbot = {
     await new Promise((resolve) => {
       const check_for_element = () => {
         if (
-          (
-            document.querySelector(
-              'main > div > div:last-child'
-            ) as HTMLDivElement
-          ).textContent
+          document.querySelector(
+            'div[contenteditable="true"]'
+          ) as HTMLDivElement
         ) {
           resolve(null)
         } else {
@@ -24,6 +22,7 @@ export const claude: Chatbot = {
       }
       check_for_element()
     })
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   },
   set_model: async (chat) => {
     const model = chat.model
@@ -127,6 +126,7 @@ export const claude: Chatbot = {
     input_element.innerText = params.message
     input_element.dispatchEvent(new Event('input', { bubbles: true }))
     input_element.dispatchEvent(new Event('change', { bubbles: true }))
+    input_element.focus()
   },
   inject_apply_response_button: (
     client_id: number,
