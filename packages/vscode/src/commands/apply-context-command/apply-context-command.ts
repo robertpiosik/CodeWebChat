@@ -78,7 +78,7 @@ export function apply_context_command(
         const main_quick_pick = vscode.window.createQuickPick<
           vscode.QuickPickItem & { value: 'internal' | 'file' | 'other' }
         >()
-        main_quick_pick.title = 'Select Context Source'
+        main_quick_pick.title = 'Context Sources'
         main_quick_pick.items = final_quick_pick_options
         main_quick_pick.placeholder = 'Select option'
         main_quick_pick.buttons = [
@@ -164,7 +164,7 @@ export function apply_context_command(
           const other_quick_pick = vscode.window.createQuickPick<
             vscode.QuickPickItem & { value?: 'clipboard' | 'unstaged' }
           >()
-          other_quick_pick.title = 'Select Context Source'
+          other_quick_pick.title = 'Context Sources'
           other_quick_pick.items = other_quick_pick_options
           other_quick_pick.placeholder = 'Select other option'
           other_quick_pick.buttons = [vscode.QuickInputButtons.Back]
