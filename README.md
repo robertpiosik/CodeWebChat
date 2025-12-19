@@ -19,20 +19,18 @@ Context-first AI coding for VS Code, Cursor, and others. Free, open-source, and 
 
 ## Introduction
 
-**The limitations of LLMs**
+Large language models are brilliant, yet mindless pattern matchers. They can't by themselves _imagine_ what noise (examples) could help them generate better outputs. To mitigate this limitation, other tools ask you to put effort into planning—a practice of expanding prompts, so the model can do better job at finding relevant files. This is slow, token-hungry, and dilutes model's attention for the task.
 
-Large language models are trained on vast, curated datasets targeting many use cases. For code generation, model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
-
-Because the model is only as smart as examples it has seen in its training, and all it does is mindless pattern matching—letting it face big, real-world, noisy codebases all by itself could be above its true capabilities, severly huriting accuracy and cost-efficiency.
+Code Web Chat places context ownership in developer's hands. By guiding the model with hand-picked context, **save time** writing simple instructions, **save money** using smaller models, **ensure privacy** by never sending your codebase for external indexing and **security** by not running arbitrary commands.
 
 **Context-first approach**
 
-Meet a non-agentic workflow—select files that make an environment for the task, enter instructions, and send message with your favorite chatbot or a model provider of choice.
+Meet CWC's pioneering non-agentic workflow—select files that make the environment for the task, enter instructions, and send message with your favorite chatbot or a model provider of choice.
 
 > [!TIP]
 > LLMs are pattern matchers—they love examples! Steer the model to higher quality outputs, like no coding agent can.
 
-Constructed messages, in their simple form, free from the tool-calling noise focus the model's whole attention on the task. Example:
+Constructed prompt is straightforward and focus the model's whole attention on the task. Example:
 
 ```
 Implement a subtract function.
@@ -40,11 +38,9 @@ Implement a subtract function.
 Whenever showing a new, updated, renamed or deleted file, provide brief explanation, then...
 </system>
 <files>
-<file path="src/calculator.ts">
-<![CDATA[
-export const addNumbers = (a: number, b: number) => a + b;
-]]>
-</file>
+  <file path="src/calculator.ts">
+    export const addNumbers = (a: number, b: number) => a + b;
+  </file>
 </files>
 <system>
 Whenever showing a new, updated, renamed or deleted file, provide brief explanation, then...
@@ -53,9 +49,9 @@ Implement a subtract function.
 ```
 
 > [!NOTE]
-> The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
+> Instructions are repeated [for even better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
-Once the response is generated, a sophisticated parser extracts code blocks with file edits for one-click changes integration.
+Once the response is generated, a built-in sophisticated parser extracts code blocks with file edits for one-click changes integration.
 
 ## Browser integration
 
