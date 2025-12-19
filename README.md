@@ -10,7 +10,8 @@ Context-first AI coding for VS Code, Cursor, and others. Free, open-source, and 
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Apply responses**—changes integration in whole, truncated, compared and diff edit formats \
-✅ **Fully featured**—code completions, commit messages, checkpoints, and more
+✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
+🏠️ **Local friendly**—easy on small models thanks to zero tool calling
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
@@ -18,24 +19,20 @@ Context-first AI coding for VS Code, Cursor, and others. Free, open-source, and 
 
 ## Introduction
 
-🧐 **The limitations of LLMs**
+**The limitations of LLMs**
 
-Large language models (LLMs) are trained on vast datasets targeting many use cases. For code generation, a model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
+Large language models are trained on vast, curated datasets targeting many use cases. For code generation, model's training involves analyzing millions of simulated problem-solving flows, such as arriving at the accepted answer from a given StackOverflow question. For the purpose of agentic coding, models are trained on an additional layer of data that simulates gathering context and planning its next steps.
 
-Because the model is only as smart as examples it has seen in its pre-training stage, the possible coverage of real-world problems when approached at a high level is fundamentally limited.
+Because the model is only as smart as examples it has seen in its training, and all it does is mindless pattern matching—letting it face big, real-world, noisy codebases all by itself could be above its true capabilities, severly huriting accuracy and cost-efficiency.
 
-Therefore, CWC is designed to align with LLMs' true capabilities—that is, code generation in a controlled signal-to-noise ratio environment. Controlled by you, the engineer.
+**Context-first approach**
 
-🧠 **Guide the model with context**
-
-Unlike coding agents that require detailed instructions to understand your intent and locate relevant files, with CWC you provide fine-grained context up front, allowing simple, even vague instructions.
+Meet a non-agentic workflow—select files that make an environment for the task, enter instructions, and send message with your favorite chatbot or a model provider of choice.
 
 > [!TIP]
-> LLMs are pattern matchers—they love examples! Include some you believe will help the model understand the goal better.
+> LLMs are pattern matchers—they love examples! Steer the model to higher quality outputs, like no coding agent can.
 
-Meet the CWC's non-agentic workflow—select folders and files, enter instructions, and send message in a new web chat or with an API provider of choice.
-
-Constructed message is simple and focuses the model's whole attention on the task:
+Constructed messages, in their simple form, free from the tool-calling noise focus the model's whole attention on the task. Example:
 
 ```
 Implement a subtract function.
@@ -58,11 +55,11 @@ Implement a subtract function.
 > [!NOTE]
 > The prompt and edit format instructions are repeated after the context [for better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
-Once the response is generated, sophisticated parser extracts code blocks with suggested edits for one-click multi-file changes integration.
+Once the response is generated, a sophisticated parser extracts code blocks with file edits for one-click changes integration.
 
-## Chatbot initialization
+## Browser integration
 
-Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) Connector in your browser and never copy & paste again.
+Install CWC's Connector extension in your favorite browser to place messages, use projects feature, set model, incognito mode, and more. Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute security and privacy.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
@@ -101,7 +98,7 @@ Install the [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/p
 Anything CWC can do in chatbots, it can do calling model providers directly from the editor.
 
 > [!TIP]
-> Get started with generous free tiers from [Google](https://aistudio.google.com/api-keys), [Mistral](https://console.mistral.ai/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
+> Get started with model providers like [Google](https://aistudio.google.com/api-keys), [Mistral](https://console.mistral.ai/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
