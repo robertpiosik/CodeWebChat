@@ -9,7 +9,7 @@ type Props = {
   autofocus?: boolean
   min_rows?: number
   max_rows?: number
-  max_rows_when_not_focused?: number
+  max_rows_when_collapsed?: number
   on_change: (value: string) => void
   on_blur?: () => void
   on_key_down?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void
@@ -62,7 +62,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, Props>(
 
     const max_rows = has_been_focused
       ? props.max_rows
-      : (props.max_rows_when_not_focused ?? props.max_rows)
+      : (props.max_rows_when_collapsed ?? props.max_rows)
 
     return (
       <TextareaAutosize

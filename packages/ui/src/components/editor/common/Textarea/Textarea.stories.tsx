@@ -33,7 +33,7 @@ export const WithValue = () => {
   )
 }
 
-export const WithMaxRowsWhenNotFocused = () => {
+export const WithMaxRowsWhenCollapsed = () => {
   const [value, set_value] = useState(
     'This is a long text that should be truncated when not focused.\nLine 2\nLine 3\nLine 4\nLine 5'
   )
@@ -45,7 +45,7 @@ export const WithMaxRowsWhenNotFocused = () => {
       placeholder="Will be ignored because value is set"
       min_rows={1}
       max_rows={10}
-      max_rows_when_not_focused={2}
+      max_rows_when_collapsed={2}
     />
   )
 }

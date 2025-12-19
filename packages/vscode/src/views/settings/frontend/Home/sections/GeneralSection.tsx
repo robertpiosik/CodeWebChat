@@ -170,7 +170,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               <Textarea
                 value={instructions.whole}
                 min_rows={3}
-                max_rows_when_not_focused={3}
+                max_rows_when_collapsed={3}
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, whole: value }))
                 }
@@ -186,7 +186,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               <Textarea
                 value={instructions.truncated}
                 min_rows={3}
-                max_rows_when_not_focused={3}
+                max_rows_when_collapsed={3}
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, truncated: value }))
                 }
@@ -202,7 +202,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               <Textarea
                 value={instructions.before_after}
                 min_rows={3}
-                max_rows_when_not_focused={3}
+                max_rows_when_collapsed={3}
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, before_after: value }))
                 }
@@ -218,7 +218,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
               <Textarea
                 value={instructions.diff}
                 min_rows={3}
-                max_rows_when_not_focused={3}
+                max_rows_when_collapsed={3}
                 on_change={(value) =>
                   set_instructions((prev) => ({ ...prev, diff: value }))
                 }
