@@ -34,7 +34,7 @@ export const handle_send_prompt = async (params: {
   show_quick_pick?: boolean
 }): Promise<void> => {
   if (
-    params.panel_provider.mode === MODE.WEB &&
+    params.panel_provider.mode == MODE.WEB &&
     !params.panel_provider.websocket_server_instance.is_connected_with_browser()
   ) {
     vscode.window.showWarningMessage(

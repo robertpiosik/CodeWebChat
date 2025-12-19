@@ -9,7 +9,8 @@ export const use_compacting = () => {
     step0: number
     step1: number
     step2: number
-  }>({ step0: 0, step1: 0, step2: 0 })
+    step3: number
+  }>({ step0: 0, step1: 0, step2: 0, step3: 0 })
 
   useLayoutEffect(() => {
     if (left_ref.current && right_ref.current) {
@@ -22,6 +23,8 @@ export const use_compacting = () => {
         set_thresholds((prev) => ({ ...prev, step1: width }))
       else if (compact_step == 2)
         set_thresholds((prev) => ({ ...prev, step2: width }))
+      else if (compact_step == 3)
+        set_thresholds((prev) => ({ ...prev, step3: width }))
     }
   }, [compact_step])
 
@@ -34,6 +37,8 @@ export const use_compacting = () => {
         set_compact_step(1)
       } else if (thresholds.step2 && width >= thresholds.step2) {
         set_compact_step(2)
+      } else if (thresholds.step3 && width >= thresholds.step3) {
+        set_compact_step(3)
       } else if (thresholds.step0 && width < thresholds.step0) {
         if (compact_step == 0) set_compact_step(1)
         else if (
@@ -48,6 +53,12 @@ export const use_compacting = () => {
           width < thresholds.step2
         )
           set_compact_step(3)
+        else if (
+          compact_step == 3 &&
+          thresholds.step3 &&
+          width < thresholds.step3
+        )
+          set_compact_step(4)
       }
     })
     if (container_ref.current) observer.observe(container_ref.current)

@@ -84,13 +84,15 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
         <div ref={right_ref}>
           <button
             className={cn(styles['footer__action-button'], {
-              [styles['footer__action-button--compact']]: compact_step >= 3
+              [styles['footer__action-button--compact']]: compact_step >= 4
             })}
             onClick={handle_apply_click}
             title={'Integrate copied chat response or a single code block'}
             disabled={is_apply_disabled_temporarily}
           >
-            <span className={styles['footer__action-button__text']}>Apply</span>
+            <span className={styles['footer__action-button__text']}>
+              {compact_step == 0 ? 'Apply from Clipboard' : 'Apply'}
+            </span>
             <span
               className={cn(
                 styles['footer__action-button__icon'],
@@ -101,7 +103,7 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
           </button>
           <button
             className={cn(styles['footer__action-button'], {
-              [styles['footer__action-button--compact']]: compact_step >= 2
+              [styles['footer__action-button--compact']]: compact_step >= 3
             })}
             onClick={on_undo_click}
             title={
@@ -120,7 +122,7 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
           </button>
           <button
             className={cn(styles['footer__action-button'], {
-              [styles['footer__action-button--compact']]: compact_step >= 1
+              [styles['footer__action-button--compact']]: compact_step >= 2
             })}
             onClick={handle_commit_click}
             title={
