@@ -15,17 +15,19 @@ def show_greeting():
 export const EDIT_FORMAT_INSTRUCTIONS_TRUNCATED = `${intro}, followed by a markdown code block with file's contents. As a space saving measure, unchanged function bodies (code inside {}) should be replaced with ellipsis comments. Example:
 Updated the greeting text.
 
-### Updated file: \`src/examples/hello.py\`
+### Updated file: \`src/examples/hello.js\`
 
-\`\`\`python
-DURATION = 5
-GREETING = "Hello, World!"
+\`\`\`javascript
+const DURATION = 5;
+const GREETING = "Hello, World!";
 
-def get_duration():
-  # ...
+function getDuration() {
+  // ...
+}
 
-def show_greeting():
-  # ...
+function showGreeting() {
+  // ...
+}
 \`\`\``
 
 export const EDIT_FORMAT_INSTRUCTIONS_DIFF = `${intro}, followed by a unified diff within a markdown code block. Example:
