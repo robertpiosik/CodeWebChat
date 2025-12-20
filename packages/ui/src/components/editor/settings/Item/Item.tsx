@@ -1,30 +1,30 @@
 import styles from './Item.module.scss'
 import React from 'react'
-import cn from 'classnames'
 
 type Props = {
   title: string
   description: React.ReactNode
-  slot: React.ReactNode
-  slot_placement?: 'right' | 'below'
+  slot_right?: React.ReactNode
+  slot_below?: React.ReactNode
 }
 
 export const Item: React.FC<Props> = (props) => {
-  const is_below = props.slot_placement == 'below'
-
   return (
-    <div
-      className={cn(styles.container, {
-        [styles['container--below']]: is_below
-      })}
-    >
-      <div className={styles.content}>
-        <div className={styles.title}>{props.title}</div>
-        <div className={styles.description} style={{ whiteSpace: 'normal' }}>
-          {props.description}
+    <div className={styles.container}>
+      <div className={styles.main}>
+        <div className={styles.content}>
+          <div className={styles.title}>{props.title}</div>
+          <div className={styles.description} style={{ whiteSpace: 'normal' }}>
+            {props.description}
+          </div>
         </div>
+        {props.slot_right && (
+          <div className={styles.content__right}>{props.slot_right}</div>
+        )}
       </div>
-      <div className={styles.slot}>{props.slot}</div>
+      {props.slot_below && (
+        <div className={styles.below}>{props.slot_below}</div>
+      )}
     </div>
   )
 }

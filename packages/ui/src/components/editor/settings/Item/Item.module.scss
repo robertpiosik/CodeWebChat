@@ -1,15 +1,15 @@
 .container {
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.main {
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px;
-
-  &--below {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-  }
 }
 
 .content {
@@ -18,6 +18,10 @@
   flex-direction: column;
   min-width: 0;
   gap: 2px;
+
+  &__right {
+    flex-shrink: 0;
+  }
 }
 
 .title {
@@ -28,6 +32,6 @@
   color: var(--cwc-text-secondary);
 }
 
-.slot {
-  flex-shrink: 0;
+.below {
+  width: 100%;
 }

@@ -47,6 +47,12 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
       before_after: '',
       diff: ''
     })
+    const [instructions_visibility, set_instructions_visibility] = useState({
+      whole: false,
+      truncated: false,
+      before_after: false,
+      diff: false
+    })
 
     useEffect(() => {
       set_context_size_warning_threshold(
@@ -93,7 +99,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <Item
             title="Open Editor Settings"
             description="For general editor settings, visit the Editor Settings Page."
-            slot={
+            slot_right={
               <TextButton on_click={props.on_open_editor_settings}>
                 Open Editor Settings
               </TextButton>
@@ -102,7 +108,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <Item
             title="Ignore patterns"
             description="Glob patterns that you don't want to place in .gitignore files."
-            slot={
+            slot_right={
               <TextButton on_click={props.on_open_ignore_patterns_settings}>
                 Open settings file
               </TextButton>
@@ -111,7 +117,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <Item
             title="Context Size Warning Threshold"
             description="Set the token count threshold for showing a warning about large context sizes."
-            slot={
+            slot_right={
               <Input
                 type="number"
                 value={context_size_warning_threshold}
@@ -124,7 +130,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <Item
             title="Clear Checks in Workspace Behavior"
             description="Behavior of the 'Clear Checks' button in the Workspace view."
-            slot={
+            slot_right={
               <Dropdown
                 options={CLEAR_CHECKS_OPTIONS}
                 value={props.clear_checks_in_workspace_behavior}
@@ -137,7 +143,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <Item
             title="Automatic Checkpoints"
             description="A checkpoint will be created whenever a response is accepted or changes commited."
-            slot={
+            slot_right={
               <Toggler
                 is_on={!props.are_automatic_checkpoints_disabled}
                 on_toggle={(is_on) =>
@@ -149,7 +155,7 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <Item
             title="Checkpoint Lifespan"
             description="The lifespan of checkpoints in hours. Checkpoints older than this will be automatically deleted."
-            slot={
+            slot_right={
               <Input
                 type="number"
                 value={checkpoint_lifespan_str}
@@ -165,65 +171,113 @@ export const GeneralSection = forwardRef<HTMLDivElement, Props>(
           <Item
             title="Whole"
             description="Instructions for generating code in 'whole' edit format."
-            slot_placement="below"
-            slot={
-              <Textarea
-                value={instructions.whole}
-                min_rows={3}
-                max_rows_when_collapsed={3}
-                on_change={(value) =>
-                  set_instructions((prev) => ({ ...prev, whole: value }))
+            slot_right={
+              <TextButton
+                on_click={() =>
+                  set_instructions_visibility((prev) => ({
+                    ...prev,
+                    whole: !prev.whole
+                  }))
                 }
-                on_blur={handle_instructions_blur}
-              />
+              >
+                {instructions_visibility.whole ? 'Hide' : 'Show'}
+              </TextButton>
+            }
+            slot_below={
+              instructions_visibility.whole && (
+                <Textarea
+                  value={instructions.whole}
+                  min_rows={3}
+                  on_change={(value) =>
+                    set_instructions((prev) => ({ ...prev, whole: value }))
+                  }
+                  on_blur={handle_instructions_blur}
+                />
+              )
             }
           />
           <Item
             title="Truncated"
             description="Instructions for generating code in 'truncated' edit format."
-            slot_placement="below"
-            slot={
-              <Textarea
-                value={instructions.truncated}
-                min_rows={3}
-                max_rows_when_collapsed={3}
-                on_change={(value) =>
-                  set_instructions((prev) => ({ ...prev, truncated: value }))
+            slot_right={
+              <TextButton
+                on_click={() =>
+                  set_instructions_visibility((prev) => ({
+                    ...prev,
+                    truncated: !prev.truncated
+                  }))
                 }
-                on_blur={handle_instructions_blur}
-              />
+              >
+                {instructions_visibility.truncated ? 'Hide' : 'Show'}
+              </TextButton>
+            }
+            slot_below={
+              instructions_visibility.truncated && (
+                <Textarea
+                  value={instructions.truncated}
+                  min_rows={3}
+                  on_change={(value) =>
+                    set_instructions((prev) => ({ ...prev, truncated: value }))
+                  }
+                  on_blur={handle_instructions_blur}
+                />
+              )
             }
           />
           <Item
             title="Before and After"
             description="Instructions for generating code in 'before/after' edit format."
-            slot_placement="below"
-            slot={
-              <Textarea
-                value={instructions.before_after}
-                min_rows={3}
-                max_rows_when_collapsed={3}
-                on_change={(value) =>
-                  set_instructions((prev) => ({ ...prev, before_after: value }))
+            slot_right={
+              <TextButton
+                on_click={() =>
+                  set_instructions_visibility((prev) => ({
+                    ...prev,
+                    before_after: !prev.before_after
+                  }))
                 }
-                on_blur={handle_instructions_blur}
-              />
+              >
+                {instructions_visibility.before_after ? 'Hide' : 'Show'}
+              </TextButton>
+            }
+            slot_below={
+              instructions_visibility.before_after && (
+                <Textarea
+                  value={instructions.before_after}
+                  min_rows={3}
+                  on_change={(value) =>
+                    set_instructions((prev) => ({
+                      ...prev,
+                      before_after: value
+                    }))
+                  }
+                  on_blur={handle_instructions_blur}
+                />
+              )
             }
           />
           <Item
             title="Diff"
             description="Instructions for generating code in 'diff' edit format."
-            slot_placement="below"
-            slot={
-              <Textarea
-                value={instructions.diff}
-                min_rows={3}
-                max_rows_when_collapsed={3}
-                on_change={(value) =>
-                  set_instructions((prev) => ({ ...prev, diff: value }))
+            slot_right={
+              <TextButton
+                on_click={() =>
+                  set_instructions_visibility((prev) => ({ ...prev, diff: !prev.diff }))
                 }
-                on_blur={handle_instructions_blur}
-              />
+              >
+                {instructions_visibility.diff ? 'Hide' : 'Show'}
+              </TextButton>
+            }
+            slot_below={
+              instructions_visibility.diff && (
+                <Textarea
+                  value={instructions.diff}
+                  min_rows={3}
+                  on_change={(value) =>
+                    set_instructions((prev) => ({ ...prev, diff: value }))
+                  }
+                  on_blur={handle_instructions_blur}
+                />
+              )
             }
           />
         </Group>

@@ -348,8 +348,7 @@ export const Home: React.FC<Props> = (props) => {
             <Item
               title="System Instructions"
               description="Tone and style instructions for the model."
-              slot_placement="below"
-              slot={
+              slot_below={
                 <Textarea
                   value={edit_context_instructions}
                   on_change={set_edit_context_instructions}
@@ -444,8 +443,7 @@ export const Home: React.FC<Props> = (props) => {
             <Item
               title="Instructions"
               description="Describe style and conventions (e.g. Conventional Commits, gitmoji) for the generated commit message."
-              slot_placement="below"
-              slot={
+              slot_below={
                 <Textarea
                   value={commit_instructions}
                   on_change={set_commit_instructions}
@@ -458,7 +456,7 @@ export const Home: React.FC<Props> = (props) => {
             <Item
               title="Modal Duration"
               description="Automatically accept the generated commit message after a specified number of seconds."
-              slot={
+              slot_right={
                 <Input
                   type="number"
                   value={commit_message_auto_accept_after_str}
