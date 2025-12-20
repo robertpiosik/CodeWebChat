@@ -84,36 +84,32 @@ export const make_api_request = async (params: {
   let last_on_chunk_time = 0
   let last_total_tokens = 0
   let total_tokens = 0
-  let first_chunk_reported = false
 
   const handle_chunk_metrics = (chunk: string) => {
     if (!params.on_chunk || !chunk) return
 
-    total_tokens += Math.ceil(chunk.length / 4)
+    const chunk_tokens = Math.ceil(chunk.length / 4)
+    total_tokens += chunk_tokens
+
+    const current_time = Date.now()
+    
     if (stream_start_time === 0) {
-      stream_start_time = Date.now()
-      last_on_chunk_time = stream_start_time
-      // Don't calculate TPS on the first chunk, as elapsed time is 0
+      stream_start_time = current_time
+      last_on_chunk_time = current_time
+      last_total_tokens = total_tokens
       return
     }
 
-    const current_time = Date.now()
     const elapsed_since_last = current_time - last_on_chunk_time
+    
     if (elapsed_since_last >= 1000) {
-      // Skip the very first report to avoid inflated TPS
-      if (!first_chunk_reported) {
-        first_chunk_reported = true
-        last_on_chunk_time = current_time
-        last_total_tokens = total_tokens
-        return
-      }
-
       const tokens_since_last = total_tokens - last_total_tokens
       const seconds_since_last = elapsed_since_last / 1000
       const tokens_per_second =
         seconds_since_last > 0
           ? Math.round(tokens_since_last / seconds_since_last)
           : 0
+      
       params.on_chunk(tokens_per_second, total_tokens)
       last_on_chunk_time = current_time
       last_total_tokens = total_tokens
@@ -362,12 +358,10 @@ export const make_api_request = async (params: {
               message: 'Stream error',
               data: error
             })
-            // Convert stream errors to a retryable error type
             reject(new StreamAbortError(error.message))
           }
         })
 
-        // Handle abort events specifically
         response.data.on('aborted', () => {
           if (!stream_closed) {
             Logger.warn({
@@ -388,7 +382,6 @@ export const make_api_request = async (params: {
         throw params.cancellation_token.reason
       }
 
-      // Check if it's a retryable error
       const is_retryable_error =
         (axios.isAxiosError(error) &&
           (error.response?.status == 503 ||
