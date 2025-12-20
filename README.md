@@ -19,16 +19,16 @@ Context-first AI coding for VS Code, Cursor, and others. Free, open-source, and 
 
 ## Introduction
 
-Large language models are brilliant, yet mindless pattern matchers. They can't by themselves _imagine_ what noise (examples) could help them generate better outputs. To mitigate this limitation, other tools ask you to put effort into planning—a practice of expanding prompts, so the model can do better job at finding relevant files. This is slow, token-hungry, and dilutes model's attention for the task.
+Large language models are brilliant, yet mindless pattern matchers. As they lack any mental models—they can't _imagine_ how the correct output should look like ahead of selecting files for context. To mitigate this limitation, other tools ask you to put effort into planning—a practice of expanding instructions, so the model can do a better job at finding relevant files. This is slow, token-hungry, and dilutes model's attention for the task.
 
-Code Web Chat places context ownership in developer's hands. By guiding the model with hand-picked files you'll **save time** by writing simple instructions, **save money** by being token-efficient, ensure **privacy** by never sending your codebase for external indexing and **security** by not running arbitrary commands.
+Code Web Chat places context ownership in developer's hands. Guide the model with hand-picked files and get **the best accuracy** by not polluting the context window with tool definitions and endless rambling, **save time** by writing simpler instructions (goodbye to markdown files), **save money** by being token-efficient, ensure **privacy** by not having to send your whole codebase for external indexing and **security** by not running arbitrary commands.
 
 **Context-first approach**
 
-Meet non-agentic workflow—select files that set the environment for the task, enter instructions, and send message with your favorite chatbot or a model provider of choice.
+Meet a simple, non-agentic workflow—select files, enter instructions, and send message with your favorite chatbot or a model provider of choice.
 
 > [!TIP]
-> LLMs are pattern matchers—they love examples! Steer the model to higher quality outputs, like no coding agent can.
+> LLMs are pattern matchers—they love examples! Guide the model with context to production-grade code.
 
 Constructed prompt is straightforward and focus the model's whole attention on the task. Example:
 
