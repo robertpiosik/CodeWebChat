@@ -54,6 +54,7 @@ export class FilesCollector {
     const now = Date.now()
     const ONE_HOUR = 60 * 60 * 1000
 
+    // Recently modified files are placed at the end for better cache efficiency
     context_files.sort((a, b) => {
       try {
         const mtime_a = fs.statSync(a).mtime.getTime()
