@@ -12,7 +12,7 @@ def show_greeting():
   print(GREETING)
 \`\`\``
 
-export const EDIT_FORMAT_INSTRUCTIONS_TRUNCATED = `${intro}, followed by a markdown code block with file's contents. As a space saving measure, replace unchanged containerized content like function bodies, paragraphs, etc., with ellipsis comments (\`# ...\`, \`// ...\`, \`<!-- ... -->\`, \`{/* ... */}\`, etc.). Example:
+export const EDIT_FORMAT_INSTRUCTIONS_TRUNCATED = `${intro}, followed by a markdown code block with file's contents. As a space saving measure, unchanged function bodies (code inside {}) should be replaced with ellipsis comments. Example:
 Updated the greeting text.
 
 ### Updated file: \`src/examples/hello.py\`
