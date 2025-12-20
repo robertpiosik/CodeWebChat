@@ -21,11 +21,11 @@ Context-first AI coding for VS Code, Cursor, and others. Free, open-source, and 
 
 Large language models are brilliant, yet mindless pattern matchers. They can't by themselves _imagine_ what noise (examples) could help them generate better outputs. To mitigate this limitation, other tools ask you to put effort into planning—a practice of expanding prompts, so the model can do better job at finding relevant files. This is slow, token-hungry, and dilutes model's attention for the task.
 
-Code Web Chat places context ownership in developer's hands. By guiding the model with hand-picked context, **save time** writing simple instructions, **save money** using smaller models, **ensure privacy** by never sending your codebase for external indexing and **security** by not running arbitrary commands.
+Code Web Chat places context ownership in developer's hands. By guiding the model with hand-picked files you'll **save time** by writing simple prompts, **save money** by using smaller models, **ensure privacy** by never sending your codebase for external indexing and **security** by not running arbitrary commands.
 
 **Context-first approach**
 
-Meet CWC's pioneering non-agentic workflow—select files that make the environment for the task, enter instructions, and send message with your favorite chatbot or a model provider of choice.
+Meet non-agentic workflow—select files that set the environment for the task, enter instructions, and send message with your favorite chatbot or a model provider of choice.
 
 > [!TIP]
 > LLMs are pattern matchers—they love examples! Steer the model to higher quality outputs, like no coding agent can.
