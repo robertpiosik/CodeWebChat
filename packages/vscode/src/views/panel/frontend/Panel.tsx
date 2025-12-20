@@ -22,7 +22,7 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Layout } from './components/Layout/Layout'
 import { ResponsePreviewFooter as UiResponsePreviewFooter } from '@ui/components/editor/panel/ResponsePreviewFooter'
 import { EditPresetFormFooter } from './components/edit-preset-form/EditPresetFormFooter'
-import { Donations } from '@ui/components/editor/panel/Donations/Donations'
+import { Donations as UiDonations } from '@ui/components/editor/panel/Donations/Donations'
 import { use_latest_donations } from './hooks/latest-donations'
 import { DonationsFooter } from './components/donations/DonationsFooter'
 
@@ -398,7 +398,7 @@ export const Panel = () => {
                 />
               }
             >
-              <Donations
+              <UiDonations
                 donations={donations_state.donations}
                 is_fetching={donations_state.is_fetching}
                 is_revalidating={donations_state.is_revalidating}

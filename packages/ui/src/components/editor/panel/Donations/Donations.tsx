@@ -85,6 +85,7 @@ export type DonationsProps = {
 export const Donations: React.FC<DonationsProps> = (props) => {
   const observer_target = useRef<HTMLDivElement>(null)
   const [is_wallets_collapsed, set_wallets_collapsed] = useState(true)
+  const [is_links_collapsed, set_links_collapsed] = useState(true)
 
   useEffect(() => {
     if (!observer_target.current) return
@@ -104,6 +105,11 @@ export const Donations: React.FC<DonationsProps> = (props) => {
     return () => observer.unobserve(target)
   }, [props.on_fetch_next_page])
 
+  const links = [
+    { label: 'Buy Me A Coffee', url: 'https://buymeacoffee.com/robertpiosik' },
+    { label: 'PayPal', url: 'https://www.paypal.com/paypalme/robertpiosik' }
+  ]
+
   const wallets = [
     {
       name: 'Bitcoin',
@@ -120,14 +126,48 @@ export const Donations: React.FC<DonationsProps> = (props) => {
     }
   ]
 
+  const format_url_for_display = (url: string) => {
+    return url.replace(/^(https?:\/\/)/, '').replace(/^www\./, '')
+  }
+
   return (
     <>
       <Scrollable>
         <div className={styles.container}>
+          <div className={styles.about}>
+            Hi there! By donating to Code Web Chat, you’re supporting my mission
+            to independently build the world’s best free and open-source AI coding tools.
+            <br />
+            Thank you for your support!
+          </div>
+          <div className={styles.links}>
+            <Fieldset
+              is_collapsed={is_links_collapsed}
+              label="Links"
+              on_toggle_collapsed={() =>
+                set_links_collapsed(!is_links_collapsed)
+              }
+            >
+              <div className={styles.links__content}>
+                {links.map((link) => (
+                  <a
+                    href={link.url}
+                    className={styles.links__item}
+                    key={link.url}
+                  >
+                    <strong>{link.label}</strong>
+                    <span className={styles.links__item__url}>
+                      {format_url_for_display(link.url)}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </Fieldset>
+          </div>
           <div className={styles.wallets}>
             <Fieldset
               is_collapsed={is_wallets_collapsed}
-              label="Crypto wallets"
+              label="Wallets"
               on_toggle_collapsed={() =>
                 set_wallets_collapsed(!is_wallets_collapsed)
               }
@@ -143,7 +183,7 @@ export const Donations: React.FC<DonationsProps> = (props) => {
                       is_small
                       on_click={() => props.on_show_qr_code(wallet)}
                     >
-                      Show QR
+                      Scan QR
                     </Button>
                   </div>
                 </div>

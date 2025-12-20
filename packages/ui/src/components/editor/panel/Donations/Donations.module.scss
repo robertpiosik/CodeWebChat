@@ -5,10 +5,56 @@
   gap: 8px;
 }
 
+.about {
+  padding: 3px 12px 0 12px;
+  font-size: 12px;
+  color: var(--cwc-text-color-dimmed);
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: default;
+
+    &:hover {
+      text-decoration: none;
+    }
+
+    & > strong {
+      align-self: flex-start;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &__url {
+      font-size: 11px;
+      color: var(--cwc-text-color-dimmed);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}
+
 .wallets {
   display: flex;
   flex-direction: column;
-  margin: 0 12px;
+  padding: 0 12px;
 
   &__wallet {
     display: flex;
@@ -19,7 +65,7 @@
     &__right {
       display: flex;
       align-items: center;
-      gap: 2px;
+      gap: 4px;
       min-width: 0;
       flex: 1;
       justify-content: flex-end;
