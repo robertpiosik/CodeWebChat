@@ -36,6 +36,7 @@
 
   &--secondary {
     background-color: var(--vscode-button-secondaryBackground);
+    color: var(--vscode-button-secondaryForeground);
 
     &:hover {
       background-color: var(--vscode-button-secondaryHoverBackground);
