@@ -33,23 +33,19 @@ Work on real-world codebases with a software engineering mindset. Meet a simple,
 Constructed prompt is straightforward and focus the model's whole attention on the task. Example:
 
 ```
-Implement a subtract function.
 <system>
-Whenever showing a new, updated, renamed or deleted file, provide brief explanation, then...
+Whenever showing a new, updated, renamed or deleted file...
 </system>
 <files>
-  <file path="src/calculator.ts">
-    export const addNumbers = (a: number, b: number) => a + b;
-  </file>
+<file path="src/calculator.ts">
+export const addNumbers = (a: number, b: number) => a + b;
+</file>
 </files>
 <system>
-Whenever showing a new, updated, renamed or deleted file, provide brief explanation, then...
+Whenever showing a new, updated, renamed or deleted file...
 </system>
 Implement a subtract function.
 ```
-
-> [!NOTE]
-> Instructions are repeated [for even better accuracy](https://cookbook.openai.com/examples/gpt4-1_prompting_guide#:~:text=If%20you%20have%20long%20context%20in%20your%20prompt%2C%20ideally%20place%20your%20instructions%20at%20both%20the%20beginning%20and%20end%20of%20the%20provided%20context%2C%20as%20we%20found%20this%20to%20perform%20better%20than%20only%20above%20or%20below.).
 
 Once the response is generated, a built-in sophisticated parser extracts code blocks with file edits for one-click changes integration.
 
