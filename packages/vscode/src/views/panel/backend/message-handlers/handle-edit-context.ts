@@ -100,9 +100,6 @@ const get_edit_context_config = async (
         if (config.reasoning_effort) {
           description_parts.push(`${config.reasoning_effort}`)
         }
-        if (config.instructions_placement == 'below-only') {
-          description_parts.push('cache-enabled')
-        }
 
         const buttons: vscode.QuickInputButton[] = []
 
@@ -258,54 +255,33 @@ const perform_context_editing = async (params: {
     instructions = replace_selection_placeholder(instructions)
   }
 
-  let pre_context_instructions = instructions
-  let post_context_instructions = instructions
+  let processed_instructions = instructions
 
-  if (pre_context_instructions.includes('#Changes:')) {
-    pre_context_instructions = await replace_changes_symbol({
-      instruction: pre_context_instructions,
-      workspace_provider: params.file_tree_provider
-    })
-    post_context_instructions = await replace_changes_symbol({
-      instruction: post_context_instructions,
-      after_context: true,
+  if (processed_instructions.includes('#Changes:')) {
+    processed_instructions = await replace_changes_symbol({
+      instruction: processed_instructions,
       workspace_provider: params.file_tree_provider
     })
   }
 
-  if (pre_context_instructions.includes('#Commit:')) {
-    pre_context_instructions = await replace_commit_symbol({
-      instruction: pre_context_instructions
-    })
-    post_context_instructions = await replace_commit_symbol({
-      instruction: post_context_instructions,
-      after_context: true
+  if (processed_instructions.includes('#Commit:')) {
+    processed_instructions = await replace_commit_symbol({
+      instruction: processed_instructions
     })
   }
 
-  if (pre_context_instructions.includes('#ContextAtCommit:')) {
-    pre_context_instructions = await replace_context_at_commit_symbol({
-      instruction: pre_context_instructions,
-      workspace_provider: params.file_tree_provider
-    })
-    post_context_instructions = await replace_context_at_commit_symbol({
-      instruction: post_context_instructions,
-      after_context: true,
+  if (processed_instructions.includes('#ContextAtCommit:')) {
+    processed_instructions = await replace_context_at_commit_symbol({
+      instruction: processed_instructions,
       workspace_provider: params.file_tree_provider
     })
   }
 
-  if (pre_context_instructions.includes('#SavedContext:')) {
-    pre_context_instructions = await replace_saved_context_placeholder({
-      instruction: pre_context_instructions,
-      context: params.context,
-      workspace_provider: params.file_tree_provider
-    })
-    post_context_instructions = await replace_saved_context_placeholder({
-      instruction: post_context_instructions,
+  if (processed_instructions.includes('#SavedContext:')) {
+    processed_instructions = await replace_saved_context_placeholder({
+      instruction: processed_instructions,
       context: params.context,
       workspace_provider: params.file_tree_provider,
-      just_opening_tag: true
     })
   }
 
@@ -380,26 +356,17 @@ const perform_context_editing = async (params: {
     }[edit_format]
     const edit_format_instructions =
       config.get<string>(instructions_key) || default_instructions
-    let loop_pre_context_instructions = pre_context_instructions
-    let loop_post_context_instructions = post_context_instructions
 
+    let system_instructions_xml = ''
     if (edit_format_instructions) {
-      const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
-      loop_pre_context_instructions += `\n${system_instructions}`
-      loop_post_context_instructions = `${system_instructions}\n${loop_post_context_instructions}`
+      system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
     }
 
-    // Use instructions placement setting to determine message structure
-    const instructions_placement =
-      edit_context_config.instructions_placement || 'above-and-below'
-    let content: string
-    if (instructions_placement == 'below-only') {
-      // Place instructions only below context for better caching
-      content = `${files}\n${loop_post_context_instructions}`
-    } else {
-      // Default: place instructions above and below context for better adherence
-      content = `${loop_pre_context_instructions}\n${files}\n${loop_post_context_instructions}`
-    }
+    const content = `${
+      system_instructions_xml ? system_instructions_xml + '\n' : ''
+    }${files}\n${
+      system_instructions_xml ? system_instructions_xml + '\n' : ''
+    }${processed_instructions}`
 
     const system_instructions = vscode.workspace
       .getConfiguration('codeWebChat')

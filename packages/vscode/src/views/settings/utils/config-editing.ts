@@ -351,29 +351,6 @@ export const edit_reasoning_effort_for_config = async () => {
   return selected_effort.label
 }
 
-export const edit_instructions_placement_for_config = async () => {
-  const placement_options: (vscode.QuickPickItem & {
-    value: 'above-and-below' | 'below-only'
-  })[] = [
-    {
-      label: 'Above and Below',
-      value: 'above-and-below',
-      detail: 'Places instructions both before and after the context (default).'
-    },
-    {
-      label: 'Below Only',
-      value: 'below-only',
-      detail:
-        'Places instructions only after the context. This may improve cost-efficienty by enabling prompt caching.'
-    }
-  ]
-  const selected_placement = await vscode.window.showQuickPick(
-    placement_options,
-    { title: 'Select Instructions Placement' }
-  )
-  return selected_placement?.value
-}
-
 export const edit_max_concurrency_for_config = async (config: ToolConfig) => {
   const new_concurrency_str = await vscode.window.showInputBox({
     title: 'Edit Max Concurrency',

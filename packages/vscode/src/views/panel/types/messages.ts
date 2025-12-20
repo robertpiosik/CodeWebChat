@@ -4,7 +4,6 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Preset } from '@shared/types/preset'
 import { Mode } from './main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
-import { InstructionsPlacement } from '@/services/model-providers-manager'
 
 export interface BaseMessage {
   command: string
@@ -17,7 +16,6 @@ export type ApiToolConfiguration = {
   model: string
   temperature: number
   reasoning_effort?: string
-  instructions_placement?: InstructionsPlacement
   is_default?: boolean
   is_pinned?: boolean
 }

@@ -183,60 +183,40 @@ export const handle_send_prompt = async (params: {
           }
         }
 
-        let pre_context_instructions = instructions
-        let post_context_instructions = instructions
-        if (pre_context_instructions.includes('#Changes:')) {
+        let processed_instructions = instructions
+        if (processed_instructions.includes('#Changes:')) {
           const is_no_context_web_mode =
             params.panel_provider.mode == MODE.WEB &&
             params.panel_provider.web_prompt_type == 'no-context'
 
-          pre_context_instructions = await replace_changes_symbol({
-            instruction: pre_context_instructions,
+          processed_instructions = await replace_changes_symbol({
+            instruction: processed_instructions,
             workspace_provider: params.panel_provider.workspace_provider,
             is_no_context_web_mode
           })
-          post_context_instructions = await replace_changes_symbol({
-            instruction: post_context_instructions,
-            after_context: true,
-            workspace_provider: params.panel_provider.workspace_provider
+        }
+
+        if (processed_instructions.includes('#Commit:')) {
+          processed_instructions = await replace_commit_symbol({
+            instruction: processed_instructions
           })
         }
 
-        if (pre_context_instructions.includes('#Commit:')) {
-          pre_context_instructions = await replace_commit_symbol({
-            instruction: pre_context_instructions
-          })
-          post_context_instructions = await replace_commit_symbol({
-            instruction: post_context_instructions,
-            after_context: true
-          })
-        }
-
-        if (pre_context_instructions.includes('#ContextAtCommit:')) {
-          pre_context_instructions = await replace_context_at_commit_symbol({
-            instruction: pre_context_instructions,
-            workspace_provider: params.panel_provider.workspace_provider
-          })
-          post_context_instructions = await replace_context_at_commit_symbol({
-            instruction: post_context_instructions,
-            after_context: true,
+        if (processed_instructions.includes('#ContextAtCommit:')) {
+          processed_instructions = await replace_context_at_commit_symbol({
+            instruction: processed_instructions,
             workspace_provider: params.panel_provider.workspace_provider
           })
         }
-        if (pre_context_instructions.includes('#SavedContext:')) {
-          pre_context_instructions = await replace_saved_context_placeholder({
-            instruction: pre_context_instructions,
-            context: params.panel_provider.context,
-            workspace_provider: params.panel_provider.workspace_provider
-          })
-          post_context_instructions = await replace_saved_context_placeholder({
-            instruction: post_context_instructions,
+        if (processed_instructions.includes('#SavedContext:')) {
+          processed_instructions = await replace_saved_context_placeholder({
+            instruction: processed_instructions,
             context: params.panel_provider.context,
             workspace_provider: params.panel_provider.workspace_provider,
-            just_opening_tag: true
           })
         }
 
+        let system_instructions_xml = ''
         if (params.panel_provider.web_prompt_type == 'edit-context') {
           const config = vscode.workspace.getConfiguration('codeWebChat')
           const instructions_key = {
@@ -254,16 +234,20 @@ export const handle_send_prompt = async (params: {
           const edit_format_instructions =
             config.get<string>(instructions_key) || default_instructions
           if (edit_format_instructions) {
-            const system_instructions = `<system>\n${edit_format_instructions}\n</system>`
-            pre_context_instructions += `\n${system_instructions}`
-            post_context_instructions = `${system_instructions}\n${post_context_instructions}`
+            system_instructions_xml = `<system>\n${edit_format_instructions}\n</system>`
           }
         }
 
         return {
           text: context_text
-            ? `${pre_context_instructions}\n<files>\n${context_text}</files>\n${post_context_instructions}`
-            : pre_context_instructions,
+            ? `${
+                system_instructions_xml ? system_instructions_xml + '\n' : ''
+              }<files>\n${context_text}</files>\n${
+                system_instructions_xml ? system_instructions_xml + '\n' : ''
+              }${processed_instructions}`
+            : `${
+                system_instructions_xml ? system_instructions_xml + '\n' : ''
+              }${processed_instructions}`,
           preset_name,
           raw_instructions: current_instructions,
           mode: params.panel_provider.web_prompt_type,

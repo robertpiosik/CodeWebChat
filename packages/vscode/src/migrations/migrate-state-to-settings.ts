@@ -35,7 +35,6 @@ type OldToolConfig = {
   temperature: number
   reasoning_effort?: string
   max_concurrency?: number
-  instructions_placement?: string
 }
 
 type NewToolConfig = {
@@ -45,7 +44,6 @@ type NewToolConfig = {
   reasoningEffort?: string
   isDefault?: boolean
   maxConcurrency?: number
-  instructionsPlacement?: string
 }
 
 async function migrateProviders(context: vscode.ExtensionContext) {
@@ -91,9 +89,6 @@ function transformToolConfig(
   }
   if (oldConfig.max_concurrency !== undefined) {
     newConfig.maxConcurrency = oldConfig.max_concurrency
-  }
-  if (oldConfig.instructions_placement !== undefined) {
-    newConfig.instructionsPlacement = oldConfig.instructions_placement
   }
   return newConfig
 }

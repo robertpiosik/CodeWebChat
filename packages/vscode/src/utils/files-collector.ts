@@ -51,7 +51,30 @@ export class FilesCollector {
     }
 
     const context_files = [...new Set(context_files_list)]
-    context_files.sort((a, b) => natural_sort(a, b))
+    const now = Date.now()
+    const ONE_HOUR = 60 * 60 * 1000
+
+    context_files.sort((a, b) => {
+      try {
+        const mtime_a = fs.statSync(a).mtime.getTime()
+        const mtime_b = fs.statSync(b).mtime.getTime()
+
+        const is_recent_a = now - mtime_a < ONE_HOUR
+        const is_recent_b = now - mtime_b < ONE_HOUR
+
+        if (is_recent_a != is_recent_b) {
+          return is_recent_a ? 1 : -1
+        }
+
+        if (is_recent_a) {
+          return mtime_a - mtime_b
+        }
+
+        return natural_sort(a, b)
+      } catch (error) {
+        return natural_sort(a, b)
+      }
+    })
 
     let collected_text = ''
 

@@ -1472,13 +1472,6 @@
                   "high"
                 ]
               },
-              "instructionsPlacement": {
-                "type": "string",
-                "enum": [
-                  "above-and-below",
-                  "below-only"
-                ]
-              },
               "isPinned": {
                 "type": "boolean"
               }

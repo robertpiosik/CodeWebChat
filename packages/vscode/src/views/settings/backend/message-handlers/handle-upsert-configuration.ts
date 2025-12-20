@@ -10,7 +10,6 @@ import { dictionary } from '@shared/constants/dictionary'
 import { UpsertConfigurationMessage } from '@/views/settings/types/messages'
 import { ModelFetcher } from '@/services/model-fetcher'
 import {
-  edit_instructions_placement_for_config,
   edit_max_concurrency_for_config,
   edit_model_for_config,
   edit_provider_for_config,
@@ -52,13 +51,9 @@ export const handle_upsert_configuration = async (
       get_configs = () => providers_manager.get_edit_context_tool_configs()
       save_configs = (configs) =>
         providers_manager.save_edit_context_tool_configs(configs)
-      advanced_options = [
-        'Temperature',
-        'Reasoning Effort',
-        'Instructions Placement'
-      ]
+      advanced_options = ['Temperature', 'Reasoning Effort']
       advanced_details =
-        'Temperature, Reasoning Effort, Instructions Placement...'
+        'Temperature, Reasoning Effort...'
       break
     case 'intelligent-update':
       get_configs = () =>
@@ -225,16 +220,6 @@ export const handle_upsert_configuration = async (
             detail: updated_config.reasoning_effort
           })
         }
-        if (advanced_options.includes('Instructions Placement')) {
-          advanced_items.push({
-            label: 'Instructions Placement',
-            detail:
-              (updated_config.instructions_placement ?? 'above-and-below') ===
-              'below-only'
-                ? 'Below Only'
-                : 'Above and Below'
-          })
-        }
         if (advanced_options.includes('Max Concurrency')) {
           advanced_items.push({
             label: 'Max Concurrency',
@@ -288,11 +273,6 @@ export const handle_upsert_configuration = async (
           if (new_effort !== undefined) {
             updated_config.reasoning_effort =
               new_effort === null ? undefined : (new_effort as any)
-          }
-        } else if (selected_advanced.label === 'Instructions Placement') {
-          const new_placement = await edit_instructions_placement_for_config()
-          if (new_placement !== undefined) {
-            updated_config.instructions_placement = new_placement as any
           }
         } else if (selected_advanced.label === 'Max Concurrency') {
           const new_concurrency =
