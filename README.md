@@ -55,7 +55,7 @@ Once the response is generated, a built-in sophisticated parser extracts code bl
 
 ## Browser integration
 
-Install CWC's Connector extension in your favorite browser to place messages, use projects feature, set model, incognito mode, and more. Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute security and privacy.
+Install CWC's Connector extension in your favorite browser to place messages, use projects/spaces, set model, incognito mode, and more, via customizable presets. Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
