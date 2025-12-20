@@ -35,7 +35,7 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
             on_change={set_message}
             min_rows={2}
             on_key_down={(e) => {
-              if (e.key == 'Enter' && (e.metaKey || e.ctrlKey)) {
+              if (e.key == 'Enter' && !e.shiftKey) {
                 e.preventDefault()
                 handle_accept()
               }
