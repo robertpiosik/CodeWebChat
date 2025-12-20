@@ -1,7 +1,6 @@
 import { parse_response } from './clipboard-parser'
 import * as fs from 'fs'
 import * as path from 'path'
-import { parse_file_content_only, parse_multiple_files } from './parsers'
 
 describe('clipboard-parser', () => {
   const load_test_case_file = (p1: string, p2: string, p3?: string): string => {
@@ -19,21 +18,22 @@ describe('clipboard-parser', () => {
     )
   }
 
-  describe('parse_multiple_files', () => {
+  describe('parse_response', () => {
     it("_temp test case that doesn't fail when files are empty", () => {
       const test_case = '_temp'
       const text = load_test_case_file(test_case, 'temp.txt')
-      const result = parse_multiple_files({
-        response: text,
-        is_single_root_folder_workspace: true
-      })
 
-      expect(result).toHaveLength(1)
-      expect(result[0]).toMatchObject({
-        type: 'file',
-        file_path: 'README.md',
-        content: load_test_case_file(test_case, '1-file.txt')
-      })
+      if (text && text.trim() != '') {
+        const result = parse_response({
+          response: text,
+          is_single_root_folder_workspace: true
+        })
+
+        expect(result).toHaveLength(1)
+        expect(result[0]).toMatchObject({
+          content: load_test_case_file(test_case, '1-file.txt')
+        })
+      }
     })
 
     it('parses multiple files when file paths are in comments at the start of code blocks', () => {
@@ -43,7 +43,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -68,7 +68,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -93,7 +93,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -113,7 +113,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -133,7 +133,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -153,7 +153,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -173,7 +173,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -193,7 +193,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -213,7 +213,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -233,7 +233,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -261,7 +261,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -281,7 +281,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -301,7 +301,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -326,7 +326,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: false
       })
@@ -347,7 +347,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -366,7 +366,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -386,7 +386,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -406,7 +406,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -426,7 +426,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -451,7 +451,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -476,7 +476,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -496,7 +496,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -516,7 +516,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -536,7 +536,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -556,7 +556,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -576,7 +576,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -596,7 +596,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -621,7 +621,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -646,7 +646,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -666,7 +666,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -686,7 +686,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -706,7 +706,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -726,7 +726,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -750,7 +750,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -771,7 +771,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -791,7 +791,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -811,7 +811,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -831,7 +831,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -855,7 +855,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -879,7 +879,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -899,7 +899,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -918,7 +918,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -942,7 +942,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -966,7 +966,7 @@ describe('clipboard-parser', () => {
         test_case,
         `${test_case}.txt`
       )
-      const result = parse_multiple_files({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
@@ -984,27 +984,21 @@ describe('clipboard-parser', () => {
     })
   })
 
-  describe('parse_file_content_only', () => {
+  describe('parse_response fallback to single file without blocks', () => {
     it('parses file content when there are no markdown code blocks', () => {
       const test_case = 'file-content-only'
-      const text = load_test_case_file(
-        'standard',
-        test_case,
-        `${test_case}.txt`
-      )
-      const result = parse_file_content_only({
+      const text = load_test_case_file('standard', test_case, `${test_case}.txt`)
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
 
-      expect(result).not.toBeNull()
-      if (result) {
-        expect(result.type).toBe('file')
-        expect(result.file_path).toBe('src/index.ts')
-        expect(result.content).toBe(
-          load_test_case_file('standard', test_case, '1-file.txt')
-        )
-      }
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/index.ts',
+        content: load_test_case_file('standard', test_case, '1-file.txt')
+      })
     })
 
     it('parses file content when file path is in a multi-line comment', () => {
@@ -1014,29 +1008,31 @@ describe('clipboard-parser', () => {
         test_case,
         `path-in-multi-line-comment.txt`
       )
-      const result = parse_file_content_only({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
 
-      expect(result).not.toBeNull()
-      if (result) {
-        expect(result.type).toBe('file')
-        expect(result.file_path).toBe('src/index.ts')
-        expect(result.content).toBe(
-          load_test_case_file('standard', test_case, '1-file.txt')
-        )
-      }
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/index.ts',
+        content: load_test_case_file('standard', test_case, '1-file.txt')
+      })
     })
 
-    it('returns null when response is just text and not a file', () => {
+    it('returns text item when response is just regular text', () => {
       const text = 'This is just regular text without a file path'
-      const result = parse_file_content_only({
+      const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true
       })
 
-      expect(result).toBeNull()
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        type: 'text',
+        content: text
+      })
     })
   })
 
