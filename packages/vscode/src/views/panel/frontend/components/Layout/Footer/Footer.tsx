@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef, useLayoutEffect } from 'react'
 import cn from 'classnames'
 import { Icon } from '@ui/components/editor/common/Icon'
 import styles from './Footer.module.scss'
+import { use_compacting } from '@shared/hooks'
 import { LayoutContext } from '../../../contexts/LayoutContext'
-import { use_compacting } from './use-compacting'
 
 type Props = {
   on_donate_click: () => void
@@ -24,7 +24,17 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
   const [is_apply_disabled_temporarily, set_is_apply_disabled_temporarily] =
     useState(false)
 
-  const { container_ref, left_ref, right_ref, compact_step } = use_compacting()
+  const { container_ref, compact_step, report_width } = use_compacting(4)
+  const left_ref = useRef<HTMLDivElement>(null)
+  const right_ref = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    if (left_ref.current && right_ref.current) {
+      const width =
+        left_ref.current.offsetWidth + right_ref.current.offsetWidth + 6
+      report_width(width, compact_step)
+    }
+  }, [compact_step, report_width])
 
   useEffect(() => {
     set_is_commit_disabled_temporarily(false)

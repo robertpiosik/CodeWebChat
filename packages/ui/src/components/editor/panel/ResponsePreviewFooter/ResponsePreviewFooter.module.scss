@@ -6,3 +6,23 @@
     flex: 1;
   }
 }
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.text {
+  &--hidden {
+    display: none;
+  }
+}
+
+.icon {
+  display: none;
+  &--visible {
+    display: inline-block;
+  }
+}
