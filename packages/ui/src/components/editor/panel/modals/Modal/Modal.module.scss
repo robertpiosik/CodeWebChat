@@ -24,7 +24,7 @@
 .icon {
   font-size: 30px !important;
   text-align: center;
-  margin-top: 24px;
+  padding-top: 16px;
   display: flex;
   justify-content: center;
 
@@ -42,6 +42,10 @@
   font-weight: 500;
   font-size: 14px;
   padding: 12px 12px 0 12px;
+
+  &--with-icon {
+    padding-top: 6px;
+  }
 }
 
 .scrollable {

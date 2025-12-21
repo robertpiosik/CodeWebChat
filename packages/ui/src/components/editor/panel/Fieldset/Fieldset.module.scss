@@ -5,7 +5,7 @@
   border-radius: 10px;
 
   &__label {
-    padding: 8px 12px 8px 12px;
+    padding: 8px 10px 8px 10px;
     font-size: 11px;
     font-weight: 600;
     color: var(--cwc-text-color-dimmed);
@@ -29,6 +29,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 2px 12px 12px 12px;
+    padding: 2px 10px 10px 10px;
   }
 }

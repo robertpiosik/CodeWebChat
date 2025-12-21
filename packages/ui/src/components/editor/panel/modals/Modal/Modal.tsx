@@ -37,7 +37,15 @@ export const Modal: React.FC<Props> = (props) => {
           />
         )}
 
-        {props.title && <div className={styles.title}>{props.title}</div>}
+        {props.title && (
+          <div
+            className={cn(styles.title, {
+              [styles['title--with-icon']]: !!props.icon
+            })}
+          >
+            {props.title}
+          </div>
+        )}
 
         {props.content_slot &&
           (props.content_max_height ? (

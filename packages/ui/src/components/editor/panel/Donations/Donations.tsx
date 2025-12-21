@@ -2,8 +2,8 @@ import styles from './Donations.module.scss'
 import { useEffect, useRef, useState } from 'react'
 import cn from 'classnames'
 import { Scrollable } from '../Scrollable'
-import { Button } from '../../common/Button/Button'
 import { Fieldset } from '../Fieldset'
+import { TextButton } from '../TextButton'
 
 const get_href_from_url_like_string = (text: string): string | null => {
   if (/\s/.test(text)) {
@@ -136,7 +136,8 @@ export const Donations: React.FC<DonationsProps> = (props) => {
         <div className={styles.container}>
           <div className={styles.about}>
             Hi there! By donating to Code Web Chat, you’re supporting my mission
-            to independently build the world’s best free and open-source AI coding tools.
+            to independently build the world’s best free and open-source AI
+            coding tools.
             <br />
             Thank you for your support!
           </div>
@@ -179,12 +180,9 @@ export const Donations: React.FC<DonationsProps> = (props) => {
                     <span className={styles.wallets__wallet__hash}>
                       {wallet.address}
                     </span>
-                    <Button
-                      is_small
-                      on_click={() => props.on_show_qr_code(wallet)}
-                    >
+                    <TextButton on_click={() => props.on_show_qr_code(wallet)}>
                       Scan QR
-                    </Button>
+                    </TextButton>
                   </div>
                 </div>
               ))}

@@ -1,6 +1,6 @@
 .button {
-  font-size: 12px;
   color: var(--vscode-textLink-foreground);
+  white-space: nowrap;
 
   &:disabled {
     opacity: 0.5;
