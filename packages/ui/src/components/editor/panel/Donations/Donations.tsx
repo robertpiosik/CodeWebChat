@@ -136,7 +136,7 @@ export const Donations: React.FC<DonationsProps> = (props) => {
         <div className={styles.container}>
           <div className={styles.about}>
             Hi there! By donating to Code Web Chat, you’re supporting my mission
-            to independently build the world’s best free and open-source AI
+            to independently build the world’s best, free and open-source AI
             coding tools.
             <br />
             Thank you for your support!
