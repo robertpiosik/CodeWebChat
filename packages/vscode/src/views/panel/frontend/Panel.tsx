@@ -542,6 +542,7 @@ export const Panel = () => {
             <UiAutoClosingModal
               title={auto_closing_modal_title}
               duration={3000}
+              icon="success"
               on_close={() => {
                 set_auto_closing_modal_title(undefined)
               }}

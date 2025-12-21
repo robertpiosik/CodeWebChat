@@ -47,7 +47,7 @@ Updated the greeting text.
 \`\`\``
 
 export const EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict markers. Example:
-Updated the greeting text.
+Changed greeting to wishes.
 
 ### Updated file: \`src/examples/hello.py\`
 
@@ -55,6 +55,13 @@ Updated the greeting text.
 <<<<<<< ORIGINAL
 GREETING = "Welcome everyone!"
 =======
-GREETING = "Hello, World!"
+WISHES = "Have a nice day!"
+>>>>>>> UPDATED
+<<<<<<< ORIGINAL
+ def show_greeting():
+   print(GREETING)
+=======
+ def show_wishes():
+   print(WISHES)
 >>>>>>> UPDATED
 \`\`\``

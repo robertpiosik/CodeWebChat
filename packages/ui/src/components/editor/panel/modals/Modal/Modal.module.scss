@@ -21,6 +21,22 @@
   }
 }
 
+.icon {
+  font-size: 30px !important;
+  text-align: center;
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+
+  &--success {
+    color: var(--vscode-testing-iconPassed);
+  }
+
+  &--warning {
+    color: var(--vscode-list-warningForeground);
+  }
+}
+
 .title {
   text-align: center;
   font-weight: 500;

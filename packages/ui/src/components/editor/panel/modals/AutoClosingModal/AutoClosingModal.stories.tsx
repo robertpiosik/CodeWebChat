@@ -14,9 +14,10 @@ export const Default = () => {
 
   return visible ? (
     <AutoClosingModal
-      title="Chat has been initialized in the connected browser"
+      title="Initialized in the connected browser"
       duration={3000}
       on_close={handle_close}
+      icon='success'
     />
   ) : null
 }

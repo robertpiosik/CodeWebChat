@@ -212,7 +212,7 @@ export const handle_send_prompt = async (params: {
           processed_instructions = await replace_saved_context_placeholder({
             instruction: processed_instructions,
             context: params.panel_provider.context,
-            workspace_provider: params.panel_provider.workspace_provider,
+            workspace_provider: params.panel_provider.workspace_provider
           })
         }
 
@@ -267,10 +267,7 @@ export const handle_send_prompt = async (params: {
 
   params.panel_provider.send_message({
     command: 'SHOW_AUTO_CLOSING_MODAL',
-    title:
-      resolved_preset_names.length > 1
-        ? 'Chats have been initialized in the connected browser'
-        : 'Chat has been initialized in the connected browser'
+    title: 'Initialized in the connected browser'
   })
 }
 

@@ -52,7 +52,7 @@ export class FilesCollector {
 
     const context_files = [...new Set(context_files_list)]
     const now = Date.now()
-    const ONE_HOUR = 60 * 60 * 1000
+    const THREE_HOURS = 3 * 60 * 60 * 1000
 
     // Recently modified files are placed at the end for better cache efficiency
     context_files.sort((a, b) => {
@@ -60,8 +60,8 @@ export class FilesCollector {
         const mtime_a = fs.statSync(a).mtime.getTime()
         const mtime_b = fs.statSync(b).mtime.getTime()
 
-        const is_recent_a = now - mtime_a < ONE_HOUR
-        const is_recent_b = now - mtime_b < ONE_HOUR
+        const is_recent_a = now - mtime_a < THREE_HOURS
+        const is_recent_b = now - mtime_b < THREE_HOURS
 
         if (is_recent_a != is_recent_b) {
           return is_recent_a ? 1 : -1

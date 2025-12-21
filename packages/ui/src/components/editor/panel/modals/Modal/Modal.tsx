@@ -4,6 +4,7 @@ import styles from './Modal.module.scss'
 
 type Props = {
   title?: string
+  icon?: 'success' | 'warning'
   content_slot?: React.ReactNode
   footer_slot?: React.ReactNode
   content_max_height?: string
@@ -25,6 +26,17 @@ export const Modal: React.FC<Props> = (props) => {
           [styles['container--full-width']]: props.use_full_width
         })}
       >
+        {props.icon && (
+          <div
+            className={cn(styles.icon, 'codicon', {
+              'codicon-check': props.icon == 'success',
+              'codicon-warning': props.icon == 'warning',
+              [styles['icon--success']]: props.icon == 'success',
+              [styles['icon--warning']]: props.icon == 'warning'
+            })}
+          />
+        )}
+
         {props.title && <div className={styles.title}>{props.title}</div>}
 
         {props.content_slot &&

@@ -6,6 +6,7 @@ import { Modal } from '../Modal'
 type Props = {
   title: string
   duration: number
+  icon?: 'success' | 'warning'
   on_close: () => void
 }
 
@@ -26,6 +27,7 @@ export const AutoClosingModal: React.FC<Props> = (props) => {
   return (
     <Modal
       title={props.title}
+      icon={props.icon}
       content_slot={
         <div className={styles.progress}>
           <div
