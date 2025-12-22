@@ -16,6 +16,7 @@ type Props = {
   max_height?: string
   initial_scroll_top?: number
   on_scroll?: (top: number) => void
+  on_scrolled_change?: (is_scrolled: boolean) => void
   scroll_trigger?: number
 }
 
@@ -46,8 +47,10 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
     const update = () => {
       const { scrollTop, scrollHeight, clientHeight } = scroll_element
       const is_scrollable = scrollHeight > clientHeight
-      set_has_top_shadow(is_scrollable && scrollTop > 0)
+      const is_scrolled = is_scrollable && scrollTop > 0
+      set_has_top_shadow(is_scrolled)
       if (props.on_scroll) props.on_scroll(scrollTop)
+      if (props.on_scrolled_change) props.on_scrolled_change(is_scrolled)
     }
 
     update()
@@ -64,7 +67,7 @@ export const Scrollable = forwardRef<any, Props>((props, ref) => {
       scroll_element.removeEventListener('scroll', update)
       resize_observer.disconnect()
     }
-  }, [props.on_scroll])
+  }, [props.on_scroll, props.on_scrolled_change])
 
   useEffect(() => {
     const simplebar_instance = simplebar_ref.current

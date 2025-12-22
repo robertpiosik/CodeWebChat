@@ -1,5 +1,4 @@
 import { useRef, useLayoutEffect } from 'react'
-import cn from 'classnames'
 import { use_compacting } from '@shared/hooks'
 import { Button } from '../../common/Button'
 import styles from './ResponsePreviewFooter.module.scss'
@@ -24,8 +23,8 @@ export const ResponsePreviewFooter: React.FC<Props> = ({
 
   useLayoutEffect(() => {
     if (back_ref.current && reject_ref.current && accept_ref.current) {
-      // Padding (approx 24px per button) + gap (8px * 2)
-      const padding_and_gap = 3 * 24 + 2 * 8
+      // Padding & icon (approx 44px per button) + gap (8px * 2)
+      const padding_and_gap = 3 * 40 + 2 * 8
       const width =
         back_ref.current.offsetWidth +
         reject_ref.current.offsetWidth +
@@ -37,28 +36,29 @@ export const ResponsePreviewFooter: React.FC<Props> = ({
 
   return (
     <div className={styles.container} ref={container_ref}>
-      <Button on_click={on_back} is_secondary title="Back">
-        <span className={styles['button-content']} ref={back_ref}>
+      <Button
+        on_click={on_back}
+        is_secondary
+        title="Back"
+        codicon="chevron-left"
+      >
+        <span ref={back_ref}>
           {compact_step < 1 && <span className={styles.text}>Back</span>}
-          {compact_step >= 1 && (
-            <span className={cn('codicon', 'codicon-chevron-left')} />
-          )}
         </span>
       </Button>
-      <Button on_click={on_reject} is_danger title="Reject">
-        <span className={styles['button-content']} ref={reject_ref}>
+      <Button on_click={on_reject} is_danger title="Reject" codicon="close">
+        <span ref={reject_ref}>
           {compact_step < 2 && <span className={styles.text}>Reject</span>}
-          {compact_step >= 2 && (
-            <span className={cn('codicon', 'codicon-close')} />
-          )}
         </span>
       </Button>
-      <Button on_click={on_accept} disabled={is_accept_disabled} title="Accept">
-        <span className={styles['button-content']} ref={accept_ref}>
+      <Button
+        on_click={on_accept}
+        disabled={is_accept_disabled}
+        title="Accept"
+        codicon="check"
+      >
+        <span ref={accept_ref}>
           {compact_step < 3 && <span className={styles.text}>Accept</span>}
-          {compact_step >= 3 && (
-            <span className={cn('codicon', 'codicon-check')} />
-          )}
         </span>
       </Button>
     </div>

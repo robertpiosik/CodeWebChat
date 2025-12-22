@@ -9,7 +9,7 @@ Context-first AI coding for VS Code, Cursor, and others. Free, open-source, and 
 - Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
-✅ **Apply responses**—changes integration in whole, truncated, compared and diff edit formats \
+✅ **Apply responses**—changes integration in _whole_, _truncated_, _before/after_ and _diff_ edit formats \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
 🏠️ **Local friendly**—easy on small models thanks to zero tool calling
 

@@ -8,6 +8,7 @@ import { use_dropdown } from './hooks/use-dropdown'
 import { use_ghost_text } from './hooks/use-ghost-text'
 import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
+import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
 import { DropdownMenu } from '../../common/DropdownMenu'
 import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
 import {
@@ -252,6 +253,15 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
     }
   }, [is_mac])
 
+  const {
+    container_ref,
+    compact_step,
+    format_whole_ref,
+    format_truncated_ref,
+    format_before_after_ref,
+    format_diff_ref
+  } = use_edit_format_compacting()
+
   return (
     <div className={styles.container}>
       {props.has_active_selection && props.is_in_code_completions_mode && (
@@ -386,21 +396,37 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
             }}
           >
             {props.show_edit_format_selector && (
-              <div className={styles['footer__right__edit-format']}>
+              <div
+                className={styles['footer__right__edit-format']}
+                ref={container_ref}
+              >
                 {(['whole', 'truncated', 'before-after', 'diff'] as const).map(
-                  (format) => {
-                    const button_text = is_narrow_viewport
+                  (format, index) => {
+                    const is_compact =
+                      (format === 'before-after' && compact_step >= 1) ||
+                      (format === 'truncated' && compact_step >= 2) ||
+                      (format === 'whole' && compact_step >= 3) ||
+                      (format === 'diff' && compact_step >= 4)
+
+                    const button_text = is_compact
                       ? format == 'before-after'
-                        ? 'B/A'
-                        : format.charAt(0).toUpperCase()
+                        ? 'b/a'
+                        : format.charAt(0)
                       : format == 'before-after'
                         ? 'before/after'
                         : format
                     const is_selected = props.edit_format == format
                     const should_underline = is_alt_pressed && !is_selected
 
+                    let ref = null
+                    if (format === 'whole') ref = format_whole_ref
+                    if (format === 'truncated') ref = format_truncated_ref
+                    if (format === 'before-after') ref = format_before_after_ref
+                    if (format === 'diff') ref = format_diff_ref
+
                     return (
                       <button
+                        ref={ref}
                         key={format}
                         className={cn(
                           styles['footer__right__edit-format__button'],
@@ -417,18 +443,17 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
                         onMouseEnter={() => set_hovered_edit_format(format)}
                         onMouseLeave={() => set_hovered_edit_format(null)}
                       >
-                        {is_narrow_viewport &&
-                          hovered_edit_format == format && (
-                            <Tooltip
-                              message={
-                                format == 'before-after'
-                                  ? 'Before and After'
-                                  : format.charAt(0).toUpperCase() +
-                                    format.slice(1)
-                              }
-                              align="center"
-                            />
-                          )}
+                        {is_compact && hovered_edit_format == format && (
+                          <Tooltip
+                            message={
+                              format == 'before-after'
+                                ? 'Before and After'
+                                : format.charAt(0).toUpperCase() +
+                                  format.slice(1)
+                            }
+                            align="center"
+                          />
+                        )}
                         <span
                           className={
                             styles['footer__right__edit-format__button__spacer']

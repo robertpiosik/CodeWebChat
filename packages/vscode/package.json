@@ -120,13 +120,13 @@
       },
       {
         "command": "codeWebChat.openRepository",
-        "title": "Repository",
+        "title": "GitHub",
         "category": "Code Web Chat",
         "icon": "$(github-alt)"
       },
       {
         "command": "codeWebChat.twitter",
-        "title": "Twitter",
+        "title": "X",
         "category": "Code Web Chat",
         "icon": "$(twitter)"
       },

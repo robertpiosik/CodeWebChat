@@ -237,8 +237,7 @@
 
 .footer {
   display: flex;
-  bottom: 0;
-  right: 0;
+  gap: 4px;
   padding: 6px 10px 6px 6px;
   justify-content: space-between;
   position: relative;
@@ -272,15 +271,17 @@
   }
 
   &__right {
-    flex-shrink: 0;
+    flex: 1;
     display: flex;
     align-items: center;
     gap: 10px;
     pointer-events: none;
 
     &__edit-format {
+      flex: 1;
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 4px;
 
       &__button {

@@ -1,11 +1,11 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { make_api_request } from '@/utils/make-api-request'
 import axios, { CancelTokenSource } from 'axios'
+import { randomUUID } from 'crypto'
 import { Logger } from '@shared/utils/logger'
-import { dictionary } from '@shared/constants/dictionary'
 
 export class ApiManager {
-  public api_call_cancel_token_source: CancelTokenSource | null = null
+  private cancel_token_sources: Map<string, CancelTokenSource> = new Map()
 
   constructor(private panel_provider: PanelProvider) {}
 
@@ -14,13 +14,15 @@ export class ApiManager {
     api_key?: string
     body: any
   }): Promise<{ response: string; thoughts?: string } | null> {
+    const request_id = randomUUID()
     const cancel_token_source = axios.CancelToken.source()
-    this.api_call_cancel_token_source = cancel_token_source
+    this.cancel_token_sources.set(request_id, cancel_token_source)
 
     try {
       this.panel_provider.send_message({
         command: 'SHOW_API_MANAGER_PROGRESS',
-        title: `${dictionary.api_call.WAITING_FOR_RESPONSE}...`
+        id: request_id,
+        title: 'Waiting...'
       })
 
       const result = await make_api_request({
@@ -31,14 +33,17 @@ export class ApiManager {
         on_thinking_chunk: () => {
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
-            title: `${dictionary.api_call.THINKING}...`
+            id: request_id,
+            title: 'Thinking...'
           })
         },
-        on_chunk: (tokens_per_second) => {
+        on_chunk: (tokens_per_second, total_tokens) => {
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
-            title: 'Receiving response...',
-            tokens_per_second
+            id: request_id,
+            title: 'Receiving...',
+            tokens_per_second,
+            total_tokens
           })
         }
       })
@@ -60,15 +65,19 @@ export class ApiManager {
       // Error messages are shown by make_api_request, so no need to show one here.
       return null
     } finally {
-      this.panel_provider.send_message({ command: 'HIDE_API_MANAGER_PROGRESS' })
-      this.api_call_cancel_token_source = null
+      this.panel_provider.send_message({
+        command: 'HIDE_API_MANAGER_PROGRESS',
+        id: request_id
+      })
+      this.cancel_token_sources.delete(request_id)
     }
   }
 
-  public cancel_api_call() {
-    if (this.api_call_cancel_token_source) {
-      this.api_call_cancel_token_source.cancel('Cancelled by user.')
-      this.api_call_cancel_token_source = null
+  public cancel_api_call(request_id: string) {
+    const source = this.cancel_token_sources.get(request_id)
+    if (source) {
+      source.cancel('Cancelled by user.')
+      this.cancel_token_sources.delete(request_id)
     }
   }
 }

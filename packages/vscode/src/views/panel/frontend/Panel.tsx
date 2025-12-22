@@ -44,7 +44,6 @@ export const Panel = () => {
     progress_state,
     set_progress_state,
     api_manager_progress_state,
-    set_api_manager_progress_state,
     auto_closing_modal_title,
     set_auto_closing_modal_title,
     commit_message_to_review,
@@ -413,6 +412,22 @@ export const Panel = () => {
           </div>
         )}
 
+        {Object.keys(api_manager_progress_state).length > 0 && (
+          <div className={styles.slot}>
+            <UiApiManagerModal
+              progress_items={Object.entries(api_manager_progress_state).map(
+                ([id, state]) => ({ id, ...state })
+              )}
+              on_cancel={(id) => {
+                post_message(vscode, {
+                  command: 'CANCEL_API_MANAGER_REQUEST',
+                  id
+                })
+              }}
+            />
+          </div>
+        )}
+
         {items_to_review && (
           <div className={styles.slot}>
             <UiPage
@@ -523,27 +538,6 @@ export const Panel = () => {
                   ? () => {
                       set_progress_state(undefined)
                       post_message(vscode, { command: 'CANCEL_API_REQUEST' })
-                    }
-                  : undefined
-              }
-            />
-          </div>
-        )}
-
-        {api_manager_progress_state && (
-          <div className={styles.slot}>
-            <UiApiManagerModal
-              title={api_manager_progress_state.title}
-              tokens_per_second={api_manager_progress_state.tokens_per_second}
-              show_elapsed_time={api_manager_progress_state.show_elapsed_time}
-              delay_visibility={api_manager_progress_state.delay_visibility}
-              on_cancel={
-                api_manager_progress_state.cancellable
-                  ? () => {
-                      set_api_manager_progress_state(undefined)
-                      post_message(vscode, {
-                        command: 'CANCEL_API_MANAGER_REQUEST'
-                      })
                     }
                   : undefined
               }

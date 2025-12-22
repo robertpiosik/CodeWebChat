@@ -553,7 +553,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               this.api_call_cancel_token_source = null
             }
           } else if (message.command == 'CANCEL_API_MANAGER_REQUEST') {
-            this.api_manager.cancel_api_call()
+            this.api_manager.cancel_api_call(message.id)
           } else if (message.command == 'GET_API_TOOL_CONFIGURATIONS') {
             await handle_get_api_tool_configurations(this)
           } else if (message.command == 'REORDER_API_TOOL_CONFIGURATIONS') {

@@ -214,6 +214,7 @@ export interface CancelApiRequestMessage extends BaseMessage {
 
 export interface CancelApiManagerRequestMessage extends BaseMessage {
   command: 'CANCEL_API_MANAGER_REQUEST'
+  id: string
 }
 
 export interface GetWebModeMessage extends BaseMessage {
@@ -637,8 +638,10 @@ export interface HideProgressMessage extends BaseMessage {
 
 export interface ShowApiManagerProgressMessage extends BaseMessage {
   command: 'SHOW_API_MANAGER_PROGRESS'
+  id: string
   title: string
   tokens_per_second?: number
+  total_tokens?: number
   cancellable?: boolean
   show_elapsed_time?: boolean
   delay_visibility?: boolean
@@ -646,6 +649,7 @@ export interface ShowApiManagerProgressMessage extends BaseMessage {
 
 export interface HideApiManagerProgressMessage extends BaseMessage {
   command: 'HIDE_API_MANAGER_PROGRESS'
+  id: string
 }
 
 export interface ShowAutoClosingModalMessage extends BaseMessage {

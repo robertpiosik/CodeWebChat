@@ -1,83 +1,123 @@
 import { useEffect, useState } from 'react'
 import styles from './ApiManagerModal.module.scss'
-import { Button } from '../../../common/Button'
-import { Modal } from '../Modal'
+import { Scrollable } from '../../Scrollable'
 import cn from 'classnames'
 
 type Props = {
-  title: string
-  on_cancel?: () => void
-  tokens_per_second?: number
-  show_elapsed_time?: boolean
-  delay_visibility?: boolean
+  progress_items: {
+    id: string
+    title: string
+    tokens_per_second?: number
+    total_tokens?: number
+    show_elapsed_time?: boolean
+    delay_visibility?: boolean
+  }[]
+  on_cancel: (id: string) => void
 }
 
-const format_tokens_per_second = (tps: number): string => {
-  const rounded_tps = Math.round(tps)
-  if (rounded_tps >= 1000) {
-    return `${(rounded_tps / 1000).toFixed(1)}k`
+const format_tokens = (tokens: number): string => {
+  const rounded = Math.round(tokens)
+  if (rounded >= 1000) {
+    return `${(rounded / 1000).toFixed(1)}k`
   }
-  return rounded_tps.toString()
+  return rounded.toString()
 }
 
 export const ApiManagerModal: React.FC<Props> = (props) => {
-  const [is_visible, set_is_visible] = useState(!props.delay_visibility)
-  const [elapsed_time, set_elapsed_time] = useState(0)
+  const [start_times, set_start_times] = useState<Record<string, number>>({})
+  const [now, set_now] = useState(Date.now())
+  const [is_scrolled, set_is_scrolled] = useState(false)
 
   useEffect(() => {
-    let visibility_timer: NodeJS.Timeout | undefined
-    if (props.delay_visibility) {
-      set_is_visible(false)
-      visibility_timer = setTimeout(() => {
-        set_is_visible(true)
-      }, 1000)
-    } else {
-      set_is_visible(true)
-    }
+    const interval = setInterval(() => {
+      set_now(Date.now())
+    }, 100)
+    return () => clearInterval(interval)
+  }, [])
 
-    let elapsed_time_timer: NodeJS.Timeout | undefined
-    if (props.show_elapsed_time !== false) {
-      set_elapsed_time(0)
-      const start_time = Date.now()
-      elapsed_time_timer = setInterval(() => {
-        set_elapsed_time((Date.now() - start_time) / 1000)
-      }, 100)
-    }
+  useEffect(() => {
+    set_start_times((prev) => {
+      const next = { ...prev }
+      let changed = false
+      const current_ids = new Set(props.progress_items.map((i) => i.id))
 
-    return () => {
-      clearTimeout(visibility_timer)
-      clearInterval(elapsed_time_timer)
-    }
-  }, [props.show_elapsed_time, props.delay_visibility])
+      props.progress_items.forEach((item) => {
+        if (!next[item.id]) {
+          next[item.id] = Date.now()
+          changed = true
+        }
+      })
 
-  return is_visible ? (
-    <Modal
-      title={props.title}
-      content_slot={
-        <>
-          {props.show_elapsed_time !== false && (
-            <div className={styles['elapsed-time']}>
-              {elapsed_time.toFixed(1)}s
-            </div>
-          )}
+      Object.keys(next).forEach((id) => {
+        if (!current_ids.has(id)) {
+          delete next[id]
+          changed = true
+        }
+      })
 
+      return changed ? next : prev
+    })
+  }, [props.progress_items])
+
+  return (
+    <div className={styles.overlay}>
+      <div className={styles.container}>
+        <div
+          className={cn(styles.title, {
+            [styles['title--scrolled']]: is_scrolled
+          })}
+        >
+          API Manager
+        </div>
+        <Scrollable max_height="20vh" on_scrolled_change={set_is_scrolled}>
           <div className={styles.content}>
-            {props.tokens_per_second !== undefined && (
-              <div className={styles['tokens-per-second']}>
-                {format_tokens_per_second(props.tokens_per_second)} tokens/s
-              </div>
-            )}
-            <div className={styles.progress}>
-              <div className={styles['progress__fill--indeterminate']} />
+            <div className={styles['requests-container']}>
+              {props.progress_items.map((item) => {
+                const item_start_time = start_times[item.id]
+                const current_start_time = item_start_time || Date.now()
+                const elapsed_ms = now - current_start_time
+
+                if (item.delay_visibility && elapsed_ms < 1000) {
+                  return null
+                }
+
+                return (
+                  <div key={item.id} className={styles.item}>
+                    <div className={styles.item__content}>
+                      <div className={styles.item__title}>{item.title}</div>
+                      <div className={styles.item__right}>
+                        {item.tokens_per_second !== undefined && (
+                          <div className={styles['tokens-per-second']}>
+                            {format_tokens(item.tokens_per_second)} tokens/s
+                          </div>
+                        )}
+                        {item.total_tokens !== undefined && (
+                          <div className={styles['tokens-per-second']}>
+                            ({format_tokens(item.total_tokens)})
+                          </div>
+                        )}
+                        {item.show_elapsed_time !== false && (
+                          <div className={styles['elapsed-time']}>
+                            {(elapsed_ms / 1000).toFixed(1)}s
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className={styles.item__abort}>
+                      <button
+                        className={styles.item__abort__button}
+                        onClick={() => props.on_cancel(item.id)}
+                      >
+                        Abort
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
-        </>
-      }
-      footer_slot={
-        props.on_cancel ? (
-          <Button on_click={props.on_cancel}>Cancel</Button>
-        ) : undefined
-      }
-    />
-  ) : null
+        </Scrollable>
+      </div>
+    </div>
+  )
 }

@@ -29,14 +29,17 @@ export const use_panel = (vscode: any) => {
     show_elapsed_time?: boolean
     delay_visibility?: boolean
   }>()
-  const [api_manager_progress_state, set_api_manager_progress_state] =
-    useState<{
-      title: string
-      tokens_per_second?: number
-      cancellable?: boolean
-      show_elapsed_time?: boolean
-      delay_visibility?: boolean
-    }>()
+  const [api_manager_progress_state, set_api_manager_progress_state] = useState<
+    Record<
+      string,
+      {
+        title: string
+        tokens_per_second?: number
+        total_tokens?: number
+        cancellable?: boolean
+      }
+    >
+  >({})
   const [auto_closing_modal_title, set_auto_closing_modal_title] = useState<
     string | undefined
   >()
@@ -222,15 +225,23 @@ export const use_panel = (vscode: any) => {
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)
       } else if (message.command == 'SHOW_API_MANAGER_PROGRESS') {
-        set_api_manager_progress_state({
-          title: message.title,
-          tokens_per_second: message.tokens_per_second,
-          cancellable: message.cancellable ?? true,
-          show_elapsed_time: message.show_elapsed_time,
-          delay_visibility: message.delay_visibility
-        })
+        set_api_manager_progress_state((prev) => ({
+          ...prev,
+          [message.id]: {
+            title: message.title,
+            tokens_per_second: message.tokens_per_second,
+            total_tokens: message.total_tokens,
+            cancellable: message.cancellable ?? true,
+            show_elapsed_time: message.show_elapsed_time,
+            delay_visibility: message.delay_visibility
+          }
+        }))
       } else if (message.command == 'HIDE_API_MANAGER_PROGRESS') {
-        set_api_manager_progress_state(undefined)
+        set_api_manager_progress_state((prev) => {
+          const new_state = { ...prev }
+          delete new_state[message.id]
+          return new_state
+        })
       } else if (message.command == 'SHOW_AUTO_CLOSING_MODAL') {
         set_auto_closing_modal_title(message.title)
       } else if (message.command == 'FOCUS_PROMPT_FIELD') {
@@ -391,7 +402,6 @@ export const use_panel = (vscode: any) => {
     progress_state,
     set_progress_state,
     api_manager_progress_state,
-    set_api_manager_progress_state,
     auto_closing_modal_title,
     set_auto_closing_modal_title,
     commit_message_to_review,
