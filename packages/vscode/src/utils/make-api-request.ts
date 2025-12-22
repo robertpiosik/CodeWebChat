@@ -82,7 +82,6 @@ export const make_api_request = async (params: {
 
   let stream_start_time = 0
   let last_on_chunk_time = 0
-  let last_total_tokens = 0
   let total_tokens = 0
 
   const handle_chunk_metrics = (chunk: string) => {
@@ -92,27 +91,24 @@ export const make_api_request = async (params: {
     total_tokens += chunk_tokens
 
     const current_time = Date.now()
-    
-    if (stream_start_time === 0) {
+
+    if (stream_start_time == 0) {
       stream_start_time = current_time
       last_on_chunk_time = current_time
-      last_total_tokens = total_tokens
       return
     }
 
     const elapsed_since_last = current_time - last_on_chunk_time
-    
+
     if (elapsed_since_last >= 1000) {
-      const tokens_since_last = total_tokens - last_total_tokens
-      const seconds_since_last = elapsed_since_last / 1000
+      const total_elapsed_seconds = (current_time - stream_start_time) / 1000
       const tokens_per_second =
-        seconds_since_last > 0
-          ? Math.round(tokens_since_last / seconds_since_last)
+        total_elapsed_seconds > 0
+          ? Math.round(total_tokens / total_elapsed_seconds)
           : 0
-      
+
       params.on_chunk(tokens_per_second, total_tokens)
       last_on_chunk_time = current_time
-      last_total_tokens = total_tokens
     }
   }
 
@@ -262,7 +258,7 @@ export const make_api_request = async (params: {
 
       response.data.setEncoding('utf8')
 
-      return new Promise((resolve, reject) => {
+      return await new Promise((resolve, reject) => {
         let stream_closed = false
 
         response.data.on('data', async (chunk: string) => {

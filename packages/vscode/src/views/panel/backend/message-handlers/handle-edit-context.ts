@@ -5,7 +5,6 @@ import {
   ModelProvidersManager,
   get_tool_config_id
 } from '@/services/model-providers-manager'
-import { make_api_request } from '@/utils/make-api-request'
 import axios from 'axios'
 import { PROVIDERS } from '@shared/constants/providers'
 import {
@@ -281,7 +280,7 @@ const perform_context_editing = async (params: {
     processed_instructions = await replace_saved_context_placeholder({
       instruction: processed_instructions,
       context: params.context,
-      workspace_provider: params.file_tree_provider,
+      workspace_provider: params.file_tree_provider
     })
   }
 
@@ -395,41 +394,11 @@ const perform_context_editing = async (params: {
 
     apply_reasoning_effort(body, provider, edit_context_config.reasoning_effort)
 
-    const cancel_token_source = axios.CancelToken.source()
-
-    if (params.panel_provider) {
-      params.panel_provider.api_call_cancel_token_source = cancel_token_source
-    }
-
     try {
-      if (params.panel_provider) {
-        params.panel_provider.send_message({
-          command: 'SHOW_PROGRESS',
-          title: `${dictionary.api_call.WAITING_FOR_RESPONSE}...`
-        })
-      }
-      const result = await make_api_request({
+      const result = await params.panel_provider.api_manager.get({
         endpoint_url,
         api_key: provider.api_key,
-        body,
-        cancellation_token: cancel_token_source.token,
-        on_thinking_chunk: () => {
-          if (params.panel_provider) {
-            params.panel_provider.send_message({
-              command: 'SHOW_PROGRESS',
-              title: `${dictionary.api_call.THINKING}...`
-            })
-          }
-        },
-        on_chunk: (tokens_per_second) => {
-          if (params.panel_provider) {
-            params.panel_provider.send_message({
-              command: 'SHOW_PROGRESS',
-              title: 'Receiving response...',
-              tokens_per_second
-            })
-          }
-        }
+        body
       })
 
       if (result) {
@@ -454,9 +423,6 @@ const perform_context_editing = async (params: {
         dictionary.error_message.EDIT_CONTEXT_ERROR
       )
       return
-    } finally {
-      params.panel_provider.send_message({ command: 'HIDE_PROGRESS' })
-      params.panel_provider.api_call_cancel_token_source = null
     }
   }
 }

@@ -10,6 +10,7 @@ import cn from 'classnames'
 import { post_message } from './utils/post_message'
 import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/panel/ResponsePreview'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
+import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/panel/modals/ApiManagerModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
 import { AutoClosingModal as UiAutoClosingModal } from '@ui/components/editor/panel/modals/AutoClosingModal'
 import { CommitMessageModal as UiCommitMessageModal } from '@ui/components/editor/panel/modals/CommitMessageModal'
@@ -42,6 +43,8 @@ export const Panel = () => {
     raw_instructions,
     progress_state,
     set_progress_state,
+    api_manager_progress_state,
+    set_api_manager_progress_state,
     auto_closing_modal_title,
     set_auto_closing_modal_title,
     commit_message_to_review,
@@ -520,6 +523,27 @@ export const Panel = () => {
                   ? () => {
                       set_progress_state(undefined)
                       post_message(vscode, { command: 'CANCEL_API_REQUEST' })
+                    }
+                  : undefined
+              }
+            />
+          </div>
+        )}
+
+        {api_manager_progress_state && (
+          <div className={styles.slot}>
+            <UiApiManagerModal
+              title={api_manager_progress_state.title}
+              tokens_per_second={api_manager_progress_state.tokens_per_second}
+              show_elapsed_time={api_manager_progress_state.show_elapsed_time}
+              delay_visibility={api_manager_progress_state.delay_visibility}
+              on_cancel={
+                api_manager_progress_state.cancellable
+                  ? () => {
+                      set_api_manager_progress_state(undefined)
+                      post_message(vscode, {
+                        command: 'CANCEL_API_MANAGER_REQUEST'
+                      })
                     }
                   : undefined
               }

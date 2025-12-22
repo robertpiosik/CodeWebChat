@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
+import { ApiManager } from '@/services/api-manager'
 import { WebsitesProvider } from '@/context/providers/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace-provider'
@@ -117,12 +118,17 @@ export class PanelProvider implements vscode.WebviewViewProvider {
   public mode: Mode = MODE.WEB
   public intelligent_update_cancel_token_sources: CancelTokenSource[] = []
   public api_call_cancel_token_source: CancelTokenSource | null = null
+  public api_manager!: ApiManager
   public commit_was_staged_by_script: boolean = false
   public response_history: ResponseHistoryItem[] = []
   public active_checkpoint_delete_operation: {
     finalize: () => Promise<void>
     timestamp: number
   } | null = null
+
+  public set_api_manager(api_manager: ApiManager) {
+    this.api_manager = api_manager
+  }
 
   public async send_checkpoints() {
     const checkpoints = await get_checkpoints(this.context)
@@ -546,6 +552,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               this.api_call_cancel_token_source.cancel('Cancelled by user.')
               this.api_call_cancel_token_source = null
             }
+          } else if (message.command == 'CANCEL_API_MANAGER_REQUEST') {
+            this.api_manager.cancel_api_call()
           } else if (message.command == 'GET_API_TOOL_CONFIGURATIONS') {
             await handle_get_api_tool_configurations(this)
           } else if (message.command == 'REORDER_API_TOOL_CONFIGURATIONS') {

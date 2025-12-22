@@ -29,6 +29,14 @@ export const use_panel = (vscode: any) => {
     show_elapsed_time?: boolean
     delay_visibility?: boolean
   }>()
+  const [api_manager_progress_state, set_api_manager_progress_state] =
+    useState<{
+      title: string
+      tokens_per_second?: number
+      cancellable?: boolean
+      show_elapsed_time?: boolean
+      delay_visibility?: boolean
+    }>()
   const [auto_closing_modal_title, set_auto_closing_modal_title] = useState<
     string | undefined
   >()
@@ -213,6 +221,16 @@ export const use_panel = (vscode: any) => {
         })
       } else if (message.command == 'HIDE_PROGRESS') {
         set_progress_state(undefined)
+      } else if (message.command == 'SHOW_API_MANAGER_PROGRESS') {
+        set_api_manager_progress_state({
+          title: message.title,
+          tokens_per_second: message.tokens_per_second,
+          cancellable: message.cancellable ?? true,
+          show_elapsed_time: message.show_elapsed_time,
+          delay_visibility: message.delay_visibility
+        })
+      } else if (message.command == 'HIDE_API_MANAGER_PROGRESS') {
+        set_api_manager_progress_state(undefined)
       } else if (message.command == 'SHOW_AUTO_CLOSING_MODAL') {
         set_auto_closing_modal_title(message.title)
       } else if (message.command == 'FOCUS_PROMPT_FIELD') {
@@ -372,6 +390,8 @@ export const use_panel = (vscode: any) => {
     raw_instructions,
     progress_state,
     set_progress_state,
+    api_manager_progress_state,
+    set_api_manager_progress_state,
     auto_closing_modal_title,
     set_auto_closing_modal_title,
     commit_message_to_review,

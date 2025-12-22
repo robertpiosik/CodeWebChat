@@ -212,6 +212,10 @@ export interface CancelApiRequestMessage extends BaseMessage {
   command: 'CANCEL_API_REQUEST'
 }
 
+export interface CancelApiManagerRequestMessage extends BaseMessage {
+  command: 'CANCEL_API_MANAGER_REQUEST'
+}
+
 export interface GetWebModeMessage extends BaseMessage {
   command: 'GET_WEB_MODE'
 }
@@ -423,6 +427,7 @@ export type FrontendMessage =
   | ShowAtSignQuickPickMessage
   | ShowHashSignQuickPickMessage
   | SaveWebModeMessage
+  | CancelApiManagerRequestMessage
   | GetWebModeMessage
   | GetApiModeMessage
   | SaveApiModeMessage
@@ -630,6 +635,19 @@ export interface HideProgressMessage extends BaseMessage {
   command: 'HIDE_PROGRESS'
 }
 
+export interface ShowApiManagerProgressMessage extends BaseMessage {
+  command: 'SHOW_API_MANAGER_PROGRESS'
+  title: string
+  tokens_per_second?: number
+  cancellable?: boolean
+  show_elapsed_time?: boolean
+  delay_visibility?: boolean
+}
+
+export interface HideApiManagerProgressMessage extends BaseMessage {
+  command: 'HIDE_API_MANAGER_PROGRESS'
+}
+
 export interface ShowAutoClosingModalMessage extends BaseMessage {
   command: 'SHOW_AUTO_CLOSING_MODAL'
   title: string
@@ -703,6 +721,8 @@ export type BackendMessage =
   | SelectedConfigurationChangedMessage
   | ShowProgressMessage
   | HideProgressMessage
+  | ShowApiManagerProgressMessage
+  | HideApiManagerProgressMessage
   | ShowAutoClosingModalMessage
   | UpdateFileInReviewMessage
   | ShowStageFilesModalMessage

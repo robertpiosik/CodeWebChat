@@ -2,6 +2,7 @@ import * as vscode from 'vscode'
 import { context_initialization } from './context/context-initialization'
 import { PanelProvider } from './views/panel/backend/panel-provider'
 import { WebSocketManager } from './services/websocket-manager'
+import { ApiManager } from './services/api-manager'
 import {
   migrate_preset_is_default_to_is_selected,
   migrate_api_providers_to_model_providers,
@@ -73,6 +74,9 @@ export async function activate(context: vscode.ExtensionContext) {
     context,
     websocket_server_instance
   )
+
+  const api_manager = new ApiManager(panel_provider)
+
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       'codeWebChatView',
@@ -102,6 +106,8 @@ export async function activate(context: vscode.ExtensionContext) {
       panel_provider
     })
   )
+
+  panel_provider.set_api_manager(api_manager)
 
   const settings_provider = new SettingsProvider(context.extensionUri, context)
 
