@@ -206,38 +206,24 @@ export const CHATBOTS = {
       thinking: 'Thinking',
       search: 'Search',
       temporary: 'Temporary'
-    },
-    models: {
-      'qwen3-max': { label: 'Qwen3-Max' },
-      'qwen3-vl-235b-a22b': { label: 'Qwen3-VL-235B-A22B' },
-      'qwen3-coder': { label: 'Qwen3-Coder' },
-      'qwen3-omni-flash': { label: 'Qwen3-Omni-Flash' },
-      'qwen3-next-80b-a3b': { label: 'Qwen3-Next-80B-A3B' },
-      'qwen3-235b-a22b-2507': { label: 'Qwen3-235B-A22B-2507' },
-      'qwen3-30b-a3b-2507': { label: 'Qwen3-30B-A3B-2507' },
-      'qwen3-coder-flash': { label: 'Qwen3-Coder-Flash' }
     }
   } as Chatbot,
   Together: {
     url: 'https://chat.together.ai/',
     models: {
       'deepseek-r1-0528': { label: 'DeepSeek R1 (0528)' },
-      'deepseek-v3-0324': { label: 'DeepSeek V3 (0324)' },
-      'gpt-oss-120b': { label: 'GPT OSS 120B' },
+      'deepseek-v3.1': { label: 'DeepSeek V3.1' },
+      'glm-4.6': { label: 'GLM-4.6' },
+      'kimi-k2-thinking': { label: 'Kimi K2 Thinking' },
       'kimi-k2-instruct-0905': { label: 'Kimi K2 Instruct (0905)' },
-      'qwen3-235b-a22b-2507': { label: 'Qwen3 235B (2507)' },
-      'qwen3-coder-480b': { label: 'Qwen3 Coder 480B' },
-      'glm-4.5-air': { label: 'GLM-4.5-Air' },
-      'llama-4-maverick': { label: 'Llama 4 Maverick' }
+      'gpt-oss-120b': { label: 'GPT OSS 120B' },
+      'llama-4-maverick': { label: 'Llama 4 Maverick' },
+      'flux-dev': { label: 'Flux Dev' },
+      'flux-kontext-pro': { label: 'Flux Kontext [Pro]' }
     }
   } as Chatbot,
   Yuanbao: {
-    url: 'https://yuanbao.tencent.com/chat',
-    supported_options: { 'deep-think': 'DeepThink', search: 'Search' },
-    models: {
-      deepseek: { label: 'DeepSeek' },
-      hunyuan: { label: 'Hunyuan' }
-    }
+    url: 'https://yuanbao.tencent.com/chat'
   } as Chatbot,
   'Z.AI': {
     url: 'https://chat.z.ai/',

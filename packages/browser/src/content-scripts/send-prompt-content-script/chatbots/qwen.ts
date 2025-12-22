@@ -84,19 +84,36 @@ export const qwen: Chatbot = {
     if (!options) return
     const supported_options = CHATBOTS['Qwen'].supported_options
     for (const option of options) {
-      if (option == 'thinking' && supported_options?.['thinking']) {
-        const buttons = document.querySelectorAll(
-          '.chat-message-input button.chat-input-feature-btn'
-        ) as NodeListOf<HTMLButtonElement>
-        for (const button of Array.from(buttons)) {
-          if (button.querySelector('i.icon-line-deepthink-01')) {
-            button.click()
-          }
+      if (option == 'temporary' && supported_options?.['temporary']) {
+        const temporary_button = document.querySelector(
+          '.temporary-chat-entry'
+        ) as HTMLButtonElement
+        if (!temporary_button) {
+          report_initialization_error({
+            function_name: 'set_options',
+            log_message: 'Temporary chat button not found'
+          })
+          return
         }
+        temporary_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
+      } else if (option == 'thinking' && supported_options?.['thinking']) {
+        const thinking_button = document.querySelector(
+          '.chat-message-input-thinking-budget-btn > div'
+        ) as HTMLDivElement
+        if (!thinking_button) {
+          report_initialization_error({
+            function_name: 'set_options',
+            log_message: 'Thinking button not found'
+          })
+          return
+        }
+        thinking_button.click()
+        await new Promise((r) => requestAnimationFrame(r))
       } else if (option == 'search' && supported_options?.['search']) {
         const search_button = document.querySelector(
-          'button.websearch_button'
-        ) as HTMLButtonElement
+          '.chat-message-input-thinking-budget-btn + div'
+        ) as HTMLDivElement
         if (!search_button) {
           report_initialization_error({
             function_name: 'set_options',
@@ -105,32 +122,6 @@ export const qwen: Chatbot = {
           return
         }
         search_button.click()
-      } else if (option == 'temporary' && supported_options?.['temporary']) {
-        const model_selector_button = document.querySelector(
-          'button#model-selector-0-button'
-        ) as HTMLElement
-        if (!model_selector_button) {
-          report_initialization_error({
-            function_name: 'set_options',
-            log_message: 'Model selector button for temporary chat not found'
-          })
-          return
-        }
-        model_selector_button.click()
-        await new Promise((r) => requestAnimationFrame(r))
-        const temporary_switch = document.querySelector(
-          'div[aria-labelledby="model-selector-0-button"] button[role="switch"]'
-        ) as HTMLButtonElement
-        if (!temporary_switch) {
-          report_initialization_error({
-            function_name: 'set_options',
-            log_message: 'Temporary chat switch not found'
-          })
-          return
-        }
-        temporary_switch.click()
-        await new Promise((r) => requestAnimationFrame(r))
-        model_selector_button.click()
         await new Promise((r) => requestAnimationFrame(r))
       }
     }

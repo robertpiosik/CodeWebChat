@@ -1,4 +1,3 @@
-import { CHATBOTS } from '@shared/constants/chatbots'
 import { Chatbot } from '../types/chatbot'
 import {
   add_apply_response_button,
@@ -19,80 +18,6 @@ export const yuanbao: Chatbot = {
       check_for_element()
     })
     await new Promise((resolve) => setTimeout(resolve, 500))
-  },
-  set_model: async (chat) => {
-    const model = chat.model
-    if (!model) return
-    const model_selector_button = document.querySelector(
-      'button[dt-button-id="model_switch"]'
-    ) as HTMLElement
-    if (!model_selector_button) {
-      report_initialization_error({
-        function_name: 'set_model',
-        log_message: 'Model selector button not found'
-      })
-      return
-    }
-    model_selector_button.click()
-    await new Promise((r) => requestAnimationFrame(r))
-    const model_buttons = document.querySelectorAll(
-      '.switch-model-dropdown .drop-down-item'
-    ) as NodeListOf<HTMLButtonElement>
-    for (const button of Array.from(model_buttons)) {
-      const model_name_element = button.querySelector(
-        '.drop-down-item__name'
-      ) as HTMLDivElement
-      if (
-        model_name_element?.textContent ==
-        CHATBOTS['Yuanbao'].models?.[model]?.label
-      ) {
-        button.click()
-        break
-      }
-    }
-    await new Promise((r) => requestAnimationFrame(r))
-  },
-  set_options: async (chat) => {
-    const options = chat.options
-    if (!options) return
-    const supported_options = CHATBOTS['Yuanbao'].supported_options
-
-    if (supported_options?.['deep-think']) {
-      const deep_think_button = document.querySelector(
-        'button[dt-button-id="deep_think"]'
-      ) as HTMLButtonElement
-      if (!deep_think_button) {
-        report_initialization_error({
-          function_name: 'set_options',
-          log_message: 'Deep think button not found'
-        })
-        return
-      }
-      const is_checked = deep_think_button.classList.contains('checked')
-      const should_be_checked = options.includes('deep-think')
-      if (is_checked !== should_be_checked) {
-        deep_think_button.click()
-      }
-    }
-
-    if (supported_options?.['search']) {
-      const search_button = document.querySelector(
-        'button[dt-button-id="online_search"]'
-      ) as HTMLButtonElement
-      if (!search_button) {
-        report_initialization_error({
-          function_name: 'set_options',
-          log_message: 'Search button not found'
-        })
-        return
-      }
-      const is_checked = search_button.classList.contains('checked')
-      const should_be_checked = options.includes('search')
-      if (is_checked !== should_be_checked) {
-        search_button.click()
-      }
-    }
-    await new Promise((r) => requestAnimationFrame(r))
   },
   enter_message: async (params) => {
     const input_element = document.querySelector(
