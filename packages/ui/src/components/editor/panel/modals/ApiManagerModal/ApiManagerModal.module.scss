@@ -6,7 +6,7 @@
   height: 100%;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: flex-end;
   padding: 0 12px 48px 12px;
   pointer-events: none;
 }
@@ -73,6 +73,8 @@
   background-color: var(--vscode-quickInput-background);
   border: 1px solid var(--vscode-widget-border);
   box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+  width: 100%;
+  max-width: 260px;
 }
 
 .requests-container {

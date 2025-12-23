@@ -192,6 +192,9 @@ export const CHATBOTS = {
         label: 'Gemini 3 Pro',
         disabled_options: ['with-reasoning']
       },
+      'gemini-3-flash': {
+        label: 'Gemini 3 Flash'
+      },
       'grok-4.1': { label: 'Grok 4.1' },
       'kimi-k2-thinking': {
         label: 'Kimi K2 Thinking',

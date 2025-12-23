@@ -6,6 +6,7 @@ import { Logger } from '@shared/utils/logger'
 
 export class ApiManager {
   private cancel_token_sources: Map<string, CancelTokenSource> = new Map()
+  private next_allowed_finish_time = 0
 
   constructor(private panel_provider: PanelProvider) {}
 
@@ -13,8 +14,9 @@ export class ApiManager {
     endpoint_url: string
     api_key?: string
     body: any
+    request_id?: string
   }): Promise<{ response: string; thoughts?: string } | null> {
-    const request_id = randomUUID()
+    const request_id = params.request_id || randomUUID()
     const cancel_token_source = axios.CancelToken.source()
     this.cancel_token_sources.set(request_id, cancel_token_source)
 
@@ -51,18 +53,17 @@ export class ApiManager {
     } catch (error) {
       if (axios.isCancel(error)) {
         Logger.info({
-          function_name: 'make_api_call',
+          function_name: 'get',
           message: 'API call cancelled by user'
         })
         throw error // Re-throw cancellation error to be handled by caller
       }
 
       Logger.error({
-        function_name: 'make_api_call',
+        function_name: 'get',
         message: 'API call error',
         data: error
       })
-      // Error messages are shown by make_api_request, so no need to show one here.
       return null
     } finally {
       this.panel_provider.send_message({
@@ -70,6 +71,16 @@ export class ApiManager {
         id: request_id
       })
       this.cancel_token_sources.delete(request_id)
+
+      // Prevent race conditions of the applyChatResponse command when invoked in short successions
+      const now = Date.now()
+      const wait_until = Math.max(now, this.next_allowed_finish_time)
+      const delay = wait_until - now
+      this.next_allowed_finish_time = wait_until + 500
+
+      if (delay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delay))
+      }
     }
   }
 

@@ -237,7 +237,6 @@
 
 .footer {
   display: flex;
-  gap: 4px;
   padding: 6px 10px 6px 6px;
   justify-content: space-between;
   position: relative;
@@ -274,7 +273,8 @@
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: flex-end;
+    gap: 8px;
     pointer-events: none;
 
     &__edit-format {
@@ -282,13 +282,13 @@
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap: 4px;
 
       &__button {
         font-size: 11px;
         pointer-events: all;
         position: relative;
         color: var(--vscode-foreground);
+        padding: 0 2px;
 
         &__spacer {
           visibility: hidden;

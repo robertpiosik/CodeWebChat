@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import axios from 'axios'
-import { make_api_request } from '@/utils/make-api-request'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
 import { FilesCollector } from '@/utils/files-collector'
 import {
@@ -15,6 +14,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { CodeCompletionMessage } from '@/views/panel/types/messages'
 import { apply_reasoning_effort } from '@/utils/apply-reasoning-effort'
 import { dictionary } from '@shared/constants/dictionary'
+import { randomUUID } from 'crypto'
 
 const get_code_completion_config = async (
   api_providers_manager: ModelProvidersManager,
@@ -211,7 +211,7 @@ const perform_code_completion = async (params: {
   show_quick_pick?: boolean
   completion_instructions?: string
   config_id?: string
-  panel_provider?: PanelProvider
+  panel_provider: PanelProvider
 }): Promise<void> => {
   const api_providers_manager = new ModelProvidersManager(params.context)
 
@@ -296,7 +296,7 @@ const perform_code_completion = async (params: {
       )
       return
     }
-    const cancel_token_source = axios.CancelToken.source()
+    const request_id = randomUUID()
     const document = editor.document
     const position = editor.selection.active
 
@@ -357,37 +357,19 @@ const perform_code_completion = async (params: {
     const cursor_listener = vscode.window.onDidChangeTextEditorSelection(
       (e) => {
         if (e.textEditor === editor) {
-          cancel_token_source.cancel(
-            'User moved the cursor, cancelling request.'
-          )
+          params.panel_provider.api_manager.cancel_api_call(request_id)
         }
       }
     )
 
     let response_for_apply: string | undefined
 
-    if (params.panel_provider) {
-      params.panel_provider.api_call_cancel_token_source = cancel_token_source
-      params.panel_provider.send_message({
-        command: 'SHOW_PROGRESS',
-        title: `${dictionary.api_call.WAITING_FOR_RESPONSE}...`
-      })
-    }
-
     try {
-      const result = await make_api_request({
+      const result = await params.panel_provider.api_manager.get({
         endpoint_url,
         api_key: provider.api_key,
         body,
-        cancellation_token: cancel_token_source.token,
-        on_thinking_chunk: () => {
-          if (params.panel_provider) {
-            params.panel_provider.send_message({
-              command: 'SHOW_PROGRESS',
-              title: `${dictionary.api_call.THINKING}...`
-            })
-          }
-        }
+        request_id
       })
 
       if (result) {
@@ -406,10 +388,6 @@ const perform_code_completion = async (params: {
         dictionary.error_message.CODE_COMPLETION_ERROR
       )
     } finally {
-      if (params.panel_provider) {
-        params.panel_provider.send_message({ command: 'HIDE_PROGRESS' })
-        params.panel_provider.api_call_cancel_token_source = null
-      }
       cursor_listener.dispose()
     }
 
