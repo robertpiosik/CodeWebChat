@@ -109,14 +109,18 @@ export const Donations: React.FC<DonationsProps> = (props) => {
 
   const links = [
     {
-      label: 'GitHub Sponsors ↗',
-      url: 'https://github.com/sponsors/robertpiosik'
-    },
-    {
       label: 'Buy Me A Coffee ↗',
       url: 'https://buymeacoffee.com/robertpiosik'
     },
-    { label: 'PayPal ↗', url: 'https://www.paypal.com/paypalme/robertpiosik' }
+    {
+      label: 'GitHub Sponsors ↗',
+      url: 'https://github.com/sponsors/robertpiosik'
+    },
+    { label: 'PayPal ↗', url: 'https://www.paypal.com/paypalme/robertpiosik' },
+    {
+      label: 'Stripe ↗',
+      url: 'https://donate.stripe.com/5kQ9ASgrH3kxflo1sR3cc00'
+    }
   ]
 
   const wallets = [
