@@ -211,6 +211,15 @@ export interface UpdateGeminiUserIdMessage {
   geminiUserId: number | null
 }
 
+export interface GetAiStudioUserIdMessage {
+  command: 'GET_AI_STUDIO_USER_ID'
+}
+
+export interface UpdateAiStudioUserIdMessage {
+  command: 'UPDATE_AI_STUDIO_USER_ID'
+  aiStudioUserId: number | null
+}
+
 export interface GetClearChecksInWorkspaceBehaviorMessage {
   command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
 }
@@ -265,6 +274,8 @@ export type FrontendMessage =
   | UpdateCheckpointLifespanMessage
   | GetGeminiUserIdMessage
   | UpdateGeminiUserIdMessage
+  | GetAiStudioUserIdMessage
+  | UpdateAiStudioUserIdMessage
   | GetClearChecksInWorkspaceBehaviorMessage
   | UpdateClearChecksInWorkspaceBehaviorMessage
   | UpsertConfigurationMessage
@@ -334,6 +345,11 @@ export interface GeminiUserIdMessage {
   geminiUserId: number | null
 }
 
+export interface AiStudioUserIdMessage {
+  command: 'AI_STUDIO_USER_ID'
+  aiStudioUserId: number | null
+}
+
 export interface ClearChecksInWorkspaceBehaviorMessage {
   command: 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR'
   value: 'ignore-open-editors' | 'uncheck-all'
@@ -358,5 +374,6 @@ export type BackendMessage =
   | AreAutomaticCheckpointsDisabledMessage
   | CheckpointLifespanMessage
   | GeminiUserIdMessage
+  | AiStudioUserIdMessage
   | ClearChecksInWorkspaceBehaviorMessage
   | ShowSectionMessage

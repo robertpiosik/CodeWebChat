@@ -50,6 +50,9 @@ export const use_settings = (vscode: any) => {
   const [gemini_user_id, set_gemini_user_id] = useState<
     number | null | undefined
   >(undefined)
+  const [ai_studio_user_id, set_ai_studio_user_id] = useState<
+    number | null | undefined
+  >(undefined)
   const [
     clear_checks_in_workspace_behavior,
     set_clear_checks_in_workspace_behavior
@@ -70,6 +73,7 @@ export const use_settings = (vscode: any) => {
     post_message(vscode, { command: 'GET_ARE_AUTOMATIC_CHECKPOINTS_DISABLED' })
     post_message(vscode, { command: 'GET_CHECKPOINT_LIFESPAN' })
     post_message(vscode, { command: 'GET_GEMINI_USER_ID' })
+    post_message(vscode, { command: 'GET_AI_STUDIO_USER_ID' })
     post_message(vscode, { command: 'GET_CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR' })
   }, [vscode])
 
@@ -115,6 +119,9 @@ export const use_settings = (vscode: any) => {
           break
         case 'GEMINI_USER_ID':
           set_gemini_user_id(message.geminiUserId)
+          break
+        case 'AI_STUDIO_USER_ID':
+          set_ai_studio_user_id(message.aiStudioUserId)
           break
         case 'CLEAR_CHECKS_IN_WORKSPACE_BEHAVIOR':
           set_clear_checks_in_workspace_behavior(message.value)
@@ -277,6 +284,12 @@ export const use_settings = (vscode: any) => {
       geminiUserId
     })
 
+  const handle_ai_studio_user_id_change = (aiStudioUserId: number | null) =>
+    post_message(vscode, {
+      command: 'UPDATE_AI_STUDIO_USER_ID',
+      aiStudioUserId
+    })
+
   const handle_clear_checks_in_workspace_behavior_change = (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) =>
@@ -304,6 +317,7 @@ export const use_settings = (vscode: any) => {
     are_automatic_checkpoints_disabled,
     checkpoint_lifespan,
     gemini_user_id,
+    ai_studio_user_id,
     clear_checks_in_workspace_behavior,
     handle_reorder_providers,
     handle_add_provider,
@@ -326,6 +340,7 @@ export const use_settings = (vscode: any) => {
     handle_automatic_checkpoints_toggle,
     handle_checkpoint_lifespan_change,
     handle_gemini_user_id_change,
+    handle_ai_studio_user_id_change,
     handle_clear_checks_in_workspace_behavior_change
   }
 }

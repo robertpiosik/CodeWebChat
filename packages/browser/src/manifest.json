@@ -24,7 +24,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://aistudio.google.com/prompts/new_chat*",
+        "https://aistudio.google.com/*",
         "https://chatgpt.com/*",
         "https://claude.ai/*",
         "https://copilot.microsoft.com/",

@@ -279,6 +279,7 @@ export class WebSocketManager {
     const web_chat_presets =
       config.get<ConfigPresetFormat[]>(params.presets_config_key) ?? []
     const gemini_user_id = config.get<number | null>('geminiUserId')
+    const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
 
     for (const chat of params.chats) {
       const preset = web_chat_presets.find((p) => p.name == chat.preset_name)
@@ -289,10 +290,17 @@ export class WebSocketManager {
       const chatbot = CHATBOTS[preset.chatbot as keyof typeof CHATBOTS]
       let url: string
       if (preset.chatbot == 'AI Studio') {
+        let base_url = chatbot.url
+        if (ai_studio_user_id !== null && ai_studio_user_id !== undefined) {
+          base_url = base_url.replace(
+            'https://aistudio.google.com/',
+            `https://aistudio.google.com/u/${ai_studio_user_id}/`
+          )
+        }
         if (preset.model) {
-          url = `${chatbot.url}?model=${preset.model}`
+          url = `${base_url}?model=${preset.model}`
         } else {
-          url = chatbot.url
+          url = base_url
         }
       } else if (preset.chatbot == 'Open WebUI') {
         if (preset.port) {
@@ -362,14 +370,22 @@ export class WebSocketManager {
 
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const gemini_user_number = config.get<number | null>('geminiUserNumber')
+    const ai_studio_user_id = config.get<number | null>('aiStudioUserId')
 
     const chatbot = CHATBOTS[params.preset.chatbot as keyof typeof CHATBOTS]
     let url: string
     if (params.preset.chatbot == 'AI Studio') {
+      let base_url = chatbot.url
+      if (ai_studio_user_id !== null && ai_studio_user_id !== undefined) {
+        base_url = base_url.replace(
+          'https://aistudio.google.com/',
+          `https://aistudio.google.com/u/${ai_studio_user_id}/`
+        )
+      }
       if (params.preset.model) {
-        url = `${chatbot.url}?model=${params.preset.model}`
+        url = `${base_url}?model=${params.preset.model}`
       } else {
-        url = chatbot.url
+        url = base_url
       }
     } else if (params.preset.chatbot == 'Open WebUI') {
       if (params.preset.port) {

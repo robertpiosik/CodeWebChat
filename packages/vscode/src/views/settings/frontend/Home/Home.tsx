@@ -78,6 +78,7 @@ type Props = {
   commit_message_auto_accept_after: number | null
   context_size_warning_threshold: number
   gemini_user_id: number | null
+  ai_studio_user_id: number | null
   are_automatic_checkpoints_disabled: boolean
   checkpoint_lifespan: number
   edit_format_instructions: EditFormatInstructions
@@ -99,6 +100,7 @@ type Props = {
   on_automatic_checkpoints_toggle: (disabled: boolean) => void
   on_checkpoint_lifespan_change: (hours: number) => void
   on_gemini_user_id_change: (id: number | null) => void
+  on_ai_studio_user_id_change: (id: number | null) => void
   on_clear_checks_in_workspace_behavior_change: (
     value: 'ignore-open-editors' | 'uncheck-all'
   ) => void
@@ -314,7 +316,9 @@ export const Home: React.FC<Props> = (props) => {
         <PresetsSection
           ref={(el) => (section_refs.current['presets'] = el)}
           gemini_user_id={props.gemini_user_id}
+          ai_studio_user_id={props.ai_studio_user_id}
           on_gemini_user_id_change={props.on_gemini_user_id_change}
+          on_ai_studio_user_id_change={props.on_ai_studio_user_id_change}
           on_stuck_change={presets_on_stuck_change}
         />
         <Section

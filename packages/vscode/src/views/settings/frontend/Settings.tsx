@@ -35,6 +35,7 @@ export const Settings = () => {
       settings_hook.are_automatic_checkpoints_disabled !== undefined &&
       settings_hook.checkpoint_lifespan !== undefined &&
       settings_hook.gemini_user_id !== undefined &&
+      settings_hook.ai_studio_user_id !== undefined &&
       settings_hook.clear_checks_in_workspace_behavior !== undefined
     )
   }, [settings_hook])
@@ -76,6 +77,7 @@ export const Settings = () => {
       }
       checkpoint_lifespan={settings_hook.checkpoint_lifespan!}
       gemini_user_id={settings_hook.gemini_user_id!}
+      ai_studio_user_id={settings_hook.ai_studio_user_id!}
       clear_checks_in_workspace_behavior={
         settings_hook.clear_checks_in_workspace_behavior!
       }
@@ -111,6 +113,9 @@ export const Settings = () => {
         settings_hook.handle_clear_checks_in_workspace_behavior_change
       }
       on_gemini_user_id_change={settings_hook.handle_gemini_user_id_change}
+      on_ai_studio_user_id_change={
+        settings_hook.handle_ai_studio_user_id_change
+      }
       on_open_editor_settings={settings_hook.handle_open_editor_settings}
       on_open_ignore_patterns_settings={
         settings_hook.handle_open_ignore_patterns_settings

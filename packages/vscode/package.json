@@ -600,6 +600,13 @@
       "type": "object",
       "title": "Code Web Chat Settings",
       "properties": {
+        "codeWebChat.aiStudioUserId": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": null
+        },
         "codeWebChat.geminiUserId": {
           "type": [
             "integer",

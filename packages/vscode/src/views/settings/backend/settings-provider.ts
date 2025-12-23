@@ -23,6 +23,7 @@ import {
   handle_get_edit_context_system_instructions,
   handle_get_edit_format_instructions,
   handle_get_gemini_user_id,
+  handle_get_ai_studio_user_id,
   handle_get_intelligent_update_configurations,
   handle_get_model_providers,
   handle_get_checkpoint_lifespan,
@@ -42,6 +43,7 @@ import {
   handle_update_edit_context_system_instructions,
   handle_update_edit_format_instructions,
   handle_update_gemini_user_id,
+  handle_update_ai_studio_user_id,
   handle_upsert_configuration,
   handle_open_ignore_patterns_settings
 } from './message-handlers'
@@ -199,6 +201,10 @@ export class SettingsProvider {
           await handle_get_gemini_user_id(this)
         } else if (message.command == 'UPDATE_GEMINI_USER_ID') {
           await handle_update_gemini_user_id(message)
+        } else if (message.command == 'GET_AI_STUDIO_USER_ID') {
+          await handle_get_ai_studio_user_id(this)
+        } else if (message.command == 'UPDATE_AI_STUDIO_USER_ID') {
+          await handle_update_ai_studio_user_id(message)
         } else if (message.command == 'GET_CHECKPOINT_LIFESPAN') {
           await handle_get_checkpoint_lifespan(this)
         } else if (
@@ -246,6 +252,7 @@ export class SettingsProvider {
           void handle_get_are_automatic_checkpoints_disabled(this)
           void handle_get_checkpoint_lifespan(this)
           void handle_get_gemini_user_id(this)
+          void handle_get_ai_studio_user_id(this)
         }
       })
     )
