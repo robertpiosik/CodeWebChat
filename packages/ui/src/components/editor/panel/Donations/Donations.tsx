@@ -84,8 +84,10 @@ export type DonationsProps = {
 
 export const Donations: React.FC<DonationsProps> = (props) => {
   const observer_target = useRef<HTMLDivElement>(null)
-  const [is_wallets_collapsed, set_wallets_collapsed] = useState(true)
+  const [is_about_collapsed, set_about_collapsed] = useState(false)
+  const [is_sponsors_collapsed, set_sponsors_collapsed] = useState(true)
   const [is_links_collapsed, set_links_collapsed] = useState(true)
+  const [is_wallets_collapsed, set_wallets_collapsed] = useState(true)
 
   useEffect(() => {
     if (!observer_target.current) return
@@ -106,8 +108,15 @@ export const Donations: React.FC<DonationsProps> = (props) => {
   }, [props.on_fetch_next_page])
 
   const links = [
-    { label: 'Buy Me A Coffee', url: 'https://buymeacoffee.com/robertpiosik' },
-    { label: 'PayPal', url: 'https://www.paypal.com/paypalme/robertpiosik' }
+    {
+      label: 'GitHub Sponsors ↗',
+      url: 'https://github.com/sponsors/robertpiosik'
+    },
+    {
+      label: 'Buy Me A Coffee ↗',
+      url: 'https://buymeacoffee.com/robertpiosik'
+    },
+    { label: 'PayPal ↗', url: 'https://www.paypal.com/paypalme/robertpiosik' }
   ]
 
   const wallets = [
@@ -135,11 +144,33 @@ export const Donations: React.FC<DonationsProps> = (props) => {
       <Scrollable>
         <div className={styles.container}>
           <div className={styles.about}>
-            Hi there! By donating to Code Web Chat, you’re supporting my mission
-            to independently build the world’s best, free and open-source AI
-            coding tools.
-            <br />
-            Thank you for your support!
+            <Fieldset
+              is_collapsed={is_about_collapsed}
+              label="About"
+              on_toggle_collapsed={() =>
+                set_about_collapsed(!is_about_collapsed)
+              }
+            >
+              Hi there! Donating is a great way to show your support for the
+              project. Thank you.
+            </Fieldset>
+          </div>
+          <div className={styles.sponsors}>
+            <Fieldset
+              is_collapsed={is_sponsors_collapsed}
+              label="Sponsors"
+              on_toggle_collapsed={() =>
+                set_sponsors_collapsed(!is_sponsors_collapsed)
+              }
+            >
+              <div className={styles.sponsors__content}>
+                <p>
+                  Please{' '}
+                  <a href="https://github.com/robertpiosik">contact me</a> if
+                  you are interested in sponsorship.
+                </p>
+              </div>
+            </Fieldset>
           </div>
           <div className={styles.links}>
             <Fieldset

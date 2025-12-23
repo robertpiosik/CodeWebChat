@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import styles from './ApiManagerModal.module.scss'
-import { Scrollable } from '../../Scrollable'
 import cn from 'classnames'
+import { Scrollable } from '../../Scrollable'
+import styles from './ApiManagerModal.module.scss'
 
 type Props = {
   progress_items: {
@@ -70,51 +70,49 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
           API Manager
         </div>
         <Scrollable max_height="20vh" on_scrolled_change={set_is_scrolled}>
-          <div className={styles.content}>
-            <div className={styles['requests-container']}>
-              {props.progress_items.map((item) => {
-                const item_start_time = start_times[item.id]
-                const current_start_time = item_start_time || Date.now()
-                const elapsed_ms = now - current_start_time
+          <div className={styles['requests-container']}>
+            {props.progress_items.map((item) => {
+              const item_start_time = start_times[item.id]
+              const current_start_time = item_start_time || Date.now()
+              const elapsed_ms = now - current_start_time
 
-                if (item.delay_visibility && elapsed_ms < 1000) {
-                  return null
-                }
+              if (item.delay_visibility && elapsed_ms < 1000) {
+                return null
+              }
 
-                return (
-                  <div key={item.id} className={styles.item}>
-                    <div className={styles.item__content}>
-                      <div className={styles.item__title}>{item.title}</div>
-                      <div className={styles.item__right}>
-                        {item.tokens_per_second !== undefined && (
-                          <div className={styles['tokens-per-second']}>
-                            {format_tokens(item.tokens_per_second)} tokens/s
-                          </div>
-                        )}
-                        {item.total_tokens !== undefined && (
-                          <div className={styles['tokens-per-second']}>
-                            ({format_tokens(item.total_tokens)})
-                          </div>
-                        )}
-                        {item.show_elapsed_time !== false && (
-                          <div className={styles['elapsed-time']}>
-                            {(elapsed_ms / 1000).toFixed(1)}s
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className={styles.item__abort}>
-                      <button
-                        className={styles.item__abort__button}
-                        onClick={() => props.on_cancel(item.id)}
-                      >
-                        Abort
-                      </button>
+              return (
+                <div key={item.id} className={styles.item}>
+                  <div className={styles.item__content}>
+                    <div className={styles.item__title}>{item.title}</div>
+                    <div className={styles.item__right}>
+                      {item.tokens_per_second !== undefined && (
+                        <div className={styles['tokens-per-second']}>
+                          {format_tokens(item.tokens_per_second)} tokens/s
+                        </div>
+                      )}
+                      {item.total_tokens !== undefined && (
+                        <div className={styles['tokens-per-second']}>
+                          ({format_tokens(item.total_tokens)})
+                        </div>
+                      )}
+                      {item.show_elapsed_time !== false && (
+                        <div className={styles['elapsed-time']}>
+                          {(elapsed_ms / 1000).toFixed(1)}s
+                        </div>
+                      )}
                     </div>
                   </div>
-                )
-              })}
-            </div>
+                  <div className={styles.item__abort}>
+                    <button
+                      className={styles.item__abort__button}
+                      onClick={() => props.on_cancel(item.id)}
+                    >
+                      Abort
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </Scrollable>
       </div>

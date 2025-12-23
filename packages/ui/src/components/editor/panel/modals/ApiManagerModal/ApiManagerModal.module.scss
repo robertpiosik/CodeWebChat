@@ -11,20 +11,20 @@
   pointer-events: none;
 }
 
-.icon {
-  font-size: 30px !important;
-  text-align: center;
-  padding-top: 16px;
+.container {
   display: flex;
-  justify-content: center;
-
-  &--success {
-    color: var(--vscode-testing-iconPassed);
-  }
-
-  &--warning {
-    color: var(--vscode-list-warningForeground);
-  }
+  flex-direction: column;
+  position: relative;
+  pointer-events: all;
+  z-index: 1;
+  border-radius: 12px;
+  color: var(--vscode-quickInput-foreground);
+  background-color: var(--vscode-quickInput-background);
+  border: 1px solid var(--vscode-focusBorder);
+  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
+  width: 100%;
+  max-width: 260px;
+  overflow: hidden;
 }
 
 .title {
@@ -46,41 +46,10 @@
   }
 }
 
-.content {
-  padding: 0px 10px 4px 10px;
-  width: 100%;
-}
-
-.footer {
-  display: flex;
-  gap: 8px;
-  padding: 12px;
-  border-top: 1px solid var(--vscode-widget-border);
-
-  > button {
-    flex: 1;
-  }
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  pointer-events: all;
-  z-index: 1;
-  border-radius: 12px;
-  color: var(--vscode-quickInput-foreground);
-  background-color: var(--vscode-quickInput-background);
-  border: 1px solid var(--vscode-widget-border);
-  box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
-  width: 100%;
-  max-width: 260px;
-}
-
 .requests-container {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  padding-bottom: 4px;
 }
 
 .item {
@@ -89,6 +58,8 @@
   width: 100%;
 
   &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+
     & .item__abort {
       visibility: visible;
     }
@@ -99,7 +70,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 4px;
-    padding: 3px 0;
+    padding: 0 10px;
+    height: 22px;
     width: 100%;
   }
 
@@ -122,11 +94,11 @@
     display: flex;
     height: 100%;
     align-items: center;
-    right: 0;
+    right: 4px;
     font-size: 12px;
     background: linear-gradient(
       to left,
-      var(--vscode-sideBar-background) 56%,
+      var(--vscode-list-hoverBackground) 56%,
       transparent
     );
     padding-left: 30px;
