@@ -7,6 +7,8 @@ import { Logger } from '@shared/utils/logger'
 export class ApiManager {
   private cancel_token_sources: Map<string, CancelTokenSource> = new Map()
   private next_allowed_finish_time = 0
+  // Waiting pipeline to utilize KV cache for the same endpoint urls
+  private waiting_chain: Map<string, Promise<void>> = new Map()
 
   constructor(private panel_provider: PanelProvider) {}
 
@@ -20,6 +22,13 @@ export class ApiManager {
     const cancel_token_source = axios.CancelToken.source()
     this.cancel_token_sources.set(request_id, cancel_token_source)
 
+    const previous_waiting_promise = this.waiting_chain.get(params.endpoint_url)
+    let resolve_waiting: () => void = () => {}
+    const waiting_promise = new Promise<void>((resolve) => {
+      resolve_waiting = resolve
+    })
+    this.waiting_chain.set(params.endpoint_url, waiting_promise)
+
     try {
       this.panel_provider.send_message({
         command: 'SHOW_API_MANAGER_PROGRESS',
@@ -27,12 +36,17 @@ export class ApiManager {
         title: 'Waiting...'
       })
 
+      if (previous_waiting_promise) {
+        await previous_waiting_promise
+      }
+
       const result = await make_api_request({
         endpoint_url: params.endpoint_url,
         api_key: params.api_key,
         body: params.body,
         cancellation_token: cancel_token_source.token,
         on_thinking_chunk: () => {
+          resolve_waiting()
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
@@ -40,6 +54,7 @@ export class ApiManager {
           })
         },
         on_chunk: (tokens_per_second, total_tokens) => {
+          resolve_waiting()
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
@@ -56,7 +71,7 @@ export class ApiManager {
           function_name: 'get',
           message: 'API call cancelled by user'
         })
-        throw error // Re-throw cancellation error to be handled by caller
+        throw error
       }
 
       Logger.error({
@@ -66,6 +81,7 @@ export class ApiManager {
       })
       return null
     } finally {
+      resolve_waiting()
       this.panel_provider.send_message({
         command: 'HIDE_API_MANAGER_PROGRESS',
         id: request_id
