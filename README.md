@@ -9,10 +9,10 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 - Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
-✅ **Apply responses**—changes integration in _whole_, _truncated_, _before/after_ and _diff_ edit formats \
+✅ **Apply responses**—changes integration in all edit formats with easy rollback \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
-🏠️ **Local friendly**—easy on small models thanks to **zero tool-calling** \
-🌿 **Efficient**—less strain on providers with shorter, cacheable prompts
+🏠️ **Local friendly**—easy on smaller models thanks to **zero tool-calling design** \
+🌱 **Efficient**—less strain on providers with compact, cacheable prompts
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
