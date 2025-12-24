@@ -30,7 +30,7 @@ To mitigate this limitation, so-called _agentic_ tools ask you to prepare extens
 
 **10X** the speed, **0.1X** the cost, and accuracy that can't get any better.
 
-**Context-first approach**
+### **Context-first approach**
 
 Meet a simple, reliable and efficient **non-agentic workflow**—select files, enter instructions, and send message with your favorite chatbot or a model provider of choice.
 
