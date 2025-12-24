@@ -18,7 +18,6 @@ export class OpenEditorsProvider
 
   private _workspace_roots: string[] = []
   private _checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
-  private _file_token_counts: Map<string, number> = new Map()
   private _tab_change_handler: vscode.Disposable
   private _file_change_watcher: vscode.Disposable
   private _workspace_change_handler: vscode.Disposable
@@ -55,7 +54,7 @@ export class OpenEditorsProvider
         if (e.document.isDirty) return
 
         const file_path = e.document.uri.fsPath
-        this._file_token_counts.delete(file_path)
+        this.workspace_provider.invalidate_token_counts_for_file(file_path)
         this._on_did_change_tree_data.fire()
       }
     )
@@ -186,12 +185,7 @@ export class OpenEditorsProvider
       this._non_preview_files.delete(key)
       this._preview_tabs.delete(key)
     })
-
-    keys_to_delete.forEach((key) => {
-      this._file_token_counts.delete(key)
-    })
   }
-
   getTreeItem(element: FileItem): vscode.TreeItem {
     const key = element.resourceUri.fsPath
     const checkbox_state =
@@ -303,7 +297,8 @@ export class OpenEditorsProvider
 
       const range = this.workspace_provider.get_range(file_path)
       const token_count =
-        await this.workspace_provider.calculate_file_tokens(file_path)
+        this.workspace_provider.get_cached_token_count(file_path) ||
+        (await this.workspace_provider.calculate_file_tokens(file_path))
 
       const item = new FileItem(
         file_name,
@@ -374,9 +369,6 @@ export class OpenEditorsProvider
 
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Unchecked)
     }
-
-    // Force a complete tree refresh by clearing the file token count cache
-    this._file_token_counts.clear()
 
     // Fire the event with undefined to force full tree refresh
     this._on_did_change_tree_data.fire(undefined)

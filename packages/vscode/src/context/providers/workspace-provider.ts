@@ -4,13 +4,26 @@ import * as path from 'path'
 import ignore, { Ignore } from 'ignore'
 import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
-  RANGES_STATE_KEY
+  RANGES_STATE_KEY,
+  TOKEN_COUNTS_CACHE
 } from '../../constants/state-keys'
 import { IGNORE_PATTERNS } from '../../constants/ignore-patterns'
 import { natural_sort } from '../../utils/natural-sort'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '@/utils/display-token-count'
+
+type TokenCountsCache = {
+  [workspace_root: string]: {
+    modified_at: number
+    files: {
+      [file_path: string]: {
+        modified_at: number
+        token_count: number
+      }
+    }
+  }
+}
 
 const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 3000
 
@@ -34,6 +47,7 @@ export class WorkspaceProvider
   private file_token_counts: Map<string, number> = new Map()
   private directory_token_counts: Map<string, number> = new Map()
   private directory_selected_token_counts: Map<string, number> = new Map()
+  private token_cache: TokenCountsCache = {}
   private file_ranges: Map<string, string> = new Map()
 
   private config_change_handler: vscode.Disposable
@@ -48,6 +62,8 @@ export class WorkspaceProvider
   private file_workspace_map: Map<string, string> = new Map()
   public gitignore_initialization: Promise<void>
   public ranges_initialization: Promise<void>
+  private token_cache_update_timeout: NodeJS.Timeout | null = null
+  private is_initialized = false
 
   constructor(
     workspace_folders: vscode.WorkspaceFolder[],
@@ -87,6 +103,7 @@ export class WorkspaceProvider
     })
 
     this.gitignore_initialization = this._load_all_gitignore_files()
+    this._load_token_cache()
     this.ranges_watcher = vscode.workspace.createFileSystemWatcher(
       '**/.vscode/ranges.json'
     )
@@ -114,6 +131,44 @@ export class WorkspaceProvider
     }
   }
 
+  private _load_token_cache(): void {
+    this.token_cache =
+      this.context.globalState.get<TokenCountsCache>(TOKEN_COUNTS_CACHE) ?? {}
+  }
+
+  private _update_token_counts_cache(): void {
+    if (this.is_initialized) return
+
+    if (this.token_cache_update_timeout) {
+      clearTimeout(this.token_cache_update_timeout)
+    }
+
+    this.token_cache_update_timeout = setTimeout(async () => {
+      const current_global_cache =
+        this.context.globalState.get<TokenCountsCache>(TOKEN_COUNTS_CACHE) ?? {}
+
+      for (const root of this.workspace_roots) {
+        if (this.token_cache[root]) {
+          current_global_cache[root] = this.token_cache[root]
+        }
+      }
+
+      // Prune workspaces updated one week ago or later
+      const one_week_ago = Date.now() - 7 * 24 * 60 * 60 * 1000
+      for (const root in current_global_cache) {
+        if (current_global_cache[root].modified_at < one_week_ago) {
+          delete current_global_cache[root]
+        }
+      }
+
+      await this.context.globalState.update(
+        TOKEN_COUNTS_CACHE,
+        current_global_cache
+      )
+      this.is_initialized = true
+    }, 10000)
+  }
+
   private async _with_token_counting_notification<T>(
     task: () => Promise<T>
   ): Promise<T> {
@@ -135,7 +190,9 @@ export class WorkspaceProvider
     }, SHOW_COUNTING_NOTIFICATION_DELAY_MS)
 
     try {
-      return await task()
+      const result = await task()
+
+      return result
     } finally {
       clearTimeout(timer)
       notification_stopper?.()
@@ -201,6 +258,10 @@ export class WorkspaceProvider
     }
     if (this.refresh_timeout) {
       clearTimeout(this.refresh_timeout)
+    }
+
+    if (this.token_cache_update_timeout) {
+      clearTimeout(this.token_cache_update_timeout)
     }
   }
 
@@ -296,6 +357,23 @@ export class WorkspaceProvider
     return path.basename(root_path)
   }
 
+  public invalidate_token_counts_for_file(changed_file_path: string): void {
+    const workspace_root = this.get_workspace_root_for_file(changed_file_path)
+    if (!workspace_root) {
+      this.file_token_counts.delete(changed_file_path)
+      return
+    }
+
+    this.file_token_counts.delete(changed_file_path)
+
+    let dir_path = path.dirname(changed_file_path)
+    while (dir_path.startsWith(workspace_root)) {
+      this.directory_token_counts.delete(dir_path)
+      this.directory_selected_token_counts.delete(dir_path)
+      dir_path = path.dirname(dir_path)
+    }
+  }
+
   private _on_file_system_changed(changed_file_path?: string): void {
     if (!changed_file_path) return
 
@@ -310,14 +388,7 @@ export class WorkspaceProvider
       return
     }
 
-    this.file_token_counts.delete(changed_file_path)
-
-    let dir_path = path.dirname(changed_file_path)
-    while (dir_path.startsWith(workspace_root)) {
-      this.directory_token_counts.delete(dir_path)
-      this.directory_selected_token_counts.delete(dir_path)
-      dir_path = path.dirname(dir_path)
-    }
+    this.invalidate_token_counts_for_file(changed_file_path)
 
     if (!fs.existsSync(changed_file_path)) {
       this.file_workspace_map.delete(changed_file_path)
@@ -416,6 +487,7 @@ export class WorkspaceProvider
       this.refresh_timeout = null
     }, 1000) // Debounce refresh to handle bulk file changes like builds
   }
+
   public async clear_checks(): Promise<void> {
     const config = vscode.workspace.getConfiguration('codeWebChat')
     const clear_checks_in_workspace_behavior = config.get<string>(
@@ -600,13 +672,15 @@ export class WorkspaceProvider
 
     if (this.workspace_roots.length == 1) {
       const single_root = this.workspace_roots[0]
-      return this._with_token_counting_notification(() =>
+      const items = await this._with_token_counting_notification(() =>
         this._get_files_and_directories(single_root)
       )
+      return items
     } else {
-      return this._with_token_counting_notification(() =>
+      const items = await this._with_token_counting_notification(() =>
         this._get_workspace_folder_items()
       )
+      return items
     }
   }
 
@@ -789,16 +863,40 @@ export class WorkspaceProvider
     return sorted_indices.map((i) => lines[i - 1]).join('\n')
   }
 
+  public get_cached_token_count(file_path: string): number | undefined {
+    return this.file_token_counts.get(file_path)
+  }
+
   public async calculate_file_tokens(file_path: string): Promise<number> {
     if (this.file_token_counts.has(file_path)) {
       return this.file_token_counts.get(file_path)!
     }
 
+    const workspace_root = this.get_workspace_root_for_file(file_path)
+    const range = this.get_range(file_path)
+    let mtime = 0
+
+    if (workspace_root && !range) {
+      try {
+        const stats = await fs.promises.stat(file_path)
+        mtime = stats.mtimeMs
+        if (
+          this.token_cache[workspace_root]?.files?.[file_path]?.modified_at ==
+          mtime
+        ) {
+          const tokens =
+            this.token_cache[workspace_root].files[file_path].token_count
+          this.file_token_counts.set(file_path, tokens)
+          return tokens
+        }
+      } catch {
+        // Continue to calculate if stat fails
+      }
+    }
+
     try {
-      const workspace_root = this.get_workspace_root_for_file(file_path)
       let content = await fs.promises.readFile(file_path, 'utf8')
 
-      const range = this.get_range(file_path)
       if (range) {
         content = this.apply_range_to_content(content, range)
       }
@@ -824,6 +922,25 @@ export class WorkspaceProvider
 
       const token_count = Math.floor(content_xml.length / 4)
       this.file_token_counts.set(file_path, token_count)
+
+      if (workspace_root && !range && mtime > 0) {
+        if (
+          !this.token_cache[workspace_root] ||
+          !this.token_cache[workspace_root].files
+        ) {
+          this.token_cache[workspace_root] = {
+            modified_at: Date.now(),
+            files: {}
+          }
+        }
+        this.token_cache[workspace_root].files[file_path] = {
+          modified_at: mtime,
+          token_count: token_count
+        }
+        this.token_cache[workspace_root].modified_at = Date.now()
+        this._update_token_counts_cache()
+      }
+
       return token_count
     } catch (error) {
       Logger.error({
