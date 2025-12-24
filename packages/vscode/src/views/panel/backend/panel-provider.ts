@@ -4,7 +4,7 @@ import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
 import { ApiManager } from '@/services/api-manager'
 import { WebsitesProvider } from '@/context/providers/websites-provider'
-import { OpenEditorsProvider } from '@/context/providers/open-editors-provider'
+import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
 import { Preset } from '@shared/types/preset'
@@ -232,6 +232,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
               )
             ])
           )
+        })
+        this.send_message({
+          command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
         })
       }
     })

@@ -9,14 +9,15 @@ type Props = {
   on_donate_click: () => void
 }
 
-export const Footer: React.FC<Props> = ({ on_donate_click }) => {
+export const Footer: React.FC<Props> = (props) => {
   const {
     can_undo,
     has_changes_to_commit,
     on_apply_click,
     on_undo_click,
     on_commit_click,
-    commit_button_enabling_trigger_count
+    commit_button_enabling_trigger_count,
+    apply_button_enabling_trigger_count
   } = useContext(LayoutContext)
 
   const [is_commit_disabled_temporarily, set_is_commit_disabled_temporarily] =
@@ -39,6 +40,10 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
   useEffect(() => {
     set_is_commit_disabled_temporarily(false)
   }, [commit_button_enabling_trigger_count])
+
+  useEffect(() => {
+    set_is_apply_disabled_temporarily(false)
+  }, [apply_button_enabling_trigger_count])
 
   useEffect(() => {
     // Timeout prevents jitter of non disabled state caused by order of updates.
@@ -73,7 +78,7 @@ export const Footer: React.FC<Props> = ({ on_donate_click }) => {
             href="#"
             onClick={(e) => {
               e.preventDefault()
-              on_donate_click()
+              props.on_donate_click()
             }}
             title="Donate"
           >

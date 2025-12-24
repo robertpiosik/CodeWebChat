@@ -7,6 +7,7 @@ type LayoutContextType = {
   on_undo_click: () => void
   on_commit_click: () => void
   commit_button_enabling_trigger_count: number
+  apply_button_enabling_trigger_count: number
 }
 
 export const LayoutContext = createContext<LayoutContextType>({
@@ -15,5 +16,6 @@ export const LayoutContext = createContext<LayoutContextType>({
   on_apply_click: () => {},
   on_undo_click: () => {},
   on_commit_click: () => {},
-  commit_button_enabling_trigger_count: 0
+  commit_button_enabling_trigger_count: 0,
+  apply_button_enabling_trigger_count: 0
 })

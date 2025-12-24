@@ -52,6 +52,7 @@ export const Panel = () => {
     set_files_to_stage,
     commit_button_enabling_trigger_count,
     set_commit_button_enabling_trigger_count,
+    apply_button_enabling_trigger_count,
     selected_history_item_created_at,
     set_selected_history_item_created_at,
     response_history,
@@ -195,7 +196,8 @@ export const Panel = () => {
     on_apply_click: handle_apply_click,
     on_undo_click: handle_undo_click,
     on_commit_click: handle_commit_click,
-    commit_button_enabling_trigger_count
+    commit_button_enabling_trigger_count,
+    apply_button_enabling_trigger_count
   }
 
   const are_keyboard_shortcuts_disabled = !!updating_preset || !!items_to_review

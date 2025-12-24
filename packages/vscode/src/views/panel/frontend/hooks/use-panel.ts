@@ -57,6 +57,10 @@ export const use_panel = (vscode: any) => {
     set_commit_button_enabling_trigger_count
   ] = useState(0)
   const [
+    apply_button_enabling_trigger_count,
+    set_apply_button_enabling_trigger_count
+  ] = useState(0)
+  const [
     selected_history_item_created_at,
     set_selected_history_item_created_at
   ] = useState<number>()
@@ -246,6 +250,10 @@ export const use_panel = (vscode: any) => {
         set_auto_closing_modal_title(message.title)
       } else if (message.command == 'FOCUS_PROMPT_FIELD') {
         set_chat_input_focus_key((k) => k + 1)
+      } else if (
+        message.command == 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
+      ) {
+        set_apply_button_enabling_trigger_count((c) => c + 1)
       } else if (message.command == 'SHOW_COMMIT_MESSAGE_MODAL') {
         set_commit_message_to_review({
           commit_message: message.commit_message,
@@ -410,6 +418,7 @@ export const use_panel = (vscode: any) => {
     set_files_to_stage,
     commit_button_enabling_trigger_count,
     set_commit_button_enabling_trigger_count,
+    apply_button_enabling_trigger_count,
     selected_history_item_created_at,
     set_selected_history_item_created_at,
     response_history,

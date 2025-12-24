@@ -584,6 +584,10 @@ export interface CanUndoChangedMessage extends BaseMessage {
   can_undo: boolean
 }
 
+export interface ResetApplyButtonTemporaryDisabledStateMessage extends BaseMessage {
+  command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
+}
+
 export interface ContextFilesMessage extends BaseMessage {
   command: 'CONTEXT_FILES'
   file_paths: string[]
@@ -718,6 +722,7 @@ export type BackendMessage =
   | VersionMessage
   | ContextFilesMessage
   | CanUndoChangedMessage
+  | ResetApplyButtonTemporaryDisabledStateMessage
   | ResponsePreviewStartedMessage
   | ResponsePreviewFinishedMessage
   | WorkspaceStateMessage
