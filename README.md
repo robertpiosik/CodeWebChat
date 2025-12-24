@@ -57,7 +57,7 @@ Once the response is generated, a built-in parser extracts code blocks with file
 
 ## Browser integration
 
-Install CWC's Connector extension in your favorite browser to place messages, use projects/spaces, set model, incognito mode, and more, via customizable presets. Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
+Install CWC's Connector extension in your favorite browser to 1) place the message directly in a project/space of your favorite chatbot, 2) include markdown-parsed websites in context. Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
@@ -96,7 +96,7 @@ Install CWC's Connector extension in your favorite browser to place messages, us
 Anything CWC can do in chatbots, it can do calling model providers directly from the editor.
 
 > [!TIP]
-> Get started with model providers like [Google](https://aistudio.google.com/api-keys), [Mistral](https://console.mistral.ai/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
+> Get started by bringing your own API key of a model provider like [Google](https://aistudio.google.com/api-keys), [Mistral](https://console.mistral.ai/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
