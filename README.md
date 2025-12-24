@@ -25,7 +25,7 @@ To mitigate this limitation, so-called _agentic_ tools ask you to prepare extens
 
 **Code Web Chat proposes a mindful, aligned with true model's capabilities approach**—make it guide itself precisely with hand-picked context and straightforward instructions, not vague markdowns! **With it comes a big win**—as you work on a task your context becomes mostly fixed (recently updated files and your instructions are placed at the end), therefore you'll hit prompt cache most of the time, making AI coding too cheap to meter!
 
-This combined with the latest generation of models like Gemini 3.0 Flash and Pro, which are great at long context understanding and diff edit format accuracy marks the new generation of AI coding tools.
+This combined with the latest generation of models like Gemini 3.0 Flash and Pro, which are great at long context understanding and diff correctness, marks **the new generation of AI coding tools**.
 
 **10X** the speed, **0.1X** the cost, and accuracy that can't get any better.
 
