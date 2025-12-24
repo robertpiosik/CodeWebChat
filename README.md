@@ -19,7 +19,7 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 
 ## Introduction
 
-LLMs are brilliant, yet mindless pattern matchers. Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before they start filling their context with files.
+**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before they start filling their context with files.
 
 To mitigate this limitation, so-called _agentic_ tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
 
