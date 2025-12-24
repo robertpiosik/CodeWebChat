@@ -11,7 +11,8 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 
 ✅ **Apply responses**—changes integration in _whole_, _truncated_, _before/after_ and _diff_ edit formats \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
-🏠️ **Local friendly**—easy on small models thanks to zero tool calling
+🏠️ **Local friendly**—easy on small models thanks to **zero tool-calling** \
+🌿 **Efficient**—less strain on providers with shorter, cacheable prompts
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
@@ -19,7 +20,7 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 
 ## Introduction
 
-**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before they start filling their context with files.
+**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with relevant files.
 
 To mitigate this limitation, so-called _agentic_ tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
 
