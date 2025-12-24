@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { sync_directory } from '../utils'
 
 export const sync_workspace_from_dir = async (params: {

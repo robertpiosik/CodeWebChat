@@ -3,7 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { SavedContext } from '@/types/context'
 import { SAVED_CONTEXTS_STATE_KEY } from '@/constants/state-keys'
-import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { resolve_glob_patterns } from '@/commands/apply-context-command/utils'
 

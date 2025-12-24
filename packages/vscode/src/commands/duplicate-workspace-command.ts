@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { WorkspaceProvider } from '../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import {
   API_EDIT_FORMAT_STATE_KEY,

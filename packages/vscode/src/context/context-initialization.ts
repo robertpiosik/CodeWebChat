@@ -1,6 +1,9 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider, FileItem } from './providers/workspace-provider'
+import {
+  WorkspaceProvider,
+  FileItem
+} from './providers/workspace/workspace-provider'
 import { FilesCollector } from '../utils/files-collector'
 import { OpenEditorsProvider } from './providers/open-editors-provider'
 import { WebsitesProvider, WebsiteItem } from './providers/websites-provider'

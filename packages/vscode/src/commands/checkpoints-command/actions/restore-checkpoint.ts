@@ -8,7 +8,7 @@ import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
   CONTEXT_CHECKED_URLS_STATE_KEY
 } from '@/constants/state-keys'
-import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import type { Checkpoint } from '../types'
 import { create_checkpoint } from './create-checkpoint'
 import { create_temporary_checkpoint } from './create-temporary-checkpoint'

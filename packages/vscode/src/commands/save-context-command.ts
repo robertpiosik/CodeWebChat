@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import { WorkspaceProvider } from '../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import {
   SAVED_CONTEXTS_STATE_KEY,
   LAST_CONTEXT_SAVE_LOCATION_STATE_KEY

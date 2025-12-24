@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
-import { WorkspaceProvider } from '../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { extract_paths_from_text } from '../../utils/path-parser'

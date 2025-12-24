@@ -3,7 +3,7 @@ import {
   CHECKPOINTS_STATE_KEY,
   TEMPORARY_CHECKPOINT_STATE_KEY
 } from '../../constants/state-keys'
-import { WorkspaceProvider } from '../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import type { Checkpoint } from './types'

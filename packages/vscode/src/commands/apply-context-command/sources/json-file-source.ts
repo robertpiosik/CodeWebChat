@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs'
-import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY } from '../../../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'

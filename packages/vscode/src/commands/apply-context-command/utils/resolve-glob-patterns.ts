@@ -1,7 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import * as glob from 'glob'
-import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 
 export async function resolve_glob_patterns(

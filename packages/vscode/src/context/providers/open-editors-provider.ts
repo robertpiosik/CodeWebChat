@@ -1,9 +1,9 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import { FileItem } from './workspace-provider'
+import { FileItem } from './workspace/workspace-provider'
 import { SharedFileState } from '../shared-file-state'
-import { WorkspaceProvider } from './workspace-provider'
+import { WorkspaceProvider } from './workspace/workspace-provider'
 import { display_token_count } from '../../utils/display-token-count'
 
 export class OpenEditorsProvider
@@ -19,7 +19,6 @@ export class OpenEditorsProvider
   private _workspace_roots: string[] = []
   private _checked_items: Map<string, vscode.TreeItemCheckboxState> = new Map()
   private _tab_change_handler: vscode.Disposable
-  private _file_change_watcher: vscode.Disposable
   private _workspace_change_handler: vscode.Disposable
   private _initialized: boolean = false
   private _opened_from_workspace_view: Set<string> = new Set()
@@ -48,16 +47,6 @@ export class OpenEditorsProvider
       this._handle_tab_changes(e)
       this.refresh()
     })
-
-    this._file_change_watcher = vscode.workspace.onDidChangeTextDocument(
-      (e) => {
-        if (e.document.isDirty) return
-
-        const file_path = e.document.uri.fsPath
-        this.workspace_provider.invalidate_token_counts_for_file(file_path)
-        this._on_did_change_tree_data.fire()
-      }
-    )
 
     this._config_change_handler = vscode.workspace.onDidChangeConfiguration(
       (event) => {
@@ -152,7 +141,6 @@ export class OpenEditorsProvider
   dispose(): void {
     this._workspace_change_handler.dispose()
     this._tab_change_handler.dispose()
-    this._file_change_watcher.dispose()
     this._config_change_handler.dispose()
     this._on_did_change_checked_files.dispose()
   }

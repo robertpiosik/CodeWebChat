@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { WorkspaceProvider } from '../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
 import { OpenEditorsProvider } from '../context/providers/open-editors-provider'
 import { WebsitesProvider } from '../context/providers/websites-provider'
 import { natural_sort } from '@/utils/natural-sort'

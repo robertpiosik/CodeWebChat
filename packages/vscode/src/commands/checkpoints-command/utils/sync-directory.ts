@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
 async function count_sync_operations(params: {
   source_dir: vscode.Uri

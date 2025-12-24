@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import {
   SAVED_CONTEXTS_STATE_KEY,
   LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY

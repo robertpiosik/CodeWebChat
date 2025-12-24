@@ -3,7 +3,7 @@ import * as path from 'path'
 import {
   WorkspaceProvider,
   FileItem
-} from '../context/providers/workspace-provider'
+} from '../context/providers/workspace/workspace-provider'
 import { natural_sort } from '../utils/natural-sort'
 
 interface FileQuickPickItem extends vscode.QuickPickItem {

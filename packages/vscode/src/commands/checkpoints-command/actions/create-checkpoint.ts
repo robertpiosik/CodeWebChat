@@ -4,7 +4,7 @@ import {
   TEMPORARY_CHECKPOINT_STATE_KEY,
   CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY
 } from '../../../constants/state-keys'
-import { WorkspaceProvider } from '../../../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
 import type { Checkpoint, CheckpointTab } from '../types'
 import { get_checkpoints } from './get-checkpoints'
 import {

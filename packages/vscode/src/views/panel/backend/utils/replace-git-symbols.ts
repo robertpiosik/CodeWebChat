@@ -3,7 +3,7 @@ import { execSync } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
 import { get_git_repository } from '@/utils/git-repository-utils'
-import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 

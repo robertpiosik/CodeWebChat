@@ -4,7 +4,7 @@ import * as fs from 'fs/promises'
 import {
   WorkspaceProvider,
   FileItem
-} from '../context/providers/workspace-provider'
+} from '../context/providers/workspace/workspace-provider'
 import {
   RANGES_STATE_KEY,
   LAST_RANGE_SAVE_LOCATION_STATE_KEY

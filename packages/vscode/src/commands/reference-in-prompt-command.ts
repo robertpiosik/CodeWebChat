@@ -1,7 +1,7 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider } from '../context/providers/workspace-provider'
-import { FileItem } from '../context/providers/workspace-provider'
+import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
+import { FileItem } from '../context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 

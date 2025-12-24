@@ -3,7 +3,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { WorkspaceProvider } from '@/context/providers/workspace-provider'
+import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { natural_sort } from '@/utils/natural-sort'
 
 type QuickPickItem = {

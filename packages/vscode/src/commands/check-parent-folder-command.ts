@@ -3,7 +3,7 @@ import * as path from 'path'
 import {
   WorkspaceProvider,
   FileItem
-} from '../context/providers/workspace-provider'
+} from '../context/providers/workspace/workspace-provider'
 
 export const check_parent_folder_command = (
   workspace_provider: WorkspaceProvider
