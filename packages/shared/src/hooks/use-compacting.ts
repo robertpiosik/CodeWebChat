@@ -7,7 +7,7 @@ export const use_compacting = (max_compact_step = 4) => {
 
   const report_width = useCallback((width: number, step: number) => {
     set_thresholds((prev) => {
-      if (prev[step] === width) return prev
+      if (prev[step] == width) return prev
       return { ...prev, [step]: width }
     })
   }, [])
@@ -26,7 +26,7 @@ export const use_compacting = (max_compact_step = 4) => {
 
       // Try to shrink (increase compaction)
       if (thresholds[0] !== undefined && width < thresholds[0]) {
-        if (compact_step === 0) {
+        if (compact_step == 0) {
           set_compact_step(1)
         } else if (compact_step < max_compact_step) {
           if (

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode'
-import { WorkspaceProvider, FileItem } from './workspace/workspace-provider'
+import { WorkspaceProvider, FileItem } from '../workspace/workspace-provider'
 
 export class ContextProvider implements vscode.TreeDataProvider<FileItem> {
   private _onDidChangeTreeData: vscode.EventEmitter<

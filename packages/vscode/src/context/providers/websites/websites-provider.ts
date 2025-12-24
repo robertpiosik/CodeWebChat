@@ -1,7 +1,7 @@
-import { CONTEXT_CHECKED_URLS_STATE_KEY } from '@/constants/state-keys'
-import { display_token_count } from '@/utils/display-token-count'
 import { Website } from '@shared/types/websocket-message'
 import * as vscode from 'vscode'
+import { CONTEXT_CHECKED_URLS_STATE_KEY } from '../../../constants/state-keys'
+import { display_token_count } from '../../../utils/display-token-count'
 
 export class WebsiteItem extends vscode.TreeItem {
   public readonly token_count: number

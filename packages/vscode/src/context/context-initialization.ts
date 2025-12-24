@@ -5,8 +5,7 @@ import {
   FileItem
 } from './providers/workspace/workspace-provider'
 import { FilesCollector } from '../utils/files-collector'
-import { OpenEditorsProvider } from './providers/open-editors-provider'
-import { WebsitesProvider, WebsiteItem } from './providers/websites-provider'
+import { OpenEditorsProvider } from './providers/open-editors/open-editors-provider'
 import { SharedFileState } from './shared-file-state'
 import { marked } from 'marked'
 import { EventEmitter } from 'events'
@@ -20,7 +19,8 @@ import {
   RANGES_STATE_KEY,
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
-import { ContextProvider } from './providers/context-provider'
+import { ContextProvider } from './providers/context/context-provider'
+import { WebsiteItem, WebsitesProvider } from './providers/websites-provider'
 
 export const token_count_emitter = new EventEmitter()
 

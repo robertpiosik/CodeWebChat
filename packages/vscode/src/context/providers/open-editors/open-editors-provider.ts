@@ -1,10 +1,10 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import { FileItem } from './workspace/workspace-provider'
-import { SharedFileState } from '../shared-file-state'
-import { WorkspaceProvider } from './workspace/workspace-provider'
-import { display_token_count } from '../../utils/display-token-count'
+import { FileItem } from '../workspace/workspace-provider'
+import { WorkspaceProvider } from '../workspace/workspace-provider'
+import { display_token_count } from '../../../utils/display-token-count'
+import { SharedFileState } from '@/context/shared-file-state'
 
 export class OpenEditorsProvider
   implements vscode.TreeDataProvider<FileItem>, vscode.Disposable

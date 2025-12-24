@@ -5,7 +5,7 @@ import {
   WorkspaceProvider,
   FileItem
 } from './providers/workspace/workspace-provider'
-import { OpenEditorsProvider } from './providers/open-editors-provider'
+import { OpenEditorsProvider } from './providers/open-editors/open-editors-provider'
 
 export class SharedFileState {
   private static instance: SharedFileState
