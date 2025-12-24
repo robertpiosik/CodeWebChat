@@ -52,12 +52,12 @@ Changed greeting to wishes.
 ### Updated file: \`src/examples/hello.py\`
 
 \`\`\`python
-<<<<<<< ORIGINAL
+<<<<<<< SEARCH
 GREETING = "Welcome everyone!"
 =======
 WISHES = "Have a nice day!"
 >>>>>>> UPDATED
-<<<<<<< ORIGINAL
+<<<<<<< SEARCH
  def show_greeting():
    print(GREETING)
 =======
