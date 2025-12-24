@@ -23,9 +23,9 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 
 To mitigate this limitation, so-called _agentic_ tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
 
-**Code Web Chat proposes a mindful, aligned with true model's capabilities approach**—make it guide itself precisely with hand-picked context and straightforward instructions, not vague markdowns! **With it comes a big win**—as you work on a task your context becomes mostly fixed (recently updated files and your instructions are placed at the end), therefore you'll hit prompt cache most of the time, making AI coding too cheap to meter!
+**Code Web Chat proposes a mindful, aligned with true model's capabilities approach**—make it guide itself precisely with hand-picked context and straightforward instructions, not vague markdowns! **With it comes a big win**—as you work on a task your context becomes mostly fixed (recently updated files and your instructions are placed at the end), therefore **you'll hit prompt cache most of the time, making AI coding too cheap to meter!**
 
-This combined with the latest generation of models like Gemini 3.0 Flash and Pro, which are great at long context understanding and diff correctness, marks **the new generation of AI coding tools**.
+**This combined with the latest generation of models** like Gemini 3.0 Flash and Pro, which excel at long context understanding and diff correctness, **marks the new generation of AI coding tools**.
 
 **10X** the speed, **0.1X** the cost, and accuracy that can't get any better.
 
