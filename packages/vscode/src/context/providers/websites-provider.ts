@@ -52,7 +52,7 @@ export class WebsitesProvider
   private _onDidChangeCheckedWebsites = new vscode.EventEmitter<void>()
   readonly onDidChangeCheckedWebsites = this._onDidChangeCheckedWebsites.event
 
-  constructor(private context: vscode.ExtensionContext) {
+  constructor(private _context: vscode.ExtensionContext) {
     this.onDidChangeCheckedWebsites(() => this.save_checked_websites_state())
   }
 
@@ -158,14 +158,14 @@ export class WebsitesProvider
   }
   private async save_checked_websites_state(): Promise<void> {
     const checked_urls = this.get_checked_websites().map((w) => w.url)
-    await this.context.workspaceState.update(
+    await this._context.workspaceState.update(
       CONTEXT_CHECKED_URLS_STATE_KEY,
       checked_urls
     )
   }
 
   public load_checked_websites_state(): void {
-    const checked_urls = this.context.workspaceState.get<string[]>(
+    const checked_urls = this._context.workspaceState.get<string[]>(
       CONTEXT_CHECKED_URLS_STATE_KEY
     )
     if (checked_urls) {

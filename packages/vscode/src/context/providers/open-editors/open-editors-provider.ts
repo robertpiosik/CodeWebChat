@@ -28,7 +28,7 @@ export class OpenEditorsProvider
   readonly onDidChangeCheckedFiles = this._on_did_change_checked_files.event
   private _shared_state: SharedFileState
   private _config_change_handler: vscode.Disposable
-  private workspace_provider: WorkspaceProvider
+  private _workspace_provider: WorkspaceProvider
 
   constructor(
     workspace_folders: vscode.WorkspaceFolder[],
@@ -36,10 +36,10 @@ export class OpenEditorsProvider
   ) {
     this._workspace_roots = workspace_folders.map((folder) => folder.uri.fsPath)
     this._shared_state = SharedFileState.get_instance()
-    this.workspace_provider = workspace_provider
+    this._workspace_provider = workspace_provider
 
     this._workspace_change_handler =
-      this.workspace_provider.onDidChangeTreeData(() => this.refresh())
+      this._workspace_provider.onDidChangeTreeData(() => this.refresh())
 
     this._update_preview_tabs_state()
 
@@ -86,7 +86,7 @@ export class OpenEditorsProvider
     const checked_files = this.get_checked_files()
 
     const files_to_uncheck = checked_files.filter((file_path) =>
-      this.workspace_provider.is_ignored_by_patterns(file_path)
+      this._workspace_provider.is_ignored_by_patterns(file_path)
     )
 
     for (const file_path of files_to_uncheck) {
@@ -250,7 +250,7 @@ export class OpenEditorsProvider
 
       const file_name = path.basename(file_path)
 
-      if (this.workspace_provider.is_ignored_by_patterns(file_path)) {
+      if (this._workspace_provider.is_ignored_by_patterns(file_path)) {
         continue
       }
 
@@ -283,10 +283,10 @@ export class OpenEditorsProvider
         description = path.basename(workspace_root)
       }
 
-      const range = this.workspace_provider.get_range(file_path)
+      const range = this._workspace_provider.get_range(file_path)
       const token_count =
-        this.workspace_provider.get_cached_token_count(file_path) ||
-        (await this.workspace_provider.calculate_file_tokens(file_path))
+        this._workspace_provider.get_cached_token_count(file_path) ||
+        (await this._workspace_provider.calculate_file_tokens(file_path))
 
       const item = new FileItem(
         file_name,
@@ -373,7 +373,7 @@ export class OpenEditorsProvider
 
       if (!this._is_file_in_any_workspace(file_path)) continue
 
-      if (this.workspace_provider.is_ignored_by_patterns(file_path)) continue
+      if (this._workspace_provider.is_ignored_by_patterns(file_path)) continue
 
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Checked)
 
@@ -407,7 +407,7 @@ export class OpenEditorsProvider
     for (const file_path of file_paths) {
       if (!fs.existsSync(file_path)) continue
 
-      if (this.workspace_provider.is_ignored_by_patterns(file_path)) continue
+      if (this._workspace_provider.is_ignored_by_patterns(file_path)) continue
 
       this._checked_items.set(file_path, vscode.TreeItemCheckboxState.Checked)
 

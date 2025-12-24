@@ -10,9 +10,12 @@ GREETING = "Hello, World!"
 
 def show_greeting():
   print(GREETING)
-\`\`\``
+\`\`\`
 
-export const EDIT_FORMAT_INSTRUCTIONS_TRUNCATED = `${intro}, followed by a markdown code block with file's contents. As a space saving measure, unchanged function bodies (code inside {}) should be replaced with ellipsis comments. Example:
+### Deleted file: \`src/examples/weekdays.py\`
+`
+
+export const EDIT_FORMAT_INSTRUCTIONS_TRUNCATED = `${intro}, followed by a markdown code block with file's contents. As a space saving measure, truncate blocks like unchanged function bodies (code inside {}) by replacing with ellipsis comments. Example:
 Updated the greeting text.
 
 ### Updated file: \`src/examples/hello.js\`
@@ -28,7 +31,28 @@ function getDuration() {
 function showGreeting() {
   // ...
 }
-\`\`\``
+\`\`\`
+
+Updated the purpose text.
+
+### Updated file: \`src/README.md\`
+
+\`\`\`markdown
+## Purpose
+
+Greet user saying "Hello, World!", for a duration of 5 seconds.
+
+## License
+
+<!-- ... --->
+
+## Author
+
+<!-- ... --->
+\`\`\`
+
+### Deleted file: \`src/examples/weekdays.js\`
+`
 
 export const EDIT_FORMAT_INSTRUCTIONS_DIFF = `${intro}, followed by a unified diff within a markdown code block. Example:
 Updated the greeting text.
@@ -44,7 +68,22 @@ Updated the greeting text.
 
  def show_greeting():
    print(GREETING)
-\`\`\``
+\`\`\`
+
+Created a simple calculator with addition and subtraction.
+
+### Created file: \`src/examples/calculator.py\`
+
+\`\`\`python
+def add(a, b):
+  return a + b
+
+def subtract(a, b):
+  return a - b
+\`\`\`
+
+### Deleted file: \`src/examples/weekdays.py\`
+`
 
 export const EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict markers. Example:
 Changed greeting to wishes.
@@ -56,12 +95,15 @@ Changed greeting to wishes.
 GREETING = "Welcome everyone!"
 =======
 WISHES = "Have a nice day!"
->>>>>>> UPDATED
+>>>>>>> REPLACE
 <<<<<<< SEARCH
  def show_greeting():
    print(GREETING)
 =======
  def show_wishes():
    print(WISHES)
->>>>>>> UPDATED
-\`\`\``
+>>>>>>> REPLACE
+\`\`\`
+
+### Deleted file: \`src/examples/weekdays.py\`
+`

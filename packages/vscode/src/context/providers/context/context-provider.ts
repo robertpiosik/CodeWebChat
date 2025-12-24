@@ -9,10 +9,10 @@ export class ContextProvider implements vscode.TreeDataProvider<FileItem> {
     FileItem | undefined | null | void
   > = this._onDidChangeTreeData.event
 
-  private disposable: vscode.Disposable
+  private _disposable: vscode.Disposable
 
-  constructor(private workspaceProvider: WorkspaceProvider) {
-    this.disposable = this.workspaceProvider.onDidChangeTreeData(() =>
+  constructor(private _workspace_provider: WorkspaceProvider) {
+    this._disposable = this._workspace_provider.onDidChangeTreeData(() =>
       this.refresh()
     )
   }
@@ -22,15 +22,15 @@ export class ContextProvider implements vscode.TreeDataProvider<FileItem> {
   }
 
   getTreeItem(element: FileItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
-    return this.workspaceProvider.getTreeItem(element)
+    return this._workspace_provider.getTreeItem(element)
   }
 
   getChildren(element?: FileItem): vscode.ProviderResult<FileItem[]> {
-    return this.workspaceProvider.getContextViewChildren(element)
+    return this._workspace_provider.getContextViewChildren(element)
   }
 
   dispose() {
-    this.disposable.dispose()
+    this._disposable.dispose()
     this._onDidChangeTreeData.dispose()
   }
 }
