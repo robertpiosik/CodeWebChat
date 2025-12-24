@@ -19,9 +19,12 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 
 ## Introduction
 
-Large language models are brilliant, yet mindless pattern matchers. As they lack any properties similar to mental models—they can't _imagine_ how the correct output should look like before they start filling their context with files. To mitigate this limitation, other _agentic_ tools ask you to put effort into planning—a practice of expanding instructions, so the model can do a better job with the grep of relevant files. This is a slow, token-hungry hit or miss.
+Large language models are brilliant, yet mindless pattern matchers. As they lack any properties similar to mental models—they can't _imagine_ how the correct output should look like before they start filling their context with files. To mitigate this limitation, other tools ask you to put effort into planning—a practice of expanding instructions, so the model can do a better job with finding relevant files. As you probably have found, his is a slow, token-hungry hit or miss.
 
-Code Web Chat places context ownership in developer's hands! Guide the model with hand-picked files and get **the best accuracy** by not polluting the context window with tool definitions and endless rambling, **save time** by writing simpler instructions (goodbye markdown files!) and never waiting for tool calls, **save money** by not using oversized models, ensure **privacy** by not having to send each request for postprocessing or your whole codebase for external indexing.
+Code Web Chat proposes more mindful, aligned with the true model's capabilities approach—make the model guided by context in the first place! By not having to meticulously compile context for you with each task
+With Code Web Chat you directly guide the model via context selection—this allows much simpler instructions and huge time and money savings
+
+Code Web Chat places context ownership in your hands! Guide the model with hand-picked files and get **the best accuracy** by not polluting the context window with tool definitions and endless rambling, **save time** by writing simpler instructions (goodbye markdown files!) and never waiting for tool calls, **save money** by not using oversized models, ensure **privacy** by not having to send each request for postprocessing or your whole codebase for external indexing.
 
 **Context-first approach**
 
