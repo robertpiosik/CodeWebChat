@@ -12,7 +12,7 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 ✅ **Apply responses**—changes integration in all edit formats with easy rollback \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
 🏠️ **Local friendly**—easy on smaller models thanks to **zero tool-calling design** \
-🌱 **Efficient**—less strain on providers with compact, cacheable prompts
+🌱 **Efficient**—less strain on providers with simple, cacheable prompts
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
@@ -20,13 +20,13 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 
 ## Introduction
 
-**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with relevant files.
+**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like _before_ their context is filled with relevant files.
 
 To mitigate this limitation, so-called _agentic_ tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
 
-**Code Web Chat proposes a mindful, aligned with true model's capabilities approach**—make it guide itself precisely with hand-picked context and straightforward instructions, not vague markdowns! **With it comes a big win**—as you work on a task your context becomes mostly fixed (recently updated files and your instructions are placed at the end), therefore **you'll hit prompt cache most of the time, making AI coding too cheap to meter!**
+**Code Web Chat proposes a mindful, aligned with true model's capabilities approach**—make the model guide itself with hand-picked files and straightforward instructions, not vague markdowns! **With it comes a big win**—as you work on a task your context becomes mostly fixed (recently updated files and your instructions are placed at the end), therefore **you'll hit prompt cache most of the time, making AI coding too cheap to meter!**
 
-**This combined with the latest generation of models** like Gemini 3.0 Flash and Pro, which excel at long context understanding and diff correctness, **marks the new generation of AI coding tools**.
+**This, combined with the latest generation of models** like Gemini 3.0 Flash and Pro, which excel at long context understanding and diff correctness, **marks the new generation of AI coding tools**.
 
 **10X** the speed, **0.1X** the cost, and accuracy that can't get any better.
 
