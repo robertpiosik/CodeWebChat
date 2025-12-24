@@ -8,6 +8,10 @@ import {
 } from '@/views/panel/backend/utils/preset-format-converters'
 import { CreatePresetGroupOrSeparatorMessage } from '@/views/panel/types/messages'
 
+const ITEM_NAME_GROUP = 'Group'
+const ITEM_NAME_SEPARATOR = 'Separator'
+const ITEM_NAME_PRESET = 'Preset'
+
 async function create_group(
   panel_provider: PanelProvider,
   options: {
@@ -44,7 +48,7 @@ async function create_group(
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_CREATE_ITEM('Group', error)
+      dictionary.error_message.FAILED_TO_CREATE_ITEM(ITEM_NAME_GROUP, error)
     )
   }
 }
@@ -72,7 +76,7 @@ async function create_separator(
   try {
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
-    vscode.window.showErrorMessage('Failed to create Separator')
+    vscode.window.showErrorMessage(`Failed to create ${ITEM_NAME_SEPARATOR}`)
   }
 }
 
@@ -122,7 +126,7 @@ async function create_preset(
     await config.update(presets_config_key, updated_presets, true)
   } catch (error) {
     vscode.window.showErrorMessage(
-      dictionary.error_message.FAILED_TO_CREATE_ITEM('Preset', error)
+      dictionary.error_message.FAILED_TO_CREATE_ITEM(ITEM_NAME_PRESET, error)
     )
   }
 }
@@ -131,24 +135,38 @@ export const handle_create_preset_group_or_separator = async (
   panel_provider: PanelProvider,
   message: CreatePresetGroupOrSeparatorMessage
 ): Promise<void> => {
-  const selection = await vscode.window.showQuickPick(
-    ['Preset', 'Group', 'Separator'],
+  const quickPick = vscode.window.createQuickPick()
+  quickPick.items = [
+    { label: ITEM_NAME_PRESET },
+    { label: ITEM_NAME_GROUP },
+    { label: ITEM_NAME_SEPARATOR }
+  ]
+  quickPick.title = 'Item Types'
+  quickPick.placeholder = 'What would you like to create?'
+  quickPick.buttons = [
     {
-      title: 'Item Types',
-      placeHolder: 'What would you like to create?'
+      iconPath: new vscode.ThemeIcon('close'),
+      tooltip: 'Close'
     }
-  )
+  ]
 
-  if (!selection) {
-    return
-  }
+  quickPick.onDidTriggerButton(() => {
+    quickPick.hide()
+  })
 
-  if (selection == 'Group') {
-    await create_group(panel_provider, { placement: message.placement })
-  } else if (selection == 'Separator') {
-    await create_separator(panel_provider, { placement: message.placement })
-  } else {
-    // 'Preset'
-    await create_preset(panel_provider, { placement: message.placement })
-  }
+  quickPick.onDidAccept(async () => {
+    const selection = quickPick.selectedItems[0]?.label
+    quickPick.hide()
+
+    if (selection == ITEM_NAME_GROUP) {
+      await create_group(panel_provider, { placement: message.placement })
+    } else if (selection == ITEM_NAME_SEPARATOR) {
+      await create_separator(panel_provider, { placement: message.placement })
+    } else if (selection == ITEM_NAME_PRESET) {
+      await create_preset(panel_provider, { placement: message.placement })
+    }
+  })
+
+  quickPick.onDidHide(() => quickPick.dispose())
+  quickPick.show()
 }
