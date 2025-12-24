@@ -11,7 +11,7 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 
 ✅ **Apply responses**—changes integration in _whole_, _truncated_, _before/after_ and _diff_ edit formats \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
-🏠️ **Local friendly**—easy on small models thanks to zero tool calling
+🏠️ **Local friendly**—easy on small models thanks to **zero tool calling**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
