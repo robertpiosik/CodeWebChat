@@ -12,9 +12,9 @@ Context-first AI coding extension for VS Code, Cursor, and others.
 ✅ **Apply responses**—changes integration in all edit formats with easy rollback \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
 ❤️ **Free and open-source**—highly capable tooling freely accessible to everyone \
-🔒 **Privacy-focused**—runs 100% on your machine, with **zero remote processing** \
-🏠️ **Local friendly**—easy on smaller models thanks to **zero tool-calling design** \
-🌱 **Efficient**—once selected context is carried between tasks enabling prompt caching
+🔒 **Privacy-focused**—runs 100% on your machine, with zero remote processing \
+🏠️ **Local friendly**—easy on small models thanks to zero tool-calling design \
+🌱 **Efficient**—once selected context is largely cached by the model provider
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
