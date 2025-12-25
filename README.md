@@ -14,7 +14,7 @@ Context-first AI coding extension for VS Code, Cursor, and others.
 ❤️ **Free and open-source**—highly capable tooling freely accessible to everyone \
 🔒 **Privacy-focused**—runs 100% on your machine, with **zero remote processing** \
 🏠️ **Local friendly**—easy on smaller models thanks to **zero tool-calling design** \
-🌱 **Efficient**—largely reused context between tasks enables prompt caching
+🌱 **Efficient**—once selected context is carried between tasks enabling prompt caching
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
@@ -26,7 +26,7 @@ Context-first AI coding extension for VS Code, Cursor, and others.
 
 To mitigate this limitation, other, agentic tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
 
-**Code Web Chat proposes a mindful 🧠, aligned with model's true capabilities approach**—guide the model with context and task-focused instructions. **With it comes a big win**—because all recently updated files and your ever-changing instructions are always at the end of the prompt, **prompt cache is hit for most of its length, making AI coding too cheap to meter!**
+**Code Web Chat proposes a mindful 🧠, aligned with model's true capabilities approach—guide the model with context!** With it comes a big win—because CWC places the recently updated files and ever-changing instructions at the very end of the message, **prompt cache is hit for most of its length, making AI coding too cheap to meter!**
 
 ### **Context-first approach**
 
