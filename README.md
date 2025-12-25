@@ -2,17 +2,19 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-Context-first AI coding extension for VS Code, Cursor, and others. Free, open-source, and privacy-focused.
+Context-first AI coding extension for VS Code, Cursor, and others.
 
-✅ **Send messages anywhere**
+✅ **Send prompts anywhere**
 
 - Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Apply responses**—changes integration in all edit formats with easy rollback \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
+❤️ **Free and open-source**—a work towards commoditization of AI coding tools \
+🔒 **Privacy-focused**—runs 100% on your machine, with **zero remote processing** \
 🏠️ **Local friendly**—easy on smaller models thanks to **zero tool-calling design** \
-🌱 **Efficient**—less strain on providers with simple, cacheable prompts
+🌱 **Efficient**—simple, cacheable prompts, with **zero overhead**
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
@@ -24,7 +26,7 @@ Context-first AI coding extension for VS Code, Cursor, and others. Free, open-so
 
 To mitigate this limitation, so-called _agentic_ tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
 
-**Code Web Chat proposes a mindful, aligned with true model's capabilities approach**—make the model guide itself with hand-picked files and straightforward instructions, not vague markdowns. **With it comes a big win**—as you work on a task your context becomes mostly fixed (recently updated files and your instructions are always at the very end), therefore **you will hit cache most of the time, making AI coding too cheap to meter!**
+**Code Web Chat proposes a mindful 🧠, aligned with true model's capabilities approach**—make the model guide itself with hand-picked files and straightforward instructions, not vague markdowns. **With it comes a big win**—as you work on a task your context becomes largely fixed (recently updated files and your changing instructions are always at the very end), therefore **cache is hit most of the time, making AI coding too cheap to meter!**
 
 **This, combined with the latest generation of models** like Gemini 3.0 Flash and Pro which excel at long context understanding and diff correctness, **marks the new generation of AI coding tools**.
 
