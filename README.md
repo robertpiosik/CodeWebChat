@@ -27,7 +27,7 @@ Context-first AI coding extension for VS Code, Cursor, and others.
 
 To mitigate this limitation, other, agentic tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
 
-**Code Web Chat proposes a mindful 🧠, aligned with model's true capabilities approach—guide the model with context!** With it comes a big win—because CWC places the recently updated files and ever-changing instructions at the very end of the message, **prompt cache is hit for most of its length, making AI coding too cheap to meter!**
+**Code Web Chat proposes a mindful 🧠, aligned with model's true capabilities approach of model guidance through manual file selection.** With it comes big wins—your instructions can be simpler than ever before, and because CWC places the recently updated files and ever-changing instructions at the very end of the message, **prompt cache is hit for most of its length, making AI coding too cheap to meter!**
 
 ### **Context-first approach**
 
