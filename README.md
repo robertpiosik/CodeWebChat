@@ -4,14 +4,15 @@
 
 Context-first AI coding extension for VS Code, Cursor, and others.
 
-❤️ **Free and open-source** \
 ✅ **Send prompts anywhere**
 
 - Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Apply responses**—changes integration in all edit formats with easy rollback \
-✅ **Fully featured**—refactorings, code completions, commit messages, and more \
+✅ **Fully featured**—refactorings, code completions, commit messages, and more
+
+❤️ **Free and open-source**—released under the GPL-3.0 license \
 🏠️ **Local friendly**—zero tool-calling design suits small models \
 🔒 **Privacy-focused**—runs 100% on your local machine \
 🌱 **Efficient**—first-class support for prompt caching
