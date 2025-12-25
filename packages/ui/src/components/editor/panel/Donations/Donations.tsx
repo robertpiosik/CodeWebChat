@@ -155,8 +155,9 @@ export const Donations: React.FC<DonationsProps> = (props) => {
                 set_about_collapsed(!is_about_collapsed)
               }
             >
-              Hi there! Donating is a great way to show your support for the
-              project. Thank you.
+              Hi there! Your donation supports my mission to make AI coding a
+              mindful practice, with highly capable tooling freely accessible to
+              everyone. Thank you.
             </Fieldset>
           </div>
           <div className={styles.sponsors}>

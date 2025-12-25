@@ -11,7 +11,7 @@ Context-first AI coding extension for VS Code, Cursor, and others.
 
 ✅ **Apply responses**—changes integration in all edit formats with easy rollback \
 ✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
-❤️ **Free and open-source**—a work towards commoditization of AI coding tools \
+❤️ **Free and open-source**—commoditizes access to highly capable AI coding tools \
 🔒 **Privacy-focused**—runs 100% on your machine, with **zero remote processing** \
 🏠️ **Local friendly**—easy on smaller models thanks to **zero tool-calling design** \
 🌱 **Efficient**—simple, cacheable prompts, with **zero overhead**
