@@ -10,7 +10,7 @@ import { use_drag_drop } from './hooks/use-drag-drop'
 import { use_keyboard_shortcuts } from './hooks/use-keyboard-shortcuts'
 import { use_edit_format_compacting } from './hooks/use-edit-format-compacting'
 import { DropdownMenu } from '../../common/DropdownMenu'
-import { use_is_narrow_viewport, use_is_mac } from '@shared/hooks'
+import { use_is_mac } from '@shared/hooks'
 import {
   get_caret_position_from_div,
   set_caret_position_for_div
@@ -64,7 +64,6 @@ export const PromptField: React.FC<PromptFieldProps> = (props) => {
   const [is_focused, set_is_focused] = useState(false)
   const [hovered_edit_format, set_hovered_edit_format] =
     useState<EditFormat | null>(null)
-  const is_narrow_viewport = use_is_narrow_viewport(330)
   const { is_alt_pressed, handle_container_key_down } = use_keyboard_shortcuts({
     show_edit_format_selector: props.show_edit_format_selector,
     on_edit_format_change: props.on_edit_format_change,
