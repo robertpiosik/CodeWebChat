@@ -32,9 +32,6 @@ To mitigate this limitation, other, agentic tools ask you to prepare extensive m
 
 Meet a simple and effective workflow—select files, enter instructions, and send message with your favorite chatbot or a model provider of choice.
 
-> [!TIP]
-> LLMs are pattern matchers—they love examples! Guide the model with context for production-grade code.
-
 Constructed prompt is straightforward and focus the model's whole attention on the task. Example:
 
 ```
