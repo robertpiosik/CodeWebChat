@@ -30,7 +30,7 @@ To mitigate this limitation, other, agentic tools ask you to prepare extensive m
 
 ### **Context-first approach**
 
-Meet a simple **_non-agentic_ workflow**—select files, enter instructions, and send message with your favorite chatbot or a model provider of choice.
+Meet a simple and effective workflow—select files, enter instructions, and send message with your favorite chatbot or a model provider of choice.
 
 > [!TIP]
 > LLMs are pattern matchers—they love examples! Guide the model with context for production-grade code.
