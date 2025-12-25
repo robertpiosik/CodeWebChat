@@ -1238,7 +1238,7 @@ export class WorkspaceProvider
     const gitignore_files = await vscode.workspace.findFiles(
       '**/{.gitignore,.cursorignore,.codeiumignore}'
     )
-    this.combined_gitignore = ignore() // Reset
+    this._combined_gitignore = ignore() // Reset
 
     for (const file_uri of gitignore_files) {
       const gitignore_path = file_uri.fsPath
@@ -1264,7 +1264,7 @@ export class WorkspaceProvider
                 }`
           )
 
-        this.combined_gitignore.add(rules_with_prefix)
+        this._combined_gitignore.add(rules_with_prefix)
       } catch (error) {
         Logger.error({
           function_name: 'load_all_gitignore_files',

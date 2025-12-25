@@ -20,7 +20,10 @@ import {
   type DuplicateWorkspaceContext
 } from '../constants/state-keys'
 import { ContextProvider } from './providers/context/context-provider'
-import { WebsiteItem, WebsitesProvider } from './providers/websites-provider'
+import {
+  WebsiteItem,
+  WebsitesProvider
+} from './providers/websites/websites-provider'
 
 export const token_count_emitter = new EventEmitter()
 
