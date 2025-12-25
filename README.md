@@ -4,17 +4,17 @@
 
 Context-first AI coding extension for VS Code, Cursor, and others.
 
+❤️ **Free and open-source** \
 ✅ **Send prompts anywhere**
 
 - Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
 
 ✅ **Apply responses**—changes integration in all edit formats with easy rollback \
-✅ **Fully featured**—code completions, commit messages, checkpoints, and more \
-❤️ **Free and open-source**—highly capable tooling freely accessible to everyone \
-🔒 **Privacy-focused**—runs 100% on your machine, with zero remote processing \
-🏠️ **Local friendly**—easy on small models thanks to zero tool-calling design \
-🌱 **Efficient**—once selected context enables prompt cache at discounted rates
+✅ **Fully featured**—refactorings, code completions, commit messages, and more \
+🏠️ **Local friendly**—zero tool-calling design suits small models \
+🔒 **Privacy-focused**—runs 100% on your local machine \
+🌱 **Efficient**—first-class support for prompt caching
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />

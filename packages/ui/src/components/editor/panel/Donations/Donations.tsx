@@ -156,7 +156,7 @@ export const Donations: React.FC<DonationsProps> = (props) => {
               }
             >
               Hi there! Your donation supports my mission to make AI coding a
-              mindful practice, with highly capable tooling freely available to
+              mindful practice, with high quality tooling freely available to
               everyone. Thank you.
             </Fieldset>
           </div>
