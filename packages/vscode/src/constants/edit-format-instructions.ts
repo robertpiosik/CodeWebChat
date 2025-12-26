@@ -13,6 +13,8 @@ def show_greeting():
 \`\`\`
 
 ### Deleted file: \`src/examples/weekdays.py\`
+
+### Renamed file: \`src/examples/math_tools.py\` (old) \`src/examples/calculator.py\` (new)
 `
 
 export const EDIT_FORMAT_INSTRUCTIONS_TRUNCATED = `${intro}, followed by a markdown code block with file's contents. As a space saving measure, truncate blocks like unchanged function bodies (code inside {}) by replacing with ellipsis comments. Example:
@@ -52,6 +54,8 @@ Greet user saying "Hello, World!", for a duration of 5 seconds.
 \`\`\`
 
 ### Deleted file: \`src/examples/weekdays.js\`
+
+### Renamed file: \`src/examples/math-tools.js\` (old) \`src/examples/calculator.js\` (new)
 `
 
 export const EDIT_FORMAT_INSTRUCTIONS_DIFF = `${intro}, followed by a unified diff within a markdown code block. Example:
@@ -83,6 +87,8 @@ def subtract(a, b):
 \`\`\`
 
 ### Deleted file: \`src/examples/weekdays.py\`
+
+### Renamed file: \`src/examples/math_tools.py\` (old) \`src/examples/calculator.py\` (new)
 `
 
 export const EDIT_FORMAT_INSTRUCTIONS_BEFORE_AFTER = `${intro}, followed by a markdown code block showing the original and updated code snippets with Git-style merge conflict markers. Example:

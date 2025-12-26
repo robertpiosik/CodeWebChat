@@ -23,11 +23,11 @@ Context-first AI coding extension for VS Code, Cursor, and others.
 
 ## Introduction
 
-**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with relevant files.
+**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't imagine how the correct output should look like before their context is filled with relevant files.
 
 To mitigate this limitation, other, agentic tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
 
-Code Web Chat proposes a mindful 🧠 approach of **model guidance through context selection.** With it come big wins—your instructions are simple, responses fast, accuracy can't get any better, and because all the recently modified files are placed at the very end of the message, **prompt cache is hit for most of its length enabling 10X cost savings.**
+Code Web Chat proposes a mindful 🧠 approach of **model guidance through context ownership.** With it come big wins—your instructions are simple, responses fast, accuracy can't get any better, and because all the recently modified files are placed at the very end of the message, **prompt cache is hit for most of its length enabling 10X cost savings.**
 
 That’s great news for your wallet—and for the planet 🌱, too.
 
@@ -125,8 +125,7 @@ Generate meaningful summaries of changes adhering to your style.
 
 ### Context
 
-- `Code Web Chat: Save Context` - Save the currently checked files as a named context for easy reuse.
-- `Code Web Chat: Apply Context` - Apply a saved context to either replace or merge with the currently checked files.
+- `Code Web Chat: Apply Context` - Apply a saved context or save the current file selection.
 - `Code Web Chat: Add File to Context` - Search and add file (or parent folder via file action) to the context.
 - `Code Web Chat: Remove File from Context` - Search and remove file (or parent folder via file action) from the context.
 - `Code Web Chat: Copy Context` - Copy XML-formatted checked files from the Workspace view to the clipboard.

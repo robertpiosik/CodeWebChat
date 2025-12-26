@@ -137,12 +137,6 @@
         "icon": "$(checklist)"
       },
       {
-        "command": "codeWebChat.saveContext",
-        "title": "Save Context",
-        "category": "Code Web Chat",
-        "icon": "$(save)"
-      },
-      {
         "command": "codeWebChat.findPathsInClipboard",
         "title": "%codeWebChat.findPathsInClipboard.title%",
         "category": "Code Web Chat"
@@ -416,16 +410,6 @@
       ],
       "view/title": [
         {
-          "command": "codeWebChat.applyContext",
-          "when": "view == codeWebChatViewContext",
-          "group": "navigation@1"
-        },
-        {
-          "command": "codeWebChat.saveContext",
-          "when": "view == codeWebChatViewContext",
-          "group": "navigation@2"
-        },
-        {
           "command": "codeWebChat.checkAll",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@1"
@@ -436,7 +420,7 @@
           "group": "navigation@2"
         },
         {
-          "command": "codeWebChat.checkpoints",
+          "command": "codeWebChat.applyContext",
           "when": "view == codeWebChatViewWorkspace",
           "group": "navigation@4"
         },

@@ -6,7 +6,7 @@ import { LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY } from '../../../constants/st
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
-import { apply_saved_context } from '../utils'
+import { apply_saved_context } from '../helpers/applying'
 
 let active_deletion_timestamp: number | undefined
 

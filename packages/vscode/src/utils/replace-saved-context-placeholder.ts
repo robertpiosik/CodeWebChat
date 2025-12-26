@@ -5,7 +5,7 @@ import { SavedContext } from '@/types/context'
 import { SAVED_CONTEXTS_STATE_KEY } from '@/constants/state-keys'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { resolve_glob_patterns } from '@/commands/apply-context-command/utils'
+import { resolve_glob_patterns } from '@/commands/apply-context-command/helpers/applying'
 
 async function get_file_content_as_xml(
   file_path: string,
