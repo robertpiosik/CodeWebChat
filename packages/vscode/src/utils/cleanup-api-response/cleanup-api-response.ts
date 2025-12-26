@@ -10,12 +10,12 @@ export const cleanup_api_response = (params: { content: string }): string => {
   if (content.startsWith('<think>')) {
     const end_index = content.indexOf('</think>')
     if (end_index != -1) {
-      content = content.substring(end_index + '</think>'.length)
+      content = content.substring(end_index + '</think>'.length).trim()
     }
   } else if (content.startsWith('<thought>')) {
     const end_index = content.indexOf('</thought>')
     if (end_index != -1) {
-      content = content.substring(end_index + '</thought>'.length)
+      content = content.substring(end_index + '</thought>'.length).trim()
     }
   }
 
