@@ -11,7 +11,6 @@ import {
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import { Preset } from '@shared/types/preset'
 import { apply_preset_affixes_to_instruction } from '@/utils/apply-preset-affixes'
-import { MODE } from '@/views/panel/types/main-view-mode'
 import { dictionary } from '@shared/constants/dictionary'
 import {
   EDIT_FORMAT_INSTRUCTIONS_WHOLE,
@@ -102,14 +101,8 @@ export const handle_preview_preset = async (
     let processed_instructions = instructions
 
     if (processed_instructions.includes('#Changes:')) {
-      const is_no_context_web_mode =
-        panel_provider.mode == MODE.WEB &&
-        panel_provider.web_prompt_type == 'no-context'
-
       processed_instructions = await replace_changes_symbol({
-        instruction: processed_instructions,
-        workspace_provider: panel_provider.workspace_provider,
-        is_no_context_web_mode
+        instruction: processed_instructions
       })
     }
 
@@ -130,7 +123,7 @@ export const handle_preview_preset = async (
       processed_instructions = await replace_saved_context_placeholder({
         instruction: processed_instructions,
         context: panel_provider.context,
-        workspace_provider: panel_provider.workspace_provider,
+        workspace_provider: panel_provider.workspace_provider
       })
     }
 

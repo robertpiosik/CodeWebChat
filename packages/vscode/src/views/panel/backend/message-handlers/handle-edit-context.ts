@@ -258,8 +258,7 @@ const perform_context_editing = async (params: {
 
   if (processed_instructions.includes('#Changes:')) {
     processed_instructions = await replace_changes_symbol({
-      instruction: processed_instructions,
-      workspace_provider: params.file_tree_provider
+      instruction: processed_instructions
     })
   }
 

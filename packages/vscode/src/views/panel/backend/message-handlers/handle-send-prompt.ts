@@ -185,14 +185,8 @@ export const handle_send_prompt = async (params: {
 
         let processed_instructions = instructions
         if (processed_instructions.includes('#Changes:')) {
-          const is_no_context_web_mode =
-            params.panel_provider.mode == MODE.WEB &&
-            params.panel_provider.web_prompt_type == 'no-context'
-
           processed_instructions = await replace_changes_symbol({
-            instruction: processed_instructions,
-            workspace_provider: params.panel_provider.workspace_provider,
-            is_no_context_web_mode
+            instruction: processed_instructions
           })
         }
 

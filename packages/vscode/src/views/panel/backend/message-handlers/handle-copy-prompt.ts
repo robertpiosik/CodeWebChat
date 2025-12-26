@@ -111,14 +111,8 @@ export const handle_copy_prompt = async (params: {
     let processed_instructions = instructions
 
     if (processed_instructions.includes('#Changes:')) {
-      const is_no_context_web_mode =
-        params.panel_provider.mode == MODE.WEB &&
-        params.panel_provider.web_prompt_type == 'no-context'
-
       processed_instructions = await replace_changes_symbol({
-        instruction: processed_instructions,
-        workspace_provider: params.panel_provider.workspace_provider,
-        is_no_context_web_mode
+        instruction: processed_instructions
       })
     }
 
@@ -139,7 +133,7 @@ export const handle_copy_prompt = async (params: {
       processed_instructions = await replace_saved_context_placeholder({
         instruction: processed_instructions,
         context: params.panel_provider.context,
-        workspace_provider: params.panel_provider.workspace_provider,
+        workspace_provider: params.panel_provider.workspace_provider
       })
     }
 

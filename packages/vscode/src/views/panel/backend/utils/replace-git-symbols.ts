@@ -84,9 +84,6 @@ const build_changes_markdown = (
 
 export const replace_changes_symbol = async (params: {
   instruction: string
-  after_context?: boolean
-  workspace_provider: WorkspaceProvider
-  is_no_context_web_mode?: boolean
 }): Promise<string> => {
   const matches = params.instruction.match(
     /#Changes:([^\s,;:.!?]+(?:\/[^\s,;:.!?]+)?)/
@@ -96,20 +93,6 @@ export const replace_changes_symbol = async (params: {
   }
 
   const branch_spec = matches[1]
-
-  if (params.after_context) {
-    let branch_name = branch_spec
-    const multi_root_match = branch_spec.match(/^([^/]+)\/(.+)$/)
-
-    if (multi_root_match) {
-      branch_name = multi_root_match[2]
-    }
-
-    return params.instruction.replace(
-      new RegExp(`#Changes:${branch_spec}`, 'g'),
-      `(Changes against ${branch_name} branch)`
-    )
-  }
 
   const multi_root_match = branch_spec.match(/^([^/]+)\/(.+)$/)
 
@@ -354,18 +337,8 @@ const build_commit_changes_markdown = (
 
 export const replace_commit_symbol = async (params: {
   instruction: string
-  after_context?: boolean
 }): Promise<string> => {
-  const regex = /#Commit:([^:]+):([a-fA-F0-9]+)\s*(?:"([^"]*)")?/g
-  if (params.after_context) {
-    return params.instruction.replace(
-      regex,
-      (_match, _folder_name, _commit_hash, commit_message) => {
-        if (commit_message) return `(Commit: ${commit_message})`
-        return '(Commit)'
-      }
-    )
-  }
+  const regex = /#Commit:([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?/g
 
   let result_instruction = params.instruction
   const matches = [...result_instruction.matchAll(regex)]
@@ -379,7 +352,7 @@ export const replace_commit_symbol = async (params: {
     const full_match = match[0]
     const folder_name = match[1]
     const commit_hash = match[2]
-    const commit_message = match[3]
+    const commit_message = match[3]?.replace(/\\(.)/g, '$1')
 
     const target_folder = workspace_folders.find(
       (folder) => folder.name === folder_name
@@ -452,13 +425,10 @@ const build_context_at_commit_xml = (
 
 export const replace_context_at_commit_symbol = async (params: {
   instruction: string
-  after_context?: boolean
   workspace_provider: WorkspaceProvider
 }): Promise<string> => {
-  const regex = /#ContextAtCommit:([^:]+):([a-fA-F0-9]+)\s*(?:"([^"]*)")?/g
-  if (params.after_context) {
-    return params.instruction.replace(regex, '<archive/>')
-  }
+  const regex =
+    /#ContextAtCommit:([^:]+):([a-fA-F0-9]+)\s*(?:"((?:[^"\\]|\\.)*)")?/g
 
   let result_instruction = params.instruction
   const matches = [...result_instruction.matchAll(regex)]
