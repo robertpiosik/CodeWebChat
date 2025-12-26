@@ -46,25 +46,67 @@ export const build_commit_message_prompt = (
     let final_diff_content = full_file_diff
 
     let file_path: string | undefined
+    let is_deleted = false
 
     if (new_path && new_path != '/dev/null') {
       file_path = new_path
     } else if (old_path && old_path != '/dev/null') {
       file_path = old_path
+      is_deleted = true
       // Shorten diff of a deleted file
       const split_diff = full_file_diff.split('+++ /dev/null')
       final_diff_content = split_diff[0] + '+++ /dev/null'
+    } else {
+      // Fallback: try to identify file from diff header (e.g. binary files)
+      const diff_header = lines[0]
+      const matched_file = affected_files_data.find((f) => {
+        const normalized_path = f.relative_path.replace(/\\/g, '/')
+        return (
+          diff_header.includes(`/${normalized_path} `) ||
+          diff_header.endsWith(`/${normalized_path}`)
+        )
+      })
+
+      if (matched_file) {
+        file_path = matched_file.relative_path
+      }
     }
 
     if (file_path) {
       const file_data = affected_files_data.find(
         (f) => f.relative_path == file_path
       )
-      changes_content += `\n### File: \`${file_path}\`\n\n`
+
+      let heading = 'Updated file'
+      let display_path = `\`${file_path}\``
+
+      if (file_data) {
+        if (file_data.status === 2) {
+          heading = 'New file'
+        } else if (file_data.status === 3) {
+          heading = 'Deleted file'
+          is_deleted = true
+        } else if (file_data.status === 4) {
+          heading = 'Renamed file'
+          if (file_data.original_relative_path) {
+            display_path = `\`${file_data.original_relative_path}\` (old) \`${file_path}\` (new)`
+          }
+        }
+      } else {
+        if (is_deleted) {
+          heading = 'Deleted file'
+        } else if (!old_path && new_path) {
+          heading = 'New file'
+        }
+      }
+
+      changes_content += `\n### ${heading}: ${display_path}\n\n`
       if (file_data) {
         changes_content += `The original state of the file for reference:\n\n<![CDATA[\n${file_data.content}\n]]>\n\n`
       }
-      changes_content += `**New changes:**\n\n<![CDATA[\n${final_diff_content}\n]]>\n`
+      if (!is_deleted) {
+        changes_content += `**New changes:**\n\n<![CDATA[\n${final_diff_content}\n]]>\n`
+      }
     }
   }
 

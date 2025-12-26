@@ -9,6 +9,7 @@ import ignore from 'ignore'
 export interface FileData {
   path: string
   relative_path: string
+  original_relative_path?: string
   content: string
   estimated_tokens: number
   status: number
@@ -33,6 +34,14 @@ export const collect_affected_files_with_metadata = async (params: {
 
     if (ig.ignores(relative_path)) {
       continue
+    }
+
+    let original_relative_path: string | undefined
+    if (change.status === 4 && change.originalUri) {
+      original_relative_path = path.relative(
+        params.repository.rootUri.fsPath,
+        change.originalUri.fsPath
+      )
     }
 
     let content = ''
@@ -74,6 +83,7 @@ export const collect_affected_files_with_metadata = async (params: {
     files_data.push({
       path: file_path,
       relative_path: relative_path,
+      original_relative_path,
       content: content,
       estimated_tokens: estimated_tokens,
       status: change.status,
