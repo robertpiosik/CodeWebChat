@@ -55,5 +55,8 @@ export const PROVIDERS = {
   },
   xAI: {
     base_url: 'https://api.x.ai/v1'
+  },
+  'Z.AI': {
+    base_url: 'https://api.z.ai/api/paas/v4'
   }
 } satisfies Providers
