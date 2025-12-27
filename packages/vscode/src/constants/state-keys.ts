@@ -7,12 +7,11 @@ export const LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY =
 export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
 export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
+export const QUICK_SAVES_STATE_KEY = 'quick-saves'
 export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'lastSaveLocation'
 export const RANGES_STATE_KEY = 'ranges'
 export const LAST_RANGE_SAVE_LOCATION_STATE_KEY = 'last-range-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
-export const LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY =
-  'last-selected-workspace-context-name'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
 export const LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY =

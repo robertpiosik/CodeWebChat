@@ -4,7 +4,8 @@ import * as path from 'path'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import {
   SAVED_CONTEXTS_STATE_KEY,
-  LAST_APPLY_CONTEXT_OPTION_STATE_KEY
+  LAST_APPLY_CONTEXT_OPTION_STATE_KEY,
+  QUICK_SAVES_STATE_KEY
 } from '../../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { dictionary } from '@shared/constants/dictionary'
@@ -14,6 +15,7 @@ import {
   handle_workspace_state_source
 } from './sources'
 import { load_all_contexts, get_contexts_file_path } from './helpers/saving'
+import { handle_quick_save } from './helpers/saving/handle-quick-save'
 
 export function apply_context_command(
   workspace_provider: WorkspaceProvider | undefined,
@@ -25,7 +27,7 @@ export function apply_context_command(
     async () => {
       let show_main_menu = true
       let last_main_selection_value = extension_context.workspaceState.get<
-        'internal' | 'file' | 'other' | undefined
+        'internal' | 'file' | 'other' | string | undefined
       >(LAST_APPLY_CONTEXT_OPTION_STATE_KEY)
 
       while (show_main_menu) {
@@ -56,7 +58,7 @@ export function apply_context_command(
         }
 
         const main_quick_pick_options: (vscode.QuickPickItem & {
-          value: 'internal' | 'file' | 'other'
+          value: 'internal' | 'file' | 'other' | string
         })[] = []
 
         main_quick_pick_options.push({
@@ -86,8 +88,33 @@ export function apply_context_command(
           value: 'other'
         })
 
+        main_quick_pick_options.push({
+          label: 'quick saves',
+          kind: vscode.QuickPickItemKind.Separator,
+          value: 'separator'
+        } as any)
+
+        const quick_saves = extension_context.workspaceState.get<
+          Record<number, SavedContext>
+        >(QUICK_SAVES_STATE_KEY, {})
+        for (let i = 1; i <= 3; i++) {
+          const is_saved = !!quick_saves[i]
+          main_quick_pick_options.push({
+            label: `Quick Save Slot ${i}`,
+            description: is_saved
+              ? `${quick_saves[i].paths.length} paths`
+              : 'empty',
+            value: `quick_save_${i}`,
+            buttons: is_saved
+              ? [{ iconPath: new vscode.ThemeIcon('trash'), tooltip: 'Clear' }]
+              : []
+          })
+        }
+
         const main_quick_pick = vscode.window.createQuickPick<
-          vscode.QuickPickItem & { value: 'internal' | 'file' | 'other' }
+          vscode.QuickPickItem & {
+            value: 'internal' | 'file' | 'other' | string
+          }
         >()
         main_quick_pick.title = 'Context Sources'
         main_quick_pick.items = main_quick_pick_options
@@ -106,7 +133,8 @@ export function apply_context_command(
 
         const main_selection = await new Promise<
           | (vscode.QuickPickItem & {
-              value: 'internal' | 'file' | 'other'
+              value: 'internal' | 'file' | 'other' | string
+              triggeredButton?: vscode.QuickInputButton
             })
           | undefined
         >((resolve) => {
@@ -164,6 +192,20 @@ export function apply_context_command(
                 }
               }
             }),
+            main_quick_pick.onDidTriggerItemButton(async (e) => {
+              if (e.item.value.startsWith('quick_save_')) {
+                const slot = parseInt(e.item.value.split('_')[2])
+                const current = extension_context.workspaceState.get<
+                  Record<number, SavedContext>
+                >(QUICK_SAVES_STATE_KEY, {})
+                delete current[slot]
+                await extension_context.workspaceState.update(
+                  QUICK_SAVES_STATE_KEY,
+                  current
+                )
+                resolve({ ...e.item, triggeredButton: e.button })
+              }
+            }),
             main_quick_pick.onDidAccept(() => {
               is_accepted = true
               resolve(main_quick_pick.selectedItems[0])
@@ -181,6 +223,11 @@ export function apply_context_command(
         })
 
         if (!main_selection) return
+
+        if (main_selection.triggeredButton) {
+          show_main_menu = true
+          continue
+        }
 
         last_main_selection_value = main_selection.value
         await extension_context.workspaceState.update(
@@ -276,6 +323,14 @@ export function apply_context_command(
             await handle_unstaged_files_source(workspace_provider)
             return
           }
+        } else if (main_selection.value.startsWith('quick_save_')) {
+          const slot = parseInt(main_selection.value.split('_')[2])
+          await handle_quick_save(
+            slot,
+            workspace_provider,
+            extension_context,
+            on_context_selected
+          )
         }
       }
     }

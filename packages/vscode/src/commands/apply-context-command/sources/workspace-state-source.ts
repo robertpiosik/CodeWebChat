@@ -1,9 +1,6 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
-import {
-  SAVED_CONTEXTS_STATE_KEY,
-  LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY
-} from '../../../constants/state-keys'
+import { SAVED_CONTEXTS_STATE_KEY } from '../../../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
@@ -76,20 +73,6 @@ export async function handle_workspace_state_source(
     quick_pick.items = create_quick_pick_items(internal_contexts)
     quick_pick.placeholder = `Select saved context (from workspace state)`
     quick_pick.buttons = [vscode.QuickInputButtons.Back]
-
-    const last_selected_context_name =
-      extension_context.workspaceState.get<string>(
-        LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY
-      )
-
-    if (last_selected_context_name) {
-      const active_item = quick_pick.items.find(
-        (item) => item.label === last_selected_context_name
-      )
-      if (active_item) {
-        quick_pick.activeItems = [active_item]
-      }
-    }
 
     let active_dialog_count = 0
     let go_back_after_delete = false
@@ -205,12 +188,6 @@ export async function handle_workspace_state_source(
           }
 
           is_accepted = true
-          if (selectedItem?.context) {
-            extension_context.workspaceState.update(
-              LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
-              selectedItem.context.name
-            )
-          }
           quick_pick.hide()
           resolve(selectedItem)
         }),
@@ -233,11 +210,6 @@ export async function handle_workspace_state_source(
             context: SavedContext
             index: number
           }
-
-          await extension_context.workspaceState.update(
-            LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
-            item.context.name
-          )
 
           if (event.button === edit_button) {
             active_dialog_count++
@@ -294,9 +266,8 @@ export async function handle_workspace_state_source(
 
             let name_to_highlight = item.context.name
 
-            if (new_name && new_name !== 'back') {
+            if (new_name && new_name != 'back') {
               const trimmed_name = new_name
-              let context_updated = false
 
               if (trimmed_name != item.context.name) {
                 const updated_contexts = internal_contexts.map((c) =>
@@ -308,15 +279,7 @@ export async function handle_workspace_state_source(
                   updated_contexts
                 )
                 internal_contexts = updated_contexts
-                context_updated = true
                 name_to_highlight = trimmed_name
-              }
-
-              if (context_updated) {
-                await extension_context.workspaceState.update(
-                  LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
-                  trimmed_name
-                )
               }
             }
 
