@@ -16,8 +16,8 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium).
 
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
 🏠️ **Local friendly**—zero tool-calling design suits small models \
-🔒 **Privacy-focused**—runs 100% on your local machine \
-🌱 **Efficient**—carry cached input tokens across tasks
+🌱 **Efficient**—carry cached prefill (input tokens) across tasks \
+🔒 **Privacy-focused**—runs 100% on your machine
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />

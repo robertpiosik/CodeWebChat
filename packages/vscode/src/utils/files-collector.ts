@@ -66,6 +66,7 @@ export class FilesCollector {
     // Only include websites when not in no_context mode
     if (!params?.no_context && this.websites_provider) {
       const checked_websites = this.websites_provider.get_checked_websites()
+      checked_websites.sort((a, b) => a.url.localeCompare(b.url))
 
       for (const website of checked_websites) {
         collected_text += `<document title="${website.title}">\n<![CDATA[\n${website.content}\n]]>\n</document>\n`
