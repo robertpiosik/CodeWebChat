@@ -14,6 +14,7 @@ export const LAST_RANGE_SAVE_LOCATION_STATE_KEY = 'last-range-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
+export const CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY = 'context-checked-timestamps'
 export const LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY =
   'lastSelectedCodeCompletionConfigId'
 export const LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY =
@@ -76,6 +77,7 @@ export const get_recently_used_presets_or_groups_key = (
 
 export type DuplicateWorkspaceContext = {
   checked_files: string[]
+  checked_files_timestamps?: Record<string, number>
   checked_websites: string[]
   timestamp: number
   workspace_root_folders: string[]

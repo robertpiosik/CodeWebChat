@@ -54,28 +54,12 @@ export class FilesCollector {
     const now = Date.now()
     const THREE_HOURS = 3 * 60 * 60 * 1000
 
-    // Recently modified files are placed at the end for better cache efficiency
-    context_files.sort((a, b) => {
-      try {
-        const mtime_a = fs.statSync(a).mtime.getTime()
-        const mtime_b = fs.statSync(b).mtime.getTime()
-
-        const is_recent_a = now - mtime_a < THREE_HOURS
-        const is_recent_b = now - mtime_b < THREE_HOURS
-
-        if (is_recent_a != is_recent_b) {
-          return is_recent_a ? 1 : -1
-        }
-
-        if (is_recent_a) {
-          return mtime_a - mtime_b
-        }
-
-        return natural_sort(a, b)
-      } catch (error) {
-        return natural_sort(a, b)
-      }
-    })
+    // Sort context files based on modification time and selection timestamp
+    const sorted_context_files = this._sort_context_files(
+      context_files,
+      now,
+      THREE_HOURS
+    )
 
     let collected_text = ''
 
@@ -88,7 +72,7 @@ export class FilesCollector {
       }
     }
 
-    for (const file_path of context_files) {
+    for (const file_path of sorted_context_files) {
       if (params?.exclude_path && params.exclude_path == file_path) continue
       try {
         if (!fs.existsSync(file_path)) continue
@@ -139,5 +123,56 @@ export class FilesCollector {
 
   private _get_workspace_root_for_file(file_path: string): string | undefined {
     return this.workspace_provider.get_workspace_root_for_file(file_path)
+  }
+
+  private _sort_context_files(
+    files: string[],
+    now: number,
+    three_hours: number
+  ): string[] {
+    // Categorize files into two groups
+    const recently_modified: Array<{ path: string; mtime: number }> = []
+    const older_files: Array<{ path: string; timestamp: number }> = []
+
+    for (const file_path of files) {
+      try {
+        if (!fs.existsSync(file_path)) continue
+        const stats = fs.statSync(file_path)
+        if (stats.isDirectory()) continue
+
+        const mtime = stats.mtimeMs
+        const selection_timestamp =
+          this.workspace_provider.get_selection_timestamp(file_path) ?? now
+
+        if (now - mtime < three_hours) {
+          // Modified within last 3 hours
+          recently_modified.push({ path: file_path, mtime })
+        } else {
+          // Modified earlier than 3 hours
+          older_files.push({ path: file_path, timestamp: selection_timestamp })
+        }
+      } catch (error) {
+        console.error(`Error getting file stats for ${file_path}:`, error)
+      }
+    }
+
+    // Sort older files by selection timestamp (ascending), with natural sort as tiebreaker
+    older_files.sort((a, b) => {
+      const timestamp_diff = a.timestamp - b.timestamp
+      if (timestamp_diff != 0) {
+        return timestamp_diff
+      }
+      // If timestamps are the same, use natural sort on paths
+      return natural_sort(a.path, b.path)
+    })
+
+    // Sort recently modified files by modification time (ascending - oldest to newest)
+    recently_modified.sort((a, b) => a.mtime - b.mtime)
+
+    // Combine: older files first, then recently modified
+    return [
+      ...older_files.map((f) => f.path),
+      ...recently_modified.map((f) => f.path)
+    ]
   }
 }

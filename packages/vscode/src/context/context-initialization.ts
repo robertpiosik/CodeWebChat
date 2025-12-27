@@ -14,6 +14,7 @@ import { dictionary } from '@shared/constants/dictionary'
 import {
   CONTEXT_CHECKED_PATHS_STATE_KEY,
   CONTEXT_CHECKED_URLS_STATE_KEY,
+  CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
   DUPLICATE_WORKSPACE_CONTEXT_STATE_KEY,
   SAVED_CONTEXTS_STATE_KEY,
   RANGES_STATE_KEY,
@@ -65,6 +66,12 @@ const restore_duplicated_workspace_context = async (
           CONTEXT_CHECKED_PATHS_STATE_KEY,
           duplicated_context.checked_files
         )
+        if (duplicated_context.checked_files_timestamps) {
+          await context.workspaceState.update(
+            CONTEXT_CHECKED_TIMESTAMPS_STATE_KEY,
+            duplicated_context.checked_files_timestamps
+          )
+        }
         await context.workspaceState.update(
           CONTEXT_CHECKED_URLS_STATE_KEY,
           duplicated_context.checked_websites
