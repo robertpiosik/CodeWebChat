@@ -992,7 +992,7 @@ export class WorkspaceProvider
     } else {
       this._checked_timestamps.delete(key)
     }
-    this._token_calculator.invalidate_directory_selected_count(key) // Invalidate self
+    this._token_calculator.invalidate_directory_selected_count(key)
 
     if (item.isDirectory) {
       await this._update_directory_check_state(key, state, false)
@@ -1001,7 +1001,7 @@ export class WorkspaceProvider
     let dir_path = path.dirname(key)
     const workspace_root = this.get_workspace_root_for_file(key)
     while (workspace_root && dir_path.startsWith(workspace_root)) {
-      this._token_calculator.invalidate_directory_selected_count(dir_path) // Invalidate parents
+      this._token_calculator.invalidate_directory_selected_count(dir_path)
       await this._update_parent_state(dir_path)
       dir_path = path.dirname(dir_path)
     }
@@ -1011,7 +1011,7 @@ export class WorkspaceProvider
   }
 
   private async _update_parent_state(dir_path: string): Promise<void> {
-    this._token_calculator.invalidate_directory_selected_count(dir_path) // Invalidate selected count for this dir
+    this._token_calculator.invalidate_directory_selected_count(dir_path)
     try {
       const workspace_root = this.get_workspace_root_for_file(dir_path)
       if (!workspace_root) return
@@ -1299,7 +1299,7 @@ export class WorkspaceProvider
     const gitignore_files = await vscode.workspace.findFiles(
       '**/{.gitignore,.cursorignore,.codeiumignore}'
     )
-    this._combined_gitignore = ignore() // Reset
+    this._combined_gitignore = ignore()
 
     for (const file_uri of gitignore_files) {
       const gitignore_path = file_uri.fsPath

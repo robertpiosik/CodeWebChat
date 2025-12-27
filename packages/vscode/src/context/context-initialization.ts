@@ -462,7 +462,7 @@ export const context_initialization = async (
       tab_change_timeout = setTimeout(() => {
         update_view_badges()
         tab_change_timeout = null
-      }, 100) // 100ms debounce
+      }, 100)
     })
   )
 

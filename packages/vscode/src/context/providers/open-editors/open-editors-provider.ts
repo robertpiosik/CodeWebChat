@@ -183,7 +183,7 @@ export class OpenEditorsProvider
 
     const token_count = element.tokenCount
 
-    let final_description = element.description || '' // relative path
+    let final_description = element.description || ''
 
     const prefix_parts: string[] = []
     if (token_count !== undefined) {
@@ -297,7 +297,7 @@ export class OpenEditorsProvider
         false,
         true,
         token_count,
-        undefined, // selectedTokenCount is undefined for open editor files
+        undefined,
         description,
         false,
         range

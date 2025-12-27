@@ -176,7 +176,6 @@ export class SharedFileState {
     return false
   }
 
-  // Get all currently open editor URIs
   private get_open_editor_uris(): vscode.Uri[] {
     const open_uris: vscode.Uri[] = []
     vscode.window.tabGroups.all.forEach((group) => {
@@ -189,7 +188,6 @@ export class SharedFileState {
     return open_uris
   }
 
-  // Update a file check state in open editors
   private async update_file_in_open_editors(
     file_path: string,
     checked: boolean

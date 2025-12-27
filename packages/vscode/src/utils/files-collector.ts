@@ -131,7 +131,6 @@ export class FilesCollector {
     now: number,
     three_hours: number
   ): string[] {
-    // Categorize files into two groups
     const recently_modified: Array<{ path: string; mtime: number }> = []
     const older_files: Array<{ path: string; timestamp: number }> = []
 
@@ -146,10 +145,8 @@ export class FilesCollector {
           this.workspace_provider.get_selection_timestamp(file_path) ?? now
 
         if (now - mtime < three_hours) {
-          // Modified within last 3 hours
           recently_modified.push({ path: file_path, mtime })
         } else {
-          // Modified earlier than 3 hours
           older_files.push({ path: file_path, timestamp: selection_timestamp })
         }
       } catch (error) {
@@ -158,19 +155,20 @@ export class FilesCollector {
     }
 
     // Sort older files by selection timestamp (ascending), with natural sort as tiebreaker
+    // Files selected within 20 seconds of each other are grouped and sorted naturally
     older_files.sort((a, b) => {
-      const timestamp_diff = a.timestamp - b.timestamp
-      if (timestamp_diff != 0) {
-        return timestamp_diff
+      const timestamp_bucket_a = Math.floor(a.timestamp / 20)
+      const timestamp_bucket_b = Math.floor(b.timestamp / 20)
+      const bucket_diff = timestamp_bucket_a - timestamp_bucket_b
+      if (bucket_diff != 0) {
+        return bucket_diff
       }
-      // If timestamps are the same, use natural sort on paths
+      // If timestamps are within the same 20-second bucket, use natural sort on paths
       return natural_sort(a.path, b.path)
     })
 
-    // Sort recently modified files by modification time (ascending - oldest to newest)
     recently_modified.sort((a, b) => a.mtime - b.mtime)
 
-    // Combine: older files first, then recently modified
     return [
       ...older_files.map((f) => f.path),
       ...recently_modified.map((f) => f.path)
