@@ -27,15 +27,15 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium).
 
 **LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't imagine how the correct output should look like before their context is filled with relevant files.
 
-To mitigate this limitation, other, agentic tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation. It's a time consuming, token-hungry hit-or-miss.
+To mitigate this limitation, other, agentic tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation.
 
-Code Web Chat proposes a mindful 🧠 approach of **model guidance through context ownership.** With it come big wins—your instructions are simple, responses fast, accuracy can't get any better, and because all the recently modified files are placed at the very end of the message, **prompt cache is hit for most of its length enabling 10X cost savings.**
+Code Web Chat proposes an alternative, more mindful 🧠 approach of **model guidance through context ownership.** With it come big wins—your instructions are simple, responses fast, accuracy can't get any better, and because all the recently modified files are placed at the very end of the message, **prompt cache is hit for most of its length enabling 10X cost savings.**
 
 That’s great news for your wallet—and for the planet 🌱, too.
 
 ### **Context-first approach**
 
-Meet a simple and effective workflow—select files, enter instructions, and send message with your favorite chatbot or a model provider of choice.
+Meet a simple and effective workflow with CWC—select files, enter instructions, and send message with your favorite chatbot or a model provider of choice.
 
 Constructed prompt is straightforward and focus the model's whole attention on the task. Example:
 
