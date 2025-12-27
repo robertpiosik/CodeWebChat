@@ -4,7 +4,7 @@
 
 CWC is a cost-efficient AI coding extension with first-class support for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching), enabling reduced latency by up to 80% and input token costs by up to 90%.
 
-Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
+Works with VS Code family of editors (Cursor, Antigravity, VSCodium).
 
 ✅ **Send prompts anywhere**
 
