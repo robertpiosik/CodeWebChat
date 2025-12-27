@@ -4,9 +4,9 @@ const PROMPT_ENTER_CONTEXT_NAME = 'Enter a name for this context'
 const PLACEHOLDER_CONTEXT_NAME = 'e.g., Backend API Context'
 const VALIDATION_CONTEXT_NAME_EMPTY = 'Context name cannot be empty.'
 
-export async function ask_for_new_context_name(
+export const ask_for_new_context_name = async (
   with_back_button: boolean
-): Promise<string | 'back' | undefined> {
+): Promise<string | 'back' | undefined> => {
   const input_box = vscode.window.createInputBox()
   input_box.title = 'New Entry'
   input_box.prompt = PROMPT_ENTER_CONTEXT_NAME

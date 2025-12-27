@@ -7,12 +7,12 @@ import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { resolve_glob_patterns } from './resolve-glob-patterns'
 
-export async function apply_saved_context(
+export const apply_saved_context = async (
   context: SavedContext,
   workspace_root: string,
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext
-): Promise<void> {
+): Promise<void> => {
   const workspace_folders = vscode.workspace.workspaceFolders || []
   const workspace_map = new Map<string, string>()
 
@@ -64,7 +64,7 @@ export async function apply_saved_context(
   }
 
   let paths_to_apply = existing_paths
-  let message = `Applied context "${context.name}".`
+  let message = dictionary.information_message.CONTEXT_APPLIED_SUCCESSFULLY
 
   const currently_checked_files = workspace_provider.get_checked_files()
   if (currently_checked_files.length > 0) {
@@ -131,7 +131,7 @@ export async function apply_saved_context(
         paths_to_apply = [
           ...new Set([...currently_checked_files, ...existing_paths])
         ]
-        message = `Merged context "${context.name}".`
+        message = dictionary.information_message.CONTEXT_MERGED_SUCCESSFULLY
       }
     }
   }

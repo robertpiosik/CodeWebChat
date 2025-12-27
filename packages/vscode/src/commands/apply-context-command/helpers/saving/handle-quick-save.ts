@@ -10,12 +10,12 @@ import {
   add_workspace_prefix
 } from './path-utils'
 
-export async function handle_quick_save(
+export const handle_quick_save = async (
   slot: number,
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext,
   on_context_selected: () => void
-): Promise<void> {
+): Promise<void> => {
   const quick_saves = extension_context.workspaceState.get<
     Record<number, SavedContext>
   >(QUICK_SAVES_STATE_KEY, {})

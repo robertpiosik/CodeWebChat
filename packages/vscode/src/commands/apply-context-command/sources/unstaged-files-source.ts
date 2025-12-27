@@ -6,9 +6,9 @@ import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { display_token_count } from '../../../utils/display-token-count'
 
-export async function handle_unstaged_files_source(
+export const handle_unstaged_files_source = async (
   workspace_provider: WorkspaceProvider
-): Promise<void> {
+): Promise<void> => {
   try {
     const git_extension = vscode.extensions.getExtension('vscode.git')?.exports
     if (!git_extension) {

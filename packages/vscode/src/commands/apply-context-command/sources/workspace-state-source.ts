@@ -9,18 +9,19 @@ import {
   ask_for_new_context_name,
   group_files_by_workspace,
   condense_paths,
-  add_workspace_prefix
+  add_workspace_prefix,
+  resolve_unique_context_name
 } from '../helpers/saving'
 
 const LABEL_NEW_ENTRY = '$(add) New entry...'
 
 let active_deletion_timestamp: number | undefined
 
-export async function handle_workspace_state_source(
+export const handle_workspace_state_source = async (
   workspace_provider: WorkspaceProvider,
   extension_context: vscode.ExtensionContext,
   on_context_selected: () => void
-): Promise<'back' | void> {
+): Promise<'back' | void> => {
   try {
     let internal_contexts: SavedContext[] =
       extension_context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, [])
@@ -141,35 +142,18 @@ export async function handle_workspace_state_source(
 
             all_prefixed_paths.sort((a, b) => a.localeCompare(b))
 
-            const existing_index = internal_contexts.findIndex(
-              (c) => c.name === name
+            const existing_names = internal_contexts.map((c) => c.name)
+            const unique_name = resolve_unique_context_name(
+              name,
+              existing_names
             )
-            if (existing_index !== -1) {
-              active_dialog_count++
-              const overwrite = await vscode.window.showWarningMessage(
-                dictionary.warning_message.CONFIRM_OVERWRITE_CONTEXT_IN_WORKSPACE_STATE(
-                  name
-                ),
-                { modal: true },
-                'Overwrite'
-              )
-              active_dialog_count--
-              if (overwrite !== 'Overwrite') {
-                quick_pick.show()
-                return
-              }
-            }
 
             const new_context: SavedContext = {
-              name,
+              name: unique_name,
               paths: all_prefixed_paths
             }
 
-            const updated_contexts = [...internal_contexts]
-            if (existing_index !== -1) {
-              updated_contexts.splice(existing_index, 1)
-            }
-            updated_contexts.unshift(new_context)
+            const updated_contexts = [new_context, ...internal_contexts]
 
             await extension_context.workspaceState.update(
               SAVED_CONTEXTS_STATE_KEY,

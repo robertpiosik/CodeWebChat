@@ -1,12 +1,12 @@
 import * as path from 'path'
 import * as fs from 'fs'
 
-export function resolve_paths(
+export const resolve_paths = (
   paths: string[],
   workspace_roots: string[],
   workspace_names: string[],
   origin_root?: string
-): string[] {
+): string[] => {
   const resolved_paths: string[] = []
 
   for (const p of paths) {

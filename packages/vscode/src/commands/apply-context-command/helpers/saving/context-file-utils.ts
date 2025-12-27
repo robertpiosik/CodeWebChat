@@ -3,14 +3,14 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { SavedContext } from '@/types/context'
 
-export function get_contexts_file_path(workspace_root: string): string {
+export const get_contexts_file_path = (workspace_root: string): string => {
   return path.join(workspace_root, '.vscode', 'contexts.json')
 }
 
-export function flatten_contexts(
+export const flatten_contexts = (
   items: any[],
   parent_name = ''
-): SavedContext[] {
+): SavedContext[] => {
   const result: SavedContext[] = []
   if (!Array.isArray(items)) return result
 
@@ -39,40 +39,7 @@ export function flatten_contexts(
   return result
 }
 
-function nest_contexts(contexts: SavedContext[]): any[] {
-  const root: any[] = []
-
-  const find_node = (nodes: any[], name: string) =>
-    nodes.find((n) => n.name === name)
-
-  for (const ctx of contexts) {
-    const parts = ctx.name.split('/')
-    let current_level = root
-
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i]
-      let node = find_node(current_level, part)
-
-      if (!node) {
-        node = { name: part }
-        current_level.push(node)
-      }
-
-      if (i === parts.length - 1) {
-        node.paths = ctx.paths
-      } else {
-        if (!node.children) {
-          node.children = []
-        }
-        current_level = node.children
-      }
-    }
-  }
-
-  return root
-}
-
-export function load_contexts_from_file(file_path: string): SavedContext[] {
+export const load_contexts_from_file = (file_path: string): SavedContext[] => {
   try {
     if (fs.existsSync(file_path)) {
       const content = fs.readFileSync(file_path, 'utf8')
@@ -85,9 +52,9 @@ export function load_contexts_from_file(file_path: string): SavedContext[] {
   return []
 }
 
-export async function load_all_contexts(): Promise<
+export const load_all_contexts = async (): Promise<
   Map<string, { contexts: SavedContext[]; root: string }>
-> {
+> => {
   const workspace_folders = vscode.workspace.workspaceFolders || []
   const contexts_by_name = new Map<
     string,
@@ -115,10 +82,10 @@ export async function load_all_contexts(): Promise<
   return contexts_by_name
 }
 
-export async function save_contexts_to_file(
+export const save_contexts_to_file = async (
   contexts: SavedContext[],
   file_path: string
-): Promise<void> {
+): Promise<void> => {
   try {
     const dir_path = path.dirname(file_path)
     if (!fs.existsSync(dir_path)) {
@@ -130,10 +97,25 @@ export async function save_contexts_to_file(
         fs.unlinkSync(file_path)
       }
     } else {
-      const nested = nest_contexts(contexts)
-      fs.writeFileSync(file_path, JSON.stringify(nested, null, 2), 'utf8')
+      fs.writeFileSync(file_path, JSON.stringify(contexts, null, 2), 'utf8')
     }
   } catch (error: any) {
     throw new Error(`Failed to save contexts to file: ${error.message}`)
   }
+}
+
+export const resolve_unique_context_name = (
+  base_name: string,
+  existing_names: string[]
+): string => {
+  let name = base_name
+  let counter = 1
+  const existing_set = new Set(existing_names)
+
+  while (existing_set.has(name)) {
+    name = `${base_name} (${counter})`
+    counter++
+  }
+
+  return name
 }

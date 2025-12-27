@@ -4,10 +4,10 @@ import * as glob from 'glob'
 import { WorkspaceProvider } from '../../../../context/providers/workspace/workspace-provider'
 import { Logger } from '@shared/utils/logger'
 
-export async function resolve_glob_patterns(
+export const resolve_glob_patterns = async (
   patterns: string[],
   workspace_provider: WorkspaceProvider
-): Promise<string[]> {
+): Promise<string[]> => {
   const all_files_in_cache = new Set<string>()
 
   for (const root of workspace_provider.getWorkspaceRoots()) {

@@ -17,11 +17,11 @@ import {
 import { load_all_contexts, get_contexts_file_path } from './helpers/saving'
 import { handle_quick_save } from './helpers/saving/handle-quick-save'
 
-export function apply_context_command(
+export const apply_context_command = (
   workspace_provider: WorkspaceProvider | undefined,
   on_context_selected: () => void,
   extension_context: vscode.ExtensionContext
-): vscode.Disposable {
+): vscode.Disposable => {
   return vscode.commands.registerCommand(
     'codeWebChat.applyContext',
     async () => {

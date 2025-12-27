@@ -92,6 +92,8 @@ export const dictionary = {
       `Selected ${count} file${count == 1 ? '' : 's'}.`,
     DELETED_CONTEXT_FROM_WORKSPACE_STATE: 'Deleted context.',
     CONTEXT_SAVED_SUCCESSFULLY: 'Saved successfully.',
+    CONTEXT_APPLIED_SUCCESSFULLY: 'Context applied successfully.',
+    CONTEXT_MERGED_SUCCESSFULLY: 'Context merged successfully.',
     FILES_REMAIN_CHECKED: (count: number) =>
       `${count} file${count == 1 ? '' : 's'} remain${
         count == 1 ? 's' : ''

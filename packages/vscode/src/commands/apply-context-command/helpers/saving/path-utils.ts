@@ -3,9 +3,9 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 
-export function group_files_by_workspace(
+export const group_files_by_workspace = (
   checked_files: string[]
-): Map<string, string[]> {
+): Map<string, string[]> => {
   const workspace_folders = vscode.workspace.workspaceFolders || []
   const files_by_workspace = new Map<string, string[]>()
 
@@ -28,11 +28,11 @@ export function group_files_by_workspace(
   return files_by_workspace
 }
 
-export function condense_paths(
+export const condense_paths = (
   paths: string[],
   workspace_root: string,
   workspace_provider: WorkspaceProvider
-): string[] {
+): string[] => {
   const relative_paths = paths.map((p) => path.relative(workspace_root, p))
   const selected_paths_set = new Set(relative_paths)
 
@@ -46,10 +46,10 @@ export function condense_paths(
     dir_to_children.get(parent_dir)!.push(rel_path)
   }
 
-  function are_all_files_selected(
+  const are_all_files_selected = (
     dir_path: string,
     condensed_paths_set: Set<string>
-  ): boolean {
+  ): boolean => {
     try {
       if (selected_paths_set.has(dir_path)) {
         return true
@@ -142,10 +142,10 @@ export function condense_paths(
   return Array.from(condensed_paths)
 }
 
-export function add_workspace_prefix(
+export const add_workspace_prefix = (
   relative_paths: string[],
   workspace_root: string
-): string[] {
+): string[] => {
   const workspaceFolders = vscode.workspace.workspaceFolders || []
   const currentWorkspace = workspaceFolders.find(
     (folder) => folder.uri.fsPath === workspace_root
