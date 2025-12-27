@@ -56,12 +56,12 @@ Once the response is generated, a built-in parser extracts code blocks with file
 
 ## Browser integration
 
-Install CWC's Connector extension in your favorite browser to 1) place the message directly in a project/space of your favorite chatbot, 2) include markdown-parsed websites in context. Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
+Install the Connector in your favorite browser to place the message directly in a project/space of your favorite chatbot, include markdown-parsed websites in context. Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-**Supported chatbots**
+**Auto-fill is supported in all popular chatbots:**
 
 - AI Studio
 - ChatGPT
@@ -92,11 +92,6 @@ Install CWC's Connector extension in your favorite browser to 1) place the messa
 
 ## API Tools
 
-Anything CWC can do in chatbots, it can do calling model providers directly from the editor.
-
-> [!TIP]
-> Get started by adding API key of a model provider supporting automatic prompt caching, for example [Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys) or [DeepSeek](https://platform.deepseek.com/api_keys).
-
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
 
@@ -108,6 +103,9 @@ Handle the compact "truncated" edit format and malformed diffs.
 
 **🛠️ Commit Messages** \
 Generate meaningful summaries of changes adhering to your style.
+
+> [!TIP]
+> Get started by adding API key of a model provider supporting automatic prompt caching, for example [Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys) or [DeepSeek](https://platform.deepseek.com/api_keys).
 
 ## Commands
 
