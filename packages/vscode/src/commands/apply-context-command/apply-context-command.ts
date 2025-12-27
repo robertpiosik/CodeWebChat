@@ -62,7 +62,7 @@ export function apply_context_command(
         main_quick_pick_options.push({
           label: 'Workspace state',
           description: `${internal_contexts.length} ${
-            internal_contexts.length === 1 ? 'context' : 'contexts'
+            internal_contexts.length == 1 ? 'entry' : 'entries'
           }`,
           value: 'internal'
         })
@@ -75,7 +75,7 @@ export function apply_context_command(
         main_quick_pick_options.push({
           label: 'JSON file',
           description: `${file_contexts_count} ${
-            file_contexts_count === 1 ? 'context' : 'contexts'
+            file_contexts_count == 1 ? 'entry' : 'entries'
           }`,
           value: 'file',
           buttons: [open_file_button]

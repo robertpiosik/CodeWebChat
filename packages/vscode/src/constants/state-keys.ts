@@ -13,8 +13,6 @@ export const LAST_RANGE_SAVE_LOCATION_STATE_KEY = 'last-range-save-location'
 export const LAST_APPLY_CONTEXT_OPTION_STATE_KEY = 'last-apply-context-option'
 export const LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY =
   'last-selected-workspace-context-name'
-export const LAST_SELECTED_FILE_CONTEXT_NAME_STATE_KEY =
-  'last-selected-file-context-name'
 export const CONTEXT_CHECKED_PATHS_STATE_KEY = 'context-checked-paths'
 export const CONTEXT_CHECKED_URLS_STATE_KEY = 'context-checked-urls'
 export const LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY =
