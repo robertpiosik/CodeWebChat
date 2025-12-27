@@ -95,7 +95,7 @@ Install CWC's Connector extension in your favorite browser to 1) place the messa
 Anything CWC can do in chatbots, it can do calling model providers directly from the editor.
 
 > [!TIP]
-> Get started by bringing your own API key of a model provider like [Google](https://aistudio.google.com/api-keys), [Mistral](https://console.mistral.ai/api-keys) or [Cerebras](https://cloud.cerebras.ai/).
+> Get started by adding API key of a model provider supporting automatic prompt caching, for example [Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys) or [DeepSeek](https://platform.deepseek.com/api_keys).
 
 **🛠️ Edit Context** \
 Modify, create or delete files based on natural language instructions.
