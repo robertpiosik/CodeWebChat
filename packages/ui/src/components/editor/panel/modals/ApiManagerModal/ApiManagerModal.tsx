@@ -27,6 +27,15 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
   const [start_times, set_start_times] = useState<Record<string, number>>({})
   const [now, set_now] = useState(Date.now())
   const [is_scrolled, set_is_scrolled] = useState(false)
+  const [window_width, set_window_width] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handle_resize = () => set_window_width(window.innerWidth)
+    window.addEventListener('resize', handle_resize)
+    return () => {
+      window.removeEventListener('resize', handle_resize)
+    }
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -87,7 +96,8 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
                     <div className={styles.item__right}>
                       {item.tokens_per_second !== undefined && (
                         <div className={styles['tokens-per-second']}>
-                          {format_tokens(item.tokens_per_second)} tokens/s
+                          {format_tokens(item.tokens_per_second)}{' '}
+                          {window_width < 340 ? 't/s' : 'tokens/s'}
                         </div>
                       )}
                       {item.total_tokens !== undefined && (

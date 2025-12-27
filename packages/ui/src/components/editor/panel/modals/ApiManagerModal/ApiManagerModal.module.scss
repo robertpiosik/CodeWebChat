@@ -23,7 +23,7 @@
   border: 1px solid var(--vscode-focusBorder);
   box-shadow: 0 0 8px 2px var(--vscode-widget-shadow);
   width: 100%;
-  max-width: 260px;
+  max-width: min(260px, 70vw);
   overflow: hidden;
 }
 
@@ -94,7 +94,7 @@
     display: flex;
     height: 100%;
     align-items: center;
-    right: 4px;
+    right: 8px;
     font-size: 12px;
     background: linear-gradient(
       to left,

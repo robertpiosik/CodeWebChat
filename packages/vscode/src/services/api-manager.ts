@@ -1,14 +1,17 @@
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { make_api_request } from '@/utils/make-api-request'
 import axios, { CancelTokenSource } from 'axios'
-import { randomUUID } from 'crypto'
+import { randomUUID, createHash } from 'crypto'
 import { Logger } from '@shared/utils/logger'
 
 export class ApiManager {
   private cancel_token_sources: Map<string, CancelTokenSource> = new Map()
   private next_allowed_finish_time = 0
   // Waiting pipeline to utilize KV cache for the same endpoint urls
-  private waiting_chain: Map<string, Promise<void>> = new Map()
+  private waiting_chain: Map<
+    string,
+    { promise: Promise<void>; resolve: () => void; body_hash: string }
+  > = new Map()
 
   constructor(private panel_provider: PanelProvider) {}
 
@@ -22,12 +25,23 @@ export class ApiManager {
     const cancel_token_source = axios.CancelToken.source()
     this.cancel_token_sources.set(request_id, cancel_token_source)
 
-    const previous_waiting_promise = this.waiting_chain.get(params.endpoint_url)
-    let resolve_waiting: () => void = () => {}
-    const waiting_promise = new Promise<void>((resolve) => {
-      resolve_waiting = resolve
+    const body_hash = createHash('md5')
+      .update(JSON.stringify(params.body))
+      .digest('hex')
+    const previous_waiting = this.waiting_chain.get(params.endpoint_url)
+
+    let resolve_current: () => void = () => {}
+    const current_promise = new Promise<void>((resolve) => {
+      resolve_current = resolve
     })
-    this.waiting_chain.set(params.endpoint_url, waiting_promise)
+
+    if (!previous_waiting || previous_waiting.body_hash !== body_hash) {
+      this.waiting_chain.set(params.endpoint_url, {
+        promise: current_promise,
+        resolve: resolve_current,
+        body_hash
+      })
+    }
 
     try {
       this.panel_provider.send_message({
@@ -36,8 +50,8 @@ export class ApiManager {
         title: 'Waiting...'
       })
 
-      if (previous_waiting_promise) {
-        await previous_waiting_promise
+      if (previous_waiting && previous_waiting.body_hash === body_hash) {
+        await previous_waiting.promise
       }
 
       const result = await make_api_request({
@@ -46,7 +60,11 @@ export class ApiManager {
         body: params.body,
         cancellation_token: cancel_token_source.token,
         on_thinking_chunk: () => {
-          resolve_waiting()
+          const chain_entry = this.waiting_chain.get(params.endpoint_url)
+          if (chain_entry && chain_entry.resolve === resolve_current) {
+            chain_entry.resolve()
+            this.waiting_chain.delete(params.endpoint_url)
+          }
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
@@ -54,7 +72,11 @@ export class ApiManager {
           })
         },
         on_chunk: (tokens_per_second, total_tokens) => {
-          resolve_waiting()
+          const chain_entry = this.waiting_chain.get(params.endpoint_url)
+          if (chain_entry && chain_entry.resolve === resolve_current) {
+            chain_entry.resolve()
+            this.waiting_chain.delete(params.endpoint_url)
+          }
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
@@ -81,7 +103,13 @@ export class ApiManager {
       })
       return null
     } finally {
-      resolve_waiting()
+      // Unblock anyone waiting for this request if it was the one in the chain
+      const chain_entry = this.waiting_chain.get(params.endpoint_url)
+      if (chain_entry && chain_entry.resolve === resolve_current) {
+        chain_entry.resolve()
+        this.waiting_chain.delete(params.endpoint_url)
+      }
+
       this.panel_provider.send_message({
         command: 'HIDE_API_MANAGER_PROGRESS',
         id: request_id
