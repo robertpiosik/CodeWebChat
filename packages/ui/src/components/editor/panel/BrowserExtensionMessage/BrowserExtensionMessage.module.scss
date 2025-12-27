@@ -1,7 +1,4 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   padding: 6px 8px 8px 8px;
   margin-bottom: calc(5px * -1);
   background: linear-gradient(
@@ -17,6 +14,9 @@
 
 .heading {
   font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .links {
@@ -27,7 +27,7 @@
     white-space: nowrap;
 
     &:first-child {
-      margin-right: 10px;
+      margin-right: 8px;
     }
   }
 }

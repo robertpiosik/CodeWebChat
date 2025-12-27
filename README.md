@@ -6,7 +6,7 @@ CWC is a context-first AI coding extension with first-class support for [prompt 
 
 Works with VS Code family of editors (Cursor, Antigravity, VSCodium).
 
-✅ **Send prompts anywhere**
+✅ **Prepare messages for...**
 
 - Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
 - Model providers—_Gemini API, OpenRouter, local Ollama, etc._
