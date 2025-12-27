@@ -69,6 +69,10 @@ export const handle_undo = async (
       null
     )
     panel_provider.set_undo_button_state(false)
+    panel_provider.send_message({
+      command: 'SHOW_AUTO_CLOSING_MODAL',
+      title: 'Changes undone'
+    })
   } catch (error: any) {
     console.error('Error during undo:', error)
     vscode.window.showErrorMessage(
