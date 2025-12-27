@@ -8,6 +8,14 @@ import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 import { apply_saved_context } from '../helpers/applying'
+import {
+  ask_for_new_context_name,
+  group_files_by_workspace,
+  condense_paths,
+  add_workspace_prefix
+} from '../helpers/saving'
+
+const LABEL_NEW_ENTRY = '$(add) New entry...'
 
 let active_deletion_timestamp: number | undefined
 
@@ -30,22 +38,37 @@ export async function handle_workspace_state_source(
     }
 
     const create_quick_pick_items = (contexts: SavedContext[]) => {
-      const context_items = contexts.map((context, index) => {
-        const buttons = [edit_button, delete_button]
+      const items: (vscode.QuickPickItem & {
+        context?: SavedContext
+        buttons?: vscode.QuickInputButton[]
+        index?: number
+      })[] = []
 
-        const description = `${context.paths.length} ${
-          context.paths.length == 1 ? 'path' : 'paths'
-        }`
+      items.push({ label: LABEL_NEW_ENTRY })
 
-        return {
-          label: context.name,
-          description,
-          context,
-          buttons,
-          index
-        }
-      })
-      return context_items
+      if (contexts.length > 0) {
+        items.push({
+          label: 'recent entries',
+          kind: vscode.QuickPickItemKind.Separator
+        })
+
+        contexts.forEach((context, index) => {
+          const buttons = [edit_button, delete_button]
+
+          const description = `${context.paths.length} ${
+            context.paths.length == 1 ? 'path' : 'paths'
+          }`
+
+          items.push({
+            label: context.name,
+            description,
+            context,
+            buttons,
+            index
+          })
+        })
+      }
+      return items
     }
 
     const quick_pick = vscode.window.createQuickPick()
@@ -89,12 +112,99 @@ export async function handle_workspace_state_source(
             resolve('back')
           }
         }),
-        quick_pick.onDidAccept(() => {
-          is_accepted = true
+        quick_pick.onDidAccept(async () => {
           const selectedItem = quick_pick
             .selectedItems[0] as vscode.QuickPickItem & {
             context?: SavedContext
           }
+
+          if (selectedItem.label === LABEL_NEW_ENTRY) {
+            const checked_files = workspace_provider.get_checked_files()
+            if (checked_files.length === 0) {
+              active_dialog_count++
+              await vscode.window.showWarningMessage(
+                dictionary.warning_message.NOTHING_IN_CONTEXT_TO_SAVE
+              )
+              active_dialog_count--
+              quick_pick.show()
+              return
+            }
+
+            active_dialog_count++
+            const name = await ask_for_new_context_name(true)
+            active_dialog_count--
+
+            if (!name || name === 'back') {
+              quick_pick.show()
+              return
+            }
+
+            const files_by_workspace = group_files_by_workspace(checked_files)
+            let all_prefixed_paths: string[] = []
+
+            for (const [root, files] of files_by_workspace.entries()) {
+              if (files.length === 0) continue
+              const condensed_paths = condense_paths(
+                files,
+                root,
+                workspace_provider
+              )
+              const relative_paths = condensed_paths.map((p) =>
+                p.replace(/\\/g, '/')
+              )
+              const prefixed_paths = add_workspace_prefix(relative_paths, root)
+              all_prefixed_paths = [...all_prefixed_paths, ...prefixed_paths]
+            }
+
+            all_prefixed_paths.sort((a, b) => a.localeCompare(b))
+
+            const existing_index = internal_contexts.findIndex(
+              (c) => c.name === name
+            )
+            if (existing_index !== -1) {
+              active_dialog_count++
+              const overwrite = await vscode.window.showWarningMessage(
+                dictionary.warning_message.CONFIRM_OVERWRITE_CONTEXT_IN_WORKSPACE_STATE(
+                  name
+                ),
+                { modal: true },
+                'Overwrite'
+              )
+              active_dialog_count--
+              if (overwrite !== 'Overwrite') {
+                quick_pick.show()
+                return
+              }
+            }
+
+            const new_context: SavedContext = {
+              name,
+              paths: all_prefixed_paths
+            }
+
+            const updated_contexts = [...internal_contexts]
+            if (existing_index !== -1) {
+              updated_contexts.splice(existing_index, 1)
+            }
+            updated_contexts.unshift(new_context)
+
+            await extension_context.workspaceState.update(
+              SAVED_CONTEXTS_STATE_KEY,
+              updated_contexts
+            )
+            internal_contexts = updated_contexts
+
+            vscode.window.showInformationMessage(
+              dictionary.information_message.CONTEXT_SAVED_SUCCESSFULLY
+            )
+
+            quick_pick.items = create_quick_pick_items(internal_contexts)
+            quick_pick.value = ''
+            quick_pick.show()
+            return
+          }
+
+          is_accepted = true
           if (selectedItem?.context) {
             extension_context.workspaceState.update(
               LAST_SELECTED_WORKSPACE_CONTEXT_NAME_STATE_KEY,
@@ -310,6 +420,15 @@ export async function handle_workspace_state_source(
       })
       return
     }
+
+    const updated_contexts = internal_contexts.filter(
+      (c) => c.name !== context_to_apply.name
+    )
+    updated_contexts.unshift(context_to_apply)
+    await extension_context.workspaceState.update(
+      SAVED_CONTEXTS_STATE_KEY,
+      updated_contexts
+    )
 
     const primary_workspace_root = workspace_provider.getWorkspaceRoot()!
 
