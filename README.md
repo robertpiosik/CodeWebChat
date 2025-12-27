@@ -2,7 +2,9 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-Cost-efficient AI coding with first-class support for prompt caching, enabling reduced latency and input token costs by up to 90%.
+Cost-efficient AI coding with first-class support for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching), enabling reduced latency by up to 80% and input token costs by up to 90%.
+
+Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 ✅ **Send prompts anywhere**
 
@@ -15,7 +17,7 @@ Cost-efficient AI coding with first-class support for prompt caching, enabling r
 ❤️ **Free and open-source**—released under the GPL-3.0 license \
 🏠️ **Local friendly**—zero tool-calling design suits small models \
 🔒 **Privacy-focused**—runs 100% on your local machine \
-🌱 **Efficient**—carry cached prompt across tasks
+🌱 **Efficient**—carry cached input tokens across tasks
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
