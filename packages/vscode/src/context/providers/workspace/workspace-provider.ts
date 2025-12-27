@@ -376,7 +376,10 @@ export class WorkspaceProvider
         created_file_path,
         vscode.TreeItemCheckboxState.Checked
       )
-      this._checked_timestamps.set(created_file_path, Date.now())
+      this._checked_timestamps.set(
+        created_file_path,
+        Math.floor(Date.now() / 1000)
+      )
 
       if (is_directory) {
         await this._update_directory_check_state(
@@ -984,7 +987,7 @@ export class WorkspaceProvider
     this._checked_items.set(key, state)
     if (state === vscode.TreeItemCheckboxState.Checked) {
       if (!this._checked_timestamps.has(key)) {
-        this._checked_timestamps.set(key, Date.now())
+        this._checked_timestamps.set(key, Math.floor(Date.now() / 1000))
       }
     } else {
       this._checked_timestamps.delete(key)
@@ -1157,7 +1160,10 @@ export class WorkspaceProvider
         this._checked_items.set(full_path, state)
         if (state === vscode.TreeItemCheckboxState.Checked) {
           if (!this._checked_timestamps.has(full_path)) {
-            this._checked_timestamps.set(full_path, Date.now())
+            this._checked_timestamps.set(
+              full_path,
+              Math.floor(Date.now() / 1000)
+            )
           }
         } else {
           this._checked_timestamps.delete(full_path)
@@ -1271,7 +1277,7 @@ export class WorkspaceProvider
       const timestamp =
         timestamps?.get(file_path) ??
         old_timestamps.get(file_path) ??
-        Date.now()
+        Math.floor(Date.now() / 1000)
       this._checked_timestamps.set(file_path, timestamp)
     }
 
@@ -1395,7 +1401,7 @@ export class WorkspaceProvider
         this._checked_items.set(key, vscode.TreeItemCheckboxState.Checked)
 
         if (!this._checked_timestamps.has(key)) {
-          this._checked_timestamps.set(key, Date.now())
+          this._checked_timestamps.set(key, Math.floor(Date.now() / 1000))
         }
 
         this._partially_checked_dirs.delete(key)
