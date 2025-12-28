@@ -52,8 +52,7 @@ export const handle_upsert_configuration = async (
       save_configs = (configs) =>
         providers_manager.save_edit_context_tool_configs(configs)
       advanced_options = ['Temperature', 'Reasoning Effort']
-      advanced_details =
-        'Temperature, Reasoning Effort...'
+      advanced_details = 'Temperature, Reasoning Effort...'
       break
     case 'intelligent-update':
       get_configs = () =>
@@ -210,6 +209,7 @@ export const handle_upsert_configuration = async (
         if (advanced_options.includes('Temperature')) {
           advanced_items.push({
             label: 'Temperature',
+            description: 'Leave unset with reasoning models',
             detail: updated_config.temperature?.toString()
           })
         }
