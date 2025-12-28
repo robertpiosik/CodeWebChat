@@ -2,22 +2,16 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC is a context-first AI coding extension for VS Code with first-class support for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching), enabling reduced latency by up to 80% and input token costs by up to 90%. Great for your wallet, and for the planet 🌱, too.
+Autofill for chatbots. Works with VS Code, Cursor, and others.
 
-Works with VS Code family of editors like Cursor, Antigravity, or VSCodium.
-
-✅ **Prepare messages for...**
+👉️ **Easily send messages with...**
 
 - Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
-- Model providers—_Gemini API, OpenRouter, local Ollama, etc._
+- API calls—_Gemini API, OpenRouter, local Ollama, etc._
 
-✅ **Apply responses**—changes integration in all edit formats with easy rollback \
-✅ **Fully featured**—refactorings, code completions, commit messages, and more
-
-❤️ **Free and open-source**—released under the GPL-3.0 license \
-🏠️ **Local friendly**—zero tool-calling design suits small models \
-🌱 **Efficient**—carry cached prefill (input tokens) across tasks \
-🔒 **Privacy-focused**—runs 100% on your machine
+👉️ **Apply responses**—changes integration in all edit formats with easy rollback \
+👉️ **Fully featured**—refactorings, code completions, commit messages, and more \
+❤️ **Free and open-source**—released under the GPL-3.0 license
 
 <p>
 <img src="https://github.com/robertpiosik/CodeWebChat/raw/HEAD/packages/shared/src/media/screenshot.png" alt="Screenshot" />
@@ -25,21 +19,15 @@ Works with VS Code family of editors like Cursor, Antigravity, or VSCodium.
 
 ## Introduction
 
-**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't imagine how the correct output should look like before their context is filled with relevant files.
+**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with relevant files.
 
-To mitigate this limitation, other, agentic tools ask you to prepare extensive markdown-based plans and feature descriptions, so the system based on a keyword matching (via _grep_ tool calling) can do a better job at automated context compilation.
+To address this limitation, **Code Web Chat lets you guide the model with context**. By having it static, you automatically use [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) for substantial 50-90% discount on input tokens.
 
-Code Web Chat proposes an alternative, more mindful 🧠 approach of **model guidance through context ownership.** With it come big wins—your instructions are simple, responses fast, accuracy can't get any better, and because all the recently modified files are placed at the very end of the message, **prompt cache is hit for most of its length enabling 10X cost savings.**
-
-### **Context-first approach**
-
-Meet a simple and effective workflow—select files, enter instructions, and send message with your favorite chatbot or a model provider of choice.
-
-Constructed prompt is straightforward and focus the model's whole attention on the task. Example:
+**Messages are simple**, constructed from selected files, chosen edit format, and prompt:
 
 ```
 <system>
-Whenever showing a new, updated, renamed or deleted file...
+Whenever showing a new, updated, renamed or deleted file, provide a brief explanation...
 </system>
 <files>
 <file path="src/calculator.ts">
@@ -47,12 +35,12 @@ export const addNumbers = (a: number, b: number) => a + b;
 </file>
 </files>
 <system>
-Whenever showing a new, updated, renamed or deleted file...
+Whenever showing a new, updated, renamed or deleted file, provide a brief explanation...
 </system>
 Implement a subtract function.
 ```
 
-Once the response is generated, a built-in parser extracts code blocks with file edits for a one-click, interactive changes integration.
+Once the response is ready, all changes can be integrated in a fully revertible way.
 
 ## Browser integration
 
