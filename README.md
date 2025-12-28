@@ -105,7 +105,7 @@ Handle the compact "truncated" edit format and malformed diffs.
 Generate meaningful summaries of changes adhering to your style.
 
 > [!TIP]
-> Get started by adding API key of a model provider supporting automatic prompt caching, for example [Google](https://aistudio.google.com/api-keys), [OpenAI](https://platform.openai.com/api-keys) or [DeepSeek](https://platform.deepseek.com/api_keys).
+> Get started with the automatic prompt caching supporting [Google](https://aistudio.google.com/api-keys) model provider. Gemini 3.0 Flash is excellent at long context and _diff_ editing.
 
 ## Commands
 
