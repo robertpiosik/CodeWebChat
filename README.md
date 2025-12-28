@@ -2,9 +2,9 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC is a context-first AI coding extension with first-class support for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching), enabling reduced latency by up to 80% and input token costs by up to 90%. Great for your wallet—and for the planet 🌱, too.
+CWC is a context-first AI coding extension for VS Code with first-class support for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching), enabling reduced latency by up to 80% and input token costs by up to 90%. Great for your wallet, and for the planet 🌱, too.
 
-Works with VS Code family of editors (Cursor, Antigravity, VSCodium).
+Works with VS Code family of editors like Cursor, Antigravity, or VSCodium.
 
 ✅ **Prepare messages for...**
 
@@ -56,7 +56,9 @@ Once the response is generated, a built-in parser extracts code blocks with file
 
 ## Browser integration
 
-Install the Connector in your favorite browser to place the message directly in a project/space of your favorite chatbot, include markdown-parsed websites in context. Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
+Install the Connector in your favorite browser and never copy & paste again!
+
+Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
@@ -89,6 +91,9 @@ Install the Connector in your favorite browser to place the message directly in 
 
 > [!IMPORTANT]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) for implementation details.
+
+> [!IMPORTANT]
+> Use [port forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) on port _55155_ when using remote machine via SSH.
 
 ## API Tools
 
