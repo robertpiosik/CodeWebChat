@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Main } from './Main'
+import { Button as UiButton } from '@ui/components/editor/common/Button'
 import { Page as UiPage } from '@ui/components/editor/panel/Page'
 import { EditPresetForm } from '@/views/panel/frontend/components/edit-preset-form/EditPresetForm'
 import { TextButton as UiTextButton } from '@ui/components/editor/panel/TextButton'
@@ -9,6 +10,7 @@ import styles from './Panel.module.scss'
 import cn from 'classnames'
 import { post_message } from './utils/post_message'
 import { ResponsePreview as UiResponsePreview } from '@ui/components/editor/panel/ResponsePreview'
+import { Modal as UiModal } from '@ui/components/editor/panel/modals/Modal'
 import { ProgressModal as UiProgressModal } from '@ui/components/editor/panel/modals/ProgressModal'
 import { ApiManagerModal as UiApiManagerModal } from '@ui/components/editor/panel/modals/ApiManagerModal'
 import { QRCodeModal as UiQRCodeModal } from '@ui/components/editor/panel/modals/QRCodeModal'
@@ -81,6 +83,8 @@ export const Panel = () => {
     can_undo,
     context_file_paths,
     presets_collapsed,
+    is_preview_ongoing_modal_visible,
+    set_is_preview_ongoing_modal_visible,
     configurations_collapsed,
     handle_instructions_change,
     edit_preset_back_click_handler,
@@ -523,6 +527,51 @@ export const Panel = () => {
                 }}
               />
             </UiPage>
+          </div>
+        )}
+
+        {is_preview_ongoing_modal_visible && (
+          <div className={styles.slot}>
+            <UiModal
+              title="New response received"
+              content_slot={
+                <div>
+                  Would you like to switch to the new response? You can do it
+                  later by going back or rejecting.
+                </div>
+              }
+              on_background_click={() => {
+                set_is_preview_ongoing_modal_visible(false)
+                post_message(vscode, {
+                  command: 'PREVIEW_SWITCH_CHOICE',
+                  choice: undefined
+                })
+              }}
+              footer_slot={
+                <>
+                  <UiButton
+                    is_secondary
+                    on_click={() => {
+                      set_is_preview_ongoing_modal_visible(false)
+                      post_message(vscode, { command: 'PREVIEW_SWITCH_CHOICE' })
+                    }}
+                  >
+                    Close
+                  </UiButton>
+                  <UiButton
+                    on_click={() => {
+                      set_is_preview_ongoing_modal_visible(false)
+                      post_message(vscode, {
+                        command: 'PREVIEW_SWITCH_CHOICE',
+                        choice: 'Switch'
+                      })
+                    }}
+                  >
+                    Switch
+                  </UiButton>
+                </>
+              }
+            />
           </div>
         )}
 

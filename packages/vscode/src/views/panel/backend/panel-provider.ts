@@ -3,7 +3,7 @@ import * as path from 'path'
 import { WebSocketManager } from '@/services/websocket-manager'
 import { FrontendMessage, BackendMessage } from '../types/messages'
 import { ApiManager } from '@/services/api-manager'
-import { WebsitesProvider } from '@/context/providers/websites-provider'
+import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 import { OpenEditorsProvider } from '@/context/providers/open-editors/open-editors-provider'
 import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provider'
 import { token_count_emitter } from '@/context/context-initialization'
@@ -125,6 +125,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
     finalize: () => Promise<void>
     timestamp: number
   } | null = null
+
+  public preview_switch_choice_resolver:
+    | ((choice: 'Switch' | undefined) => void)
+    | undefined = undefined
 
   public set_api_manager(api_manager: ApiManager) {
     this.api_manager = api_manager
@@ -637,6 +641,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             handle_get_collapsed_states(this)
           } else if (message.command == 'SAVE_COMPONENT_COLLAPSED_STATE') {
             await handle_save_component_collapsed_state(this, message)
+          } else if (message.command == 'PREVIEW_SWITCH_CHOICE') {
+            if (this.preview_switch_choice_resolver) {
+              this.preview_switch_choice_resolver(message.choice)
+            }
           }
         } catch (error: any) {
           Logger.error({

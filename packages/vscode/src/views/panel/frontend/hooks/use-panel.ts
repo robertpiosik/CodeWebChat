@@ -110,6 +110,10 @@ export const use_panel = (vscode: any) => {
   const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
     useState<{ [mode in WebPromptType]?: boolean }>({})
   const [
+    is_preview_ongoing_modal_visible,
+    set_is_preview_ongoing_modal_visible
+  ] = useState(false)
+  const [
     configurations_collapsed_by_api_mode,
     set_configurations_collapsed_by_api_mode
   ] = useState<{ [mode in ApiPromptType]?: boolean }>({})
@@ -271,6 +275,8 @@ export const use_panel = (vscode: any) => {
         set_has_changes_to_commit(message.has_changes_to_commit)
       } else if (message.command == 'CAN_UNDO_CHANGED') {
         set_can_undo(message.can_undo)
+      } else if (message.command == 'SHOW_PREVIEW_ONGOING_MODAL') {
+        set_is_preview_ongoing_modal_visible(true)
       }
     }
     window.addEventListener('message', handle_message)
@@ -452,6 +458,8 @@ export const use_panel = (vscode: any) => {
     configurations_collapsed: api_prompt_type
       ? (configurations_collapsed_by_api_mode[api_prompt_type] ?? false)
       : false,
+    is_preview_ongoing_modal_visible,
+    set_is_preview_ongoing_modal_visible,
     handle_instructions_change,
     edit_preset_back_click_handler,
     edit_preset_save_handler,

@@ -84,10 +84,21 @@ export const apply_chat_response_command = (params: {
           command: 'RESPONSE_HISTORY',
           history
         })
-        const choice = await vscode.window.showInformationMessage(
-          dictionary.warning_message.PREVIEW_ONGOING,
-          'Switch'
-        )
+
+        if (params.panel_provider.preview_switch_choice_resolver) {
+          // The "switch preview" modal is already visible for a previous
+          // response. The current response has been added to the history,
+          // so we can just return and avoid showing a second modal.
+          return
+        }
+
+        const choice = await new Promise<'Switch' | undefined>((resolve) => {
+          params.panel_provider.preview_switch_choice_resolver = resolve
+          params.panel_provider.send_message({
+            command: 'SHOW_PREVIEW_ONGOING_MODAL'
+          })
+        })
+        params.panel_provider.preview_switch_choice_resolver = undefined
 
         if (choice == 'Switch') {
           placeholder_created_at_for_update = new_item.created_at

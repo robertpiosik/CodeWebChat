@@ -108,7 +108,6 @@ export const dictionary = {
   },
 
   warning_message: {
-    PREVIEW_ONGOING: 'A new response has been received, switch now?',
     SKIPPING_INVALID_PATH: (file_path: string) =>
       `Skipping applying change to invalid path: ${file_path}.`,
     CODE_COMPLETIONS_NO_SELECTION:

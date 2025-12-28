@@ -391,6 +391,11 @@ export interface ClearAllCheckpointsMessage extends BaseMessage {
   command: 'CLEAR_ALL_CHECKPOINTS'
 }
 
+export interface PreviewSwitchChoiceMessage extends BaseMessage {
+  command: 'PREVIEW_SWITCH_CHOICE'
+  choice?: 'Switch'
+}
+
 export type FrontendMessage =
   | GetInstructionsMessage
   | SaveInstructionsMessage
@@ -463,6 +468,7 @@ export type FrontendMessage =
   | UpdateCheckpointDescriptionMessage
   | DeleteCheckpointMessage
   | ClearAllCheckpointsMessage
+  | PreviewSwitchChoiceMessage
 
 // === FROM BACKEND TO FRONTEND ===
 export interface InstructionsMessage extends BaseMessage {
@@ -697,6 +703,10 @@ export interface CurrentlyOpenFileTextMessage extends BaseMessage {
   text?: string
 }
 
+export interface ShowPreviewOngoingModalMessage extends BaseMessage {
+  command: 'SHOW_PREVIEW_ONGOING_MODAL'
+}
+
 export type BackendMessage =
   | InstructionsMessage
   | FocusPromptFieldMessage
@@ -740,3 +750,4 @@ export type BackendMessage =
   | CollapsedStatesMessage
   | CheckpointsMessage
   | CurrentlyOpenFileTextMessage
+  | ShowPreviewOngoingModalMessage
