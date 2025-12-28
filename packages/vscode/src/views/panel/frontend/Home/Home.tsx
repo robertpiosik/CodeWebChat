@@ -100,7 +100,7 @@ export const Home: React.FC<Props> = (props) => {
 
             <div className={styles.inner__mode}>
               <ModeButton
-                pre="Initialize"
+                pre="Auto-fill"
                 label="Chatbots"
                 on_click={props.on_chatbots_click}
               />
