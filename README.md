@@ -19,7 +19,7 @@ Autofill for chatbots. Works with VS Code, Cursor, Antigravity, and others.
 
 ## Introduction
 
-**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with files.
+**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like _before_ their context is filled with files.
 
 While agents address this limitation with the _grep_ keyword search via tool calling just fine—they're slow and, because files are placed in output tokens, expensive.
 
