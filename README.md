@@ -11,6 +11,7 @@ CWC enables autofill in chatbots, so you don't have to copy and paste ever again
 
 👉️ **Apply responses**—changes integration in all edit formats with easy rollback \
 👉️ **Fully featured**—refactorings, code completions, commit messages, and more \
+🌱 **Sustainable AI coding**—designed for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
 ❤️ **Free and open-source**—released under the GPL-3.0 license
 
 <p>
@@ -25,7 +26,7 @@ While agents address this limitation via tool calling just fine—they're slow a
 
 Code Web Chat proposes an alternative approach where the model is guided with hand-picked context, allowing simpler instructions and enabling accuracy that can't get any better!
 
-For efficiency, files are sorted in a way prioritizing **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens!
+For efficiency, files are sorted in a way enabling **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens!
 
 **Example message:**
 
