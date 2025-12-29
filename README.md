@@ -25,7 +25,7 @@ While agents address this limitation via tool calling just fine—they're slow a
 
 Code Web Chat proposes an alternative approach where the model is guided with hand-picked context, allowing simpler instructions and enabling accuracy that can't get any better!
 
-For efficiency, files are sorted in a way prioritizing **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens.
+For efficiency, files are sorted in a way prioritizing **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens!
 
 **Example message:**
 
