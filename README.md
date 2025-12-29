@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC enables autofill in chatbots, so you don't have to copy and paste ever again!
+CWC enables autofill in all popular chatbots, so you don't have to copy and paste ever again! Working in a project ([ChatGPT](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [Claude](https://support.claude.com/en/articles/9517075-what-are-projects)) have never been easier.
 
 👉️ **Send messages with...**
 
