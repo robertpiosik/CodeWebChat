@@ -4,7 +4,7 @@
 
 Autofill for chatbots. Works with VS Code, Cursor, Antigravity, and others.
 
-👉️ **Easily send messages with...**
+👉️ **Send messages with...**
 
 - Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
 - API calls—_Gemini API, OpenRouter, local Ollama, etc._
