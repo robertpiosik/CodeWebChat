@@ -205,6 +205,8 @@ export const CHATBOTS = {
   } as Chatbot,
   Qwen: {
     url: 'https://chat.qwen.ai/',
+    supports_url_override: true,
+    url_override_label: 'Project URL',
     supported_options: {
       thinking: 'Thinking',
       search: 'Search',
