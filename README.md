@@ -19,9 +19,11 @@ Autofill for chatbots. Works with VS Code, Cursor, Antigravity, and others.
 
 ## Introduction
 
-**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with relevant files.
+**LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with files.
 
-To address this limitation, **Code Web Chat lets you guide the model with context**. With that come big wins—instructions can be simple, and accuracy can't get any better!
+While agents address this with the _grep_ keyword search via tool calling just fine—they're slow and expensive (files are placed in output tokens).
+
+Code Web Chat proposes an alternative approach where the model is guided with context, allowing simpler instructions and enabling accuracy that can't get any better!
 
 For efficiency, files are sorted in a way prioritizing **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens!
 
@@ -54,7 +56,7 @@ Like all of Code Web Chat, the extension is [open-source](https://github.com/rob
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
 
-**Auto-fill is supported in all popular chatbots:**
+**List of supported chatbots:**
 
 - AI Studio
 - ChatGPT
