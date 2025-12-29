@@ -8,7 +8,7 @@ CWC enables autofill in all popular chatbots, so you don't have to copy and past
 
 👉️ **Send messages with...**
 
-- Chatbots—_ChatGPT, Claude, Gemini, Grok, DeepSeek, etc._
+- Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
 - API calls—_Gemini API, OpenRouter, local Ollama, etc._
 
 👉️ **Apply responses**—changes integration in all edit formats with easy rollback \
