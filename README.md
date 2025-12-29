@@ -21,9 +21,9 @@ Autofill for chatbots. Works with VS Code, Cursor, Antigravity, and others.
 
 **LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with files.
 
-While agents address this limitation with the _grep_ keyword search via tool calling just fine—they're slow and expensive (files are placed in output tokens).
+While agents address this limitation with the _grep_ keyword search via tool calling just fine—they're slow and, because files are placed in output tokens, expensive.
 
-Code Web Chat proposes an alternative approach where the model is guided with context, allowing simpler instructions and enabling accuracy that can't get any better!
+Code Web Chat proposes an alternative approach where the model is guided with hand-picked context, allowing simpler instructions and enabling accuracy that can't get any better!
 
 For efficiency, files are sorted in a way prioritizing **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens!
 
