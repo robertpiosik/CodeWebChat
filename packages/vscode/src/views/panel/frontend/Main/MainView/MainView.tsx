@@ -154,7 +154,7 @@ export const MainView: React.FC<Props> = (props) => {
         on_quick_action_click={props.on_quick_action_click}
         are_keyboard_shortcuts_disabled={props.are_keyboard_shortcuts_disabled}
       />
-      <Scrollable>
+      <Scrollable scroll_to_top_key={props.scroll_reset_key}>
         <UiSeparator height={4} />
 
         {!props.is_connected && props.mode == MODE.WEB && (
@@ -279,11 +279,7 @@ export const MainView: React.FC<Props> = (props) => {
             <UiSeparator height={8} />
             <UiConfigurations
               api_prompt_type={props.api_prompt_type}
-              configurations={props.configurations.map((c) => ({
-                ...c,
-                provider: c.provider_name,
-                cache_enabled: c.instructions_placement == 'below-only'
-              }))}
+              configurations={props.configurations}
               on_configuration_click={props.on_configuration_click}
               on_reorder={props.on_configurations_reorder}
               on_toggle_pinned={props.on_toggle_pinned_configuration}

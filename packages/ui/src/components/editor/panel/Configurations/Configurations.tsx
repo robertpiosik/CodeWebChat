@@ -9,10 +9,9 @@ export namespace Configurations {
   export type Configuration = {
     id: string
     model: string
-    provider: string
+    provider_name: string
     temperature?: number
     reasoning_effort?: string
-    cache_enabled?: boolean
     is_pinned?: boolean
   }
 
@@ -36,15 +35,12 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
     configuration: Configurations.Configuration,
     is_dragging_disabled: boolean
   ) => {
-    const description_parts = [configuration.provider]
+    const description_parts = [configuration.provider_name]
     if (configuration.reasoning_effort) {
       description_parts.push(`${configuration.reasoning_effort}`)
     }
     if (configuration.temperature != null) {
       description_parts.push(`${configuration.temperature}`)
-    }
-    if (configuration.cache_enabled) {
-      description_parts.push('cache-enabled')
     }
 
     const description = description_parts.join(' · ')
