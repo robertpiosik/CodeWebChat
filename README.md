@@ -21,11 +21,11 @@ Autofill for chatbots. Works with VS Code, Cursor, Antigravity, and others.
 
 **LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like _before_ their context is filled with files.
 
-While agents address this limitation with the _grep_ keyword search via tool calling just fine—they're slow and, because files are placed in output tokens, expensive.
+While agents address this limitation via tool calling just fine—they're slow and, because files are placed in output tokens, expensive.
 
 Code Web Chat proposes an alternative approach where the model is guided with hand-picked context, allowing simpler instructions and enabling accuracy that can't get any better!
 
-For efficiency, files are sorted in a way prioritizing **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens!
+For efficiency, files are sorted in a way prioritizing **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens.
 
 **Example message:**
 
@@ -49,7 +49,7 @@ Once the response is ready, changes can be integrated in a fully revertible way.
 
 ## Browser integration
 
-Install the Connector in your favorite browser and never copy & paste again!
+Install the Connector in your favorite browser and never copy and paste again!
 
 Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
