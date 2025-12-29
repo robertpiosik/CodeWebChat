@@ -21,9 +21,11 @@ Autofill for chatbots. Works with VS Code, Cursor, Antigravity, and others.
 
 **LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like before their context is filled with relevant files.
 
-To address this limitation, **Code Web Chat lets you guide the model with context**. Files are intelligently sorted in a way prioritizing [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks—put less strain on the planet and save up to 90% on input tokens.
+To address this limitation, **Code Web Chat lets you guide the model with context**. With that come big wins—instructions can be simple, and accuracy can't get any better!
 
-**Messages are simple**, constructed from selected files, chosen edit format, and prompt:
+For efficiency, files are sorted in a way prioritizing **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens!
+
+**Example message:**
 
 ```
 <system>
@@ -41,7 +43,7 @@ Whenever showing a new, updated, renamed or deleted file, provide a brief explan
 Implement a subtract function.
 ```
 
-Once the response is ready, all changes can be integrated in a fully revertible way.
+Once the response is ready, changes can be integrated in a fully revertible way.
 
 ## Browser integration
 
