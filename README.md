@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC enables autofill in all popular chatbots, so you don't have to copy and paste ever again! Working in a project ([ChatGPT](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [Gemini](https://gemini.google/pl/overview/gems), [Claude](https://support.claude.com/en/articles/9517075-what-are-projects)) have never been easier.
+CWC enables autofill in all popular chatbots, so you don't have to copy and paste ever again! Working in a project ([ChatGPT](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [Gemini](https://gemini.google/pl/overview/gems), [Claude](https://support.claude.com/en/articles/9517075-what-are-projects), etc.) have never been easier.
 
 👉️ **Send messages with...**
 
@@ -48,14 +48,14 @@ Implement a subtract function.
 
 Once the response is ready, changes can be integrated in a fully revertible way.
 
-## Browser integration
+## Enabling autofill
 
-Install the Connector in your favorite browser and never copy and paste again!
-
-Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
+Install the zero-setup Connector extension in your favorite browser:
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
+
+Like all of Code Web Chat, the extension is [open-source](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser) and works with minimal permissions for your absolute privacy and security.
 
 **List of supported chatbots:**
 
