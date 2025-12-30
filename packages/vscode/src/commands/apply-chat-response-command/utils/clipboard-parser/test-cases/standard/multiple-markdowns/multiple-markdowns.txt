@@ -1,0 +1,12 @@
+### New file: `src/hello.md`
+
+```markdown
+## Complexity Tracking
+
+```
+
+### New file: `src/world.md`
+
+```markdown
+console.log("World")
+```

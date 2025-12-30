@@ -1,0 +1,88 @@
+.tasks {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  padding: 8px 12px;
+  gap: 10px;
+  border-bottom: 1px solid var(--cwc-border-color-dimmed);
+  position: relative;
+
+  &:hover {
+    background-color: var(--vscode-list-hoverBackground);
+  }
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 20px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  &__drag_handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    opacity: 0.5;
+    width: 20px;
+    height: 20px;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0;
+    gap: 2px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--cwc-text-color-dimmed);
+    margin-bottom: 2px;
+  }
+
+  &__star {
+    cursor: pointer;
+    &:hover {
+      color: var(--vscode-icon-foreground);
+    }
+    &--active {
+      color: var(--vscode-button-background);
+    }
+  }
+
+  &__text {
+    white-space: pre-wrap;
+    word-break: break-word;
+    cursor: text;
+    min-height: 18px;
+
+    &--checked {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    &--placeholder {
+      font-style: italic;
+      opacity: 0.5;
+    }
+  }
+}

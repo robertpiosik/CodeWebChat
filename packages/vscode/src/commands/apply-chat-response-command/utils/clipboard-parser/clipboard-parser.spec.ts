@@ -764,6 +764,31 @@ describe('clipboard-parser', () => {
       })
     })
 
+    it('parses multiple markdowns', () => {
+      const test_case = 'multiple-markdowns'
+      const text = load_test_case_file(
+        'standard',
+        test_case,
+        `${test_case}.txt`
+      )
+      const result = parse_response({
+        response: text,
+        is_single_root_folder_workspace: true
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        type: 'file',
+        file_path: 'src/hello.md',
+        content: load_test_case_file('standard', test_case, '1-file.txt')
+      })
+      expect(result[1]).toMatchObject({
+        type: 'file',
+        file_path: 'src/world.md',
+        content: load_test_case_file('standard', test_case, '2-file.txt')
+      })
+    })
+
     it('parses file path when it is included immediately after the opening code block backticks', () => {
       const test_case = 'markdown-backticks-file-path-in-one-line'
       const text = load_test_case_file(
@@ -987,7 +1012,11 @@ describe('clipboard-parser', () => {
   describe('parse_response fallback to single file without blocks', () => {
     it('parses file content when there are no markdown code blocks', () => {
       const test_case = 'file-content-only'
-      const text = load_test_case_file('standard', test_case, `${test_case}.txt`)
+      const text = load_test_case_file(
+        'standard',
+        test_case,
+        `${test_case}.txt`
+      )
       const result = parse_response({
         response: text,
         is_single_root_folder_workspace: true

@@ -261,7 +261,7 @@ export const handle_send_prompt = async (params: {
 
   params.panel_provider.send_message({
     command: 'SHOW_AUTO_CLOSING_MODAL',
-    title: 'Initialized in the connected browser'
+    title: 'Opened in the connected browser'
   })
 }
 

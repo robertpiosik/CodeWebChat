@@ -695,6 +695,7 @@ export const parse_multiple_files = (params: {
         trimmed_line === '```' &&
         backtick_nesting_level === 1 &&
         (current_language === 'markdown' || current_language === 'md') &&
+        !last_seen_file_path_was_header &&
         ((current_content.trim() === '' &&
           i > 0 &&
           lines[i - 1].trim() !== '') ||
