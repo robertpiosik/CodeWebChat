@@ -27,6 +27,10 @@ export const preview = async (params: {
   accepted_files: ReviewableFile[]
   rejected_states: OriginalFileState[]
   created_at?: number
+  active_editor_state?: {
+    file_path: string
+    position: vscode.Position
+  }
 } | null> => {
   if (!vscode.workspace.workspaceFolders?.length) {
     vscode.window.showErrorMessage(
@@ -206,10 +210,29 @@ export const preview = async (params: {
           })
           .filter((state): state is OriginalFileState => state !== undefined)
 
+        let active_editor_state:
+          | { file_path: string; position: vscode.Position }
+          | undefined
+
+        if (result.active_file_path && result.active_position) {
+          const active_path = result.active_file_path
+          const matching_prepared = prepared_files.find(
+            (pf) => pf.temp_file_path === active_path
+          )
+
+          active_editor_state = {
+            file_path: matching_prepared
+              ? matching_prepared.sanitized_path
+              : active_path,
+            position: result.active_position
+          }
+        }
+
         return {
           accepted_files,
           rejected_states,
-          created_at: decision.created_at
+          created_at: decision.created_at,
+          active_editor_state
         }
       }
 

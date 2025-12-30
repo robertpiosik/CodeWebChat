@@ -54,10 +54,21 @@ export const show_diff_with_actions = async (
         final_content = right_doc.getText()
       } catch (error) {}
 
+      const active_editor = vscode.window.activeTextEditor
+      let active_file_path: string | undefined
+      let active_position: vscode.Position | undefined
+
+      if (active_editor) {
+        active_file_path = active_editor.document.uri.fsPath
+        active_position = active_editor.selection.active
+      }
+
       resolve({
         decision,
         new_content: final_content,
-        temp_file_path: prepared_file.temp_file_path
+        temp_file_path: prepared_file.temp_file_path,
+        active_file_path,
+        active_position
       })
     }
   }).finally(() => {

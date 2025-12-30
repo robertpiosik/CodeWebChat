@@ -113,6 +113,37 @@ export const preview_handler = async (params: {
         original_editor_state: params.original_editor_state
       })
 
+      if (preview_result.active_editor_state) {
+        try {
+          const uri = vscode.Uri.file(
+            preview_result.active_editor_state.file_path
+          )
+          const file_exists = await vscode.workspace.fs.stat(uri).then(
+            () => true,
+            () => false
+          )
+
+          if (file_exists) {
+            const document = await vscode.workspace.openTextDocument(uri)
+            const editor = await vscode.window.showTextDocument(document, {
+              preview: false
+            })
+            const position = preview_result.active_editor_state.position
+            editor.selection = new vscode.Selection(position, position)
+            editor.revealRange(
+              new vscode.Range(position, position),
+              vscode.TextEditorRevealType.InCenter
+            )
+          }
+        } catch (error) {
+          Logger.error({
+            function_name: 'preview_handler',
+            message: 'Failed to restore active editor state',
+            data: error
+          })
+        }
+      }
+
       return true
     } else {
       update_undo_button_state({
