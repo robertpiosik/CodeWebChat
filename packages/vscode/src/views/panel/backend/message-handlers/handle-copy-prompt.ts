@@ -95,17 +95,6 @@ export const handle_copy_prompt = async (params: {
       no_context: params.panel_provider.web_prompt_type == 'no-context'
     })
 
-    if (
-      params.panel_provider.web_prompt_type == 'edit-context' &&
-      !context_text
-    ) {
-      vscode.window.showWarningMessage(
-        dictionary.warning_message
-          .CANNOT_COPY_PROMPT_IN_EDIT_CONTEXT_WITHOUT_CONTEXT
-      )
-      return
-    }
-
     const instructions = replace_selection_placeholder(final_instruction)
 
     let processed_instructions = instructions

@@ -127,8 +127,6 @@ export const dictionary = {
     NO_EDITOR_OPEN: 'No editor is open.',
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITH_SELECTION:
       'Cannot copy prompt in code completion mode with an active selection.',
-    CANNOT_COPY_PROMPT_IN_EDIT_CONTEXT_WITHOUT_CONTEXT:
-      'Cannot copy prompt in the edit context mode without any files in context.',
     CANNOT_COPY_PROMPT_IN_CODE_COMPLETION_WITHOUT_EDITOR:
       'Cannot copy prompt in code completion mode without an active editor.',
     CONTEXT_CANNOT_BE_EMPTY: 'Context cannot be empty.',

@@ -7,11 +7,10 @@ import { WorkspaceProvider } from '@/context/providers/workspace/workspace-provi
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
 
-const build_changes_markdown = (
+const build_changes_xml = (
   diff: string,
   cwd: string,
-  diff_base: string,
-  branch_name: string
+  diff_base: string
 ): string => {
   // Split diff into per-file sections. Each section starts with 'diff --git '.
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
@@ -47,7 +46,7 @@ const build_changes_markdown = (
     }
 
     if (file_path) {
-      changes_content += `\n\n### File: \`${file_path}\`\n\n`
+      changes_content += `<file path="${file_path}">\n`
 
       let file_content = ''
       try {
@@ -62,24 +61,21 @@ const build_changes_markdown = (
         // In this case, the original content is correctly an empty string.
         if (!is_deleted) {
           Logger.warn({
-            function_name: 'build_changes_markdown',
+            function_name: 'build_changes_xml',
             message: `Could not get file content from git base ${diff_base} for path ${file_path}. Assuming it's a new file.`,
             data: e
           })
         }
       }
       if (file_content) {
-        const lang = path.extname(file_path).slice(1)
-        changes_content += `The original state of the file for reference:\n\n\`\`\`${lang}\n${file_content}\n\`\`\`\n\n`
+        changes_content += `<archive>\n<![CDATA[\n${file_content}\n]]>\n</archive>\n`
       }
-      changes_content += `**New changes:**\n\n\`\`\`diff\n${full_file_diff}\`\`\`\n`
+      changes_content += `<changes>\n<![CDATA[\n${full_file_diff}\n]]>\n</changes>\n`
+      changes_content += `</file>\n`
     }
   }
 
-  if (changes_content) {
-    return `\n\n# Changes against ${branch_name} branch${changes_content}\n---\n\n`
-  }
-  return ''
+  return changes_content
 }
 
 export const replace_changes_symbol = async (params: {
@@ -159,11 +155,10 @@ export const replace_changes_symbol = async (params: {
         )
       }
 
-      const replacement_text = build_changes_markdown(
+      const replacement_text = build_changes_xml(
         diff,
         target_folder.uri.fsPath,
-        diff_base,
-        branch_name
+        diff_base
       )
       return params.instruction.replace(
         new RegExp(`\\s*#Changes:${branch_spec}\\s*`, 'g'),
@@ -234,11 +229,10 @@ export const replace_changes_symbol = async (params: {
         )
       }
 
-      const replacement_text = build_changes_markdown(
+      const replacement_text = build_changes_xml(
         diff,
         repository.rootUri.fsPath,
-        diff_base,
-        branch_name
+        diff_base
       )
       return params.instruction.replace(
         new RegExp(`\\s*#Changes:${branch_name}\\s*`, 'g'),
@@ -261,7 +255,7 @@ export const replace_changes_symbol = async (params: {
   }
 }
 
-const build_commit_changes_markdown = (
+const build_commit_changes_xml = (
   diff: string,
   cwd: string,
   commit_hash: string,
@@ -310,27 +304,25 @@ const build_commit_changes_markdown = (
           })
         } catch (e) {
           Logger.error({
-            function_name: 'build_commit_changes_markdown',
+            function_name: 'build_commit_changes_xml',
             message: `Could not read file for diff from commit: ${file_path}`,
             data: e
           })
         }
       }
 
-      changes_content += `### File: \`${file_path}\`\n\n`
-      changes_content += `**Changes:**\n\n\`\`\`diff\n${full_file_diff}\`\`\`\n`
+      changes_content += `<file path="${file_path}">\n`
+      changes_content += `<![CDATA[\n${full_file_diff}\n]]>\n`
       if (file_content) {
-        const lang = path.extname(file_path).slice(1)
-        changes_content += `\nFull file for reference:\n\n\`\`\`${lang}\n${file_content}\n\`\`\`\n`
+        changes_content += `<![CDATA[\n${file_content}\n]]>\n`
       }
+      changes_content += `</file>\n`
     }
   }
 
   if (changes_content) {
-    const message_section = commit_message
-      ? `**Message:** ${commit_message}\n\n`
-      : ''
-    return `\n\n# Commit\n\n${message_section}${changes_content}\n---\n\n`
+    const safe_message = (commit_message || '').replace(/"/g, '&quot;')
+    return `<commit message="${safe_message}">\n${changes_content}</commit>\n`
   }
   return ''
 }
@@ -379,7 +371,7 @@ export const replace_commit_symbol = async (params: {
         continue
       }
 
-      const replacement_text = build_commit_changes_markdown(
+      const replacement_text = build_commit_changes_xml(
         diff,
         target_folder.uri.fsPath,
         commit_hash,
