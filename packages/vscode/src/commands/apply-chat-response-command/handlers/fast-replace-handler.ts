@@ -126,6 +126,11 @@ export const handle_fast_replace = async (
 
       if (rename_source_path && rename_source_content !== undefined) {
         try {
+          let new_content = file.content
+          if (new_content == '') {
+            new_content = rename_source_content
+          }
+
           const tabs_to_close: vscode.Tab[] = []
           for (const tab_group of vscode.window.tabGroups.all) {
             tabs_to_close.push(
@@ -154,7 +159,7 @@ export const handle_fast_replace = async (
           }
           await vscode.workspace.fs.writeFile(
             vscode.Uri.file(safe_path),
-            Buffer.from(file.content, 'utf8')
+            Buffer.from(new_content, 'utf8')
           )
 
           const document = await vscode.workspace.openTextDocument(safe_path)

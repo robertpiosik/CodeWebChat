@@ -392,6 +392,24 @@ export const parse_multiple_files = (params: {
 
         renamed_from_path = relative_path
 
+        const {
+          relative_path: new_relative_path,
+          workspace_name: new_workspace_name
+        } = extract_and_set_workspace_path({
+          raw_file_path: renamed_file_match[2],
+          is_single_root_folder_workspace:
+            params.is_single_root_folder_workspace
+        })
+
+        create_or_update_file_item({
+          file_name: new_relative_path,
+          content: '',
+          workspace_name: new_workspace_name,
+          file_ref_map,
+          results,
+          renamed_from: renamed_from_path
+        })
+
         last_seen_file_path_comment = renamed_file_match[2]
         last_seen_file_path_was_header = true
         header_path_already_used = false
