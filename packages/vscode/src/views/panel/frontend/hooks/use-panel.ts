@@ -331,6 +331,7 @@ export const use_panel = (vscode: any) => {
   const handle_web_prompt_type_change = (new_mode: WebPromptType) => {
     set_web_mode(new_mode)
     set_chat_input_focus_and_select_key((k) => k + 1)
+    set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_WEB_MODE',
       mode: new_mode
@@ -343,6 +344,7 @@ export const use_panel = (vscode: any) => {
   const handle_api_prompt_type_change = (new_mode: ApiPromptType) => {
     set_api_mode(new_mode)
     set_chat_input_focus_and_select_key((k) => k + 1)
+    set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_API_MODE',
       mode: new_mode
@@ -368,6 +370,7 @@ export const use_panel = (vscode: any) => {
 
     set_mode(new_mode)
     set_chat_input_focus_key((k) => k + 1)
+    set_main_view_scroll_reset_key((k) => k + 1)
     post_message(vscode, {
       command: 'SAVE_MODE',
       mode: new_mode
