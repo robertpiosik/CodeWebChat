@@ -1,6 +1,6 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../context/providers/workspace/workspace-provider'
-import { WebsitesProvider } from '../context/providers/websites-provider'
+import { WebsitesProvider } from '../context/providers/websites/websites-provider'
 import {
   API_EDIT_FORMAT_STATE_KEY,
   CHAT_EDIT_FORMAT_STATE_KEY,

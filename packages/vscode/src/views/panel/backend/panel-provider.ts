@@ -80,12 +80,12 @@ import {
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   get_configurations_collapsed_state_key,
-  get_last_selected_preset_or_group_key,
   LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
   get_presets_collapsed_state_key,
-  WEB_MODE_STATE_KEY
+  WEB_MODE_STATE_KEY,
+  get_recently_used_presets_or_groups_key
 } from '@/constants/state-keys'
 import {
   config_preset_to_ui_format,
@@ -776,10 +776,9 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         web_modes.map((mode) => {
           const presets_for_mode = all_presets[mode]
           let selected_name: string | undefined = undefined
-          const key = get_last_selected_preset_or_group_key(mode)
-          const last_selected =
-            this.context.workspaceState.get<string>(key) ??
-            this.context.globalState.get<string>(key)
+          const key = get_recently_used_presets_or_groups_key(mode)
+          const recents = this.context.globalState.get<string[]>(key, [])
+          const last_selected = recents[0]
           if (last_selected) {
             if (last_selected === 'Ungrouped') {
               const first_group_index = presets_for_mode.findIndex(

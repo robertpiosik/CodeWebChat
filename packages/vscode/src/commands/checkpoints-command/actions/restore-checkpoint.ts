@@ -21,7 +21,7 @@ import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
 import { ongoing_review_cleanup_promise } from '../../apply-chat-response-command/utils/preview-handler'
 import { dictionary } from '@shared/constants/dictionary'
-import { WebsitesProvider } from '@/context/providers/websites-provider'
+import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 import { get_git_info } from '../utils/git-utils'
 
 export const restore_checkpoint = async (params: {

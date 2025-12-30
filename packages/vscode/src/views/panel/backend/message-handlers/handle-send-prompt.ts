@@ -10,10 +10,7 @@ import {
   replace_commit_symbol
 } from '@/views/panel/backend/utils/replace-git-symbols'
 import { code_completion_instructions_for_panel } from '@/constants/instructions'
-import {
-  get_last_selected_preset_or_group_key,
-  get_recently_used_presets_or_groups_key
-} from '@/constants/state-keys'
+import { get_recently_used_presets_or_groups_key } from '@/constants/state-keys'
 import { ConfigPresetFormat } from '../utils/preset-format-converters'
 import { MODE } from '@/views/panel/types/main-view-mode'
 import { WebPromptType } from '@shared/types/prompt-types'
@@ -81,25 +78,11 @@ export const handle_send_prompt = async (params: {
   const resolved_preset_names = resolution.preset_names
 
   if (params.preset_name !== undefined || params.group_name) {
-    const name_to_save = params.preset_name ?? params.group_name!
     update_last_used_preset_or_group({
       panel_provider: params.panel_provider,
       preset_name: params.preset_name,
       group_name: params.group_name
     })
-    const recents_key = get_recently_used_presets_or_groups_key(
-      params.panel_provider.web_prompt_type
-    )
-    const recents =
-      params.panel_provider.context.globalState.get<string[]>(
-        recents_key,
-        []
-      ) ?? []
-    const new_recents = [
-      name_to_save,
-      ...recents.filter((r) => r != name_to_save)
-    ].slice(0, 10)
-    params.panel_provider.context.globalState.update(recents_key, new_recents)
   }
 
   await vscode.workspace.saveAll()
@@ -337,10 +320,7 @@ async function show_preset_quick_pick(params: {
   quick_pick.title = 'Recently Used Presets and Groups'
   quick_pick.matchOnDescription = true
 
-  const last_selected_key = get_last_selected_preset_or_group_key(mode)
-  const last_selected_name =
-    context.workspaceState.get<string>(last_selected_key) ??
-    context.globalState.get<string>(last_selected_key)
+  const last_selected_name = recent_names[0]
 
   let last_selected_preset_name: string | undefined
   if (last_selected_name) {
@@ -473,8 +453,9 @@ async function resolve_presets(params: {
   show_quick_pick?: boolean
   context: vscode.ExtensionContext
 }): Promise<{ preset_names: string[] }> {
-  const last_selected_preset_or_group_key =
-    get_last_selected_preset_or_group_key(params.panel_provider.web_prompt_type)
+  const recents_key = get_recently_used_presets_or_groups_key(
+    params.panel_provider.web_prompt_type
+  )
   const config = vscode.workspace.getConfiguration('codeWebChat')
   const presets_config_key = params.panel_provider.get_presets_config_key()
   const all_presets = config.get<ConfigPresetFormat[]>(presets_config_key, [])
@@ -604,12 +585,8 @@ async function resolve_presets(params: {
     params.group_name === undefined
   ) {
     // Try to use last selection if "Send" button is clicked without specific preset/group
-    const last_selected_name =
-      params.context.workspaceState.get<string>(
-        last_selected_preset_or_group_key
-      ) ??
-      params.context.globalState.get<string>(last_selected_preset_or_group_key)
-
+    const recents = params.context.globalState.get<string[]>(recents_key, [])
+    const last_selected_name = recents[0]
     if (last_selected_name) {
       const item = all_presets.find((p) => p.name === last_selected_name)
       if (item) {

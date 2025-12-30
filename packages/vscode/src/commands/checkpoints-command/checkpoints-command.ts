@@ -19,7 +19,7 @@ import {
 } from './actions'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { get_checkpoint_path } from './utils'
-import { WebsitesProvider } from '@/context/providers/websites-provider'
+import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 import { dictionary } from '@shared/constants/dictionary'
 
 dayjs.extend(relativeTime)

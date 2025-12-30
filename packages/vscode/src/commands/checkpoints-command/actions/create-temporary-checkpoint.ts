@@ -9,7 +9,7 @@ import {
 } from '../utils/git-utils'
 import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
-import { WebsitesProvider } from '@/context/providers/websites-provider'
+import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 
 export const create_temporary_checkpoint = async (
   workspace_provider: WorkspaceProvider,

@@ -21,7 +21,7 @@ import * as path from 'path'
 import { Logger } from '@shared/utils/logger'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { dictionary } from '@shared/constants/dictionary'
-import { WebsitesProvider } from '@/context/providers/websites-provider'
+import { WebsitesProvider } from '@/context/providers/websites/websites-provider'
 import { response_preview_promise_resolve } from '../../apply-chat-response-command/utils/preview'
 import { remove_old_checkpoints } from './get-checkpoints'
 

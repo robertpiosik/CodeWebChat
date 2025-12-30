@@ -9,7 +9,7 @@ import {
 } from '@shared/types/websocket-message'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { DEFAULT_PORT, SECURITY_TOKENS } from '@shared/constants/websocket'
-import { WebsitesProvider } from '../context/providers/websites-provider'
+import { WebsitesProvider } from '../context/providers/websites/websites-provider'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import { Preset } from '@shared/types/preset'
