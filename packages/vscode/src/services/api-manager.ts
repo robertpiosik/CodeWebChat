@@ -4,6 +4,8 @@ import axios, { CancelTokenSource } from 'axios'
 import { randomUUID, createHash } from 'crypto'
 import { Logger } from '@shared/utils/logger'
 
+const CHAIN_RESOLUTION_DELAY_MS = 2000
+
 export class ApiManager {
   private cancel_token_sources: Map<string, CancelTokenSource> = new Map()
   private next_allowed_finish_time = 0
@@ -35,6 +37,22 @@ export class ApiManager {
       resolve_current = resolve
     })
 
+    let is_chain_resolution_scheduled = false
+    const schedule_chain_resolution = () => {
+      if (is_chain_resolution_scheduled) return
+      const chain_entry = this.waiting_chain.get(params.endpoint_url)
+      if (chain_entry && chain_entry.resolve === resolve_current) {
+        is_chain_resolution_scheduled = true
+        setTimeout(() => {
+          chain_entry.resolve()
+          const current_entry = this.waiting_chain.get(params.endpoint_url)
+          if (current_entry && current_entry.resolve === resolve_current) {
+            this.waiting_chain.delete(params.endpoint_url)
+          }
+        }, CHAIN_RESOLUTION_DELAY_MS)
+      }
+    }
+
     if (!previous_waiting || previous_waiting.body_hash !== body_hash) {
       this.waiting_chain.set(params.endpoint_url, {
         promise: current_promise,
@@ -60,11 +78,7 @@ export class ApiManager {
         body: params.body,
         cancellation_token: cancel_token_source.token,
         on_thinking_chunk: () => {
-          const chain_entry = this.waiting_chain.get(params.endpoint_url)
-          if (chain_entry && chain_entry.resolve === resolve_current) {
-            chain_entry.resolve()
-            this.waiting_chain.delete(params.endpoint_url)
-          }
+          schedule_chain_resolution()
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
@@ -72,11 +86,7 @@ export class ApiManager {
           })
         },
         on_chunk: (tokens_per_second, total_tokens) => {
-          const chain_entry = this.waiting_chain.get(params.endpoint_url)
-          if (chain_entry && chain_entry.resolve === resolve_current) {
-            chain_entry.resolve()
-            this.waiting_chain.delete(params.endpoint_url)
-          }
+          schedule_chain_resolution()
           this.panel_provider.send_message({
             command: 'SHOW_API_MANAGER_PROGRESS',
             id: request_id,
@@ -104,10 +114,12 @@ export class ApiManager {
       return null
     } finally {
       // Unblock anyone waiting for this request if it was the one in the chain
-      const chain_entry = this.waiting_chain.get(params.endpoint_url)
-      if (chain_entry && chain_entry.resolve === resolve_current) {
-        chain_entry.resolve()
-        this.waiting_chain.delete(params.endpoint_url)
+      if (!is_chain_resolution_scheduled) {
+        const chain_entry = this.waiting_chain.get(params.endpoint_url)
+        if (chain_entry && chain_entry.resolve === resolve_current) {
+          chain_entry.resolve()
+          this.waiting_chain.delete(params.endpoint_url)
+        }
       }
 
       this.panel_provider.send_message({
