@@ -1,12 +1,11 @@
 ### New file: `src/hello.md`
 
 ```markdown
-## Complexity Tracking
-
+## hello
 ```
 
 ### New file: `src/world.md`
 
 ```markdown
-console.log("World")
+## world
 ```

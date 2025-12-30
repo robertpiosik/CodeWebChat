@@ -764,8 +764,8 @@ describe('clipboard-parser', () => {
       })
     })
 
-    it('parses multiple markdowns', () => {
-      const test_case = 'multiple-markdowns'
+    it('parses multiple markdowns with headins', () => {
+      const test_case = 'multiple-markdowns-with-headings'
       const text = load_test_case_file(
         'standard',
         test_case,
