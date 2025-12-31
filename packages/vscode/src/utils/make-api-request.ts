@@ -9,13 +9,13 @@ type ThinkingStreamCallback = (text: string) => void
 const DATA_PREFIX = 'data: '
 const DONE_TOKEN = '[DONE]'
 
-const process_stream_chunk = async (
+const process_stream_chunk = (
   chunk: string,
   buffer: string
-): Promise<{
+): {
   updated_buffer: string
   new_content: string
-}> => {
+} => {
   let updated_buffer = buffer
   let new_content = ''
   try {
@@ -33,8 +33,9 @@ const process_stream_chunk = async (
           if (!json_string || json_string == DONE_TOKEN) continue
 
           const json_data = JSON.parse(json_string)
-          if (json_data.choices?.[0]?.delta?.content) {
-            new_content += json_data.choices[0].delta.content
+          const content = json_data.choices?.[0]?.delta?.content
+          if (typeof content == 'string') {
+            new_content += content
           }
         } catch (parse_error) {
           Logger.warn({
@@ -262,7 +263,7 @@ export const make_api_request = async (params: {
         let stream_closed = false
 
         response.data.on('data', async (chunk: string) => {
-          const { updated_buffer, new_content } = await process_stream_chunk(
+          const { updated_buffer, new_content } = process_stream_chunk(
             chunk,
             buffer
           )
@@ -293,8 +294,9 @@ export const make_api_request = async (params: {
                   .trim()
                 if (json_string && json_string !== DONE_TOKEN) {
                   const json_data = JSON.parse(json_string)
-                  if (json_data.choices?.[0]?.delta?.content) {
-                    process_content(json_data.choices[0].delta.content)
+                  const content = json_data.choices?.[0]?.delta?.content
+                  if (typeof content === 'string') {
+                    process_content(content)
                   }
                 }
               }
