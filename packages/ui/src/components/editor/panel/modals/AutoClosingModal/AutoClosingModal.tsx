@@ -29,6 +29,7 @@ export const AutoClosingModal: React.FC<Props> = (props) => {
       onKeyDown={(e) => {
         if (e.key == 'Escape') {
           e.stopPropagation()
+          props.on_close()
         }
       }}
     >

@@ -56,7 +56,7 @@
       }
 
       &:hover {
-        background-color: color-mix(in srgb, #f7d600, black 10%);
+        background-color: color-mix(in srgb, #f7d600, transparent 20%);
       }
     }
 
@@ -68,7 +68,7 @@
       }
 
       &:hover {
-        background-color: color-mix(in srgb, #ff4500, black 10%);
+        background-color: color-mix(in srgb, #ff4500, transparent 10%);
       }
     }
 
@@ -80,7 +80,7 @@
       }
 
       &:hover {
-        background-color: color-mix(in srgb, #5765f2, black 10%);
+        background-color: color-mix(in srgb, #5765f2, transparent 10%);
       }
     }
   }

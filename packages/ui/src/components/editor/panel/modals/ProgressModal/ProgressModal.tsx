@@ -87,6 +87,7 @@ export const ProgressModal: React.FC<Props> = (props) => {
       onKeyDown={(e) => {
         if (e.key == 'Escape') {
           e.stopPropagation()
+          props.on_cancel?.()
         }
       }}
     >
