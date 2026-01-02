@@ -24,11 +24,11 @@ Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
 **LLMs are brilliant, yet mindless pattern matchers.** Because they lack properties similar to mental models, they can't _imagine_ how the correct output should look like _before_ their context is filled with files.
 
-While agents address this limitation via tool calling just fine—they're slow and, because files are placed in output tokens, expensive.
+Coding agents address this limitation via tool calling—although keyword search may work, it requires instructions complex enough to fully understand your intent. The context is compiled in output tokens by slowly printing out all relevant files. With a lot of rambling along the way, it's an expensive and time consuming process.
 
-Code Web Chat proposes an alternative approach where the model is guided with hand-picked context, allowing simpler instructions and enabling accuracy that can't get any better!
+Code Web Chat proposes an alternative approach where the model is guided with files included directly in the prompt, allowing simpler instructions and unlocking accuracy that can't get any better!
 
-For efficiency, files are sorted in a way enabling **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—be kinder to the planet, and save up to 90% on input tokens!
+With clever sorting of files by its update recency, CWC help utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently save up to 90% on input tokens and reserve the more expensive output tokens for the changes you're looking for.
 
 **Example message:**
 
