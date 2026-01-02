@@ -2,9 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC enables autofill in all popular chatbots, so you don't have to copy and paste ever again! Working in a project\* have never been easier.
-
-<small>\* Projects are smart workspaces, learn more: [ChatGPT](https://help.openai.com/en/articles/10169521-projects-in-chatgpt), [Gemini](https://gemini.google/pl/overview/gems), [Claude](https://support.claude.com/en/articles/9517075-what-are-projects).</small>
+CWC makes it easy to construct coding prompts for chatbots and model providers. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) with its signature autofill, and never copy and paste again!
 
 👉️ **Send messages with...**
 
