@@ -2,14 +2,16 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC makes it easy to construct coding prompts for chatbots and model providers. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) with its signature autofill, and never copy and paste again!
+CWC makes it easy to construct coding prompts for chatbots and APIs. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) with its signature autofill, and never copy and paste again!
 
-👉️ **Send messages with...**
+Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
+
+👉️ **Send coding prompts with...**
 
 - Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
 - API calls—_Gemini API, OpenRouter, local Ollama, etc._
 
-👉️ **Apply responses**—changes integration in all edit formats with easy rollback \
+👉️ **Apply responses**—changes integration in all edit formats, with easy rollback \
 👉️ **Fully featured**—refactorings, code completions, commit messages, and more \
 🌱 **Sustainable AI coding**—designed for [prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks \
 ❤️ **Free and open-source**—released under the GPL-3.0 license
@@ -26,7 +28,7 @@ While agents address this limitation via tool calling just fine—they're slow a
 
 Code Web Chat proposes an alternative approach where the model is guided with hand-picked context, allowing simpler instructions and enabling accuracy that can't get any better!
 
-For efficiency, files are sorted in a way enabling **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—put less strain on the planet 🌱, and save up to 90% on input tokens!
+For efficiency, files are sorted in a way enabling **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—be kinder to the planet, and save up to 90% on input tokens!
 
 **Example message:**
 
