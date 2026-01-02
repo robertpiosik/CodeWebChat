@@ -183,7 +183,7 @@ export const gemini: Chatbot = {
     observe_for_responses({
       chatbot_name: 'Gemini',
       is_generating: () =>
-        !!document.querySelector('mat-icon[data-mat-icon-name="stop"]'),
+        !!document.querySelector('mat-icon[fonticon="stop"]'),
       footer_selector: 'message-actions > div > div',
       add_buttons
     })
