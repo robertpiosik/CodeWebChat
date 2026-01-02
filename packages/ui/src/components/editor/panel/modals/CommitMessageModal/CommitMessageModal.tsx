@@ -26,7 +26,15 @@ export const CommitMessageModal: React.FC<Props> = (props) => {
   })
 
   return (
-    <div onMouseDown={commit_timer_hook.stop_timer}>
+    <div
+      onMouseDown={commit_timer_hook.stop_timer}
+      onKeyDown={(e) => {
+        if (e.key == 'Escape') {
+          e.stopPropagation()
+          props.on_cancel()
+        }
+      }}
+    >
       <Modal
         title="Commit changes"
         content_slot={

@@ -25,26 +25,34 @@ export const AutoClosingModal: React.FC<Props> = (props) => {
   }, [])
 
   return (
-    <Modal
-      title={props.title}
-      icon={props.icon}
-      content_slot={
-        <div className={styles.progress}>
-          <div
-            className={styles.progress__fill}
-            style={{
-              width: is_filling ? '100%' : '0%',
-              transition: `width ${props.duration}ms linear`
-            }}
-          />
-        </div>
-      }
-      on_background_click={props.on_close}
-      footer_slot={
-        <Button on_click={props.on_close} is_focused={true}>
-          Close
-        </Button>
-      }
-    />
+    <div
+      onKeyDown={(e) => {
+        if (e.key == 'Escape') {
+          e.stopPropagation()
+        }
+      }}
+    >
+      <Modal
+        title={props.title}
+        icon={props.icon}
+        content_slot={
+          <div className={styles.progress}>
+            <div
+              className={styles.progress__fill}
+              style={{
+                width: is_filling ? '100%' : '0%',
+                transition: `width ${props.duration}ms linear`
+              }}
+            />
+          </div>
+        }
+        on_background_click={props.on_close}
+        footer_slot={
+          <Button on_click={props.on_close} is_focused={true}>
+            Close
+          </Button>
+        }
+      />
+    </div>
   )
 }

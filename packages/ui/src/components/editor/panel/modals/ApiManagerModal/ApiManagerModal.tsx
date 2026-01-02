@@ -69,7 +69,14 @@ export const ApiManagerModal: React.FC<Props> = (props) => {
   }, [props.progress_items])
 
   return (
-    <div className={styles.overlay}>
+    <div
+      className={styles.overlay}
+      onKeyDown={(e) => {
+        if (e.key == 'Escape') {
+          e.stopPropagation()
+        }
+      }}
+    >
       <div className={styles.container}>
         <div
           className={cn(styles.title, {

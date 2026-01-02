@@ -127,14 +127,16 @@ export const Home: React.FC<Props> = (props) => {
                       handle_create_checkpoint_click()
                     }}
                   />
-                  <IconButton
-                    codicon_icon="trash"
-                    title="Delete all checkpoints"
-                    on_click={(e) => {
-                      e.stopPropagation()
-                      handle_delete_all_checkpoints_click()
-                    }}
-                  />
+                  {props.checkpoints.length > 0 && (
+                    <IconButton
+                      codicon_icon="trash"
+                      title="Delete all checkpoints"
+                      on_click={(e) => {
+                        e.stopPropagation()
+                        handle_delete_all_checkpoints_click()
+                      }}
+                    />
+                  )}
                 </>
               }
             />
