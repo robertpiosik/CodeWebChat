@@ -17,8 +17,8 @@ export const DonationsFooter: React.FC<Props> = (props) => {
     if (close_ref.current && coffee_ref.current) {
       const padding_and_gap = 2 * 24 + 8
       const width =
-        close_ref.current.offsetWidth +
-        coffee_ref.current.offsetWidth +
+        close_ref.current.getBoundingClientRect().width +
+        coffee_ref.current.getBoundingClientRect().width +
         padding_and_gap
       report_width(width, compact_step)
     }

@@ -7,8 +7,10 @@ export const use_compacting = (max_compact_step = 4) => {
 
   const report_width = useCallback((width: number, step: number) => {
     set_thresholds((prev) => {
-      if (prev[step] == width) return prev
-      return { ...prev, [step]: width }
+      // Round up and add 1px buffer to account for subpixel rendering differences
+      const threshold = Math.ceil(width) + 1
+      if (prev[step] == threshold) return prev
+      return { ...prev, [step]: threshold }
     })
   }, [])
 

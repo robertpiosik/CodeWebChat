@@ -26,9 +26,9 @@ export const ResponsePreviewFooter: React.FC<Props> = ({
       // Padding & icon (approx 44px per button) + gap (8px * 2)
       const padding_and_gap = 3 * 40 + 2 * 8
       const width =
-        back_ref.current.offsetWidth +
-        reject_ref.current.offsetWidth +
-        accept_ref.current.offsetWidth +
+        back_ref.current.getBoundingClientRect().width +
+        reject_ref.current.getBoundingClientRect().width +
+        accept_ref.current.getBoundingClientRect().width +
         padding_and_gap
       report_width(width, compact_step)
     }

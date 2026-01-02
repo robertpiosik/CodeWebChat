@@ -19,11 +19,11 @@ export const use_edit_format_compacting = () => {
     if (refs.every((ref) => ref.current)) {
       // Calculate total width of all elements
       const total_width = refs.reduce(
-        (acc, ref) => acc + (ref.current?.offsetWidth || 0),
+        (acc, ref) => acc + (ref.current?.getBoundingClientRect().width || 0),
         0
       )
       // Add gap (4px * 3 gaps)
-      const width = total_width + 12
+      const width = total_width
 
       report_width(width, compact_step)
     }

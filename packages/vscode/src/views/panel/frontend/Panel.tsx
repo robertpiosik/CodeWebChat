@@ -210,7 +210,10 @@ export const Panel = () => {
     <LayoutContext.Provider value={layout_context_value}>
       <div className={styles.container}>
         <div className={styles.slot}>
-          <Layout on_donate_click={() => set_viewing_donations(true)}>
+          <Layout
+            on_donate_click={() => set_viewing_donations(true)}
+            are_links_dimmed={active_view == 'main'}
+          >
             <div
               className={cn(styles.content, {
                 [styles['content--hidden']]: active_view != 'main'

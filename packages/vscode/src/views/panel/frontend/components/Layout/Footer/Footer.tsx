@@ -7,6 +7,7 @@ import { LayoutContext } from '../../../contexts/LayoutContext'
 
 type Props = {
   on_donate_click: () => void
+  are_links_dimmed?: boolean
 }
 
 export const Footer: React.FC<Props> = (props) => {
@@ -32,7 +33,8 @@ export const Footer: React.FC<Props> = (props) => {
   useLayoutEffect(() => {
     if (left_ref.current && right_ref.current) {
       const width =
-        left_ref.current.offsetWidth + right_ref.current.offsetWidth + 6
+        left_ref.current.getBoundingClientRect().width +
+        right_ref.current.getBoundingClientRect().width
       report_width(width, compact_step)
     }
   }, [compact_step, report_width])
@@ -69,7 +71,12 @@ export const Footer: React.FC<Props> = (props) => {
   return (
     <>
       <div className={styles.footer} ref={container_ref}>
-        <div ref={left_ref}>
+        <div
+          ref={left_ref}
+          className={cn(styles.footer__left, {
+            [styles['footer__left--dimmed']]: props.are_links_dimmed
+          })}
+        >
           <a
             className={cn(
               styles['footer__icon-button'],

@@ -15,7 +15,7 @@ export const BrowserExtensionMessage: React.FC = () => {
         const child = children[i] as HTMLElement
         const style = getComputedStyle(child)
         width +=
-          child.offsetWidth +
+          child.getBoundingClientRect().width +
           parseFloat(style.marginLeft) +
           parseFloat(style.marginRight)
       }
