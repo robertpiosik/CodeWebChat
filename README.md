@@ -28,7 +28,7 @@ Coding agents address this limitation via tool calling—although keyword search
 
 Code Web Chat proposes an alternative approach where the model is guided with files included directly in the prompt, allowing simpler instructions and unlocking accuracy that can't get any better!
 
-With clever sorting of files by its update recency, CWC help utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently save up to 90% on input tokens and reserve the more expensive output tokens for the changes you're looking for.
+With clever sorting of files by its update recency, CWC helps utilize **[prompt caching](https://platform.openai.com/docs/guides/prompt-caching) across tasks**—consistently save up to 90% on input tokens and reserve the more expensive output tokens for task-focused reasoning and code changes you're looking for.
 
 **Example message:**
 
