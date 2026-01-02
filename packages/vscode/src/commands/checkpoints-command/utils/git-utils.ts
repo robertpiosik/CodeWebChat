@@ -1,6 +1,22 @@
 import * as vscode from 'vscode'
-import { execSync } from 'child_process'
+import { exec } from 'child_process'
 import { Logger } from '@shared/utils/logger'
+
+const execAsync = (command: string, options: any): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    exec(command, options, (error, stdout, stderr) => {
+      if (error) {
+        ;(error as any).stdout = stdout
+        ;(error as any).stderr = stderr
+        ;(error as any).status = error.code
+        reject(error)
+      } else {
+        resolve(stdout.toString())
+      }
+    })
+  })
+}
+
 export interface GitInfo {
   branch: string
   commit_hash: string
@@ -11,15 +27,19 @@ export const get_git_info = async (
   workspace_folder: vscode.WorkspaceFolder
 ): Promise<GitInfo | null> => {
   try {
-    const branch = execSync('git rev-parse --abbrev-ref HEAD', {
-      cwd: workspace_folder.uri.fsPath,
-      encoding: 'utf8'
-    }).trim()
+    const branch = (
+      await execAsync('git rev-parse --abbrev-ref HEAD', {
+        cwd: workspace_folder.uri.fsPath,
+        encoding: 'utf8'
+      })
+    ).trim()
 
-    const commit_hash = execSync('git rev-parse HEAD', {
-      cwd: workspace_folder.uri.fsPath,
-      encoding: 'utf8'
-    }).trim()
+    const commit_hash = (
+      await execAsync('git rev-parse HEAD', {
+        cwd: workspace_folder.uri.fsPath,
+        encoding: 'utf8'
+      })
+    ).trim()
 
     return {
       branch,
@@ -38,8 +58,8 @@ export const get_git_diff = async (
     let diff = ''
     try {
       // Add --binary to handle binary files correctly.
-      // execSync will throw if there are differences, so we catch it.
-      diff = execSync('git diff --binary HEAD', {
+      // execAsync will reject if there are differences (exit code 1), so we catch it.
+      diff = await execAsync('git diff --binary HEAD', {
         cwd: workspace_folder.uri.fsPath,
         encoding: 'utf8',
         maxBuffer: 50 * 1024 * 1024 // 50MB max
@@ -54,12 +74,11 @@ export const get_git_diff = async (
       }
     }
 
-    const untracked_files = execSync(
-      'git ls-files --others --exclude-standard',
-      {
+    const untracked_files = (
+      await execAsync('git ls-files --others --exclude-standard', {
         cwd: workspace_folder.uri.fsPath,
         encoding: 'utf8'
-      }
+      })
     )
       .trim()
       .split('\n')
@@ -69,8 +88,8 @@ export const get_git_diff = async (
     for (const file of untracked_files) {
       try {
         // Use git diff to create a patch for the new file, which handles binary files correctly.
-        // execSync will throw if there are differences, but the diff will be in stdout.
-        const file_diff = execSync(
+        // execAsync will throw if there are differences, but the diff will be in stdout.
+        const file_diff = await execAsync(
           `git diff --no-index --binary /dev/null "${file}"`,
           {
             cwd: workspace_folder.uri.fsPath,
@@ -108,9 +127,8 @@ export const is_git_repository = async (
   workspace_folder: vscode.WorkspaceFolder
 ): Promise<boolean> => {
   try {
-    execSync('git rev-parse --git-dir', {
-      cwd: workspace_folder.uri.fsPath,
-      stdio: 'pipe'
+    await execAsync('git rev-parse --git-dir', {
+      cwd: workspace_folder.uri.fsPath
     })
     return true
   } catch (error) {

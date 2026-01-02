@@ -90,8 +90,6 @@ export const create_checkpoint = async (
     const folder_git_statuses = await Promise.all(
       workspace_folders.map((folder) => is_git_repository(folder))
     )
-    const all_folders_use_git = folder_git_statuses.every((status) => status)
-
     let new_checkpoint: Checkpoint | undefined
 
     const create_checkpoint_task = async () => {
@@ -232,17 +230,27 @@ export const create_checkpoint = async (
       new_checkpoint = checkpoint_object
     }
 
-    if (all_folders_use_git) {
-      await create_checkpoint_task()
-    } else {
-      await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
+    let timer: ReturnType<typeof setTimeout> | undefined
+    let did_show_modal = false
+
+    try {
+      timer = setTimeout(() => {
+        did_show_modal = true
+        panel_provider.send_message({
+          command: 'SHOW_PROGRESS',
           title: 'Creating checkpoint...',
           cancellable: false
-        },
-        create_checkpoint_task
-      )
+        })
+      }, 500)
+
+      await create_checkpoint_task()
+    } finally {
+      if (timer) clearTimeout(timer)
+      if (did_show_modal) {
+        panel_provider.send_message({
+          command: 'HIDE_PROGRESS'
+        })
+      }
     }
     return new_checkpoint
   } catch (err: any) {
