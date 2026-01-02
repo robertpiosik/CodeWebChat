@@ -44,6 +44,14 @@
       }
     }
 
+    &--reddit {
+      background-color: #ff4500;
+
+      > svg {
+        fill: white;
+      }
+    }
+
     &--discord {
       background-color: #5765f2;
 

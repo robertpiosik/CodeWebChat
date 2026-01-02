@@ -1,5 +1,6 @@
 export const IGNORE_PATTERNS = [
   '**/package-lock.json',
+  '**/yarn.lock',
   '**/pnpm-lock.yaml',
   '**/node_modules',
   '**/*.png',

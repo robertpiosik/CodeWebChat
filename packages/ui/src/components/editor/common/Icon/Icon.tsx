@@ -11,7 +11,6 @@ import CurlyBraces from '../../../../assets/icons/curly-braces.svg'
 import DeepSeek from '../../../../assets/icons/deepseek.svg'
 import GithubCopilot from '../../../../assets/icons/github-copilot.svg'
 import DiscordLogo from '../../../../assets/icons/discord-logo.svg'
-import DiscordText from '../../../../assets/icons/discord-text.svg'
 import Doubao from '../../../../assets/icons/doubao.svg'
 import Gemini from '../../../../assets/icons/gemini.svg'
 import Grok from '../../../../assets/icons/grok.svg'
@@ -25,6 +24,7 @@ import OpenWebUI from '../../../../assets/icons/open-webui.svg'
 import Perplexity from '../../../../assets/icons/perplexity.svg'
 import Qwen from '../../../../assets/icons/qwen.svg'
 import Together from '../../../../assets/icons/together.svg'
+import Reddit from '../../../../assets/icons/reddit.svg'
 import X from '../../../../assets/icons/x.svg'
 import Yuanbao from '../../../../assets/icons/yuanbao.svg'
 import ZAI from '../../../../assets/icons/z-ai.svg'
@@ -42,8 +42,7 @@ export namespace Icon {
     | 'COPILOT'
     | 'CURLY_BRACES'
     | 'DEEPSEEK'
-    | 'DISCORD_LOGO'
-    | 'DISCORD_TEXT'
+    | 'DISCORD'
     | 'DOUBAO'
     | 'GEMINI'
     | 'GITHUB_COPILOT'
@@ -58,6 +57,7 @@ export namespace Icon {
     | 'PERPLEXITY'
     | 'QWEN'
     | 'TOGETHER'
+    | 'REDDIT'
     | 'X'
     | 'YUANBAO'
     | 'Z_AI'
@@ -104,11 +104,8 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
     case 'DEEPSEEK':
       icon = <DeepSeek />
       break
-    case 'DISCORD_LOGO':
+    case 'DISCORD':
       icon = <DiscordLogo />
-      break
-    case 'DISCORD_TEXT':
-      icon = <DiscordText />
       break
     case 'DOUBAO':
       icon = <Doubao />
@@ -151,6 +148,9 @@ export const Icon: React.FC<Icon.Props> = ({ variant }) => {
       break
     case 'TOGETHER':
       icon = <Together />
+      break
+    case 'REDDIT':
+      icon = <Reddit />
       break
     case 'X':
       icon = <X />

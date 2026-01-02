@@ -87,12 +87,22 @@ export const Footer: React.FC<Props> = (props) => {
           <a
             className={cn(
               styles['footer__icon-button'],
+              styles['footer__icon-button--reddit']
+            )}
+            href="https://www.reddit.com/r/CodeWebChat/"
+            title="Reddit"
+          >
+            <Icon variant="REDDIT" />
+          </a>
+          <a
+            className={cn(
+              styles['footer__icon-button'],
               styles['footer__icon-button--discord']
             )}
             href="https://discord.gg/KJySXsrSX5"
             title="Get involved"
           >
-            <Icon variant="DISCORD_LOGO" />
+            <Icon variant="DISCORD" />
           </a>
         </div>
 
