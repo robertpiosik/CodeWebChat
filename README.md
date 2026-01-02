@@ -6,10 +6,10 @@ CWC makes it easy to construct coding prompts for chatbots and APIs. Start using
 
 Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
-👉️ **Send coding prompts with...**
+👉️ **Construct coding prompts for...**
 
 - Chatbots—_ChatGPT, Gemini, Claude, Grok, DeepSeek, etc._
-- API calls—_Gemini API, OpenRouter, local Ollama, etc._
+- APIs—_Gemini API, OpenRouter, local Ollama, etc._
 
 👉️ **Apply responses**—changes integration in all edit formats, with easy rollback \
 👉️ **Fully featured**—refactorings, code completions, commit messages, and more \
