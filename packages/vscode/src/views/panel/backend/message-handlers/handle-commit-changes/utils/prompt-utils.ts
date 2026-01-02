@@ -29,12 +29,13 @@ export const build_commit_message_prompt = (
 
   const file_diffs = diff.split(/^diff --git /m).filter((d) => d.trim() != '')
 
-  let changes_content = ''
+  let changes_content = '<files>\n'
   for (const file_diff_content of file_diffs) {
     const full_file_diff = 'diff --git ' + file_diff_content
     const lines = full_file_diff.split('\n')
     const old_path_line = lines.find((l) => l.startsWith('--- a/'))
     const new_path_line = lines.find((l) => l.startsWith('+++ b/'))
+    const rename_from_line = lines.find((l) => l.startsWith('rename from '))
 
     const old_path = old_path_line
       ? old_path_line.substring('--- a/'.length)
@@ -77,38 +78,75 @@ export const build_commit_message_prompt = (
         (f) => f.relative_path == file_path
       )
 
-      let heading = 'Updated file'
-      let display_path = `\`${file_path}\``
+      let status = 'updated'
 
       if (file_data) {
-        if (file_data.status === 2) {
-          heading = 'New file'
-        } else if (file_data.status === 3) {
-          heading = 'Deleted file'
+        if (file_data.status == 2) {
+          status = 'created'
+        } else if (file_data.status == 3) {
+          status = 'deleted'
           is_deleted = true
-        } else if (file_data.status === 4) {
-          heading = 'Renamed file'
-          if (file_data.original_relative_path) {
-            display_path = `\`${file_data.original_relative_path}\` (old) \`${file_path}\` (new)`
-          }
+        } else if (file_data.status == 4) {
+          status = 'renamed'
         }
       } else {
         if (is_deleted) {
-          heading = 'Deleted file'
+          status = 'deleted'
         } else if (!old_path && new_path) {
-          heading = 'New file'
+          status = 'created'
         }
       }
 
-      changes_content += `\n### ${heading}: ${display_path}\n\n`
-      if (file_data) {
-        changes_content += `The original state of the file for reference:\n\n<![CDATA[\n${file_data.content}\n]]>\n\n`
+      let old_path_attr: string | undefined
+      if (status == 'renamed') {
+        if (rename_from_line) {
+          old_path_attr = rename_from_line
+            .substring('rename from '.length)
+            .trim()
+        } else {
+          const diff_header = lines[0]
+          const b_part = ` b/${file_path}`
+          if (diff_header.endsWith(b_part)) {
+            const prefix_len = 'diff --git '.length
+            const a_part = diff_header.substring(
+              prefix_len,
+              diff_header.length - b_part.length
+            )
+            if (a_part.startsWith('a/')) {
+              old_path_attr = a_part.substring(2)
+            }
+          }
+        }
       }
-      if (!is_deleted) {
-        changes_content += `**New changes:**\n\n<![CDATA[\n${final_diff_content}\n]]>\n`
+
+      changes_content += `<file path="${file_path}" status="${status}"`
+      if (old_path_attr) {
+        changes_content += ` old_path="${old_path_attr}"`
       }
+      changes_content += '>\n'
+
+      if (status == 'created' || status == 'deleted') {
+        if (file_data) {
+          changes_content += `<![CDATA[\n${file_data.content}\n]]>\n`
+        }
+      } else if (status == 'renamed') {
+        if (old_path && new_path) {
+          changes_content += `<![CDATA[\n${final_diff_content}\n]]>\n`
+        }
+        if (file_data) {
+          changes_content += `<![CDATA[\n${file_data.content}\n]]>\n`
+        }
+      } else {
+        changes_content += `<![CDATA[\n${final_diff_content}\n]]>\n`
+        if (file_data) {
+          changes_content += `<![CDATA[\n${file_data.content}\n]]>\n`
+        }
+      }
+      changes_content += `</file>\n`
     }
   }
+
+  changes_content += '</files>'
 
   return `${commit_message_prompt}\n${changes_content}\n${commit_message_prompt}`
 }

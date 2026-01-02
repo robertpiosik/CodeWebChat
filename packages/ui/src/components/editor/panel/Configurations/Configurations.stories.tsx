@@ -8,21 +8,20 @@ const configurations: Configurations.Configuration[] = [
   {
     id: '1',
     model: 'claude-3-haiku-20240307',
-    provider: 'Anthropic',
+    provider_name: 'Anthropic',
     temperature: 0.7
   },
   {
     id: '2',
     model: 'gpt-4o',
-    provider: 'OpenAI',
+    provider_name: 'OpenAI',
     reasoning_effort: 'low',
     is_pinned: true
   },
   {
     id: '3',
     model: 'gemini-1.5-flash',
-    provider: 'Google',
-    cache_enabled: true
+    provider_name: 'Google'
   }
 ]
 
