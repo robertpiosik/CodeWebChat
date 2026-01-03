@@ -12,7 +12,7 @@ export const handle_restore_preview = async (
   files: FileInPreview[]
 ): Promise<{ success: boolean; original_states?: OriginalFileState[] }> => {
   Logger.info({
-    function_name: 'handle_restore_review',
+    function_name: 'handle_restore_preview',
     message: 'start',
     data: { file_count: files.length }
   })
@@ -25,7 +25,7 @@ export const handle_restore_preview = async (
       dictionary.error_message.NO_WORKSPACE_FOLDER_OPEN
     )
     Logger.warn({
-      function_name: 'handle_restore_review',
+      function_name: 'handle_restore_preview',
       message: 'No workspace folder open.'
     })
     return { success: false }
@@ -45,7 +45,7 @@ export const handle_restore_preview = async (
       workspace_root = workspace_map.get(file.workspace_name)!
     } else if (file.workspace_name) {
       Logger.warn({
-        function_name: 'handle_restore_review',
+        function_name: 'handle_restore_preview',
         message: `Workspace '${file.workspace_name}' not found for file '${file.file_path}'. Using default.`
       })
     }
@@ -54,7 +54,7 @@ export const handle_restore_preview = async (
 
     if (!safe_path) {
       Logger.warn({
-        function_name: 'handle_restore_review',
+        function_name: 'handle_restore_preview',
         message: 'Unsafe file path detected and skipped',
         data: file.file_path
       })
@@ -69,7 +69,7 @@ export const handle_restore_preview = async (
         original_content = document.getText()
       } catch (e) {
         Logger.warn({
-          function_name: 'handle_restore_review',
+          function_name: 'handle_restore_preview',
           message: 'Could not read original content of file',
           data: { file_path: safe_path, error: e }
         })
@@ -112,7 +112,7 @@ export const handle_restore_preview = async (
 
             fs.unlinkSync(safe_path)
             Logger.info({
-              function_name: 'handle_restore_review',
+              function_name: 'handle_restore_preview',
               message: 'File deleted',
               data: safe_path
             })
@@ -122,7 +122,7 @@ export const handle_restore_preview = async (
             })
           } catch (error) {
             Logger.error({
-              function_name: 'handle_restore_review',
+              function_name: 'handle_restore_preview',
               message: 'Error deleting file',
               data: { safe_path, error }
             })
@@ -156,13 +156,13 @@ export const handle_restore_preview = async (
 
             await document.save()
             Logger.info({
-              function_name: 'handle_restore_review',
+              function_name: 'handle_restore_preview',
               message: 'Existing file replaced and saved',
               data: safe_path
             })
           } catch (error) {
             Logger.error({
-              function_name: 'handle_restore_review',
+              function_name: 'handle_restore_preview',
               message: 'Error updating file',
               data: { safe_path, error }
             })
@@ -176,13 +176,13 @@ export const handle_restore_preview = async (
             try {
               fs.mkdirSync(directory, { recursive: true })
               Logger.info({
-                function_name: 'handle_restore_review',
+                function_name: 'handle_restore_preview',
                 message: 'Directory created',
                 data: directory
               })
             } catch (error) {
               Logger.error({
-                function_name: 'handle_restore_review',
+                function_name: 'handle_restore_preview',
                 message: 'Failed to create directory',
                 data: { directory, error, file_path: file.file_path }
               })
@@ -198,7 +198,7 @@ export const handle_restore_preview = async (
           try {
             fs.writeFileSync(safe_path, file.content)
             Logger.info({
-              function_name: 'handle_restore_review',
+              function_name: 'handle_restore_preview',
               message: 'New file created',
               data: safe_path
             })
@@ -206,7 +206,7 @@ export const handle_restore_preview = async (
             await vscode.window.showTextDocument(document, { preview: false })
           } catch (error) {
             Logger.error({
-              function_name: 'handle_restore_review',
+              function_name: 'handle_restore_preview',
               message: 'Failed to write new file',
               data: { safe_path, error, file_path: file.file_path }
             })

@@ -265,8 +265,8 @@ export interface ResponsePreviewMessage extends BaseMessage {
   created_at?: number
 }
 
-export interface ToggleFileInReviewMessage extends BaseMessage {
-  command: 'TOGGLE_FILE_IN_REVIEW'
+export interface ToggleFileInPreviewMessage extends BaseMessage {
+  command: 'TOGGLE_FILE_IN_PREVIEW'
   file_path: string
   workspace_name?: string
   is_checked: boolean
@@ -449,7 +449,7 @@ export type FrontendMessage =
   | GetVersionMessage
   | RequestCurrentlyOpenFileTextMessage
   | ResponsePreviewMessage
-  | ToggleFileInReviewMessage
+  | ToggleFileInPreviewMessage
   | DiscardUserChangesInPreviewMessage
   | FocusOnFileInPreviewMessage
   | GoToFileMessage
@@ -674,8 +674,8 @@ export interface ShowAutoClosingModalMessage extends BaseMessage {
   title: string
 }
 
-export interface UpdateFileInReviewMessage extends BaseMessage {
-  command: 'UPDATE_FILE_IN_REVIEW'
+export interface UpdateFileInPreviewMessage extends BaseMessage {
+  command: 'UPDATE_FILE_IN_PREVIEW'
   file: FileInPreview
 }
 
@@ -750,7 +750,7 @@ export type BackendMessage =
   | ShowApiManagerProgressMessage
   | HideApiManagerProgressMessage
   | ShowAutoClosingModalMessage
-  | UpdateFileInReviewMessage
+  | UpdateFileInPreviewMessage
   | ShowStageFilesModalMessage
   | ShowCommitMessageModalMessage
   | CommitProcessCancelledMessage

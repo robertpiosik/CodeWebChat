@@ -6,7 +6,7 @@ import { preview } from './preview'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { update_undo_button_state } from './state-manager'
 
-export let ongoing_review_cleanup_promise: Promise<void> | null = null
+export let ongoing_preview_cleanup_promise: Promise<void> | null = null
 
 export const preview_handler = async (params: {
   original_states: OriginalFileState[]
@@ -21,7 +21,7 @@ export const preview_handler = async (params: {
   created_at?: number
 }): Promise<boolean> => {
   let resolve_cleanup_promise: () => void
-  ongoing_review_cleanup_promise = new Promise((resolve) => {
+  ongoing_preview_cleanup_promise = new Promise((resolve) => {
     resolve_cleanup_promise = resolve
   })
 
@@ -66,7 +66,7 @@ export const preview_handler = async (params: {
           )
         } catch (error) {
           Logger.error({
-            function_name: 'handle_code_review_and_cleanup',
+            function_name: 'preview_handler',
             message: 'Error restoring original editor state',
             data: error
           })
@@ -155,6 +155,6 @@ export const preview_handler = async (params: {
     }
   } finally {
     resolve_cleanup_promise!()
-    ongoing_review_cleanup_promise = null
+    ongoing_preview_cleanup_promise = null
   }
 }

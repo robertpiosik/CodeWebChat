@@ -5,13 +5,13 @@ import * as crypto from 'crypto'
 import * as os from 'os'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
-import { PreparedFile, ReviewableFile } from './types'
+import { PreparedFile, PreviewableFile } from './types'
 import { get_diff_stats } from './diff-utils'
 import { remove_directory_if_empty } from '../file-operations'
 import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { create_temp_files_with_original_content } from './temp-file-manager'
 
-export let toggle_file_review_state:
+export let toggle_file_preview_state:
   | ((file: {
       file_path: string
       workspace_name?: string
@@ -40,7 +40,7 @@ const recalculate_history_item_totals = (item: ResponseHistoryItem) => {
 const update_response_history = (
   panel_provider: PanelProvider,
   created_at: number | undefined,
-  updated_file: ReviewableFile
+  updated_file: PreviewableFile
 ) => {
   if (!created_at) return
 
@@ -98,35 +98,35 @@ export const setup_workspace_listeners = (
   const text_document_change_listener =
     vscode.workspace.onDidChangeTextDocument(async (event) => {
       const changed_doc_path = event.document.uri.fsPath
-      const changed_file_in_review = prepared_files.find(
+      const changed_file_in_preview = prepared_files.find(
         (pf) => pf.sanitized_path == changed_doc_path
       )
 
-      if (changed_file_in_review) {
+      if (changed_file_in_preview) {
         const new_content = event.document.getText()
-        const original_content = changed_file_in_review.original_content
+        const original_content = changed_file_in_preview.original_content
         const diff_stats = get_diff_stats({
           original_content,
           new_content
         })
 
-        changed_file_in_review.reviewable_file.lines_added =
+        changed_file_in_preview.previewable_file.lines_added =
           diff_stats.lines_added
-        changed_file_in_review.reviewable_file.lines_removed =
+        changed_file_in_preview.previewable_file.lines_removed =
           diff_stats.lines_removed
-        if (changed_file_in_review.reviewable_file.is_checked) {
-          changed_file_in_review.reviewable_file.content = new_content
+        if (changed_file_in_preview.previewable_file.is_checked) {
+          changed_file_in_preview.previewable_file.content = new_content
         }
 
         update_response_history(
           panel_provider,
           created_at,
-          changed_file_in_review.reviewable_file
+          changed_file_in_preview.previewable_file
         )
 
         panel_provider.send_message({
-          command: 'UPDATE_FILE_IN_REVIEW',
-          file: changed_file_in_review.reviewable_file
+          command: 'UPDATE_FILE_IN_PREVIEW',
+          file: changed_file_in_preview.previewable_file
         })
       } else {
         const doc = event.document
@@ -179,7 +179,7 @@ export const setup_workspace_listeners = (
         const is_deleted =
           !is_new && new_content === '' && original_content !== ''
 
-        const reviewable_file: ReviewableFile = {
+        const previewable_file: PreviewableFile = {
           type: 'file',
           file_path: relative_path,
           content: new_content,
@@ -191,7 +191,7 @@ export const setup_workspace_listeners = (
         }
 
         const new_prepared_file: PreparedFile = {
-          reviewable_file,
+          previewable_file,
           sanitized_path: sanitized_file_path,
           original_content: original_content,
           temp_file_path,
@@ -204,11 +204,11 @@ export const setup_workspace_listeners = (
         update_response_history(
           panel_provider,
           created_at,
-          new_prepared_file.reviewable_file
+          new_prepared_file.previewable_file
         )
         panel_provider.send_message({
-          command: 'UPDATE_FILE_IN_REVIEW',
-          file: new_prepared_file.reviewable_file
+          command: 'UPDATE_FILE_IN_PREVIEW',
+          file: new_prepared_file.previewable_file
         })
       }
     })
@@ -218,11 +218,11 @@ export const setup_workspace_listeners = (
       if (uri.scheme != 'file') continue
 
       const deleted_file_path = uri.fsPath
-      const deleted_file_in_review = prepared_files.find(
+      const deleted_file_in_preview = prepared_files.find(
         (pf) => pf.sanitized_path == deleted_file_path
       )
 
-      if (!deleted_file_in_review) {
+      if (!deleted_file_in_preview) {
         const workspace_folder = vscode.workspace.getWorkspaceFolder(uri)
         if (!workspace_folder) continue
 
@@ -258,7 +258,7 @@ export const setup_workspace_listeners = (
         const temp_filename = `cwc-${hash}.tmp`
         const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
-        const reviewable_file: ReviewableFile = {
+        const previewable_file: PreviewableFile = {
           type: 'file',
           file_path: relative_path,
           content: new_content,
@@ -270,7 +270,7 @@ export const setup_workspace_listeners = (
         }
 
         const new_prepared_file: PreparedFile = {
-          reviewable_file,
+          previewable_file,
           sanitized_path: sanitized_file_path,
           original_content: original_content_for_undo,
           temp_file_path,
@@ -283,31 +283,31 @@ export const setup_workspace_listeners = (
         update_response_history(
           panel_provider,
           created_at,
-          new_prepared_file.reviewable_file
+          new_prepared_file.previewable_file
         )
         panel_provider.send_message({
-          command: 'UPDATE_FILE_IN_REVIEW',
-          file: new_prepared_file.reviewable_file
+          command: 'UPDATE_FILE_IN_PREVIEW',
+          file: new_prepared_file.previewable_file
         })
       } else {
-        deleted_file_in_review.reviewable_file.file_state = 'deleted'
-        deleted_file_in_review.reviewable_file.content = ''
+        deleted_file_in_preview.previewable_file.file_state = 'deleted'
+        deleted_file_in_preview.previewable_file.content = ''
         const diff_stats = get_diff_stats({
-          original_content: deleted_file_in_review.original_content,
+          original_content: deleted_file_in_preview.original_content,
           new_content: ''
         })
-        deleted_file_in_review.reviewable_file.lines_added =
+        deleted_file_in_preview.previewable_file.lines_added =
           diff_stats.lines_added
-        deleted_file_in_review.reviewable_file.lines_removed =
+        deleted_file_in_preview.previewable_file.lines_removed =
           diff_stats.lines_removed
         update_response_history(
           panel_provider,
           created_at,
-          deleted_file_in_review.reviewable_file
+          deleted_file_in_preview.previewable_file
         )
         panel_provider.send_message({
-          command: 'UPDATE_FILE_IN_REVIEW',
-          file: deleted_file_in_review.reviewable_file
+          command: 'UPDATE_FILE_IN_PREVIEW',
+          file: deleted_file_in_preview.previewable_file
         })
       }
     }
@@ -362,7 +362,7 @@ export const setup_workspace_listeners = (
         const temp_filename = `cwc-${hash}.tmp`
         const temp_file_path = path.join(os.tmpdir(), temp_filename)
 
-        const reviewable_file: ReviewableFile = {
+        const previewable_file: PreviewableFile = {
           type: 'file',
           file_path: relative_path,
           content: new_content,
@@ -374,7 +374,7 @@ export const setup_workspace_listeners = (
         }
 
         const new_prepared_file: PreparedFile = {
-          reviewable_file,
+          previewable_file,
           sanitized_path: sanitized_file_path,
           original_content: original_content,
           temp_file_path,
@@ -390,12 +390,12 @@ export const setup_workspace_listeners = (
         update_response_history(
           panel_provider,
           created_at,
-          new_prepared_file.reviewable_file
+          new_prepared_file.previewable_file
         )
-        // Notify the panel to include this file in the review UI
+        // Notify the panel to include this file in the preview UI
         panel_provider.send_message({
-          command: 'UPDATE_FILE_IN_REVIEW',
-          file: new_prepared_file.reviewable_file
+          command: 'UPDATE_FILE_IN_PREVIEW',
+          file: new_prepared_file.previewable_file
         })
       }
     }
@@ -446,10 +446,10 @@ export const setup_workspace_listeners = (
         if (existing) {
           // Update existing entry to point to the new path
           existing.sanitized_path = newUri.fsPath
-          existing.reviewable_file.file_path = new_relative
-          existing.reviewable_file.workspace_name = new_workspace_folder.name
-          existing.reviewable_file.file_state = 'new'
-          existing.reviewable_file.content = new_content
+          existing.previewable_file.file_path = new_relative
+          existing.previewable_file.workspace_name = new_workspace_folder.name
+          existing.previewable_file.file_state = 'new'
+          existing.previewable_file.content = new_content
 
           const old_original_content = existing.original_content
           existing.original_content = ''
@@ -459,8 +459,8 @@ export const setup_workspace_listeners = (
             original_content: '',
             new_content
           })
-          existing.reviewable_file.lines_added = diff_stats_updated.lines_added
-          existing.reviewable_file.lines_removed =
+          existing.previewable_file.lines_added = diff_stats_updated.lines_added
+          existing.previewable_file.lines_removed =
             diff_stats_updated.lines_removed
 
           // Also add a synthetic "deleted" entry for the old path so UI shows delete+create
@@ -477,13 +477,13 @@ export const setup_workspace_listeners = (
             new_content: ''
           })
 
-          const deleted_reviewable: ReviewableFile = {
+          const deleted_previewable: PreviewableFile = {
             type: 'file',
             file_path: old_relative,
             content: '',
             workspace_name:
               old_workspace_folder?.name ??
-              existing.reviewable_file.workspace_name,
+              existing.previewable_file.workspace_name,
             file_state: 'deleted',
             lines_added: deleted_diff_stats.lines_added,
             lines_removed: deleted_diff_stats.lines_removed,
@@ -491,7 +491,7 @@ export const setup_workspace_listeners = (
           }
 
           const deleted_prepared: PreparedFile = {
-            reviewable_file: deleted_reviewable,
+            previewable_file: deleted_previewable,
             sanitized_path: oldSanitized,
             original_content: old_original_content,
             temp_file_path: oldTemp,
@@ -514,20 +514,20 @@ export const setup_workspace_listeners = (
           update_response_history(
             panel_provider,
             created_at,
-            existing.reviewable_file
+            existing.previewable_file
           )
           panel_provider.send_message({
-            command: 'UPDATE_FILE_IN_REVIEW',
-            file: existing.reviewable_file
+            command: 'UPDATE_FILE_IN_PREVIEW',
+            file: existing.previewable_file
           })
           update_response_history(
             panel_provider,
             created_at,
-            deleted_prepared.reviewable_file
+            deleted_prepared.previewable_file
           )
           panel_provider.send_message({
-            command: 'UPDATE_FILE_IN_REVIEW',
-            file: deleted_prepared.reviewable_file
+            command: 'UPDATE_FILE_IN_PREVIEW',
+            file: deleted_prepared.previewable_file
           })
         } else {
           // Not previously tracked: treat rename as delete (old) + create (new)
@@ -550,7 +550,7 @@ export const setup_workspace_listeners = (
             new_content
           })
 
-          const created_reviewable: ReviewableFile = {
+          const created_previewable: PreviewableFile = {
             type: 'file',
             file_path: new_relative,
             content: new_content,
@@ -562,7 +562,7 @@ export const setup_workspace_listeners = (
           }
 
           const created_prepared: PreparedFile = {
-            reviewable_file: created_reviewable,
+            previewable_file: created_previewable,
             sanitized_path: newSanitized,
             original_content: '',
             temp_file_path: newTemp,
@@ -581,7 +581,7 @@ export const setup_workspace_listeners = (
             new_content: ''
           })
 
-          const deleted_reviewable: ReviewableFile = {
+          const deleted_previewable: PreviewableFile = {
             type: 'file',
             file_path: old_relative,
             content: '',
@@ -594,7 +594,7 @@ export const setup_workspace_listeners = (
           }
 
           const deleted_prepared: PreparedFile = {
-            reviewable_file: deleted_reviewable,
+            previewable_file: deleted_previewable,
             sanitized_path: oldSanitized,
             original_content: new_content,
             temp_file_path: oldTemp,
@@ -619,20 +619,20 @@ export const setup_workspace_listeners = (
           update_response_history(
             panel_provider,
             created_at,
-            created_reviewable
+            created_previewable
           )
           panel_provider.send_message({
-            command: 'UPDATE_FILE_IN_REVIEW',
-            file: created_reviewable
+            command: 'UPDATE_FILE_IN_PREVIEW',
+            file: created_previewable
           })
           update_response_history(
             panel_provider,
             created_at,
-            deleted_reviewable
+            deleted_previewable
           )
           panel_provider.send_message({
-            command: 'UPDATE_FILE_IN_REVIEW',
-            file: deleted_reviewable
+            command: 'UPDATE_FILE_IN_PREVIEW',
+            file: deleted_previewable
           })
         }
       }
@@ -642,18 +642,18 @@ export const setup_workspace_listeners = (
   discard_user_changes_in_preview = async ({ file_path, workspace_name }) => {
     const file_to_discard = prepared_files.find(
       (f) =>
-        f.reviewable_file.file_path == file_path &&
-        f.reviewable_file.workspace_name == workspace_name
+        f.previewable_file.file_path == file_path &&
+        f.previewable_file.workspace_name == workspace_name
     )
 
     if (
       !file_to_discard ||
-      file_to_discard.reviewable_file.proposed_content === undefined
+      file_to_discard.previewable_file.proposed_content === undefined
     ) {
       return
     }
 
-    const proposed = file_to_discard.reviewable_file.proposed_content
+    const proposed = file_to_discard.previewable_file.proposed_content
 
     await vscode.workspace.fs.writeFile(
       vscode.Uri.file(file_to_discard.sanitized_path),
@@ -661,20 +661,20 @@ export const setup_workspace_listeners = (
     )
   }
 
-  toggle_file_review_state = async ({
+  toggle_file_preview_state = async ({
     file_path,
     workspace_name,
     is_checked
   }) => {
     const file_to_toggle = prepared_files.find(
       (f) =>
-        f.reviewable_file.file_path == file_path &&
-        f.reviewable_file.workspace_name == workspace_name
+        f.previewable_file.file_path == file_path &&
+        f.previewable_file.workspace_name == workspace_name
     )
 
     if (!file_to_toggle) return
 
-    file_to_toggle.reviewable_file.is_checked = is_checked
+    file_to_toggle.previewable_file.is_checked = is_checked
 
     if (created_at) {
       const history = panel_provider.response_history
@@ -694,11 +694,11 @@ export const setup_workspace_listeners = (
 
     let workspace_root = default_workspace
     if (
-      file_to_toggle.reviewable_file.workspace_name &&
-      workspace_map.has(file_to_toggle.reviewable_file.workspace_name)
+      file_to_toggle.previewable_file.workspace_name &&
+      workspace_map.has(file_to_toggle.previewable_file.workspace_name)
     ) {
       workspace_root = workspace_map.get(
-        file_to_toggle.reviewable_file.workspace_name
+        file_to_toggle.previewable_file.workspace_name
       )!
     }
 
@@ -712,7 +712,7 @@ export const setup_workspace_listeners = (
         file_to_toggle.content_to_restore = current_content
       }
 
-      if (file_to_toggle.reviewable_file.file_state === 'new') {
+      if (file_to_toggle.previewable_file.file_state === 'new') {
         try {
           if (fs.existsSync(file_to_toggle.sanitized_path)) {
             await vscode.workspace.fs.delete(
@@ -731,7 +731,7 @@ export const setup_workspace_listeners = (
         )
       }
     } else {
-      if (file_to_toggle.reviewable_file.file_state === 'deleted') {
+      if (file_to_toggle.previewable_file.file_state === 'deleted') {
         try {
           if (fs.existsSync(file_to_toggle.sanitized_path)) {
             await vscode.workspace.fs.delete(
@@ -748,7 +748,7 @@ export const setup_workspace_listeners = (
           vscode.Uri.file(file_to_toggle.sanitized_path),
           Buffer.from(
             file_to_toggle.content_to_restore ??
-              file_to_toggle.reviewable_file.content,
+              file_to_toggle.previewable_file.content,
             'utf8'
           )
         )
@@ -762,7 +762,7 @@ export const setup_workspace_listeners = (
     file_delete_listener.dispose()
     file_created_listener.dispose()
     file_renamed_listener.dispose()
-    toggle_file_review_state = undefined
+    toggle_file_preview_state = undefined
     discard_user_changes_in_preview = undefined
   }
 

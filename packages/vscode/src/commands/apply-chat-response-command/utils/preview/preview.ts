@@ -9,12 +9,12 @@ import {
   create_temp_files_with_original_content,
   cleanup_temp_files
 } from './temp-file-manager'
-import { close_review_diff_editors, show_diff_with_actions } from './vscode-ui'
-import { PreparedFile, ReviewableFile } from './types'
+import { close_preview_diff_editors, show_diff_with_actions } from './vscode-ui'
+import { PreparedFile, PreviewableFile } from './types'
 import { ItemInPreview } from '@shared/types/file-in-preview'
 
 export { response_preview_promise_resolve } from './vscode-ui'
-export { toggle_file_review_state } from './workspace-listener'
+export { toggle_file_preview_state } from './workspace-listener'
 export { discard_user_changes_in_preview } from './workspace-listener'
 
 export const preview = async (params: {
@@ -25,7 +25,7 @@ export const preview = async (params: {
   context: vscode.ExtensionContext
   created_at?: number
 }): Promise<{
-  accepted_files: ReviewableFile[]
+  accepted_files: PreviewableFile[]
   rejected_states: OriginalFileState[]
   created_at?: number
   active_editor_state?: {
@@ -74,9 +74,9 @@ export const preview = async (params: {
       const prepared_files_map = new Map<string, PreparedFile>()
       for (const pf of prepared_files) {
         const key = is_single_root_folder_workspace
-          ? pf.reviewable_file.file_path
-          : `${pf.reviewable_file.workspace_name || ''}:${
-              pf.reviewable_file.file_path
+          ? pf.previewable_file.file_path
+          : `${pf.previewable_file.workspace_name || ''}:${
+              pf.previewable_file.file_path
             }`
         prepared_files_map.set(key, pf)
       }
@@ -94,7 +94,7 @@ export const preview = async (params: {
             : `${item.workspace_name || ''}:${item.file_path}`
           const prepared_file = prepared_files_map.get(key)
           if (prepared_file) {
-            items_for_preview.push(prepared_file.reviewable_file)
+            items_for_preview.push(prepared_file.previewable_file)
             prepared_files_map.delete(key)
           }
           if (item.type == 'diff' && item.new_file_path) {
@@ -103,17 +103,17 @@ export const preview = async (params: {
               : `${item.workspace_name || ''}:${item.new_file_path}`
             const new_prepared_file = prepared_files_map.get(new_key)
             if (new_prepared_file) {
-              items_for_preview.push(new_prepared_file.reviewable_file)
+              items_for_preview.push(new_prepared_file.previewable_file)
               prepared_files_map.delete(new_key)
             }
           }
         }
       }
       items_for_preview.push(
-        ...[...prepared_files_map.values()].map((pf) => pf.reviewable_file)
+        ...[...prepared_files_map.values()].map((pf) => pf.previewable_file)
       )
     } else {
-      items_for_preview.push(...prepared_files.map((p) => p.reviewable_file))
+      items_for_preview.push(...prepared_files.map((p) => p.previewable_file))
     }
 
     if (params.panel_provider) {
@@ -141,33 +141,33 @@ export const preview = async (params: {
 
     create_temp_files_with_original_content(prepared_files)
 
-    const review_items = prepared_files.map((file) => ({
+    const preview_items = prepared_files.map((file) => ({
       file,
       status: 'pending' as 'pending' | 'accepted' | 'rejected'
     }))
 
     let current_index = 0
-    while (current_index >= 0 && current_index < review_items.length) {
-      const review_item = review_items[current_index]
+    while (current_index >= 0 && current_index < preview_items.length) {
+      const preview_item = preview_items[current_index]
 
-      if (review_item.status != 'pending') {
+      if (preview_item.status != 'pending') {
         current_index++
         continue
       }
 
-      const result = await show_diff_with_actions(review_item.file)
+      const result = await show_diff_with_actions(preview_item.file)
 
-      if (prepared_files.length > review_items.length) {
-        const new_prepared_files = prepared_files.slice(review_items.length)
+      if (prepared_files.length > preview_items.length) {
+        const new_prepared_files = prepared_files.slice(preview_items.length)
         for (const pf of new_prepared_files) {
-          review_items.push({
+          preview_items.push({
             file: pf,
             status: 'pending'
           })
         }
       }
 
-      review_item.file.reviewable_file.content = result.new_content
+      preview_item.file.previewable_file.content = result.new_content
       const { decision } = result
 
       if ('accepted_files' in decision) {
@@ -188,25 +188,25 @@ export const preview = async (params: {
 
         const accepted_files = prepared_files
           .filter((pf) => {
-            const identifier = `${pf.reviewable_file.workspace_name || ''}:${
-              pf.reviewable_file.file_path
+            const identifier = `${pf.previewable_file.workspace_name || ''}:${
+              pf.previewable_file.file_path
             }`
             return accepted_file_identifiers.has(identifier)
           })
-          .map((pf) => pf.reviewable_file)
+          .map((pf) => pf.previewable_file)
 
         const rejected_states = prepared_files
           .filter((pf) => {
-            const identifier = `${pf.reviewable_file.workspace_name || ''}:${
-              pf.reviewable_file.file_path
+            const identifier = `${pf.previewable_file.workspace_name || ''}:${
+              pf.previewable_file.file_path
             }`
             return !accepted_file_identifiers.has(identifier)
           })
           .map((item) => {
             return params.original_states.find(
               (state) =>
-                state.file_path == item.reviewable_file.file_path &&
-                state.workspace_name == item.reviewable_file.workspace_name
+                state.file_path == item.previewable_file.file_path &&
+                state.workspace_name == item.previewable_file.workspace_name
             )
           })
           .filter((state): state is OriginalFileState => state !== undefined)
@@ -239,16 +239,16 @@ export const preview = async (params: {
 
       if ('jump_to' in decision) {
         const jump_target = decision.jump_to
-        const new_index = review_items.findIndex(
+        const new_index = preview_items.findIndex(
           (item) =>
-            item.file.reviewable_file.file_path === jump_target.file_path &&
-            item.file.reviewable_file.workspace_name ===
+            item.file.previewable_file.file_path === jump_target.file_path &&
+            item.file.previewable_file.workspace_name ===
               jump_target.workspace_name
         )
 
         if (new_index != -1) {
-          if (review_items[new_index].status != 'pending') {
-            review_items[new_index].status = 'pending'
+          if (preview_items[new_index].status != 'pending') {
+            preview_items[new_index].status = 'pending'
           }
           current_index = new_index
         } else {
@@ -258,19 +258,19 @@ export const preview = async (params: {
       }
     }
 
-    const accepted_files = review_items
+    const accepted_files = preview_items
       .filter((item) => item.status == 'accepted')
-      .map((item) => item.file.reviewable_file)
+      .map((item) => item.file.previewable_file)
 
-    const rejected_items = review_items.filter(
+    const rejected_items = preview_items.filter(
       (item) => item.status == 'rejected'
     )
     const rejected_states = rejected_items
       .map((item) => {
         return params.original_states.find(
           (state) =>
-            state.file_path == item.file.reviewable_file.file_path &&
-            state.workspace_name == item.file.reviewable_file.workspace_name
+            state.file_path == item.file.previewable_file.file_path &&
+            state.workspace_name == item.file.previewable_file.workspace_name
         )
       })
       .filter((state): state is OriginalFileState => state !== undefined)
@@ -278,7 +278,7 @@ export const preview = async (params: {
     return { accepted_files, rejected_states }
   } finally {
     listener_disposer?.dispose()
-    await close_review_diff_editors(prepared_files)
+    await close_preview_diff_editors(prepared_files)
     cleanup_temp_files(prepared_files)
 
     if (params.panel_provider) {

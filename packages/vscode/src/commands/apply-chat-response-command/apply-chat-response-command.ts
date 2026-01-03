@@ -14,7 +14,7 @@ import { get_diff_stats } from './utils/preview/diff-utils'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import {
   preview_handler,
-  ongoing_review_cleanup_promise
+  ongoing_preview_cleanup_promise
 } from './utils/preview-handler'
 import { process_chat_response, CommandArgs } from './response-processor'
 import { Checkpoint } from '../checkpoints-command/types'
@@ -103,8 +103,8 @@ export const apply_chat_response_command = (params: {
         if (choice == 'Switch') {
           placeholder_created_at_for_update = new_item.created_at
           response_preview_promise_resolve({ accepted_files: [] })
-          if (ongoing_review_cleanup_promise) {
-            await ongoing_review_cleanup_promise
+          if (ongoing_preview_cleanup_promise) {
+            await ongoing_preview_cleanup_promise
           }
           await new Promise((r) => setTimeout(r, 500)) // Wait for all fileystem operation to finish
         } else {
@@ -145,14 +145,14 @@ export const apply_chat_response_command = (params: {
           args?.raw_instructions
         )
 
-        const review_data = await process_chat_response(
+        const preview_data = await process_chat_response(
           args,
           chat_response,
           params.context,
           params.panel_provider
         )
 
-        if (review_data) {
+        if (preview_data) {
           let created_at_for_preview = args?.created_at
           if (!args?.files_with_content) {
             let total_lines_added = 0
@@ -166,7 +166,7 @@ export const apply_chat_response_command = (params: {
             const default_workspace =
               vscode.workspace.workspaceFolders![0].uri.fsPath
 
-            for (const state of review_data.original_states) {
+            for (const state of preview_data.original_states) {
               let workspace_root = default_workspace
               if (
                 state.workspace_name &&
@@ -271,7 +271,7 @@ export const apply_chat_response_command = (params: {
               } else {
                 created_at_for_preview = Date.now()
                 const new_item: ResponseHistoryItem = {
-                  response: review_data.chat_response,
+                  response: preview_data.chat_response,
                   raw_instructions: args?.raw_instructions,
                   created_at: created_at_for_preview,
                   lines_added: total_lines_added,
@@ -293,8 +293,8 @@ export const apply_chat_response_command = (params: {
             ...params.panel_provider.response_history
           ]
           const changes_accepted = await preview_handler({
-            original_states: review_data.original_states,
-            chat_response: review_data.chat_response,
+            original_states: preview_data.original_states,
+            chat_response: preview_data.chat_response,
             panel_provider: params.panel_provider,
             context: params.context,
             original_editor_state: args?.original_editor_state,

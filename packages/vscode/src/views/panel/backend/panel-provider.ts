@@ -605,7 +605,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_show_diff(message)
           } else if (message.command == 'FOCUS_ON_FILE_IN_PREVIEW') {
             handle_focus_on_file_in_preview(message)
-          } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
+          } else if (message.command == 'TOGGLE_FILE_IN_PREVIEW') {
             await handle_toggle_file_in_preview(message)
           } else if (message.command == 'DISCARD_USER_CHANGES_IN_PREVIEW') {
             await handle_discard_user_changes_in_preview(message)

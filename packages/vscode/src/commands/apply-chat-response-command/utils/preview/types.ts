@@ -1,24 +1,24 @@
 import { FileInPreview } from '@shared/types/file-in-preview'
 import * as vscode from 'vscode'
 
-export type CodeReviewDecision =
+export type PreviewDecision =
   | { jump_to: { file_path: string; workspace_name?: string } }
   | { accepted_files: FileInPreview[]; created_at?: number }
 
-export type CodeReviewResult = {
-  decision: CodeReviewDecision
+export type PreviewResult = {
+  decision: PreviewDecision
   new_content: string
   temp_file_path: string
   active_file_path?: string
   active_position?: vscode.Position
 }
 
-export type ReviewableFile = FileInPreview & {
+export type PreviewableFile = FileInPreview & {
   content: string
 }
 
 export type PreparedFile = {
-  reviewable_file: ReviewableFile
+  previewable_file: PreviewableFile
   sanitized_path: string
   original_content: string
   temp_file_path: string

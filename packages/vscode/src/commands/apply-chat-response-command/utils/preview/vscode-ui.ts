@@ -1,12 +1,12 @@
 import * as vscode from 'vscode'
 import * as path from 'path'
-import { CodeReviewDecision, CodeReviewResult, PreparedFile } from './types'
+import { PreviewDecision, PreviewResult, PreparedFile } from './types'
 
 export let response_preview_promise_resolve:
-  | ((decision: CodeReviewDecision) => void)
+  | ((decision: PreviewDecision) => void)
   | undefined
 
-export const close_review_diff_editors = async (
+export const close_preview_diff_editors = async (
   prepared_files: PreparedFile[]
 ): Promise<void> => {
   const temp_file_paths = new Set(prepared_files.map((f) => f.temp_file_path))
@@ -28,13 +28,13 @@ export const close_review_diff_editors = async (
 
 export const show_diff_with_actions = async (
   prepared_file: PreparedFile
-): Promise<CodeReviewResult> => {
+): Promise<PreviewResult> => {
   const left_doc_uri = vscode.Uri.file(prepared_file.temp_file_path)
   const right_doc_uri = vscode.Uri.file(prepared_file.sanitized_path)
 
-  const title = path.basename(prepared_file.reviewable_file.file_path)
+  const title = path.basename(prepared_file.previewable_file.file_path)
 
-  if (prepared_file.reviewable_file.file_state !== 'deleted') {
+  if (prepared_file.previewable_file.file_state !== 'deleted') {
     await vscode.commands.executeCommand(
       'vscode.diff',
       left_doc_uri,
@@ -46,7 +46,7 @@ export const show_diff_with_actions = async (
     )
   }
 
-  return new Promise<CodeReviewResult>((resolve) => {
+  return new Promise<PreviewResult>((resolve) => {
     response_preview_promise_resolve = async (decision) => {
       let final_content = ''
       try {

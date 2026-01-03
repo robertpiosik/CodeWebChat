@@ -190,7 +190,7 @@ export const use_panel = (vscode: any) => {
         if (message.created_at) {
           set_selected_history_item_created_at(message.created_at)
         }
-      } else if (message.command == 'UPDATE_FILE_IN_REVIEW') {
+      } else if (message.command == 'UPDATE_FILE_IN_PREVIEW') {
         set_items_to_review((current_items) => {
           const items = current_items ?? []
           const existing_file_index = items.findIndex(

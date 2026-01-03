@@ -6,7 +6,7 @@ import * as os from 'os'
 import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { create_safe_path } from '@/utils/path-sanitizer'
 import { get_diff_stats } from './diff-utils'
-import { PreparedFile, ReviewableFile } from './types'
+import { PreparedFile, PreviewableFile } from './types'
 
 export const prepare_files_from_original_states = async (params: {
   original_states: OriginalFileState[]
@@ -70,7 +70,7 @@ export const prepare_files_from_original_states = async (params: {
         current_content == '' &&
         state.content != '')
 
-    const reviewable_file: ReviewableFile = {
+    const previewable_file: PreviewableFile = {
       type: 'file',
       file_path: state.file_path,
       content: current_content,
@@ -88,7 +88,7 @@ export const prepare_files_from_original_states = async (params: {
     }
 
     prepared_files.push({
-      reviewable_file,
+      previewable_file,
       sanitized_path: sanitized_file_path,
       original_content: original_content_for_diff,
       temp_file_path,
@@ -121,7 +121,7 @@ export const prepare_files_from_original_states = async (params: {
         new_content: restored_current_content
       })
 
-      const restored_reviewable_file: ReviewableFile = {
+      const restored_previewable_file: PreviewableFile = {
         type: 'file',
         file_path: state.file_path_to_restore,
         content: restored_current_content,
@@ -134,7 +134,7 @@ export const prepare_files_from_original_states = async (params: {
       }
 
       prepared_files.push({
-        reviewable_file: restored_reviewable_file,
+        previewable_file: restored_previewable_file,
         sanitized_path: restored_sanitized_file_path,
         original_content: state.content,
         temp_file_path: restored_temp_file_path,

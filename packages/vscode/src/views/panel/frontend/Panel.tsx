@@ -40,8 +40,8 @@ export const Panel = () => {
     version,
     updating_preset,
     set_updating_preset,
-    items_to_review,
-    set_items_to_review,
+    items_to_review: items_to_preview,
+    set_items_to_review: set_items_to_preview,
     raw_instructions,
     progress_state,
     set_progress_state,
@@ -205,7 +205,8 @@ export const Panel = () => {
     apply_button_enabling_trigger_count
   }
 
-  const are_keyboard_shortcuts_disabled = !!updating_preset || !!items_to_review
+  const are_keyboard_shortcuts_disabled =
+    !!updating_preset || !!items_to_preview
 
   return (
     <LayoutContext.Provider value={layout_context_value}>
@@ -438,7 +439,7 @@ export const Panel = () => {
           </div>
         )}
 
-        {items_to_review && (
+        {items_to_preview && (
           <div className={styles.slot}>
             <UiPage
               title="Response Preview"
@@ -469,7 +470,7 @@ export const Panel = () => {
                     })
                   }}
                   on_accept={() => {
-                    const accepted_files = items_to_review.filter(
+                    const accepted_files = items_to_preview.filter(
                       (f) => f.type === 'file' && f.is_checked
                     ) as FileInPreview[]
                     set_response_history([])
@@ -481,7 +482,7 @@ export const Panel = () => {
                     })
                   }}
                   is_accept_disabled={
-                    items_to_review.filter(
+                    items_to_preview.filter(
                       (f) => f.type == 'file' && f.is_checked
                     ).length == 0
                   }
@@ -489,7 +490,7 @@ export const Panel = () => {
               }
             >
               <UiResponsePreview
-                items={items_to_review}
+                items={items_to_preview}
                 raw_instructions={raw_instructions}
                 has_multiple_workspaces={workspace_folder_count > 1}
                 on_focus_file={(file) => {
@@ -506,7 +507,7 @@ export const Panel = () => {
                   })
                 }}
                 on_toggle_file={(file) => {
-                  set_items_to_review((current_items) =>
+                  set_items_to_preview((current_items) =>
                     current_items?.map((f) =>
                       f.type == 'file' &&
                       f.file_path == file.file_path &&
@@ -516,7 +517,7 @@ export const Panel = () => {
                     )
                   )
                   post_message(vscode, {
-                    command: 'TOGGLE_FILE_IN_REVIEW',
+                    command: 'TOGGLE_FILE_IN_PREVIEW',
                     file_path: file.file_path,
                     workspace_name: file.workspace_name,
                     is_checked: file.is_checked

@@ -51,7 +51,7 @@ export const process_chat_response = async (
     const result = await handle_restore_preview(args.files_with_content)
     if (result.success && result.original_states) {
       const augmented_states = result.original_states.map((state) => {
-        const file_in_review = args?.files_with_content!.find(
+        const file_in_preview = args?.files_with_content!.find(
           (f) =>
             f.file_path === state.file_path &&
             f.workspace_name === state.workspace_name
@@ -59,8 +59,8 @@ export const process_chat_response = async (
         return {
           ...state,
           ai_content:
-            file_in_review?.proposed_content ?? file_in_review?.content,
-          is_checked: file_in_review?.is_checked
+            file_in_preview?.proposed_content ?? file_in_preview?.content,
+          is_checked: file_in_preview?.is_checked
         }
       })
       update_undo_button_state({
