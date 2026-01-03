@@ -19,6 +19,10 @@ export let toggle_file_review_state:
     }) => Promise<void>)
   | undefined
 
+export let discard_user_changes_in_preview:
+  | ((file: { file_path: string; workspace_name?: string }) => Promise<void>)
+  | undefined
+
 const recalculate_history_item_totals = (item: ResponseHistoryItem) => {
   if (!item.files) {
     item.lines_added = 0
@@ -635,6 +639,28 @@ export const setup_workspace_listeners = (
     }
   )
 
+  discard_user_changes_in_preview = async ({ file_path, workspace_name }) => {
+    const file_to_discard = prepared_files.find(
+      (f) =>
+        f.reviewable_file.file_path == file_path &&
+        f.reviewable_file.workspace_name == workspace_name
+    )
+
+    if (
+      !file_to_discard ||
+      file_to_discard.reviewable_file.proposed_content === undefined
+    ) {
+      return
+    }
+
+    const proposed = file_to_discard.reviewable_file.proposed_content
+
+    await vscode.workspace.fs.writeFile(
+      vscode.Uri.file(file_to_discard.sanitized_path),
+      Buffer.from(proposed, 'utf8')
+    )
+  }
+
   toggle_file_review_state = async ({
     file_path,
     workspace_name,
@@ -737,6 +763,7 @@ export const setup_workspace_listeners = (
     file_created_listener.dispose()
     file_renamed_listener.dispose()
     toggle_file_review_state = undefined
+    discard_user_changes_in_preview = undefined
   }
 
   return { dispose }

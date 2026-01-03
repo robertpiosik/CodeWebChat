@@ -83,6 +83,7 @@ export const prepare_files_from_original_states = async (params: {
       lines_added: diff_stats.lines_added,
       lines_removed: diff_stats.lines_removed,
       diff_application_method: state.diff_application_method,
+      proposed_content: state.ai_content ?? current_content,
       is_checked: state.is_checked ?? true
     }
 
@@ -128,6 +129,7 @@ export const prepare_files_from_original_states = async (params: {
         file_state: 'deleted',
         lines_added: restored_diff_stats.lines_added,
         lines_removed: restored_diff_stats.lines_removed,
+        proposed_content: restored_current_content,
         is_checked: state.is_checked ?? true
       }
 

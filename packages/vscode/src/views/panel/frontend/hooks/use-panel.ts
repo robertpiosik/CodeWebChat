@@ -354,6 +354,17 @@ export const use_panel = (vscode: any) => {
     })
   }
 
+  const handle_discard_user_changes_in_preview = (file: {
+    file_path: string
+    workspace_name?: string
+  }) => {
+    post_message(vscode, {
+      command: 'DISCARD_USER_CHANGES_IN_PREVIEW',
+      file_path: file.file_path,
+      workspace_name: file.workspace_name
+    })
+  }
+
   const handle_mode_change = (new_mode: Mode) => {
     if (mode == new_mode) return
 
@@ -472,6 +483,7 @@ export const use_panel = (vscode: any) => {
     handle_mode_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change,
-    handle_remove_response_history_item
+    handle_remove_response_history_item,
+    handle_discard_user_changes_in_preview
   }
 }

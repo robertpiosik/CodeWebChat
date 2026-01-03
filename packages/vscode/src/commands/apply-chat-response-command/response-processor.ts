@@ -58,7 +58,8 @@ export const process_chat_response = async (
         )
         return {
           ...state,
-          ai_content: file_in_review?.content,
+          ai_content:
+            file_in_review?.proposed_content ?? file_in_review?.content,
           is_checked: file_in_review?.is_checked
         }
       })

@@ -95,7 +95,8 @@ export const Panel = () => {
     handle_mode_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change,
-    handle_remove_response_history_item
+    handle_remove_response_history_item,
+    handle_discard_user_changes_in_preview
   } = use_panel(vscode)
 
   const [checkpoint_to_edit, set_checkpoint_to_edit] = useState<
@@ -521,6 +522,7 @@ export const Panel = () => {
                     is_checked: file.is_checked
                   })
                 }}
+                on_discard_user_changes={handle_discard_user_changes_in_preview}
                 on_intelligent_update={(file) => {
                   post_message(vscode, {
                     command: 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW',

@@ -8,6 +8,7 @@ export type FileInPreview = {
   lines_removed: number
   diff_application_method?: 'recount' | 'search_and_replace'
   content?: string
+  proposed_content?: string
 }
 
 export type TextContentInPreview = {

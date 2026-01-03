@@ -21,6 +21,10 @@ type Props = {
     workspace_name?: string
     is_checked: boolean
   }) => void
+  on_discard_user_changes?: (file: {
+    file_path: string
+    workspace_name?: string
+  }) => void
   raw_instructions?: string
 }
 
@@ -192,6 +196,21 @@ export const ResponsePreview: FC<Props> = (props) => {
                   </div>
                   <div className={styles.list__file__right}>
                     <div className={styles['list__file__actions']}>
+                      {file.content !== undefined &&
+                        file.proposed_content !== undefined &&
+                        file.content !== file.proposed_content && (
+                          <IconButton
+                            codicon_icon="discard"
+                            title="Discard user changes"
+                            on_click={(e) => {
+                              e.stopPropagation()
+                              props.on_discard_user_changes?.({
+                                file_path: file.file_path,
+                                workspace_name: file.workspace_name
+                              })
+                            }}
+                          />
+                        )}
                       {file.file_state != 'new' &&
                         file.file_state != 'deleted' && (
                           <IconButton

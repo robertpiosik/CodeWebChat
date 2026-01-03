@@ -272,6 +272,12 @@ export interface ToggleFileInReviewMessage extends BaseMessage {
   is_checked: boolean
 }
 
+export interface DiscardUserChangesInPreviewMessage extends BaseMessage {
+  command: 'DISCARD_USER_CHANGES_IN_PREVIEW'
+  file_path: string
+  workspace_name?: string
+}
+
 export interface FocusOnFileInPreviewMessage extends BaseMessage {
   command: 'FOCUS_ON_FILE_IN_PREVIEW'
   file_path: string
@@ -444,6 +450,7 @@ export type FrontendMessage =
   | RequestCurrentlyOpenFileTextMessage
   | ResponsePreviewMessage
   | ToggleFileInReviewMessage
+  | DiscardUserChangesInPreviewMessage
   | FocusOnFileInPreviewMessage
   | GoToFileMessage
   | ShowDiffMessage

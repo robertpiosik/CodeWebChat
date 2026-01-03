@@ -58,6 +58,7 @@ import {
   handle_go_to_file,
   handle_show_diff,
   handle_toggle_file_in_preview,
+  handle_discard_user_changes_in_preview,
   handle_intelligent_update_file_in_preview,
   handle_response_preview,
   handle_commit_changes,
@@ -606,6 +607,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             handle_focus_on_file_in_preview(message)
           } else if (message.command == 'TOGGLE_FILE_IN_REVIEW') {
             await handle_toggle_file_in_preview(message)
+          } else if (message.command == 'DISCARD_USER_CHANGES_IN_PREVIEW') {
+            await handle_discard_user_changes_in_preview(message)
           } else if (message.command == 'INTELLIGENT_UPDATE_FILE_IN_PREVIEW') {
             await handle_intelligent_update_file_in_preview(this, message)
           } else if (message.command == 'RESPONSE_PREVIEW') {
