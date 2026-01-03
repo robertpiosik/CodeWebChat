@@ -91,7 +91,15 @@ export const ConfigurationsList: React.FC<ConfigurationsList.Props> = (
             <ReactSortable
               list={props.configurations}
               setList={(new_list) => {
-                props.on_reorder(new_list)
+                const has_order_changed =
+                  new_list.length != props.configurations.length ||
+                  new_list.some(
+                    (item, index) => item.id != props.configurations[index].id
+                  )
+
+                if (has_order_changed) {
+                  props.on_reorder(new_list)
+                }
               }}
               tag="div"
               handle={`.${styles['drag-handle']}`}

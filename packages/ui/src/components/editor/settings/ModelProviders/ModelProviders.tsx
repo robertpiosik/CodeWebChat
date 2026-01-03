@@ -79,7 +79,17 @@ export const ModelProviders: React.FC<ModelProviders.Props> = (props) => {
           <ReactSortable
             list={with_ids(props.providers)}
             setList={(new_list) => {
-              props.on_reorder(new_list.map(({ id, ...provider }) => provider))
+              const has_order_changed =
+                new_list.length != props.providers.length ||
+                new_list.some(
+                  (item, index) => item.id != props.providers[index].name
+                )
+
+              if (has_order_changed) {
+                props.on_reorder(
+                  new_list.map(({ id, ...provider }) => provider)
+                )
+              }
             }}
             tag="div"
             handle={`.${styles['drag-handle']}`}
