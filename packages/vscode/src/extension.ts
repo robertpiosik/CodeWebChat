@@ -5,8 +5,7 @@ import { WebSocketManager } from './services/websocket-manager'
 import { ApiManager } from './services/api-manager'
 import {
   migrate_preset_is_default_to_is_selected,
-  migrate_api_providers_to_model_providers,
-  migrate_state_to_settings
+  migrate_api_providers_to_model_providers
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -51,8 +50,6 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_preset_is_default_to_is_selected(context)
     // 16 September 2025
     await migrate_api_providers_to_model_providers(context)
-    // 3 October 2025
-    await migrate_state_to_settings(context)
   }
 
   await migrations()

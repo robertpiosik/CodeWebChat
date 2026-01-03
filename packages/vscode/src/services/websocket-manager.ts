@@ -398,7 +398,7 @@ export class WebSocketManager {
       gemini_user_number !== undefined &&
       gemini_user_number !== null
     ) {
-      url = `https://gemini.google.com/u/${gemini_user_number}/app`
+      url = `https://gemini.google.com/u/${gemini_user_number}`
     } else if (chatbot.supports_url_override && params.preset.new_url) {
       try {
         const original_domain = new URL(chatbot.url).hostname

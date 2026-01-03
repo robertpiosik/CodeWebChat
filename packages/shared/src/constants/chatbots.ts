@@ -99,6 +99,7 @@ export const CHATBOTS = {
     supported_options: { 'temporary-chat': 'Temporary chat' },
     supports_url_override: true,
     url_override_label: 'Gem URL',
+    url_override_disabled_options: ['temporary-chat'],
     models: {
       fast: { label: 'Fast' },
       thinking: { label: 'Thinking' },

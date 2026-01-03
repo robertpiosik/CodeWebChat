@@ -809,6 +809,15 @@
               "port": {
                 "type": "number"
               },
+              "newUrl": {
+                "type": "string"
+              },
+              "thinkingBudget": {
+                "type": "number"
+              },
+              "reasoningEffort": {
+                "type": "string"
+              },
               "isSelected": {
                 "type": "boolean"
               },
@@ -972,6 +981,15 @@
               "port": {
                 "type": "number"
               },
+              "newUrl": {
+                "type": "string"
+              },
+              "thinkingBudget": {
+                "type": "number"
+              },
+              "reasoningEffort": {
+                "type": "string"
+              },
               "isSelected": {
                 "type": "boolean"
               },
@@ -1106,6 +1124,15 @@
               },
               "port": {
                 "type": "number"
+              },
+              "newUrl": {
+                "type": "string"
+              },
+              "thinkingBudget": {
+                "type": "number"
+              },
+              "reasoningEffort": {
+                "type": "string"
               },
               "isSelected": {
                 "type": "boolean"
@@ -1269,6 +1296,15 @@
               },
               "port": {
                 "type": "number"
+              },
+              "newUrl": {
+                "type": "string"
+              },
+              "thinkingBudget": {
+                "type": "number"
+              },
+              "reasoningEffort": {
+                "type": "string"
               },
               "isSelected": {
                 "type": "boolean"
