@@ -296,7 +296,8 @@ export const use_panel = (vscode: any) => {
       { command: 'REQUEST_GIT_STATE' },
       { command: 'GET_COLLAPSED_STATES' },
       { command: 'GET_CHECKPOINTS' },
-      { command: 'REQUEST_CURRENTLY_OPEN_FILE_TEXT' }
+      { command: 'REQUEST_CURRENTLY_OPEN_FILE_TEXT' },
+      { command: 'REQUEST_CAN_UNDO' }
     ]
     initial_messages.forEach((message) => post_message(vscode, message))
 

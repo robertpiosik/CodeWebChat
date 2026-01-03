@@ -397,6 +397,10 @@ export interface ClearAllCheckpointsMessage extends BaseMessage {
   command: 'CLEAR_ALL_CHECKPOINTS'
 }
 
+export interface RequestCanUndoMessage extends BaseMessage {
+  command: 'REQUEST_CAN_UNDO'
+}
+
 export interface PreviewSwitchChoiceMessage extends BaseMessage {
   command: 'PREVIEW_SWITCH_CHOICE'
   choice?: 'Switch'
@@ -475,6 +479,7 @@ export type FrontendMessage =
   | UpdateCheckpointDescriptionMessage
   | DeleteCheckpointMessage
   | ClearAllCheckpointsMessage
+  | RequestCanUndoMessage
   | PreviewSwitchChoiceMessage
 
 // === FROM BACKEND TO FRONTEND ===

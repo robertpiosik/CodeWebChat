@@ -70,7 +70,8 @@ import {
   handle_manage_configurations,
   handle_save_component_collapsed_state,
   handle_undo,
-  handle_delete_checkpoint
+  handle_delete_checkpoint,
+  handle_request_can_undo
 } from './message-handlers'
 import {
   API_EDIT_FORMAT_STATE_KEY,
@@ -81,7 +82,6 @@ import {
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
   get_configurations_collapsed_state_key,
-  LAST_APPLIED_CHANGES_STATE_KEY,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
   get_presets_collapsed_state_key,
@@ -92,7 +92,6 @@ import {
   config_preset_to_ui_format,
   ConfigPresetFormat
 } from '@/views/panel/backend/utils/preset-format-converters'
-import { OriginalFileState } from '@/commands/apply-chat-response-command/types/original-file-state'
 import { CHATBOTS } from '@shared/constants/chatbots'
 import { MODE, Mode } from '../types/main-view-mode'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -648,6 +647,8 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             if (this.preview_switch_choice_resolver) {
               this.preview_switch_choice_resolver(message.choice)
             }
+          } else if (message.command == 'REQUEST_CAN_UNDO') {
+            handle_request_can_undo(this)
           }
         } catch (error: any) {
           Logger.error({
@@ -661,15 +662,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
         }
       }
     )
-
-    this.send_presets_to_webview(webview_view.webview)
-    // We need to wait until the webview fully initialized
-    setTimeout(() => {
-      this.send_message({
-        command: 'CAN_UNDO_CHANGED',
-        can_undo: this._can_undo()
-      })
-    }, 1000)
   }
 
   public calculate_token_count() {
@@ -905,13 +897,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
       command: 'CAN_UNDO_CHANGED',
       can_undo
     })
-  }
-
-  private _can_undo(): boolean {
-    const original_states = this.context.workspaceState.get<
-      OriginalFileState[]
-    >(LAST_APPLIED_CHANGES_STATE_KEY)
-    return !!original_states && original_states.length > 0
   }
 
   private _get_html_for_webview(webview: vscode.Webview) {
