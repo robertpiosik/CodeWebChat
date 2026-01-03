@@ -73,12 +73,6 @@ export const EditPresetForm: React.FC<Props> = (props) => {
   )
 
   useEffect(() => {
-    if (!model && Object.keys(models).length > 0) {
-      set_model(Object.keys(models)[0])
-    }
-  }, [model, models])
-
-  useEffect(() => {
     if (model_info) {
       const disabled = model_info.disabled_options || []
       set_options((prev) => prev.filter((o) => !disabled.includes(o)))
@@ -255,15 +249,18 @@ export const EditPresetForm: React.FC<Props> = (props) => {
             </Field>
           )}
 
-          {Object.keys(models).length > 0 && model && (
+          {Object.keys(models).length > 0 && (
             <Field label="Model" html_for="model">
               <Dropdown
-                options={Object.entries(models).map(([value, model_data]) => ({
-                  value,
-                  label: (model_data as any).label
-                }))}
-                value={model}
-                onChange={set_model}
+                options={[
+                  { value: '', label: '—' },
+                  ...Object.entries(models).map(([value, model_data]) => ({
+                    value,
+                    label: (model_data as any).label
+                  }))
+                ]}
+                value={model || ''}
+                onChange={(value) => set_model(value || undefined)}
               />
             </Field>
           )}
