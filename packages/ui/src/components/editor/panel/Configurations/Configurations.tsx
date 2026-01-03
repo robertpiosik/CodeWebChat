@@ -121,7 +121,15 @@ export const Configurations: React.FC<Configurations.Props> = (props) => {
               list={props.configurations}
               setList={(new_state) => {
                 if (props.on_reorder) {
-                  props.on_reorder(new_state)
+                  const has_order_changed =
+                    new_state.length != props.configurations.length ||
+                    new_state.some(
+                      (item, index) => item.id != props.configurations[index].id
+                    )
+
+                  if (has_order_changed) {
+                    props.on_reorder(new_state)
+                  }
                 }
               }}
               animation={150}

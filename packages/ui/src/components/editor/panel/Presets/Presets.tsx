@@ -249,6 +249,16 @@ export const Presets: React.FC<Presets.Props> = (props) => {
             <ReactSortable
               list={sortable_list}
               setList={(new_state) => {
+                const has_order_changed =
+                  new_state.length != sortable_list.length ||
+                  new_state.some(
+                    (item, index) => item.id != sortable_list[index].id
+                  )
+
+                if (!has_order_changed) {
+                  return
+                }
+
                 // Handle normal preset/group reordering
                 const new_visible_presets = new_state.map(
                   ({ id, ...preset }) => preset
