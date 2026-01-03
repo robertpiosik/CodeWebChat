@@ -400,6 +400,7 @@ export const undo_files = async (params: {
           }
         }
       } else {
+        let file_was_relocated = false
         if (state.file_path_to_restore) {
           if (safe_path && (await uri_exists(vscode.Uri.file(safe_path)))) {
             await relocate_file({
@@ -407,6 +408,7 @@ export const undo_files = async (params: {
               new_path: state.file_path_to_restore,
               workspace_root
             })
+            file_was_relocated = true
           }
           safe_path = create_safe_path(
             workspace_root,
@@ -449,9 +451,11 @@ export const undo_files = async (params: {
           }
         } else {
           try {
-            const editor = vscode.window.visibleTextEditors.find(
-              (e) => e.document.uri.fsPath == safe_path
-            )
+            const editor = !file_was_relocated
+              ? vscode.window.visibleTextEditors.find(
+                  (e) => e.document.uri.fsPath == safe_path
+                )
+              : undefined
             if (editor) {
               const document = editor.document
               await editor.edit((edit) => {
