@@ -84,7 +84,6 @@ export type DonationsProps = {
 
 export const Donations: React.FC<DonationsProps> = (props) => {
   const observer_target = useRef<HTMLDivElement>(null)
-  const [is_about_collapsed, set_about_collapsed] = useState(false)
   const [is_sponsors_collapsed, set_sponsors_collapsed] = useState(true)
   const [is_links_collapsed, set_links_collapsed] = useState(true)
   const [is_wallets_collapsed, set_wallets_collapsed] = useState(true)
@@ -148,17 +147,9 @@ export const Donations: React.FC<DonationsProps> = (props) => {
       <Scrollable>
         <div className={styles.container}>
           <div className={styles.about}>
-            <Fieldset
-              is_collapsed={is_about_collapsed}
-              label="About"
-              on_toggle_collapsed={() =>
-                set_about_collapsed(!is_about_collapsed)
-              }
-            >
-              Hi there! Your donation supports my mission to help build a
-              sustainable future for AI coding, providing free, prompt caching
-              friendly tooling for everyone. Thank you.
-            </Fieldset>
+            Hi there! Your donation supports my mission to help build a
+            sustainable future for AI coding, providing free, prompt caching
+            friendly tooling for everyone. Thank you.
           </div>
           <div className={styles.sponsors}>
             <Fieldset

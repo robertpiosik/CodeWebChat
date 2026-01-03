@@ -6,7 +6,11 @@
 }
 
 .about {
-  padding: 0 12px;
+  margin: 0 12px;
+  background-color: var(--vscode-list-hoverBackground);
+  padding: 6px 8px;
+  border-radius: 8px;
+  user-select: text;
 }
 
 .sponsors {
@@ -118,7 +122,7 @@
 
     &__note {
       background-color: var(--vscode-list-hoverBackground);
-      padding: 5px 8px;
+      padding: 6px 8px;
       border-radius: 8px;
     }
   }
