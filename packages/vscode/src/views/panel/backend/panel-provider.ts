@@ -524,7 +524,7 @@ export class PanelProvider implements vscode.WebviewViewProvider {
             await handle_replace_presets(this, message)
           } else if (message.command == 'UPDATE_PRESET') {
             await handle_update_preset(this, message, webview_view)
-          } else if (message.command === 'DELETE_PRESET_GROUP_OR_SEPARATOR') {
+          } else if (message.command == 'DELETE_PRESET_GROUP_OR_SEPARATOR') {
             await handle_delete_preset_group_or_separator(
               this,
               message,

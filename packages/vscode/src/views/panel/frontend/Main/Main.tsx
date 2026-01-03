@@ -241,6 +241,7 @@ export const Main: React.FC<Props> = (props) => {
           system_instructions: preset.system_instructions,
           options: preset.options,
           port: preset.port,
+          new_url: preset.new_url,
           is_selected: preset.is_selected || undefined,
           is_collapsed: preset.is_collapsed || undefined,
           is_pinned: preset.is_pinned || undefined
@@ -276,6 +277,7 @@ export const Main: React.FC<Props> = (props) => {
           system_instructions: preset.system_instructions,
           options: preset.options,
           port: preset.port,
+          new_url: preset.new_url,
           is_selected: preset.is_selected || undefined,
           is_collapsed: preset.is_collapsed || undefined,
           is_pinned: preset.is_pinned || undefined
@@ -311,6 +313,7 @@ export const Main: React.FC<Props> = (props) => {
           system_instructions: preset.system_instructions,
           options: preset.options,
           port: preset.port,
+          new_url: preset.new_url,
           is_selected: preset.is_selected || undefined,
           is_collapsed: preset.is_collapsed || undefined,
           is_pinned: preset.is_pinned || undefined
@@ -369,6 +372,7 @@ export const Main: React.FC<Props> = (props) => {
         system_instructions: preset.system_instructions,
         options: preset.options,
         port: preset.port,
+        new_url: preset.new_url,
         is_selected: preset.is_selected,
         is_collapsed: preset.is_collapsed,
         is_pinned: preset.is_pinned
