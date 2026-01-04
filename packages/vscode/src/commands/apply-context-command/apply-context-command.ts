@@ -12,7 +12,8 @@ import { dictionary } from '@shared/constants/dictionary'
 import {
   handle_unstaged_files_source,
   handle_json_file_source,
-  handle_workspace_state_source
+  handle_workspace_state_source,
+  handle_commit_files_source
 } from './sources'
 import { load_all_contexts, get_contexts_file_path } from './helpers/saving'
 import { handle_quick_save } from './helpers/saving/handle-quick-save'
@@ -254,74 +255,111 @@ export const apply_context_command = (
             show_main_menu = true
           }
         } else if (main_selection.value == 'other') {
-          const other_quick_pick_options: (vscode.QuickPickItem & {
-            value?: 'clipboard' | 'unstaged'
-          })[] = [
-            {
-              label: 'Scan the clipboard for valid paths',
-              value: 'clipboard'
-            },
-            {
-              label: 'Select unstaged files',
-              value: 'unstaged'
+          let show_other_menu = true
+          let last_other_selection_value: string | undefined
+
+          while (show_other_menu) {
+            show_other_menu = false
+
+            const other_quick_pick_options: (vscode.QuickPickItem & {
+              value?: 'clipboard' | 'unstaged' | 'commit_files'
+            })[] = [
+              {
+                label: 'Scan the clipboard for valid paths',
+                value: 'clipboard'
+              },
+              {
+                label: 'Unstaged files',
+                value: 'unstaged'
+              },
+              {
+                label: 'Files of a commit...',
+                value: 'commit_files'
+              }
+            ]
+
+            const other_quick_pick = vscode.window.createQuickPick<
+              vscode.QuickPickItem & {
+                value?: 'clipboard' | 'unstaged' | 'commit_files'
+              }
+            >()
+            other_quick_pick.title = 'Context Sources'
+            other_quick_pick.items = other_quick_pick_options
+            other_quick_pick.placeholder = 'Select other option'
+            other_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+
+            if (last_other_selection_value) {
+              const active_item = other_quick_pick_options.find(
+                (opt) => opt.value === last_other_selection_value
+              )
+              if (active_item) {
+                other_quick_pick.activeItems = [active_item]
+              }
             }
-          ]
 
-          const other_quick_pick = vscode.window.createQuickPick<
-            vscode.QuickPickItem & { value?: 'clipboard' | 'unstaged' }
-          >()
-          other_quick_pick.title = 'Context Sources'
-          other_quick_pick.items = other_quick_pick_options
-          other_quick_pick.placeholder = 'Select other option'
-          other_quick_pick.buttons = [vscode.QuickInputButtons.Back]
+            const other_selection = await new Promise<
+              | 'back'
+              | (vscode.QuickPickItem & {
+                  value?: 'clipboard' | 'unstaged' | 'commit_files'
+                })
+              | undefined
+            >((resolve) => {
+              let is_accepted = false
+              let did_trigger_back = false
+              const disposables: vscode.Disposable[] = []
 
-          const other_selection = await new Promise<
-            | 'back'
-            | (vscode.QuickPickItem & { value?: 'clipboard' | 'unstaged' })
-            | undefined
-          >((resolve) => {
-            let is_accepted = false
-            let did_trigger_back = false
-            const disposables: vscode.Disposable[] = []
-
-            disposables.push(
-              other_quick_pick.onDidTriggerButton((button) => {
-                if (button === vscode.QuickInputButtons.Back) {
-                  did_trigger_back = true
+              disposables.push(
+                other_quick_pick.onDidTriggerButton((button) => {
+                  if (button === vscode.QuickInputButtons.Back) {
+                    did_trigger_back = true
+                    other_quick_pick.hide()
+                    resolve('back')
+                  }
+                }),
+                other_quick_pick.onDidAccept(() => {
+                  is_accepted = true
+                  resolve(other_quick_pick.selectedItems[0])
                   other_quick_pick.hide()
-                  resolve('back')
-                }
-              }),
-              other_quick_pick.onDidAccept(() => {
-                is_accepted = true
-                resolve(other_quick_pick.selectedItems[0])
-                other_quick_pick.hide()
-              }),
-              other_quick_pick.onDidHide(() => {
-                if (!is_accepted && !did_trigger_back) {
-                  resolve('back')
-                }
-                disposables.forEach((d) => d.dispose())
-                other_quick_pick.dispose()
-              })
-            )
-            other_quick_pick.show()
-          })
+                }),
+                other_quick_pick.onDidHide(() => {
+                  if (!is_accepted && !did_trigger_back) {
+                    resolve('back')
+                  }
+                  disposables.forEach((d) => d.dispose())
+                  other_quick_pick.dispose()
+                })
+              )
+              other_quick_pick.show()
+            })
 
-          if (!other_selection || other_selection == 'back') {
-            show_main_menu = true
-            continue
-          }
+            if (!other_selection || other_selection == 'back') {
+              show_main_menu = true
+              break
+            }
 
-          if (other_selection.value == 'clipboard') {
-            await vscode.commands.executeCommand(
-              'codeWebChat.findPathsInClipboard'
-            )
-            return
-          }
-          if (other_selection.value == 'unstaged') {
-            await handle_unstaged_files_source(workspace_provider)
-            return
+            last_other_selection_value = other_selection.value
+
+            if (other_selection.value == 'clipboard') {
+              await vscode.commands.executeCommand(
+                'codeWebChat.findPathsInClipboard'
+              )
+              return
+            }
+            if (other_selection.value == 'unstaged') {
+              await handle_unstaged_files_source(workspace_provider)
+              return
+            }
+            if (other_selection.value == 'commit_files') {
+              const result = await handle_commit_files_source(
+                workspace_provider,
+                extension_context
+              )
+              if (result === 'back') {
+                show_other_menu = true
+                continue
+              }
+              return
+            }
           }
         } else if (main_selection.value.startsWith('quick_save_')) {
           const slot = parseInt(main_selection.value.split('_')[2])
