@@ -37,7 +37,7 @@ export const handle_quick_save = async (
   const checked_files = workspace_provider.get_checked_files()
   if (checked_files.length == 0) {
     vscode.window.showWarningMessage(
-      `Quick Save Slot ${slot} is empty. Select some files first to save them here.`
+      `Quick save slot ${slot} is empty. Select some files first to save them here.`
     )
     return
   }
@@ -54,7 +54,7 @@ export const handle_quick_save = async (
   }
 
   const new_context: SavedContext = {
-    name: `Quick Save Slot ${slot}`,
+    name: `Quick save slot ${slot}`,
     paths: all_prefixed_paths
   }
 

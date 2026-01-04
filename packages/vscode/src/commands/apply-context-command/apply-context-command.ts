@@ -101,7 +101,7 @@ export const apply_context_command = (
         for (let i = 1; i <= 3; i++) {
           const is_saved = !!quick_saves[i]
           main_quick_pick_options.push({
-            label: `Quick Save Slot ${i}`,
+            label: `Quick save slot ${i}`,
             description: is_saved
               ? `${quick_saves[i].paths.length} paths`
               : 'empty',
