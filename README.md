@@ -2,7 +2,7 @@
 
 <a href="https://marketplace.visualstudio.com/items?itemName=robertpiosik.gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-VS_Code_Marketplace-blue" alt="Get from Visual Studio Code Marketplace" /></a> <a href="https://open-vsx.org/extension/robertpiosik/gemini-coder" target="_blank"><img src="https://img.shields.io/badge/Install-Open_VSX_Registry-a60ee5" alt="Get from Open VSX Registry" /></a> <a href="https://github.com/robertpiosik/CodeWebChat/blob/dev/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-GPL--3.0-green.svg" alt="GPL-3.0 license" /></a>
 
-CWC makes it easy to construct coding prompts for chatbots and APIs. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) with its signature prompt autofill feature, and never copy and paste again!
+CWC makes it easy to construct coding prompts for chatbots/APIs, and apply responses. Start using [projects](https://help.openai.com/en/articles/10169521-projects-in-chatgpt) (also called [gems](https://gemini.google/pl/overview/gems) or [spaces](https://docs.github.com/en/copilot/concepts/context/spaces)) with its signature prompt autofill feature, and never copy and paste again!
 
 Works with VS Code family of editors (Cursor, Antigravity, VSCodium, etc.).
 
@@ -34,7 +34,7 @@ With files sorted by update recency, CWC helps utilize **[prompt caching](https:
 
 ```
 <system>
-Whenever showing a new, updated, renamed or deleted file, provide a brief explanation...
+Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation...
 </system>
 <files>
   <file path="src/calculator.ts">
@@ -43,7 +43,7 @@ Whenever showing a new, updated, renamed or deleted file, provide a brief explan
   ...
 </files>
 <system>
-Whenever showing a new, updated, renamed or deleted file, provide a brief explanation...
+Whenever showing a new, updated, renamed, or deleted file, provide a brief explanation...
 </system>
 Implement a subtract function.
 ```
