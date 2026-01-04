@@ -29,8 +29,6 @@ export const LAST_REFACTOR_INSTRUCTION_SOURCE_STATE_KEY =
   'last-refactor-instruction-source'
 export const LAST_REFACTOR_INSTRUCTION_STATE_KEY = 'last-refactor-instruction'
 
-export const TOKEN_COUNTS_CACHE = 'token-count-cache'
-
 export const CHECKPOINTS_STATE_KEY = 'checkpoints'
 export const TEMPORARY_CHECKPOINT_STATE_KEY = 'temporary-checkpoint'
 export const CHECKPOINT_OPERATION_IN_PROGRESS_STATE_KEY =

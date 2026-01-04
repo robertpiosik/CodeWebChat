@@ -1,7 +1,6 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
 import * as path from 'path'
-import { TOKEN_COUNTS_CACHE } from '@/constants/state-keys'
 import { dictionary } from '@shared/constants/dictionary'
 import { Logger } from '@shared/utils/logger'
 import type { IWorkspaceProvider } from '../workspace-provider'
@@ -20,6 +19,8 @@ type TokenCountsCache = {
 
 const SHOW_COUNTING_NOTIFICATION_DELAY_MS = 3000
 
+const TOKEN_CACHE_FILE_NAME = 'token-count-cache.json'
+
 export class TokenCalculator implements vscode.Disposable {
   private _file_token_counts: Map<string, number> = new Map()
   private _directory_token_counts: Map<string, number> = new Map()
@@ -35,9 +36,15 @@ export class TokenCalculator implements vscode.Disposable {
     this._load_token_cache()
   }
 
-  private _load_token_cache(): void {
-    this._token_cache =
-      this._context.globalState.get<TokenCountsCache>(TOKEN_COUNTS_CACHE) ?? {}
+  private async _load_token_cache(): Promise<void> {
+    try {
+      const storage_path = this._context.globalStorageUri.fsPath
+      const cache_path = path.join(storage_path, TOKEN_CACHE_FILE_NAME)
+      const content = await fs.promises.readFile(cache_path, 'utf8')
+      this._token_cache = JSON.parse(content)
+    } catch (error) {
+      this._token_cache = {}
+    }
   }
 
   private _update_token_counts_cache(): void {
@@ -48,9 +55,19 @@ export class TokenCalculator implements vscode.Disposable {
     }
 
     this._token_cache_update_timeout = setTimeout(async () => {
-      const current_global_cache =
-        this._context.globalState.get<TokenCountsCache>(TOKEN_COUNTS_CACHE) ??
-        {}
+      const storage_path = this._context.globalStorageUri.fsPath
+      const cache_path = path.join(storage_path, TOKEN_CACHE_FILE_NAME)
+      let current_global_cache: TokenCountsCache = {}
+
+      try {
+        if (!fs.existsSync(storage_path)) {
+          await fs.promises.mkdir(storage_path, { recursive: true })
+        }
+        const content = await fs.promises.readFile(cache_path, 'utf8')
+        current_global_cache = JSON.parse(content)
+      } catch {
+        // Cache file might not exist yet or be corrupt
+      }
 
       for (const root of this._provider.getWorkspaceRoots()) {
         if (this._token_cache[root]) {
@@ -66,16 +83,24 @@ export class TokenCalculator implements vscode.Disposable {
         }
       }
 
-      await this._context.globalState.update(
-        TOKEN_COUNTS_CACHE,
-        current_global_cache
-      )
+      try {
+        await fs.promises.writeFile(
+          cache_path,
+          JSON.stringify(current_global_cache)
+        )
 
-      Logger.info({
-        function_name: '_update_token_counts_cache',
-        message: 'Token counts cache updated'
-      })
-      this._has_token_counts_cache_updated_once = true
+        Logger.info({
+          function_name: '_update_token_counts_cache',
+          message: 'Token counts cache updated'
+        })
+        this._has_token_counts_cache_updated_once = true
+      } catch (error) {
+        Logger.error({
+          function_name: '_update_token_counts_cache',
+          message: 'Error writing token cache',
+          data: error
+        })
+      }
     }, 10000)
   }
 
