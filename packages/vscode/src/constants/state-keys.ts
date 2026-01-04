@@ -1,5 +1,3 @@
-import { SavedContext } from '@/types/context'
-
 // Note: Use kebab-case for new keys
 export const LAST_APPLIED_CHANGES_STATE_KEY = 'last-applied-changes-state'
 export const LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY =
@@ -76,7 +74,6 @@ export type DuplicateWorkspaceContext = {
   workspace_root_folders: string[]
   open_editors?: { path: string; view_column?: number }[]
   ranges?: Record<string, string>
-  saved_contexts?: SavedContext[]
 }
 
 export type HistoryEntry = {
