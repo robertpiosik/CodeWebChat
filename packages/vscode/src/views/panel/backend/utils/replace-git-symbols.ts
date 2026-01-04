@@ -67,15 +67,15 @@ const build_changes_xml = (
           })
         }
       }
+      changes_content += `<![CDATA[\n${full_file_diff}\n]]>\n`
       if (file_content) {
-        changes_content += `<archive>\n<![CDATA[\n${file_content}\n]]>\n</archive>\n`
+        changes_content += `<![CDATA[\n${file_content}\n]]>\n`
       }
-      changes_content += `<changes>\n<![CDATA[\n${full_file_diff}\n]]>\n</changes>\n`
       changes_content += `</file>\n`
     }
   }
 
-  return changes_content
+  return changes_content ? `<changes>\n${changes_content}</changes>\n` : ''
 }
 
 export const replace_changes_symbol = async (params: {
