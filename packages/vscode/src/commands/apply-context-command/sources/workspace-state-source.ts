@@ -1,6 +1,5 @@
 import * as vscode from 'vscode'
 import { WorkspaceProvider } from '../../../context/providers/workspace/workspace-provider'
-import { SAVED_CONTEXTS_STATE_KEY } from '../../../constants/state-keys'
 import { SavedContext } from '@/types/context'
 import { Logger } from '@shared/utils/logger'
 import { dictionary } from '@shared/constants/dictionary'
@@ -10,7 +9,9 @@ import {
   group_files_by_workspace,
   condense_paths,
   add_workspace_prefix,
-  resolve_unique_context_name
+  resolve_unique_context_name,
+  load_contexts_for_workspace,
+  save_contexts_for_workspace
 } from '../helpers/saving'
 
 const LABEL_NEW_ENTRY = '$(add) New entry...'
@@ -23,8 +24,16 @@ export const handle_workspace_state_source = async (
   on_context_selected: () => void
 ): Promise<'back' | void> => {
   try {
-    let internal_contexts: SavedContext[] =
-      extension_context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, [])
+    const workspace_root = workspace_provider.getWorkspaceRoot()
+    if (!workspace_root) {
+      vscode.window.showErrorMessage(dictionary.error_message.NO_WORKSPACE_ROOT)
+      return
+    }
+
+    let internal_contexts: SavedContext[] = load_contexts_for_workspace(
+      extension_context,
+      workspace_root
+    )
 
     const edit_button = {
       iconPath: new vscode.ThemeIcon('edit'),
@@ -155,8 +164,9 @@ export const handle_workspace_state_source = async (
 
             const updated_contexts = [new_context, ...internal_contexts]
 
-            await extension_context.workspaceState.update(
-              SAVED_CONTEXTS_STATE_KEY,
+            save_contexts_for_workspace(
+              extension_context,
+              workspace_root,
               updated_contexts
             )
             internal_contexts = updated_contexts
@@ -258,8 +268,9 @@ export const handle_workspace_state_source = async (
                   c.name == item.context.name ? { ...c, name: trimmed_name } : c
                 )
 
-                await extension_context.workspaceState.update(
-                  SAVED_CONTEXTS_STATE_KEY,
+                save_contexts_for_workspace(
+                  extension_context,
+                  workspace_root,
                   updated_contexts
                 )
                 internal_contexts = updated_contexts
@@ -289,8 +300,9 @@ export const handle_workspace_state_source = async (
             const updated_contexts = internal_contexts.filter(
               (c) => c.name != deleted_context_name
             )
-            await extension_context.workspaceState.update(
-              SAVED_CONTEXTS_STATE_KEY,
+            save_contexts_for_workspace(
+              extension_context,
+              workspace_root,
               updated_contexts
             )
             internal_contexts = updated_contexts
@@ -316,8 +328,9 @@ export const handle_workspace_state_source = async (
 
             if (choice == 'Undo') {
               internal_contexts.splice(deleted_index, 0, deleted_context)
-              await extension_context.workspaceState.update(
-                SAVED_CONTEXTS_STATE_KEY,
+              save_contexts_for_workspace(
+                extension_context,
+                workspace_root,
                 internal_contexts
               )
               vscode.window.showInformationMessage(
@@ -372,16 +385,15 @@ export const handle_workspace_state_source = async (
       (c) => c.name !== context_to_apply.name
     )
     updated_contexts.unshift(context_to_apply)
-    await extension_context.workspaceState.update(
-      SAVED_CONTEXTS_STATE_KEY,
+    save_contexts_for_workspace(
+      extension_context,
+      workspace_root,
       updated_contexts
     )
 
-    const primary_workspace_root = workspace_provider.getWorkspaceRoot()!
-
     await apply_saved_context(
       context_to_apply,
-      primary_workspace_root,
+      workspace_root,
       workspace_provider,
       extension_context
     )

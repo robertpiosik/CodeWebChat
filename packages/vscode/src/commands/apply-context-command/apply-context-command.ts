@@ -3,7 +3,6 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { WorkspaceProvider } from '../../context/providers/workspace/workspace-provider'
 import {
-  SAVED_CONTEXTS_STATE_KEY,
   LAST_APPLY_CONTEXT_OPTION_STATE_KEY,
   QUICK_SAVES_STATE_KEY
 } from '../../constants/state-keys'
@@ -15,7 +14,11 @@ import {
   handle_workspace_state_source,
   handle_commit_files_source
 } from './sources'
-import { load_all_contexts, get_contexts_file_path } from './helpers/saving'
+import {
+  load_all_contexts,
+  get_contexts_file_path,
+  load_contexts_for_workspace
+} from './helpers/saving'
 import { handle_quick_save } from './helpers/saving/handle-quick-save'
 
 export const apply_context_command = (
@@ -49,8 +52,10 @@ export const apply_context_command = (
           return
         }
 
-        const internal_contexts: SavedContext[] =
-          extension_context.workspaceState.get(SAVED_CONTEXTS_STATE_KEY, [])
+        const internal_contexts: SavedContext[] = load_contexts_for_workspace(
+          extension_context,
+          workspace_root
+        )
 
         const file_contexts_map = await load_all_contexts()
         let file_contexts_count = 0

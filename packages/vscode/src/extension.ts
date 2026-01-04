@@ -6,7 +6,8 @@ import { ApiManager } from './services/api-manager'
 import {
   migrate_preset_is_default_to_is_selected,
   migrate_api_providers_to_model_providers,
-  migrate_token_count_cache
+  migrate_token_count_cache,
+  migrate_saved_contexts_to_global_storage
 } from './migrations'
 import {
   apply_chat_response_command,
@@ -53,6 +54,8 @@ export async function activate(context: vscode.ExtensionContext) {
     await migrate_api_providers_to_model_providers(context)
     // 4 January 2026
     await migrate_token_count_cache(context)
+    // 5 January 2026
+    await migrate_saved_contexts_to_global_storage(context)
   }
 
   await migrations()

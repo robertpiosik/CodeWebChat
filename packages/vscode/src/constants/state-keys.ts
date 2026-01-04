@@ -6,7 +6,6 @@ export const LAST_APPLIED_CHANGES_EDITOR_STATE_STATE_KEY =
   'last-applied-changes-editor-state'
 export const LAST_APPLIED_CLIPBOARD_CONTENT_STATE_KEY =
   'last-applied-clipboard-content'
-export const SAVED_CONTEXTS_STATE_KEY = 'savedContexts'
 export const QUICK_SAVES_STATE_KEY = 'quick-saves'
 export const LAST_CONTEXT_SAVE_LOCATION_STATE_KEY = 'lastSaveLocation'
 export const RANGES_STATE_KEY = 'ranges'
