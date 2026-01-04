@@ -140,24 +140,29 @@ export const Home: React.FC<Props> = (props) => {
                 </>
               }
             />
-            {!is_timeline_collapsed && (
-              <Timeline
-                items={props.checkpoints.map((c) => ({
-                  id: c.timestamp,
-                  label: c.title,
-                  timestamp: c.timestamp,
-                  description: c.description,
-                  is_starred: c.is_starred,
-                  can_edit: c.title == 'Created by user'
-                }))}
-                on_toggle_starred={(id) =>
-                  props.on_toggle_checkpoint_starred(id)
-                }
-                on_item_click={(id) => props.on_restore_checkpoint(id)}
-                on_edit={props.on_edit_checkpoint_description}
-                on_delete={props.on_delete_checkpoint}
-              />
-            )}
+            {!is_timeline_collapsed &&
+              (props.checkpoints.length > 0 ? (
+                <Timeline
+                  items={props.checkpoints.map((c) => ({
+                    id: c.timestamp,
+                    label: c.title,
+                    timestamp: c.timestamp,
+                    description: c.description,
+                    is_starred: c.is_starred,
+                    can_edit: c.title == 'Created by user'
+                  }))}
+                  on_toggle_starred={(id) =>
+                    props.on_toggle_checkpoint_starred(id)
+                  }
+                  on_item_click={(id) => props.on_restore_checkpoint(id)}
+                  on_edit={props.on_edit_checkpoint_description}
+                  on_delete={props.on_delete_checkpoint}
+                />
+              ) : (
+                <div className={styles.inner__empty}>
+                  No checkpoints created yet.
+                </div>
+              ))}
           </div>
 
           <div className={styles.bottom}>

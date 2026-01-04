@@ -107,6 +107,11 @@
     }
   }
 
+  &__empty {
+    padding-left: 34px;
+    color: var(--cwc-text-color-dimmed);
+  }
+
   &__buttons {
     display: flex;
     flex-direction: column;

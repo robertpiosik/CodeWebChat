@@ -148,8 +148,8 @@ export const Donations: React.FC<DonationsProps> = (props) => {
         <div className={styles.container}>
           <div className={styles.about}>
             Hi there! Your donation supports my mission to help build a
-            sustainable future for AI coding, providing free, prompt caching
-            friendly tooling for everyone. Thank you.
+            sustainable future for AI coding, providing free and open-source,
+            prompt caching friendly tooling for everyone. Thank you.
           </div>
           <div className={styles.sponsors}>
             <Fieldset
