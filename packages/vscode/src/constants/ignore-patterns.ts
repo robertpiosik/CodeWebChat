@@ -12,6 +12,7 @@ export const IGNORE_PATTERNS = [
   '**/*.webp',
   '**/*.tiff',
   '**/*.psd',
+  '**/*.icns',
   '**/*.avif',
   '**/*.mp4',
   '**/*.webm',
