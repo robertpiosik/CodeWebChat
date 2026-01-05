@@ -52,7 +52,7 @@ Once the response is ready, changes can be integrated in a fully revertible way.
 
 ## Enabling autofill
 
-Install the zero-setup Connector extension in your favorite browser:
+Install the zero-setup Connector extension in your favorite browser and never copy and paste again!
 
 - [Chrome Web Store](https://chromewebstore.google.com/detail/code-web-chat-connector/ljookipcanaglfaocjbgdicfbdhhjffp)
 - [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/code-web-chat-connector/)
@@ -88,7 +88,7 @@ Like all of Code Web Chat, the extension is [open-source](https://github.com/rob
 > [!IMPORTANT]
 > The _Apply response_ button placed under responses is not a means of automatic output extraction, it's an alias for the original _copy to clipboard_ button. Review the [content script](https://github.com/robertpiosik/CodeWebChat/blob/dev/packages/browser/src/content-scripts/send-prompt-content-script/send-prompt-content-script.ts) for implementation details.
 
-> [!IMPORTANT]
+> [!NOTE]
 > Use [port forwarding](https://code.visualstudio.com/docs/debugtest/port-forwarding) on port _55155_ when using remote machine via SSH.
 
 ## API Tools
