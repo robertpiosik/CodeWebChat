@@ -354,9 +354,9 @@ export interface GetCollapsedStatesMessage extends BaseMessage {
 
 export interface SaveComponentCollapsedStateMessage extends BaseMessage {
   command: 'SAVE_COMPONENT_COLLAPSED_STATE'
-  component: 'presets' | 'configurations'
+  component: 'presets' | 'configurations' | 'timeline'
   is_collapsed: boolean
-  mode: WebPromptType | ApiPromptType
+  mode?: WebPromptType | ApiPromptType
 }
 
 export interface GetCheckpointsMessage extends BaseMessage {
@@ -703,6 +703,7 @@ export interface CollapsedStatesMessage extends BaseMessage {
   command: 'COLLAPSED_STATES'
   presets_collapsed_by_web_mode: { [mode in WebPromptType]?: boolean }
   configurations_collapsed_by_api_mode: { [mode in ApiPromptType]?: boolean }
+  is_timeline_collapsed: boolean
 }
 
 export interface CheckpointsMessage extends BaseMessage {

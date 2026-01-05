@@ -14,14 +14,13 @@ export type Task = {
   id: string
   text: string
   is_checked: boolean
-  is_starred: boolean
   created_at: number
 }
 
 type Props = {
   tasks: Task[]
-  on_reorder?: (tasks: Task[]) => void
-  on_change?: (task: Task) => void
+  on_reorder: (tasks: Task[]) => void
+  on_change: (task: Task) => void
 }
 
 export const Tasks: React.FC<Props> = ({ tasks, on_reorder, on_change }) => {
@@ -29,11 +28,7 @@ export const Tasks: React.FC<Props> = ({ tasks, on_reorder, on_change }) => {
   const [editing_id, set_editing_id] = useState<string | null>(null)
 
   const handle_check_change = (task: Task, checked: boolean) => {
-    on_change?.({ ...task, is_checked: checked })
-  }
-
-  const handle_star_toggle = (task: Task) => {
-    on_change?.({ ...task, is_starred: !task.is_starred })
+    on_change({ ...task, is_checked: checked })
   }
 
   const render_item = (task: Task) => {
@@ -46,7 +41,7 @@ export const Tasks: React.FC<Props> = ({ tasks, on_reorder, on_change }) => {
             checked={task.is_checked}
             on_change={(checked) => handle_check_change(task, checked)}
           />
-          <div className={styles.item__drag_handle}>
+          <div className={styles['item__drag-handle']}>
             <span className="codicon codicon-gripper" />
           </div>
         </div>
@@ -56,20 +51,18 @@ export const Tasks: React.FC<Props> = ({ tasks, on_reorder, on_change }) => {
             <span
               className={cn(
                 'codicon',
-                task.is_starred ? 'codicon-star-full' : 'codicon-star-empty',
-                styles.item__star,
-                {
-                  [styles['item__star--active']]: task.is_starred
-                }
+                is_editing ? 'codicon-check' : 'codicon-edit',
+                styles.item__edit
               )}
-              onClick={() => handle_star_toggle(task)}
-              title={task.is_starred ? 'Unstar' : 'Star'}
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => set_editing_id(is_editing ? null : task.id)}
+              title={is_editing ? 'Save task' : 'Edit task'}
             />
           </div>
           {is_editing ? (
             <Textarea
               value={task.text}
-              on_change={(value) => on_change?.({ ...task, text: value })}
+              on_change={(value) => on_change({ ...task, text: value })}
               autofocus
               on_blur={() => set_editing_id(null)}
               on_key_down={(e) => {
@@ -85,7 +78,7 @@ export const Tasks: React.FC<Props> = ({ tasks, on_reorder, on_change }) => {
                 [styles['item__text--checked']]: task.is_checked,
                 [styles['item__text--placeholder']]: !task.text
               })}
-              onDoubleClick={() => set_editing_id(task.id)}
+              onClick={() => set_editing_id(task.id)}
             >
               {task.text || 'Double click to add text...'}
             </div>
@@ -95,19 +88,15 @@ export const Tasks: React.FC<Props> = ({ tasks, on_reorder, on_change }) => {
     )
   }
 
-  if (on_reorder) {
-    return (
-      <ReactSortable
-        list={tasks}
-        setList={on_reorder}
-        handle={`.${styles.item__drag_handle}`}
-        className={styles.tasks}
-        animation={150}
-      >
-        {tasks.map(render_item)}
-      </ReactSortable>
-    )
-  }
-
-  return <div className={styles.tasks}>{tasks.map(render_item)}</div>
+  return (
+    <ReactSortable
+      list={tasks}
+      setList={on_reorder}
+      handle={`.${styles['item__drag-handle']}`}
+      className={styles.tasks}
+      animation={150}
+    >
+      {tasks.map(render_item)}
+    </ReactSortable>
+  )
 }

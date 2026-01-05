@@ -10,21 +10,18 @@ const initialTasks: Task[] = [
     id: '1',
     text: 'Refactor the authentication middleware',
     is_checked: false,
-    is_starred: true,
     created_at: Date.now() - 1000 * 60 * 5 // 5 mins ago
   },
   {
     id: '2',
     text: 'Fix bug in user profile update',
     is_checked: true,
-    is_starred: false,
     created_at: Date.now() - 1000 * 60 * 60 * 2 // 2 hours ago
   },
   {
     id: '3',
     text: '',
     is_checked: false,
-    is_starred: false,
     created_at: Date.now() - 1000 * 60 * 60 * 24 // 1 day ago
   }
 ]
@@ -74,7 +71,7 @@ export const NoReorder = () => {
         padding: '20px'
       }}
     >
-      <Tasks tasks={tasks} on_change={handle_change} />
+      <Tasks tasks={tasks} on_change={handle_change} on_reorder={() => {}} />
     </div>
   )
 }

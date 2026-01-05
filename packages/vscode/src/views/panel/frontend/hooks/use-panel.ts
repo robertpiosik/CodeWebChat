@@ -109,6 +109,7 @@ export const use_panel = (vscode: any) => {
   const [context_file_paths, set_context_file_paths] = useState<string[]>([])
   const [presets_collapsed_by_web_mode, set_presets_collapsed_by_web_mode] =
     useState<{ [mode in WebPromptType]?: boolean }>({})
+  const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
   const [
     is_preview_ongoing_modal_visible,
     set_is_preview_ongoing_modal_visible
@@ -173,6 +174,7 @@ export const use_panel = (vscode: any) => {
         set_configurations_collapsed_by_api_mode(
           message.configurations_collapsed_by_api_mode
         )
+        set_is_timeline_collapsed(message.is_timeline_collapsed)
       } else if (message.command === 'CHECKPOINTS') {
         set_checkpoints(message.checkpoints)
       } else if (message.command == 'EDITOR_STATE_CHANGED') {
@@ -310,6 +312,15 @@ export const use_panel = (vscode: any) => {
       updating_preset: updating_preset!,
       updated_preset: updated_preset!,
       origin: 'back_button'
+    })
+  }
+
+  const handle_timeline_collapsed_change = (is_collapsed: boolean) => {
+    set_is_timeline_collapsed(is_collapsed)
+    post_message(vscode, {
+      command: 'SAVE_COMPONENT_COLLAPSED_STATE',
+      component: 'timeline',
+      is_collapsed
     })
   }
 
@@ -473,6 +484,7 @@ export const use_panel = (vscode: any) => {
     configurations_collapsed: api_prompt_type
       ? (configurations_collapsed_by_api_mode[api_prompt_type] ?? false)
       : false,
+    is_timeline_collapsed,
     is_preview_ongoing_modal_visible,
     set_is_preview_ongoing_modal_visible,
     handle_instructions_change,
@@ -483,6 +495,7 @@ export const use_panel = (vscode: any) => {
     handle_api_prompt_type_change,
     handle_mode_change,
     handle_presets_collapsed_change,
+    handle_timeline_collapsed_change,
     handle_configurations_collapsed_change,
     handle_remove_response_history_item,
     handle_discard_user_changes_in_preview

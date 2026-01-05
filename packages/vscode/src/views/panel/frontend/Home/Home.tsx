@@ -10,7 +10,6 @@ import { ResponseHistoryItem } from '@shared/types/response-history-item'
 import { Separator } from '@ui/components/editor/panel/Separator'
 import { ListHeader } from '@ui/components/editor/panel/ListHeader'
 import { use_translation } from '@/views/i18n/use-translation'
-import { useState } from 'react'
 import { IconButton } from '@ui/components/editor/panel/IconButton'
 
 type Props = {
@@ -29,11 +28,12 @@ type Props = {
   on_response_history_item_remove: (created_at: number) => void
   on_edit_checkpoint_description: (timestamp: number) => void
   on_delete_checkpoint: (timestamp: number) => void
+  is_timeline_collapsed: boolean
+  on_timeline_collapsed_change: (is_collapsed: boolean) => void
 }
 
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
-  const [is_timeline_collapsed, set_is_timeline_collapsed] = useState(false)
 
   const handle_settings_click = () => {
     post_message(props.vscode, {
@@ -113,9 +113,9 @@ export const Home: React.FC<Props> = (props) => {
             <Separator height={8} />
             <ListHeader
               title="Timeline"
-              is_collapsed={is_timeline_collapsed}
+              is_collapsed={props.is_timeline_collapsed}
               on_toggle_collapsed={() =>
-                set_is_timeline_collapsed(!is_timeline_collapsed)
+                props.on_timeline_collapsed_change(!props.is_timeline_collapsed)
               }
               actions={
                 <>
@@ -140,7 +140,7 @@ export const Home: React.FC<Props> = (props) => {
                 </>
               }
             />
-            {!is_timeline_collapsed &&
+            {!props.is_timeline_collapsed &&
               (props.checkpoints.length > 0 ? (
                 <Timeline
                   items={props.checkpoints.map((c) => ({

@@ -81,10 +81,8 @@ import {
   INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY,
   INSTRUCTIONS_EDIT_CONTEXT_STATE_KEY,
   INSTRUCTIONS_NO_CONTEXT_STATE_KEY,
-  get_configurations_collapsed_state_key,
   LAST_SELECTED_CODE_COMPLETION_CONFIG_ID_STATE_KEY,
   LAST_SELECTED_EDIT_CONTEXT_CONFIG_ID_STATE_KEY,
-  get_presets_collapsed_state_key,
   WEB_MODE_STATE_KEY,
   get_recently_used_presets_or_groups_key
 } from '@/constants/state-keys'
@@ -209,34 +207,6 @@ export class PanelProvider implements vscode.WebviewViewProvider {
 
     vscode.window.onDidChangeWindowState(async (e) => {
       if (e.focused) {
-        const WEB_MODES: WebPromptType[] = [
-          'ask',
-          'edit-context',
-          'code-completions',
-          'no-context'
-        ]
-        const API_MODES: ApiPromptType[] = ['edit-context', 'code-completions']
-        this.send_message({
-          command: 'COLLAPSED_STATES',
-          presets_collapsed_by_web_mode: Object.fromEntries(
-            WEB_MODES.map((mode) => [
-              mode,
-              this.context.globalState.get<boolean>(
-                get_presets_collapsed_state_key(mode),
-                false
-              )
-            ])
-          ),
-          configurations_collapsed_by_api_mode: Object.fromEntries(
-            API_MODES.map((mode) => [
-              mode,
-              this.context.globalState.get<boolean>(
-                get_configurations_collapsed_state_key(mode),
-                false
-              )
-            ])
-          )
-        })
         this.send_message({
           command: 'RESET_APPLY_BUTTON_TEMPORARY_DISABLED_STATE'
         })
@@ -285,6 +255,10 @@ export class PanelProvider implements vscode.WebviewViewProvider {
           all_api_config_keys.some((key) => event.affectsConfiguration(key))
         ) {
           handle_get_api_tool_configurations(this)
+        }
+
+        if (event.affectsConfiguration('codeWebChat.isTimelineCollapsed')) {
+          handle_get_collapsed_states(this)
         }
       }
     )

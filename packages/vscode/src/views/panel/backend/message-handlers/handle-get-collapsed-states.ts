@@ -1,6 +1,7 @@
 import {
   get_configurations_collapsed_state_key,
-  get_presets_collapsed_state_key
+  get_presets_collapsed_state_key,
+  IS_TIMELINE_COLLAPSED_STATE_KEY
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { ApiPromptType, WebPromptType } from '@shared/types/prompt-types'
@@ -15,6 +16,7 @@ export const handle_get_collapsed_states = (
     'no-context'
   ]
   const API_MODES: ApiPromptType[] = ['edit-context', 'code-completions']
+
   panel_provider.send_message({
     command: 'COLLAPSED_STATES',
     presets_collapsed_by_web_mode: Object.fromEntries(
@@ -34,6 +36,10 @@ export const handle_get_collapsed_states = (
           false
         )
       ])
+    ),
+    is_timeline_collapsed: panel_provider.context.globalState.get<boolean>(
+      IS_TIMELINE_COLLAPSED_STATE_KEY,
+      false
     )
   })
 }

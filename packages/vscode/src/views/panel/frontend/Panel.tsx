@@ -95,6 +95,8 @@ export const Panel = () => {
     handle_mode_change,
     handle_presets_collapsed_change,
     handle_configurations_collapsed_change,
+    is_timeline_collapsed,
+    handle_timeline_collapsed_change,
     handle_remove_response_history_item,
     handle_discard_user_changes_in_preview
   } = use_panel(vscode)
@@ -340,6 +342,8 @@ export const Panel = () => {
                     })
                   }
                 }}
+                is_timeline_collapsed={is_timeline_collapsed}
+                on_timeline_collapsed_change={handle_timeline_collapsed_change}
                 on_delete_checkpoint={(timestamp) => {
                   post_message(vscode, {
                     command: 'DELETE_CHECKPOINT',

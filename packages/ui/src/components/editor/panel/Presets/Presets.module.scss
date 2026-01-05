@@ -72,12 +72,12 @@
       white-space: nowrap;
       position: relative;
 
-      &__drag_handle {
+      &__drag-handle {
         display: flex;
         align-items: center;
         height: 100%;
         cursor: grab;
-        opacity: 0.5;
+        opacity: var(--drag-handle-opacity);
 
         &:active {
           cursor: grabbing;

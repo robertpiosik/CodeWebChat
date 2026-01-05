@@ -45,6 +45,8 @@ export const INSTRUCTIONS_NO_CONTEXT_STATE_KEY = 'instructions-no-context'
 export const INSTRUCTIONS_CODE_COMPLETIONS_STATE_KEY =
   'instructions-code-completions'
 
+export const IS_TIMELINE_COLLAPSED_STATE_KEY = 'is-timeline-collapsed'
+
 export const HISTORY_ASK_STATE_KEY = 'history-ask'
 export const HISTORY_EDIT_STATE_KEY = 'history-edit'
 export const HISTORY_CODE_COMPLETIONS_STATE_KEY = 'history-code-completions'

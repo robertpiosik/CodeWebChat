@@ -18,27 +18,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     width: 20px;
     flex-shrink: 0;
     padding-top: 2px;
   }
 
-  &__drag_handle {
+  &__drag-handle {
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: grab;
-    opacity: 0.5;
-    width: 20px;
-    height: 20px;
+    opacity: var(--drag-handle-opacity);
+    width: 15px;
+    height: 15px;
 
     &:active {
       cursor: grabbing;
-    }
-
-    &:hover {
-      opacity: 1;
     }
   }
 
@@ -59,13 +55,11 @@
     margin-bottom: 2px;
   }
 
-  &__star {
+  &__edit {
     cursor: pointer;
+
     &:hover {
       color: var(--vscode-icon-foreground);
-    }
-    &--active {
-      color: var(--vscode-button-background);
     }
   }
 

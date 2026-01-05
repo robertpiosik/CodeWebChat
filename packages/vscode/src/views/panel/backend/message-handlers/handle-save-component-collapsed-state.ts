@@ -1,6 +1,7 @@
 import {
   get_configurations_collapsed_state_key,
-  get_presets_collapsed_state_key
+  get_presets_collapsed_state_key,
+  IS_TIMELINE_COLLAPSED_STATE_KEY
 } from '@/constants/state-keys'
 import { PanelProvider } from '@/views/panel/backend/panel-provider'
 import { SaveComponentCollapsedStateMessage } from '@/views/panel/types/messages'
@@ -18,6 +19,11 @@ export const handle_save_component_collapsed_state = async (
   } else if (message.component == 'configurations') {
     await panel_provider.context.globalState.update(
       get_configurations_collapsed_state_key(message.mode as ApiPromptType),
+      message.is_collapsed
+    )
+  } else if (message.component == 'timeline') {
+    await panel_provider.context.globalState.update(
+      IS_TIMELINE_COLLAPSED_STATE_KEY,
       message.is_collapsed
     )
   }
