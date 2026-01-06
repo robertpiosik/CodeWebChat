@@ -19,6 +19,19 @@
   padding: 0 12px;
   height: 80px;
 
+  &--compact {
+    height: 36px;
+    gap: 8px;
+
+    .button__pre {
+      display: none;
+    }
+
+    .button__label {
+      font-size: 18px;
+    }
+  }
+
   &:hover {
     background-color: var(--vscode-toolbar-hoverBackground);
     border-color: transparent;

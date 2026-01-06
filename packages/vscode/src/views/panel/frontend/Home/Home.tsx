@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react'
 import styles from './Home.module.scss'
 import { Scrollable } from '@ui/components/editor/panel/Scrollable'
 import { Timeline } from '@ui/components/editor/panel/Timeline'
@@ -43,6 +44,9 @@ type Props = {
 
 export const Home: React.FC<Props> = (props) => {
   const { t } = use_translation()
+  const [is_mode_sticky, set_is_mode_sticky] = useState(false)
+  const responses_ref = useRef<HTMLDivElement>(null)
+  const mode_ref = useRef<HTMLDivElement>(null)
 
   const {
     handle_reorder,
@@ -93,11 +97,17 @@ export const Home: React.FC<Props> = (props) => {
         </button>
       </div>
 
-      <Scrollable>
+      <Scrollable
+        on_scroll={(top) => {
+          const responses_height = responses_ref.current?.clientHeight || 0
+          const mode_height = mode_ref.current?.clientHeight || 0
+          set_is_mode_sticky(top > responses_height + mode_height + 4)
+        }}
+      >
         <div className={styles.content}>
           <div className={styles.inner}>
             {props.response_history.length > 0 && (
-              <div className={styles.inner__responses}>
+              <div className={styles.inner__responses} ref={responses_ref}>
                 <UiResponses
                   response_history={props.response_history}
                   on_response_history_item_click={
@@ -112,20 +122,27 @@ export const Home: React.FC<Props> = (props) => {
                   on_response_history_item_remove={
                     props.on_response_history_item_remove
                   }
-                />{' '}
+                />
               </div>
             )}
 
-            <div className={styles.inner__mode}>
+            <div
+              className={cn(styles.inner__mode, {
+                [styles['inner__mode--sticky']]: is_mode_sticky
+              })}
+              ref={mode_ref}
+            >
               <ModeButton
                 pre="Autofill"
                 label="Chatbots"
                 on_click={props.on_chatbots_click}
+                is_compact={is_mode_sticky}
               />
               <ModeButton
                 pre="Make"
                 label="API calls"
                 on_click={props.on_api_calls_click}
+                is_compact={is_mode_sticky}
               />
             </div>
 
@@ -137,52 +154,83 @@ export const Home: React.FC<Props> = (props) => {
               on_toggle_collapsed={() =>
                 props.on_tasks_collapsed_change(!props.are_tasks_collapsed)
               }
+              actions={
+                Object.keys(props.tasks).length == 1 ? (
+                  <IconButton
+                    codicon_icon="add"
+                    title="Add Task"
+                    on_click={(e) => {
+                      e.stopPropagation()
+                      const roots = Object.keys(props.tasks)
+                      if (roots.length > 0) {
+                        handle_add(roots[0], props.tasks[roots[0]], 'top')
+                        if (props.are_tasks_collapsed) {
+                          props.on_tasks_collapsed_change(false)
+                        }
+                      }
+                    }}
+                  />
+                ) : undefined
+              }
             />
             {!props.are_tasks_collapsed &&
-              Object.entries(props.tasks).map(
-                ([workspace_root_folder, tasks], _, entries) => (
+              Object.entries(props.tasks)
+                .filter(([_, tasks], __, arr) =>
+                  arr.length == 1 ? tasks.length : true
+                )
+                .map(([workspace_root_folder, tasks], _, entries) => (
                   <div
                     key={workspace_root_folder}
                     className={styles.inner__tasks}
                   >
                     {entries.length > 1 && (
                       <div className={styles['inner__tasks-header']}>
-                        {workspace_root_folder.split(/[\\/]/).pop() ||
-                          workspace_root_folder}
+                        <span>
+                          {workspace_root_folder.split(/[\\/]/).pop() ||
+                            workspace_root_folder}
+                        </span>
+                        <button
+                          className={styles['add-button']}
+                          title="Add Task"
+                          onClick={() => {
+                            handle_add(workspace_root_folder, tasks, 'top')
+                          }}
+                        />
                       </div>
                     )}
-                    <Tasks
-                      tasks={tasks}
-                      on_reorder={(new_tasks) =>
-                        handle_reorder(workspace_root_folder, new_tasks)
-                      }
-                      on_change={(updated_task) => {
-                        handle_change(
-                          workspace_root_folder,
-                          tasks,
-                          updated_task
-                        )
-                      }}
-                      on_add={() => {
-                        handle_add(workspace_root_folder, tasks)
-                      }}
-                      on_add_subtask={(parent_task) => {
-                        handle_add_subtask(
-                          workspace_root_folder,
-                          tasks,
-                          parent_task
-                        )
-                      }}
-                      on_delete={(timestamp) => {
-                        handle_delete(workspace_root_folder, timestamp)
-                      }}
-                      on_copy={(text) => {
-                        handle_copy(text)
-                      }}
-                    />
+                    {tasks.length > 0 && (
+                      <Tasks
+                        tasks={tasks}
+                        on_reorder={(new_tasks) =>
+                          handle_reorder(workspace_root_folder, new_tasks)
+                        }
+                        on_change={(updated_task) => {
+                          handle_change(
+                            workspace_root_folder,
+                            tasks,
+                            updated_task
+                          )
+                        }}
+                        on_add={() => {
+                          handle_add(workspace_root_folder, tasks)
+                        }}
+                        on_add_subtask={(parent_task) => {
+                          handle_add_subtask(
+                            workspace_root_folder,
+                            tasks,
+                            parent_task
+                          )
+                        }}
+                        on_delete={(timestamp) => {
+                          handle_delete(workspace_root_folder, timestamp)
+                        }}
+                        on_copy={(text) => {
+                          handle_copy(text)
+                        }}
+                      />
+                    )}
                   </div>
-                )
-              )}
+                ))}
 
             <ListHeader
               title="Timeline"
