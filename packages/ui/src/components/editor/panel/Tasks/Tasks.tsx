@@ -47,6 +47,10 @@ export const Tasks: React.FC<Props> = (props) => {
   >(null)
   const prevent_edit_ref = useRef(false)
 
+  useEffect(() => {
+    set_last_copied_timestamp(null)
+  }, [props.tasks])
+
   const tree = useMemo(() => add_ids(props.tasks), [props.tasks])
 
   const handle_tree_reorder = (new_tree: SortableTask[]) => {
